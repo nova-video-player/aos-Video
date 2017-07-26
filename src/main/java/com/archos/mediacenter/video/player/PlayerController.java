@@ -301,42 +301,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             mPlayerView.setSystemUiVisibility(mSystemUiVisibility);
             manualVisibilityChange=true;
         }
-        // When the user touches the screen or uses some hard key, the framework
-        // will change system ui visibility from invisible to visible. We show
-        // the media control and enable system UI (e.g. ActionBar) to be visible at this point
-        
-        mPlayerView.setOnSystemUiVisibilityChangeListener(
-                new View.OnSystemUiVisibilityChangeListener() {
-                    public void onSystemUiVisibilityChange(int visibility) {
-                        if(isInfoActivityDisplayed())
-                            return;
-                        int diff = mSystemUiVisibility ^ visibility;
-                        if(!manualVisibilityChange){              
-                            switchMode(false);   
-                        }
-                        /*
-                         * show full ui on first touch event
-                         * (onTouch is not called if system bar is hidden on phones)
-                         */
-                        if (((diff & View.SYSTEM_UI_FLAG_LOW_PROFILE) != 0 &&
-                                (visibility & View.SYSTEM_UI_FLAG_LOW_PROFILE) == 0) ||
-                                ((diff & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0 &&
-                                (visibility & View.SYSTEM_UI_FLAG_LOW_PROFILE) != 0)) {
-                            if(!mIsLocked)
-                                show();
-                            else {
-                                show(FLAG_SIDE_UNLOCK_INSTRUCTIONS,0);
-                               mSystemBarShowing = false;
-                                showSystemBar(false);
-                            }
-                        }
-                        if ((visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0) {
-                            mSystemBarGone = true;
-                            updateBottomBarHeight();
-                        }
-                        manualVisibilityChange=false;
-                    }
-                });
 
         /*
          * Hack when using one window for the player controller:
