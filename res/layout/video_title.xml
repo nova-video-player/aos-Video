@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <!-- Video Title -->
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/video_title"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:paddingLeft="40dip"
+    android:paddingRight="40dip"
+    android:singleLine="true"
+
+    android:ellipsize="middle"
+    android:textSize="@dimen/player_time_text_size"
+    android:textColor="#ddffffff"
+    android:textStyle="bold"
+    android:shadowColor="#dd000000"
+    android:shadowDx="0"
+    android:shadowDy="0"
+    android:shadowRadius="2"
+    android:minWidth="1000dp" />

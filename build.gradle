@@ -1,0 +1,215 @@
+import java.util.regex.Pattern
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.2'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+        maven {
+            url 'http://4thline.org/m2'
+        }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    }
+}
+
+def getDate() {
+    // we increment version number every 1000 seconds,
+    // we start on 31/08/2016
+    def date = new Date().getTime() / 1000L - 1472637600L
+    return (int) (date / 1000L)
+}
+
+def getFormattedDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMdd.HHmm')
+    return formattedDate
+}
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.3'
+    useLibrary 'org.apache.http.legacy'
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            resources.srcDirs = ['src/main/java']
+            aidl.srcDirs = ['src/main/java']
+            renderscript.srcDirs = ['src/main/java']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+
+        //uses archos framework
+        ti.setRoot('src/archos')
+        aw.setRoot('src/archos')
+        mtk.setRoot('src/archos')
+        qc.setRoot('src/archos')
+        rk.setRoot('src/archos')
+    }
+
+    if (file("../mc-utils/mc_apps_common_env.gradle").exists())
+        apply from: "../mc-utils/mc_apps_common_env.gradle";
+
+
+    defaultConfig {
+        generatedDensities = []
+        minSdkVersion 15
+        targetSdkVersion 25
+        multiDexEnabled true
+        versionCode getDate()
+        versionName '10.2-' + getFormattedDate()
+    }
+    aaptOptions {
+        additionalParameters "--no-version-vectors"
+    }
+
+    flavorDimensions "version", "tv", "amazon"
+
+    productFlavors {
+        community {
+            dimension "version"
+            applicationId "com.archos.mediacenter.videocommunity"
+        }
+        amazon {
+            dimension "amazon"
+        }
+        noamazon {
+            dimension "amazon"
+        }
+        leanback {
+            minSdkVersion 17
+            dimension "tv"
+            versionCode 2
+        }
+        noleanback {
+            dimension "tv"
+            versionCode 1
+        }
+    }
+
+    // make per-variant version code
+    applicationVariants.all { variant ->
+        // get the version code of each flavor
+        def compatVersion = variant.productFlavors.get(1).versionCode
+        // set the composite code
+        variant.mergedFlavor.versionCode = compatVersion * 1000000 + defaultConfig.versionCode
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-project.txt'
+        }
+    }
+
+    lintOptions {
+        disable 'MissingTranslation'
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/beans.xml'
+        exclude 'META-INF/maven'
+        exclude 'README'
+    }
+
+    if (project.ext.has("ProjectKeyStoreFile")) {
+        signingConfigs {
+            release {
+                storeFile file(ProjectKeyStoreFile)
+                storePassword ProjectKeyStorePassword
+                keyAlias ProjectKeyAlias
+                keyPassword ProjectKeyPassword
+            }
+        }
+
+        buildTypes {
+            release {
+                signingConfig signingConfigs.release
+            }
+            debug {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
+    dexOptions {
+        incremental true
+        javaMaxHeapSize "4G"
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            def api = variant.mergedFlavor.minSdkVersion.apiLevel
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def fileName = outputFile.name
+                        .replace("-noleanback-", "-API_" + "${api}" + "+-")
+                        .replace("-leanback-", "-API_" + "${api}" + "+-")
+                        .replace("-noamazon-", "-")
+                output.outputFile = new File(outputFile.parent, fileName)
+                assemble.doLast {
+                    println output.outputFile
+                }
+            }
+        }
+    }
+
+    variantFilter { variant ->
+        if (variant.getFlavors().get(2).name.equals("amazon")
+                && !variant.getFlavors().get(0).name.equals("free") && !variant.getFlavors().get(0).name.equals("ki")) {
+            variant.setIgnore(true);
+        }
+        if (variant.getFlavors().get(2).name.equals("community")
+                && !variant.getFlavors().get(0).name.equals("premium")) {
+            variant.setIgnore(true);
+        }
+        if (variant.getFlavors().get(2).name.equals("noamazon")
+                && variant.getFlavors().get(0).name.equals("ki")) {
+            variant.setIgnore(true);
+        }
+        if (variant.getFlavors().get(1).name.equals("leanback")
+                && (variant.getFlavors().get(0).name.equals("aw") ||
+                variant.getFlavors().get(0).name.equals("mtk") ||
+                variant.getFlavors().get(0).name.equals("qc") ||
+                variant.getFlavors().get(0).name.equals("rk") ||
+                variant.getFlavors().get(0).name.equals("ti"))) {
+            variant.setIgnore(true);
+        }
+    }
+}
+
+dependencies {
+    compile project(':FileCoreLibrary')
+    communityCompile project(path: ':MediaLib', configuration: 'communityRelease')
+
+    compile 'com.google.android.gms:play-services-ads:10.2.0'
+    compile 'com.google.android.gms:play-services-cast:10.2.0'
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:recyclerview-v7:25.0.1'
+    compile 'com.android.support:cardview-v7:25.0.1'
+    compile 'com.google.android.libraries.cast.companionlibrary:ccl:2.9.1'
+    compile 'com.android.support:palette-v7:25.0.1'
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.squareup.picasso:picasso:2.6.0-SNAPSHOT'
+    compile 'com.github.ksoichiro:android-observablescrollview:1.5.0'
+    compile 'com.android.support:design:25.0.1'
+    compile 'com.amazon.android:mobile-ads:5.8.1.1'
+    leanbackCompile 'com.android.support:leanback-v17:25.0.1'
+    compile 'com.amazon.android:mobile-ads:+'
+}

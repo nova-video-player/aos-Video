@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- based on base/core/res/res/layout/popup_menu_item_layout.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:minWidth="@dimen/track_menu_minWidth"
+        android:paddingLeft="@dimen/track_menu_padding"
+        android:paddingRight="@dimen/track_menu_padding"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/track_menu_layout_width" >
+    <TextView android:id="@+id/name"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLargePopupMenu"
+            android:ellipsize="end"
+            android:fadingEdge="horizontal" />
+    <RadioButton android:id="@+id/radio"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:focusable="false"
+            android:clickable="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+</RelativeLayout>

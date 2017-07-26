@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+     The root FrameLayout is needed to have the main RelativeLayout centered in the GridView cells, without
+     having the list_item_background background in the margin
+-->
+
+
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="left"
+    card_view:cardBackgroundColor="@color/grid_item_background"
+    card_view:cardCornerRadius="4dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+    <RelativeLayout
+
+        android:layout_width="@dimen/video_grid_poster_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="5dip"
+        android:descendantFocusability="blocksDescendants"
+        android:background="@drawable/list_item_background"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:context=".video.browser.AdapterDefaultValuesGrid" >
+
+        <!-- thumbnail of the grid item -->
+
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="@dimen/video_grid_poster_width"
+            android:layout_height="@dimen/video_grid_poster_height"
+
+            android:background="@color/default_icon_background"
+            android:scaleType="center" />
+
+        <ImageView
+            android:id="@+id/flag_3d"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/thumbnail"
+            android:layout_alignRight="@id/thumbnail"
+            android:layout_marginBottom="@dimen/video_3d_label_margin_grid"
+            android:layout_marginRight="@dimen/video_3d_label_margin_grid"
+            android:src="@drawable/label_3d"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/trakt_watched"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/thumbnail"
+            android:layout_alignTop="@id/thumbnail"
+            android:src="@drawable/watched_icon_corner"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/trakt_library"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/thumbnail"
+            android:layout_alignTop="@id/thumbnail"
+            android:layout_marginLeft="@dimen/video_trakt_library_margin_left"
+            android:src="@drawable/label_trakt_library"
+            android:visibility="gone" />
+        <include
+            layout="@layout/video_occurencies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/thumbnail"
+            android:layout_alignTop="@id/thumbnail"
+            android:visibility="gone" />
+
+
+        <!--
+           (i) symbol.
+        NOTE: Active area larger than the icon itself due to different left and top padding
+        -->
+
+
+        <!-- bottom area of the grid item -->
+        <ProgressBar
+            android:id="@+id/resume_notif"
+            style="@style/BrowserResumeSlider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/thumbnail"
+            android:clickable="false"
+            android:indeterminate="false"
+            android:paddingLeft="0dip"
+            android:progress="70" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/resume_notif"
+            android:layout_marginLeft="4dip" >
+
+            <!-- line 1 = name -->
+
+            <TextView
+                android:id="@+id/name"
+                style="@style/BrowserTinyText.Name"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:paddingTop="5dip" />
+
+            <!-- left area = duration -->
+
+
+
+
+
+
+
+            <LinearLayout
+                android:id="@+id/bottom_row"
+                android:layout_width="wrap_content"
+                android:layout_height="18dip"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/name"
+                android:gravity="center_vertical|right"
+                android:orientation="horizontal" >
+
+                <com.archos.mediacenter.utils.ImageLabel
+                    android:id="@+id/bookmark_notif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="8dip"
+                    android:clickable="false"
+                    android:visibility="gone"
+                    android:src="@drawable/label_bookmark_small" />
+
+                <com.archos.mediacenter.utils.ImageLabel
+                    android:id="@+id/subtitle_notif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="8dip"
+                    android:clickable="false"
+                    android:src="@drawable/label_subtitles_small" />
+
+                <com.archos.mediacenter.utils.ImageLabel
+                    android:id="@+id/network_notif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="2dip"
+                    android:clickable="false"
+                    android:src="@drawable/label_network_small" />
+                <TextView
+                    android:id="@+id/info"
+                    style="@style/BrowserTinyText.Info"
+                    android:layout_marginLeft="4dip"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/name" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/expanded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/name"
+                android:background="@drawable/list_selector_holo_dark"
+                android:paddingBottom="2dip"
+                android:paddingLeft="4dip"
+                android:paddingRight="14dip"
+                android:paddingTop="2dip"
+                android:src="@drawable/label_infoarrow" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

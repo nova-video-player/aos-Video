@@ -1,0 +1,36 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="resume"
+        android:enabled="true"
+        android:icon="@drawable/shortcut_resume"
+        android:shortcutShortLabel="@string/resume"
+        >
+        <intent
+            android:action="com.archos.mediacenter.video.action_resume"
+            android:targetPackage="com.archos.mediacenter.videofree"
+            android:targetClass="com.archos.mediacenter.video.browser.MainActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="movies"
+        android:enabled="true"
+        android:icon="@drawable/shortcut_recently_played"
+        android:shortcutShortLabel="@string/recently_played"
+        >
+        <intent
+            android:action="com.archos.mediacenter.video.action_recently_played"
+            android:targetPackage="com.archos.mediacenter.videofree"
+            android:targetClass="com.archos.mediacenter.video.browser.MainActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="tvshows"
+        android:enabled="true"
+        android:icon="@drawable/shortcut_recently_added"
+        android:shortcutShortLabel="@string/recently_added"
+        >
+        <intent
+            android:action="com.archos.mediacenter.video.action_recently_added"
+            android:targetPackage="com.archos.mediacenter.videofree"
+            android:targetClass="com.archos.mediacenter.video.browser.MainActivity" />
+    </shortcut>
+</shortcuts>
+

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="20dip"
+    android:layout_height="wrap_content"
+    android:paddingTop="1dip"
+    android:id="@+id/occurencies_container"
+    android:gravity="center_horizontal"
+    android:background="@drawable/count_left_corner"
+    >
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+
+        android:textSize="10dip"
+android:paddingLeft="2dip"
+        android:gravity="center_horizontal"
+        android:text="1"
+        android:id="@+id/occurencies_text_view"
+        android:textColor="@android:color/white"/>
+
+</FrameLayout>
+

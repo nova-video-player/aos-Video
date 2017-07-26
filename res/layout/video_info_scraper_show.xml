@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollview"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/video_info_picture_and_text_linear_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/video_info_margin_half" >
+
+        <ImageView
+            android:id="@+id/poster"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="@dimen/video_info_poster_width"
+            android:layout_height="@dimen/video_info_poster_height" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/video_info_margin_half"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/video_info_margin_half" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/show_name"
+                    style="@style/CoverDescription.Title"
+                    android:paddingBottom="10dip"
+                    android:textSize="24dip" />
+
+                <LinearLayout
+                    android:id="@+id/show_networks_container"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.8"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        style="@style/VideoInfoFileInfo.Title"
+                        android:text="@string/show_network" />
+
+                    <TextView
+                        android:id="@+id/show_networks"
+                        style="@style/VideoInfoFileInfo"
+                        android:paddingLeft="8dip" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/show_genres_container"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.8"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        style="@style/VideoInfoFileInfo.Title"
+                        android:text="@string/scrap_genre" />
+
+                    <TextView
+                        android:id="@+id/show_genres"
+                        style="@style/VideoInfoFileInfo"
+                        android:paddingLeft="8dip" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/show_premiered_container"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        style="@style/VideoInfoFileInfo.Title"
+                        android:text="@string/scrap_premiered" />
+
+                    <TextView
+                        android:id="@+id/show_premiered"
+                        style="@style/VideoInfoFileInfo"
+                        android:paddingLeft="8dip" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/show_rating_container"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        style="@style/VideoInfoFileInfo.Title"
+                        android:text="@string/scrap_rating" />
+
+                    <TextView
+                        android:id="@+id/show_rating"
+                        style="@style/VideoInfoFileInfo"
+                        android:paddingLeft="8dip" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/show_plot"
+                    style="@style/VideoInfoFileInfo"
+                    android:paddingTop="10dip"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/show_cast_title"
+                    style="@style/VideoInfoFileInfo.Title"
+                    android:paddingTop="10dip"
+                    android:text="@string/scrap_cast" />
+
+                <TextView
+                    android:id="@+id/show_cast"
+                    style="@style/VideoInfoFileInfo" />
+
+                <ImageButton
+                    android:id="@+id/scrap_link_imdb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dip"
+                    android:src="@drawable/imdb_logo" />
+
+            </LinearLayout>
+<Button
+                android:id="@+id/change"
+                style="@style/VideoInfoButton"
+                android:layout_marginBottom="@dimen/video_info_margin_half"
+                android:layout_marginTop="@dimen/video_info_margin_half"
+                android:text="@string/scrap_change" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

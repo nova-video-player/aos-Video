@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MainLine">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">20dip</item>
+    </style>
+
+    <style name="SecondaryLine" parent="textAppearanceMedium">
+        <item name="android:typeface">sans</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">17dip</item>
+    </style>
+
+    <style name="TinyLine" parent="textAppearanceSmall">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+</resources>

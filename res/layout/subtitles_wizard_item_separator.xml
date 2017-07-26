@@ -1,0 +1,18 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/separator_container"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="16dip"
+              android:gravity="center_vertical" >
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/separator_name"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/video_list_item_height"
+            android:gravity="center_vertical"
+            android:paddingTop="8dip"
+            android:paddingLeft="10dip"
+            style="@style/textAppearanceMedium"
+            android:singleLine="true" />
+
+</LinearLayout>

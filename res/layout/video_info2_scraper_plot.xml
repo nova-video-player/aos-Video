@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_marginTop="@dimen/video_info_cardview_top_margin"
+    card_view:cardCornerRadius="4dp"
+    android:id="@+id/scraper_plot_cardview"
+
+    android:layout_height="wrap_content"
+    >
+    <LinearLayout
+
+        android:id="@+id/scraper_plot_content"
+        android:paddingLeft="@dimen/video_info_margin_simple"
+        android:paddingRight="@dimen/video_info_margin_simple"
+        android:paddingTop="@dimen/video_info_margin_half"
+        android:paddingBottom="@dimen/video_info_margin_half"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+
+
+
+        <LinearLayout
+            android:id="@+id/scrap_rating_container"
+            android:layout_width="fill_parent"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/video_info_margin_half"
+            android:orientation="horizontal" >
+
+
+            <TextView
+                android:id="@+id/scrap_date"
+                style="@style/VideoInfoFileInfo"
+                android:layout_marginRight="@dimen/video_info_margin_simple" />
+
+            <TextView
+                android:id="@+id/scrap_duration"
+                style="@style/VideoInfoFileInfo"
+                android:layout_marginRight="@dimen/video_info_margin_simple"
+                />
+
+
+
+            <TextView
+                android:id="@+id/scrap_rating"
+                style="@style/VideoInfoFileInfo"
+                android:drawablePadding="2dip"
+                android:drawableLeft="@drawable/little_star"
+                android:gravity="center_vertical"/>
+        </LinearLayout>
+
+
+
+        <TextView
+            android:id="@+id/scrap_plot"
+            style="@style/VideoInfoFileInfo"
+            android:textStyle="italic" />
+        <TextView
+            android:layout_marginTop="@dimen/video_info_margin_half"
+            android:id="@+id/scrap_genre"
+            style="@style/VideoInfoFileInfo.Title2"
+             />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

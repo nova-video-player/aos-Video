@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/unlock_instructions"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="top"
+    android:layout_marginTop="30dp"
+    android:orientation="vertical"
+    android:visibility="gone" >
+
+    <TextView
+        android:layout_width="180dip"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/unlock_instructions"
+        android:textColor="@android:color/white"
+        android:shadowColor="@android:color/black"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="2"
+        android:paddingLeft="10dp"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/unlock_button"
+        android:layout_toRightOf="@+id/unlock_button"
+        android:textAlignment="gravity"
+        android:gravity="left" />
+
+        <ImageView
+            android:src="@drawable/lock_icon"
+            android:id="@+id/unlock_button"
+            android:layout_width="50dp"
+            android:layout_height="50dip"
+            android:padding="5dip"
+            android:background="@drawable/button_selector_holo_dark"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true" />
+    
+</RelativeLayout>

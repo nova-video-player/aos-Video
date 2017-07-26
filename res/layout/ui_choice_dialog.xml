@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/ui_choice_dialog_padding">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/ui_choice_dialog_padding"
+        android:text="It seems that you are using Archos Video Player on a TV.\nIf it is actually the case, we recommend using our new TV user interface"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <LinearLayout
+        android:id="@+id/choices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/choice_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/big_button"
+            android:clickable="true"
+            android:layout_marginRight="@dimen/ui_choice_dialog_padding"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:padding="@dimen/ui_choice_dialog_padding">
+
+            <ImageView
+                android:layout_width="@dimen/ui_choice_dialog_image_width"
+                android:adjustViewBounds="true"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ui_choice_leanback"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/ui_choice_dialog_padding"
+                android:gravity="center"
+                android:text="TV interface" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/choice_tablet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/big_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:padding="@dimen/ui_choice_dialog_padding">
+
+            <ImageView
+                android:layout_width="@dimen/ui_choice_dialog_image_width"
+                android:adjustViewBounds="true"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ui_choice_tablet"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/ui_choice_dialog_padding"
+                android:gravity="center"
+                android:text="Tablet interface" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/ui_choice_dialog_padding"
+        android:gravity="center"
+        android:text="You can change your choice in the application settings later"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
+</LinearLayout>

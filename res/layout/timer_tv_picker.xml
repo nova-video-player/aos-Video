@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.archos.mediacenter.video.player.tvmenu.TimerDelayTVPicker
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/audioDelayPicker"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:focusable="true"  >
+
+    <RelativeLayout
+        android:id="@+id/parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minHeight="20dp" >
+
+        <ImageView
+            android:id="@+id/image_previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dip"
+            android:layout_alignParentLeft="true"
+            android:padding="4dip"
+            android:src="@drawable/arrow_left" />
+
+        <TextView
+            android:id="@+id/text_delay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_centerInParent="true"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/tv_menu_font_size"
+            style="@style/textAppearanceLarge" />
+
+        <ImageView
+            android:id="@+id/image_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="32dip"
+            android:layout_alignParentRight="true"
+            android:padding="4dip"
+            android:src="@drawable/arrow_right" />
+
+    </RelativeLayout>
+
+</com.archos.mediacenter.video.player.tvmenu.TimerDelayTVPicker>

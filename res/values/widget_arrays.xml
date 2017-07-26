@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <string-array name="video_content_array" translatable="false">
+        <item>@string/all_movies</item>
+        <item>@string/all_tv_shows</item>
+        <item>@string/content_all_videos</item>
+        <item>@string/content_recently_added</item>
+        <item>@string/content_recently_played</item>
+    </string-array>
+
+</resources>

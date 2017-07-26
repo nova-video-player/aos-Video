@@ -1,0 +1,14 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <include
+        layout="@layout/auto_scraper_initial_item"
+        android:visibility="visible" />
+
+    <include
+        layout="@layout/auto_scraper_processed_item"
+        android:visibility="gone" />
+
+</LinearLayout>

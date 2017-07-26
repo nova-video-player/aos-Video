@@ -1,0 +1,4 @@
+<resources>
+    <integer name="player_pref_subtitle_size_default">30</integer> <!-- an integer instead of a dimension because we don't want it to be density-scaled -->
+    <integer name="player_pref_subtitle_vpos_default">0</integer> <!-- an integer instead of a dimension because we don't want it to be density-scaled -->
+</resources>

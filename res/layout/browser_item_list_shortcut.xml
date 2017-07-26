@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+   This layout defines items of the browser list.
+   There is a thumbnail, a first line for the name, and a second line
+   for informations (size for files, number of files for directories).
+  -->
+
+<!-- Same layout as a standard file item but shifted to the right --> 
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/item_horizontal_offset" >
+
+    <include layout="@layout/browser_item_list" />
+
+</FrameLayout>

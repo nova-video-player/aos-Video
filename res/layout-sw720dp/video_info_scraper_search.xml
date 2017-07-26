@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="top"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/header_message"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dip"
+        android:layout_marginLeft="@dimen/video_info_margin_double"
+        android:layout_marginRight="@dimen/video_info_margin_double"
+        android:layout_marginTop="@dimen/video_info_margin_half"
+        android:gravity="center"
+        android:text="@string/scrap_no_info"
+        style="@style/textAppearanceMedium"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/custom_search_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/video_info_margin_half"
+        android:layout_marginLeft="@dimen/video_info_margin_double"
+        android:layout_marginRight="@dimen/video_info_margin_double"
+        android:layout_marginTop="@dimen/video_info_margin_half"
+        android:visibility="visible" >
+
+        <Button
+            android:id="@+id/search"
+            style="@style/VideoInfoButton"
+            android:layout_alignParentRight="true"
+            android:text="@android:string/search_go" />
+
+        <Button
+            android:id="@+id/cancel"
+            style="@style/VideoInfoButton"
+            android:layout_toLeftOf="@id/search"
+            android:text="@android:string/cancel" />
+
+        <EditText
+            android:id="@+id/custom_search_edittext"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@id/cancel"
+            android:imeOptions="actionSearch"
+            android:inputType="textNoSuggestions" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/video_info_margin_double"
+        android:layout_marginLeft="@dimen/video_info_margin_double"
+        android:layout_marginRight="@dimen/video_info_margin_double"
+        android:layout_marginTop="@dimen/video_info_margin_double"
+        android:gravity="center"
+        style="@style/textAppearanceMedium"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/progress_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/video_info_margin_double"
+        android:layout_marginLeft="@dimen/video_info_margin_double"
+        android:layout_marginRight="@dimen/video_info_margin_double"
+        android:layout_marginTop="@dimen/video_info_margin_double"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:paddingRight="10dip" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/scrap_processing"
+            style="@style/textAppearanceMedium" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/search_results_group"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/video_info_margin_double"
+        android:layout_marginRight="@dimen/video_info_margin_double"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:divider="@null"
+            android:dividerHeight="@dimen/content_list_vertical_spacing_between_items"
+            android:drawSelectorOnTop="false"
+            android:fastScrollEnabled="false"
+            android:scrollbarStyle="outsideOverlay" />
+    </LinearLayout>
+
+</LinearLayout>

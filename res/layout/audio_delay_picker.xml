@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="20dp" >
+
+    <Button
+        android:id="@+id/minus"
+        android:layout_width="@dimen/delai_picker_dialog_button_width"
+        android:layout_height="@dimen/delai_picker_dialog_button_height"
+        android:layout_marginLeft="@dimen/delai_picker_dialog_button_margin"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="@dimen/delai_picker_dialog_button_padding"
+        android:paddingRight="@dimen/delai_picker_dialog_button_padding"
+        style="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/text_delay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        style="@style/textAppearanceLarge" />
+
+    <Button
+        android:id="@+id/plus"
+        android:layout_width="@dimen/delai_picker_dialog_button_width"
+        android:layout_height="@dimen/delai_picker_dialog_button_height"
+        android:layout_marginRight="@dimen/delai_picker_dialog_button_margin"
+        android:layout_alignParentRight="true"
+        android:paddingLeft="@dimen/delai_picker_dialog_button_padding"
+        android:paddingRight="@dimen/delai_picker_dialog_button_padding"
+        style="?android:attr/textAppearanceLarge" />
+
+</RelativeLayout>

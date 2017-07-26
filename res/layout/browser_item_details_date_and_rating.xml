@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal">
+
+    <TextView android:id="@+id/release_date"
+              style="@style/BrowserText.Details"
+              android:layout_width="0dip"
+              android:layout_height="wrap_content"
+              android:layout_weight="1.0"/>
+
+
+    <TextView
+        android:id="@+id/rating"
+        style="@style/BrowserText.Details"
+        android:drawablePadding="2dip"
+        android:drawableLeft="@drawable/little_star"
+        android:layout_weight="0.7"
+        android:gravity="center_vertical"/>
+
+</LinearLayout>
+

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.archos.mediacenter.video.player.PlayerControlsRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/playerControllers"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <!-- Control Bar (play/pause/seek) -->
+
+    <FrameLayout
+        android:id="@+id/tv_menu_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <FrameLayout
+            android:id="@+id/my_recycler_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scrollbars="horizontal" >
+        </FrameLayout>
+    </FrameLayout>
+
+    <include
+        android:layout_width="@dimen/player2014_bar_width"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        layout="@layout/player_controller_left" />
+
+
+    <FrameLayout
+        android:id="@+id/play_touch_zone"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="horizontal"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        android:layout_toRightOf="@+id/volume_bar"
+        android:layout_above="@+id/control_bar"
+        android:layout_gravity="center"
+        android:visibility="invisible">
+
+    </FrameLayout>
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adViewController"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_above="@+id/control_bar"
+        android:layout_gravity="center"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/ad_unit_id"
+        android:gravity="center"
+        android:minHeight="100dp"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:id="@+id/control_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/player2014_bar_width"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="0dip"
+        android:layout_toRightOf="@+id/volume_bar"
+        android:background="@drawable/player_bar_2014"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <ImageButton
+            android:id="@+id/pause"
+            style="@style/PlayerControlButton"
+            android:paddingLeft="@dimen/player_button_padding_full"
+            android:paddingRight="@dimen/player_button_padding_full"
+            android:src="@drawable/video_play_selector" />
+
+        <ImageButton
+            android:id="@+id/backward"
+            style="@style/PlayerControlButton"
+            android:layout_marginLeft="-12dip"
+            android:paddingLeft="0dip"
+            android:paddingRight="@dimen/player_button_padding_half"
+            android:src="@drawable/video_backward_selector" />
+
+        <RelativeLayout
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/player_button_padding_half"
+            android:paddingRight="@dimen/player_button_padding_half" >
+
+            <com.archos.mediacenter.utils.seekbar.ArchosProgressSlider
+                android:id="@+id/seek_progress"
+                style="@style/PlayerSliderHorizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:paddingBottom="13dip"
+                android:paddingTop="31dip" />
+
+            <TextView
+                android:id="@+id/time_current"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:paddingTop="10dip"
+                android:textSize="@dimen/player_time_text_size"
+                android:textStyle="bold" />
+
+            <ProgressBar
+                android:id="@+id/seek_state"
+                style="?android:attr/progressBarStyleSmallTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dip"
+                android:layout_marginTop="12dip"
+                android:layout_toRightOf="@id/time_current"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:paddingTop="10dip"
+                android:textSize="@dimen/player_time_text_size"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/forward"
+            style="@style/PlayerControlButton"
+            android:paddingLeft="@dimen/player_button_padding_half"
+            android:paddingRight="@dimen/player_button_padding_small"
+            android:src="@drawable/video_forward_selector" />
+
+        <ImageButton
+            android:id="@+id/format"
+            style="@style/PlayerControlButton"
+            android:layout_marginLeft="-10dip"
+            android:layout_marginRight="10dip"
+            android:paddingLeft="@dimen/player_button_padding_full"
+            android:paddingRight="@dimen/player_button_padding_full"
+            android:src="@drawable/video_format_original_selector" />
+    </LinearLayout>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/control_bar"
+        layout="@layout/player_help_overlay" />
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/unlock_instructions"
+        layout="@layout/unlock_instructions" />
+</com.archos.mediacenter.video.player.PlayerControlsRelativeLayout>

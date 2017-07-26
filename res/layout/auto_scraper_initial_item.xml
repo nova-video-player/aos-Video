@@ -1,0 +1,63 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/initial_item_container"
+    android:layout_width="fill_parent"
+    android:layout_height="@dimen/auto_scraper_thumbnail_item_height"
+    android:background="@drawable/list_item_background"
+    android:gravity="center_vertical" >
+
+    <!-- Thumbnail on the left (with the spinbar centered on top of it) -->
+
+    <RelativeLayout
+        android:id="@+id/thumbnail_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name" >
+
+        <ImageView
+            android:id="@+id/initial_thumbnail"
+            android:layout_width="@dimen/auto_scraper_thumbnail_width"
+            android:layout_height="@dimen/auto_scraper_thumbnail_height"
+            android:layout_marginBottom="@dimen/auto_scraper_thumbnail_margin_bottom"
+            android:layout_marginLeft="@dimen/auto_scraper_thumbnail_margin_left"
+            android:layout_marginTop="@dimen/auto_scraper_thumbnail_margin_top"
+            android:scaleType="center" />
+
+        <ProgressBar
+            android:id="@+id/initial_spinbar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <!-- Text line 1 = name -->
+
+    <TextView
+        android:id="@+id/initial_name"
+        style="@style/BrowserText.Name"
+        android:layout_toRightOf="@id/thumbnail_container" />
+
+    <!-- Text line 2 = duration -->
+
+    <TextView
+        android:id="@+id/initial_duration"
+        style="@style/BrowserText.Info.InfoBlue"
+        android:layout_below="@id/initial_name"
+        android:layout_toRightOf="@id/thumbnail_container" />
+
+    <!-- Text line 3 = status -->
+
+    <TextView
+        android:id="@+id/initial_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/initial_duration"
+        android:layout_toRightOf="@id/thumbnail_container"
+        style="@style/textAppearanceSmall"
+        android:typeface="sans" />
+
+</RelativeLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollview"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/video_info_picture_and_text_linear_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/video_info_margin_half" >
+
+        <ImageView
+            android:id="@+id/poster"
+            android:layout_width="@dimen/video_info_poster_width"
+            android:layout_height="@dimen/video_info_poster_height"
+            android:layout_gravity="center_horizontal" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/video_info_margin_half"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/video_info_margin_half" >
+
+            <!-- Movie Info layout -->
+
+            <ViewStub
+                android:id="@+id/video_info_scraper_movie"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/video_info_scraper_movie"
+                android:visibility="gone" />
+
+            <!-- Show Info layout -->
+
+            <ViewStub
+                android:id="@+id/video_info_scraper_episode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/video_info_scraper_episode"
+                android:visibility="gone" />
+
+            <!-- Remove button -->
+
+            <Button
+                android:id="@+id/delete"
+                style="@style/VideoInfoButton"
+                android:layout_marginBottom="@dimen/video_info_margin_half"
+                android:layout_marginTop="@dimen/video_info_margin_half"
+                android:text="@string/scrap_remove" />
+
+            <Button
+                android:id="@+id/export"
+                style="@style/VideoInfoButton"
+                android:layout_marginBottom="@dimen/video_info_margin_half"
+                android:text="@string/nfo_export_button" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

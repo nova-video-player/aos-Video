@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This layout defines items of the browser list.
+There is a thumbnail, a first line for the name, and a second line
+for informations (duration for files, number of files for directories).
+-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="@dimen/video_list_item_height"
+    android:descendantFocusability="blocksDescendants"
+    android:background="@drawable/list_item_background"
+    android:gravity="center_vertical" >
+
+    <RelativeLayout
+        android:id="@+id/left_area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
+
+        <!-- Left area = thumbnail/poster -->
+
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="@dimen/video_list_thumbnail_width"
+            android:layout_height="@dimen/video_list_thumbnail_height"
+            android:layout_marginBottom="@dimen/video_list_thumbnail_margin_bottom"
+            android:layout_marginLeft="@dimen/video_list_thumbnail_margin_left"
+            android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name"
+            android:layout_marginTop="@dimen/video_list_thumbnail_margin_top"
+            android:background="@color/default_icon_background" />
+
+
+
+        <ImageView
+            android:id="@+id/flag_3d"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/thumbnail"
+            android:layout_alignRight="@id/thumbnail"
+            android:layout_marginBottom="@dimen/video_3d_label_margin_list"
+            android:layout_marginRight="@dimen/video_3d_label_margin_list"
+            android:src="@drawable/label_3d_small"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/trakt_watched"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/thumbnail"
+            android:layout_alignTop="@id/thumbnail"
+            android:layout_marginRight="-2px"
+            android:layout_marginTop="-2px"
+            android:src="@drawable/watched_icon_corner"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/trakt_library"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/thumbnail"
+            android:layout_alignTop="@id/thumbnail"
+            android:layout_marginLeft="@dimen/video_list_trakt_library_margin_left"
+            android:src="@drawable/label_trakt_library_small"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <include layout="@layout/browser_item_list_common"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/left_area" />
+
+</RelativeLayout>

@@ -1,0 +1,164 @@
+# To enable ProGuard in your project, edit project.properties
+# to define the proguard.config property as described in that file.
+#
+# Add project specific ProGuard rules here.
+# By default, the flags in this file are appended to flags specified
+# in ${sdk.dir}/tools/proguard/proguard-android.txt
+# You can edit the include path and order by changing the ProGuard
+# include property in project.properties.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# Add any project specific keep options here:
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
+-optimizationpasses 5
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-dontpreverify
+-dontshrink
+-dontoptimize
+-dontobfuscate
+#-verbose
+#-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
+-keepattributes Exceptions,InnerClasses
+
+-keepclasseswithmember class * {
+    native <methods>;
+}
+
+-keep class com.archos.mediacenter.video.browser.BrowserByCling { *; }
+-keep class com.archos.mediacenter.video.browser.BrowserBySeason
+-keep class com.archos.mediacenter.video.browser.BrowserCategoryVideo
+-keep class com.archos.mediacenter.utils.SambaPreferencesFragment
+
+-keep class com.archos.mediacenter.utils.BrowserLayout {
+  private void setCoverLeftAnim(int);
+}
+
+-keep class com.archos.mediacenter.video.utils.VideoPreferencesFragment
+
+-keep class com.archos.mediacenter.LibAvosReceiver
+-keep class com.archos.mediaprovider.LibAvosReceiver
+
+-keep class com.archos.mediacenter.video.utils.CodecDiscovery {*;}
+
+#### MediaLib ####
+-keep class com.archos.medialib.AvosMediaPlayer {
+  private void postEventFromNative(java.lang.Object, int, int, int, java.lang.Object);
+}
+-keep class com.archos.medialib.Subtitle {
+  public java.lang.Object createTimedTextSubtitle(int, int, java.lang.String);
+  public java.lang.Object createTimedBitmapSubtitle(int, int, int, int, android.graphics.Bitmap);
+}
+-keep class com.archos.medialib.AvosMediaMetadataRetriever {
+  private long mMediaMetadataRetrieverHandle;
+}
+-keep class com.archos.medialib.AvosMediaPlayer {
+  private long mMediaPlayerHandle;
+  private long mNativeWindowHandle;
+}
+-keep class com.archos.medialib.AvosBitmapHelper {
+  public android.graphics.Bitmap createRGBBitmap(int[], int, int, int, int, int, int);
+}
+
+-keep class com.archos.mediacenter.video.browser.Browser** { *; } 
+-keep class org.fourthline.** { *; } 
+-keep interface org.fourthline.** { *; } 
+-keep class org.eclipse.jetty.** { *;}
+-keep interface org.eclipse.jetty.** { *;}
+-keep interface org.seamless.http.** { *;} 
+-keep class com.bubblesoft.** { *;} 
+-keep interface com.bubblesoft.** { *;} 
+
+-keep interface com.google.vrtoolkit.cardboard.** { *; } 
+-dontwarn com.google.vrtoolkit.cardboard.**
+-dontnote com.google.vrtoolkit.cardboard.**
+
+#-keepattributes *Annotation*, InnerClasses
+##################
+
+-dontwarn javax.**
+-dontwarn java.awt.**
+-dontwarn com.sun.**
+-dontwarn org.seamless.**
+-dontwarn com.bubblesoft.**
+-dontnote com.bubblesoft.**
+-dontwarn org.fourthline.**
+-dontnote org.fourthline.**
+-dontwarn org.eclipse.jetty.**
+-dontnote org.eclipse.jetty.**
+-dontnote com.apple.**
+
+# retrofit
+-dontwarn retrofit.**
+-dontnote retrofit.**
+-dontwarn com.google.gson.**
+-dontnote com.google.gson.**
+-dontwarn rx.*
+-keep class com.archos.mediacenter.utils.trakt.** { *; }
+-keep interface com.archos.mediacenter.utils.trakt.** { *; }
+-keep class com.google.gson.** { *; }
+-keep class com.google.inject.** { *; }
+-keep class org.apache.http.** { *; }
+-keep class org.apache.james.mime4j.** { *; }
+-keep class javax.inject.** { *; }
+-keep class retrofit.** { *; }
+-keep interface retrofit.** { *; }
+-keep class rx.** { *; }
+-keep class com.example.testobfuscation.** { *; }
+-keepattributes Signature
+-keep class sun.misc.Unsafe { *; }
+-keep class com.google.gson.examples.android.model.** { *; }
+
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+-keepattributes Signature
+
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.android.gms.**
+
+-dontwarn com.squareup.picasso.OkHttpDownloader
+
+#trakt
+-keep class com.uwetrottmann.trakt.v2.** {*;}
+-keepclassmembers class com.uwetrottmann.trakt.v2.** {*;}
+
+#joda time
+-dontwarn org.joda.convert.**
+-dontwarn org.joda.time.**
+-keep class org.joda.time.** { *; }
+-keep interface org.joda.time.** { *; }
+
+#apache http
+-keep class org.apache.http.** { *; }
+-keepclassmembers class org.apache.http.** {*;}
+-dontwarn org.apache.**
+
+-keep class android.net.http.** { *; }
+-keepclassmembers class android.net.http.** {*;}
+-dontwarn android.net.*
+
+#jsch
+-keep class com.jcraft.jsch.**
+-keep interface com.jcraft.jsch.**
+
+#amazon
+-dontwarn com.amazon.**
+-keep class com.amazon.** {*;}
+-keepattributes *Annotation*

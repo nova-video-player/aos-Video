@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- This is the resume view of the video browser for getting fast
+access to last video played. -->
+
+<com.archos.mediacenter.utils.GlobalResumeView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/global_resume"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/global_resume_video_height"
+    android:focusable="true"
+    >
+
+    <include layout="@layout/nowplaying_header" />
+
+    <ImageView
+        android:id="@+id/global_resume_btn"
+        android:layout_width="@dimen/global_resume_playbutton_width"
+        android:layout_height="@dimen/global_resume_playbutton_height"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/global_resume_icon_padding_left"
+        android:layout_marginRight="@dimen/global_resume_icon_padding_right"
+        android:background="@drawable/nowplaying_btn_background"
+        android:src="@drawable/nowplaying_play"
+        />
+
+    <TextView
+        android:id="@+id/global_resume_text"
+        style="@style/NowPlaying.Video"
+        android:layout_toRightOf="@id/global_resume_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="3dip"
+        android:layout_marginRight="3dip"
+        />
+
+    <ImageView
+        android:id="@+id/global_resume_focus"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/now_playing_tile_pressed"
+        android:visibility="gone"
+        />
+
+</com.archos.mediacenter.utils.GlobalResumeView>

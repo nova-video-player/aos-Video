@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical">
+
+      <!-- Video info -->
+      <TextView
+           android:id="@+id/video_track_label"
+           style="@style/VideoInfoFileInfo.Title"
+           android:paddingTop="10dip"
+           android:drawableLeft="@drawable/label_video_padded"
+           android:text="@string/info_video" />
+      <TextView
+           android:id="@+id/video_track"
+           style="@style/VideoInfoFileInfo"
+           android:paddingLeft="32dip"/>
+      <TextView
+           android:id="@+id/video_decoder"
+           style="@style/VideoInfoFileInfo.Smaller"
+           android:textStyle="italic"
+           android:paddingLeft="32dip"
+           android:visibility="gone"/>
+
+      <!-- Audio tracks info -->
+      <TextView
+           android:id="@+id/audio_track_label"
+           style="@style/VideoInfoFileInfo.Title"
+           android:paddingTop="10dip"
+           android:drawableLeft="@drawable/label_music_padded"
+           android:text="@string/info_audio" />
+      <TextView
+           android:id="@+id/audio_track"
+           style="@style/VideoInfoFileInfo"
+           android:paddingLeft="32dip"/>
+
+      <!-- Subtitles tracks info -->
+      <TextView
+           android:id="@+id/subtitle_track_label"
+           style="@style/VideoInfoFileInfo.Title"
+           android:paddingTop="10dip"
+           android:drawableLeft="@drawable/label_subtitles_padded"
+           android:text="@string/info_subtitle" />
+      <TextView
+           android:id="@+id/subtitle_track"
+           style="@style/VideoInfoFileInfo"
+           android:paddingLeft="32dip"/>
+      <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginLeft="28dip"
+           android:orientation="vertical">
+	      <Button
+	           android:id="@+id/subtitles_online"
+	           style="@style/VideoInfoButton"
+	           android:layout_width="fill_parent"
+	           android:text="@string/get_subtitles_online"/>
+	      <Button
+	           android:id="@+id/subtitles_on_drive"
+	           style="@style/VideoInfoButton"
+	           android:layout_width="fill_parent"
+	           android:text="@string/get_subtitles_on_drive"/>
+	  </LinearLayout>
+
+      <!-- Resume position -->
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+           android:paddingTop="10dip"
+          android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/resume_pos_label"
+            style="@style/VideoInfoFileInfo.Title"
+            android:drawableLeft="@drawable/label_resume_padded"
+            android:text="@string/info_resume" />
+        <TextView
+            android:id="@+id/resume_pos"
+            style="@style/VideoInfoFileInfo"
+            android:paddingLeft="10dip"/>
+      </LinearLayout>
+
+      <!-- Bookmark position -->
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/bookmark_pos_label"
+            style="@style/VideoInfoFileInfo.Title"
+            android:drawableLeft="@drawable/label_bookmark_padded"
+            android:text="@string/info_bookmark" />
+        <TextView
+            android:id="@+id/bookmark_pos"
+            style="@style/VideoInfoFileInfo"
+            android:paddingLeft="10dip"/>
+      </LinearLayout>
+
+    </LinearLayout>

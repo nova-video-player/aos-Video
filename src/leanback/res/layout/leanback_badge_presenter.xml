@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2017 Archos SA
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:minWidth="150dp"
+    android:paddingTop="15dip"
+    android:paddingLeft="15dip"
+    android:paddingRight="15dip"
+    android:paddingBottom="5dip"
+    android:background="@color/lb_basic_card_info_bg_color">
+
+    <ImageView
+        android:id="@+id/image_3d"
+
+        android:layout_width="58dp"
+        android:layout_height="match_parent"
+        android:scaleType="center"
+        android:layout_marginBottom="8dip"
+        android:src="@drawable/badge_3d"
+        />
+    <ImageView  
+        android:id="@+id/image_res"
+        android:layout_width="58dp"
+        android:layout_height="match_parent"
+        android:scaleType="center"
+        android:src="@drawable/badge_1080"
+    />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.Leanback.DetailsDescriptionBody"
+        android:text="Small Text"
+        android:layout_marginBottom="15dip"
+        android:id="@+id/video_format" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+
+        android:id="@+id/audio_format_container"
+        android:layout_height="45dip"></LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        style="@style/TextAppearance.Leanback.DetailsDescriptionBody"
+        android:id="@+id/size" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.Leanback.DetailsDescriptionBody"
+        android:text="Small Text"
+        android:id="@+id/source" />
+
+</LinearLayout>

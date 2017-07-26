@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="left"
+    android:padding="@dimen/video_info_margin_half">
+
+    <EditText
+        android:id="@+id/message_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:layout_marginBottom="20dip"
+        style="@style/textAppearanceMedium"
+        android:singleLine="true"
+        android:inputType="textNoSuggestions" />
+
+    <GridView
+        android:id="@+id/share_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:horizontalSpacing="2dip"
+        android:isScrollContainer="false"
+        android:numColumns="5"
+        android:verticalSpacing="20dip"
+        android:stretchMode="columnWidth" />
+
+</LinearLayout>

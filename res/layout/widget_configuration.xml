@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <!-- Selection of the content type -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dip"
+        android:layout_marginRight="16dip"
+        android:layout_marginTop="16dip"
+        android:gravity="center_horizontal"
+        android:text="@string/content_title"
+        style="@style/textAppearanceMedium" />
+
+    <Spinner
+        android:id="@+id/content_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dip"
+        android:layout_marginRight="16dip"
+        android:minHeight="48dip"
+        android:prompt="@string/content_title" />
+
+    <!-- Validation button -->
+
+    <Button
+        android:id="@+id/validate_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dip"
+        android:layout_marginTop="16dip"
+        android:minWidth="120dip"
+        android:text="@string/validate_configuration" />
+
+</LinearLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/subtitle_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+    <!-- Subtitles -->
+    <com.archos.mediacenter.video.player.SubtitleGfxView android:id="@+id/subtitle_gfx_view"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:clickable="false"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/subtitle_spacer"
+        android:visibility="gone" />
+
+    <com.archos.mediacenter.video.player.Subtitle3DTextView android:id="@+id/subtitle_txt_view"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:clickable="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/subtitle_spacer"
+        android:padding="4dip"
+        android:gravity="center"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="14sp"
+        android:maxLines="4"
+        android:textColor="#ffffffff"
+        android:visibility="gone" />
+
+    <com.archos.mediacenter.video.player.SubtitleSpacerView android:id="@+id/subtitle_spacer"
+        android:layout_width="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_height="@dimen/subtitles_paddingBottom"
+        android:visibility="visible"
+    />
+
+</RelativeLayout>

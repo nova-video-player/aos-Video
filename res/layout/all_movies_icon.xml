@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="@dimen/all_movies_icon_width"
+        android:layout_height="@dimen/all_movies_icon_height"
+        android:layout_gravity="center" >
+
+        <ImageView
+            android:id="@+id/poster1"
+            android:layout_width="@dimen/all_movies_icon_poster_width"
+            android:layout_height="@dimen/all_movies_icon_poster_height"
+            android:layout_alignParentStart="true"
+            android:scaleType="centerCrop"/>
+
+        <ImageView
+            android:id="@+id/poster2"
+            android:layout_width="@dimen/all_movies_icon_poster_width"
+            android:layout_height="@dimen/all_movies_icon_poster_height"
+            android:layout_toEndOf="@id/poster1"
+            android:scaleType="centerCrop"/>
+
+        <ImageView
+            android:id="@+id/poster3"
+            android:layout_width="@dimen/all_movies_icon_poster_width"
+            android:layout_height="@dimen/all_movies_icon_poster_height"
+            android:layout_toEndOf="@id/poster2"
+            android:scaleType="centerCrop"/>
+
+        <ImageView
+            android:id="@+id/poster4"
+            android:layout_width="@dimen/all_movies_icon_poster_width"
+            android:layout_height="@dimen/all_movies_icon_poster_height"
+            android:layout_toEndOf="@id/poster3"
+            android:scaleType="centerCrop"/>
+
+        <ImageView
+            android:id="@+id/poster5"
+            android:layout_width="@dimen/all_movies_icon_poster_width"
+            android:layout_height="@dimen/all_movies_icon_poster_height"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/poster1"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/poster6"
+            android:layout_width="@dimen/all_movies_icon_poster_width"
+            android:layout_height="@dimen/all_movies_icon_poster_height"
+            android:layout_alignTop="@id/poster5"
+            android:layout_toEndOf="@id/poster5"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/poster7"
+            android:layout_width="@dimen/all_movies_icon_poster_width"
+            android:layout_height="@dimen/all_movies_icon_poster_height"
+            android:layout_alignTop="@id/poster6"
+            android:layout_toEndOf="@id/poster6"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/poster8"
+            android:layout_width="@dimen/all_movies_icon_poster_width"
+            android:layout_height="@dimen/all_movies_icon_poster_height"
+            android:layout_alignTop="@id/poster7"
+            android:layout_toEndOf="@id/poster7"
+            android:scaleType="centerCrop" />
+    </RelativeLayout>
+
+</FrameLayout>

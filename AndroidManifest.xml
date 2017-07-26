@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2007 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.archos.mediacenter.video"
+    android:installLocation="auto"
+    android:sharedUserId="archos.mediacenter" >
+    
+    <supports-screens android:largeScreens="true" />
+
+    <original-package android:name="${applicationId}" />
+
+    <uses-sdk tools:overrideLibrary="android.support.v17.leanback" />
+
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
+    <!-- You must mark this feature as optional in order to make the app available for Android TV -->
+    <uses-feature android:name="android.hardware.microphone" android:required="false"/>
+
+    <!--<uses-permission android:name="android.permission.WRITE_SETTINGS" />-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE" / -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <!-- uses-permission android:name="android.permission.DEVICE_POWER" / -->
+    <!-- uses-permission android:name="android.permission.INJECT_EVENTS" / -->
+    <!-- uses-permission android:name="android.permission.STATUS_BAR" / -->
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <!-- uses-permission android:name="android.permission.ARCHOS_READ_RAWFS" / -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <application
+        android:name=".CustomApplication"
+        android:allowTaskReparenting="true"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/video2"
+        android:label="@string/video"
+        android:largeHeap="true" >
+        <meta-data
+            android:name="to.dualscreen"
+            android:value="true" />
+
+        <!--
+        Make the free version of Archos Video available for Archos devices
+        only by asking for this archos framework library
+        -->
+        <!-- <uses-library android:name="com.archos.frameworks" /> -->
+
+        <activity
+            android:name=".EntryActivity"
+            android:icon="@mipmap/video2"
+            android:label="@string/video"
+            android:launchMode="singleTask"
+            android:exported="true"
+            android:taskAffinity="archos.task.video"
+            android:theme="@style/ArchosThemeBlue" >
+        </activity>
+
+        <activity
+            android:name=".browser.MainActivity"
+            android:configChanges="keyboard|keyboardHidden"
+            android:icon="@mipmap/video2"
+            android:banner="@drawable/androidtv_banner"
+            android:label="@string/video"
+            android:launchMode="singleTask"
+            android:taskAffinity="archos.task.video"
+            android:theme="@style/ArchosThemeBlueCompatNoActionBar"
+            android:windowSoftInputMode="adjustPan" >
+            <!-- Points to searchable meta data. -->
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value="com.archos.mediacenter.video.browser.QueryBrowserActivityVideo" />
+
+            </activity>
+
+        <!-- BrowserActivityVideo used to be the entry point. We keep this alias so that old shortcuts are still working -->
+        <activity-alias
+            android:name="${applicationId}.browser.BrowserActivityVideo"
+            android:targetActivity=".EntryActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <activity-alias
+            android:name=".browser.MainActivityStereo"
+            android:icon="@mipmap/video2"
+            android:label="@string/video"
+            android:targetActivity=".browser.MainActivity" >
+
+            <!--
+              <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+          </intent-filter>
+            -->
+
+
+            <!-- Points to searchable meta data. -->
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value="com.archos.mediacenter.video.browser.QueryBrowserActivityVideo" />
+            <meta-data
+                android:name="stereo_mode"
+                android:value="true" />
+        </activity-alias>
+
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".browser.QueryBrowserActivityVideo"
+            android:icon="@mipmap/video2"
+            android:theme="@style/ArchosThemeBlueCompat" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.MEDIA_SEARCH" />
+                <action android:name="com.google.android.gms.actions.SEARCH_ACTION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_video" />
+        </activity>
+
+        <!-- Provides search suggestions for video search. -->
+        <provider
+            android:name="com.archos.mediacenter.video.browser.SearchProviderVideo"
+            android:authorities="browser.SearchProviderVideo" />
+
+        <activity
+            android:name=".player.PlayerActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize"
+            android:finishOnTaskLaunch="true"
+            android:taskAffinity="archos.task.video"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"
+            android:icon="@mipmap/video2"
+            android:label="@string/video"
+            android:theme="@style/ArchosThemeBlueCompatOverlay" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="mms" />
+                <data android:scheme="mmsh" />
+                <data android:scheme="rtsp" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="video/*" />
+                <data android:scheme="mms" />
+                <data android:scheme="mmsh" />
+                <data android:scheme="rtsp" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="video/*" />
+                <data android:mimeType="application/x-shockwave-flash" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="" />
+                <data android:scheme="file" />
+                <data android:scheme="http" />
+                <data android:scheme="smb" />
+                <data android:mimeType="video/*" />
+                <data android:mimeType="application/x-shockwave-flash" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="" />
+                <data android:scheme="file" />
+                <data android:scheme="ftp" />
+                <data android:scheme="content" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="*" />
+                <data android:pathPattern=".*\\.3g2" />
+                <data android:pathPattern=".*\\.3gp" />
+                <data android:pathPattern=".*\\.3gp2" />
+                <data android:pathPattern=".*\\.3gpp" />
+                <data android:pathPattern=".*\\.asf" />
+                <data android:pathPattern=".*\\.avi" />
+                <data android:pathPattern=".*\\.divx" />
+                <data android:pathPattern=".*\\.flv" />
+                <data android:pathPattern=".*\\.f4v" />
+                <data android:pathPattern=".*\\.qt" />
+                <data android:pathPattern=".*\\.m4v" />
+                <data android:pathPattern=".*\\.mtv" />
+                <data android:pathPattern=".*\\.mkv" />
+                <data android:pathPattern=".*\\.mp4" />
+                <data android:pathPattern=".*\\.mpeg" />
+                <data android:pathPattern=".*\\.mpe" />
+                <data android:pathPattern=".*\\.mpg" />
+                <data android:pathPattern=".*\\.mov" />
+                <data android:pathPattern=".*\\.ogm" />
+                <data android:pathPattern=".*\\.ogv" />
+                <data android:pathPattern=".*\\.ogx" />
+                <data android:pathPattern=".*\\.vob" />
+                <data android:pathPattern=".*\\.wtv" />
+                <data android:pathPattern=".*\\.webm" />
+                <data android:pathPattern=".*\\.3G2" />
+                <data android:pathPattern=".*\\.3GP" />
+                <data android:pathPattern=".*\\.3GP2" />
+                <data android:pathPattern=".*\\.3GPP" />
+                <data android:pathPattern=".*\\.ASF" />
+                <data android:pathPattern=".*\\.AVI" />
+                <data android:pathPattern=".*\\.DIVX" />
+                <data android:pathPattern=".*\\.FLV" />
+                <data android:pathPattern=".*\\.F4V" />
+                <data android:pathPattern=".*\\.QT" />
+                <data android:pathPattern=".*\\.M4V" />
+                <data android:pathPattern=".*\\.MTV" />
+                <data android:pathPattern=".*\\.MKV" />
+                <data android:pathPattern=".*\\.MP4" />
+                <data android:pathPattern=".*\\.MPEG" />
+                <data android:pathPattern=".*\\.MPE" />
+                <data android:pathPattern=".*\\.MPG" />
+                <data android:pathPattern=".*\\.MOV" />
+                <data android:pathPattern=".*\\.OGV" />
+                <data android:pathPattern=".*\\.VOB" />
+                <data android:pathPattern=".*\\.WTV" />
+                <data android:pathPattern=".*\\.WEBM" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="archos.intent.action.RESUME_VIDEOPLAYER" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="video/*" />
+                <data android:mimeType="application/x-shockwave-flash" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".utils.VideoInfoActivity2"
+            android:excludeFromRecents="true"
+            android:hardwareAccelerated="true"
+            android:theme="@style/Theme.Transparent" >
+        </activity>
+        <activity
+            android:name=".autoscraper.AutoScraperActivity"
+            android:configChanges="orientation|screenLayout|screenSize"
+            android:excludeFromRecents="true"
+            android:icon="@mipmap/video2"
+            android:label="@string/scraper_notification_title"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.DialogMinWidth" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".utils.SubtitlesWizardActivity"
+            android:excludeFromRecents="true"
+            android:icon="@mipmap/video2"
+            android:launchMode="singleTask"
+            android:theme="@style/ArchosThemeBlue" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".utils.credentialsmanager.CredentialsManagerPreferenceActivity"
+            android:excludeFromRecents="true"
+            android:icon="@mipmap/video2"
+            android:launchMode="singleTask"
+            android:theme="@style/ArchosThemeBlue" >
+
+        </activity>
+        <activity
+            android:name=".utils.VideoPreferencesActivity"
+            android:configChanges="orientation|screenLayout"
+            android:excludeFromRecents="true"
+            android:icon="@mipmap/video2"
+            android:label="@string/preferences"
+            android:launchMode="singleTop"
+            android:theme="@style/ArchosThemeBlueCompat" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".utils.VideoPreferencesLicencesActivity"
+            android:configChanges="orientation|screenLayout"
+            android:excludeFromRecents="true"
+            android:icon="@mipmap/video2"
+            android:label="@string/preferences"
+            android:launchMode="singleTop"
+            android:theme="@style/ArchosThemeBlue" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <service
+            android:name=".player.cast.CastService"
+         />
+        <activity
+            android:name=".browser.VideoPicker"
+            android:icon="@mipmap/video2"
+            android:label="@string/video_picker_title"
+            android:theme="@style/ArchosThemeBlue" >
+
+            <!-- Someone asks to get content of any of the video types we support. -->
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+
+                <data android:mimeType="video/*" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".utils.SubtitlesDownloaderActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.Transparent" />
+        <activity
+            android:name=".player.SDKNotSupportedDialogActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.Transparent" />
+        <activity
+            android:name="com.archos.filecorelibrary.samba.SharedPasswordRequest"
+            android:theme="@style/Theme.Transparent" />
+        <activity
+            android:name="com.archos.mediacenter.utils.HelpOverlayActivity"
+            android:configChanges="orientation|screenSize"
+            android:taskAffinity="archos.task.video"
+            android:theme="@style/Theme.HelpOverlay" >
+        </activity>
+
+
+        <service android:name="com.archos.mediacenter.upnp.ArchosUpnpServiceImpl" />
+        <service android:name=".browser.TorrentObserverService" />
+
+        <service android:name=".player.cast.CastPlayerService" android:exported="false"/>
+        <service android:name=".player.FloatingPlayerService" android:exported="false"/>
+        <service android:name=".player.PlayerService" />
+
+        <service android:name="com.archos.mediascraper.AutoScrapeService" />
+        <service android:name="com.archos.mediacenter.video.browser.FileManagerService" />
+        <receiver android:name="com.archos.mediacenter.LibAvosReceiver" >
+            <intent-filter>
+                <action android:name="com.archos.mediacenter.NEW_PLUGINS" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.archos.mediacenter.DEBUG" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.archos.mediacenter.DEBUG_SCAN" />
+
+                <data android:scheme="file" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.archos.mediacenter.AVSH" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.archos.mediacenter.RM_XML" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.archos.mediaprovider.video.NetworkAutoRefresh" >
+            <intent-filter>
+                <action android:name="com.archos.mediaprovider.video.NetworkAutoRefresh_force" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.archos.mediaprovider.video.NetworkAutoRefresh" />
+            </intent-filter>
+        </receiver>
+
+
+        <!-- ArchosMediaProvider & related, all running in a separate process -->
+        <!-- ContentProvider for media -->
+        <provider
+            android:name="com.archos.mediaprovider.video.VideoProvider"
+            android:authorities="com.archos.media.video;com.archos.media.scraper"
+            android:exported="true" />
+        <!-- BroadcastReceiver to trigger database import -->
+        <receiver android:name="com.archos.mediaprovider.video.VideoStoreImportReceiver" >
+
+            <!-- Android broadcasts that start / stop importing -->
+            <!-- TODO: these should be removed too -->
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_SCANNER_STARTED" />
+
+                <data android:scheme="file" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_SCANNER_FINISHED" />
+
+                <data android:scheme="file" />
+            </intent-filter>
+            <!-- Android broadcast that stops importing -->
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+            </intent-filter>
+            <!-- Our broadcasts that trigger scanner actions -->
+            <!-- Starts network indexing -->
+            <intent-filter>
+                <action android:name="archos.media.intent.action.VIDEO_SCANNER_SCAN_FILE" />
+                <action android:name="archos.intent.action.MEDIA_SCANNER_SCAN_FILE" />
+                <data android:scheme="smb" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+
+                <data android:scheme="sftp" />
+                <data android:scheme="ftp" />
+                <data android:scheme="ftps" />
+                <data android:scheme="upnp" />
+                <data android:scheme="ftps" />
+                <data android:scheme="content" />
+
+            </intent-filter>
+            <!-- Starts network un-indexing -->
+            <intent-filter>
+                <action android:name="archos.media.intent.action.VIDEO_SCANNER_REMOVE_FILE" />
+                <action android:name="archos.intent.action.MEDIA_SCANNER_REMOVE_FILE" />
+                <data android:scheme="sftp" />
+                <data android:scheme="ftp" />
+                <data android:scheme="ftps" />
+                <data android:scheme="upnp" />
+                <data android:scheme="file" />
+                <data android:scheme="smb" />
+                <data android:scheme="content" />
+            </intent-filter>
+            <!-- Triggers metadata update -->
+            <intent-filter>
+                <action android:name="archos.media.intent.action.VIDEO_SCANNER_METADATA_UPDATE" />
+                <data android:scheme="sftp" />
+                <data android:scheme="ftp" />
+                <data android:scheme="ftps" />
+                <data android:scheme="file" />
+                <data android:scheme="smb" />
+                <data android:scheme="upnp" />
+                <data android:scheme="content" />
+
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.archos.mediaprovider.MediaThumbnailService"
+            android:process=":scanner" />
+        <service
+            android:name="com.archos.mediaprovider.MediaRetrieverService"
+            android:process=":scanner" />
+
+        <!-- Service doing the import -->
+        <service android:name="com.archos.mediaprovider.video.VideoStoreImportService" />
+
+        <!-- Service doing SMB scanning -->
+        <service android:name="com.archos.mediaprovider.video.NetworkScannerServiceVideo" />
+
+        <!-- Service doing Trakt.tv stuff -->
+        <service android:name="com.archos.mediacenter.utils.trakt.TraktService" />
+
+        <!-- MediaScraper -->
+        <receiver android:name="com.archos.mediascraper.receiver.ScraperReceiver" >
+            <intent-filter>
+                <action android:name="archos.intent.action.MEDIA_LIBRARY_FLUSH" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="archos.intent.action.MEDIASCANNER_MEDIASCRAPER_RESET" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name="com.archos.mediascraper.settings.ScraperPreferences" />
+        <activity android:name="com.archos.filecorelibrary.samba.SambaPreferenceActivity" />
+
+        <activity
+            android:name=".info.VideoInfoActivity"
+            android:theme="@style/Theme.TransparentCompat">
+        </activity>
+        <activity
+            android:name=".info.VideoInfoScraperActivity"
+            android:theme="@style/ArchosThemeBlue" />
+        <activity
+            android:name=".info.VideoInfoPosterBackdropActivity"
+            android:theme="@style/ArchosThemeBlue" />
+        <activity
+            android:name=".player.TorrentLoaderActivity"
+            android:theme="@style/Theme.Transparent" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:pathPattern=".*\\.torrent"
+                    android:scheme="http" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:pathPattern=".*\\.torrent"
+                    android:scheme="https" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern=".*\\.torrent"
+                    android:scheme="http" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern=".*\\.torrent"
+                    android:scheme="https" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:mimeType="application/x-bittorrent"
+                    android:scheme="http" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:mimeType="application/x-bittorrent"
+                    android:scheme="https" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern=".*\\.torrent"
+                    android:scheme="file" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="application/x-bittorrent" />
+                <data
+                    android:mimeType="application/x-bittorrent"
+                    android:scheme="file" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="magnet" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".utils.FolderPicker"
+            android:exported="true"
+            android:theme="@style/Theme.TransparentCompat" />
+
+        <!-- Shows/hides JCIFS smb:// shares -->
+        <service android:name="com.archos.mediaprovider.video.RemoteStateService" />
+
+        <!-- keeps track of network scanning state -->
+        <receiver android:name="com.archos.mediaprovider.video.NetworkScannerReceiver" >
+            <intent-filter>
+                <action android:name="archos.media.intent.action.VIDEO_SCANNER_SCAN_STARTED" />
+                <data android:scheme="sftp" />
+                <data android:scheme="ftp" />
+                <data android:scheme="upnp" />
+                <data android:scheme="ftps" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:scheme="smb" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="archos.media.intent.action.VIDEO_SCANNER_SCAN_FINISHED" />
+                <data android:scheme="sftp" />
+                <data android:scheme="ftp" />
+                <data android:scheme="upnp" />
+                <data android:scheme="ftps" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:scheme="smb" />
+            </intent-filter>
+        </receiver>
+
+
+        <receiver android:name="com.archos.filecorelibrary.ExtStorageReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
+                <action android:name="android.intent.action.MEDIA_EJECT" />
+                <action android:name="android.intent.action.MEDIA_BAD_REMOVAL" />
+
+                <data android:scheme="file" />
+            </intent-filter>
+        </receiver>
+
+        <!-- small service that can be told to export a bunch of nfo files -->
+        <service
+            android:name="com.archos.mediascraper.NfoExportService"
+            android:exported="false" />
+        <service
+            android:name=".browser.UpdateRecommendationsService"
+            android:enabled="true" />
+
+        <!-- chromecast support -->
+
+        <receiver android:name="com.google.android.libraries.cast.companionlibrary.remotecontrol.VideoIntentReceiver" />
+        <service
+            android:name="com.google.android.libraries.cast.companionlibrary.notification.VideoCastNotificationService" />
+        <service android:name="com.google.android.libraries.cast.companionlibrary.cast.reconnection.ReconnectionService"/>
+
+    </application>
+
+</manifest>

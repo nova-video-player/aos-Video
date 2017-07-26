@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.github.ksoichiro.android.observablescrollview.ObservableScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/scrollView" >
+
+    <RelativeLayout  android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scroll_content"
+        android:paddingTop="@dimen/video_info_margin_half"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/info_activity_horizontal_margin"
+        android:paddingRight="@dimen/info_activity_horizontal_margin">
+        <FrameLayout
+            android:id="@+id/poster_action_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include
+
+                layout="@layout/video_info2_action_poster_layout"/>
+
+
+        </FrameLayout>
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:gravity="left"
+            android:layout_gravity="bottom"
+            android:id="@+id/buttons_container"
+            android:layout_marginTop="@dimen/video_info_cardview_top_margin"
+            android:layout_below="@+id/poster_action_container"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            card_view:cardCornerRadius="@dimen/video_info_cardview_corner"
+            card_view:cardElevation="@dimen/video_info_cardview_elevation"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:text="@string/leanback_scrap"
+                android:id="@+id/scrap_button"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentStart="false"
+                android:background="@drawable/transparent_ripple"
+                android:visibility="visible" />
+            <Button
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:text="@string/video_browser_index_file"
+                android:id="@+id/index_button"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentStart="false"
+                android:background="@drawable/transparent_ripple"
+                />
+
+        </android.support.v7.widget.CardView>
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/video_info2_scraper_plot"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginTop="@dimen/video_info_cardview_top_margin"
+
+            android:layout_below="@+id/buttons_container"
+            android:id="@+id/scraper_plot_container"
+            android:layout_alignParentStart="true"
+            />
+        <HorizontalScrollView
+            android:id="@+id/source_container"
+            android:layout_below="@+id/scraper_plot_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <LinearLayout
+                android:id="@+id/source_layout"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"></LinearLayout>
+        </HorizontalScrollView>
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/video_info2_file"
+            android:id="@+id/info_file_container"
+            android:layout_below="@+id/source_container"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/video_info_cardview_top_margin"
+            />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/video_info2_subtitles"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_below="@+id/info_file_container"
+            android:id="@+id/subtitles_container"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/video_info_cardview_top_margin"
+            />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/video_info2_scraper"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_below="@+id/subtitles_container"
+            android:id="@+id/scraper_container"
+            android:layout_alignParentStart="true"
+            />
+
+    </RelativeLayout>
+</com.github.ksoichiro.android.observablescrollview.ObservableScrollView>

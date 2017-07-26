@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<View xmlns:android="http://schemas.android.com/apk/res/android"
+        android:minWidth="@dimen/track_menu_minWidth"
+        android:background="#ff303030"
+        android:layout_width="match_parent"
+        android:layout_height="2px" />

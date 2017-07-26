@@ -1,0 +1,51 @@
+<!--
+  Copyright 2017 Archos SA
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="resume"
+        android:enabled="true"
+        android:icon="@drawable/shortcut_resume"
+        android:shortcutShortLabel="@string/resume"
+        >
+        <intent
+            android:action="com.archos.mediacenter.video.action_resume"
+            android:targetPackage="com.archos.mediacenter.videocommunity"
+            android:targetClass="com.archos.mediacenter.video.browser.MainActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="movies"
+        android:enabled="true"
+        android:icon="@drawable/shortcut_recently_played"
+        android:shortcutShortLabel="@string/recently_played"
+        >
+        <intent
+            android:action="com.archos.mediacenter.video.action_recently_played"
+            android:targetPackage="com.archos.mediacenter.videocommunity"
+            android:targetClass="com.archos.mediacenter.video.browser.MainActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="tvshows"
+        android:enabled="true"
+        android:icon="@drawable/shortcut_recently_added"
+        android:shortcutShortLabel="@string/recently_added"
+        >
+        <intent
+            android:action="com.archos.mediacenter.video.action_recently_added"
+            android:targetPackage="com.archos.mediacenter.videocommunity"
+            android:targetClass="com.archos.mediacenter.video.browser.MainActivity" />
+    </shortcut>
+</shortcuts>
+

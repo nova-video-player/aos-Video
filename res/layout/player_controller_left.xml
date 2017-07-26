@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Volume Bar -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/volume_bar"
+    android:layout_width="@dimen/player2014_bar_width"
+    android:layout_height="fill_parent"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:background="@drawable/player_bar_2014"
+    android:descendantFocusability="blocksDescendants"
+    android:focusable="false"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:visibility="gone"
+    tools:context=".video.player.PlayerActivity" >
+
+    <com.archos.mediacenter.utils.RepeatingImageButton
+        android:id="@+id/volume_up"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dip"
+        android:layout_marginTop="@dimen/volume_button_vertical_margin"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/volume_up" />
+
+    <com.archos.mediacenter.utils.seekbar.ArchosProgressSlider
+        android:id="@+id/volume_level"
+        style="@style/PlayerSliderVertical"
+        android:layout_width="wrap_content"
+        android:layout_height="0dip"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:paddingBottom="4dip"
+        android:paddingLeft="22dip"
+        android:paddingRight="22dip"
+        android:paddingTop="4dip" />
+
+    <com.archos.mediacenter.utils.RepeatingImageButton
+        android:id="@+id/volume_down"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dip"
+        android:layout_marginTop="0dip"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/volume_down" />
+
+</LinearLayout>

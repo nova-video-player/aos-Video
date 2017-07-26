@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.archos.mediacenter.video.player.tvmenu.TVMenuSeparator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingBottom="8dp"
+    android:paddingLeft="8dp"
+     android:focusable="true"
+    android:paddingRight="8dp"
+    android:paddingTop="8dp" >
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+         android:focusable="false"
+        android:background="#606060" />
+
+</com.archos.mediacenter.video.player.tvmenu.TVMenuSeparator>

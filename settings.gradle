@@ -1,0 +1,5 @@
+include ':FileCoreLibrary'
+project(':FileCoreLibrary').projectDir = new File(settingsDir, '../FileCoreLibrary')
+
+include ':MediaLib'
+project(':MediaLib').projectDir = new File(settingsDir, '../MediaLib')

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:background="@drawable/button_selector_holo_dark"
+    android:layout_height="wrap_content">
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="@dimen/subtitle_color_picker_box_size"
+        android:layout_height="@dimen/subtitle_color_picker_box_size">
+        <FrameLayout
+            android:id="@+id/color"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dip"
+            android:background="#ff000000"></FrameLayout>
+    </FrameLayout>
+</FrameLayout>

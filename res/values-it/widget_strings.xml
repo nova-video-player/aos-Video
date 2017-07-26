@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="empty_view_text_video">Nessun video trovato</string>
+    <string name="cant_play_video">Impossibile riprodurre questo video</string>
+    <string name="content_title">Tipo di contenuto:</string>
+    <string name="content_all_videos">Tutti i video</string>
+    <string name="content_recently_added">Aggiunti di recente</string>
+    <string name="content_recently_played">Riprodotti di recente</string>
+    <string name="validate_configuration">OK</string>
+</resources>

@@ -1,0 +1,75 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/processed_item_container"
+    android:layout_width="fill_parent"
+    android:layout_height="@dimen/auto_scraper_poster_item_height"
+    android:background="@drawable/list_item_background"
+    android:gravity="center_vertical" >
+
+    <!-- Poster on the left -->
+
+    <ImageView
+        android:id="@+id/processed_poster"
+        android:layout_width="@dimen/auto_scraper_poster_width"
+        android:layout_height="@dimen/auto_scraper_poster_height"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/auto_scraper_poster_margin_bottom"
+        android:layout_marginLeft="@dimen/auto_scraper_poster_margin_left"
+        android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name"
+        android:layout_marginTop="@dimen/auto_scraper_poster_margin_top"
+        android:scaleType="center" />
+
+    <!-- Text line 1 = name -->
+
+    <TextView
+        android:id="@+id/processed_name"
+        style="@style/BrowserText.Name"
+        android:layout_toRightOf="@id/processed_poster"
+        android:paddingTop="8dip" />
+
+    <!-- Text line 2 = duration -->
+
+    <TextView
+        android:id="@+id/processed_duration"
+        style="@style/BrowserText.Info.InfoBlue"
+        android:layout_below="@id/processed_name"
+        android:layout_toRightOf="@id/processed_poster" />
+
+    <!-- Text line 3 = genre -->
+
+    <TextView
+        android:id="@+id/processed_genre"
+        style="@style/BrowserText.Details"
+        android:layout_below="@id/processed_duration"
+        android:layout_marginTop="8dip"
+        android:layout_toRightOf="@id/processed_poster"
+        android:ellipsize="end"
+        android:singleLine="true" />
+
+    <!-- Text line 4 = release date -->
+
+    <TextView
+        android:id="@+id/processed_date"
+        style="@style/BrowserText.Details"
+        android:layout_below="@id/processed_genre"
+        android:layout_toRightOf="@id/processed_poster" />
+
+    <!-- Text line 5 = rating -->
+
+    <TextView
+        android:id="@+id/processed_rating"
+        style="@style/BrowserText.Details"
+        android:layout_below="@id/processed_date"
+        android:layout_toRightOf="@id/processed_poster" />
+
+    <!-- Button  allowing to reject the infos retrieved -->
+
+    <Button
+        android:id="@+id/processed_reject_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/scrap_remove" />
+
+</RelativeLayout>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2017 Archos SA
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/lb_details_description_title"
+        style="?attr/detailsDescriptionTitleStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Title can be long"
+        />
+
+    <LinearLayout
+        android:id="@+id/episode_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lb_details_description_title"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/episode_sxex"
+            style="?attr/detailsDescriptionTitleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dip"
+            android:text="S1E3"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/episode_title"
+            style="?attr/detailsDescriptionTitleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Episode title can be long too"
+            android:textSize="22sp"
+            />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/details_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/episode_group"
+        android:layout_marginBottom="12dip"
+        android:layout_marginTop="12dip"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/date"
+            style="?attr/detailsDescriptionSubtitleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="32dip"
+            android:maxLines="2"
+            android:singleLine="false"
+            android:text="2015"
+            />
+        <TextView
+            android:id="@+id/duration"
+            style="?attr/detailsDescriptionSubtitleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="32dip"
+            android:layout_toRightOf="@+id/date"
+            android:text="1h35"
+            />
+
+        <TextView
+            android:id="@+id/rating"
+            style="?attr/detailsDescriptionSubtitleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/duration"
+            android:layout_marginRight="64dip"
+            android:drawableLeft="@drawable/little_star"
+            android:drawablePadding="4dip"
+            android:text="7,3"
+            />
+
+
+        <ImageView
+            android:id="@+id/trakt_watched"
+            android:layout_width="wrap_content"
+            android:layout_toRightOf="@+id/rating"
+            android:layout_height="wrap_content"
+            android:src="@drawable/trakt_watched" />
+
+        <LinearLayout
+            android:id="@+id/badges"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:animateLayoutChanges="true"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/badge_3d"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dip"
+                android:src="@drawable/badge_3d"
+                android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/badge_resolution"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dip"
+                android:src="@drawable/badge_1080"
+                android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/badge_audio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dip"
+                android:src="@drawable/badge_5_1"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- body maxLines is changed programmatically depending on the number of lines of the title -->
+    <TextView
+        android:id="@+id/lb_details_description_body"
+        style="?attr/detailsDescriptionBodyStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/details_group"
+        android:maxLines="3"
+        android:text="blabla blibli lalala le text"
+        />
+</RelativeLayout>

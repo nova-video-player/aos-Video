@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:focusable="true"
+    android:layout_marginTop="5dip"
+    android:background="@drawable/recycler_item_background"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="center_vertical" >
+
+    <RelativeLayout
+        android:id="@+id/left_area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true">
+
+        <!-- Left area = thumbnail/poster -->
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="70dip"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/video_list_thumbnail_margin_bottom"
+            android:layout_marginLeft="@dimen/video_list_thumbnail_margin_left"
+
+            android:layout_marginTop="@dimen/video_list_thumbnail_margin_top"
+            android:src="@drawable/filetype_video_folder_indexed"
+            />
+
+    </RelativeLayout>
+
+    <!--
+    (i) symbol.
+    NOTE: Active area larger than the icon itself due to different left and right padding
+-->
+
+    <ImageButton
+        android:id="@+id/refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/video_list_thumbnail_height"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="false"
+        android:layout_centerVertical="true"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:background="@drawable/list_selector_holo_dark"
+        android:src="@drawable/label_refresh" />
+
+    <!--
+         Bottom area = progressbar + info icons
+         NOTE: negative right margin to be close to the (i) icon despite it's large left padding (see above)
+    -->
+
+    <!--
+         Middle area = text info
+         NOTE: negative right margin to be go over the (i) icon despite it's large left padding
+    -->
+    <RelativeLayout
+        android:paddingLeft="@dimen/content_list_space_between_thumbnail_and_name"
+        android:layout_width="fill_parent"
+        android:layout_toRightOf="@id/left_area"
+        android:layout_toLeftOf="@id/refresh"
+        android:layout_height="wrap_content"
+        android:descendantFocusability="blocksDescendants"
+        android:gravity="center_vertical" >
+    <TextView
+        android:id="@+id/name"
+        style="@style/BrowserText.Name.Video"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignWithParentIfMissing="true"
+        android:singleLine="false"
+        android:layout_marginRight="-30dip"
+        android:text="this is"
+        android:layout_toLeftOf="@id/expanded"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/second"
+        style="@style/BrowserText.Info.Video"
+        android:layout_alignWithParentIfMissing="true"
+        android:singleLine="false"
+        android:maxLines="3"
+        android:text="this is a pretty long text just for testinf purposes"
+        android:layout_below="@id/name"
+        android:layout_marginRight="3dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    </RelativeLayout>
+</RelativeLayout>

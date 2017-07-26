@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- /*** Copyright 2007, The Android Open Source Project**** Licensed under the Apache License, Version 2.0 (the "License"); ** you may not use this file except in compliance with the License. ** You may obtain a copy of the License at **** http://www.apache.org/licenses/LICENSE-2.0 **** Unless required by applicable law or agreed to in writing, software ** distributed under the License is distributed on an "AS IS" BASIS, ** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. ** See the License for the specific language governing permissions and ** limitations under the License.*/ -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string msgid="5548732936480723311" name="fast_scroll_alphabet">" ABCDEFGHIJKLMNOPQRSTUVWXYZ"</string>
+    <string msgid="2854921021814550018" name="play_selection">"播放"</string>
+    <string msgid="1016971653383739344" name="search_title">"搜索"</string>
+    <string msgid="8979658707407220934" name="goto_start">"音乐库"</string>
+    <string name="unknown_track_name">未知</string>
+    <string name="info">信息</string>
+    <string name="refresh_servers_list">刷新服务器列表</string>
+    <string name="cannot_list">不能列出内容</string>
+    <string name="add_to_shortcuts">创建首页快捷方式</string>
+    <string name="remove_from_shortcuts">删除快捷方式</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="abort">退出</string>
+    <string name="notification_mode">通知</string>
+</resources>

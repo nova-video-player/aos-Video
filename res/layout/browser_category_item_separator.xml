@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/SecondaryLine"
+    android:id="@+id/category_name"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="36dip"
+    android:gravity="center_vertical"
+    android:clickable="false"
+    android:focusable="false"
+    android:paddingLeft="8dip"
+    android:paddingRight="8dip"
+    android:background="@drawable/category_title_background"
+
+    android:textColor="@color/lightblue500"
+    android:singleLine="true"
+     />

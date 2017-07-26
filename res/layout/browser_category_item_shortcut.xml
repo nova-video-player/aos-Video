@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/SecondaryLine"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="48dip"
+    android:gravity="center_vertical"
+    android:drawablePadding="24dip"
+    android:paddingLeft="16dip"
+    android:paddingRight="16dip"
+    android:background="@drawable/category_item_background_normal"
+
+    android:maxLines="2"
+    />

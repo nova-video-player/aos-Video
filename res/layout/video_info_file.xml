@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:gravity="left"
+		android:padding="@dimen/video_info_margin_half">
+
+    <TextView android:id="@+id/filename"
+        android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+        style="@style/textAppearanceLarge"/>
+
+    <TextView android:id="@+id/fullpath"
+        android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+        style="@style/textAppearanceSmall"/>
+
+    <include
+        android:id="@+id/play_button"
+        layout="@layout/video_info_play_button"
+        android:visibility="gone" />
+
+    <LinearLayout
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:paddingTop="10dip"
+           android:orientation="horizontal">
+	    <TextView
+	         android:id="@+id/duration_label"
+	         style="@style/VideoInfoFileInfo.Title"
+	         android:text="@string/info_duration" />
+	    <TextView
+	         android:id="@+id/duration"
+	         style="@style/VideoInfoFileInfo"
+	         android:layout_marginLeft="10dip"
+	         android:layout_marginRight="50dip"/>
+	    <TextView
+	         android:id="@+id/filesize_label"
+	         style="@style/VideoInfoFileInfo.Title"
+	         android:text="@string/file_info_label_size" />
+	    <TextView
+	         android:id="@+id/filesize"
+	         style="@style/VideoInfoFileInfo"
+	         android:layout_marginLeft="10dip"/>
+    </LinearLayout>
+
+	<!-- Progress Spinner VideoMetaData -->
+	<include
+		layout="@layout/audio_video_info_processing"
+		android:id="@+id/audio_video_info_processing"
+		android:visibility="gone" />
+
+	<!-- VideoMetaData Info Layout -->
+	<include
+		layout="@layout/audio_video_info"
+		android:id="@+id/audio_video_info"
+		android:visibility="gone" />
+
+	</LinearLayout>
+</ScrollView>

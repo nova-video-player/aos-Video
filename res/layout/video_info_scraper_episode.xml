@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical">
+
+	<TextView
+		android:id="@+id/show_name"
+		style="@style/CoverDescription.Title"
+		android:textSize="24dip" />
+
+	<TextView
+		android:id="@+id/season_and_episode_number"
+		style="@style/CoverDescription.Secondary"
+		android:textSize="20dip" />
+
+	<TextView
+		android:id="@+id/episode_name"
+		style="@style/CoverDescription.Secondary"
+		android:textStyle="italic"
+		android:textSize="20dip" />
+
+	<include
+        android:id="@+id/play_button"
+        layout="@layout/video_info_play_button"
+        android:visibility="gone" />
+
+	<LinearLayout
+		android:id="@+id/episode_director_container"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:paddingTop="10dip">
+		<TextView
+			style="@style/VideoInfoFileInfo.Title"
+			android:text="@string/scrap_director" />
+		<TextView
+			android:id="@+id/episode_director"
+			style="@style/VideoInfoFileInfo"
+			android:paddingLeft="8dip" />
+	</LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/episode_aired_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/VideoInfoFileInfo.Title"
+                android:text="@string/scrap_aired" />
+            <TextView
+                android:id="@+id/episode_aired"
+                style="@style/VideoInfoFileInfo"
+                android:paddingLeft="8dip" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/episode_rating_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/episode_duration_label"
+                style="@style/VideoInfoFileInfo.Title"
+              android:text="@string/info_duration" />
+
+            <TextView
+                android:id="@+id/episode_duration"
+                style="@style/VideoInfoFileInfo"
+                android:layout_marginRight="50dip"
+                android:paddingLeft="8dip" />
+
+            <TextView
+                android:id="@+id/episode_rating_label"
+                style="@style/VideoInfoFileInfo.Title"
+                android:text="@string/scrap_rating" />
+
+            <TextView
+                android:id="@+id/episode_rating"
+                style="@style/VideoInfoFileInfo"
+                android:paddingLeft="8dip" />
+        </LinearLayout>
+
+	<TextView
+		android:id="@+id/episode_plot"
+		android:paddingTop="10dip"
+		style="@style/VideoInfoFileInfo"
+		android:textStyle="italic"/>
+	<TextView
+		android:id="@+id/episode_cast_title"
+		android:paddingTop="10dip"
+		style="@style/VideoInfoFileInfo.Title"
+		android:text="@string/scrap_cast" />
+	<TextView
+		android:id="@+id/episode_cast"
+		style="@style/VideoInfoFileInfo"/>
+	<TextView
+		android:id="@+id/episode_guests_title"
+		android:paddingTop="10dip"
+		style="@style/VideoInfoFileInfo.Title"
+		android:text="@string/scrap_guests"/>
+	<TextView
+		android:id="@+id/episode_guests"
+		style="@style/VideoInfoFileInfo"/>
+
+    <ImageButton
+        android:id="@+id/scrap_link_imdb"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="10dip"
+        android:src="@drawable/imdb_logo" />
+</LinearLayout>

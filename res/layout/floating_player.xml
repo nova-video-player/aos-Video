@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:background="@android:color/black"
+    android:layout_width="fill_parent" 
+    android:layout_height="fill_parent">
+
+
+
+
+    <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+        <TextureView android:id="@+id/gl_surface_view"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center" />
+    </FrameLayout>
+
+    <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+        <SurfaceView android:id="@+id/surface_view"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center" />
+    </FrameLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@android:color/black"
+        android:id="@+id/progress_indicator"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <ProgressBar android:id="@android:id/progress"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView android:paddingTop="5dip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/player_loading_video" android:textSize="14sp"
+                    android:textColor="#ffffffff" />
+
+                <TextView android:id="@+id/buffer_percentage"
+                    android:paddingTop="5dip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="#ffffffff" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/torrent_status"
+                android:paddingTop="5dip"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:textSize="14sp"
+                android:textColor="#ffffffff" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/subtitle_root_view"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+
+    <RelativeLayout android:id="@+id/player_controller"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:animateLayoutChanges="true"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <include
+            android:layout_width="@dimen/player2014_bar_width"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            layout="@layout/player_controller_left"
+            android:id="@+id/volume_bar"
+            android:layout_alignParentBottom="true"
+            android:layout_alignTop="@+id/fullscreen_button" />
+        <ImageView
+            android:id="@+id/hide_button"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+
+            android:src="@drawable/video_reduce_selector"
+            android:layout_marginLeft="3dip"
+            android:layout_marginRight="3dip"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/discrete_button"
+            android:layout_toLeftOf="@+id/discrete_button"
+            />
+        <ImageView
+            android:id="@+id/discrete_button"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:src="@drawable/video_fade_selector"
+            android:layout_marginLeft="3dip"
+            android:layout_marginRight="3dip"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/fullscreen_button"
+            android:layout_toLeftOf="@+id/fullscreen_button"
+            />
+        <ImageView
+            android:id="@+id/fullscreen_button"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:src="@drawable/video_format_fullscreen_selector"
+            android:layout_marginLeft="3dip"
+            android:layout_marginRight="3dip"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/exit_button"
+            android:layout_toLeftOf="@+id/exit_button"
+            />
+        <ImageView
+            android:id="@+id/exit_button"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:src="@drawable/video_exit_selector"
+            android:layout_marginLeft="3dip"
+            android:layout_marginRight="3dip"
+            android:layout_alignParentTop="true"
+            android:layout_alignEnd="@+id/seek_progress"
+            android:layout_alignRight="@+id/seek_progress"/>
+        <ImageView
+            android:id="@+id/play_button"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/video_play"/>
+
+
+
+        <com.archos.mediacenter.utils.seekbar.ArchosProgressSlider
+            android:id="@+id/seek_progress"
+            style="@style/PlayerSliderHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="13dip"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:layout_alignParentBottom="true"
+            android:paddingTop="20dip" android:background="@drawable/player_bar_2014"
+            android:layout_toEndOf="@+id/volume_bar" />
+
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/warning_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:textColor="@color/white"
+        android:text="@string/cast_audio_background"
+        android:background="@color/black"
+        android:visibility="gone"/>
+</RelativeLayout>

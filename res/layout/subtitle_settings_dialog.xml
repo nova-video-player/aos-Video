@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+**
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="@dimen/subtitles_settings_dialog_margin_outerframe" >
+
+    <!-- Size: a (seekbar) A -->
+
+
+
+
+    <!-- "sample" minWidth/Height might need adjustment -->
+
+    <TextView
+        android:id="@+id/subtitle_sample_text"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center"
+        android:maxLines="1"
+        android:minHeight="@dimen/subtitles_settings_dialog_sample_min_height"
+        android:minWidth="350dp"
+        android:padding="@dimen/subtitles_settings_dialog_margin_small"
+        android:shadowColor="#ff000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="1"
+        android:text="@string/subtitle_sample_text"
+        android:textColor="#ffffffff"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/subtitle_size_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/subtitles_settings_dialog_margin_small"
+        android:text="@string/subtitle_style_text" />
+    <RelativeLayout
+        android:id="@+id/seekbar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+
+
+        <TextView
+            android:id="@+id/left_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_alignBottom="@+id/subtitle_size_seekbar"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/subtitle_size_seekbar"
+            android:layout_margin="@dimen/subtitles_settings_dialog_margin_small"
+            android:gravity="center"
+            android:text="@string/text_a"
+            style="@style/textAppearanceSmall"
+            android:textStyle="bold" />
+
+        <SeekBar
+            android:id="@+id/subtitle_size_seekbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/right_a"
+            android:layout_toRightOf="@+id/left_a"
+            android:paddingBottom="@dimen/subtitles_settings_dialog_margin_large"
+            android:paddingTop="@dimen/subtitles_settings_dialog_margin_large" />
+
+        <TextView
+            android:id="@+id/right_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_alignBottom="@+id/subtitle_size_seekbar"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/subtitle_size_seekbar"
+            android:layout_marginTop="@dimen/subtitles_settings_dialog_margin_small"
+            android:layout_marginBottom="@dimen/subtitles_settings_dialog_margin_small"
+
+            android:gravity="center"
+            android:text="@string/text_a"
+            android:textSize="36dip"
+            style="@style/textAppearanceLarge"
+            android:textStyle="bold" />
+    </RelativeLayout>
+    <!-- simple listDivider, should be using current Theme -->
+
+    <com.archos.mediacenter.video.player.SubtitleColorPicker
+        android:id="@+id/color_layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></com.archos.mediacenter.video.player.SubtitleColorPicker>
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="@dimen/subtitles_settings_dialog_margin_large"
+        android:layout_marginTop="@dimen/subtitles_settings_dialog_margin_large"
+        android:scaleType="fitXY"
+        android:src="?android:attr/listDivider" />
+
+    <!-- Vertical Positon v (seekbar) ^ -->
+
+    <RelativeLayout
+        android:id="@+id/seekbar_container2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/subtitle_vert_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/subtitles_settings_dialog_margin_small"
+            android:text="@string/subtitle_vert_text" />
+
+        <ImageView
+            android:id="@+id/left_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/subtitle_vert_seekbar"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/subtitle_vert_seekbar"
+            android:padding="@dimen/subtitles_settings_dialog_margin_large"
+            android:src="@drawable/video_info_arrow_down" />
+
+        <SeekBar
+            android:id="@+id/subtitle_vert_seekbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/subtitle_vert_text"
+            android:layout_gravity="center_vertical"
+            android:layout_toLeftOf="@+id/right_icon"
+            android:layout_toRightOf="@+id/left_icon"
+            android:paddingBottom="@dimen/subtitles_settings_dialog_margin_large"
+            android:paddingTop="@dimen/subtitles_settings_dialog_margin_large" />
+
+        <ImageView
+            android:id="@+id/right_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/subtitle_vert_seekbar"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/subtitle_vert_seekbar"
+            android:padding="@dimen/subtitles_settings_dialog_margin_large"
+            android:src="@drawable/video_info_arrow_up" />
+    </RelativeLayout>
+
+</LinearLayout>

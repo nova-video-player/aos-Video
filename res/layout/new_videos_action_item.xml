@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="?android:attr/actionButtonStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:clickable="true"
+    android:focusable="true"
+    android:id="@+id/new_videos_action_button"
+     >
+
+    <ImageView
+        android:id="@+id/new_videos_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:background="@drawable/ic_menu_video_new"
+        android:scaleType="fitCenter" />
+
+    <TextView
+        android:id="@+id/new_videos_textview"
+        style="@android:style/TextAppearance.Holo.Widget.ActionBar.Menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!-- A vertical separator is needed when an action bar item has a text -->
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="30dip"
+        android:layout_marginLeft="10dip"
+        android:scaleType="fitXY"
+        android:src="@drawable/list_divider_holo_dark" />
+
+</LinearLayout>

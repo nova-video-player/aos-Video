@@ -1,0 +1,51 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceScreen
+        android:summary="LGPL v2.1"
+        android:title="Libav" >
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://libav.org/legal/" />
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:summary="Curl license"
+        android:title="libcurl" >
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="http://curl.haxx.se/docs/copyright.html" />
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:summary="LGPL v2.1"
+        android:title="AudioCompress" >
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="http://beesbuzz.biz/code/audiocompress.php" />
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:summary="BSD"
+        android:title="libyuv" >
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="http://code.google.com/p/libyuv/" />
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:summary="Boost Software License - Version 1.0"
+        android:title="Boost" >
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="http://www.boost.org/users/license.html" />
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:summary="BSD"
+        android:title="libtorrent" >
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="http://www.libtorrent.org/" />
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:summary="OpenSSL license"
+        android:title="OpenSSL" >
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://android.googlesource.com/platform/external/openssl.git" />
+    </PreferenceScreen>
+</PreferenceScreen>

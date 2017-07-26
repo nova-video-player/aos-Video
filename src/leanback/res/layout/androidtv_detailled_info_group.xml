@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2017 Archos SA
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginBottom="8dip"
+    android:layout_marginTop="8dip">
+
+    <!-- View below is only need to catch the focus in this panel, else user is not able to scroll to it -->
+    <View
+        android:id="@+id/focus_hook"
+        android:layout_width="0dip"
+        android:layout_height="0dip"
+        android:focusable="true"/>
+
+    <!-- File info -->
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dip"
+            android:layout_marginTop="0dip"
+            android:src="@drawable/leanback_info_file"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/file_name"
+                style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                />
+            <TextView
+                android:id="@+id/file_path"
+                style="@style/TextAppearance.Leanback.DetailsDescriptionBody"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="false"
+                />
+            <ProgressBar
+                android:id="@+id/progress"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/file_size_and_duration"
+                style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                />
+            <TextView
+                android:id="@+id/file_error"
+                style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dip"
+                android:singleLine="false"
+                android:text="@string/file_access_error"
+                android:textColor="@color/error_text_over_blue_background"
+                />
+        </LinearLayout>
+    </TableRow>
+
+    <!-- Video info -->
+    <TableRow
+        android:id="@+id/video_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dip">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dip"
+            android:layout_marginTop="0dip"
+            android:src="@drawable/leanback_info_video"/>
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/video_track"
+                style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+            <TextView
+                android:id="@+id/video_decoder"
+                style="@style/TextAppearance.Leanback.DetailsDescriptionBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="italic"/>
+        </LinearLayout>
+    </TableRow>
+
+
+    <!-- Audio tracks info -->
+    <TableRow
+        android:id="@+id/audio_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dip">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dip"
+            android:layout_marginTop="0dip"
+            android:src="@drawable/leanback_info_audio"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/audio_track"
+                style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+    </TableRow>
+
+    <!-- Subtitles tracks info -->
+    <TableRow
+        android:id="@+id/subtitles_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dip">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dip"
+            android:layout_marginTop="0dip"
+            android:src="@drawable/leanback_info_subtitles"/>
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/subtitle_track_col1"
+                style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/subtitle_track_col2"
+                style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+    </TableRow>
+
+</LinearLayout>

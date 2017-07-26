@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.archos.mediacenter.video.player.tvmenu.TVMenuItem xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/test"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:focusable="true"
+    android:orientation="horizontal"
+    android:padding="1dp" >
+
+  <Switch
+      android:id="@+id/info_text"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@null"
+      android:ellipsize="marquee"
+      android:paddingLeft="24dp"
+      android:paddingRight="12dp"
+      android:singleLine="true"
+      android:switchMinWidth="0dp"
+      android:textColor="#ffffff"
+      android:textOff="O"
+      android:textOn="I"
+      android:textSize="@dimen/tv_menu_font_size" />
+
+</com.archos.mediacenter.video.player.tvmenu.TVMenuItem>

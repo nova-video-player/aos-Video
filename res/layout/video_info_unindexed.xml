@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="left"
+    android:orientation="vertical"
+    android:padding="@dimen/video_info_margin_half" >
+
+    <!-- Some info about the file: file name & path -->
+    <TextView
+        android:id="@+id/filename"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        style="@style/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/fullpath"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        style="@style/textAppearanceSmall" />
+
+    <!-- A message that tells users that file is not indexed -->
+    <TextView
+        android:id="@+id/not_indexed_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:lineSpacingExtra="2sp"
+        android:paddingBottom="10dip"
+        android:paddingTop="40dip"
+        android:text="@string/video_info_unindexed_message"
+        android:textAppearance="?android:attr/textAppearance" />
+
+    <!-- A button to request indexing -->
+    <Button
+        android:id="@+id/index_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableLeft="@drawable/ic_menu_video_index"
+        android:text="@string/video_browser_index_file" />
+
+    <!-- Replacement for button: progress spinner + text -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/index_inprogress_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:lineSpacingExtra="2sp"
+        android:paddingBottom="10dip"
+        android:paddingTop="0dip"
+        android:text="@string/video_info_unindexed_message2"
+        android:textAppearance="?android:attr/textAppearance"
+        android:visibility="gone" />
+
+</LinearLayout>

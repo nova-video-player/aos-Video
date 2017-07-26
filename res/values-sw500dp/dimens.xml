@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2009 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+    <!-- ============ COVER ROLL ============ -->
+    <dimen name="MessageBox_width">200dip</dimen>
+    <dimen name="MessageBox_fontsize">17dip</dimen>
+    <dimen name="ContentLabel_fontsize">18dip</dimen>
+    <dimen name="cover_description_floating_large">23px</dimen> <!-- no dip, because not used in framework but in texture bitmaps -->
+    <dimen name="cover_description_floating_medium">19px</dimen> <!-- no dip, because not used in framework but in texture bitmaps -->
+    <dimen name="cover_description_floating_small">17px</dimen> <!-- no dip, because not used in framework but in texture bitmaps -->
+    <dimen name="cover_description_overlay_medium">13px</dimen> <!-- no dip, because not used in framework but in texture bitmaps -->
+    <dimen name="cover_description_overlay_small">10px</dimen> <!-- no dip, because not used in framework but in texture bitmaps -->
+
+    <!-- ============ MUSIC & VIDEO BROWSER ============ -->
+    <dimen name="content_list_left_margin">24dip</dimen>
+    <dimen name="content_list_right_margin">24dip</dimen>
+    <dimen name="content_list_vertical_spacing_between_items">2dip</dimen>
+    <dimen name="content_grid_vertical_spacing_between_items">16dip</dimen>
+    <dimen name="content_list_space_between_thumbnail_and_name">12dip</dimen>	<!-- space between the thumbnail and the name of the item-->
+
+    <!-- ============ GLOBAL RESUME ============ -->
+    <dimen name="global_resume_music_height">92dip</dimen>
+    <dimen name="global_resume_playbutton_width">48dip</dimen>
+    <dimen name="global_resume_playbutton_height">48dip</dimen>
+    <dimen name="global_resume_icon_padding_left">30dip</dimen>
+    <dimen name="global_resume_icon_padding_right">10dip</dimen>
+
+    <!-- ============ VIDEO INFO BROWSER ============ -->
+    <dimen name="video_list_container_width">110dip</dimen>
+    <dimen name="video_info_grid_column_width">100dip</dimen>
+    <dimen name="video_info_grid_poster_width">96dip</dimen>
+    <dimen name="video_info_grid_poster_height">144dip</dimen>
+    
+    <!-- ============ VIDEO BROWSER ============ -->
+    <dimen name="video_grid_column_width">152dip</dimen>
+    <dimen name="video_grid_poster_width">148dip</dimen>    <!-- (video_grid_column_width - 2 - 2) for the left and right margin -->   
+    <dimen name="video_grid_poster_short_height">182dip</dimen>   <!-- video_grid_poster_height = 3 / 2 * video_grid_poster_width -->
+    <dimen name="video_grid_poster_margin_top">2dip</dimen> <!-- margin to have background visible around the thumbnail when pressed -->
+    <dimen name="video_grid_poster_margin_left">2dip</dimen> <!-- margin to have background visible around the thumbnail when pressed -->
+    <dimen name="video_grid_poster_margin_right">2dip</dimen> <!-- margin to have background visible around the thumbnail when pressed -->
+
+    <dimen name="video_details_item_height">244dip</dimen>
+    <dimen name="video_details_poster_height">240dip</dimen>      <!-- (video_details_item_height - 2 - 2) for the top and bottom margin -->
+    <dimen name="video_details_poster_width">160dip</dimen>       <!-- "video_details_poster_width" = 2 / 3 * video_details_poster_height -->
+    <dimen name="video_details_poster_margin_top">2dip</dimen>    <!-- margin to have background visible around the thumbnail when pressed -->
+    <dimen name="video_details_poster_margin_bottom">2dip</dimen> <!-- margin to have background visible around the thumbnail when pressed -->
+    <dimen name="video_details_poster_margin_left">2dip</dimen>   <!-- margin to have background visible around the thumbnail when pressed -->
+    <dimen name="video_details_number_width">60dip</dimen>
+    <dimen name="video_show_details_item_height">180dip</dimen>
+
+    <dimen name="video_list_item_height">76dip</dimen>
+    <dimen name="video_list_thumbnail_height">72dip</dimen>        <!-- (video_list_item_height - 2 - 2) for the top and bottom margin -->
+    <dimen name="video_list_thumbnail_width">108dip</dimen>
+    <dimen name="video_list_thumbnail_margin_top">2dip</dimen>    <!-- margin to have background visible around the thumbnail when pressed -->
+    <dimen name="video_list_thumbnail_margin_bottom">2dip</dimen> <!-- margin to have background visible around the thumbnail when pressed -->
+    <dimen name="video_list_thumbnail_margin_left">2dip</dimen>   <!-- margin to have background visible around the thumbnail when pressed -->
+    <dimen name="video_list_number_width">60dip</dimen>
+
+    <dimen name="item_horizontal_offset">0dp</dimen>
+    <dimen name="video_resume_slider_length_list">100dp</dimen>
+    <dimen name="video_resume_slider_length_grid">70dp</dimen>
+    
+    <dimen name="radio_button_width">40dp</dimen>               <!-- based on btn_radio_off/on bitmaps in the framework (not public) -->
+
+    <dimen name="connection_button_height">38dip</dimen>
+    <dimen name="connection_button_vertical_spacing">4dip</dimen>
+    <dimen name="connection_button_padding">24dip</dimen>
+
+    <!-- ============ QUICK ACTION ============ -->
+    <dimen name="popup_horizontal_offset">16dip</dimen>
+    <dimen name="extra_vertical_offset">8dip</dimen>
+
+    <!-- must be set so that the arrows and the popup are exactly overlapping -->
+    <dimen name="single_quick_action_arrow_up_margin">0px</dimen>
+    <dimen name="multi_quick_action_arrow_up_margin">0px</dimen>
+    <dimen name="single_quick_action_arrow_down_margin">-16px</dimen>
+    <dimen name="multi_quick_action_arrow_down_margin">-16px</dimen>
+    <dimen name="quick_action_row_height">50dip</dimen>
+    <dimen name="quick_action_anchor_size">24dip</dimen>    <!-- used to adjust the vertical distance between the popup and the anchor -->
+
+    <!-- ============ VIDEO PLAYER ============ -->
+    <dimen name="video_title_marginTop">0dip</dimen>
+    <dimen name="volume_bar_marginTop">200dip</dimen>
+    <dimen name="volume_bar_marginBottom">200dip</dimen>
+    <dimen name="volume_button_vertical_margin">2dip</dimen>
+
+    <dimen name="player_time_text_size">14dip</dimen>
+    <dimen name="player_button_padding_full">16dip</dimen>
+    <dimen name="player_button_padding_half">8dip</dimen>
+    <dimen name="player_button_padding_small">2dip</dimen>
+
+    <dimen name="control_bar_margin_left">0dip</dimen>
+    <dimen name="control_bar_margin_right">0dip</dimen>
+    <dimen name="control_bar_margin_bottom">0dip</dimen>
+
+    <!-- based on base/core/res/res/layout/popup_menu_item_layout.xml -->
+    <dimen name="track_menu_minWidth">196dip</dimen>
+    <dimen name="track_menu_padding">16dip</dimen>
+    <dimen name="track_menu_layout_width">48dip</dimen>
+
+    <dimen name="subtitles_settings_dialog_margin_small">5dip</dimen>
+    <dimen name="subtitles_settings_dialog_margin_large">10dip</dimen>
+    <dimen name="subtitles_settings_dialog_margin_outerframe">20dip</dimen>
+    <dimen name="subtitles_settings_dialog_sample_min_height">100dip</dimen>
+
+    <!-- ============ SCRAPER ============ -->
+    <dimen name="scraper_selection_spinbar_size">40dip</dimen>  <!-- standard spinbar size is 48 dip -->
+
+    <dimen name="auto_scraper_thumbnail_item_height">84dip</dimen>
+    <dimen name="auto_scraper_thumbnail_height">80dip</dimen>
+    <dimen name="auto_scraper_thumbnail_width">120dip</dimen>
+    <dimen name="auto_scraper_thumbnail_margin_top">2dip</dimen>    <!-- margin to have background visible around the thumbnail when pressed -->
+    <dimen name="auto_scraper_thumbnail_margin_bottom">2dip</dimen> <!-- margin to have background visible around the thumbnail when pressed -->
+    <dimen name="auto_scraper_thumbnail_margin_left">2dip</dimen>   <!-- margin to have background visible around the thumbnail when pressed -->
+
+    <dimen name="auto_scraper_poster_item_height">184dip</dimen>
+    <dimen name="auto_scraper_poster_height">180dip</dimen>      <!-- (auto_scraper_poster_item_height - 2 - 2) for the top and bottom margin -->
+    <dimen name="auto_scraper_poster_width">120dip</dimen>       <!-- "auto_scraper_poster_width" = 2 / 3 * auto_scraper_poster_height -->
+    <dimen name="auto_scraper_poster_margin_top">2dip</dimen>    <!-- margin to have background visible around the thumbnail when pressed -->
+    <dimen name="auto_scraper_poster_margin_bottom">2dip</dimen> <!-- margin to have background visible around the thumbnail when pressed -->
+    <dimen name="auto_scraper_poster_margin_left">2dip</dimen>   <!-- margin to have background visible around the thumbnail when pressed -->
+
+    <!-- ============ ALBUMART EXTRACTION ============ -->
+    <dimen name="maximum_thumb_size">320dip</dimen>
+</resources>

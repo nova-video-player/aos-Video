@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- /*** Copyright 2007, The Android Open Source Project**** Licensed under the Apache License, Version 2.0 (the "License"); ** you may not use this file except in compliance with the License. ** You may obtain a copy of the License at **** http://www.apache.org/licenses/LICENSE-2.0 **** Unless required by applicable law or agreed to in writing, software ** distributed under the License is distributed on an "AS IS" BASIS, ** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. ** See the License for the specific language governing permissions and ** limitations under the License.*/ -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string msgid="8979658707407220934" name="goto_start">"Biblioteka"</string>
+    <string msgid="1016971653383739344" name="search_title">"Szukaj"</string>
+    <string msgid="2854921021814550018" name="play_selection">"Odtwórz"</string>
+    <string msgid="5548732936480723311" name="fast_scroll_alphabet">" AĄBCĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻ"</string>
+    <string name="unknown_track_name">Niezn.</string>
+    <string name="info">Info</string>
+    <string name="info_duration">Czas trwania:</string>
+    <string name="recently_added">Ostatnio dodane</string>
+    <string name="recently_added_videos">Ostatnio dodane</string>
+    <string name="recently_played">Ostatnio odtwarzane</string>
+    <string name="recently_played_videos">Ostatnio odtwarzane</string>
+    <string name="not_played_yet_videos">Nieodtwarzane</string>
+    <string name="external_storage">Zewnętrzna</string>
+    <string name="internal_storage">Wewnętrzna</string>
+    <string name="network_storage">Sieć</string>
+    <string name="sd_card_storage">Karta SD</string>
+    <string name="usb_host_storage">Dysk zewnętrzny</string>
+    <string name="network_media_servers">Serwery mediów (UPnP)</string>
+    <string name="network_shared_folders">Foldery współużytkowane (SMB)</string>
+    <string name="upnp_not_allowed">Brak zezwolenia na dostęp do serwera UPnP. Należy zmienić konfigurację dostępu. </string>
+    <string name="recordings_storage">Nagrania</string>
+    <string name="root_storage">Pamięć wewnętrzna</string>    
+    <string name="refresh_servers_list">Odśwież listę serwerów</string>
+    <string name="cannot_list">Nie można wyświetlić zawartości</string>
+    <string name="cannot_open_video">Nie można otworzyć filmu</string>
+    <string name="confirm_delete">Czy na pewno chcesz usunąć wybrany element?</string>
+    <string name="deleting">Trwa usuwanie...</string>
+    <string name="cannot_delete_directory">Nie można usunąć folderu</string>
+    <string name="cannot_delete_file">Nie można usunąć pliku</string>
+    <string name="directory_deleted">Folder został usunięty</string>
+    <string name="file_deleted">Plik został usunięty</string>
+    <string name="resume">Wznów</string>
+    <string name="bookmark">Zakładka</string>
+    <string name="delete">Usuń</string>
+    <string name="delete_resume">Usuń streszczenie</string>
+    <string name="delete_bookmark">Usuń zakładkę</string>
+    <string name="player_loading_video">Ładowanie filmu wideo\u2026</string>
+    <string name="player_audio_track_toast">Ścieżka audio:</string>
+    <string name="player_subtitle_track_toast">Ścieżka napisów:</string>
+    <string name="player_bookmark_set">Zakładka na</string>
+    <string name="player_pref_subtitle_delay_title">Opóźnienie</string>
+    <string name="pref_audio_parameters_title">Dźwięk</string>
+    <string name="pref_play_mode_title">Tryb odtwarzania</string>
+    <string name="pref_play_mode_entry_single">Pojedynczy</string>
+    <string name="pref_play_mode_entry_folder">Folder</string>
+    <string name="pref_play_mode_entry_repeat_folder">Powtórz folder</string>
+    <string name="pref_play_mode_entry_repeat_single">Potwórz pojedynczy</string>
+    <string name="s_arabic">arabski</string>
+    <string name="s_bulgarian">bułgarski</string>
+    <string name="Bosnian">bośniacki</string>
+    <string name="s_czech">czeski</string>
+    <string name="s_danish">duński</string>
+    <string name="s_german">niemiecki:</string>
+    <string name="s_english">angielski</string>
+    <string name="s_greek">grecki</string>
+    <string name="s_spanish">hiszpański</string>
+    <string name="s_finnish">fiński</string>
+    <string name="s_french">francuski</string>
+    <string name="s_hebrew">hebrajski</string>
+    <string name="s_hungarian">węgierski</string>
+    <string name="s_italian">włoski</string>
+    <string name="s_japanese">japoński</string>
+    <string name="s_korean">koreański</string>
+    <string name="s_dutch">holenderski</string>
+    <string name="s_norwegian">norweski</string>
+    <string name="s_polish">polski</string>
+    <string name="s_portuguese">portugalski</string>
+    <string name="s_russian">rosyjski</string>
+    <string name="Romanian">rumuński</string>
+    <string name="Serbo_Croatian">serbochorwacki</string>
+    <string name="Serbian">serbski</string>
+    <string name="s_swedish">szwedzki</string>
+    <string name="s_turkish">turecki</string>
+    <string name="s_chinese">chiński</string>
+    <string name="s_none">Brak</string>
+    <string name="player_err_cantplayvideo">Nie można odtworzyć filmu</string>
+    <string name="player_err_file">Plik wideo nie istnieje.</string>
+    <string name="player_err_sizetoobig">Rozmiar obrazu jest zbyt duży</string>
+    <string name="player_err_unknown">Nieznany błąd.</string>
+    <string name="player_err_critical">Błąd serwera mediów.</string><!-- TODO -->
+    <string name="player_err_forcodec">dla kodeku</string>
+    <string name="player_err_notinterleaved">Strumieniowanie wideo i audio nie przeplata się.</string>
+    <string name="player_err_codec">Kodek</string>
+    <string name="player_err_isnotsupported">nie jest obsługiwany.</string>
+    <string name="player_err_fileNoLicense">Brak licencji dla tego pliku.</string>
+    <string name="player_err_fileerror">Plik jest uszkodzony lub niekompletny.</string>
+    <string name="player_err_connection_failed">Połączenie nie powiodło się.</string>
+    <string name="player_err_video_decoder_error">Błąd dekodera wideo:</string>
+    <string name="player_err_qpel_and_gmc">\„Quarter Pixel\” oraz \„GMC\”</string>
+    <string name="player_err_profile_and_level">\„Profil\” oraz \„Poziom\”</string>
+    <string name="player_err_interlaced">Przeplatany</string>
+    <string name="player_plugin_cinema_title">Wtyczka kinowa</string>
+    <string name="player_plugin_cinema">Wtyczka kinowa (DVD, MPEG-2, AC3)</string>
+    <string name="player_plugin_video_msg">Ten plik zawiera format wideo <xliff:g id="video">%1$s</xliff:g>.</string>
+    <string name="player_plugin_audio_msg">Ten plik zawiera format audio <xliff:g id="audio">%1$s</xliff:g>.</string>
+    <string name="player_plugin_video_audio_msg">Ten plik zawiera format wideo <xliff:g id="video">%1$s</xliff:g> i format audio <xliff:g id="audio">%2$s</xliff:g>.</string>
+    <string name="player_plugin_purchase_msg">Należy zakupić <xliff:g id="plugin">%1$s</xliff:g></string>
+    <string name="player_plugin_purchase">Idź do Sklepu</string>
+    <string name="scrap_director">Reżyser</string>
+    <string name="scrap_director_format">Reżyser: %s</string>
+    <string name="scrap_rating">Ocena</string>
+    <string name="scrap_rating_format">Ocena: %s</string>
+    <string name="scrap_year">Rok</string>
+    <string name="scrap_year_format">Rok: %d</string>
+    <string name="scrap_studio">Studio</string>
+    <string name="scrap_plot">Fabuła</string>
+    <string name="scrap_cast">Obsada</string>
+    <string name="scrap_cast_format">Obsada: %s</string>
+    <string name="scrap_processing">Pobieranie metadanych...</string>
+    <string name="scrap_no_network">Brak połączenia z siecią.</string>
+    <string name="scrap_enable_network_first">"Aby umożliwić uruchomienie aplikacji należy najpierw aktywować połączenie z siecią".</string>
+    <string name="scrap_failed">Nie znaleziono filmu w bazie danych.</string>
+    <string name="scrap_aired">Premiera</string>
+    <string name="scrap_aired_format">Premiera: %s</string>
+    <string name="scrap_guests">Goście</string>
+    <string name="episode_name">Odcinek</string>
+    <string name="episode_season">Sezon</string>
+    <string name="episode_identification">Sezon %1$d Odcinek %2$d</string>
+    <string name="info_processing">Sprawdzanie właściwości mediów...</string>
+    <string name="info_video">Wideo</string>
+    <string name="info_audio">Dźwięk</string>
+    <string name="info_audio_vbr">VBR</string>
+    <string name="info_subtitle">Napisy</string>
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
+    <string name="video_picker_title">"Wybierz film wideo"</string>
+    <string name="notification_mode">Powiadomienia</string>
+</resources>

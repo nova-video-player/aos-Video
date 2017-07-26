@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2017 Archos SA
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:lb="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:paddingBottom="@dimen/lb_details_overview_margin_bottom"
+    android:background="@null"
+    android:paddingLeft="@dimen/lb_details_overview_margin_start"
+    android:paddingRight="@dimen/lb_details_overview_margin_end"
+    >
+
+    <!-- Background is applied to this inner layout -->
+    <!-- Foreground used for dimming, see FullWidthRowPresenter.changeSelectLevel() -->
+    <FrameLayout
+        android:id="@+id/main_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lb_basic_card_bg_color"
+        android:elevation="@dimen/lb_details_overview_z"
+        android:paddingBottom="16dip"
+        android:paddingEnd="32dip"
+        android:paddingStart="32dip"
+        android:paddingTop="16dip"
+        android:foreground="#ffffff"
+        >
+
+        <!-- The HorizontalGridView is useless but it is the way i found to have the view actually do something like match_parent
+             (i.e. take the whole width). It found it by checking how it is done in lb_details_overview.xml (see DetailsOverviewRowPresenter.java)
+             It is made invisible to not get the focus, because for some reason it catches the focus even with focusable="false"....
+        -->
+        <android.support.v17.leanback.widget.HorizontalGridView
+            android:id="@+id/useless_but_needed"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:background="@null"
+            android:visibility="invisible"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:gravity="center" />
+
+    </FrameLayout>
+</FrameLayout>

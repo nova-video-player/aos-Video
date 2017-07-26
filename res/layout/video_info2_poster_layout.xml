@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <!-- height is modified in fragment -->
+    <ImageView
+        android:id="@+id/poster"
+        android:layout_width="@dimen/video_info_poster_width"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:layout_gravity="center_horizontal" />
+    <ImageView
+        android:id="@+id/trakt_watched"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/poster"
+        android:layout_alignTop="@id/poster"
+        android:src="@drawable/watched_icon_corner"
+        android:visibility="visible" />
+</RelativeLayout>

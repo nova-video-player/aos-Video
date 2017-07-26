@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+     android:label="@string/video"
+     android:searchSettingsDescription="@string/all_movies_and_tv_shows"
+     android:hint="@string/all_movies_and_tv_shows"
+     android:searchSuggestAuthority="com.archos.mediacenter.video.leanback.search.VideoSearchProvider"
+     android:searchSuggestIntentAction="android.intent.action.VIEW"
+     android:searchSuggestIntentData="content://com.archos.media/external/video/media"
+     android:searchSuggestSelection=" ?"
+     android:searchSuggestThreshold="3"
+     android:includeInGlobalSearch="true" >
+</searchable>

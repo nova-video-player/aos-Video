@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools" >
+
+    <!-- info text & icons in the middle area -->
+
+
+    <!-- Movie   : movie name -->
+    <!-- TV show : TV show title -->
+    <!-- Other   : filename -->
+
+    <TextView
+        android:id="@+id/name"
+        style="@style/BrowserText.Name.Video"
+        android:layout_width="fill_parent"
+        android:layout_toRightOf="@id/left_area" />
+
+    <!-- Movie   : director(s) -->
+    <!-- TV show : season + episode numbers -->
+    <!-- Other   : empty -->
+
+    <TextView
+        android:id="@+id/detail_line_one"
+        style="@style/BrowserText.Details"
+        android:layout_below="@id/name"
+        android:layout_marginTop="8dip"
+        android:layout_toRightOf="@id/left_area"
+        android:singleLine="true" />
+
+    <!-- Movie   : plot -->
+    <!-- TV show : episode name -->
+    <!-- Other   : empty -->
+
+    <TextView
+        android:id="@+id/detail_line_two"
+        style="@style/BrowserText.Details"
+        android:layout_below="@id/detail_line_one"
+        android:layout_marginTop="4dip"
+        android:layout_toRightOf="@id/left_area"
+        android:ellipsize="end"
+        android:textStyle="italic" />
+
+    <!-- All : duration -->
+
+    <TextView
+        android:id="@+id/info"
+        style="@style/BrowserText.Info.Video"
+        android:layout_below="@id/detail_line_two"
+        android:layout_toRightOf="@id/left_area" />
+
+    <!-- Movie   : cast -->
+    <!-- TV show : plot -->
+    <!-- Other   : empty -->
+
+    <TextView
+        android:id="@+id/detail_line_three"
+        style="@style/BrowserText.Details"
+        android:layout_below="@id/info"
+        android:layout_marginTop="4dip"
+        android:layout_toRightOf="@id/left_area"
+        android:ellipsize="end" />
+
+    <!-- Movie or TV show  : release date and rating -->
+    <!-- Other             : empty -->
+
+    <include
+        android:id="@+id/rating_and_date"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detail_line_three"
+        android:layout_marginTop="4dip"
+        android:layout_toRightOf="@id/left_area"
+        layout="@layout/browser_item_details_date_and_rating" />
+
+    <!--
+         (i) symbol.
+	     NOTE: Active area larger than the icon itself due to different left and right padding
+    -->
+
+    <ImageButton
+        android:id="@+id/expanded"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/video_list_thumbnail_height"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="2dip"
+        android:paddingLeft="30dip"
+        android:paddingTop="30dip"
+        android:paddingRight="@dimen/list_expanded_padding"
+        android:visibility="gone"
+        android:background="@drawable/list_selector_holo_dark"
+        android:src="@drawable/label_infoarrow" />
+    <!--
+         Bottom area = progressbar + info icons 
+         NOTE: negative right margin to be close to the (i) icon despite it's large left padding (see above)
+    -->
+
+    <LinearLayout
+        android:id="@+id/bottom_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/expanded"
+        android:paddingRight="@dimen/content_list_right_margin"
+        android:paddingBottom="2dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_toLeftOf="@id/expanded"
+        android:orientation="horizontal" >
+
+        <ProgressBar
+            android:id="@+id/resume_notif"
+            style="@style/BrowserResumeSlider"
+            android:layout_width="@dimen/video_resume_slider_length_list"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="3dip"
+            android:layout_marginRight="10dip"
+            android:clickable="false"
+            android:indeterminate="false"
+            android:paddingBottom="0dip"
+            android:progress="0" />
+
+        <!-- resume_notif is only used in case we don't know the duration of the video -->
+
+        <com.archos.mediacenter.utils.ImageLabel
+            android:id="@+id/resume_notif_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="8dip"
+            android:clickable="false"
+            android:src="@drawable/label_resume"
+            android:visibility="gone" />
+
+        <com.archos.mediacenter.utils.ImageLabel
+            android:id="@+id/bookmark_notif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="8dip"
+            android:clickable="false"
+            android:visibility="gone"
+            android:src="@drawable/label_bookmark" />
+
+        <com.archos.mediacenter.utils.ImageLabel
+            android:id="@+id/subtitle_notif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="8dip"
+            android:clickable="false"
+            android:src="@drawable/label_subtitles" />
+
+        <com.archos.mediacenter.utils.ImageLabel
+            android:id="@+id/network_notif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="false"
+            android:src="@drawable/label_network" />
+    </LinearLayout>
+
+</merge>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Hack to get an anchor point where to display a submenu -->
+
+    <View
+        android:id="@+id/menu_anchor"
+        android:layout_width="1px"
+        android:layout_height="1px"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/connection_button"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/connection_button_height"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/connection_button_vertical_spacing"
+        android:paddingStart="@dimen/connection_button_padding"
+        android:paddingEnd="@dimen/connection_button_padding"
+        android:background="@drawable/square_button"
+        android:gravity="center"
+        android:focusable="true"
+        android:visibility="gone" />
+
+    <com.archos.mediacenter.video.browser.HeaderGridView
+        android:id="@+id/archos_grid_view"
+        style="@style/ArchosGridView"
+        android:layout_below="@id/connection_button"
+        android:layout_alignWithParentIfMissing="true"
+        android:drawSelectorOnTop="true"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/archos_list_view"
+        style="@style/ArchosGridView"
+        android:layout_below="@id/connection_button"
+        android:layout_alignWithParentIfMissing="true"
+        android:divider="@null"
+        android:dividerHeight="@dimen/content_list_vertical_spacing_between_items" />
+
+    <!-- This view doesn't consume memory when the listview isn't empty -->
+
+    <ViewStub
+        android:id="@+id/empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="20dip"
+        android:inflatedId="@+id/empty_view"
+        android:layout="@layout/browser_empty_item_with_button" />
+
+</RelativeLayout>

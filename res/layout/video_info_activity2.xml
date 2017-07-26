@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:layout_gravity="bottom"
+        android:paddingLeft="@dimen/video_info_left_border" >
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            >
+
+            <TabHost
+                android:id="@+id/tabhost"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                >
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal|top">
+
+                    <TabWidget
+                        android:id="@android:id/tabs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="@null"/>
+
+                    <FrameLayout
+                        android:id="@android:id/tabcontent"
+                        android:layout_width="0dip"
+                        android:layout_height="0dip">
+
+                        <ImageView
+                            android:id="@+id/dummy_view"
+                            android:layout_width="0dip"
+                            android:layout_height="0dip" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/fragment_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    </FrameLayout>
+
+                </LinearLayout>
+
+            </TabHost>
+
+            <LinearLayout
+                android:id="@+id/prev_next_group"
+                android:orientation="vertical"
+                android:layout_width="@dimen/video_info_right_border"
+                android:layout_height="match_parent" >
+
+                <Space
+                    android:layout_width="1dip"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent" />
+
+                <ImageButton
+                    android:id="@+id/prev"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/video_info_arrow_up"
+                    android:background="@drawable/button_selector_holo_dark"
+                    android:gravity="top|center_horizontal"
+                    android:padding="20dip"
+                    />
+
+                <Space
+                    android:layout_width="1dip"
+                    android:layout_weight=".75"
+                    android:layout_height="match_parent" />
+
+                <ImageButton
+                    android:id="@+id/next"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/video_info_arrow_down"
+                    android:background="@drawable/button_selector_holo_dark"
+                    android:gravity="bottom|center_horizontal"
+                    android:padding="20dip"
+                    />
+
+                <Space
+                    android:layout_width="1dip"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

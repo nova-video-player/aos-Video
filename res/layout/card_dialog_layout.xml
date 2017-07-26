@@ -1,0 +1,50 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:focusable="false" >
+
+    <com.archos.mediacenter.video.player.tvmenu.TVCardDialog
+        android:id="@+id/card_view"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:alpha="0.8"
+        android:background="@drawable/abc_menu_dropdown_panel_holo_light"
+        android:animateLayoutChanges="true"
+        android:focusable="true" >
+
+        <LinearLayout
+            android:id="@+id/inside"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/info_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@null"
+                android:gravity="center_horizontal"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+
+            <com.archos.mediacenter.video.player.tvmenu.TVScrollView
+                android:id="@+id/contentScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <LinearLayout
+                    android:id="@+id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+                </LinearLayout>
+            </com.archos.mediacenter.video.player.tvmenu.TVScrollView>
+        </LinearLayout>
+    </com.archos.mediacenter.video.player.tvmenu.TVCardDialog>
+
+</FrameLayout>

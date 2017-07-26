@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="@dimen/video_info_backdrop_chooser_item_width"
+	    android:layout_height="@dimen/video_info_backdrop_chooser_item_height">
+	<ImageView
+	    android:id="@+id/image"
+	    android:layout_width="@dimen/video_info_backdrop_chooser_image_width"
+	    android:layout_height="@dimen/video_info_backdrop_chooser_image_height"
+	    android:layout_margin="@dimen/video_info_backdrop_chooser_image_margin"
+	    android:background="@color/video_info_list_item_background"
+	    />
+</FrameLayout>

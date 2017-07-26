@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:id="@+id/horizontalScrollView"
+    card_view:cardCornerRadius="4dp"
+    android:layout_below="@+id/short_scrap_plot"
+    android:layout_marginRight="@dimen/video_info_margin_simple"
+    android:layout_marginTop="@dimen/video_info_cardview_top_margin"
+    android:layout_height="wrap_content"
+    >
+    <LinearLayout
+        android:id="@+id/root"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:minWidth="120dp"
+        android:paddingTop="15dip"
+        android:paddingLeft="0dip"
+        android:paddingRight="0dip"
+        android:paddingBottom="5dip"
+        >
+
+        <ImageView
+            android:id="@+id/image_3d"
+
+            android:layout_width="58dp"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            android:layout_marginBottom="8dip"
+            android:src="@drawable/badge_3d"
+            />
+        <ImageView
+            android:id="@+id/image_res"
+            android:layout_width="58dp"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            android:src="@drawable/badge_1080"
+            />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/video_info_medium_text"
+            android:text="Small Text"
+            android:layout_marginBottom="15dip"
+            android:id="@+id/video_format" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+
+            android:id="@+id/audio_format_container"
+            android:layout_height="45dip"></LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dip"
+            android:textSize="@dimen/video_info_medium_text"
+            android:id="@+id/size" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/video_info_medium_text"
+            android:text="Small Text"
+            android:id="@+id/source" />
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

@@ -1,0 +1,90 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ImageView
+        android:id="@+id/backdrop"
+        android:alpha="0"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/genres_banner" />
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_above="@+id/miniController1"
+        android:layout_height="wrap_content">
+
+        <include
+            layout="@layout/video_info2_common_content"
+            />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:id="@+id/toolbar_container">
+            <RelativeLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:paddingLeft="@dimen/info_activity_horizontal_margin"
+                android:paddingRight="@dimen/video_info_margin_simple"
+                android:paddingTop="@dimen/video_info_margin_half"
+                android:paddingBottom="@dimen/video_info_margin_half"
+                android:orientation="vertical"
+                android:id="@+id/titlebar_content"
+                >
+            <!--used to cast a shadow-->
+            <include
+                layout="@layout/video_info2_titlebar_layout"
+                />
+            </RelativeLayout>
+            <android.support.v7.widget.Toolbar
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/titlebar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:contentInsetLeft="0dp"
+                app:contentInsetStart="0dp"
+                android:layout_margin="0dp"
+                android:background="@android:color/transparent"
+                android:paddingLeft="0dip">
+
+
+            </android.support.v7.widget.Toolbar>
+        </FrameLayout>
+
+        <!-- inside a coordinator layout : floating button will put itself in the right place-->
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/play_toolbar"
+            android:layout_gravity="bottom|end"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/button_icon_play"
+            app:elevation="4dp"/>
+
+    </android.support.design.widget.CoordinatorLayout>
+    <FrameLayout
+        android:id="@+id/mini_controller_black_veil"
+        android:background="@color/transparent_black_50"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></FrameLayout>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="5dp"
+        android:layout_above="@+id/miniController1"
+        android:visibility="gone"
+        android:id="@+id/minicontroller_shadow"
+        android:background="@drawable/mini_gradient_light"/>
+    <com.archos.mediacenter.video.player.cast.ArchosMiniPlayer
+        android:id="@+id/miniController1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:auto_setup="true"
+        android:visibility="gone" />
+</RelativeLayout>

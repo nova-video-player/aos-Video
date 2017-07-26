@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Symbols for Subtitle Settings Dialog --> <eat-comment />
+    <string name="text_a">A</string>
+
+    <string name="eng">eng</string>
+    <string name="fre">fra</string>
+    <string name="ita">ita</string>
+    <string name="ger">deu</string>
+    <string name="nld">nld</string>
+    <string name="spa">spa</string>
+    <string name="swe">swe</string>
+    
+    <string name="ara">ara</string>
+    <string name="bul">bul</string>
+    <string name="ces">ces</string>
+    <string name="dan">dan</string>
+    <string name="ell">ell</string>
+    <string name="fin">fin</string>
+    <string name="heb">heb</string>
+    <string name="hun">hun</string>
+    <string name="jpn">jpn</string>
+    <string name="kor">kor</string>
+    <string name="nor">nor</string>
+    <string name="pol">pol</string>
+    <string name="pob">pob</string>
+    <string name="por">por</string>
+    <string name="rus">rus</string>
+    <string name="ron">ron</string>
+    <string name="slv">slv</string>
+    <string name="srp">srp</string>
+    <string name="tha">tha</string>
+    <string name="tur">tur</string>
+    <string name="zho">zho</string>
+    <string name="hrv">hrv</string>
+
+    <string name="unknown_video_name">@string/unknown_track_name</string>
+
+    <string name="player_plugin_store_url">http://www.archos.com/misc/result.html?ptype=10&amp;ts=pl</string>
+
+    <string name="ad_unit_id"></string>
+    <string name="interstitiel_ad_unit_id"></string>
+    <string name="ad_anticrash_freebox_unit_id"></string>
+    <string name="interstitiel_ad_anticrash_freebox_unit_id"></string>
+
+    <string name="tmdb_title_url">http://www.themoviedb.org/movie/%1$s?language=%2$s</string>
+    <string name="action_resume">com.archos.mediacenter.video.action_resume</string>
+    <string name="action_recently_added">com.archos.mediacenter.video.action_recently_added</string>
+    <string name="action_recently_played">com.archos.mediacenter.video.action_recently_played</string>
+
+</resources>

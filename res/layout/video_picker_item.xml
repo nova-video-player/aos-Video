@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dip"
+    android:background="@drawable/list_item_background"
+    android:gravity="center_vertical" >
+
+    <TextView android:id="@+id/duration"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/line1"
+        style="@style/textAppearanceSmall"
+        android:paddingLeft="4dip"
+        android:paddingRight="50dip"
+        android:singleLine="true" />
+
+    <TextView android:id="@+id/line1"
+        style="@style/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:paddingLeft="4dip"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/duration"
+        android:ellipsize="end"
+        android:singleLine="true" />
+
+    <TextView android:id="@+id/line2" android:visibility="visible"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:paddingLeft="4dip"
+        style="@style/textAppearanceSmall"
+        android:layout_below="@id/line1"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

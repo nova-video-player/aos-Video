@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+    <Button
+        android:id="@+id/play"
+        style="@style/VideoInfoButton"
+        android:layout_height="match_parent"
+        android:drawablePadding="4dip"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:drawableTop="@drawable/label_playing_padded"
+        android:text="@string/play_selection"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/resume"
+        style="@style/VideoInfoButton"
+        android:layout_height="match_parent"
+        android:drawablePadding="4dip"
+        android:drawableTop="@drawable/label_resume_padded"
+        android:text="M&apos;SS&apos;&apos;"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/bookmark"
+        style="@style/VideoInfoButton"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:drawablePadding="4dip"
+        android:drawableTop="@drawable/label_bookmark"
+        android:text="M&apos;SS&apos;&apos;"
+        android:visibility="gone" />
+
+</LinearLayout>

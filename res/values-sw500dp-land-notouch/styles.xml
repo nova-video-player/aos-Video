@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Animations" />
+
+    <!-- PopDownMenu -->
+    <style name="Animations.PopDownMenu" />
+
+    <style name="Animations.PopDownMenu.Center">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_top</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_bottom</item>
+    </style>
+
+    <style name="Animations.PopDownMenu.Left">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_topleft_to_bottomright</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_bottomright_to_topleft</item>
+    </style>
+
+    <style name="Animations.PopDownMenu.Right">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_topright_to_bottomleft</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_bottomleft_to_topright</item>
+    </style>
+
+    <style name="Animations.PopDownMenu.Reflect">
+        <item name="@android:windowEnterAnimation">@anim/pump_top</item>
+        <item name="@android:windowExitAnimation">@anim/disappear</item>
+    </style>
+
+    <!-- PopUpMenu -->
+    <style name="Animations.PopUpMenu" />
+
+    <style name="Animations.PopUpMenu.Center">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_bottom</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_top</item>
+    </style>
+
+    <style name="Animations.PopUpMenu.Left">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_bottomleft_to_topright</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_topright_to_bottomleft</item>
+    </style>
+
+    <style name="Animations.PopUpMenu.Right">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_bottomright_to_topleft</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_topleft_to_bottomright</item>
+    </style>
+
+    <style name="Animations.PopUpMenu.Reflect">
+        <item name="@android:windowEnterAnimation">@anim/pump_bottom</item>
+        <item name="@android:windowExitAnimation">@anim/disappear</item>
+    </style>
+
+    <!-- Now playing -->
+    <style name="NowPlaying" parent="textAppearanceSmall">
+        <item name="android:typeface">sans</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowRadius">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="NowPlaying.Video">
+        <item name="android:singleLine">false</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <!-- Video Player -->
+    <style name="PlayerControlButton">
+        <item name="android:background">@null</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <!-- Player Settings -->
+
+    <!-- Info dialog -->
+    <style name="InfoDialogButton" parent="android:Widget.Holo.Button.Small">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingRight">11dip</item>
+        <item name="android:paddingLeft">11dip</item>
+    </style>
+
+    <!-- Archos GridView theme for the browser -->
+    <style name="ArchosGridView">
+        <item name="android:id">@id/browser_items</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:paddingTop">10dip</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="android:drawSelectorOnTop">false</item>
+        <item name="android:fastScrollEnabled">true</item>
+        <item name="android:choiceMode">singleChoice</item>
+        <item name="android:cacheColorHint">#00000000</item>
+        <item name="android:textFilterEnabled">true</item>
+        <item name="android:scrollbarStyle">outsideOverlay</item>
+    </style>
+
+    <!-- Common styles for Music and Video Browsers -->
+    <style name="MainLine">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">15dip</item>
+    </style>
+
+    <style name="SecondaryLine">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">12dip</item>
+    </style>
+
+    <style name="TinyLine" parent="textAppearanceSmall">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="BrowserText.Name" parent="MainLine">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:scrollHorizontally">true</item>
+    </style>
+
+    <style name="BrowserText.Info.InfoBlue" parent="SecondaryLine">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:scrollHorizontally">true</item>
+        <item name="android:textColor">@color/lightblue500</item>
+    </style>
+
+    <style name="BrowserText.Details" parent="MainLine">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textSize">12dip</item>
+    </style>
+
+    <style name="BrowserTinyText.Name" parent="TinyLine">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:scrollHorizontally">true</item>
+    </style>
+
+    <style name="BrowserTinyText.Info" parent="TinyLine">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/lightblue500</item>
+    </style>
+
+    <style name="BrowserText.Name.Video">
+        <item name="android:paddingTop">6dip</item>
+    </style>
+
+    <style name="BrowserText.Info.InfoBlue.Video">
+        <item name="android:paddingTop">3dip</item>
+    </style>
+
+    <style name="BrowserText.Number.Video" parent="MainLine">
+        <item name="android:singleLine">true</item>
+        <item name="android:paddingTop">6dip</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <!-- Cover text descriptions -->
+    <style name="CoverDescription">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="CoverDescription.Title">
+        <item name="android:maxLines">3</item>
+        <item name="android:textSize">@dimen/cover_description_floating_large</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="CoverDescription.Secondary">
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">@dimen/cover_description_floating_small</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="CoverDescription.Duration">
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">@dimen/cover_description_floating_small</item>
+        <item name="android:textColor">@color/lightblue500</item>
+    </style>
+
+    <style name="CoverDescription.Overlay">
+        <item name="android:background">#BB555555</item>
+        <item name="android:paddingLeft">7dip</item>
+    </style>
+
+    <!-- ArchosProgressSlider -->
+
+    <style name="BrowserResumeSlider">
+        <item name="android:progressDrawable">@drawable/browser_resume_slider</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:minHeight">4dip</item>
+        <item name="android:maxHeight">4dip</item>
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:paddingTop">4dip</item>
+        <item name="android:paddingBottom">4dip</item>
+        <item name="android:thumb">@null</item>
+    </style>
+
+    <style name="PlayerSliderHorizontal">
+        <item name="android:progressDrawable">@drawable/player_slider_horizontal</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:minHeight">4dip</item>
+        <item name="android:maxHeight">4dip</item>
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:paddingTop">4dip</item>
+        <item name="android:paddingBottom">4dip</item>
+        <item name="android:thumb">@null</item>
+    </style>
+
+    <style name="PlayerSliderVertical">
+        <!-- Starting with Android M, there is a default 48px maxHeight for SeekBar/ProgressBar, for some reason... -->
+        <item name="android:maxHeight">5000dip</item>
+        <item name="android:progressDrawable">@drawable/player_slider_vertical</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:thumb">@null</item>
+        <item name="android:minWidth">4dip</item>
+        <item name="android:maxWidth">4dip</item>
+        <item name="android:paddingLeft">4dip</item>
+        <item name="android:paddingRight">4dip</item>
+    </style>
+
+    <style name="VideoInfoButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">15dip</item>
+        <item name="android:paddingRight">15dip</item>
+    </style>
+
+   	<style name="VideoInfoFileInfo" parent="textAppearanceMedium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="VideoInfoFileInfo.Title">
+        <item name="android:textColor">@color/lightblue500</item>
+        <item name="android:drawablePadding">4dip</item>
+    </style>
+
+    <style name="VideoPreferenceAboutButton">
+        <item name="android:layout_width">140dip</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:scaleType">center</item>
+    </style>
+
+    <style name="textAppearanceSmall">
+        <item name="android:textSize">10sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="textAppearanceMedium">
+        <item name="android:textSize">13sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="textAppearanceLarge">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+</resources>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This is the main view of the video browser with a cover roll, a list
+category, and contents.
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.archos.mediacenter.video.browser.BrowserLayout
+
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:fitsSystemWindows="true"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/main_toolbar"
+                android:layout_alignParentTop="true"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:background="@color/leanback_background_transparent"
+                android:minHeight="?attr/actionBarSize"
+                />
+
+
+
+            <FrameLayout
+                android:id="@+id/content"
+                android:layout_below="@+id/main_toolbar"
+                android:layout_above="@+id/adViews"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <FrameLayout
+                android:id="@+id/adViews"
+                android:layout_above="@+id/miniControllerContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.gms.ads.AdView
+                    android:id="@+id/adView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    ads:adSize="SMART_BANNER"
+                    ads:adUnitId="@string/ad_unit_id"
+                    />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/mini_controller_black_veil"
+                android:layout_above="@+id/miniControllerContainer"
+                android:background="@color/transparent_black_50"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="5dp"
+                android:layout_above="@+id/miniControllerContainer"
+                android:visibility="gone"
+                android:id="@+id/minicontroller_shadow"
+                android:background="@drawable/mini_gradient_light"/>
+            <FrameLayout
+                android:id="@+id/miniControllerContainer"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.archos.mediacenter.video.player.cast.ArchosMiniPlayer
+                    android:id="@+id/miniController1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/lightblue900"
+                    app:auto_setup="true"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+        </RelativeLayout>
+
+        <!-- The navigation drawer -->
+
+        <LinearLayout
+            android:layout_width="@dimen/categories_list_width"
+            android:id="@+id/category_container"
+            android:fitsSystemWindows="true"
+            android:layout_gravity="left|start"
+            android:background="@color/leanback_background"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <!-- Category view at the middle -->
+
+            <fragment
+                android:id="@+id/category"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                class="com.archos.mediacenter.video.browser.BrowserCategoryVideo"
+                />
+
+            <!-- Global resume at the middle and below the category view -->
+
+            <ViewStub
+                android:id="@+id/global_resume_stub"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/global_resume_video_height"
+                android:layout="@layout/browser_resume_video" />
+        </LinearLayout>
+
+        <!-- Handle category view and global resume -->
+
+
+
+        <!-- Content view at the right -->
+
+
+    </com.archos.mediacenter.video.browser.BrowserLayout >
+
+
+
+</FrameLayout>
+
+
+
+    

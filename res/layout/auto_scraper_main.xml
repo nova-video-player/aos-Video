@@ -1,0 +1,103 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal" >
+
+    <!-- Main view -->
+
+    <LinearLayout
+        android:id="@+id/main_view"
+        style="@android:style/Holo.ButtonBar.AlertDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <!-- Top area = list of files -->
+
+        <ListView
+            android:id="@+id/list_items"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_weight="1"
+            android:drawSelectorOnTop="false"
+            android:fastScrollEnabled="true"
+            android:scrollbarStyle="outsideOverlay"
+            android:divider="@null"
+            android:dividerHeight="@dimen/content_list_vertical_spacing_between_items" />
+
+        <!-- Bottom area = control buttons -->
+
+        <LinearLayout
+            android:id="@+id/control_buttons"
+            style="@android:style/Holo.ButtonBar.AlertDialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/abort_button"
+                style="@android:style/Widget.Holo.Button.Borderless.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/abort" />
+
+            <Button
+                android:id="@+id/exit_button"
+                style="@android:style/Widget.Holo.Button.Borderless.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@android:string/yes" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Empty view -->
+
+    <LinearLayout
+        android:id="@+id/empty_view"
+        style="@android:style/Holo.ButtonBar.AlertDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <!-- Text to display inside the empty view -->
+
+        <TextView
+            android:id="@+id/empty_view_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:focusable="false"
+            android:gravity="center"
+            android:singleLine="false"
+            android:padding="30dip"
+            style="@style/textAppearanceMedium" />
+
+        <!-- Buttons area to display below the text -->
+
+        <LinearLayout
+            style="@android:style/Holo.ButtonBar.AlertDialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/empty_view_no_button"
+                style="@android:style/Widget.Holo.Button.Borderless.Small"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@android:string/no" />
+
+            <Button
+                android:id="@+id/empty_view_yes_button"
+                style="@android:style/Widget.Holo.Button.Borderless.Small"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@android:string/yes" />
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

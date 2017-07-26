@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+     The root FrameLayout is needed to have the main RelativeLayout centered in the GridView cells, without
+     having the list_item_background background in the margin
+-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/video_info_grid_column_width"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:background="@drawable/list_item_background"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".video.browser.AdapterDefaultValuesGrid" >
+
+    <!-- thumbnail of the grid item -->
+
+    <ImageView
+        android:id="@+id/thumbnail"
+        android:layout_width="@dimen/video_info_grid_poster_width"
+        android:layout_height="@dimen/video_info_grid_poster_height"
+        android:layout_marginLeft="@dimen/video_grid_poster_margin_left"
+        android:layout_marginRight="@dimen/video_grid_poster_margin_right"
+        android:layout_marginTop="@dimen/video_grid_poster_margin_top"
+        android:background="@color/default_icon_background"
+        android:scaleType="center" />
+
+   
+
+    <!--
+	   (i) symbol.
+	NOTE: Active area larger than the icon itself due to different left and top padding
+    -->
+
+
+    <!-- bottom area of the grid item -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/thumbnail"
+        android:layout_margin="4dip"
+        >
+
+        <!-- line 1 = name -->
+
+        <TextView
+            android:id="@+id/name"
+            style="@style/BrowserTinyText.Name"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:paddingTop="5dip" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

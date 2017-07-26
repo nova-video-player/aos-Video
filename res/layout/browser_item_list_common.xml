@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools" >
+    <!--
+         (i) symbol.
+	     NOTE: Active area larger than the icon itself due to different left and right padding
+    -->
+    <View
+        android:id="@+id/right_wrapper"
+        android:layout_height="0dp"
+        android:layout_width="1dp"
+        android:layout_alignParentRight="true"
+        >
+
+    </View>
+    <ImageButton
+        android:id="@+id/expanded"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/video_list_thumbnail_height"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@id/right_wrapper"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="30dip"
+        android:paddingRight="@dimen/list_expanded_padding"
+        android:background="@drawable/list_selector_holo_dark"
+        android:src="@drawable/label_infoarrow" />
+
+    <!--
+         Bottom area = progressbar + info icons 
+         NOTE: negative right margin to be close to the (i) icon despite it's large left padding (see above)
+    -->
+
+    <LinearLayout
+        android:id="@+id/bottom_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/info"
+        android:layout_alignParentBottom="false"
+        android:layout_marginRight="-18dip"
+        android:paddingRight="18dip"
+        android:layout_toLeftOf="@id/expanded"
+
+        android:orientation="horizontal" >
+
+        <ProgressBar
+                   android:id="@+id/resume_notif"
+                    style="@style/BrowserResumeSlider"
+                    android:layout_width="@dimen/video_resume_slider_length_list"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                   android:layout_marginBottom="3dip"
+                    android:layout_marginRight="10dip"
+                    android:clickable="false"
+                   android:indeterminate="false"
+                    android:paddingBottom="0dip"
+                    android:progress="50" />
+
+        <!-- resume_notif is only used in case we don't know the duration of the video -->
+
+        <com.archos.mediacenter.utils.ImageLabel
+            android:id="@+id/resume_notif_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="8dip"
+            android:clickable="false"
+            android:src="@drawable/label_resume"
+            android:visibility="gone" />
+
+        <com.archos.mediacenter.utils.ImageLabel
+            android:id="@+id/bookmark_notif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="8dip"
+            android:clickable="false"
+            android:visibility="gone"
+            android:src="@drawable/label_bookmark" />
+
+        <com.archos.mediacenter.utils.ImageLabel
+            android:id="@+id/subtitle_notif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="8dip"
+            android:clickable="false"
+            android:src="@drawable/label_subtitles" />
+
+        <com.archos.mediacenter.utils.ImageLabel
+            android:id="@+id/network_notif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="false"
+            android:src="@drawable/label_network" />
+    </LinearLayout>
+
+    <!--
+         Middle area = text info
+	     NOTE: negative right margin to be go over the (i) icon despite it's large left padding
+    -->
+
+    <TextView
+        android:id="@+id/name"
+        style="@style/BrowserText.Name.Video"
+        android:layout_alignParentTop="true"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_marginRight="18dip"
+        android:layout_toLeftOf="@id/expanded"
+        android:layout_toRightOf="@id/left_area" />
+
+    <TextView
+        android:id="@+id/info"
+        style="@style/BrowserText.Info.Video"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@id/name"
+
+        android:layout_marginRight="3dp"
+        android:layout_toRightOf="@id/left_area" />
+</merge>

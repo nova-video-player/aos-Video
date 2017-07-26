@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="0dip"
+    android:paddingRight="0dip">
+
+
+    <ImageView
+        android:id="@+id/audio_label"
+        android:layout_width="58dp"
+        android:layout_height="wrap_content"
+        android:scaleType="center"
+        android:src="@drawable/badge_5_1"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/video_info_medium_text"
+        android:text="Small Text"
+        android:id="@+id/audio_format" />
+
+</LinearLayout>
