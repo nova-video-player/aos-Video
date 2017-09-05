@@ -57,11 +57,7 @@ android {
         qc.setRoot('src/archos')
         rk.setRoot('src/archos')
     }
-
-    if (file("../mc-utils/mc_apps_common_env.gradle").exists())
-        apply from: "../mc-utils/mc_apps_common_env.gradle";
-
-
+    
     defaultConfig {
         generatedDensities = []
         minSdkVersion 15
@@ -212,4 +208,8 @@ dependencies {
     compile 'com.amazon.android:mobile-ads:5.8.1.1'
     leanbackCompile 'com.android.support:leanback-v17:25.0.1'
     compile 'com.amazon.android:mobile-ads:+'
+}
+if (file("../VideoInternal").exists()) {
+    apply from: "../VideoInternal/mc_apps_common_env.gradle";
+    apply from: '../VideoInternal/internal_build.gradle'
 }
