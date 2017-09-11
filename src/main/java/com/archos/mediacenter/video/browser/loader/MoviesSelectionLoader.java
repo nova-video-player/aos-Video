@@ -21,20 +21,15 @@ import com.archos.mediaprovider.video.VideoStore;
 /**
  * Created by vapillon on 10/04/15.
  */
-public class MoviesSelectionLoader extends MoviesLoader {
+public class MoviesSelectionLoader extends VideosSelectionLoader {
 
-    private final String mListOfMoviesIds;
-    private String mSortOrder;
 
     public MoviesSelectionLoader(Context context, String listOfMoviesIds) {
-        this(context, listOfMoviesIds, DEFAULT_SORT);
+        super(context, listOfMoviesIds);
     }
 
-    public MoviesSelectionLoader(Context context, String listOfMoviesIds, String SortOrder) {
-        super(context, true);
-        mListOfMoviesIds = listOfMoviesIds;
-        mSortOrder = SortOrder;
-        init();
+    public MoviesSelectionLoader(Context context, String listOfIds, String SortOrder) {
+        super(context, listOfIds, SortOrder);
     }
 
     @Override
@@ -44,7 +39,7 @@ public class MoviesSelectionLoader extends MoviesLoader {
 
     @Override
     public String getSelection() {
-        return VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IN (" + mListOfMoviesIds + ")";
+        return VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IN (" + mListOfIds + ")";
     }
 
     @Override

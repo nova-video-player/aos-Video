@@ -150,7 +150,7 @@ public class WidgetProviderVideo extends AppWidgetProvider {
             }
             // case 2: launch the video
             else if (videoId >= 0) {
-                VideoInfoActivity.startInstance(context, null, null, videoId, null);
+                VideoInfoActivity.startInstance(context, null, null, videoId);
             }
             else {
                 if (DBG) Log.d(TAG, "Can not play item " + position);

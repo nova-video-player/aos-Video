@@ -74,6 +74,11 @@
             android:theme="@style/MyLeanbackTheme"/>
 
         <activity
+            android:name="com.archos.mediacenter.video.leanback.VideosByListActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+
+        <activity
             android:name="com.archos.mediacenter.video.leanback.details.VideoDetailsActivity"
             android:theme="@style/MyLeanbackTheme"/>
 

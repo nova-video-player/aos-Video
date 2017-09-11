@@ -167,7 +167,7 @@ abstract public class BrowserCategory extends ListFragment {
         super.onActivityResult(requestCode,resultCode, data);
         if(requestCode == FILE_CHOOSER_ACTIVITY_REQUEST_CODE&&data!=null){
             //PlayUtils.startVideo(getActivity(), data.getData(), data.getData(), null, null, PlayerActivity.RESUME_FROM_LAST_POS, true,-1, null);
-            VideoInfoActivity.startInstance(getActivity(), null, data.getData(),new Long(-1),null);
+            VideoInfoActivity.startInstance(getActivity(), null, data.getData(),new Long(-1));
         }
     }
 

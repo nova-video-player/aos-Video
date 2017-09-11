@@ -22,11 +22,12 @@ import android.util.SparseArray;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.MoviesByYearLoader;
+import com.archos.mediacenter.video.leanback.VideosByFragment;
 import com.archos.mediacenter.video.utils.SortOrder;
 import com.archos.mediaprovider.video.VideoStore;
 
 
-public class MoviesByYearFragment extends MoviesByFragment {
+public class MoviesByYearFragment extends VideosByFragment {
 
     private static final String SORT_PARAM_KEY = MoviesByYearFragment.class.getName() + "_SORT";
 

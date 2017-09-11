@@ -696,12 +696,17 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
         public void onClick(View v) {
             // The user clicked on the empty view button.
             // This button is only used so far to start searching infos online.
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.setClass(mContext, AutoScraperActivity.class);
-            startActivity(intent);
+            if(!onEmptyviewButtonClick()) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setClass(mContext, AutoScraperActivity.class);
+                startActivity(intent);
+            }
         }
     };
 
+    protected boolean onEmptyviewButtonClick(){
+        return false;
+    }
 
     protected boolean mMultiplePositionEnabled = false;
 
@@ -744,22 +749,6 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     abstract public Uri getUriFromPosition(int position);
     public Uri getRealPathUriFromPosition(int position){
         return getUriFromPosition(position);
-    }
-    public void startVideo(int position, int resume) {
-        Uri uri = getUriFromPosition(position);
-        String extension = getExtension(getRealPathUriFromPosition(position).getLastPathSegment());
-        String mimeType = null;
-        if (extension!=null) {
-            mimeType = MimeUtils.guessMimeTypeFromExtension(extension);
-        }
-        Uri nonContentUri = getRealPathUriFromPosition(position);
-        PlayUtils.startVideo(getActivity(),
-                getUriFromPosition(position),
-                nonContentUri,
-                null,
-                mimeType,
-                resume,
-                true,-1, this);
     }
 
     @Override
@@ -936,12 +925,6 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     // this can't be a parameter of startvideo because otherwise we won't be able to use it in context menu
     public boolean shouldDownloadRemoteSubtitle(int position){
         return true;
-    }
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        boolean ret = true;
-
-        return ret;
     }
 
     /**

@@ -332,15 +332,15 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 		args.putInt(VideoColumns.SCRAPER_E_SEASON,
 				mCursor.getInt(seasonColumn));
 		args.putString(SUBCATEGORY_NAME, tvshow.getName());
-		args.putSerializable(BrowserBySeason.EXTRA_SHOW_ITEM, tvshow);
+		args.putSerializable(BrowserListOfSeasons.EXTRA_SHOW_ITEM, tvshow);
         args.putLong(VideoColumns.SCRAPER_SHOW_ID,
 				tvshow.getTvshowId());
 
         Fragment f = null;
 		if(tvshow.getSeasonCount()>1)
-			f = Fragment.instantiate(mContext, BrowserBySeason.class.getName(), args);
+			f = Fragment.instantiate(mContext, BrowserListOfSeasons.class.getName(), args);
 		else
-			f = Fragment.instantiate(mContext, BrowserByShow.class.getName(), args);
+			f = Fragment.instantiate(mContext, BrowserListOfEpisodes.class.getName(), args);
         BrowserCategory category = (BrowserCategory) getFragmentManager().findFragmentById(
                 R.id.category);
         category.startContent(f);

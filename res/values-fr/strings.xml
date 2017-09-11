@@ -621,4 +621,9 @@
     <string name="rate_us">Si vous aimez cette application, pensez à nous soutenir en nous donnant 5 étoiles</string>
     <string name="rate_us_title">☆ Soutenez-nous</string>
     <string name="no_resume_available">Reprise indisponible</string>
+    <string name="premium_already_purchased">Archos Video Premium a déjà été acheté</string>
+    <string name="create_new_list">Créer une nouvelle liste</string>
+    <string name="add_to_list">Ajouter à la liste</string>
+    <string name="no_list_detected">Aucune liste détectée. Une liste peut être crée en ajoutant des vidéos à partir de leur vue d\'information ou en les synchronisant avec Trakt (seulement en version premium).</string>
+    <string name="remove_from_list">Retirer de la liste</string>
 </resources>

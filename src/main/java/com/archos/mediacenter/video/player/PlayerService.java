@@ -52,6 +52,7 @@ import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.BootupRecommandationService;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
+import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoUtils;
@@ -133,6 +134,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public static final String EXIT_INTENT = "playerservice.exit";
     public static final String FULLSCREEN_INTENT = "playerservice.fullscreen";
     public static final String DISABLE_PASSTHROUGH = "playerservice.passthrough";
+    public static final String PLAYLIST_ID = "playlist_id";
+    public static final String VIDEO = "extra_video";
     public static PlayerService sPlayerService;
     private SharedPreferences mPreferences;
     private PlayerFrontend mPlayerFrontend;
@@ -294,7 +297,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mUpdateNextTask.cancel(false);
             mUpdateNextTask.setListener(null);
         }
-        mUpdateNextTask = new UpdateNextTask(getContentResolver(), mUri, null, -1);
+        mUpdateNextTask = new UpdateNextTask(getContentResolver(),(Video)mIntent.getSerializableExtra(VIDEO), mUri, null, -1, mIntent.getLongExtra(PLAYLIST_ID, -1));
         if (!sync) {
             mUpdateNextTask.setListener(new UpdateNextTask.Listener() {
                 @Override

@@ -76,6 +76,7 @@
     <string name="recently_added_videos">Recently added</string>
     <string name="recently_played">Recently played</string>
     <string name="recently_played_videos">Recently played</string>
+    <string name="video_lists">Playlists</string>
 
     <!-- The string used in main storage list -->
     <string name="external_storage">External</string>
@@ -692,6 +693,7 @@
    <string name="trakt_user">Username</string>
    <string name="trakt_password">Password</string>
    <string name="trakt_signin">Sign in</string>
+   <string name="trakt_list_signin">Sign into Trakt</string>
    <string name="trakt_status_login">Signing in&#8230;</string>
    <string name="trakt_signin_summary_logged">Signed in</string>
    <string name="trakt_signin_summary_logged_error">Authentication error</string>
@@ -839,5 +841,8 @@
     <string name="create_new_list">Create new list</string>
     <string name="add_to_list">Add to list</string>
     <string name="no_resume_available">No resume currently available</string>
+    <string name="no_list_detected">No list currently detected. List can be created by adding new items directly from video info, or can be synced with your trakt account (premium only).</string>
+    <string name="premium_already_purchased">Premium has already been purchased</string>
+    <string name="remove_from_list">Remove from list</string>
 
 </resources>

@@ -65,7 +65,7 @@ import java.io.IOException;
 public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
 
-    static final private String BROWSER_SHOW = BrowserByShow.class.getName();
+    static final private String BROWSER_SHOW = BrowserListOfEpisodes.class.getName();
     public static final String EXTRA_SHOW_ITEM = "show_item";
     private final static int SUBMENU_ITEM_LIST_INDEX = 0;
     private final static int SUBMENU_ITEM_GRID_INDEX = 1;

@@ -86,30 +86,8 @@ public class GroupOfMovieAdapter extends CursorAdapter implements SectionIndexer
 
     }
 
-    /* ALREADY DEFINED IN SUPERCLASS, no need to redefine
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (!mDataValid) {
-            throw new IllegalStateException("this should only be called when the cursor is valid");
-        }
-        if (!getCursor().moveToPosition(position)) {
-            throw new IllegalStateException("couldn't move cursor to position " + position);
-        }
-        View view;
-        if (convertView == null) {
-            view = newView(mContext, getCursor(), parent);
-        } else {
-            view = convertView;
-        }
-        bindView(view, mContext, getCursor());
-        return view;
-    }*/
-
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         int layoutId = -1;
-
-
-
-
         return mPresenter.getView(parent, null, null);
     }
 
@@ -122,20 +100,10 @@ public class GroupOfMovieAdapter extends CursorAdapter implements SectionIndexer
 
     }
 
-    /* ALREADY DEFINED IN SUPERCLASS, no need to redefine
-    public Object getItem(int position) {
-        if (mDataValid) {
-            getCursor().moveToPosition(position);
-            return getCursor();
-        } else {
-            return null;
-        }
-    } */
-
     private void setSections() {
         String previousLetter = "";
         mIndexer.clear();
-        if (getCount() != 0) {
+        if (getCount() > 0) {
             getCursor().moveToFirst();
             do {
                 String letter = getCursor().getString(mNameColumnIdx).substring(0, 1);

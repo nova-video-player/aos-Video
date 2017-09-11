@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -33,13 +34,13 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.archos.environment.ArchosIntents;
 import com.archos.environment.ArchosSettings;
-import com.archos.filecorelibrary.MimeUtils;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.utils.videodb.XmlDb;
 import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.lists.ListDialog;
 import com.archos.mediacenter.video.browser.adapters.AdapterByVideoObjectsInterface;
 import com.archos.mediacenter.video.browser.adapters.PresenterAdapterInterface;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
@@ -70,7 +71,7 @@ import httpimage.HttpImageManager;
 public abstract class BrowserByVideoObjects extends Browser implements CommonPresenter.ExtendedClickListener, ExternalPlayerWithResultStarter {
 
     private static final int PLAY_ACTIVITY_REQUEST_CODE = 780;
-    private AdapterByVideoObjectsInterface mAdapterByVideoObjects;
+    protected AdapterByVideoObjectsInterface mAdapterByVideoObjects;
 
     @Override
     protected void postBindAdapter() {
@@ -104,9 +105,11 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
             if(j>VideoInfoActivity.MAX_VIDEO)
                 break;
         }
+        VideoInfoActivity.startInstance(getActivity(), this,video,finalPos,urlList,-1, shouldForceVideoSelection(), getPlaylistId());
+    }
 
-
-        VideoInfoActivity.startInstance(getActivity(), this,video,finalPos,urlList,-1, shouldForceVideoSelection());
+    protected long getPlaylistId(){
+        return -1;
     }
 
     protected boolean shouldForceVideoSelection() {
@@ -195,6 +198,10 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
         // Subloader
         menu.add(0, R.string.get_subtitles_online, 0, R.string.get_subtitles_online);
 
+        if(video.hasScraperData()){
+            menu.add(0, R.string.add_to_list, 0, R.string.add_to_list);
+
+        }
 
         // Propose to remove from DB the files that are indexed
         if (video.getId()>0) {
@@ -246,20 +253,10 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
     }
 
     public void startVideo(Video video, int resume) {
-        Uri uri = video.getUri();
-        String extension = getExtension(video.getFileUri().getLastPathSegment());
-        String mimeType = null;
-        if (extension!=null) {
-            mimeType = MimeUtils.guessMimeTypeFromExtension(extension);
-        }
-        Uri nonContentUri = video.getFileUri();
         PlayUtils.startVideo(getActivity(),
-                video.getUri(),
-                nonContentUri,
-                null,
-                mimeType,
+                video,
                 resume,
-                true,-1, this);
+                true, -1, this, false, -1);
     }
 
 
@@ -371,6 +368,13 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
                 toCopy.add(video.getFileUri());
                 startDownloadingVideo(toCopy);
 
+                break;
+            case R.string.add_to_list:
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(ListDialog.EXTRA_VIDEO, video);
+                ListDialog dialog = new ListDialog();
+                dialog.setArguments(bundle);
+                dialog.show(getActivity().getFragmentManager(), "list_dialog");
                 break;
             default:
                 ret = super.onContextItemSelected(item);

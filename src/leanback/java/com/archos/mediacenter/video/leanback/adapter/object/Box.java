@@ -25,6 +25,7 @@ public class Box {
         ALL_MOVIES,
         MOVIES_BY_GENRE,
         MOVIES_BY_YEAR,
+        VIDEOS_BY_LISTS,
         FOLDERS,
         USB,
         SDCARD,

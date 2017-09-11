@@ -203,8 +203,14 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
                     return;
                 if (checkPayement(isPaid)) {
                     setPaidStatus();
+                    if(getActivity().getIntent().getBooleanExtra(VideoPreferencesActivity.EXTRA_LAUNCH_INAPP_PURCHASE, false)){
+                        Toast.makeText(getActivity(), R.string.premium_already_purchased, Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     setFreeStatus();
+                    if(getActivity().getIntent().getBooleanExtra(VideoPreferencesActivity.EXTRA_LAUNCH_INAPP_PURCHASE, false)){
+                        launchPurchase();
+                    }
                 }
             }
         };

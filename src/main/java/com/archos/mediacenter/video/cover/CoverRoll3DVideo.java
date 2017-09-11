@@ -401,7 +401,7 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 				break;
 		}
 		// Give current position
-		VideoInfoActivity.startInstance(getContext(), null,null, pos, urlList,-1, false);
+		VideoInfoActivity.startInstance(getContext(), null,null, pos, urlList,-1, false, -1);
 	}
 	@Override
 	protected Runnable getOpenAction(final Integer cid) {

@@ -20,7 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserAllMovies;
+import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserByVideoSelection;
 
 
 class RemoteViewsFactoryMovies extends RemoteViewsFactoryBase {
@@ -34,8 +34,8 @@ class RemoteViewsFactoryMovies extends RemoteViewsFactoryBase {
 
 	protected boolean loadData(Context context, int maxItemCount) {
 		if(DBG) Log.d(TAG, "loadData()");
-		String sortOrder = BrowserAllMovies.DEFAULT_SORT + " LIMIT " + maxItemCount;
-		String selection = BrowserAllMovies.SELECTION_ALL_MOVIES;
+		String sortOrder = BrowserByVideoSelection.DEFAULT_SORT + " LIMIT " + maxItemCount;
+		String selection = BrowserByVideoSelection.SELECTION_ALL_MOVIES;
 		ContentResolver resolver = context.getContentResolver();
 		mCursor = resolver.query(MEDIA_DB_CONTENT_URI, VIDEO_FILES_COLUMNS, selection, null, sortOrder);
 		return (mCursor !=null);

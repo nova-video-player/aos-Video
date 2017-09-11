@@ -44,7 +44,7 @@ public class MoviesLoader extends VideoLoader {
         if(mGroupByOnlineId) {
             setUri(getUri().buildUpon().appendQueryParameter("group",
                     "CASE\n"+
-                            "WHEN " + VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID + ">0 THEN " + VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID+"\n" +
+                            "WHEN " + VideoStore.Video.VideoColumns.SCRAPER_VIDEO_ONLINE_ID + ">0 THEN " + VideoStore.Video.VideoColumns.SCRAPER_VIDEO_ONLINE_ID+"\n" +
                             " ELSE "+VideoStore.Video.VideoColumns._ID+"\n" +
                             "END"
 

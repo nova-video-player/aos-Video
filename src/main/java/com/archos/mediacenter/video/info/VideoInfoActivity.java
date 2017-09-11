@@ -25,7 +25,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,6 +44,7 @@ public class VideoInfoActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     public static final String EXTRA_VIDEO = "VIDEO";
     public static final String EXTRA_VIDEO_ID = "video_id";
+    public static final String EXTRA_PLAYLIST_ID = "playlist_id";
     public static final String EXTRA_LAUNCHED_FROM_PLAYER = "launchedFromPlayer";
     public static final String EXTRA_VIDEO_PATHS = "video_paths";
     public static final String EXTRA_VIDEO_PATH = "video_path";
@@ -125,7 +125,14 @@ public class VideoInfoActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static void startInstance(Context context, Fragment fragment, Video currentVideo, int currentPosition, ArrayList<Uri> paths, long id, boolean forceVideoSelection){
+    public static void startInstance(Context context,
+                                     Fragment fragment,
+                                     Video currentVideo,
+                                     int currentPosition,
+                                     ArrayList<Uri> paths,
+                                     long id,
+                                     boolean forceVideoSelection,
+                                     long playlistId){
 
         Intent intent = new Intent(context, VideoInfoActivity.class);
         if(currentVideo!=null)
@@ -134,6 +141,7 @@ public class VideoInfoActivity extends AppCompatActivity {
             intent.putExtra(EXTRA_VIDEO_PATHS, paths);
         intent.putExtra(EXTRA_FORCE_VIDEO_SELECTION,forceVideoSelection);
         intent.putExtra(EXTRA_VIDEO_ID, id);
+        intent.putExtra(EXTRA_PLAYLIST_ID, playlistId);
         intent.putExtra(EXTRA_CURRENT_POSITION, currentPosition);
         if(fragment!=null) {
             fragment.startActivityForResult(intent, 0);
@@ -147,10 +155,10 @@ public class VideoInfoActivity extends AppCompatActivity {
 
 
     }
-    public static void startInstance(Context context, Video video, Uri path,Long id,View posterView){
+    public static void startInstance(Context context, Video video, Uri path, Long id){
         ArrayList<Uri> paths = new ArrayList<>();
         paths.add(path);
-        startInstance(context,null,video, 0,paths,id, false);
+        startInstance(context,null,video, 0,paths,id, false, -1);
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

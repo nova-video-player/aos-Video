@@ -117,12 +117,9 @@ import com.archos.mediascraper.xml.MovieScraper2;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
-import com.google.android.gms.cast.ApplicationMetadata;
-import com.google.android.gms.cast.CastDevice;
 import com.google.android.gms.cast.CastMediaControlIntent;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCastConsumer;
-import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCastConsumerImpl;
 import com.google.android.libraries.cast.companionlibrary.widgets.IntroductoryOverlay;
 import com.squareup.picasso.Picasso;
 
@@ -550,7 +547,14 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             @Override
             public void onClick(View view) {
                 mIsLeavingPlayerActivity = true;
-                PlayUtils.startVideo(getActivity(), mCurrentVideo.getUri(), mCurrentVideo.getFileUri(), mCurrentVideo.getStreamingUri(), mCurrentVideo.getMimeType(), finalResume, false, finalResumePos, VideoInfoActivityFragment.this);
+                PlayUtils.startVideo(getActivity(),
+                        mCurrentVideo,
+                        finalResume,
+                        false,
+                        finalResumePos,
+                        VideoInfoActivityFragment.this,
+                        false,
+                        getActivity().getIntent().getLongExtra(VideoInfoActivity.EXTRA_PLAYLIST_ID, -1));
             }
         });
 
@@ -1003,7 +1007,15 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 resumePos = mCurrentVideo.getRemoteResumeMs();
             }
             mIsLeavingPlayerActivity = true;
-            PlayUtils.startVideo(getActivity(), mCurrentVideo.getUri(), mCurrentVideo.getFileUri(), mCurrentVideo.getStreamingUri(), mCurrentVideo.getMimeType(), resume, false, resumePos, this);
+            PlayUtils.startVideo(
+                    getActivity(),
+                    mCurrentVideo,
+                    resume,
+                    false,
+                    resumePos,
+                    this,
+                    false,
+                    getActivity().getIntent().getLongExtra(VideoInfoActivity.EXTRA_PLAYLIST_ID, -1));
 
         }
         else if(view == mIndexButton){

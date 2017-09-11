@@ -17,8 +17,7 @@ package com.archos.mediacenter.video.cover;
 import com.archos.mediacenter.cover.ArtworkFactory;
 import com.archos.mediacenter.cover.Cover;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserBySeason;
-import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserByShow;
+import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserListOfSeasons;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.browser.BrowserActivity;
 import com.archos.mediacenter.utils.InfoDialog;
@@ -39,8 +38,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import java.io.InputStream;
-import java.io.IOException;
 import java.util.Formatter;
 import java.util.Locale;
 
@@ -255,7 +252,7 @@ public class TvShowCover extends Cover {
             public void run() {
                 Bundle args;
                 Intent i = new Intent(LAUNCH_CONTENT_BROWSER_INTENT);
-                i.putExtra(BrowserActivity.FRAGMENT_NAME, BrowserBySeason.class.getName());
+                i.putExtra(BrowserActivity.FRAGMENT_NAME, BrowserListOfSeasons.class.getName());
                 args = new Bundle(2);
                 args.putLong(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID, mScraperId);
                 args.putString("subcategoryName", mName);

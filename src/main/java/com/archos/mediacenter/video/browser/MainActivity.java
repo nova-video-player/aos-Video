@@ -75,10 +75,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazon.device.ads.AdLayout;
-import com.amazon.device.ads.AdRegistration;
 import com.amazon.device.ads.AdTargetingOptions;
 import com.archos.environment.ArchosUtils;
-import com.archos.filecorelibrary.Utils;
 import com.archos.mediacenter.utils.GlobalResumeView;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.CustomApplication;
@@ -89,10 +87,13 @@ import com.archos.mediacenter.video.UiChoiceDialog;
 import com.archos.mediacenter.video.autoscraper.AutoScraperActivity;
 import com.archos.mediacenter.video.billingutils.BillingUtils;
 import com.archos.mediacenter.video.billingutils.IsPaidCallback;
-import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserBySeason;
+import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserListOfSeasons;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.CursorBrowserByVideo;
+import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
+import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.dialogs.Paste;
 import com.archos.mediacenter.video.browser.filebrowsing.BrowserByVideoFolder;
+import com.archos.mediacenter.video.info.SingleVideoLoader;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.player.cast.ArchosMiniPlayer;
@@ -107,7 +108,6 @@ import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.ScraperStore;
 import com.archos.mediaprovider.video.VideoStore;
-import com.archos.mediaprovider.video.VideoStore.Video;
 import com.archos.mediaprovider.video.VideoStore.Video.VideoColumns;
 import com.archos.mediascraper.AutoScrapeService;
 import com.google.android.gms.ads.AdListener;
@@ -444,7 +444,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                     Bundle args = new Bundle(2);
                     args.putLong(VideoColumns.SCRAPER_SHOW_ID, showId);
                     args.putString(CursorBrowserByVideo.SUBCATEGORY_NAME, ""); // should better have the show title, but...
-                    Fragment f = Fragment.instantiate(this,BrowserBySeason.class.getName(), args);
+                    Fragment f = Fragment.instantiate(this,BrowserListOfSeasons.class.getName(), args);
                     BrowserCategory category = (BrowserCategory) getSupportFragmentManager().findFragmentById(R.id.category);
                     category.clearCheckedItem(); // a category may have be selected previously
                     category.startContent(f);
@@ -480,9 +480,9 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             if (c != null && c.getCount() != 0) {
                 int index_id = c.getColumnIndex(VideoStore.Video.VideoColumns._ID);
                 c.moveToFirst();
-                int resumeId = c.getInt(index_id);
-                Uri uri = ContentUris.withAppendedId(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, resumeId);
-                PlayUtils.startVideo(this, uri, VideoUtils.getFileUriFromMediaLibPath(Utils.getRealUriFromVideoURI(this, uri).toString()), null, null, PlayerActivity.RESUME_FROM_LAST_POS, true,-1, this);
+                long resumeId = c.getLong(index_id);
+                Video video = getVideoFromId(resumeId);
+                PlayUtils.startVideo(this, video, PlayerActivity.RESUME_FROM_LAST_POS, true,-1, this, false, -1);
             }else
                 Toast.makeText(this, R.string.no_resume_available, Toast.LENGTH_LONG).show();
         }
@@ -506,6 +506,19 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 }
             });
         }
+    }
+
+    private Video getVideoFromId(long resumeId) {
+        SingleVideoLoader singleVideoLoader = new SingleVideoLoader(this, resumeId);
+        Cursor c = singleVideoLoader.loadInBackground();
+        if(c.getCount()>0){
+            VideoCursorMapper cursorMapper = new VideoCursorMapper();
+            cursorMapper.publicBindColumns(c);
+            c.moveToFirst();
+            Video video = (Video) cursorMapper.publicBind(c);
+            return video;
+        }
+        return null;
     }
 
 
@@ -628,8 +641,8 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     protected void launchGlobalResume() {
         if (mGlobalResumeId != -1) {
 
-            Uri uri = ContentUris.withAppendedId(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, mGlobalResumeId);
-            PlayUtils.startVideo(this, uri, VideoUtils.getFileUriFromMediaLibPath(Utils.getRealUriFromVideoURI(this, uri).toString()), null, null, PlayerActivity.RESUME_FROM_LAST_POS, true,-1, this);
+            Video video = getVideoFromId(mGlobalResumeId);
+            PlayUtils.startVideo(this, video, PlayerActivity.RESUME_FROM_LAST_POS, true,-1, this, false, -1);
             if(ArchosVideoCastManager.getInstance().isConnected()) {//reset resume view since playeractivity won't be launcher
                 GlobalResumeView grv = getGlobalResumeView();
                 grv.resetOpenAnimation();
@@ -1020,8 +1033,8 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 }
 
                 if (thumbnail == null) {
-                    thumbnail = Video.Thumbnails.getThumbnail(contentResolver, mGlobalResumeId,
-                            Video.Thumbnails.MINI_KIND, null);
+                    thumbnail = VideoStore.Video.Thumbnails.getThumbnail(contentResolver, mGlobalResumeId,
+                            VideoStore.Video.Thumbnails.MINI_KIND, null);
                 }
 
                 result = new HashMap(3);

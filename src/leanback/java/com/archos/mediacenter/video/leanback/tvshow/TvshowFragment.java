@@ -163,7 +163,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 if (item instanceof Video) {
                     //animate only if episode picture isn't displayed
                     boolean animate =!((item instanceof Episode)&&((Episode)item).getPictureUri()!=null);
-                    VideoViewClickedListener.showVideoDetails(getActivity(), (Video) item, itemViewHolder, animate, false, false);
+                    VideoViewClickedListener.showVideoDetails(getActivity(), (Video) item, itemViewHolder, animate, false, false, -1);
                 }
             }
         });

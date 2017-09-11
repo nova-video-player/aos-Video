@@ -46,6 +46,9 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
     public static final int ACTION_HIDE = 32;
     public static final int ACTION_UNHIDE = 33;
     public static final int ACTION_DELETE = 40;
+    public static final int ACTION_ADD_TO_LIST = 41;
+    public static final int ACTION_REMOVE_FROM_LIST = 42;
+
     private static final String TAG = "VideoActionAdapter";
 
     final Context mContext;
@@ -59,14 +62,14 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
      * @param inPlayer true if the player is already running (in background)
      * @param nextEpisode the next episode if there is one
      */
-    public VideoActionAdapter(Context context, Video video, boolean inPlayer, Episode nextEpisode) {
+    public VideoActionAdapter(Context context, Video video, boolean inPlayer, boolean displayRemoveFromList, Episode nextEpisode) {
         Log.d(TAG, "new VideoActionAdapter");
         mContext = context;
-        update(video, inPlayer, nextEpisode);
+        update(video, inPlayer, displayRemoveFromList,  nextEpisode);
 
     }
 
-    public void update(Video video, boolean inPlayer, Episode nextEpisode){
+    public void update(Video video, boolean inPlayer, boolean displayRemoveFromList, Episode nextEpisode){
         Video oldVideo = mCurrentVideo;
         mCurrentVideo = video;
         int oldRemoteResume = mCurrentRemoteResume;
@@ -122,9 +125,16 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
         if (video.isIndexed()) {
             if (video.hasScraperData()) {
                 clear(ACTION_SCRAP);
+                if(displayRemoveFromList)
+                    set(ACTION_REMOVE_FROM_LIST, new Action(ACTION_REMOVE_FROM_LIST, mContext.getString(R.string.remove_from_list)));
+                else
+                    clear(ACTION_REMOVE_FROM_LIST);
+                set(ACTION_ADD_TO_LIST, new Action(ACTION_ADD_TO_LIST, mContext.getString(R.string.add_to_list)));
                 set(ACTION_UNSCRAP, new Action(ACTION_UNSCRAP, mContext.getString(R.string.leanback_unscrap)));
             } else {
                 clear(ACTION_UNSCRAP);
+                clear(ACTION_ADD_TO_LIST);
+                clear(ACTION_REMOVE_FROM_LIST);
                 set(ACTION_SCRAP, new Action(ACTION_SCRAP, mContext.getString(R.string.leanback_scrap)));
             }
             /**** WIP
@@ -217,6 +227,7 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
         clear(ACTION_UNSCRAP);
         clear(ACTION_HIDE);
         clear(ACTION_UNHIDE);
+        clear(ACTION_ADD_TO_LIST);
 
         set(ACTION_INDEX, new Action(ACTION_INDEX, context.getString(R.string.video_browser_index_file)));
     }

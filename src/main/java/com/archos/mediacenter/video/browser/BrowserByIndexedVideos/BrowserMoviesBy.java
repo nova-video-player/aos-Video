@@ -239,19 +239,27 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
     public void onItemClick(AdapterView parent, View view, int position, long id) {
 	    // Prepare the list of movies and the title, to be given to the opened fragment
         Bundle args = new Bundle(2);
-        args.putString(BrowserAllMovies.LIST_OF_MOVIES_IDS, ((GroupOfMovieAdapter)mBrowserAdapter).getListOfMoviesIds(position));
+        args.putString(BrowserByVideoSelection.LIST_OF_IDS, ((GroupOfMovieAdapter)mBrowserAdapter).getListOfMoviesIds(position));
         Log.d(Browser.TAG, "onItemClick: Selection: "+((GroupOfMovieAdapter)mBrowserAdapter).getListOfMoviesIds(position));
         args.putString(CursorBrowserByVideo.SUBCATEGORY_NAME, ((GroupOfMovieAdapter)mBrowserAdapter).getName(position));
-
-        //Load the BrowserAllMovies fragment
+		completeNewFragmentBundle(args, position);
+        //Load fragment
         BrowserCategory category = (BrowserCategory) getFragmentManager().findFragmentById(R.id.category);
-        Fragment newfragment = Fragment.instantiate(getActivity().getApplicationContext(), BrowserAllMovies.class.getName(), args);
+        Fragment newfragment = Fragment.instantiate(getActivity().getApplicationContext(), getBrowserNameToInstantiate(), args);
         category.startContent(newfragment);
         
         // Remove the navigation drop down from the actionbar when opening a child fragment
 		((MainActivity)getActivity()).setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
     }
-	
+
+	protected void completeNewFragmentBundle(Bundle args, int pos) {
+
+	}
+
+	protected String getBrowserNameToInstantiate(){
+		return BrowserAllMovies.class.getName();
+	}
+
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 	    //none

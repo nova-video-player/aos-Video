@@ -26,6 +26,7 @@ import com.archos.mediacenter.video.R;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.Preference;
@@ -34,6 +35,8 @@ import android.util.AttributeSet;
 
 public class TraktSigninDialogPreference extends Preference{
 	OAuthDialog od=null;
+    private DialogInterface.OnDismissListener mOnDismissListener;
+
     public TraktSigninDialogPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         
@@ -107,6 +110,13 @@ public class TraktSigninDialogPreference extends Preference{
 
             od= new OAuthDialog(getContext(),codeCallBack, oa, t);
             od.show();
+            od.setOnDismissListener(mOnDismissListener);
+            od.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    mOnDismissListener.onDismiss(dialogInterface);
+                }
+            });
         } catch (OAuthSystemException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -117,6 +127,11 @@ public class TraktSigninDialogPreference extends Preference{
 		if(od!=null)
 			od.dismiss();
 	}
+
+	public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener){
+        mOnDismissListener = onDismissListener;
+    }
+
 	public void showDialog(boolean boolean1) {
 		// TODO Auto-generated method stub
 		if(boolean1)

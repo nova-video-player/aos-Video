@@ -32,6 +32,7 @@ public class VideoPreferencesActivity extends AppCompatActivity {
     final public static String FOLDER_BROWSING_DEFAULT_FOLDER = "folder_browsing_default_folder";
     final public static String FOLDER_BROWSING_DEFAULT_FOLDER_DEFAULT = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getPath();
     public final static int    FOLDER_PICKER_REQUEST_CODE=2;
+    public static final String EXTRA_LAUNCH_INAPP_PURCHASE = "extra_launch_inapp_purchase";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -30,6 +30,7 @@ import com.archos.mediacenter.filecoreextension.upnp2.StreamUriFinder;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PlayerService;
@@ -48,15 +49,14 @@ public class PlayUtils implements IndexHelper.Listener {
     private IndexHelper mIndexHelper;
     private VideoDbInfo mVideoDbInfo;
     private int mResume;
-    private Uri mContentUri;
-    private Uri mFileUri;
-    private Uri mStreamingUri;
     private String mMimeType;
     private boolean mLegacyPlayer;
     private ExternalPlayerWithResultStarter mExternalPlayerWithResultStarter;
     private int mResumePosition;
     private Context mContext;
     private boolean mDisablePassthrough;
+    private long mPlaylistId;
+    private Video mVideo;
 
 
     @Override
@@ -80,42 +80,39 @@ public class PlayUtils implements IndexHelper.Listener {
         intent.putExtra(PlayerActivity.RESUME, resume);
         context.startActivity(intent);
     }
+
     /**
      * Common method to start a video
-     * @param upnpUriRetrievingListener listener for http uri retriever
      * @param context
-     * @param contentUri uri in content://
-     * @param videoUri file uri when available
-     * @param streamingUri http:// uri when available for upnp
-     * @param mimeType
      * @param resume
      * @param externalPlayerWithResultStarter
+     * @param playlistId
      */
     static public void startVideo(final Context context,
-                                  final Uri contentUri,
-                                  final Uri videoUri,
-                                  final Uri streamingUri,
-                                  String mimeType,
+                                  final Video video,
                                   final int resume,
                                   final boolean legacyPlayer,
                                   final int resumePosition, //in case we already have resume position. Will only be used by external players
-                                  final ExternalPlayerWithResultStarter externalPlayerWithResultStarter,
-                                  final boolean disablePassthrough) //mxplayer will call onResult after playing video
+                                  final ExternalPlayerWithResultStarter externalPlayerWithResultStarter, //mxplayer will call onResult after playing video
+                                  final boolean disablePassthrough,
+                                  final long playlistId)
                                     {
+
         Log.d(TAG, "passthrough disabled ? "+disablePassthrough);
         if(sPlayUtils==null)
             sPlayUtils = new PlayUtils();
         Log.d(TAG, "startVideo " + resume);
-        Log.d(TAG, "streamingUri " + (streamingUri == null ? "null" : streamingUri));
+        Log.d(TAG, "streamingUri " + (video.getStreamingUri() == null ? "null" : video.getStreamingUri()));
         // try to find extension when none has been set
-        if(mimeType==null&&videoUri!=null) {
-            String extension = Utils.getExtension(videoUri.getLastPathSegment());
+        String mimeType = video.getMimeType();
+        if(mimeType==null&&video.getFileUri()!=null) {
+            String extension = Utils.getExtension(video.getFileUri().getLastPathSegment());
             if (extension!=null) {
                 mimeType = MimeUtils.guessMimeTypeFromExtension(extension);
             }
         }
-        if(mimeType==null&&streamingUri!=null) {
-            String extension = Utils.getExtension(streamingUri.getLastPathSegment());
+        if(mimeType==null&&video.getStreamingUri()!=null) {
+            String extension = Utils.getExtension(video.getStreamingUri().getLastPathSegment());
             if (extension!=null) {
                 mimeType = MimeUtils.guessMimeTypeFromExtension(extension);
             }
@@ -123,71 +120,55 @@ public class PlayUtils implements IndexHelper.Listener {
 
         final String finalMimetype = mimeType;
         if("application/x-bittorrent".equals(mimeType)){
-            startTorrent(context, videoUri, mimeType, resume);
+            startTorrent(context, video.getFileUri(), mimeType, resume);
         }
 
-        else if("upnp".equals(videoUri.getScheme())&&(streamingUri==null||"upnp".equals(streamingUri.getScheme()))){ // retrieve streaming uri for external player
-            StreamUriFinder uriFinder = new StreamUriFinder(videoUri, context);
+        else if("upnp".equals(video.getFileUri().getScheme())&&(video.getStreamingUri()==null||"upnp".equals(video.getStreamingUri().getScheme()))){ // retrieve streaming uri for external player
+            StreamUriFinder uriFinder = new StreamUriFinder(video.getFileUri(), context);
             uriFinder.setListener(new StreamUriFinder.Listener() {
                 @Override
                 public void onUriFound(Uri uri) {
-                    sPlayUtils.startPlayer(context, contentUri, videoUri, uri, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, disablePassthrough);
+                    video.setStreamingUri(uri);
+                    sPlayUtils.startPlayer(context, video, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, disablePassthrough, playlistId);
                 }
 
                 @Override
                 public void onError() {
-                    sPlayUtils.startPlayer(context, contentUri, videoUri, streamingUri, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, disablePassthrough);
+                    sPlayUtils.startPlayer(context, video, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, disablePassthrough, playlistId);
                 }
             });
             uriFinder.start();
         }
         else
-            sPlayUtils.startPlayer(context, contentUri, videoUri, streamingUri, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, disablePassthrough);
+            sPlayUtils.startPlayer(context, video, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, disablePassthrough, playlistId);
     }
-
-    static public void startVideo(final Context context,
-                                  final Uri contentUri,
-                                  final Uri videoUri,
-                                  final Uri streamingUri,
-                                  String mimeType,
-                                  final int resume,
-                                  final boolean legacyPlayer,
-                                  final int resumePosition, //in case we already have resume position. Will only be used by external players
-                                  final ExternalPlayerWithResultStarter externalPlayerWithResultStarter) //mxplayer will call onResult after playing video
-    {
-        startVideo(context,contentUri, videoUri,streamingUri,mimeType,resume,legacyPlayer,resumePosition,externalPlayerWithResultStarter,false);
-    }
-
 
     private void startPlayer(Context context,
-                             Uri contentUri,
-                             Uri fileUri,
-                             Uri streamingUri,
+                             Video video,
                              final String mimeType,
                              int resume,
                              boolean legacyPlayer,
                              int resumePosition,
                              ExternalPlayerWithResultStarter externalPlayerWithResultStarter,
-                             boolean disablePassthrough) {
+                             boolean disablePassthrough, long playlistId) {
         reset();
         mContext = context;
         mResume = resume;
-        mContentUri = contentUri;
-        mFileUri = fileUri;
-        mStreamingUri = streamingUri;
+        mVideo = video;
         mMimeType = mimeType;
         mLegacyPlayer = legacyPlayer;
         mExternalPlayerWithResultStarter = externalPlayerWithResultStarter;
         mResumePosition = resumePosition;
         mDisablePassthrough = disablePassthrough;
+        mPlaylistId = playlistId;
         if (allow3rdPartyPlayer(context)&&resume!=PlayerService.RESUME_NO&&resumePosition==-1) {
             if(mIndexHelper==null)
                 mIndexHelper = new IndexHelper(context, null, 0);
-            mIndexHelper.requestVideoDb(contentUri,-1,null, this, false, true);
+            mIndexHelper.requestVideoDb(video.getUri(), -1,null, this, false, true);
         }else {
             if (resume == PlayerService.RESUME_NO)
                 resumePosition = 0;
-            onResumeReady(context, contentUri, fileUri, streamingUri, mimeType, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter);
+            onResumeReady(context, mVideo, mimeType, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, playlistId);
         }
     }
 
@@ -210,8 +191,8 @@ public class PlayUtils implements IndexHelper.Listener {
                 }
             }
         }
-        onResumeReady(mContext, mContentUri, mFileUri, mStreamingUri, mMimeType,
-                mResume, mLegacyPlayer, resumePos, mExternalPlayerWithResultStarter);
+        onResumeReady(mContext, mVideo, mMimeType,
+                mResume, mLegacyPlayer, resumePos, mExternalPlayerWithResultStarter, mPlaylistId);
     }
 
     private void reset() {
@@ -220,20 +201,22 @@ public class PlayUtils implements IndexHelper.Listener {
         mVideoDbInfo = null;
         mContext = null;
         mResume = PlayerService.RESUME_NO;
-        mContentUri = null;
-        mFileUri = null;
-        mStreamingUri = null;
+        mVideo = null;
         mMimeType = null;
         mLegacyPlayer = false;
         mExternalPlayerWithResultStarter = null;
         mResumePosition = -1;
         mDisablePassthrough = false;
+        mPlaylistId = -1;
     }
 
 
-    private void onResumeReady(Context context, Uri contentUri, Uri fileUri, Uri streamingUri, final String mimeType, int resume, boolean legacyPlayer, int resumePosition, ExternalPlayerWithResultStarter externalPlayerWithResultStarter){
+    private void onResumeReady(Context context, Video video, final String mimeType, int resume, boolean legacyPlayer, int resumePosition, ExternalPlayerWithResultStarter externalPlayerWithResultStarter, long playlistId){
+
+
+
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri dataUri = contentUri;
+        Uri dataUri = video.getUri();
         if(ArchosVideoCastManager.getInstance().isConnected())
             intent.setClass(context, CastService.class);
         else if (!allow3rdPartyPlayer(context)) {
@@ -241,17 +224,17 @@ public class PlayUtils implements IndexHelper.Listener {
         }
         else {
             // do not check Uri below because it can be a MediaDB Uri starting with content:
-            if (!Utils.isLocal(fileUri)) {
-                if (!"upnp".equals(fileUri.getScheme())) {
+            if (!Utils.isLocal(video.getFileUri())) {
+                if (!"upnp".equals(video.getFileUri().getScheme())) {
                     // Http proxy to allow 3rd party players to play remote files
                     try {
-                        StreamOverHttp stream = new StreamOverHttp(fileUri, mimeType);
-                        dataUri = stream.getUri(fileUri.getLastPathSegment());
+                        StreamOverHttp stream = new StreamOverHttp(video.getFileUri(), mimeType);
+                        dataUri = stream.getUri(video.getFileUri().getLastPathSegment());
                     } catch (IOException e) {
-                        Log.e(TAG, "Failed to start " + fileUri + e);
+                        Log.e(TAG, "Failed to start " + video.getFileUri() + e);
                     }
-                } else if (streamingUri != null && !"upnp".equals(streamingUri.getScheme())) { //when upnp, try to open streamingUri
-                    dataUri = streamingUri;
+                } else if (video.getStreamingUri() != null && !"upnp".equals(video.getStreamingUri().getScheme())) { //when upnp, try to open streamingUri
+                    dataUri = video.getStreamingUri();
                 }
             }
         }
@@ -259,10 +242,12 @@ public class PlayUtils implements IndexHelper.Listener {
 
         intent.setDataAndType(dataUri, mimeType);
         //this differs from the file uri for upnp
-        intent.putExtra(PlayerActivity.KEY_STREAMING_URI, streamingUri);
+        intent.putExtra(PlayerActivity.KEY_STREAMING_URI, video.getStreamingUri());
         intent.putExtra(PlayerActivity.RESUME, resume);
         intent.putExtra(PlayerActivity.VIDEO_PLAYER_LEGACY_EXTRA, legacyPlayer);
         intent.putExtra(PlayerService.DISABLE_PASSTHROUGH, mDisablePassthrough);
+        intent.putExtra(PlayerService.PLAYLIST_ID, playlistId);
+        intent.putExtra(PlayerService.VIDEO, video);
 
         ExternalPlayerResultListener.ExternalPositionExtra.setAllPositionExtras(intent,resumePosition );
         try {
@@ -271,7 +256,7 @@ public class PlayUtils implements IndexHelper.Listener {
             else if(externalPlayerWithResultStarter==null||!allow3rdPartyPlayer(context))
                 context.startActivity(intent);
             else {
-                ExternalPlayerResultListener.getInstance().init(context,contentUri,dataUri, mVideoDbInfo);
+                ExternalPlayerResultListener.getInstance().init(context, video.getUri(), dataUri, mVideoDbInfo);
                 externalPlayerWithResultStarter.startActivityWithResultListener(intent);
             }
         } catch (ActivityNotFoundException e) {

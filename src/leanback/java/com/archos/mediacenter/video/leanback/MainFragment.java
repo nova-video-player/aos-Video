@@ -306,6 +306,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         mFileBrowsingRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         mFileBrowsingRowAdapter.add(new Box(Box.ID.NETWORK, getString(R.string.network_storage), R.drawable.filetype_new_server));
         mFileBrowsingRowAdapter.add(new Box(Box.ID.FOLDERS, getString(R.string.internal_storage), R.drawable.filetype_new_folder));
+        mFileBrowsingRowAdapter.add(new Box(Box.ID.VIDEOS_BY_LISTS, getString(R.string.video_lists), R.drawable.filetype_new_playlist));
 
         mNonScrapedVideosItem = new Box(Box.ID.NON_SCRAPED_VIDEOS, getString(R.string.non_scraped_videos), R.drawable.filetype_new_unscraped_video);
         // Add USB and SDcard items at init ?depending of their availability
@@ -555,6 +556,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         mFileBrowsingRowAdapter.clear();
         mFileBrowsingRowAdapter.add(new Box(Box.ID.NETWORK, getString(R.string.network_storage), R.drawable.filetype_new_server));
         mFileBrowsingRowAdapter.add(new Box(Box.ID.FOLDERS, getString(R.string.internal_storage), R.drawable.filetype_new_folder));
+        mFileBrowsingRowAdapter.add(new Box(Box.ID.VIDEOS_BY_LISTS, getString(R.string.video_lists), R.drawable.filetype_new_playlist));
 
         if (hasExternal) {
             for(String s : storageManager.getExtSdcards()) {
@@ -602,6 +604,9 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
                         break;
                     case MOVIES_BY_YEAR:
                         mActivity.startActivity(new Intent(mActivity, MoviesByYearActivity.class));
+                        break;
+                    case VIDEOS_BY_LISTS:
+                        mActivity.startActivity(new Intent(mActivity, VideosByListActivity.class));
                         break;
                     case FOLDERS:
                         mActivity.startActivity(new Intent(mActivity, LocalListingActivity.class));

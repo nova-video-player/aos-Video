@@ -21,6 +21,7 @@ import android.os.AsyncTask;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.FileComparator;
 import com.archos.filecorelibrary.ListingEngine;
 import com.archos.filecorelibrary.MetaFile2;
@@ -28,7 +29,19 @@ import com.archos.filecorelibrary.RawLister;
 import com.archos.filecorelibrary.ftp.AuthenticationException;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.RawListerFactoryWithUpnp;
+import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserMoviesBy;
+import com.archos.mediacenter.video.browser.adapters.object.Episode;
+import com.archos.mediacenter.video.browser.adapters.object.Movie;
+import com.archos.mediacenter.video.browser.adapters.object.Video;
+import com.archos.mediacenter.video.browser.loader.VideosByListLoader;
+import com.archos.mediacenter.video.info.MultipleVideoLoader;
+import com.archos.mediacenter.video.info.SingleVideoLoader;
+import com.archos.mediaprovider.video.ListTables;
+import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
+import com.archos.mediascraper.BaseTags;
+import com.archos.mediascraper.EpisodeTags;
+import com.archos.mediascraper.MovieTags;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 
@@ -45,6 +58,8 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
     private final ArrayList<String> mRemoteUrlsList;
     private final int mRemotePosition;
     private final ContentResolver mResolver;
+    private final long mPlaylistId;
+    private final Video mVideo;
     private Uri mUri;
     private Listener mListener;
     private static final boolean DBG = true;
@@ -62,12 +77,14 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
         void onResult(Uri uri, long id);
     }
 
-    public UpdateNextTask(ContentResolver resolver, Uri uri, ArrayList<String> remoteUrlsList, int remotePosition) {
+    public UpdateNextTask(ContentResolver resolver, Video video, Uri uri, ArrayList<String> remoteUrlsList, int remotePosition, long playlistId) {
         mResolver = resolver;
         mUri = uri;
         mRemoteUrlsList = remoteUrlsList;
         mRemotePosition = remotePosition;
         mListener = null;
+        mPlaylistId = playlistId;
+        mVideo = video;
         Log.d(TAG, "UpdateNextTask");
     }
 
@@ -144,6 +161,50 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
             return new Result(nextUri, nextId);
         }
 
+        else if(mPlaylistId != -1 && mVideo!=null){ //next in playlist
+            BaseTags tags = mVideo.getFullScraperTags(ArchosUtils.getGlobalContext());
+            long currentEpisodeId = tags instanceof EpisodeTags ? tags.getOnlineId():-1;
+            long currentMovieId = tags instanceof MovieTags ? tags.getOnlineId():-1;
+            boolean useNextVideo = false;
+            String selection = "Select \n" +
+                    "   v._id as _id,\n" +
+                    "   v."+ VideoStore.MediaColumns.DATA+" as "+VideoStore.MediaColumns.DATA+", \n" +
+                    "   vl."+VideoStore.VideoList.Columns.M_ONLINE_ID+" as "+VideoStore.VideoList.Columns.M_ONLINE_ID+", \n" +
+                    "   vl."+VideoStore.VideoList.Columns.E_ONLINE_ID+" as "+VideoStore.VideoList.Columns.E_ONLINE_ID+
+                    "   from \n" +
+                    "   video v,\n" +
+                    "   "+ ListTables.VIDEO_LIST_TABLE+" vl \n" +
+                    "WHERE\n" +
+                    "        (" +
+                    "(" +
+                    "v."+ VideoStore.Video.VideoColumns.SCRAPER_M_ONLINE_ID+" = vl."+VideoStore.VideoList.Columns.M_ONLINE_ID+" " +
+                    " AND v."+ VideoStore.Video.VideoColumns.SCRAPER_M_ONLINE_ID+" NOT NULL" +
+                    " OR v."+ VideoStore.Video.VideoColumns.SCRAPER_E_ONLINE_ID+" = vl."+VideoStore.VideoList.Columns.E_ONLINE_ID+" " +
+                    " AND v."+ VideoStore.Video.VideoColumns.SCRAPER_E_ONLINE_ID+" NOT NULL) " +
+                    " AND "+ LoaderUtils.HIDE_USER_HIDDEN_FILTER +
+                    " AND vl."+ VideoStore.List.Columns.SYNC_STATUS +" != "+VideoStore.List.SyncStatus.STATUS_DELETED+
+                    " AND vl."+VideoStore.VideoList.Columns.LIST_ID+" = ?)";
+            Cursor cursor = mResolver.query(VideoStore.RAW_QUERY,null, selection, new String[]{mPlaylistId+""}, null);
+            if(cursor != null && cursor.getCount() >0){
+                int movieIdColumn = cursor.getColumnIndex(VideoStore.VideoList.Columns.M_ONLINE_ID);
+                int episodeIdColumn = cursor.getColumnIndex(VideoStore.VideoList.Columns.E_ONLINE_ID);
+                while(cursor.moveToNext()){
+                    long episodeId = cursor.getLong(episodeIdColumn);
+                    long movieId = cursor.getLong(movieIdColumn);
+                    if(currentEpisodeId != -1 && currentEpisodeId == episodeId){
+                        useNextVideo = true;
+                    }
+                    else if( currentMovieId != -1 && currentMovieId == movieId){
+                        useNextVideo = true;
+                    } else if(useNextVideo){ //previous was our video, this one is different, use Uri
+                        nextUri = Uri.parse(cursor.getString(cursor.getColumnIndex(VideoStore.MediaColumns.DATA)));
+                        return new Result(nextUri, nextId);
+                    }
+                }
+
+            }
+            return null;
+        }
         if(!UriUtils.isImplementedByFileCore(mUri)) // when we can't list folder
             return null;
 

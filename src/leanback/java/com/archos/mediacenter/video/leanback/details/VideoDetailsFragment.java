@@ -63,12 +63,14 @@ import android.widget.Toast;
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.Utils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
+import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.utils.videodb.XmlDb;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.billingutils.BillingUtils;
 import com.archos.mediacenter.video.billingutils.IsPaidCallback;
 import com.archos.mediacenter.video.browser.BootupRecommandationService;
+import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.lists.ListDialog;
 import com.archos.mediacenter.video.browser.Delete;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
@@ -134,6 +136,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     /** A serialized com.archos.mediacenter.video.leanback.adapter.object.Video */
     public static final String EXTRA_VIDEO = "VIDEO";
+    public static final String EXTRA_LIST_ID = "list_id";
     public static final String EXTRA_FORCE_VIDEO_SELECTION = "force_video_selection";
     /** The id of the video in the MediaDB (long) */
     public static final String EXTRA_VIDEO_ID = VideoInfoActivity.EXTRA_VIDEO_ID;
@@ -237,6 +240,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private Uri mLastIndexed;
     private boolean mHasBeenPaid;
     private boolean mShouldUpdateRemoteResume;
+    private boolean mShouldDisplayRemoveFromList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -244,7 +248,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         mSubtitleListCache = new HashMap<>();
         mVideoMetadateCache = new HashMap<>();
-
+        mShouldDisplayRemoveFromList = getActivity().getIntent().getLongExtra(EXTRA_LIST_ID, -1) != -1;
         Object transition = TransitionHelper.getInstance().getEnterTransition(getActivity().getWindow());
         if(transition!=null){
             mAnimationIsRunning = false;
@@ -512,6 +516,22 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             else if (action.getId() == VideoActionAdapter.ACTION_HIDE) {
                 DbUtils.markAsHiddenByUser(getActivity(), mVideo);
             }
+            else if (action.getId() == VideoActionAdapter.ACTION_ADD_TO_LIST) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(ListDialog.EXTRA_VIDEO, mVideo);
+                ListDialog dialog = new ListDialog();
+                dialog.setArguments(bundle);
+                dialog.show(getFragmentManager(), "list_dialog");
+            }
+            else if (action.getId() == VideoActionAdapter.ACTION_REMOVE_FROM_LIST) {
+                BaseTags metadata = mVideo.getFullScraperTags(getActivity());
+                boolean isEpisode = metadata instanceof EpisodeTags;
+                VideoStore.VideoList.VideoItem videoItem  = new VideoStore.VideoList.VideoItem(-1,!isEpisode?(int)metadata.getOnlineId():-1, isEpisode?(int)metadata.getOnlineId():-1, VideoStore.List.SyncStatus.STATUS_DELETED);
+                getActivity().getContentResolver().update(VideoStore.List.getListUri(getActivity().getIntent().getLongExtra(EXTRA_LIST_ID,-1)), videoItem.toContentValues(),  videoItem.getDBWhereString(), videoItem.getDBWhereArgs());
+                mShouldDisplayRemoveFromList = false;
+                mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), mVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode));
+                TraktService.sync(ArchosUtils.getGlobalContext(), TraktService.FLAG_SYNC_AUTO);
+            }
             else if (action.getId() == VideoActionAdapter.ACTION_UNHIDE) {
                 DbUtils.markAsNotHiddenByUser(getActivity(), mVideo);
             }
@@ -742,8 +762,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 // update details presenter and actions
                 mDescriptionPresenter.update(currentVideo);
                 if(mDetailsOverviewRow.getActionsAdapter()==null)
-                    mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), currentVideo, mLaunchedFromPlayer, mNextEpisode));
-                else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mNextEpisode);
+                    mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode));
+                else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode);
                 // update poster
                 mDetailsOverviewRow.setImageDrawable(getResources().getDrawable(R.drawable.filetype_new_video));
                 mDetailsOverviewRow.setImageScaleUpAllowed(false);
@@ -754,8 +774,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 // update details presenter and actions
                 mDescriptionPresenter.update(currentVideo);
                 if(mDetailsOverviewRow.getActionsAdapter()==null)
-                    mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), currentVideo, mLaunchedFromPlayer, mNextEpisode));
-                else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mNextEpisode);
+                    mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode));
+                else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode);
 
                 // update poster
                 mDetailsOverviewRow.setImageDrawable(getResources().getDrawable(R.drawable.filetype_new_video));
@@ -811,8 +831,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                         @Override
                         public void run() {
                             if(mDetailsOverviewRow.getActionsAdapter()==null)
-                                mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), mVideo, mLaunchedFromPlayer, mNextEpisode));
-                            else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mVideo, mLaunchedFromPlayer, mNextEpisode);
+                                mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), mVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode));
+                            else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode);
                         }
                     });
 
@@ -954,9 +974,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         }
         if(mDetailsOverviewRow.getActionsAdapter()==null || !(mDetailsOverviewRow.getActionsAdapter() instanceof  VideoActionAdapter))
-            mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), video, mLaunchedFromPlayer, mNextEpisode));
+            mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), video, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode));
         else{
-            ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(video, mLaunchedFromPlayer, mNextEpisode);
+            ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(video, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode);
         }
 
         // Plot, Cast, Posters, Backdrops, Links rows will be added after, once we get the Scraper Tags
@@ -1336,7 +1356,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 break;
             }
             mResumeFromPlayer = true;
-            PlayUtils.startVideo(getActivity(), mVideo.getUri(), mVideo.getFileUri(), mVideo.getStreamingUri(), mVideo.getMimeType(), resume, false,resumePos, this, shouldDisablePassthrough());
+            PlayUtils.startVideo(getActivity(), mVideo, resume, false,resumePos, this, shouldDisablePassthrough(), getActivity().getIntent().getLongExtra(EXTRA_LIST_ID, -1));
         }
     }
 
@@ -1384,29 +1404,24 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             }
             mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,mVideo);
         }
-        else if (requestCode == REQUEST_CODE_LOCAL_RESUME_AFTER_ADS_ACTIVITY && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Get RESULT_OK from AdsActivity with resume");
+        else if (
+                (requestCode >= REQUEST_CODE_LOCAL_RESUME_AFTER_ADS_ACTIVITY
+                || requestCode <= REQUEST_CODE_PLAY_FROM_BEGIN_AFTER_ADS_ACTIVITY) && resultCode == Activity.RESULT_OK) {
+            Log.d(TAG, "Get RESULT_OK from AdsActivity");
             mResumeFromPlayer = true;
-            //TODO url retriever listener
-            PlayUtils.startVideo(getActivity(), mVideo.getUri(), mVideo.getFileUri(), mVideo.getStreamingUri(), mVideo.getMimeType(), PlayerActivity.RESUME_FROM_LOCAL_POS, false, mVideo.getResumeMs(), this, shouldDisablePassthrough());
-        }
-        else if (requestCode == REQUEST_CODE_RESUME_AFTER_ADS_ACTIVITY && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Get RESULT_OK from AdsActivity with resume");
-            mResumeFromPlayer = true;
-            //TODO url retriever listener
-            PlayUtils.startVideo(getActivity(), mVideo.getUri(), mVideo.getFileUri(), mVideo.getStreamingUri(), mVideo.getMimeType(), PlayerActivity.RESUME_FROM_LAST_POS,false, mVideo.getResumeMs(), this, shouldDisablePassthrough());
-        }
-        else if (requestCode == REQUEST_CODE_REMOTE_RESUME_AFTER_ADS_ACTIVITY && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Get RESULT_OK from AdsActivity with resume");
-            mResumeFromPlayer = true;
-            //TODO url retriever listener
-            PlayUtils.startVideo(getActivity(), mVideo.getUri(), mVideo.getFileUri(), mVideo.getStreamingUri(), mVideo.getMimeType(), PlayerActivity.RESUME_FROM_REMOTE_POS, false, mVideo.getRemoteResumeMs(), this, shouldDisablePassthrough());
-        }
-        else if (requestCode == REQUEST_CODE_PLAY_FROM_BEGIN_AFTER_ADS_ACTIVITY && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Get RESULT_OK from AdsActivity with play from begin");
-            mResumeFromPlayer = true;
-            //TODO url retriever listener
-            PlayUtils.startVideo(getActivity(), mVideo.getUri(), mVideo.getFileUri(), mVideo.getStreamingUri(), mVideo.getMimeType(), PlayerActivity.RESUME_NO, false, -1, this, shouldDisablePassthrough());
+            int resume = PlayerActivity.RESUME_NO;
+            switch (requestCode){
+                case REQUEST_CODE_REMOTE_RESUME_AFTER_ADS_ACTIVITY:
+                    resume = PlayerActivity.RESUME_FROM_REMOTE_POS;
+                    break;
+                case REQUEST_CODE_RESUME_AFTER_ADS_ACTIVITY:
+                    resume = PlayerActivity.RESUME_FROM_LAST_POS;
+                    break;
+                case REQUEST_CODE_LOCAL_RESUME_AFTER_ADS_ACTIVITY:
+                    resume = PlayerActivity.RESUME_FROM_LOCAL_POS;
+                    break;
+            }
+            PlayUtils.startVideo(getActivity(), mVideo, resume, false, -1, this, shouldDisablePassthrough(), getActivity().getIntent().getLongExtra(EXTRA_LIST_ID, -1));
         }
         else if(requestCode == PLAY_ACTIVITY_REQUEST_CODE){
             ExternalPlayerResultListener.getInstance().onActivityResult(requestCode,resultCode,data);

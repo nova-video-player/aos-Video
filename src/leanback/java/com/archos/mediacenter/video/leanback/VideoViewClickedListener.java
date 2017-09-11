@@ -48,23 +48,24 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
     public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
         if (item instanceof Video) {
             if(row!=null&&(row.getId() == MainFragment.ROW_ID_LAST_PLAYED || row.getId() == MainFragment.ROW_ID_LAST_ADDED)){
-                showVideoDetails(mActivity, (Video) item, itemViewHolder, true);
+                showVideoDetails(mActivity, (Video) item, itemViewHolder, true, -1);
             }
             else
-                showVideoDetails(mActivity, (Video) item, itemViewHolder, false);
+                showVideoDetails(mActivity, (Video) item, itemViewHolder, false, row!=null?row.getId():-1);
         }
         else if (item instanceof Tvshow) {
             showTvshowDetails(mActivity, (Tvshow) item, itemViewHolder);
         }
     }
 
-    public static void showVideoDetails(Activity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean forceSelection) {
-        showVideoDetails(activity,video, itemViewHolder, true, forceSelection, true);
+    public static void showVideoDetails(Activity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean forceSelection, long listId) {
+        showVideoDetails(activity,video, itemViewHolder, true, forceSelection, true, listId);
     }
 
-    public static void showVideoDetails(Activity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean animate, boolean forceSelection, boolean shouldLoadBackdrop) {
+    public static void showVideoDetails(Activity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean animate, boolean forceSelection, boolean shouldLoadBackdrop, long listId) {
         Intent intent = new Intent(activity, VideoDetailsActivity.class);
         intent.putExtra(VideoDetailsFragment.EXTRA_VIDEO, video);
+        intent.putExtra(VideoDetailsFragment.EXTRA_LIST_ID, listId);
         intent.putExtra(VideoDetailsFragment.EXTRA_FORCE_VIDEO_SELECTION, forceSelection);
         intent.putExtra(VideoDetailsFragment.EXTRA_SHOULD_LOAD_BACKDROP,shouldLoadBackdrop);
         View sourceView = null;

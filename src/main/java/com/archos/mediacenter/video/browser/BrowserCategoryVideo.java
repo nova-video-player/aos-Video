@@ -34,6 +34,7 @@ import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserLastPl
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserMoviesByGenre2;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserMoviesByYear;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserNeverPlayed;
+import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserPlaylists;
 import com.archos.mediacenter.video.browser.filebrowsing.BrowserByExtStorage;
 import com.archos.mediacenter.video.browser.filebrowsing.BrowserByVideoFolder;
 import com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser.FtpRootFragment;
@@ -71,6 +72,8 @@ public class BrowserCategoryVideo extends BrowserCategory implements android.sup
     private static final int ITEM_ID_ALL_VIDEOS = ITEM_ID_OFFSET + 3;
     public static final int ITEM_ID_RECENTLY_ADDED = ITEM_ID_OFFSET + 4;
     private static final int ITEM_ID_RECENTLY_PLAYED = ITEM_ID_OFFSET +5;
+    private static final int ITEM_ID_LISTS = ITEM_ID_OFFSET +6;
+
 
 
     public void setNavigationMode(int navigationMode){
@@ -135,6 +138,12 @@ public class BrowserCategoryVideo extends BrowserCategory implements android.sup
         itemData.icon = R.drawable.category_video_played;
         itemData.text = R.string.recently_played_videos;
         itemData.id = ITEM_ID_RECENTLY_PLAYED;
+        categoryList.add(itemData);
+
+        itemData = new ItemData();
+        itemData.icon = R.drawable.category_video_played;
+        itemData.text = R.string.video_lists;
+        itemData.id = ITEM_ID_LISTS;
         categoryList.add(itemData);
 
         /*itemData = new ItemData();
@@ -249,6 +258,10 @@ public class BrowserCategoryVideo extends BrowserCategory implements android.sup
             case ITEM_ID_RECENTLY_PLAYED:
                 fragmentName = BrowserLastPlayed.class.getName();
                 struc.title = R.string.recently_played_videos;
+                break;
+            case ITEM_ID_LISTS:
+                fragmentName = BrowserPlaylists.class.getName();
+                struc.title = R.string.video_lists;
                 break;
             case R.string.not_played_yet_videos:
                 fragmentName = BrowserNeverPlayed.class.getName();

@@ -47,6 +47,7 @@ public class BackdropTask extends AsyncTask<Object, Integer, File> {
         mDefaultBackground = new ColorDrawable(backgroundDefaultColor);
         activity.getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
         BackgroundManager backgroundManager = BackgroundManager.getInstance(activity);
+        if(!backgroundManager.isAttached())
         backgroundManager.attach(activity.getWindow());
         mBackgroundTarget = new PicassoBackgroundManagerTarget(backgroundManager);
     }

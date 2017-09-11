@@ -261,29 +261,11 @@ public class CastDebug implements ArchosVideoCastManager.ArchosCastManagerListen
     }
 
     private void startVideo(Video video) {
-
         log("starting video "+video.getFilePath());
-
-
-
-
-
-
-
-        String extension = Utils.getExtension(video.getFileUri().getLastPathSegment());
-        String mimeType = null;
-        if (extension!=null) {
-            mimeType = MimeUtils.guessMimeTypeFromExtension(extension);
-        }
-        Uri nonContentUri = video.getFileUri();
         PlayUtils.startVideo(mContext,
-                video.getUri(),
-                nonContentUri,
-                video.getStreamingUri(),
-                mimeType,
+                video,
                 PlayerService.RESUME_NO,
-                true,-1, null);
-
+                true,-1, null, false, -1);
     }
 
 }
