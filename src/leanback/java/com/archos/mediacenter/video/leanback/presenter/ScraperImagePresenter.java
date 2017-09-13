@@ -90,7 +90,7 @@ public abstract class ScraperImagePresenter extends Presenter {
         Context c = vh.view.getContext();
 
         ScraperImage image = (ScraperImage)item;
-        Picasso.with(c)
+        Picasso.with()
                 .load(getImageUrl(image))
                 .resize(getWidth(c), getHeight(c)) // better resize to card size, since backdrop files are pretty large
                 .centerCrop()
@@ -122,7 +122,7 @@ public abstract class ScraperImagePresenter extends Presenter {
         }
 
         @Override
-        public void onBitmapFailed(Drawable drawable){
+        public void onBitmapFailed(Exception e, Drawable drawable){
             mImageView.setScaleType(ImageView.ScaleType.CENTER);
             mImageView.setImageDrawable(drawable);
         }

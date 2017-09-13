@@ -88,7 +88,7 @@ public class SeasonPresenter extends Presenter {
          * @param imageUri
          */
         protected void updateCardView(Uri imageUri) {
-            Picasso.with(mContext.getApplicationContext())
+            Picasso.with()
                     // must use an Uri here, does not work with path only
                     .load(imageUri)
                     .resize(getWidth(mContext), getHeight(mContext))
@@ -193,7 +193,7 @@ public class SeasonPresenter extends Presenter {
         }
 
         @Override
-        public void onBitmapFailed(Drawable drawable){
+        public void onBitmapFailed(Exception e, Drawable drawable){
             if (mImageCardView.getMainImage() != drawable) {
                 mImageCardView.setMainImageScaleType(ImageView.ScaleType.CENTER);
                 mImageCardView.setMainImage(drawable, true);

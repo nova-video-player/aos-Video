@@ -811,7 +811,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         if (imageUri!=null) {
 
             try {
-                mBitmap = Picasso.with(getActivity())
+                mBitmap = Picasso.with()
                         .load(imageUri)
                         .resize(getResources().getDimensionPixelSize(R.dimen.video_info_poster_width), getResources().getDimensionPixelSize(R.dimen.video_info_poster_height))
                         .centerCrop()
@@ -828,7 +828,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                     if (imageUri!=null) {
                         try {
-                            mBitmap = Picasso.with(getActivity())
+                            mBitmap = Picasso.with()
                                     .load(imageUri)
                                     .resize(getResources().getDimensionPixelSize(R.dimen.video_info_poster_width), getResources().getDimensionPixelSize(R.dimen.video_info_poster_height))
                                     .centerCrop()

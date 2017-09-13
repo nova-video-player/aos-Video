@@ -102,7 +102,7 @@ public abstract class ListPresenter extends Presenter {
 
             //setting fallback : when fail to load poster (for example when file doesn't exist), try to load thumbnail
             mImageViewTarget.setVideoId(videoId);
-            Picasso.with(mContext.getApplicationContext())
+            Picasso.with()
                     // must use an Uri here, does not work with path only
                     .load(posterUri)
                     .resize(getWidth(mContext), getHeight(mContext))
@@ -112,7 +112,7 @@ public abstract class ListPresenter extends Presenter {
         }
 
         protected void updateImageViewThumbnail(long videoId) {
-            Picasso.with(mContext.getApplicationContext())
+            Picasso.with()
                     // must use an Uri here, does not work with path only
                     .load(ThumbnailRequestHandler.buildUri(videoId))
                     .resize(getWidth(mContext), getHeight(mContext))
@@ -190,7 +190,7 @@ public abstract class ListPresenter extends Presenter {
         }
 
         @Override
-        public void onBitmapFailed(Drawable drawable){
+        public void onBitmapFailed(Exception e,Drawable drawable){
             if( mVideoId!=-1){
                 UnavailablePosterBroadcastReceiver.sendBroadcast(mContext, mVideoId);
                 mVideoId = -1;
