@@ -553,7 +553,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         false,
                         finalResumePos,
                         VideoInfoActivityFragment.this,
-                        false,
                         getActivity().getIntent().getLongExtra(VideoInfoActivity.EXTRA_PLAYLIST_ID, -1));
             }
         });
@@ -1014,7 +1013,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     false,
                     resumePos,
                     this,
-                    false,
                     getActivity().getIntent().getLongExtra(VideoInfoActivity.EXTRA_PLAYLIST_ID, -1));
 
         }

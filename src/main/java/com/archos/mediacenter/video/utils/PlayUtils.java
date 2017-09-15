@@ -54,7 +54,6 @@ public class PlayUtils implements IndexHelper.Listener {
     private ExternalPlayerWithResultStarter mExternalPlayerWithResultStarter;
     private int mResumePosition;
     private Context mContext;
-    private boolean mDisablePassthrough;
     private long mPlaylistId;
     private Video mVideo;
 
@@ -94,11 +93,9 @@ public class PlayUtils implements IndexHelper.Listener {
                                   final boolean legacyPlayer,
                                   final int resumePosition, //in case we already have resume position. Will only be used by external players
                                   final ExternalPlayerWithResultStarter externalPlayerWithResultStarter, //mxplayer will call onResult after playing video
-                                  final boolean disablePassthrough,
                                   final long playlistId)
                                     {
 
-        Log.d(TAG, "passthrough disabled ? "+disablePassthrough);
         if(sPlayUtils==null)
             sPlayUtils = new PlayUtils();
         Log.d(TAG, "startVideo " + resume);
@@ -129,18 +126,18 @@ public class PlayUtils implements IndexHelper.Listener {
                 @Override
                 public void onUriFound(Uri uri) {
                     video.setStreamingUri(uri);
-                    sPlayUtils.startPlayer(context, video, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, disablePassthrough, playlistId);
+                    sPlayUtils.startPlayer(context, video, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, playlistId);
                 }
 
                 @Override
                 public void onError() {
-                    sPlayUtils.startPlayer(context, video, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, disablePassthrough, playlistId);
+                    sPlayUtils.startPlayer(context, video, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, playlistId);
                 }
             });
             uriFinder.start();
         }
         else
-            sPlayUtils.startPlayer(context, video, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, disablePassthrough, playlistId);
+            sPlayUtils.startPlayer(context, video, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, playlistId);
     }
 
     private void startPlayer(Context context,
@@ -150,7 +147,7 @@ public class PlayUtils implements IndexHelper.Listener {
                              boolean legacyPlayer,
                              int resumePosition,
                              ExternalPlayerWithResultStarter externalPlayerWithResultStarter,
-                             boolean disablePassthrough, long playlistId) {
+                             long playlistId) {
         reset();
         mContext = context;
         mResume = resume;
@@ -159,7 +156,6 @@ public class PlayUtils implements IndexHelper.Listener {
         mLegacyPlayer = legacyPlayer;
         mExternalPlayerWithResultStarter = externalPlayerWithResultStarter;
         mResumePosition = resumePosition;
-        mDisablePassthrough = disablePassthrough;
         mPlaylistId = playlistId;
         if (allow3rdPartyPlayer(context)&&resume!=PlayerService.RESUME_NO&&resumePosition==-1) {
             if(mIndexHelper==null)
@@ -206,7 +202,6 @@ public class PlayUtils implements IndexHelper.Listener {
         mLegacyPlayer = false;
         mExternalPlayerWithResultStarter = null;
         mResumePosition = -1;
-        mDisablePassthrough = false;
         mPlaylistId = -1;
     }
 
@@ -245,7 +240,6 @@ public class PlayUtils implements IndexHelper.Listener {
         intent.putExtra(PlayerActivity.KEY_STREAMING_URI, video.getStreamingUri());
         intent.putExtra(PlayerActivity.RESUME, resume);
         intent.putExtra(PlayerActivity.VIDEO_PLAYER_LEGACY_EXTRA, legacyPlayer);
-        intent.putExtra(PlayerService.DISABLE_PASSTHROUGH, mDisablePassthrough);
         intent.putExtra(PlayerService.PLAYLIST_ID, playlistId);
         intent.putExtra(PlayerService.VIDEO, video);
 

@@ -256,7 +256,7 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
         PlayUtils.startVideo(getActivity(),
                 video,
                 resume,
-                true, -1, this, false, -1);
+                true, -1, this, -1);
     }
 
 

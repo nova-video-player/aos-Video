@@ -706,10 +706,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 Integer.parseInt(mPreferences.getString(KEY_PLAYER_AUTO_FORMAT, "-1")));
         if (LibAvos.isAvailable()) {
             VideoPreferencesFragment.resetPassthroughPref(mPreferences);
-            if(getIntent().getBooleanExtra(PlayerService.DISABLE_PASSTHROUGH,false))
-                LibAvos.setPassthrough(0);
-            else
-                LibAvos.setPassthrough(Integer.valueOf(mPreferences.getString("force_audio_passthrough_multiple","0")));
+            LibAvos.setPassthrough(Integer.valueOf(mPreferences.getString("force_audio_passthrough_multiple","0")));
             LibAvos.setDownmix(ArchosFeatures.isAndroidTV(this)&&!"AFTM".equals(Build.MODEL)?0:1);//not with firestick
         }
         //if not started from floating player, we have to stop our video

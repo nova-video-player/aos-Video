@@ -265,7 +265,7 @@ public class CastDebug implements ArchosVideoCastManager.ArchosCastManagerListen
         PlayUtils.startVideo(mContext,
                 video,
                 PlayerService.RESUME_NO,
-                true,-1, null, false, -1);
+                true,-1, null, -1);
     }
 
 }

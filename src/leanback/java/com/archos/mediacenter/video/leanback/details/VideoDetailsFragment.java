@@ -1356,42 +1356,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 break;
             }
             mResumeFromPlayer = true;
-            PlayUtils.startVideo(getActivity(), mVideo, resume, false,resumePos, this, shouldDisablePassthrough(), getActivity().getIntent().getLongExtra(EXTRA_LIST_ID, -1));
+            PlayUtils.startVideo(getActivity(), mVideo, resume, false,resumePos, this, getActivity().getIntent().getLongExtra(EXTRA_LIST_ID, -1));
         }
-    }
-
-    private boolean isAac6Channels(String format, String channels){
-        if(format!=null&&format.toLowerCase().equals("aac")) {
-            if (channels != null && channels.startsWith("5")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean shouldDisablePassthrough(){
-        if(mVideo.getCalculatedBestAudioFormat()!=null&&!mVideo.getCalculatedBestAudioFormat().isEmpty()) {
-            try {
-                JSONObject obj = new JSONObject(mVideo.getCalculatedBestAudioFormat());
-                JSONArray array = obj.getJSONArray("audiotracks");
-                for (int i = 0; i < array.length(); i++) {
-                    if(isAac6Channels(array.getJSONObject(i).getString("format"), array.getJSONObject(i).getString("channels"))) {
-                        return true;
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        else if(mVideo.getMetadata()!=null){
-            for(int i = 0; i < mVideo.getMetadata().getAudioTrackNb(); i++){
-                VideoMetadata.AudioTrack audioTrack = mVideo.getMetadata().getAudioTrack(i);
-                if(isAac6Channels(audioTrack.format, audioTrack.channels)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     @Override
@@ -1421,7 +1387,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     resume = PlayerActivity.RESUME_FROM_LOCAL_POS;
                     break;
             }
-            PlayUtils.startVideo(getActivity(), mVideo, resume, false, -1, this, shouldDisablePassthrough(), getActivity().getIntent().getLongExtra(EXTRA_LIST_ID, -1));
+            PlayUtils.startVideo(getActivity(), mVideo, resume, false, -1, this, getActivity().getIntent().getLongExtra(EXTRA_LIST_ID, -1));
         }
         else if(requestCode == PLAY_ACTIVITY_REQUEST_CODE){
             ExternalPlayerResultListener.getInstance().onActivityResult(requestCode,resultCode,data);

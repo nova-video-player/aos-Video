@@ -482,7 +482,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 c.moveToFirst();
                 long resumeId = c.getLong(index_id);
                 Video video = getVideoFromId(resumeId);
-                PlayUtils.startVideo(this, video, PlayerActivity.RESUME_FROM_LAST_POS, true,-1, this, false, -1);
+                PlayUtils.startVideo(this, video, PlayerActivity.RESUME_FROM_LAST_POS, true,-1, this, -1);
             }else
                 Toast.makeText(this, R.string.no_resume_available, Toast.LENGTH_LONG).show();
         }
@@ -642,7 +642,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         if (mGlobalResumeId != -1) {
 
             Video video = getVideoFromId(mGlobalResumeId);
-            PlayUtils.startVideo(this, video, PlayerActivity.RESUME_FROM_LAST_POS, true,-1, this, false, -1);
+            PlayUtils.startVideo(this, video, PlayerActivity.RESUME_FROM_LAST_POS, true,-1, this, -1);
             if(ArchosVideoCastManager.getInstance().isConnected()) {//reset resume view since playeractivity won't be launcher
                 GlobalResumeView grv = getGlobalResumeView();
                 grv.resetOpenAnimation();

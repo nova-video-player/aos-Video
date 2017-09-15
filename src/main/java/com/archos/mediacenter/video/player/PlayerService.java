@@ -133,7 +133,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public static final String PAUSE_INTENT = "playerservice.pause";
     public static final String EXIT_INTENT = "playerservice.exit";
     public static final String FULLSCREEN_INTENT = "playerservice.fullscreen";
-    public static final String DISABLE_PASSTHROUGH = "playerservice.passthrough";
     public static final String PLAYLIST_ID = "playlist_id";
     public static final String VIDEO = "extra_video";
     public static PlayerService sPlayerService;
