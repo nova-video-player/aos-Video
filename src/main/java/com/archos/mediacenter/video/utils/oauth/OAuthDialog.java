@@ -22,8 +22,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -97,13 +95,13 @@ public class OAuthDialog extends Dialog {
 		
 		mLayout = new LinearLayout(getContext());
 		mLayout.setOrientation(LinearLayout.VERTICAL);
-		
+
 		mWebView = new WebView(getContext());
 		mWebView.setVerticalScrollBarEnabled(false);
 		mWebView.setHorizontalScrollBarEnabled(false);
-		//mWebView.getSettings().setJavaScriptEnabled(true);
 		//mWebView.getSettings().setSupportZoom(false);
 		mWebView.setLayoutParams(MATCH);
+		mWebView.getSettings().setJavaScriptEnabled(true);
 
 		mWebView.setWebViewClient(new OAuthWebViewClient());
         mWebView.setWebChromeClient(new WebChromeClient());
@@ -117,6 +115,10 @@ public class OAuthDialog extends Dialog {
 		CookieManager cookieManager = CookieManager.getInstance();
 		cookieManager.removeAllCookie();
 		
+	}
+
+	public WebView getWebView(){
+		return mWebView;
 	}
 	
 	/**
@@ -191,6 +193,24 @@ public class OAuthDialog extends Dialog {
 		{
 			super.onPageFinished(view, url);
 			mProgress.dismiss();
+			injectCSS();
 		}
 	}
+
+	//workaround to be accepted on amazon store
+	private void injectCSS() {
+		try {
+			String css = ".col-xs-4 a:focus .btn{ background-color:blue !important; }";
+			getWebView().loadUrl("javascript:(function() {" +
+					"var parent = document.getElementsByTagName('head').item(0);" +
+					"var style = document.createElement('style');" +
+					"style.type = 'text/css';" +
+					"style.innerHTML=\"" +css+"\";"+
+					"parent.appendChild(style);" +
+					"})()");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }
