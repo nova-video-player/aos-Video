@@ -65,6 +65,7 @@ public class CastPlayerService extends CastRemoteDisplayLocalService implements 
 
     private static final int MSG_TORRENT_UPDATE = 2;
     private static final int MSG_HIDE_CONTROLLER = 3;
+    private static final int MSG_HIDE_SOUND_NOT_WORKING = 4;
     private static final String TAG = "CastPlayerService";
 
     private WindowManager mWindowManager;
@@ -263,6 +264,9 @@ public class CastPlayerService extends CastRemoteDisplayLocalService implements 
                         Log.d("AVP", "Display update, out of bound", e);
                     }
                     break;
+                case MSG_HIDE_SOUND_NOT_WORKING:
+                    mBackgroundWarning.setVisibility(View.GONE);
+                    break;
             }
         }
     };
@@ -270,11 +274,14 @@ public class CastPlayerService extends CastRemoteDisplayLocalService implements 
 
     @Override
     public void onForeGroundState(Context applicationContext, boolean foreground) {
+        mHandler.removeMessages(MSG_HIDE_SOUND_NOT_WORKING);
         if(mBackgroundWarning!=null){
             if(foreground)
                 mBackgroundWarning.setVisibility(View.GONE);
-            else
+            else {
                 mBackgroundWarning.setVisibility(View.VISIBLE);
+                mHandler.sendEmptyMessageDelayed(MSG_HIDE_SOUND_NOT_WORKING,4000);
+            }
         }
     }
 
