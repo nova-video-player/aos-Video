@@ -119,6 +119,8 @@ public class VideoUtils {
     }
 
     static public CharSequence getLanguageString(Context context, CharSequence name) {
+        if(name==null)
+            return null;
         final Resources resources = context.getResources();
         CharSequence lang;
         int resId = resources.getIdentifier((String) name, "string", context.getPackageName());
