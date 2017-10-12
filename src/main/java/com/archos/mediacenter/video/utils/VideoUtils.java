@@ -20,6 +20,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
+import com.archos.mediacenter.video.R;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -119,10 +121,11 @@ public class VideoUtils {
     }
 
     static public CharSequence getLanguageString(Context context, CharSequence name) {
-        if(name==null)
-            return null;
         final Resources resources = context.getResources();
         CharSequence lang;
+
+        if(name==null)
+            return resources.getText(R.string.unknown_track_name);
         int resId = resources.getIdentifier((String) name, "string", context.getPackageName());
         try {
             lang = resources.getText(resId);
