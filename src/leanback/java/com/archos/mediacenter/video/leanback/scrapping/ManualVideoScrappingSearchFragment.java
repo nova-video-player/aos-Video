@@ -50,7 +50,7 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
 
         // Get input file and init the SearchInfo ASAP
         mVideo = (Video) getActivity().getIntent().getSerializableExtra(ManualVideoScrappingActivity.EXTRA_VIDEO);
-        mSearchInfo = SearchPreprocessor.instance().parseFileBased(mVideo.getName()!=null&&!mVideo.getName().isEmpty()? Uri.parse("/"+mVideo.getName()):mVideo.getUri());
+        mSearchInfo = SearchPreprocessor.instance().parseFileBased(mVideo.getUri(), mVideo.getName()!=null&&!mVideo.getName().isEmpty()? Uri.parse("/"+mVideo.getName()):mVideo.getUri());
 
         // Start a search using the search suggestion. It makes it easy for the user to edit it for typo if needed
         // Allow often the second or third suggestion is the right one

@@ -122,7 +122,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
 
         // we'd like to keep this instance when rotating
         setRetainInstance(false);
-        mSearchInfo = SearchPreprocessor.instance().parseFileBased(Uri.parse("/foo.avi"));
+        mSearchInfo = SearchPreprocessor.instance().parseFileBased(Uri.parse("/foo.avi"), Uri.parse("/foo.avi"));
         mHandler = new Handler(this);
 
         mDisplayState = DisplayState.SEARCH_INITIAL;

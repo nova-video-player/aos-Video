@@ -1142,7 +1142,7 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
                 Uri file = Uri.parse(path);
                 SearchInfo searchInfo = null;
                 if (file != null) {
-                    searchInfo = SearchPreprocessor.instance().parseFileBased(file);
+                    searchInfo = SearchPreprocessor.instance().parseFileBased(file, null);
                     itemProperties.title = searchInfo.getSearchSuggestion();
                 } else {
                     continue;

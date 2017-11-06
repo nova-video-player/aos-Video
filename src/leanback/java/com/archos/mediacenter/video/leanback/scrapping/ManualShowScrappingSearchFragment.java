@@ -77,7 +77,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
         // Get input show and init the SearchInfo ASAP
         mShowId = getActivity().getIntent().getLongExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_ID, -1);
         mShowName = getActivity().getIntent().getStringExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_NAME);
-        mSearchInfo = SearchPreprocessor.instance().parseFileBased(Uri.parse("/foo.avi"));
+        mSearchInfo = SearchPreprocessor.instance().parseFileBased(Uri.parse("/foo.avi"), Uri.parse("/foo.avi"));
 
         // Start a search using the search suggestion. It makes it easy for the user to edit it for typo if needed
         // Allow often the second or third suggestion is the right one

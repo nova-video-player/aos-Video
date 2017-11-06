@@ -22,6 +22,7 @@ import android.support.v17.leanback.widget.Action;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.DetailsOverviewRow;
 import android.support.v17.leanback.widget.DetailsOverviewRowPresenter;
+import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter;
 import android.support.v17.leanback.widget.OnActionClickedListener;
 import android.view.View;
 import android.widget.Toast;
@@ -49,7 +50,7 @@ public class NetworkShortcutDetailsFragment extends DetailsFragment implements O
 
     protected Shortcut mShortcut;
 
-    private DetailsOverviewRowPresenter mDetailsRowPresenter;
+    private FullWidthDetailsOverviewRowPresenter mDetailsRowPresenter;
 
     private Overlay mOverlay;
 
@@ -66,9 +67,8 @@ public class NetworkShortcutDetailsFragment extends DetailsFragment implements O
         DetailsOverviewRow detailRow = new DetailsOverviewRow(mShortcut);
         detailRow.setImageScaleUpAllowed(false);
         addActions(detailRow);
-        mDetailsRowPresenter = new DetailsOverviewRowPresenter(new ShortcutDetailsPresenter());
-        mDetailsRowPresenter.setSharedElementEnterTransition(getActivity(), SHARED_ELEMENT_NAME, 1000);
-        mDetailsRowPresenter.setStyleLarge(false);
+        mDetailsRowPresenter = new FullWidthDetailsOverviewRowPresenter(new ShortcutDetailsPresenter());
+
         mDetailsRowPresenter.setBackgroundColor(getResources().getColor(R.color.lightblue900));
         mDetailsRowPresenter.setOnActionClickedListener(this);
 

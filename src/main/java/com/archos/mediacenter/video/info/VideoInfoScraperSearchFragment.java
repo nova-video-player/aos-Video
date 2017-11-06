@@ -307,7 +307,7 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
         {
         	if(DBG) Log.d(TAG, "setupIfReady: READY!");
 
-            mSearchInfo = SearchPreprocessor.instance().parseFileBased(mTitle!=null&&!mTitle.isEmpty()?Uri.parse("/"+mTitle):mUri);
+            mSearchInfo = SearchPreprocessor.instance().parseFileBased(mUri, mTitle!=null&&!mTitle.isEmpty()?Uri.parse("/"+mTitle):mUri);
             String searchText = mSearchInfo.getSearchSuggestion();
             mCustomSearchEditText.setText(searchText);
             mCustomSearchEditText.setSelection(searchText.length());
@@ -471,7 +471,7 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
                 String search = mCustomSearchEditText.getText().toString();
                 SearchInfo searchInfo = mSearchInfo;
                 if (searchInfo == null) {
-                    searchInfo = SearchPreprocessor.instance().parseFileBased(mTitle!=null&&!mTitle.isEmpty()?Uri.parse("/"+mTitle):mUri);
+                    searchInfo = SearchPreprocessor.instance().parseFileBased(mUri, mTitle!=null&&!mTitle.isEmpty()?Uri.parse("/"+mTitle):mUri);
                 }
                 searchInfo.setUserInput(search);
                 mResults = mScraper.getBestMatches(searchInfo, SELECTION_DIALOG_MAX_ITEMS).results;

@@ -215,6 +215,7 @@ public class PlayUtils implements IndexHelper.Listener {
         if(ArchosVideoCastManager.getInstance().isConnected())
             intent.setClass(context, CastService.class);
         else if (!allow3rdPartyPlayer(context)) {
+            intent.putExtra(PlayerService.VIDEO, video);
             intent.setClass(context, PlayerActivity.class);
         }
         else {
@@ -241,7 +242,6 @@ public class PlayUtils implements IndexHelper.Listener {
         intent.putExtra(PlayerActivity.RESUME, resume);
         intent.putExtra(PlayerActivity.VIDEO_PLAYER_LEGACY_EXTRA, legacyPlayer);
         intent.putExtra(PlayerService.PLAYLIST_ID, playlistId);
-        intent.putExtra(PlayerService.VIDEO, video);
 
         ExternalPlayerResultListener.ExternalPositionExtra.setAllPositionExtras(intent,resumePosition );
         try {
