@@ -39,6 +39,7 @@ import com.archos.filecorelibrary.samba.SambaDiscovery;
 import com.archos.filecorelibrary.samba.Share;
 import com.archos.filecorelibrary.samba.Workgroup;
 import com.archos.mediacenter.filecoreextension.upnp2.UpnpServiceManager;
+import com.archos.mediacenter.upnp.UpnpAvailability;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.ShortcutDb;
@@ -170,7 +171,8 @@ public class NetworkRootFragment extends BrowseFragment {
         mDiscoveryRepeatHandler.post(mSmbDiscoveryRepeat);
 
         // Start UPnP
-        UpnpServiceManager
+        if(UpnpAvailability.isUpnpAvaialbe())
+            UpnpServiceManager
                 .startServiceIfNeeded(getActivity())
                 .addListener(mUpnpListener);
     }
@@ -204,11 +206,12 @@ public class NetworkRootFragment extends BrowseFragment {
         mRowsAdapter.add(new ListRow(
                 new HeaderItem(getString(R.string.network_shared_folders)),
                 mSmbDiscoveryAdapter));
-
-        mUpnpDiscoveryAdapter = new ArrayObjectAdapter(new SmbSharePresenter());
-        mRowsAdapter.add(new ListRow(
-                new HeaderItem(getString(R.string.network_media_servers)),
-                mUpnpDiscoveryAdapter));
+        if(UpnpAvailability.isUpnpAvaialbe()) {
+            mUpnpDiscoveryAdapter = new ArrayObjectAdapter(new SmbSharePresenter());
+            mRowsAdapter.add(new ListRow(
+                    new HeaderItem(getString(R.string.network_media_servers)),
+                    mUpnpDiscoveryAdapter));
+        }
 
         mFtpShortcutsAdapter = new ArrayObjectAdapter(new NetworkShortcutPresenter());
         mRowsAdapter.add(new ListRow(
@@ -484,6 +487,8 @@ public class NetworkRootFragment extends BrowseFragment {
 
         @Override
         public void onDeviceListUpdate(List<Device> devices) {
+            if(!UpnpAvailability.isUpnpAvaialbe())
+                return;
             if(DBG_UPNP) Log.d(TAG, "UpnpDiscovery onDiscoveryUpdate");
 
             // NOTE: for UPnP, onDiscoveryUpdate() is called each time a server is added or removed

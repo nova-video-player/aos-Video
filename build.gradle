@@ -9,6 +9,10 @@ buildscript {
     }
 }
 
+ext {
+    groupOpen = false
+}
+
 allprojects {
     repositories {
         jcenter()
@@ -18,6 +22,7 @@ allprojects {
             url 'http://4thline.org/m2'
         }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -70,13 +75,22 @@ android {
         additionalParameters "--no-version-vectors"
     }
 
-    flavorDimensions "version", "tv", "amazon"
+    flavorDimensions "version", "tv", "amazon", "privDeps"
 
     productFlavors {
         community {
             dimension "version"
             applicationId "com.archos.mediacenter.videocommunity"
         }
+
+        privlibs {
+            dimension "privDeps"
+        }
+
+        open {
+            dimension "privDeps"
+        }
+
         amazon {
             dimension "amazon"
         }
@@ -111,6 +125,8 @@ android {
 
     lintOptions {
         disable 'MissingTranslation'
+        checkReleaseBuilds false
+        abortOnError false
     }
 
     packagingOptions {
@@ -165,14 +181,20 @@ android {
             }
         }
     }
+    gradle.startParameter.getTaskNames().each { task ->
+        if (task.contains("Open")) {
+            groupOpen = true
+        }
+    }
 
     variantFilter { variant ->
         if (variant.getFlavors().get(2).name.equals("amazon")
                 && !variant.getFlavors().get(0).name.equals("free") && !variant.getFlavors().get(0).name.equals("ki")) {
             variant.setIgnore(true);
         }
-        if (variant.getFlavors().get(2).name.equals("community")
-                && !variant.getFlavors().get(0).name.equals("premium")) {
+
+        if (variant.getFlavors().get(3).name.equals("open")
+                && !variant.getFlavors().get(0).name.equals("community")) {
             variant.setIgnore(true);
         }
         if (variant.getFlavors().get(2).name.equals("noamazon")
@@ -189,12 +211,18 @@ android {
         }
     }
 }
-
+if (file("../VideoInternal").exists()) {
+    apply from: "../VideoInternal/mc_apps_common_env.gradle";
+    apply from: '../VideoInternal/internal_build.gradle'
+}
 dependencies {
     compile project(':FileCoreLibrary')
-    communityCompile project(path: ':MediaLib', configuration: 'communityRelease')
+    if (groupOpen){
+        compile project(path: ':MediaLib', configuration: 'communityOpenRelease')
+    }else
+        communityCompile project(path: ':MediaLib', configuration: 'communityPrivlibsRelease')
 
-    compile 'com.google.android.gms:play-services-ads:10.2.0'
+
     compile 'com.google.android.gms:play-services-cast:10.2.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:recyclerview-v7:25.0.1'
@@ -205,11 +233,8 @@ dependencies {
     compile 'com.squareup.picasso:picasso:3.0.0-SNAPSHOT'
     compile 'com.github.ksoichiro:android-observablescrollview:1.5.0'
     compile 'com.android.support:design:25.0.1'
-    compile 'com.amazon.android:mobile-ads:5.8.1.1'
     leanbackCompile 'com.android.support:leanback-v17:25.0.1'
-    compile 'com.amazon.android:mobile-ads:+'
-}
-if (file("../VideoInternal").exists()) {
-    apply from: "../VideoInternal/mc_apps_common_env.gradle";
-    apply from: '../VideoInternal/internal_build.gradle'
+    privlibsCompile 'com.google.android.gms:play-services-ads:10.2.0'
+    openCompile 'com.github.archos-sa:aos-FakeLibs:master-SNAPSHOT'
+    privlibsCompile 'com.amazon.android:mobile-ads:+'
 }

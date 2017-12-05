@@ -5,7 +5,6 @@ category, and contents.
 -->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
     android:layout_width="match_parent"
@@ -48,15 +47,7 @@ category, and contents.
                 android:layout_above="@+id/miniControllerContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <com.google.android.gms.ads.AdView
-                    android:id="@+id/adView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    ads:adSize="SMART_BANNER"
-                    ads:adUnitId="@string/ad_unit_id"
-                    />
-
+                <include layout="@layout/addview" />
             </FrameLayout>
 
             <FrameLayout

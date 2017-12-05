@@ -40,17 +40,8 @@
         android:visibility="invisible">
 
     </FrameLayout>
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adViewController"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_above="@+id/control_bar"
-        android:layout_gravity="center"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/ad_unit_id"
-        android:gravity="center"
-        android:minHeight="100dp"
-        android:visibility="invisible" />
+
+    <include layout="@layout/addview_player" />
 
     <LinearLayout
         android:id="@+id/control_bar"
