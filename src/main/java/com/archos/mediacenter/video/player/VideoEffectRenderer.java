@@ -32,7 +32,6 @@ import java.nio.ShortBuffer;
 import 	java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.google.vrtoolkit.cardboard.sensors.HeadTracker;
 
 public class VideoEffectRenderer extends TextureSurfaceRenderer implements SurfaceTexture.OnFrameAvailableListener
 {
@@ -50,8 +49,6 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
     private Surface mUISurface;
     private Context mContext;
 
-    private HeadTracker mHeadTracker;
-    
     private VideoEffect mEffect;
     
     private SurfaceTexture mUIOverlay;
@@ -92,7 +89,6 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
         setEffectType(effectType);
         if (mEffect != null)
             mEffect.setEffectMode(mode);
-        mHeadTracker = new HeadTracker(context);
         mTransformMatrix = new float[16];
         mHeadTransform = new float[16];
     }
@@ -178,7 +174,6 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
             mVideoSurfaceTexture.getTransformMatrix(mTransformMatrix);
             if (mEffect != null) {
             mEffect.setVideoTransform(mTransformMatrix);
-            mHeadTracker.getLastHeadView(mHeadTransform, offset);
             mEffect.setHeadTransform(mHeadTransform);
             mEffect.draw();
             }
@@ -206,7 +201,6 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
             c.drawColor(0x0);
             mUISurface.unlockCanvasAndPost(c);
         } catch (Exception e) { }
-        mHeadTracker.startTracking();
         }
         notifyInit();
     }
@@ -224,7 +218,6 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
 	mEffect.deinitGLComponents();
         mVideoSurfaceTexture.release();
         mVideoSurfaceTexture.setOnFrameAvailableListener(null);
-        mHeadTracker.stopTracking();
         }
     }
 
