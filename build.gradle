@@ -235,6 +235,6 @@ dependencies {
     compile 'com.android.support:design:25.0.1'
     leanbackCompile 'com.android.support:leanback-v17:25.0.1'
     privlibsCompile 'com.google.android.gms:play-services-ads:10.2.0'
-    openCompile 'com.github.archos-sa:aos-FakeLibs:master-SNAPSHOT'
+    openCompile 'com.github.archos-sa:aos-FakeLibs:9e22f163b0ce1e50445e866c0644ae029f10f812'
     privlibsCompile 'com.amazon.android:mobile-ads:+'
 }
