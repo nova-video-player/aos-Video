@@ -99,7 +99,7 @@ public class ArchosTracksChooserDialog extends DialogFragment implements Subtitl
         setUpView(view);
 
         builder.setView(view)
-                .setPositiveButton(getString(com.google.android.libraries.cast.companionlibrary.R.string.ccl_ok),
+                .setPositiveButton(getString(R.string.ccl_ok),
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
@@ -121,7 +121,7 @@ public class ArchosTracksChooserDialog extends DialogFragment implements Subtitl
         mActiveTracks = mArchosCastManager.getSelectedTracks();
         List<MediaTrack> allTracks = mMediaInfo.getMediaTracks();
         if (allTracks == null || allTracks.isEmpty()) {
-            Utils.showToast(getActivity(), com.google.android.libraries.cast.companionlibrary.R.string.ccl_caption_no_tracks_available);
+            Utils.showToast(getActivity(), R.string.ccl_caption_no_tracks_available);
             dismiss();
         }
     }
@@ -139,8 +139,8 @@ public class ArchosTracksChooserDialog extends DialogFragment implements Subtitl
     }
 
     private void setUpView(View view) {
-        ListView listView1 = (ListView) view.findViewById(com.google.android.libraries.cast.companionlibrary.R.id.listview1);
-        ListView listView2 = (ListView) view.findViewById(com.google.android.libraries.cast.companionlibrary.R.id.listview2);
+        ListView listView1 = (ListView) view.findViewById(R.id.listview1);
+        ListView listView2 = (ListView) view.findViewById(R.id.listview2);
         LinearLayout textEmptyMessageContainer = (LinearLayout) view.findViewById(R.id.text_empty_container);
         LinearLayout audioEmptyMessageContainer = (LinearLayout) view.findViewById(R.id.audio_empty_container);
         View switchToremoteDisplayText = view.findViewById(R.id.switch_remote_empty_message_text);
@@ -148,16 +148,16 @@ public class ArchosTracksChooserDialog extends DialogFragment implements Subtitl
 
         partitionTracks();
 
-        mTextAdapter = new SubtitleTracksListAdapter(getActivity(), com.google.android.libraries.cast.companionlibrary.R.layout.tracks_row_layout,
+        mTextAdapter = new SubtitleTracksListAdapter(getActivity(), R.layout.tracks_row_layout,
                 mTextTracks, mSelectedTextPosition, this);
         mTextAdapter.setOnMenuClickListener(this);
-        mAudioVideoAdapter = new AudioTracksListAdapter(getActivity(), com.google.android.libraries.cast.companionlibrary.R.layout.tracks_row_layout,
+        mAudioVideoAdapter = new AudioTracksListAdapter(getActivity(), R.layout.tracks_row_layout,
                 mAudioTracks, mSelectedAudioPosition, this);
         mAudioVideoAdapter.setOnMenuClickListener(this);
         listView1.setAdapter(mTextAdapter);
         listView2.setAdapter(mAudioVideoAdapter);
 
-        TabHost tabs = (TabHost) view.findViewById(com.google.android.libraries.cast.companionlibrary.R.id.tabhost);
+        TabHost tabs = (TabHost) view.findViewById(R.id.tabhost);
         tabs.setup();
 
         // create tab 1
@@ -175,7 +175,7 @@ public class ArchosTracksChooserDialog extends DialogFragment implements Subtitl
             tab1.setContent(R.id.listview1);
 
         }
-        tab1.setIndicator(getString(com.google.android.libraries.cast.companionlibrary.R.string.ccl_caption_subtitles));
+        tab1.setIndicator(getString(R.string.ccl_caption_subtitles));
         tabs.addTab(tab1);
 
         // create tab 2
@@ -190,13 +190,13 @@ public class ArchosTracksChooserDialog extends DialogFragment implements Subtitl
             audioEmptyMessageContainer.setVisibility(View.INVISIBLE);
             tab2.setContent(R.id.listview2);
         }
-        tab2.setIndicator(getString(com.google.android.libraries.cast.companionlibrary.R.string.ccl_caption_audio));
+        tab2.setIndicator(getString(R.string.ccl_caption_audio));
         tabs.addTab(tab2);
     }
 
     private MediaTrack buildNoneTrack() {
         return new MediaTrack.Builder(TEXT_TRACK_NONE_ID, MediaTrack.TYPE_TEXT)
-                .setName(getString(com.google.android.libraries.cast.companionlibrary.R.string.ccl_none))
+                .setName(getString(R.string.ccl_none))
                 .setSubtype(MediaTrack.SUBTYPE_CAPTIONS)
                 .setContentId("").build();
     }

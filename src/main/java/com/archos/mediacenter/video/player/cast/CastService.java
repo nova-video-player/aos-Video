@@ -30,7 +30,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.media.MediaRouter;
 import android.util.Log;
-import android.util.Pair;
 import android.widget.Toast;
 
 import com.archos.filecorelibrary.StreamOverHttp;
@@ -44,7 +43,6 @@ import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.info.SingleVideoLoader;
-import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.player.PlayerService;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.player.cast.subconverter.IOClass;
@@ -70,7 +68,6 @@ import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCa
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.CastException;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.NoConnectionException;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.TransientNetworkDisconnectionException;
-import com.google.android.libraries.cast.companionlibrary.cast.tracks.OnTracksSelectedListener;
 
 import java.io.File;
 import java.io.IOException;

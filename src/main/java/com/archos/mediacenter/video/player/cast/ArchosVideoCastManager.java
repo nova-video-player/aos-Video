@@ -248,6 +248,13 @@ public class ArchosVideoCastManager implements IMiniController, MiniController.O
         mMiniControllers = new ArrayList();
         mContext = context;
         reset();
+        mArchosCastManagerListeners = new ArrayList<>();
+        if(!isCastAvailable()) {
+            mCastManager = null;
+            mMediaRouter = null;
+            mMediaRouteSelector = null;
+            return;
+        }
         mCastManager = VideoCastManager.getInstance();
         mCastManager.addMiniController(this);//this will set mOnMiniControllerChangedListener
         mCastManager.addVideoCastConsumer(mCastConsumer);
@@ -257,7 +264,6 @@ public class ArchosVideoCastManager implements IMiniController, MiniController.O
                 ArchosVideoCastManager.getInstance().setSelectedTracks(tracks);
             }
         });
-        mArchosCastManagerListeners = new ArrayList<>();
         mRouteSelectorCallback = new MediaRouter.Callback(){
             @Override
             public void onRouteSelected(MediaRouter router, MediaRouter.RouteInfo route) {
@@ -320,6 +326,7 @@ public class ArchosVideoCastManager implements IMiniController, MiniController.O
     }
 
     public static  synchronized ArchosVideoCastManager initialize(Context context, CastConfiguration options){
+        if(options!=null)
         VideoCastManager.initialize(context,options);
         if(sInstance==null)  sInstance = new ArchosVideoCastManager(context);
         return sInstance;
@@ -336,7 +343,7 @@ public class ArchosVideoCastManager implements IMiniController, MiniController.O
             MediaMetadata mm = mediaInfo.getMetadata();
             controller.setStreamType(mediaInfo.getStreamType());
             controller.setPlaybackStatus(getPlaybackStatus(), getIdleReason());
-            controller.setSubtitle(mContext.getResources().getString(com.google.android.libraries.cast.companionlibrary.R.string.ccl_casting_to_device,
+            controller.setSubtitle(mContext.getResources().getString(R.string.ccl_casting_to_device,
                     getSelectedDevice().getFriendlyName()));
             controller.setTitle(mm.getString(MediaMetadata.KEY_TITLE));
             setIcon(controller);
@@ -421,7 +428,7 @@ public class ArchosVideoCastManager implements IMiniController, MiniController.O
             MediaMetadata mm = mediaInfo.getMetadata();
             controller.setStreamType(mediaInfo.getStreamType());
             controller.setPlaybackStatus(getPlaybackStatus(), getIdleReason());
-            controller.setSubtitle( mContext.getResources().getString(com.google.android.libraries.cast.companionlibrary.R.string.ccl_casting_to_device,
+            controller.setSubtitle( mContext.getResources().getString(R.string.ccl_casting_to_device,
                     getSelectedDevice().getFriendlyName()));
             controller.setTitle(mm.getString(MediaMetadata.KEY_TITLE));
             setIcon(controller);
@@ -445,8 +452,18 @@ public class ArchosVideoCastManager implements IMiniController, MiniController.O
         return -1;
     }
 
+    public static boolean isCastAvailable(){
+        try {
+            Class.forName( "com.google.android.gms.cast.Archos" );
+            return false;
+        } catch( ClassNotFoundException e ) {
+            return true;
+        }
+    }
 
     public boolean isConnected(){
+        if(!isCastAvailable())
+            return false;
         if(CastDebug.DBG) {
             CastDebug.log("checking if connected : " + String.valueOf(mSelectedRoute != null));
             if (mSelectedRoute == null) {

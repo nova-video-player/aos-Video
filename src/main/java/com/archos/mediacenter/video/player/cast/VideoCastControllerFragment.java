@@ -34,6 +34,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.SeekBar;
 
+import com.archos.mediacenter.video.R;
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.cast.MediaQueueItem;
@@ -221,7 +222,7 @@ public class VideoCastControllerFragment extends Fragment implements
                     @Override
                     public void run() {
                         mCastController.showLoading(false);
-                        showErrorDialog(getString(com.google.android.libraries.cast.companionlibrary.R.string.ccl_failed_authorization_timeout));
+                        showErrorDialog(getString(R.string.ccl_failed_authorization_timeout));
                         mAuthSuccess = false;
                         if ((mMediaAuthService != null)
                                 && (mMediaAuthService.getStatus() == MediaAuthStatus.PENDING)) {
@@ -464,9 +465,9 @@ public class VideoCastControllerFragment extends Fragment implements
         }
         mCastController.setStreamType(mSelectedMedia.getStreamType());
         if (mediaStatus == MediaStatus.PLAYER_STATE_BUFFERING) {
-            mCastController.setSubTitle(getString(com.google.android.libraries.cast.companionlibrary.R.string.ccl_loading));
+            mCastController.setSubTitle(getString(R.string.ccl_loading));
         } else {
-            mCastController.setSubTitle(getString(com.google.android.libraries.cast.companionlibrary.R.string.ccl_casting_to_device,
+            mCastController.setSubTitle(getString(R.string.ccl_casting_to_device,
                     mCastManager.getDeviceName()));
         }
         switch (mediaStatus) {
@@ -602,7 +603,7 @@ public class VideoCastControllerFragment extends Fragment implements
 
         if (uri == null) {
             mCastController.setImage(BitmapFactory.decodeResource(getActivity().getResources(),
-                    com.google.android.libraries.cast.companionlibrary.R.drawable.album_art_placeholder_large));
+                    R.drawable.album_art_placeholder_large));
             return;
         }
         if (mUrlAndBitmap != null && mUrlAndBitmap.isMatch(uri)) {
@@ -663,9 +664,9 @@ public class VideoCastControllerFragment extends Fragment implements
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             String message = getArguments().getString(MESSAGE);
             return new AlertDialog.Builder(getActivity())
-                    .setTitle(com.google.android.libraries.cast.companionlibrary.R.string.ccl_error)
+                    .setTitle(R.string.ccl_error)
                     .setMessage(message)
-                    .setPositiveButton(com.google.android.libraries.cast.companionlibrary.R.string.ccl_ok, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.ccl_ok, new DialogInterface.OnClickListener() {
 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

@@ -98,6 +98,7 @@ import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.player.cast.ArchosMiniPlayer;
 import com.archos.mediacenter.video.player.cast.ArchosVideoCastManager;
+import com.archos.mediacenter.video.player.cast.CastService;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.PlayUtils;
@@ -172,7 +173,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             ScraperStore.AllVideos.EPISODE_NUMBER, ScraperStore.AllVideos.EPISODE_SEASON_NUMBER,
             ScraperStore.AllVideos.EPISODE_NAME
     };
-    
+
     private final static String StereoActivity = "com.archos.mediacenter.video.browser.MainActivityStereo";
 
     private NewVideosActionProvider mNewVideosActionProvider = null;
@@ -524,27 +525,29 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     @Override
     public void onDestroy() {
-        if(adLayout!=null)
+        if (adLayout != null)
             adLayout.destroy();
         super.onDestroy();
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         mPermissionChecker.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mMediaRouteSelector = new MediaRouteSelector.Builder()
-                .addControlCategory(CastMediaControlIntent.categoryForCast(ArchosVideoCastManager.getInstance().appId))
-                .build();
-        if(mMediaRouteMenuItem!=null) ((MediaRouteActionProvider) MenuItemCompat.getActionProvider(mMediaRouteMenuItem)).setRouteSelector(mMediaRouteSelector);
-
+        if(ArchosVideoCastManager.isCastAvailable()) {
+            mMediaRouteSelector = new MediaRouteSelector.Builder()
+                    .addControlCategory(CastMediaControlIntent.categoryForCast(ArchosVideoCastManager.getInstance().appId))
+                    .build();
+            if (mMediaRouteMenuItem != null)
+                ((MediaRouteActionProvider) MenuItemCompat.getActionProvider(mMediaRouteMenuItem)).setRouteSelector(mMediaRouteSelector);
+        }
         mPermissionChecker.checkAndRequestPermission(this);
         //check if app has been bought after
-        if(adLayout!=null)
+        if (adLayout != null)
             adLayout.resume();
 
         if (ArchosUtils.isFreeVersion(this)) {
@@ -657,34 +660,38 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     @Override
     protected void updateGlobalResume() {
-        if(mPreferences.getBoolean("display_resume_box", true))
+        if (mPreferences.getBoolean("display_resume_box", true))
             new GlobalResumeTask().execute();
-        else if (mGlobalResumeView!=null)
+        else if (mGlobalResumeView != null)
             mGlobalResumeView.setVisibility(View.GONE);
     }
-    public SearchView getSearchView(){ //useful for sftp activity filter
+
+    public SearchView getSearchView() { //useful for sftp activity filter
         return mSearchView;
-        
-        
+
+
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        boolean ret = super.onCreateOptionsMenu (menu);
+        boolean ret = super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.cast_menu, menu);
-        mMediaRouteMenuItem = VideoCastManager.getInstance().addMediaRouterButton(menu, R.id.media_route_menu_item);
-        showOverlay();
-        VideoCastManager.getInstance().addVideoCastConsumer(new VideoCastConsumerImpl(){
-            @Override
-               public void onCastAvailabilityChanged(boolean castPresent){
-                if(castPresent) {
-                   showOverlay();
+        if(ArchosVideoCastManager.isCastAvailable()) {
+            mMediaRouteMenuItem = VideoCastManager.getInstance().addMediaRouterButton(menu, R.id.media_route_menu_item);
+            showOverlay();
+            VideoCastManager.getInstance().addVideoCastConsumer(new VideoCastConsumerImpl() {
+                @Override
+                public void onCastAvailabilityChanged(boolean castPresent) {
+                    if (castPresent) {
+                        showOverlay();
+                    }
                 }
-            }
-        });
+            });
+        }
         /// /setHomeButtonsetHomeButton();
         MenuItem item = menu.add(MENU_SEARCH_GROUP, MENU_SEARCH_ITEM, Menu.NONE, R.string.search_title);
         item.setIcon(android.R.drawable.ic_menu_search);
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM|MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         mSearchView = new SearchView(this);
@@ -705,11 +712,13 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     }
 
     private void showOverlay() {
-        new Handler().postDelayed(new Runnable(){
+        if(!ArchosVideoCastManager.isCastAvailable())
+            return;
+        new Handler().postDelayed(new Runnable() {
             @Override
-             public void run() {
+            public void run() {
                 if (mMediaRouteMenuItem.isVisible()) {
-                    if (!hasAlreadyDisplayedCastOverlay&&(mDrawerLayout == null || !mDrawerLayout.isDrawerOpen(GravityCompat.START))) {
+                    if (!hasAlreadyDisplayedCastOverlay && (mDrawerLayout == null || !mDrawerLayout.isDrawerOpen(GravityCompat.START))) {
                         shouldShowOverlayOnDrawerClosed = false;
                         hasAlreadyDisplayedCastOverlay = true;
                         mCastOverlay = new IntroductoryOverlay.Builder(MainActivity.this)

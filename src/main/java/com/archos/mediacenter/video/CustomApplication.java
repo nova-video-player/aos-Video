@@ -141,32 +141,35 @@ public class CustomApplication extends MultiDexApplication {
                 AdsHelper.requestNewAd();
             }
         }
-        if(getMyProcessName(this).equals(getPackageName())){
+        if (getMyProcessName(this).equals(getPackageName())) {
             //if main process
             Utils.clearOldSubDir(this);
             Debug.startLogcatRecording();
         }
-
-        String applicationId = getString(R.string.app_id);
-        // Build a CastConfiguration object and initialize VideoCastManager
-        CastConfiguration options = new CastConfiguration.Builder(getString(R.string.app_id))
-                .enableAutoReconnect()
-                .enableCaptionManagement()
-                .enableDebug()
-                .enableLockScreen()
-                .enableNotification()
-                .enableWifiReconnection()
-                .setTargetActivity(MainActivity.class)
-                .setCastControllerImmersive(false)
-                .setLaunchOptions(false, Locale.getDefault())
-                .setNextPrevVisibilityPolicy(CastConfiguration.NEXT_PREV_VISIBILITY_POLICY_DISABLED)
-                .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_REWIND, false)
-                .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_PLAY_PAUSE, true)
-                .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_DISCONNECT, true)
-                .setForwardStep(10)
-                .build();
-        ArchosVideoCastManager.initialize(this, options);
-        ArchosVideoCastManager.getInstance().appId = applicationId;
+        if(ArchosVideoCastManager.isCastAvailable()) {
+            String applicationId = getString(R.string.app_id);
+            // Build a CastConfiguration object and initialize VideoCastManager
+            CastConfiguration options = new CastConfiguration.Builder(getString(R.string.app_id))
+                    .enableAutoReconnect()
+                    .enableCaptionManagement()
+                    .enableDebug()
+                    .enableLockScreen()
+                    .enableNotification()
+                    .enableWifiReconnection()
+                    .setTargetActivity(MainActivity.class)
+                    .setCastControllerImmersive(false)
+                    .setLaunchOptions(false, Locale.getDefault())
+                    .setNextPrevVisibilityPolicy(CastConfiguration.NEXT_PREV_VISIBILITY_POLICY_DISABLED)
+                    .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_REWIND, false)
+                    .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_PLAY_PAUSE, true)
+                    .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_DISCONNECT, true)
+                    .setForwardStep(10)
+                    .build();
+            ArchosVideoCastManager.initialize(this, options);
+            ArchosVideoCastManager.getInstance().appId = applicationId;
+        }
+        else
+            ArchosVideoCastManager.initialize(this, null);
 
     }
 

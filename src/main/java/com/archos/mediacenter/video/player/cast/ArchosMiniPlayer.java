@@ -148,12 +148,12 @@ public class ArchosMiniPlayer extends RelativeLayout implements IMiniController,
             super(context, attrs);
             LayoutInflater inflater = LayoutInflater.from(context);
             inflater.inflate(R.layout.archos_cast_mini_controller, this);
-            TypedArray a = getContext().obtainStyledAttributes(attrs, com.google.android.libraries.cast.companionlibrary.R.styleable.MiniController);
-            mAutoSetup = a.getBoolean(com.google.android.libraries.cast.companionlibrary.R.styleable.MiniController_auto_setup, false);
+            TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.MiniController);
+            mAutoSetup = a.getBoolean(R.styleable.MiniController_auto_setup, false);
         a.recycle();
             mPauseDrawable = getResources().getDrawable(R.drawable.video_pause);
             mPlayDrawable = getResources().getDrawable(R.drawable.video_play);;
-            mStopDrawable = getResources().getDrawable(com.google.android.libraries.cast.companionlibrary.R.drawable.ic_mini_controller_stop);
+            mStopDrawable = getResources().getDrawable(R.drawable.ic_mini_controller_stop);
             mHandler = new Handler();
             mArchosCastManager = ArchosVideoCastManager.getInstance();
             loadViews();
@@ -262,14 +262,14 @@ public class ArchosMiniPlayer extends RelativeLayout implements IMiniController,
                         try {
                             mListener.onPlayPauseClicked(v);
                         } catch (CastException e) {
-                            mListener.onFailed(com.google.android.libraries.cast.companionlibrary.R.string.ccl_failed_perform_action,
+                            mListener.onFailed(R.string.ccl_failed_perform_action,
                                     UNDEFINED_STATUS_CODE);
                         } catch (TransientNetworkDisconnectionException e) {
-                            mListener.onFailed(com.google.android.libraries.cast.companionlibrary.R.string.ccl_failed_no_connection_trans,
+                            mListener.onFailed(R.string.ccl_failed_no_connection_trans,
                                     UNDEFINED_STATUS_CODE);
                         } catch (NoConnectionException e) {
                             mListener
-                                    .onFailed(com.google.android.libraries.cast.companionlibrary.R.string.ccl_failed_no_connection, UNDEFINED_STATUS_CODE);
+                                    .onFailed(R.string.ccl_failed_no_connection, UNDEFINED_STATUS_CODE);
                         }
                     }
                 }
@@ -436,19 +436,19 @@ public class ArchosMiniPlayer extends RelativeLayout implements IMiniController,
         }
 
         private void loadViews() {
-            mIcon = (ImageView) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.icon_view);
-            mTitle = (TextView) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.title_view);
-            mSubTitle = (TextView) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.subtitle_view);
-            mPlayPause = (ImageView) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.play_pause);
-            mLoading = (ProgressBar) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.loading_view);
+            mIcon = (ImageView) findViewById(R.id.icon_view);
+            mTitle = (TextView) findViewById(R.id.title_view);
+            mSubTitle = (TextView) findViewById(R.id.subtitle_view);
+            mPlayPause = (ImageView) findViewById(R.id.play_pause);
+            mLoading = (ProgressBar) findViewById(R.id.loading_view);
             mMainContainer = findViewById(R.id.container_current);
             mRootContainer = findViewById(R.id.container_all);
-            mProgressBar = (ProgressBar) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.progressBar);
-            mUpcomingIcon = (ImageView) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.icon_view_upcoming);
-            mUpcomingTitle = (TextView) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.title_view_upcoming);
-            mUpcomingContainer = findViewById(com.google.android.libraries.cast.companionlibrary.R.id.container_upcoming);
-            mUpcomingPlay = findViewById(com.google.android.libraries.cast.companionlibrary.R.id.play_upcoming);
-            mUpcomingStop = findViewById(com.google.android.libraries.cast.companionlibrary.R.id.stop_upcoming);
+            mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+            mUpcomingIcon = (ImageView) findViewById(R.id.icon_view_upcoming);
+            mUpcomingTitle = (TextView) findViewById(R.id.title_view_upcoming);
+            mUpcomingContainer = findViewById(R.id.container_upcoming);
+            mUpcomingPlay = findViewById(R.id.play_upcoming);
+            mUpcomingStop = findViewById(R.id.stop_upcoming);
             loadAndSetupViews();
         }
 
@@ -486,7 +486,7 @@ public class ArchosMiniPlayer extends RelativeLayout implements IMiniController,
                 protected void onPostExecute(Bitmap bitmap) {
                     if (bitmap == null) {
                         bitmap = BitmapFactory.decodeResource(getResources(),
-                                com.google.android.libraries.cast.companionlibrary.R.drawable.album_art_placeholder);
+                                R.drawable.album_art_placeholder);
                     }
                     setUpcomingIcon(bitmap);
                     if (this == mFetchUpcomingBitmapTask) {
@@ -595,13 +595,13 @@ public class ArchosMiniPlayer extends RelativeLayout implements IMiniController,
 
 
     private void loadAndSetupViews() {
-        mSecondaryPlayPause = (ImageButton) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.play_pause_toggle);
+        mSecondaryPlayPause = (ImageButton) findViewById(R.id.play_pause_toggle);
         mSecondaryLoading = (ProgressBar) findViewById(R.id.secondary_progressbar);
         mFullController = findViewById(R.id.full_controller);
-        mLiveText = (TextView) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.live_text);
-        mStart = (TextView) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.start_text);
-        mEnd = (TextView) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.end_text);
-        mSeekbar = (SeekBar) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.seekbar);
+        mLiveText = (TextView) findViewById(R.id.live_text);
+        mStart = (TextView) findViewById(R.id.start_text);
+        mEnd = (TextView) findViewById(R.id.end_text);
+        mSeekbar = (SeekBar) findViewById(R.id.seekbar);
         mRatioButton = (ImageView) findViewById(R.id.ratio_button);
         mRatioButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -612,10 +612,10 @@ public class ArchosMiniPlayer extends RelativeLayout implements IMiniController,
                 }
             }
         });
-        mClosedCaptionIcon = (ImageButton) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.cc);
-        mSkipNext = (ImageButton) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.next);
-        mSkipPrevious = (ImageButton) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.previous);
-        mPlaybackControls = findViewById(com.google.android.libraries.cast.companionlibrary.R.id.playback_controls);
+        mClosedCaptionIcon = (ImageButton) findViewById(R.id.cc);
+        mSkipNext = (ImageButton) findViewById(R.id.next);
+        mSkipPrevious = (ImageButton) findViewById(R.id.previous);
+        mPlaybackControls = findViewById(R.id.playback_controls);
         mSwitchButton = (Button) findViewById(R.id.switch_mode);
         mTroubleshootButton = (Button) findViewById(R.id.troubleshoot_button);
         ((ArchosMiniPlayer) findViewById(R.id.miniController1)).setCurrentVisibility(false);
@@ -652,13 +652,13 @@ public class ArchosMiniPlayer extends RelativeLayout implements IMiniController,
                     mListener.onPlayPauseClicked(v);
                 } catch (TransientNetworkDisconnectionException e) {
                     Utils.showToast(getContext(),
-                            com.google.android.libraries.cast.companionlibrary.R.string.ccl_failed_no_connection_trans);
+                            R.string.ccl_failed_no_connection_trans);
                 } catch (NoConnectionException e) {
                     Utils.showToast(getContext(),
-                            com.google.android.libraries.cast.companionlibrary.R.string.ccl_failed_no_connection);
+                            R.string.ccl_failed_no_connection);
                 } catch (Exception e) {
                     Utils.showToast(getContext(),
-                            com.google.android.libraries.cast.companionlibrary.R.string.ccl_failed_perform_action);
+                            R.string.ccl_failed_perform_action);
                 }
             }
         });

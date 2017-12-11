@@ -1781,9 +1781,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     @Override
     public void onResume() {
-        mMediaRouteSelector = new MediaRouteSelector.Builder()
-                .addControlCategory(CastMediaControlIntent.categoryForCast(ArchosVideoCastManager   .getInstance().appId))
-                .build();
+        if(ArchosVideoCastManager.isCastAvailable()) {
+            mMediaRouteSelector = new MediaRouteSelector.Builder()
+                    .addControlCategory(CastMediaControlIntent.categoryForCast(ArchosVideoCastManager.getInstance().appId))
+                    .build();
+        }
         if(mIsLeavingPlayerActivity)
             StoreRatingDialogBuilder.displayStoreRatingDialogIfNeeded(getContext());
         mIsLeavingPlayerActivity = false;

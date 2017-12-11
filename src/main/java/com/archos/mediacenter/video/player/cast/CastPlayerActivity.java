@@ -209,8 +209,8 @@ public class CastPlayerActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(com.google.android.libraries.cast.companionlibrary.R.menu.cast_player_menu, menu);
-        mCastManager.addMediaRouterButton(menu, com.google.android.libraries.cast.companionlibrary.R.id.media_route_menu_item);
+        getMenuInflater().inflate(R.menu.cast_player_menu, menu);
+        mCastManager.addMediaRouterButton(menu, R.id.media_route_menu_item);
         return true;
     }
 
@@ -229,15 +229,15 @@ public class CastPlayerActivity extends AppCompatActivity implements
     }
 
     private void loadAndSetupViews() {
-        mPauseDrawable = getResources().getDrawable(com.google.android.libraries.cast.companionlibrary.R.drawable.ic_pause_circle_white_80dp);
-        mPlayDrawable = getResources().getDrawable(com.google.android.libraries.cast.companionlibrary.R.drawable.ic_play_circle_white_80dp);
-        mStopDrawable = getResources().getDrawable(com.google.android.libraries.cast.companionlibrary.R.drawable.ic_stop_circle_white_80dp);
-        mPageView = findViewById(com.google.android.libraries.cast.companionlibrary.R.id.pageview);
-        mPlayPause = (ImageButton) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.play_pause_toggle);
-        mLiveText = (TextView) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.live_text);
-        mStart = (TextView) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.start_text);
-        mEnd = (TextView) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.end_text);
-        mSeekbar = (SeekBar) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.seekbar);
+        mPauseDrawable = getResources().getDrawable(R.drawable.ic_pause_circle_white_80dp);
+        mPlayDrawable = getResources().getDrawable(R.drawable.ic_play_circle_white_80dp);
+        mStopDrawable = getResources().getDrawable(R.drawable.ic_stop_circle_white_80dp);
+        mPageView = findViewById(R.id.pageview);
+        mPlayPause = (ImageButton) findViewById(R.id.play_pause_toggle);
+        mLiveText = (TextView) findViewById(R.id.live_text);
+        mStart = (TextView) findViewById(R.id.start_text);
+        mEnd = (TextView) findViewById(R.id.end_text);
+        mSeekbar = (SeekBar) findViewById(R.id.seekbar);
         mRatioButton = (ImageView) findViewById(R.id.ratio_button);
         mRatioButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -248,12 +248,12 @@ public class CastPlayerActivity extends AppCompatActivity implements
                 }
             }
         });
-        mLine2 = (TextView) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.textview2);
+        mLine2 = (TextView) findViewById(R.id.textview2);
         mLoading = (ProgressBar) findViewById(R.id.progressbar1);
-        mControllers = findViewById(com.google.android.libraries.cast.companionlibrary.R.id.controllers);
-        mClosedCaptionIcon = (ImageButton) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.cc);
-        mSkipNext = (ImageButton) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.next);
-        mSkipPrevious = (ImageButton) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.previous);
+        mControllers = findViewById(R.id.controllers);
+        mClosedCaptionIcon = (ImageButton) findViewById(R.id.cc);
+        mSkipNext = (ImageButton) findViewById(R.id.next);
+        mSkipPrevious = (ImageButton) findViewById(R.id.previous);
         mPlaybackControls = findViewById(R.id.playback_controls);
         mSwitchButton = (Button) findViewById(R.id.switch_mode);
         mTroubleshootButton = (Button) findViewById(R.id.troubleshoot_button);
@@ -292,15 +292,15 @@ public class CastPlayerActivity extends AppCompatActivity implements
                 } catch (TransientNetworkDisconnectionException e) {
                     LOGE(TAG, "Failed to toggle playback due to temporary network issue", e);
                     Utils.showToast(CastPlayerActivity.this,
-                            com.google.android.libraries.cast.companionlibrary.R.string.ccl_failed_no_connection_trans);
+                            R.string.ccl_failed_no_connection_trans);
                 } catch (NoConnectionException e) {
                     LOGE(TAG, "Failed to toggle playback due to network issues", e);
                     Utils.showToast(CastPlayerActivity.this,
-                            com.google.android.libraries.cast.companionlibrary.R.string.ccl_failed_no_connection);
+                            R.string.ccl_failed_no_connection);
                 } catch (Exception e) {
                     LOGE(TAG, "Failed to toggle playback due to other issues", e);
                     Utils.showToast(CastPlayerActivity.this,
-                            com.google.android.libraries.cast.companionlibrary.R.string.ccl_failed_perform_action);
+                            R.string.ccl_failed_perform_action);
                 }
             }
         });
@@ -449,7 +449,7 @@ public class CastPlayerActivity extends AppCompatActivity implements
     }
 
     private void setUpActionBar() {
-        mToolbar = (Toolbar) findViewById(com.google.android.libraries.cast.companionlibrary.R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -548,7 +548,7 @@ public class CastPlayerActivity extends AppCompatActivity implements
                     mPlayPause.setImageDrawable(mPauseDrawable);
                 }
 
-                mLine2.setText(getString(com.google.android.libraries.cast.companionlibrary.R.string.ccl_casting_to_device,
+                mLine2.setText(getString(R.string.ccl_casting_to_device,
                         mArchosCastManager.getDeviceName()));
                 mControllers.setVisibility(View.VISIBLE);
                 break;
@@ -557,7 +557,7 @@ public class CastPlayerActivity extends AppCompatActivity implements
                 mLoading.setVisibility(View.INVISIBLE);
                 mPlaybackControls.setVisibility(View.VISIBLE);
                 mPlayPause.setImageDrawable(mPlayDrawable);
-                mLine2.setText(getString(com.google.android.libraries.cast.companionlibrary.R.string.ccl_casting_to_device,
+                mLine2.setText(getString(R.string.ccl_casting_to_device,
                         mArchosCastManager.getDeviceName()));
                 break;
             case MediaStatus.PLAYER_STATE_IDLE:
@@ -566,18 +566,18 @@ public class CastPlayerActivity extends AppCompatActivity implements
                     mLoading.setVisibility(View.INVISIBLE);
                     mPlaybackControls.setVisibility(View.VISIBLE);
                     mPlayPause.setImageDrawable(mPlayDrawable);
-                    mLine2.setText(getString(com.google.android.libraries.cast.companionlibrary.R.string.ccl_casting_to_device,
+                    mLine2.setText(getString(R.string.ccl_casting_to_device,
                             mArchosCastManager.getDeviceName()));
                 } else {
                     mPlaybackControls.setVisibility(View.INVISIBLE);
                     mLoading.setVisibility(View.VISIBLE);
-                    mLine2.setText(getString(com.google.android.libraries.cast.companionlibrary.R.string.ccl_loading));
+                    mLine2.setText(getString(R.string.ccl_loading));
                 }
                 break;
             case MediaStatus.PLAYER_STATE_BUFFERING:
                 mPlaybackControls.setVisibility(View.INVISIBLE);
                 mLoading.setVisibility(View.VISIBLE);
-                mLine2.setText(getString(com.google.android.libraries.cast.companionlibrary.R.string.ccl_loading));
+                mLine2.setText(getString(R.string.ccl_loading));
                 break;
             default:
         }
