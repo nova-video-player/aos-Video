@@ -217,7 +217,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                 // Poster
                 File file = tags.getDefaultPoster().getLargeFileF();
                 if (file != null) {
-                    bitmap = Picasso.with()
+                    bitmap = Picasso.with(getActivity())
                             .load(file)
                             .noFade() // no fade since we are using activity transition anyway
                             .get();
@@ -329,7 +329,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
             // Update the bitmap
             Bitmap bitmap=null;
             try {
-                bitmap = Picasso.with()
+                bitmap = Picasso.with(getActivity())
                         .load(poster.getLargeUrl())
                         .noFade()
                         .get();

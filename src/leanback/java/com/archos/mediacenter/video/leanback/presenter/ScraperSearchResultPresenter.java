@@ -70,7 +70,7 @@ public class ScraperSearchResultPresenter extends Presenter {
          * @param posterUri
          */
         protected void updateCardViewPoster(Uri posterUri) {
-            Picasso.with()
+            Picasso.with(mContext.getApplicationContext())
                     // must use an Uri here, does not work with path only
                     .load(posterUri)
                     .resize(getWidth(mContext), getHeight(mContext))
@@ -127,7 +127,7 @@ public class ScraperSearchResultPresenter extends Presenter {
         }
 
         @Override
-        public void onBitmapFailed(Exception e,Drawable drawable){
+        public void onBitmapFailed(Drawable drawable){
             mImageCardView.setMainImageScaleType(ImageView.ScaleType.CENTER);
             mImageCardView.setMainImage(drawable, true);
         }

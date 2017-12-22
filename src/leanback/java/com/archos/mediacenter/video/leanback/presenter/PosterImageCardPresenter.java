@@ -115,7 +115,7 @@ public class PosterImageCardPresenter extends Presenter {
                 mImageCardViewTarget.setLastUri(imageUri);
                 mCardView.setMainImageDimensions(getWidth(mContext, isLarge), getHeight(mContext, isLarge));
                 mImageCardViewTarget.setVideoId(videoId);
-                Picasso.with()
+                Picasso.with(mContext.getApplicationContext())
                         // must use an Uri here, does not work with path only
                         .load(imageUri)
                         .resize(getWidth(mContext, isLarge), getHeight(mContext, isLarge))
@@ -354,7 +354,7 @@ public class PosterImageCardPresenter extends Presenter {
         }
 
         @Override
-        public void onBitmapFailed(Exception e, Drawable drawable){
+        public void onBitmapFailed(Drawable drawable){
             mIsLastStateError = true;
             if( mVideoId!=-1){
                 UnavailablePosterBroadcastReceiver.sendBroadcast(mContext, mVideoId);

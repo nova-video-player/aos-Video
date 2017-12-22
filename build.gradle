@@ -231,7 +231,7 @@ dependencies {
 
     compile 'com.android.support:palette-v7:25.0.1'
     compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.squareup.picasso:picasso:3.0.0-SNAPSHOT'
+    compile 'com.squareup.picasso:picasso:2.6.0-SNAPSHOT'
     compile 'com.github.ksoichiro:android-observablescrollview:1.5.0'
     compile 'com.android.support:design:25.0.1'
     leanbackCompile 'com.android.support:leanback-v17:25.0.1'

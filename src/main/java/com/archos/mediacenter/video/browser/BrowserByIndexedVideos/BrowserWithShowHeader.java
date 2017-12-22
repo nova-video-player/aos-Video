@@ -302,7 +302,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
 
                 if (posterUri != null) {
-                    bitmap = Picasso.with()
+                    bitmap = Picasso.with(getActivity())
                             .load(posterUri)
                             .resizeDimen(R.dimen.video_details_poster_width,R.dimen.video_details_poster_height)
                             .noFade() // no fade since we are using activity transition anyway
