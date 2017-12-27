@@ -3,9 +3,10 @@ import java.util.regex.Pattern
 buildscript {
     repositories {
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.2'
+        classpath 'com.android.tools.build:gradle:3.0.1'
     }
 }
 
@@ -23,6 +24,7 @@ allprojects {
         }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
         maven { url 'https://jitpack.io' }
+        google()
     }
 }
 
@@ -43,7 +45,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    buildToolsVersion '27.0.3'
     useLibrary 'org.apache.http.legacy'
     sourceSets {
         main {
@@ -165,18 +167,13 @@ android {
     }
 
     applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            def outputFile = output.outputFile
+        variant.outputs.all { output ->
             def api = variant.mergedFlavor.minSdkVersion.apiLevel
-            if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                def fileName = outputFile.name
-                        .replace("-noleanback-", "-API_" + "${api}" + "+-")
-                        .replace("-leanback-", "-API_" + "${api}" + "+-")
-                        .replace("-noamazon-", "-")
-                output.outputFile = new File(outputFile.parent, fileName)
-                assemble.doLast {
-                    println output.outputFile
-                }
+            outputFileName = outputFileName.replace("-noleanback-", "-API_" + "${api}" + "+-")
+                    .replace("-leanback-", "-API_" + "${api}" + "+-")
+                    .replace("-noamazon-", "-")
+            assemble.doLast {
+                println outputFileName
             }
         }
     }
