@@ -76,7 +76,7 @@ public class BackdropTask extends AsyncTask<Object, Integer, File> {
 
     @Override
     protected void onCancelled() {
-        Picasso.with(mContext).cancelRequest(mBackgroundTarget);
+        Picasso.get().cancelRequest(mBackgroundTarget);
         super.onCancelled();
     }
 
@@ -87,7 +87,7 @@ public class BackdropTask extends AsyncTask<Object, Integer, File> {
             return;
         // It is on purpose that we have the error case when file is null (like a fallback)
         if (file!=null) {
-            Picasso.with(mContext)
+            Picasso.get()
                     .load(file)
                     .resize(mMetrics.widthPixels, mMetrics.heightPixels)
                     .error(mDefaultBackground)

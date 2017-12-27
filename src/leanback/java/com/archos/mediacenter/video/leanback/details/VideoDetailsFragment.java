@@ -861,7 +861,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                         imageUri = ThumbnailRequestHandler.buildUri(video.getId()); // Thumbnail
                     }
                     if (imageUri!=null) {
-                        bitmap = Picasso.with(getActivity())
+                        bitmap = Picasso.get()
                                 .load(imageUri)
                                 .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
                                 .centerCrop()
@@ -1048,7 +1048,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             }
             if(imageUri != null){
                 try {
-                    Bitmap bitmap  = Picasso.with(getActivity()).load(imageUri)
+                    Bitmap bitmap  = Picasso.get().load(imageUri)
                             .noFade() // no fade since we are using activity transition anyway
                             .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
                             .centerCrop()
@@ -1425,7 +1425,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             // Update the bitmap
             Bitmap bitmap=null;
             try {
-                bitmap = Picasso.with(getActivity())
+                bitmap = Picasso.get()
                         .load(poster.getLargeUrl())
                         .noFade()
                         .get();

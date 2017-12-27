@@ -55,7 +55,7 @@ public class TrailerPresenter extends PosterImageCardPresenter {
         card.setMainImageScaleType(ImageView.ScaleType.CENTER);
         card.setTitleText(box.mName);
 
-        Picasso.with(mContext)
+        Picasso.get()
                 .load(getImageUrl(box))
                 .resize(getWidth(mContext), getHeight(mContext)) // better resize to card size, since backdrop files are pretty large
                 .centerCrop()
@@ -106,7 +106,7 @@ public class TrailerPresenter extends PosterImageCardPresenter {
         }
 
         @Override
-        public void onBitmapFailed(Drawable drawable){
+        public void onBitmapFailed(Exception e, Drawable drawable){
             mImageView.setScaleType(ImageView.ScaleType.CENTER);
             mImageView.setImageDrawable(drawable);
         }

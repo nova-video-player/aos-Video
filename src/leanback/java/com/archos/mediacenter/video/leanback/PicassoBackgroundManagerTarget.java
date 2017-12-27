@@ -39,7 +39,7 @@ public class PicassoBackgroundManagerTarget implements Target {
     }
 
     @Override
-    public void onBitmapFailed(Drawable drawable) {
+    public void onBitmapFailed(Exception e, Drawable drawable) {
         if (this.mBackgroundManager.isAttached()) { // try to fix some cases of "java.lang.IllegalStateException: Must attach before setting background drawable"
             this.mBackgroundManager.setDrawable(drawable);
         }

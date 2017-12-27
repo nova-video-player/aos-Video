@@ -357,7 +357,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 }
 
                 if (posterUri != null) {
-                    bitmap = Picasso.with(getActivity())
+                    bitmap = Picasso.get()
                             .load(posterUri)
                             .noFade() // no fade since we are using activity transition anyway
                             .get();

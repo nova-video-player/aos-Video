@@ -71,7 +71,7 @@ public class ScraperBaseTagsPresenter extends Presenter {
          * @param posterUrl
          */
         protected void updateCardViewPoster(String posterUrl) {
-            Picasso.with(mContext.getApplicationContext())
+            Picasso.get()
                     .load(posterUrl)
                     .resize(getWidth(mContext), getHeight(mContext))
                     .error(R.drawable.filetype_new_video)
@@ -156,7 +156,7 @@ public class ScraperBaseTagsPresenter extends Presenter {
         }
 
         @Override
-        public void onBitmapFailed(Drawable drawable){
+        public void onBitmapFailed(Exception e, Drawable drawable){
             mImageCardView.setMainImageScaleType(ImageView.ScaleType.CENTER);
             mImageCardView.setMainImage(drawable, true);
         }
