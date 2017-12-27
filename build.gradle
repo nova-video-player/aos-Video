@@ -177,11 +177,6 @@ android {
             }
         }
     }
-    gradle.startParameter.getTaskNames().each { task ->
-        if (task.contains("Open")) {
-            groupOpen = true
-        }
-    }
 
     variantFilter { variant ->
         if (variant.getFlavors().get(2).name.equals("amazon")
@@ -207,31 +202,30 @@ android {
         }
     }
 }
+
 if (file("../VideoInternal").exists()) {
     apply from: "../VideoInternal/mc_apps_common_env.gradle";
     apply from: '../VideoInternal/internal_build.gradle'
 }
+
 dependencies {
-    compile project(':FileCoreLibrary')
-    if (groupOpen){
-        compile project(path: ':MediaLib', configuration: 'communityOpenRelease')
-    }else
-        communityCompile project(path: ':MediaLib', configuration: 'communityPrivlibsRelease')
+    implementation project(':FileCoreLibrary')
+    implementation project(':MediaLib')
 
+    implementation 'com.android.support:multidex:1.0.1'
+    implementation 'com.android.support:recyclerview-v7:25.0.1'
+    implementation 'com.android.support:cardview-v7:25.0.1'
+    implementation 'com.android.support:palette-v7:25.0.1'
+    implementation 'com.android.support:appcompat-v7:25.0.1'
+    implementation 'com.squareup.picasso:picasso:3.0.0-SNAPSHOT'
+    implementation 'com.github.ksoichiro:android-observablescrollview:1.5.0'
+    implementation 'com.android.support:design:25.0.1'
+    leanbackImplementation'com.android.support:leanback-v17:25.0.1'
+    
+    privlibsApi 'com.amazon.android:mobile-ads:5.8.1.1'
+    privlibsImplementation 'com.google.android.libraries.cast.companionlibrary:ccl:2.9.1'
+    privlibsImplementation 'com.google.android.gms:play-services-ads:10.2.0'
+    privlibsImplementation 'com.google.android.gms:play-services-cast:10.2.0'
 
-    privlibsCompile 'com.google.android.gms:play-services-cast:10.2.0'
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:recyclerview-v7:25.0.1'
-    compile 'com.android.support:cardview-v7:25.0.1'
-    privlibsCompile 'com.google.android.libraries.cast.companionlibrary:ccl:2.9.1'
-
-    compile 'com.android.support:palette-v7:25.0.1'
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.squareup.picasso:picasso:2.6.0-SNAPSHOT'
-    compile 'com.github.ksoichiro:android-observablescrollview:1.5.0'
-    compile 'com.android.support:design:25.0.1'
-    leanbackCompile 'com.android.support:leanback-v17:25.0.1'
-    privlibsCompile 'com.google.android.gms:play-services-ads:10.2.0'
     openCompile 'com.github.archos-sa:AOS-FakeLibs:517a7ca02f'
-    privlibsCompile 'com.amazon.android:mobile-ads:+'
 }
