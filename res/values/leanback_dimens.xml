@@ -52,4 +52,6 @@
 
     <dimen name="smbshortcut_width">210dip</dimen>
     <dimen name="smbshortcut_height">120dip</dimen>
+
+    <dimen name="lb_details_overview_action_items_margin">8dp</dimen>
 </resources>
