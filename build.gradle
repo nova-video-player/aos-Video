@@ -22,14 +22,14 @@ allprojects {
     }
 }
 
-def getDate() {
+static def getDate() {
     // we increment version number every 1000 seconds,
     // we start on 31/08/2016
     def date = new Date().getTime() / 1000L - 1472637600L
     return (int) (date / 1000L)
 }
 
-def getFormattedDate() {
+static def getFormattedDate() {
     def date = new Date()
     def formattedDate = date.format('yyyyMMdd.HHmm')
     return formattedDate
@@ -173,32 +173,32 @@ android {
     }
 
     variantFilter { variant ->
-        if (variant.getFlavors().get(2).name.equals("amazon")
-                && !variant.getFlavors().get(0).name.equals("free") && !variant.getFlavors().get(0).name.equals("ki")) {
-            variant.setIgnore(true);
+        if (variant.getFlavors().get(2).name == "amazon"
+                && variant.getFlavors().get(0).name != "free" && variant.getFlavors().get(0).name != "ki") {
+            variant.setIgnore(true)
         }
 
-        if (variant.getFlavors().get(3).name.equals("open")
-                && !variant.getFlavors().get(0).name.equals("community")) {
-            variant.setIgnore(true);
+        if (variant.getFlavors().get(3).name == "open"
+                && variant.getFlavors().get(0).name != "community") {
+            variant.setIgnore(true)
         }
-        if (variant.getFlavors().get(2).name.equals("noamazon")
-                && variant.getFlavors().get(0).name.equals("ki")) {
-            variant.setIgnore(true);
+        if (variant.getFlavors().get(2).name == "noamazon"
+                && variant.getFlavors().get(0).name == "ki") {
+            variant.setIgnore(true)
         }
-        if (variant.getFlavors().get(1).name.equals("leanback")
-                && (variant.getFlavors().get(0).name.equals("aw") ||
-                variant.getFlavors().get(0).name.equals("mtk") ||
-                variant.getFlavors().get(0).name.equals("qc") ||
-                variant.getFlavors().get(0).name.equals("rk") ||
-                variant.getFlavors().get(0).name.equals("ti"))) {
-            variant.setIgnore(true);
+        if (variant.getFlavors().get(1).name == "leanback"
+                && (variant.getFlavors().get(0).name == "aw" ||
+                variant.getFlavors().get(0).name == "mtk" ||
+                variant.getFlavors().get(0).name == "qc" ||
+                variant.getFlavors().get(0).name == "rk" ||
+                variant.getFlavors().get(0).name == "ti")) {
+            variant.setIgnore(true)
         }
     }
 }
 
 if (file("../VideoInternal").exists()) {
-    apply from: "../VideoInternal/mc_apps_common_env.gradle";
+    apply from: "../VideoInternal/mc_apps_common_env.gradle"
     apply from: '../VideoInternal/internal_build.gradle'
 }
 
