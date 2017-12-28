@@ -221,5 +221,5 @@ dependencies {
     privlibsImplementation 'com.google.android.gms:play-services-ads:11.8.0'
     privlibsImplementation 'com.google.android.gms:play-services-cast:11.8.0'
 
-    openCompile 'com.github.archos-sa:AOS-FakeLibs:517a7ca02f'
+    openImplementation 'com.github.archos-sa:AOS-FakeLibs:517a7ca02f'
 }
