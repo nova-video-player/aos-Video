@@ -586,6 +586,11 @@ public class CastService extends Service implements CastPlayerService.RemoteInte
                         ArchosVideoCastManager.getInstance().setIsRemoteDisplayConnected(false);
 
                     }
+
+                    @Override
+                    public void onRemoteDisplaySessionEnded(CastRemoteDisplayLocalService castRemoteDisplayLocalService) {
+                        ArchosVideoCastManager.getInstance().setIsRemoteDisplayConnected(false);
+                    }
                 });
 
 
