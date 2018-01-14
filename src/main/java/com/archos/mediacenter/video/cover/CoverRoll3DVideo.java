@@ -32,7 +32,7 @@ import android.widget.Toast;
 
 import com.archos.environment.ArchosIntents;
 import com.archos.environment.ArchosSettings;
-import com.archos.filecorelibrary.MetaFile;
+import com.archos.filecorelibrary.localstorage.JavaFile2;
 import com.archos.mediacenter.cover.ArtworkFactory;
 import com.archos.mediacenter.cover.Cover;
 import com.archos.mediacenter.cover.CoverProvider;
@@ -48,6 +48,7 @@ import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
 import com.archos.mediacenter.video.utils.SubtitlesWizardActivity;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -358,7 +359,7 @@ public class CoverRoll3DVideo extends CoverRoll3D {
                 if (videoPath != null && videoPath.length() > 0) {
                     Intent intent = new Intent(Intent.ACTION_MAIN);
                     intent.setClass(mActivity, SubtitlesWizardActivity.class);
-                    intent.setData(MetaFile.pathToUri(videoPath));
+                    intent.setData(new JavaFile2(new File(videoPath)).getUri());
                     getContext().startActivity(intent);
                 }
                 return true;

@@ -26,7 +26,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.CharArrayBuffer;
 import android.database.Cursor;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -40,8 +39,6 @@ import android.widget.ListView;
 import android.widget.SectionIndexer;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-
-import java.io.IOException;
 
 
 /**
