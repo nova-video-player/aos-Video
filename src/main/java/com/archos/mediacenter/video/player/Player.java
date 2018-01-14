@@ -32,7 +32,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
-import com.archos.filecorelibrary.MetaFile;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.medialib.IMediaPlayer;
@@ -345,10 +344,6 @@ public class Player implements IPlayerControl,
     public int getUIMode() {
         if (mEffectRenderer != null) return mEffectRenderer.getUIMode();
         else return VideoEffect.NORMAL_2D_MODE;
-    }
-    
-    public void setVideoPath(String path) {
-        setVideoURI(MetaFile.pathToUri(path), null);
     }
 
     public void setVideoURI(Uri uri, Map<String, String> extraMap) {

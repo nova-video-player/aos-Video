@@ -46,8 +46,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.archos.filecorelibrary.FileExtendedInfo;
 import com.archos.filecorelibrary.ListingEngine;
-import com.archos.filecorelibrary.MetaFile.FileType;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.ListingEngineFactoryWithUpnp;
@@ -413,13 +413,13 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     }
 
     @Override
-    public FileType getFileType(int position) {
+    public FileExtendedInfo.FileType getFileType(int position) {
         // Must only be called for files/folders/shortcuts
         Object itemData = mItemList.get(position);
         if (itemData instanceof  MetaFile2 && ((MetaFile2)itemData).isDirectory()) {
-            return FileType.Directory;
+            return FileExtendedInfo.FileType.Directory;
         }
-        return FileType.File;
+        return FileExtendedInfo.FileType.File;
     }
 
 
