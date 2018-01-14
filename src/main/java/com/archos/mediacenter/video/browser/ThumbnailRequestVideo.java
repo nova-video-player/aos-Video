@@ -18,8 +18,6 @@ import android.net.Uri;
 
 import java.util.ArrayList;
 
-import com.archos.filecorelibrary.MetaFile;
-import com.archos.filecorelibrary.MetaFile2;
 import com.archos.mediacenter.utils.ThumbnailRequest;
 
 public class ThumbnailRequestVideo extends ThumbnailRequest {

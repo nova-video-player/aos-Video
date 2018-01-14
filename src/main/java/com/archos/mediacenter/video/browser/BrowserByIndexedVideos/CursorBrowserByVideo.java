@@ -28,7 +28,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 
-import com.archos.filecorelibrary.MetaFile.FileType;
+import com.archos.filecorelibrary.FileExtendedInfo;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.BrowserAdapterCommon;
@@ -201,9 +201,9 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
     }
 
     @Override
-    public FileType getFileType(int position) {
+    public FileExtendedInfo.FileType getFileType(int position) {
         // There are no directories and shortcuts in the view by id
-        return FileType.File;
+        return FileExtendedInfo.FileType.File;
     }
 
     @Override

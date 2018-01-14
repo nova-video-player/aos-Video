@@ -22,7 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-import com.archos.filecorelibrary.MetaFile.FileType;
+import com.archos.filecorelibrary.FileExtendedInfo;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
@@ -43,7 +43,7 @@ public abstract class BrowserByLocalFolder extends BrowserByFolder {
         } catch (ClassCastException e) {
         }
 
-        if (info != null && getFileType(info.position) == FileType.Directory) {
+        if (info != null && getFileType(info.position) == FileExtendedInfo.FileType.Directory) {
             menu.add(0, R.string.start_auto_scraper_activity, 0,
                     R.string.start_auto_scraper_activity);
             // TODO unhide
