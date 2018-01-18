@@ -109,7 +109,9 @@ android {
         // get the version code of each flavor
         def compatVersion = variant.productFlavors.get(1).versionCode
         // set the composite code
-        variant.mergedFlavor.versionCode = compatVersion * 1000000 + defaultConfig.versionCode
+        variant.outputs.all { output ->
+            output.setVersionCodeOverride(compatVersion * 1000000 + defaultConfig.versionCode)
+        }
     }
 
     buildTypes {
