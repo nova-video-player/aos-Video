@@ -61,6 +61,7 @@ import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
 import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.ScrapeDetailResult;
+import com.archos.environment.ArchosUtils;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -395,7 +396,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mTraktClient = new TraktService.Client(this, mTraktListener, false);
         }
         setPlayer();
-        sendBroadcast(new Intent(PLAYER_SERVICE_STARTED));
+        Intent intent = new Intent(PLAYER_SERVICE_STARTED);
+        intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+        sendBroadcast(intent);
     }
 
     /* init variables from intent
@@ -708,7 +711,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
                     startTrakt(); //this writes mVideoInfo.traktResume
 
-                    sendBroadcast(new Intent(BootupRecommandationService.UPDATE_ACTION));
+                    Intent intent = new Intent(BootupRecommandationService.UPDATE_ACTION);
+                    intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+                    sendBroadcast(intent);
 
                 }
             }

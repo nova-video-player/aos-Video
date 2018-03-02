@@ -900,7 +900,9 @@ public class SubtitlesDownloaderActivity extends Activity{
                 }
                 try {
                     //catching all exceptions for now for quick release
-                    sendBroadcast(new Intent(ArchosMediaIntent.ACTION_VIDEO_SCANNER_METADATA_UPDATE, Uri.parse(path)));
+                    Intent intent = new Intent(ArchosMediaIntent.ACTION_VIDEO_SCANNER_METADATA_UPDATE, Uri.parse(path));
+                    intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+                    sendBroadcast(intent);
                 }
                 catch (Exception e){
 

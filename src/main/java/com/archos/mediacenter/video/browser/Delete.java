@@ -76,8 +76,11 @@ public class Delete {
                     final Uri fileUri = toDeleteUri;
                     //sending intent to unindex the file
                     boolean deleteResult = deleteFileAndAssociatedFiles(mContext, fileUri);
-                    if (Utils.isLocal(fileUri))
-                        mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(VideoUtils.getMediaLibCompatibleFilepathFromUri(fileUri))));
+                    if (Utils.isLocal(fileUri)) {
+                        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(VideoUtils.getMediaLibCompatibleFilepathFromUri(fileUri)));
+                        intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+                        mContext.sendBroadcast(intent);
+                    }
                     else
                         NetworkScanner.removeVideos(mContext, fileUri);
 
@@ -164,8 +167,11 @@ public class Delete {
                 }
 
                 //sending intent to unindex the file
-                if(Utils.isLocal(fileUri))
-                    mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,Uri.parse(VideoUtils.getMediaLibCompatibleFilepathFromUri(fileUri))));
+                if(Utils.isLocal(fileUri)) {
+                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,Uri.parse(VideoUtils.getMediaLibCompatibleFilepathFromUri(fileUri)));
+                    intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+                    mContext.sendBroadcast(intent);
+                }
                 else
                     NetworkScanner.removeVideos(mContext, fileUri);
 

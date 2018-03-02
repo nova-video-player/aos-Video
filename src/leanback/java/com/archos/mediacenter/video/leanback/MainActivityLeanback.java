@@ -29,6 +29,7 @@ import com.archos.mediacenter.video.browser.PermissionChecker;
 import com.archos.mediacenter.video.utils.VideoPreferencesActivity;
 import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
 import com.archos.mediascraper.AutoScrapeService;
+import com.archos.environment.ArchosUtils;
 
 public class MainActivityLeanback extends LeanbackActivity {
 
@@ -62,7 +63,9 @@ public class MainActivityLeanback extends LeanbackActivity {
 
         setContentView(R.layout.androidtv_root_activity);
         AutoScrapeService.registerObserver(this);
-        sendBroadcast(new Intent(BootupRecommandationService.UPDATE_ACTION));
+        Intent intent = new Intent(BootupRecommandationService.UPDATE_ACTION);
+        intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+        sendBroadcast(intent);
     }
 
     @Override

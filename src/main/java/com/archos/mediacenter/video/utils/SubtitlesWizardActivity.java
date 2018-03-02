@@ -26,6 +26,7 @@ import com.archos.filecorelibrary.Utils;
 import com.archos.mediacenter.video.R;
 import com.archos.medialib.IMediaMetadataRetriever;
 import com.archos.medialib.MediaFactory;
+import com.archos.environment.ArchosUtils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -492,12 +493,18 @@ public class SubtitlesWizardActivity extends Activity implements OnItemClickList
             if (fileRenamed) {
                 // Update the medialib
                 Uri oldUri = Uri.fromFile(oldFile);
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, oldUri));
+                Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, oldUri);
+                intent1.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+                sendBroadcast(intent1);
                 Uri newUri = Uri.fromFile(newFile);
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, newUri));
+                Intent intent2 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, newUri);
+                intent2.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+                sendBroadcast(intent2);
 
                 if (DBG) Log.d(TAG, "rescanning Video: " + mVideoUri.toString());
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, mVideoUri));
+                Intent intent3 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, mVideoUri);
+                intent3.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+                sendBroadcast(intent3);
 
                 // Update the local data : add the file to current subtitles list
                 // and remove it from the available subtitles list
@@ -530,10 +537,14 @@ public class SubtitlesWizardActivity extends Activity implements OnItemClickList
             if (fileDeleted) {
                 // Update the medialib
                 Uri uri = Uri.fromFile(file);
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
+                Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri);
+                intent1.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+                sendBroadcast(intent1);
 
                 if (DBG) Log.d(TAG, "rescanning Video: " + mVideoUri.toString());
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, mVideoUri));
+                Intent intent2 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, mVideoUri);
+                intent2.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+                sendBroadcast(intent2);
                 // Update the local data : remove the file from the list it belongs
                 if (itemData.type == ITEM_DATA_TYPE_CURRENT) {
                     mCurrentFiles.remove(itemData.index);

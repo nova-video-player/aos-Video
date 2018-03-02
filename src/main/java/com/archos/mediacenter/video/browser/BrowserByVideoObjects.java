@@ -15,7 +15,6 @@
 
 package com.archos.mediacenter.video.browser;
 
-
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -321,6 +320,7 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
 
             case R.string.video_browser_index_file:
                 VideoStore.requestIndexing(video.getFileUri(), getActivity());
+                break;
 
             case R.string.delete_resume:
                 updateDbXml(info.position, UpdateDbXmlType.RESUME, -1);

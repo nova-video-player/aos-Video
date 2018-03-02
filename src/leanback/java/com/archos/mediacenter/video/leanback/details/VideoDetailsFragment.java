@@ -1632,7 +1632,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         int numberDeleted = getActivity().getContentResolver().delete(VideoStoreInternal.FILES_SCANNED,
                 VideoStore.MediaColumns.DATA + " = ?",
                 new String[]{mVideo.getFilePath()});
-        getActivity().sendBroadcast(new Intent(BootupRecommandationService.UPDATE_ACTION));
+        Intent intent = new Intent(BootupRecommandationService.UPDATE_ACTION);
+        intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+        getActivity().sendBroadcast(intent);
         if (numberDeleted!=1) {
             Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
         }

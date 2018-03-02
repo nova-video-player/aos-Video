@@ -104,6 +104,7 @@ import com.archos.medialib.Subtitle;
 import com.archos.mediaprovider.NetworkState;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.ScrapeDetailResult;
+import com.archos.environment.ArchosUtils;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -2618,7 +2619,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mAudioInfoController.clear();
         mSubtitleManager.stop();
         mPlayerController.stop();
-        sendBroadcast(new Intent(STOPPED_VIDEO_INTENT));
+        Intent intent = new Intent(STOPPED_VIDEO_INTENT);
+        intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+        sendBroadcast(intent);
 
     }
 
