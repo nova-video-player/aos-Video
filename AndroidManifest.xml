@@ -54,7 +54,8 @@
         android:name=".CustomApplication"
         android:allowTaskReparenting="true"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/video2"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/video"
         android:largeHeap="true" >
         <meta-data
@@ -69,7 +70,8 @@
 
         <activity
             android:name=".EntryActivity"
-            android:icon="@mipmap/video2"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/video"
             android:launchMode="singleTask"
             android:exported="true"
@@ -80,7 +82,8 @@
         <activity
             android:name=".browser.MainActivity"
             android:configChanges="keyboard|keyboardHidden"
-            android:icon="@mipmap/video2"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:banner="@drawable/androidtv_banner"
             android:label="@string/video"
             android:launchMode="singleTask"
@@ -109,7 +112,8 @@
 
         <activity-alias
             android:name=".browser.MainActivityStereo"
-            android:icon="@mipmap/video2"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/video"
             android:targetActivity=".browser.MainActivity" >
 
@@ -140,7 +144,8 @@
 
         <activity
             android:name=".browser.QueryBrowserActivityVideo"
-            android:icon="@mipmap/video2"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:theme="@style/ArchosThemeBlueCompat" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -168,7 +173,8 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true"
-            android:icon="@mipmap/video2"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/video"
             android:theme="@style/ArchosThemeBlueCompatOverlay" >
             <intent-filter>
@@ -292,7 +298,8 @@
             android:name=".autoscraper.AutoScraperActivity"
             android:configChanges="orientation|screenLayout|screenSize"
             android:excludeFromRecents="true"
-            android:icon="@mipmap/video2"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/scraper_notification_title"
             android:launchMode="singleTask"
             android:theme="@style/Theme.DialogMinWidth" >
@@ -303,7 +310,8 @@
         <activity
             android:name=".utils.SubtitlesWizardActivity"
             android:excludeFromRecents="true"
-            android:icon="@mipmap/video2"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:launchMode="singleTask"
             android:theme="@style/ArchosThemeBlue" >
             <intent-filter>
@@ -313,7 +321,8 @@
         <activity
             android:name=".utils.credentialsmanager.CredentialsManagerPreferenceActivity"
             android:excludeFromRecents="true"
-            android:icon="@mipmap/video2"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:launchMode="singleTask"
             android:theme="@style/ArchosThemeBlue" >
 
@@ -322,7 +331,8 @@
             android:name=".utils.VideoPreferencesActivity"
             android:configChanges="orientation|screenLayout"
             android:excludeFromRecents="true"
-            android:icon="@mipmap/video2"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/preferences"
             android:launchMode="singleTop"
             android:theme="@style/ArchosThemeBlueCompat" >
@@ -334,7 +344,8 @@
             android:name=".utils.VideoPreferencesLicencesActivity"
             android:configChanges="orientation|screenLayout"
             android:excludeFromRecents="true"
-            android:icon="@mipmap/video2"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/preferences"
             android:launchMode="singleTop"
             android:theme="@style/ArchosThemeBlue" >
@@ -347,7 +358,8 @@
          />
         <activity
             android:name=".browser.VideoPicker"
-            android:icon="@mipmap/video2"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/video_picker_title"
             android:theme="@style/ArchosThemeBlue" >
 
