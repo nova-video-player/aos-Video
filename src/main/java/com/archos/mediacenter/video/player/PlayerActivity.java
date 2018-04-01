@@ -1355,7 +1355,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         AudioDelayTVPicker tvPicker = (AudioDelayTVPicker)LayoutInflater.from(mContext)
                 .inflate(R.layout.audio_delay_tv_picker, null);
 
-        tvPicker.setStep(50);
+        tvPicker.setStep(20);
         if (mPlayer.getDuration() > 0) {
             tvPicker.setMax(mPlayer.getDuration());
             tvPicker.setMin(-mPlayer.getDuration());
@@ -2335,7 +2335,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             case DIALOG_AUDIO_DELAY:
                 mPlayerController.hide();
                 AudioDelayPickerDialog dialog = (AudioDelayPickerDialog)masterDialog;
-                dialog.setStep(50);
+                dialog.setStep(20);
                 if (mPlayer.getDuration() > 0) {
                     dialog.setMax(mPlayer.getDuration());
                     dialog.setMin(-mPlayer.getDuration());
