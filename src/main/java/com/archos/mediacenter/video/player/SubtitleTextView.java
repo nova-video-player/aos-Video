@@ -26,6 +26,7 @@ import android.view.Surface;
 import android.widget.TextView;
 
 public class SubtitleTextView extends TextView {
+
     private static final String TAG = "SubtitleTextView";
    
     private Surface mExternalSurface = null;
@@ -72,16 +73,19 @@ public class SubtitleTextView extends TextView {
             } catch (Exception ignored) {
             }
         }
-        TextPaint paint = getPaint();
-        int color = getCurrentTextColor();
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeJoin(Paint.Join.MITER);
-        paint.setStrokeMiter(1.0f);
-        paint.setStrokeWidth(4.0f);
-        setTextColor(Color.BLACK);
-        super.onDraw(c);
-        paint.setStyle(Paint.Style.FILL);
-        setTextColor(color);
+        // disable for now nice outline since it is too slow on lowend CPU/GPU (e.g. RK3128)
+        if (false) {
+            TextPaint paint = getPaint();
+            int color = getCurrentTextColor();
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeJoin(Paint.Join.MITER);
+            paint.setStrokeMiter(1.0f);
+            paint.setStrokeWidth(4.0f);
+            setTextColor(Color.BLACK);
+            super.onDraw(c);
+            paint.setStyle(Paint.Style.FILL);
+            setTextColor(color);
+        }
         super.onDraw(c);
         if (c != canvas) {
             c.restore();
