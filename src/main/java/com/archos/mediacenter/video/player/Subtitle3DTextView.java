@@ -58,7 +58,6 @@ public class Subtitle3DTextView extends LinearLayout {
         ((FrameLayout.LayoutParams)mPrimaryTV.getLayoutParams()).gravity = Gravity.BOTTOM;
         ((FrameLayout.LayoutParams)mSecondaryTV.getLayoutParams()).height = ViewGroup.LayoutParams.WRAP_CONTENT;
         ((FrameLayout.LayoutParams)mPrimaryTV.getLayoutParams()).height = ViewGroup.LayoutParams.WRAP_CONTENT;
-
     }
     
     @Override
@@ -94,6 +93,11 @@ public class Subtitle3DTextView extends LinearLayout {
         mSecondaryTV.setTextColor(color);
     }
 
+    public void setOutlineState(boolean outline) {
+        mPrimaryTV.setOutlineState(outline);
+        mSecondaryTV.setOutlineState(outline);
+    }
+
     public void setTextSize(float v) {
         mPrimaryTV.setTextSize(v);
         mSecondaryTV.setTextSize(v);
@@ -104,7 +108,6 @@ public class Subtitle3DTextView extends LinearLayout {
         if(mNeed3d)
             mSecondaryTV.setText(spannableStringBuilder);
     }
-
 
     public void setUIMode(int uiMode) {
         getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;

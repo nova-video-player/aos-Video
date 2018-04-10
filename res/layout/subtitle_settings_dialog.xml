@@ -17,6 +17,7 @@
 */
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
@@ -61,21 +62,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-
-
-        <TextView
+        <ImageView
             android:id="@+id/left_a"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
             android:layout_alignBottom="@+id/subtitle_size_seekbar"
             android:layout_alignParentLeft="true"
             android:layout_alignTop="@+id/subtitle_size_seekbar"
-            android:layout_margin="@dimen/subtitles_settings_dialog_margin_small"
-            android:gravity="center"
-            android:text="@string/text_a"
-            style="@style/textAppearanceSmall"
-            android:textStyle="bold" />
+            android:padding="@dimen/subtitles_settings_dialog_margin_large"
+            android:src="@drawable/video_info_arrow_down" />
 
         <SeekBar
             android:id="@+id/subtitle_size_seekbar"
@@ -86,23 +81,16 @@
             android:paddingBottom="@dimen/subtitles_settings_dialog_margin_large"
             android:paddingTop="@dimen/subtitles_settings_dialog_margin_large" />
 
-        <TextView
+        <ImageView
             android:id="@+id/right_a"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
             android:layout_alignBottom="@+id/subtitle_size_seekbar"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/subtitle_size_seekbar"
-            android:layout_marginTop="@dimen/subtitles_settings_dialog_margin_small"
-            android:layout_marginBottom="@dimen/subtitles_settings_dialog_margin_small"
+            android:padding="@dimen/subtitles_settings_dialog_margin_large"
+            android:src="@drawable/video_info_arrow_up" />
 
-            android:gravity="center"
-            android:text="@string/text_a"
-            android:textSize="36dip"
-            style="@style/textAppearanceLarge"
-            android:textStyle="bold" />
     </RelativeLayout>
     <!-- simple listDivider, should be using current Theme -->
 
@@ -164,6 +152,22 @@
             android:layout_alignTop="@+id/subtitle_vert_seekbar"
             android:padding="@dimen/subtitles_settings_dialog_margin_large"
             android:src="@drawable/video_info_arrow_up" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/outline_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <CheckBox
+            android:id="@+id/subOutline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:duplicateParentState="true"
+            android:text="@string/subtitle_outline" />
+
     </RelativeLayout>
 
 </LinearLayout>

@@ -157,6 +157,7 @@ public class SubtitleManager {
         }
     };
     private int mColor;
+    private boolean mOutline;
     private int mUiMode;
 
     private void removeSubtitle(Subtitle subtitle) {
@@ -213,12 +214,20 @@ public class SubtitleManager {
         return mColor;
     }
 
+    public boolean getOutlineState() { return mOutline; }
+
+    public void setOutlineState(boolean outline) {
+        mOutline = outline;
+        if (mSubtitleTxtView != null) {
+            mSubtitleTxtView.setOutlineState(outline);
+        }
+    }
+
     public void setUIMode(int uiMode) {
         mUiMode = uiMode;
         if(mSubtitleTxtView!=null)
             mSubtitleTxtView.setUIMode(uiMode);
     }
-
 
     final class DispSubtitleThread extends Thread {
         private boolean mSuspended = true;
@@ -520,13 +529,13 @@ public class SubtitleManager {
         }
     }
 
-
     public void setColor(int color){
         mColor = color;
         if (mSubtitleTxtView != null) {
             mSubtitleTxtView.setTextColor(color);
         }
     }
+
     /**
      * Animates the Alpha
      * @param fadeIn true to fade in, false to fade out

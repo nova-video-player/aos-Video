@@ -30,7 +30,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -47,10 +49,12 @@ public class SubtitleSettingsDialog extends AlertDialog implements
     private SeekBar mSizeSeekBar;
     private SeekBar mVertSeekBar;
     private TextView mSampleText;
+    private CheckBox mSubOutlineCheckBox;
     private SubtitleManager mSubtitleManager;
     private SharedPreferences mSharedPreferences;
     private int mSize = 50;
     private int mVPos = 10;
+    private boolean mOutline = false;
     private boolean touching=false;
     private View mRightSizeButton;
     private View mLeftSizeButton;
@@ -75,11 +79,11 @@ public class SubtitleSettingsDialog extends AlertDialog implements
         init(context, subtitleManager);
     }
 
-
     private void init(Context context, final SubtitleManager stm) {
         mSubtitleManager = stm;
         mSize = stm.getSize();
         mColor = stm.getColor();
+        mOutline = stm.getOutlineState();
         setIcon(R.drawable.ic_menu_settings);
 
         getWindow().setGravity(Gravity.TOP);
@@ -92,8 +96,6 @@ public class SubtitleSettingsDialog extends AlertDialog implements
         final LinearLayout view = (LinearLayout) inflater.inflate(R.layout.subtitle_settings_dialog, null);
 
         ((SubtitleColorPicker)view.findViewById(R.id.color_layout)).setColorPickListener(this);
-
-
 
         setView(view);
         mLeftSizeButton = view.findViewById(R.id.left_a);
@@ -116,6 +118,16 @@ public class SubtitleSettingsDialog extends AlertDialog implements
         // 0.255 Range is what SubtitleManager.setVerticalPosition() expects
         mVertSeekBar.setMax(255);
         mVertSeekBar.setOnSeekBarChangeListener(this);
+
+        mSubOutlineCheckBox = view.findViewById(R.id.subOutline);
+        mSubOutlineCheckBox.setChecked(mOutline);
+        mSubOutlineCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOutline = mSubOutlineCheckBox.isChecked();
+                mSubtitleManager.setOutlineState(mOutline);
+            }
+        });
 
         setCancelable(true);
         setCanceledOnTouchOutside(true);
@@ -153,12 +165,6 @@ public class SubtitleSettingsDialog extends AlertDialog implements
         }
     }
 
-    private static void setSharedPreference(SharedPreferences sharedPreferences, String key,
-            int value) {
-        sharedPreferences.edit()
-                .putInt(key, value)
-                .apply();
-    }
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
         touching=true;
@@ -178,9 +184,9 @@ public class SubtitleSettingsDialog extends AlertDialog implements
     public void onDetachedFromWindow() {
         Log.d("Player", "onDetachedFromWindow");
         mSampleText.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-        setSharedPreference(mSharedPreferences, PlayerActivity.KEY_SUBTITLE_SIZE, mSize);
-        setSharedPreference(mSharedPreferences, PlayerActivity.KEY_SUBTITLE_COLOR, mColor);
-        setSharedPreference(mSharedPreferences, PlayerActivity.KEY_SUBTITLE_VPOS, mVPos);
+        mSharedPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_SIZE, mSize).apply();
+        mSharedPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_VPOS, mVPos).apply();
+        mSharedPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_OUTLINE, mOutline).apply();
         mSubtitleManager.fadeSubtitlePositionHint(false);
         super.onDetachedFromWindow();
     }
@@ -190,9 +196,10 @@ public class SubtitleSettingsDialog extends AlertDialog implements
         super.onAttachedToWindow();
         mSampleText.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
-        // Set the initial position of the sliders
+        // Set the initial position of the sliders and checkbox
         mSizeSeekBar.setProgress(mSubtitleManager.getSize());
         mVertSeekBar.setProgress(mSubtitleManager.getVerticalPosition());
+        mSubOutlineCheckBox.setChecked(mSubtitleManager.getOutlineState());
         mSubtitleManager.setShowSubtitlePositionHint(true);
 
         // Force the initial focus on the size slider

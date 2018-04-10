@@ -286,6 +286,7 @@
     <string name="subtitle_delay_radio_none">Aucun</string>
     <string name="subtitle_delay_radio_ntsc2pal">NTSC &#x2192; PAL</string>
     <string name="subtitle_delay_radio_pal2ntsc">PAL &#x2192; NTSC</string>
+    <string name="subtitle_outline">Contour sous-titres (\u26A0 CPU)</string>
     <string name="no_server">Pas de serveur de media trouvé</string>
     <string name="scrap_genre">Genre</string>
     <string name="quotation_format">&#x00AB;%s&#x00BB;&#x2003;</string>
