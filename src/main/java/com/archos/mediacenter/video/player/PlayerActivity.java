@@ -867,7 +867,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         Editor editor = getSharedPreferences("player", 0).edit();
         editor.putInt("lastintent", getIntent().hashCode());
-        editor.commit();
+        editor.apply();
         unregisterReceiver(mReceiver);
         unbindService(mPlayerServiceConnection);
     }
@@ -1341,9 +1341,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).setOnDialogResultListener(new TVCardDialog.OnDialogResultListener() {     
             @Override
             public void onResult(int code) {
-               	mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_SIZE, mSubtitleManager.getSize()).commit();
-            	mPreferences.edit().putInt( PlayerActivity.KEY_SUBTITLE_VPOS, mSubtitleManager.getVerticalPosition()).commit();
-                mPreferences.edit().putInt( PlayerActivity.KEY_SUBTITLE_COLOR, mSubtitleManager.getColor()).commit();
+               	mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_SIZE, mSubtitleManager.getSize()).apply();
+            	mPreferences.edit().putInt( PlayerActivity.KEY_SUBTITLE_VPOS, mSubtitleManager.getVerticalPosition()).apply();
+                mPreferences.edit().putInt( PlayerActivity.KEY_SUBTITLE_COLOR, mSubtitleManager.getColor()).apply();
                 mPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_OUTLINE, mSubtitleManager.getOutlineState()).apply();
                 mPlayerController.getTVMenuAdapter().setDiscrete(false);
                 mSubtitleManager.fadeSubtitlePositionHint(false);
@@ -1397,11 +1397,11 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             public void onResult(int code) {
                 mPlayerController.getTVMenuAdapter().setDiscrete(false);
                 if(saveSettingCB.isChecked()){
-                    mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), PlayerService.sPlayerService.getAudioDelay()).commit();
+                    mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), PlayerService.sPlayerService.getAudioDelay()).apply();
                     ;
                 }
                 else {
-                    mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), 0).commit();
+                    mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), 0).apply();
                 }
             }
         });
