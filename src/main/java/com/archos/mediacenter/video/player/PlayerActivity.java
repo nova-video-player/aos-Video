@@ -1326,6 +1326,16 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             }
         });
 
+        tvmenu.createAndAddSeparator();
+        final TVMenuItem tvm = tvmenu.createAndAddTVSwitchableMenuItem(getResources().getString(R.string.subtitle_outline), mSubtitleManager.getOutlineState());
+        tvm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean outline = mSubtitleManager.getOutlineState();
+                tvm.setChecked(! outline);
+                mSubtitleManager.setOutlineState(! outline);
+            }
+        });
 
         ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).addOtherView(tvmenu);
         ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).setOnDialogResultListener(new TVCardDialog.OnDialogResultListener() {     
@@ -1334,6 +1344,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                	mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_SIZE, mSubtitleManager.getSize()).commit();
             	mPreferences.edit().putInt( PlayerActivity.KEY_SUBTITLE_VPOS, mSubtitleManager.getVerticalPosition()).commit();
                 mPreferences.edit().putInt( PlayerActivity.KEY_SUBTITLE_COLOR, mSubtitleManager.getColor()).commit();
+                mPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_OUTLINE, mSubtitleManager.getOutlineState()).apply();
                 mPlayerController.getTVMenuAdapter().setDiscrete(false);
                 mSubtitleManager.fadeSubtitlePositionHint(false);
             }
