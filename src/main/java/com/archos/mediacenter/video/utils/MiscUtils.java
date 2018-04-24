@@ -15,9 +15,14 @@
 package com.archos.mediacenter.video.utils;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.app.UiModeManager;
+import android.content.res.Configuration;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+
+import static android.content.Context.UI_MODE_SERVICE;
 
 /**
  * Created by alexandre on 02/06/17.
@@ -29,6 +34,16 @@ public class MiscUtils {
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context);
         return resultCode == ConnectionResult.SUCCESS;
+    }
+
+    public static boolean isOnTV(Context context) {
+        return(context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEVISION)
+                || context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK));
+    }
+
+    public static boolean isAndroidTV(Context context) {
+        UiModeManager uiModeManager = (UiModeManager) context.getSystemService(UI_MODE_SERVICE);
+        return (uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION);
     }
 
 }
