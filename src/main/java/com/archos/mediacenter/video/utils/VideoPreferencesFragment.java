@@ -158,7 +158,7 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
             // advanced preferences
             Editor editor = mForceSwDecPreferences.getEditor();
             editor.remove(KEY_FORCE_SW);
-            editor.commit();
+            editor.apply();
             prefCategory.removePreference(mForceSwDecPreferences);
             prefCategory.addPreference(mDecChoicePreferences);
             getPreferenceScreen().addPreference(mAdvancedPreferences);
@@ -166,7 +166,7 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
             // normal preferences
             Editor editor = mDecChoicePreferences.getEditor();
             editor.remove(KEY_DEC_CHOICE);
-            editor.commit();
+            editor.apply();
             prefCategory.removePreference(mDecChoicePreferences);
             prefCategory.addPreference(mForceSwDecPreferences);
 
@@ -182,7 +182,7 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
     public static void resetPassthroughPref(SharedPreferences preferences){
         if(Integer.valueOf(preferences.getString("force_audio_passthrough_multiple","-1"))==-1&&preferences.getBoolean("force_audio_passthrough",false)){ //has never been set
             //has never been set with new mode but was set with old mode
-            preferences.edit().putString("force_audio_passthrough_multiple","1").commit(); //set pref
+            preferences.edit().putString("force_audio_passthrough_multiple","1").apply(); //set pref
         }
     }
 
@@ -315,7 +315,7 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
             public boolean onPreferenceChange(Preference preference,
                                              final Object newValue) {
                 boolean oldValue = getPreferenceManager().getSharedPreferences().getBoolean(AutoScrapeService.KEY_ENABLE_AUTO_SCRAP, true);
-                getPreferenceManager().getSharedPreferences().edit().putBoolean(AutoScrapeService.KEY_ENABLE_AUTO_SCRAP, !oldValue).commit();
+                getPreferenceManager().getSharedPreferences().edit().putBoolean(AutoScrapeService.KEY_ENABLE_AUTO_SCRAP, !oldValue).apply();
 
                 mAutoScrapPreference.setChecked(!oldValue);
                 if (!oldValue)
@@ -365,7 +365,7 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
                 if (mAdvancedPrefsClickCount > 8) {
                     Editor editor = mSharedPreferences.edit();
                     editor.putBoolean(KEY_ADVANCED_VIDEO_ENABLED, true);
-                    editor.commit();
+                    editor.apply();
                     switchAdvancedPreferences();
                     return true;
                 }
@@ -379,7 +379,7 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
             public boolean onPreferenceClick(Preference preference) {
                 Editor editor = mSharedPreferences.edit();
                 editor.putBoolean(KEY_ADVANCED_VIDEO_ENABLED, false);
-                editor.commit();
+                editor.apply();
                 switchAdvancedPreferences();
                 return true;
             }
@@ -449,7 +449,7 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
                             mDownloadSubsList.remove(s);
                         else
                             mDownloadSubsList.add(s);
-                        getPreferenceManager().getSharedPreferences().edit().putStringSet("languages_list", mDownloadSubsList).commit();
+                        getPreferenceManager().getSharedPreferences().edit().putStringSet("languages_list", mDownloadSubsList).apply();
                     }
                 }).setTitle(R.string.preferences_languages);
                 if(!ArchosFeatures.isAndroidTV(getActivity()))
@@ -787,7 +787,7 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
                     if (newPath!=null) {
                         File f = new File(newPath);
                         if ((f!=null) && f.isDirectory() && f.exists()) { //better safe than sorry x3
-                            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString(VideoPreferencesFragment.KEY_TORRENT_PATH, f.getAbsolutePath()).commit();
+                            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString(VideoPreferencesFragment.KEY_TORRENT_PATH, f.getAbsolutePath()).apply();
                             ((TorrentPathDialogPreference)findPreference(KEY_TORRENT_PATH)).refresh();
                         }
                     }
