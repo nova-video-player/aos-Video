@@ -58,7 +58,6 @@ android {
         qc.setRoot('src/archos')
         rk.setRoot('src/archos')
     }
-    
     defaultConfig {
         generatedDensities = []
         minSdkVersion 15
@@ -70,23 +69,18 @@ android {
     aaptOptions {
         additionalParameters "--no-version-vectors"
     }
-
     flavorDimensions "version", "tv", "amazon", "privDeps"
-
     productFlavors {
         community {
             dimension "version"
             applicationId "com.archos.mediacenter.videocommunity"
         }
-
         privlibs {
             dimension "privDeps"
         }
-
         open {
             dimension "privDeps"
         }
-
         amazon {
             dimension "amazon"
         }
@@ -103,7 +97,6 @@ android {
             versionCode 1
         }
     }
-
     // make per-variant version code
     applicationVariants.all { variant ->
         // get the version code of each flavor
@@ -113,20 +106,17 @@ android {
             output.setVersionCodeOverride(compatVersion * 1000000 + defaultConfig.versionCode)
         }
     }
-
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-project.txt'
         }
     }
-
     lintOptions {
         disable 'MissingTranslation'
         checkReleaseBuilds false
         abortOnError false
     }
-
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE'
@@ -137,7 +127,6 @@ android {
         exclude 'META-INF/maven'
         exclude 'README'
     }
-
     if (project.ext.has("ProjectKeyStoreFile")) {
         signingConfigs {
             release {
@@ -157,11 +146,6 @@ android {
             }
         }
     }
-
-    dexOptions {
-        javaMaxHeapSize "4G"
-    }
-
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
             def api = variant.mergedFlavor.minSdkVersion.apiLevel
@@ -173,7 +157,6 @@ android {
             }
         }
     }
-
     variantFilter { variant ->
         if (variant.getFlavors().get(2).name == "amazon"
                 && variant.getFlavors().get(0).name != "free" && variant.getFlavors().get(0).name != "ki") {
@@ -216,8 +199,8 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.0.2'
     implementation 'com.github.ksoichiro:android-observablescrollview:1.5.0'
     implementation 'com.android.support:design:27.0.2'
-    leanbackImplementation'com.android.support:leanback-v17:27.0.2'
-    
+    leanbackImplementation 'com.android.support:leanback-v17:27.0.2'
+
     privlibsApi 'com.amazon.android:mobile-ads:5.8.1.1'
     privlibsImplementation 'com.google.android.libraries.cast.companionlibrary:ccl:2.9.1'
     privlibsImplementation 'com.google.android.gms:play-services-ads:11.8.0'
