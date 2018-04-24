@@ -54,6 +54,7 @@ import com.archos.mediacenter.video.utils.credentialsmanager.CredentialsManagerP
 import com.archos.medialib.MediaFactory;
 import com.archos.mediaprovider.video.VideoProvider;
 import com.archos.mediascraper.AutoScrapeService;
+import com.archos.mediacenter.video.utils.WebViewActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -709,10 +710,12 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
         }
     }
     public void videoPreferenceOsClick() {
-        WebUtils.openWebLink(getActivity(), "http://www.opensubtitles.org/support");
+        // Breaks AndroidTV acceptance: inappropriate content TV-AA rating on opensubtitles web site
+        // WebUtils.openWebLink(getActivity(), "http://www.opensubtitles.org/support");
     }
     public void videoPreferenceTmdbClick() {
-        WebUtils.openWebLink(getActivity(), "http://www.themoviedb.org/faq/general");
+        // Breaks AndroidTV acceptance: text is cut on edges
+        //WebUtils.openWebLink(getActivity(), "http://www.themoviedb.org/faq/general");
     }
     public void videoPreferenceTvdbClick() {
         WebUtils.openWebLink(getActivity(), "http://thetvdb.com/donate");
