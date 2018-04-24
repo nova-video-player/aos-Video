@@ -33,11 +33,12 @@ public class WebUtils {
         intent.setData(Uri.parse(url));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        // Force our basic WebView activity only in case the is no other web browser
-        if (!isThereAnActivityToOpenWebLinks(context)) {
+        if (MiscUtils.isAndroidTV(context)) {
+            // On AndroidTV, only webview is allowed
             intent.setClass(context, WebViewActivity.class);
-        }
-
+        } else if (!isThereAnActivityToOpenWebLinks(context))
+            // Force our basic WebView activity only in case the is no other web browser
+            intent.setClass(context, WebViewActivity.class);
         context.startActivity(intent);
     }
 
