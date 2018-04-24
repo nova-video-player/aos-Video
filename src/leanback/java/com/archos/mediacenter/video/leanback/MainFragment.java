@@ -77,6 +77,7 @@ import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.WebUtils;
 import com.archos.mediacenter.video.utils.WebViewActivity;
 import com.archos.mediaprovider.ArchosMediaIntent;
 
@@ -651,10 +652,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
                         mActivity.startActivity(new Intent(mActivity, MainActivity.class));
                         break;
                     case HELP_FAQ:
-                        Intent intent = new Intent(mActivity, WebViewActivity.class);
-                        intent.setData(Uri.parse(getString(R.string.faq_url)));
-                        mActivity.startActivity(intent);
-
+                        WebUtils.openWebLink(mActivity,getString(R.string.faq_url));
                         break;
                 }
             }
