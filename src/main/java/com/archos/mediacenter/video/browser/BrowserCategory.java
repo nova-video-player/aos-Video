@@ -45,6 +45,7 @@ import com.archos.mediacenter.upnp.UpnpAvailability;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
+import com.archos.mediacenter.video.utils.WebUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -274,9 +275,7 @@ abstract public class BrowserCategory extends ListFragment {
                 setSelection(mSelectedItemId); //restore selection
             }
             else if (item.text == R.string.help_faq){
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://www.archos.com/support/faq_videoplayer/index.htm"));
-                startActivity(i);
+                WebUtils.openWebLink(getActivity(),"https://www.archos.com/support/faq_videoplayer/index.htm");
             }
             else if(item.text  == R.string.activate_private_mode || item.text  == R.string.deactivate_private_mode){
                 if (!PrivateMode.isActive() && PrivateMode.canShowDialog(getActivity())) {

@@ -47,16 +47,17 @@ public class VideoPreferencesActivity extends AppCompatActivity {
             ((VideoPreferencesFragment)getFragmentManager().findFragmentById(R.id.preferencesFragment)).launchPurchase();
         } }
     public void videoPreferenceOsClick(View v) {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.opensubtitles.org")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        //remove because not appropriate links displayed
+        //WebUtils.openWebLink(v.this.getActivity,"http://www.opensubtitles.org");
     }
     public void videoPreferenceTmdbClick(View v) {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.themoviedb.org")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        WebUtils.openWebLink(this,"http://www.themoviedb.org");
     }
     public void videoPreferenceTvdbClick(View v) {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://thetvdb.com")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        WebUtils.openWebLink(this,"http://thetvdb.com");
     }
-    public void videoPreferenceTraktClick(View b) {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://trakt.tv/")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+    public void videoPreferenceTraktClick(View v) {
+        WebUtils.openWebLink(this,"http://trakt.tv/");
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
