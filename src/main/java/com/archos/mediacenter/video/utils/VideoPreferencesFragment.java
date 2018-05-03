@@ -718,7 +718,8 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
         //WebUtils.openWebLink(getActivity(), "http://www.themoviedb.org/faq/general");
     }
     public void videoPreferenceTvdbClick() {
-        WebUtils.openWebLink(getActivity(), "http://thetvdb.com/donate");
+        // Breaks AndroidTV acceptance: contains non fullscreen ads
+        //WebUtils.openWebLink(getActivity(), "http://thetvdb.com/donate");
     }
     public void videoPreferenceTraktClick() {
         WebUtils.openWebLink(getActivity(), "http://trakt.tv/about");

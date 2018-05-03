@@ -51,10 +51,12 @@ public class VideoPreferencesActivity extends AppCompatActivity {
         //WebUtils.openWebLink(v.this.getActivity,"http://www.opensubtitles.org");
     }
     public void videoPreferenceTmdbClick(View v) {
-        WebUtils.openWebLink(this,"http://www.themoviedb.org");
+        // Breaks AndroidTV acceptance: text is cut on edges
+        //WebUtils.openWebLink(this,"http://www.themoviedb.org");
     }
     public void videoPreferenceTvdbClick(View v) {
-        WebUtils.openWebLink(this,"http://thetvdb.com");
+        // Breaks AndroidTV acceptance: contains non fullscreen ads
+        //WebUtils.openWebLink(this,"http://thetvdb.com");
     }
     public void videoPreferenceTraktClick(View v) {
         WebUtils.openWebLink(this,"http://trakt.tv/");
