@@ -37,6 +37,7 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
     public static final int ACTION_PLAY_FROM_BEGIN = 4;
 
     public static final int ACTION_NEXT_EPISODE = 5;
+    public static final int ACTION_LIST_EPISODES = 6;
     public static final int ACTION_MARK_AS_WATCHED = 10;
     public static final int ACTION_MARK_AS_NOT_WATCHED = 11;
     public static final int ACTION_INDEX = 20;
@@ -61,15 +62,16 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
      * @param video
      * @param inPlayer true if the player is already running (in background)
      * @param nextEpisode the next episode if there is one
+     * @param isTvEpisode true if it is a tv episode
      */
-    public VideoActionAdapter(Context context, Video video, boolean inPlayer, boolean displayRemoveFromList, Episode nextEpisode) {
+    public VideoActionAdapter(Context context, Video video, boolean inPlayer, boolean displayRemoveFromList, Episode nextEpisode, boolean isTvEpisode) {
         Log.d(TAG, "new VideoActionAdapter");
         mContext = context;
-        update(video, inPlayer, displayRemoveFromList,  nextEpisode);
+        update(video, inPlayer, displayRemoveFromList, nextEpisode, isTvEpisode);
 
     }
 
-    public void update(Video video, boolean inPlayer, boolean displayRemoveFromList, Episode nextEpisode){
+    public void update(Video video, boolean inPlayer, boolean displayRemoveFromList, Episode nextEpisode, boolean isTvEpisode){
         Video oldVideo = mCurrentVideo;
         mCurrentVideo = video;
         int oldRemoteResume = mCurrentRemoteResume;
@@ -104,6 +106,12 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
                 set(ACTION_NEXT_EPISODE, new Action(ACTION_NEXT_EPISODE, mContext.getString(R.string.next_episode)));
             }else{
                 clear(ACTION_NEXT_EPISODE);
+            }
+
+            if (isTvEpisode) {
+                set(ACTION_LIST_EPISODES, new Action(ACTION_LIST_EPISODES, mContext.getString(R.string.list_episodes)));
+            }else{
+                clear(ACTION_LIST_EPISODES);
             }
 
             if (video.isIndexed()) {
@@ -182,6 +190,14 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
         }
     }
 
+    public void setListEpisodesStatus(boolean visible) {
+        if (visible) {
+            set(ACTION_LIST_EPISODES, new Action(ACTION_LIST_EPISODES, mContext.getString(R.string.list_episodes)));
+        } else {
+            clear(ACTION_LIST_EPISODES);
+        }
+    }
+
     public void updateRemoteResume(Context context, Video video) {
         Video oldVideo = mCurrentVideo;
         mCurrentVideo = video;
@@ -220,6 +236,7 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
         clear(ACTION_LOCAL_RESUME);
         set(ACTION_PLAY_FROM_BEGIN, new Action(ACTION_PLAY_FROM_BEGIN, context.getString(R.string.play_selection)));
         clear(ACTION_NEXT_EPISODE);
+        clear(ACTION_LIST_EPISODES);
         clear(ACTION_MARK_AS_WATCHED);
         clear(ACTION_MARK_AS_NOT_WATCHED);
         clear(ACTION_UNINDEX);
@@ -234,6 +251,7 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
 
     public void updateToNonScraped(Context context) {
         clear(ACTION_NEXT_EPISODE);
+        clear(ACTION_LIST_EPISODES);
         clear(ACTION_UNSCRAP);
         set(ACTION_SCRAP, new Action(ACTION_SCRAP, context.getString(R.string.leanback_scrap)));
     }

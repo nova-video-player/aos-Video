@@ -165,6 +165,7 @@
     <string name="episode_identification">Season %1$d Episode %2$d</string>
     <string name="season_identification">Season %1$d</string>
     <string name="next_episode">Next episode</string>
+    <string name="list_episodes">List episodes</string>
     <string name="how_to_mark_season_watched">Click on a season to mark all its episodes watched or unwatched</string>
     <string name="no_episode_watched">No episode watched</string>
     <string name="all_episodes_watched">All episodes watched</string>

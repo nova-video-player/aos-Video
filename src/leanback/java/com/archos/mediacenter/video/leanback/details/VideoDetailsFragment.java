@@ -72,12 +72,15 @@ import com.archos.mediacenter.video.billingutils.IsPaidCallback;
 import com.archos.mediacenter.video.browser.BootupRecommandationService;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.lists.ListDialog;
 import com.archos.mediacenter.video.browser.Delete;
+import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.NonIndexedVideo;
+import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.loader.NextEpisodeLoader;
+import com.archos.mediacenter.video.browser.loader.TvshowLoader;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.info.MultipleVideoLoader;
 import com.archos.mediacenter.video.info.SortByFavoriteSources;
@@ -94,6 +97,8 @@ import com.archos.mediacenter.video.leanback.presenter.ScraperImagePosterPresent
 import com.archos.mediacenter.video.leanback.presenter.TrailerPresenter;
 import com.archos.mediacenter.video.leanback.presenter.VideoBadgePresenter;
 import com.archos.mediacenter.video.leanback.scrapping.ManualVideoScrappingActivity;
+import com.archos.mediacenter.video.leanback.tvshow.TvshowActivity;
+import com.archos.mediacenter.video.leanback.tvshow.TvshowFragment;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
@@ -114,13 +119,10 @@ import com.archos.mediascraper.MovieTags;
 import com.archos.mediascraper.ScraperImage;
 import com.archos.mediascraper.ScraperTrailer;
 import com.archos.mediascraper.ShowTags;
+
 import com.archos.mediascraper.VideoTags;
 import com.archos.mediascraper.xml.MovieScraper2;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -128,7 +130,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
 
 public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor>, PlayUtils.SubtitleDownloadListener, SubtitleDownloadInterface, Delete.DeleteListener, XmlDb.ResumeChangeListener, ExternalPlayerWithResultStarter {
 
@@ -216,6 +217,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     /** the next episode, if there is one */
     Episode mNextEpisode;
+    private boolean mIsTvEpisode = false;
     private boolean mHasRetrievedDetails;
     private Handler mHandler;
     private ListRow mTrailersRow;
@@ -472,6 +474,39 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             else if (action.getId() == VideoActionAdapter.ACTION_PLAY_FROM_BEGIN) {
                 startAds(REQUEST_CODE_PLAY_FROM_BEGIN_AFTER_ADS_ACTIVITY);
             }
+            else if (action.getId() == VideoActionAdapter.ACTION_LIST_EPISODES) {
+                // In this case mVideo is a tvshow Episode
+                Episode mEpisode = (Episode) mVideo;
+                // ShowId is obtained via EpisodeTags
+                EpisodeTags tagsE = (EpisodeTags) mVideo.getFullScraperTags(getActivity());
+                long mShowId = tagsE.getShowId();
+                // TvshowLoader is a CursorLoader
+                TvshowLoader mTvshowLoader = new TvshowLoader(getActivity(), mShowId);
+                Cursor mCursor = mTvshowLoader.loadInBackground();
+                if(mCursor != null && mCursor.getCount()>0) {
+                    mCursor.moveToFirst();
+                    TvshowCursorMapper mTvShowCursorMapper = new TvshowCursorMapper();
+                    mTvShowCursorMapper.bindColumns(mCursor);
+                    Tvshow mTvshow = (Tvshow) mTvShowCursorMapper.bind(mCursor);
+                    final Intent intent = new Intent(getActivity(), TvshowActivity.class);
+                    intent.putExtra(TvshowFragment.EXTRA_TVSHOW, mTvshow);
+                    // Launch next activity with slide animation
+                    // Starting from lollipop we need to give an empty "SceneTransitionAnimation" for this to work
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                    } else {
+                        startActivity(intent);
+                    }
+                    // Delay the finish the "old" activity, else it breaks the animation
+                    mHandler.postDelayed(new Runnable() {
+                        public void run() {
+                            if (getActivity()!=null) // better safe than sorry
+                                getActivity().finish();
+                        }
+                    }, 1000);
+                 }
+            }
             else if (action.getId() == VideoActionAdapter.ACTION_NEXT_EPISODE) {
                 final Intent intent = new Intent(getActivity(), VideoDetailsActivity.class);
                 intent.putExtra(VideoDetailsFragment.EXTRA_VIDEO, mNextEpisode);
@@ -528,7 +563,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 VideoStore.VideoList.VideoItem videoItem  = new VideoStore.VideoList.VideoItem(-1,!isEpisode?(int)metadata.getOnlineId():-1, isEpisode?(int)metadata.getOnlineId():-1, VideoStore.List.SyncStatus.STATUS_DELETED);
                 getActivity().getContentResolver().update(VideoStore.List.getListUri(getActivity().getIntent().getLongExtra(EXTRA_LIST_ID,-1)), videoItem.toContentValues(),  videoItem.getDBWhereString(), videoItem.getDBWhereArgs());
                 mShouldDisplayRemoveFromList = false;
-                mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), mVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode));
+                mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), mVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode, mIsTvEpisode));
                 TraktService.sync(ArchosUtils.getGlobalContext(), TraktService.FLAG_SYNC_AUTO);
             }
             else if (action.getId() == VideoActionAdapter.ACTION_UNHIDE) {
@@ -761,8 +796,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 // update details presenter and actions
                 mDescriptionPresenter.update(currentVideo);
                 if(mDetailsOverviewRow.getActionsAdapter()==null)
-                    mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode));
-                else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode);
+                    mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode, mIsTvEpisode));
+                else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode, mIsTvEpisode);
                 // update poster
                 mDetailsOverviewRow.setImageDrawable(getResources().getDrawable(R.drawable.filetype_new_video));
                 mDetailsOverviewRow.setImageScaleUpAllowed(false);
@@ -773,8 +808,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 // update details presenter and actions
                 mDescriptionPresenter.update(currentVideo);
                 if(mDetailsOverviewRow.getActionsAdapter()==null)
-                    mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode));
-                else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode);
+                    mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode, mIsTvEpisode));
+                else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode, mIsTvEpisode);
 
                 // update poster
                 mDetailsOverviewRow.setImageDrawable(getResources().getDrawable(R.drawable.filetype_new_video));
@@ -830,8 +865,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                         @Override
                         public void run() {
                             if(mDetailsOverviewRow.getActionsAdapter()==null)
-                                mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), mVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode));
-                            else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode);
+                                mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), mVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode, mIsTvEpisode));
+                            else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode, mIsTvEpisode);
                         }
                     });
 
@@ -973,9 +1008,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         }
         if(mDetailsOverviewRow.getActionsAdapter()==null || !(mDetailsOverviewRow.getActionsAdapter() instanceof  VideoActionAdapter))
-            mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), video, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode));
+            mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), video, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode, mIsTvEpisode));
         else{
-            ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(video, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode);
+            ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(video, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mNextEpisode, mIsTvEpisode);
         }
 
         // Plot, Cast, Posters, Backdrops, Links rows will be added after, once we get the Scraper Tags
@@ -1163,6 +1198,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 mTrailers = null;
             // Check if we have the next episode
             if (tags instanceof EpisodeTags) {
+                mIsTvEpisode = true;
                 // Using a CursorLoader but outside of the LoaderManager : need to make sure the Looper is ready
                 if (Looper.myLooper()==null) Looper.prepare();
                 CursorLoader loader = new NextEpisodeLoader(getActivity(), (EpisodeTags)tags);
@@ -1172,6 +1208,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     mNextEpisode = (Episode)new CompatibleCursorMapperConverter(new VideoCursorMapper()).convert(c);
                 }
                 c.close();
+            } else {
+                mIsTvEpisode = false;
             }
 
             return tags;
@@ -1182,6 +1220,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 return;
             // Update the action adapter if there is a next episode
             ((VideoActionAdapter) mDetailsOverviewRow.getActionsAdapter()).setNextEpisodeStatus(mNextEpisode != null);
+            ((VideoActionAdapter) mDetailsOverviewRow.getActionsAdapter()).setListEpisodesStatus(mIsTvEpisode);
             // Launch backdrop task in BaseTags-as-arguments mode
             if (mBackdropTask!=null) {
                 mBackdropTask.cancel(true);
