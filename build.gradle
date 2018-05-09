@@ -4,7 +4,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.2'
     }
 }
 
@@ -50,13 +50,6 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
-
-        //uses archos framework
-        ti.setRoot('src/archos')
-        aw.setRoot('src/archos')
-        mtk.setRoot('src/archos')
-        qc.setRoot('src/archos')
-        rk.setRoot('src/archos')
     }
     defaultConfig {
         generatedDensities = []
