@@ -275,7 +275,7 @@ abstract public class BrowserCategory extends ListFragment {
                 setSelection(mSelectedItemId); //restore selection
             }
             else if (item.text == R.string.help_faq){
-                WebUtils.openWebLink(getActivity(),"https://www.archos.com/support/faq_videoplayer/index.htm");
+                WebUtils.openWebLink(getActivity(),"https://home.courville.org/nova_video_player-faq/index.html");
             }
             else if(item.text  == R.string.activate_private_mode || item.text  == R.string.deactivate_private_mode){
                 if (!PrivateMode.isActive() && PrivateMode.canShowDialog(getActivity())) {
