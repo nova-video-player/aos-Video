@@ -98,7 +98,7 @@
     <string name="cannot_list">Cannot list content</string>
 
     <!-- VIDEO -->
-    <string name="video">Archos Video</string>
+    <string name="video">Nova Video</string>
     <string name="videos">Videos</string>
     <string name="all_videos">All videos</string>
     <string name="not_played_yet_videos">Not played yet</string>
@@ -372,7 +372,7 @@
     <string name="player_plugin_purchase_google_play_msg">You can purchase additional codec plug-ins on Google Play.</string>
     <string name="player_plugin_purchase_google_play_button">Go to Google Play</string>
     <string name="plugin_update_required_title">Codec update required</string>
-    <string name="plugin_update_required_message">It looks like you already have additional codecs installed for Archos Video Player.\n\nThis new version of Archos Video Player requires an update of these codecs.\n\nPlease go to Google Play to update and re-install the codecs.</string>
+    <string name="plugin_update_required_message">It looks like you already have additional codecs installed for Nova Video Player.\n\nThis new version of Nova Video Player requires an update of these codecs.\n\nPlease go to Google Play to update and re-install the codecs.</string>
 
     <!-- Subtitles wizard -->
     <string name="get_subtitles_on_drive">Select subtitles on storage</string>
@@ -424,7 +424,7 @@
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
 
     <string name="error_permission">Not enough permissions</string>
-    <string name="error_permission_storage">Archos Video Player needs storage permission to read local videos, please, grant this permission.</string>
+    <string name="error_permission_storage">Nova Video Player needs storage permission to read local videos, please, grant this permission.</string>
     <string name="allow">Allow</string>
     <string name="exit">Exit</string>
     <!-- torrent -->
@@ -547,7 +547,7 @@
     <string name="video_info_backdrop_remove">Remove</string>
     <string name="video_info_backdrop_set_as">Set picture as</string>
 
-    <string name="video_info_share_message">"I\'ve been watching the video \"%1$s\" on my Archos %2$s"</string>
+    <string name="video_info_share_message">"I\'ve been watching the video \"%1$s\" on my Nova %2$s"</string>
 
     <string name="notification_mode">Notifications</string>
     <string name="notifications_all">All notifications</string>
@@ -598,10 +598,10 @@
    <!--  Nfo File parsing -->
    <string name="network_nfo_parse">Process \'nfo\' files</string>
    <string name="network_nfo_parse_summary">Read Boxee / XBMC \'.nfo\' files during (re-)scanning to gather media information and posters.</string>
-   <string name="ask_to_mail_media_DB">Do you want to mail your Video database to Archos development team in order to help them check a bug?\n\nThe video files are (of course) not mailed, but the full list of file names is.</string>
+   <string name="ask_to_mail_media_DB">Do you want to mail your Video database to Nova development team in order to help them check a bug?\n\nThe video files are (of course) not mailed, but the full list of file names is.</string>
    <string name="no_email_installed">No email application found</string>
    <string name="zipping_library_before_mailing">Zipping a copy of the library before mailing it...</string>
-   <string name="zipped_library_mail_subject">Archos Video Database Dump</string>
+   <string name="zipped_library_mail_subject">Nova Video Database Dump</string>
    <string name="zipped_library_mail_text">Please describe the problem you\'re experiencing\n\n</string>
 
    <string name="sort_mode">Sort mode</string>
@@ -711,7 +711,7 @@
    <string name="trakt_sync_collection_title">Synchronize TV show and movie collections</string>
    <string name="trakt_sync_trakt_resume_title">Sync trakt resume position</string>
    <string name="trakt_sync_trakt_resume">Use trakt resume position when more advanced than local</string>
-   <string name="trakt_sync_collection_summary">Automatically add all videos from your Archos library to your Trakt collection</string>
+   <string name="trakt_sync_collection_summary">Automatically add all videos from your Nova library to your Trakt collection</string>
    <string name="trakt_toast_syncing">Syncing with Trakt&#8230;</string>
 
    <string name="show_all">All videos</string>
@@ -755,7 +755,7 @@
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Legacy interface</string>
     <string name="leanback_hint_long_press_on_back">HINT: long press on BACK key closes the file browser</string>
-    <string name="leanback_archos_video_webview">Archos Video Basic WebView</string>
+    <string name="leanback_archos_video_webview">Nova Video Basic WebView</string>
     <string name="file_access_error">Did not manage to access the file</string>
 
     <string name="interface_size">Interface size</string>
@@ -785,7 +785,7 @@
     <string name="scheduled_rescan_time">Re-scan time</string>
     <string name="rescan_when_opening_application">Re-scan when opening the application</string>
     <string name="last_rescan_occured">Last re-scan occurred:</string>
-    <string name="error_permission_display_over_apps">Window mode needs special permissions to be displayed in front of other apps. Please, grant Archos Video Player this permission to switch to window mode.</string>
+    <string name="error_permission_display_over_apps">Window mode needs special permissions to be displayed in front of other apps. Please, grant Nova Video Player this permission to switch to window mode.</string>
     <string name="app_id"></string>
     <string name="app_id_surface"></string>
 
@@ -798,7 +798,7 @@
     <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="nfo_export_in_progress">NFO export in progress</string>
     <string name="rescrap_in_progress">Rescraping whole library</string>
-    <string name="acquire_external_usb_permission">Archos Video needs special permission to access external storage. Please select your storage on next screen</string>
+    <string name="acquire_external_usb_permission">Nova Video needs special permission to access external storage. Please select your storage on next screen</string>
 
     <string name="rescrap_not_found">Rescrap videos without description</string>
     <string name="rescrap_all_title">Rescrap all</string>
@@ -818,10 +818,10 @@
     <string name="sleep_timer_description">Stop video after: </string>
     <string name="cast_mode">Cast mode</string>
     <string name="cast_info">Info</string>
-    <string name="troubleshoot_streammode_msg">Archos video player is currently in stream cast mode.
+    <string name="troubleshoot_streammode_msg">Nova video player is currently in stream cast mode.
         \nThis results to a good video quality but might rise issues with audiotracks and subtitles.
         Try switching to Remote display cast mode.</string>
-    <string name="troubleshoot_remotemode_msg">Archos video player is currently in remote display mode.
+    <string name="troubleshoot_remotemode_msg">Nova video player is currently in remote display mode.
         \nDepending on your device and your network quality, you might experience some quality loss and performance issues. </string>
     <string name="picture_in_picture">Picture in picture</string>
     <string name="cast">Cast</string>
@@ -830,13 +830,13 @@
     <string name="cast_fallback_message">Error: fallback to screen cast</string>
     <string name="cast_introduction">New experimental feature : \nGoogle cast</string>
     <string name="cast_select_for_full_control">Touch to expand controller</string>
-    <string name="cast_audio_background">Sound won\'t work while Archos Video Player is in background</string>
+    <string name="cast_audio_background">Sound won\'t work while Nova Video Player is in background</string>
     <string name="help_faq">Help / FAQ</string>
     <string name="amazon_ad"></string>
     <string name="faq_url">https://www.archos.com/support/faq_videoplayer/index.htm</string>
     <string name="provider_folders">Cloud</string>
     <string name="learn_more">Learn more</string>
-    <string name="learn_more_about_codecs">Archos Video Player can only play videos supported by your device. Due to license issues, some formats can not be legally included, some other can be purchased on Google Play Store.</string>
+    <string name="learn_more_about_codecs">Nova Video Player can only play videos supported by your device. Due to license issues, some formats can not be legally included, some other can be purchased on Google Play Store.</string>
     <string name="base64_encoded_publicKey" />
     <string name="rate_us">If you like this app, please support us by rating us 5 stars</string>
     <string name="rate_us_title">☆ Support us</string>

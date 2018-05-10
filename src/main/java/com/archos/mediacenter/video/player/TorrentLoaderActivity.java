@@ -211,7 +211,7 @@ public class TorrentLoaderActivity extends Activity implements TorrentThreadObse
             mTorrentURL= intent.getData().getPath();
         mOriginalTorrentUri = mTorrentURL; //keep original uri, mTorrentUrl will be replaced after torrent file download
         mProgress = new ProgressDialog(this);
-        mProgress.setTitle("Archos Video Player");
+        mProgress.setTitle("Nova Video Player");
         mProgress.setMessage(getString(R.string.loading_torrent));
         mProgress.setButton( DialogInterface.BUTTON_NEGATIVE,getString(android.R.string.cancel), new DialogInterface.OnClickListener() {  
             @Override

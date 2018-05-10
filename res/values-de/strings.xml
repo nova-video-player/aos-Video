@@ -26,7 +26,7 @@
     <string name="refresh_servers_list">Liste der Server aktualisieren</string>
     <string name="enable_network_shares">Netzwerkfreigaben aktivieren</string>
     <string name="cannot_list">Der Inhalt kann nicht aufgelistet werden</string>
-    <string name="video">Archos Video</string>
+    <string name="video">Nova Video</string>
     <string name="videos">Videos</string>
     <string name="all_videos">Alle Videos</string>
     <string name="not_played_yet_videos">Noch nicht angesehen</string>
@@ -146,7 +146,7 @@
     <string name="player_plugin_purchase_google_play_msg">Sie können zusätzliche Codec Plugins via Google Play erwerben.</string>
     <string name="player_plugin_purchase_google_play_button">Google Play öffnen</string>
     <string name="plugin_update_required_title">Codec Plugin Update nötig</string>
-    <string name="plugin_update_required_message">Sie haben zusätzliche Codec Plugins für den Archos Video Player installiert.\n\nDie neue Version des Archos Video Player benötigt auch ein Update der Codec Plugins, diese sind im Google Play Store erhältlich.</string>
+    <string name="plugin_update_required_message">Sie haben zusätzliche Codec Plugins für den Nova Video Player installiert.\n\nDie neue Version des Nova Video Player benötigt auch ein Update der Codec Plugins, diese sind im Google Play Store erhältlich.</string>
     <string name="scrap_director">Regisseur</string>
     <string name="scrap_director_format">Regisseur: %s</string>
     <string name="scrap_rating">Bewertung</string>
@@ -313,7 +313,7 @@
     <string name="video_info_backdrop_select">Anderen Hintergrund wählen</string>
     <string name="video_info_backdrop_remove">Entfernen</string>
     <string name="video_info_backdrop_set_as">Bild festlegen als</string>
-    <string name="video_info_share_message">"Ich habe gerade \"%1$s\" auf meinem Archos %2$s geschaut!"</string>
+    <string name="video_info_share_message">"Ich habe gerade \"%1$s\" auf meinem Nova %2$s geschaut!"</string>
     <string name="notification_mode">Benachrichtigungen</string>
     <string name="notifications_all">Alle</string>
     <string name="notifications_alerts">Nur Alarme</string>

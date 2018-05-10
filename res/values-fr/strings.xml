@@ -28,7 +28,7 @@
     <string name="refresh_servers_list">Recharger la liste des serveurs</string>
     <string name="enable_network_shares">Autoriser les partages réseaux</string>
     <string name="cannot_list">Erreur à la lecture du contenu</string>
-    <string name="video">Archos Vidéo</string>
+    <string name="video">Nova Vidéo</string>
     <string name="videos">Vidéos</string>
     <string name="all_videos">Toutes les vidéos</string>
     <string name="not_played_yet_videos">Pas encore joué</string>
@@ -163,7 +163,7 @@
     <string name="player_plugin_purchase_google_play_msg">Vous pouvez acheter des plug-ins permettant de décoder plus de formats sur Google Play.</string>
     <string name="player_plugin_purchase_google_play_button">Aller sur Google Play</string>
     <string name="plugin_update_required_title">Mise-à-jour des codecs nécessaire</string>
-    <string name="plugin_update_required_message">Il semble que vous ayez déjà installé des codecs additionnels pour Archos Video Player.\n\nCette nouvelle version de Archos Video Player nécessite une mise-à-jour de ces codecs.\n\nVeuillez aller sur Google Play pour mettre à jour et ré-installer ces codecs.</string>
+    <string name="plugin_update_required_message">Il semble que vous ayez déjà installé des codecs additionnels pour Nova Video Player.\n\nCette nouvelle version de Nova Video Player nécessite une mise-à-jour de ces codecs.\n\nVeuillez aller sur Google Play pour mettre à jour et ré-installer ces codecs.</string>
     <string name="scrap_director">Réalisateur</string>
     <string name="scrap_director_format">Réalisateur: %s</string>
     <string name="scrap_rating">Notes</string>
@@ -361,7 +361,7 @@
     <string name="video_info_backdrop_select">Sélectionner une autre image</string>
     <string name="video_info_backdrop_remove">Supprimer</string>
     <string name="video_info_backdrop_set_as">Définir l\'image comme</string>
-    <string name="video_info_share_message">"J\'ai regardé la vidéo \"%1$s\" sur mon Archos %2$s"</string>
+    <string name="video_info_share_message">"J\'ai regardé la vidéo \"%1$s\" sur mon Nova %2$s"</string>
     <string name="notification_mode">Notifications</string>
     <string name="notifications_all">Toutes les notifications</string>
     <string name="notifications_alerts">Seulement les alertes</string>
@@ -470,7 +470,7 @@
    <string name="trakt_live_scrobbling_summary">Partager les vidéos en train d\'être vues sur Trakt</string>
    <string name="trakt_getfull_summary">Scrobbler pour Trakt seulement disponible avec la version payante</string>
    <string name="trakt_sync_collection_title">Synchroniser la collection de séries et de films</string>
-   <string name="trakt_sync_collection_summary">Ajouter automatiquement les vidéos de votre bibliothèque Archos à votre collection Trakt</string>
+   <string name="trakt_sync_collection_summary">Ajouter automatiquement les vidéos de votre bibliothèque Nova à votre collection Trakt</string>
    <string name="trakt_toast_syncing">Synchronisation avec Trakt&#8230;</string>
    <string name="trakt_sync_trakt_resume_title">Synchroniser les points de reprise avec Trakt</string>
    <string name="trakt_sync_trakt_resume">Utilise le point de reprise de Trakt s\'il est plus loin que celui de l\'appareil</string>
@@ -511,7 +511,7 @@
     <string name="file_access_error">Échec de l\'accès au fichier</string>
     <string name="leanback_legacy_ui">Interface classique</string>
     <string name="leanback_hint_long_press_on_back">ASTUCE: un appui long sur la touch RETOUR ferme l\'explorateur de fichier</string>
-    <string name="leanback_archos_video_webview">Archos Video WebView basique</string>
+    <string name="leanback_archos_video_webview">Nova Video WebView basique</string>
 
     <string name="interface_size">Taille de l\'interface utilisateur</string>
     <string name="interface_size_summary">À modifier si l\'interface utilisateur est trop petite ou trop grande sur votre appareil</string>
@@ -520,7 +520,7 @@
     <string name="interface_size_standard">Standard (xhdpi)</string>
     <string name="interface_size_large">Grand (xxhdpi)</string>
     <string name="error_permission_display_over_apps">
-        Le mode fenêtré requiert une permission spéciale pour s\'afficher par dessus d\'autres applications. Autorisez Archos Video Player pour continuer.
+        Le mode fenêtré requiert une permission spéciale pour s\'afficher par dessus d\'autres applications. Autorisez Nova Video Player pour continuer.
     </string>
 
     <string name="allow">Autoriser</string>
@@ -539,13 +539,13 @@
     <string name="view_more">Plus d\'informations</string>
     <string name="zipping_library_before_mailing">Compression d\'une copie de la librairie avant l\'envoi</string>
     <string name="zipped_library_mail_text">Décrivez votre problème \n\n</string>
-    <string name="acquire_external_usb_permission">Archos Vidéo requiert une permission spéciale pour accéder au stockage externe. Sélectionnez votre stockage sur l\'écran suivant.</string>
+    <string name="acquire_external_usb_permission">Nova Vidéo requiert une permission spéciale pour accéder au stockage externe. Sélectionnez votre stockage sur l\'écran suivant.</string>
     <string name="error">Une erreur est survenue</string>
     <string name="error_downloading_not_enough_space">Erreur pendant le téléchargement du torrent : pas assez d\'espace disponible</string>
     <string name="error_loading_torrent">Erreur pendant le téléchargement du torrent</string>
     <string name="error_no_video_file">Aucun fichier vidéo</string>
     <string name="error_permission">Erreur de permission</string>
-    <string name="error_permission_storage">Archos Vidéo Player requiert la permission "Stockage" pour accéder aux vidéos de votre appareil.</string>
+    <string name="error_permission_storage">Nova Vidéo Player requiert la permission "Stockage" pour accéder aux vidéos de votre appareil.</string>
     <string name="hide_seen">Non vus</string>
     <string name="help_overlay_ssh_indexing_text">Sélectionnez "Créer un raccourci" pour revenir facilement sur ce serveur.</string>
     <string name="ftp_shortcut_list_empty">Pour créer des raccourcis vers vos dossiers distants, sélectionner \"%s\" dans la barre d\'action (en haut) pendant la visite de votre serveur.</string>
@@ -608,12 +608,12 @@
     <string name="help_faq">Aide/FAQ</string>
     <string name="learn_more">En savoir plus</string>
     <string name="learn_more_about_codecs">
-        Archos Video Player ne peut lire que les vidéos supportées par votre appareil. Certains codecs ne peuvent être distribués légalement, d\'autres peuvent être achetés sur le Play Store.</string>
+        Nova Video Player ne peut lire que les vidéos supportées par votre appareil. Certains codecs ne peuvent être distribués légalement, d\'autres peuvent être achetés sur le Play Store.</string>
 
-    <string name="troubleshoot_streammode_msg">Archos video player est en Mode Streaming.
+    <string name="troubleshoot_streammode_msg">Nova video player est en Mode Streaming.
         \nLa qualité vidéo sera optimale mais vous pouvez rencontrer des soucis avec vos pistes de sous-titres et pistes audio.
         En ce cas, vous pouvez passer en mode "Écran distant".</string>
-    <string name="troubleshoot_remotemode_msg">Archos video player est en Écran distant.
+    <string name="troubleshoot_remotemode_msg">Nova video player est en Écran distant.
         \nEn fonction de votre appareil et selon les performances de votre réseau, la qualité vidéo peut être déteriorée. </string>
     <string name="cast_stream_mode">Mode Streaming</string>
     <string name="cast_remote_display_mode">Écran distant</string>
@@ -623,7 +623,7 @@
     <string name="rate_us">Si vous aimez cette application, pensez à nous soutenir en nous donnant 5 étoiles</string>
     <string name="rate_us_title">☆ Soutenez-nous</string>
     <string name="no_resume_available">Reprise indisponible</string>
-    <string name="premium_already_purchased">Archos Video Premium a déjà été acheté</string>
+    <string name="premium_already_purchased">Nova Video Premium a déjà été acheté</string>
     <string name="create_new_list">Créer une nouvelle liste</string>
     <string name="add_to_list">Ajouter à la liste</string>
     <string name="no_list_detected">Aucune liste détectée. Une liste peut être crée en ajoutant des vidéos à partir de leur vue d\'information ou en les synchronisant avec Trakt (seulement en version premium).</string>

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/ui_choice_dialog_padding"
-        android:text="It seems that you are using Archos Video Player on a TV.\nIf it is actually the case, we recommend using our new TV user interface"
+        android:text="It seems that you are using Nova Video Player on a TV.\nIf it is actually the case, we recommend using our new TV user interface"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <LinearLayout
