@@ -14,6 +14,7 @@
 package com.archos.customizedleanback.widget;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v17.leanback.widget.SearchOrbView;
 import android.util.AttributeSet;
@@ -149,6 +150,7 @@ public class MyTitleView extends RelativeLayout {
      * Set a short description displayed below the orb when is is selected
      */
     public void setOnOrb1Description(CharSequence description) {
+        mOrb1Description.setTextColor(Color.WHITE);
         mOrb1Description.setText(description);
 
         // Avoid description changing without animation (in case it was displayed already)
@@ -163,6 +165,7 @@ public class MyTitleView extends RelativeLayout {
      * * Set a short description displayed below the orb when is is selected
      */
     public void setOnOrb2Description(CharSequence description) {
+        mOrb2Description.setTextColor(Color.WHITE);
         mOrb2Description.setText(description);
 
         // Avoid description changing without animation (in case it was displayed already)
@@ -177,6 +180,7 @@ public class MyTitleView extends RelativeLayout {
      * * Set a short description displayed below the orb when is is selected
      */
     public void setOnOrb3Description(CharSequence description) {
+        mOrb3Description.setTextColor(Color.WHITE);
         mOrb3Description.setText(description);
 
         // Avoid description changing without animation (in case it was displayed already)
@@ -191,6 +195,7 @@ public class MyTitleView extends RelativeLayout {
      * * Set a short description displayed below the orb when is is selected
      */
     public void setOnOrb4Description(CharSequence description) {
+        mOrb4Description.setTextColor(Color.WHITE);
         mOrb4Description.setText(description);
 
         // Avoid description changing without animation (in case it was displayed already)
