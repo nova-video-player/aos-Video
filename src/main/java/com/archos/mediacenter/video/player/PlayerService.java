@@ -16,6 +16,8 @@ package com.archos.mediacenter.video.player;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
@@ -496,13 +498,26 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         return mStreamingUri;
     }
 
+    private static final String notifChannelId = "PlayerService_id";
+    private static final String notifChannelName = "PlayerService";
+    private static final String notifChannelDescr = "PlayerService";
+    private NotificationManager notificationManager;
     public void stopStatusbarNotification(){
         stopForeground(true);
     }
     public void startStatusbarNotification(boolean isDicreteOrMinimized) {
         Intent notificationIntent = new Intent("DISPLAY_FLOATING_PLAYER");
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // Create the NotificationChannel, but only on API 26+ because the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel mNotifChannel = new NotificationChannel(notifChannelId, notifChannelName,
+                    notificationManager.IMPORTANCE_LOW);
+            mNotifChannel.setDescription(notifChannelDescr);
+            if (notificationManager != null)
+                notificationManager.createNotificationChannel(mNotifChannel);
+        }
         PendingIntent contentIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, 0);
-        mNotificationBuilder = new NotificationCompat.Builder(this);
+        mNotificationBuilder = new NotificationCompat.Builder(this, notifChannelId);
         int icon = R.drawable.video2;
         mNotificationBuilder.setSmallIcon(icon);
         mNotificationBuilder.setTicker(null);

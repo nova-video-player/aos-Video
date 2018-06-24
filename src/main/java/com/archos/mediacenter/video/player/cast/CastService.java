@@ -15,6 +15,8 @@
 package com.archos.mediacenter.video.player.cast;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -28,6 +30,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.media.MediaRouter;
 import android.util.Log;
 import android.widget.Toast;
@@ -597,8 +600,21 @@ public class CastService extends Service implements CastPlayerService.RemoteInte
 
     }
 
+    private static final String notifChannelId = "CastService_id";
+    private static final String notifChannelName = "CastService";
+    private static final String notifChannelDescr = "CastService";
+    private NotificationManager notificationManager;
     private Notification getNotification() {
-        Notification.Builder builder = new Notification.Builder(this);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // Create the NotificationChannel, but only on API 26+ because the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel mNotifChannel = new NotificationChannel(notifChannelId, notifChannelName,
+                    notificationManager.IMPORTANCE_LOW);
+            mNotifChannel.setDescription(notifChannelDescr);
+            if (notificationManager != null)
+                notificationManager.createNotificationChannel(mNotifChannel);
+        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, notifChannelId);
         builder.setContentTitle(getString(R.string.ccl_casting_to_device, ArchosVideoCastManager.getInstance().getDeviceName()));
         builder.setSmallIcon(R.drawable.video2);
         Intent playerActivityIntent = ArchosVideoCastManager.getInstance().getPlayerActivityIntent(this);

@@ -17,7 +17,9 @@ package com.archos.mediacenter.video.autoscraper;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.support.v4.app.NotificationCompat;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
@@ -111,6 +113,9 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
     private final static int MY_SCROLL_STATE_USER = 101;
     private final static int MY_SCROLL_STATE_AUTO = 102;
 
+    private static final String mNotifChannelId = "AutoScraperActivity_id";
+    private static final String mNotifChannelName = "AutoScraperActivity";
+    private static final String mNotifChannelDescr = "AutoScraperActivity";
     private static final int NOTIFICATION_ID = 2; // MediaPlaybackService is using the default ID 1, see #94
 
     // The contents of this cursor is modified each time scraper info are
@@ -146,7 +151,7 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
     protected ScraperResultTask mResultTask;
     private NotificationManager mNotificationManager;
     protected Notification mNotification = null;
-    private Notification.Builder mNotificationBuilder = null;
+    private NotificationCompat.Builder mNotificationBuilder = null;
 
     protected Scraper mScraper;
     private String mContextMenuPath;
@@ -515,6 +520,15 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
         Context context = AutoScraperActivity.this;
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
+        // Create the NotificationChannel, but only on API 26+ because the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel mNotifChannel = new NotificationChannel(mNotifChannelId, mNotifChannelName,
+                    mNotificationManager.IMPORTANCE_LOW);
+            mNotifChannel.setDescription(mNotifChannelDescr);
+            if (mNotificationManager != null)
+                mNotificationManager.createNotificationChannel(mNotifChannel);
+        }
+
         // Set the title and icon
         int icon = R.drawable.stat_notify_scraper;
         CharSequence title = context.getResources().getText(R.string.scraper_notification_title);
@@ -524,15 +538,11 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
         // Create a new notification builder
-        mNotificationBuilder = new Notification.Builder(context);
-        mNotificationBuilder.setSmallIcon(icon);
-        mNotificationBuilder.setTicker(null);
-        mNotificationBuilder.setOnlyAlertOnce(true);
-        mNotificationBuilder.setContentTitle(title);
-        mNotificationBuilder.setContentIntent(contentIntent);
-        mNotificationBuilder.setWhen(when);
-        mNotificationBuilder.setOngoing(true);
-        mNotificationBuilder.setDefaults(0); // no sound, no light, no vibrate
+        mNotificationBuilder = new NotificationCompat.Builder(context, mNotifChannelId)
+                .setSmallIcon(icon)
+                .setContentTitle(title)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setAutoCancel(true).setTicker(null).setOnlyAlertOnce(true).setContentIntent(contentIntent).setOngoing(true);
 
         // Set the info to display in the notification panel and attach the notification to the notification manager
         updateStatusbarNotification();
@@ -550,10 +560,8 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
 
             // Update the notification text
             mNotificationBuilder.setContentText(formattedString);
-            mNotification = mNotificationBuilder.getNotification();
-
             // Tell the notification manager about the changes
-            mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+            mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
         }
     }
 

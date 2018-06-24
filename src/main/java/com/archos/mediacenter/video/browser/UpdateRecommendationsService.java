@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.browser;
 
 import android.app.IntentService;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentUris;
@@ -28,6 +29,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.provider.BaseColumns;
 import android.support.v4.app.NotificationCompat;
@@ -46,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class UpdateRecommendationsService extends IntentService {
+public class  UpdateRecommendationsService extends IntentService {
 	private static final String TAG = "UpdateRecommendationsService";
 	public static class Columns {
 		public static final String ID = BaseColumns._ID;
@@ -226,9 +228,20 @@ public class UpdateRecommendationsService extends IntentService {
 			mPriority = priority;
 			return this;
 		}
-		
+
+		private static final String notifChannelId = "UpdateRecommendationsService_id";
+		private static final String notifChannelName = "UpdateRecommendationsService";
+		private static final String notifChannelDescr = "UpdateRecommendationsService";
 		public Notification build() throws IOException {
-			NotificationCompat.Builder b = new NotificationCompat.Builder(ct)
+			// Create the NotificationChannel, but only on API 26+ because the NotificationChannel class is new and not in the support library
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+				NotificationChannel mNotifChannel = new NotificationChannel(notifChannelId, notifChannelName,
+						mNotificationManager.IMPORTANCE_LOW);
+				mNotifChannel.setDescription(notifChannelDescr);
+				if (mNotificationManager != null)
+					mNotificationManager.createNotificationChannel(mNotifChannel);
+			}
+			NotificationCompat.Builder b = new NotificationCompat.Builder(ct, notifChannelId)
 					.setContentTitle(mTitle)
 					.setContentText(mDescription)
 					.setLocalOnly(true)

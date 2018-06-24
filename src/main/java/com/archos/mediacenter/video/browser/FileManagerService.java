@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.browser;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -429,6 +430,9 @@ public class FileManagerService extends Service implements OperationEngineListen
 
     /* Notification */
 
+    private static final String notifChannelId = "FileManagerService_id";
+    private static final String notifChannelName = "FileManagerService";
+    private static final String notifChannelDescr = "FileManagerService";
     public void startStatusbarNotification() {
         mNotificationManager.cancel(OPEN_NOTIFICATION_ID);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -440,9 +444,17 @@ public class FileManagerService extends Service implements OperationEngineListen
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.setAction(MainActivity.LAUNCH_DIALOG);
 
+        // Create the NotificationChannel, but only on API 26+ because the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel mNotifChannel = new NotificationChannel(notifChannelId, notifChannelName,
+                    mNotificationManager.IMPORTANCE_LOW);
+            mNotifChannel.setDescription(notifChannelDescr);
+            if (mNotificationManager != null)
+                mNotificationManager.createNotificationChannel(mNotifChannel);
+        }
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         // Create a new notification builder
-        mNotificationBuilder = new NotificationCompat.Builder(this);
+        mNotificationBuilder = new NotificationCompat.Builder(this, notifChannelId);
         int icon = R.mipmap.video2;
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             icon = R.drawable.video2; //special white icon for lollipop
