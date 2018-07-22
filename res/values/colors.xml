@@ -66,4 +66,6 @@
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
     <color name="ccl_mini_upcoming_background">@color/primary</color>
+
+    <color name="private_mode">#01142A</color>
 </resources>
