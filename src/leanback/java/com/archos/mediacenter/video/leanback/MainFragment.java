@@ -122,6 +122,8 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
     private BroadcastReceiver mUpdateReceiver;
     private IntentFilter mUpdateFilter;
 
+    private BackgroundManager bgMngr;
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -165,9 +167,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mTvShowSortOrder = mPrefs.getString(VideoPreferencesFragment.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
 
-        BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
-        bgMngr.attach(getActivity().getWindow());
-        updateBackground(bgMngr);
+        updateBackground();
 
         Resources r = getResources();
         setBadgeDrawable(r.getDrawable(R.drawable.leanback_title));
@@ -207,6 +207,9 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
     public void onResume() {
         super.onResume();
         mOverlay.resume();
+
+        updateBackground();
+
         getActivity().registerReceiver(mUpdateReceiver, mUpdateFilter);
         new AllMoviesIconBuilder(getActivity());
 
@@ -242,14 +245,20 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         getActivity().unregisterReceiver(mUpdateReceiver);
     }
 
-    private void updateBackground(BackgroundManager bgMngr) {
+    private void updateBackground() {
         Resources r = getResources();
+
+        bgMngr = BackgroundManager.getInstance(getActivity());
+        if(!bgMngr.isAttached())
+            bgMngr.attach(getActivity().getWindow());
+
         if (PrivateMode.isActive()) {
+            bgMngr.setColor(r.getColor(R.color.private_mode));
             bgMngr.setDrawable(r.getDrawable(R.drawable.private_background));
         } else {
+            bgMngr.setColor(r.getColor(R.color.leanback_background));
             bgMngr.setDrawable(new ColorDrawable(r.getColor(R.color.leanback_background)));
         }
-        bgMngr.setDimLayer(r.getDrawable(android.R.color.transparent));
     }
 
     private void setupEventListeners() {
@@ -578,8 +587,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
     private void updatePrivateMode(Icon icon) {
         icon.setActive(PrivateMode.isActive());
         mPreferencesRowAdapter.replace(mPreferencesRowAdapter.indexOf(icon), icon);
-        BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
-        updateBackground(bgMngr);
+        updateBackground();
     }
 
     public class MainViewClickedListener extends VideoViewClickedListener {

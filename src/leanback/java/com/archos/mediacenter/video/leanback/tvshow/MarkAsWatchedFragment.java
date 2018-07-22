@@ -73,10 +73,8 @@ public class MarkAsWatchedFragment extends BrowseFragment implements  LoaderMana
         super.onActivityCreated(savedInstanceState);
 
         // Just need to attach the background manager to keep the background of the parent activity
-        BackgroundManager bm = BackgroundManager.getInstance(getActivity());
-        bm.attach(getActivity().getWindow());
-        // Adding a very dark dim to increase the difference with TvShowFragment + to improve the visibility of the row header (it contains a short how-to)
-        bm.setDimLayer(getActivity().getResources().getDrawable(R.color.leanback_very_dark_dim_for_background_manager));
+        BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
+        bgMngr.attach(getActivity().getWindow());
 
         setTitle(mTvshowName);
         setHeadersState(HEADERS_DISABLED);
