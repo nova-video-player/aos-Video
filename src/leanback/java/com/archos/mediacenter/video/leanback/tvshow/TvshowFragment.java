@@ -203,6 +203,11 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         if (mTvshow.getShowTags()==null) {
             mFullScraperTagsTask = new FullScraperTagsTask().execute(mTvshow);
         }
+        if (mBackdropTask!=null) {
+            mBackdropTask.cancel(true);
+        }
+        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mTvshow.getShowTags());
+
     }
 
     @Override
