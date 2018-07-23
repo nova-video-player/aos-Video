@@ -19,7 +19,9 @@ import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -64,6 +66,7 @@ import com.archos.mediacenter.video.leanback.presenter.ListPresenter;
 import com.archos.mediacenter.video.leanback.presenter.MetaFileListPresenter;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.leanback.presenter.VideoListPresenter;
+import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
 import com.archos.mediacenter.video.utils.VideoUtils;
@@ -106,6 +109,8 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
     private boolean mDbQueryReady;
     private Cursor mCursor;
 
+    private BackgroundManager bgMngr = null;
+
     /**
      * flag used to make the difference between first-creation and back-from-backstack
      */
@@ -124,11 +129,8 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mDisplayMode = readDisplayModePref(mPrefs);
 
-        BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
-        if(!bgMngr.isAttached())
-            bgMngr.attach(getActivity().getWindow());
-        bgMngr.setColor(getResources().getColor(R.color.leanback_background));
-
+        updateBackground();
+        
         setTitle(getArguments().getString(ARG_TITLE));
         mUri = getArguments().getParcelable(ARG_URI);
         mIsRoot = getArguments().getBoolean(ARG_IS_ROOT, false);
@@ -223,6 +225,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
             startListing(mUri);
             mRefreshOnNextResume = false;
         }
+        updateBackground();
     }
 
     @Override
@@ -666,6 +669,22 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
                 else
                     mRefreshOnNextResume = true;
             }
+        }
+    }
+
+    private void updateBackground() {
+        Resources r = getResources();
+
+        bgMngr = BackgroundManager.getInstance(getActivity());
+        if(!bgMngr.isAttached())
+            bgMngr.attach(getActivity().getWindow());
+
+        if (PrivateMode.isActive()) {
+            bgMngr.setColor(r.getColor(R.color.private_mode));
+            bgMngr.setDrawable(r.getDrawable(R.drawable.private_background));
+        } else {
+            bgMngr.setColor(r.getColor(R.color.leanback_background));
+            bgMngr.setDrawable(new ColorDrawable(r.getColor(R.color.leanback_background)));
         }
     }
 }

@@ -15,7 +15,9 @@
 package com.archos.mediacenter.video.leanback.network;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -61,6 +63,7 @@ import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.NetworkShortcutPresenter;
 import com.archos.mediacenter.video.leanback.presenter.RescanBoxItemPresenter;
 import com.archos.mediacenter.video.leanback.presenter.SmbSharePresenter;
+import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediaprovider.video.NetworkScannerReceiver;
 
 import org.fourthline.cling.model.meta.Device;
@@ -106,6 +109,8 @@ public class NetworkRootFragment extends BrowseFragment {
     // temp debug flag (to remove once re-scan feature is published)
     static boolean sDisplayRescanItem = false;
 
+    BackgroundManager bgMngr = null;
+
     // temp debug method (to remove once re-scan feature is published)
     void displayRescanItem() {
         sDisplayRescanItem = true;
@@ -129,6 +134,7 @@ public class NetworkRootFragment extends BrowseFragment {
     public void onResume() {
         super.onResume();
         mOverlay.resume();
+        updateBackground();
     }
 
     @Override
@@ -141,9 +147,7 @@ public class NetworkRootFragment extends BrowseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
-        bgMngr.attach(getActivity().getWindow());
-        bgMngr.setColor(getResources().getColor(R.color.leanback_background));
+        updateBackground();
 
         setTitle(getString(R.string.network_storage));
         setHeadersState(HEADERS_DISABLED);
@@ -552,5 +556,21 @@ public class NetworkRootFragment extends BrowseFragment {
 
         // Default is to add at the end (either because of the names or because this is the first item)
         adapter.add(newObject);
+    }
+
+    private void updateBackground() {
+        Resources r = getResources();
+
+        bgMngr = BackgroundManager.getInstance(getActivity());
+        if(!bgMngr.isAttached())
+            bgMngr.attach(getActivity().getWindow());
+
+        if (PrivateMode.isActive()) {
+            bgMngr.setColor(r.getColor(R.color.private_mode));
+            bgMngr.setDrawable(r.getDrawable(R.drawable.private_background));
+        } else {
+            bgMngr.setColor(r.getColor(R.color.leanback_background));
+            bgMngr.setDrawable(new ColorDrawable(r.getColor(R.color.leanback_background)));
+        }
     }
 }
