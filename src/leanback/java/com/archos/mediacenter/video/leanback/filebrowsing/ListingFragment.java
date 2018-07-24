@@ -130,7 +130,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         mDisplayMode = readDisplayModePref(mPrefs);
 
         updateBackground();
-        
+
         setTitle(getArguments().getString(ARG_TITLE));
         mUri = getArguments().getParcelable(ARG_URI);
         mIsRoot = getArguments().getBoolean(ARG_IS_ROOT, false);

@@ -20,7 +20,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v17.leanback.app.BackgroundManager;
@@ -45,6 +47,7 @@ import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.leanback.presenter.VideoListPresenter;
 import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
+import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.utils.SortOrder;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -65,6 +68,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
     private int mSortOrderItem;
     private String mSortOrder;
     private CharSequence[] mSortOrderEntries;
+    private BackgroundManager bgMngr = null;
 
     private static SparseArray<MoviesSortOrderEntry> sortOrderIndexer = new SparseArray<MoviesSortOrderEntry>();
     static {
@@ -90,9 +94,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         mSortOrder = mPrefs.getString(SORT_PARAM_KEY, MoviesLoader.DEFAULT_SORT);
         mSortOrderEntries = MoviesSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
 
-        BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
-        bgMngr.attach(getActivity().getWindow());
-        bgMngr.setColor(getResources().getColor(R.color.leanback_background));
+        updateBackground();
 
         setTitle(getString(R.string.all_movies));
         setEmptyTextMessage(getString(R.string.you_have_no_movies));
@@ -217,6 +219,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
     public void onResume() {
         super.onResume();
         mOverlay.resume();
+        updateBackground();
     }
 
     @Override
@@ -257,6 +260,22 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
                 mBackgroundURI = ((Movie) item).getBackgroundImageURI();
                 startBackgroundTimer();
             }*/
+        }
+    }
+
+    private void updateBackground() {
+        Resources r = getResources();
+
+        bgMngr = BackgroundManager.getInstance(getActivity());
+        if(!bgMngr.isAttached())
+            bgMngr.attach(getActivity().getWindow());
+
+        if (PrivateMode.isActive()) {
+            bgMngr.setColor(r.getColor(R.color.private_mode));
+            bgMngr.setDrawable(r.getDrawable(R.drawable.private_background));
+        } else {
+            bgMngr.setColor(r.getColor(R.color.leanback_background));
+            bgMngr.setDrawable(new ColorDrawable(r.getColor(R.color.leanback_background)));
         }
     }
 

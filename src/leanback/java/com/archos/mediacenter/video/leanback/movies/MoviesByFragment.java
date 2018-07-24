@@ -22,6 +22,7 @@ import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v17.leanback.app.BackgroundManager;
@@ -52,6 +53,7 @@ import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesSelectionLoader;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
+import com.archos.mediacenter.video.player.PrivateMode;
 
 import java.util.ArrayList;
 
@@ -90,6 +92,8 @@ public abstract class MoviesByFragment extends BrowseFragment  implements  Loade
     abstract protected String item2SortOrder(int item);
     abstract protected int sortOrder2Item(String sortOrder);
     abstract protected String getSortOrderParamKey();
+
+    private BackgroundManager bgMngr = null;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -130,6 +134,7 @@ public abstract class MoviesByFragment extends BrowseFragment  implements  Loade
     public void onResume() {
         super.onResume();
         mOverlay.resume();
+        updateBackground();
     }
 
     @Override
@@ -146,9 +151,8 @@ public abstract class MoviesByFragment extends BrowseFragment  implements  Loade
         mSortOrder = mPrefs.getString(getSortOrderParamKey(), MoviesLoader.DEFAULT_SORT);
 
         Resources r = getResources();
-        BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
-        bgMngr.attach(getActivity().getWindow());
-        bgMngr.setColor(r.getColor(R.color.leanback_background));
+
+        updateBackground();
 
         setHeadersState(HEADERS_ENABLED);
         setHeadersTransitionOnBackEnabled(true);
@@ -307,6 +311,22 @@ public abstract class MoviesByFragment extends BrowseFragment  implements  Loade
         }
 
         mRowsAdapter.addAll(0,rows);
+    }
+
+    private void updateBackground() {
+        Resources r = getResources();
+
+        bgMngr = BackgroundManager.getInstance(getActivity());
+        if(!bgMngr.isAttached())
+            bgMngr.attach(getActivity().getWindow());
+
+        if (PrivateMode.isActive()) {
+            bgMngr.setColor(r.getColor(R.color.private_mode));
+            bgMngr.setDrawable(r.getDrawable(R.drawable.private_background));
+        } else {
+            bgMngr.setColor(r.getColor(R.color.leanback_background));
+            bgMngr.setDrawable(new ColorDrawable(r.getColor(R.color.leanback_background)));
+        }
     }
 
 }
