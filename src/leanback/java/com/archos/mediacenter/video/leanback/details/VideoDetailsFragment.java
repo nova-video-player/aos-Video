@@ -451,6 +451,14 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         // reset flags
         mResumeFromPlayer = false;
         mFirstOnResume = false;
+
+        if (mBackdropTask!=null) {
+            mBackdropTask.cancel(true);
+        }
+        if (!mLaunchedFromPlayer) { // in player case the player is displayed in the background, not the backdrop
+            mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mVideo);
+        }
+
     }
 
     @Override

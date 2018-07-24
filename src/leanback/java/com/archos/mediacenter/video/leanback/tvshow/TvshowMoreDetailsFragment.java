@@ -93,7 +93,6 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setTopOffsetRatio(0.6f);
 
         final Intent intent = getActivity().getIntent();
@@ -168,6 +167,11 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
         if (mShowTags==null) {
             mFullScraperTagsTask = new FullScraperTagsTask().execute(mShowId);
         }
+
+        if (mBackdropTask!=null) {
+            mBackdropTask.cancel(true);
+        }
+        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mShowTags);
     }
 
     @Override
