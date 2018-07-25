@@ -1284,9 +1284,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 if (newSubtitleTrack != mVideoInfo.subtitleTrack &&
                         !mPlayer.setSubtitleTrack(mVideoInfo.subtitleTrack))
                     mVideoInfo.subtitleTrack = noneTrack;
-                    if (mVideoInfo.subtitleDelay >= 0) {
-                        mPlayer.setSubtitleDelay(mVideoInfo.subtitleDelay);
-                    }
+                    if (DBG) Log.d(TAG, "SubtitleDelay = "+String.valueOf(mVideoInfo.subtitleDelay));
+                    mPlayer.setSubtitleDelay(mVideoInfo.subtitleDelay);
                     if (mVideoInfo.subtitleRatio >= 0) {
                         mPlayer.setSubtitleRatio(mVideoInfo.subtitleRatio);
 
