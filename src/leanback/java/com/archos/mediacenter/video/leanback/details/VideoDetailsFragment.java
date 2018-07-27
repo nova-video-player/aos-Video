@@ -244,6 +244,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private boolean mShouldUpdateRemoteResume;
     private boolean mShouldDisplayRemoveFromList;
 
+    private boolean isFilePlayable = true;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -470,17 +472,34 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     final OnActionClickedListener mOnActionClickedListener = new OnActionClickedListener() {
         @Override
         public void onActionClicked(Action action) {
+            VideoMetadata mMetadata = mVideo.getMetadata();
+            // test from FileDetailsRowPresenter to check if file is playable
+            if (mMetadata.getFileSize()==0 && mMetadata.getVideoTrack()==null && mMetadata.getAudioTrackNb()==0) {
+                isFilePlayable = false;
+            }
             if(action.getId() == VideoActionAdapter.ACTION_LOCAL_RESUME){
-                startAds(REQUEST_CODE_LOCAL_RESUME_AFTER_ADS_ACTIVITY);
+                if (isFilePlayable) {
+                    startAds(REQUEST_CODE_LOCAL_RESUME_AFTER_ADS_ACTIVITY);
+                } else {
+                    Toast.makeText(getActivity(), R.string.player_err_cantplayvideo, Toast.LENGTH_SHORT).show();
+                }
             }
             if (action.getId() == VideoActionAdapter.ACTION_RESUME) {
-                startAds(REQUEST_CODE_RESUME_AFTER_ADS_ACTIVITY);
+                if (isFilePlayable) {
+                    startAds(REQUEST_CODE_RESUME_AFTER_ADS_ACTIVITY);
+                } else {
+                    Toast.makeText(getActivity(), R.string.player_err_cantplayvideo, Toast.LENGTH_SHORT).show();
+                }
             }
             if (action.getId() == VideoActionAdapter.ACTION_REMOTE_RESUME) {
                 startAds(REQUEST_CODE_REMOTE_RESUME_AFTER_ADS_ACTIVITY);
             }
             else if (action.getId() == VideoActionAdapter.ACTION_PLAY_FROM_BEGIN) {
-                startAds(REQUEST_CODE_PLAY_FROM_BEGIN_AFTER_ADS_ACTIVITY);
+                if (isFilePlayable) {
+                    startAds(REQUEST_CODE_PLAY_FROM_BEGIN_AFTER_ADS_ACTIVITY);
+                } else {
+                    Toast.makeText(getActivity(), R.string.player_err_cantplayvideo, Toast.LENGTH_SHORT).show();
+                }
             }
             else if (action.getId() == VideoActionAdapter.ACTION_LIST_EPISODES) {
                 // In this case mVideo is a tvshow Episode
