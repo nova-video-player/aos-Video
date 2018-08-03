@@ -121,6 +121,8 @@ public class ISO639codes {
         sMap.put("zh",  R.string.s_chinese);
         sMap.put("zho", R.string.s_chinese);
         sMap.put("chi", R.string.s_chinese);
+
+        sMap.put("vie", R.string.s_vietnamese);
     }
 
     /**
