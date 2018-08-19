@@ -297,6 +297,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private boolean mIsLeavingPlayerActivity = false;
     //chromecast end
 
+    private boolean isFilePlayable = true;
 
     public static VideoInfoActivityFragment getInstance(Video video, Uri path, long id, boolean forceVideoSelection){
         Bundle arguments = new Bundle();
@@ -548,13 +549,21 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             @Override
             public void onClick(View view) {
                 mIsLeavingPlayerActivity = true;
-                PlayUtils.startVideo(getActivity(),
-                        mCurrentVideo,
-                        finalResume,
-                        false,
-                        finalResumePos,
-                        VideoInfoActivityFragment.this,
-                        getActivity().getIntent().getLongExtra(VideoInfoActivity.EXTRA_PLAYLIST_ID, -1));
+                VideoMetadata mMetadata = mCurrentVideo.getMetadata();
+                if (mMetadata.getFileSize()==0 && mMetadata.getVideoTrack()==null && mMetadata.getAudioTrackNb()==0) {
+                    isFilePlayable = false;
+                }
+                if (isFilePlayable) {
+                    PlayUtils.startVideo(getActivity(),
+                            mCurrentVideo,
+                            finalResume,
+                            false,
+                            finalResumePos,
+                            VideoInfoActivityFragment.this,
+                            getActivity().getIntent().getLongExtra(VideoInfoActivity.EXTRA_PLAYLIST_ID, -1));
+                } else {
+                    Toast.makeText(getActivity(), R.string.player_err_cantplayvideo, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -1007,15 +1016,22 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 resumePos = mCurrentVideo.getRemoteResumeMs();
             }
             mIsLeavingPlayerActivity = true;
-            PlayUtils.startVideo(
-                    getActivity(),
-                    mCurrentVideo,
-                    resume,
-                    false,
-                    resumePos,
-                    this,
-                    getActivity().getIntent().getLongExtra(VideoInfoActivity.EXTRA_PLAYLIST_ID, -1));
-
+            VideoMetadata mMetadata = mCurrentVideo.getMetadata();
+            if (mMetadata.getFileSize()==0 && mMetadata.getVideoTrack()==null && mMetadata.getAudioTrackNb()==0) {
+                isFilePlayable = false;
+            }
+            if (isFilePlayable) {
+                PlayUtils.startVideo(
+                        getActivity(),
+                        mCurrentVideo,
+                        resume,
+                        false,
+                        resumePos,
+                        this,
+                        getActivity().getIntent().getLongExtra(VideoInfoActivity.EXTRA_PLAYLIST_ID, -1));
+            } else {
+                Toast.makeText(getActivity(), R.string.player_err_cantplayvideo, Toast.LENGTH_SHORT).show();
+            }
         }
         else if(view == mIndexButton){
             VideoStore.requestIndexing(mCurrentVideo.getFileUri(), getActivity());
