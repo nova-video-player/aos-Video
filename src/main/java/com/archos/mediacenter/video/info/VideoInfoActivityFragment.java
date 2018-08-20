@@ -550,8 +550,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             public void onClick(View view) {
                 mIsLeavingPlayerActivity = true;
                 VideoMetadata mMetadata = mCurrentVideo.getMetadata();
-                if (mMetadata.getFileSize()==0 && mMetadata.getVideoTrack()==null && mMetadata.getAudioTrackNb()==0) {
-                    isFilePlayable = false;
+                if (mMetadata != null) {
+                    if (mMetadata.getFileSize() == 0 && mMetadata.getVideoTrack() == null && mMetadata.getAudioTrackNb() == 0) {
+                        isFilePlayable = false;
+                    }
                 }
                 if (isFilePlayable) {
                     PlayUtils.startVideo(getActivity(),
@@ -1017,8 +1019,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }
             mIsLeavingPlayerActivity = true;
             VideoMetadata mMetadata = mCurrentVideo.getMetadata();
-            if (mMetadata.getFileSize()==0 && mMetadata.getVideoTrack()==null && mMetadata.getAudioTrackNb()==0) {
-                isFilePlayable = false;
+            if (mMetadata != null) {
+                if (mMetadata.getFileSize() == 0 && mMetadata.getVideoTrack() == null && mMetadata.getAudioTrackNb() == 0) {
+                    isFilePlayable = false;
+                }
             }
             if (isFilePlayable) {
                 PlayUtils.startVideo(
