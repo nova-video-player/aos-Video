@@ -278,13 +278,21 @@ public class FloatingPlayerService extends Service implements AppState.OnForeGro
 
             mProgressView = mFloatingPlayerRootView.findViewById(R.id.progress_indicator);
             mSurfaceController = new SurfaceController(mFloatingPlayerRootView);
-            mParamsF = new WindowManager.LayoutParams(
-                    WindowManager.LayoutParams.WRAP_CONTENT,
-                    WindowManager.LayoutParams.WRAP_CONTENT,
-                    WindowManager.LayoutParams.TYPE_PHONE,
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-                    PixelFormat.TRANSPARENT);
-
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                mParamsF = new WindowManager.LayoutParams(
+                        WindowManager.LayoutParams.WRAP_CONTENT,
+                        WindowManager.LayoutParams.WRAP_CONTENT,
+                        WindowManager.LayoutParams.TYPE_PHONE,
+                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                        PixelFormat.TRANSPARENT);
+            } else {
+                mParamsF = new WindowManager.LayoutParams(
+                        WindowManager.LayoutParams.WRAP_CONTENT,
+                        WindowManager.LayoutParams.WRAP_CONTENT,
+                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                        PixelFormat.TRANSPARENT);
+            }
             mParamsF.gravity = Gravity.TOP | Gravity.LEFT;
             mParamsF.x = 0;
             mParamsF.y = 100;
