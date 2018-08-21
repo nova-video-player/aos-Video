@@ -473,6 +473,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         @Override
         public void onActionClicked(Action action) {
             VideoMetadata mMetadata = mVideo.getMetadata();
+            isFilePlayable = true;
             // test from FileDetailsRowPresenter to check if file is playable
             if (mMetadata != null) {
                 if (mMetadata.getFileSize() == 0 && mMetadata.getVideoTrack() == null && mMetadata.getAudioTrackNb() == 0) {

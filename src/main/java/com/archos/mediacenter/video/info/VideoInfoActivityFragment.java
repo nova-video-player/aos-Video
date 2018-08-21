@@ -549,6 +549,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             @Override
             public void onClick(View view) {
                 mIsLeavingPlayerActivity = true;
+                isFilePlayable = true;
                 VideoMetadata mMetadata = mCurrentVideo.getMetadata();
                 if (mMetadata != null) {
                     if (mMetadata.getFileSize() == 0 && mMetadata.getVideoTrack() == null && mMetadata.getAudioTrackNb() == 0) {
@@ -1019,6 +1020,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }
             mIsLeavingPlayerActivity = true;
             VideoMetadata mMetadata = mCurrentVideo.getMetadata();
+            isFilePlayable = true;
             if (mMetadata != null) {
                 if (mMetadata.getFileSize() == 0 && mMetadata.getVideoTrack() == null && mMetadata.getAudioTrackNb() == 0) {
                     isFilePlayable = false;
