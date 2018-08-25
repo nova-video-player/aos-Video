@@ -10,3 +10,5 @@ tests/project.properties
 libs/armeabi-v7a
 *.iml
 .idea/
+keystore.properties
+nova.json
