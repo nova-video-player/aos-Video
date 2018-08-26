@@ -78,7 +78,7 @@ android {
         targetSdkVersion 27
         multiDexEnabled true
         versionCode getDate()
-        versionName '10.2-' + getFormattedDate()
+        versionName '1.0-' + getFormattedDate()
         signingConfig signingConfigs.release
     }
     aaptOptions {
