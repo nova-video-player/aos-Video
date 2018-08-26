@@ -1,3 +1,7 @@
+def keystorePropertiesFile = rootProject.file("keystore.properties");
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 buildscript {
     repositories {
         jcenter()
@@ -5,6 +9,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.2'
+	classpath 'com.github.triplet.gradle:play-publisher:1.2.2'
     }
 }
 
@@ -36,8 +41,24 @@ static def getFormattedDate() {
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.android.application'
+apply plugin: 'com.github.triplet.play'
+
+play {
+    jsonFile = file('nova.json')
+    track = 'alpha' // rollout, beta, alpha, release, internal
+    userFraction = 0.2 // rollout rate in %/100
+}
 
 android {
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+	}
+    }
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
     useLibrary 'org.apache.http.legacy'
@@ -58,6 +79,7 @@ android {
         multiDexEnabled true
         versionCode getDate()
         versionName '10.2-' + getFormattedDate()
+        signingConfig signingConfigs.release
     }
     aaptOptions {
         additionalParameters "--no-version-vectors"
