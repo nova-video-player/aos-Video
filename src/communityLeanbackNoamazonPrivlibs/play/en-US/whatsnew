@@ -1,0 +1,7 @@
+Add support for Android P avoiding application crash at startup;
+Add a "list episodes" button on tvshow episode view to quickly get to tvshow view on AndroidTV leanback version;
+Add notification channels for Oreo;
+Fix subtitle delay not applied on play resume when negative;
+Fix floating player crash on Android version Oreo and above
+Fix loss of activity background and private mode background;
+Prevent from playing a file when detecting a problem: issue a toast instead;

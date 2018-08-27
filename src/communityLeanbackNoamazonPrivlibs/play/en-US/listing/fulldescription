@@ -1,0 +1,44 @@
+Nova is an opeN sOurce Video plAyer designed for tablets, phones and AndroidTV devices.
+
+Universal player:
+- Play videos from your computer, server (FTP, SFTP), NAS (SMB, UPnP)
+- Play videos from external USB storage
+- Videos from all sources integrated in a unified multimedia collection
+- Automatic online retrieval of movie and TV show descriptions with posters and backdrops
+- Integrated subtitle download
+
+Best player:
+- Hardware accelerated video decoding for most devices and video formats
+- Multi-audio tracks and mutli-subtitles support
+- Supported file formats: MKV, MP4, AVI, WMV, FLV, etc.
+- Supported subtitle file types: SRT, SUB, ASS, SMI, etc.
+
+TV friendly:
+- Dedicated “leanback” user interface for Android TV
+- AC3/DTS passthrough (HDMI or S/PDIF) on supported hardware: Nexus Player, NVidia SHIELD TV, Rockchip and AmLogic based TV-boxes
+- 3D support with side-by-side and top-bottom formats playback for 3D TVs
+- Audio Boost mode to increase the volume level
+- Night Mode to dynamically adjust the volume level
+
+Browse the way you want:
+- Instant access to recently added and recently played videos
+- Browse movies by name, genre, year, duration, rating
+- Browse TV shows by seasons
+- Folder browsing supported
+
+And even more:
+- Multi-device network video resume
+- NFO metadata processing for descriptions and posters
+- Scheduled rescan of your network content (Leanback UI only)
+- Private mode: temporarily disable playback history recording
+- Manually adjust subtitles synchronization
+- Manually adjust audio/video synchronization
+- Track what your collection and what you have watched via Trakt
+
+In case you have an issue or a request about this app, please check our Google+ support group at this address: https://goo.gl/PXyUfM
+
+If you experience any issue with video hardware decoding you can force software decoding in the application preferences.
+
+This application is based on a fork of Archos Video Player open-source release available at https://github.com/nova-video-player/aos-AVP
+
+NOVA stands for opeN sOurce Video plAyer.

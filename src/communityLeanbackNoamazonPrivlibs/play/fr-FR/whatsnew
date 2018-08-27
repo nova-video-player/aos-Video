@@ -1,0 +1,7 @@
+Support d'Android P (évite de crasher au démarrage).
+Ajout d'un bouton pour lister directement les épisodes d'une série TV à partir d'un épisode sur AndroidTV.
+Corrige le délai des sous-titres non appliqué en reprise de lecture quand négatif.
+Corrige le mode fenêtré sur les versions Android supérieures à Oreo.
+Corrige la perte d'image de fond et de l'affichage du mode privé.
+Ajout des canaux de notification pour Oreo.
+Evite de lancer une vidéo si un problème est détecté.
