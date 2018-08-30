@@ -168,6 +168,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     public static final String KEY_TORRENT_URL = "torrent_url";
     public static final String KEY_TORRENT_SELECTED_FILE="torrent_seletected_file";
     public static final String LAUNCH_FROM_FLOATING_PLAYER = "launch_from_floating_player";
+    public static final String KEY_FORCE_SW = "force_software_decoding";
 
 
     private static final int SUBTITLE_MENU_DELAY = 0;
@@ -312,6 +313,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private int mLastPosition;
     private int mForceAudioTrack = -1;
     private boolean mLockRotation;
+    private boolean mForceSWDecoding;
     private boolean mHideSubtitles = false;
     private String mSubsFavoriteLanguage;
     private boolean mStopped;
@@ -704,6 +706,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mHideSubtitles = mPreferences.getBoolean(KEY_HIDE_SUBTITLES, false);
         mNetworkBookmarksEnabled = mPreferences.getBoolean(KEY_NETWORK_BOOKMARKS, true);
         mSubsFavoriteLanguage = mPreferences.getString(KEY_SUBTITLES_FAVORITE_LANGUAGE, Locale.getDefault().getISO3Language());
+        mForceSWDecoding = mPreferences.getBoolean(KEY_FORCE_SW, true);
         setLockRotation(mLockRotation);
         updateSizes();
         mSurfaceController.setVideoFormat(Integer.parseInt(mPreferences.getString(KEY_PLAYER_FORMAT, "-1")),
@@ -714,7 +717,11 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             LibAvos.setDownmix(ArchosFeatures.isAndroidTV(this)&&!"AFTM".equals(Build.MODEL)?0:1);//not with firestick
         }
         //if not started from floating player, we have to stop our video
-
+        if (mForceSWDecoding)
+            Toast.makeText(
+                mContext,
+                R.string.warning_swdec,
+                Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, PlayerService.class);
         bindService(intent, mPlayerServiceConnection, BIND_AUTO_CREATE);
         if(PlayerService.sPlayerService!=null)
