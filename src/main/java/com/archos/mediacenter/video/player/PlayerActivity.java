@@ -706,7 +706,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mHideSubtitles = mPreferences.getBoolean(KEY_HIDE_SUBTITLES, false);
         mNetworkBookmarksEnabled = mPreferences.getBoolean(KEY_NETWORK_BOOKMARKS, true);
         mSubsFavoriteLanguage = mPreferences.getString(KEY_SUBTITLES_FAVORITE_LANGUAGE, Locale.getDefault().getISO3Language());
-        mForceSWDecoding = mPreferences.getBoolean(KEY_FORCE_SW, true);
+        mForceSWDecoding = mPreferences.getBoolean(KEY_FORCE_SW, false);
         setLockRotation(mLockRotation);
         updateSizes();
         mSurfaceController.setVideoFormat(Integer.parseInt(mPreferences.getString(KEY_PLAYER_FORMAT, "-1")),
