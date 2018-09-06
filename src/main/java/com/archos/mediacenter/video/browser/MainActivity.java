@@ -532,7 +532,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        mPermissionChecker.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPermissionChecker.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     @Override

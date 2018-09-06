@@ -756,7 +756,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         PlayerService.sPlayerService.switchPlayerFrontend(mPlayerListener);
         Player.sPlayer = mPlayer;
         PlayerService.sPlayerService.setPlayer();
-        if(mPermissionChecker.hasExternalPermission()) {
+        if(mPermissionChecker.hasExternalPermission(this)) {
             Log.d(TAG, "hasExternalPermission ");
             PlayerService.sPlayerService.onStart(intent);
             PlayerService.sPlayerService.setIndexHelper(mIndexHelper);
@@ -2649,7 +2649,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults){
-        mPermissionChecker.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPermissionChecker.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     private boolean canSetBookmark() {
