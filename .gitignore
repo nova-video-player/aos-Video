@@ -12,3 +12,4 @@ libs/armeabi-v7a
 .idea/
 keystore.properties
 nova.json
+crowdin.properties
