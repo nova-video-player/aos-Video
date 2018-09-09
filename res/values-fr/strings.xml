@@ -4,6 +4,7 @@
     <string msgid="8979658707407220934" name="goto_start">"Bibliothèque"</string>
     <string msgid="1016971653383739344" name="search_title">"Rechercher"</string>
     <string msgid="2854921021814550018" name="play_selection">"Lire"</string>
+    <string name="initial_scan">Scan initial</string>
     <string name="play_from_beginning">Lire depuis le début</string>
     <string name="multiple_selection">Sélection multiple</string>
     <string msgid="5548732936480723311" name="fast_scroll_alphabet">" ABCDEFGHIJKLMNOPQRSTUVWXYZ"</string>
@@ -49,6 +50,7 @@
     <string name="directory_deleted">Le dossier a été supprimé</string>
     <string name="file_deleted">Le fichier a été supprimé</string>
     <string name="resume">Reprendre</string>
+    <string name="remote_resume">Reprise réseau</string>
     <string name="bookmark">Marque-page</string>
     <string name="delete">Supprimer</string>
     <string name="delete_resume">Effacer le point de reprise</string>
@@ -96,6 +98,7 @@
     <string name="pref_play_mode_entry_folder">Dossier</string>
     <string name="pref_play_mode_entry_repeat_folder">Répétition du dossier</string>
     <string name="pref_play_mode_entry_repeat_single">Répétition du fichier</string>
+    <string name="seek_to_percentage">"Aller à %s%%</string>
     <string name="s_arabic">Arabe</string>
     <string name="s_bulgarian">Bulgare</string>
     <string name="Bosnian">Bosniaque</string>
@@ -352,6 +355,10 @@
     <string name="pref_audio_filt_title">Audio Boost</string>
     <string name="preferences_network_mobile_vpn_summary">N\'activez cette option que pour les connexions VPN. Attention à la consommation de données.</string>
     <string name="preferences_network_mobile_vpn_title">Activer les partages réseau avec une connexion mobile</string>
+    <string name="preferences_video_advanced">Avancé</string>
+    <string name="preferences_video_advanced_quit_title">Paramètres par défaut</string>
+    <string name="preferences_video_advanced_quit_summary">Retour aux paramètres par défaut</string>
+    <string name="trakt_change">Une modification de l'API de Trakt requiert une reconnexion.</string>
     <string name="pref_s3d_mode_title">Mode 3D</string>
     <string name="pref_s3d_mode_entry_sbs">Côte à côte</string>
     <string name="pref_s3d_mode_entry_topbottom">Dessus-dessous</string>
@@ -429,6 +436,9 @@
     <string name="preferences_category_sort_order">Ordre de tri</string>
     <string name="preferences_tv_show_sort_order_title">Ordre de tri des séries</string>
     <string name="preferences_tv_show_sort_order_summary">Sélectionnez l\'ordre de tri pour vos séries</string>
+
+    <string name="dec_choice_title">Choix du décodeur</string>
+    <string name="dec_choice_summary">Préférence avancée, peut interférer avec le décodage vidéo.</string>
 
    <string name="codepage_title">Encodage des sous-titres</string>
    <string name="codepage_summary">Sélectionnez l\'encodage utilisé pour les sous-titres</string>
