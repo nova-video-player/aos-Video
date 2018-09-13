@@ -39,7 +39,7 @@
     <string name="all_movies_and_tv_shows">Filme und Serien</string>
     <string name="cannot_open_video">Dieses Video kann nicht geöffnet werden</string>
     <string name="confirm_delete">Wollen Sie wirklich löschen?</string>
-    <string name="deleting">wird gelöscht, bitte warten...</string>
+    <string name="deleting">wird gelöscht, bitte warten…</string>
     <string name="cannot_delete_directory">Der Ordner kann nicht gelöscht werden</string>
     <string name="cannot_delete_file">Die Datei kann nicht gelöscht werden</string>
     <string name="directory_deleted">Der Ordner wurde gelöscht</string>
@@ -165,7 +165,7 @@
     <string name="episode_name">Folge</string>
     <string name="episode_season">Staffel</string>
     <string name="episode_identification">Staffel %1$d Folge %2$d</string>
-    <string name="scrap_processing">Zusatzinformation werden geladen...</string>
+    <string name="scrap_processing">Zusatzinformation werden geladen…</string>
     <string name="scrap_no_network">Nicht mit Netzwerk verbunden.</string>
     <string name="scrap_enable_network_first">"Bitte aktivieren Sie zuerst eine Internet-Verbindung um diese Applikation ausführen zu können."</string>
     <string name="scrap_failed">Film wurde nicht in der Datenbank gefunden.</string>
@@ -176,7 +176,7 @@
     <string name="start_auto_scraper_activity">Medieninformationen online suchen</string>
     <string name="scraper_settigns">Medieninformationen</string>
     <string name="scrap_status_initial">In Bearbeitung</string>
-    <string name="scrap_status_busy">Suche...</string>
+    <string name="scrap_status_busy">Suche…</string>
     <string name="scrap_status_success">Aktualisiert</string>
     <string name="scrap_status_failed">Keine Information gefunden</string>
     <string name="scrap_status_rejected">Information entfernt</string>
@@ -192,7 +192,7 @@
     <string name="scraper_no_tv_show_text">Keine Serien gefunden. Nutzen Sie die Onlinesuche um Serien-Informationen und Poster für Ihre Videos zu suchen.</string>
     <string name="scraper_no_tv_show_button_label">Online-Suche starten</string>
     <string name="imdb_title_url">http://www.imdb.de/title/</string> <!-- To be translated only in case there is a localized IMDB -->
-    <string name="info_processing">Medieneigenschaften überprüfen...</string>
+    <string name="info_processing">Medieneigenschaften überprüfen…</string>
     <string name="info_video">Video</string>
     <string name="info_audio">Audio</string>
     <string name="info_audio_vbr">VBR</string>
@@ -268,11 +268,11 @@
     <string name="toast_subloader_sub_not_found">Untertitel für diese Sprache(n) nicht gefunden</string>
     <string name="toast_subloader_service_unreachable">Untertitel-Service nicht erreichbar</string>
     <string name="menu_subloader_allfolder">Hole fehlende Untertitel</string>
-    <string name="dialog_subloader_downloading">Lade Untertitel herunter...</string>
+    <string name="dialog_subloader_downloading">Lade Untertitel herunter…</string>
     <string name="dialog_subloader_sumup">Herunterladen abgeschlossen</string>
     <string name="dialog_subloader_success">Untertitel gefunden für:</string>
     <string name="dialog_subloader_fails">Keine Untertitel gefunden für:</string>
-    <string name="dialog_subloader_connecting">Verbinde mit opensubtitles.org...</string>
+    <string name="dialog_subloader_connecting">Verbinde mit opensubtitles.org…</string>
     <string name="sub_force_all_title">Erzwinge herunterladen von Untertiteln</string>
     <string name="sub_force_all">Alle Ihre Videos haben bereits Untertitel. Wollen Sie trotzdem neue Untertitel herunterladen?</string>
     <string name="preferences">Einstellungen</string>

@@ -114,7 +114,7 @@
     <string name="no_server">No media server found</string>
     <string name="cannot_open_video">Cannot open this video</string>
     <string name="confirm_delete">Do you really want to delete it?</string>
-    <string name="deleting">Please wait while deleting...</string>
+    <string name="deleting">Please wait while deleting…</string>
     <string name="cannot_delete_directory">Cannot delete the folder</string>
     <string name="cannot_delete_file">Cannot delete the file</string>
     <string name="directory_deleted">The folder was deleted</string>
@@ -174,14 +174,14 @@
         <item quantity="other">%d episodes watched</item>
     </plurals>
 
-    <string name="scrap_processing">Retrieving metadata...</string>
+    <string name="scrap_processing">Retrieving metadata…</string>
     <string name="scrap_no_network">Not connected to a network.</string>
     <string name="scrap_enable_network_first">"Please connect to a network first to be able to run this application."</string>
     <string name="scrap_failed">Movie not found in online database.</string>
     <string name="start_auto_scraper_activity">Search info online</string>
     <string name="scraper_settigns">Posters &amp; descriptions</string>
     <string name="scrap_status_initial">Queued</string>
-    <string name="scrap_status_busy">Searching...</string>
+    <string name="scrap_status_busy">Searching…</string>
     <string name="scrap_status_success">Updated</string>
     <string name="scrap_status_failed">Info not found</string>
     <string name="scrap_status_rejected">Info removed</string>
@@ -211,7 +211,7 @@
     <string name="rescanning">Rescanning storage devices</string>
     <string name="rescan_storage_summary">Rescan internal, SD Card and USB storage devices</string>
     <string name="preference_display_all_files">Display all files in browser</string>
-    <string name="info_processing">Checking media properties...</string>
+    <string name="info_processing">Checking media properties…</string>
     <string name="info_video">Video</string>
     <string name="info_audio">Audio</string>
     <string name="info_audio_vbr">VBR</string>
@@ -393,8 +393,8 @@
     <string name="toast_subloader_sub_not_found">Subtitles track not found for this language</string>
     <string name="toast_subloader_service_unreachable">subtitles web service outage</string>
     <string name="menu_subloader_allfolder">Get missing subtitles</string>
-    <string name="dialog_subloader_copying">Copying subtitles...</string>
-    <string name="dialog_subloader_downloading">Downloading subtitles...</string>
+    <string name="dialog_subloader_copying">Copying subtitles…</string>
+    <string name="dialog_subloader_downloading">Downloading subtitles…</string>
     <string name="dialog_subloader_sumup">Download finished</string>
     <string name="dialog_subloader_success">Subtitles found for:</string>
     <string name="dialog_subloader_fails">Subtitles not found for:</string>
@@ -402,7 +402,7 @@
     <string name="sub_force_all">All your videos already have at least one subtitles track. Do you want to force download of new subtitles tracks?</string>
     <string name="dialog_subloader_nonetwork_title">No Internet connection</string>
     <string name="dialog_subloader_nonetwork_message">An internet connection is required to download subtitles</string>
-    <string name="dialog_subloader_connecting">Connecting to www.opensubtitles.org...</string>
+    <string name="dialog_subloader_connecting">Connecting to www.opensubtitles.org…</string>
 
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Subtitle Settings</string>
@@ -432,7 +432,7 @@
     <string name="error">An error occurred</string>
     <string name="error_loading_torrent">Error while loading torrent</string>
     <string name="error_downloading_not_enough_space">Error while downloading torrent : not enough space</string>
-    <string name="loading_torrent">Loading torrent...</string>
+    <string name="loading_torrent">Loading torrent…</string>
     <string name="error_no_video_file">No video files</string>
     <string name="torrent_file_to_play">Choose a file to play</string>
     <string name="torrent_buy_premium_message">Torrent streaming is only available on paid version</string>
@@ -601,7 +601,7 @@
    <string name="network_nfo_parse_summary">Read Boxee / XBMC \'.nfo\' files during (re-)scanning to gather media information and posters.</string>
    <string name="ask_to_mail_media_DB">Do you want to mail your Video database to Nova development team in order to help them check a bug?\n\nThe video files are (of course) not mailed, but the full list of file names is.</string>
    <string name="no_email_installed">No email application found</string>
-   <string name="zipping_library_before_mailing">Zipping a copy of the library before mailing it...</string>
+   <string name="zipping_library_before_mailing">Zipping a copy of the library before mailing it…</string>
    <string name="zipped_library_mail_subject">Nova Video Database Dump</string>
    <string name="zipped_library_mail_text">Please describe the problem you\'re experiencing\n\n</string>
 

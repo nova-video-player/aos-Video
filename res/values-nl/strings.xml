@@ -26,7 +26,7 @@
     <string name="cannot_list">Kan de inhoud niet weergeven</string>
     <string name="cannot_open_video">Kan deze video niet openen</string>
     <string name="confirm_delete">Wilt u dit echt verwijderen?</string>
-    <string name="deleting">Bezig met verwijderen, een ogenblik...</string>
+    <string name="deleting">Bezig met verwijderen, een ogenblik…</string>
     <string name="cannot_delete_directory">De map kan niet worden verwijderd</string>
     <string name="cannot_delete_file">Het bestand kan niet worden verwijderd</string>
     <string name="directory_deleted">De map is verwijderd</string>
@@ -128,11 +128,11 @@
     <string name="episode_name">Aflevering</string>
     <string name="episode_season">Seizoen</string>
     <string name="episode_identification">Seizoen %1$d aflevering %2$d</string>
-    <string name="scrap_processing">Metagegevens ophalen...</string>
+    <string name="scrap_processing">Metagegevens ophalen…</string>
     <string name="scrap_failed">Film niet gevonden in de online database.</string>
     <string name="start_auto_scraper_activity">Info online zoeken</string>
     <string name="scrap_status_initial">In wachtrij</string>
-    <string name="scrap_status_busy">Zoeken...</string>
+    <string name="scrap_status_busy">Zoeken…</string>
     <string name="scrap_status_success">Bijgewerkt</string>
     <string name="scrap_status_failed">Info niet gevonden</string>
     <string name="scrap_status_rejected">Info verwijderd</string>
@@ -147,7 +147,7 @@
     <string name="scraper_no_movie_button_label">Info online zoeken voor uw films</string>
     <string name="scraper_no_tv_show_text">Op het moment zijn er geen posters en informatie voor uw tv-series</string>
     <string name="scraper_no_tv_show_button_label">Info online zoeken voor uw tv-series</string>
-    <string name="info_processing">Media-eigenschappen controleren...</string>
+    <string name="info_processing">Media-eigenschappen controleren…</string>
     <string name="info_video">Video</string>
     <string name="info_audio">Audio</string>
     <string name="info_audio_vbr">VBR</string>
@@ -211,7 +211,7 @@
     <string name="toast_subloader_sub_not_found">Geen ondertiteling gevonden voor deze taal</string>
     <string name="toast_subloader_service_unreachable">Uitval webservice ondertitelingen</string>
     <string name="menu_subloader_allfolder">Haal ontbrekende ondertiteling op</string>
-    <string name="dialog_subloader_downloading">Bezig met downloaden ondertiteling...</string>
+    <string name="dialog_subloader_downloading">Bezig met downloaden ondertiteling…</string>
     <string name="dialog_subloader_sumup">Download voltooid</string>
     <string name="dialog_subloader_success">Ondertiteling gevonden voor:</string>
     <string name="dialog_subloader_fails">Geen ondertiteling gevonden voor:</string>
@@ -259,7 +259,7 @@
     <string name="pref_s3d_mode_entry_sbs">Naast elkaar</string>
     <string name="pref_s3d_mode_entry_topbottom">Boven en onder</string>
     <string name="pref_s3d_mode_entry_off">Uit</string>
-    <string name="dialog_subloader_connecting">Bezig met verbinding maken met www.opensubtitles.org...</string>
+    <string name="dialog_subloader_connecting">Bezig met verbinding maken met www.opensubtitles.org…</string>
     <string name="indexed_folders">Geïndexeerde mappen</string>
     <string name="add_to_indexed_folders">Indexmap</string>
     <string name="indexed_folder_added">Map %s toegevoegd aan geïndexeerde mappen</string>

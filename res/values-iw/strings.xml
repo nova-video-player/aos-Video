@@ -33,7 +33,7 @@
     <string name="no_server">לא נמצא שרת מדיה</string>
     <string name="cannot_open_video">לא ניתן לפתוח וידאו זה</string>
     <string name="confirm_delete">האם אתה בטוח שברצונך למחוק אותו?</string>
-    <string name="deleting">אנא המתן בזמן המחיקה...</string>
+    <string name="deleting">אנא המתן בזמן המחיקה…</string>
     <string name="cannot_delete_directory">לא ניתן למחוק את התיקיה</string>
     <string name="cannot_delete_file">לא ניתן למחוק את הקובץ</string>
     <string name="directory_deleted">התיקיה נמחקה</string>
@@ -64,13 +64,13 @@
     <string name="episode_name">פרק</string>
     <string name="episode_season">עונה</string>
     <string name="episode_identification">עונה %1$d פרק %2$d</string>
-    <string name="scrap_processing">מקבל מידע תוכן...</string>
+    <string name="scrap_processing">מקבל מידע תוכן…</string>
     <string name="scrap_no_network">לא מחובר לרשת.</string>
     <string name="scrap_enable_network_first">"אנא התחבר קודם לרשת בכדי שתוכל להפעיל יישום זה."</string>
     <string name="scrap_failed">הסרט לא נמצא במסד הנתונים המקוון.</string>
     <string name="start_auto_scraper_activity">חפש מידע באופן מקוון</string>
     <string name="scrap_status_initial">בתור</string>
-    <string name="scrap_status_busy">מחפש...</string>
+    <string name="scrap_status_busy">מחפש…</string>
     <string name="scrap_status_success">התעדכן</string>
     <string name="scrap_status_failed">מידע לא נמצא</string>
     <string name="scrap_status_rejected">מידע הוסר</string>
@@ -82,7 +82,7 @@
     <string name="scraper_notification_progress">"%1$d מתוך %2$d קבצים עובדו</string>
     <string name="scraper_no_episode_found">לא נמצא פרק</string>
     <string name="scraper_suggest_message">באפשרותך לחפש פוסטרים ומידע עבור סרטי הוידאו שלך באופן מקוון ע"י התפריט \'חפש מידע באופן מקוון\'.</string>
-    <string name="info_processing">בודק מאפייני מדיה...</string>
+    <string name="info_processing">בודק מאפייני מדיה…</string>
     <string name="info_video">וידאו:</string>
     <string name="info_audio">אודיו:</string>
     <string name="info_audio_vbr">VBR</string>
@@ -203,7 +203,7 @@
     <string name="toast_subloader_sub_not_found">רצועת כתוביות לא נמצאה עבור שפה זו</string>
     <string name="toast_subloader_service_unreachable">הופסק שירות חיפוש כתוביות</string>
     <string name="menu_subloader_allfolder">קבל כתוביות חסרות</string>
-    <string name="dialog_subloader_downloading">מוריד כתוביות...</string>
+    <string name="dialog_subloader_downloading">מוריד כתוביות…</string>
     <string name="dialog_subloader_sumup">ההורדה הסתיימה</string>
     <string name="dialog_subloader_success">כתוביות נמצאו עבור:</string>
     <string name="dialog_subloader_fails">כתוביות לא נמצאו עבור:</string>
@@ -254,7 +254,7 @@
     <string name="pref_s3d_mode_entry_sbs">אחד ליד השני</string>
     <string name="pref_s3d_mode_entry_topbottom">אחד מעל השני</string>
     <string name="pref_s3d_mode_entry_off">כבוי</string>
-    <string name="dialog_subloader_connecting">מתחבר אל www.opensubtitles.org...</string>
+    <string name="dialog_subloader_connecting">מתחבר אל www.opensubtitles.org…</string>
     <string name="indexed_folders">תיקיות מקוטלגות</string>
     <string name="add_to_indexed_folders">הוסף לקטלוג התיקיות</string>
     <string name="indexed_folder_added">התיקיה %s התווספה לקטלוג התיקיות</string>

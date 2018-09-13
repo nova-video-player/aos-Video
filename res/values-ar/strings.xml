@@ -33,7 +33,7 @@
     <string name="no_server">لا يوجد خادم للوسائط</string>
     <string name="cannot_open_video">لا استطيع فتح الفيديو</string>
     <string name="confirm_delete">هل تريد الحذف ?</string>
-    <string name="deleting">برجاء الانتظار حتى يتم الحذف...</string>
+    <string name="deleting">برجاء الانتظار حتى يتم الحذف…</string>
     <string name="cannot_delete_directory">لا يمكن حذف هذه الحافظة</string>
     <string name="cannot_delete_file">لا يمكن حذف هذا الملف</string>
     <string name="directory_deleted">تم حذف الحافظة</string>
@@ -64,13 +64,13 @@
     <string name="episode_name">حلقة</string>
     <string name="episode_season">موسم</string>
     <string name="episode_identification">%1$dموسم %2$dحلقة </string>
-    <string name="scrap_processing">استرجاع البيانات التوصيفية...</string>
+    <string name="scrap_processing">استرجاع البيانات التوصيفية…</string>
     <string name="scrap_no_network">غير متصل بالشبكة.</string>
     <string name="scrap_enable_network_first">"برجاء الاتصال بالشبكة اولا ليمكنك تشغيل البرنامج."</string>
     <string name="scrap_failed">الفيلم غير موجود على قاعدة بيانات الإنترنت.</string>
     <string name="start_auto_scraper_activity">بحث عن المعلومات على الإنترنت</string>
     <string name="scrap_status_initial">قائمة الانتظار</string>
-    <string name="scrap_status_busy">جارى البحث...</string>
+    <string name="scrap_status_busy">جارى البحث…</string>
     <string name="scrap_status_success">تعديل</string>
     <string name="scrap_status_failed">لا يوجد معلومات</string>
     <string name="scrap_status_rejected">تم حذف المعلومات</string>
@@ -82,7 +82,7 @@
     <string name="scraper_notification_progress">"%1$d of %2$d معالجة الملفات</string>
     <string name="scraper_no_episode_found">لم يتم العثور على اي حلقة</string>
     <string name="scraper_suggest_message">\'يمكنك البحث على الإنترنت عن المعلومات والملصقات الاعلانية للفيديو الخاص بك عن طريق قائمة\'بحث عن المعلومات على الإنترنت.</string>
-    <string name="info_processing">التحقق من خصائص الوسائط...</string>
+    <string name="info_processing">التحقق من خصائص الوسائط…</string>
     <string name="info_video">فيديو:</string>
     <string name="info_audio">صوت:</string>
     <string name="info_audio_vbr">VBR</string>
@@ -206,7 +206,7 @@
     <string name="toast_subloader_sub_not_found">لا توجد ترجمة لهذه اللغة</string>
     <string name="toast_subloader_service_unreachable">انقطاع خدمة الترجمة</string>
     <string name="menu_subloader_allfolder">الحصول على الترجمة</string>
-    <string name="dialog_subloader_downloading">....تحميل الترجمة </string>
+    <string name="dialog_subloader_downloading">….تحميل الترجمة </string>
     <string name="dialog_subloader_sumup">تم انتهاء التحميل</string>
     <string name="dialog_subloader_success">:الترجمة وجدت ل</string>
     <string name="dialog_subloader_fails">:الترجمة غير موجوده ل</string>
@@ -254,7 +254,7 @@
     <string name="pref_s3d_mode_entry_sbs">Side by side</string><!--TODO-->
     <string name="pref_s3d_mode_entry_topbottom">Top and bottom</string><!--TODO-->
     <string name="pref_s3d_mode_entry_off">Off</string><!--TODO-->
-    <string name="dialog_subloader_connecting">Connecting to www.opensubtitles.org...</string><!--TODO-->
+    <string name="dialog_subloader_connecting">Connecting to www.opensubtitles.org…</string><!--TODO-->
     <string name="indexed_folders">Indexed folders</string><!--TODO-->
     <string name="add_to_indexed_folders">Index folder</string><!--TODO-->
     <string name="indexed_folder_added">Folder %s added to indexed folders</string><!--TODO-->

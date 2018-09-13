@@ -27,7 +27,7 @@
     <string name="cannot_list">No se puede listar contenido</string>
     <string name="cannot_open_video">No se puede abrir este vídeo</string>
     <string name="confirm_delete">¿Seguro que desea borrarlo?</string>
-    <string name="deleting">Espere mientras se borra...</string>
+    <string name="deleting">Espere mientras se borra…</string>
     <string name="cannot_delete_directory">No se puede borrar la carpeta</string>
     <string name="cannot_delete_file">No se puede borrar el archivo</string>
     <string name="directory_deleted">La carpeta se ha borrado</string>
@@ -134,11 +134,11 @@
     <string name="episode_name">Episodio</string>
     <string name="episode_season">Temporada</string>
     <string name="episode_identification">Temporada %1$d Episodio %2$d</string>
-    <string name="scrap_processing">Recuperando metadatos...</string>
+    <string name="scrap_processing">Recuperando metadatos…</string>
     <string name="scrap_failed">Película no encontrada en la base de datos en línea.</string>
     <string name="start_auto_scraper_activity">Buscar información en línea</string>
     <string name="scrap_status_initial">En cola</string>
-    <string name="scrap_status_busy">Buscando...</string>
+    <string name="scrap_status_busy">Buscando…</string>
     <string name="scrap_status_success">Actualizado</string>
     <string name="scrap_status_failed">Información no encontrada</string>
     <string name="scrap_status_rejected">Información eliminada</string>
@@ -154,7 +154,7 @@
     <string name="scraper_no_tv_show_text">Actualmente no hay ningún póster o información para sus programas de TV</string>
     <string name="scraper_no_tv_show_button_label">Buscar información en línea para sus programas de TV</string>
     <string name="imdb_title_url">http://www.imdb.es/title/</string> <!-- To be translated only in case there is a localized IMDB -->
-    <string name="info_processing">Comprobando propiedades del medio...</string>
+    <string name="info_processing">Comprobando propiedades del medio…</string>
     <string name="info_video">Vídeo</string>
     <string name="info_audio">Audio</string>
     <string name="info_audio_vbr">VBR</string>
@@ -213,7 +213,7 @@
     <string name="toast_subloader_sub_not_found">No se encuentra la pista de subtítulos para este idioma</string>
     <string name="toast_subloader_service_unreachable">El servicio de web de subtítulos no funciona</string>
     <string name="menu_subloader_allfolder">Obtener los subtítulos que faltan</string>
-    <string name="dialog_subloader_downloading">Descargando subtítulos...</string>
+    <string name="dialog_subloader_downloading">Descargando subtítulos…</string>
     <string name="dialog_subloader_sumup">Descarga terminada</string>
     <string name="dialog_subloader_success">Se han encontrado subtítulos para:</string>
     <string name="dialog_subloader_fails">No se han encontrado subtítulos para:</string>
@@ -261,7 +261,7 @@
     <string name="pref_s3d_mode_entry_sbs">En paralelo</string>
     <string name="pref_s3d_mode_entry_topbottom">Arriba y abajo</string>
     <string name="pref_s3d_mode_entry_off">Off</string>
-    <string name="dialog_subloader_connecting">Conectándose a www.opensubtitles.org...</string>
+    <string name="dialog_subloader_connecting">Conectándose a www.opensubtitles.org…</string>
     <string name="indexed_folders">Carpetas indexadas</string>
     <string name="add_to_indexed_folders">Carpeta de índice</string>
     <string name="indexed_folder_added">Carpeta %s añadida a las carpetas indexadas</string>

@@ -44,7 +44,7 @@
     <string name="enable_auto_scrap">Obtenir automatiquement des descriptions pour les nouvelles vidéos</string>
     <string name="cannot_open_video">Cette vidéo n\'a pas pu être lue</string>
     <string name="confirm_delete">Êtes vous sûr de vouloir le supprimer?</string>
-    <string name="deleting">Effacement en cours...</string>
+    <string name="deleting">Effacement en cours…</string>
     <string name="cannot_delete_directory">La suppression du dossier a échoué</string>
     <string name="cannot_delete_file">La suppression du fichier a échoué</string>
     <string name="directory_deleted">Le dossier a été supprimé</string>
@@ -205,14 +205,14 @@
         <item quantity="other">%d épisodes vus</item>
     </plurals>
 
-    <string name="scrap_processing">Récupération des données...</string>
+    <string name="scrap_processing">Récupération des données…</string>
     <string name="scrap_no_network">Non connecté à un réseau.</string>
     <string name="scrap_enable_network_first">"Veuillez d'abord vous connecter à un réseau pour pouvoir démarrer cette application."</string>
     <string name="scrap_failed">Film inexistant dans la base de données.</string>
     <string name="start_auto_scraper_activity">Rechercher les informations en ligne</string>
     <string name="scraper_settigns">Posters &amp; descriptions</string>
     <string name="scrap_status_initial">En attente</string>
-    <string name="scrap_status_busy">Recherche...</string>
+    <string name="scrap_status_busy">Recherche…</string>
     <string name="scrap_status_success">Mis à jour</string>
     <string name="scrap_status_failed">Informations non trouvées</string>
     <string name="scrap_status_rejected">Informations retirées</string>
@@ -241,7 +241,7 @@
     <string name="rescanning">Rafraîchissement des fichiers</string>
     <string name="rescan_storage_summary">Ré-analyse le stockage interne, la carte SD et les clés USB</string>
 
-    <string name="info_processing">Analyse du fichier...</string>
+    <string name="info_processing">Analyse du fichier…</string>
     <string name="info_video">Vidéo</string>
     <string name="info_audio">Audio</string>
     <string name="info_audio_vbr">VBR</string>
@@ -265,14 +265,14 @@
     <string name="toast_subloader_sub_not_found">Sous-titres non trouvés</string>
     <string name="toast_subloader_service_unreachable">Service indisponible</string>
     <string name="menu_subloader_allfolder">Télécharger les sous-titres manquants</string>
-    <string name="dialog_subloader_downloading">Téléchargement des sous-titres...</string>
+    <string name="dialog_subloader_downloading">Téléchargement des sous-titres…</string>
     <string name="dialog_subloader_copying">Copie des sous-titres</string>
     <string name="dialog_subloader_sumup">Téléchargement terminé</string>
     <string name="dialog_subloader_success">Sous-titres trouvés pour :</string>
     <string name="dialog_subloader_fails">Sous-titres non trouvés pour :</string>
     <string name="dialog_subloader_nonetwork_title">Aucune connection à Internet</string>
     <string name="dialog_subloader_nonetwork_message">Une connection Internet est requise pour le téléchargement de sous-titres</string>
-    <string name="dialog_subloader_connecting">Connexion au site www.opensubtitles.org...</string>
+    <string name="dialog_subloader_connecting">Connexion au site www.opensubtitles.org…</string>
     <string name="sub_force_all_title">Forcer le téléchargement des sous-titres</string>
     <string name="sub_force_all">Toutes vos vidéos ont déjà au moins une piste de sous-titres. Voulez-vous forcer le téléchargement de nouvelles pistes de sous-titres ?</string>
     <string name="menu_info">Info</string>
@@ -405,7 +405,7 @@
 	<string name="network_bookmarks">Points de reprises et marque-pages sur le réseau</string>
 	<string name="network_bookmarks_summary">Sauvegarde et lit les points de reprise et marque-pages sur le réseau lorsque cela est possible</string>
     <string name="video_info_unindexed_message">Cette vidéo n\'est pas indexée dans votre bibliothèque vidéo.\nLa recherche de l\'affiche et des informations détaillées n\'est disponible que pour les vidéos indexées.\nVoulez-vous indexer cette vidéo?</string>
-    <string name="video_info_unindexed_message2">Indexation en cours...</string>
+    <string name="video_info_unindexed_message2">Indexation en cours…</string>
     <string name="video_browser_index_file">Ajouter à la bibliothèque</string>
     <string name="video_browser_unindex_file">Retirer de la bibliothèque</string>
     <string name="auto_brightness_message">La luminosité de l\'écran ne peut pas être modifiée car le mode d\'ajustement automatique est actuellement activé.</string>
