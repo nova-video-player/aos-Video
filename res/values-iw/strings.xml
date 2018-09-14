@@ -1,281 +1,340 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="goto_start">ספריה</string>
-    <string name="refresh_servers_list">רענן רשימת שרתים</string>
-    <string name="enable_network_shares">הפעל שיתופי רשת</string>
-    <string name="search_title">חיפוש</string>
-    <string name="unknown_track_name">לא ידוע</string>
-    <string name="info">מידע</string>
-    <string name="play_selection">הפעל</string>
-    <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
-    <string name="info_duration">אורך:</string>
-    <string name="recently_added">הוסף לאחרונה</string>
-    <string name="recently_added_videos">הוסף לאחרונה</string>
-    <string name="recently_played">הופעל לאחרונה</string>
-    <string name="recently_played_videos">הופעל לאחרונה</string>
-    <string name="external_storage">חיצוני</string>
-    <string name="internal_storage">פנימי</string>
-    <string name="network_storage">רשת</string>
-    <string name="sd_card_storage">כרטיס SD</string>
-    <string name="usb_host_storage">כונן חיצוני</string>
-    <string name="network_media_servers">שרתי מדיה (UPnP)</string>
-    <string name="network_shared_folders">תיקיות משותפות (SMB)</string>
-    <string name="recordings_storage">הקלטות</string>
-    <string name="root_storage">אחסון פנימי</string>
-    <string name="cannot_list">לא ניתן להציג תוכן</string>
-    <string name="video">Archos וידאו</string>
-    <string name="all_videos">כל הוידאו</string>
-    <string name="not_played_yet_videos">לא הופעל עדיין</string>
-    <string name="video_folder">תיקיות</string>
-    <string name="movies">סרטים</string>
-    <string name="all_tv_shows">תוכניות טלוויזיה</string>
-    <string name="all_movies_and_tv_shows">סרטים ותוכניות טלוויזיה</string>
-    <string name="no_server">לא נמצא שרת מדיה</string>
-    <string name="cannot_open_video">לא ניתן לפתוח וידאו זה</string>
-    <string name="confirm_delete">האם אתה בטוח שברצונך למחוק אותו?</string>
-    <string name="deleting">אנא המתן בזמן המחיקה…</string>
-    <string name="cannot_delete_directory">לא ניתן למחוק את התיקיה</string>
-    <string name="cannot_delete_file">לא ניתן למחוק את הקובץ</string>
-    <string name="directory_deleted">התיקיה נמחקה</string>
-    <string name="file_deleted">הקובץ נמחק</string>
-    <string name="resume">המשך</string>
-    <string name="bookmark">סימניה</string>
-    <string name="delete">מחק</string>
-    <string name="delete_resume">מחק המשך</string>
-    <string name="delete_bookmark">מחק סימניה</string>
-    <string name="upnp_not_allowed">אינך רשאי לגשת לשרת UPnP זה. אנא שנה קודם את הגדרות הגישה שלך.</string>
-    <string name="scrap_remove">הסר מידע זה</string>
-    <string name="scrap_remove_short">הסר</string> <!-- for small screens --> 
-    <string name="scrap_director">במאי</string>
-    <string name="scrap_director_format">במאי: %s</string>
-    <string name="scrap_rating">דירוג</string>
-    <string name="scrap_rating_format">דירוג: %s</string>
-    <string name="scrap_year">שנה</string>
-    <string name="scrap_year_format">שנה: %d</string>
-    <string name="scrap_studio">אולפן</string>
-    <string name="scrap_plot">תוכנית</string>
-    <string name="scrap_cast">סוג</string>
-    <string name="scrap_cast_format">סוג: %s</string>
-    <string name="scrap_genre">ז\'אנר</string>
-    <string name="scrap_aired">שודר</string>
-    <string name="scrap_aired_format">שודר: %s</string>
-    <string name="scrap_guests">אורחים</string>
-    <string name="scrap_premiered">שודר לראשונה</string>
-    <string name="episode_name">פרק</string>
-    <string name="episode_season">עונה</string>
-    <string name="episode_identification">עונה %1$d פרק %2$d</string>
-    <string name="scrap_processing">מקבל מידע תוכן…</string>
-    <string name="scrap_no_network">לא מחובר לרשת.</string>
-    <string name="scrap_enable_network_first">"אנא התחבר קודם לרשת בכדי שתוכל להפעיל יישום זה."</string>
-    <string name="scrap_failed">הסרט לא נמצא במסד הנתונים המקוון.</string>
-    <string name="start_auto_scraper_activity">חפש מידע באופן מקוון</string>
-    <string name="scrap_status_initial">בתור</string>
-    <string name="scrap_status_busy">מחפש…</string>
-    <string name="scrap_status_success">התעדכן</string>
-    <string name="scrap_status_failed">מידע לא נמצא</string>
-    <string name="scrap_status_rejected">מידע הוסר</string>
-    <string name="scrap_status_unknown">לא ידוע</string>
-    <string name="scraper_abort_request">האם אתה בטוח שברצונך לבטל את החיפוש?</string>
-    <string name="scraper_no_files">אין קבצים לעיבוד</string>
-    <string name="scraper_no_new_files">אין קבצים חדשים לעיבוד</string>
-    <string name="scraper_notification_title">מחפש מידע באופן מקוון</string>
-    <string name="scraper_notification_progress">"%1$d מתוך %2$d קבצים עובדו</string>
-    <string name="scraper_no_episode_found">לא נמצא פרק</string>
-    <string name="scraper_suggest_message">באפשרותך לחפש פוסטרים ומידע עבור סרטי הוידאו שלך באופן מקוון ע"י התפריט \'חפש מידע באופן מקוון\'.</string>
-    <string name="info_processing">בודק מאפייני מדיה…</string>
-    <string name="info_video">וידאו:</string>
-    <string name="info_audio">אודיו:</string>
-    <string name="info_audio_vbr">VBR</string>
-    <string name="info_plugin_required">(נדרש תוסף)</string>
-    <string name="info_subtitle">כתובית:</string>
-    <string name="you_have_no_recently_added_video">לא נוסף לאחרונה וידאו</string>
-    <string name="you_have_no_recently_played_video">לא הופעל לאחרונה וידאו</string>
-    <string name="you_have_no_video">אין וידאו</string>
-    <string name="you_have_no_movies">אין סרטים</string>
-    <string name="you_have_no_tv_shows">אין תוכניות טלוויזיה</string>
-    <string name="mediacenterlabel">מרכז המדיה</string>
-    <string name="view_mode">מצב תצוגה</string>
-    <string name="view_mode_list">רשימה</string>
-    <string name="view_mode_grid">פוסטרים</string>
-    <string name="view_mode_details">פרטים</string>
-    <string name="switch_to_list">רשימה</string>
-    <string name="switch_to_grid">רשת</string>
-    <string name="player_loading_video">טוען וידאו\u2026</string>
-    <string name="player_audio_track_toast">רצועת שמע:</string>
-    <string name="player_subtitle_track_toast">רצועת כתובית:</string>
-    <string name="player_bookmark_set">הגדרת סימניה ב- </string>
-    <string name="player_pref_subtitle_delay_title">רווח</string>
-    <string name="pref_audio_parameters_title">צליל</string>
-    <string name="pref_play_mode_title">מצב הפעלה</string>
-    <string name="pref_play_mode_entry_single">בודד</string>
-    <string name="pref_play_mode_entry_folder">תיקיה</string>
-    <string name="pref_play_mode_entry_repeat_folder">חזרת תיקיה</string>
-    <string name="pref_play_mode_entry_repeat_single">חזרת בודד</string>
-    <string name="menu_info">מידע</string>
-    <string name="menu_subtitles">רצועות כתובית</string>
-    <string name="menu_audio">רצועות שמע</string>
-    <string name="menu_bookmark">הגדר סימניה</string>
-    <string name="menu_brightness_settings">בהירות</string>
-    <string name="menu_player_settings">הגדרות</string>
-    <string name="s_arabic">ערבית</string>
-    <string name="s_bulgarian">בולגרית</string>
-    <string name="Bosnian">Bosnian</string>
-    <string name="s_czech">צ\'יכית</string>
-    <string name="s_danish">דנית</string>
-    <string name="s_german">גרמנית</string>
-    <string name="s_english">אנגלית</string>
-    <string name="s_greek">יוונית</string>
-    <string name="s_spanish">ספרדית</string>
-    <string name="s_finnish">פינית</string>
-    <string name="s_french">צרפתית</string>
-    <string name="s_hebrew">עברית</string>
-    <string name="s_hungarian">הונגרית</string>
-    <string name="s_italian">איטלקית</string>
-    <string name="s_japanese">יפנית</string>
-    <string name="s_korean">קוריאנית</string>
-    <string name="s_dutch">הולנדית</string>
-    <string name="s_norwegian">נורבגית</string>
-    <string name="s_polish">פולנית</string>
-    <string name="s_portuguese">פורטוגזית</string>
-    <string name="s_russian">רוסית</string>
-    <string name="Romanian">רומנית</string>
-    <string name="Serbo_Croatian">סרבו קרואטית</string>
-    <string name="Serbian">סרבית</string>
-    <string name="s_swedish">שוודית</string>
-    <string name="s_turkish">טורקית</string>
-    <string name="s_chinese">סינית</string>
-    <string name="s_none">ללא</string>
-    <string name="player_err_cantplayvideo">לא ניתן להפעיל וידאו</string>
-    <string name="player_err_file">קובץ הוידאו אינו קיים.</string>
-    <string name="player_err_sizetoobig">גודל הוידאו גדול מדי</string>
-    <string name="player_err_unknown">שגיאה לא ידועה.</string>
-    <string name="player_err_critical">שגיאת נגן מדיה.</string>
-    <string name="player_err_forcodec">עבור מקודד</string>
-    <string name="player_err_notinterleaved">זרמי הוידאו והשמע אינם מופרדים.</string>
-    <string name="player_err_codec">מקודד</string>
-    <string name="player_err_isnotsupported">אינו נתמך.</string>
-    <string name="player_err_fileNoLicense">לא נמצא רישיון עבור קובץ זה.</string>
-    <string name="player_err_fileerror">הקובץ פגום או לא שלם.</string>
-    <string name="player_err_connection_failed">חיבור נכשל.</string>
-    <string name="player_err_video_decoder_error">שגיאת מפענח וידאו:</string>
-    <string name="player_err_qpel_and_gmc">\"Quarter Pixel\" ו- \"GMC\"</string>
-    <string name="player_err_profile_and_level">\"Profile\" ו- \"Level\"</string>
-    <string name="player_err_interlaced">משולב</string>
-    <string name="player_plugin_cinema_title">תוסף קולנוע</string>
-    <string name="player_plugin_cinema">תוסף קולנוע (DVD, MPEG-2, AC3)</string>
-    <string name="player_plugin_video_msg">קובץ זה מכיל תבנית וידאו של <xliff:g id="video">%1$s</xliff:g>.</string>
-    <string name="player_plugin_audio_msg">קובץ זה מכיל תבנית שמע של <xliff:g id="audio">%1$s</xliff:g>.</string>
-    <string name="player_plugin_video_audio_msg">קובץ זה מכיל תבנית וידאו של <xliff:g id="video">%1$s</xliff:g> ותבנית שמע של <xliff:g id="audio">%2$s</xliff:g>.</string>
-    <string name="player_plugin_purchase_msg">אתה צריך לרכוש את ה- <xliff:g id="plugin">%1$s</xliff:g></string>
-    <string name="player_plugin_purchase">עבור לחנות</string>
-    <string name="get_subtitles_on_drive">בחר כתוביות באחסון</string>
-    <string name="subtitles_wizard_no_files">לא נמצאו קבצי כתוביות</string>
-    <string name="subtitles_wizard_current_files">קבצי כתוביות נוכחיים:</string>
-    <string name="subtitles_wizard_available_files">קבצי כתוביות זמינים:</string>
-    <string name="subtitles_wizard_associate">שייך קובץ זה לוידאו</string>
-    <string name="subtitles_wizard_delete">מחק קובץ זה</string>
-    <string name="subtitles_wizard_empty_list">לא נמצא קובץ</string>
-    <string name="subtitles_wizard_add_files">באפשרותך להעתיק עוד קבצי כתוביות לתיקיה זו בכדי לשייך אותם לוידאו זה.</string>
-    <string name="subtitles_wizard_help">בחר כל אחד מקבצי הכתוביות הזמינות בכדי לשייך אותם לוידאו %s. הקובץ ישנה את שמו בכדי להתאים את שם הוידאו.</string>
-    <string name="subtitles_wizard_empty_list_help">לא נמצאו קבצי כתוביות. עליך להעתיק קודם קובץ כתוביות אחד או יותר לתיקיה זו בכדי לשייך אותם עם הוידאו %s.</string>
-    <string name="get_subtitles_online">קבל כתוביות באופן מקוון</string>
-    <string name="subtitle_settings_title">הגדרות כתובית</string>
-    <string name="subtitle_sample_text">\"sample\"</string>
-    <string name="subtitle_size_text">גודל:</string>
-    <string name="subtitle_vert_text">מיקום אנכי:</string>
-    <string name="subtitle_delay_speed">כוונון מהירות</string>
-    <string name="subtitle_delay_radio_none">ללא</string>
-    <string name="subtitle_delay_radio_ntsc2pal">NTSC → PAL</string>
-    <string name="subtitle_delay_radio_pal2ntsc">PAL → NTSC</string>
-    <string name="quotation_format">“%s” </string>
-    <string name="scraper_no_new_files_in_folder">אין קבצים חדשים לעיבוד בתיקייה זו</string>
-    <string name="scraper_folder_no_files">עם זאת, קיימים עדיין %d קבצי וידאו אשר אין להם מידע שנמצא בעבר.</string>
-    <string name="scraper_folder_no_file">עם זאת, קיים עדיין קובץ וידאו אשר אין לו מידע שנמצא בעבר.</string>
-    <string name="scraper_folder_try_again">האם ברצונך לנסות שנית ?</string>
-    <string name="info_resume">שחזר מיקום:</string>
-    <string name="info_bookmark">הוסף סימניה במיקום:</string>
-    <string name="pref_audio_filt_title">הגברת אודיו</string>
-    <string name="player_plugin_ac3_title">פלאגין AC3</string>
-    <string name="player_plugin_ac3">פלאגין AC3</string>
-    <string name="player_plugin_mpeg2_title">MפלאגיןMPEG-2 (DVD)</string>
-    <string name="player_plugin_mpeg2">פלאגיןMPEG-2 (DVD)</string>
-    <string name="toast_subloader_sub_found">רצועת כתוביות נמצאה עבור שפה זו</string>
-    <string name="toast_subloader_sub_not_found">רצועת כתוביות לא נמצאה עבור שפה זו</string>
-    <string name="toast_subloader_service_unreachable">הופסק שירות חיפוש כתוביות</string>
-    <string name="menu_subloader_allfolder">קבל כתוביות חסרות</string>
-    <string name="dialog_subloader_downloading">מוריד כתוביות…</string>
-    <string name="dialog_subloader_sumup">ההורדה הסתיימה</string>
-    <string name="dialog_subloader_success">כתוביות נמצאו עבור:</string>
-    <string name="dialog_subloader_fails">כתוביות לא נמצאו עבור:</string>
-    <string name="sub_force_all_title">אילוץ הורדת כתוביות</string>
-    <string name="sub_force_all">כל קבצי הוידאו מכילים לפחות רצועת כתוביות אחת. האם ברצונך לאלץ הורדת רצועת כתוביות חדשה ?</string>
-    <string name="dialog_subloader_nonetwork_title">אין חיבור אינטרנט</string>
-    <string name="dialog_subloader_nonetwork_message">חיבור אינטרנט נדרש ע"מ להוריד כתוביות</string>
-    <string name="add_to_shortcuts">צור קיצור דרך</string>
-    <string name="remove_from_shortcuts">הסר קיצור דרך</string>
-    <string name="shortcut_added">קיצור דרך %s נוצר</string>
-    <string name="shortcut_removed">קיצור דרך %s הוסר</string>
-    <string name="server_not_available">השרת כעת אינו זמין</string>
-    <string name="cannot_open_shortcut">תוכן קיצור הדרך אינו זמין כעת. \nאנא בדקו שיש לכם את ההרשאות המתאימות.</string>
-    <string name="network_shortcuts">קיצורי דרך רשת</string>
-    <string name="media_servers">שרתי מדיה</string>
-    <string name="shortcut_list_empty">No network shortcuts created.\n\nTo create shortcuts to your favorite remote folders long-click on the target folders and select \"%s\" in the top action bar.</string>
-    <string name="preferences">העדפות</string>
-    <string name="category_languages">כתוביות</string>
-    <string name="preferences_languages">הורדת שפות כתוביות</string>
-    <string name="summary_list_preference_primary">בחר את השפות להורדת כתוביות</string>
-    <string name="favSubLang_title">קריאת שפת כתוביות</string>
-    <string name="favSubLang_summary">בחר את השפה המועדפת לקריאת כתוביות</string>
-    <string name="tv_scraper">תוכניות טלוויזיה</string>
-    <string name="movie_scraper">סרטים</string>
-    <string name="locale">שפת מערכת</string>
-    <string name="yes">כן</string>
-    <string name="no">לא</string>
-    <string name="abort">ביטול</string>
-    <string name="notification_mode">התראות</string>
-    <string name="play_from_beginning">נגן מהתחלה</string>
-    <string name="info_tab_movie">סרט</string>
-    <string name="info_tab_show">תכנית</string>
-    <string name="info_tab_episode">פרק</string>
-    <string name="info_tab_video">סרטון</string>
-    <string name="info_tab_file">מידע קובץ</string>
-    <string name="info_tab_backdrop_chooser">בוחר רקע</string>
-    <string name="info_tab_poster_chooser">בוחר פוסטר</string>
-    <string name="info_tab_share">שתף</string>
-    <string name="scrap_no_info">אין תיאור לסרט או תכנית טלויזיה עבור סרטון זה</string>
-    <string name="scrap_change">שנה תיאור לכל הפרקים</string>
-    <string name="show_network">רשת</string>
-    <string name="scraper_no_movie_text">אין לך פוסטרים או תיאורים לסרטים שלך.</string>
-    <string name="scraper_no_movie_button_label">חפש מידע לסרטים ברשת</string>
-    <string name="scraper_no_tv_show_text">אין לך פוסטרים או תיאורים לתכניות הטלויזיה שלך</string>
-    <string name="scraper_no_tv_show_button_label">חפש מידע לטכניות הטלויזיה ברשת</string>
-    <string name="use_remote_resume">המשך מהנקודה שנשמרה דרך הרשת?</string>
-    <string name="pref_s3d_mode_title">מצב תלת-ממד</string>
-    <string name="pref_s3d_mode_entry_sbs">אחד ליד השני</string>
-    <string name="pref_s3d_mode_entry_topbottom">אחד מעל השני</string>
-    <string name="pref_s3d_mode_entry_off">כבוי</string>
-    <string name="dialog_subloader_connecting">מתחבר אל www.opensubtitles.org…</string>
-    <string name="indexed_folders">תיקיות מקוטלגות</string>
-    <string name="add_to_indexed_folders">הוסף לקטלוג התיקיות</string>
-    <string name="indexed_folder_added">התיקיה %s התווספה לקטלוג התיקיות</string>
-    <string name="remove_from_indexed_folders">הסר מקטלוג התיקיות</string>
-    <string name="indexed_folder_removed">התיקיה %s הוסרה מקטלוג התיקיות</string>
-    <string name="indexed_folders_list_empty">אין תיקיות רשתיות בקטלוג התיקיות.\n\nבאפשרותך להוסיף את תוכנה של תיקיה רשתית לספריה באמצעות כניסה לתיקיה זו ובחירת \"%s\" בסרגל הכלים העליון.</string>
-    <string name="video_picker_title">בחר סרטון</string>
-    <string name="video_info_custom_search_file_hint">"\"Moviename\" או \"Showname S01E01\""</string>
-    <string name="video_info_custom_search_show_hint">Name of the TV show</string><!--TODO-->
-    <string name="scrap_show_no_result">לא נמצאה תוכנית מתאימה ברשת</string>
-    <string name="video_info_backdrop_select">בחר תמונה נוספת</string>
-    <string name="video_info_backdrop_remove">הסר</string>
-    <string name="video_info_backdrop_set_as">קבע תמונה כ- </string>
-    <string name="video_info_share_message">"צפיתי בסרטון \"%1$s\" על מכשיר ה- Archos %2$s שלי"</string>
-    <string name="notifications_all">כל ההתרעות</string>
-    <string name="notifications_alerts">צלילי התרעות בלבד</string>
-    <string name="notifications_none">ללא התרעות</string>
-    <string name="network_reindex">סרוק מחדש את התוכן</string>
-    <string name="help_overlay_network_indexing_text1">לחץ על תפריט זה כדי לשלב את תוכן תיקיה זו ותתי-התיקיות שלה לספרית הוידאו</string>
-    <string name="help_overlay_network_indexing_text2">יאפשר לך להשיג פוסטרים ותיאורים לסרטים ולתוכניות טלויזיה</string>
-    <string name="help_overlay_scraper_text">לחץ על תפריט זה כדי לחפש פוסטרים ותיאורים לסרטונים שלך ברשת</string>
-    <string name="new_videos_count">סרטון חדש: %d</string>
-    <string name="new_videos_scrape_message">יש לך סרטונים חדשים ללא תיאורים ופוסטרים.</string>
+<!--Generated by crowdin.com-->
+<!--
+/*
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+  <!-- Menu item that takes the user back to the top level screen of the music player -->
+  <string name="goto_start">ספריה</string>
+  <!-- Menu item that takes the user to the "now playing" screen of the music player -->
+  <!-- Menu item to refresh servers list -->
+  <string name="refresh_servers_list">רענן רשימת שרתים</string>
+  <!-- Menu item to enable network shares -->
+  <string name="enable_network_shares">הפעל שיתופי רשת</string>
+  <!-- Library screen, menu item -->
+  <string name="search_title">חיפוש</string>
+  <!-- Default name of track that doesn't have a name in the metadata -->
+  <string name="unknown_track_name">לא ידוע</string>
+  <!-- Toast after turning shuffle on -->
+  <!-- Toast after turning shuffle off -->
+  <!-- Toast after turning single repeat on -->
+  <!-- Context menu item -->
+  <string name="info">מידע</string>
+  <!-- Context menu item -->
+  <string name="play_selection">הפעל</string>
+  <!-- Context menu item -->
+  <!-- Context menu item -->
+  <string name="play_from_beginning">נגן מהתחלה</string>
+  <!-- Dialog box button -->
+  <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+  <!-- The string used in file/folder infos dialog. -->
+  <string name="info_duration">אורך:</string>
+  <!-- Infos dialog tabs -->
+  <string name="info_tab_movie">סרט</string>
+  <string name="info_tab_show">תכנית</string>
+  <string name="info_tab_episode">פרק</string>
+  <string name="info_tab_video">סרטון</string>
+  <string name="info_tab_file">מידע קובץ</string>
+  <string name="info_tab_backdrop_chooser">בוחר רקע</string>
+  <string name="info_tab_poster_chooser">בוחר פוסטר</string>
+  <string name="info_tab_share">שתף</string>
+  <!-- COVER ROLL -->
+  <string name="recently_added">הוסף לאחרונה</string>
+  <string name="recently_added_videos">הוסף לאחרונה</string>
+  <string name="recently_played">הופעל לאחרונה</string>
+  <string name="recently_played_videos">הופעל לאחרונה</string>
+  <!-- The string used in main storage list -->
+  <string name="external_storage">חיצוני</string>
+  <string name="internal_storage">פנימי</string>
+  <string name="network_storage">רשת</string>
+  <string name="sd_card_storage">כרטיס SD</string>
+  <string name="usb_host_storage">כונן חיצוני</string>
+  <string name="network_media_servers">שרתי מדיה (UPnP)</string>
+  <string name="network_shared_folders">תיקיות משותפות (SMB)</string>
+  <string name="recordings_storage">הקלטות</string>
+  <string name="root_storage">אחסון פנימי</string>
+  <string name="cannot_list">לא ניתן להציג תוכן</string>
+  <!-- VIDEO -->
+  <string name="video">Archos וידאו</string>
+  <string name="all_videos">כל הוידאו</string>
+  <string name="not_played_yet_videos">לא הופעל עדיין</string>
+  <string name="video_folder">תיקיות</string>
+  <string name="movies">סרטים</string>
+  <string name="all_tv_shows">תוכניות טלוויזיה</string>
+  <string name="all_movies_and_tv_shows">סרטים ותוכניות טלוויזיה</string>
+  <string name="no_server">לא נמצא שרת מדיה</string>
+  <string name="cannot_open_video">לא ניתן לפתוח וידאו זה</string>
+  <string name="confirm_delete">האם אתה בטוח שברצונך למחוק אותו?</string>
+  <string name="deleting">אנא המתן בזמן המחיקה…</string>
+  <string name="cannot_delete_directory">לא ניתן למחוק את התיקיה</string>
+  <string name="cannot_delete_file">לא ניתן למחוק את הקובץ</string>
+  <string name="directory_deleted">התיקיה נמחקה</string>
+  <string name="file_deleted">הקובץ נמחק</string>
+  <string name="resume">המשך</string>
+  <string name="bookmark">סימניה</string>
+  <string name="delete">מחק</string>
+  <string name="delete_resume">מחק המשך</string>
+  <string name="delete_bookmark">מחק סימניה</string>
+  <string name="upnp_not_allowed">אינך רשאי לגשת לשרת UPnP זה. אנא שנה קודם את הגדרות הגישה שלך.</string>
+  <string name="scrap_no_info">אין תיאור לסרט או תכנית טלויזיה עבור סרטון זה</string>
+  <string name="scrap_remove">הסר מידע זה</string>
+  <string name="scrap_remove_short">הסר</string>
+  <!-- for small screens -->
+  <string name="scrap_change">שנה תיאור לכל הפרקים</string>
+  <!-- Generic strings for Movies or TV shows -->
+  <string name="scrap_director">במאי</string>
+  <string name="scrap_director_format">במאי: %s</string>
+  <string name="scrap_rating">דירוג</string>
+  <string name="scrap_rating_format">דירוג: %s</string>
+  <string name="scrap_year">שנה</string>
+  <string name="scrap_year_format">שנה: %d</string>
+  <string name="scrap_studio">אולפן</string>
+  <string name="scrap_plot">תוכנית</string>
+  <string name="scrap_cast">סוג</string>
+  <string name="scrap_cast_format">סוג: %s</string>
+  <string name="scrap_genre">ז\'אנר</string>
+  <string name="scrap_aired">שודר</string>
+  <string name="scrap_aired_format">שודר: %s</string>
+  <string name="scrap_guests">אורחים</string>
+  <string name="scrap_premiered">שודר לראשונה</string>
+  <!-- Specific strings for TV shows -->
+  <string name="show_network">רשת</string>
+  <string name="episode_name">פרק</string>
+  <string name="episode_season">עונה</string>
+  <string name="episode_identification">עונה %1$d פרק %2$d</string>
+  <string name="scrap_processing">מקבל מידע תוכן…</string>
+  <string name="scrap_no_network">לא מחובר לרשת.</string>
+  <string name="scrap_enable_network_first">"אנא התחבר קודם לרשת בכדי שתוכל להפעיל יישום זה."</string>
+  <string name="scrap_failed">הסרט לא נמצא במסד הנתונים המקוון.</string>
+  <string name="start_auto_scraper_activity">חפש מידע באופן מקוון</string>
+  <string name="scrap_status_initial">בתור</string>
+  <string name="scrap_status_busy">מחפש…</string>
+  <string name="scrap_status_success">התעדכן</string>
+  <string name="scrap_status_failed">מידע לא נמצא</string>
+  <string name="scrap_status_rejected">מידע הוסר</string>
+  <string name="scrap_status_unknown">לא ידוע</string>
+  <string name="scraper_abort_request">האם אתה בטוח שברצונך לבטל את החיפוש?</string>
+  <string name="scraper_no_files">אין קבצים לעיבוד</string>
+  <string name="scraper_no_new_files">אין קבצים חדשים לעיבוד</string>
+  <string name="scraper_no_new_files_in_folder">אין קבצים חדשים לעיבוד בתיקייה זו</string>
+  <string name="scraper_folder_no_files">עם זאת, קיימים עדיין %d קבצי וידאו אשר אין להם מידע שנמצא בעבר.</string>
+  <string name="scraper_folder_no_file">עם זאת, קיים עדיין קובץ וידאו אשר אין לו מידע שנמצא בעבר.</string>
+  <string name="scraper_folder_try_again">האם ברצונך לנסות שנית ?</string>
+  <string name="scraper_notification_title">מחפש מידע באופן מקוון</string>
+  <string name="scraper_notification_progress">\"%1$d מתוך %2$d קבצים עובדו</string>
+  <string name="scraper_no_episode_found">לא נמצא פרק</string>
+  <string name="scraper_suggest_message">באפשרותך לחפש פוסטרים ומידע עבור סרטי הוידאו שלך באופן מקוון ע\"י התפריט \'חפש מידע באופן מקוון\'.</string>
+  <string name="scraper_no_movie_text">אין לך פוסטרים או תיאורים לסרטים שלך.</string>
+  <string name="scraper_no_movie_button_label">חפש מידע לסרטים ברשת</string>
+  <string name="scraper_no_tv_show_text">אין לך פוסטרים או תיאורים לתכניות הטלויזיה שלך</string>
+  <string name="scraper_no_tv_show_button_label">חפש מידע לטכניות הטלויזיה ברשת</string>
+  <!-- To be translated only in case there is a localized IMDB -->
+  <string name="info_processing">בודק מאפייני מדיה…</string>
+  <string name="info_video">וידאו:</string>
+  <string name="info_audio">אודיו:</string>
+  <string name="info_plugin_required">(נדרש תוסף)</string>
+  <string name="info_subtitle">כתובית:</string>
+  <string name="info_resume">שחזר מיקום:</string>
+  <string name="info_bookmark">הוסף סימניה במיקום:</string>
+  <string name="use_remote_resume">המשך מהנקודה שנשמרה דרך הרשת?</string>
+  <!-- VIDEO COVER ROLL -->
+  <string name="you_have_no_recently_added_video">לא נוסף לאחרונה וידאו</string>
+  <string name="you_have_no_recently_played_video">לא הופעל לאחרונה וידאו</string>
+  <string name="you_have_no_video">אין וידאו</string>
+  <string name="you_have_no_movies">אין סרטים</string>
+  <string name="you_have_no_tv_shows">אין תוכניות טלוויזיה</string>
+  <!-- Media Center -->
+  <string name="mediacenterlabel">מרכז המדיה</string>
+  <string name="view_mode">מצב תצוגה</string>
+  <string name="view_mode_list">רשימה</string>
+  <string name="view_mode_grid">פוסטרים</string>
+  <string name="view_mode_details">פרטים</string>
+  <string name="switch_to_list">רשימה</string>
+  <string name="switch_to_grid">רשת</string>
+  <!-- VideoPlayer -->
+  <string name="player_loading_video">טוען וידאו\u2026</string>
+  <string name="player_audio_track_toast">רצועת שמע:</string>
+  <string name="player_subtitle_track_toast">רצועת כתובית:</string>
+  <string name="player_bookmark_set">הגדרת סימניה ב- </string>
+  <string name="player_pref_subtitle_delay_title">רווח</string>
+  <string name="pref_play_mode_title">מצב הפעלה</string>
+  <string name="pref_play_mode_entry_single">בודד</string>
+  <string name="pref_play_mode_entry_folder">תיקיה</string>
+  <string name="pref_play_mode_entry_repeat_folder">חזרת תיקיה</string>
+  <string name="pref_play_mode_entry_repeat_single">חזרת בודד</string>
+  <string name="pref_audio_parameters_title">צליל</string>
+  <string name="pref_audio_filt_title">הגברת אודיו</string>
+  <string name="pref_s3d_mode_title">מצב תלת-ממד</string>
+  <string name="pref_s3d_mode_entry_sbs">אחד ליד השני</string>
+  <string name="pref_s3d_mode_entry_topbottom">אחד מעל השני</string>
+  <string name="pref_s3d_mode_entry_off">כבוי</string>
+  <string name="menu_info">מידע</string>
+  <string name="menu_subtitles">רצועות כתובית</string>
+  <string name="menu_audio">רצועות שמע</string>
+  <string name="menu_bookmark">הגדר סימניה</string>
+  <string name="menu_brightness_settings">בהירות</string>
+  <string name="menu_player_settings">הגדרות</string>
+  <!-- Subtitles/Audio languages -->
+  <string name="s_arabic">ערבית</string>
+  <string name="s_bulgarian">בולגרית</string>
+  <string name="s_czech">צ\'יכית</string>
+  <string name="s_danish">דנית</string>
+  <string name="s_german">גרמנית</string>
+  <string name="s_english">אנגלית</string>
+  <string name="s_greek">יוונית</string>
+  <string name="s_spanish">ספרדית</string>
+  <string name="s_finnish">פינית</string>
+  <string name="s_french">צרפתית</string>
+  <string name="s_hebrew">עברית</string>
+  <string name="s_hungarian">הונגרית</string>
+  <string name="s_italian">איטלקית</string>
+  <string name="s_japanese">יפנית</string>
+  <string name="s_korean">קוריאנית</string>
+  <string name="s_dutch">הולנדית</string>
+  <string name="s_norwegian">נורבגית</string>
+  <string name="s_polish">פולנית</string>
+  <string name="s_portuguese">פורטוגזית</string>
+  <string name="s_russian">רוסית</string>
+  <string name="Romanian">רומנית</string>
+  <string name="Serbo_Croatian">סרבו קרואטית</string>
+  <string name="Serbian">סרבית</string>
+  <string name="s_swedish">שוודית</string>
+  <string name="s_turkish">טורקית</string>
+  <string name="s_chinese">סינית</string>
+  <string name="s_none">ללא</string>
+  <!-- Player errors -->
+  <string name="player_err_cantplayvideo">לא ניתן להפעיל וידאו</string>
+  <string name="player_err_file">קובץ הוידאו אינו קיים.</string>
+  <string name="player_err_sizetoobig">גודל הוידאו גדול מדי</string>
+  <string name="player_err_unknown">שגיאה לא ידועה.</string>
+  <string name="player_err_critical">שגיאת נגן מדיה.</string>
+  <string name="player_err_forcodec">עבור מקודד</string>
+  <string name="player_err_notinterleaved">זרמי הוידאו והשמע אינם מופרדים.</string>
+  <string name="player_err_codec">מקודד</string>
+  <string name="player_err_isnotsupported">אינו נתמך.</string>
+  <string name="player_err_fileNoLicense">לא נמצא רישיון עבור קובץ זה.</string>
+  <string name="player_err_fileerror">הקובץ פגום או לא שלם.</string>
+  <string name="player_err_connection_failed">חיבור נכשל.</string>
+  <string name="player_err_video_decoder_error">שגיאת מפענח וידאו:</string>
+  <string name="player_err_qpel_and_gmc">\"Quarter Pixel\" ו- \"GMC\"</string>
+  <string name="player_err_profile_and_level">\"Profile\" ו- \"Level\"</string>
+  <string name="player_err_interlaced">משולב</string>
+  <!-- Player plug-in -->
+  <string name="player_plugin_cinema_title">תוסף קולנוע</string>
+  <string name="player_plugin_cinema">תוסף קולנוע (DVD, MPEG-2, AC3)</string>
+  <string name="player_plugin_ac3_title">פלאגין AC3</string>
+  <string name="player_plugin_ac3">פלאגין AC3</string>
+  <string name="player_plugin_mpeg2_title">MפלאגיןMPEG-2 (DVD)</string>
+  <string name="player_plugin_mpeg2">פלאגיןMPEG-2 (DVD)</string>
+  <string name="player_plugin_video_msg">קובץ זה מכיל תבנית וידאו של <xliff:g id="video">%1$s</xliff:g>.</string>
+  <string name="player_plugin_audio_msg">קובץ זה מכיל תבנית שמע של <xliff:g id="audio">%1$s</xliff:g>.</string>
+  <string name="player_plugin_video_audio_msg">קובץ זה מכיל תבנית וידאו של <xliff:g id="video">%1$s</xliff:g> ותבנית שמע של <xliff:g id="audio">%2$s</xliff:g>.</string>
+  <string name="player_plugin_purchase_msg">אתה צריך לרכוש את ה- <xliff:g id="plugin">%1$s</xliff:g></string>
+  <string name="player_plugin_purchase">עבור לחנות</string>
+  <!-- Subtitles wizard -->
+  <string name="get_subtitles_on_drive">בחר כתוביות באחסון</string>
+  <string name="subtitles_wizard_no_files">לא נמצאו קבצי כתוביות</string>
+  <string name="subtitles_wizard_current_files">קבצי כתוביות נוכחיים:</string>
+  <string name="subtitles_wizard_available_files">קבצי כתוביות זמינים:</string>
+  <string name="subtitles_wizard_associate">שייך קובץ זה לוידאו</string>
+  <string name="subtitles_wizard_delete">מחק קובץ זה</string>
+  <string name="subtitles_wizard_empty_list">לא נמצא קובץ</string>
+  <string name="subtitles_wizard_add_files">באפשרותך להעתיק עוד קבצי כתוביות לתיקיה זו בכדי לשייך אותם לוידאו זה.</string>
+  <string name="subtitles_wizard_help">בחר כל אחד מקבצי הכתוביות הזמינות בכדי לשייך אותם לוידאו %s. הקובץ ישנה את שמו בכדי להתאים את שם הוידאו.</string>
+  <string name="subtitles_wizard_empty_list_help">לא נמצאו קבצי כתוביות. עליך להעתיק קודם קובץ כתוביות אחד או יותר לתיקיה זו בכדי לשייך אותם עם הוידאו %s.</string>
+  <!-- Subloader -->
+  <string name="get_subtitles_online">קבל כתוביות באופן מקוון</string>
+  <string name="toast_subloader_sub_found">רצועת כתוביות נמצאה עבור שפה זו</string>
+  <string name="toast_subloader_sub_not_found">רצועת כתוביות לא נמצאה עבור שפה זו</string>
+  <string name="toast_subloader_service_unreachable">הופסק שירות חיפוש כתוביות</string>
+  <string name="menu_subloader_allfolder">קבל כתוביות חסרות</string>
+  <string name="dialog_subloader_downloading">מוריד כתוביות…</string>
+  <string name="dialog_subloader_sumup">ההורדה הסתיימה</string>
+  <string name="dialog_subloader_success">כתוביות נמצאו עבור:</string>
+  <string name="dialog_subloader_fails">כתוביות לא נמצאו עבור:</string>
+  <string name="sub_force_all_title">אילוץ הורדת כתוביות</string>
+  <string name="sub_force_all">כל קבצי הוידאו מכילים לפחות רצועת כתוביות אחת. האם ברצונך לאלץ הורדת רצועת כתוביות חדשה ?</string>
+  <string name="dialog_subloader_nonetwork_title">אין חיבור אינטרנט</string>
+  <string name="dialog_subloader_nonetwork_message">חיבור אינטרנט נדרש ע\"מ להוריד כתוביות</string>
+  <string name="dialog_subloader_connecting">מתחבר אל www.opensubtitles.org…</string>
+  <!-- Subtitle Settings Dialog -->
+  <string name="subtitle_settings_title">הגדרות כתובית</string>
+  <string name="subtitle_size_text">גודל:</string>
+  <string name="subtitle_vert_text">מיקום אנכי:</string>
+  <!-- Subtitle Delay Dialog -->
+  <string name="subtitle_delay_speed">כוונון מהירות</string>
+  <string name="subtitle_delay_radio_none">ללא</string>
+  <string name="subtitle_delay_radio_ntsc2pal">NTSC → PAL</string>
+  <string name="subtitle_delay_radio_pal2ntsc">PAL → NTSC</string>
+  <!-- Browser.CommonDetailsView -->
+  <!-- Add a space after the right quote
+    because the right part of the quote is
+    not visible otherwise -->
+  <string name="quotation_format">“%s” </string>
+  <!-- torrent -->
+  <!-- Shortcuts -->
+  <string name="add_to_shortcuts">צור קיצור דרך</string>
+  <string name="remove_from_shortcuts">הסר קיצור דרך</string>
+  <string name="shortcut_added">קיצור דרך %s נוצר</string>
+  <string name="shortcut_removed">קיצור דרך %s הוסר</string>
+  <string name="server_not_available">השרת כעת אינו זמין</string>
+  <string name="cannot_open_shortcut">תוכן קיצור הדרך אינו זמין כעת. \nאנא בדקו שיש לכם את ההרשאות המתאימות.</string>
+  <string name="network_shortcuts">קיצורי דרך רשת</string>
+  <string name="media_servers">שרתי מדיה</string>
+  <string name="indexed_folders">תיקיות מקוטלגות</string>
+  <string name="add_to_indexed_folders">הוסף לקטלוג התיקיות</string>
+  <string name="indexed_folder_added">התיקיה %s התווספה לקטלוג התיקיות</string>
+  <string name="remove_from_indexed_folders">הסר מקטלוג התיקיות</string>
+  <string name="indexed_folder_removed">התיקיה %s הוסרה מקטלוג התיקיות</string>
+  <string name="indexed_folders_list_empty">אין תיקיות רשתיות בקטלוג התיקיות.\n\nבאפשרותך להוסיף את תוכנה של תיקיה רשתית לספריה באמצעות כניסה לתיקיה זו ובחירת \"%s\" בסרגל הכלים העליון.</string>
+  <!-- Preferences -->
+  <string name="preferences">העדפות</string>
+  <string name="category_languages">כתוביות</string>
+  <string name="preferences_languages">הורדת שפות כתוביות</string>
+  <string name="summary_list_preference_primary">בחר את השפות להורדת כתוביות</string>
+  <string name="favSubLang_title">קריאת שפת כתוביות</string>
+  <string name="favSubLang_summary">בחר את השפה המועדפת לקריאת כתוביות</string>
+  <string name="tv_scraper">תוכניות טלוויזיה</string>
+  <string name="movie_scraper">סרטים</string>
+  <string name="locale">שפת מערכת</string>
+  <string name="yes">כן</string>
+  <string name="no">לא</string>
+  <string name="abort">ביטול</string>
+  <!--  Title of the video picker activity. -->
+  <string name="video_picker_title">בחר סרטון</string>
+  <!-- Archos File Info -->
+  <string name="video_info_custom_search_file_hint">"\"Moviename\" או \"Showname S01E01\""</string>
+  <string name="scrap_show_no_result">לא נמצאה תוכנית מתאימה ברשת</string>
+  <string name="video_info_backdrop_select">בחר תמונה נוספת</string>
+  <string name="video_info_backdrop_remove">הסר</string>
+  <string name="video_info_backdrop_set_as">קבע תמונה כ- </string>
+  <string name="video_info_share_message">"צפיתי בסרטון \"%1$s\" על מכשיר ה- Archos %2$s שלי"</string>
+  <string name="notification_mode">התראות</string>
+  <string name="notifications_all">כל ההתרעות</string>
+  <string name="notifications_alerts">צלילי התרעות בלבד</string>
+  <string name="notifications_none">ללא התרעות</string>
+  <string name="network_reindex">סרוק מחדש את התוכן</string>
+  <!-- Help overlay -->
+  <string name="help_overlay_network_indexing_text1">לחץ על תפריט זה כדי לשלב את תוכן תיקיה זו ותתי-התיקיות שלה לספרית הוידאו</string>
+  <string name="help_overlay_network_indexing_text2">יאפשר לך להשיג פוסטרים ותיאורים לסרטים ולתוכניות טלויזיה</string>
+  <string name="help_overlay_scraper_text">לחץ על תפריט זה כדי לחפש פוסטרים ותיאורים לסרטונים שלך ברשת</string>
+  <string name="new_videos_count">סרטון חדש: %d</string>
+  <string name="new_videos_scrape_message">יש לך סרטונים חדשים ללא תיאורים ופוסטרים.</string>
+  <!-- Info dialog, not indexed file -->
+  <!-- Brightness -->
+  <!--  Nfo File parsing -->
 </resources>
