@@ -211,6 +211,7 @@
     <item quantity="other"><xliff:g id="count">%d</xliff:g> saisons</item>
   </plurals>
   <!-- Media Center -->
+  <string name="mediacenterlabel">Centre Multimédia</string>
   <string name="view_mode">Type d\'affichage</string>
   <string name="view_mode_list">Liste</string>
   <string name="view_mode_grid">Affiches</string>
@@ -224,6 +225,7 @@
   <string name="player_bookmark_set">Marque-page placé à</string>
   <string name="player_pref_subtitle_delay_title">Décalage</string>
   <string name="floating_player_restore">Restaurer</string>
+  <string name="floating_player_play">Lire</string>
   <string name="player_pref_audio_delay_title">Décalage audio</string>
   <string name="now_playing">En cours de lecture</string>
   <string name="player_window_mode">Mode fenêtré</string>
@@ -239,6 +241,7 @@
   <string name="pref_s3d_mode_title">Mode 3D</string>
   <string name="pref_s3d_mode_entry_sbs">Côte à côte</string>
   <string name="pref_s3d_mode_entry_topbottom">Dessus-dessous</string>
+  <string name="pref_s3d_mode_entry_anaglyph">Anaglyphe</string>
   <string name="pref_s3d_mode_entry_off">Désactivé</string>
   <string name="menu_subtitles">Pistes de sous-titres</string>
   <string name="menu_audio">Pistes audio</string>
@@ -401,6 +404,7 @@
   <string name="rescan_indexed_folders">Recharger tous les dossiers indexés</string>
   <string name="last_rescan_never">Jamais</string>
   <string name="upnp_indexing_warning_title">Indexation UPNP</string>
+  <string name="upnp_indexing_warning_message">L\'indexation par UPnP n\'est pas aussi efficace que par SMB.\nIl est recommandé d\'opter pour SMB si votre serveur ou PC supporte ce protocole.\n</string>
   <string name="ssh_error">Impossible de se connecter: vérifiez votre connexion et vos identifiants</string>
   <string name="ssh_remote_address">Adresse</string>
   <string name="ssh_password">Mot-de-passe</string>
@@ -546,6 +550,7 @@
   <string name="trakt_signin_summary_logged">Connecté</string>
   <string name="trakt_signin_summary_logged_error">Erreur d\'authentification</string>
   <string name="trakt_signin_summary">Non connecté</string>
+  <string name="trakt_relog_description">Un problème a été détecté avec Trakt qui nécessite une reconnexion.</string>
   <string name="trakt_signin_dialog_title">Connexion</string>
   <string name="trakt_signin_title">Connexion</string>
   <string name="trakt_wipe_dialog_title">Déconnexion de Trakt.tv \?</string>
@@ -625,6 +630,7 @@
   <string name="nfo_export_in_progress">Export de NFO en cours</string>
   <string name="rescrap_in_progress">Actualisation des descriptions en cours</string>
   <string name="acquire_external_usb_permission">Nova Vidéo requiert une permission spéciale pour accéder au stockage externe. Sélectionnez votre stockage sur l\'écran suivant.</string>
+  <string name="rescrap_not_found">Rechercher les descriptions manquantes des vidéos</string>
   <string name="rescrap_all_title">Actualiser les descriptions</string>
   <string name="nfo_export_manual_title">Exporter toutes les descriptions</string>
   <string name="nfo_export_manual_summary">Export des fichiers .nfo pour chaque vidéo</string>
