@@ -1,3 +1,4 @@
+Quelques traductions en français de plus et synchronisation avec le service crowdin.
 Amélioration du scraper et corrections de bugs.
 Avertissement à la lecture si l'accélération matérielle est désactivée.
 Support d'Android P (évite de crasher au démarrage).
