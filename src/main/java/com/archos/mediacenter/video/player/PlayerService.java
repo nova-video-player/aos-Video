@@ -943,7 +943,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     info.subtitleTrack = mVideoInfo.subtitleTrack;
                     info.audioTrack = mVideoInfo.audioTrack;
                     mVideoInfo = info;
-                    mPlayerFrontend.setVideoInfo(mVideoInfo);
+                    if (mPlayerFrontend != null)
+                        mPlayerFrontend.setVideoInfo(mVideoInfo);
 
                     if(mVideoInfo.lastTimePlayed<=0&&mVideoInfo.id!=-1) {
                         mVideoInfo.lastTimePlayed = Long.valueOf(System.currentTimeMillis() / 1000L);
