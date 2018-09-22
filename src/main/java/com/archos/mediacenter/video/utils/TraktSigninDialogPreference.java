@@ -114,7 +114,9 @@ public class TraktSigninDialogPreference extends Preference{
             od.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialogInterface) {
-                    mOnDismissListener.onDismiss(dialogInterface);
+                    if (mOnDismissListener != null) {
+                        mOnDismissListener.onDismiss(dialogInterface);
+                    }
                 }
             });
         } catch (OAuthSystemException e) {
