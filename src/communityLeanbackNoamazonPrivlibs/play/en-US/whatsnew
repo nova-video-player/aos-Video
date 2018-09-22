@@ -1,4 +1,3 @@
-Improved french translations and interfacing with crowdin service.
 Scraper improvements and bug fixes.
 Issue a warning toast is hardware decoding is disabled.
 Add support for Android P avoiding application crash at startup.
