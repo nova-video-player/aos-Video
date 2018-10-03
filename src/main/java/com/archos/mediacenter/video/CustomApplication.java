@@ -31,19 +31,15 @@ import com.archos.mediacenter.utils.Utils;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.browser.BootupRecommandationService;
-import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.debug.Debug;
 import com.archos.mediacenter.video.picasso.SmbRequestHandler;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
-import com.archos.mediacenter.video.player.cast.ArchosVideoCastManager;
 import com.archos.medialib.LibAvos;
 import com.archos.mediaprovider.video.NetworkAutoRefresh;
 import com.archos.mediascraper.ScraperImage;
-import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-import java.util.Locale;
 
 import httpimage.FileSystemPersistence;
 import httpimage.HttpImageManager;
@@ -146,30 +142,6 @@ public class CustomApplication extends MultiDexApplication {
             Utils.clearOldSubDir(this);
             Debug.startLogcatRecording();
         }
-        if(ArchosVideoCastManager.isCastAvailable()) {
-            String applicationId = getString(R.string.app_id);
-            // Build a CastConfiguration object and initialize VideoCastManager
-            CastConfiguration options = new CastConfiguration.Builder(getString(R.string.app_id))
-                    .enableAutoReconnect()
-                    .enableCaptionManagement()
-                    .enableDebug()
-                    .enableLockScreen()
-                    .enableNotification()
-                    .enableWifiReconnection()
-                    .setTargetActivity(MainActivity.class)
-                    .setCastControllerImmersive(false)
-                    .setLaunchOptions(false, Locale.getDefault())
-                    .setNextPrevVisibilityPolicy(CastConfiguration.NEXT_PREV_VISIBILITY_POLICY_DISABLED)
-                    .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_REWIND, false)
-                    .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_PLAY_PAUSE, true)
-                    .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_DISCONNECT, true)
-                    .setForwardStep(10)
-                    .build();
-            ArchosVideoCastManager.initialize(this, options);
-            ArchosVideoCastManager.getInstance().appId = applicationId;
-        }
-        else
-            ArchosVideoCastManager.initialize(this, null);
 
     }
 

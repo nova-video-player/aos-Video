@@ -54,8 +54,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.MediaRouteActionProvider;
-import android.support.v7.media.MediaRouteSelector;
 import android.support.v7.widget.SearchView;
 import android.text.Html;
 import android.util.Log;
@@ -96,9 +94,6 @@ import com.archos.mediacenter.video.browser.filebrowsing.BrowserByVideoFolder;
 import com.archos.mediacenter.video.info.SingleVideoLoader;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
-import com.archos.mediacenter.video.player.cast.ArchosMiniPlayer;
-import com.archos.mediacenter.video.player.cast.ArchosVideoCastManager;
-import com.archos.mediacenter.video.player.cast.CastService;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.PlayUtils;
@@ -115,10 +110,6 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.cast.CastMediaControlIntent;
-import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
-import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCastConsumerImpl;
-import com.google.android.libraries.cast.companionlibrary.widgets.IntroductoryOverlay;
 
 import java.io.File;
 import java.util.HashMap;
@@ -192,12 +183,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     private GlobalResumeView mGlobalResumeView;
     private MenuItem mSearchItem;
     private int mNavigationMode;
-    private MenuItem mMediaRouteMenuItem;
-    private MediaRouteSelector mMediaRouteSelector;
-    private boolean shouldShowOverlayOnDrawerClosed;
-    private boolean hasAlreadyDisplayedCastOverlay = false;
     private AdLayout amazonAdLayout;
-    private IntroductoryOverlay mCastOverlay;
 
     private void updateStereoMode(Intent intent) {
         mStereoForced = false;
@@ -243,24 +229,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                     R.string.drawer_open, R.string.drawer_close);
             mDrawerToggle.setDrawerIndicatorEnabled(true);
             mDrawerToggle.syncState();
-            mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
-                @Override
-                public void onDrawerSlide(View drawerView, float slideOffset) {}
-                @Override
-                public void onDrawerOpened(View drawerView) {}
-                @Override
-                public void onDrawerClosed(View drawerView) {
-                    if(shouldShowOverlayOnDrawerClosed){
-                        shouldShowOverlayOnDrawerClosed = false;
-                        showOverlay();
-                    }
-                }
-
-                @Override
-                public void onDrawerStateChanged(int newState) {
-
-                }
-            });
 
             if(savedInstanceState==null && !isShortcutIntent())
                 mDrawerLayout.openDrawer(GravityCompat.START);
@@ -270,11 +238,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         mGlobalResumeViewStub = (ViewStub) findViewById(R.id.global_resume_stub);
         AutoScrapeService.registerObserver(this);
         mPermissionChecker = new PermissionChecker();
-        View minicontroller = null;
-        if((minicontroller=findViewById(R.id.miniController1))!=null) {
-            ((ArchosMiniPlayer) minicontroller).setBlackVeil(findViewById(R.id.mini_controller_black_veil));
-            ((ArchosMiniPlayer) minicontroller).setShadow(findViewById(R.id.minicontroller_shadow));
-        }
         setBackground();
 
         if(ArchosUtils.isAmazonApk()){
@@ -538,13 +501,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     @Override
     public void onResume() {
         super.onResume();
-        if(ArchosVideoCastManager.isCastAvailable()) {
-            mMediaRouteSelector = new MediaRouteSelector.Builder()
-                    .addControlCategory(CastMediaControlIntent.categoryForCast(ArchosVideoCastManager.getInstance().appId))
-                    .build();
-            if (mMediaRouteMenuItem != null)
-                ((MediaRouteActionProvider) MenuItemCompat.getActionProvider(mMediaRouteMenuItem)).setRouteSelector(mMediaRouteSelector);
-        }
         mPermissionChecker.checkAndRequestPermission(this);
         //check if app has been bought after
         if (adLayout != null)
@@ -646,10 +602,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
             Video video = getVideoFromId(mGlobalResumeId);
             PlayUtils.startVideo(this, video, PlayerActivity.RESUME_FROM_LAST_POS, true,-1, this, -1);
-            if(ArchosVideoCastManager.getInstance().isConnected()) {//reset resume view since playeractivity won't be launcher
-                GlobalResumeView grv = getGlobalResumeView();
-                grv.resetOpenAnimation();
-            }
         }
     }
 
@@ -675,19 +627,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean ret = super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.cast_menu, menu);
-        if(ArchosVideoCastManager.isCastAvailable()) {
-            mMediaRouteMenuItem = VideoCastManager.getInstance().addMediaRouterButton(menu, R.id.media_route_menu_item);
-            showOverlay();
-            VideoCastManager.getInstance().addVideoCastConsumer(new VideoCastConsumerImpl() {
-                @Override
-                public void onCastAvailabilityChanged(boolean castPresent) {
-                    if (castPresent) {
-                        showOverlay();
-                    }
-                }
-            });
-        }
         /// /setHomeButtonsetHomeButton();
         MenuItem item = menu.add(MENU_SEARCH_GROUP, MENU_SEARCH_ITEM, Menu.NONE, R.string.search_title);
         item.setIcon(android.R.drawable.ic_menu_search);
@@ -711,38 +650,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         return ret;
     }
 
-    private void showOverlay() {
-        if(!ArchosVideoCastManager.isCastAvailable())
-            return;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mMediaRouteMenuItem.isVisible()) {
-                    if (!hasAlreadyDisplayedCastOverlay && (mDrawerLayout == null || !mDrawerLayout.isDrawerOpen(GravityCompat.START))) {
-                        shouldShowOverlayOnDrawerClosed = false;
-                        hasAlreadyDisplayedCastOverlay = true;
-                        mCastOverlay = new IntroductoryOverlay.Builder(MainActivity.this)
-                                .setTitleText(R.string.cast_introduction)
-                                .setSingleTime()
-                                .setOnDismissed(new IntroductoryOverlay.OnOverlayDismissedListener() {
-                                    @Override
-                                    public void onOverlayDismissed() {
-                                        Log.d(TAG, "overlay is dismissed");
-                                        mCastOverlay = null;
-                                    }
-                                })
-                                .setMenuItem(mMediaRouteMenuItem)
-                                .build();
-                        mCastOverlay.show();
-                    }
-                    else
-                        shouldShowOverlayOnDrawerClosed =true;
-                }
-            }
-        },1000); //do not show it immediately
-
-
-    }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -1154,10 +1061,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent ev) {
-        if(mCastOverlay!=null&&mCastOverlay.isShown()) {
-            mCastOverlay.fadeOut(400);
-            return true;
-        }
         boolean ignore = false;
 
         // Special case: BACK button on touchscreen generate a keyboard event... Let's ignore it...
@@ -1183,10 +1086,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if(mCastOverlay!=null&&mCastOverlay.isShown()) {
-            mCastOverlay.fadeOut(400);
-            return true;
-        }
         checkUiChoice(ev);
         return super.dispatchTouchEvent(ev);
     }

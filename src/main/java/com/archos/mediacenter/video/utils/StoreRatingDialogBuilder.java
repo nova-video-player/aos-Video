@@ -25,7 +25,6 @@ import android.widget.Toast;
 
 import com.archos.mediacenter.video.R;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 
 /**
  * Created by alexandre on 13/06/17.
@@ -56,7 +55,7 @@ public class StoreRatingDialogBuilder{
         alertDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                boolean googlePlay = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS;
+                boolean googlePlay = MiscUtils.isGooglePlayServicesAvailable(context);
                 try {
                     context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse((googlePlay ? "market://details?id=" : "amzn://apps/android?p=") +context.getPackageName())));
                 } catch (ActivityNotFoundException e1) {

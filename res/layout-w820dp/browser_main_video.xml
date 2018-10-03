@@ -69,24 +69,7 @@ category, and contents.
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_toRightOf="@+id/left_view"
-            android:layout_above="@+id/miniController1"
             android:layout_height="match_parent" />
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="5dp"
-            android:layout_above="@+id/miniController1"
-            android:visibility="gone"
-            android:id="@+id/minicontroller_shadow"
-            android:background="@drawable/mini_gradient_light"/>
-        <com.archos.mediacenter.video.player.cast.ArchosMiniPlayer
-            android:id="@+id/miniController1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/left_view"
-            android:background="@color/lightblue900"
-            app:auto_setup="true"
-            android:visibility="gone" />
 
     </RelativeLayout>
     <FrameLayout

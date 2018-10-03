@@ -35,8 +35,6 @@ import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PlayerService;
 import com.archos.mediacenter.video.player.TorrentLoaderActivity;
-import com.archos.mediacenter.video.player.cast.ArchosVideoCastManager;
-import com.archos.mediacenter.video.player.cast.CastService;
 import com.archos.mediascraper.ScrapeDetailResult;
 
 import java.io.IOException;
@@ -212,9 +210,7 @@ public class PlayUtils implements IndexHelper.Listener {
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         Uri dataUri = video.getUri();
-        if(ArchosVideoCastManager.getInstance().isConnected())
-            intent.setClass(context, CastService.class);
-        else if (!allow3rdPartyPlayer(context)) {
+        if (!allow3rdPartyPlayer(context)) {
             intent.putExtra(PlayerService.VIDEO, video);
             intent.setClass(context, PlayerActivity.class);
         }
@@ -245,9 +241,7 @@ public class PlayUtils implements IndexHelper.Listener {
 
         ExternalPlayerResultListener.ExternalPositionExtra.setAllPositionExtras(intent,resumePosition );
         try {
-            if(ArchosVideoCastManager.getInstance().isConnected())
-                context.startService(intent);
-            else if(externalPlayerWithResultStarter==null||!allow3rdPartyPlayer(context))
+            if(externalPlayerWithResultStarter==null||!allow3rdPartyPlayer(context))
                 context.startActivity(intent);
             else {
                 ExternalPlayerResultListener.getInstance().init(context, video.getUri(), dataUri, mVideoDbInfo);

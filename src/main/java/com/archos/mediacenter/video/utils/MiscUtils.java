@@ -15,12 +15,12 @@
 package com.archos.mediacenter.video.utils;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.app.UiModeManager;
 import android.content.res.Configuration;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 
 import static android.content.Context.UI_MODE_SERVICE;
 
@@ -31,9 +31,12 @@ import static android.content.Context.UI_MODE_SERVICE;
 public class MiscUtils {
 
     public static boolean isGooglePlayServicesAvailable(Context context){
-        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context);
-        return resultCode == ConnectionResult.SUCCESS;
+        try {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo("com.google.android.gms", 0);
+            return packageInfo!=null;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 
     public static boolean isOnTV(Context context) {

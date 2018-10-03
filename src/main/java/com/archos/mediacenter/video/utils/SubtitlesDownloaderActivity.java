@@ -54,7 +54,6 @@ import com.archos.mediacenter.utils.Utils;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
-import com.archos.mediacenter.video.player.cast.ArchosVideoCastManager;
 import com.archos.mediaprovider.ArchosMediaIntent;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -195,8 +194,6 @@ public class SubtitlesDownloaderActivity extends Activity{
             mOpenSubtitlesTask.cancel(false);
             mOpenSubtitlesTask = null;
         }
-        //new subs might have been downloaded
-        ArchosVideoCastManager.getInstance().notifySubsUpdated();
         finish();
         super.onStop();
     }

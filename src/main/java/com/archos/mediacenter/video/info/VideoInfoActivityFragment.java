@@ -42,12 +42,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.MediaRouteActionProvider;
 import android.support.v7.graphics.Palette;
-import android.support.v7.media.MediaRouteSelector;
-import android.support.v7.media.MediaRouter;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.ToolbarWidgetWrapper;
@@ -90,8 +86,6 @@ import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
 import com.archos.mediacenter.video.player.PlayerService;
 import com.archos.mediacenter.video.player.PrivateMode;
-import com.archos.mediacenter.video.player.cast.ArchosMiniPlayer;
-import com.archos.mediacenter.video.player.cast.ArchosVideoCastManager;
 import com.archos.mediacenter.video.utils.DbUtils;
 import com.archos.mediacenter.video.utils.DelayedBackgroundLoader;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
@@ -118,10 +112,6 @@ import com.archos.mediascraper.xml.MovieScraper2;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
-import com.google.android.gms.cast.CastMediaControlIntent;
-import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
-import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCastConsumer;
-import com.google.android.libraries.cast.companionlibrary.widgets.IntroductoryOverlay;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -167,6 +157,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private AsyncTask<Video, Void, List<SubtitleManager.SubtitleFile>> mSubtitleFilesListerTask;
     private AsyncTask<Video, Void, BaseTags> mFullScraperTagsTask;
 
+    private boolean mIsLeavingPlayerActivity = false;
 
 
 
@@ -286,17 +277,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mFileError;
     private ToolbarWidgetWrapper mToolbarWidgetWrapper;
 
-    //chromecast
-    private VideoCastConsumer mCastConsumer;
-    private MenuItem mMediaRouteMenuItem;
-    private IntroductoryOverlay mOverlay;
-    private MediaRouteSelector mMediaRouteSelector;
-    private MediaRouter mMediaRouter;
-    private VideoCastManager mCastManager;
-    private ArchosMiniPlayer mMiniController;
-    private boolean mIsLeavingPlayerActivity = false;
-    //chromecast end
-
     private boolean isFilePlayable = true;
 
     public static VideoInfoActivityFragment getInstance(Video video, Uri path, long id, boolean forceVideoSelection){
@@ -343,14 +323,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if(MiscUtils.isGooglePlayServicesAvailable(getActivity())) {
-            mMediaRouter = MediaRouter.getInstance(getActivity().getApplicationContext());
-            mCastManager = VideoCastManager.getInstance();
-        }
-
         mRoot = inflater.inflate(R.layout.video_info2_fragment, container, false);
-        mMiniController = (ArchosMiniPlayer)mRoot.findViewById(R.id.miniController1);
-        mMiniController.setBlackVeil(mRoot.findViewById(R.id.mini_controller_black_veil));
         mScrollView = (ObservableScrollView) mRoot.findViewById(R.id.scrollView);
         mIsPortraitMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
         mGenericPlayButton = (FloatingActionButton)mRoot.findViewById(R.id.play_toolbar);
@@ -520,8 +493,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
         if(mIsLaunchFromPlayer) //hide play button
             mActionButtonsContainer.setVisibility(View.GONE);
-        if(mMiniController!=null)
-            mMiniController.setShadow(mRoot.findViewById(R.id.minicontroller_shadow));
         return mRoot;
     }
 
@@ -658,10 +629,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             mRoot.setBackgroundColor(VideoInfoCommonClass.getAlphaColor(VideoInfoCommonClass.getDarkerColor(mColor),160));
         if(mGenericPlayButton!=null)
             mGenericPlayButton.setBackgroundTintList(new ColorStateList(new int[][]{new int[]{0}}, new int[]{VideoInfoCommonClass.getClearerColor(mColor)}));
-        if(mMiniController!=null){
-            mMiniController.setBackgroundColor(mColor);
-
-        }
     }
 
 
@@ -725,9 +692,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             mFilePathTextView.setText(video.getFilePath());
 
 
-            getActivity().getMenuInflater().inflate(R.menu.cast_menu, mTitleBar.getMenu());
-            if(MiscUtils.isGooglePlayServicesAvailable(getActivity()))
-                mMediaRouteMenuItem = mCastManager.addMediaRouterButton(mTitleBar.getMenu(), R.id.media_route_menu_item);
             updateActionButtons();
 
             //picasso should be executed in a separated thread however we don't want fragment to be displayed before fragment loads
@@ -1800,15 +1764,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     @Override
     public void onResume() {
-        if(ArchosVideoCastManager.isCastAvailable()) {
-            mMediaRouteSelector = new MediaRouteSelector.Builder()
-                    .addControlCategory(CastMediaControlIntent.categoryForCast(ArchosVideoCastManager.getInstance().appId))
-                    .build();
-        }
         if(mIsLeavingPlayerActivity)
             StoreRatingDialogBuilder.displayStoreRatingDialogIfNeeded(getContext());
         mIsLeavingPlayerActivity = false;
-        if(mMediaRouteMenuItem!=null) ((MediaRouteActionProvider) MenuItemCompat.getActionProvider(mMediaRouteMenuItem)).setRouteSelector(mMediaRouteSelector);
         super.onResume();
     }
 
@@ -1816,8 +1774,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     public void onPause() {
 
         super.onPause();
-        //  mMediaRouter.removeCallback(ArchosVideoCastManager.getInstance().getRouteSelectorCallback());
     }
-    //chromecast end
 
 }

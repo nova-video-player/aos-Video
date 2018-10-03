@@ -44,38 +44,10 @@ category, and contents.
                 android:layout_height="match_parent" />
             <FrameLayout
                 android:id="@+id/adViews"
-                android:layout_above="@+id/miniControllerContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <include layout="@layout/addview" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/mini_controller_black_veil"
-                android:layout_above="@+id/miniControllerContainer"
-                android:background="@color/transparent_black_50"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="5dp"
-                android:layout_above="@+id/miniControllerContainer"
-                android:visibility="gone"
-                android:id="@+id/minicontroller_shadow"
-                android:background="@drawable/mini_gradient_light"/>
-            <FrameLayout
-                android:id="@+id/miniControllerContainer"
                 android:layout_alignParentBottom="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <com.archos.mediacenter.video.player.cast.ArchosMiniPlayer
-                    android:id="@+id/miniController1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/lightblue900"
-                    app:auto_setup="true"
-                    android:visibility="gone" />
-
+                <include layout="@layout/addview" />
             </FrameLayout>
 
         </RelativeLayout>

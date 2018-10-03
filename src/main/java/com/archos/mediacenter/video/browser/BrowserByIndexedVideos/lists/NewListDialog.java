@@ -32,7 +32,8 @@ public class NewListDialog extends DialogFragment {
         mView = LayoutInflater.from(getActivity()).inflate(R.layout.list_creator_layout, null);
         builder.setView(mView);
         builder.setTitle("List title");
-        builder.setPositiveButton(R.string.ccl_ok, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(android.R.string.ok
+                , new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 EditText text = (EditText)mView.findViewById(R.id.list_title);

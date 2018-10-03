@@ -44,8 +44,6 @@ import com.archos.mediacenter.video.billingutils.IsPaidCallback;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
 import com.archos.mediacenter.video.browser.TorrentObserverService.TorrentServiceBinder;
 import com.archos.mediacenter.video.browser.TorrentObserverService.TorrentThreadObserver;
-import com.archos.mediacenter.video.player.cast.ArchosVideoCastManager;
-import com.archos.mediacenter.video.player.cast.CastService;
 import com.archos.mediacenter.video.utils.TorrentPathDialogPreference;
 
 import java.io.File;
@@ -164,14 +162,9 @@ public class TorrentLoaderActivity extends Activity implements TorrentThreadObse
         intent.putExtra(PlayerActivity.KEY_TORRENT_URL, mTorrentURL);
         intent.putExtra(PlayerActivity.RESUME, getIntent().getIntExtra(PlayerActivity.RESUME, PlayerActivity.RESUME_NO));
         intent.putExtra(PlayerService.KEY_ORIGINAL_TORRENT_URL, mOriginalTorrentUri);
-        if(ArchosVideoCastManager.getInstance().isConnected()) {
-            intent.setClass(TorrentLoaderActivity.this, CastService.class);
-            startService(intent);
-        }
-        else {
-            intent.setClass(TorrentLoaderActivity.this, PlayerActivity.class);
-            startActivity(intent);
-        }
+        intent.setClass(TorrentLoaderActivity.this, PlayerActivity.class);
+        startActivity(intent);
+
         hasLaunchedPlayer = true;
 
         this.finish();

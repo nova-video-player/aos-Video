@@ -80,23 +80,4 @@
             app:elevation="4dp"/>
 
     </android.support.design.widget.CoordinatorLayout>
-    <FrameLayout
-        android:id="@+id/mini_controller_black_veil"
-        android:background="@color/transparent_black_50"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="5dp"
-        android:layout_above="@+id/miniController1"
-        android:visibility="gone"
-        android:id="@+id/minicontroller_shadow"
-        android:background="@drawable/mini_gradient_light"/>
-    <com.archos.mediacenter.video.player.cast.ArchosMiniPlayer
-        android:id="@+id/miniController1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:auto_setup="true"
-        android:visibility="gone" />
 </RelativeLayout>
