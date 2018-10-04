@@ -46,6 +46,7 @@
   <string name="fast_scroll_alphabet"> ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
   <!-- The string used in file/folder infos dialog. -->
   <string name="info_duration">Durée</string>
+  <string name="video_sources">Sources</string>
   <!-- Infos dialog tabs -->
   <string name="info_tab_movie">Film</string>
   <string name="info_tab_show">Série</string>
@@ -64,16 +65,21 @@
   <string name="recently_added_videos">Ajouts récents</string>
   <string name="recently_played">Joué récemment</string>
   <string name="recently_played_videos">Joué récemment</string>
+  <string name="video_lists">Listes</string>
   <!-- The string used in main storage list -->
   <string name="external_storage">Externe</string>
   <string name="internal_storage">Interne</string>
   <string name="network_storage">Réseau</string>
   <string name="sd_card_storage">Carte SD</string>
   <string name="usb_host_storage">Disque externe</string>
+  <string name="other_storage">Disque dur</string>
   <string name="network_media_servers">Serveurs de Média (UPnP)</string>
   <string name="network_shared_folders">Répertoires partagés (SMB)</string>
   <string name="network_connected_as">Connecté comme %s</string>
   <string name="network_guest">invité</string>
+  <string name="sftp_folders">FTP</string>
+  <string name="network_jcifs">Samba (Expérimental)</string>
+  <string name="network_cling">UPNP (Expérimental)</string>
   <string name="recordings_storage">Enregistrements</string>
   <string name="root_storage">Stockage interne</string>
   <string name="cannot_list">Erreur à la lecture du contenu</string>
@@ -124,10 +130,12 @@
   <string name="scrap_rating_format">Notes: %s</string>
   <string name="scrap_year">Année</string>
   <string name="scrap_year_format">Année: %d</string>
+  <string name="scrap_studio">Studio</string>
   <string name="scrap_plot">Résumé</string>
   <string name="scrap_trailer">Bandes annonces</string>
   <string name="scrap_cast">Distribution</string>
   <string name="scrap_cast_format">Distribution: %s</string>
+  <string name="scrap_genre">Genre</string>
   <string name="scrap_aired">Diffusé le</string>
   <string name="scrap_aired_format">Diffusé le: %s</string>
   <string name="scrap_guests">Invités</string>
@@ -152,6 +160,7 @@
   <string name="scrap_enable_network_first">"Veuillez d'abord vous connecter à un réseau pour pouvoir démarrer cette application."</string>
   <string name="scrap_failed">Film inexistant dans la base de données.</string>
   <string name="start_auto_scraper_activity">Rechercher les informations en ligne</string>
+  <string name="scraper_settigns">Posters &amp; descriptions</string>
   <string name="scrap_status_initial">En attente</string>
   <string name="scrap_status_busy">Recherche…</string>
   <string name="scrap_status_success">Mis à jour</string>
@@ -179,9 +188,11 @@
   <string name="rescan_storage">Rafraîchir les fichiers</string>
   <string name="rescanning">Rafraîchissement des fichiers</string>
   <string name="rescan_storage_summary">Ré-analyse le stockage interne, la carte SD et les clés USB</string>
-  <string name="preference_display_all_files">Affichier tous les fichiers dans l\'explorateur</string>
+  <string name="preference_display_all_files">Afficher tous les fichiers dans l\'explorateur</string>
   <string name="info_processing">Analyse du fichier…</string>
   <string name="info_video">Vidéo</string>
+  <string name="info_audio">Audio</string>
+  <string name="info_audio_vbr">VBR</string>
   <string name="info_plugin_required">(plugin requis)</string>
   <string name="info_subtitle">Sous-titres</string>
   <string name="info_resume">Point de reprise</string>
@@ -226,6 +237,7 @@
   <string name="player_pref_subtitle_delay_title">Décalage</string>
   <string name="floating_player_restore">Restaurer</string>
   <string name="floating_player_play">Lire</string>
+  <string name="floating_player_pause">Pause</string>
   <string name="player_pref_audio_delay_title">Décalage audio</string>
   <string name="now_playing">En cours de lecture</string>
   <string name="player_window_mode">Mode fenêtré</string>
@@ -251,7 +263,7 @@
   <string name="menu_player_settings">Réglages</string>
   <string name="menu_change_folder">Changer de dossier</string>
   <string name="menu_change_folder_details">Choisissez le dossier à ouvrir</string>
-  <string name="unlock_instructions">Appui long sur l\'icone pour déverrouiller</string>
+  <string name="unlock_instructions">Appui long sur l\'icône pour déverrouiller</string>
   <string name="seek_to_percentage">\"Aller à %s%%</string>
   <!-- Subtitles/Audio languages -->
   <string name="s_arabic">Arabe</string>
@@ -278,9 +290,11 @@
   <string name="s_russian">Russe</string>
   <string name="Romanian">Roumain</string>
   <string name="Serbo_Croatian">Serbo-Croate</string>
+  <string name="Croatian">Croate</string>
   <string name="Serbian">Serbe</string>
   <string name="Slovenian">Slovène</string>
   <string name="s_swedish">Suédois</string>
+  <string name="s_thai">Thaï</string>
   <string name="s_turkish">Turque</string>
   <string name="s_chinese">Chinois</string>
   <string name="s_vietnamese">Vietnamien</string>
@@ -293,9 +307,10 @@
   <string name="player_err_file">Le fichier vidéo n\'a pas été trouvé.</string>
   <string name="player_err_sizetoobig">Format vidéo trop grand</string>
   <string name="player_err_unknown">Erreur inconnue</string>
-  <string name="player_err_critical">Erreur du lecteur vidéo</string>
+  <string name="player_err_critical">Erreur du lecteur vidéo.</string>
   <string name="player_err_forcodec">pour le codec</string>
-  <string name="player_err_notinterleaved">Flux vidéo et audio non intercalés</string>
+  <string name="player_err_notinterleaved">Flux vidéo et audio non intercalés.</string>
+  <string name="player_err_codec">Codec</string>
   <string name="player_err_isnotsupported">non reconnu.</string>
   <string name="player_err_fileNoLicense">Aucune licence pour ce fichier.</string>
   <string name="player_err_fileerror">Fichier endommagé ou incomplet.</string>
@@ -329,7 +344,7 @@
   <string name="subtitles_wizard_associate">Associer ce fichier à la vidéo</string>
   <string name="subtitles_wizard_delete">Effacer ce fichier</string>
   <string name="subtitles_wizard_empty_list">Aucun fichier actuellement</string>
-  <string name="subtitles_wizard_add_files">Vous pouvez copier d\'autres fichiers de sous-titres dans ce dossier pour pouvoir les associer à cette vidéo</string>
+  <string name="subtitles_wizard_add_files">Vous pouvez copier d\'autres fichiers de sous-titres dans ce dossier pour pouvoir les associer à cette vidéo.</string>
   <string name="subtitles_wizard_help">Sélectionnez l\'un des fichiers de sous-titres disponibles pour l\'associer à la vidéo %s. Le fichier sera renommé de façon à ce que son nom corresponde à celui de la vidéo.</string>
   <string name="subtitles_wizard_empty_list_help">Aucun fichier de sous-titres n\'a été trouvé. Veuillez copier d\'abord des fichiers de sous-titres dans ce dossier pour pouvoir les associer à la vidéo %s.</string>
   <!-- Subloader -->
@@ -338,7 +353,7 @@
   <string name="toast_subloader_sub_not_found">Sous-titres non trouvés</string>
   <string name="toast_subloader_service_unreachable">Service indisponible</string>
   <string name="menu_subloader_allfolder">Télécharger les sous-titres manquants</string>
-  <string name="dialog_subloader_copying">Copie des sous-titres</string>
+  <string name="dialog_subloader_copying">Copie des sous-titres…</string>
   <string name="dialog_subloader_downloading">Téléchargement des sous-titres…</string>
   <string name="dialog_subloader_sumup">Téléchargement terminé</string>
   <string name="dialog_subloader_success">Sous-titres trouvés pour :</string>
@@ -352,11 +367,15 @@
   <string name="subtitle_settings_title">Réglages des sous-titres</string>
   <string name="subtitle_sample_text">\"exemple\"</string>
   <string name="subtitle_size_text">Taille:</string>
-  <string name="subtitle_vert_text">Position verticale:</string>
+  <string name="subtitle_style_text">Style :</string>
+  <string name="subtitle_vert_text">Position verticale :</string>
+  <string name="subtitle_color_default">#ffffff</string>
   <string name="subtitle_outline">Contour sous-titres</string>
   <!-- Subtitle Delay Dialog -->
   <string name="subtitle_delay_speed">Ajustement de la vitesse</string>
   <string name="subtitle_delay_radio_none">Aucun</string>
+  <string name="subtitle_delay_radio_ntsc2pal">NTSC &#x2192; PAL</string>
+  <string name="subtitle_delay_radio_pal2ntsc">PAL &#x2192; NTSC</string>
   <!-- Browser.CommonDetailsView -->
   <!-- Add a space after the right quote
     because the right part of the quote is
@@ -381,6 +400,11 @@
   <string name="add_ssh_shortcut">Créer un raccourci</string>
   <string name="ssh_prompt">Type</string>
   <string name="ssh_empty_view">Parcourez votre propre serveur FTP</string>
+  <string-array name="ssh_types">
+    <item>FTP</item>
+    <item>SFTP</item>
+    <item>FTPS</item>
+  </string-array>
   <string name="remove_from_shortcuts">Supprimer le raccourci</string>
   <string name="shortcut_added">Raccourci %s créé</string>
   <string name="shortcut_removed">Raccourci %s supprimé</string>
@@ -394,12 +418,12 @@
   <string name="ftp_shortcuts">Raccourcis FTP</string>
   <string name="add_to_indexed_folders">Indexer ce dossier</string>
   <string name="add_to_library">Ajouter à la bibliothèque</string>
-  <string name="add_all_items_to_library">Ajouter toutes les vidéos à ma bibliothèque</string>
+  <string name="add_all_items_to_library">Ajouter toutes les vidéos à ma bibliothèque ?</string>
   <string name="indexed_folder_added">Le dossier %s a été ajouté à la bibliothèque</string>
   <string name="remove_from_indexed_folders">Désindexer le dossier</string>
   <string name="indexed_folder_removed">Le dossier %s a été retiré des dossiers indexés</string>
   <string name="indexed_folders_list_empty">Pas de dossiers actuellement indexés.\n\nVous pouvez ajouter le contenu d\'un dossier réseau à la bibliothèque en ouvrant le dossier et en sélectionnant \"%s\" dans la barre du haut.</string>
-  <string name="indexed_folders_list_empty_ftp">Aucun dossier FTP indexé</string>
+  <string name="indexed_folders_list_empty_ftp">Aucun dossier FTP indexé.</string>
   <string name="open_indexed_folder">"Ouvrir"</string>
   <string name="rescan_indexed_folders">Recharger tous les dossiers indexés</string>
   <string name="last_rescan_never">Jamais</string>
@@ -412,7 +436,7 @@
   <string name="ssh_shortcut_name">Nom du raccourci</string>
   <!-- Preferences -->
   <string name="preferences">Préférences</string>
-  <string name="get_the_ad_free_version">Téléchargez la version sans publicité sur Google Play!</string>
+  <string name="get_the_ad_free_version">Téléchargez la version sans publicité sur Google Play</string>
   <string name="upgrade_to_add_free_version">Mettre-à-jour vers la version sans publicité</string>
   <string name="upgrade_to_add_free_version_description">Supprime les publicités et active toutes les fonctionnalités</string>
   <string name="preferences_category_complete">Version complète</string>
@@ -500,7 +524,7 @@
   <string name="network_nfo_parse">Traiter les fichiers \'nfo\'</string>
   <string name="network_nfo_parse_summary">Lire les fichiers \'.nfo\' de Boxee / XBMC lors du (re)scan pour récupérer les informations et posters des fichiers multimédia.</string>
   <string name="no_email_installed">Aucune application de mails détectée</string>
-  <string name="zipping_library_before_mailing">Compression d\'une copie de la librairie avant l\'envoi</string>
+  <string name="zipping_library_before_mailing">Compression d\'une copie de la librairie avant l\'envoi…</string>
   <string name="zipped_library_mail_text">Décrivez votre problème \n\n</string>
   <string name="sort_mode">Type de tri</string>
   <string name="sort_by_name_asc">Trier par nom (a &gt; z)</string>
@@ -623,13 +647,11 @@
   <string name="scheduled_rescan_time">Heure de re-scan</string>
   <string name="rescan_when_opening_application">Re-scanner lors de l\'ouverture de l\'application</string>
   <string name="last_rescan_occured">Dernier scan:</string>
-  <string name="error_permission_display_over_apps">
-        Le mode fenêtré requiert une permission spéciale pour s\'afficher par dessus d\'autres applications. Autorisez Nova Video Player pour continuer.
-    </string>
+  <string name="error_permission_display_over_apps">Le mode fenêtré requiert une permission spéciale pour s\'afficher par dessus d\'autres applications. Autorisez Nova Video Player pour continuer.</string>
   <string name="view_more">Plus d\'informations</string>
   <string name="nfo_export_in_progress">Export de NFO en cours</string>
   <string name="rescrap_in_progress">Actualisation des descriptions en cours</string>
-  <string name="acquire_external_usb_permission">Nova Vidéo requiert une permission spéciale pour accéder au stockage externe. Sélectionnez votre stockage sur l\'écran suivant.</string>
+  <string name="acquire_external_usb_permission">Nova Vidéo requiert une permission spéciale pour accéder au stockage externe. Sélectionnez votre stockage sur l\'écran suivant</string>
   <string name="rescrap_not_found">Rechercher les descriptions manquantes des vidéos</string>
   <string name="rescrap_all_title">Actualiser les descriptions</string>
   <string name="nfo_export_manual_title">Exporter toutes les descriptions</string>
@@ -639,19 +661,18 @@
   <string name="select_sub_file"><![CDATA[Les sous-titres exacts n\'ont pas été trouvés pour ce fichier <font color=#29b6f6><i>%s</i></font><br />Choisissez un fichier parmi cette liste:]]></string>
   <string name="cast_stream_mode">Mode Streaming</string>
   <string name="cast_remote_display_mode">Écran distant</string>
-  <string name="sleep_timer_description">Arrêt de la vidéo après:</string>
+  <string name="sleep_timer_description">Arrêt de la vidéo après : </string>
   <string name="troubleshoot_streammode_msg">Nova video player est en Mode Streaming.
         \nLa qualité vidéo sera optimale mais vous pouvez rencontrer des soucis avec vos pistes de sous-titres et pistes audio.
         En ce cas, vous pouvez passer en mode \"Écran distant\".</string>
   <string name="troubleshoot_remotemode_msg">Nova video player est en Écran distant.
-        \nEn fonction de votre appareil et selon les performances de votre réseau, la qualité vidéo peut être déteriorée. </string>
+\nEn fonction de votre appareil et selon les performances de votre réseau, la qualité vidéo peut être détériorée. </string>
   <string name="cast_warning">Le cast est limité par le peu de codecs supportés par la Chromecast. Pour contourner ces limitations, l\'application passe automatiquement en Écran distant si le format n\'est pas supporté. La qualité et la vitesse de chargement dépendent fortement de votre appareil et de votre réseau.</string>
   <string name="cast_warning_title">Expérimental</string>
   <string name="cast_introduction">Nouveauté expérimentale : \nGoogle cast</string>
   <string name="help_faq">Aide/FAQ</string>
   <string name="learn_more">En savoir plus</string>
-  <string name="learn_more_about_codecs">
-        Nova Video Player ne peut lire que les vidéos supportées par votre appareil. Certains codecs ne peuvent être distribués légalement, d\'autres peuvent être achetés sur le Play Store.</string>
+  <string name="learn_more_about_codecs">Nova Video Player ne peut lire que les vidéos supportées par votre appareil. Certains codecs ne peuvent être distribués légalement, d\'autres peuvent être achetés sur le Play Store.</string>
   <string name="rate_us">Si vous aimez cette application, pensez à nous soutenir en nous donnant 5 étoiles</string>
   <string name="rate_us_title">☆ Soutenez-nous</string>
   <string name="create_new_list">Créer une nouvelle liste</string>

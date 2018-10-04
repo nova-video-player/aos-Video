@@ -1,284 +1,263 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- /*** Copyright 2007, The Android Open Source Project**** Licensed under the Apache License, Version 2.0 (the "License"); ** you may not use this file except in compliance with the License. ** You may obtain a copy of the License at **** http://www.apache.org/licenses/LICENSE-2.0 **** Unless required by applicable law or agreed to in writing, software ** distributed under the License is distributed on an "AS IS" BASIS, ** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. ** See the License for the specific language governing permissions and ** limitations under the License.*/ -->
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string msgid="5548732936480723311" name="fast_scroll_alphabet">" ABCDEFGHIJKLMNOPQRSTUVWXYZ"</string>
-    <string msgid="2854921021814550018" name="play_selection">"Afspelen"</string>
-    <string msgid="1016971653383739344" name="search_title">"Zoeken"</string>
-    <string msgid="8979658707407220934" name="goto_start">"Bibliotheek"</string>
-    <string name="recordings_storage">"Opnamen"</string>
-    <string name="unknown_track_name">Onbekend</string>
-    <string name="info">Info</string>
-    <string name="info_duration">Duur:</string>
-    <string name="recently_added">Onlangs toegevoegd</string>
-    <string name="recently_added_videos">Onlangs toegevoegd</string>
-    <string name="recently_played">Onlangs gespeeld</string>
-    <string name="recently_played_videos">Onlangs gespeeld</string>
-    <string name="not_played_yet_videos">Nog niet afgespeeld</string>
-    <string name="external_storage">Externe</string>
-    <string name="internal_storage">Interne</string>
-    <string name="network_storage">Netwerk</string>
-    <string name="sd_card_storage">SD kaart</string>
-    <string name="usb_host_storage">Externe schijf</string>
-    <string name="network_media_servers">Media servers (UPnP)</string>
-    <string name="network_shared_folders">Gedeelde mappen (SMB)</string>
-    <string name="root_storage">Interne opslagruimte</string>
-    <string name="refresh_servers_list">Serverlijst opnieuw laden</string>
-    <string name="cannot_list">Kan de inhoud niet weergeven</string>
-    <string name="cannot_open_video">Kan deze video niet openen</string>
-    <string name="confirm_delete">Wilt u dit echt verwijderen?</string>
-    <string name="deleting">Bezig met verwijderen, een ogenblik…</string>
-    <string name="cannot_delete_directory">De map kan niet worden verwijderd</string>
-    <string name="cannot_delete_file">Het bestand kan niet worden verwijderd</string>
-    <string name="directory_deleted">De map is verwijderd</string>
-    <string name="file_deleted">Het bestand is verwijderd</string>
-    <string name="resume">Hervatten</string>
-    <string name="bookmark">Bladwijzer</string>
-    <string name="delete">Verwijderen</string>
-    <string name="delete_resume">Hervatten verwijderen</string>
-    <string name="delete_bookmark">Bladwijzer verwijderen</string>
-    <string name="player_loading_video">Video wordt geladen\u2026</string>
-    <string name="player_audio_track_toast">Audiospoor:</string>
-    <string name="player_subtitle_track_toast">Ondertitelspoor:</string>
-    <string name="player_bookmark_set">Bladwijzer ingesteld op</string>
-    <string name="player_pref_subtitle_delay_title">Vertraging</string>
-    <string name="pref_audio_parameters_title">Audio</string>
-    <string name="pref_play_mode_title">Afspeelmodus</string>
-    <string name="pref_play_mode_entry_single">Een</string>
-    <string name="pref_play_mode_entry_folder">Map</string>
-    <string name="pref_play_mode_entry_repeat_folder">Map herhalen</string>
-    <string name="pref_play_mode_entry_repeat_single">Een herhalen</string>
-    <string name="s_arabic">Arabisch</string>
-    <string name="s_bulgarian">Bulgaars</string>
-    <string name="Bosnian">Bosnisch</string>
-    <string name="s_czech">Tsjechisch</string>
-    <string name="s_danish">Deens</string>
-    <string name="s_german">Duits</string>
-    <string name="s_english">Engels</string>
-    <string name="s_greek">Grieks</string>
-    <string name="s_spanish">Spaans</string>
-    <string name="s_finnish">Fins</string>
-    <string name="s_french">Frans</string>
-    <string name="s_hebrew">Hebreeuws</string>
-    <string name="s_hungarian">Hongaars</string>
-    <string name="s_italian">Italiaans</string>
-    <string name="s_japanese">Japans</string>
-    <string name="s_korean">Koreaans</string>
-    <string name="s_dutch">Nederlands</string>
-    <string name="s_norwegian">Noors</string>
-    <string name="s_polish">Pools</string>
-    <string name="s_portuguese">Portugees</string>
-    <string name="s_russian">Russisch</string>
-    <string name="Romanian">Roemeens</string>
-    <string name="Serbo_Croatian">Servo-Kroatisch</string>
-    <string name="Serbian">Servisch</string>
-    <string name="s_swedish">Zweeds</string>
-    <string name="s_turkish">Turks</string>
-    <string name="s_chinese">Chinees</string>
-    <string name="s_none">Geen</string>
-    <string name="player_err_cantplayvideo">Kan de video niet afspelen</string>
-    <string name="player_err_file">Het videobestand bestaat niet.</string>
-    <string name="player_err_sizetoobig">Afbeelding te groot</string>
-    <string name="player_err_unknown">Onbekende fout.</string>
-    <string name="player_err_critical">Mediaserverfout.</string>
-    <string name="player_err_forcodec">voor codec</string>
-    <string name="player_err_notinterleaved">Video-en audiostreams zijn niet INTERLEAVED.</string>
-    <string name="player_err_codec">Codec</string>
-    <string name="player_err_isnotsupported">wordt niet ondersteund.</string>
-    <string name="player_err_fileNoLicense">Geen licentie gevonden voor dit bestand.</string>
-    <string name="player_err_fileerror">Bestand beschadigd of onvolledig.</string>
-    <string name="player_err_connection_failed">Verbinding mislukt.</string>
-    <string name="player_err_video_decoder_error">Fout in videodecoder:</string>
-    <string name="player_err_qpel_and_gmc">\"Quarter Pixel\" en \"GMC\"</string>
-    <string name="player_err_profile_and_level">\"Profiel\" en \"Niveau\"</string>
-    <string name="player_err_interlaced">Interlaced</string>
-    <string name="player_plugin_cinema_title">Cinema plug-in</string>
-    <string name="player_plugin_cinema">Cinema plug-in (DVD, MPEG-2, AC3)</string>
-    <string name="player_plugin_video_msg">Dit bestand bevat het videoformaat <xliff:g id="video">%1$s</xliff:g>.</string>
-    <string name="player_plugin_audio_msg">Dit bestand bevat het audioformaat <xliff:g id="video">%1$s</xliff:g>.</string>
-    <string name="player_plugin_video_audio_msg">Dit bestand bevat het videoformaat <xliff:g id="video">%1$s</xliff:g> en het audioformaat <xliff:g id="audio">%2$s</xliff:g>.</string>
-    <string name="player_plugin_purchase_msg">Schaf <xliff:g id="plugin">%1$s</xliff:g></string>
-    <string name="player_plugin_purchase">Ga naar de Store</string>
-    <string name="scrap_no_network">"Niet verbonden met het netwerk"</string>
-    <string name="scrap_enable_network_first">"Schakel de netwerk-verbinding in voordat u de toepassing gaat uitvoeren."</string>
-    <string name="video">Nova Video</string>
-    <string name="all_videos">Alle video\'s</string>
-    <string name="video_folder">Mappen</string>
-    <string name="movies">Films</string>
-    <string name="all_tv_shows">Tv-series</string>
-    <string name="all_movies_and_tv_shows">Films en tv-series</string>
-    <string name="no_server">Geen mediaserver gevonden</string>
-    <string name="upnp_not_allowed">U hebt geen toegang tot deze UPnP-server. Wijzig eerst uw toegangsconfiguratie.</string>
-    <string name="scrap_remove">Deze info verwijderen</string>
-    <string name="scrap_remove_short">Remove</string> <!-- for small screens --> <!-- TODO -->
-    <string name="scrap_director">Regisseur</string>
-    <string name="scrap_director_format">Regisseur: %s</string>
-    <string name="scrap_rating">Beoordeling</string>
-    <string name="scrap_rating_format">Beoordeling: %s</string>
-    <string name="scrap_year">Jaar</string>
-    <string name="scrap_year_format">Jaar: %d</string>
-    <string name="scrap_studio">Studio</string>
-    <string name="scrap_plot">Plot</string>
-    <string name="scrap_cast">Cast</string>
-    <string name="scrap_cast_format">Cast: %s</string>
-    <string name="scrap_genre">Genre</string>
-    <string name="scrap_aired">Uitgezonden</string>
-    <string name="scrap_aired_format">Uitgezonden: %s</string>
-    <string name="scrap_guests">Gasten</string>
-    <string name="scrap_premiered">Première</string>
-    <string name="episode_name">Aflevering</string>
-    <string name="episode_season">Seizoen</string>
-    <string name="episode_identification">Seizoen %1$d aflevering %2$d</string>
-    <string name="scrap_processing">Metagegevens ophalen…</string>
-    <string name="scrap_failed">Film niet gevonden in de online database.</string>
-    <string name="start_auto_scraper_activity">Info online zoeken</string>
-    <string name="scrap_status_initial">In wachtrij</string>
-    <string name="scrap_status_busy">Zoeken…</string>
-    <string name="scrap_status_success">Bijgewerkt</string>
-    <string name="scrap_status_failed">Info niet gevonden</string>
-    <string name="scrap_status_rejected">Info verwijderd</string>
-    <string name="scrap_status_unknown">Onbekend</string>
-    <string name="scraper_abort_request">Wilt u stoppen met zoeken?</string>
-    <string name="scraper_no_files">Geen bestanden die kunnen worden verwerkt</string>
-    <string name="scraper_notification_title">Online informatie zoeken</string>
-    <string name="scraper_notification_progress">%1$d van %2$d bestanden verwerkt</string>
-    <string name="scraper_no_episode_found">Er zijn geen afleveringen gevonden</string>
-    <string name="scraper_suggest_message">U kunt online naar posters en informatie voor uw video\'s zoeken via het menu \'Online informatie zoeken\'.</string>
-    <string name="scraper_no_movie_text">Op het moment zijn er geen posters en informatie voor uw films</string>
-    <string name="scraper_no_movie_button_label">Info online zoeken voor uw films</string>
-    <string name="scraper_no_tv_show_text">Op het moment zijn er geen posters en informatie voor uw tv-series</string>
-    <string name="scraper_no_tv_show_button_label">Info online zoeken voor uw tv-series</string>
-    <string name="info_processing">Media-eigenschappen controleren…</string>
-    <string name="info_video">Video</string>
-    <string name="info_audio">Audio</string>
-    <string name="info_audio_vbr">VBR</string>
-    <string name="info_plugin_required">(plug-in vereist)</string>
-    <string name="info_subtitle">Ondertiteling</string>
-    <string name="you_have_no_recently_added_video">Geen onlangs toegevoegde video</string>
-    <string name="you_have_no_recently_played_video">Geen onlangs afgespeelde video</string>
-    <string name="you_have_no_video">Geen video\'s</string>
-    <string name="you_have_no_movies">Geen films</string>
-    <string name="you_have_no_tv_shows">Geen tv-series</string>
-    <string name="mediacenterlabel">Media Center</string>
-    <string name="view_mode">Weergavemodus</string>
-    <string name="view_mode_list">Lijst</string>
-    <string name="view_mode_grid">Posters</string>
-    <string name="view_mode_details">Details</string>
-    <string name="switch_to_list">Lijst</string>
-    <string name="switch_to_grid">Raster</string>
-    <string name="menu_info">Info</string>
-    <string name="menu_subtitles">Ondertitelingssporen</string>
-    <string name="menu_audio">Audiosporen</string>
-    <string name="menu_bookmark">Bladwijzer instellen</string>
-    <string name="menu_brightness_settings">Helderheid</string>
-    <string name="menu_player_settings">Instellingen</string>
-    <string name="get_subtitles_on_drive">Ondertiteling selecteren bij opslaan</string>
-    <string name="subtitles_wizard_no_files">Geen ondertiteling gevonden</string>
-    <string name="subtitles_wizard_current_files">Huidige ondertitelingsbestanden:</string>
-    <string name="subtitles_wizard_available_files">Beschikbare ondertitelingsbestanden:</string>
-    <string name="subtitles_wizard_associate">Dit bestand aan de video koppelen</string>
-    <string name="subtitles_wizard_delete">Dit bestand verwijderen</string>
-    <string name="subtitles_wizard_empty_list">Geen bestand gevonden</string>
-    <string name="subtitles_wizard_add_files">U kunt meer ondertitelingsbestanden naar de map kopiëren en ze aan deze video te koppelen.</string>
-    <string name="subtitles_wizard_help">Selecteer een van de beschikbare ondertitelingsbestanden om deze aan de video %s te koppelen. De naam van het bestand wordt gewijzigd, zodat deze overeenkomt met de naam van de video.</string>
-    <string name="subtitles_wizard_empty_list_help">Geen ondertitelingsbestanden gevonden. U moet eerst een ondertitelingsbestand naar deze map kopiëren voordat u het bestand aan de video %s kunt koppelen.</string>
-    <string name="get_subtitles_online">Online ondertitelingen ophalen</string>
-    <string name="subtitle_settings_title">Ondertitelingsinstellingen</string>
-    <string name="subtitle_sample_text">\"voorbeeld\"</string>
-    <string name="subtitle_size_text">Grootte:</string>
-    <string name="subtitle_vert_text">Verticale positie:</string>
-    <string name="add_to_shortcuts">Creëer shortcut</string>
-    <string name="remove_from_shortcuts">Shortcut verwijderen</string>
-    <string name="shortcut_added">Shortcut %s creëert</string>
-    <string name="shortcut_removed">Shortcut %s verwijderd</string>
-    <string name="server_not_available">Op het moment is het server niet beschikbaar</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nee</string>
-    <string name="abort">Afbreken</string>
-    <string name="enable_network_shares">Schakel delen via netwerk in</string>
-    <string name="scraper_no_new_files">Geen nieuwe bestanden om te verwerken</string>
-    <string name="scraper_no_new_files_in_folder">Geen nieuwe bestanden om in deze map te verwerken</string>
-    <string name="scraper_folder_no_files">Er zijn echter nog steeds %d video\'s waarvoor eerder geen info is gevonden.</string>
-    <string name="scraper_folder_no_file">Er is echter nog steeds 1 video waarvoor eerder geen info is gevonden.</string>
-    <string name="scraper_folder_try_again">Wilt u het opnieuw proberen?</string>
-    <string name="info_resume">Positie weer innemen:</string>
-    <string name="info_bookmark">Positie markeren:</string>
-    <string name="pref_audio_filt_title">Audio Boost</string>
-    <string name="player_plugin_ac3_title">AC3 plug-in</string>
-    <string name="player_plugin_ac3">AC3 plug-in</string>
-    <string name="player_plugin_mpeg2_title">MPEG-2 plug-in</string>
-    <string name="player_plugin_mpeg2">MPEG-2 plug-in (dvd)</string>
-    <string name="toast_subloader_sub_found">Ondertiteling gevonden voor deze taal</string>
-    <string name="toast_subloader_sub_not_found">Geen ondertiteling gevonden voor deze taal</string>
-    <string name="toast_subloader_service_unreachable">Uitval webservice ondertitelingen</string>
-    <string name="menu_subloader_allfolder">Haal ontbrekende ondertiteling op</string>
-    <string name="dialog_subloader_downloading">Bezig met downloaden ondertiteling…</string>
-    <string name="dialog_subloader_sumup">Download voltooid</string>
-    <string name="dialog_subloader_success">Ondertiteling gevonden voor:</string>
-    <string name="dialog_subloader_fails">Geen ondertiteling gevonden voor:</string>
-    <string name="sub_force_all_title">Forceer download ondertiteling</string>
-    <string name="sub_force_all">Al uw video\'s hebben al minstens één ondertiteling. Wilt u de download van meer ondertitelingen forceren?</string>
-    <string name="dialog_subloader_nonetwork_title">Geen internetverbinding</string>
-    <string name="dialog_subloader_nonetwork_message">Er is een internetverbinding nodig om ondertitelingen te downloaden</string>
-    <string name="subtitle_delay_speed">Aanpassing snelheid</string>
-    <string name="subtitle_delay_radio_none">geen</string>
-    <string name="subtitle_delay_radio_ntsc2pal">NTSC → PAL</string>
-    <string name="subtitle_delay_radio_pal2ntsc">PAL → NTSC</string>
-    <string name="quotation_format">“%s” </string>
-    <string name="cannot_open_shortcut">De inhoud van deze shortcut is momenteel niet beschikbaar.\nControleer of u de juiste toestemmingen hebt.</string>
-    <string name="network_shortcuts">Netwerk-shortcuts</string>
-    <string name="media_servers">Mediaservers</string>
-    <string name="shortcut_list_empty">Geen netwerk-shortcut aangemaakt.\n\nKlik om shortcuts naar uw favoriete mappen op afstand te maken lang op de doelmap en selecteer \"%s\" in de werkbalk bovenaan.</string>
-    <string name="preferences">Voorkeuren</string>
-    <string name="category_languages">Ondertitelingen</string>
-    <string name="preferences_languages">Talen ondertitelingsdownload</string>
-    <string name="summary_list_preference_primary">Selecteer uw talen voor het dowloaden van ondertitelingen</string>
-    <string name="favSubLang_title">Leestaal ondertitelingen</string>
-    <string name="favSubLang_summary">Selecteer uw favoriete taal voor het lezen van ondertitelingen</string>
-    <string name="tv_scraper">TV-shows</string>
-    <string name="movie_scraper">Films</string>
-    <string name="locale">Systeemtaal</string>
-    <string name="video_picker_title">"Video selecteren"</string>
-    <string name="notification_mode">Meldingen</string>
-    <string name="notifications_all">Alle meldingen</string>
-    <string name="notifications_alerts">Alleen waarschuwingen van meldingen</string>
-    <string name="notifications_none">Geen meldingen</string>
-    <string name="info_tab_movie">Film</string>
-    <string name="info_tab_file">Bestandsinformatie</string>
-    <string name="play_from_beginning">Afspelen vanaf begin</string>
-    <string name="info_tab_show">Programma</string>
-    <string name="info_tab_episode">Aflevering</string>
-    <string name="info_tab_video">Video</string>
-    <string name="info_tab_backdrop_chooser">Achtergrondkiezer</string>
-    <string name="info_tab_poster_chooser">Posterkiezer</string>
-    <string name="info_tab_share">Delen</string>
-    <string name="scrap_no_info">U heeft geen beschrijving van een film of tv-programma voor deze video.</string>
-    <string name="scrap_change">Info voor alle afleveringen wijzigen.</string>
-    <string name="show_network">Netwerk</string>
-    <string name="use_remote_resume">Doorgaan vanaf netwerkpositie?</string>
-    <string name="pref_s3d_mode_title">3D-modus</string>
-    <string name="pref_s3d_mode_entry_sbs">Naast elkaar</string>
-    <string name="pref_s3d_mode_entry_topbottom">Boven en onder</string>
-    <string name="pref_s3d_mode_entry_off">Uit</string>
-    <string name="dialog_subloader_connecting">Bezig met verbinding maken met www.opensubtitles.org…</string>
-    <string name="indexed_folders">Geïndexeerde mappen</string>
-    <string name="add_to_indexed_folders">Indexmap</string>
-    <string name="indexed_folder_added">Map %s toegevoegd aan geïndexeerde mappen</string>
-    <string name="remove_from_indexed_folders">Verwijderen uit geïndexeerde mappen</string>
-    <string name="indexed_folder_removed">Map %s verwijderd uit geïndexeerde mappen</string>
-    <string name="open_indexed_folder">"Open"</string>
-    <string name="rescan_indexed_folders">Alle geïndexeerde mappen opnieuw scannen</string>
-    <string name="indexed_folders_list_empty">Er zijn momenteel geen netwerkmappen geïndexeerd.\n\nU kunt de content van een netwerkmap toevoegen aan de bibliotheek door naar de map te bladeren en \"%s\" te selecteren in de bovenste actiebalk.</string>
-    <string name="video_info_custom_search_file_hint">\"Moviename\" [Filmnaam] of \"Showname S01E01\" [Programmanaam S01E01]</string>
-    <string name="video_info_custom_search_show_hint">TV-show</string>
-    <string name="scrap_show_no_result">Geen overeenkomend programma online gevonden.</string>
-    <string name="video_info_backdrop_select">Kies een andere afbeelding</string>
-    <string name="video_info_backdrop_remove">Verwijderen</string>
-    <string name="video_info_backdrop_set_as">Afbeelding instellen als</string>
-    <string name="video_info_share_message">"Ik heb de video \"%1$s\" op mijn Archos %2$s bekeken"</string>
-    <string name="network_reindex">Content opnieuw scannen</string>
-    <string name="help_overlay_network_indexing_text1">Druk op deze menu-optie om de content van deze map en submappen aan de Videobibliotheek toe te voegen.</string>
-    <string name="help_overlay_network_indexing_text2">Hiermee kunt u posters en beschrijvingen van films en tv-programma\'s krijgen.</string>
-    <string name="help_overlay_scraper_text">Druk op deze menu-optie om online te zoeken naar posters en beschrijvingen voor video\'s. </string>
-    <string name="new_videos_count">Nieuwe video\'s: %d</string>
-    <string name="new_videos_scrape_message">U heeft nieuwe foto\'s waarvoor nog geen informatie en posters zijn.</string>
+<!--Generated by crowdin.com-->
+<!--
+/*
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+  <!-- Menu item that takes the user back to the top level screen of the music player -->
+  <string name="goto_start">Bibliotheek</string>
+  <!-- Menu item that takes the user to the "now playing" screen of the music player -->
+  <!-- Menu item to refresh servers list -->
+  <string name="refresh_servers_list">Serverlijst opnieuw laden</string>
+  <!-- Menu item to enable network shares -->
+  <string name="enable_network_shares">Delen via het netwerk inschakelen</string>
+  <string name="initial_scan">Initiële scan</string>
+  <!-- Library screen, menu item -->
+  <string name="search_title">Zoeken</string>
+  <!-- Default name of track that doesn't have a name in the metadata -->
+  <string name="unknown_track_name">Onbekend</string>
+  <!-- Toast after turning shuffle on -->
+  <!-- Toast after turning shuffle off -->
+  <!-- Toast after turning single repeat on -->
+  <!-- Context menu item -->
+  <string name="info">Info</string>
+  <!-- Context menu item -->
+  <string name="play_selection">Afspelen</string>
+  <!-- Context menu item -->
+  <string name="multiple_selection">Meervoudige selectie</string>
+  <!-- Context menu item -->
+  <string name="play_from_beginning">Afspelen vanaf het begin</string>
+  <!-- Dialog box button -->
+  <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+  <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+  <!-- The string used in file/folder infos dialog. -->
+  <string name="info_duration">Tijdsduur</string>
+  <string name="video_sources">Bronnen</string>
+  <!-- Infos dialog tabs -->
+  <string name="info_tab_movie">Film</string>
+  <string name="info_tab_show">Programma</string>
+  <string name="info_tab_episode">Aflevering</string>
+  <string name="info_tab_video">Video</string>
+  <string name="info_tab_file">Bestandsinformatie</string>
+  <string name="info_tab_backdrop_chooser">Achtergrond kiezer</string>
+  <string name="info_tab_poster_chooser">Poster kiezer</string>
+  <string name="info_tab_share">Delen</string>
+  <string name="info_menu_backdrop_select">Achtergrond</string>
+  <string name="info_menu_series_backdrop_select">Serie achtergrond</string>
+  <string name="info_menu_poster_select">Kies een andere poster</string>
+  <string name="info_menu_series_poster_select">Kies een andere poster</string>
+  <!-- COVER ROLL -->
+  <string name="recently_added">Onlangs toegevoegd</string>
+  <string name="recently_added_videos">Onlangs toegevoegd</string>
+  <string name="recently_played">Onlangs gespeeld</string>
+  <string name="recently_played_videos">Onlangs afgespeeld</string>
+  <string name="video_lists">Afspeellijsten</string>
+  <!-- The string used in main storage list -->
+  <string name="external_storage">Extern</string>
+  <string name="internal_storage">Intern</string>
+  <string name="network_storage">Netwerk</string>
+  <string name="sd_card_storage">SD-kaart</string>
+  <string name="usb_host_storage">Externe schijf</string>
+  <string name="other_storage">Schijf</string>
+  <string name="network_media_servers">Mediaservers (UPnP)</string>
+  <string name="network_shared_folders">Gedeelde mappen (SMB)</string>
+  <string name="network_connected_as">Verbonden als %s</string>
+  <string name="network_guest">gast</string>
+  <string name="sftp_folders">FTP</string>
+  <string name="network_jcifs">Samba (Experimenteel)</string>
+  <string name="network_cling">UPNP (experimenteel)</string>
+  <string name="recordings_storage">Opnames</string>
+  <string name="root_storage">Interne opslag</string>
+  <string name="cannot_list">Kan de inhoud niet weergeven</string>
+  <!-- VIDEO -->
+  <string name="video">Nova Video</string>
+  <string name="videos">Video\'s</string>
+  <string name="all_videos">Alle video\'s</string>
+  <string name="not_played_yet_videos">Nog niet afgespeeld</string>
+  <string name="video_folder">Mappen</string>
+  <string name="movies">Films</string>
+  <string name="all_movies">Alle films</string>
+  <string name="movies_by_genre">Films op genre</string>
+  <string name="movies_by_year">Films per jaar</string>
+  <string name="all_tv_shows">Tv-series</string>
+  <string name="all_movies_and_tv_shows">Films en tv-series</string>
+  <string name="non_scraped_videos">Videos zonder opgehaalde informatie</string>
+  <string name="no_server">Geen mediaserver gevonden</string>
+  <string name="cannot_open_video">Kan deze video niet openen</string>
+  <string name="confirm_delete">Wilt u dit echt verwijderen?</string>
+  <string name="deleting">Bezig met verwijderen, een ogenblik…</string>
+  <string name="cannot_delete_directory">De map kan niet worden verwijderd</string>
+  <string name="cannot_delete_file">Kan het bestand niet verwijderen</string>
+  <string name="directory_deleted">De map is verwijderd</string>
+  <string name="file_deleted">Het bestand is verwijderd</string>
+  <string name="resume">Hervatten</string>
+  <string name="remote_resume">Hervatten op afstand</string>
+  <string name="bookmark">Bladwijzer</string>
+  <string name="delete">Verwijderen</string>
+  <string name="delete_resume">Hervatten verwijderen</string>
+  <string name="delete_bookmark">Bladwijzer verwijderen</string>
+  <string name="mark_as_watched">Markeer als bekeken</string>
+  <string name="mark_as_not_watched">Markeer als niet bekeken</string>
+  <string name="upnp_not_allowed">U hebt geen toegang tot deze UPNP-server. Wijzig eerst uw toegangsconfiguratie.</string>
+  <string name="scrap_no_info">U heeft geen beschrijving van een film of tv-programma voor deze video.</string>
+  <string name="scrap_remove">Beschrijving verwijderen</string>
+  <string name="scrap_remove_short">Verwijderen</string>
+  <!-- for small screens -->
+  <string name="scrap_change">Informatie voor alle afleveringen wijzigen</string>
+  <string name="scrap_series_change">Wijzig informatie series</string>
+  <string name="scrap_change_confirmation">Wijzig alle afleveringen van\n\t\"%1$s\"\nnaar\n\t\"%2$s\"?</string>
+  <string name="scrap_change_title">Alle afleveringen aanpassen</string>
+  <string name="scrap_change_initializing">Initialiseren...</string>
+  <string name="scrap_change_finalizing">Afronden…</string>
+  <!-- Generic strings for Movies or TV shows -->
+  <string name="scrap_director">Regisseur</string>
+  <string name="scrap_director_format">Regisseur: %s</string>
+  <string name="scrap_rating">Beoordeling</string>
+  <string name="scrap_rating_format">Beoordeling: %s</string>
+  <string name="scrap_year">Jaar</string>
+  <string name="scrap_year_format">Jaar: %d</string>
+  <string name="scrap_studio">Studio</string>
+  <string name="scrap_plot">Plot</string>
+  <string name="scrap_trailer">Trailers</string>
+  <string name="scrap_cast">Acteurs</string>
+  <string name="scrap_cast_format">Acteurs: %s</string>
+  <string name="scrap_genre">Genre</string>
+  <string name="scrap_aired">Uitgezonden</string>
+  <string name="scrap_aired_format">Uitgezonden: %s</string>
+  <string name="scrap_guests">Gasten</string>
+  <string name="scrap_premiered">Première</string>
+  <!-- Specific strings for TV shows -->
+  <string name="show_network">Netwerk</string>
+  <string name="episode_name">Aflevering</string>
+  <string name="episode_season">Seizoen</string>
+  <string name="episode_identification">Seizoen %1$d aflevering %2$d</string>
+  <string name="season_identification">Seizoen %1$d</string>
+  <string name="next_episode">Volgende aflevering</string>
+  <string name="list_episodes">Toon afleveringen</string>
+  <string name="how_to_mark_season_watched">Klik op een seizoen om alle afleveringen te markeren als bekeken of als niet bekeken</string>
+  <string name="no_episode_watched">Geen aflevering bekeken</string>
+  <string name="all_episodes_watched">Alle afleveringen bekeken</string>
+  <plurals name="n_episodes_watched">
+    <item quantity="one">%d aflevering bekeken</item>
+    <item quantity="other">%d afleveringen bekeken</item>
+  </plurals>
+  <string name="scrap_processing">Metainformatie ophalen…</string>
+  <string name="scrap_no_network">Niet verbonden met het netwerk.</string>
+  <string name="scrap_enable_network_first">"Schakel de netwerk-verbinding in voordat u de toepassing gaat uitvoeren."</string>
+  <string name="scrap_failed">Film niet gevonden in de online database.</string>
+  <string name="start_auto_scraper_activity">Online informatie zoeken</string>
+  <string name="scraper_settigns">Omschrijving posters</string>
+  <string name="scrap_status_initial">In wachtrij</string>
+  <string name="scrap_status_busy">Zoeken…</string>
+  <string name="scrap_status_success">Bijgewerkt</string>
+  <string name="scraper_no_movie_text">Op het moment zijn er geen posters en informatie beschikbaar voor uw films</string>
+  <string name="scraper_no_tv_show_text">Op het moment zijn er geen posters en informatie beschikbaar voor uw tv-series</string>
+  <!-- To be translated only in case there is a localized IMDB -->
+  <!-- VIDEO COVER ROLL -->
+  <!-- Media Center -->
+  <!-- VideoPlayer -->
+  <string name="player_audio_track_toast">Audiospoor:</string>
+  <string name="player_subtitle_track_toast">Ondertitelspoor:</string>
+  <string name="player_bookmark_set">Bladwijzer ingesteld op</string>
+  <string name="player_pref_subtitle_delay_title">Vertraging</string>
+  <string name="floating_player_restore">Herstellen</string>
+  <string name="floating_player_play">Afspelen</string>
+  <string name="floating_player_pause">Pauseren</string>
+  <string name="player_pref_audio_delay_title">Audiovertraging</string>
+  <string name="now_playing">Nu aan het afspelen</string>
+  <string name="player_window_mode">Venster Mode</string>
+  <string name="pref_play_mode_title">Afspeelmodus</string>
+  <string name="pref_play_mode_entry_single">Enkelvoudig</string>
+  <string name="pref_play_mode_entry_folder">Map</string>
+  <string name="pref_play_mode_entry_repeat_folder">Map herhalen</string>
+  <string name="pref_play_mode_entry_repeat_single">Eén herhalen</string>
+  <string name="pref_audio_parameters_title">Geluid</string>
+  <string name="pref_audio_filt_title">Audio versterken</string>
+  <string name="pref_audio_filt_night_mode">Nachtmodus</string>
+  <string name="ui_mode_auto">Automatisch</string>
+  <string name="ui_mode_tv">TV</string>
+  <string name="ui_mode_normal">Tablet/Telefoon</string>
+  <string name="pref_s3d_mode_title">3D-modus</string>
+  <string name="pref_s3d_mode_entry_sbs">Naast elkaar</string>
+  <string name="pref_s3d_mode_entry_topbottom">Boven en onder</string>
+  <string name="pref_s3d_mode_entry_anaglyph">Anaglyph</string>
+  <string name="pref_s3d_mode_entry_off">Uit</string>
+  <string name="menu_info">Informatie</string>
+  <string name="menu_subtitles">Ondertitelspoor</string>
+  <string name="menu_audio">Geluidsspoor</string>
+  <string name="menu_lock_player">Vergrendel speler</string>
+  <string name="menu_bookmark">Bladwijzer instellen</string>
+  <string name="menu_brightness_settings">Helderheid</string>
+  <string name="menu_player_settings">Instellingen</string>
+  <string name="menu_change_folder">Map wijzigen</string>
+  <string name="menu_change_folder_details">Kies de map waaruit u wilt starten</string>
+  <string name="unlock_instructions">Druk lang op icoon om te ontgrendelen</string>
+  <string name="seek_to_percentage">\"Zoeken tot %s%%</string>
+  <!-- Subtitles/Audio languages -->
+  <string name="s_arabic">Arabisch</string>
+  <string name="s_bulgarian">Bulgaars</string>
+  <string name="Bosnian">Bosnisch</string>
+  <string name="s_czech">Tsjechisch</string>
+  <string name="s_danish">Deens</string>
+  <string name="s_german">Duits</string>
+  <string name="s_english">Engels</string>
+  <string name="s_greek">Grieks</string>
+  <string name="s_spanish">Spaans</string>
+  <string name="s_finnish">Fins</string>
+  <string name="s_french">Frans</string>
+  <string name="s_hebrew">Hebreeuws</string>
+  <string name="s_hungarian">Hongaars</string>
+  <!-- Player errors -->
+  <!-- Player plug-in -->
+  <string name="player_plugin_purchase_archos_msg">U kunt aanvullende codec-plug-ins aanschaffen op www.archos.com.</string>
+  <string name="player_plugin_purchase_google_play_msg">U kunt aanvullende codec-plug-ins aanschaffen via Google Play.</string>
+  <string name="player_plugin_purchase_google_play_button">Ga naar Google Play</string>
+  <string name="plugin_update_required_title">Sorry, update is vereist</string>
+  <string name="plugin_update_required_message">Het lijkt erop dat u al aanvullende codecs heeft geïnstalleerd voor Nova Video Player.\n\nDeze nieuwe versie van Nova Video Player vereist een update van deze codecs.\n\nGa naar Google Play om de codecs bij te werken en opnieuw te installeren.</string>
+  <!-- Subtitles wizard -->
+  <string name="get_subtitles_on_drive">Ondertiteling selecteren bij opslaan</string>
+  <string name="subtitles_wizard_no_files">Geen ondertiteling gevonden</string>
+  <string name="subtitles_wizard_current_files">Huidige ondertitelingsbestanden:</string>
+  <string name="subtitles_wizard_available_files">Beschikbare ondertitelingsbestanden:</string>
+  <string name="subtitles_wizard_associate">Dit bestand aan de video koppelen</string>
+  <string name="subtitles_wizard_delete">Dit bestand verwijderen</string>
+  <string name="subtitles_wizard_empty_list">Geen bestand gevonden</string>
+  <string name="subtitles_wizard_add_files">U kunt meer ondertitelingsbestanden naar de map kopiëren en ze aan deze video te koppelen.</string>
+  <string name="subtitles_wizard_help">Selecteer een van de beschikbare ondertitelingsbestanden om deze aan de video %s te koppelen. De naam van het bestand wordt gewijzigd, zodat deze overeenkomt met de naam van de video.</string>
+  <string name="subtitles_wizard_empty_list_help">Geen ondertitelingsbestanden gevonden. U moet eerst een ondertitelingsbestand naar deze map kopiëren voordat u het bestand aan de video %s kunt koppelen.</string>
+  <!-- Subloader -->
+  <string name="get_subtitles_online">Ondertitels online ophalen</string>
+  <string name="toast_subloader_sub_found">Ondertiteling gevonden voor deze taal</string>
+  <string name="toast_subloader_sub_not_found">Geen ondertiteling gevonden voor deze taal</string>
+  <string name="toast_subloader_service_unreachable">uitval webservice ondertitelingen</string>
+  <string name="menu_subloader_allfolder">Haal ontbrekende ondertiteling op</string>
+  <!-- Subtitle Settings Dialog -->
+  <!-- Subtitle Delay Dialog -->
+  <!-- Browser.CommonDetailsView -->
+  <!-- Add a space after the right quote
+    because the right part of the quote is
+    not visible otherwise -->
+  <!-- torrent -->
+  <!-- Shortcuts -->
+  <!-- Preferences -->
+  <!--  Title of the video picker activity. -->
+  <!-- Archos File Info -->
+  <!-- Help overlay -->
+  <!-- Info dialog, not indexed file -->
+  <!-- Brightness -->
+  <!--  Nfo File parsing -->
 </resources>
