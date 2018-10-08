@@ -28,7 +28,7 @@ category, and contents.
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:layout_above="@+id/adViews"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:splitMotionEvents="true" >
 
@@ -72,13 +72,6 @@ category, and contents.
             android:layout_height="match_parent" />
 
     </RelativeLayout>
-    <FrameLayout
-        android:id="@+id/adViews"
-        android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_height="wrap_content">
-        <include layout="@layout/addview" />
-    </FrameLayout>
 
 
 </LinearLayout>

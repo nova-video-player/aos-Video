@@ -131,10 +131,6 @@
             android:theme="@style/MyLeanbackTheme"/>
 
         <activity
-            android:name="com.archos.mediacenter.video.leanback.AdsActivity"
-            android:theme="@style/MyLeanbackTheme"/>
-
-        <activity
             android:name="com.archos.mediacenter.video.leanback.search.VideoSearchActivity"
             android:theme="@style/MyLeanbackTheme"
             android:exported="true" >

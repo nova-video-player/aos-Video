@@ -218,8 +218,5 @@ dependencies {
     implementation 'com.android.support:design:27.0.2'
     leanbackImplementation 'com.android.support:leanback-v17:27.0.2'
 
-    privlibsApi 'com.amazon.android:mobile-ads:5.8.1.1'
-    privlibsImplementation 'com.google.android.gms:play-services-ads:11.8.0'
-
     openImplementation 'com.github.archos-sa:AOS-FakeLibs:517a7ca02f'
 }

@@ -42,7 +42,6 @@ import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -67,14 +66,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.Window;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amazon.device.ads.AdLayout;
-import com.amazon.device.ads.AdTargetingOptions;
-import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.utils.GlobalResumeView;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.CustomApplication;
@@ -83,8 +78,6 @@ import com.archos.mediacenter.video.EntryActivity;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.UiChoiceDialog;
 import com.archos.mediacenter.video.autoscraper.AutoScraperActivity;
-import com.archos.mediacenter.video.billingutils.BillingUtils;
-import com.archos.mediacenter.video.billingutils.IsPaidCallback;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserListOfSeasons;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.CursorBrowserByVideo;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
@@ -106,10 +99,6 @@ import com.archos.mediaprovider.video.ScraperStore;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStore.Video.VideoColumns;
 import com.archos.mediascraper.AutoScrapeService;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
 
 import java.io.File;
 import java.util.HashMap;
@@ -172,8 +161,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     protected SharedPreferences mPreferences;
 
     private View mGlobalBackdrop;
-	private AdView adLayout;
-    
+
     public static Boolean mStereoForced = false;
     private BroadcastReceiver mTraktRelogBroadcastReceiver;
     private AlertDialog mTraktRelogAlertDialog;
@@ -183,7 +171,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     private GlobalResumeView mGlobalResumeView;
     private MenuItem mSearchItem;
     private int mNavigationMode;
-    private AdLayout amazonAdLayout;
 
     private void updateStereoMode(Intent intent) {
         mStereoForced = false;
@@ -239,75 +226,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         AutoScrapeService.registerObserver(this);
         mPermissionChecker = new PermissionChecker();
         setBackground();
-
-        if(ArchosUtils.isAmazonApk()){
-            amazonAdLayout = new com.amazon.device.ads.AdLayout(this, com.amazon.device.ads.AdSize.SIZE_AUTO);
-            ((FrameLayout)findViewById(R.id.adViews)).addView(amazonAdLayout);
-        }
-        else if (Build.BRAND.equals("Freebox")) {
-            // use text and images only ads on FreeBox 4K to avoid crashing it
-            adLayout = new AdView(MainActivity.this);
-            adLayout.setAdSize(AdSize.SMART_BANNER);
-            adLayout.setAdUnitId(getString(R.string.ad_anticrash_freebox_unit_id));
-            adLayout.setVisibility(View.GONE);
-            ((FrameLayout)findViewById(R.id.adViews)).addView(adLayout);
-        } else {
-            adLayout = (AdView) findViewById(R.id.adView);
-        }
-        // At this point setContentView() has been called, we can turn-on the ads if needed
-        if (ArchosUtils.isFreeVersion(this)) {
-            BillingUtils u = new BillingUtils(this);
-            u.checkPayement(new IsPaidCallback(this) {
-                
-                @Override
-                public void hasBeenPaid(int isPaid) {
-                	super.hasBeenPaid(isPaid);
-
-                	if (!checkPayement(isPaid)) {
-                        if (adLayout != null) {
-                            adLayout.setEnabled(true);
-                            adLayout.loadAd(new AdRequest.Builder().addTestDevice(VideoUtils.TEST_ADS_DEVICE_ID).build());
-                            adLayout.setAdListener(new AdListener() {
-                                @Override
-                                public void onAdLoaded() {
-                                    adLayout.setVisibility(View.VISIBLE);
-                                    super.onAdLoaded();
-                                }
-
-                                @Override
-                                public void onAdFailedToLoad(int errorCode) {
-                                    super.onAdFailedToLoad(errorCode);
-                                    final String adUnitId = getString(Build.BRAND.equals("Freebox")
-                                            ? R.string.ad_anticrash_freebox_unit_id
-                                            : R.string.ad_unit_id);
-                                    // Load banner with adaptative width can fail on some devices (e.g nexus 7 2012)
-                                    // try with fixed width if loading has failed
-                                    adLayout = new AdView(MainActivity.this);
-                                    adLayout.setAdSize(AdSize.BANNER);
-                                    adLayout.setEnabled(true);
-                                    adLayout.setAdUnitId(adUnitId);
-                                    adLayout.loadAd(new AdRequest.Builder().addTestDevice(VideoUtils.TEST_ADS_DEVICE_ID).build());
-                                    adLayout.setAdListener(new AdListener() {
-                                        @Override
-                                        public void onAdLoaded() {
-                                            adLayout.setVisibility(View.VISIBLE);
-                                            super.onAdLoaded();
-                                        }
-                                    });
-                                    ((FrameLayout) findViewById(R.id.adViews)).addView(adLayout);
-                                }
-
-                            });
-                        }
-                        else{
-                            AdTargetingOptions adOptions = new AdTargetingOptions();
-                            // Optional: Set ad targeting options here.
-                            amazonAdLayout.loadAd(adOptions);
-                        }
-                    }
-                }
-            });
-        }
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -485,14 +403,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         return null;
     }
 
-
-    @Override
-    public void onDestroy() {
-        if (adLayout != null)
-            adLayout.destroy();
-        super.onDestroy();
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         mPermissionChecker.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
@@ -502,29 +412,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     public void onResume() {
         super.onResume();
         mPermissionChecker.checkAndRequestPermission(this);
-        //check if app has been bought after
-        if (adLayout != null)
-            adLayout.resume();
-
-        if (ArchosUtils.isFreeVersion(this)) {
-            BillingUtils u = new BillingUtils(this);
-            u.checkPayement(new IsPaidCallback(this) {
-
-                @Override
-                public void hasBeenPaid(int isPaid) {
-                    super.hasBeenPaid(isPaid);
-                    if (checkPayement(isPaid)) {
-                        if(adLayout!=null) {
-                            adLayout.setEnabled(false);
-                            adLayout.setVisibility(View.GONE);
-                        }else if (amazonAdLayout!=null){
-                            amazonAdLayout.setEnabled(false);
-                            amazonAdLayout.setVisibility(View.GONE);
-                        }
-                    }
-                }
-            });
-        }
 
         registerReceiver(mTraktRelogBroadcastReceiver,new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN));
         getContentResolver().registerContentObserver(VideoStore.Video.Media.EXTERNAL_CONTENT_URI,
@@ -535,8 +422,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     @Override
     public void onPause() {
         unregisterReceiver(mTraktRelogBroadcastReceiver);
-        if(adLayout!=null)
-    	    adLayout.pause();
         if (mGlobalResumeContentObserver != null) {
             getContentResolver().unregisterContentObserver(mGlobalResumeContentObserver);
         }

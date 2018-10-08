@@ -22,7 +22,6 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.support.multidex.MultiDexApplication;
 
-import com.amazon.device.ads.AdRegistration;
 import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
@@ -127,16 +126,6 @@ public class CustomApplication extends MultiDexApplication {
         if(ArchosFeatures.isAndroidTV(this))
             BootupRecommandationService.init();
 
-        // preload an Ad for free version
-        if (ArchosUtils.isFreeVersion(this)) {
-            if(ArchosUtils.isAmazonApk())
-                AdRegistration.setAppKey(getString(R.string.amazon_ad));
-            // if we are running on a pure leanback device OR on a device using the leanback UI (Android4.4 tv box for example)
-            if (UiChoiceDialog.applicationIsInLeanbackMode(this)) {
-                AdsHelper.createInterstitialAd(this);
-                AdsHelper.requestNewAd();
-            }
-        }
         if (getMyProcessName(this).equals(getPackageName())) {
             //if main process
             Utils.clearOldSubDir(this);

@@ -67,8 +67,6 @@ import com.archos.mediacenter.video.player.tvmenu.TVCardView;
 import com.archos.mediacenter.video.player.tvmenu.TVMenuAdapter;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
 import com.archos.mediacenter.video.utils.VideoUtils;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -186,7 +184,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private TextView            mEndTime2, mCurrentTime2;
     private View                mSeekState;
     private View                mSeekState2;
-    private AdView              mAdView;
     private TextView            mClock;
     private SimpleDateFormat    mDateFormat;
     private boolean				splitView;
@@ -245,8 +242,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private FrameLayout         playerControllersContainer;
     private TVCardDialog tvCardDialog = null;
     private boolean             isTVMode = false;
-    private boolean             mIsPaidVersion;
-    private boolean             mAllowAdBanner;
     private long                mLastTouchEventTime = -1;
     private View mPlayPauseTouchZone;
     private boolean mPlayPauseOnTouchActivated = false;
@@ -267,7 +262,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mContext = context;
         mSurfaceController = surfaceController;
         splitView = false;
-        mIsPaidVersion = true;
         mSettings = settings;
 
         UIMode	= VideoEffect.getDefaultMode();
@@ -287,10 +281,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mActionBar.setDisplayShowCustomEnabled(true);
         mActionBar.setCustomView(mVideoTitle);
         manualVisibilityChange=false;
-
-        mAllowAdBanner = ((Activity)mContext).getIntent().getBooleanExtra(PlayerActivity.VIDEO_PLAYER_LEGACY_EXTRA, true);
-        // don't allow Ad banner on FreeBox 4K to avoid crashing it
-        mAllowAdBanner &= !Build.BRAND.equals("Freebox");
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) { /* JB and more */
             mSystemUiVisibility = 0x00000400 /* View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN */
@@ -366,8 +356,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mLastProgressTime = mLastProgress = 0;
         if (mControlBar != null)
             mControlBar.setVisibility(View.INVISIBLE);
-        if (mAdView != null)
-            mAdView.setVisibility(View.INVISIBLE);
         if (mVolumeBar != null) {
             mVolumeBar.setVisibility(View.GONE);
         }
@@ -555,9 +543,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             mEndTime = (TextView) v.findViewById(R.id.time);
             mSeekState = v.findViewById(R.id.seek_state);
             mCurrentTime = (TextView) v.findViewById(R.id.time_current);
-            if (mAllowAdBanner) {
-                mAdView = (AdView) v.findViewById(R.id.adViewController);
-            }
             // The clock is only for actual leanback devices
             if (mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK)) {
                 mClock = (TextView) v.findViewById(R.id.clock);
@@ -648,29 +633,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             });
         }
 
-        // At this point we can turn-on the ads if needed
-        BillingUtils inappUtil = new BillingUtils(mContext);
-        if (ArchosUtils.isFreeVersion(mContext)) {
-            inappUtil.checkPayement(new IsPaidCallback(mContext) {
-                @Override
-                public void hasBeenPaid(int isPaid) {
-                    super.hasBeenPaid(isPaid);
-                    mIsPaidVersion = checkPayement(isPaid);
-                    if (!mIsPaidVersion) {
-                        AdRequest adRequest = new AdRequest.Builder()
-                                .addTestDevice(VideoUtils.TEST_ADS_DEVICE_ID)
-                                .build();
-                        if (mAllowAdBanner && mControllerViewLeft != null) {
-                            AdView adLayout = (AdView) mControllerViewLeft.findViewById(R.id.adViewController);
-                            adLayout.setEnabled(true);
-                            adLayout.loadAd(adRequest);
-                        }
-                    }
-                }
-            });
-        } else {
-            mIsPaidVersion = true;
-        }
 
         playerControllersContainer = (FrameLayout)mControllerView.findViewById(R.id.playerControllersContainer);
         playerControllersContainer.addView(mControllerViewLeft);
@@ -935,9 +897,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             }
             if (mControlBar2 != null && splitView ) {
                 setVisibility(mControlBar2, show, true);
-            }
-            if (mAdView != null && !splitView && !isTVMenuDisplayed) {
-                setVisibility(mAdView, show && !mIsPaidVersion, true);
             }
 
             if (mClock!=null) {
@@ -2287,8 +2246,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     setVisibility(mControlBar2, mControlBar.getVisibility()==View.VISIBLE, true);
                 if(mVolumeBar2!=null&&mVolumeBar!=null)
                     setVisibility(mVolumeBar2, mVolumeBar.getVisibility()==View.VISIBLE, true);
-                if(mAdView!=null)
-                    setVisibility(mAdView, false, true);
                 if(mTVMenuView2!=null)
                     setVisibility(mTVMenuView2, isTVMenuDisplayed, true);
                 if(mControllerViewRight!=null)
@@ -2314,8 +2271,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     setVisibility(mControlBar2, mControlBar.getVisibility()==View.VISIBLE, true);
                 if(mVolumeBar2!=null&&mVolumeBar!=null)
                     setVisibility(mVolumeBar2, mVolumeBar.getVisibility()==View.VISIBLE, true);
-                if(mAdView!=null)
-                    setVisibility(mAdView, false, true);
                 if(mTVMenuView2!=null)
                     setVisibility(mTVMenuView2, isTVMenuDisplayed, true);
                 if(mControllerViewRight!=null)
@@ -2350,9 +2305,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 playerControllersContainer.removeView(mControllerViewRight);
                 
             }
-            if(mAdView != null && mControlBarShowing && !mIsPaidVersion) {
-                setVisibility(mAdView, true, true);
-            }
         }
     }
 
@@ -2376,9 +2328,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     public void showTVMenu(boolean show){
         if (mTVMenuView != null) {
             mTVMenuView.setVisibility(show ? View.VISIBLE : View.GONE);
-            if(mAdView != null && !mControlBarShowing) {
-                setVisibility(mAdView, show && !splitView && !mIsPaidVersion, true);
-            }
             if (show && !isTVMenuDisplayed) {
                 isTVMenuDisplayed = show;
                 showControlBar(false);

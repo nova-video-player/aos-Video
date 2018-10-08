@@ -20,8 +20,6 @@ import android.content.pm.PackageManager;
 import android.app.UiModeManager;
 import android.content.res.Configuration;
 
-import com.google.android.gms.common.ConnectionResult;
-
 import static android.content.Context.UI_MODE_SERVICE;
 
 /**

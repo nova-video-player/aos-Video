@@ -41,8 +41,6 @@
 
     </FrameLayout>
 
-    <include layout="@layout/addview_player" />
-
     <LinearLayout
         android:id="@+id/control_bar"
         android:layout_width="fill_parent"

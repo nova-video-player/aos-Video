@@ -42,9 +42,6 @@
         android:visibility="invisible">
 
     </FrameLayout>
-    <!-- Control Bar (play/pause/seek) -->
-
-    <include layout="@layout/addview_player" />
 
     <LinearLayout
         android:id="@+id/control_bar"

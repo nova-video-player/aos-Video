@@ -38,17 +38,10 @@ category, and contents.
             <FrameLayout
                 android:id="@+id/content"
                 android:layout_below="@+id/main_toolbar"
-                android:layout_above="@+id/adViews"
+                android:layout_alignParentBottom="true"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:layout_height="match_parent" />
-            <FrameLayout
-                android:id="@+id/adViews"
-                android:layout_alignParentBottom="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <include layout="@layout/addview" />
-            </FrameLayout>
 
         </RelativeLayout>
 

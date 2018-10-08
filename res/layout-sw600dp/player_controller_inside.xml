@@ -46,7 +46,6 @@
         android:layout_above="@+id/unlock_instructions"
         layout="@layout/unlock_instructions" />
 
-    <include layout="@layout/addview_player" />
 
 
     <!-- Control Bar (play/pause/seek) -->

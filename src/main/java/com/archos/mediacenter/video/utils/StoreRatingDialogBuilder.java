@@ -21,10 +21,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import com.archos.mediacenter.video.R;
-import com.google.android.gms.common.ConnectionResult;
 
 /**
  * Created by alexandre on 13/06/17.

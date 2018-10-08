@@ -86,7 +86,6 @@ import com.archos.mediacenter.video.info.MultipleVideoLoader;
 import com.archos.mediacenter.video.info.SortByFavoriteSources;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
-import com.archos.mediacenter.video.leanback.AdsActivity;
 import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.adapter.object.WebPageLink;
@@ -1398,34 +1397,28 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     }
 
     private void startAds(int requestCode) {
-        if (!mHasBeenPaid) {//if is free and either hasn't been checked or hasn't been paid
-            Log.d(TAG, "startAds isFreeVersion");
-            Intent intent = new Intent(getActivity(), AdsActivity.class);
-            startActivityForResult(intent, requestCode);
-        } else {
-            int resume = PlayerActivity.RESUME_FROM_LAST_POS;
-            int resumePos = -1;
-            switch (requestCode){
-                case REQUEST_CODE_LOCAL_RESUME_AFTER_ADS_ACTIVITY:
-                    resume = PlayerActivity.RESUME_FROM_LOCAL_POS;
-                    resumePos = mVideo.getResumeMs();
-                    break;
-                case REQUEST_CODE_RESUME_AFTER_ADS_ACTIVITY:
-                    resume = PlayerActivity.RESUME_FROM_LAST_POS;
-                    resumePos = mVideo.getResumeMs();
-                    break;
-                case REQUEST_CODE_REMOTE_RESUME_AFTER_ADS_ACTIVITY:
-                    resume = PlayerActivity.RESUME_FROM_REMOTE_POS;
-                    resumePos = mVideo.getRemoteResumeMs();
+        int resume = PlayerActivity.RESUME_FROM_LAST_POS;
+        int resumePos = -1;
+        switch (requestCode){
+            case REQUEST_CODE_LOCAL_RESUME_AFTER_ADS_ACTIVITY:
+                resume = PlayerActivity.RESUME_FROM_LOCAL_POS;
+                resumePos = mVideo.getResumeMs();
                 break;
+            case REQUEST_CODE_RESUME_AFTER_ADS_ACTIVITY:
+                resume = PlayerActivity.RESUME_FROM_LAST_POS;
+                resumePos = mVideo.getResumeMs();
+                break;
+            case REQUEST_CODE_REMOTE_RESUME_AFTER_ADS_ACTIVITY:
+                resume = PlayerActivity.RESUME_FROM_REMOTE_POS;
+                resumePos = mVideo.getRemoteResumeMs();
+            break;
 
-                case REQUEST_CODE_PLAY_FROM_BEGIN_AFTER_ADS_ACTIVITY:
-                    resume =  PlayerActivity.RESUME_NO;
-                break;
-            }
-            mResumeFromPlayer = true;
-            PlayUtils.startVideo(getActivity(), mVideo, resume, false,resumePos, this, getActivity().getIntent().getLongExtra(EXTRA_LIST_ID, -1));
+            case REQUEST_CODE_PLAY_FROM_BEGIN_AFTER_ADS_ACTIVITY:
+                resume =  PlayerActivity.RESUME_NO;
+            break;
         }
+        mResumeFromPlayer = true;
+        PlayUtils.startVideo(getActivity(), mVideo, resume, false,resumePos, this, getActivity().getIntent().getLongExtra(EXTRA_LIST_ID, -1));
     }
 
     @Override
@@ -1437,25 +1430,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 mSubtitleFilesListerTask.cancel(true);
             }
             mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,mVideo);
-        }
-        else if (
-                (requestCode >= REQUEST_CODE_LOCAL_RESUME_AFTER_ADS_ACTIVITY
-                || requestCode <= REQUEST_CODE_PLAY_FROM_BEGIN_AFTER_ADS_ACTIVITY) && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Get RESULT_OK from AdsActivity");
-            mResumeFromPlayer = true;
-            int resume = PlayerActivity.RESUME_NO;
-            switch (requestCode){
-                case REQUEST_CODE_REMOTE_RESUME_AFTER_ADS_ACTIVITY:
-                    resume = PlayerActivity.RESUME_FROM_REMOTE_POS;
-                    break;
-                case REQUEST_CODE_RESUME_AFTER_ADS_ACTIVITY:
-                    resume = PlayerActivity.RESUME_FROM_LAST_POS;
-                    break;
-                case REQUEST_CODE_LOCAL_RESUME_AFTER_ADS_ACTIVITY:
-                    resume = PlayerActivity.RESUME_FROM_LOCAL_POS;
-                    break;
-            }
-            PlayUtils.startVideo(getActivity(), mVideo, resume, false, -1, this, getActivity().getIntent().getLongExtra(EXTRA_LIST_ID, -1));
         }
         else if(requestCode == PLAY_ACTIVITY_REQUEST_CODE){
             ExternalPlayerResultListener.getInstance().onActivityResult(requestCode,resultCode,data);
