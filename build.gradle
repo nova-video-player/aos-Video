@@ -210,13 +210,13 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     implementation 'com.android.support:multidex:1.0.3'
-    implementation 'com.android.support:recyclerview-v7:27.1.0'
-    implementation 'com.android.support:cardview-v7:27.1.0'
-    implementation 'com.android.support:palette-v7:27.1.0'
-    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:cardview-v7:27.1.1'
+    implementation 'com.android.support:palette-v7:27.1.1'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.github.ksoichiro:android-observablescrollview:1.6.0'
-    implementation 'com.android.support:design:27.1.0'
-    leanbackImplementation 'com.android.support:leanback-v17:27.1.0'
+    implementation 'com.android.support:design:27.1.1'
+    leanbackImplementation 'com.android.support:leanback-v17:27.1.1'
 
     openImplementation 'com.github.archos-sa:AOS-FakeLibs:517a7ca02f'
 }
