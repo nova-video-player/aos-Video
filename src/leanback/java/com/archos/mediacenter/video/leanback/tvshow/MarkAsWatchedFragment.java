@@ -66,11 +66,6 @@ public class MarkAsWatchedFragment extends BrowseFragment implements  LoaderMana
 
         mTvshowId = getActivity().getIntent().getLongExtra(EXTRA_TVSHOW_ID, -1);
         mTvshowName = getActivity().getIntent().getStringExtra(EXTRA_TVSHOW_NAME);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
         // Just need to attach the background manager to keep the background of the parent activity
         BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
