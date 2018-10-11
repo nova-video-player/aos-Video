@@ -17,11 +17,13 @@ package com.archos.mediacenter.video.utils;
 import com.archos.mediacenter.utils.trakt.Trakt;
 
 import android.content.Context;
-import android.preference.DialogPreference;
-import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.preference.DialogPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceManager;
 import android.util.AttributeSet;
 
-public class TraktWipeDialogPreference extends DialogPreference {
+public class TraktWipeDialogPreference extends Preference {
     public TraktWipeDialogPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -29,13 +31,10 @@ public class TraktWipeDialogPreference extends DialogPreference {
             int defStyle) {
         super(context, attrs, defStyle);
     }
-
-    @Override
-    protected void onDialogClosed(boolean positiveResult) {
-        if (positiveResult){
-            Trakt.setLoginPreferences(PreferenceManager.getDefaultSharedPreferences(getContext()), null, null);
-            Trakt.setAccessToken(PreferenceManager.getDefaultSharedPreferences(getContext()), null);
-            notifyChanged();
-        }super.onDialogClosed(positiveResult);
+    protected void onClick() {
+        Trakt.setLoginPreferences(PreferenceManager.getDefaultSharedPreferences(getContext()), null, null);
+        Trakt.setAccessToken(PreferenceManager.getDefaultSharedPreferences(getContext()), null);
+        notifyChanged();
     }
+
 }
