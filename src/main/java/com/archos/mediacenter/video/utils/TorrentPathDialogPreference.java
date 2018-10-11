@@ -33,43 +33,46 @@ import java.io.File;
 public class TorrentPathDialogPreference extends Preference {
 
     private View mView;
-	public TorrentPathDialogPreference(Context context, AttributeSet attrs) {
-        super(context, attrs);        
+
+    public TorrentPathDialogPreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
 
     public TorrentPathDialogPreference(Context context, AttributeSet attrs,
-            int defStyle) {
-        super(context, attrs, defStyle); 
+                                       int defStyle) {
+        super(context, attrs, defStyle);
+    }
+
+    public void notifyChanged(){
+        super.notifyChanged();
     }
 
     @Override
     public void onBindViewHolder(PreferenceViewHolder v) {
         super.onBindViewHolder(v);
-        refresh();
     }
- 
-    @Override
-    public void onClick() {
-        if(getOnPreferenceClickListener()==null){
-          
-            Intent i = new Intent(getContext(), FolderPicker.class);
-            Bundle b = new Bundle();
-            i.putExtra(FolderPicker.EXTRA_CURRENT_SELECTION, getDefaultDirectory(getSharedPreferences()).getPath());
-            i.putExtra(FolderPicker.EXTRA_DIALOG_TITLE, getContext().getString(R.string.torrent_path));
-            ((Activity)getContext()).startActivityForResult(i, VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE);
-        }
+
+    public void choosePath(Activity activity) {
+
+        Intent i = new Intent(getContext(), FolderPicker.class);
+        Bundle b = new Bundle();
+        i.putExtra(FolderPicker.EXTRA_CURRENT_SELECTION, getDefaultDirectory(getSharedPreferences()).getPath());
+        i.putExtra(FolderPicker.EXTRA_DIALOG_TITLE, getContext().getString(R.string.torrent_path));
+        activity.startActivityForResult(i, VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE);
+
     }
+
     public static File getDefaultDirectory(SharedPreferences pref) {
         // Check if there is one specified in the preferences
-        String defaultDirectoryPath = pref.getString(VideoPreferencesFragment.KEY_TORRENT_PATH,null);
-        if (defaultDirectoryPath!=null) {
+        String defaultDirectoryPath = pref.getString(VideoPreferencesFragment.KEY_TORRENT_PATH, null);
+        if (defaultDirectoryPath != null) {
             return new File(defaultDirectoryPath);
         } else {
             return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         }
     }
-	public void refresh() {
-		setSummary(getDefaultDirectory(getSharedPreferences()).getAbsolutePath());
-	}
-   
+
+    public CharSequence getSummary() {
+        return getDefaultDirectory(getSharedPreferences()).getAbsolutePath();
+    }
 }
