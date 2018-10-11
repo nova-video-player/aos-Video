@@ -14,14 +14,16 @@
 
 package com.archos.mediacenter.video.utils;
 
-import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
-import android.preference.ListPreference;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.preference.ListPreference;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 import android.widget.ListAdapter;
 
 /**
@@ -33,15 +35,17 @@ public class CustomListPreference extends ListPreference {
         super(context, attrs);
     }
 
-
-    protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
-
+    public void  onClick(){
         ListAdapter listAdapter = new CustomArrayAdapter(getContext(),
                 android.R.layout.simple_list_item_single_choice, getEntries());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setAdapter(listAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getSharedPreferences().edit().putString(getKey(), ""+which).apply();
+            }
+        }).show();
 
-        builder.setAdapter(listAdapter, this);
-
-        super.onPrepareDialogBuilder(builder);
     }
 
     public class CustomArrayAdapter extends ArrayAdapter<CharSequence> {
@@ -59,6 +63,8 @@ public class CustomListPreference extends ListPreference {
         public View getView(int position, View converView, ViewGroup viewGroup){
             View v = super.getView(position, converView, viewGroup);
             v.setEnabled(isEnabled(position));
+            ((CheckedTextView)v).setChecked(Integer.valueOf(getSharedPreferences().getString(getKey(), "0")) == position);
+
             return v;
         }
 
