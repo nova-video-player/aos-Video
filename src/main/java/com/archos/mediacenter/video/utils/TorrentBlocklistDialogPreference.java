@@ -22,7 +22,8 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.preference.Preference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipException;
 
 
-public class TorrentBlocklistDialogPreference extends Preference{
+public class TorrentBlocklistDialogPreference extends Preference {
 	AlertDialog od=null;
 
 	protected File mCurrentDirectory;
@@ -63,15 +64,29 @@ public class TorrentBlocklistDialogPreference extends Preference{
 		
 	}
 	@Override
-    public View onCreateView(ViewGroup parent) {
-         mView = super.onCreateView(parent);
-         setup();
-         return mView;
+    public void onBindViewHolder(PreferenceViewHolder holder) {
+		super.onBindViewHolder(holder);
+		mView = holder.itemView;
+		setup();
     }
 	public TorrentBlocklistDialogPreference(Context context, AttributeSet attrs,
 			int defStyle) {
 		super(context, attrs, defStyle); 
 	}
+
+	public CharSequence getSummary() {
+		if((mCurrentBlockList=getSharedPreferences().getString(getKey(), defaultBlocklist))!=null){
+			File file = getContext().getFileStreamPath(TorrentObserverService.BLOCKLIST);
+			if(file.exists()) {
+				return  mCurrentBlockList;
+			}
+			else {
+				return getContext().getResources().getString(R.string.blocklist_not_loaded);
+			}
+		}
+		return "";
+	}
+
 	private void setup() {
 		
 		mProgress = new ProgressDialog(getContext());
@@ -81,17 +96,15 @@ public class TorrentBlocklistDialogPreference extends Preference{
 		if((mCurrentBlockList=getSharedPreferences().getString(getKey(), defaultBlocklist))!=null){
             File file = getContext().getFileStreamPath(TorrentObserverService.BLOCKLIST);
 			if(file.exists()) {
-                setSummary(mCurrentBlockList);
                 mView.findViewById(R.id.button).setVisibility(View.VISIBLE);
             }
 			else {
-                setSummary(R.string.blocklist_not_loaded);
                 mView.findViewById(R.id.button).setVisibility(View.GONE);
             }
 		}
 		else
 			mView.findViewById(R.id.button).setVisibility(View.GONE);
-		
+
 		mView.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -100,14 +113,7 @@ public class TorrentBlocklistDialogPreference extends Preference{
             }
         });
 	}
-	@Override
-	protected void onBindView(View view)
-	{       
-		super.onBindView(view);
 
-		TextView summary= (TextView)view.findViewById(android.R.id.summary);
-		summary.setMaxLines(1); //only one line for pref
-	}    
 	public boolean isDialogShowing(){
 		return od!=null&&od.isShowing();
 	}
@@ -271,7 +277,7 @@ public class TorrentBlocklistDialogPreference extends Preference{
 					getSharedPreferences().edit().putString(getKey(), url).commit();
 					Toast.makeText(getContext(), getErrorString(200), Toast.LENGTH_SHORT).show();
 					mView.findViewById(R.id.button).setVisibility(View.VISIBLE);
-				}	
+				}
 				else{
 					showErrorDialog(getErrorString(success));
 				}
