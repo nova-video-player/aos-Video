@@ -16,9 +16,7 @@ package com.archos.mediacenter.video.leanback.overlay;
 
 import android.content.Context;
 import android.support.v17.leanback.app.BrowseSupportFragment;
-import android.support.v17.leanback.app.DetailsFragment;
 import android.support.v17.leanback.app.DetailsSupportFragment;
-import android.support.v17.leanback.app.GuidedStepSupportFragment;
 import android.support.v17.leanback.app.GuidedStepSupportFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
