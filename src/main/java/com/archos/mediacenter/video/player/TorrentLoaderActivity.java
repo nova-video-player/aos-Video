@@ -29,7 +29,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.CopyCutEngine;

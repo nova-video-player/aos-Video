@@ -17,7 +17,7 @@ package com.archos.mediacenter.video.leanback;
 import android.content.Intent;
 
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import com.archos.mediacenter.video.DensityTweak;

@@ -32,7 +32,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v4.view.ActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;

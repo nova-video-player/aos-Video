@@ -16,7 +16,7 @@ package com.archos.mediacenter.video.leanback.network.rescan;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v17.leanback.app.GuidedStepSupportFragment;

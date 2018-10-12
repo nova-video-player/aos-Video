@@ -16,7 +16,7 @@ package com.archos.mediacenter.video.player.tvmenu;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 import android.view.KeyEvent;
 
 import com.archos.environment.ArchosFeatures;

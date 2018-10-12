@@ -17,7 +17,7 @@ package com.archos.mediacenter.video.browser;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;

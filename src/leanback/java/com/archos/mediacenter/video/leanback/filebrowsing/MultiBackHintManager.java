@@ -16,7 +16,7 @@ package com.archos.mediacenter.video.leanback.filebrowsing;
 
 import android.content.Context;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.archos.mediacenter.video.R;

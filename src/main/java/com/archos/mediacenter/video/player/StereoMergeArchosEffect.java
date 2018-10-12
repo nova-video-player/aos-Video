@@ -19,7 +19,7 @@ import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
 public class StereoMergeArchosEffect extends VideoEffect
