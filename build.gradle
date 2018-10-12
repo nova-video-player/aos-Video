@@ -27,6 +27,13 @@ allprojects {
     }
 }
 
+allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }
+}
 static def getDate() {
     // we increment version number every 1000 seconds,
     // we start on 31/08/2016
