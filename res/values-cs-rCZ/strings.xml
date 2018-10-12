@@ -58,8 +58,8 @@
   <string name="info_tab_share">Sdílet</string>
   <string name="info_menu_backdrop_select">Pozadí</string>
   <string name="info_menu_series_backdrop_select">Pozadí pro seriál</string>
-  <string name="info_menu_poster_select">Zvolte jiný plakát</string>
-  <string name="info_menu_series_poster_select">Zvolte jiný plakát</string>
+  <string name="info_menu_poster_select">Vybrat jiný plakát</string>
+  <string name="info_menu_series_poster_select">Vybrat jiný plakát</string>
   <!-- COVER ROLL -->
   <string name="recently_added">Nedávno přidané</string>
   <string name="recently_added_videos">Nedávno přidané</string>
@@ -190,7 +190,7 @@
   <string name="info_audio">Audio</string>
   <string name="info_audio_vbr">VBR</string>
   <string name="info_plugin_required">(je vyžadován plugin)</string>
-  <string name="info_subtitle">Podtitulky</string>
+  <string name="info_subtitle">Titulky</string>
   <string name="info_resume">Obnovit pozici</string>
   <string name="info_bookmark">Nastavit záložku</string>
   <string name="info_file">Informace o souboru</string>
@@ -358,7 +358,7 @@
   <string name="subtitle_outline">Obrys titulků</string>
   <!-- Subtitle Delay Dialog -->
   <string name="subtitle_delay_speed">Úprava rychlosti</string>
-  <string name="subtitle_delay_radio_none">žádná</string>
+  <string name="subtitle_delay_radio_none">žádné</string>
   <string name="subtitle_delay_radio_ntsc2pal">NTSC &#x2192; PAL</string>
   <string name="subtitle_delay_radio_pal2ntsc">PAL &#x2192; NTSC</string>
   <!-- Browser.CommonDetailsView -->
@@ -697,15 +697,15 @@
   <string name="nfo_export_manual_prefkey">export_manual_prefkey</string>
   <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
   <string name="nfo_export_in_progress">Probíhá export NFO</string>
-  <string name="rescrap_in_progress">Znovu získat informace pro celou knihovnu</string>
+  <string name="rescrap_in_progress">Opětovné získání informací pro celou knihovnu</string>
   <string name="acquire_external_usb_permission">Nova Video vyžaduje speciální oprávnění pro přístup k externímu úložišti. Prosím vyberte vaše úložiště na další obrazovce</string>
-  <string name="rescrap_not_found">Získat informace pro videa bez dostupného popisu</string>
-  <string name="rescrap_all_title">Získat znovu informace pro všechny položky</string>
+  <string name="rescrap_not_found">Získání informací pro videa bez dostupného popisu</string>
+  <string name="rescrap_all_title">Opětovné získání informací pro všechny položky</string>
   <string name="nfo_export_manual_title">Exportovat videa se získanými informacemi</string>
   <string name="nfo_export_manual_summary">Exportovat .nfo soubory pro všechna videa se získanými informacemi</string>
   <string name="system">Systém</string>
   <string name="save_delay_setting_pref_key">save_setting_pref_key</string>
-  <string name="keep_setting">Ponechat toto nastavení</string>
+  <string name="keep_setting">Zapamatovat toto nastavení</string>
   <string name="select_sub_file"><![CDATA[Nebyly nalezeny přesné titulky pro soubor <font color=#29b6f6><i>%s</i></font><br />Prosím zkuste některé z následujícího seznamu:]]></string>
   <string name="switch_remote_empty_message">Přepnutí do režimu vzdáleného displeje vám může nabídnout více možností sledování</string>
   <string name="cast_stream_mode">Režim streamování</string>
