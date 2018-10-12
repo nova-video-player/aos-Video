@@ -743,7 +743,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
                 mFileBrowsingRowAdapter.add(item);
             }
             for(String s : storageManager.getExtOtherStorages()) {
-                Box item = new Box(Box.ID.FOLDERS, getString(R.string.other_storage), R.drawable.filetype_new_folder, s);
+                Box item = new Box(Box.ID.OTHER, getString(R.string.other_storage), R.drawable.filetype_new_folder, s);
                 mFileBrowsingRowAdapter.add(item);
             }
         }
