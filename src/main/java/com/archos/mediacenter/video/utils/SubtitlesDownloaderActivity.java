@@ -86,7 +86,7 @@ public class SubtitlesDownloaderActivity extends Activity{
     private final String TAG = "SubtitlesDownloaderActivity";
     //to distinguished program dismiss and users
     private boolean mDoNotFinish;
-    private final String OpenSubtitlesAPIUrl = "http://api.opensubtitles.org/xml-rpc";
+    private final String OpenSubtitlesAPIUrl = "https://api.opensubtitles.org/xml-rpc";
     private final String USER_AGENT = "ArchosMediaCenter";
     private SharedPreferences sharedPreferences;
     private File subsDir;

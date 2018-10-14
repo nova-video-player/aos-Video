@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.details;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.AlertDialog;

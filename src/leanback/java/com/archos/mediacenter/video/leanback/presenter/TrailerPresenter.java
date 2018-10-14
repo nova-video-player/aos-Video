@@ -73,7 +73,7 @@ public class TrailerPresenter extends PosterImageCardPresenter {
     }
 
     private Uri getImageUrl(ScraperTrailer box) {
-        String base = "http://img.youtube.com/vi/%s/0.jpg";
+        String base = "https://img.youtube.com/vi/%s/0.jpg";
         return Uri.parse(String.format(base, box.mVideoKey));
     }
 
