@@ -38,14 +38,14 @@
 
     <string name="unknown_video_name">@string/unknown_track_name</string>
 
-    <string name="player_plugin_store_url">http://www.archos.com/misc/result.html?ptype=10&amp;ts=pl</string>
+    <string name="player_plugin_store_url">https://www.archos.com/misc/result.html?ptype=10&amp;ts=pl</string>
 
     <string name="ad_unit_id"></string>
     <string name="interstitiel_ad_unit_id"></string>
     <string name="ad_anticrash_freebox_unit_id"></string>
     <string name="interstitiel_ad_anticrash_freebox_unit_id"></string>
 
-    <string name="tmdb_title_url">http://www.themoviedb.org/movie/%1$s?language=%2$s</string>
+    <string name="tmdb_title_url">https://www.themoviedb.org/movie/%1$s?language=%2$s</string>
     <string name="action_resume">com.archos.mediacenter.video.action_resume</string>
     <string name="action_recently_added">com.archos.mediacenter.video.action_recently_added</string>
     <string name="action_recently_played">com.archos.mediacenter.video.action_recently_played</string>

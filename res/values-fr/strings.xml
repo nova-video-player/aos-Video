@@ -182,7 +182,7 @@
   <string name="scraper_no_movie_button_label">Rechercher des informations en ligne pour vos films</string>
   <string name="scraper_no_tv_show_text">Vous n\'avez actuellement pas d\'affiches ou d\'informations pour vos séries</string>
   <string name="scraper_no_tv_show_button_label">Rechercher des informations en ligne pour vos séries</string>
-  <string name="imdb_title_url">http://www.imdb.fr/title/</string>
+  <string name="imdb_title_url">https://www.imdb.fr/title/</string>
   <!-- To be translated only in case there is a localized IMDB -->
   <string name="storage">Stockage</string>
   <string name="rescan_storage">Rafraîchir les fichiers</string>

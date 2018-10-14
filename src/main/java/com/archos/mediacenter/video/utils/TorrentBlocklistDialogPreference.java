@@ -54,7 +54,7 @@ public class TorrentBlocklistDialogPreference extends Preference{
 	protected File mCurrentDirectory;
 	ProgressDialog mProgress; 
 	private View mView;
-	private String defaultBlocklist = "http://list.iblocklist.com/?list=bt_level1&fileformat=p2p&archiveformat=gz";
+	private String defaultBlocklist = "https://list.iblocklist.com/?list=bt_level1&fileformat=p2p&archiveformat=gz";
 
 	private String mCurrentBlockList;
 

@@ -203,7 +203,7 @@
     <string name="scraper_no_tv_show_text">You currently have no poster and description for your TV shows</string>
     <string name="scraper_no_tv_show_button_label">Search TV show info online</string>
 
-    <string name="imdb_title_url">http://www.imdb.com/title/</string> <!-- To be translated only in case there is a localized IMDB -->
+    <string name="imdb_title_url">https://www.imdb.com/title/</string> <!-- To be translated only in case there is a localized IMDB -->
 
 
     <string name="storage">Storage</string>
