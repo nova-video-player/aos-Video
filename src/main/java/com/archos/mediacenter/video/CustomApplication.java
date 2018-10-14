@@ -66,7 +66,7 @@ public class CustomApplication extends MultiDexApplication {
 
     @Override
     public void onCreate() {
-        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= 16) {
+        /* if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= 16) {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                     .detectDiskReads()
                     .detectDiskWrites()
@@ -82,7 +82,9 @@ public class CustomApplication extends MultiDexApplication {
                     .penaltyLog()
                     //.penaltyDeath()
                     .build());
-        }
+        } */
+
+
 
         super.onCreate();
         Trakt.initApiKeys(this);
