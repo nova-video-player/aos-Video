@@ -1,17 +1,15 @@
 package com.archos.mediacenter.video.leanback;
 
 import android.content.Context;
-import android.content.Loader;
+import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v17.leanback.widget.SearchOrbView;
-import android.util.SparseArray;
 import android.view.View;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.VideosByListLoader;
 import com.archos.mediacenter.video.browser.loader.VideosSelectionLoader;
-import com.archos.mediacenter.video.leanback.movies.MoviesSortOrderEntry;
 
 
 public class VideosByListFragment extends VideosByFragment {

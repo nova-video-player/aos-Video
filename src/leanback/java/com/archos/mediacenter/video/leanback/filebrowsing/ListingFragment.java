@@ -15,9 +15,9 @@
 package com.archos.mediacenter.video.leanback.filebrowsing;
 
 import android.app.FragmentTransaction;
-import android.app.LoaderManager;
+import android.support.v4.app.LoaderManager;
 import android.content.Intent;
-import android.content.Loader;
+import android.support.v4.content.Loader;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -651,7 +651,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
                 sourceView,
                 VideoDetailsActivity.SHARED_ELEMENT_NAME).toBundle();
 
-        getActivity().startActivityForResult(intent, ListingActivity.REQUEST_INFO_ACTIVITY, bundle);
+        startActivityForResult(intent, ListingActivity.REQUEST_INFO_ACTIVITY, bundle);
     }
 
 

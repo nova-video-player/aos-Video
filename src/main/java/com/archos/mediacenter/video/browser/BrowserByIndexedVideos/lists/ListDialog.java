@@ -2,7 +2,7 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos.lists;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
+import android.support.v4.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -90,7 +90,7 @@ public class ListDialog extends DialogFragment {
                     //add new list
                     NewListDialog listDialog = new NewListDialog();
                     listDialog.setArguments(getArguments());
-                    listDialog.show(getFragmentManager(), "");
+                    listDialog.show(getActivity().getSupportFragmentManager(), "");
                 }
                 else{
                     int id = mAdapter.getCursor().getInt(mAdapter.getCursor().getColumnIndex(VideoStore.List.Columns.ID));

@@ -230,7 +230,7 @@ public class FtpListingFragment extends ListingFragment {
                 public void onClick(View view) {
                 }
             });
-            dialog.show(getFragmentManager(), FtpServerCredentialsDialog.class.getCanonicalName());
+            dialog.show(getActivity().getSupportFragmentManager(), FtpServerCredentialsDialog.class.getCanonicalName());
         }
     }
 
@@ -256,7 +256,7 @@ public class FtpListingFragment extends ListingFragment {
             Toast.makeText(getActivity(), getString(R.string.indexed_folder_added, shortcutPath), Toast.LENGTH_SHORT).show();
             getActivity().setResult(NetworkRootFragment.RESULT_CODE_SHORTCUTS_MODIFIED);
             // Send a scan request to MediaScanner
-           // NetworkScanner.scanVideos(getActivity(), shortcutPath);
+            // NetworkScanner.scanVideos(getActivity(), shortcutPath);
         }
         else {
             Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();

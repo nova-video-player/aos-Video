@@ -14,14 +14,12 @@
 
 package com.archos.mediacenter.video.cover;
 
-import com.archos.mediacenter.cover.*;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.AllVideosLoader;
 import com.archos.mediaprovider.ImportState;
 
 import android.content.Context;
-import android.content.CursorLoader;
-import android.util.Log;
+import android.support.v4.content.CursorLoader;
 
 public class AllVideosProvider extends VideoSingleCursorCoverProvider {
 

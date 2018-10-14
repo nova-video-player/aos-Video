@@ -15,7 +15,8 @@
 package com.archos.mediacenter.video.browser.loader;
 
 import android.content.Context;
-import android.content.CursorLoader;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.provider.MediaStore;
 
 import com.archos.mediaprovider.video.LoaderUtils;
@@ -175,7 +176,7 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
     }
 
     ;
-    public android.support.v4.content.Loader getV4CursorLoader(boolean detailed, boolean hideWatchedVideos){
+    public Loader getV4CursorLoader(boolean detailed, boolean hideWatchedVideos){
         mIsDetailed = detailed;
         mForceHideVideos = hideWatchedVideos;
         return  new android.support.v4.content.CursorLoader(getContext(),

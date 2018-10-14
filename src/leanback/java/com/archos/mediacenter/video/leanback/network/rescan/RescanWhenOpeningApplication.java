@@ -17,7 +17,7 @@ package com.archos.mediacenter.video.leanback.network.rescan;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v17.leanback.app.GuidedStepFragment;
+import android.support.v17.leanback.app.GuidedStepSupportFragment;
 import android.support.v17.leanback.widget.GuidanceStylist;
 import android.support.v17.leanback.widget.GuidedAction;
 
@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Created by vapillon on 22/06/15.
  */
-public class RescanWhenOpeningApplication extends GuidedStepFragment {
+public class RescanWhenOpeningApplication extends GuidedStepSupportFragment {
 
     public static boolean sGeneralSwitch = false;
 

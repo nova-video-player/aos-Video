@@ -15,9 +15,9 @@
 package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.app.Activity;
-import android.app.LoaderManager;
+import android.support.v4.app.LoaderManager;
 import android.content.Intent;
-import android.content.Loader;
+import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
@@ -70,7 +70,7 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 
 
-public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements  LoaderManager.LoaderCallbacks<Cursor> {
+public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "TvshowFragment";
 

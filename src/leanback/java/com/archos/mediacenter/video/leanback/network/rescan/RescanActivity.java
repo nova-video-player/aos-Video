@@ -15,7 +15,7 @@
 package com.archos.mediacenter.video.leanback.network.rescan;
 
 import android.os.Bundle;
-import android.support.v17.leanback.app.GuidedStepFragment;
+import android.support.v17.leanback.app.GuidedStepSupportFragment;
 
 import com.archos.mediacenter.video.leanback.LeanbackActivity;
 
@@ -28,8 +28,8 @@ public class RescanActivity extends LeanbackActivity {
         super.onCreate(savedInstanceState);
         if (savedInstanceState==null) {
             // One hour lost to find out the fucking weirdo way how to do this, i hate you leanback tream!
-            GuidedStepFragment firstFragment = new RescanFragment();
-            GuidedStepFragment.addAsRoot(this, firstFragment,android.R.id.content);
+            GuidedStepSupportFragment firstFragment = new RescanFragment();
+            GuidedStepSupportFragment.addAsRoot(this, firstFragment,android.R.id.content);
         }
     }
 }

@@ -15,10 +15,10 @@
 package com.archos.mediacenter.video.leanback.movies;
 
 import android.app.AlertDialog;
-import android.app.LoaderManager;
+import android.support.v4.app.LoaderManager;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
+import android.support.v4.content.Loader;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;

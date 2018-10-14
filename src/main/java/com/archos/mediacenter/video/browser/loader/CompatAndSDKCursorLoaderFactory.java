@@ -14,11 +14,11 @@
 
 package com.archos.mediacenter.video.browser.loader;
 
-import android.content.CursorLoader;
+import android.support.v4.content.Loader;
 
 /**
  * Created by alexandre on 22/10/15.
  */
 public interface CompatAndSDKCursorLoaderFactory {
-    public android.support.v4.content.Loader getV4CursorLoader(boolean detailed, boolean hideWatchedVideos);
+    public Loader getV4CursorLoader(boolean detailed, boolean hideWatchedVideos);
 }

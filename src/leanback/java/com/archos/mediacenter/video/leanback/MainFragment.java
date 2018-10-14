@@ -15,22 +15,21 @@
 package com.archos.mediacenter.video.leanback;
 
 import android.app.Activity;
-import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.Loader;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v17.leanback.app.BackgroundManager;
-import android.support.v17.leanback.app.BrowseFragment;
+import android.support.v17.leanback.app.BrowseSupportFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.CursorObjectAdapter;
@@ -78,10 +77,9 @@ import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
 import com.archos.mediacenter.video.utils.WebUtils;
-import com.archos.mediacenter.video.utils.WebViewActivity;
 import com.archos.mediaprovider.ArchosMediaIntent;
 
-public class MainFragment extends BrowseFragment  implements  LoaderManager.LoaderCallbacks<Cursor> {
+public class MainFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "MainFragment";
 
@@ -644,7 +642,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
                         if (mActivity instanceof MainActivityLeanback) {
                             ((MainActivityLeanback)mActivity).startPreferencesActivity(); // I know this is ugly (and i'm ashamed...)
                         } else {
-                            throw  new IllegalStateException("Sorry developper, this ugly code can work with a MainActivityLeanback only for now!");
+                            throw  new IllegalStateException("Sorry developer, this ugly code can work with a MainActivityLeanback only for now!");
                         }
                         break;
                     case PRIVATE_MODE:
