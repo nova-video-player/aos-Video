@@ -17,12 +17,12 @@ package com.archos.mediacenter.video.leanback.scrapping;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v17.leanback.app.SearchSupportFragment;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 
 import com.archos.mediacenter.video.R;
 
-public class ManualShowScrappingActivity extends AppCompatActivity {
+public class ManualShowScrappingActivity extends FragmentActivity {
 
     public static final String EXTRA_TVSHOW_ID = "TVSHOW_ID";
     public static final String EXTRA_TVSHOW_NAME = "TVSHOW_NAME";
