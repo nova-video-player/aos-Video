@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.cover;
 
 import com.archos.mediacenter.cover.ArtworkFactory;
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.EpisodeInfo;
 import com.archos.mediaprovider.video.VideoStore.Video;
@@ -28,8 +29,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.InputStream;
-import java.io.IOException;
 
 /**
  * This class is used TV Show Episodes
@@ -207,7 +206,7 @@ public class EpisodeCover extends BaseVideoCover {
 			sTVShowEpisodeName.setText("-");
 		}
 
-        sTVShowDuration.setText(factory.formatTime(mDurationMs));
+        sTVShowDuration.setText(MediaUtils.formatTime(mDurationMs));
 
 		// Update the layout setup to take care of the updated text views
 		view.measure(View.MeasureSpec.makeMeasureSpec(DESCRIPTION_TEXTURE_WIDTH, View.MeasureSpec.EXACTLY),

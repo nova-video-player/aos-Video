@@ -21,9 +21,9 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.TextView;
 
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.Browser;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesDetails;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 
@@ -85,7 +85,7 @@ public class EpisodeListDetailedPresenter extends EpisodePresenter{
 
 
             setViewHolderVisibility(holder, View.VISIBLE);
-            holder.info.setText(Browser.formatTime(tvShow.getDurationMs()));
+            holder.info.setText(MediaUtils.formatTime(tvShow.getDurationMs()));
             //holder.detailLineTwo.setText(tvShow.getEpisodeName());
             holder.detailLineOne.setVisibility(View.GONE);
             holder.detailLineTwo.setVisibility(View.GONE);

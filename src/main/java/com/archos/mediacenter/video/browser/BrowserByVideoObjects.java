@@ -34,6 +34,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import com.archos.environment.ArchosIntents;
 import com.archos.environment.ArchosSettings;
 import com.archos.filecorelibrary.FileUtils;
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
@@ -156,7 +157,7 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
         menu.add(0, R.string.play_from_beginning, 0, R.string.play_selection);
         if (resume && resumePosition != PlayerActivity.LAST_POSITION_END) {
             menu.findItem(R.string.play_from_beginning).setTitle(R.string.play_from_beginning);
-            String resumeString = mContext.getString(R.string.resume) + " (" + formatTime(resumePosition) + ")";
+            String resumeString = mContext.getString(R.string.resume) + " (" + MediaUtils.formatTime(resumePosition) + ")";
             menu.add(0, R.string.resume, 0, resumeString);
         }
 

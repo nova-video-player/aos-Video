@@ -19,8 +19,8 @@ import android.support.v17.leanback.widget.Action;
 import android.support.v17.leanback.widget.SparseArrayObjectAdapter;
 import android.util.Log;
 
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.Browser;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.player.PlayerActivity;
@@ -81,9 +81,9 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
         mHasNextEpisode = nextEpisode!=null;
         if (!inPlayer) {
             if(video.getRemoteResumeMs()>0 && video.getResumeMs()!=video.getRemoteResumeMs()){
-                set(ACTION_REMOTE_RESUME, new Action(ACTION_REMOTE_RESUME, mContext.getString(R.string.remote_resume), Browser.formatTime(video.getRemoteResumeMs())));
+                set(ACTION_REMOTE_RESUME, new Action(ACTION_REMOTE_RESUME, mContext.getString(R.string.remote_resume), MediaUtils.formatTime(video.getRemoteResumeMs())));
                 if (video.getResumeMs() > 0) { // this will be used to FORCE local resume
-                    set(ACTION_RESUME, new Action(ACTION_LOCAL_RESUME, mContext.getString(R.string.resume), Browser.formatTime(video.getResumeMs())));
+                    set(ACTION_RESUME, new Action(ACTION_LOCAL_RESUME, mContext.getString(R.string.resume), MediaUtils.formatTime(video.getResumeMs())));
                 }else{
                     clear(ACTION_RESUME);
                 }
@@ -91,7 +91,7 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
             else {
                 clear(ACTION_REMOTE_RESUME);
                 if (video.getResumeMs() > 0) { // LAST_POSITION_UNKNOWN is -1 and LAST_POSITION_END is -2
-                    set(ACTION_RESUME, new Action(ACTION_RESUME, mContext.getString(R.string.resume), Browser.formatTime(video.getResumeMs())));
+                    set(ACTION_RESUME, new Action(ACTION_RESUME, mContext.getString(R.string.resume), MediaUtils.formatTime(video.getResumeMs())));
                 }else{
                     clear(ACTION_RESUME);
                 }
@@ -207,16 +207,16 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
         if(!foundDifferencesRequiringDetailsUpdate(oldVideo, video, oldRemoteResume))
             return;
         if(video.getRemoteResumeMs()>0 && video.getResumeMs()!=video.getRemoteResumeMs()){
-            set(ACTION_REMOTE_RESUME, new Action(ACTION_REMOTE_RESUME, context.getString(R.string.remote_resume), Browser.formatTime(video.getRemoteResumeMs())));
+            set(ACTION_REMOTE_RESUME, new Action(ACTION_REMOTE_RESUME, context.getString(R.string.remote_resume), MediaUtils.formatTime(video.getRemoteResumeMs())));
             if (video.getResumeMs() > 0) { // this will be used to FORCE local resume
-                set(ACTION_RESUME, new Action(ACTION_LOCAL_RESUME, context.getString(R.string.resume), Browser.formatTime(video.getResumeMs())));
+                set(ACTION_RESUME, new Action(ACTION_LOCAL_RESUME, context.getString(R.string.resume), MediaUtils.formatTime(video.getResumeMs())));
             } else {
                 clear(ACTION_RESUME);
             }
         }
         else if (video.getResumeMs() > 0) { // LAST_POSITION_UNKNOWN is -1 and LAST_POSITION_END is -2
             clear(ACTION_REMOTE_RESUME);
-            set(ACTION_RESUME, new Action(ACTION_RESUME, context.getString(R.string.resume), Browser.formatTime(video.getResumeMs())));
+            set(ACTION_RESUME, new Action(ACTION_RESUME, context.getString(R.string.resume), MediaUtils.formatTime(video.getResumeMs())));
         }
         else {
             clear(ACTION_REMOTE_RESUME);

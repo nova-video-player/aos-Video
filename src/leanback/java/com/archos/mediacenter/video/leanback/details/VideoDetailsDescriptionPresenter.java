@@ -26,8 +26,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.Browser;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
@@ -171,7 +171,7 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
             vh.mRating.setVisibility(View.GONE);
         }
 
-        setTextOrSetInvisibleIfEmpty(vh.mDuration, Browser.formatTime(video.getDurationMs()));
+        setTextOrSetInvisibleIfEmpty(vh.mDuration, MediaUtils.formatTime(video.getDurationMs()));
 
         vh.mBody.setText(video.getDescriptionBody());
         vh.mTraktWatched.setVisibility(video.isWatched() || video.getResumeMs() == PlayerActivity.LAST_POSITION_END ? View.VISIBLE : View.GONE);
@@ -301,7 +301,7 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
             }
 
             // duration
-            setTextOrSetInvisibleIfEmpty(mSingleViewHolder.mDuration, Browser.formatTime(metadata.getDuration()));
+            setTextOrSetInvisibleIfEmpty(mSingleViewHolder.mDuration, MediaUtils.formatTime(metadata.getDuration()));
 
             // 3d badge
             mSingleViewHolder.m3dBadge.setVisibility(video.is3D() ? View.VISIBLE : View.GONE);

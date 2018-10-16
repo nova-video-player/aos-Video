@@ -63,6 +63,7 @@ import android.widget.Toast;
 import com.archos.environment.ArchosSettings;
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.MetaFile;
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.imageview.ChainProcessor;
 import com.archos.mediacenter.utils.imageview.ImageProcessor;
 import com.archos.mediacenter.utils.imageview.ImageViewSetter;
@@ -70,7 +71,6 @@ import com.archos.mediacenter.utils.imageview.ImageViewSetterConfiguration;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.Browser;
 import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
@@ -1057,7 +1057,7 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
                             ChainProcessor.newChain(mPosterProcessor, itemProperties.posterPath));
 
                 vh.processed_name.setText(name);
-                vh.processed_duration.setText((duration > 0) ? Browser.formatTime(duration) : "");
+                vh.processed_duration.setText((duration > 0) ? MediaUtils.formatTime(duration) : "");
                 vh.processed_genre.setText(getResources().getString(R.string.scrap_genre) + ": " + genre);
 
                 vh.processed_rating.setText(getResources().getString(R.string.scrap_rating) + ": " + rating);
@@ -1088,7 +1088,7 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
                 //---------------------------------------
                 vh.initial_thumbnail.setImageResource(R.drawable.filetype_video);
                 vh.initial_name.setText(name);
-                vh.initial_duration.setText((duration > 0) ? Browser.formatTime(duration) : "");
+                vh.initial_duration.setText((duration > 0) ? MediaUtils.formatTime(duration) : "");
                 vh.initial_status.setText(statusStringId);
 
                 // Show the initial layout of the items
