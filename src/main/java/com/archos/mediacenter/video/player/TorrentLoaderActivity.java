@@ -33,10 +33,10 @@ import android.preference.PreferenceManager;
 
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.CopyCutEngine;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.MimeUtils;
 import com.archos.filecorelibrary.OperationEngineListener;
-import com.archos.filecorelibrary.Utils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.billingutils.BillingUtils;
@@ -257,7 +257,7 @@ public class TorrentLoaderActivity extends Activity implements TorrentThreadObse
     }
     private void preloadTorrent(){
 
-        if(!Utils.isLocal(Uri.parse(mTorrentURL))&& UriUtils.isImplementedByFileCore(Uri.parse(mTorrentURL))){
+        if(!FileUtils.isLocal(Uri.parse(mTorrentURL))&& UriUtils.isImplementedByFileCore(Uri.parse(mTorrentURL))){
             //first we download the torrent file
 
             Uri mTorrentUri = Uri.parse(mTorrentURL);

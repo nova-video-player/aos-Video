@@ -29,7 +29,8 @@ import com.archos.filecorelibrary.OperationEngineListener;
 import com.archos.filecorelibrary.ftp.AuthenticationException;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.RawListerFactoryWithUpnp;
-import com.archos.mediacenter.utils.Utils;
+import com.archos.mediacenter.utils.MediaUtils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.ArchosMediaIntent;
 import com.jcraft.jsch.JSchException;
@@ -125,14 +126,14 @@ public class SubtitleManager {
 
                 //preparing upnp
                 if ("upnp".equalsIgnoreCase(upnpNiceUri.getScheme())) {
-                    File subsDir = com.archos.mediacenter.utils.Utils.getSubsDir(mContext);
+                    File subsDir = MediaUtils.getSubsDir(mContext);
                     Uri destinationDir = Uri.fromFile(subsDir);
-                    String nameSource = com.archos.filecorelibrary.Utils.getFileNameWithoutExtension(upnpNiceUri);
-                    String nameDest = com.archos.filecorelibrary.Utils.getFileNameWithoutExtension(fileUri);
+                    String nameSource = FileUtils.getFileNameWithoutExtension(upnpNiceUri);
+                    String nameDest = FileUtils.getFileNameWithoutExtension(fileUri);
                     for (File file : subsDir.listFiles()) {
                         Uri fileUri = Uri.fromFile(file);
-                        String nameWithoutExtension = com.archos.filecorelibrary.Utils.getFileNameWithoutExtension(fileUri);
-                        String extension = MimeUtils.getExtension(com.archos.filecorelibrary.Utils.getName(fileUri));
+                        String nameWithoutExtension = FileUtils.getFileNameWithoutExtension(fileUri);
+                        String extension = MimeUtils.getExtension(FileUtils.getName(fileUri));
                         String lang = MimeUtils.getExtension(nameWithoutExtension);
                         if (nameWithoutExtension.startsWith(nameSource)) {
                             try {
@@ -160,8 +161,8 @@ public class SubtitleManager {
                     int l;
                     byte[] buffer;
                     for (String ext : VideoUtils.getSubtitleExtensions()) {
-                        String url = com.archos.filecorelibrary.Utils.stripExtensionFromName(fileUri.toString()) + "." + ext;
-                        String name = com.archos.filecorelibrary.Utils.getFileNameWithoutExtension(fileUri) + "." + ext;
+                        String url = FileUtils.stripExtensionFromName(fileUri.toString()) + "." + ext;
+                        String name = FileUtils.getFileNameWithoutExtension(fileUri) + "." + ext;
                         HttpURLConnection con = null;
                         try {
                             con = (HttpURLConnection) new URL(url).openConnection();
@@ -176,7 +177,7 @@ public class SubtitleManager {
                                     break;
                                 }
                                 in = con.getInputStream();
-                                File subFile = new File(com.archos.mediacenter.utils.Utils.getSubsDir(mContext), name);
+                                File subFile = new File(MediaUtils.getSubsDir(mContext), name);
                                 fos = new FileOutputStream(subFile);
                                 l = 0;
                                 buffer = new byte[1024];
@@ -189,8 +190,8 @@ public class SubtitleManager {
                                     fos.write(buffer, 0, l);
                                 }
                                 if(total >= MAX_SUB_SIZE) {//delete wrong sub
-                                    com.archos.mediacenter.utils.Utils.closeSilently(in);
-                                    com.archos.mediacenter.utils.Utils.closeSilently(fos);
+                                    MediaUtils.closeSilently(in);
+                                    MediaUtils.closeSilently(fos);
                                     subFile.delete();
                                     //we break because this server isn't trustful, so we won't try next subs
                                     break;
@@ -202,13 +203,13 @@ public class SubtitleManager {
                         } finally {
                             if (con != null)
                                 con.disconnect();
-                            com.archos.mediacenter.utils.Utils.closeSilently(in);
-                            com.archos.mediacenter.utils.Utils.closeSilently(fos);
+                            MediaUtils.closeSilently(in);
+                            MediaUtils.closeSilently(fos);
                         }
 
                     }
                 }
-                else if(!"upnp".equals(fileUri.getScheme())&&UriUtils.isImplementedByFileCore(fileUri)&&!com.archos.filecorelibrary.Utils.isLocal(fileUri)){
+                else if(!"upnp".equals(fileUri.getScheme())&&UriUtils.isImplementedByFileCore(fileUri)&&!FileUtils.isLocal(fileUri)){
                     privatePrefetchSub(fileUri);
                 }
 
@@ -233,10 +234,10 @@ public class SubtitleManager {
 
     private void privatePrefetchSub(final Uri videoUri) {
         try {
-            Utils.removeLastSubs(mContext);List<MetaFile2> subs = getSubtitleList(videoUri);
+            MediaUtils.removeLastSubs(mContext);List<MetaFile2> subs = getSubtitleList(videoUri);
             if (!subs.isEmpty()){
 
-                Uri target = Uri.fromFile(Utils.getSubsDir(mContext));
+                Uri target = Uri.fromFile(MediaUtils.getSubsDir(mContext));
                 engine = new CopyCutEngine(mContext);
                 engine.setListener(new OperationEngineListener() {
                     @Override
@@ -245,7 +246,7 @@ public class SubtitleManager {
                     public void onProgress(int currentFile, long currentFileProgress,int currentRootFile, long currentRootFileProgress, long totalProgress, double currentSpeed) {}
                     @Override
                     public void onSuccess(Uri target) {
-                        if(com.archos.filecorelibrary.Utils.isLocal(target)){
+                        if(FileUtils.isLocal(target)){
                             try {
                                 Intent intent = new Intent(ArchosMediaIntent.ACTION_VIDEO_SCANNER_METADATA_UPDATE, target);
                                 mContext.sendBroadcast(intent);
@@ -290,7 +291,7 @@ public class SubtitleManager {
     }
 
     private static String stripExtension(Uri video){
-        final String videoFileName = com.archos.filecorelibrary.Utils.getName(video);
+        final String videoFileName = FileUtils.getName(video);
         final String videoExtension = MimeUtils.getExtension(videoFileName);
         String filenameWithoutExtension ;
         if (videoExtension!=null) { // may happen in UPnP
@@ -311,7 +312,7 @@ public class SubtitleManager {
      * @throws IOException
      */
     public static List<MetaFile2> getSubtitleList(Uri video) throws SftpException, AuthenticationException, JSchException, IOException {
-        final Uri parentUri = com.archos.filecorelibrary.Utils.getParentUrl(video);
+        final Uri parentUri = FileUtils.getParentUrl(video);
 
 
         ArrayList<MetaFile2> subs = new ArrayList<>();
@@ -390,7 +391,7 @@ public class SubtitleManager {
         }
         // List files in the local temporary folder
         String filenameWithoutExtension = stripExtension(video);
-        Uri localSubsDirUri = Uri.fromFile(com.archos.mediacenter.utils.Utils.getSubsDir(mContext));
+        Uri localSubsDirUri = Uri.fromFile(MediaUtils.getSubsDir(mContext));
         if (localSubsDirUri!=null) {
             try {
                 List<MetaFile2> files = RawListerFactoryWithUpnp.getRawListerForUrl(localSubsDirUri).getFileList();

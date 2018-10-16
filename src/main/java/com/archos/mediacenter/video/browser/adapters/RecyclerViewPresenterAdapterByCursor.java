@@ -21,7 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.widget.SectionIndexer;
 
-import com.archos.mediacenter.utils.Utils;
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.browser.ThumbnailAdapterVideo;
 import com.archos.mediacenter.video.browser.ThumbnailEngineVideo;
 import com.archos.mediacenter.video.browser.presenter.Presenter;
@@ -166,7 +166,7 @@ public abstract class RecyclerViewPresenterAdapterByCursor extends RecyclerView.
         // Get first all the files/folders located in the current folder
         File[] files = null;
         try {
-            files = Utils.getSubsDir(mContext).listFiles();
+            files = MediaUtils.getSubsDir(mContext).listFiles();
         }
         catch (SecurityException e) {
         }

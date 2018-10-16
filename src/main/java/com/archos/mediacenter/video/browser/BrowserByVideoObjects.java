@@ -33,6 +33,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.archos.environment.ArchosIntents;
 import com.archos.environment.ArchosSettings;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
@@ -149,9 +150,9 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
 
         final int resumePosition = video.getResumeMs();
         final boolean resume = resumePosition > 0;
-        final boolean delete = !com.archos.filecorelibrary.Utils.isSlowRemote(Uri.parse(entryPath));
+        final boolean delete = !FileUtils.isSlowRemote(Uri.parse(entryPath));
         final boolean markAsTrakt = Trakt.isTraktV2Enabled(mContext, mPreferences);
-        final boolean isNetwork = !com.archos.filecorelibrary.Utils.isLocal(video.getFileUri());
+        final boolean isNetwork = !FileUtils.isLocal(video.getFileUri());
         menu.add(0, R.string.play_from_beginning, 0, R.string.play_selection);
         if (resume && resumePosition != PlayerActivity.LAST_POSITION_END) {
             menu.findItem(R.string.play_from_beginning).setTitle(R.string.play_from_beginning);

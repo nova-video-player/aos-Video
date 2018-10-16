@@ -71,7 +71,7 @@ import android.widget.Toast;
 import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosIntents;
 import com.archos.environment.SystemPropertiesProxy;
-import com.archos.mediacenter.utils.Utils;
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.video.R;
@@ -1123,10 +1123,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         // Only handle joystick events
         if(mPlayerController!=null && !mPlayerController.isTVMenuDisplayed())
             if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                int joystickZone = Utils.getJoystickZone(event);
+                int joystickZone = MediaUtils.getJoystickZone(event);
                 if (DBG) Log.d(TAG, "onGenericMotionEvent : event=ACTION_MOVE");
 
-                if (!mSeekingWithJoystickStarted && joystickZone != Utils.JOYSTICK_ZONE_CENTER) {
+                if (!mSeekingWithJoystickStarted && joystickZone != MediaUtils.JOYSTICK_ZONE_CENTER) {
                     // Starting to seek => make the control bar visible
                     mSeekingWithJoystickStarted = true;
                     mPlayerController.showControlBar();
@@ -1134,7 +1134,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
                 mPlayerController.handleJoystickEvent(joystickZone);
 
-                if (mSeekingWithJoystickStarted && joystickZone == Utils.JOYSTICK_ZONE_CENTER) {
+                if (mSeekingWithJoystickStarted && joystickZone == MediaUtils.JOYSTICK_ZONE_CENTER) {
                     // Seeking done
                     mSeekingWithJoystickStarted = false;
                 }

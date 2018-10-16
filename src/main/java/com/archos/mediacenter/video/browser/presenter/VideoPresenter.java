@@ -21,7 +21,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.video.browser.Browser;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
@@ -122,7 +122,7 @@ public class VideoPresenter extends CommonPresenter{
         // Network notification
         if(holder.network!=null){
 
-            holder.network.setEnabled(!Utils.isLocal(video.getFileUri()));
+            holder.network.setEnabled(!FileUtils.isLocal(video.getFileUri()));
             holder.network.setVisibility(View.VISIBLE);
         }
         if(holder.expanded!=null)

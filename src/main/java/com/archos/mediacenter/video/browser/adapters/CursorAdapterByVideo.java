@@ -17,7 +17,8 @@ package com.archos.mediacenter.video.browser.adapters;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.archos.mediacenter.utils.Utils;
+import com.archos.mediacenter.utils.MediaUtils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.utils.VideoUtils;
@@ -45,7 +46,7 @@ public class CursorAdapterByVideo extends PresenterAdapterByCursor implements Ad
         // Get first all the files/folders located in the current folder
         File[] files = null;
         try {
-            files = Utils.getSubsDir(mContext).listFiles();
+            files = MediaUtils.getSubsDir(mContext).listFiles();
         }
         catch (SecurityException e) {
         }
@@ -86,7 +87,7 @@ public class CursorAdapterByVideo extends PresenterAdapterByCursor implements Ad
     public Video getVideoItem(int position) {
         getCursor().moveToPosition(position);
         Video video = (Video) mVideoCursorMapper.publicBind(getCursor());
-        video.setHasSubs(video.hasSubs()||hasLocalSubtitles(com.archos.filecorelibrary.Utils.getFileNameWithoutExtension(video.getFileUri())));
+        video.setHasSubs(video.hasSubs()||hasLocalSubtitles(FileUtils.getFileNameWithoutExtension(video.getFileUri())));
         return video;
     }
 

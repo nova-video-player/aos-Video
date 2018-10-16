@@ -44,7 +44,7 @@ import android.util.Log;
 
 import com.archos.environment.ArchosFeatures;
 import com.archos.environment.SystemPropertiesProxy;
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.StreamUriFinder;
 import com.archos.mediacenter.utils.trakt.Trakt;
@@ -475,7 +475,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         else if(!"content".equals(mUri.getScheme()))
             onDataUriOK();
         else if(mVideoId==-1){
-            Uri correctedUri = Utils.getRealUriFromVideoURI(this,mUri);
+            Uri correctedUri = FileUtils.getRealUriFromVideoURI(this,mUri);
             if(correctedUri!=null) {
                 Log.d(TAG, "correctedUri " + correctedUri);
                 mUri = correctedUri;
@@ -528,7 +528,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         else if(getVideoInfo()!=null&&getVideoInfo().title!=null)
             title = getVideoInfo().title;
         else
-            title = Utils.getFileNameWithoutExtension(mUri);
+            title = FileUtils.getFileNameWithoutExtension(mUri);
         mNotificationBuilder.setContentTitle(getString(R.string.now_playing));
         mNotificationBuilder.setContentText(title);
         mNotificationBuilder.setContentIntent(contentIntent);
@@ -1410,7 +1410,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void updateNowPlayingMetadata() {
         MediaMetadata.Builder metadataBuilder = new MediaMetadata.Builder();
-        String title = mVideoInfo.scraperTitle!=null?mVideoInfo.scraperTitle:mVideoInfo.title!=null?mVideoInfo.title:Utils.getFileNameWithoutExtension(mUri);
+        String title = mVideoInfo.scraperTitle!=null?mVideoInfo.scraperTitle:mVideoInfo.title!=null?mVideoInfo.title:FileUtils.getFileNameWithoutExtension(mUri);
         metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE,
                 title);
         metadataBuilder.putString(MediaMetadata.METADATA_KEY_TITLE,title);

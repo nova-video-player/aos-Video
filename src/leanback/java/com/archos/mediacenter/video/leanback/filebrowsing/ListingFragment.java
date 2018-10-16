@@ -50,7 +50,7 @@ import com.archos.customizedleanback.widget.MyTitleView;
 import com.archos.filecorelibrary.ListingEngine;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.MimeUtils;
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.ListingEngineFactoryWithUpnp;
 import com.archos.mediacenter.filecoreextension.upnp2.UpnpFile2;
 import com.archos.mediacenter.video.R;
@@ -661,7 +661,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
             if (isAdded()) getActivity().onBackPressed();
         }
         else{ //if parent uri
-            Uri parent = Utils.getParentUrl(file);
+            Uri parent = FileUtils.getParentUrl(file);
             if(parent.toString().endsWith("/")&&!mUri.toString().endsWith("/")&&parent.toString().equals(mUri.toString()+"/") || mUri.equals(parent)){
                 // we need to refresh
                 if(isAdded())

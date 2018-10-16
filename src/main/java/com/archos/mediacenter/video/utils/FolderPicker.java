@@ -23,7 +23,7 @@ import com.archos.filecorelibrary.ExtStorageReceiver;
 import com.archos.filecorelibrary.ListingEngine;
 import com.archos.filecorelibrary.ListingEngineFactory;
 import com.archos.filecorelibrary.MetaFile2;
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.video.R;
 
 
@@ -129,7 +129,7 @@ public class FolderPicker extends FragmentActivity {
         if (isOneOfTheRootStorageItems(uri)) {
 			return VIRTUAL_ROOT_POINT;
 		} else {
-            Uri parentUri = Utils.getParentUrl(uri);
+            Uri parentUri = FileUtils.getParentUrl(uri);
             if (parentUri != null) {
                 String parent = parentUri.toString();
                 if (parent != null && !parent.isEmpty() && parent.endsWith("/")) {
@@ -169,7 +169,7 @@ public class FolderPicker extends FragmentActivity {
                 if (mName != null) {
                     return mName;
                 }
-                return Utils.getName(mUri);
+                return FileUtils.getName(mUri);
 			}
 		}
 

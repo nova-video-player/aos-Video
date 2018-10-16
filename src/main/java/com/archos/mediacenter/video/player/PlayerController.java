@@ -58,7 +58,7 @@ import android.widget.Toast;
 import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.utils.RepeatingImageButton;
-import com.archos.mediacenter.utils.Utils;
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.billingutils.BillingUtils;
 import com.archos.mediacenter.video.billingutils.IsPaidCallback;
@@ -215,7 +215,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private boolean             mSeekWasPlaying;
     private boolean             mIsStopped = true;
     private boolean             mJoystickSeekingActive = false;
-    private int                 mJoystickZone = Utils.JOYSTICK_ZONE_CENTER;
+    private int                 mJoystickZone = MediaUtils.JOYSTICK_ZONE_CENTER;
     private int                 mSeekAccelStepCount = SEEK_ACCEL_STEPS.length;
 
     private AudioManager        mAudioManager;
@@ -669,7 +669,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         //help overlay
         if(mContext instanceof PlayerActivity){
             if(((PlayerActivity)mContext).isPluggedOnTv()){
-                SharedPreferences mPreferences =  mContext.getSharedPreferences(Utils.SHARED_PREFERENCES_NAME, mContext.MODE_PRIVATE);
+                SharedPreferences mPreferences =  mContext.getSharedPreferences(MediaUtils.SHARED_PREFERENCES_NAME, mContext.MODE_PRIVATE);
                 if(!mPreferences.getBoolean(PLAYER_HELP_OVERLAY_KEY, false)){
                     showHelpOverlay(mControllerViewLeft);
                     if(mControllerViewRight!=null && UIMode!=VideoEffect.NORMAL_2D_MODE){
@@ -1109,7 +1109,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                             // Seeking with a joystick => set either a slow or a fast seeking speed depending on
                             // how much the joystick is moved. Make slow speed match  the first acceleration step
                             // and fast speed match the last acceleration step.
-                            step = (mJoystickZone == Utils.JOYSTICK_ZONE_FAR_LEFT || mJoystickZone == Utils.JOYSTICK_ZONE_FAR_RIGHT) ? mSeekAccelStepCount - 1 : 0;
+                            step = (mJoystickZone == MediaUtils.JOYSTICK_ZONE_FAR_LEFT || mJoystickZone == MediaUtils.JOYSTICK_ZONE_FAR_RIGHT) ? mSeekAccelStepCount - 1 : 0;
                         } else {
                             // Seeking with keys => make seeking accelerate while keeping the key pressed a long time
                             step = getSeekAccelStep(mLongSeekTime);
@@ -2142,7 +2142,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             return;
         mJoystickZone = joystickZone;
 
-        if ((mJoystickZone == Utils.JOYSTICK_ZONE_RIGHT || mJoystickZone == Utils.JOYSTICK_ZONE_FAR_RIGHT) && !mJoystickSeekingActive) {
+        if ((mJoystickZone == MediaUtils.JOYSTICK_ZONE_RIGHT || mJoystickZone == MediaUtils.JOYSTICK_ZONE_FAR_RIGHT) && !mJoystickSeekingActive) {
             // Only call onSeek() once when starting to seek but set longPress=true so that
             // the seek event will be sent periodically until the joystick is released
             if (DBG) Log.d(TAG, "Joystick moved to the right => start seeking forward");
@@ -2151,7 +2151,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 onSeek(1, true);
             }
         }
-        else if ((mJoystickZone == Utils.JOYSTICK_ZONE_LEFT || mJoystickZone == Utils.JOYSTICK_ZONE_FAR_LEFT) && !mJoystickSeekingActive) {
+        else if ((mJoystickZone == MediaUtils.JOYSTICK_ZONE_LEFT || mJoystickZone == MediaUtils.JOYSTICK_ZONE_FAR_LEFT) && !mJoystickSeekingActive) {
             // Only call onSeek() once when starting to seek but set longPress=true so that
             // the seek event will be sent periodically until the joystick is released
             if (DBG) Log.d(TAG, "Joystick moved to the left => start seeking backward");
@@ -2160,7 +2160,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 onSeek(-1, true);
             }
         }
-        else if (mJoystickZone == Utils.JOYSTICK_ZONE_CENTER && mJoystickSeekingActive) {
+        else if (mJoystickZone == MediaUtils.JOYSTICK_ZONE_CENTER && mJoystickSeekingActive) {
             // The joystick is released (i.e. is back in the dead zone)
             if (DBG) Log.d(TAG, "Joystick released => stop seeking");
             mJoystickSeekingActive = false;

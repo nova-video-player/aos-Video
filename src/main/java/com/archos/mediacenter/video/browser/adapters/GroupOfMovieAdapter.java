@@ -26,7 +26,7 @@ import android.widget.CursorAdapter;
 import android.widget.SectionIndexer;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
-import com.archos.mediacenter.utils.Utils;
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserMoviesBy;
 import com.archos.mediacenter.video.browser.ThumbnailAdapterVideo;
@@ -125,12 +125,12 @@ public class GroupOfMovieAdapter extends CursorAdapter implements SectionIndexer
     }
 
     public int getPositionForSection(int sectionIndex) {
-        return Utils.getPositionForSection(sectionIndex, mIndexer, getCount(),
+        return MediaUtils.getPositionForSection(sectionIndex, mIndexer, getCount(),
                 mSections);
     }
 
     public int getSectionForPosition(int position) {
-        return Utils.getSectionForPosition(position, mIndexer, getCount());
+        return MediaUtils.getSectionForPosition(position, mIndexer, getCount());
     }
 
     public String getName(int position) {

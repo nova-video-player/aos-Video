@@ -25,7 +25,7 @@ import android.widget.Toast;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.MimeUtils;
 import com.archos.filecorelibrary.StreamOverHttp;
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.StreamUriFinder;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
@@ -101,13 +101,13 @@ public class PlayUtils implements IndexHelper.Listener {
         // try to find extension when none has been set
         String mimeType = video.getMimeType();
         if(mimeType==null&&video.getFileUri()!=null) {
-            String extension = Utils.getExtension(video.getFileUri().getLastPathSegment());
+            String extension = FileUtils.getExtension(video.getFileUri().getLastPathSegment());
             if (extension!=null) {
                 mimeType = MimeUtils.guessMimeTypeFromExtension(extension);
             }
         }
         if(mimeType==null&&video.getStreamingUri()!=null) {
-            String extension = Utils.getExtension(video.getStreamingUri().getLastPathSegment());
+            String extension = FileUtils.getExtension(video.getStreamingUri().getLastPathSegment());
             if (extension!=null) {
                 mimeType = MimeUtils.guessMimeTypeFromExtension(extension);
             }
@@ -216,7 +216,7 @@ public class PlayUtils implements IndexHelper.Listener {
         }
         else {
             // do not check Uri below because it can be a MediaDB Uri starting with content:
-            if (!Utils.isLocal(video.getFileUri())) {
+            if (!FileUtils.isLocal(video.getFileUri())) {
                 if (!"upnp".equals(video.getFileUri().getScheme())) {
                     // Http proxy to allow 3rd party players to play remote files
                     try {
@@ -264,7 +264,7 @@ public class PlayUtils implements IndexHelper.Listener {
             mimeType = "*/" + file.getExtension();
         }
         Uri uri = file.getUri();
-        if(!Utils.isLocal(uri)){
+        if(!FileUtils.isLocal(uri)){
             try {
                 StreamOverHttp streamOverHttp = new StreamOverHttp(file,mimeType);
                 uri = streamOverHttp.getUri(file.getName());

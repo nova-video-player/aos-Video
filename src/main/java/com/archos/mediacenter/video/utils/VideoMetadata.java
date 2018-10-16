@@ -21,7 +21,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.medialib.IMediaMetadataRetriever;
 import com.archos.medialib.IMediaPlayer;
@@ -176,7 +176,7 @@ public class VideoMetadata implements Serializable {
         reset();
         mFile = null;
         mRemotePath = null;
-        if (!Utils.isLocal(Uri.parse(path))|| UriUtils.isContentUri(Uri.parse(path)))
+        if (!FileUtils.isLocal(Uri.parse(path))|| UriUtils.isContentUri(Uri.parse(path)))
             mRemotePath = path;
         else
             mFile = new File(path);

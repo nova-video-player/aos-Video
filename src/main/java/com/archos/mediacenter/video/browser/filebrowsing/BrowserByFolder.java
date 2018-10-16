@@ -45,7 +45,7 @@ import android.widget.Toast;
 import com.archos.filecorelibrary.ListingEngine;
 import com.archos.filecorelibrary.MetaFile.FileType;
 import com.archos.filecorelibrary.MetaFile2;
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.ListingEngineFactoryWithUpnp;
 import com.archos.mediacenter.filecoreextension.upnp2.UpnpFile2;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
@@ -774,7 +774,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         if (mCurrentDirectory.equals(Uri.fromFile(Environment.getExternalStorageDirectory()))) {
             return  getResources().getString(R.string.root_storage);
         } else {
-            return Utils.getName(mCurrentDirectory);
+            return FileUtils.getName(mCurrentDirectory);
         }
     }
 

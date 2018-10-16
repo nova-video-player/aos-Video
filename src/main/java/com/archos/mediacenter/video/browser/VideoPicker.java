@@ -15,7 +15,7 @@
 package com.archos.mediacenter.video.browser;
 
 import com.archos.mediacenter.utils.MusicAlphabetIndexer;
-import com.archos.mediacenter.utils.Utils;
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -333,7 +333,7 @@ public class VideoPicker extends ListActivity implements AdapterView.OnItemClick
             cursor.copyStringToBuffer(mVideoIdx, vh.buffer1);
             vh.line1.setText(vh.buffer1.data, 0, vh.buffer1.sizeCopied);
 
-            vh.duration.setText(Utils.makeDurationString(context, cursor.getInt(mDurationIdx), false));
+            vh.duration.setText(MediaUtils.makeDurationString(context, cursor.getInt(mDurationIdx), false));
             vh.duration.setVisibility(View.VISIBLE);
 
             final StringBuilder builder = mBuilder;

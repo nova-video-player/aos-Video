@@ -47,7 +47,7 @@ import android.widget.TextView;
 
 import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.utils.HelpOverlayActivity;
-import com.archos.mediacenter.utils.Utils;
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.autoscraper.AutoScraperActivity;
 import com.archos.mediaprovider.video.VideoStore;
@@ -98,7 +98,7 @@ public class NewVideosActionProvider extends ActionProvider implements
 
         mHelpOverlayHandler = new HelpOverlayHandler();
 
-        mPreferences = mContext.getSharedPreferences(Utils.SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
+        mPreferences = mContext.getSharedPreferences(MediaUtils.SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
     }
 
     private MenuItem mItem;

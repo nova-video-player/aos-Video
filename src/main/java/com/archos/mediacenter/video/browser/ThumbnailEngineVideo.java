@@ -15,7 +15,7 @@
 package com.archos.mediacenter.video.browser;
 
 import com.archos.filecorelibrary.MetaFile2;
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.BitmapUtils;
 import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.utils.ThumbnailRequest;

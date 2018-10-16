@@ -62,7 +62,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.archos.environment.ArchosUtils;
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
@@ -854,7 +854,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         if(mShouldUpdateRemoteResume) {
             //before that, we couldn't be sure to have the right file uri. Now that we are, try to get remote resume
             currentVideo.setRemoteResumeMs(-1);//reset remote resume
-            if (!mLaunchedFromPlayer && !Utils.isLocal(currentVideo.getFileUri()) && UriUtils.isCompatibleWithRemoteDB(currentVideo.getFileUri())) {
+            if (!mLaunchedFromPlayer && !FileUtils.isLocal(currentVideo.getFileUri()) && UriUtils.isCompatibleWithRemoteDB(currentVideo.getFileUri())) {
                 Log.d(TAG, "addParseListener");
                 XmlDb.getInstance().addParseListener(mRemoteDbObserver);
                 XmlDb.getInstance().parseXmlLocation(currentVideo.getFileUri());

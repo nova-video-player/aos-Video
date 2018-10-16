@@ -34,7 +34,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.archos.filecorelibrary.MetaFile2;
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
@@ -257,7 +257,7 @@ public class PosterImageCardPresenter extends Presenter {
             vh.updateCardView(posterUri, video.getId(),isLarge);
         }
         //don't try to load thumb when not indexed or not local && create remote thumb is set to false
-        else if (video.isIndexed()&& (Utils.isLocal(video.getFileUri())||PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoProvider.PREFERENCE_CREATE_REMOTE_THUMBS, false))) {
+        else if (video.isIndexed()&& (FileUtils.isLocal(video.getFileUri())||PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoProvider.PREFERENCE_CREATE_REMOTE_THUMBS, false))) {
             // get/build Thumbnail
             vh.updateCardView(ThumbnailRequestHandler.buildUri(video.getId()),-1, false);
         }

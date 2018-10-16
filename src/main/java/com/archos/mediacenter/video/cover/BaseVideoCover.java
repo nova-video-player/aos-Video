@@ -19,7 +19,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.cover.Cover;
 import com.archos.mediacenter.utils.InfoDialog;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
@@ -61,8 +61,8 @@ abstract public class BaseVideoCover extends Cover {
     public Runnable getOpenAction(final Context context, final int resume) {
     	return new Runnable() {
     		public void run() {
-                VideoInfoActivity.startInstance(context, null, Utils.getRealUriFromVideoURI(context, getUri()), new Long(-1));
-               // PlayUtils.startVideo(context, getUri(), Utils.getRealUriFromVideoURI(context, getUri()), null, null, resume, false, null, true);
+                VideoInfoActivity.startInstance(context, null, FileUtils.getRealUriFromVideoURI(context, getUri()), new Long(-1));
+               // PlayUtils.startVideo(context, getUri(), FileUtils.getRealUriFromVideoURI(context, getUri()), null, null, resume, false, null, true);
     		}
     	};
     }
