@@ -25,6 +25,7 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.R;
@@ -109,7 +110,7 @@ public class MultipleSelectionManager implements ActionMode.Callback {
                     else if(obj instanceof MetaFile2){
                         uri = ((MetaFile2)obj).getUri();
                     }
-                    if (com.archos.filecorelibrary.Utils.isLocal(uri)) {
+                    if (FileUtils.isLocal(uri)) {
                         areNotLocal = false;
                     }
                     if(obj instanceof MetaFile2 || obj instanceof NonIndexedVideo) {

@@ -24,7 +24,7 @@ import android.widget.CursorAdapter;
 import android.widget.SectionIndexer;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
-import com.archos.mediacenter.utils.Utils;
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.browser.ThumbnailAdapterVideo;
 import com.archos.mediacenter.video.browser.ThumbnailEngineVideo;
 import com.archos.mediacenter.video.browser.ThumbnailRequestVideo;
@@ -145,7 +145,7 @@ public abstract class PresenterAdapterByCursor extends CursorAdapter implements 
         // Get first all the files/folders located in the current folder
         File[] files = null;
         try {
-            files = Utils.getSubsDir(mContext).listFiles();
+            files = MediaUtils.getSubsDir(mContext).listFiles();
         }
         catch (SecurityException e) {
         }

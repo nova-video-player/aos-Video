@@ -23,6 +23,7 @@ import android.util.Log;
 
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.FileComparator;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.ListingEngine;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.RawLister;
@@ -259,7 +260,7 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
 
 
 
-            int bucketId = com.archos.filecorelibrary.Utils.getBucketId(mUri);
+            int bucketId = FileUtils.getBucketId(mUri);
             Cursor cursor;
             // 1. Try to find the next video in the database
             cursor = getNextInBucket(mResolver, bucketId, mUri.toString());
@@ -295,7 +296,7 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
             // 3. try to find the next file within the filesystem
             if(mUri.getScheme()==null)
                 mUri = Uri.parse("file://"+mUri.toString());
-            Uri parentUri = com.archos.filecorelibrary.Utils.getParentUrl(mUri);
+            Uri parentUri = FileUtils.getParentUrl(mUri);
             if (parentUri != null) {
                 RawLister lister = RawListerFactoryWithUpnp.getRawListerForUrl(parentUri);
 

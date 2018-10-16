@@ -33,7 +33,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.archos.filecorelibrary.MetaFile2;
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.utils.HelpOverlayActivity;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
@@ -224,7 +224,7 @@ public class BrowserByNetwork extends BrowserByFolder {
         switch (item.getItemId()) {
             case R.string.add_to_indexed_folders:
                 // Handle this item when it is in the options menu
-                createShortcut(mCurrentDirectory.toString(), Utils.getName(mCurrentDirectory));
+                createShortcut(mCurrentDirectory.toString(), FileUtils.getName(mCurrentDirectory));
                 ret = true;
                 break;
             case R.string.remove_from_indexed_folders:

@@ -64,7 +64,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.utils.imageview.ImageProcessor;
 import com.archos.mediacenter.utils.imageview.ImageViewSetter;
@@ -298,7 +298,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         public void onReceive(Context context, Intent intent) {
             NetworkState networkState = NetworkState.instance(context);
             networkState.updateFrom(context);
-            if (mCurrentVideo!=null&&(!networkState.isConnected()||!networkState.hasLocalConnection()&&!Utils.isSlowRemote(mCurrentVideo.getFileUri()))&&!Utils.isLocal(mCurrentVideo.getFileUri())&&isAdded()&&!isDetached()) {
+            if (mCurrentVideo!=null&&(!networkState.isConnected()||!networkState.hasLocalConnection()&&!FileUtils.isSlowRemote(mCurrentVideo.getFileUri()))&&!FileUtils.isLocal(mCurrentVideo.getFileUri())&&isAdded()&&!isDetached()) {
                 getActivity().finish();
             }
         }
@@ -709,7 +709,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             setBackground();
             //execute async task BEFORE xml parsing
             startAsyncTasks();
-            if(!mIsLaunchFromPlayer&&!Utils.isLocal(video.getFileUri())&& UriUtils.isCompatibleWithRemoteDB(video.getFileUri())) {
+            if(!mIsLaunchFromPlayer&&!FileUtils.isLocal(video.getFileUri())&& UriUtils.isCompatibleWithRemoteDB(video.getFileUri())) {
                 Log.d(TAG, "addParseListener");
                 XmlDb.getInstance().addParseListener(this);
                 XmlDb.getInstance().parseXmlLocation(video.getFileUri());

@@ -14,7 +14,7 @@
 
 package com.archos.mediacenter.video.info;
 
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -80,13 +80,13 @@ public class SortByFavoriteSources  implements Comparator<Video> {
 
             }
 
-            if(Utils.isLocal(video1.getFileUri()))
+            if(FileUtils.isLocal(video1.getFileUri()))
                 return -1;
-            if (Utils.isLocal(video2.getFileUri()))
+            if (FileUtils.isLocal(video2.getFileUri()))
                 return 1;
-            if(!Utils.isSlowRemote(video1.getFileUri()))
+            if(!FileUtils.isSlowRemote(video1.getFileUri()))
                 return -1;
-            if(!Utils.isSlowRemote(video2.getFileUri()))
+            if(!FileUtils.isSlowRemote(video2.getFileUri()))
                 return 1;
 
 

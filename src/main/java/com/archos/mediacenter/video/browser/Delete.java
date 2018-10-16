@@ -27,7 +27,7 @@ import com.archos.filecorelibrary.FileEditor;
 import com.archos.filecorelibrary.FileEditorFactory;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.RawLister;
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.ftp.AuthenticationException;
 import com.archos.filecorelibrary.localstorage.LocalStorageFileEditor;
 import com.archos.mediacenter.filecoreextension.UriUtils;
@@ -76,7 +76,7 @@ public class Delete {
                     final Uri fileUri = toDeleteUri;
                     //sending intent to unindex the file
                     boolean deleteResult = deleteFileAndAssociatedFiles(mContext, fileUri);
-                    if (Utils.isLocal(fileUri)) {
+                    if (FileUtils.isLocal(fileUri)) {
                         Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(VideoUtils.getMediaLibCompatibleFilepathFromUri(fileUri)));
                         intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
                         mContext.sendBroadcast(intent);
@@ -167,7 +167,7 @@ public class Delete {
                 }
 
                 //sending intent to unindex the file
-                if(Utils.isLocal(fileUri)) {
+                if(FileUtils.isLocal(fileUri)) {
                     Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,Uri.parse(VideoUtils.getMediaLibCompatibleFilepathFromUri(fileUri)));
                     intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
                     mContext.sendBroadcast(intent);
@@ -201,15 +201,15 @@ public class Delete {
                 // sometimes we will want to delete parent folder, when empty or only filled with little files like subtitles or nfo
                 // then, ask the user
                 if(mListener!=null) {
-                    if(Utils.isLocal(fileUri)&&
-                            !LocalStorageFileEditor.checkIfShouldNotTouchFolder(Utils.getParentUrl(fileUri)))
+                    if(FileUtils.isLocal(fileUri)&&
+                            !LocalStorageFileEditor.checkIfShouldNotTouchFolder(FileUtils.getParentUrl(fileUri)))
                     {
-                        long shouldIDelete = getFolderSizeAndStopOnMax(Utils.getParentUrl(fileUri), MAX_FOLDER_SIZE, 0, 0);
+                        long shouldIDelete = getFolderSizeAndStopOnMax(FileUtils.getParentUrl(fileUri), MAX_FOLDER_SIZE, 0, 0);
                         if ((currentFileSize > MIN_FILE_SIZE || shouldIDelete == 0) && MAX_FOLDER_SIZE > shouldIDelete && shouldIDelete >= 0) {
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mListener.onVideoFileRemoved(fileUri, true, Utils.getParentUrl(fileUri));
+                                    mListener.onVideoFileRemoved(fileUri, true, FileUtils.getParentUrl(fileUri));
                                 }
                             });
                         } else {
@@ -266,7 +266,7 @@ public class Delete {
             }
         }
         //delete subs
-        if(!Utils.isSlowRemote(fileUri)) {
+        if(!FileUtils.isSlowRemote(fileUri)) {
             SubtitleManager.deleteAssociatedSubs(fileUri,context);
             XmlDb.deleteAssociatedResumeDatabase(fileUri);
         }
@@ -339,12 +339,12 @@ public class Delete {
     private static List<Uri> getAssociatedFiles(Uri fileUri) {
         List<Uri> result = new LinkedList<>();
 
-        final Uri parentUri = Utils.getParentUrl(fileUri);
+        final Uri parentUri = FileUtils.getParentUrl(fileUri);
         if (parentUri==null) {
             return result;
         }
 
-        final String filenameWithoutExtension = Utils.getFileNameWithoutExtension(fileUri);
+        final String filenameWithoutExtension = FileUtils.getFileNameWithoutExtension(fileUri);
         if (filenameWithoutExtension==null || filenameWithoutExtension.isEmpty()) {
             return result;
         }

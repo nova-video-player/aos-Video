@@ -44,13 +44,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.archos.environment.ArchosUtils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.FileEditor;
 import com.archos.filecorelibrary.FileEditorFactory;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.MetaFile2Factory;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.MetaFileFactoryWithUpnp;
-import com.archos.mediacenter.utils.Utils;
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
@@ -159,7 +160,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                 for(String uri : fileUrls)
                     mIndexableUri.put(uri, uri);
                 mOpenSubtitlesTask.execute(fileUrls, getSubLangValue());
-                subsDir = Utils.getSubsDir(this);
+                subsDir = MediaUtils.getSubsDir(this);
             } else {
                 Builder dialogNoNetwork;
 
@@ -395,7 +396,7 @@ public class SubtitlesDownloaderActivity extends Activity{
             if (mFriendlyFileNames != null&&mFriendlyFileNames.containsKey(fileUrl)){
                 return mFriendlyFileNames.get(fileUrl);
             } else {
-                return com.archos.filecorelibrary.Utils.getFileNameWithoutExtension(Uri.parse(fileUrl));
+                return FileUtils.getFileNameWithoutExtension(Uri.parse(fileUrl));
             }
         }
         @SuppressWarnings("unchecked")
@@ -593,7 +594,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                         fails.put(fileName, langs);
                 }
             }
-            Utils.removeLastSubs(SubtitlesDownloaderActivity.this);
+            MediaUtils.removeLastSubs(SubtitlesDownloaderActivity.this);
             if (!isCancelled()) {
                 if (single){
                     stop = true;
@@ -822,8 +823,8 @@ public class SubtitlesDownloaderActivity extends Activity{
             String indexableUri = mIndexableUri.get(path);
             boolean canWrite = false;
             Uri parentUri = null;
-            if(UriUtils.isImplementedByFileCore(Uri.parse(path))&&!com.archos.filecorelibrary.Utils.isSlowRemote(Uri.parse(path))){
-                parentUri = com.archos.filecorelibrary.Utils.getParentUrl(Uri.parse(path));
+            if(UriUtils.isImplementedByFileCore(Uri.parse(path))&&!FileUtils.isSlowRemote(Uri.parse(path))){
+                parentUri = FileUtils.getParentUrl(Uri.parse(path));
                 if(parentUri!=null){
                     try {
                         MetaFile2 metaFile2 = MetaFile2Factory.getMetaFileForUrl(parentUri);
@@ -855,7 +856,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                 }
             }
             if(name==null||name.isEmpty())
-                name = com.archos.filecorelibrary.Utils.getFileNameWithoutExtension(Uri.parse(path));
+                name = FileUtils.getFileNameWithoutExtension(Uri.parse(path));
             localSb = new StringBuilder();
             localSb.append(subsDir.getPath()).append('/').append(name).append('.').append(language).append('.').append(subFormat);
             if(!canWrite)
@@ -907,7 +908,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                  // Update the media database
                 if (canWrite) {
 
-                    if(!com.archos.filecorelibrary.Utils.isLocal(Uri.parse(path))){ // when not local, we need to copy our file
+                    if(!FileUtils.isLocal(Uri.parse(path))){ // when not local, we need to copy our file
                         editor.copyFileTo(Uri.parse(localSb.toString()),SubtitlesDownloaderActivity.this);
                     }
                 }
@@ -918,9 +919,9 @@ public class SubtitlesDownloaderActivity extends Activity{
             } catch (Throwable e){ //for various service outages
                 e.printStackTrace();
             }finally{
-                Utils.closeSilently(f);
-                Utils.closeSilently(in);
-                Utils.closeSilently(gzIS);
+                MediaUtils.closeSilently(f);
+                MediaUtils.closeSilently(in);
+                MediaUtils.closeSilently(gzIS);
                 f = null;
                 gzIS = null;
                 in = null;

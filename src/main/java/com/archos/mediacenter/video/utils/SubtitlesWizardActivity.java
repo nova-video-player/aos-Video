@@ -22,7 +22,7 @@
 
 package com.archos.mediacenter.video.utils;
 
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.medialib.IMediaMetadataRetriever;
 import com.archos.medialib.MediaFactory;
@@ -131,7 +131,7 @@ public class SubtitlesWizardActivity extends Activity implements OnItemClickList
 
         // Use the name of the video to build the help message displayed at the top of the screen
         TextView helpMessageHeader = (TextView) findViewById(R.id.help_message_header);
-        String name = Utils.getFileNameWithoutExtension(mVideoUri);
+        String name = FileUtils.getFileNameWithoutExtension(mVideoUri);
 
         String helpMessage;
         if (mAvailableFilesCount == 0 && mCurrentFilesCount == 0) {

@@ -28,7 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.ActionBarSubmenu;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.R;
@@ -175,7 +175,7 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 				cursor2.moveToFirst();
 				int uri = cursor2.getColumnIndex(VideoStore.MediaColumns.DATA);
 				do {
-					if (!Utils.isLocal(Uri.parse(cursor2.getString(uri)))) {
+					if (!FileUtils.isLocal(Uri.parse(cursor2.getString(uri)))) {
 						distant = true;
 					}
 				} while (cursor2.moveToNext() && !distant);
@@ -207,7 +207,7 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 					int uriCol = cursor2.getColumnIndex(VideoStore.MediaColumns.DATA);
 					do {
 						Uri uri = Uri.parse(cursor2.getString(uriCol));
-						if (!Utils.isLocal(uri))
+						if (!FileUtils.isLocal(uri))
 							list.add(uri);
 					} while (cursor2.moveToNext());
 					startDownloadingVideo(list);

@@ -26,7 +26,7 @@ import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.mediacenter.utils.AppState;
-import com.archos.mediacenter.utils.Utils;
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.browser.BootupRecommandationService;
@@ -130,7 +130,7 @@ public class CustomApplication extends MultiDexApplication {
 
         if (getMyProcessName(this).equals(getPackageName())) {
             //if main process
-            Utils.clearOldSubDir(this);
+            MediaUtils.clearOldSubDir(this);
             Debug.startLogcatRecording();
         }
 

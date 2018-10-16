@@ -27,7 +27,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
@@ -140,7 +140,7 @@ public class VideoBadgePresenter implements Presenter {
             }
             else ((CardView)mRootView).setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent_grey));
 
-            if(Utils.isLocal(source)){
+            if(FileUtils.isLocal(source)){
                 mSourceTextView.setText("Local");
             }
             else {

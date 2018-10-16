@@ -27,7 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.archos.filecorelibrary.Utils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
 import com.archos.mediaprovider.NetworkScanner;
@@ -90,7 +90,7 @@ public class CreateShareDialog extends DialogFragment implements DialogInterface
     }
     private void createShortcut(String shortcutPath) {
         // Add the shortcut to the list
-        ShortcutDbAdapter.Shortcut shortcut = new ShortcutDbAdapter.Shortcut(Utils.getName(Uri.parse(shortcutPath)),shortcutPath);
+        ShortcutDbAdapter.Shortcut shortcut = new ShortcutDbAdapter.Shortcut(FileUtils.getName(Uri.parse(shortcutPath)),shortcutPath);
         ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), shortcut);
 
         String text = getString(R.string.indexed_folder_added, shortcutPath);

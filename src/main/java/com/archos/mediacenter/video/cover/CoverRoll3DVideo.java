@@ -39,7 +39,7 @@ import com.archos.mediacenter.cover.CoverProvider;
 import com.archos.mediacenter.cover.CoverRoll3D;
 import com.archos.mediacenter.cover.CoverRollLayout;
 import com.archos.mediacenter.cover.LibraryUtils;
-import com.archos.mediacenter.utils.Utils;
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.Browser;
 import com.archos.mediacenter.video.browser.Delete;
@@ -162,7 +162,7 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 	protected void saveCoverProviderContext() {
 		// Save the current choice for the type of content in the CoverRoll
 		if (mCurrentContent!=null) {
-			LibraryUtils.setStringPref(getContext(), Utils.PREFS_SETTINGS_COVER_ROLL_3D_VIDEO_CONTENT_KEY, mCurrentContent.mId);
+			LibraryUtils.setStringPref(getContext(), MediaUtils.PREFS_SETTINGS_COVER_ROLL_3D_VIDEO_CONTENT_KEY, mCurrentContent.mId);
 		}
 	}
 
@@ -176,8 +176,8 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 			String coverRollInitContentId = null;
 
 			// Check in settings for last value used
-			coverRollInitContentId = LibraryUtils.getStringPref( getContext(), Utils.PREFS_SETTINGS_COVER_ROLL_3D_VIDEO_CONTENT_KEY, ROLL_CONTENT[DEFAULT_CONTENT].mId);
-			if(DBG) Log.d(TAG,"reading "+Utils.PREFS_SETTINGS_COVER_ROLL_3D_VIDEO_CONTENT_KEY+"="+coverRollInitContentId);
+			coverRollInitContentId = LibraryUtils.getStringPref( getContext(), MediaUtils.PREFS_SETTINGS_COVER_ROLL_3D_VIDEO_CONTENT_KEY, ROLL_CONTENT[DEFAULT_CONTENT].mId);
+			if(DBG) Log.d(TAG,"reading "+MediaUtils.PREFS_SETTINGS_COVER_ROLL_3D_VIDEO_CONTENT_KEY+"="+coverRollInitContentId);
 
 			for (int i=0 ; i<ROLL_CONTENT.length ; i++) {
 				if (ROLL_CONTENT[i].mId.equals(coverRollInitContentId)) {
