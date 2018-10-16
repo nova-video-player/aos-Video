@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.cover;
 
 import com.archos.mediacenter.cover.ArtworkFactory;
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.MovieInfo;
 import com.archos.mediaprovider.video.VideoStore.Video;
@@ -28,8 +29,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.InputStream;
-import java.io.IOException;
 
 /**
  * This class is used for Movies
@@ -192,7 +191,7 @@ public class MovieCover extends BaseVideoCover {
 		}
 
 		if (mDurationMs!=0) {
-			sMovieDuration.setText(factory.formatTime(mDurationMs));
+			sMovieDuration.setText(MediaUtils.formatTime(mDurationMs));
 		} else {
 			sMovieDuration.setText("");
 		}

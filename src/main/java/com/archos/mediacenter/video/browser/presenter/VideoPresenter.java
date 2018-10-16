@@ -22,8 +22,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.archos.filecorelibrary.FileUtils;
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.ThumbnailEngine;
-import com.archos.mediacenter.video.browser.Browser;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.player.PlayerActivity;
@@ -103,7 +103,7 @@ public class VideoPresenter extends CommonPresenter{
             if (video.getDurationMs() > 0) {
 
                 holder.info.setVisibility(View.VISIBLE);
-                holder.info.setText(Browser.formatTime(video.getDurationMs()));
+                holder.info.setText(MediaUtils.formatTime(video.getDurationMs()));
             }
             else
                 holder.info.setVisibility(View.INVISIBLE);

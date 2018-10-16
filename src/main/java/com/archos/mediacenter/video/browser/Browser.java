@@ -37,7 +37,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -62,7 +61,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.archos.filecorelibrary.MetaFile.FileType;
-import com.archos.filecorelibrary.MimeUtils;
 import com.archos.mediacenter.utils.ActionBarSubmenu;
 import com.archos.mediacenter.utils.ActionBarSubmenu.ActionBarSubmenuListener;
 import com.archos.mediacenter.utils.ThumbnailEngine;
@@ -80,7 +78,6 @@ import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
-import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
 import com.archos.mediacenter.video.utils.SubtitlesWizardActivity;
 import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
@@ -1098,27 +1095,6 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
         }
     }
 
-    static public String formatTime(int ms) {
-        String res;
-        if (ms <= 0) {
-            res = EMPTY_STRING;
-        } else {
-            Time t = new Time();
-            t.set(ms);
-            t.switchTimezone(Time.TIMEZONE_UTC);
-            if (ms >= 3600000) {
-                res = t.format(TIME_HOUR);
-            } else if (ms < 60000)
-                res = t.format(TIME_SECOND);
-            else
-                res = t.format(TIME_MINUTE);
-
-            if (res.charAt(0) == '0') {
-                res = res.substring(1);
-            }
-        }
-        return res;
-    }
     /*
         missingSubVideoPaths : all videos with no subs
         allVideoPaths : all videos

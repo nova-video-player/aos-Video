@@ -66,13 +66,13 @@ import android.widget.Toast;
 
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.imageview.ImageProcessor;
 import com.archos.mediacenter.utils.imageview.ImageViewSetter;
 import com.archos.mediacenter.utils.imageview.ImageViewSetterConfiguration;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.utils.videodb.XmlDb;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.Browser;
 import com.archos.mediacenter.video.browser.Delete;
 import com.archos.mediacenter.video.browser.FileManagerService;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
@@ -90,7 +90,6 @@ import com.archos.mediacenter.video.utils.DbUtils;
 import com.archos.mediacenter.video.utils.DelayedBackgroundLoader;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
-import com.archos.mediacenter.video.utils.MiscUtils;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.StoreRatingDialogBuilder;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
@@ -586,13 +585,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private void updateActionButtons(){
         if(mCurrentVideo.getRemoteResumeMs()>0&&mCurrentVideo.getResumeMs()!=mCurrentVideo.getRemoteResumeMs()) {
             mRemoteResumeButton.setVisibility(View.VISIBLE);
-            mRemoteResumeButton.setText(getResources().getString(R.string.remote_resume)+" "+Browser.formatTime(mCurrentVideo.getRemoteResumeMs()));
+            mRemoteResumeButton.setText(getResources().getString(R.string.remote_resume)+" "+MediaUtils.formatTime(mCurrentVideo.getRemoteResumeMs()));
         }
         else mRemoteResumeButton.setVisibility(View.GONE);
 
         if(mCurrentVideo.getResumeMs()>0) {
             mResumeLocalButton.setVisibility(View.VISIBLE);
-            mResumeLocalButton.setText(getResources().getString(R.string.resume) + " " + Browser.formatTime(mCurrentVideo.getResumeMs()));
+            mResumeLocalButton.setText(getResources().getString(R.string.resume) + " " + MediaUtils.formatTime(mCurrentVideo.getResumeMs()));
 
         }
         else mResumeLocalButton.setVisibility(View.GONE);
@@ -929,7 +928,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             mDuration.setVisibility(View.VISIBLE);
             mFileSize.setVisibility(View.VISIBLE);
             mFileSize.setText(Formatter.formatFileSize(getActivity(), videoMetadata.getFileSize()));
-            mDuration.setText(Browser.formatTime(videoMetadata.getDuration()));
+            mDuration.setText(MediaUtils.formatTime(videoMetadata.getDuration()));
             String decoder = VideoInfoCommonClass.getDecoder(videoMetadata, getResources(), mPlayerType);
             setTextOrHideContainer(mDecoderTextView, decoder, mDecoderTextView);
             String audiotrack = VideoInfoCommonClass.getAudioTrackString(videoMetadata, getResources(), getActivity());
@@ -1606,7 +1605,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mIMDBIcon.setVisibility(View.GONE);
                 setTextOrHideContainer(mScrapStudio, studio,mScrapStudioContainer);
                 setTextOrHideContainer(mScrapYear, date, mScrapYear);
-                setTextOrHideContainer(mScrapDuration, Browser.formatTime(mCurrentVideo.getDurationMs()),mScrapDuration);
+                setTextOrHideContainer(mScrapDuration, MediaUtils.formatTime(mCurrentVideo.getDurationMs()),mScrapDuration);
                 setTextOrHideContainer(mScrapRating, String.valueOf(tags.getRating()), mScrapRating);
                 if(tags.getRating()==0)
                     mScrapRating.setVisibility(View.GONE);

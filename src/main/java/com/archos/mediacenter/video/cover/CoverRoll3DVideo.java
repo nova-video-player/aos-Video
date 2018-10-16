@@ -41,7 +41,6 @@ import com.archos.mediacenter.cover.CoverRollLayout;
 import com.archos.mediacenter.cover.LibraryUtils;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.Browser;
 import com.archos.mediacenter.video.browser.Delete;
 import com.archos.mediacenter.video.browser.dialogs.DeleteDialog;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
@@ -292,7 +291,7 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 		if (resume > 0) {
 		    menu.findItem(R.string.play_selection).setTitle(R.string.play_from_beginning);
 
-            String resumeString = activity.getString(R.string.resume) + " (" + Browser.formatTime(resume) + ")"; 
+            String resumeString = activity.getString(R.string.resume) + " (" + MediaUtils.formatTime(resume) + ")";
 			menu.add(resumeString).setOnMenuItemClickListener(new OnMenuItemClickListener() {
 				public boolean onMenuItemClick(MenuItem item) {
 					BaseVideoCover bvc = (BaseVideoCover)c;
@@ -303,7 +302,7 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 		//Bookmark
 		final int bookmark = resumeAndBookmark[1];
 		if (bookmark > 0) {
-            String bookmarkString = activity.getString(R.string.bookmark) + " (" + Browser.formatTime(bookmark) + ")"; 
+            String bookmarkString = activity.getString(R.string.bookmark) + " (" + MediaUtils.formatTime(bookmark) + ")";
 			menu.add(bookmarkString).setOnMenuItemClickListener(new OnMenuItemClickListener() {
 				public boolean onMenuItemClick(MenuItem item) {
 					BaseVideoCover bvc = (BaseVideoCover)c;

@@ -24,8 +24,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.Browser;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.utils.VideoMetadata;
@@ -143,7 +143,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
             sb.append(Formatter.formatFileSize(c, videoMetadata.getFileSize()));
             sb.append("          ");
             if (videoMetadata.getDuration() > 0) {
-                sb.append(Browser.formatTime(videoMetadata.getDuration()));
+                sb.append(MediaUtils.formatTime(videoMetadata.getDuration()));
             }
 
             vh.mFileSizeAndDurationTv.setText(sb.toString());
