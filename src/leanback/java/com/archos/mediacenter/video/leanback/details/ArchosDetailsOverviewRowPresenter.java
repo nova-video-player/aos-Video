@@ -14,28 +14,22 @@
 
 package com.archos.mediacenter.video.leanback.details;
 
-import android.support.v17.leanback.widget.DetailsOverviewRowPresenter;
 import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.RowPresenter;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
-import com.archos.mediacenter.video.R;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 
 /**
  * Created by alexandre on 20/02/17.
  */
 
-public class ArchosDetailsOverviewRowPresenter extends DetailsOverviewRowPresenter {
+public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewRowPresenter {
 
 
     private final Presenter mDetailsPresenter;
+    private ViewHolder mViewHolder;
 
     /**
      * Constructor for a DetailsOverviewRowPresenter.
@@ -46,30 +40,14 @@ public class ArchosDetailsOverviewRowPresenter extends DetailsOverviewRowPresent
     public ArchosDetailsOverviewRowPresenter(Presenter detailsPresenter) {
         super(detailsPresenter);
         mDetailsPresenter = detailsPresenter;
-
     }
     @Override
     protected RowPresenter.ViewHolder createRowViewHolder(ViewGroup parent) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.lb_details_overview, parent, false);
-        ArchosHorizontalGridView gridView = (ArchosHorizontalGridView) v.findViewById(R.id.details_overview_actions);
-        gridView.setViewHolderCreator(this);
-        ViewHolder vh = new ViewHolder(v, mDetailsPresenter);
+        mViewHolder = (ViewHolder)super.createRowViewHolder(parent);
+        return mViewHolder;
+    }
 
-        Class[]classes = new Class[1];
-        classes[0] = DetailsOverviewRowPresenter.ViewHolder.class;
-
-        try {
-            Method method = DetailsOverviewRowPresenter.class.getDeclaredMethod("initDetailsOverview",   classes);
-            method.setAccessible(true);
-            method.invoke(this, vh);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        return super.createRowViewHolder(parent);
+    public int getState() {
+        return mViewHolder.getState();
     }
 }
