@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.support.v17.leanback.widget.FullWidthDetailsOverviewSharedElementHelper;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
 import android.app.ProgressDialog;
@@ -196,7 +197,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     private Overlay mOverlay;
 
-    private DetailsOverviewRowPresenter mOverviewRowPresenter;
+    private ArchosDetailsOverviewRowPresenter mOverviewRowPresenter;
     private VideoDetailsDescriptionPresenter mDescriptionPresenter;
     private ArrayObjectAdapter mAdapter;
     private FileDetailsRow mFileDetailsRow;
@@ -250,6 +251,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private boolean mShouldDisplayConfirmDelete = false;
 
     private boolean isFilePlayable = true;
+    private int oldPos = 0;
+    private int oldSelectedSubPosition = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -287,9 +290,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
         mDescriptionPresenter = new VideoDetailsDescriptionPresenter();
         mOverviewRowPresenter = new ArchosDetailsOverviewRowPresenter(mDescriptionPresenter);
-        mOverviewRowPresenter.setSharedElementEnterTransition(getActivity(), VideoDetailsActivity.SHARED_ELEMENT_NAME, 1000);
+        //be aware of a hack to avoid fullscreen overview : cf onSetRowStatus
+        FullWidthDetailsOverviewSharedElementHelper helper = new FullWidthDetailsOverviewSharedElementHelper();
+        helper.setSharedElementEnterTransition(getActivity(), VideoDetailsActivity.SHARED_ELEMENT_NAME, 1000);
+        mOverviewRowPresenter.setListener(helper);
         mOverviewRowPresenter.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
-        mOverviewRowPresenter.setStyleLarge(true);
+        mOverviewRowPresenter.setActionsBackgroundColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
         mOverviewRowPresenter.setOnActionClickedListener(mOnActionClickedListener);
         mVideoBadgePresenter = new VideoBadgePresenter(getActivity());
         mFileListAdapter = new ArrayObjectAdapter(mVideoBadgePresenter);
@@ -393,6 +399,31 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         });
 
 
+    }
+
+    //hack to avoid fullscreen overview
+    @Override
+    protected void onSetRowStatus(RowPresenter presenter, RowPresenter.ViewHolder viewHolder, int
+            adapterPosition, int selectedPosition, int selectedSubPosition) {
+        super.onSetRowStatus(presenter, viewHolder, adapterPosition, selectedPosition, selectedSubPosition);
+        if(oldPos == 0 && oldSelectedSubPosition == 0){
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    setSelectedPosition(1);
+                }
+            });
+        } else if(oldPos == 1){
+            setSelectedPosition(1, false);
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    setSelectedPosition(0, true);
+                }
+            });
+        }
+        oldPos = selectedPosition;
+        oldSelectedSubPosition = selectedSubPosition;
     }
 
     @Override
@@ -1147,6 +1178,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                         mColor = palette.getDarkVibrantColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
                         mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
                         mOverviewRowPresenter.setBackgroundColor(mColor);
+                        mOverviewRowPresenter.setActionsBackgroundColor(mColor);
                         return bitmap;
 
                     }
