@@ -396,21 +396,23 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     protected void onSetRowStatus(RowPresenter presenter, RowPresenter.ViewHolder viewHolder, int
             adapterPosition, int selectedPosition, int selectedSubPosition) {
         super.onSetRowStatus(presenter, viewHolder, adapterPosition, selectedPosition, selectedSubPosition);
-        if(oldPos == 0 && oldSelectedSubPosition == 0){
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    setSelectedPosition(1);
-                }
-            });
-        } else if(oldPos == 1){
-            setSelectedPosition(1, false);
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    setSelectedPosition(0, true);
-                }
-            });
+        if(selectedPosition == 0 && selectedSubPosition != 0) {
+            if (oldPos == 0 && oldSelectedSubPosition == 0) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setSelectedPosition(1);
+                    }
+                });
+            } else if (oldPos == 1) {
+                setSelectedPosition(1, false);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setSelectedPosition(0, true);
+                    }
+                });
+            }
         }
         oldPos = selectedPosition;
         oldSelectedSubPosition = selectedSubPosition;
