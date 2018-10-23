@@ -53,8 +53,8 @@ apply plugin: 'com.github.triplet.play'
 
 play {
     jsonFile = file('nova.json')
-    track = 'alpha' // rollout, beta, alpha, release, internal
-    userFraction = 0.2 // rollout rate in %/100
+    track = 'internal' // rollout, beta, alpha, release, internal
+    userFraction = 1.0 // rollout rate in %/100
 }
 
 android {
