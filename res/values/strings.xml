@@ -849,4 +849,6 @@
     <string name="remove_from_list">Remove from list</string>
     <string name="warning_swdec">Warning: hardware decoding disabled!</string>
 
+    <string name="list_title">List title</string>
+
 </resources>

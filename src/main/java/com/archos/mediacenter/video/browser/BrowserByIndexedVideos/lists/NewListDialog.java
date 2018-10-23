@@ -31,7 +31,7 @@ public class NewListDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         mView = LayoutInflater.from(getActivity()).inflate(R.layout.list_creator_layout, null);
         builder.setView(mView);
-        builder.setTitle("List title");
+        builder.setTitle(R.string.list_title);
         builder.setPositiveButton(android.R.string.ok
                 , new DialogInterface.OnClickListener() {
             @Override
