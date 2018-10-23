@@ -15,7 +15,7 @@
 package com.archos.mediacenter.video.cover;
 
 import com.archos.mediacenter.cover.*;
-import com.archos.mediacenter.utils.Utils;
+import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.browser.loader.LastAddedLoader;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediacenter.video.R;
