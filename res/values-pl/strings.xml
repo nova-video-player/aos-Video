@@ -328,6 +328,7 @@
   <string name="dialog_subloader_fails">Nie znaleziono napisów dla:</string>
   <string name="sub_force_all_title">Wymuś pobranie napisów</string>
   <string name="dialog_subloader_nonetwork_title">Brak połączenia z Internetem</string>
+  <string name="dialog_subloader_nonetwork_message">Do pobrania napisów wymagane jest połączenie z internetem</string>
   <string name="dialog_subloader_connecting">Łączenie z www.opensubtitles.org…</string>
   <!-- Subtitle Settings Dialog -->
   <string name="subtitle_settings_title">Ustawienia napisów</string>
@@ -375,6 +376,7 @@
   <string name="shortcut_added">Utworzono skrót %s</string>
   <string name="shortcut_removed">Skrót %s usunięty</string>
   <string name="server_not_available">Serwer jest obecnie niedostępny</string>
+  <string name="cannot_open_shortcut">Zawartość tego skrótu jest obecnie niedostępna.\nSprawdź czy masz wymagane uprawnienia.</string>
   <string name="network_shortcuts">Skróty sieciowe</string>
   <string name="media_servers">Serwery mediów</string>
   <string name="indexed_folders">Foldery zindeksowane</string>
@@ -385,10 +387,12 @@
   <string name="indexed_folder_added">Folder %s dodany do biblioteki</string>
   <string name="remove_from_indexed_folders">Usuń z biblioteki</string>
   <string name="indexed_folder_removed">Folder %s usunięty z biblioteki</string>
+  <string name="indexed_folders_list_empty_ftp">Brak aktualnie zindeksowanych folderów ftp.</string>
   <string name="open_indexed_folder">"Otwórz"</string>
   <string name="rescan_indexed_folders">Ponowne skanowanie wszystkich indeksowanych folderów</string>
   <string name="last_rescan_never">Nigdy</string>
   <string name="upnp_indexing_warning_title">Indeksowania UPnP</string>
+  <string name="ssh_error">Nie można połączyć: Proszę sprawdzić połączenie i poświadczenia</string>
   <string name="ssh_remote_address">Adres zdalny</string>
   <string name="ssh_port">Port</string>
   <string name="ssh_password">Hasło</string>
@@ -398,18 +402,23 @@
   <string name="preferences">Ustawienia</string>
   <string name="get_the_ad_free_version">Pobierz wersję bez reklam z Google Play</string>
   <string name="upgrade_to_add_free_version">Uaktualnij do wersji bez reklam</string>
+  <string name="upgrade_to_add_free_version_description">Kup licencję aplikacji, aby usunąć reklamy i włączyć wszystkie funkcje</string>
   <string name="preferences_category_complete">Pełna wersja</string>
   <string name="preferences_category_video">Wideo</string>
   <string name="preferences_force_software_decoding">Wymuś dekoder softwarowy</string>
+  <string name="preferences_force_software_decoding_summary">Jeśli niektóre filmy nie są odtwarzane poprawnie, może spróbować tej opcji</string>
   <string name="preferences_force_audio_passthrough">Przekazywanie audio</string>
   <string name="preferences_force_audio_passthrough_disabled">Wyłączone</string>
   <string name="preferences_force_audio_passthrough_enable">Tryb 1</string>
   <string name="preferences_force_audio_passthrough_enable2">Tryb 2</string>
+  <string name="preferences_force_audio_passthrough_summary">dla połączenia HDMI i S/PDIF przekazywanie skompresowanego dźwięku</string>
   <string name="preferences_allow_3rd_party_player">Zezwól na używanie innego odtwarzacza wideo</string>
   <string name="preference_tv_3d_automatic_switch">Włącz automatyczne przełączanie TV 3D\"</string>
   <string name="category_languages">Napisy</string>
   <string name="subtitles_hide_default">Domyślnie ukryj napisy</string>
   <string name="subtitles_hide_default_summary">Zaznacz jeżeli chcesz domyślnie ukryć napisy</string>
+  <string name="preferences_languages">Język pobieranych napisów</string>
+  <string name="summary_list_preference_primary">Pobieraj napisy w swoim języku</string>
   <string name="preferences_video_about">O aplikacji</string>
   <string name="preferences_video_os_text">Dostawcy napisów</string>
   <string name="preferences_video_tmdb_text">Dostawca informacji o filmach</string>
@@ -443,6 +452,8 @@
   <string name="format_optimized">Zoptymalizowany</string>
   <string name="format_original">Oryginalny</string>
   <string name="rotation_unlock">Automatyczna orientacja ekranu</string>
+  <string name="rotation_locked">Automatyczna rotacja ekranu wyłączona</string>
+  <string name="rotation_unlocked">Automatyczna rotacja ekranu włączona</string>
   <string name="network_reindex">Ponowne skanowanie zawartości</string>
   <!-- Help overlay -->
   <string name="new_videos_count">Nowe Filmy: %d</string>
@@ -476,10 +487,16 @@
   <string name="preferences_category_sort_order">Porządek sortowania</string>
   <string name="preferences_tv_show_sort_order_title">Porządek sortowania seriali</string>
   <string name="dec_choice_title">Wybierz dekoder</string>
+  <string name="dec_hw_omx">Dekoder sprzętowy (IOMX w/ swbuf)</string>
+  <string name="dec_hw_omxplus">Dekoder sprzętowy (IOMX w/ hwbuf)</string>
+  <string name="dec_hw_omxcodec">Dekoder sprzętowy (OMXCodec)</string>
+  <string name="dec_hw_mediacodec">Dekoder sprzętowy (MediaCodec)</string>
   <string name="dec_sw">Dekoder programowy</string>
   <string name="dec_any">Domyślne</string>
   <string name="dec_android">Android MediaPlayer</string>
   <string name="preferences_user_interface">Interfejs użytkownika</string>
+  <string name="codepage_title">Kodowanie napisów</string>
+  <string name="codepage_summary">Ustaw kodowanie używane w napisach tekstowych</string>
   <string name="codepage_default">Język urządzenia %s</string>
   <string name="codepage_874">Tajski(CP874)</string>
   <string name="codepage_932">Japoński (Shift-JIS, EUC-JP)</string>
@@ -518,6 +535,7 @@
   <string name="blocklist_file_not_found">Nie znaleziono pliku</string>
   <string name="blocklist_unknown_error">Nieznany</string>
   <string name="blocklist_not_loaded">Nie załadowany</string>
+  <string name="torrent_blocklist_url">Adres Url bloklisty</string>
   <string name="share_path">Ścieżka</string>
   <string name="category_trakt">Trakt</string>
   <string name="trakt_user">Nazwa użytkownika</string>
@@ -528,8 +546,20 @@
   <string name="trakt_signin_summary_logged">Zalogowano</string>
   <string name="trakt_signin_summary_logged_error">Błąd uwierzytelniania</string>
   <string name="trakt_signin_summary">Nie zalogowano</string>
+  <string name="trakt_relog_description">Wykryto problem z Trakt i dane logowania muszą zostać zresetowane. Zaloguj się ponownie.</string>
   <string name="trakt_signin_dialog_title">Zaloguj się</string>
   <string name="trakt_signin_title">Zaloguj się</string>
+  <string name="trakt_wipe_dialog_title">Wylogować z Trakt.tv\?</string>
+  <string name="trakt_wipe_title">Wylogowano z Trakt.tv</string>
+  <string name="trakt_getfull_summary">Trakt scrobbler jest dostępny tylko w płatnej wersji</string>
+  <string name="trakt_sync_collection_title">Synchronizuj seriale i kolekcje filmowe</string>
+  <string name="trakt_toast_syncing">Synchronizowanie z Trakt&#8230;</string>
+  <string name="show_all">Wszystkie wideo</string>
+  <string name="hide_seen">Nie obejrzane</string>
+  <string name="search_results">Wynik wyszukiwania</string>
+  <string name="no_results_found">Nie znaleziono wyników.</string>
+  <string name="activate_private_mode">Aktywuj tryb prywatny</string>
+  <string name="deactivate_private_mode">Deaktywuj tryb prywatny</string>
   <string name="private_mode_is_on">Tryb prywatny włączony</string>
   <string name="private_mode_is_off">Tryb prywatny wyłączony</string>
   <string name="private_mode">Tryb prywatny</string>
@@ -538,23 +568,36 @@
   <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
   <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
   <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
+  <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Sieć &amp; Pliki</string>
+  <string name="leanback_subtitles_integrated">Zintegrowane napisy</string>
   <string name="leanback_subtitles_external">Napisy zewnętrzne</string>
   <string name="leanback_posters_header">Plakaty</string>
   <string name="leanback_backdrops_header">Tapety</string>
+  <string name="leanback_poster_changed">Plakat został zmieniony</string>
   <string name="leanback_backdrop_changed">Tapeta została zmieniona</string>
   <string name="leanback_weblinks_header">Linki</string>
   <string name="leanback_action_more_details">Więcej szczegółów</string>
+  <string name="leanback_scrap">Pobierz opis</string>
+  <string name="leanback_scrap_choose_the_description">Wybierz opis</string>
+  <string name="leanback_scrap_choose_the_description_for">"Wybierz opis dla \"%s\""</string>
+  <string name="leanback_scrap_searching_general_hint">Nazwa filmu lub serialu</string>
   <string name="leanback_scrap_searching_tvshow_hint">Nazwa serialu</string>
   <string name="leanback_unscrap">@string/scrap_remove</string>
+  <string name="leanback_legacy_ui">Starszy interfejs</string>
+  <string name="leanback_archos_video_webview">Nova Video Basic WebView</string>
   <string name="interface_size">Wielkość interfejsu</string>
   <string name="interface_size_very_small">Bardzo mały (mdpi)</string>
   <string name="interface_size_small">Mały (hdpi)</string>
   <string name="interface_size_standard">Standard (xhdpi)</string>
   <string name="interface_size_large">Duży (xxhdpi)</string>
   <string name="rescan">Przeskanuj</string>
+  <string name="rescan_now">Przeskanuj teraz</string>
+  <string name="rescan_now_description">Przeskanuj ręcznie</string>
   <string name="scheduled_rescan_period_once_a_day">Raz dziennie</string>
   <string name="scheduled_rescan_period_twice_a_day">Dwa razy dziennie</string>
   <string name="scheduled_rescan_period_every_six_hours">Co 6 godzin</string>
+  <string name="scheduled_rescan_period_every_two_hours">Co 2 godziny</string>
+  <string name="scheduled_rescan_period_every_hour">Co godzinę</string>
   <string name="drawer_close">drawer_close</string>
   <string name="view_more">Zobacz więcej</string>
   <string name="nfo_export_manual_prefkey">export_manual_prefkey</string>

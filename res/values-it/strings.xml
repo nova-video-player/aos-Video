@@ -137,7 +137,7 @@
   <string name="scraper_no_movie_button_label">Cerca informazioni online per i filmati</string>
   <string name="scraper_no_tv_show_text">Attualmente non hai né poster né descrizioni per i tuoi programmi TV</string>
   <string name="scraper_no_tv_show_button_label">Cerca informazioni online per i spettacoli TV</string>
-  <string name="imdb_title_url">https://www.imdb.it/title/</string>
+  <string name="imdb_title_url">https://www.imdb.com/title/</string>
   <!-- To be translated only in case there is a localized IMDB -->
   <string name="info_processing">Controllo proprietà multimediali…</string>
   <string name="info_plugin_required">(è necessario un plugin)</string>

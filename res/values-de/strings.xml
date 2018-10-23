@@ -143,7 +143,7 @@
   <string name="scraper_no_movie_button_label">Online-Suche starten</string>
   <string name="scraper_no_tv_show_text">Keine Serien gefunden. Nutzen Sie die Onlinesuche um Serien-Informationen und Poster für Ihre Videos zu suchen.</string>
   <string name="scraper_no_tv_show_button_label">Online-Suche starten</string>
-  <string name="imdb_title_url">https://www.imdb.de/title/</string>
+  <string name="imdb_title_url">https://www.imdb.com/title/</string>
   <!-- To be translated only in case there is a localized IMDB -->
   <string name="info_processing">Medieneigenschaften überprüfen…</string>
   <string name="info_plugin_required">(Plugin erforderlich)</string>
