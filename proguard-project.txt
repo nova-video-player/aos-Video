@@ -176,3 +176,7 @@
 
 #okhttp3
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
+
+-dontwarn org.ietf.**
+-dontwarn java.lang.annotation.Annotation
+
