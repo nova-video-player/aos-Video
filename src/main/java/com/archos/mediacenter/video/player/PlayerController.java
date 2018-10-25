@@ -16,7 +16,6 @@ package com.archos.mediacenter.video.player;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -56,17 +55,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.archos.environment.ArchosFeatures;
-import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.utils.RepeatingImageButton;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.billingutils.BillingUtils;
-import com.archos.mediacenter.video.billingutils.IsPaidCallback;
 import com.archos.mediacenter.video.player.tvmenu.TVCardDialog;
 import com.archos.mediacenter.video.player.tvmenu.TVCardView;
 import com.archos.mediacenter.video.player.tvmenu.TVMenuAdapter;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
-import com.archos.mediacenter.video.utils.VideoUtils;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -117,6 +112,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private static final int MSG_SWITCH_VIDEO_FORMAT = 5;
     private static final int MSG_HIDE_SYSTEM_BAR = 6;
     private static final int MSG_OVERLAY_FADE_OUT = 7;
+    private static final int MSG_CHECK_PROGRESS = 8;
+
 
 
     public static final int SEEK_LONG_INIT_DELAY = 200;
@@ -238,6 +235,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private boolean				isTVMenuDisplayed;
     private View                mTVMenuContainer;
     private View                mTVMenuContainer2;
+    private View mPlayNextButton;
+    private View mPlayNextButton2;
     private boolean             manualVisibilityChange;
     private FrameLayout         playerControllersContainer;
     private TVCardDialog tvCardDialog = null;
@@ -434,6 +433,13 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 }
             });
         }
+        View playNextButton = v.findViewById(R.id.play_next);
+        playNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PlayerService.sPlayerService.playNextVideo();
+            }
+        });
         ImageButton mPauseButton = (ImageButton) v.findViewById(R.id.pause);
         if (mPauseButton != null) {
 
@@ -531,6 +537,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         View lock = null;
 
         if (isMainView) {
+            this.mPlayNextButton = playNextButton;
             this.mUnlockInstructions = unlockInstructions;
             this.mVolumeBar = volumeBar;
             this.mPlayPauseTouchZone = playPauseTouchZone;
@@ -560,6 +567,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             }
         }
         else{
+            this.mPlayNextButton2 = playNextButton;
             this.mUnlockInstructions2 = unlockInstructions;
             this.mVolumeBar2 = mVolumeBar;
             this.mControlBar2=mControlBar;
@@ -1100,6 +1108,22 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         sendMessageDelayed(msg, 1000 - (pos % 1000));
                     }
                     break;
+                case MSG_CHECK_PROGRESS:
+                    if (Player.sPlayer.isPlaying()){
+                        int diff = Player.sPlayer.getDuration() - Player.sPlayer.getCurrentPosition();
+                        if(PlayerService.sPlayerService.hasNextVideo() && PlayerService.sPlayerService.getVideoInfo()!=null && PlayerService.sPlayerService.getVideoInfo().isShow && diff <= 60000 && diff > 0){
+                            mPlayNextButton.setVisibility(View.VISIBLE);
+                            if(mPlayNextButton2 !=null)
+                                mPlayNextButton2.setVisibility(View.VISIBLE);
+                            mPlayNextButton.requestFocus();
+                        } else{
+                            mPlayNextButton.setVisibility(View.GONE);
+                            if(mPlayNextButton2 !=null)
+                                mPlayNextButton2.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    sendEmptyMessageDelayed(MSG_CHECK_PROGRESS, 10000);
+                    break;
                 case MSG_SEEK:
                     if (mNextSeek >= 0) {
                         boolean stop = false;
@@ -1388,6 +1412,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         setEnabled(true);
         if (DBG_ALWAYS_SHOW)
             show(FLAG_SIDE_ALL_EXCEPT_UNLOCK_INSTRUCTIONS, 0);
+        mHandler.sendEmptyMessage(MSG_CHECK_PROGRESS);
     }
 
     public void stop() {

@@ -431,7 +431,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         mForceSingleRepeatMode = isDemoMode;
         mPlayOnResume = true;
         mHideSubtitles = mPreferences.getBoolean(KEY_HIDE_SUBTITLES, false);
-        mPlayMode = mPreferences.getInt(KEY_PLAY_MODE, PLAYMODE_SINGLE);
+        mPlayMode = mPreferences.getInt(KEY_PLAY_MODE, PLAYMODE_FOLDER);
         mResume = intent.getIntExtra(RESUME, RESUME_NO);
         mUri = intent.getData();
         mTorrentURL = mIntent.getStringExtra(PlayerActivity.KEY_TORRENT_URL);
@@ -1079,6 +1079,30 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
     }
 
+    public boolean hasNextVideo() {
+        return mNextUri != null;
+    }
+
+    public void playNextVideo(){
+        if (mNextUri != null) {
+            stopAndSaveVideoState();
+            if(mPlayerFrontend!=null) {
+                mPlayerFrontend.onCompletion();
+            }
+            mUri = mNextUri;
+            mStreamingUri=mUri;
+            mIntent.setData(mUri);
+            mIntent.putExtra(KEY_STREAMING_URI, mStreamingUri);
+            mIntent.putExtra(RESUME, RESUME_NO);
+            mVideoId = mNextVideoId;
+            mNextUri = null;
+            mNextVideoId = -1;
+            mLastPosition = 0;
+            onStart(mIntent);
+
+        }
+    }
+
 
     @Nullable
     @Override
@@ -1112,20 +1136,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
         mLastPosition = LAST_POSITION_END;
         if (mNextUri != null) {
-            stopAndSaveVideoState();
-            if(mPlayerFrontend!=null) {
-                mPlayerFrontend.onCompletion();
-            }
-            mUri = mNextUri;
-            mStreamingUri=mUri;
-            mIntent.setData(mUri);
-            mIntent.putExtra(KEY_STREAMING_URI, mStreamingUri);
-            mIntent.putExtra(RESUME, RESUME_NO);
-            mVideoId = mNextVideoId;
-            mNextUri = null;
-            mNextVideoId = -1;
-            mLastPosition = 0;
-            onStart(mIntent);
+            playNextVideo();
 
         } else {
             if(mPlayerFrontend!=null) {

@@ -144,4 +144,16 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/unlock_instructions"
         layout="@layout/unlock_instructions" />
+    <Button
+        android:id="@+id/play_next"
+        android:visibility="gone"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:alpha="0.3"
+        android:layout_marginBottom="@dimen/player2014_bar_width"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/play_next"
+        android:textSize="20dp" />
 </com.archos.mediacenter.video.player.PlayerControlsRelativeLayout>

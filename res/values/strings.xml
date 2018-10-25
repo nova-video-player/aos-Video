@@ -848,6 +848,7 @@
     <string name="premium_already_purchased">Premium has already been purchased</string>
     <string name="remove_from_list">Remove from list</string>
     <string name="warning_swdec">Warning: hardware decoding disabled!</string>
+    <string name="play_next">Play next</string>
 
     <string name="list_title">List title</string>
 
