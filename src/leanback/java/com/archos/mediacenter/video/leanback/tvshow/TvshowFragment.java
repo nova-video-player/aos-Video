@@ -321,7 +321,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 seasonAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
                 mSeasonAdapters.put(seasonNumber, seasonAdapter);
                 mRowsAdapter.add(new ListRow(seasonNumber,
-                        new HeaderItem(seasonNumber, getString(R.string.episode_season) + seasonNumber),
+                        new HeaderItem(seasonNumber, getString(R.string.episode_season) + " " + seasonNumber),
                         seasonAdapter));
                 getLoaderManager().restartLoader(seasonNumber, null, this);
                 cursor.moveToNext();
