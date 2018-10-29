@@ -312,7 +312,8 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             cursor.moveToFirst();
             final int seasonNumberColumn = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON);
 
-            mSeasonAdapters = new SparseArray<CursorObjectAdapter>();
+            if (!cursor.isAfterLast())
+                mSeasonAdapters = new SparseArray<CursorObjectAdapter>();
 
             // Build one row for each season
             while (!cursor.isAfterLast()) {
