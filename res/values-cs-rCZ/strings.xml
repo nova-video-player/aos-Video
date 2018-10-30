@@ -203,6 +203,12 @@
   <string name="you_have_no_movies">Žádné filmy</string>
   <string name="you_have_no_tv_shows">Žádné seriály</string>
   <string name="you_have_no_non_scraped_videos">Nejsou žádná videa bez získaných informací</string>
+  <plurals name="Nseasons">
+    <item quantity="one">1 sezóna</item>
+    <item quantity="few"><xliff:g id="count">%d</xliff:g> sezóny</item>
+    <item quantity="many"><xliff:g id="count">%d</xliff:g> sezón</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> sezón</item>
+  </plurals>
   <!-- Media Center -->
   <string name="mediacenterlabel">Centrum médií</string>
   <string name="view_mode">Režim zobrazení</string>
@@ -743,4 +749,5 @@
   <string name="premium_already_purchased">Prémiová verze byla již zakoupena</string>
   <string name="remove_from_list">Odebrat z playlistu</string>
   <string name="warning_swdec">Varování: hardwarové dekódování vypnuto!</string>
+  <string name="list_title">Název</string>
 </resources>

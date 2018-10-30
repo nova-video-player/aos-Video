@@ -182,7 +182,6 @@
   <string name="scraper_no_movie_button_label">Rechercher des informations en ligne pour vos films</string>
   <string name="scraper_no_tv_show_text">Vous n\'avez actuellement pas d\'affiches ou d\'informations pour vos séries</string>
   <string name="scraper_no_tv_show_button_label">Rechercher des informations en ligne pour vos séries</string>
-  <string name="imdb_title_url">https://www.imdb.com/title/</string>
   <!-- To be translated only in case there is a localized IMDB -->
   <string name="storage">Stockage</string>
   <string name="rescan_storage">Rafraîchir les fichiers</string>
@@ -505,6 +504,8 @@
   <string name="format_fullscreen">Plein écran</string>
   <string name="format_optimized">Optimisé</string>
   <string name="format_original">Original</string>
+  <string name="stereo_dive_enable">Effet immersion stéréo</string>
+  <string name="stereo_dive_disable">Désactiver l\'effet d\'immersion stéréo</string>
   <string name="rotation_unlock">Rotation auto. de l\'écran</string>
   <string name="rotation_locked">Rotation automatique de l\'écran désactivé</string>
   <string name="rotation_unlocked">Rotation automatique de l\'écran activé</string>

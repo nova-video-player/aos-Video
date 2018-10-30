@@ -170,7 +170,6 @@
   <string name="scraper_no_movie_button_label">Wyszukaj informacje o filmie online</string>
   <string name="scraper_no_tv_show_text">Nie masz aktualnie plakatu ani opisu dla twoich seriali</string>
   <string name="scraper_no_tv_show_button_label">Wyszukaj informacje o serialu online</string>
-  <string name="imdb_title_url">http://www.imdb.com/title/</string>
   <!-- To be translated only in case there is a localized IMDB -->
   <string name="storage">Pamięć wewnętrzna</string>
   <string name="rescan_storage">Ponowne skanowanie pamięci masowej</string>
