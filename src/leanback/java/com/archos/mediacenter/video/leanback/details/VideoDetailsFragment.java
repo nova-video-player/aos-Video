@@ -253,10 +253,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         mSubtitleListCache = new HashMap<>();
         mVideoMetadateCache = new HashMap<>();
         mShouldDisplayRemoveFromList = getActivity().getIntent().getLongExtra(EXTRA_LIST_ID, -1) != -1;
-        Object transition = TransitionHelper.getInstance().getEnterTransition(getActivity().getWindow());
+        Object transition = TransitionHelper.getEnterTransition(getActivity().getWindow());
         if(transition!=null){
             mAnimationIsRunning = false;
-            TransitionHelper.getInstance().setTransitionListener(transition, new android.support.v17.leanback.transition.TransitionListener(){
+            TransitionHelper.addTransitionListener(transition, new android.support.v17.leanback.transition.TransitionListener(){
                 @Override
                 public void onTransitionStart(Object transition) {
                     mAnimationIsRunning = true;
