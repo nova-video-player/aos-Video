@@ -245,10 +245,10 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             Long newId = data.getLongExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_ID, -1);
             mTvshow = new Tvshow(newId, newName, null, mTvshow.getSeasonCount(), mTvshow.getEpisodeCount());
             // Clear all the loader managers because they need to be recreated with the new ID
-            getLoaderManager().destroyLoader(SEASONS_LOADER_ID);
+            getActivity().getSupportLoaderManager().destroyLoader(SEASONS_LOADER_ID);
             if (mSeasonAdapters != null){
                 for (int i = 0; i < mSeasonAdapters.size(); i++) {
-                    getLoaderManager().destroyLoader(mSeasonAdapters.keyAt(i));
+                    getActivity().getSupportLoaderManager().destroyLoader(mSeasonAdapters.keyAt(i));
                 }
             }
             // Clear the rows
@@ -284,7 +284,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(tvshow.getShowTags());
 
             // Start loading the list of seasons
-            getLoaderManager().restartLoader(SEASONS_LOADER_ID, null, TvshowFragment.this);
+            getActivity().getSupportLoaderManager().restartLoader(SEASONS_LOADER_ID, null, TvshowFragment.this);
         }
     }
 
@@ -324,7 +324,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 mRowsAdapter.add(new ListRow(seasonNumber,
                         new HeaderItem(seasonNumber, getString(R.string.episode_season) + " " + seasonNumber),
                         seasonAdapter));
-                getLoaderManager().restartLoader(seasonNumber, null, this);
+                getActivity().getSupportLoaderManager().restartLoader(seasonNumber, null, this);
                 cursor.moveToNext();
             }
             cursor.close();
