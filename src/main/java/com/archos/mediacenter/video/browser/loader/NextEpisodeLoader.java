@@ -55,10 +55,15 @@ public class NextEpisodeLoader extends VideoLoader {
 
         if (sb.length()>0) { sb.append(" AND "); }
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + "=?");
-        sb.append(" AND ");
+        sb.append(" AND ( (");
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + "=?");
         sb.append(" AND ");
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE + "=?");
+        sb.append(" ) OR ( ");
+        sb.append(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + "=?");
+        sb.append(" AND ");
+        sb.append(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE + "=?");
+        sb.append(" ) ) ");
         return sb.toString();
     }
 
@@ -67,7 +72,9 @@ public class NextEpisodeLoader extends VideoLoader {
         return new String[] {
                 Long.toString(mShowId),
                 Integer.toString(mSeasonNumber),
-                Integer.toString(mEpisodeNumber)
+                Integer.toString(mEpisodeNumber),
+                Integer.toString(mSeasonNumber + 1),
+                Integer.toString(1)
         };
     }
 }
