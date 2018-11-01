@@ -16,14 +16,13 @@ package com.archos.mediacenter.video.cover;
 
 
 import android.content.Context;
-import android.content.CursorLoader;
+import android.support.v4.content.CursorLoader;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.cover.Cover;
-import com.archos.mediacenter.cover.LibraryUtils;
 import com.archos.mediacenter.cover.SingleCursorCoverProvider;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediaprovider.video.VideoStore;

@@ -138,7 +138,7 @@ public class SmbListingFragment extends NetworkListingFragment {
                     startListing(mUri);
                 }
             });
-            dialog.show(getFragmentManager(), SmbServerCredentialsDialog.class.getCanonicalName());
+            dialog.show(getActivity().getSupportFragmentManager(), SmbServerCredentialsDialog.class.getCanonicalName());
         }
     }
 

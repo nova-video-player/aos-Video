@@ -14,7 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.network;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.widget.Toast;
@@ -45,7 +45,7 @@ public class NetworkRootActivity extends SingleFragmentActivity {
             // Check for 5 press in less than 1 second
             if (keyupCount>4 && (SystemClock.elapsedRealtime()-keyupTrainStartTimeMs<1000)) {
                 // display re-scan item
-                Fragment f = getFragmentManager().findFragmentById(R.id.fragment_container);
+                Fragment f = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                 if (f!=null && f instanceof NetworkRootFragment) {
                     ((NetworkRootFragment)f).displayRescanItem();
                     Toast.makeText(this, "Displaying Re-scan item (caution it is Debug only for now)", Toast.LENGTH_SHORT).show();

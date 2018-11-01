@@ -19,7 +19,7 @@ import android.support.v17.leanback.widget.VerticalGridView;
 /**
  * This class exists only to reduce the vertical offset above the DetailsRow in the DetailsFragment
  */
-public class DetailsFragmentWithLessTopOffset extends DetailsFragment {
+public class DetailsFragmentWithLessTopOffset extends DetailsSupportFragment {
 
     private float mRatio = 1;
 

@@ -19,14 +19,14 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.LoaderManager;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
-import android.content.CursorLoader;
+import android.support.v4.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
+import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
@@ -585,7 +585,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 bundle.putSerializable(ListDialog.EXTRA_VIDEO, mVideo);
                 ListDialog dialog = new ListDialog();
                 dialog.setArguments(bundle);
-                dialog.show(getFragmentManager(), "list_dialog");
+                dialog.show(getActivity().getSupportFragmentManager(), "list_dialog");
             }
             else if (action.getId() == VideoActionAdapter.ACTION_REMOVE_FROM_LIST) {
                 BaseTags metadata = mVideo.getFullScraperTags(getActivity());

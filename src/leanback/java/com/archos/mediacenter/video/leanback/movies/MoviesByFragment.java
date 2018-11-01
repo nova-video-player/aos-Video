@@ -15,10 +15,10 @@
 package com.archos.mediacenter.video.leanback.movies;
 
 import android.app.AlertDialog;
-import android.app.LoaderManager;
+import android.support.v4.app.LoaderManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Loader;
+import android.support.v4.content.Loader;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -26,7 +26,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v17.leanback.app.BackgroundManager;
-import android.support.v17.leanback.app.BrowseFragment;
+import android.support.v17.leanback.app.BrowseSupportFragment;
 import android.support.v17.leanback.database.CursorMapper;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.CursorObjectAdapter;
@@ -58,7 +58,7 @@ import com.archos.mediacenter.video.player.PrivateMode;
 import java.util.ArrayList;
 
 
-public abstract class MoviesByFragment extends BrowseFragment  implements  LoaderManager.LoaderCallbacks<Cursor> {
+public abstract class MoviesByFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "MoviesByFragment";
 

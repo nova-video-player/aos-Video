@@ -1,6 +1,6 @@
 package com.archos.mediacenter.video.leanback;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 
 public class VideosByListActivity extends SingleFragmentActivity {
     @Override

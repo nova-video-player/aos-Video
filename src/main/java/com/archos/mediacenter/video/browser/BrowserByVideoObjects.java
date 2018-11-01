@@ -376,7 +376,7 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
                 bundle.putSerializable(ListDialog.EXTRA_VIDEO, video);
                 ListDialog dialog = new ListDialog();
                 dialog.setArguments(bundle);
-                dialog.show(getActivity().getFragmentManager(), "list_dialog");
+                dialog.show(getActivity().getSupportFragmentManager(), "list_dialog");
                 break;
             default:
                 ret = super.onContextItemSelected(item);

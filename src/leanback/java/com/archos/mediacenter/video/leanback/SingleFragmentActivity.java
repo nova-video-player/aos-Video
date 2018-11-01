@@ -14,7 +14,7 @@
 
 package com.archos.mediacenter.video.leanback;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 
 import com.archos.mediacenter.video.R;
@@ -41,11 +41,11 @@ public abstract class SingleFragmentActivity extends LeanbackActivity {
         // In some cases (after a crash for example) the activity is recreated with the fragment already in it (because the
         // fragment state was saved in a Bundle) and we must not add a new fragment in it.
 
-        Fragment existingFragment = getFragmentManager().findFragmentById(R.id.fragment_container);
+        Fragment existingFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (existingFragment==null) {
-            getFragmentManager()
+            getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.fragment_container, getFragmentInstance(), "fragment_"+getFragmentManager().getBackStackEntryCount())//tag is useful when we want to iterate on fragments
+                    .add(R.id.fragment_container, getFragmentInstance(), "fragment_"+getSupportFragmentManager().getBackStackEntryCount())//tag is useful when we want to iterate on fragments
                     .commit();
         }
     }

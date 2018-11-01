@@ -14,8 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.movies;
 
-import android.app.Fragment;
-
+import android.support.v4.app.Fragment;
 import com.archos.mediacenter.video.leanback.SingleFragmentActivity;
 
 public class AllMoviesGridActivity extends SingleFragmentActivity {

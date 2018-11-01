@@ -14,7 +14,6 @@
 
 package com.archos.mediacenter.video.leanback;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,6 +21,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 
 import com.archos.mediacenter.utils.trakt.Trakt;
@@ -29,7 +29,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
 import com.archos.mediacenter.video.utils.TraktSigninDialogPreference;
 
-public abstract class LeanbackActivity extends Activity {
+public abstract class LeanbackActivity extends AppCompatActivity {
 
     private BroadcastReceiver mTraktRelogBroadcastReceiver;
     private AlertDialog mTraktRelogAlertDialog;

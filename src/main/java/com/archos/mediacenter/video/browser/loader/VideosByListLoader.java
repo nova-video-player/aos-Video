@@ -1,8 +1,7 @@
 package com.archos.mediacenter.video.browser.loader;
 
 import android.content.Context;
-import android.content.CursorLoader;
-import android.util.Log;
+import android.support.v4.content.CursorLoader;
 
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserMoviesBy;
 import com.archos.mediaprovider.video.ListTables;

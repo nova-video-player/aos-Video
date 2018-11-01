@@ -23,7 +23,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v17.leanback.app.BackgroundManager;
-import android.support.v17.leanback.app.BrowseFragment;
+import android.support.v17.leanback.app.BrowseSupportFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.HeaderItem;
@@ -76,7 +76,7 @@ import java.util.List;
  * Fragment displaying 3 rows : one for the shortcuts a.k.a. indexed folders ; one for the SMB discovered servers ; one for the UPnP discovered servers
  * Created by vapillon on 20/04/15.
  */
-public class NetworkRootFragment extends BrowseFragment {
+public class NetworkRootFragment extends BrowseSupportFragment {
 
     private static final String TAG = "NetworkRootFragment";
     public static final boolean DBG = false;

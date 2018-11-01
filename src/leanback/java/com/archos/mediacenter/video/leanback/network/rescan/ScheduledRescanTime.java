@@ -19,7 +19,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v17.leanback.app.GuidedStepFragment;
+import android.support.v17.leanback.app.GuidedStepSupportFragment;
 import android.support.v17.leanback.widget.GuidanceStylist;
 import android.support.v17.leanback.widget.GuidedAction;
 import android.text.format.DateFormat;
@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Created by vapillon on 22/06/15.
  */
-public class ScheduledRescanTime extends GuidedStepFragment {
+public class ScheduledRescanTime extends GuidedStepSupportFragment {
 
     private static final int RESCAN_TIME_ID = RescanFragment.SCHEDULED_RESCAN_PERIOD_ID + 10;
 
