@@ -19,7 +19,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v17.leanback.app.GuidedStepFragment;
+import android.support.v17.leanback.app.GuidedStepSupportFragment;
 import android.support.v17.leanback.widget.GuidanceStylist;
 import android.support.v17.leanback.widget.GuidedAction;
 import android.view.LayoutInflater;
@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * Created by vapillon on 22/06/15.
  */
-public class RescanFragment extends GuidedStepFragment implements NetworkScannerServiceVideo.ScannerListener {
+public class RescanFragment extends GuidedStepSupportFragment implements NetworkScannerServiceVideo.ScannerListener {
 
     public static final int MANUAL_RESCAN_ID = 100;
     public static final int SCHEDULED_RESCAN_PERIOD_ID = 200;

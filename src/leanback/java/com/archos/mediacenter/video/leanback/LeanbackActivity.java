@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 
 import com.archos.mediacenter.utils.trakt.Trakt;
@@ -29,7 +30,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
 import com.archos.mediacenter.video.utils.TraktSigninDialogPreference;
 
-public abstract class LeanbackActivity extends Activity {
+public abstract class LeanbackActivity extends FragmentActivity {
 
     private BroadcastReceiver mTraktRelogBroadcastReceiver;
     private AlertDialog mTraktRelogAlertDialog;

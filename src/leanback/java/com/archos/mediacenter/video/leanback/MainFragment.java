@@ -15,12 +15,11 @@
 package com.archos.mediacenter.video.leanback;
 
 import android.app.Activity;
-import android.app.LoaderManager;
+import android.support.v4.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -29,7 +28,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v17.leanback.app.BackgroundManager;
-import android.support.v17.leanback.app.BrowseFragment;
+import android.support.v17.leanback.app.BrowseSupportFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.CursorObjectAdapter;
@@ -42,6 +41,7 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowHeaderPresenter;
 import android.support.v17.leanback.widget.RowPresenter;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.View;
 
@@ -85,7 +85,7 @@ import com.archos.mediacenter.video.utils.WebUtils;
 import com.archos.mediaprovider.ArchosMediaIntent;
 import com.archos.mediaprovider.video.VideoStore;
 
-public class MainFragment extends BrowseFragment  implements  LoaderManager.LoaderCallbacks<Cursor> {
+public class MainFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "MainFragment";
     private static final String PREF_PRIVATE_MODE = "PREF_PRIVATE_MODE";
@@ -159,7 +159,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
             @Override
             public void onReceive(Context context, Intent intent) {
                 if(intent!=null&& ArchosMediaIntent.ACTION_VIDEO_SCANNER_SCAN_FINISHED.equals(intent.getAction())) {
-                    getLoaderManager().restartLoader(LOADER_ID_LAST_ADDED, null, MainFragment.this);
+                    LoaderManager.getInstance(getActivity()).restartLoader(LOADER_ID_LAST_ADDED, null, MainFragment.this);
                     Log.d(TAG, "manual reload");
                 }
             }
@@ -211,19 +211,19 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         setupEventListeners();
 
         loadRows();
-        getLoaderManager().initLoader(LOADER_ID_LAST_ADDED, null, this);
-        getLoaderManager().initLoader(LOADER_ID_LAST_PLAYED, null, this);
+        LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_LAST_ADDED, null, this);
+        LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_LAST_PLAYED, null, this);
         
         Bundle movieArgs = new Bundle();
 
         movieArgs.putString("sort", mMovieSortOrder);
-        getLoaderManager().initLoader(LOADER_ID_ALL_MOVIES, movieArgs, this);
+        LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_ALL_MOVIES, movieArgs, this);
         
         Bundle tvshowArgs = new Bundle();
 
         tvshowArgs.putString("sort", mTvShowSortOrder);
-        getLoaderManager().initLoader(LOADER_ID_ALL_TV_SHOWS, tvshowArgs, this);
-        getLoaderManager().initLoader(LOADER_ID_NON_SCRAPED_VIDEOS_COUNT, null, this);
+        LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_ALL_TV_SHOWS, tvshowArgs, this);
+        LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_NON_SCRAPED_VIDEOS_COUNT, null, this);
     }
 
     @Override
@@ -292,7 +292,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
             Bundle args = new Bundle();
 
             args.putString("sort", mTvShowSortOrder);
-            getLoaderManager().restartLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
+            LoaderManager.getInstance(getActivity()).restartLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
         }
 
         findAndUpdatePrivateModeIcon();

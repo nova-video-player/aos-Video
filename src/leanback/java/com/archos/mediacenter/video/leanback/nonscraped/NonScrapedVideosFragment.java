@@ -15,10 +15,12 @@
 package com.archos.mediacenter.video.leanback.nonscraped;
 
 import android.app.AlertDialog;
-import android.app.LoaderManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
+import android.support.v4.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -128,7 +130,7 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
         setGridPresenter(vgp);
         Bundle args = new Bundle();
         args.putString("sort", mSortOrder);
-        getLoaderManager().restartLoader(0, args, NonScrapedVideosFragment.this);
+        LoaderManager.getInstance(getActivity()).restartLoader(0, args, NonScrapedVideosFragment.this);
     }
 
     @Override
@@ -192,7 +194,7 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
                                     mSortOrder = NonScrapedSortOrderEntry.item2SortOrder(mSortOrderItem, sortOrderIndexer);
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
-                                    getLoaderManager().restartLoader(0, args, NonScrapedVideosFragment.this);
+                                    LoaderManager.getInstance(getActivity()).restartLoader(0, args, NonScrapedVideosFragment.this);
                                 }
                                 dialog.dismiss();
                             }

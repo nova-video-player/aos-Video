@@ -176,7 +176,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 			if ((itemId & MENU_ITEM_SORT_MASK)==MENU_ITEM_SORT) {
 				mSortOrder = itemid2sortorder((int)itemId);
 				// It's not enough to call notifyDataSetChanged() here to have the sort mode changed, must reset at Loader level.
-				getLoaderManager().restartLoader(0, null, this);
+				LoaderManager.getInstance(getActivity()).restartLoader(0, null, this);
 			}
 		}
 		else {

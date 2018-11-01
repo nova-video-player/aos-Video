@@ -14,12 +14,12 @@
 
 package com.archos.mediacenter.video.leanback.search;
 
-import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v17.leanback.app.SearchFragment;
+import android.support.v17.leanback.app.SearchSupportFragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 
 import com.archos.mediacenter.video.R;
@@ -30,7 +30,7 @@ import com.archos.mediacenter.video.leanback.details.VideoDetailsFragment;
 import com.archos.mediacenter.video.info.SingleVideoLoader;
 
 
-public class VideoSearchActivity extends Activity {
+public class VideoSearchActivity extends FragmentActivity {
 
     public static final String EXTRA_SEARCH_MODE = "searchMode";
     public static final int SEARCH_MODE_ALL = 0;
@@ -77,7 +77,7 @@ public class VideoSearchActivity extends Activity {
 
         VideoSearchFragment frag = new VideoSearchFragment();
         frag.setArguments(args);
-        getFragmentManager().beginTransaction().add(R.id.video_search_fragment, frag).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.video_search_fragment, frag).commit();
     }
 
     /**
@@ -90,9 +90,9 @@ public class VideoSearchActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_SEARCH) {
-            Fragment f = getFragmentManager().findFragmentById(R.id.video_search_fragment);
-            if (f instanceof SearchFragment) {
-                ((SearchFragment)f).startRecognition();
+            Fragment f = getSupportFragmentManager().findFragmentById(R.id.video_search_fragment);
+            if (f instanceof SearchSupportFragment) {
+                ((SearchSupportFragment)f).startRecognition();
                 return true;
             }
         }

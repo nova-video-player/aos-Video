@@ -20,7 +20,7 @@ import com.archos.mediacenter.video.browser.loader.AllVideosLoader;
 import com.archos.mediaprovider.ImportState;
 
 import android.content.Context;
-import android.content.CursorLoader;
+import android.support.v4.content.CursorLoader;
 import android.util.Log;
 
 public class AllVideosProvider extends VideoSingleCursorCoverProvider {

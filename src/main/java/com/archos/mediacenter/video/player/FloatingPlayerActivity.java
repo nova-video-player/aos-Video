@@ -20,17 +20,19 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.LoaderManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.archos.mediacenter.utils.videodb.IndexHelper;
 
-public class FloatingPlayerActivity extends Activity {
+public class FloatingPlayerActivity extends FragmentActivity {
 
     private ServiceConnection mPlayerServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            PlayerService.sPlayerService.setIndexHelper(new IndexHelper(FloatingPlayerActivity.this, getLoaderManager(),0));
+            PlayerService.sPlayerService.setIndexHelper(new IndexHelper(FloatingPlayerActivity.this, getSupportLoaderManager(),0));
             Intent intent = new Intent(FloatingPlayerActivity.this, FloatingPlayerService.class);
             intent.setData(getIntent().getData());
             intent.putExtras(getIntent());

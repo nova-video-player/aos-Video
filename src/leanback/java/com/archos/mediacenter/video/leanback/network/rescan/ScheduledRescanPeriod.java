@@ -18,7 +18,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v17.leanback.app.GuidedStepFragment;
+import android.support.v17.leanback.app.GuidedStepSupportFragment;
 import android.support.v17.leanback.widget.GuidanceStylist;
 import android.support.v17.leanback.widget.GuidedAction;
 
@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Created by vapillon on 22/06/15.
  */
-public class ScheduledRescanPeriod extends GuidedStepFragment {
+public class ScheduledRescanPeriod extends GuidedStepSupportFragment {
 
     private static final int DO_NOT_ID = RescanFragment.SCHEDULED_RESCAN_PERIOD_ID + 1;
     private static final int ONCE_A_DAY_ID = RescanFragment.SCHEDULED_RESCAN_PERIOD_ID + 2;

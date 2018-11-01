@@ -26,6 +26,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
 
 import com.archos.filecorelibrary.ExtStorageReceiver;
 import com.archos.filecorelibrary.ListingEngine;
@@ -77,7 +78,7 @@ public class BrowserByExtStorage extends BrowserByLocalFolder {
                 mCurrentDirectory = uri;
                 currentMountPoint = uri.toString();
                 listFiles(false);
-                getLoaderManager().restartLoader(0, null, this);
+                LoaderManager.getInstance(getActivity()).restartLoader(0, null, this);
 
             }
 
@@ -148,7 +149,7 @@ public class BrowserByExtStorage extends BrowserByLocalFolder {
                 getActivity().getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 mCurrentDirectory = treeUri;
                 listFiles(false);
-                getLoaderManager().restartLoader(0, null, this);
+                LoaderManager.getInstance(getActivity()).restartLoader(0, null, this);
 
             } else displayFailPage();
         }

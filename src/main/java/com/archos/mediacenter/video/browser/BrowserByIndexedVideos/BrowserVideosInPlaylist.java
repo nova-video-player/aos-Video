@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -134,7 +135,7 @@ public class BrowserVideosInPlaylist extends BrowserByVideoSelection {
 					}
 				}
 				getArguments().putString(BrowserByVideoSelection.LIST_OF_IDS, ids);
-				getLoaderManager().restartLoader(0, null, this);
+				LoaderManager.getInstance(getActivity()).restartLoader(0, null, this);
 				TraktService.sync(ArchosUtils.getGlobalContext(), TraktService.FLAG_SYNC_AUTO);
 				return true;
 			}

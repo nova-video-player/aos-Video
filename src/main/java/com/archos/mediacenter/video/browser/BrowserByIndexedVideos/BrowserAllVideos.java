@@ -18,6 +18,7 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.Menu;
@@ -141,7 +142,7 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 			if ((itemId & MENU_ITEM_SORT_MASK)==MENU_ITEM_SORT) {
 				mSortOrder = itemid2sortorder((int)itemId);
 				// It's not enough to call notifyDataSetChanged() here to have the sort mode changed, must reset at Loader level.
-				getLoaderManager().restartLoader(0, null, this);
+				LoaderManager.getInstance(getActivity()).restartLoader(0, null, this);
 			}
 		}
 		else {

@@ -14,15 +14,15 @@
 
 package com.archos.mediacenter.video.leanback.scrapping;
 
-import android.app.Activity;
-import android.app.Fragment;
+import android.support.v17.leanback.app.SearchSupportFragment;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v17.leanback.app.SearchFragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 
 import com.archos.mediacenter.video.R;
 
-public class ManualShowScrappingActivity extends Activity {
+public class ManualShowScrappingActivity extends FragmentActivity {
 
     public static final String EXTRA_TVSHOW_ID = "TVSHOW_ID";
     public static final String EXTRA_TVSHOW_NAME = "TVSHOW_NAME";
@@ -43,9 +43,9 @@ public class ManualShowScrappingActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_SEARCH) {
-            Fragment f = getFragmentManager().findFragmentById(R.id.fragment);
-            if (f instanceof SearchFragment) {
-                ((SearchFragment)f).startRecognition();
+            Fragment f = getSupportFragmentManager().findFragmentById(R.id.fragment);
+            if (f instanceof SearchSupportFragment) {
+                ((SearchSupportFragment)f).startRecognition();
                 return true;
             }
         }

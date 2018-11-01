@@ -14,7 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.filebrowsing;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -167,8 +167,8 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
         if(requestCode==REQUEST_INFO_ACTIVITY&&result== RESULT_FILE_DELETED){
             Uri file = data.getData();
 
-            for(int i = 0; i<= getFragmentManager().getBackStackEntryCount(); i++){
-                Fragment frag = getFragmentManager().findFragmentByTag("fragment_"+i);//tag specified in fragmenttransaction
+            for(int i = 0; i<= getSupportFragmentManager().getBackStackEntryCount(); i++){
+                Fragment frag = getSupportFragmentManager().findFragmentByTag("fragment_"+i);//tag specified in fragmenttransaction
                 if(frag != null&&frag instanceof ListingFragment){ //send uri to refresh
                     ((ListingFragment)frag).onFileDelete(file);
                 }

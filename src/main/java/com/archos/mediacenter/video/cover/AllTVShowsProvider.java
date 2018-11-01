@@ -16,7 +16,7 @@ package com.archos.mediacenter.video.cover;
 
 
 import android.content.Context;
-import android.content.CursorLoader;
+import android.support.v4.content.CursorLoader;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.util.Log;

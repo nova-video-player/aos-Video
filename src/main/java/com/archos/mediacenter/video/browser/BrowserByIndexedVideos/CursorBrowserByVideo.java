@@ -128,7 +128,7 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
 	        bindAdapter();
         }
 
-        getLoaderManager().restartLoader(0, null, this);
+        LoaderManager.getInstance(getActivity()).restartLoader(0, null, this);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getActionBarTitle());
     }
 
@@ -194,7 +194,7 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
             mHideWatched = !mHideWatched;
             item.setTitle(mHideWatched ? R.string.hide_seen : R.string.show_all);
             mPreferences.edit().putBoolean(VideoPreferencesFragment.KEY_HIDE_WATCHED, mHideWatched).apply();
-            getLoaderManager().restartLoader(0, null, this);
+            LoaderManager.getInstance(getActivity()).restartLoader(0, null, this);
             return true;
         } else
             return super.onOptionsItemSelected(item);

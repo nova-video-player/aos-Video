@@ -41,6 +41,7 @@ import android.provider.Settings;
 import android.provider.Settings.Secure;
 import android.provider.Settings.SettingNotFoundException;
 import android.support.annotation.NonNull;
+import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -469,7 +470,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         if (DBG) Log.d(TAG, "onCreate");
 
         super.onCreate(icicle);
-        mIndexHelper = new IndexHelper(this, getLoaderManager(), LOADER_INDEX);
+        mIndexHelper = new IndexHelper(this, LoaderManager.getInstance(this), LOADER_INDEX);
 
         /*
         if (android.os.Build.VERSION.SDK_INT > 18){

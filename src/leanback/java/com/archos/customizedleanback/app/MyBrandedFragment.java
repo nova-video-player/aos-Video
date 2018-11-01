@@ -13,11 +13,11 @@
  */
 package com.archos.customizedleanback.app;
 
-import android.app.Fragment;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v17.leanback.widget.SearchOrbView;
 import android.support.v17.leanback.widget.TitleView;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 

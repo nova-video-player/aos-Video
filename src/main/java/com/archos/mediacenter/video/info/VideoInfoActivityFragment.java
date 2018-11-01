@@ -472,7 +472,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }
             if(video!=null)
                 setCurrentVideo(video);
-            getLoaderManager().restartLoader(1, null, this);
+            LoaderManager.getInstance(getActivity()).restartLoader(1, null, this);
         }
         setBackground();
         mTitleBar.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -1402,7 +1402,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private void setSelectedSource(Video video) {
         setCurrentVideo(video);
 
-        getLoaderManager().restartLoader(1, null, this);
+        LoaderManager.getInstance(getActivity()).restartLoader(1, null, this);
     }
 
     @Override
@@ -1424,7 +1424,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 // It is not indexed anymore hence we need to change our query and have it based on the path now
                 // (else a new indexing would need to no cursor loader update callback)
                 if (oldVideoObject.isIndexed()) {
-                    getLoaderManager().restartLoader(1, null, this);
+                    LoaderManager.getInstance(getActivity()).restartLoader(1, null, this);
                 }
             }
             // If we have no Video object (case it's launched from player with path only)

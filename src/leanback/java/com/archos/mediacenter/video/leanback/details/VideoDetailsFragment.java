@@ -19,16 +19,16 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.LoaderManager;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
-import android.content.CursorLoader;
+import android.support.v4.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
@@ -41,7 +41,6 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.DetailsFragmentWithLessTopOffset;
-import android.support.v17.leanback.transition.TransitionHelper;
 import android.support.v17.leanback.widget.Action;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
@@ -58,8 +57,9 @@ import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
 import android.text.SpannableString;
-import android.transition.Transition;
-import android.transition.Transition.TransitionListener;
+import android.support.transition.Transition;
+import android.support.v17.leanback.transition.TransitionHelper;
+import android.support.v17.leanback.transition.TransitionListener;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -82,6 +82,7 @@ import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.NonIndexedVideo;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
+import com.archos.mediacenter.video.browser.dialogs.DialogRetrieveSubtitles;
 import com.archos.mediacenter.video.browser.loader.NextEpisodeLoader;
 import com.archos.mediacenter.video.browser.loader.TvshowLoader;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
@@ -257,10 +258,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         mSubtitleListCache = new HashMap<>();
         mVideoMetadateCache = new HashMap<>();
         mShouldDisplayRemoveFromList = getActivity().getIntent().getLongExtra(EXTRA_LIST_ID, -1) != -1;
-        Object transition = TransitionHelper.getInstance().getEnterTransition(getActivity().getWindow());
-        if(transition!=null){
+
+        Object transition = TransitionHelper.getEnterTransition(getActivity().getWindow());
+        if(transition!=null) {
             mAnimationIsRunning = false;
-            TransitionHelper.getInstance().setTransitionListener(transition, new android.support.v17.leanback.transition.TransitionListener(){
+            TransitionHelper.addTransitionListener(transition, new TransitionListener() {
                 @Override
                 public void onTransitionStart(Object transition) {
                     mAnimationIsRunning = true;
@@ -269,7 +271,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 @Override
                 public void onTransitionEnd(Object transition) {
                     mAnimationIsRunning = false;
-                    if(mThumbnail!=null){
+                    if (mThumbnail != null) {
                         mDetailsOverviewRow.setImageBitmap(getActivity(), mThumbnail);
                         mDetailsOverviewRow.setImageScaleUpAllowed(true);
 
@@ -295,17 +297,21 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         // allow Video Badges Animation at end of enter transition to prevent a huge animation glitch when opening VideoDetails
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getActivity().getWindow().getEnterTransition().addListener(new TransitionListener() {
-                public void onTransitionCancel(Transition transition) {}
-                public void onTransitionStart(Transition transition) {}
-                public void onTransitionPause(Transition transition) {}
-                public void onTransitionResume(Transition transition) {}
-                public void onTransitionEnd(Transition transition) {
-                    if (mDescriptionPresenter != null) {
-                        mDescriptionPresenter.allowVideoBadgesAnimation();
+            //getActivity().getWindow().getEnterTransition().addListener(new TransitionListener() {
+            TransitionHelper.addTransitionListener(
+                    TransitionHelper.getEnterTransition(getActivity().getWindow()),
+                    new TransitionListener() {
+                        public void onTransitionCancel(Transition transition) {}
+                        public void onTransitionStart(Transition transition) {}
+                        public void onTransitionPause(Transition transition) {}
+                        public void onTransitionResume(Transition transition) {}
+                        public void onTransitionEnd(Transition transition) {
+                            if (mDescriptionPresenter != null) {
+                                mDescriptionPresenter.allowVideoBadgesAnimation();
+                            }
+                        }
                     }
-                }
-            });
+            );
         }
         Intent intent = getActivity().getIntent();
         mSelectCurrentVideo = intent.getBooleanExtra(EXTRA_FORCE_VIDEO_SELECTION, false) ;
@@ -375,7 +381,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                             fullyReloadVideo(mVideo,mPoster);
 
                         }
-                        getLoaderManager().restartLoader(1, null, VideoDetailsFragment.this);
+                        LoaderManager.getInstance(getActivity()).restartLoader(1, null, VideoDetailsFragment.this);
 
                     }
                 }
@@ -447,11 +453,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 mDetailRowBuilderTask = new DetailRowBuilderTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,mVideo);
             }
             // We start the loader in all cases to get DB updates
-            getLoaderManager().restartLoader(1, null, this);
+            LoaderManager.getInstance(this).restartLoader(1, null, this);
         }
         // Update the details when back from player (we may have miss some DB updates while in background)
         else if (mResumeFromPlayer) {
-            getLoaderManager().restartLoader(1, null, this);
+            LoaderManager.getInstance(this).restartLoader(1, null, this);
         }
 
         // reset flags
@@ -692,7 +698,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 // It is not indexed anymore hence we need to change our query and have it based on the path now
                 // (else a new indexing would need to no cursor loader update callback)
                 if (oldVideoObject.isIndexed()) {
-                    getLoaderManager().restartLoader(1, null, this);
+                    LoaderManager.getInstance(this).restartLoader(1, null, this);
                 }
             }
             // If we have no Video object (case it's launched from player with path only)

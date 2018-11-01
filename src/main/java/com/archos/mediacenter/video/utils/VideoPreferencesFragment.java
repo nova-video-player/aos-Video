@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 package com.archos.mediacenter.video.utils;
 
 import android.app.Activity;
@@ -29,13 +28,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.CheckBoxPreference;
+import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.Preference.OnPreferenceClickListener;
+import android.support.v7.preference.PreferenceCategory;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
@@ -53,6 +52,12 @@ import com.archos.mediacenter.video.leanback.movies.MoviesSortOrderEntry;
 import com.archos.mediacenter.video.leanback.tvshow.AllTvshowsGridFragment;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowsSortOrderEntry;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
+import com.archos.mediacenter.video.utils.DebugDbExportDialogFragment;
+import com.archos.mediacenter.video.utils.FolderPicker;
+import com.archos.mediacenter.video.utils.TorrentPathDialogPreference;
+import com.archos.mediacenter.video.utils.TraktSigninDialogPreference;
+import com.archos.mediacenter.video.utils.VideoPreferencesActivity;
+import com.archos.mediacenter.video.utils.VideoPreferencesLicencesActivity;
 import com.archos.mediacenter.video.utils.credentialsmanager.CredentialsManagerPreferenceActivity;
 import com.archos.medialib.MediaFactory;
 import com.archos.mediaprovider.video.VideoProvider;
@@ -68,7 +73,7 @@ import java.util.Locale;
 import java.util.Set;
 import static com.archos.filecorelibrary.FileUtils.backupDatabase;
 
-public class VideoPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
+public class VideoPreferencesFragment extends PreferenceFragmentCompat implements OnSharedPreferenceChangeListener {
 
     public static final String KEY_VIDEO_AD_FREE = "video_ad_free";
     public static final String KEY_VIDEO_AD_FREE_CATEGORY = "preferences_category_complete";
@@ -172,7 +177,8 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
         PreferenceCategory prefScraperCategory = (PreferenceCategory) findPreference(KEY_SCRAPER_CATEGORY);
         if (mSharedPreferences.getBoolean(KEY_ADVANCED_VIDEO_ENABLED, false)) {
             // advanced preferences
-            Editor editor = mForceSwDecPreferences.getEditor();
+            //Editor editor = mForceSwDecPreferences.getEditor();
+            Editor editor = mSharedPreferences.edit();
             editor.remove(KEY_FORCE_SW);
             editor.apply();
             prefCategory.removePreference(mForceSwDecPreferences);
@@ -181,7 +187,8 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
             getPreferenceScreen().addPreference(mAdvancedPreferences);
         } else {
             // normal preferences
-            Editor editor = mDecChoicePreferences.getEditor();
+            //Editor editor = mDecChoicePreferences.getEditor();
+            Editor editor = mSharedPreferences.edit();
             editor.remove(KEY_DEC_CHOICE);
             editor.apply();
             prefCategory.removePreference(mDecChoicePreferences);
@@ -189,6 +196,7 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
             prefScraperCategory.removePreference(mDbExportManualPreference);
             getPreferenceScreen().removePreference(mAdvancedPreferences);
         }
+
     }
 
     public static void resetPassthroughPref(SharedPreferences preferences){
@@ -198,9 +206,7 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
         }
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         mSharedPreferences = getPreferenceManager().getSharedPreferences();
         // Load the preferences from an XML resource
         resetPassthroughPref(mSharedPreferences);

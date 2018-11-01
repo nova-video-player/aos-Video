@@ -16,24 +16,21 @@ package com.archos.mediacenter.video.utils;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceScreen;
+import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.archos.mediacenter.video.R;
 
-public class VideoPreferencesLicencesFragment extends PreferenceFragment {
+public class VideoPreferencesLicencesFragment extends PreferenceFragmentCompat {
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences_licences);
     }
 
 
-    @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         try {
             Uri uri = preference.getIntent().getData();
@@ -44,6 +41,6 @@ public class VideoPreferencesLicencesFragment extends PreferenceFragment {
         }
         catch (NullPointerException npe) {}
 
-        return super.onPreferenceTreeClick(preferenceScreen, preference);
+        return super.onPreferenceTreeClick(preference);
     }
 }

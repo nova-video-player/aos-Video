@@ -29,11 +29,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.Preference;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceManager;
 import android.util.AttributeSet;
 
-public class TraktSigninDialogPreference extends Preference{
+public class TraktSigninDialogPreference extends Preference {
 	OAuthDialog od=null;
     private DialogInterface.OnDismissListener mOnDismissListener;
 

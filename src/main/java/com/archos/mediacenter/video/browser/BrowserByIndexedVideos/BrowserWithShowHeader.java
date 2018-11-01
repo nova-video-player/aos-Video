@@ -22,6 +22,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.graphics.Palette;
@@ -189,8 +190,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             if(newShowID!=-1&&newShowID!=mShowId){
                 mShowId = newShowID;
                 getArguments().putLong(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID, mShowId);
-                getLoaderManager().restartLoader(0, null, this);
-                getLoaderManager().restartLoader(SHOW_LOADER_ID, null, this);
+                LoaderManager.getInstance(getActivity()).restartLoader(0, null, this);
+                LoaderManager.getInstance(getActivity()).restartLoader(SHOW_LOADER_ID, null, this);
             }
         }
     }
@@ -429,7 +430,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
                 mTvShowAsyncTask = new TvShowAsyncTask().executeOnExecutor(mSerialExecutor, getPosterUri(), mShow);
             }
-            getLoaderManager().restartLoader(SHOW_LOADER_ID, null, this);
+            LoaderManager.getInstance(getActivity()).restartLoader(SHOW_LOADER_ID, null, this);
         }
     }
 

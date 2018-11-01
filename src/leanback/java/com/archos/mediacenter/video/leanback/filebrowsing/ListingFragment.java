@@ -14,10 +14,10 @@
 
 package com.archos.mediacenter.video.leanback.filebrowsing;
 
-import android.app.FragmentTransaction;
-import android.app.LoaderManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
 import android.content.Intent;
-import android.content.Loader;
+import android.support.v4.content.Loader;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -371,7 +371,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
 
         // 2 - Get DB data for the indexed videos that may be in this folder
         mDbQueryReady = false;
-        getLoaderManager().restartLoader(0, null, this);
+        LoaderManager.getInstance(this).restartLoader(0, null, this);
     }
 
     /**
@@ -617,7 +617,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
     // -----------------------------------------------------
 
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+    public  Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         // TODO For SMB we need to implement the BUCKET_ID stuff BrowserBySMB (do we?)
         return new VideosInFolderLoader(getActivity(), VideoUtils.getMediaLibCompatibleFilepathFromUri(mUri));
     }

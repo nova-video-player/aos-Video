@@ -71,6 +71,7 @@
         only by asking for this archos framework library
         -->
         <!-- <uses-library android:name="com.archos.frameworks" /> -->
+	<uses-library android:name="org.apache.http.legacy" android:required="false" />
 
         <activity
             android:name=".EntryActivity"

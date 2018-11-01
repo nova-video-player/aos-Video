@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.DetailsFragment;
+import android.support.v17.leanback.app.DetailsSupportFragment;
 import android.support.v17.leanback.widget.Action;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.DetailsOverviewRow;
@@ -36,7 +37,7 @@ import com.archos.mediacenter.video.leanback.presenter.ShortcutDetailsPresenter;
 import com.archos.mediaprovider.NetworkScanner;
 
 
-public class NetworkShortcutDetailsFragment extends DetailsFragment implements OnActionClickedListener {
+public class NetworkShortcutDetailsFragment extends DetailsSupportFragment implements OnActionClickedListener {
 
     private static final String TAG = "NetworkShortcutDetailsFragment";
 

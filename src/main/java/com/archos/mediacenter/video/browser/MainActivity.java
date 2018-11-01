@@ -49,6 +49,7 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -230,7 +231,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         mNewVideosActionProvider = new NewVideosActionProvider(this);
-        getLoaderManager().initLoader(0, null, mNewVideosActionProvider);
+        LoaderManager.getInstance(this).initLoader(0, null, mNewVideosActionProvider);
 
         // Register a content observer which will be used to update the global
         // resume view
@@ -1040,7 +1041,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         // If the choice has not been done yet, ask user
         if (uiMode.equals("unset") &&
              !getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK)) { // no UI choice to do on actual AndroidTV devices
-            new UiChoiceDialog().show(getFragmentManager(), "UiChoiceDialog");
+            new UiChoiceDialog().show(getSupportFragmentManager(), "UiChoiceDialog");
         }
     }
 }

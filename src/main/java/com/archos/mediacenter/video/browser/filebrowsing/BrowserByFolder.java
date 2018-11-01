@@ -139,7 +139,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             mCurrentDirectory = getDefaultDirectory();
         mFileList = new ArrayList();
         mFullFileList = new ArrayList<>();
-        getLoaderManager().initLoader(0, null, this);
+        LoaderManager.getInstance(getActivity()).initLoader(0, null, this);
     }
 
     @Override

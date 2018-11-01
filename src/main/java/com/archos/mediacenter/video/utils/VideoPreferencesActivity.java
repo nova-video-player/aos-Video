@@ -59,8 +59,8 @@ public class VideoPreferencesActivity extends AppCompatActivity {
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(getFragmentManager().findFragmentById(R.id.preferencesFragment)!=null){
-            ((VideoPreferencesFragment)getFragmentManager().findFragmentById(R.id.preferencesFragment)).onActivityResult(requestCode, resultCode, data);
+        if(getSupportFragmentManager().findFragmentById(R.id.preferencesFragment)!=null){
+            ((VideoPreferencesFragment)getSupportFragmentManager().findFragmentById(R.id.preferencesFragment)).onActivityResult(requestCode, resultCode, data);
         }
     }
 

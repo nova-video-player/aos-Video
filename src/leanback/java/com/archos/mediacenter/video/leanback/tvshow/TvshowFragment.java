@@ -15,9 +15,10 @@
 package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.app.Activity;
-import android.app.LoaderManager;
+import android.support.v4.app.LoaderManager;
 import android.content.Intent;
-import android.content.Loader;
+import android.support.v4.content.Loader;
+
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
@@ -72,7 +73,7 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 
 
-public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements  LoaderManager.LoaderCallbacks<Cursor> {
+public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "TvshowFragment";
 
@@ -296,10 +297,10 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             Long newId = data.getLongExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_ID, -1);
             mTvshow = new Tvshow(newId, newName, null, mTvshow.getSeasonCount(), mTvshow.getEpisodeCount());
             // Clear all the loader managers because they need to be recreated with the new ID
-            getLoaderManager().destroyLoader(SEASONS_LOADER_ID);
+            LoaderManager.getInstance(this).destroyLoader(SEASONS_LOADER_ID);
             if (mSeasonAdapters != null){
                 for (int i = 0; i < mSeasonAdapters.size(); i++) {
-                    getLoaderManager().destroyLoader(mSeasonAdapters.keyAt(i));
+                    LoaderManager.getInstance(this).destroyLoader(mSeasonAdapters.keyAt(i));
                 }
             }
             // Clear the rows
@@ -335,7 +336,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(tvshow.getShowTags());
 
             // Start loading the list of seasons
-            getLoaderManager().restartLoader(SEASONS_LOADER_ID, null, TvshowFragment.this);
+            LoaderManager.getInstance(getActivity()).restartLoader(SEASONS_LOADER_ID, null, TvshowFragment.this);
         }
     }
 
@@ -374,7 +375,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 mRowsAdapter.add(new ListRow(seasonNumber,
                         new HeaderItem(seasonNumber, getString(R.string.episode_season) + " " + seasonNumber),
                         seasonAdapter));
-                getLoaderManager().restartLoader(seasonNumber, null, this);
+                LoaderManager.getInstance(this).restartLoader(seasonNumber, null, this);
                 cursor.moveToNext();
             }
             cursor.close();

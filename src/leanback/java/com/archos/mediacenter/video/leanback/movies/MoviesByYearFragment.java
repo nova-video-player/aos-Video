@@ -15,9 +15,9 @@
 package com.archos.mediacenter.video.leanback.movies;
 
 import android.content.Context;
-import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.content.Loader;
 import android.util.SparseArray;
 
 import com.archos.mediacenter.video.R;

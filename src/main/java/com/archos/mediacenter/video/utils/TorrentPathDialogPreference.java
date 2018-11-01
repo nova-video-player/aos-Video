@@ -20,7 +20,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.Preference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,22 +30,22 @@ import com.archos.mediacenter.video.R;
 
 import java.io.File;
 
-public class TorrentPathDialogPreference extends Preference{
+public class TorrentPathDialogPreference extends Preference {
 
-	
     private View mView;
 	public TorrentPathDialogPreference(Context context, AttributeSet attrs) {
         super(context, attrs);        
     }
-	@Override
-    public View onCreateView(ViewGroup parent) {
-         mView = super.onCreateView(parent);
-         refresh();
-         return mView;
-    }
+
     public TorrentPathDialogPreference(Context context, AttributeSet attrs,
             int defStyle) {
         super(context, attrs, defStyle); 
+    }
+
+    @Override
+    public void onBindViewHolder(PreferenceViewHolder v) {
+        super.onBindViewHolder(v);
+        refresh();
     }
  
     @Override

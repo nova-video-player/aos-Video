@@ -3,18 +3,15 @@ package com.archos.mediacenter.video.leanback;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Loader;
-import android.database.Cursor;
-import android.os.Bundle;
 import android.support.v17.leanback.widget.SearchOrbView;
 import android.support.v17.leanback.widget.Row;
-import android.util.SparseArray;
+import android.support.v4.content.Loader;
+import android.database.Cursor;
+import android.os.Bundle;
 import android.view.View;
-
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.VideosByListLoader;
 import com.archos.mediacenter.video.browser.loader.VideosSelectionLoader;
-import com.archos.mediacenter.video.leanback.movies.MoviesSortOrderEntry;
 import com.archos.mediaprovider.video.VideoStore;
 
 import java.util.ArrayList;

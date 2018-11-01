@@ -22,6 +22,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -83,7 +84,7 @@ abstract public class BrowserActivity extends AppCompatActivity {
                 mCoverRoll.setLastNonConfigurationInstance(nci.mCoverRoll);
             }
             mCoverRoll.setActivity(this);
-            mCoverRoll.setLoaderManager(getLoaderManager());
+            mCoverRoll.setLoaderManager(LoaderManager.getInstance(this));
             mCoverRoll.onStartGL();
 
             // The content of the cover roll may be defined by the intent extra

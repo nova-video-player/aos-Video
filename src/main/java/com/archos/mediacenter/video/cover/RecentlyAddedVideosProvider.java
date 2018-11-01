@@ -21,7 +21,7 @@ import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediacenter.video.R;
 
 import android.content.Context;
-import android.content.CursorLoader;
+import android.support.v4.content.CursorLoader;
 import android.content.SharedPreferences;
 import android.util.Log;
 

@@ -23,7 +23,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v17.leanback.app.BackgroundManager;
-import android.support.v17.leanback.app.BrowseFragment;
+import android.support.v17.leanback.app.BrowseSupportFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.HeaderItem;
@@ -76,7 +76,7 @@ import java.util.List;
  * Fragment displaying 3 rows : one for the shortcuts a.k.a. indexed folders ; one for the SMB discovered servers ; one for the UPnP discovered servers
  * Created by vapillon on 20/04/15.
  */
-public class NetworkRootFragment extends BrowseFragment {
+public class NetworkRootFragment extends BrowseSupportFragment {
 
     private static final String TAG = "NetworkRootFragment";
     public static final boolean DBG = false;
@@ -196,7 +196,9 @@ public class NetworkRootFragment extends BrowseFragment {
 
     private void loadRows() {
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
+        setAdapter(mRowsAdapter);
 
+        mRowsAdapter.clear();
         ClassPresenterSelector classPresenter = new ClassPresenterSelector();
         classPresenter.addClassPresenter(NetworkShortcut.class, new NetworkShortcutPresenter());
         classPresenter.addClassPresenter(Box.class, new RescanBoxItemPresenter()); // for the rescan item
@@ -205,26 +207,29 @@ public class NetworkRootFragment extends BrowseFragment {
                 new HeaderItem(getString(R.string.indexed_folders)),
                 mIndexedFoldersAdapter);
         mRowsAdapter.add(mIndexedFoldersListRow);
+        mRowsAdapter.notifyArrayItemRangeChanged(0, mRowsAdapter.size());
 
         mSmbDiscoveryAdapter = new ArrayObjectAdapter(new SmbSharePresenter());
         mRowsAdapter.add(new ListRow(
                 new HeaderItem(getString(R.string.network_shared_folders)),
                 mSmbDiscoveryAdapter));
+        mRowsAdapter.notifyArrayItemRangeChanged(0, mRowsAdapter.size());
         if(UpnpAvailability.isUpnpAvaialbe()) {
             mUpnpDiscoveryAdapter = new ArrayObjectAdapter(new SmbSharePresenter());
             mRowsAdapter.add(new ListRow(
                     new HeaderItem(getString(R.string.network_media_servers)),
                     mUpnpDiscoveryAdapter));
+                mRowsAdapter.notifyArrayItemRangeChanged(0, mRowsAdapter.size());
         }
 
         mFtpShortcutsAdapter = new ArrayObjectAdapter(new NetworkShortcutPresenter());
         mRowsAdapter.add(new ListRow(
                 new HeaderItem(getString(R.string.ftp_shortcuts)),
                 mFtpShortcutsAdapter));
+        mRowsAdapter.notifyArrayItemRangeChanged(0, mRowsAdapter.size());
 
         setOnItemViewClickedListener(mClickListener);
 
-        setAdapter(mRowsAdapter);
     }
 
     @Override

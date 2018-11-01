@@ -14,11 +14,13 @@
 
 package com.archos.mediacenter.video.leanback.overlay;
 
-import android.app.Fragment;
 import android.content.Context;
-import android.support.v17.leanback.app.BrowseFragment;
+import android.support.v17.leanback.app.BrowseSupportFragment;
 import android.support.v17.leanback.app.DetailsFragment;
-import android.support.v17.leanback.app.GuidedStepFragment;
+import android.support.v17.leanback.app.DetailsSupportFragment;
+import android.support.v17.leanback.app.GuidedStepSupportFragment;
+import android.support.v17.leanback.app.GuidedStepSupportFragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,13 +61,13 @@ public class Overlay {
         }
 
         int parentViewId = -1;
-        if (fragment instanceof BrowseFragment) {
+        if (fragment instanceof BrowseSupportFragment) {
             parentViewId = R.id.browse_frame;
         } else if (fragment instanceof MyVerticalGridFragment) {
             parentViewId = R.id.browse_dummy;
-        } else if (fragment instanceof DetailsFragment) {
+        } else if (fragment instanceof DetailsSupportFragment) {
             parentViewId = R.id.details_fragment_root;
-        } else if (fragment instanceof GuidedStepFragment) {
+        } else if (fragment instanceof GuidedStepSupportFragment) {
             parentViewId = R.id.guidedstep_background_view_root;
         } else {
             throw new IllegalStateException("Overlay is not compatible with this fragment: "+fragment);

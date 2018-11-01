@@ -20,7 +20,7 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v17.leanback.app.BackgroundManager;
-import android.support.v17.leanback.app.SearchFragment;
+import android.support.v17.leanback.app.SearchSupportFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.HeaderItem;
@@ -53,7 +53,7 @@ import java.util.concurrent.Executor;
 /**
  * Created by vapillon on 11/06/15.
  */
-public abstract class ManualScrappingSearchFragment extends SearchFragment implements SearchFragment.SearchResultProvider {
+public abstract class ManualScrappingSearchFragment extends SearchSupportFragment implements SearchSupportFragment.SearchResultProvider {
 
     private static final String TAG = "ManualScrappingSF";
 

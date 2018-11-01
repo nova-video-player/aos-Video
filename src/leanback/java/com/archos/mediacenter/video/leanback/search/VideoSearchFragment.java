@@ -22,7 +22,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v17.leanback.app.BackgroundManager;
-import android.support.v17.leanback.app.SearchFragment;
+import android.support.v17.leanback.app.SearchSupportFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.CursorObjectAdapter;
@@ -48,9 +48,8 @@ import android.support.v17.leanback.widget.ShadowLessRowPresenter;
 import android.support.v17.leanback.widget.SpeechRecognitionCallback;
 
 
-public class VideoSearchFragment extends SearchFragment implements SearchFragment.SearchResultProvider {
+public class VideoSearchFragment extends SearchSupportFragment implements SearchSupportFragment.SearchResultProvider {
     public static final int ROW_ID = 2000;
-
     private static final int SEARCH_DELAY_MS = 300;
 
     private ArrayObjectAdapter mRowsAdapter;

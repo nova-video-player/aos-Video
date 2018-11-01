@@ -19,11 +19,12 @@ import com.archos.mediacenter.video.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
+import android.support.v4.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
-public class SDKNotSupportedDialogActivity extends Activity {
+public class SDKNotSupportedDialogActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -33,7 +34,7 @@ public class SDKNotSupportedDialogActivity extends Activity {
 
     void showDialog() {
         DialogFragment newFragment = SDKNotSupportedDialogFragment.newInstance();
-        newFragment.show(getFragmentManager(), "dialog");
+        newFragment.show(getSupportFragmentManager(), "dialog");
     }
 
     public static class SDKNotSupportedDialogFragment extends DialogFragment {
