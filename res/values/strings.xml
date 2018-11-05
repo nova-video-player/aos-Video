@@ -594,7 +594,7 @@
     <string name="video_browser_unindex_file">Remove from library</string>
 
     <!-- Brightness -->
-    <string name="auto_brightness_message">Brightness can not be changed because automatic brightness mode is currently enabled.</string>
+    <string name="auto_brightness_message">Brightness cannot be changed because automatic brightness mode is currently enabled.</string>
 
    <!--  Nfo File parsing -->
    <string name="network_nfo_parse">Process \'nfo\' files</string>
@@ -813,7 +813,7 @@
     <string name="cast_stream_mode">Stream mode</string>
     <string name="cast_remote_display_mode">Remote display</string>
     <string name="cast_remote_display_mode_description">every format supported by nova video player can be played using remote display. However, quality can be deteriorated.</string>
-    <string name="cast_stream_mode_description">Optimal quality but some format can not be supported</string>
+    <string name="cast_stream_mode_description">Optimal quality but some format cannot be supported</string>
 
     <string name="sleep_timer_title">Sleep timer</string>
     <string name="sleep_timer_description">Stop video after: </string>
@@ -837,7 +837,7 @@
     <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Cloud</string>
     <string name="learn_more">Learn more</string>
-    <string name="learn_more_about_codecs">Nova Video Player can only play videos supported by your device. Due to license issues, some formats can not be legally included, some other can be purchased on Google Play Store.</string>
+    <string name="learn_more_about_codecs">Nova Video Player can only play videos supported by your device. Due to license issues, some formats cannot be legally included, some other can be purchased on Google Play Store.</string>
     <string name="base64_encoded_publicKey" />
     <string name="rate_us">If you like this app, please support us by rating us 5 stars</string>
     <string name="rate_us_title">☆ Support us</string>
