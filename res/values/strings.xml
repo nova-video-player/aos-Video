@@ -812,7 +812,7 @@
     <string name="switch_remote_empty_message">Switching to remote display mode might give more track options</string>
     <string name="cast_stream_mode">Stream mode</string>
     <string name="cast_remote_display_mode">Remote display</string>
-    <string name="cast_remote_display_mode_description">every format supported by archos video player can be played using remote display. However, quality can be deteriorated.</string>
+    <string name="cast_remote_display_mode_description">every format supported by nova video player can be played using remote display. However, quality can be deteriorated.</string>
     <string name="cast_stream_mode_description">Optimal quality but some format can not be supported</string>
 
     <string name="sleep_timer_title">Sleep timer</string>
