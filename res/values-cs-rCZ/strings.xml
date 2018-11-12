@@ -390,7 +390,7 @@
     <string name="add_ssh_server">Procházet FTP server</string>
     <string name="add_ssh_shortcut">Přidat jako zástupce</string>
     <string name="ssh_prompt">Typ FTP</string>
-    <string name="ssh_empty_view">\"Můžete procházet a přehrávat z vašeho ftp serveru\"</string>
+    <string name="ssh_empty_view"> \"Můžete procházet a přehrávat z vašeho ftp serveru\"</string>
     <string-array name="ssh_types">
         <item>FTP</item>
         <item>SFTP</item>
@@ -505,7 +505,7 @@
     <string name="help_overlay_network_indexing_text1">Vyberte tuto položku menu pro zahrnutí obsahu této složky a jejích podsložek to knihovny videí.</string>
     <string name="help_overlay_network_indexing_text1_lb">Použijte tlačítko + pro zahrnutí obsahu této složky a jejích podsložek to knihovny videí.</string>
     <string name="help_overlay_network_indexing_text2">Tato funkce vám umožní získat plakáty a popisy k filmům a seriálům.</string>
-    <string name="help_overlay_scraper_text">Zvolte tuto položku menu pro online vyhledání plakátů a informací k vašim videím.</string>
+    <string name="help_overlay_scraper_text">Zvolte tuto položku menu pro online vyhledání plakátů a informací k vašim videím. </string>
     <string name="new_videos_count">Nová videa: %d</string>
     <string name="new_videos_scrape_message">Máte nová videa, ke kterým zatím nejsou k dispozici informace a plakáty.</string>
     <string name="network_bookmarks">Obnovení pozic a záložek na síťových připojeních</string>
@@ -719,14 +719,14 @@
     <string name="cast_remote_display_mode_description">Všechny formáty podporované přehrávačem archos video mohou být přehrány na vzdáleném displeji. Nicméně jejich kvalita může být snížena.</string>
     <string name="cast_stream_mode_description">Optimální kvalita ale některé formáty nemusejí být podporovány</string>
     <string name="sleep_timer_title">Časovač uspání</string>
-    <string name="sleep_timer_description">Zastavit video po:</string>
+    <string name="sleep_timer_description">Zastavit video po: </string>
     <string name="cast_mode">Režim vysílání (castování)</string>
     <string name="cast_info">Informace</string>
     <string name="troubleshoot_streammode_msg">Přehrávač Nova Video je nyní v režimu streamovaného vysílání (castování).
         \nTento režim poskytuje dobrou kvalitu videa ale může způsobit problémy se zvukovými a titulkovými stopami.
         Zkuste přepnout do režimu vzdáleného displeje.</string>
     <string name="troubleshoot_remotemode_msg">Přehrávač Nova video je nyní v režimu vzdáleného displeje.
-        \nV závislosti na vašem zařízení a kvalitě síťového připojení může dojít ke snížení kvality nebo problémům s výkonností.</string>
+        \nV závislosti na vašem zařízení a kvalitě síťového připojení může dojít ke snížení kvality nebo problémům s výkonností. </string>
     <string name="picture_in_picture">Obraz v obraze</string>
     <string name="cast">Vysílání (castování)</string>
     <string name="cast_warning">Podpora pro vysílání (castování) je limitována z důvodu omezení kodeků pro Chromecast. Pro zmírnění těchto omezení jsou k dispozici 2 režimy: Chromecast a Screencast (s automatickým přepnutím na tento režim). Omezení výkonu a kvality může být také způsobeno zařízením a síťovým připojením.</string>

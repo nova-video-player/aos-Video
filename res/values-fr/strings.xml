@@ -43,7 +43,7 @@
     <string name="play_from_beginning">Lire depuis le début</string>
     <!-- Dialog box button -->
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
-    <string name="fast_scroll_alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="fast_scroll_alphabet"> ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <!-- The string used in file/folder infos dialog. -->
     <string name="info_duration">Durée</string>
     <string name="video_sources">Sources</string>
@@ -505,7 +505,7 @@
     <string name="format_fullscreen">Plein écran</string>
     <string name="format_optimized">Optimisé</string>
     <string name="format_original">Original</string>
-    <string name="stereo_dive_enable">Effet immersion stéréo</string>
+    <string name="stereo_dive_enable">Effet stéréo immersive</string>
     <string name="stereo_dive_disable">Désactiver l\'effet d\'immersion stéréo</string>
     <string name="rotation_unlock">Rotation auto. de l\'écran</string>
     <string name="rotation_locked">Rotation automatique de l\'écran désactivé</string>
@@ -517,7 +517,7 @@
     <string name="help_overlay_network_indexing_text1">Sélectionnez cette action pour ajouter le contenu de ce dossier et de ses sous-dossiers à la bibliothèque vidéo.</string>
     <string name="help_overlay_network_indexing_text1_lb">Utilisez le bouton + pour ajouter le contenu de ce dossier et de ses sous-dossiers à la bibliothèque vidéo.</string>
     <string name="help_overlay_network_indexing_text2">Cela vous permettra d\'obtenir des affiches et des informations pour vos films et vos séries.</string>
-    <string name="help_overlay_scraper_text">Sélectionnez cette action pour rechercher des affiches et des informations en ligne pour vos vidéos.</string>
+    <string name="help_overlay_scraper_text">Sélectionnez cette action pour rechercher des affiches et des informations en ligne pour vos vidéos. </string>
     <string name="new_videos_count">Nouvelles vidéos: %d</string>
     <string name="new_videos_scrape_message">Vous avez des nouvelles vidéos qui n\'ont pas encore d\'affiches et d\'informations.</string>
     <string name="network_bookmarks">Points de reprises et marque-pages sur le réseau</string>
@@ -725,20 +725,20 @@
     <string name="save_delay_setting_pref_key">save_setting_pref_key</string>
     <string name="keep_setting">Conserver ce réglage</string>
     <string name="select_sub_file"><![CDATA[Les sous-titres exacts n\'ont pas été trouvés pour ce fichier <font color=#29b6f6><i>%s</i></font><br />Choisissez un fichier parmi cette liste:]]></string>
-    <string name="switch_remote_empty_message">Passer en mode d\'affichage distant peut conduire à plus d\'options de piste</string>
+    <string name="switch_remote_empty_message">Passer en mode d\'affichage distant pourrait vous permettre plus d\'options de piste</string>
     <string name="cast_stream_mode">Mode Streaming</string>
     <string name="cast_remote_display_mode">Écran distant</string>
     <string name="cast_remote_display_mode_description">chaque format pris en charge par Nova vidéo player peut être lu à l\'aide d\'un affichage à distance. Cependant, la qualité peut être détériorée.</string>
     <string name="cast_stream_mode_description">Qualité optimale mais certains formats ne sont pas pris en charge</string>
-    <string name="sleep_timer_title">Minuteur de mis en veille</string>
-    <string name="sleep_timer_description">Arrêt de la vidéo après :</string>
+    <string name="sleep_timer_title">Minuteur de mise en veille</string>
+    <string name="sleep_timer_description">Arrêt de la vidéo après : </string>
     <string name="cast_mode">Mode de diffusion</string>
     <string name="cast_info">Info</string>
     <string name="troubleshoot_streammode_msg">Nova video player est en Mode Streaming.
         \nLa qualité vidéo sera optimale mais vous pouvez rencontrer des soucis avec vos pistes de sous-titres et pistes audio.
         En ce cas, vous pouvez passer en mode \"Écran distant\".</string>
     <string name="troubleshoot_remotemode_msg">Nova video player est en Écran distant.
-\nEn fonction de votre appareil et selon les performances de votre réseau, la qualité vidéo peut être détériorée.</string>
+\nEn fonction de votre appareil et selon les performances de votre réseau, la qualité vidéo peut être détériorée. </string>
     <string name="picture_in_picture">Image incrustée</string>
     <string name="cast">Diffuser</string>
     <string name="cast_warning">Le cast est limité par le peu de codecs supportés par la Chromecast. Pour contourner ces limitations, l\'application passe automatiquement en Écran distant si le format n\'est pas supporté. La qualité et la vitesse de chargement dépendent fortement de votre appareil et de votre réseau.</string>
@@ -746,7 +746,7 @@
     <string name="cast_fallback_message">Erreur: repli sur la diffusion d\'écran</string>
     <string name="cast_introduction">Nouveauté expérimentale : \nGoogle cast</string>
     <string name="cast_select_for_full_control">Touchez pour étendre votre contrôleur</string>
-    <string name="cast_audio_background">Le son ne fonctionne pas lorsque Nova Video Player est en arrière-plan</string>
+    <string name="cast_audio_background">Le son ne fonctionnera pas lorsque Nova Video Player est en arrière-plan</string>
     <string name="help_faq">Aide/FAQ</string>
     <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Cloud</string>
@@ -761,5 +761,5 @@
     <string name="premium_already_purchased">Nova Video Premium a déjà été acheté</string>
     <string name="remove_from_list">Retirer de la liste</string>
     <string name="warning_swdec">Attention: décodage matériel désactivé!</string>
-    <string name="list_title">Titre de la liste</string>
+    <string name="list_title">Liste de titres</string>
 </resources>
