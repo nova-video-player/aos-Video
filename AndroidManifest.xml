@@ -687,14 +687,7 @@
         <service
             android:name=".browser.UpdateRecommendationsService"
             android:enabled="true" />
-
-        <!-- chromecast support -->
-
-        <receiver android:name="com.google.android.libraries.cast.companionlibrary.remotecontrol.VideoIntentReceiver" />
-        <service
-            android:name="com.google.android.libraries.cast.companionlibrary.notification.VideoCastNotificationService" />
-        <service android:name="com.google.android.libraries.cast.companionlibrary.cast.reconnection.ReconnectionService"/>
-
+        
     </application>
 
 </manifest>
