@@ -425,7 +425,7 @@
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
 
     <string name="error_permission">Non possiedi abbastanza permessi</string>
-    <string name="error_permission_storage">Nova Video Player ha bisogno dell\'autorizzazione sull\'archiviazione per leggere i video locali. Per favore, concedi questa autorizzazione</string>
+    <string name="error_permission_storage">Nova Video Player ha bisogno dell\'autorizzazione sull\'archiviazione per leggere i video locali. Concedi questa autorizzazione</string>
     <string name="allow">Concedi</string>
     <string name="exit">Esci</string>
     <!-- torrent -->
@@ -605,7 +605,7 @@
    <string name="zipped_library_mail_subject">Nova Video Database Dump</string>
    <string name="zipped_library_mail_text">Descrivi il problema che si è verificato\n\n</string>
 
-   <string name="sort_mode">Sort mode</string>
+   <string name="sort_mode">Ordina per</string>
    <string name="sort_by_name_asc">Ordina per nome (a > z)</string>
    <string name="sort_by_name_desc">Ordina per nome (z > a)</string>
    <string name="sort_by_year_asc">Ordina per anno (prima i più vecchi)</string>
@@ -799,7 +799,7 @@
     <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="nfo_export_in_progress">Esportazione dei NFO in corso</string>
     <string name="rescrap_in_progress">Analisi dell\'intera libreria</string>
-    <string name="acquire_external_usb_permission">Nova Video necessita di permessi speciali per accedere all\'archivio esterno. Sleziona il tuo archivio nella prossima schermata</string>
+    <string name="acquire_external_usb_permission">Nova Video necessita di permessi speciali per accedere all\'archivio esterno. Seleziona il tuo archivio nella prossima schermata</string>
 
     <string name="rescrap_not_found">Analizza nuovamente i video senza una descrizione</string>
     <string name="rescrap_all_title">Analizza tutto</string>
