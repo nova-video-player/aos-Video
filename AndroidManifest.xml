@@ -34,6 +34,10 @@
     <!-- You must mark this feature as optional in order to make the app available for Android TV -->
     <uses-feature android:name="android.hardware.microphone" android:required="false"/>
 
+    <!-- Used to monitor the usb storage plug/unplug -->
+    <uses-feature android:name="android.hardware.usb.host" />
+    <uses-permission android:name="android.permission.USB_PERMISSION" />
+
     <!--<uses-permission android:name="android.permission.WRITE_SETTINGS" />-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -667,17 +671,23 @@
                 <data android:scheme="smb" />
             </intent-filter>
         </receiver>
-
-
+        
         <receiver android:name="com.archos.filecorelibrary.ExtStorageReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />
                 <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
                 <action android:name="android.intent.action.MEDIA_EJECT" />
                 <action android:name="android.intent.action.MEDIA_BAD_REMOVAL" />
-
                 <data android:scheme="file" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+                <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
+            </intent-filter>
+            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/usb_device_filter" />
+            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_DETACHED"
+                android:resource="@xml/usb_device_filter" />
         </receiver>
 
         <!-- small service that can be told to export a bunch of nfo files -->
@@ -687,7 +697,7 @@
         <service
             android:name=".browser.UpdateRecommendationsService"
             android:enabled="true" />
-        
+
     </application>
 
 </manifest>
