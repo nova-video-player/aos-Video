@@ -96,7 +96,7 @@ import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
 import com.archos.mediacenter.video.utils.TrailerServiceIconFactory;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoUtils;
-import com.archos.mediacenter.video.utils.WebUtils;
+//import com.archos.mediacenter.video.utils.WebUtils;
 import com.archos.mediaprovider.NetworkState;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
@@ -1026,11 +1026,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             // Format TMDB URL with movie ID and preferred language
             final String language = MovieScraper2.getLanguage(getActivity());
             final String tmdbUrl = String.format(getResources().getString(R.string.tmdb_title_url), mTMDBId, language);
-            WebUtils.openWebLink(getActivity(), tmdbUrl);
+            // Breaks AndroidTV acceptance
+            Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(tmdbUrl));
+            startActivity(it);
+            //WebUtils.openWebLink(getActivity(), tmdbUrl);
         }
         else if(view == mIMDBIcon){
             final String imdbUrl = getResources().getString(R.string.imdb_title_url) + mIMDBId;
-            WebUtils.openWebLink(getActivity(), imdbUrl);
+            // Breaks AndroidTV acceptance but required to open link in app instead of browser
+            Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(imdbUrl));
+            startActivity(it);
+            //WebUtils.openWebLink(getActivity(), imdbUrl);
         }
         else if(view == mPosterImageView){
             if(!mCurrentVideo.hasScraperData())
@@ -1620,7 +1626,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         button.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                WebUtils.openWebLink(getActivity(), trailer.getUrl().toString());
+                                // Breaks AndroidTV acceptance but required to open link in app instead of browser
+                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, trailer.getUrl());
+                                startActivity(browserIntent);
+                                //WebUtils.openWebLink(getActivity(), trailer.getUrl().toString());
                             }
                         });
                         button.setText(trailer.mName);

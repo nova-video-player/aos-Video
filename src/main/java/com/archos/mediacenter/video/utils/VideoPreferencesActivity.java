@@ -48,15 +48,15 @@ public class VideoPreferencesActivity extends AppCompatActivity {
         } }
     public void videoPreferenceOsClick(View v) {
         //remove because not appropriate links displayed
-        //WebUtils.openWebLink(v.this.getActivity,"https://www.opensubtitles.org");
+        WebUtils.openWebLink(this,"https://www.opensubtitles.org");
     }
     public void videoPreferenceTmdbClick(View v) {
         // Breaks AndroidTV acceptance: text is cut on edges
-        //WebUtils.openWebLink(this,"https://www.themoviedb.org");
+        WebUtils.openWebLink(this,"https://www.themoviedb.org");
     }
     public void videoPreferenceTvdbClick(View v) {
         // Breaks AndroidTV acceptance: contains non fullscreen ads
-        //WebUtils.openWebLink(this,"https://thetvdb.com");
+        WebUtils.openWebLink(this,"https://thetvdb.com");
     }
     public void videoPreferenceTraktClick(View v) {
         WebUtils.openWebLink(this,"https://trakt.tv/");
