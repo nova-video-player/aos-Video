@@ -58,7 +58,9 @@ public class StoreRatingDialogBuilder{
                     context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse((googlePlay ? "market://details?id=" : "amzn://apps/android?p=") +context.getPackageName())));
                 } catch (ActivityNotFoundException e1) {
                     try {
-                        WebUtils.openWebLink(context, googlePlay ? "http://play.google.com/store/apps/details?id=" : "http://www.amazon.com/gp/mas/dl/android?p=" +context.getPackageName());
+                        // Breaks AndroidTV acceptance but required to open link in app instead of browser
+                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse((googlePlay ? "http://play.google.com/store/apps/details?id=" : "http://www.amazon.com/gp/mas/dl/android?p=") +context.getPackageName())));
+                        //WebUtils.openWebLink(context, googlePlay ? "http://play.google.com/store/apps/details?id=" : "http://www.amazon.com/gp/mas/dl/android?p=" +context.getPackageName());
                     } catch (ActivityNotFoundException e2) {
                     }
                 }
