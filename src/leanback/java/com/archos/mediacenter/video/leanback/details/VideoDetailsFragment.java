@@ -342,7 +342,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             @Override
             public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
                 if(item instanceof ScraperTrailer){
-                    WebUtils.openWebLink(getActivity(), ((ScraperTrailer)item).getUrl().toString());
+                    // Breaks AndroidTV acceptance but needed to launch scraper in Youtube app instead of browser
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, ((ScraperTrailer)item).getUrl());
+                    startActivity(browserIntent);
+                    //WebUtils.openWebLink(getActivity(), ((ScraperTrailer)item).getUrl().toString());
                 }
                 else if (item instanceof ScraperImage) {
                     if (row == mPostersRow) {
