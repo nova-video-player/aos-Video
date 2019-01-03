@@ -711,18 +711,18 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
     }
     public void videoPreferenceOsClick() {
         // Breaks AndroidTV acceptance: inappropriate content TV-AA rating on opensubtitles web site
-        WebUtils.openWebLink(getActivity(), "https://www.opensubtitles.org/support");
+        //WebUtils.openWebLink(getActivity(), "https://www.opensubtitles.org/support");
     }
     public void videoPreferenceTmdbClick() {
         // Breaks AndroidTV acceptance: text is cut on edges
-        WebUtils.openWebLink(getActivity(), "https://www.themoviedb.org/faq/general");
+        //WebUtils.openWebLink(getActivity(), "https://www.themoviedb.org/faq/general");
     }
     public void videoPreferenceTvdbClick() {
         // Breaks AndroidTV acceptance: contains non fullscreen ads
-        WebUtils.openWebLink(getActivity(), "https://thetvdb.com/donate");
+        //WebUtils.openWebLink(getActivity(), "https://thetvdb.com/donate");
     }
     public void videoPreferenceTraktClick() {
-        WebUtils.openWebLink(getActivity(), "https://trakt.tv/about");
+        //WebUtils.openWebLink(getActivity(), "https://trakt.tv/about");
     }
 
     @Override
