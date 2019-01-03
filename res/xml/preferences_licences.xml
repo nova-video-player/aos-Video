@@ -1,10 +1,10 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <PreferenceScreen
         android:summary="LGPL v2.1"
-        android:title="Libav" >
+        android:title="FFmpeg" >
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="https://libav.org/legal/" />
+            android:data="https://www.ffmpeg.org/legal.html" />
     </PreferenceScreen>
     <PreferenceScreen
         android:summary="Curl license"
@@ -25,7 +25,7 @@
         android:title="libyuv" >
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="http://code.google.com/p/libyuv/" />
+            android:data="https://chromium.googlesource.com/libyuv/libyuv/+/master/LICENSE" />
     </PreferenceScreen>
     <PreferenceScreen
         android:summary="Boost Software License - Version 1.0"
@@ -40,12 +40,5 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:data="http://www.libtorrent.org/" />
-    </PreferenceScreen>
-    <PreferenceScreen
-        android:summary="OpenSSL license"
-        android:title="OpenSSL" >
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:data="https://android.googlesource.com/platform/external/openssl.git" />
     </PreferenceScreen>
 </PreferenceScreen>
