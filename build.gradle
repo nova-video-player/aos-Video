@@ -150,6 +150,12 @@ android {
         exclude 'META-INF/beans.xml'
         exclude 'META-INF/maven'
         exclude 'README'
+        pickFirst 'lib/x86/libnativehelper.so'
+        pickFirst 'lib/armeabi-v7a/libnativehelper.so'
+        pickFirst 'lib/arm64-v8a/libnativehelper.so'
+        pickFirst 'lib/x86/libc++_shared.so'
+        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+        pickFirst 'lib/arm64-v8a/libc++_shared.so'
     }
     if (project.ext.has("ProjectKeyStoreFile")) {
         signingConfigs {
