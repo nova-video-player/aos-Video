@@ -453,7 +453,7 @@
     <string name="shortcut_added">Shortcut %s created</string>
     <string name="shortcut_removed">Shortcut %s removed</string>
     <string name="server_not_available">The server is currently not available</string>
-    <string name="cannot_open_shortcut">The contents of this shortcut is currently not available.\nPlease check that you have the required permissions.</string>
+    <string name="cannot_open_shortcut">The content of this shortcut is currently not available.\nPlease check that you have the required permissions.</string>
     <string name="network_shortcuts">Network shortcuts</string>
     <string name="media_servers">Media servers</string>
     <string name="shortcut_list_empty">No network shortcuts created.\n\nTo create shortcuts to your favorite remote folders long-click on the target folders and select \"%s\" in the top action bar.</string>
