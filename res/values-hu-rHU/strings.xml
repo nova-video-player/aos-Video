@@ -18,51 +18,447 @@
 */
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-  <!-- Menu item that takes the user back to the top level screen of the music player -->
-  <!-- Menu item that takes the user to the "now playing" screen of the music player -->
-  <!-- Menu item to refresh servers list -->
-  <!-- Menu item to enable network shares -->
-  <!-- Library screen, menu item -->
-  <!-- Default name of track that doesn't have a name in the metadata -->
-  <!-- Toast after turning shuffle on -->
-  <!-- Toast after turning shuffle off -->
-  <!-- Toast after turning single repeat on -->
-  <!-- Context menu item -->
-  <!-- Context menu item -->
-  <!-- Context menu item -->
-  <!-- Context menu item -->
-  <!-- Dialog box button -->
-  <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
-  <!-- The string used in file/folder infos dialog. -->
-  <!-- Infos dialog tabs -->
-  <!-- COVER ROLL -->
-  <!-- The string used in main storage list -->
-  <!-- VIDEO -->
-  <!-- for small screens -->
-  <!-- Generic strings for Movies or TV shows -->
-  <!-- Specific strings for TV shows -->
-  <!-- To be translated only in case there is a localized IMDB -->
-  <!-- VIDEO COVER ROLL -->
-  <!-- Media Center -->
-  <!-- VideoPlayer -->
-  <!-- Subtitles/Audio languages -->
-  <!-- Player errors -->
-  <!-- Player plug-in -->
-  <!-- Subtitles wizard -->
-  <!-- Subloader -->
-  <!-- Subtitle Settings Dialog -->
-  <!-- Subtitle Delay Dialog -->
-  <!-- Browser.CommonDetailsView -->
-  <!-- Add a space after the right quote
+    <!-- Menu item that takes the user back to the top level screen of the music player -->
+    <string name="goto_start">Könyvtár</string>
+    <!-- Menu item that takes the user to the "now playing" screen of the music player -->
+    <!-- Menu item to refresh servers list -->
+    <string name="refresh_servers_list">Szerverlista frissítése</string>
+    <!-- Menu item to enable network shares -->
+    <string name="enable_network_shares">Hálózati megosztások engedélyezése</string>
+    <string name="initial_scan">Kezdeti keresés</string>
+    <!-- Library screen, menu item -->
+    <string name="search_title">Keresés</string>
+    <!-- Default name of track that doesn't have a name in the metadata -->
+    <string name="unknown_track_name">Ismeretlen</string>
+    <!-- Toast after turning shuffle on -->
+    <!-- Toast after turning shuffle off -->
+    <!-- Toast after turning single repeat on -->
+    <!-- Context menu item -->
+    <string name="info">Infó</string>
+    <!-- Context menu item -->
+    <string name="play_selection">Lejátszás</string>
+    <!-- Context menu item -->
+    <string name="multiple_selection">Többszörös kijelőlés</string>
+    <!-- Context menu item -->
+    <string name="play_from_beginning">Lejátszás az elejétől</string>
+    <!-- Dialog box button -->
+    <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <!-- The string used in file/folder infos dialog. -->
+    <string name="info_duration">Időtartam</string>
+    <string name="video_sources">Források</string>
+    <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">Film</string>
+    <string name="info_tab_show">Sorozat</string>
+    <string name="info_tab_episode">Epizód</string>
+    <string name="info_tab_video">Videó</string>
+    <string name="info_tab_file">Fájlinfó</string>
+    <string name="info_tab_backdrop_chooser">Háttér választó</string>
+    <string name="info_tab_poster_chooser">Poster választó</string>
+    <string name="info_tab_share">Megosztás</string>
+    <string name="info_menu_backdrop_select">Háttér</string>
+    <string name="info_menu_series_backdrop_select">Sorozatok háttere</string>
+    <string name="info_menu_poster_select">Másik poszter választása</string>
+    <string name="info_menu_series_poster_select">Másik poszter választása</string>
+    <!-- COVER ROLL -->
+    <string name="recently_added">Mostanában hozzáadva</string>
+    <string name="recently_added_videos">Mostanában hozzáadva</string>
+    <string name="recently_played">Mostanában lejátzott</string>
+    <string name="recently_played_videos">Mostanában lejátzott</string>
+    <string name="video_lists">Lejátszólisták</string>
+    <!-- The string used in main storage list -->
+    <string name="external_storage">Külső</string>
+    <string name="internal_storage">Belső</string>
+    <string name="network_storage">Hálózat</string>
+    <string name="sd_card_storage">SD kártya</string>
+    <string name="usb_host_storage">Külső meghajtó</string>
+    <string name="other_storage">Meghajtó</string>
+    <string name="network_media_servers">Médiakiszolgálók (UPnP)</string>
+    <string name="network_shared_folders">Megosztott mappák (SMB)</string>
+    <string name="network_connected_as">Kapcsolódva mint %s</string>
+    <string name="network_guest">vendég</string>
+    <string name="sftp_folders">FTP</string>
+    <string name="network_jcifs">Samba (kísérleti)</string>
+    <string name="network_cling">UPNP (kísérleti)</string>
+    <string name="recordings_storage">Felvételek</string>
+    <string name="root_storage">Belső tárhely</string>
+    <string name="cannot_list">A tartalom nem listázható</string>
+    <!-- VIDEO -->
+    <string name="video">Nova Video</string>
+    <string name="videos">Videók</string>
+    <string name="all_videos">Összes videó</string>
+    <string name="not_played_yet_videos">Még nem játszott</string>
+    <string name="video_folder">Mappák</string>
+    <string name="movies">Filmek</string>
+    <string name="all_movies">Összes film</string>
+    <string name="movies_by_genre">Filmek műfaj szerint</string>
+    <string name="movies_by_year">Filmek év szerint</string>
+    <string name="all_tv_shows">Sorozatok</string>
+    <string name="all_movies_and_tv_shows">Filmek és Sorozatok</string>
+    <string name="non_scraped_videos">Feldolgozatlan videók</string>
+    <string name="no_server">Nem található médiakiszolgáló</string>
+    <string name="cannot_open_video">Ezt a videót nem lehet megnyitni</string>
+    <string name="confirm_delete">Biztosan törli?</string>
+    <string name="deleting">Kérjük, várjon a törlésig…</string>
+    <string name="cannot_delete_directory">Nem sikerült törölni a mappát</string>
+    <string name="cannot_delete_file">Nem sikerült törölni a fájlt</string>
+    <string name="directory_deleted">Mappa törölve</string>
+    <string name="file_deleted">Fájl törölve</string>
+    <string name="resume">Folytatás</string>
+    <string name="remote_resume">Távoli folytatás</string>
+    <string name="bookmark">Könyvjelző</string>
+    <string name="delete">Törlés</string>
+    <string name="delete_resume">Folytatási pont törlése</string>
+    <string name="delete_bookmark">Könyvjelző törlése</string>
+    <string name="mark_as_watched">Látottként jelölés</string>
+    <string name="mark_as_not_watched">Nem látotként jelölés</string>
+    <string name="upnp_not_allowed">Nincs feljogosítva az UPNP szerver elérésére. Kérjük, előbb változtassa meg a hozzáférési beállításait.</string>
+    <string name="scrap_no_info">Nincs film vagy sorozat leírás ehhez a videóhoz.</string>
+    <string name="scrap_remove">Leírás eltávolítása</string>
+    <string name="scrap_remove_short">Eltávolítás</string>
+    <!-- for small screens -->
+    <string name="scrap_change">Cserélje az összes epizód infóját</string>
+    <string name="scrap_series_change">Cserélje a sorozat infóját</string>
+    <string name="scrap_change_confirmation">Cseréli az összes epizódot\n\t\"%1$s\"\nés\n\t\"%2$s\" között?</string>
+    <string name="scrap_change_title">Minden epizód változtatása</string>
+    <string name="scrap_change_initializing">Inicializálás…</string>
+    <string name="scrap_change_finalizing">Véglegesítés…</string>
+    <!-- Generic strings for Movies or TV shows -->
+    <string name="scrap_director">Rendező</string>
+    <string name="scrap_director_format">Rendező: %s</string>
+    <string name="scrap_rating">Értékelés</string>
+    <string name="scrap_rating_format">Értékelés: %s</string>
+    <string name="scrap_year">Év</string>
+    <string name="scrap_year_format">Év: %d</string>
+    <string name="scrap_studio">Stúdió</string>
+    <string name="scrap_plot">Filmterv</string>
+    <string name="scrap_trailer">Előzetesek</string>
+    <string name="scrap_cast">Szereplők</string>
+    <string name="scrap_cast_format">Szereplők: %s</string>
+    <string name="scrap_genre">Műfaj</string>
+    <string name="scrap_aired">Sugározva</string>
+    <string name="scrap_aired_format">Sugározva: %s</string>
+    <string name="scrap_guests">Vendégszereplők</string>
+    <string name="scrap_premiered">Bemutatva</string>
+    <!-- Specific strings for TV shows -->
+    <string name="show_network">Hálózat</string>
+    <string name="episode_name">Epizód</string>
+    <string name="episode_season">Évad</string>
+    <string name="episode_identification">%1$d. évad %2$d epizód</string>
+    <string name="season_identification">%1$d. évad</string>
+    <string name="next_episode">Következő epizód</string>
+    <string name="list_episodes">Epizódok mutatása</string>
+    <string name="how_to_mark_season_watched">Kattintson egy évadra a benne lévő epizódok megnézettként vagy nem látottként jelőléshez</string>
+    <string name="no_episode_watched">Nincs megnézett epizód</string>
+    <string name="all_episodes_watched">Minden epizód megnézve</string>
+    <plurals name="n_episodes_watched">
+        <item quantity="one">%d epizód megnézve</item>
+        <item quantity="other">%d epizód megnézve</item>
+    </plurals>
+    <string name="scrap_processing">Metaadatok lekérése…</string>
+    <string name="scrap_no_network">Nem kapcsolódik hálózathoz.</string>
+    <string name="scrap_failed">Film nem található az online adatbázísban.</string>
+    <string name="start_auto_scraper_activity">Infó keresése online</string>
+    <string name="scraper_settigns">Poszterek és leírások</string>
+    <string name="scrap_status_initial">Sorba állítva</string>
+    <string name="scrap_status_busy">Keresés…</string>
+    <string name="scrap_status_success">Frissítve</string>
+    <string name="scrap_status_failed">Nem található infó</string>
+    <string name="scrap_status_rejected">Infó törölve</string>
+    <string name="scrap_status_unknown">Ismeretlen</string>
+    <string name="scraper_abort_request">Biztosan megszakítja a keresést?</string>
+    <string name="scraper_no_files">Nincs feldolgozandó fájl</string>
+    <string name="scraper_no_new_files">Nincs új feldolgozandó fájl</string>
+    <string name="scraper_no_new_files_in_folder">Nincs új feldolgozandó fájl ebben a mappában</string>
+    <string name="scraper_folder_try_again">Meg szeretné próbálni újra?</string>
+    <string name="scraper_notification_title">Infó keresése online</string>
+    <string name="scraper_notification_progress">\"%1$d of %2$d fájl feldolgozva</string>
+    <string name="scraper_no_episode_found">Nem található epizód</string>
+    <string name="scraper_no_movie_button_label">Filminfó keresése online</string>
+    <string name="scraper_no_tv_show_button_label">Sorozatinfó keresése online</string>
+    <string name="imdb_title_url">https://www.imdb.com/title/</string>
+    <!-- To be translated only in case there is a localized IMDB -->
+    <string name="storage">Tárhely</string>
+    <string name="rescan_storage">Tárhely újravizsgálása</string>
+    <string name="rescan_storage_summary">Belső tárhely, SD kártya és USB tárhelyek újravizsgálata</string>
+    <string name="preference_display_all_files">Az összes fájl megjelenítése a böngészőben</string>
+    <string name="info_processing">Médiatulajdonságok ellenőrzése…</string>
+    <string name="info_video">Videó</string>
+    <string name="info_audio">Audió</string>
+    <string name="info_audio_vbr">VBR</string>
+    <string name="info_plugin_required">(bővitmény szükséges)</string>
+    <string name="info_subtitle">Felirat</string>
+    <string name="info_resume">Folytatási pozíció</string>
+    <string name="info_file">Fájlinfó</string>
+    <!-- VIDEO COVER ROLL -->
+    <string name="you_have_no_recently_added_video">Nincs mostanábanj hozzáadott videó</string>
+    <string name="you_have_no_recently_played_video">Nincs mostanában lejátszott videó</string>
+    <string name="you_have_no_video">Nincsenek videók</string>
+    <string name="you_have_no_video_yet">Videók keresése&#8230;</string>
+    <string name="you_have_no_movies">Nincsenek filmek</string>
+    <string name="you_have_no_tv_shows">Nincsenek sorozatok</string>
+    <string name="you_have_no_non_scraped_videos">Feldolgozatlan videók kivételével</string>
+    <plurals name="Nmovies">
+        <item quantity="one">1 film</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> film</item>
+    </plurals>
+    <plurals name="Nepisodes">
+        <!-- number of episodes is one -->
+        <item quantity="one">1 epizód</item>
+        <!-- number of episodes is not equal to one -->
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> epizód</item>
+    </plurals>
+    <!-- Media Center -->
+    <string name="mediacenterlabel">Médiaközpont</string>
+    <string name="view_mode">Megjelenítési mód</string>
+    <string name="view_mode_list">Lista</string>
+    <string name="view_mode_grid">Poszterek</string>
+    <string name="view_mode_details">Részletek</string>
+    <string name="switch_to_list">Lista</string>
+    <string name="switch_to_grid">Rács</string>
+    <!-- VideoPlayer -->
+    <string name="player_loading_video">Videó betöltése\u2026</string>
+    <string name="player_audio_track_toast">Hangsáv:</string>
+    <string name="player_subtitle_track_toast">Feliratsáv:</string>
+    <string name="player_bookmark_set">Könyvjelző beállítva itt:</string>
+    <string name="player_pref_subtitle_delay_title">Késleltetés</string>
+    <string name="floating_player_restore">Visszaállítás</string>
+    <string name="floating_player_play">Lejátszás</string>
+    <string name="floating_player_pause">Szünet</string>
+    <string name="player_pref_audio_delay_title">Hangkésleltetés</string>
+    <string name="now_playing">Most játszott</string>
+    <string name="player_window_mode">Ablak mód</string>
+    <string name="pref_play_mode_title">Lejátszási mód</string>
+    <string name="pref_play_mode_entry_single">Videó</string>
+    <string name="pref_play_mode_entry_folder">Mappa</string>
+    <string name="pref_play_mode_entry_repeat_folder">Mappa ismétlése</string>
+    <string name="pref_play_mode_entry_repeat_single">Videó ismétlése</string>
+    <string name="pref_audio_parameters_title">Hang</string>
+    <string name="pref_audio_filt_title">Hangkiemelés</string>
+    <string name="pref_audio_filt_night_mode">Éjszakai mód</string>
+    <string name="ui_mode_auto">Automatikus</string>
+    <string name="ui_mode_tv">TV</string>
+    <string name="ui_mode_normal">Tablet/Mobil</string>
+    <string name="pref_s3d_mode_title">3D mód</string>
+    <string name="pref_s3d_mode_entry_sbs">Egymás mellett</string>
+    <string name="pref_s3d_mode_entry_topbottom">Felül és alul</string>
+    <string name="pref_s3d_mode_entry_anaglyph">Anaglif</string>
+    <string name="pref_s3d_mode_entry_off">Ki</string>
+    <string name="menu_info">Infó</string>
+    <string name="menu_subtitles">Feliratsávok</string>
+    <string name="menu_audio">Hangsávok</string>
+    <string name="menu_lock_player">Lejátszó zárása</string>
+    <string name="menu_bookmark">Könyvjelző beállítása</string>
+    <string name="menu_brightness_settings">Fényerő</string>
+    <string name="menu_player_settings">Beállítások</string>
+    <string name="menu_change_folder">Mappaváltás</string>
+    <string name="menu_change_folder_details">Válassza ki az induló mappát</string>
+    <string name="unlock_instructions">Nyomja hosszan az ikont a feloldáshoz</string>
+    <!-- Subtitles/Audio languages -->
+    <string name="s_arabic">Arab</string>
+    <string name="s_bulgarian">Bolgár</string>
+    <string name="Bosnian">Bosnyák</string>
+    <string name="s_czech">Cseh</string>
+    <string name="s_danish">Dán</string>
+    <string name="s_german">Német</string>
+    <string name="s_english">Angol</string>
+    <string name="s_greek">Görög</string>
+    <string name="s_spanish">Spanyol</string>
+    <string name="s_finnish">Finn</string>
+    <string name="s_french">Francia</string>
+    <string name="s_hebrew">Héber</string>
+    <string name="s_hungarian">Magyar</string>
+    <string name="s_italian">Olasz</string>
+    <string name="s_japanese">Japán</string>
+    <string name="s_korean">Koreai</string>
+    <string name="s_dutch">Holland</string>
+    <string name="s_norwegian">Norvég</string>
+    <string name="s_polish">Lengyel</string>
+    <string name="s_brazilian">Brazil</string>
+    <string name="s_portuguese">Portugál</string>
+    <string name="s_russian">Orosz</string>
+    <string name="Romanian">Román</string>
+    <string name="Serbo_Croatian">Szerbhorvát</string>
+    <string name="Croatian">Horvát</string>
+    <string name="Serbian">Szerb</string>
+    <string name="Slovenian">Szlovén</string>
+    <string name="s_swedish">Svéd</string>
+    <string name="s_thai">Thai</string>
+    <string name="s_turkish">Török</string>
+    <string name="s_chinese">Kínai</string>
+    <string name="s_vietnamese">Vietnámi</string>
+    <string name="s_none">Egyik sem</string>
+    <!-- Player errors -->
+    <string name="player_err_cantplayvideo">Nem lehet lejátszani a videót</string>
+    <string name="player_err_cantplaysound">Nem lehet lejátszani az audiósávot</string>
+    <string name="audiocodec_not_supported">Ez a hangformátum (<xliff:g id="codec">%s</xliff:g>) nem támogatott.</string>
+    <string name="videocodec_not_supported">Ez a képformátum (<xliff:g id="codec">%s</xliff:g>) nem támogatott.</string>
+    <string name="player_err_file">A videójájl nem létezik.</string>
+    <string name="player_err_sizetoobig">A videó mérete túl nagy</string>
+    <string name="player_err_unknown">Ismeretlen hiba.</string>
+    <string name="player_err_critical">Médialejátszó hiba.</string>
+    <string name="player_err_codec">Kodek</string>
+    <string name="player_err_isnotsupported">nem támogatott.</string>
+    <string name="player_err_fileNoLicense">Licenc nem található ehhez a fájlhoz.</string>
+    <string name="player_err_fileerror">A fájl sérült vagy hiányos.</string>
+    <string name="player_err_connection_failed">Sikertelen csatlakozás.</string>
+    <string name="player_err_video_decoder_error">Video dekóder hiba:</string>
+    <!-- Player plug-in -->
+    <string name="player_plugin_ac3_title">AC3 bővitmény</string>
+    <string name="player_plugin_ac3">AC3 bővitmény</string>
+    <string name="player_plugin_mpeg2_title">MPEG-2 bővitmény</string>
+    <string name="player_plugin_mpeg2">MPEG-2 bővitmény (DVD)</string>
+    <string name="player_plugin_purchase">Ugrás az Áruházba</string>
+    <string name="player_plugin_purchase_google_play_button">Ugrás a Google Play-re</string>
+    <string name="plugin_update_required_title">Kodek frissítése szükséges</string>
+    <!-- Subtitles wizard -->
+    <string name="get_subtitles_on_drive">Válassza ki a feliratokat a tárhelyen</string>
+    <string name="subtitles_wizard_no_files">Nem található felirat fájl</string>
+    <string name="subtitles_wizard_current_files">Jelenlegi felirat fájlok:</string>
+    <string name="subtitles_wizard_available_files">Elérhető felirat fájlok:</string>
+    <string name="subtitles_wizard_delete">Fájl törlése</string>
+    <string name="subtitles_wizard_empty_list">Nem található fájl</string>
+    <!-- Subloader -->
+    <string name="get_subtitles_online">Feliratok lekérése online</string>
+    <string name="toast_subloader_sub_found">Feliratsáv elérhető ehhez a nyelvhez</string>
+    <string name="toast_subloader_sub_not_found">Nem található feliratsáv ehhez a nyelvhez</string>
+    <string name="menu_subloader_allfolder">Hiányzó feliratok letöltése</string>
+    <string name="dialog_subloader_copying">Feliratok másolása…</string>
+    <string name="dialog_subloader_downloading">Feliratok letöltése…</string>
+    <string name="dialog_subloader_sumup">Letöltés befejeződött</string>
+    <string name="sub_force_all_title">Feliratletöltés kényszerítése</string>
+    <string name="dialog_subloader_nonetwork_title">Nincs internetkapcsolat</string>
+    <string name="dialog_subloader_nonetwork_message">Internetkapcsolat szükséges a feliratok letöltéséhez</string>
+    <string name="dialog_subloader_connecting">Csatlakozás a www.opensubtitles.org-hoz…</string>
+    <!-- Subtitle Settings Dialog -->
+    <string name="subtitle_settings_title">Feliratok Beállításai</string>
+    <string name="subtitle_sample_text">\"minta\"</string>
+    <string name="subtitle_size_text">Méret:</string>
+    <string name="subtitle_style_text">Stílus:</string>
+    <string name="subtitle_vert_text">Függőleges elhelyezkedés:</string>
+    <string name="subtitle_color_default">#ffffff</string>
+    <!-- Subtitle Delay Dialog -->
+    <string name="subtitle_delay_speed">Sebesség igazítása</string>
+    <string name="subtitle_delay_radio_none">nincs</string>
+    <string name="subtitle_delay_radio_ntsc2pal">NTSC &#x2192; PAL</string>
+    <string name="subtitle_delay_radio_pal2ntsc">PAL &#x2192; NTSC</string>
+    <!-- Browser.CommonDetailsView -->
+    <!-- Add a space after the right quote
     because the right part of the quote is
     not visible otherwise -->
-  <!-- torrent -->
-  <!-- Shortcuts -->
-  <!-- Preferences -->
-  <!--  Title of the video picker activity. -->
-  <!-- Archos File Info -->
-  <!-- Help overlay -->
-  <!-- Info dialog, not indexed file -->
-  <!-- Brightness -->
-  <!--  Nfo File parsing -->
+    <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
+    <string name="error_permission">Nincsenek megfelelő engedélyek</string>
+    <string name="allow">Engedélyezés</string>
+    <string name="exit">Kilépés</string>
+    <!-- torrent -->
+    <string name="error">Hiba történt</string>
+    <string name="error_loading_torrent">Hiba a torrent betöltésekor</string>
+    <string name="error_downloading_not_enough_space">Hiba a torrent letöltése során : nincs elég tárhely</string>
+    <string name="loading_torrent">Torrent betöltése…</string>
+    <string name="error_no_video_file">Nincs videó fájl</string>
+    <string name="torrent_file_to_play">Válasszon fájlt a lejátszáshoz</string>
+    <string name="torrent_buy_premium_message">Torrent-lejátszás csak a fizetett verzíóban elérhető</string>
+    <string name="torrent_buy_premium">Prémium verzió megvásárlása</string>
+    <!-- Shortcuts -->
+    <string name="add_to_shortcuts">Parancsikon létrehozása</string>
+    <string name="add_ssh_server">FTP szerver tallózása</string>
+    <string name="add_ssh_shortcut">Parancsikon hozzáadása</string>
+    <string name="ssh_prompt">FTP típusa</string>
+    <string name="ssh_empty_view"> \"Tallózhat és lejátszhat tartalmat saját FTP szerverről\"</string>
+    <string-array name="ssh_types">
+        <item>FTP</item>
+        <item>SFTP</item>
+        <item>FTPS</item>
+    </string-array>
+    <string name="remove_from_shortcuts">Parancsikon eltávolítása</string>
+    <string name="shortcut_added">%s parancsikon létrehozva</string>
+    <string name="shortcut_removed">%s parancsikon eltávolítva</string>
+    <string name="server_not_available">A szerver jelenleg nem elérhető</string>
+    <string name="cannot_open_shortcut">A parancsikon tartalma jelenleg nem elérhető.\nKérjük ellenőrizze, hogy rendelkezik-e a szükséges engedélyekkel.</string>
+    <string name="network_shortcuts">Hálózati parancsikonok</string>
+    <string name="media_servers">Médiakiszolgálók</string>
+    <string name="shortcut_list_empty">Nincs hálózati parancsikon.\n\nParancsikon létrehozásához tartsa lenyomva a célmappa nevét és válassza ki a(z) \"%s\" opciót a fenti sávon.</string>
+    <string name="indexed_folders">Indexált mappák</string>
+    <string name="ftp_shortcuts">FPT parancsikonok</string>
+    <string name="add_to_indexed_folders">Mappa indexálása</string>
+    <string name="add_to_library">Hozzáadás a könyvtárhoz</string>
+    <string name="add_all_items_to_library">Az összes videó azonnali hozzáadása a könyvtárhoz?</string>
+    <string name="indexed_folder_added">%s mappa hozzáadva a könyvtárhoz</string>
+    <string name="remove_from_indexed_folders">Eltávólítás a könyvtárból</string>
+    <string name="indexed_folder_removed">%s mappa eltávolítva a könyvtárból</string>
+    <string name="open_indexed_folder">"Megnyit"</string>
+    <string name="rescan_indexed_folders">Az összes indexelt mappa újravizsgálása</string>
+    <string name="last_rescan_never">Soha</string>
+    <string name="upnp_indexing_warning_title">UPnP indexelés</string>
+    <string name="upnp_indexing_warning_message">Az UPnP indexelés nem támogat ugyanannyi funkciót, mint az SMB indexelés.\nSMB mappa indexelése javasolt, amennyiben ezt a szerver vagy a PC támogatja.\n</string>
+    <string name="ssh_error">Sikertelen csatlakozás: ellenőrizze a kapcsolatot és a belépési adatokat</string>
+    <string name="ssh_remote_address">Távoli cím</string>
+    <string name="ssh_port">Port</string>
+    <string name="ssh_password">Jelszó</string>
+    <string name="ssh_username">Felhasználónév</string>
+    <string name="ssh_shortcut_name">Parancsikon neve</string>
+    <!-- Preferences -->
+    <string name="preferences">Beállítások</string>
+    <string name="get_the_ad_free_version">Szerezze meg a reklámmentes verzíót a Google Play-en</string>
+    <string name="locale">Rendszernyelv</string>
+    <string name="yes">Igen</string>
+    <string name="no">Nem</string>
+    <string name="abort">Megszakítás</string>
+    <!--  Title of the video picker activity. -->
+    <string name="video_picker_title">Videó kiválasztása</string>
+    <!-- Archos File Info -->
+    <string name="video_info_custom_search_file_hint">"\"Filmcím\" vagy \"Sorozatcím S01E01\""</string>
+    <string name="video_info_custom_search_show_hint">A sorozat címe</string>
+    <string name="scrap_show_no_result">Nem található megegyező sorozat online.</string>
+    <string name="video_info_backdrop_select">Másik fénykép választása</string>
+    <string name="video_info_backdrop_remove">Eltávolítás</string>
+    <string name="video_info_backdrop_set_as">Kép beállítása, mint</string>
+    <string name="video_info_share_message">"A(z) \"%1$s\" filmet néztem a Nova %2$s-n"</string>
+    <string name="notification_mode">Értesítések</string>
+    <string name="notifications_all">Összes értesítés</string>
+    <string name="notifications_alerts">Csak rendszerértesítések</string>
+    <string name="notifications_none">Nincs értesítés</string>
+    <string name="pref_format_mode_title">Formátum</string>
+    <string name="format_fullscreen">Teljes képernyő</string>
+    <string name="format_optimized">Optimizálva</string>
+    <string name="format_original">Eredeti</string>
+    <string name="rotation_unlock">Automatikus képernyőforgatás engedélyezése</string>
+    <string name="rotation_locked">Automatikus képernyőforgatás letiltva</string>
+    <string name="rotation_unlocked">Automatikus képernyőforgatás engedélyezve</string>
+    <string name="network_reindex">Tartalom újrakeresése</string>
+    <!-- Help overlay -->
+    <string name="help_overlay_menu">Nyomja meg a felfelé nyilat\na TV menü megjelenítéséhez</string>
+    <string name="new_videos_count">Új videó: %d</string>
+    <string name="network_thumbnails">Távoli miniatűrök létrehozása</string>
+    <string name="connection_reset">Visszaállítás</string>
+    <!-- Info dialog, not indexed file -->
+    <string name="video_browser_index_file">Hozzáadás a könyvtárhoz</string>
+    <string name="video_browser_unindex_file">Eltávólítás a könyvtárból</string>
+    <!-- Brightness -->
+    <!--  Nfo File parsing -->
+    <string name="network_nfo_parse">\'nfo\' fájlok feldolgozása</string>
+    <string name="network_nfo_parse_summary">Boxee / XBMC \'.nfo\' fájlok beolvasása a keresés/újrakeresés során, médiaadatok és poszterek kinyeréséhez.</string>
+    <string name="no_email_installed">Nem található email alkalmazás</string>
+    <string name="zipped_library_mail_subject">Nova videóadatbázis küldése</string>
+    <string name="zipped_library_mail_text">Kérjük, írja le a tapasztalt problémát\n\n</string>
+    <string name="sort_mode">Rendezés</string>
+    <string name="sort_by_name_asc">Név szerint (a &gt; z)</string>
+    <string name="sort_by_name_desc">Név szerint (z &gt; a)</string>
+    <string name="sort_by_year_asc">Év szerint (legrégebbi előbb)</string>
+    <string name="sort_by_year_desc">Év szerint (legújabb előbb)</string>
+    <string name="sort_by_date_asc">Dátum szerint (legrégebbi előbb)</string>
+    <string name="sort_by_date_desc">Dátum szerint (legújabb előbb)</string>
+    <string name="sort_by_duration_asc">Időtartam szerint (legrövidebb előbb)</string>
+    <string name="sort_by_duration_desc">Időtartam szerint (leghosszabb előbb)</string>
+    <string name="sort_by_genre_asc">Műfaj szerint (a &gt; z)</string>
+    <string name="sort_by_genre_desc">Műfaj szerint (z &gt; a)</string>
+    <string name="sort_by_rating_asc">Értékelés szerint (legjobb előbb)</string>
+    <string name="sort_by_date_added_desc">Hozzáadás dátuma szerint (legújabb előbb)</string>
+    <string name="sort_by_date_added_asc">Hozzáadás dátuma szerint (legrégebbi előbb)</string>
+    <string name="preferences_category_sort_order">Rendezési sorrend</string>
+    <string name="preferences_tv_show_sort_order_title">Sorozatok rendezése</string>
+    <string name="preferences_tv_show_sort_order_summary">Válassza ki a sorozatok rendezési sorrendjét</string>
+    <string name="dec_choice_title">Dekóder választása</string>
+    <string name="nfo_export_manual_title">Már feldolgozott videók exportálása</string>
+    <string name="nfo_export_manual_summary">.nfo fájlok exportálása minden feldolgozott videóhoz</string>
+    <string name="cast_info">Infó</string>
 </resources>

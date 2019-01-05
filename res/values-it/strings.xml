@@ -19,12 +19,12 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- Menu item that takes the user back to the top level screen of the music player -->
-    <string name="goto_start">Raccolta</string>
+    <string name="goto_start">Libreria</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
     <!-- Menu item to refresh servers list -->
-    <string name="refresh_servers_list">Ricarica elenco server</string>
+    <string name="refresh_servers_list">Ricarica l\'elenco dei server</string>
     <!-- Menu item to enable network shares -->
-    <string name="enable_network_shares">Attiva condivisioni di rete</string>
+    <string name="enable_network_shares">Attiva condivisione di rete</string>
     <string name="initial_scan">Scansione iniziale</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Cerca</string>
@@ -45,14 +45,14 @@
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet"> ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <!-- The string used in file/folder infos dialog. -->
-    <string name="info_duration">Durata:</string>
+    <string name="info_duration">Durata</string>
     <string name="video_sources">Fonti</string>
     <!-- Infos dialog tabs -->
-    <string name="info_tab_movie">Filmato</string>
-    <string name="info_tab_show">Mostra</string>
+    <string name="info_tab_movie">Film</string>
+    <string name="info_tab_show">Serie TV</string>
     <string name="info_tab_episode">Episodio</string>
     <string name="info_tab_video">Video</string>
-    <string name="info_tab_file">Info file</string>
+    <string name="info_tab_file">Informazioni file</string>
     <string name="info_tab_backdrop_chooser">Selettore sfondo</string>
     <string name="info_tab_poster_chooser">Selettore poster </string>
     <string name="info_tab_share">Condividi</string>
@@ -61,20 +61,20 @@
     <string name="info_menu_poster_select">Seleziona un altro poster</string>
     <string name="info_menu_series_poster_select">Seleziona un altro poster</string>
     <!-- COVER ROLL -->
-    <string name="recently_added">Aggiunta di recente</string>
-    <string name="recently_added_videos">Aggiunta di recente</string>
-    <string name="recently_played">Riprodotta di recente</string>
-    <string name="recently_played_videos">Riprodotta di recente</string>
+    <string name="recently_added">Aggiunti di recente</string>
+    <string name="recently_added_videos">Aggiunti di recente</string>
+    <string name="recently_played">Visti di recente</string>
+    <string name="recently_played_videos">Visti di recente</string>
     <string name="video_lists">Playlist</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">Esterno</string>
-    <string name="internal_storage">Interno</string>
+    <string name="external_storage">Memoria esterna</string>
+    <string name="internal_storage">Memoria interna</string>
     <string name="network_storage">Rete</string>
     <string name="sd_card_storage">Scheda SD</string>
     <string name="usb_host_storage">Unità esterna</string>
     <string name="other_storage">Archivio</string>
-    <string name="network_media_servers">Server di media (UPnP)</string>
-    <string name="network_shared_folders">Condivisi cartelle (SMB)</string>
+    <string name="network_media_servers">Server multimediale (UPnP)</string>
+    <string name="network_shared_folders">Cartelle condivise (SMB)</string>
     <string name="network_connected_as">Connesso come %s</string>
     <string name="network_guest">Ospite</string>
     <string name="sftp_folders">FTP</string>
@@ -87,47 +87,47 @@
     <string name="video">Nova Video</string>
     <string name="videos">Video</string>
     <string name="all_videos">Tutti i video</string>
-    <string name="not_played_yet_videos">Non ancora riprodotto</string>
+    <string name="not_played_yet_videos">Non ancora visti</string>
     <string name="video_folder">Cartelle</string>
     <string name="movies">Film</string>
     <string name="all_movies">Tutti i film</string>
     <string name="movies_by_genre">Film per genere</string>
     <string name="movies_by_year">Film per anno</string>
-    <string name="all_tv_shows">Programmi TV</string>
-    <string name="all_movies_and_tv_shows">Film e spettacoli TV</string>
+    <string name="all_tv_shows">Serie TV</string>
+    <string name="all_movies_and_tv_shows">Film e serie TV</string>
     <string name="non_scraped_videos">Video non analizzati</string>
     <string name="no_server">Nessun server multimediale trovato</string>
     <string name="cannot_open_video">Impossibile aprire questo video</string>
-    <string name="confirm_delete">Si desidera davvero eliminarlo?</string>
-    <string name="deleting">Attendere la fine dell\'eliminazione…</string>
-    <string name="cannot_delete_directory">Impossibile eliminare la cartella</string>
-    <string name="cannot_delete_file">Impossibile eliminare file</string>
-    <string name="directory_deleted">La cartella è stata eliminata</string>
-    <string name="file_deleted">Il file è stato eliminato</string>
-    <string name="resume">Ripresa</string>
+    <string name="confirm_delete">Vuoi davvero cancellarlo?</string>
+    <string name="deleting">Attendere...</string>
+    <string name="cannot_delete_directory">Impossibile cancellare questa cartella</string>
+    <string name="cannot_delete_file">Impossibile cancellare questo file</string>
+    <string name="directory_deleted">La cartella è stata cancellata</string>
+    <string name="file_deleted">Il file è stato cancellato</string>
+    <string name="resume">Riprendi</string>
     <string name="remote_resume">Riprendi da remoto</string>
     <string name="bookmark">Segnalibro</string>
-    <string name="delete">Elimina</string>
+    <string name="delete">Cancella</string>
     <string name="delete_resume">Elimina ripresa</string>
     <string name="delete_bookmark">Elimina segnalibro</string>
     <string name="mark_as_watched">Segna come visto</string>
     <string name="mark_as_not_watched">Segna come non visto</string>
-    <string name="upnp_not_allowed">Non è possibile accedere a questo server UPnP. Cambiare prima la configurazione di accesso.</string>
-    <string name="scrap_no_info">Non hai alcuna descrizione di filmato o programma TV per questo video.</string>
-    <string name="scrap_remove">Rimuovi queste informazioni</string>
+    <string name="upnp_not_allowed">Non sei autorizzato ad accedere a questo server UPnP. Devi cambiare la tua configurazione di accesso</string>
+    <string name="scrap_no_info">Non c\'è alcuna descrizione per questo film o serie TV</string>
+    <string name="scrap_remove">Rimuovi la descrizione</string>
     <string name="scrap_remove_short">Rimuovi</string>
     <!-- for small screens -->
-    <string name="scrap_change">Modifica informazioni per tutti gli episodi</string>
+    <string name="scrap_change">Cambia le informazioni per tutti gli episodi</string>
     <string name="scrap_series_change">Cambia le informazioni della serie TV</string>
     <string name="scrap_change_confirmation">Vuoi cambiare tutti gli episodi da\n\t\"%1$s\"\na\n\t\"%2$s\"?</string>
     <string name="scrap_change_title">Sto modificando tutti gli episodi</string>
     <string name="scrap_change_initializing">Avvio in corso…</string>
     <string name="scrap_change_finalizing">Completamento in corso…</string>
     <!-- Generic strings for Movies or TV shows -->
-    <string name="scrap_director">Direttore</string>
-    <string name="scrap_director_format">Direttore: %s</string>
-    <string name="scrap_rating">Classificazione</string>
-    <string name="scrap_rating_format">Classificazione: %s</string>
+    <string name="scrap_director">Regista</string>
+    <string name="scrap_director_format">Regista: %s</string>
+    <string name="scrap_rating">Valutazione</string>
+    <string name="scrap_rating_format">Valutazione: %s</string>
     <string name="scrap_year">Anno</string>
     <string name="scrap_year_format">Anno: %d</string>
     <string name="scrap_studio">Studio:</string>
@@ -139,7 +139,7 @@
     <string name="scrap_aired">In onda</string>
     <string name="scrap_aired_format">In onda: %s</string>
     <string name="scrap_guests">Ospiti</string>
-    <string name="scrap_premiered">Dato in prima rappresentazione</string>
+    <string name="scrap_premiered">Presentato</string>
     <!-- Specific strings for TV shows -->
     <string name="show_network">Rete</string>
     <string name="episode_name">Episodio</string>
@@ -155,33 +155,33 @@
         <item quantity="one">%d episodi visti</item>
         <item quantity="other">%d episodi visti</item>
     </plurals>
-    <string name="scrap_processing">Recupero metadati…</string>
-    <string name="scrap_no_network">Non connesso a una rete</string>
-    <string name="scrap_enable_network_first">"Abilitare la connessione a una rete prima di eseguire questa applicazione."</string>
-    <string name="scrap_failed">Film non trovato nel database online.</string>
+    <string name="scrap_processing">Recupero dei metadati...</string>
+    <string name="scrap_no_network">Non sei connesso ad alcuna una rete</string>
+    <string name="scrap_enable_network_first">"Devi prima connetterti a una rete per poter avviare questa applicazione"</string>
+    <string name="scrap_failed">Film non trovato nel database online</string>
     <string name="start_auto_scraper_activity">Cerca informazioni online</string>
     <string name="scraper_settigns">Posters &amp; descrizioni</string>
     <string name="scrap_status_initial">In coda</string>
-    <string name="scrap_status_busy">Ricerca…</string>
+    <string name="scrap_status_busy">Ricerca...</string>
     <string name="scrap_status_success">Aggiornato</string>
     <string name="scrap_status_failed">Informazioni non trovate</string>
     <string name="scrap_status_rejected">Informazioni rimosse</string>
     <string name="scrap_status_unknown">Sconosciuto</string>
-    <string name="scraper_abort_request">Interrompere la ricerca?</string>
+    <string name="scraper_abort_request">Vuoi davvero interrompere la ricerca?</string>
     <string name="scraper_no_files">Nessun file da elaborare</string>
-    <string name="scraper_no_new_files">Nessun nuovo file da elaborareo</string>
+    <string name="scraper_no_new_files">Nessun nuovo file da elaborare</string>
     <string name="scraper_no_new_files_in_folder">Nessun nuovo file da elaborare in questa cartella</string>
-    <string name="scraper_folder_no_files">Tuttavia, ci sono ancora %d video per i quali in precedenza non è stata trovata nessuna informazione.</string>
-    <string name="scraper_folder_no_file">Tuttavia, c\'è ancora un video per il quale i precedenza non erano state trovate informazioni.</string>
-    <string name="scraper_folder_try_again">Riprovare?</string>
-    <string name="scraper_notification_title">Ricerca informazioni online</string>
+    <string name="scraper_folder_no_files">Comunque, non sono ancora state trovate informazioni per %d video</string>
+    <string name="scraper_folder_no_file">Comunque, non sono state ancora trovate informazioni per un video</string>
+    <string name="scraper_folder_try_again">Vuoi provare di nuovo?</string>
+    <string name="scraper_notification_title">Ricerca delle informazioni online</string>
     <string name="scraper_notification_progress">\"%1$d di %2$d file elaborati</string>
     <string name="scraper_no_episode_found">Nessun episodio trovato</string>
-    <string name="scraper_suggest_message">E\' possibile cercare poster e informazioni online per i video mediante il menu \'Cerca informazioni online\'.</string>
-    <string name="scraper_no_movie_text">Attualmente non hai né poster né descrizioni per i tuoi filmati</string>
-    <string name="scraper_no_movie_button_label">Cerca informazioni online per i filmati</string>
-    <string name="scraper_no_tv_show_text">Attualmente non hai né poster né descrizioni per i tuoi programmi TV</string>
-    <string name="scraper_no_tv_show_button_label">Cerca informazioni online per i spettacoli TV</string>
+    <string name="scraper_suggest_message">Puoi cercare poster e informazioni online per i tuoi video attraverso il menù \'Cerca informazioni online\'</string>
+    <string name="scraper_no_movie_text">Al momento, non hai poster e descrizione per i tuoi film</string>
+    <string name="scraper_no_movie_button_label">Cerca le informazioni del film online</string>
+    <string name="scraper_no_tv_show_text">Al momento, non hai poster e descrizione per le tue serie TV</string>
+    <string name="scraper_no_tv_show_button_label">Cerca le informazioni della serie TV online</string>
     <string name="imdb_title_url">https://www.imdb.com/title/</string>
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="storage">Memoria</string>
@@ -189,23 +189,23 @@
     <string name="rescanning">Sto scansionando nuovamente le memorie di archiviazione</string>
     <string name="rescan_storage_summary">Scansiona nuovamente la memoria interna, la scheda SD e l\'unità esterna</string>
     <string name="preference_display_all_files">Mostra tutti i file</string>
-    <string name="info_processing">Controllo proprietà multimediali…</string>
+    <string name="info_processing">Controllo delle proprietà multimediali...</string>
     <string name="info_video">Video</string>
     <string name="info_audio">Audio</string>
     <string name="info_audio_vbr">VBR</string>
-    <string name="info_plugin_required">(è necessario un plugin)</string>
+    <string name="info_plugin_required">(Plug-in richiesto)</string>
     <string name="info_subtitle">Sottotitolo</string>
-    <string name="info_resume">Riprendi posizione:</string>
-    <string name="info_bookmark">Posizione segnalibro:</string>
+    <string name="info_resume">Riprendi posizione</string>
+    <string name="info_bookmark">Posizione segnalibro</string>
     <string name="info_file">Informazioni del file</string>
     <string name="use_remote_resume">Utilizzare la posizione di ripristino della rete?</string>
     <!-- VIDEO COVER ROLL -->
-    <string name="you_have_no_recently_added_video">Nessun video aggiunto di recente</string>
-    <string name="you_have_no_recently_played_video">Nessun video riprodotto di recente</string>
+    <string name="you_have_no_recently_added_video">Nessun video aggiunto recentemente</string>
+    <string name="you_have_no_recently_played_video">Nessun video riprodotto recentemente</string>
     <string name="you_have_no_video">Nessun video</string>
     <string name="you_have_no_video_yet">Ricerca dei video&#8230;</string>
     <string name="you_have_no_movies">Nessun film</string>
-    <string name="you_have_no_tv_shows">Nessuno spettacolo TV</string>
+    <string name="you_have_no_tv_shows">Nessuna serie TV</string>
     <string name="you_have_no_non_scraped_videos">Tutti i video sono stati analizzati</string>
     <plurals name="Nmovies">
         <item quantity="one">1 film</item>
@@ -223,16 +223,16 @@
     </plurals>
     <!-- Media Center -->
     <string name="mediacenterlabel">Centro multimediale</string>
-    <string name="view_mode">Modalità schermo</string>
+    <string name="view_mode">Modalità Schermo</string>
     <string name="view_mode_list">Lista</string>
     <string name="view_mode_grid">Poster</string>
     <string name="view_mode_details">Dettagli</string>
-    <string name="switch_to_list">Elenco</string>
+    <string name="switch_to_list">Lista</string>
     <string name="switch_to_grid">Griglia</string>
     <!-- VideoPlayer -->
-    <string name="player_loading_video">Caricamento video\u2026</string>
+    <string name="player_loading_video">Caricamento dei video\u2026</string>
     <string name="player_audio_track_toast">Traccia audio:</string>
-    <string name="player_subtitle_track_toast">Traccia sottotitoli:</string>
+    <string name="player_subtitle_track_toast">Traccia dei sottotitoli:</string>
     <string name="player_bookmark_set">Segnalibro impostato su</string>
     <string name="player_pref_subtitle_delay_title">Ritardo</string>
     <string name="floating_player_restore">Ripristina</string>
@@ -241,24 +241,24 @@
     <string name="player_pref_audio_delay_title">Ritardo dell\'audio</string>
     <string name="now_playing">In riproduzione</string>
     <string name="player_window_mode">Modalità a Finestra</string>
-    <string name="pref_play_mode_title">Modo di riproduzione </string>
+    <string name="pref_play_mode_title">Modalità di riproduzione</string>
     <string name="pref_play_mode_entry_single">Singolo</string>
     <string name="pref_play_mode_entry_folder">Cartella</string>
     <string name="pref_play_mode_entry_repeat_folder">Ripeti cartella</string>
-    <string name="pref_play_mode_entry_repeat_single">Repeti singolo</string>
-    <string name="pref_audio_parameters_title">Audio</string>
-    <string name="pref_audio_filt_title">Boost audio</string>
+    <string name="pref_play_mode_entry_repeat_single">Ripeti singolo</string>
+    <string name="pref_audio_parameters_title">Suono</string>
+    <string name="pref_audio_filt_title">Boost Audio</string>
     <string name="pref_audio_filt_night_mode">Modalità Notturna</string>
     <string name="ui_mode_auto">Automatica</string>
     <string name="ui_mode_tv">TV</string>
     <string name="ui_mode_normal">Tablet/Telefono</string>
     <string name="pref_s3d_mode_title">Modalità 3D</string>
-    <string name="pref_s3d_mode_entry_sbs">Affianca</string>
+    <string name="pref_s3d_mode_entry_sbs">Affiancata</string>
     <string name="pref_s3d_mode_entry_topbottom">Sopra e sotto</string>
     <string name="pref_s3d_mode_entry_anaglyph">Anaglifo</string>
     <string name="pref_s3d_mode_entry_off">Off</string>
     <string name="menu_info">Informazioni</string>
-    <string name="menu_subtitles">Tracce sottotitoli</string>
+    <string name="menu_subtitles">Tracce dei sottotitoli</string>
     <string name="menu_audio">Tracce audio </string>
     <string name="menu_lock_player">Blocca il player</string>
     <string name="menu_bookmark">Imposta segnalibro</string>
@@ -291,8 +291,8 @@
     <string name="s_brazilian">Brasiliano</string>
     <string name="s_portuguese">Portoghese</string>
     <string name="s_russian">Russo</string>
-    <string name="Romanian">Rumeno</string>
-    <string name="Serbo_Croatian">Serbo-croato</string>
+    <string name="Romanian">Romeno</string>
+    <string name="Serbo_Croatian">Serbo-Croato</string>
     <string name="Croatian">Croato</string>
     <string name="Serbian">Serbo</string>
     <string name="Slovenian">Sloveno</string>
@@ -301,82 +301,82 @@
     <string name="s_turkish">Turco</string>
     <string name="s_chinese">Cinese</string>
     <string name="s_vietnamese">Vietnamita</string>
-    <string name="s_none">Nessuno</string>
+    <string name="s_none">Nessuna</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Impossibile riprodurre il video</string>
     <string name="player_err_cantplaysound">Impossibile riprodurre la traccia audio</string>
     <string name="audiocodec_not_supported">Questo formato audio (<xliff:g id="codec">%s</xliff:g>) non è supportato</string>
     <string name="videocodec_not_supported">Questo formato video (<xliff:g id="codec">%s</xliff:g>) non è supportato</string>
-    <string name="player_err_file">Il file video è inesistente.</string>
-    <string name="player_err_sizetoobig">Dimensione immagine troppo grande</string>
-    <string name="player_err_unknown">Errore sconosciuto.</string>
-    <string name="player_err_critical">Errore server multimediale.</string>
+    <string name="player_err_file">Il file video non esiste</string>
+    <string name="player_err_sizetoobig">Dimensione del video troppo grande</string>
+    <string name="player_err_unknown">Errore sconosciuto</string>
+    <string name="player_err_critical">Errore del lettore multimediale</string>
     <string name="player_err_forcodec">per il codec</string>
-    <string name="player_err_notinterleaved">Gli stream video e audio non sono INTERLEAVED.</string>
+    <string name="player_err_notinterleaved">Gli stream video e audio non sono INTERLEAVE</string>
     <string name="player_err_codec">Codec</string>
-    <string name="player_err_isnotsupported">non è supportato.</string>
-    <string name="player_err_fileNoLicense">Per questo file non è stata trovata nessuna licenza.</string>
-    <string name="player_err_fileerror">File danneggiato o incompleto.</string>
-    <string name="player_err_connection_failed">Connessione non riuscita.</string>
-    <string name="player_err_video_decoder_error">Errore decoder video:</string>
+    <string name="player_err_isnotsupported">non è supportato</string>
+    <string name="player_err_fileNoLicense">Nessuna licenza trovata per questo file</string>
+    <string name="player_err_fileerror">Il file è danneggiato o incompleto</string>
+    <string name="player_err_connection_failed">Connessione fallita</string>
+    <string name="player_err_video_decoder_error">Errore del decoder video:</string>
     <string name="player_err_qpel_and_gmc">\"Quarter Pixel\" e \"GMC\"</string>
     <string name="player_err_profile_and_level">\"Profilo\" e \"Livello\"</string>
     <string name="player_err_interlaced">Interlacciato</string>
     <!-- Player plug-in -->
-    <string name="player_plugin_cinema_title">Plugin cinema</string>
-    <string name="player_plugin_cinema">Plugin cinema (DVD, MPEG-2, AC3)</string>
+    <string name="player_plugin_cinema_title">Plug-in cinema</string>
+    <string name="player_plugin_cinema">Plug-in cinema (DVD, MPEG-2, AC3)</string>
     <string name="player_plugin_ac3_title">Plug-in AC3</string>
     <string name="player_plugin_ac3">Plug-in AC3</string>
     <string name="player_plugin_mpeg2_title">Plug-in MPEG-2</string>
     <string name="player_plugin_mpeg2">Plug-in MPEG-2 (DVD)</string>
-    <string name="player_plugin_video_msg">Questo file contiene un formato video <xliff:g id="video">%1$s</xliff:g>.</string>
-    <string name="player_plugin_audio_msg">Questo file contiene un formato audio <xliff:g id="audio">%1$s</xliff:g>.</string>
-    <string name="player_plugin_video_audio_msg">Questo file contiene un formato video <xliff:g id="video">%1$s</xliff:g> e un formato audio <xliff:g id="audio">%2$s</xliff:g>.</string>
-    <string name="player_plugin_purchase_msg">E\' necessario acquistare <xliff:g id="plugin">%1$s</xliff:g></string>
-    <string name="player_plugin_purchase">Vai allo store</string>
+    <string name="player_plugin_video_msg">Questo file contiene un formato video <xliff:g id="video">%1$s</xliff:g> </string>
+    <string name="player_plugin_audio_msg">Questo file contiene un formato audio <xliff:g id="audio">%1$s</xliff:g> </string>
+    <string name="player_plugin_video_audio_msg">Questo file contiene un formato video <xliff:g id="video">%1$s</xliff:g> e un formato audio <xliff:g id="audio">%2$s</xliff:g> </string>
+    <string name="player_plugin_purchase_msg">È necessario acquistare <xliff:g id="plugin">%1$s</xliff:g></string>
+    <string name="player_plugin_purchase">Vai allo Store</string>
     <string name="player_plugin_purchase_archos_msg">Puoi acquistare i coded plug-in addizionali su on www.archos.com</string>
     <string name="player_plugin_purchase_google_play_msg">Puoi acquistare i coded plug-in addizionali su Google Play</string>
     <string name="player_plugin_purchase_google_play_button">Vai su Google Play</string>
     <string name="plugin_update_required_title">Richiesto aggiornamento del codec</string>
     <string name="plugin_update_required_message">Sembra che tu abbia già installato i codec addizionali per Nova Video Player.\n\nQuesta nuova versione di Nova Video Player richiede un aggiornamento di questi codec.\n\nVai su Google Play per aggiornare e reinstallare i codec</string>
     <!-- Subtitles wizard -->
-    <string name="get_subtitles_on_drive">Seleziona sottotitoli sul sistema di supporto</string>
-    <string name="subtitles_wizard_no_files">Nessun file di sottotitoli trovato</string>
-    <string name="subtitles_wizard_current_files">File sottotitoli correnti:</string>
-    <string name="subtitles_wizard_available_files">File sottotitoli disponibili:</string>
+    <string name="get_subtitles_on_drive">Seleziona i sottotitoli dall\'archivio</string>
+    <string name="subtitles_wizard_no_files">Nessun file di sottotitoli trovati</string>
+    <string name="subtitles_wizard_current_files">File di sottotitoli correnti:</string>
+    <string name="subtitles_wizard_available_files">File di sottotitoli disponibili:</string>
     <string name="subtitles_wizard_associate">Associa questo file al video</string>
-    <string name="subtitles_wizard_delete">Elimina questo file</string>
+    <string name="subtitles_wizard_delete">Cancella questo file</string>
     <string name="subtitles_wizard_empty_list">Nessun file trovato</string>
-    <string name="subtitles_wizard_add_files">E\' possibile copiare più file di sottotitoli in questa cartella per associarli a questo video.</string>
-    <string name="subtitles_wizard_help">Selezionare i file dei sottotitoli disponibili per associarli al video video %s. Il file verrà rinominato in modo che corrisponda al nome del video.</string>
-    <string name="subtitles_wizard_empty_list_help">Nessun file di sottotitoli trovato. E\' necessario copiare prima uno o più file di sottotitoli in questa cartella, per associarlo al video %s.</string>
+    <string name="subtitles_wizard_add_files">Puoi copiare più file di sottotitoli in questa cartella in modo da poterli associare a questo video</string>
+    <string name="subtitles_wizard_help">Seleziona uno qualsiasi dei file di sottotitoli per poterlo associare con il video %s. Il file verrà rinominato in modo da poter combaciare con il nome del video</string>
+    <string name="subtitles_wizard_empty_list_help">Nessun file di sottotitolo trovato. Devi prima copiare uno o più file di sottotitoli in questa cartella in modo da poterli associare con il video %s</string>
     <!-- Subloader -->
-    <string name="get_subtitles_online">Scarica sottotitoli online</string>
-    <string name="toast_subloader_sub_found">Traccia sottotitoli trovata per questa lingua</string>
-    <string name="toast_subloader_sub_not_found">Traccia sottotitoli non trovata per questa lingua</string>
-    <string name="toast_subloader_service_unreachable">Interruzione servizio Web sottotitoli</string>
-    <string name="menu_subloader_allfolder">Ricevi sottotitoli mancanti</string>
+    <string name="get_subtitles_online">Scarica i sottotitoli online</string>
+    <string name="toast_subloader_sub_found">Sottotitoli trovati per questa lingua</string>
+    <string name="toast_subloader_sub_not_found">Non sono stati trovati sottotitoli per questa lingua</string>
+    <string name="toast_subloader_service_unreachable">Interruzione del servizio web per i sottotitoli</string>
+    <string name="menu_subloader_allfolder">Scarica i sottotitoli mancanti</string>
     <string name="dialog_subloader_copying">Copia dei sottotitoli in corso...</string>
-    <string name="dialog_subloader_downloading">Scaricamento sottotitoli in corso…</string>
-    <string name="dialog_subloader_sumup">Download terminato</string>
+    <string name="dialog_subloader_downloading">Download dei sottotitoli in corso...</string>
+    <string name="dialog_subloader_sumup">Download completato</string>
     <string name="dialog_subloader_success">Sottotitoli trovati per:</string>
     <string name="dialog_subloader_fails">Sottotitoli non trovati per:</string>
-    <string name="sub_force_all_title">Forza download sottotitoli</string>
-    <string name="sub_force_all">Tutti i video hanno già almeno una traccia di sottotitoli. Si desidera forzare il download di nuove tracce di sottotitoli?</string>
-    <string name="dialog_subloader_nonetwork_title">Nessuna connessione Internet</string>
-    <string name="dialog_subloader_nonetwork_message">Per scaricare i sottotitoli è necessaria una connessione Internet</string>
-    <string name="dialog_subloader_connecting">Connessione a www.opensubtitles.org in corso</string>
+    <string name="sub_force_all_title">Forza il download dei sottotitoli</string>
+    <string name="sub_force_all">Tutti i tuoi video hanno già almeno una traccia per i sottotitoli. Vuoi forzare il download di nuovi sottotitoli?</string>
+    <string name="dialog_subloader_nonetwork_title">Nessuna connessione a internet</string>
+    <string name="dialog_subloader_nonetwork_message">È necessaria una connessione a internet per scaricare i sottotitoli</string>
+    <string name="dialog_subloader_connecting">Connessione a www.opensubtitles.org...</string>
     <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_settings_title">Impostazioni sottotitoli</string>
+    <string name="subtitle_settings_title">Impostazioni per i sottotitoli</string>
     <string name="subtitle_sample_text">\"sample\"</string>
-    <string name="subtitle_size_text">Dimensioni:</string>
+    <string name="subtitle_size_text">Dimensione:</string>
     <string name="subtitle_style_text">Stile:</string>
     <string name="subtitle_vert_text">Posizione verticale:</string>
     <string name="subtitle_color_default">#ffffff</string>
     <string name="subtitle_outline">Contorno dei sottotitoli</string>
     <!-- Subtitle Delay Dialog -->
-    <string name="subtitle_delay_speed">Regolazione velocità</string>
-    <string name="subtitle_delay_radio_none">nessuno</string>
+    <string name="subtitle_delay_speed">Aggiusta la velocità</string>
+    <string name="subtitle_delay_radio_none">Nessuno</string>
     <string name="subtitle_delay_radio_ntsc2pal">NTSC → PAL</string>
     <string name="subtitle_delay_radio_pal2ntsc">PAL → NTSC</string>
     <!-- Browser.CommonDetailsView -->
@@ -398,7 +398,7 @@
     <string name="torrent_buy_premium_message">Lo streaming dei torrent è disponibile solo nella versione a pagamento</string>
     <string name="torrent_buy_premium">Compra la versione premium</string>
     <!-- Shortcuts -->
-    <string name="add_to_shortcuts">Crea tasto rapido</string>
+    <string name="add_to_shortcuts">Crea un collegamento</string>
     <string name="add_ssh_server">Carica un server FTP</string>
     <string name="add_ssh_shortcut">Aggiungi un collegamento</string>
     <string name="ssh_prompt">Tipo FTP</string>
@@ -408,27 +408,27 @@
         <item>SFTP</item>
         <item>FTPS</item>
     </string-array>
-    <string name="remove_from_shortcuts">Cancella il tasto rapido</string>
-    <string name="shortcut_added">Tasto rapido %s aggiunto</string>
-    <string name="shortcut_removed">Tasto rapido %s eliminato</string>
-    <string name="server_not_available">Server non disponibile attualmente</string>
-    <string name="cannot_open_shortcut">Il contenuto di questo collegamento non è disponibole.\nVerificare se si dispone delle autorizzazioni necessarie.</string>
+    <string name="remove_from_shortcuts">Rimuovi il collegamento</string>
+    <string name="shortcut_added">Collegamento %s aggiunto</string>
+    <string name="shortcut_removed">Collegamento %s eliminato</string>
+    <string name="server_not_available">Il server non è attualmente disponibile</string>
+    <string name="cannot_open_shortcut">Il contenuto di questo collegamento non è attualmente disponibole.\nAssicurarsi di avere i permessi necessari</string>
     <string name="network_shortcuts">Collegamenti di rete</string>
     <string name="media_servers">Server multimediali</string>
-    <string name="shortcut_list_empty">Nessun collegamento di rete creato.\n\nPer creare collegamenti alle cartelle remote preferite, fare clic tenendo premuto il pulsante del mouse sulle cartelle remote di destinazione preferite e selezionare \"%s\" nella barra delle operazioni superiore.</string>
+    <string name="shortcut_list_empty">Nessuna collegamento di rete creato.\n\nPer creare collegamenti per le tue cartelle remote preferite, effettua una pressione prolungata sulle cartelle interessate e seleziona \"%s\" nella action bar superiore</string>
     <string name="ftp_shortcut_list_empty">Per creare collegamenti per le tue cartelle remote preferite, seleziona \"%s\" nella action bar superiore quando navighi in un server</string>
     <string name="indexed_folders">Cartelle indicizzate</string>
     <string name="ftp_shortcuts">Collegamenti FTP</string>
     <string name="add_to_indexed_folders">Cartella indice</string>
     <string name="add_to_library">Aggiungi alla libreria</string>
     <string name="add_all_items_to_library">Vuoi aggiungere tutti i video alla libreria?</string>
-    <string name="indexed_folder_added">La cartella %s è aggiunta alle cartelle indicizzate</string>
-    <string name="remove_from_indexed_folders">Rimuovi dalle cartelle indicizzate</string>
-    <string name="indexed_folder_removed">La cartella %s è rimossa dalle cartelle indicizzate</string>
-    <string name="indexed_folders_list_empty">Nessuna cartella di rete è attualmente indicizzata.\n\nÈ possibile aggiungere il contenuto di una cartella di rete al catalogo esplorando questa cartella e selezionando \"%s\" nella barra delle azioni superiore.</string>
+    <string name="indexed_folder_added">Cartella %s aggiunta alla libreria</string>
+    <string name="remove_from_indexed_folders">Rimuovi dalla libreria</string>
+    <string name="indexed_folder_removed">Cartella %s rimossa dalla libreria</string>
+    <string name="indexed_folders_list_empty">Nessuna cartella di rete attualmente indicizzata.\n\nPuoi aggiungere il contenuto di una cartella di rete alla libreria navigando in questa cartella e selezionando \"%s\" nella action bar superiore</string>
     <string name="indexed_folders_list_empty_ftp">Nessuna cartella FTP attualmente indicizzata</string>
-    <string name="open_indexed_folder">"Aprire"</string>
-    <string name="rescan_indexed_folders">Analizza di nuovo tutte le cartelle indicizzate</string>
+    <string name="open_indexed_folder">"Apri"</string>
+    <string name="rescan_indexed_folders">Scansiona nuovamente tutte le cartelle indicizzate</string>
     <string name="last_rescan_never">Mai</string>
     <string name="upnp_indexing_warning_title">Indicizzazione UPnP</string>
     <string name="upnp_indexing_warning_message">L\'indicizzazione UPnP possiede un minor numero di funzionalità rispetto all\'indicizzazione SMB.\nPiuttosto, si consiglia di indicizzare una cartella SMB se il tuo server o PC lo supporta\n</string>
@@ -454,17 +454,17 @@
     <string name="preferences_force_audio_passthrough_summary">Per la connessione HDMI e S/PDIF, trasmetti audio compresso</string>
     <string name="preferences_allow_3rd_party_player">Consenti l\'utilizzo di un altro lettore video</string>
     <string name="preferences_allow_3rd_party_player_summary">Altri lettori video verranno proposti da Android durante la riproduzione di un filmato. Alcune funzioni potrebbero non funzionare (riprendi, segnalibri, etc.)</string>
-    <string name="preference_tv_3d_automatic_switch">Abilita lo switch 3D automatico\"</string>
-    <string name="preference_tv_3d_automatic_switch_summary">Usa questa funzione solo se la tua TV 3D la supporta\"</string>
+    <string name="preference_tv_3d_automatic_switch">Abilita lo switch 3D automatico</string>
+    <string name="preference_tv_3d_automatic_switch_summary">Usa questa funzione solo se la tua TV 3D la supporta</string>
     <string name="preference_tv_refreshrate_switch">Abilita lo switch refresh rate automatico</string>
     <string name="preference_tv_refreshrate_switch_summary">Rimuovi l\'effetto judder adattando il refresh rate (potrebbe cambiare a seconda della TV utilizzata)</string>
     <string name="category_languages">Sottotitoli</string>
     <string name="subtitles_hide_default">Nascondi sempre i sottotitoli</string>
     <string name="subtitles_hide_default_summary">Chiedi sempre se vuoi nascondere i sottotitoli</string>
-    <string name="preferences_languages">Lingue download sottotitoli</string>
-    <string name="summary_list_preference_primary">Selezionare le lingue per scaricare i sottotitoli</string>
-    <string name="favSubLang_title">Lingua lettura sottotitoli</string>
-    <string name="favSubLang_summary">Scegliere la lingua preferita per leggere i sottotitoli</string>
+    <string name="preferences_languages">Lingua dei sottotitoli da scaricare</string>
+    <string name="summary_list_preference_primary">Seleziona la tua lingua per i sottotitoli da scaricare</string>
+    <string name="favSubLang_title">Lingua di lettura dei sottotitoli</string>
+    <string name="favSubLang_summary">Scegli la tua lingua preferita per la lettura dei sottotitoli</string>
     <string name="ui_mode_title">Modalità Interfaccia Utente</string>
     <string name="ui_mode_summary">Scegli fra interfaccia TV e interfaccia tablet/telefono</string>
     <string name="preferences_video_about">Informazioni</string>
@@ -480,26 +480,26 @@
     <string name="preferences_video_advanced_quit_title">Preferenze predefinite</string>
     <string name="preferences_video_advanced_quit_summary">Torna alle preferenze predefinite</string>
     <string name="trakt_change">Una modifica alle API di Trakt richiede una riconnessione</string>
-    <string name="tv_scraper">Spettacoli TV</string>
+    <string name="tv_scraper">Serie TV</string>
     <string name="movie_scraper">Film</string>
     <string name="enable_auto_scrap">Ottieni automaticamente le descrizioni per i nuovi video</string>
     <string name="locale">Lingua di sistema</string>
-    <string name="yes">Si</string>
+    <string name="yes">Sì</string>
     <string name="no">No</string>
-    <string name="abort">Annullare</string>
+    <string name="abort">Interrompi</string>
     <!--  Title of the video picker activity. -->
     <string name="video_picker_title">Seleziona video</string>
     <!-- Archos File Info -->
-    <string name="video_info_custom_search_file_hint">"\"Nomefilmato\" o \"Nomeprogramma S01E01\""</string>
-    <string name="video_info_custom_search_show_hint">Spettacolo TV</string>
-    <string name="scrap_show_no_result">Nessun programma corrispondente trovato on-line.</string>
+    <string name="video_info_custom_search_file_hint">"\"Nomefilm\" o \"Nomeserie S01E01\""</string>
+    <string name="video_info_custom_search_show_hint">Nome della serie TV</string>
+    <string name="scrap_show_no_result">Nessuna serie corrispondente trovata online</string>
     <string name="video_info_backdrop_select">Seleziona un\'altra immagine</string>
     <string name="video_info_backdrop_remove">Rimuovi</string>
     <string name="video_info_backdrop_set_as">Imposta immagine come</string>
-    <string name="video_info_share_message">"Ho guardato il video \"%1$s\" sul mio Archos %2$s"</string>
+    <string name="video_info_share_message">"Ho visto il video \"%1$s\" sul mio Nova %2$s"</string>
     <string name="notification_mode">Notifiche</string>
     <string name="notifications_all">Tutte le notifiche</string>
-    <string name="notifications_alerts">Notifiche di avvisi soltanto</string>
+    <string name="notifications_alerts">Solo notifiche di avvisi</string>
     <string name="notifications_none">Nessuna notifica</string>
     <string name="pref_format_mode_title">Formato</string>
     <string name="format_fullscreen">Schermo intero</string>
@@ -510,16 +510,16 @@
     <string name="rotation_unlock">Attiva la rotazione automatica dello schermo</string>
     <string name="rotation_locked">Rotazione automatica dello schermo disattivata</string>
     <string name="rotation_unlocked">Rotazione automatica dello schermo attivata</string>
-    <string name="network_reindex">Analizza di nuovo il contenuto</string>
+    <string name="network_reindex">Analizza nuovamente il contenuto</string>
     <!-- Help overlay -->
     <string name="help_overlay_menu">Premi il tasto SU\nto mostrare il menù della TV</string>
     <string name="help_overlay_ssh_indexing_text">Seleziona l\'opzione \"Aggiungi come collegamento\" per tornare rapidamente al tuo server</string>
-    <string name="help_overlay_network_indexing_text1">Premi questa voce di menu per integrare il contenuto di questa cartella e delle relative sottocartelle nel  catalogo video.</string>
+    <string name="help_overlay_network_indexing_text1">Seleziona questa voce del menù per integrare il contenuto di questa cartella e le sue sottocartelle alla Libreria Video</string>
     <string name="help_overlay_network_indexing_text1_lb">Usa il tasto + per integrare il contenuto di questa cartella e le sue sottocartelle alla Libreria Video</string>
-    <string name="help_overlay_network_indexing_text2">Ti permetterà di ottenere poster e descrizioni dei filmati e programmi TV.</string>
-    <string name="help_overlay_scraper_text">Premi questa voce di menu per ricercare poster e descrizioni on-line per i tuoi video. </string>
+    <string name="help_overlay_network_indexing_text2">Ti permetterà di ottenere poster e descrizioni per i film e le serie TV</string>
+    <string name="help_overlay_scraper_text">Seleziona questa voce del menù per cercare online poster e descrizioni per i tuoi video </string>
     <string name="new_videos_count">Nuovi video: %d</string>
-    <string name="new_videos_scrape_message">Hai dei nuovi video che ancora non hanno informazioni e poster.</string>
+    <string name="new_videos_scrape_message">Hai dei nuovi video ancora senza informazioni e poster</string>
     <string name="network_bookmarks">Riprendi punti e posizioni dei segnalibri sulla rete</string>
     <string name="network_thumbnails">Crea un\'anteprima remota</string>
     <string name="network_thumbnails_summary">Crea un\'anteprima da un video remoto quando non ci sono poster disponibili</string>
