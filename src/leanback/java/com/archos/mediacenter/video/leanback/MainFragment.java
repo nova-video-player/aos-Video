@@ -303,7 +303,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         ArrayObjectAdapter movieRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         movieRowAdapter.add(buildAllMoviesBox());
         movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_GENRE, getString(R.string.movies_by_genre), R.drawable.genres_banner));
-        movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_YEAR, getString(R.string.movies_by_year), R.drawable.years_banner));
+        movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_YEAR, getString(R.string.movies_by_year), R.drawable.years_banner_2018));
         mRowsAdapter.add(new ListRow(ROW_ID_MOVIES,
                 new HeaderItem(getString(R.string.movies)),
                 movieRowAdapter));
