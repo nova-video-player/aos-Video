@@ -18,117 +18,117 @@
 */
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-  <!-- Menu item that takes the user back to the top level screen of the music player -->
-  <string name="goto_start">라이브러리</string>
-  <!-- Menu item that takes the user to the "now playing" screen of the music player -->
-  <!-- Menu item to refresh servers list -->
-  <string name="refresh_servers_list">서버목록 새로고침</string>
-  <!-- Menu item to enable network shares -->
-  <!-- Library screen, menu item -->
-  <string name="search_title">검색</string>
-  <!-- Default name of track that doesn't have a name in the metadata -->
-  <string name="unknown_track_name">알수없음</string>
-  <!-- Toast after turning shuffle on -->
-  <!-- Toast after turning shuffle off -->
-  <!-- Toast after turning single repeat on -->
-  <!-- Context menu item -->
-  <string name="info">정보</string>
-  <!-- Context menu item -->
-  <string name="play_selection">재생</string>
-  <!-- Context menu item -->
-  <!-- Context menu item -->
-  <!-- Dialog box button -->
-  <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
-  <string name="fast_scroll_alphabet"> ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
-  <!-- The string used in file/folder infos dialog. -->
-  <string name="info_duration">재생시간:</string>
-  <!-- Infos dialog tabs -->
-  <!-- COVER ROLL -->
-  <string name="recently_added">최근 추가된 항목</string>
-  <string name="recently_added_videos">최근 추가된 항목</string>
-  <string name="recently_played">최근 재생된 항목</string>
-  <string name="recently_played_videos">최근 재생된 항목</string>
-  <!-- The string used in main storage list -->
-  <string name="external_storage">외부메모리</string>
-  <string name="internal_storage">내부메모리</string>
-  <string name="sd_card_storage">SD카드</string>
-  <string name="usb_host_storage">외장 드라이브</string>
-  <string name="network_media_servers">미디어 서버 (UPnP)</string>
-  <string name="network_shared_folders">공유폴더 (SMB)</string>
-  <string name="recordings_storage">녹음</string>
-  <string name="root_storage">내부 저장공간</string>
-  <string name="cannot_list">콘텐츠를 표시할 수 없습니다.</string>
-  <!-- VIDEO -->
-  <string name="upnp_not_allowed">UPNP 서버에 액세스할 수 없습니다. 먼저 액세스 설정을 변경하십시오.</string>
-  <!-- for small screens -->
-  <!-- Generic strings for Movies or TV shows -->
-  <!-- Specific strings for TV shows -->
-  <!-- To be translated only in case there is a localized IMDB -->
-  <!-- VIDEO COVER ROLL -->
-  <!-- Media Center -->
-  <!-- VideoPlayer -->
-  <string name="player_loading_video">비디오 로딩중 \u2026</string>
-  <string name="player_audio_track_toast">오디오 트랙:</string>
-  <string name="player_subtitle_track_toast">자막 트랙:</string>
-  <string name="player_bookmark_set">북마크 설정</string>
-  <string name="player_pref_subtitle_delay_title">씽크시간</string>
-  <string name="pref_play_mode_title">재생 모드</string>
-  <string name="pref_play_mode_entry_single">1번만 재생</string>
-  <string name="pref_play_mode_entry_folder">폴더내의 파일만 1회 재생</string>
-  <string name="pref_play_mode_entry_repeat_folder">폴더반복</string>
-  <string name="pref_play_mode_entry_repeat_single">파일반복</string>
-  <string name="pref_audio_parameters_title">사운드</string>
-  <string name="menu_info">정보</string>
-  <string name="menu_bookmark">북마크 설정</string>
-  <string name="menu_brightness_settings">밝기</string>
-  <string name="menu_player_settings">설정</string>
-  <!-- Subtitles/Audio languages -->
-  <!-- Player errors -->
-  <string name="player_err_cantplayvideo">비디오를 재생할 수 없습니다.</string>
-  <string name="player_err_file">비디오 파일이 존재하지 않습니다.</string>
-  <string name="player_err_sizetoobig">비디오 크기가 너무 큽니다.</string>
-  <string name="player_err_unknown">알 수없는 오류입니다.</string>
-  <string name="player_err_critical">미디어 플레이어 오류가 발행하였습니다.</string>
-  <string name="player_err_forcodec">코덱</string>
-  <string name="player_err_notinterleaved">비디오와 오디오 스트림이 인터리브되지 않았습니다..</string>
-  <string name="player_err_codec">코덱</string>
-  <string name="player_err_isnotsupported">지원되지 않습니다.</string>
-  <string name="player_err_fileNoLicense">이 파일에 대한 라이센스를 찾을 수 없습니다.</string>
-  <string name="player_err_fileerror">파일 손상되었거나 완전하지 않습니다.</string>
-  <string name="player_err_connection_failed">연결에 실패했습니다.</string>
-  <string name="player_err_video_decoder_error">비디오 디코더 오류:</string>
-  <string name="player_err_interlaced">비월주사</string>
-  <!-- Player plug-in -->
-  <string name="player_plugin_cinema_title">시네마 플러그인</string>
-  <string name="player_plugin_cinema">시네마 플러그인 (DVD, MPEG-2, AC3)</string>
-  <string name="player_plugin_video_msg">이 파일은<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="video">%1$s</g>비디오 포맷을 포함합니다. </string>
-  <string name="player_plugin_audio_msg">이 파일은<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="audio">%1$s</g>오디오 포맷을 포함합니다. </string>
-  <string name="player_plugin_video_audio_msg">이 파일은<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="video">%1$s</g>비디오 포맷과<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="audio">%2$s</g>오디오 포맷을 포함합니다. </string>
-  <string name="player_plugin_purchase_msg">You need to purchase the<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="plugin">%1$s</g></string>
-  <string name="player_plugin_purchase">스토어로 이동합니다.</string>
-  <!-- Subtitles wizard -->
-  <string name="subtitles_wizard_no_files">자막 파일을 찾을 수 없습니다.</string>
-  <string name="subtitles_wizard_current_files">최근 사용한 자막 파일:</string>
-  <string name="subtitles_wizard_available_files">사용 가능한 자막 파일:</string>
-  <string name="subtitles_wizard_associate">이 파일을 비디오로 연결합니다.</string>
-  <string name="subtitles_wizard_delete">이 파일을 삭제합니다.</string>
-  <string name="subtitles_wizard_empty_list">파일을 찾을 수 없습니다.</string>
-  <string name="subtitles_wizard_add_files">이 비디오를 연결하기 위해이 폴더에 더 많은 자막 파일을 복사할 수 있습니다.</string>
-  <string name="subtitles_wizard_help">%s 비디오로 연결할 자막파일을 하나 선택하십시오. 선택된 파일의 파일명은 동영상의 파일명과 동일하게 변경됩니다.</string>
-  <!-- Subloader -->
-  <!-- Subtitle Settings Dialog -->
-  <!-- Subtitle Delay Dialog -->
-  <!-- Browser.CommonDetailsView -->
-  <!-- Add a space after the right quote
+    <!-- Menu item that takes the user back to the top level screen of the music player -->
+    <string name="goto_start">라이브러리</string>
+    <!-- Menu item that takes the user to the "now playing" screen of the music player -->
+    <!-- Menu item to refresh servers list -->
+    <string name="refresh_servers_list">서버목록 새로고침</string>
+    <!-- Menu item to enable network shares -->
+    <!-- Library screen, menu item -->
+    <string name="search_title">검색</string>
+    <!-- Default name of track that doesn't have a name in the metadata -->
+    <string name="unknown_track_name">알수없음</string>
+    <!-- Toast after turning shuffle on -->
+    <!-- Toast after turning shuffle off -->
+    <!-- Toast after turning single repeat on -->
+    <!-- Context menu item -->
+    <string name="info">정보</string>
+    <!-- Context menu item -->
+    <string name="play_selection">재생</string>
+    <!-- Context menu item -->
+    <!-- Context menu item -->
+    <!-- Dialog box button -->
+    <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <string name="fast_scroll_alphabet"> ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <!-- The string used in file/folder infos dialog. -->
+    <string name="info_duration">재생시간:</string>
+    <!-- Infos dialog tabs -->
+    <!-- COVER ROLL -->
+    <string name="recently_added">최근 추가된 항목</string>
+    <string name="recently_added_videos">최근 추가된 항목</string>
+    <string name="recently_played">최근 재생된 항목</string>
+    <string name="recently_played_videos">최근 재생된 항목</string>
+    <!-- The string used in main storage list -->
+    <string name="external_storage">외부메모리</string>
+    <string name="internal_storage">내부메모리</string>
+    <string name="sd_card_storage">SD카드</string>
+    <string name="usb_host_storage">외장 드라이브</string>
+    <string name="network_media_servers">미디어 서버 (UPnP)</string>
+    <string name="network_shared_folders">공유폴더 (SMB)</string>
+    <string name="recordings_storage">녹음</string>
+    <string name="root_storage">내부 저장공간</string>
+    <string name="cannot_list">콘텐츠를 표시할 수 없습니다.</string>
+    <!-- VIDEO -->
+    <string name="upnp_not_allowed">UPNP 서버에 액세스할 수 없습니다. 먼저 액세스 설정을 변경하십시오.</string>
+    <!-- for small screens -->
+    <!-- Generic strings for Movies or TV shows -->
+    <!-- Specific strings for TV shows -->
+    <!-- To be translated only in case there is a localized IMDB -->
+    <!-- VIDEO COVER ROLL -->
+    <!-- Media Center -->
+    <!-- VideoPlayer -->
+    <string name="player_loading_video">비디오 로딩중 \u2026</string>
+    <string name="player_audio_track_toast">오디오 트랙:</string>
+    <string name="player_subtitle_track_toast">자막 트랙:</string>
+    <string name="player_bookmark_set">북마크 설정</string>
+    <string name="player_pref_subtitle_delay_title">씽크시간</string>
+    <string name="pref_play_mode_title">재생 모드</string>
+    <string name="pref_play_mode_entry_single">1번만 재생</string>
+    <string name="pref_play_mode_entry_folder">폴더내의 파일만 1회 재생</string>
+    <string name="pref_play_mode_entry_repeat_folder">폴더반복</string>
+    <string name="pref_play_mode_entry_repeat_single">파일반복</string>
+    <string name="pref_audio_parameters_title">사운드</string>
+    <string name="menu_info">정보</string>
+    <string name="menu_bookmark">북마크 설정</string>
+    <string name="menu_brightness_settings">밝기</string>
+    <string name="menu_player_settings">설정</string>
+    <!-- Subtitles/Audio languages -->
+    <!-- Player errors -->
+    <string name="player_err_cantplayvideo">비디오를 재생할 수 없습니다.</string>
+    <string name="player_err_file">비디오 파일이 존재하지 않습니다.</string>
+    <string name="player_err_sizetoobig">비디오 크기가 너무 큽니다.</string>
+    <string name="player_err_unknown">알 수없는 오류입니다.</string>
+    <string name="player_err_critical">미디어 플레이어 오류가 발행하였습니다.</string>
+    <string name="player_err_forcodec">코덱</string>
+    <string name="player_err_notinterleaved">비디오와 오디오 스트림이 인터리브되지 않았습니다..</string>
+    <string name="player_err_codec">코덱</string>
+    <string name="player_err_isnotsupported">지원되지 않습니다.</string>
+    <string name="player_err_fileNoLicense">이 파일에 대한 라이센스를 찾을 수 없습니다.</string>
+    <string name="player_err_fileerror">파일 손상되었거나 완전하지 않습니다.</string>
+    <string name="player_err_connection_failed">연결에 실패했습니다.</string>
+    <string name="player_err_video_decoder_error">비디오 디코더 오류:</string>
+    <string name="player_err_interlaced">비월주사</string>
+    <!-- Player plug-in -->
+    <string name="player_plugin_cinema_title">시네마 플러그인</string>
+    <string name="player_plugin_cinema">시네마 플러그인 (DVD, MPEG-2, AC3)</string>
+    <string name="player_plugin_video_msg">이 파일은<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="video">%1$s</g>비디오 포맷을 포함합니다. </string>
+    <string name="player_plugin_audio_msg">이 파일은<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="audio">%1$s</g>오디오 포맷을 포함합니다. </string>
+    <string name="player_plugin_video_audio_msg">이 파일은<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="video">%1$s</g>비디오 포맷과<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="audio">%2$s</g>오디오 포맷을 포함합니다. </string>
+    <string name="player_plugin_purchase_msg">You need to purchase the<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="plugin">%1$s</g></string>
+    <string name="player_plugin_purchase">스토어로 이동합니다.</string>
+    <!-- Subtitles wizard -->
+    <string name="subtitles_wizard_no_files">자막 파일을 찾을 수 없습니다.</string>
+    <string name="subtitles_wizard_current_files">최근 사용한 자막 파일:</string>
+    <string name="subtitles_wizard_available_files">사용 가능한 자막 파일:</string>
+    <string name="subtitles_wizard_associate">이 파일을 비디오로 연결합니다.</string>
+    <string name="subtitles_wizard_delete">이 파일을 삭제합니다.</string>
+    <string name="subtitles_wizard_empty_list">파일을 찾을 수 없습니다.</string>
+    <string name="subtitles_wizard_add_files">이 비디오를 연결하기 위해이 폴더에 더 많은 자막 파일을 복사할 수 있습니다.</string>
+    <string name="subtitles_wizard_help">%s 비디오로 연결할 자막파일을 하나 선택하십시오. 선택된 파일의 파일명은 동영상의 파일명과 동일하게 변경됩니다.</string>
+    <!-- Subloader -->
+    <!-- Subtitle Settings Dialog -->
+    <!-- Subtitle Delay Dialog -->
+    <!-- Browser.CommonDetailsView -->
+    <!-- Add a space after the right quote
     because the right part of the quote is
     not visible otherwise -->
-  <!-- torrent -->
-  <!-- Shortcuts -->
-  <!-- Preferences -->
-  <!--  Title of the video picker activity. -->
-  <!-- Archos File Info -->
-  <!-- Help overlay -->
-  <!-- Info dialog, not indexed file -->
-  <!-- Brightness -->
-  <!--  Nfo File parsing -->
+    <!-- torrent -->
+    <!-- Shortcuts -->
+    <!-- Preferences -->
+    <!--  Title of the video picker activity. -->
+    <!-- Archos File Info -->
+    <!-- Help overlay -->
+    <!-- Info dialog, not indexed file -->
+    <!-- Brightness -->
+    <!--  Nfo File parsing -->
 </resources>
