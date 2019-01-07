@@ -35,7 +35,7 @@
     <uses-feature android:name="android.hardware.microphone" android:required="false"/>
 
     <!-- Used to monitor the usb storage plug/unplug -->
-    <uses-feature android:name="android.hardware.usb.host" />
+    <uses-feature android:required="false" android:name="android.hardware.usb.host" />
     <uses-permission android:name="android.permission.USB_PERMISSION" />
 
     <!--<uses-permission android:name="android.permission.WRITE_SETTINGS" />-->
