@@ -34,6 +34,10 @@
     <!-- You must mark this feature as optional in order to make the app available for Android TV -->
     <uses-feature android:name="android.hardware.microphone" android:required="false"/>
 
+    <!-- Used to monitor the usb storage plug/unplug -->
+    <uses-feature android:required="false" android:name="android.hardware.usb.host" />
+    <uses-permission android:name="android.permission.USB_PERMISSION" />
+
     <!--<uses-permission android:name="android.permission.WRITE_SETTINGS" />-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
