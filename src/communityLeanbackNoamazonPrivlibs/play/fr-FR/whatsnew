@@ -1,7 +1,3 @@
-Amélioration du scraper et corrections de bugs.
-Avertissement à la lecture si l'accélération matérielle est désactivée.
-Support d'Android P (évite de crasher au démarrage).
-Ajout d'un bouton pour lister directement les épisodes d'une série TV à partir d'un épisode sur AndroidTV.
-Corrige le délai des sous-titres non appliqué en reprise de lecture quand négatif.
-Corrige le mode fenêtré sur Oreo+.
-Evite de lancer une vidéo si un problème est détecté.
+Ouverture des bandes annonces dans l'application youtube au lieu d'un browser web.
+Suppression des API privées listées comme dark greylist en Android P qui seront à terme bannies.
+Améliorations des traductions grace aux contributions via crowdin.

@@ -1,7 +1,3 @@
-Scraper improvements and bug fixes.
-Issue a warning toast is hardware decoding is disabled.
-Add support for Android P avoiding application crash at startup.
-Add a "list episodes" button on tvshow episode view to quickly get to tvshow view on AndroidTV leanback version.
-Fix subtitle delay not applied on play resume when negative.
-Fix floating player crash on Android version Oreo and above.
-Prevent from playing a file when detecting a problem: issue a toast instead.
+Open trailers in youtube application instead of the browser.
+Remove soon enough to be banned Android P dark greylist APIs to be future proof.
+Improve translations thanks to crowdin contributors.
