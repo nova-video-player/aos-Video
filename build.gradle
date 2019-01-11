@@ -8,7 +8,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath 'com.android.tools.build:gradle:3.2.1'
 	classpath 'com.github.triplet.gradle:play-publisher:1.2.2'
     }
 }
@@ -48,7 +48,6 @@ static def getFormattedDate() {
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.android.application'
 apply plugin: 'com.github.triplet.play'
 
 play {
@@ -69,7 +68,6 @@ android {
 	}
     }
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
     useLibrary 'org.apache.http.legacy'
     sourceSets {
         main {
@@ -83,7 +81,7 @@ android {
     }
     defaultConfig {
         generatedDensities = []
-        minSdkVersion 15
+        minSdkVersion 21
         targetSdkVersion 27
         multiDexEnabled true
         versionCode getDate()
@@ -112,7 +110,7 @@ android {
             dimension "amazon"
         }
         leanback {
-            minSdkVersion 17
+            minSdkVersion 21
             dimension "tv"
             versionCode 2
         }
