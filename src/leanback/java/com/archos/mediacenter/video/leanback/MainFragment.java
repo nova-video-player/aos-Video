@@ -26,7 +26,6 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v17.leanback.app.BackgroundManager;
@@ -78,12 +77,12 @@ import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
 import com.archos.mediacenter.video.utils.WebUtils;
-import com.archos.mediacenter.video.utils.WebViewActivity;
 import com.archos.mediaprovider.ArchosMediaIntent;
 
 public class MainFragment extends BrowseFragment  implements  LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "MainFragment";
+    private static final String PREF_PRIVATE_MODE = "PREF_PRIVATE_MODE";
 
     final static int LOADER_ID_LAST_ADDED = 42;
     final static int LOADER_ID_LAST_PLAYED = 43;
@@ -167,6 +166,11 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mTvShowSortOrder = mPrefs.getString(VideoPreferencesFragment.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
 
+        if (mPrefs.getBoolean(PREF_PRIVATE_MODE, false) !=  PrivateMode.isActive()) {
+            PrivateMode.toggle();
+            findAndUpdatePrivateModeIcon();
+        }
+
         updateBackground();
 
         Resources r = getResources();
@@ -221,21 +225,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
             getLoaderManager().restartLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
         }
 
-        if (mPreferencesRowAdapter != null) {
-            for(int i=0 ; i<mPreferencesRowAdapter.size() ; i++) {
-                Object item = mPreferencesRowAdapter.get(i);
-                if (item instanceof Icon) {
-                    Icon icon = (Icon) item;
-                    if (icon.getId() == Icon.ID.PRIVATE_MODE) {
-                        if (icon.isActive() != PrivateMode.isActive()) {
-                            updatePrivateMode(icon);
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-
+        findAndUpdatePrivateModeIcon();
     }
 
     @Override
@@ -590,6 +580,23 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         updateBackground();
     }
 
+    private void findAndUpdatePrivateModeIcon() {
+        if (mPreferencesRowAdapter != null) {
+            for(int i=0 ; i<mPreferencesRowAdapter.size() ; i++) {
+                Object item = mPreferencesRowAdapter.get(i);
+                if (item instanceof Icon) {
+                    Icon icon = (Icon) item;
+                    if (icon.getId() == Icon.ID.PRIVATE_MODE) {
+                        if (icon.isActive() != PrivateMode.isActive()) {
+                            updatePrivateMode(icon);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     public class MainViewClickedListener extends VideoViewClickedListener {
 
         final private Activity mActivity;
@@ -652,6 +659,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
                             PrivateMode.showDialog(getActivity());
                         }
                         PrivateMode.toggle();
+                        mPrefs.edit().putBoolean(PREF_PRIVATE_MODE, PrivateMode.isActive()).commit();
                         updatePrivateMode(icon);
                         break;
                     case LEGACY_UI:
