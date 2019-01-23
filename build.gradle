@@ -8,8 +8,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
-	classpath 'com.github.triplet.gradle:play-publisher:1.2.2'
+        classpath 'com.android.tools.build:gradle:3.3.0'
+        classpath 'com.github.triplet.gradle:play-publisher:1.2.2'
     }
 }
 
@@ -182,10 +182,7 @@ android {
             outputFileName = outputFileName.replace("-noleanback-", "-API_" + "${api}" + "+-")
                     .replace("-leanback-", "-API_" + "${api}" + "+-")
                     .replace("-noamazon-", "-")
-            assemble.doLast {
-                println outputFileName
             }
-        }
     }
     variantFilter { variant ->
         if (variant.getFlavors().get(2).name == "amazon"
