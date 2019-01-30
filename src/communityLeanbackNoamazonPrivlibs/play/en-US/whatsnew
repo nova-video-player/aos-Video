@@ -1,3 +1,5 @@
-Open trailers in youtube application instead of the browser.
-Remove soon enough to be banned Android P dark greylist APIs to be future proof.
-Improve translations thanks to crowdin contributors.
+Migration from Android ndk-r17 to ndk-r19.
+Add AV1 soft decoding capability through 4.2-dev ffmpeg version and dav1d codec.
+Add support for x86_64 architecture.
+Improve torrent streaming stability.
+Make private mode persistent at application exit/launch.

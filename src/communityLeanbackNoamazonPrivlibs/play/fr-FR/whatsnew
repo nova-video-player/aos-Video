@@ -1,3 +1,5 @@
-Ouverture des bandes annonces dans l'application youtube au lieu d'un browser web.
-Suppression des API privées listées comme dark greylist en Android P qui seront à terme bannies.
-Améliorations des traductions grace aux contributions via crowdin.
+Migration du ndk-r17 à ndk-r19 pour Android..
+Ajout du décodage AV1 non matériel via ffmpeg 4.2-dev et le codec dav1d.
+Ajout du support de l'architecture x86_64.
+Amélioration de la stabilité de la lecture video en streaming torrent.
+Le mode privé et désormais persistent même en quittant l'application.
