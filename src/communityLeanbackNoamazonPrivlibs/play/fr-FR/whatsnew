@@ -1,5 +1,5 @@
 Migration du ndk-r17 à ndk-r19 pour Android..
 Ajout du décodage AV1 non matériel via ffmpeg 4.2-dev et le codec dav1d.
 Ajout du support de l'architecture x86_64.
-Amélioration de la stabilité de la lecture video en streaming torrent.
+Amélioration de la stabilité du passthrough audio.
 Le mode privé et désormais persistent même en quittant l'application.

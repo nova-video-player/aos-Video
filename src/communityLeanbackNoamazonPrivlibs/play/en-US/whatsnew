@@ -1,5 +1,5 @@
 Migration from Android ndk-r17 to ndk-r19.
 Add AV1 soft decoding capability through 4.2-dev ffmpeg version and dav1d codec.
 Add support for x86_64 architecture.
-Improve torrent streaming stability.
-Make private mode persistent at application exit/launch.
+Improve audio passthrough stability.
+Make private mode persistent between application relaunches.
