@@ -94,6 +94,9 @@
     <string name="movies_by_genre">Films par genre</string>
     <string name="movies_by_year">Films par année</string>
     <string name="all_tv_shows">Séries</string>
+    <string name="all_tvshows">Toutes les séries</string>
+    <string name="tvshows_by_alpha">Séries ordre alphabétique</string>
+    <string name="tvshows_by_genre">Séries par genre</string>
     <string name="all_movies_and_tv_shows">Films et séries</string>
     <string name="non_scraped_videos">Vidéos sans description</string>
     <string name="no_server">Pas de serveur de media trouvé</string>
