@@ -24,7 +24,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Ricarica l\'elenco dei server</string>
     <!-- Menu item to enable network shares -->
-    <string name="enable_network_shares">Attiva condivisione di rete</string>
+    <string name="enable_network_shares">Attiva la condivisione di rete</string>
     <string name="initial_scan">Scansione iniziale</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Cerca</string>
@@ -79,7 +79,7 @@
     <string name="network_guest">Ospite</string>
     <string name="sftp_folders">FTP</string>
     <string name="network_jcifs">Samba (Sperimentale)</string>
-    <string name="network_cling">UPNP (Sperimentale)</string>
+    <string name="network_cling">UPnP (Sperimentale)</string>
     <string name="recordings_storage">Registrazioni</string>
     <string name="root_storage">Archiviazione interna</string>
     <string name="cannot_list">Impossibile elencare il contenuto</string>
@@ -160,7 +160,7 @@
     <string name="scrap_enable_network_first">"Devi prima connetterti a una rete per poter avviare questa applicazione"</string>
     <string name="scrap_failed">Film non trovato nel database online</string>
     <string name="start_auto_scraper_activity">Cerca informazioni online</string>
-    <string name="scraper_settigns">Posters &amp; descrizioni</string>
+    <string name="scraper_settigns">Poster &amp; descrizioni</string>
     <string name="scrap_status_initial">In coda</string>
     <string name="scrap_status_busy">Ricerca...</string>
     <string name="scrap_status_success">Aggiornato</string>
@@ -171,17 +171,17 @@
     <string name="scraper_no_files">Nessun file da elaborare</string>
     <string name="scraper_no_new_files">Nessun nuovo file da elaborare</string>
     <string name="scraper_no_new_files_in_folder">Nessun nuovo file da elaborare in questa cartella</string>
-    <string name="scraper_folder_no_files">Comunque, non sono ancora state trovate informazioni per %d video</string>
-    <string name="scraper_folder_no_file">Comunque, non sono state ancora trovate informazioni per un video</string>
+    <string name="scraper_folder_no_files">Comunque, non sono ancora state trovate informazioni per %d video.</string>
+    <string name="scraper_folder_no_file">Comunque, non sono state ancora trovate informazioni per un video.</string>
     <string name="scraper_folder_try_again">Vuoi provare di nuovo?</string>
     <string name="scraper_notification_title">Ricerca delle informazioni online</string>
     <string name="scraper_notification_progress">\"%1$d di %2$d file elaborati</string>
     <string name="scraper_no_episode_found">Nessun episodio trovato</string>
     <string name="scraper_suggest_message">Puoi cercare poster e informazioni online per i tuoi video attraverso il menù \'Cerca informazioni online\'</string>
     <string name="scraper_no_movie_text">Al momento, non hai poster e descrizione per i tuoi film</string>
-    <string name="scraper_no_movie_button_label">Cerca le informazioni del film online</string>
+    <string name="scraper_no_movie_button_label">Cerca online le informazioni dei film</string>
     <string name="scraper_no_tv_show_text">Al momento, non hai poster e descrizione per le tue serie TV</string>
-    <string name="scraper_no_tv_show_button_label">Cerca le informazioni della serie TV online</string>
+    <string name="scraper_no_tv_show_button_label">Cerca online le informazioni delle serie TV</string>
     <string name="imdb_title_url">https://www.imdb.com/title/</string>
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="storage">Memoria</string>
