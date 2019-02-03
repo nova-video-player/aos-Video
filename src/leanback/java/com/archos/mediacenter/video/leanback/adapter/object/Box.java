@@ -33,7 +33,10 @@ public class Box {
         NETWORK,
         FTP,
         INDEXED_FOLDERS_REFRESH,
-        NON_SCRAPED_VIDEOS
+        NON_SCRAPED_VIDEOS,
+        ALL_TVSHOWS,
+        TVSHOWS_BY_ALPHA,
+        TVSHOWS_BY_GENRE
     }
 
     final private ID mBoxId;
