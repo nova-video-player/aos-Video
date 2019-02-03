@@ -1,5 +1,6 @@
-Migration from Android ndk-r17 to ndk-r19.
+Add new TV show fragments on Leanback interface to browse quicker through large TV show collections.
 Add AV1 soft decoding capability through 4.2-dev ffmpeg version and dav1d codec.
-Add support for x86_64 architecture.
 Improve audio passthrough stability.
 Make private mode persistent between application relaunches.
+Add support for x86_64 architecture.
+Migration from Android ndk-r17 to ndk-r19.
