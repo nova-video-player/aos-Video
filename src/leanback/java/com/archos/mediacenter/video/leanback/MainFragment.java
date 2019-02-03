@@ -73,6 +73,10 @@ import com.archos.mediacenter.video.leanback.presenter.BoxItemPresenter;
 import com.archos.mediacenter.video.leanback.presenter.IconItemPresenter;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
+import com.archos.mediacenter.video.leanback.tvshow.AllTvshowsGridActivity;
+import com.archos.mediacenter.video.leanback.tvshow.AllTvshowsIconBuilder;
+import com.archos.mediacenter.video.leanback.tvshow.TvshowsByAlphaActivity;
+import com.archos.mediacenter.video.leanback.tvshow.TvshowsByGenreActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
@@ -92,6 +96,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
     final static int ROW_ID_LAST_ADDED = 1000;
     final static int ROW_ID_LAST_PLAYED = 1001;
     final static int ROW_ID_MOVIES = 1002;
+    final static int ROW_ID_TVSHOW2 = 1003;
     final static int ROW_ID_TVSHOWS = 1004;
     final static int ROW_ID_FILES = 1005;
     final static int ROW_ID_PREFERENCES = 1006;
@@ -298,9 +303,17 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
                 new HeaderItem(getString(R.string.movies)),
                 movieRowAdapter));
 
+        ArrayObjectAdapter tvshowRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
+        tvshowRowAdapter.add(buildAllTvshowsBox());
+        tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_ALPHA, getString(R.string.tvshows_by_alpha), R.drawable.alpha_banner));
+        tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_GENRE, getString(R.string.tvshows_by_genre), R.drawable.genres_banner));
+        mRowsAdapter.add(new ListRow(ROW_ID_TVSHOW2,
+                new HeaderItem(getString(R.string.all_tv_shows)),
+                tvshowRowAdapter));
+
         mTvshowsAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
         mTvshowsAdapter.setMapper(new CompatibleCursorMapperConverter(new TvshowCursorMapper()));
-        mTvshowsRow = new ListRow(ROW_ID_TVSHOWS, new HeaderItem(getString(R.string.all_tv_shows)), mTvshowsAdapter);
+        mTvshowsRow = new ListRow(ROW_ID_TVSHOWS, new HeaderItem(getString(R.string.all_tvshows)), mTvshowsAdapter);
         mRowsAdapter.add(mTvshowsRow);
 
         mFileBrowsingRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
@@ -339,6 +352,17 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         else {
             // fallback to regular default icon
             return new Box(Box.ID.ALL_MOVIES, getString(R.string.all_movies), R.drawable.movies_banner);
+        }
+    }
+
+    private Box buildAllTvshowsBox() {
+        Bitmap iconBitmap = new AllTvshowsIconBuilder(getActivity()).buildNewBitmap();
+        if (iconBitmap!=null) {
+            return new Box(Box.ID.ALL_TVSHOWS, getString(R.string.all_tvshows), iconBitmap);
+        }
+        else {
+            // fallback to regular default icon
+            return new Box(Box.ID.ALL_TVSHOWS, getString(R.string.all_tvshows), R.drawable.movies_banner);
         }
     }
 
@@ -640,6 +664,15 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
                         break;
                     case NON_SCRAPED_VIDEOS:
                         mActivity.startActivity(new Intent(mActivity, NonScrapedVideosActivity.class));
+                        break;
+                    case ALL_TVSHOWS:
+                        mActivity.startActivity(new Intent(mActivity, AllTvshowsGridActivity.class));
+                        break;
+                    case TVSHOWS_BY_ALPHA:
+                        mActivity.startActivity(new Intent(mActivity, TvshowsByAlphaActivity.class));
+                        break;
+                    case TVSHOWS_BY_GENRE:
+                        mActivity.startActivity(new Intent(mActivity, TvshowsByGenreActivity.class));
                         break;
 
                 }
