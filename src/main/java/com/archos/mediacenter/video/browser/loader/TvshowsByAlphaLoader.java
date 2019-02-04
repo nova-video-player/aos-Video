@@ -36,20 +36,17 @@ public class TvshowsByAlphaLoader extends TvshowsByLoader {
 
     public String getSelection(Context context) {
         return "SELECT\n" +
-                "    UNICODE(SUBSTR(s_name,1,1)) AS "+COLUMN_SUBSET_ID+",\n" +
-                "    CASE\n" +
-                "        WHEN s_name NOT NULL THEN UPPER(SUBSTR(s_name,1,1))\n" +
-                "        ELSE '"+context.getString(R.string.scrap_status_unknown)+"' \n" +
-                "    END AS "+COLUMN_SUBSET_NAME+",\n" +
-                "    group_concat( s_id ) AS "+COLUMN_LIST_OF_TVSHOWS_IDS+", -- show id list\n" +
-                "    group_concat( s_po_large_file ) AS "+COLUMN_LIST_OF_POSTER_FILES+", -- show poster files list\n" +
-                "    count( s_id ) AS "+COLUMN_NUMBER_OF_TVSHOWS+"   -- number of shows in list\n" +
+                "    UNICODE(SUBSTR(s_name,1,1)) AS _id,\n" +
+                "    UPPER(SUBSTR(s_name,1,1)) AS name,\n" +
+                "    group_concat( s_id ) AS list,\n" +
+                "    group_concat( s_po_large_file ) AS po_file_list,\n" +
+                "    count( s_id ) AS number\n" +
                 "FROM  ( \n" +
                 "  SELECT s_id, s_po_large_file, s_name FROM video\n"+
-                "  WHERE s_id IS NOT NULL"+ getCommonSelection()+"\n"+
+                "  WHERE s_id IS NOT NULL AND s_name IS NOT NULL"+ getCommonSelection()+"\n"+
                 "  GROUP BY s_name COLLATE NOCASE\n" +
                 ") \n" +
-                "GROUP BY "+COLUMN_SUBSET_NAME+"\n" +
+                "GROUP BY name\n" +
                 " ORDER BY " + mSortOrder;
     }
 }

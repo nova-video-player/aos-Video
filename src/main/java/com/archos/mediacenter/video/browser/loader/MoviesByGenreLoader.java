@@ -36,12 +36,11 @@ public class MoviesByGenreLoader extends MoviesByLoader {
     @Override
     protected String getSelection(Context context) {
         return "SELECT\n" +
-                "       "+COLUMN_SUBSET_ID+", -- genre id\n" +
-                "       name_genre AS "+COLUMN_SUBSET_NAME+", -- genre name\n" +
-                "       -- below is sorted by movie name\n" +
-                "       group_concat( m_id ) AS "+COLUMN_LIST_OF_MOVIE_IDS+", -- movie id list\n" +
-                "       group_concat( po_large_file ) AS "+COLUMN_LIST_OF_POSTER_FILES+", -- movie poster files list\n" +
-                "       count( m_id ) AS "+COLUMN_NUMBER_OF_MOVIES+"   -- number of movie in list\n" +
+                "       _id,\n" +
+                "       name_genre AS name,\n" +
+                "       group_concat( m_id ) AS list,\n" +
+                "       group_concat( po_large_file ) AS po_file_list,\n" +
+                "       count( m_id ) AS number\n" +
                 "  FROM  (\n" +
                 "    SELECT\n" +
                 "           genre._id,\n" +
@@ -54,7 +53,6 @@ public class MoviesByGenreLoader extends MoviesByLoader {
                 "           JOIN genre\n" +
                 "             ON ( genre._id = genre_belongs )\n" +
                 "     WHERE m_id IS NOT NULL" + getCommonSelection()+"\n"+
-                "     ORDER BY m_name COLLATE NOCASE\n" +
                 ")\n" +
                 " GROUP BY _id\n" +
                 " ORDER BY "+mSortOrder;

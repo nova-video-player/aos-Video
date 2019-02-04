@@ -37,22 +37,16 @@ public class MoviesByYearLoader extends MoviesByLoader {
         setSelection(getSelection(context));
     }
 
-
-
     public String getSelection(Context context) {
         return "SELECT\n" +
-                "    _id,\n" +
-                "    CASE\n" +
-                "        WHEN m_year > 0 THEN m_year\n" +
-                "        ELSE '"+context.getString(R.string.scrap_status_unknown)+"' \n" +
-                "    END AS "+COLUMN_SUBSET_NAME+",\n" +
-                "    group_concat( m_id ) AS "+COLUMN_LIST_OF_MOVIE_IDS+", -- movie id list\n" +
-                "    group_concat( m_po_large_file ) AS "+COLUMN_LIST_OF_POSTER_FILES+", -- movie poster files list\n" +
-                "    count( m_id ) AS "+COLUMN_NUMBER_OF_MOVIES+"   -- number of movie in list\n" +
+                "    m_year as _id,\n" +
+                "    m_year as name,\n" +
+                "    group_concat( m_id ) AS list,\n" +
+                "    group_concat( m_po_large_file ) AS po_file_list,\n" +
+                "    count( m_id ) AS number\n" +
                 "FROM  ( \n" +
-                "  SELECT _id, m_id, m_po_large_file, m_name, m_year FROM video\n"+
-                "  WHERE m_id IS NOT NULL"+ getCommonSelection()+"\n"+
-                "  ORDER BY m_name COLLATE NOCASE\n" +
+                "  SELECT m_id, m_po_large_file, m_year FROM video\n"+
+                "  WHERE m_id IS NOT NULL AND m_year > 0" + getCommonSelection()+"\n"+
                 ") \n" +
                 "GROUP BY name\n" +
                 " ORDER BY "+mSortOrder;
