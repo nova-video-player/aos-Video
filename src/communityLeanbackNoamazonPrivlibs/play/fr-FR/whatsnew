@@ -1,5 +1,6 @@
 Ajout sur Android TV de fragments pour parcourir plus rapidemment les grandes collections de séries TV.
 Ajout du décodage AV1 non matériel via ffmpeg 4.2-dev et le codec dav1d.
+Ajout de raccourcis clavier (A = changement de piste audio, S = changement de piste de sous-titre, U = augmenter le volume, D = diminuer le volume).
 Amélioration de la stabilité du passthrough audio.
 Le mode privé et désormais persistent même en quittant l'application.
 Ajout du support de l'architecture x86_64.
