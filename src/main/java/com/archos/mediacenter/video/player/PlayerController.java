@@ -1900,11 +1900,13 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             if (mVolumeBarEnabled) {
                 switch(keyCode) {
                     case KeyEvent.KEYCODE_VOLUME_DOWN:
+                    case KeyEvent.KEYCODE_D:
                         if (event.getAction() == KeyEvent.ACTION_DOWN) {
                             changeVolumeBy(-1);
                         }
                         return true;
                     case KeyEvent.KEYCODE_VOLUME_UP:
+                    case KeyEvent.KEYCODE_U:
                         if (event.getAction() == KeyEvent.ACTION_DOWN) {
                             changeVolumeBy(1);
                         }
@@ -2048,9 +2050,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                             mSurfaceController.switchVideoFormat();
                             return true;
                         case KeyEvent.KEYCODE_J:
+                        case KeyEvent.KEYCODE_S:
                             mSettings.switchSubtitleTrack();
                             return true;
                         case KeyEvent.KEYCODE_POUND:
+                        case KeyEvent.KEYCODE_A:
                             mSettings.switchAudioTrack();
                             return true;
                     }
