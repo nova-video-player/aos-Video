@@ -54,6 +54,11 @@
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <!-- uses-permission android:name="android.permission.ARCHOS_READ_RAWFS" / -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <!-- Required for Android TV channels -->
+    <uses-permission android:name="com.android.providers.tv.permission.READ_EPG_DATA" android:required="false"/>
+    <uses-permission android:name="com.android.providers.tv.permission.WRITE_EPG_DATA" android:required="false"/>
+
     <application
         android:name=".CustomApplication"
         android:allowTaskReparenting="true"
