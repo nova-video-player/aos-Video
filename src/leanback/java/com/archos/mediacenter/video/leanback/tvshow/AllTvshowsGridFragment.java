@@ -15,16 +15,15 @@
 package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.app.AlertDialog;
-import android.app.LoaderManager;
+import android.support.v4.app.LoaderManager;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.widget.CursorObjectAdapter;
 import android.support.v17.leanback.widget.FocusHighlight;
@@ -33,6 +32,7 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.VerticalGridPresenter;
+import android.support.v4.content.Loader;
 import android.util.SparseArray;
 import android.view.View;
 
@@ -126,7 +126,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
         setGridPresenter(vgp);
         Bundle args = new Bundle();
         args.putString("sort", mSortOrder);
-        getLoaderManager().restartLoader(0, args, AllTvshowsGridFragment.this);
+        LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllTvshowsGridFragment.this);
     }
 
     @Override
@@ -191,7 +191,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
                                     mSortOrder = TvshowsSortOrderEntry.item2SortOrder(mSortOrderItem, sortOrderIndexer);
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
-                                    getLoaderManager().restartLoader(0, args, AllTvshowsGridFragment.this);
+                                    LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllTvshowsGridFragment.this);
                                 }
                                 dialog.dismiss();
                             }

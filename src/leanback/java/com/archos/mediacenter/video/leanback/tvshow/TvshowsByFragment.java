@@ -1,18 +1,18 @@
 package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.app.AlertDialog;
-import android.app.LoaderManager;
+import android.support.v4.app.LoaderManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Loader;
+import android.support.v4.content.Loader;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v17.leanback.app.BackgroundManager;
-import android.support.v17.leanback.app.BrowseFragment;
+import android.support.v17.leanback.app.BrowseSupportFragment;
 import android.support.v17.leanback.database.CursorMapper;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.CursorObjectAdapter;
@@ -43,7 +43,7 @@ import com.archos.mediacenter.video.player.PrivateMode;
 import java.util.ArrayList;
 
 
-public abstract class TvshowsByFragment extends BrowseFragment  implements  LoaderManager.LoaderCallbacks<Cursor> {
+public abstract class TvshowsByFragment extends BrowseSupportFragment  implements  LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "TvshowsByFragment";
 
@@ -156,7 +156,7 @@ public abstract class TvshowsByFragment extends BrowseFragment  implements  Load
         mTvshowPresenter = new PosterImageCardPresenter(getActivity());
         mTvshowMapper = new CompatibleCursorMapperConverter(new TvshowCursorMapper());
 
-        getLoaderManager().initLoader(-1, null, this);
+        LoaderManager.getInstance(getActivity()).initLoader(-1, null, this);
     }
 
     private void setupEventListeners() {
@@ -288,7 +288,7 @@ public abstract class TvshowsByFragment extends BrowseFragment  implements  Load
             Bundle args = new Bundle();
             args.putString("ids", listOfTvshowIds);
             args.putString("sort", mSortOrder);
-            getLoaderManager().restartLoader(subsetId, args, this);
+            LoaderManager.getInstance(getActivity()).restartLoader(subsetId, args, this);
 
             c.moveToNext();
         }

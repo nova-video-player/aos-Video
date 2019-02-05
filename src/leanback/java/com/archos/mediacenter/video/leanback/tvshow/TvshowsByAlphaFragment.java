@@ -15,15 +15,13 @@
 package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.content.Context;
-import android.content.Loader;
+import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.SparseArray;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.TvshowsByAlphaLoader;
-import com.archos.mediacenter.video.leanback.VideosByFragment;
-import com.archos.mediacenter.video.utils.SortOrder;
 import com.archos.mediaprovider.video.VideoStore;
 
 
