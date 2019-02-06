@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.leanback;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v17.leanback.widget.BaseCardView;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.Presenter;
@@ -90,14 +91,18 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
     public static void showTvshowDetails(Activity activity, Tvshow tvshow, Presenter.ViewHolder itemViewHolder) {
         Intent intent = new Intent(activity, TvshowActivity.class);
         intent.putExtra(TvshowFragment.EXTRA_TVSHOW, tvshow);
-
-        View sourceView = ((ImageCardView) itemViewHolder.view).getMainImageView();
-        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                activity,
-                sourceView,
-                TvshowFragment.SHARED_ELEMENT_NAME).toBundle();
-
-        activity.startActivity(intent, bundle);
+        View sourceView = null;
+        Bundle bundle = null;
+        if (itemViewHolder.view instanceof ImageCardView) {
+            sourceView = ((ImageCardView) itemViewHolder.view).getMainImageView();
+            bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    activity,
+                    sourceView,
+                    TvshowFragment.SHARED_ELEMENT_NAME).toBundle();
+            activity.startActivity(intent, bundle);
+        }
+        else if (itemViewHolder.view instanceof BaseCardView) {
+            activity.startActivity(intent);
+        }
     }
-
 }
