@@ -91,8 +91,10 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
         mSortOrderEntries = NonScrapedSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
 
         BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
-        bgMngr.attach(getActivity().getWindow());
-        bgMngr.setColor(getResources().getColor(R.color.leanback_background));
+        if(!bgMngr.isAttached()) {
+            bgMngr.attach(getActivity().getWindow());
+            bgMngr.setColor(getResources().getColor(R.color.leanback_background));
+        }
 
         setTitle(getString(R.string.non_scraped_videos));
         setEmptyTextMessage(getString(R.string.you_have_no_non_scraped_videos));
