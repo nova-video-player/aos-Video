@@ -63,6 +63,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import static com.archos.filecorelibrary.FileUtils.backupDatabase;
 
 public class VideoPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
@@ -109,7 +110,7 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
     private static final boolean ACTIVATE_EMAIL_MEDIA_DB = true;
     private static final String KEY_RESCAN_STORAGE = "rescan_storage" ;
     private static final String KEY_DISPLAY_ALL_FILE = "preference_display_all_files" ;
-
+    private final static String KEY_SCRAPER_CATEGORY = "scraper_category";
 
     private SharedPreferences mSharedPreferences = null;
     private int mAdvancedPrefsClickCount = 0;
@@ -122,6 +123,7 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
     private CheckBoxPreference mActivateRefreshrateTVSwitch = null;
     private CheckBoxPreference mActivate3DTVSwitch = null;
     private PreferenceCategory mAdvancedPreferences = null;
+    private PreferenceCategory mScraperCategory = null;
     private ListPreference mSubtitlesFavLangPreferences = null;
 
     private String mLastTraktUser = null;
@@ -143,6 +145,7 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
     final public static int ACTIVITY_RESULT_UI_ZOOM_CHANGED = 667;
     private Set<String> mDownloadSubsList;
     private Preference mExportManualPreference;
+    private Preference mDbExportManualPreference = null;
 
     private void switchAdvancedPreferences() {
         PreferenceCategory prefCategory = (PreferenceCategory) findPreference("preferences_category_video");
@@ -154,6 +157,7 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
             prefCategory.addPreference(mActivateRefreshrateTVSwitch);
         }
 
+        PreferenceCategory prefScraperCategory = (PreferenceCategory) findPreference(KEY_SCRAPER_CATEGORY);
         if (mSharedPreferences.getBoolean(KEY_ADVANCED_VIDEO_ENABLED, false)) {
             // advanced preferences
             Editor editor = mForceSwDecPreferences.getEditor();
@@ -161,6 +165,7 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
             editor.apply();
             prefCategory.removePreference(mForceSwDecPreferences);
             prefCategory.addPreference(mDecChoicePreferences);
+            prefScraperCategory.addPreference(mDbExportManualPreference);
             getPreferenceScreen().addPreference(mAdvancedPreferences);
         } else {
             // normal preferences
@@ -169,7 +174,7 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
             editor.apply();
             prefCategory.removePreference(mDecChoicePreferences);
             prefCategory.addPreference(mForceSwDecPreferences);
-
+            prefScraperCategory.removePreference(mDbExportManualPreference);
             getPreferenceScreen().removePreference(mAdvancedPreferences);
         }
     }
@@ -263,6 +268,8 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
         mActivateRefreshrateTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_REFRESHRATE_SWITCH);
         mTraktSyncProgressPreference = (CheckBoxPreference) findPreference(KEY_TRAKT_SYNC_PROGRESS);
         mAdvancedPreferences = (PreferenceCategory) findPreference(KEY_ADVANCED_VIDEO_CATEGORY);
+
+        mScraperCategory = (PreferenceCategory) findPreference(KEY_SCRAPER_CATEGORY);
         mExportManualPreference = findPreference(getString(R.string.nfo_export_manual_prefkey));
         mExportManualPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
             @Override
@@ -284,6 +291,17 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
                 return true;
             }
         });
+
+        mDbExportManualPreference = findPreference(getString(R.string.db_export_manual_prefkey));
+        mDbExportManualPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                backupDatabase(getContext(),"media.db");
+                Toast.makeText(getActivity(), R.string.db_export_in_progress, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
         findPreference(KEY_RESCAN_STORAGE).setOnPreferenceClickListener(new OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {

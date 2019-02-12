@@ -196,7 +196,9 @@
             android:summary="@string/preferences_network_mobile_vpn_summary"
             android:title="@string/preferences_network_mobile_vpn_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/scraper_settigns" >
+    <PreferenceCategory
+        android:title="@string/scraper_settigns"
+        android:key="scraper_category">
         <CheckBoxPreference
             android:defaultValue="true" android:title="@string/enable_auto_scrap"
             android:key="enable_auto_scrap_key" />
@@ -224,6 +226,10 @@
             android:key="@string/nfo_export_manual_prefkey"
             android:summary="@string/nfo_export_manual_summary"
             android:title="@string/nfo_export_manual_title" />
+        <Preference
+            android:key="@string/db_export_manual_prefkey"
+            android:summary="@string/db_export_manual_summary"
+            android:title="@string/db_export_manual_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/storage" >
