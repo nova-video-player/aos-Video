@@ -715,7 +715,6 @@
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Plus d\'informations</string>
-    <string name="nfo_export_manual_prefkey">export_manual_prefkey</string>
     <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="nfo_export_in_progress">Export de NFO en cours</string>
     <string name="rescrap_in_progress">Actualisation des descriptions en cours</string>
@@ -724,6 +723,10 @@
     <string name="rescrap_all_title">Actualiser les descriptions</string>
     <string name="nfo_export_manual_title">Exporter toutes les descriptions</string>
     <string name="nfo_export_manual_summary">Export des fichiers .nfo pour chaque vidéo</string>
+    <string name="db_export_manual_prefkey">db_export_manual_prefkey</string>
+    <string name="db_export_manual_title">Export de la base de donnée media</string>
+    <string name="db_export_manual_summary">Exporter le fichier media.db vers /sdcard à des fins de débogage</string>
+    <string name="db_export_in_progress">Export de la base de donnée en cours</string>
     <string name="system">Système</string>
     <string name="save_delay_setting_pref_key">save_setting_pref_key</string>
     <string name="keep_setting">Conserver ce réglage</string>
