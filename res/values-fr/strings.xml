@@ -715,6 +715,7 @@
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Plus d\'informations</string>
+    <string name="nfo_export_manual_prefkey">nfo_export_manual_prefkey</string>
     <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="nfo_export_in_progress">Export de NFO en cours</string>
     <string name="rescrap_in_progress">Actualisation des descriptions en cours</string>
