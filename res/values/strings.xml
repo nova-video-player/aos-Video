@@ -798,6 +798,7 @@
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">View more</string>
+    <string name="nfo_export_manual_prefkey">export_manual_prefkey</string>
     <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="nfo_export_in_progress">NFO export in progress</string>
     <string name="rescrap_in_progress">Rescraping whole library</string>
