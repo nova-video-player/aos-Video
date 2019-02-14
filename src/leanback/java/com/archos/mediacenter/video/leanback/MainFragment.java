@@ -53,6 +53,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
+import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.LastAddedLoader;
 import com.archos.mediacenter.video.browser.loader.LastPlayedLoader;
@@ -90,6 +91,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
 
     final static int LOADER_ID_LAST_ADDED = 42;
     final static int LOADER_ID_LAST_PLAYED = 43;
+    final static int LOADER_ID_ALL_MOVIES = 46;
     final static int LOADER_ID_ALL_TV_SHOWS = 44;
     final static int LOADER_ID_NON_SCRAPED_VIDEOS_COUNT = 45;
 
@@ -97,6 +99,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
     final static int ROW_ID_LAST_PLAYED = 1001;
     final static int ROW_ID_MOVIES = 1002;
     final static int ROW_ID_TVSHOW2 = 1003;
+    final static int ROW_ID_ALL_MOVIES = 1007;
     final static int ROW_ID_TVSHOWS = 1004;
     final static int ROW_ID_FILES = 1005;
     final static int ROW_ID_PREFERENCES = 1006;
@@ -108,6 +111,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
     int rowIndexTvShows = ROW_INDEX_UNSET;
 
     private ArrayObjectAdapter mRowsAdapter;
+    private CursorObjectAdapter mMoviesAdapter;
     private CursorObjectAdapter mTvshowsAdapter;
     private CursorObjectAdapter mLastAddedAdapter;
     private CursorObjectAdapter mLastPlayedAdapter;
@@ -116,7 +120,15 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
 
     private ListRow mLastAddedRow;
     private ListRow mLastPlayedRow;
+    private ListRow mMoviesRow;
     private ListRow mTvshowsRow;
+    private ListRow mMovieRow;
+    private ListRow mTvshowRow;
+    
+    private boolean mShowLastAddedRow;
+    private boolean mShowLastPlayedRow;
+    private boolean mShowMoviesRow;
+    private boolean mShowTvshowsRow;
     private String mTvShowSortOrder;
 
     private Box mNonScrapedVideosItem;
@@ -169,6 +181,10 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         super.onActivityCreated(savedInstanceState);
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mShowLastAddedRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_LAST_ADDED_ROW, VideoPreferencesFragment.SHOW_LAST_ADDED_ROW_DEFAULT);
+        mShowLastPlayedRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_LAST_PLAYED_ROW, VideoPreferencesFragment.SHOW_LAST_PLAYED_ROW_DEFAULT);
+        mShowMoviesRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_ALL_MOVIES_ROW, VideoPreferencesFragment.SHOW_ALL_MOVIES_ROW_DEFAULT);
+        mShowTvshowsRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_ALL_TV_SHOWS_ROW, VideoPreferencesFragment.SHOW_ALL_TV_SHOWS_ROW_DEFAULT);
         mTvShowSortOrder = mPrefs.getString(VideoPreferencesFragment.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
 
         if (mPrefs.getBoolean(PREF_PRIVATE_MODE, false) !=  PrivateMode.isActive()) {
@@ -196,6 +212,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         getLoaderManager().initLoader(LOADER_ID_LAST_PLAYED, null, this);
         Bundle args = new Bundle();
         args.putString("sort", mTvShowSortOrder);
+        getLoaderManager().initLoader(LOADER_ID_ALL_MOVIES, args, this);
         getLoaderManager().initLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
         getLoaderManager().initLoader(LOADER_ID_NON_SCRAPED_VIDEOS_COUNT, null, this);
     }
@@ -221,12 +238,41 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
 
         getActivity().registerReceiver(mUpdateReceiver, mUpdateFilter);
         new AllMoviesIconBuilder(getActivity());
+        
+        boolean newShowLastAddedRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_LAST_ADDED_ROW, VideoPreferencesFragment.SHOW_LAST_ADDED_ROW_DEFAULT);
+
+        if (newShowLastAddedRow != mShowLastAddedRow) {
+            mShowLastAddedRow = newShowLastAddedRow;
+            updateLastAddedRow(null);
+        }
+
+        boolean newShowLastPlayedRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_LAST_PLAYED_ROW, VideoPreferencesFragment.SHOW_LAST_PLAYED_ROW_DEFAULT);
+
+        if (newShowLastPlayedRow != mShowLastPlayedRow) {
+            mShowLastPlayedRow = newShowLastPlayedRow;
+            updateLastPlayedRow(null);
+        }
+
+        boolean newShowMoviesRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_ALL_MOVIES_ROW, VideoPreferencesFragment.SHOW_ALL_MOVIES_ROW_DEFAULT);
+        
+        if (newShowMoviesRow != mShowMoviesRow) {
+            mShowMoviesRow = newShowMoviesRow;
+            updateMoviesRow(null);
+        }
+
+        boolean newShowTvshowsRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_ALL_TV_SHOWS_ROW, VideoPreferencesFragment.SHOW_ALL_TV_SHOWS_ROW_DEFAULT);
+
+        if (newShowTvshowsRow != mShowTvshowsRow) {
+            mShowTvshowsRow = newShowTvshowsRow;
+            updateTvShowsRow(null);
+        }
 
         String newTvShowSortOrder = mPrefs.getString(VideoPreferencesFragment.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
         if (!newTvShowSortOrder.equals(mTvShowSortOrder)) {
             mTvShowSortOrder = newTvShowSortOrder;
             Bundle args = new Bundle();
             args.putString("sort", mTvShowSortOrder);
+            getLoaderManager().restartLoader(LOADER_ID_ALL_MOVIES, args, this);
             getLoaderManager().restartLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
         }
 
@@ -288,33 +334,30 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         mLastAddedAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
         mLastAddedAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
         mLastAddedRow = new ListRow(ROW_ID_LAST_ADDED, new HeaderItem(getString(R.string.recently_added)), mLastAddedAdapter);
-        mRowsAdapter.add(mLastAddedRow);
 
         mLastPlayedAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
         mLastPlayedAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
         mLastPlayedRow = new ListRow(ROW_ID_LAST_PLAYED, new HeaderItem(getString(R.string.recently_played)), mLastPlayedAdapter);
-        mRowsAdapter.add(mLastPlayedRow);
 
         ArrayObjectAdapter movieRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         movieRowAdapter.add(buildAllMoviesBox());
         movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_GENRE, getString(R.string.movies_by_genre), R.drawable.genres_banner));
         movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_YEAR, getString(R.string.movies_by_year), R.drawable.years_banner_2019));
-        mRowsAdapter.add(new ListRow(ROW_ID_MOVIES,
-                new HeaderItem(getString(R.string.movies)),
-                movieRowAdapter));
+        mMovieRow = new ListRow(ROW_ID_MOVIES, new HeaderItem(getString(R.string.movies)), movieRowAdapter);
 
         ArrayObjectAdapter tvshowRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         tvshowRowAdapter.add(buildAllTvshowsBox());
         tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_ALPHA, getString(R.string.tvshows_by_alpha), R.drawable.alpha_banner));
         tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_GENRE, getString(R.string.tvshows_by_genre), R.drawable.genres_banner));
-        mRowsAdapter.add(new ListRow(ROW_ID_TVSHOW2,
-                new HeaderItem(getString(R.string.all_tv_shows)),
-                tvshowRowAdapter));
+        mTvshowRow = new ListRow(ROW_ID_TVSHOW2, new HeaderItem(getString(R.string.all_tv_shows)), tvshowRowAdapter);
+        
+        mMoviesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
+        mMoviesAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
+        mMoviesRow = new ListRow(ROW_ID_ALL_MOVIES, new HeaderItem(getString(R.string.all_movies)), mMoviesAdapter);
 
         mTvshowsAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
         mTvshowsAdapter.setMapper(new CompatibleCursorMapperConverter(new TvshowCursorMapper()));
-        mTvshowsRow = new ListRow(ROW_ID_TVSHOWS, new HeaderItem(getString(R.string.all_tvshows)), mTvshowsAdapter);
-        mRowsAdapter.add(mTvshowsRow);
+        mTvshowsRow = new ListRow(ROW_ID_TVSHOWS, new HeaderItem(getString(R.string.all_tvshows)),
 
         mFileBrowsingRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         mFileBrowsingRowAdapter.add(new Box(Box.ID.NETWORK, getString(R.string.network_storage), R.drawable.filetype_new_server));
@@ -367,67 +410,130 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
     }
 
     private void updateLastAddedRow(Cursor cursor) {
+        if (cursor != null)
+            mLastAddedAdapter.changeCursor(cursor);
+        else
+            cursor = mLastAddedAdapter.getCursor();
+
         int currentPosition = getRowPosition(ROW_ID_LAST_ADDED);
-        if (cursor.getCount()==0) {
-            // remove row if it was previously added
-            if (currentPosition>=0) {
+
+        if (cursor.getCount() == 0 || !mShowLastAddedRow) {
+            if (currentPosition != -1)
                 mRowsAdapter.removeItems(currentPosition, 1);
-            }
         }
         else {
-            if (currentPosition>=0) { // row is already inserted
-                mLastAddedAdapter.changeCursor(cursor); // Updating to new updated cursor
-            }
-            else {
-                // Update adapter and insert row
-                mLastAddedAdapter.changeCursor(cursor);
-                // Last Added is always added in first row
-                mRowsAdapter.add(0, mLastAddedRow);
+            if (currentPosition == -1) {
+                int newPosition = 0;
+                
+                mRowsAdapter.add(newPosition, mLastAddedRow);
             }
         }
     }
 
     private void updateLastPlayedRow(Cursor cursor) {
+        if (cursor != null)
+            mLastPlayedAdapter.changeCursor(cursor);
+        else
+            cursor = mLastPlayedAdapter.getCursor();
+
         int currentPosition = getRowPosition(ROW_ID_LAST_PLAYED);
-        if (cursor.getCount()==0) {
-            // Remove row if it was previously added
-            if (currentPosition>=0) {
+
+        if (cursor.getCount() == 0 || !mShowLastPlayedRow) {
+            if (currentPosition != -1)
                 mRowsAdapter.removeItems(currentPosition, 1);
+        }
+        else {
+            if (currentPosition == -1) {
+                int newPosition = 0;
+
+                if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
+                    newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
+                
+                mRowsAdapter.add(newPosition, mLastPlayedRow);
+            }
+        }
+    }
+
+    private void updateMoviesRow(Cursor cursor) {
+        if (cursor != null)
+            mMoviesAdapter.changeCursor(cursor);
+        else
+            cursor = mMoviesAdapter.getCursor();
+
+        int currentPosition = getRowPosition(ROW_ID_ALL_MOVIES);
+
+        if (cursor.getCount() == 0 || !mShowMoviesRow) {
+            if (currentPosition != -1)
+                mRowsAdapter.removeItems(currentPosition, 1);
+            if (getRowPosition(ROW_ID_MOVIES) == -1) {
+                int newPosition = 0;
+
+                if (getRowPosition(ROW_ID_LAST_PLAYED) != -1)
+                    newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
+                else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
+                    newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
+                
+                mRowsAdapter.add(newPosition, mMovieRow);
             }
         }
         else {
-            if (currentPosition>=0) { // row is already inserted
-                mLastPlayedAdapter.changeCursor(cursor); // Updating to new updated cursor
-            }
-            else {
-                // Update adapter and insert row
-                mLastPlayedAdapter.changeCursor(cursor);
-                // Last played is added after Last added, or first if there is no last added
-                boolean lastAddedRowIsPresent = (getRowPosition(ROW_ID_LAST_ADDED)!=-1);
-                final int rowPosition = lastAddedRowIsPresent ? 1 : 0;
-                mRowsAdapter.add(rowPosition, mLastPlayedRow);
+            if (getRowPosition(ROW_ID_MOVIES) != -1)
+                mRowsAdapter.removeItems(getRowPosition(ROW_ID_MOVIES), 1);
+            if (currentPosition == -1) {
+                int newPosition = 0;
+
+                if (getRowPosition(ROW_ID_LAST_PLAYED) != -1)
+                    newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
+                else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
+                    newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
+                
+                mRowsAdapter.add(newPosition, mMoviesRow);
             }
         }
     }
 
     private void updateTvShowsRow(Cursor cursor) {
+        if (cursor != null)
+            mTvshowsAdapter.changeCursor(cursor);
+        else
+            cursor = mTvshowsAdapter.getCursor();
+
         int currentPosition = getRowPosition(ROW_ID_TVSHOWS);
-        if (cursor.getCount()==0) {
-            // Remove row if it was previously added
-            if (currentPosition>=0) {
+
+        if (cursor.getCount() == 0 || !mShowTvshowsRow) {
+            if (currentPosition != -1)
                 mRowsAdapter.removeItems(currentPosition, 1);
+            if (getRowPosition(ROW_ID_TVSHOW2) == -1) {
+                int newPosition = 0;
+
+                if (getRowPosition(ROW_ID_MOVIES) != -1)
+                    newPosition = getRowPosition(ROW_ID_MOVIES) + 1;
+                else if (getRowPosition(ROW_ID_ALL_MOVIES) != -1)
+                    newPosition = getRowPosition(ROW_ID_ALL_MOVIES) + 1;
+                else if (getRowPosition(ROW_ID_LAST_PLAYED) != -1)
+                    newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
+                else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
+                    newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
+                
+                mRowsAdapter.add(newPosition, mTvshowRow);
             }
         }
         else {
-            if (currentPosition>=0) { // row is already inserted
-                mTvshowsAdapter.changeCursor(cursor); // Updating to new updated cursor
-            }
-            else {
-                // Update adapter and insert row
-                mTvshowsAdapter.changeCursor(cursor);
-                // Last played is added after Movies (and there is always the movies row)
-                final int rowPosition = getRowPosition(ROW_ID_MOVIES)+1;
-                mRowsAdapter.add(rowPosition, mTvshowsRow);
+            if (getRowPosition(ROW_ID_TVSHOW2) != -1)
+                mRowsAdapter.removeItems(getRowPosition(ROW_ID_TVSHOW2), 1);
+            if (currentPosition == -1) {
+                int newPosition = 0;
+
+                if (getRowPosition(ROW_ID_MOVIES) != -1)
+                    newPosition = getRowPosition(ROW_ID_MOVIES) + 1;
+                else if (getRowPosition(ROW_ID_ALL_MOVIES) != -1)
+                    newPosition = getRowPosition(ROW_ID_ALL_MOVIES) + 1;
+                else if (getRowPosition(ROW_ID_LAST_PLAYED) != -1)
+                    newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
+                else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
+                    newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
+                
+                mRowsAdapter.add(newPosition, mTvshowsRow);
             }
         }
     }
@@ -483,6 +589,13 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         else if (id == LOADER_ID_LAST_PLAYED) {
             return new LastPlayedLoader(getActivity());
         }
+        else if (id == LOADER_ID_ALL_MOVIES) {
+            if (args == null) {
+                return new MoviesLoader(getActivity(), true);
+            } else {
+                return new MoviesLoader(getActivity(), args.getString("sort"), true);
+            }
+        }
         else if (id == LOADER_ID_ALL_TV_SHOWS) {
             if (args == null) {
                 return new AllTvshowsLoader(getActivity());
@@ -506,6 +619,9 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         else if (cursorLoader.getId() == LOADER_ID_LAST_PLAYED) {
             updateLastPlayedRow(cursor);
             mInitLastPlayedCount = cursor.getCount();
+        }
+        else if (cursorLoader.getId() == LOADER_ID_ALL_MOVIES) {
+            updateMoviesRow(cursor);
         }
         else if (cursorLoader.getId() == LOADER_ID_ALL_TV_SHOWS) {
             updateTvShowsRow(cursor);
