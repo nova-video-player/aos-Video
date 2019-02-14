@@ -80,6 +80,11 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
     public static final String KEY_FORCE_AUDIO_PASSTHROUGH = "force_audio_passthrough";
     public static final String KEY_ACTIVATE_REFRESHRATE_SWITCH = "enable_tv_refreshrate_switch";
     public static final String KEY_ACTIVATE_3D_SWITCH = "activate_tv_switch";
+    
+    public static final String KEY_SHOW_LAST_ADDED_ROW = "show_last_added_row";
+    public static final String KEY_SHOW_LAST_PLAYED_ROW = "show_last_played_row";
+    public static final String KEY_SHOW_ALL_MOVIES_ROW = "show_all_movies_row";
+    public static final String KEY_SHOW_ALL_TV_SHOWS_ROW = "show_all_tv_shows_row";
 
     public static final String KEY_VIDEO_OS = "preferences_video_os";
     public static final String KEY_TMDB="preferences_video_tmdb";
@@ -102,6 +107,11 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
     public static final String KEY_TRAKT_SYNC_COLLECTION = "trakt_sync_collection";
     public static final String KEY_HIDE_WATCHED = "hide_watched";
     public static final String KEY_CREATE_REMOTE_THUMBS = VideoProvider.PREFERENCE_CREATE_REMOTE_THUMBS;
+    
+    public static final boolean SHOW_LAST_ADDED_ROW_DEFAULT = true;
+    public static final boolean SHOW_LAST_PLAYED_ROW_DEFAULT = true;
+    public static final boolean SHOW_ALL_MOVIES_ROW_DEFAULT = false;
+    public static final boolean SHOW_ALL_TV_SHOWS_ROW_DEFAULT = false;
 
     public static final boolean TRAKT_SYNC_COLLECTION_DEFAULT = false;
     public static final boolean TRAKT_LIVE_SCROBBLING_DEFAULT = true;
@@ -601,6 +611,13 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
                     tvshowSortOrderPref.setDefaultValue(TvshowSortOrderEntries.DEFAULT_SORT);
                 }
             }
+        }
+        
+        PreferenceCategory leanbackUserInterfaceCategory = (PreferenceCategory)findPreference("category_leanback_user_interface");
+        
+        if (leanbackUserInterfaceCategory != null) {
+            if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK))
+                getPreferenceScreen().removePreference(leanbackUserInterfaceCategory);
         }
 
         // Free / Paid
