@@ -1861,6 +1861,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 switch(keyCode) {
                     case KeyEvent.KEYCODE_ESCAPE:
                     case KeyEvent.KEYCODE_BACK:
+                    case KeyEvent.KEYCODE_MENU:
                         showTVMenu(false);
                         return true;
                     case KeyEvent.KEYCODE_DPAD_LEFT:    
@@ -1885,7 +1886,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 return true;
             }
 
-            if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_UP || (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_MENU))  {
                 if (!mTVMenuAdapter.isCreated() && mContext instanceof PlayerActivity) {
                     ((PlayerActivity) mContext).createPlayerTVMenu();
                 }
