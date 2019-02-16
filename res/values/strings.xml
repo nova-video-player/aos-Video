@@ -644,6 +644,15 @@
    <string name="preferences_display_resume_box_summary">Display or hide the button resuming the latest video in the main screen</string>
    <string name="preferences_display_resume_box">Display resume box</string>
 
+   <string name="preferences_show_last_added_row_summary">Check to show a row with your last added medias</string>
+   <string name="preferences_show_last_added_row">Show last added row</string>
+   <string name="preferences_show_last_played_row_summary">Check to show a row with your last played medias</string>
+   <string name="preferences_show_last_played_row">Show last played row</string>
+   <string name="preferences_show_all_movies_row_summary">Check to show a row with all your movies instead of the movie category row</string>
+   <string name="preferences_show_all_movies_row">Show all movie row</string>
+   <string name="preferences_show_all_tv_shows_row_summary">Check to show a row with all your tv shows instead of the tv show category row</string>
+   <string name="preferences_show_all_tv_shows_row">Show all tv show row</string>
+
    <string name="codepage_title">Subtitles encoding</string>
    <string name="codepage_summary">Set the encoding used in text subtitles</string>
    <string name="codepage_default">Device language %s</string>
