@@ -648,9 +648,9 @@
    <string name="preferences_show_last_added_row">Show last added row</string>
    <string name="preferences_show_last_played_row_summary">Check to show a row with your last played media</string>
    <string name="preferences_show_last_played_row">Show last played row</string>
-   <string name="preferences_show_all_movies_row_summary">Check to show a row with all your movies instead of the movie category row</string>
+   <string name="preferences_show_all_movies_row_summary">Check to show a row with all your movies instead of the movie categories row</string>
    <string name="preferences_show_all_movies_row">Show all movie row</string>
-   <string name="preferences_show_all_tv_shows_row_summary">Check to show a row with all your TV shows instead of the TV show category row</string>
+   <string name="preferences_show_all_tv_shows_row_summary">Check to show a row with all your TV shows instead of the TV show categories row</string>
    <string name="preferences_show_all_tv_shows_row">Show all TV show row</string>
 
    <string name="codepage_title">Subtitles encoding</string>
