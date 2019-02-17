@@ -1,8 +1,7 @@
-Ajout sur Android TV de fragments pour parcourir plus rapidemment les grandes collections de séries TV.
-Ajout du décodage AV1 non matériel via ffmpeg 4.2-dev et le codec dav1d.
-Ajout de raccourcis clavier (A = changement de piste audio, S = changement de piste de sous-titre, U = augmenter le volume, D = diminuer le volume) et support de la touche menu.
-Amélioration de la stabilité du passthrough audio.
-Le mode privé et désormais persistent même en quittant l'application.
-Ajout du support de l'architecture x86_64.
-Migration du ndk-r17 à ndk-r19 pour Android.
-Evite de planter en présence d'une carte SD endommagée.
+Ajout sur Android TV de catégories série TV afin de parcourir plus rapidemment de grandes collections
+Ajout du décodage AV1 logiciel via ffmpeg 4.2dev et dav1d
+Ajout de raccourcis clavier (A/S changement de piste audio/sous-titre, U/D augmenter/diminuer le volume) et touche menu
+Amélioration de la stabilité du passthrough audio
+Le mode privé désormais persistent
+Migration ndk-r19 et ajout arch x86_64
+Evite de planter en présence d'une carte SD endommagée
