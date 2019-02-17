@@ -28,6 +28,7 @@ import java.util.ArrayList;
  */
 public class TvshowActionAdapter extends ObjectAdapter{
 
+    public static final int ACTION_PLAY = 4;
     public static final int ACTION_MORE_DETAILS = 0;
     public static final int ACTION_MARK_SHOW_AS_WATCHED = 1;
     public static final int ACTION_MARK_SHOW_AS_NOT_WATCHED = 2;
@@ -40,7 +41,9 @@ public class TvshowActionAdapter extends ObjectAdapter{
      * @param tvshow
      */
     public TvshowActionAdapter(Context context, Tvshow tvshow) {
-        mActions = new ArrayList<>(3);
+        mActions = new ArrayList<>(4);
+        
+        mActions.add(new Action(ACTION_PLAY, context.getString(R.string.play_selection)));
 
         mActions.add(new Action(ACTION_MORE_DETAILS, context.getString(R.string.leanback_action_more_details)));
 
