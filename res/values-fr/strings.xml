@@ -576,6 +576,13 @@
     <string name="preferences_user_interface">Interface utilisateur</string>
     <string name="preferences_display_resume_box_summary">Afficher ou cacher le bouton de reprise de la dernière vidéo dans l\'écran principal</string>
     <string name="preferences_display_resume_box">Afficher le bouton de reprise de la vidéo</string>
+    <string name="preferences_show_last_added_row_summary">Cochez pour afficher une ligne avec vos dernières vidéos ajoutées</string>
+    <string name="preferences_show_last_added_row">Afficher la ligne des derniers ajouts</string>
+    <string name="preferences_show_last_played_row_summary">Cochez pour afficher une ligne avec vos dernières vidéos jouées</string>
+    <string name="preferences_show_last_played_row">Afficher la ligne des dernières vidéos jouées</string>
+    <string name="preferences_show_all_movies_row_summary">Cochez pour afficher une ligne avec tous vos films au lieu de la ligne des catégories film</string>
+    <string name="preferences_show_all_movies_row">Afficher la ligne regroupant tous les films</string>
+    <string name="preferences_show_all_tv_shows_row">Afficher la ligne regroupant toutes les séries TV</string>
     <string name="codepage_title">Encodage des sous-titres</string>
     <string name="codepage_summary">Sélectionnez l\'encodage utilisé pour les sous-titres</string>
     <string name="codepage_default">Langue de l\'appareil %s</string>
