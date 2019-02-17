@@ -63,6 +63,8 @@ import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.leanback.scrapping.ManualShowScrappingActivity;
+import com.archos.mediacenter.video.player.PlayerActivity;
+import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.ShowTags;
 import com.squareup.picasso.Picasso;
@@ -118,7 +120,38 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         mOverviewRowPresenter.setOnActionClickedListener(new OnActionClickedListener() {
             @Override
             public void onActionClicked(Action action) {
-                if (action.getId() == TvshowActionAdapter.ACTION_MORE_DETAILS) {
+                if (action.getId() == TvshowActionAdapter.ACTION_PLAY) {
+                    if (mSeasonAdapters != null) {
+                        Episode resumeEpisode = null;
+                        Episode firstEpisode = null;
+                        int i = 0;
+
+                        while(i < mSeasonAdapters.size() && resumeEpisode == null) {
+                            CursorObjectAdapter seasonAdapter = mSeasonAdapters.valueAt(i);
+                            int j = 0;
+
+                            while (j < seasonAdapter.size() && resumeEpisode == null) {
+                                Episode episode = (Episode)seasonAdapter.get(j);
+
+                                if (firstEpisode == null)
+                                    firstEpisode = episode;
+
+                                if (episode.getResumeMs() != PlayerActivity.LAST_POSITION_END)
+                                    resumeEpisode = episode;
+
+                                j++;
+                            }
+
+                            i++;
+                        }
+
+                        if (resumeEpisode != null)
+                            PlayUtils.startVideo(getActivity(), (Video)resumeEpisode, PlayerActivity.RESUME_FROM_LAST_POS, false, -1, null, -1);
+                        else if (firstEpisode != null)
+                            PlayUtils.startVideo(getActivity(), (Video)firstEpisode, PlayerActivity.RESUME_FROM_LAST_POS, false, -1, null, -1);
+                    }
+                }
+                else if (action.getId() == TvshowActionAdapter.ACTION_MORE_DETAILS) {
                     Intent intent = new Intent(getActivity(), TvshowMoreDetailsActivity.class);
                     intent.putExtra(TvshowMoreDetailsFragment.EXTRA_TVSHOW_ID, mTvshow.getTvshowId());
                     Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
