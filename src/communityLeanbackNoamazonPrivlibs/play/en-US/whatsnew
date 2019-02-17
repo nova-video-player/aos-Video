@@ -1,7 +1,8 @@
 Add new TV show fragments on Leanback interface to browse quicker through large TV show collections.
 Add AV1 soft decoding capability through 4.2-dev ffmpeg version and dav1d codec.
-Add new shortcuts (A = switch audio track, S = switch subtitle track, U = volume up, D = volume down).
+Add new player shortcuts (A = switch audio track, S = switch subtitle track, U = volume up, D = volume down) and support for menu.
 Improve audio passthrough stability.
 Make private mode persistent between application relaunches.
 Add support for x86_64 architecture.
 Migration from Android ndk-r17 to ndk-r19.
+Fix application crash in presence of a damaged sdcard (unmountable state).
