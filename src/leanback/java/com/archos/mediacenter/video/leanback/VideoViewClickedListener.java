@@ -48,7 +48,7 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
     @Override
     public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
         if (item instanceof Video) {
-            if(row!=null&&(row.getId() == MainFragment.ROW_ID_LAST_PLAYED || row.getId() == MainFragment.ROW_ID_LAST_ADDED)){
+            if(row!=null&&(row.getId() == MainFragment.ROW_ID_LAST_PLAYED || row.getId() == MainFragment.ROW_ID_LAST_ADDED || row.getId() == MainFragment.ROW_ID_ALL_MOVIES)){
                 showVideoDetails(mActivity, (Video) item, itemViewHolder, true, -1);
             }
             else
