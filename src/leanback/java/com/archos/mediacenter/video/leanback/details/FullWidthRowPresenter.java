@@ -68,7 +68,8 @@ public class FullWidthRowPresenter extends RowPresenter {
         super.onBindRowViewHolder(vh, item);
     }
 
-    public void changeSelectLevel(ViewHolder holder, float selectLevel) {
+    public void changeSelectLevel(RowPresenter.ViewHolder vh, ViewHolder holder, float selectLevel) {
+        super.onSelectLevelChanged(vh);
         holder.mColorDimmer.setActiveLevel(selectLevel);
         int dimmedColor = holder.mColorDimmer.getPaint().getColor();
         ((ColorDrawable) holder.getMainContainer().getForeground().mutate()).setColor(dimmedColor);
