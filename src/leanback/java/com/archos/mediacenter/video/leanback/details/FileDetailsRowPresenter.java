@@ -84,7 +84,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
 
     @Override
     protected void onSelectLevelChanged(RowPresenter.ViewHolder holder) {
-        super.changeSelectLevel(((FileDetailsViewHolder) holder).mFullWidthViewHolder, holder.getSelectLevel());
+        super.changeSelectLevel(holder, ((FileDetailsViewHolder) holder).mFullWidthViewHolder, holder.getSelectLevel());
     }
 
     @Override
@@ -100,6 +100,10 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
         fullwidthContainer.addView(detailsView);
 
         fullwidthContainer.setBackgroundColor(mColor);
+        
+        // hacky
+        View rootContainer = (View)fullwidthContainer.getParent();
+        rootContainer.setPadding(rootContainer.getPaddingLeft(), rootContainer.getPaddingTop(), rootContainer.getPaddingRight(), 0);
 
         return new FileDetailsViewHolder(fullWidthViewHolder, detailsView);
     }
@@ -115,7 +119,11 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
         FileDetailsViewHolder vh = (FileDetailsViewHolder) holder;
         vh.mFullWidthViewHolder.getMainContainer().setBackgroundColor(mColor);
         vh.mFileNameTv.setText(videoObject.getFilenameNonCryptic());
-        vh.mFilePathTv.setText(videoObject.getFriendlyPath());
+
+        String path = videoObject.getFriendlyPath();
+        String parentPath = path.substring(0, path.lastIndexOf("/"));
+
+        vh.mFilePathTv.setText(parentPath);
         vh.mProgress.setVisibility(View.GONE);
         vh.mFileErrorTv.setVisibility(View.GONE);
 
