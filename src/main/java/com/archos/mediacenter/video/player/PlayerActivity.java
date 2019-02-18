@@ -2408,8 +2408,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         return lastPosition;
     }
 
-    private final static String EPISODE_FORMAT = "S%dE%d %s";
-    private final static String TITLE_FORMAT = "%s  %s";
+    private final static String SHOW_FORMAT = "%s  -  S%02dE%02d  -  %s";
 
     public void setVideoInfo(VideoDbInfo info){
         mVideoInfo = info;
@@ -2437,9 +2436,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 mMovieOrShowName = mVideoInfo.scraperTitle;
                 if (mMovieOrShowName != null) {
                     if (mVideoInfo.isShow) {
-                        String episodeName = getString(R.string.quotation_format, mVideoInfo.scraperEpisodeName);
-                        mEpisode = String.format(EPISODE_FORMAT, mVideoInfo.scraperSeasonNr, mVideoInfo.scraperEpisodeNr, episodeName);
-                        mTitle = String.format(TITLE_FORMAT, mMovieOrShowName, mEpisode);
+                        mTitle = String.format(SHOW_FORMAT, mMovieOrShowName, mVideoInfo.scraperSeasonNr, mVideoInfo.scraperEpisodeNr, mVideoInfo.scraperEpisodeName);
                     } else {
                         mTitle = mMovieOrShowName;
                     }
