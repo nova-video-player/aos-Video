@@ -25,8 +25,11 @@ public class FullWidthRow extends Row {
     public FullWidthRow() {
         super();
     }
+    
+    private final static String HEADER_PADDING = "                 ";
 
     public FullWidthRow(HeaderItem header) {
-        super(header);
+        // hacky
+        super(new HeaderItem(HEADER_PADDING + header.getName()));
     }
 }
