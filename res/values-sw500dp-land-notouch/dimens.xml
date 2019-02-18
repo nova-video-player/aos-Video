@@ -124,7 +124,7 @@
 <dimen name="volume_bar_marginBottom">60dip</dimen>
 <dimen name="volume_button_vertical_margin">0dip</dimen>
 
-<dimen name="player_time_text_size">10dip</dimen>
+<dimen name="player_time_text_size">14dip</dimen>
 <dimen name="player_button_padding_full">12dip</dimen>
 <dimen name="player_button_padding_half">6dip</dimen>
 <dimen name="player_button_padding_small">1dip</dimen>
