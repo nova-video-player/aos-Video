@@ -75,7 +75,7 @@ public class CastRowPresenter extends FullWidthRowPresenter implements Backgroun
 
     @Override
     protected void onSelectLevelChanged(RowPresenter.ViewHolder holder) {
-        super.changeSelectLevel(((CastViewHolder) holder).mFullWidthViewHolder, holder.getSelectLevel());
+        super.changeSelectLevel(holder, ((CastViewHolder) holder).mFullWidthViewHolder, holder.getSelectLevel());
     }
 
     @Override
