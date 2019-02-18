@@ -459,12 +459,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 mVideoIdFromPlayer = bundle.getLong(EXTRA_VIDEO_ID, -1);
                 if (mVideoIdFromPlayer == -1) {
                     mPath = bundle.getString(EXTRA_VIDEO_PATH);
-                    if(mPath!=null&&mPath.startsWith("content")) {
-                        try {
-                            mVideoIdFromPlayer = Long.valueOf(Uri.parse(mPath).getLastPathSegment());
-                            mPath = null;
-                        } catch (java.lang.NumberFormatException e){}
-                    }
                 }
                 CursorLoader loader = (CursorLoader) onCreateLoader(1, null);
                 Cursor cursor = loader.loadInBackground();
