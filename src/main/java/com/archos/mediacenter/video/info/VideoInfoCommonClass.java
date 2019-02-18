@@ -144,11 +144,11 @@ public class VideoInfoCommonClass {
                     sb.append(Integer.toString(i + 1)).append('.').append(SEP).append(VideoUtils.getLanguageString(c, audio.name)).append(SEP);
                 }
                 sb.append(audio.format).append(SEP);
+                sb.append(audio.channels).append(SEP);
                 if (audio.bitRate > 0) {
                     sb.append(audio.bitRate).append("kb/s").append(SEP);
                 }
                 sb.append(audio.sampleRate).append("Hz").append(SEP);
-                sb.append(audio.channels).append(SEP);
                 if (audio.vbr) {
                     sb.append(resources.getText(R.string.info_audio_vbr)).append(SEP);
                 }
