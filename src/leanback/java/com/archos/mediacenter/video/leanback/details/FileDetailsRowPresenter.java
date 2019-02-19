@@ -84,7 +84,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
 
     @Override
     protected void onSelectLevelChanged(RowPresenter.ViewHolder holder) {
-        super.changeSelectLevel(((FileDetailsViewHolder) holder).mFullWidthViewHolder, holder.getSelectLevel());
+        super.changeSelectLevel(holder, ((FileDetailsViewHolder) holder).mFullWidthViewHolder);
     }
 
     @Override
@@ -115,7 +115,11 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
         FileDetailsViewHolder vh = (FileDetailsViewHolder) holder;
         vh.mFullWidthViewHolder.getMainContainer().setBackgroundColor(mColor);
         vh.mFileNameTv.setText(videoObject.getFilenameNonCryptic());
-        vh.mFilePathTv.setText(videoObject.getFriendlyPath());
+        
+        String path = videoObject.getFriendlyPath();
+        String parentPath = path.substring(0, path.lastIndexOf("/"));
+
+        vh.mFilePathTv.setText(parentPath);
         vh.mProgress.setVisibility(View.GONE);
         vh.mFileErrorTv.setVisibility(View.GONE);
 
@@ -191,7 +195,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
             int subtitleTrackCol2Nb = need2Columns ? (subtitleTrackNb / 2) : 0;
             vh.mSubtitlesTracksCol1Tv.setText(getSubtitleTrackList(c, subtitleTrackCol1Nb, 0,                   SEP, videoMetadata));
             vh.mSubtitlesTracksCol2Tv.setText(getSubtitleTrackList(c, subtitleTrackCol2Nb, subtitleTrackCol1Nb, SEP, videoMetadata));
-            vh.mSubtitlesTracksCol2Tv.setVisibility(need2Columns ? View.VISIBLE : View.GONE);
+            ((View)vh.mSubtitlesTracksCol2Tv.getParent()).setVisibility(need2Columns ? View.VISIBLE : View.GONE);
             vh.mSubtitlesGroup.setVisibility(View.VISIBLE);
         }
         else {
