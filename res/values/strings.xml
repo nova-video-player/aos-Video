@@ -156,6 +156,7 @@
     <string name="scrap_cast">Cast</string>
     <string name="scrap_cast_format">Cast: %s</string>
     <string name="scrap_genre">Genre</string>
+    <string name="scrap_genre_format">Genres: %s</string>
     <string name="scrap_aired">Aired</string>
     <string name="scrap_aired_format">Aired: %s</string>
     <string name="scrap_guests">Guests</string>
