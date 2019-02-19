@@ -67,7 +67,7 @@ public class FullTextRowPresenter extends FullWidthRowPresenter {
 
     @Override
     protected void onSelectLevelChanged(RowPresenter.ViewHolder holder) {
-        super.changeSelectLevel(((FullTextRowViewHolder) holder).mFullWidthViewHolder, holder.getSelectLevel());
+        super.changeSelectLevel(holder, ((FullTextRowViewHolder) holder).mFullWidthViewHolder);
     }
 
     @Override
