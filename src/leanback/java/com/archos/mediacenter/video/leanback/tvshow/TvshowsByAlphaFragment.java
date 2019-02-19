@@ -44,7 +44,7 @@ public class TvshowsByAlphaFragment extends TvshowsByFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setTitle(getString(R.string.all_tv_shows));
+        setTitle(getString(R.string.tvshows_by_alpha));
 
         mSortOrderEntries = TvshowsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
     }
