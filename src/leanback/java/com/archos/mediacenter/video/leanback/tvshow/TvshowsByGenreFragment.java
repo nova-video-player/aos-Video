@@ -49,7 +49,7 @@ public class TvshowsByGenreFragment extends TvshowsByFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setTitle(getString(R.string.all_tv_shows));
+        setTitle(getString(R.string.tvshows_by_genre));
 
         mSortOrderEntries = TvshowsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
     }
