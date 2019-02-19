@@ -94,7 +94,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
 
         updateBackground();
 
-        setTitle(getString(R.string.all_tv_shows));
+        setTitle(getString(R.string.all_tvshows));
         setEmptyTextMessage(getString(R.string.you_have_no_tv_shows));
         setOnItemViewClickedListener(new VideoViewClickedListener(getActivity()));
         setOnItemViewSelectedListener(new ItemViewSelectedListener());
