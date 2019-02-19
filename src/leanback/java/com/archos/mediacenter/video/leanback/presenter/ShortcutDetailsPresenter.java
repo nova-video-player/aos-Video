@@ -24,6 +24,10 @@ public class ShortcutDetailsPresenter extends AbstractDetailsDescriptionPresente
     protected void onBindDescription(ViewHolder viewHolder, Object item) {
         Shortcut shortcut = (Shortcut) item;
         viewHolder.getTitle().setText(shortcut.getName());
-        viewHolder.getSubtitle().setText(shortcut.getFriendlyUri());
+        
+        String uri = shortcut.getFriendlyUri();
+        String newUri = uri.substring(0, uri.length() - 1);
+
+        viewHolder.getSubtitle().setText(newUri);
     }
 }
