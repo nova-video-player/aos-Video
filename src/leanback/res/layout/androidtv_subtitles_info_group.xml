@@ -94,8 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/lb_action_1_line_height"
             android:layout_marginBottom="8dip"
-            android:layout_marginStart="16dip"
-            android:layout_marginTop="8dip"
+            android:layout_marginTop="16dip"
             android:lines="1"
             android:text="@string/get_subtitles_online"/>
 
