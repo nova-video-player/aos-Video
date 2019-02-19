@@ -86,6 +86,8 @@ public class  UpdateRecommendationsService extends IntentService {
 			VideoColumns.DURATION,
 			VideoStore.Video.VideoColumns.ARCHOS_BOOKMARK,
 			VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_ID,
+			VideoStore.Video.VideoColumns.SCRAPER_E_NAME,
+			VideoStore.Video.VideoColumns.SCRAPER_E_SEASON,
 			VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE,
 			COVER,  NAME,
 			null, null
@@ -129,6 +131,9 @@ public class  UpdateRecommendationsService extends IntentService {
 			mIDColumns = c.getColumnIndex(Columns.ID);
 			mProgressColumns = c.getColumnIndex(VideoColumns.BOOKMARK);
 			mDurationColumns = c.getColumnIndex(VideoColumns.DURATION);
+			int episodeNameColumns = c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_NAME);
+			int seasonColumns = c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON);
+			int episodeColumns = c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE);
 			int count = 0;
 			int total = c.getCount();
 			//mNotificationManager.cancelAll();
@@ -149,6 +154,10 @@ public class  UpdateRecommendationsService extends IntentService {
 					if (bitmap == null){
 						bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.widget_default_video);
 					}
+					int season = c.getInt(seasonColumns);
+					int episode = c.getInt(episodeColumns);
+					if (season != 0 && episode != 0)
+						builder.setDescription(String.format("S%02dE%02d  -  %s", season, episode, c.getString(episodeNameColumns)));
 					Notification notification = builder.setTitle(c.getString(mNameColumn))
 							.setImage(bitmap)
 							.setMax(c.getInt(mDurationColumns))
