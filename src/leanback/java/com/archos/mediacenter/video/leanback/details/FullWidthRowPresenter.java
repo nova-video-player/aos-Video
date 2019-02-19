@@ -14,9 +14,11 @@
 
 package com.archos.mediacenter.video.leanback.details;
 
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v17.leanback.graphics.ColorOverlayDimmer;
 import android.support.v17.leanback.widget.RowPresenter;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,10 +68,19 @@ public class FullWidthRowPresenter extends RowPresenter {
     @Override
     protected void onBindRowViewHolder(RowPresenter.ViewHolder vh, Object item) {
         super.onBindRowViewHolder(vh, item);
+        
+        // hacky
+        View headerView = vh.getHeaderViewHolder().view;
+        headerView.setPadding((int)dipToPixels(75), headerView.getPaddingTop(), headerView.getPaddingRight(), headerView.getPaddingBottom());
+    }
+    
+    private static float dipToPixels(float dipValue) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, Resources.getSystem().getDisplayMetrics());
     }
 
-    public void changeSelectLevel(ViewHolder holder, float selectLevel) {
-        holder.mColorDimmer.setActiveLevel(selectLevel);
+    public void changeSelectLevel(RowPresenter.ViewHolder vh, ViewHolder holder) {
+        super.onSelectLevelChanged(vh);
+        holder.mColorDimmer.setActiveLevel(vh.getSelectLevel());
         int dimmedColor = holder.mColorDimmer.getPaint().getColor();
         ((ColorDrawable) holder.getMainContainer().getForeground().mutate()).setColor(dimmedColor);
     }
