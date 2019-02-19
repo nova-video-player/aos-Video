@@ -84,7 +84,7 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
 
     @Override
     protected void onSelectLevelChanged(RowPresenter.ViewHolder holder) {
-        super.changeSelectLevel(((SubtitlesDetailsViewHolder) holder).mFullWidthViewHolder, holder.getSelectLevel());
+        super.changeSelectLevel(holder, ((SubtitlesDetailsViewHolder) holder).mFullWidthViewHolder);
     }
 
     @Override

@@ -76,7 +76,7 @@ public class PlotAndGenresRowPresenter extends FullWidthRowPresenter implements 
 
     @Override
     protected void onSelectLevelChanged(RowPresenter.ViewHolder holder) {
-        super.changeSelectLevel(((PlotAndGenresViewHolder) holder).mFullWidthViewHolder, holder.getSelectLevel());
+        super.changeSelectLevel(holder, ((PlotAndGenresViewHolder) holder).mFullWidthViewHolder);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class PlotAndGenresRowPresenter extends FullWidthRowPresenter implements 
         vh.mPlotTv.setText(row.getPlot());
 
         if (row.getGenres()!=null && !row.getGenres().isEmpty()) {
-            vh.mGenresTv.setText(row.getGenres());
+            vh.mGenresTv.setText(mR.getString(R.string.scrap_genre_format, row.getGenres()));
             vh.mGenresTv.setVisibility(View.VISIBLE);
         } else {
             vh.mGenresTv.setVisibility(View.GONE);
