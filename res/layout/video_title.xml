@@ -14,7 +14,7 @@
 
     android:ellipsize="middle"
     android:textSize="@dimen/player_time_text_size"
-    android:textColor="#ddffffff"
+    android:textColor="#ffffff"
     android:textStyle="bold"
     android:shadowColor="#dd000000"
     android:shadowDx="0"
