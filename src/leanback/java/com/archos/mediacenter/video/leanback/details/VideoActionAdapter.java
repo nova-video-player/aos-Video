@@ -47,8 +47,9 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
     public static final int ACTION_HIDE = 32;
     public static final int ACTION_UNHIDE = 33;
     public static final int ACTION_DELETE = 40;
-    public static final int ACTION_ADD_TO_LIST = 41;
-    public static final int ACTION_REMOVE_FROM_LIST = 42;
+    public static final int ACTION_CONFIRM_DELETE = 41;
+    public static final int ACTION_ADD_TO_LIST = 42;
+    public static final int ACTION_REMOVE_FROM_LIST = 43;
 
     private static final String TAG = "VideoActionAdapter";
 
@@ -64,19 +65,19 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
      * @param nextEpisode the next episode if there is one
      * @param isTvEpisode true if it is a tv episode
      */
-    public VideoActionAdapter(Context context, Video video, boolean inPlayer, boolean displayRemoveFromList, Episode nextEpisode, boolean isTvEpisode) {
+    public VideoActionAdapter(Context context, Video video, boolean inPlayer, boolean displayRemoveFromList, boolean displayConfirmDelete, Episode nextEpisode, boolean isTvEpisode) {
         Log.d(TAG, "new VideoActionAdapter");
         mContext = context;
-        update(video, inPlayer, displayRemoveFromList, nextEpisode, isTvEpisode);
+        update(video, inPlayer, displayRemoveFromList, displayConfirmDelete, nextEpisode, isTvEpisode);
 
     }
 
-    public void update(Video video, boolean inPlayer, boolean displayRemoveFromList, Episode nextEpisode, boolean isTvEpisode){
+    public void update(Video video, boolean inPlayer, boolean displayRemoveFromList, boolean displayConfirmDelete, Episode nextEpisode, boolean isTvEpisode){
         Video oldVideo = mCurrentVideo;
         mCurrentVideo = video;
         int oldRemoteResume = mCurrentRemoteResume;
         mCurrentRemoteResume = video.getRemoteResumeMs();
-        if(!foundDifferencesRequiringDetailsUpdate(oldVideo, video,oldRemoteResume)&&mHasNextEpisode==(nextEpisode!=null))
+        if(!foundDifferencesRequiringDetailsUpdate(oldVideo, video,oldRemoteResume)&&mHasNextEpisode==(nextEpisode!=null)  && (indexOf(ACTION_CONFIRM_DELETE) >= 0) == displayConfirmDelete)
             return;
         mHasNextEpisode = nextEpisode!=null;
         if (!inPlayer) {
@@ -124,9 +125,17 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
                 }
             }
             if (video.locationSupportsDelete()) {
-                set(ACTION_DELETE, new Action(ACTION_DELETE, mContext.getString(R.string.delete)));
+                if (!displayConfirmDelete) {
+                    clear(ACTION_CONFIRM_DELETE);
+                    set(ACTION_DELETE, new Action(ACTION_DELETE, mContext.getString(R.string.delete)));
+                }
+                else {
+                    clear(ACTION_DELETE);
+                    set(ACTION_CONFIRM_DELETE, new Action(ACTION_CONFIRM_DELETE, mContext.getString(R.string.confirm_delete_short)));
+                }
             }else{
                 clear(ACTION_DELETE);
+                clear(ACTION_CONFIRM_DELETE);
             }
         }
 

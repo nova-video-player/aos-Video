@@ -126,6 +126,7 @@
     <string name="remote_resume">Remote resume</string>
     <string name="bookmark">Bookmark</string>
     <string name="delete">Delete</string>
+    <string name="confirm_delete_short">Confirm deletion</string>
     <string name="delete_resume">Delete resume</string>
     <string name="delete_bookmark">Delete bookmark</string>
     <string name="mark_as_watched">Mark watched</string>
@@ -135,7 +136,7 @@
     <string name="scrap_no_info">You have no movie or TV show description for this video.</string>
     <string name="scrap_remove">Remove the description</string>
     <string name="scrap_remove_short">Remove</string> <!-- for small screens -->
-    <string name="scrap_change">Change info for all episodes</string>
+    <string name="scrap_change">Change the description for all episodes</string>
     <string name="scrap_series_change">Change series info</string>
 
     <string name="scrap_change_confirmation">Change all episodes from\n\t\"%1$s\"\nto\n\t\"%2$s\"?</string>
@@ -171,6 +172,8 @@
     <string name="next_episode">Next episode</string>
     <string name="list_episodes">List episodes</string>
     <string name="how_to_mark_season_watched">Click on a season to mark all its episodes watched or unwatched</string>
+    <string name="how_to_unindex_season">Click on a season to unindex all its episodes</string>
+    <string name="how_to_delete_season">Click on a season to delete all its episodes</string>
     <string name="no_episode_watched">No episode watched</string>
     <string name="all_episodes_watched">All episodes watched</string>
     <plurals name="n_episodes_watched">
