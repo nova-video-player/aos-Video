@@ -84,8 +84,8 @@ public class TvshowMoreDetailsDescriptionPresenter extends Presenter {
         }
     }
 
-    private String getYearFormatted(Date date && date.getTime() > 0) {
-        if (date != null) {
+    private String getYearFormatted(Date date) {
+        if (date != null && date.getTime() > 0) {
             return new SimpleDateFormat("yyyy").format(date);
         }
         return null;
