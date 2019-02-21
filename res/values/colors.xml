@@ -29,7 +29,7 @@
     <color name="yellow">#EEFF41</color>
     <color name="mr_custom_title">#EEFF41</color>
     <color name="actionbar">#506a7d</color>
-
+    <color name="red">#b71c1c</color>
 
     <!-- Queue -->
     <color name="bg_item_normal_state">#fff0f0f0</color>
