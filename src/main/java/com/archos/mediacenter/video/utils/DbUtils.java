@@ -18,6 +18,8 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -34,6 +36,8 @@ import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediaprovider.video.VideoStore;
+
+import java.util.ArrayList;
 
 /**
  * Created by vapillon on 13/05/15.
@@ -212,5 +216,42 @@ public class DbUtils {
         if (traktSync) {
             syncTrakt(context, season);
         }
+    }
+    
+    public static void markAsHiddenByUser(final Context context, final Season season) {
+        final ContentResolver cr = context.getContentResolver();
+        Log.d(TAG, "markHiddenValue " + season.getName()+" S"+season.getSeasonNumber());
+        
+        final ContentValues values = new ContentValues();
+        values.put(VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER, 1);
+        
+        final String where = "_id IN (SELECT video_id FROM episode e JOIN show s ON e.show_episode=s._id WHERE s._id=? AND e.season_episode=?)";
+        final String[] selectionArgs = new String[]{Long.toString(season.getShowId()), Integer.toString(season.getSeasonNumber())};
+        
+        cr.update(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, values, where, selectionArgs);
+    }
+    
+    public static ArrayList<String> getFilePaths(final Context context, final Season season) {
+        ArrayList<String> filePaths = new ArrayList<String>();
+        final Uri uri = VideoStore.Video.Media.EXTERNAL_CONTENT_URI;
+        final String[] projection = new String[] { VideoStore.MediaColumns.DATA };
+        final String selection = VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + "=? AND " + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + "=?";
+        final String[] selectionArgs = new String[] { String.valueOf(season.getShowId()), String.valueOf(season.getSeasonNumber()) };
+        final String sortOrder = VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + ", " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE;
+        Cursor c = context.getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
+        final int filePathColumn = c.getColumnIndex(VideoStore.MediaColumns.DATA);
+        
+        c.moveToFirst();
+        
+        while (!c.isAfterLast()) {
+            String filePath = c.getString(filePathColumn);
+            
+            filePaths.add(filePath);
+            c.moveToNext();
+        }
+        
+        c.close();
+        
+        return filePaths;
     }
 }
