@@ -1265,7 +1265,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 if(mProgress2!=null)
                     mProgress2.setProgress((int) pos);
                 currentText = stringForTime(position);
-                endText = stringForTime(duration-position > 0 ? duration-position : 0);
+                endText = "-" + stringForTime(duration-position > 0 ? duration-position : 0);
             } else {
                 if (mDragging || !mSeekComplete) {
                     mProgress.setProgress(position);
