@@ -55,6 +55,7 @@
 
         <ImageButton
             android:id="@+id/pause"
+            android:layout_width="0dip"
             style="@style/PlayerControlButton"
             android:paddingLeft="@dimen/player_button_padding_full"
             android:paddingRight="@dimen/player_button_padding_small"
@@ -62,6 +63,7 @@
 
         <ImageButton
             android:id="@+id/backward"
+            android:layout_width="0dip"
             style="@style/PlayerControlButton"
             android:paddingLeft="0dip"
             android:paddingRight="@dimen/player_button_padding_half"
@@ -72,25 +74,31 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:paddingLeft="@dimen/player_button_padding_half"
-            android:paddingRight="@dimen/player_button_padding_half" >
+            android:paddingLeft="0dip"
+            android:paddingRight="0dip" >
 
             <com.archos.mediacenter.utils.seekbar.ArchosProgressSlider
                 android:id="@+id/seek_progress"
-                style="@style/PlayerSliderHorizontal"
+                style="@style/TallerPlayerSliderHorizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:paddingBottom="13dip"
-                android:paddingTop="31dip" />
+                android:layout_marginLeft="10dip"
+                android:layout_marginTop="2dip"
+                android:layout_marginRight="10dip"
+                android:layout_gravity="center"
+                android:layout_toLeftOf="@id/time"
+                android:layout_toRightOf="@id/time_current" />
 
             <TextView
                 android:id="@+id/time_current"
-                android:layout_width="wrap_content"
+                android:layout_width="60dip"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:paddingTop="10dip"
+                android:layout_marginLeft="30dip"
+                android:layout_gravity="center"
+                android:gravity="right"
                 android:textSize="@dimen/player_time_text_size"
                 android:textStyle="bold" />
 
@@ -100,24 +108,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="2dip"
+                android:layout_marginRight="10dip"
                 android:layout_gravity="center"
-                android:layout_marginLeft="5dip"
-                android:layout_marginTop="12dip"
-                android:layout_toRightOf="@id/time_current"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/time"
-                android:layout_width="wrap_content"
+                android:layout_width="60dip"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:paddingTop="10dip"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="30dip"
+                android:layout_gravity="center"
                 android:textSize="@dimen/player_time_text_size"
                 android:textStyle="bold" />
         </RelativeLayout>
 
         <ImageButton
+            android:layout_width="0dip"
             android:id="@+id/forward"
             style="@style/PlayerControlButton"
             android:paddingLeft="@dimen/player_button_padding_half"
@@ -125,6 +135,7 @@
             android:src="@drawable/video_forward_selector" />
 
         <ImageButton
+            android:layout_width="0dip"
             android:id="@+id/format"
             style="@style/PlayerControlButton"
             android:paddingLeft="@dimen/player_button_padding_small"
