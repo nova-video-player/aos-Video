@@ -294,6 +294,17 @@ public class TVMenuAdapter {
             cards.get(pos).requestFocus();
         }
     }
+    
+    public void hideAnimation() {
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        mWindow.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        final int width = displaymetrics.heightPixels;
+        YAnimation a = new YAnimation(-width, false);
+        
+        a.setDuration(400);
+        mView.startAnimation(a);
+    }
+    
     public void refocus(){
         
         if(cards!=null&& cards.size()>0&&pos>=0&&pos<cards.size()){
