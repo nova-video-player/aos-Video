@@ -48,11 +48,11 @@ public class TvshowActionAdapter extends ObjectAdapter{
         mActions.add(new Action(ACTION_PLAY, context.getString(R.string.play_selection)));
 
         mActions.add(new Action(ACTION_MORE_DETAILS, context.getString(R.string.leanback_action_more_details)));
-        
-        mActions.add(new Action(ACTION_UNINDEX, context.getString(R.string.video_browser_unindex_file)));
 
         // Limitation/Keep it simple: For TvShow we always display "Mark watched", even if all episodes are watched already
         mActions.add(new Action(ACTION_MARK_SHOW_AS_WATCHED, context.getString(R.string.mark_as_watched)));
+        
+        mActions.add(new Action(ACTION_UNINDEX, context.getString(R.string.video_browser_unindex_file)));
 
         mActions.add(new Action(ACTION_CHANGE_INFO, context.getString(R.string.scrap_change)));
         

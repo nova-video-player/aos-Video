@@ -163,8 +163,8 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 else if (action.getId() == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED) {
                     Intent intent = new Intent(getActivity(), SeasonActivity.class);
                     intent.putExtra(SeasonFragment.EXTRA_ACTION_ID, action.getId());
-                    intent.putExtra(MarkAsWatchedFragment.EXTRA_TVSHOW_ID, mTvshow.getTvshowId());
-                    intent.putExtra(MarkAsWatchedFragment.EXTRA_TVSHOW_NAME, mTvshow.getName());
+                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_ID, mTvshow.getTvshowId());
+                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_NAME, mTvshow.getName());
                     startActivity(intent);
                 }
                 else if (action.getId() == TvshowActionAdapter.ACTION_UNINDEX) {
