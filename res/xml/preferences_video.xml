@@ -210,7 +210,7 @@
             android:title="@string/network_thumbnails" />
 
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="network_bookmarks"
             android:summary="@string/network_bookmarks_summary"
             android:title="@string/network_bookmarks" />
