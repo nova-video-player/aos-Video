@@ -33,32 +33,37 @@ import android.widget.TextView;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Season;
+import com.archos.mediacenter.video.leanback.tvshow.TvshowActionAdapter;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 public class SeasonPresenter extends Presenter {
 
     final Drawable mErrorDrawable;
+    
+    private long mActionId;
 
     private Context mContext;
 
     public class VideoViewHolder extends ViewHolder {
         private ImageCardView mCardView;
         private PicassoImageCardViewTarget mImageCardViewTarget;
-        private TextView mWatchedMessage;
+        private TextView mInfoMessage;
 
-        public VideoViewHolder(Context context) {
+        public VideoViewHolder(Context context, boolean displayInfoMessage) {
             super(new ImageCardView(context));
             mCardView = (ImageCardView)view;
             mCardView.setMainImageDimensions(getWidth(context), getHeight(context));
             mCardView.setMainImage(new ColorDrawable(context.getResources().getColor(R.color.lb_basic_card_bg_color)));
             mCardView.setFocusable(true);
             mCardView.setFocusableInTouchMode(true);
-
-            mWatchedMessage = (TextView)LayoutInflater.from(mContext).inflate(R.layout.leanback_season_watched_text, mCardView, false);
-            BaseCardView.LayoutParams cardLp = new BaseCardView.LayoutParams(mWatchedMessage.getLayoutParams());
-            cardLp.viewType = BaseCardView.LayoutParams.VIEW_TYPE_INFO;
-            mCardView.addView(mWatchedMessage, cardLp);
+            
+            if (displayInfoMessage) {
+                mInfoMessage = (TextView)LayoutInflater.from(mContext).inflate(R.layout.leanback_season_info_text, mCardView, false);
+                BaseCardView.LayoutParams cardLp = new BaseCardView.LayoutParams(mInfoMessage.getLayoutParams());
+                cardLp.viewType = BaseCardView.LayoutParams.VIEW_TYPE_INFO;
+                mCardView.addView(mInfoMessage, cardLp);
+            }
 
             mImageCardViewTarget = new PicassoImageCardViewTarget(mCardView);
         }
@@ -75,12 +80,30 @@ public class SeasonPresenter extends Presenter {
             return mCardView;
         }
 
-        public void setWatchedMessage(CharSequence text) {
-            mWatchedMessage.setText(text);
+        public void setInfoMessage(CharSequence text) {
+            mInfoMessage.setText(text);
         }
 
-        public void setWatchedColor(int color) {
-            mWatchedMessage.setBackgroundColor(color);
+        public void setInfoColor(int color) {
+            mInfoMessage.setBackgroundColor(color);
+        }
+        
+        public boolean getConfirmDelete() {
+            return mConfirmDelete;
+        }
+
+        public void enableConfirmDelete() {
+            mConfirmDelete = true;
+
+            mInfoMessage = (TextView)LayoutInflater.from(mContext).inflate(R.layout.leanback_season_info_text, mCardView, false);
+            BaseCardView.LayoutParams cardLp = new BaseCardView.LayoutParams(mInfoMessage.getLayoutParams());
+            cardLp.viewType = BaseCardView.LayoutParams.VIEW_TYPE_INFO;
+            mCardView.addView(mInfoMessage, cardLp);
+
+            final Resources r = mContext.getResources();
+
+            setInfoMessage(r.getString(R.string.confirm_delete_short));
+            setInfoColor(r.getColor(R.color.red));
         }
 
         /**
@@ -98,15 +121,16 @@ public class SeasonPresenter extends Presenter {
         }
     }
 
-    public SeasonPresenter(Context context) {
+    public SeasonPresenter(Context context, long actionId) {
         super();
         mErrorDrawable = context.getResources().getDrawable(R.drawable.filetype_new_video);
+        mActionId = actionId;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
         mContext = parent.getContext();
-        VideoViewHolder vh = new VideoViewHolder(parent.getContext());
+        VideoViewHolder vh = new VideoViewHolder(parent.getContext(), mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED);
         return vh;
     }
 
@@ -117,7 +141,7 @@ public class SeasonPresenter extends Presenter {
 
         // setup the watched flag BEFORE the poster because it is handled in a strange way in the ImageCardViewTarget
         // We show the top-right corner icon like for the individual videos, for consistency
-        vh.mImageCardViewTarget.setWatchedFlag(season.allEpisodesWatched());
+        vh.mImageCardViewTarget.setWatchedFlag(mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED && season.allEpisodesWatched());
 
         vh.updateCardView(season.getPosterUri());
 
@@ -125,23 +149,25 @@ public class SeasonPresenter extends Presenter {
         card.setTitleText(mContext.getString(R.string.season_identification, season.getSeasonNumber()));
         card.setContentText(mContext.getResources().getQuantityString(R.plurals.Nepisodes, season.getEpisodeTotalCount(), season.getEpisodeTotalCount()));
 
-        final Resources r = mContext.getResources();
-        String desc;
-        int color;
-        if (season.allEpisodesWatched()) {
-            desc = r.getString(R.string.all_episodes_watched);
-            color = r.getColor(R.color.leanback_all_episodes_watched);
+        if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED) {
+            final Resources r = mContext.getResources();
+            String desc;
+            int color;
+            if (season.allEpisodesWatched()) {
+                desc = r.getString(R.string.all_episodes_watched);
+                color = r.getColor(R.color.leanback_all_episodes_watched);
+            }
+            else if (season.allEpisodesNotWatched()) {
+                desc = r.getString(R.string.no_episode_watched);
+                color = r.getColor(R.color.leanback_no_episode_watched);
+            }
+            else {
+                desc = r.getQuantityString(R.plurals.n_episodes_watched, season.getEpisodeWatchedCount(), season.getEpisodeWatchedCount());
+                color = r.getColor(R.color.leanback_n_episodes_watched);
+            }
+            vh.setWatchedMessage(desc);
+            vh.setWatchedColor(color);
         }
-        else if (season.allEpisodesNotWatched()) {
-            desc = r.getString(R.string.no_episode_watched);
-            color = r.getColor(R.color.leanback_no_episode_watched);
-        }
-        else {
-            desc = r.getQuantityString(R.plurals.n_episodes_watched, season.getEpisodeWatchedCount(), season.getEpisodeWatchedCount());
-            color = r.getColor(R.color.leanback_n_episodes_watched);
-        }
-        vh.setWatchedMessage(desc);
-        vh.setWatchedColor(color);
     }
 
     @Override

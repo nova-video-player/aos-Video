@@ -21,9 +21,9 @@ import com.archos.mediacenter.video.leanback.SingleFragmentActivity;
 /**
  * Created by vapillon on 16/06/15.
  */
-public class MarkAsWatchedActivity extends SingleFragmentActivity {
+public class SeasonActivity extends SingleFragmentActivity {
     @Override
     public Fragment getFragmentInstance() {
-        return new MarkAsWatchedFragment();
+        return new SeasonFragment();
     }
 }

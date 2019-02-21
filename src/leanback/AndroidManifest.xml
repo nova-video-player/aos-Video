@@ -66,7 +66,7 @@
             android:theme="@style/MyLeanbackTheme"/>
 
         <activity
-            android:name="com.archos.mediacenter.video.leanback.tvshow.MarkAsWatchedActivity"
+            android:name="com.archos.mediacenter.video.leanback.tvshow.SeasonActivity"
             android:theme="@style/MyLeanbackTheme"/>
 
         <activity

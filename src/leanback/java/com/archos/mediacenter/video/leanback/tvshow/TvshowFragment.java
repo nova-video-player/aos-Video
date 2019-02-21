@@ -161,9 +161,17 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                     startActivityForResult(intent, REQUEST_CODE_MORE_DETAILS, bundle);
                 }
                 else if (action.getId() == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED) {
-                    Intent intent = new Intent(getActivity(), MarkAsWatchedActivity.class);
+                    Intent intent = new Intent(getActivity(), SeasonActivity.class);
+                    intent.putExtra(SeasonFragment.EXTRA_ACTION_ID, action.getId());
                     intent.putExtra(MarkAsWatchedFragment.EXTRA_TVSHOW_ID, mTvshow.getTvshowId());
                     intent.putExtra(MarkAsWatchedFragment.EXTRA_TVSHOW_NAME, mTvshow.getName());
+                    startActivity(intent);
+                }
+                else if (action.getId() == TvshowActionAdapter.ACTION_UNINDEX) {
+                    Intent intent = new Intent(getActivity(), SeasonActivity.class);
+                    intent.putExtra(SeasonFragment.EXTRA_ACTION_ID, action.getId());
+                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_ID, mTvshow.getTvshowId());
+                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_NAME, mTvshow.getName());
                     startActivity(intent);
                 }
                 else if (action.getId() == TvshowActionAdapter.ACTION_CHANGE_INFO) {
@@ -175,6 +183,13 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                         intent.putExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_ID, mTvshow.getTvshowId());
                         startActivityForResult(intent, REQUEST_CODE_CHANGE_TVSHOW);
                     }
+                }
+                else if (action.getId() == TvshowActionAdapter.ACTION_DELETE) {
+                    Intent intent = new Intent(getActivity(), SeasonActivity.class);
+                    intent.putExtra(SeasonFragment.EXTRA_ACTION_ID, action.getId());
+                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_ID, mTvshow.getTvshowId());
+                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_NAME, mTvshow.getName());
+                    startActivity(intent);
                 }
             }
         });
@@ -364,6 +379,18 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         else {
             // We got the list of episode for one season, load it
             mSeasonAdapters.get(cursorLoader.getId()).changeCursor(cursor);
+            
+            if (cursor.getCount() == 0) {
+                for (int i = 0; i < mRowsAdapter.size(); i++) {
+                    Row row = (Row)mRowsAdapter.get(i);
+
+                    if (row.getId() == cursorLoader.getId()) {
+                        mRowsAdapter.remove(row);
+
+                        break;
+                    }
+                }
+            }
         }
     }
 
