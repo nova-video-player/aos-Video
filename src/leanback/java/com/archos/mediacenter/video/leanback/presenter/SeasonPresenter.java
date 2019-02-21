@@ -49,6 +49,7 @@ public class SeasonPresenter extends Presenter {
         private ImageCardView mCardView;
         private PicassoImageCardViewTarget mImageCardViewTarget;
         private TextView mInfoMessage;
+        private boolean mConfirmDelete = false;
 
         public VideoViewHolder(Context context, boolean displayInfoMessage) {
             super(new ImageCardView(context));
@@ -165,8 +166,8 @@ public class SeasonPresenter extends Presenter {
                 desc = r.getQuantityString(R.plurals.n_episodes_watched, season.getEpisodeWatchedCount(), season.getEpisodeWatchedCount());
                 color = r.getColor(R.color.leanback_n_episodes_watched);
             }
-            vh.setWatchedMessage(desc);
-            vh.setWatchedColor(color);
+            vh.setInfoMessage(desc);
+            vh.setInfoColor(color);
         }
     }
 
