@@ -21,6 +21,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dip"
+        android:layout_marginBottom="4dip"
         android:layout_gravity="center"
         android:orientation="vertical"
         android:visibility="visible">
@@ -29,7 +31,8 @@
             android:id="@+id/progress"
             style="?android:attr/progressBarStyleSmall"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dip" />
 
         <TextView
             android:id="@+id/integrated_subtitles_label"
@@ -43,7 +46,8 @@
             android:id="@+id/integrated_subtitles_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dip">
+            android:layout_marginLeft="16dip"
+            android:layout_marginBottom="12dip">
             <TextView
                 android:id="@+id/integrated_subtitles_values_col1"
                 style="@style/TextAppearance.Leanback.DetailsDescriptionBody"
@@ -71,7 +75,8 @@
             android:id="@+id/external_subtitles_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dip">
+            android:layout_marginLeft="16dip"
+            android:layout_marginBottom="12dip">
             <TextView
                 android:id="@+id/external_subtitles_values_col1"
                 style="@style/TextAppearance.Leanback.DetailsDescriptionBody"
@@ -93,8 +98,8 @@
             style="?attr/detailsActionButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/lb_action_1_line_height"
-            android:layout_marginBottom="8dip"
-            android:layout_marginTop="16dip"
+            android:layout_marginTop="4dip"
+            android:layout_marginBottom="4dip"
             android:lines="1"
             android:text="@string/get_subtitles_online"/>
 
