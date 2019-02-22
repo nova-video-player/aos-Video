@@ -100,6 +100,7 @@
                 android:layout_gravity="center"
                 android:gravity="right"
                 android:textSize="@dimen/player_time_text_size"
+                android:textColor="#ffffff"
                 android:textStyle="bold" />
 
             <ProgressBar
@@ -123,6 +124,7 @@
                 android:layout_marginRight="30dip"
                 android:layout_gravity="center"
                 android:textSize="@dimen/player_time_text_size"
+                android:textColor="#ffffff"
                 android:textStyle="bold" />
         </RelativeLayout>
 
