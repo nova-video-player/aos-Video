@@ -205,6 +205,8 @@ public class VideoMetadata implements Serializable {
         int nbTrack;
         if (data.has(IMediaPlayer.METADATA_KEY_FILE_SIZE))
             mFileSize = data.getLong(IMediaPlayer.METADATA_KEY_FILE_SIZE);
+	if (data.has(IMediaPlayer.METADATA_KEY_DURATION))
+            mDuration = data.getInt(IMediaPlayer.METADATA_KEY_DURATION);
         if (data.has(IMediaPlayer.METADATA_KEY_VIDEO_WIDTH))
             mVideoWidth = data.getInt(IMediaPlayer.METADATA_KEY_VIDEO_WIDTH);
         if (data.has(IMediaPlayer.METADATA_KEY_VIDEO_HEIGHT))
