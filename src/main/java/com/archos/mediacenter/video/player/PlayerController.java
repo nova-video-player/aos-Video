@@ -550,6 +550,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     // in the player we change the typeface and add shadow to improve visibility over the video plane
                     mClock.setShadowLayer(2, 0, 0, Color.BLACK);
                     mClock.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+                    mClock.setTextColor(Color.WHITE);
                     if (DateFormat.is24HourFormat(mContext)) {
                         mDateFormat = new SimpleDateFormat("HH:mm");
                     } else {
