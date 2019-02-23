@@ -145,10 +145,6 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
         {
             StringBuilder sb = new StringBuilder();
             sb.append(Formatter.formatFileSize(c, videoMetadata.getFileSize()));
-            sb.append("          ");
-            if (videoMetadata.getDuration() > 0) {
-                sb.append(MediaUtils.formatTime(videoMetadata.getDuration()));
-            }
 
             vh.mFileSizeAndDurationTv.setText(sb.toString());
             vh.mFileSizeAndDurationTv.setVisibility(View.VISIBLE);
@@ -181,19 +177,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
         }
 
         // Subtitles tracks info
-        int subtitleTrackNb = videoMetadata.getSubtitleTrackNb();
-        if (subtitleTrackNb > 0) {
-            boolean need2Columns = subtitleTrackNb > 5;
-            int subtitleTrackCol1Nb = need2Columns ? ((subtitleTrackNb + 1) / 2) : subtitleTrackNb;
-            int subtitleTrackCol2Nb = need2Columns ? (subtitleTrackNb / 2) : 0;
-            vh.mSubtitlesTracksCol1Tv.setText(getSubtitleTrackList(c, subtitleTrackCol1Nb, 0,                   SEP, videoMetadata));
-            vh.mSubtitlesTracksCol2Tv.setText(getSubtitleTrackList(c, subtitleTrackCol2Nb, subtitleTrackCol1Nb, SEP, videoMetadata));
-            ((View)vh.mSubtitlesTracksCol2Tv.getParent()).setVisibility(need2Columns ? View.VISIBLE : View.GONE);
-            vh.mSubtitlesGroup.setVisibility(View.VISIBLE);
-        }
-        else {
-            vh.mSubtitlesGroup.setVisibility(View.GONE);
-        }
+        vh.mSubtitlesGroup.setVisibility(View.GONE);
     }
 
     private String getSubtitleTrackList(Context context, int number, int offset, String separator, VideoMetadata videoMetadata) {
