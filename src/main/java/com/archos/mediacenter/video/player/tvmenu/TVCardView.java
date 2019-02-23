@@ -312,6 +312,13 @@ public class TVCardView extends FrameLayout implements Checkable, FocusableTVCar
         this.text=txt;
         ((TextView) findViewById(R.id.info_text)).setText(txt);
     }
+    
+    public void setText2(String txt) {
+        TextView textView = (TextView)findViewById(R.id.info_text2);
+
+        textView.setText(txt);
+        textView.setVisibility(View.VISIBLE);
+    }
 
     public void setDrawable(Drawable d) {
 
