@@ -52,6 +52,20 @@
                         android:textSize="@dimen/tv_menu_font_size" />
                 </LinearLayout>
             </RelativeLayout>
+            
+            <TextView
+                android:id="@+id/info_text2"
+                android:fontFamily="sans-serif"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:background="@null"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/tv_menu_font_size"
+                android:focusable="false"
+                android:visibility="gone" />
 
             <com.archos.mediacenter.video.player.tvmenu.TVScrollView
                 android:id="@+id/contentScrollView"
