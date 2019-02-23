@@ -398,7 +398,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 @Override
                 public boolean onFocusOut(int keyCode) {
                     // TODO Auto-generated method stub
-                    if(keyCode==KeyEvent.KEYCODE_DPAD_DOWN){
+                    if(keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode==KeyEvent.KEYCODE_DPAD_DOWN){
                         //showTVMenu(false);
                         return true;
                     }

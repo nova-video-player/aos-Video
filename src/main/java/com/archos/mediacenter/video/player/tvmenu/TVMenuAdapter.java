@@ -228,8 +228,8 @@ public class TVMenuAdapter {
             while((cards.get(pos).findViewById(R.id.card_view)==null || !cards.get(pos).findViewById(R.id.card_view).isFocusable())&&pos<cards.size()-1)
                 pos++;
             if(cards.get(pos).findViewById(R.id.card_view).isFocusable()){
-                cards.get(pos).requestFocus();
                 ((TVCardView)cards.get(oldPos).findViewById(R.id.card_view)).focus(false);
+                cards.get(pos).requestFocus();
             }
             else
                 pos=oldPos;
