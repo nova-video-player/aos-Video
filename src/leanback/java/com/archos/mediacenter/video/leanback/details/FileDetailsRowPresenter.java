@@ -157,14 +157,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
         if (video != null) {
 
             vh.mVideoTrackTv.setText(VideoInfoCommonClass.getVideoTrackString(videoMetadata, mR));
-            String decoder = VideoInfoCommonClass.getDecoder(videoMetadata,mR, playerType);
-            if (decoder!=null) {
-                vh.mVideoDecoderTv.setText(decoder);
-                vh.mVideoDecoderTv.setVisibility(View.VISIBLE);
-            } else {
-                vh.mVideoDecoderTv.setVisibility(View.GONE);
-            }
-
+            vh.mVideoDecoderTv.setVisibility(View.GONE);
             vh.mVideoGroup.setVisibility(View.VISIBLE);
         }
         else {
