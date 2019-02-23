@@ -80,6 +80,7 @@ import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.browser.PermissionChecker;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
+import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.player.TrackInfoController.TrackInfoListener;
 import com.archos.mediacenter.video.player.tvmenu.AudioDelayTVPicker;
 import com.archos.mediacenter.video.player.tvmenu.SubtitleDelayTVPicker;
@@ -1467,11 +1468,46 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             mAudioTracksTVMenu.clean();
             if (mAudioInfoController.getTrackCount() > 0) {
                 mPlayerController.getTVMenuAdapter().setCardViewVisibility(View.VISIBLE, mAudioTracksTVCardView);
+		    
+		for (int i =0; i<mAudioInfoController.getTrackCount(); i++) {
+                    mAudioTracksTVMenu.createAndAddTVMenuItem(mAudioInfoController.getTrackNameAt(i).toString(), true, mAudioInfoController.getTrack()==i);
+                }
+
+                if (isAudioFilterEnabled()) {
+                    mAudioTracksTVMenu.createAndAddSeparator();
+        
+                    final TVMenuItem tvmi = mAudioTracksTVMenu.createAndAddTVSwitchableMenuItem(getResources().getString(R.string.pref_audio_filt_title),  PlayerService.sPlayerService.mAudioFilt > 0);
+                    tvmi.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            PlayerService.sPlayerService.setAudioFilt(PlayerService.sPlayerService.mAudioFilt > 0 ? 0 : 3);
+                            tvmi.setChecked( PlayerService.sPlayerService.mAudioFilt>0);
+                        }
+                    });
+        
+                    final TVMenuItem tvmi2 = mAudioTracksTVMenu.createAndAddTVSwitchableMenuItem(getResources().getString(R.string.pref_audio_filt_night_mode),  PlayerService.sPlayerService.mNightModeOn);
+                    tvmi2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            PlayerService.sPlayerService.setNightMode(! PlayerService.sPlayerService.mNightModeOn);
+                            tvmi2.setChecked( PlayerService.sPlayerService.mNightModeOn);
+                        }
+                    });
+        
+                    mAudioTracksTVMenu.createAndAddSeparator();
+        
+                    final TVMenuItem tvmi3 = mAudioTracksTVMenu.createAndAddTVMenuItem(getText(R.string.player_pref_subtitle_delay_title).toString(), false, false);
+                    tvmi3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            createTVAudioDelayDialog();
+                        }
+                    });
+                }
             } else {
                 mPlayerController.getTVMenuAdapter().setCardViewVisibility(View.GONE, mAudioTracksTVCardView);
-            }
-            for (int i =0; i<mAudioInfoController.getTrackCount(); i++) {
-                mAudioTracksTVMenu.createAndAddTVMenuItem(mAudioInfoController.getTrackNameAt(i).toString(), true, mAudioInfoController.getTrack()==i);
             }
         }
     }
@@ -1551,6 +1587,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             //[infomenu]
             TVCardView tcv = tma.createAndAddView(null, getResources().getDrawable(R.drawable.tv_info),
                                                   getResources().getString(R.string.menu_info));
+            String decoder = VideoInfoCommonClass.getDecoder(mPlayer.getVideoMetadata(), getResources(), mPlayer.getType());
+            
+            tcv.setText2(decoder);
             tcv.setOnSwitchClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1563,6 +1602,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     }, 20);
                 }
             });
+		
+            final TVMenu tm = tma.createTVMenu();
+
+            tcv.addOtherView(tm);
             //[/infomenu]
 
             // Scale (format) type
@@ -1612,45 +1655,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             });
 
             tcv.addOtherView(tvmFormat);
-
-            //[audioboost]
-            if (isAudioFilterEnabled()) {
-                TVCardView cv = tma.createAndAddView(null, getResources().getDrawable(R.drawable.tv_audioboost),
-                                                     getResources().getString(R.string.pref_audio_parameters_title));
-                final TVMenu tvm = tma.createTVMenu();
-                final TVMenuItem tvmi = tvm.createAndAddTVSwitchableMenuItem(getResources().getString(R.string.pref_audio_filt_title),  PlayerService.sPlayerService.mAudioFilt > 0);
-                tvmi.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // TODO Auto-generated method stub
-                        PlayerService.sPlayerService.setAudioFilt(PlayerService.sPlayerService.mAudioFilt > 0 ? 0 : 3);
-                        tvmi.setChecked( PlayerService.sPlayerService.mAudioFilt>0);
-                    }
-                });
-
-                final TVMenuItem tvmi2 = tvm.createAndAddTVSwitchableMenuItem(getResources().getString(R.string.pref_audio_filt_night_mode),  PlayerService.sPlayerService.mNightModeOn);
-                tvmi2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // TODO Auto-generated method stub
-                        PlayerService.sPlayerService.setNightMode(! PlayerService.sPlayerService.mNightModeOn);
-                        tvmi2.setChecked( PlayerService.sPlayerService.mNightModeOn);
-                    }
-                });
-
-                tvm.createAndAddSeparator();
-
-                final TVMenuItem tvmi3 = tvm.createAndAddTVMenuItem(getText(R.string.player_pref_subtitle_delay_title).toString(), false, false);
-                tvmi3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        createTVAudioDelayDialog();
-                    }
-                });
-
-                cv.addOtherView(tvm);
-            }
-            //[/audioboost]
 
             //[playmode]
             tcv = tma.createAndAddView(null, getResources().getDrawable(R.drawable.tv_playmode),
@@ -3209,14 +3213,12 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     + "  firstTimeUpdated: " + firstTimeUpdated
                     + "  nbTrack: " + nbTrack);
 
-            if (nbTrack > 1) {
-                mAudioInfoController.clear();
-                for (int i = 0; i < nbTrack; ++i) {
-                    VideoMetadata.AudioTrack audio = vMetadata.getAudioTrack(i);
-                    CharSequence name = VideoUtils.getLanguageString(PlayerActivity.this, audio.name);
-                    CharSequence summary = VideoUtils.getLanguageString(PlayerActivity.this, audio.format);
-                    mAudioInfoController.addTrack(name, summary);
-                }
+            mAudioInfoController.clear();
+            for (int i = 0; i < nbTrack; ++i) {
+            	VideoMetadata.AudioTrack audio = vMetadata.getAudioTrack(i);
+            	CharSequence name = VideoUtils.getLanguageString(PlayerActivity.this, audio.name);
+            	CharSequence summary = VideoUtils.getLanguageString(PlayerActivity.this, audio.format);
+            	mAudioInfoController.addTrack(name, summary);
             }
 
             mAudioInfoController.setTrack(mVideoInfo.audioTrack);
