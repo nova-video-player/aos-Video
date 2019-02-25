@@ -33,7 +33,10 @@ import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.archos.mediacenter.video.R;
@@ -71,6 +74,9 @@ public class SeasonFragment extends BrowseFragment implements  LoaderManager.Loa
     private ListRow mSeasonsListRow;
 
     private Overlay mOverlay;
+    
+    private Button mActionButton;
+    private boolean mConfirmDelete = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +100,7 @@ public class SeasonFragment extends BrowseFragment implements  LoaderManager.Loa
             @Override
             public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
                 Season season = (Season)item;
+                
                 if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED) {
                     if (season.allEpisodesWatched()) {
                         DbUtils.markAsNotRead(getActivity(), season);
@@ -138,6 +145,86 @@ public class SeasonFragment extends BrowseFragment implements  LoaderManager.Loa
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mOverlay = new Overlay(this);
+        
+        ViewGroup titleView = (ViewGroup)getTitleView();
+        mActionButton = (Button)LayoutInflater.from(getContext()).inflate(R.layout.leanback_season_action_button, titleView, false);
+        String text = "";
+        
+        if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED)
+            text = getString(R.string.mark_show_watched);
+        else if (mActionId == TvshowActionAdapter.ACTION_UNINDEX)
+            text = getString(R.string.unindex_show);
+        else if (mActionId == TvshowActionAdapter.ACTION_DELETE)
+            text = getString(R.string.delete_show);
+
+        mActionButton.setText(text);
+        mActionButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED) {
+                    boolean allEpisodesWatched = true;
+
+                    for (int i = 0; i < mSeasonsAdapter.size(); i++) {
+                        Season season = (Season)mSeasonsAdapter.get(i);
+    
+                        if (!season.allEpisodesWatched()) {
+                            allEpisodesWatched = false;
+
+                            break;
+                        }
+                    }
+
+                    if (allEpisodesWatched) {
+                        for (int i = 0; i < mSeasonsAdapter.size(); i++) {
+                            Season season = (Season)mSeasonsAdapter.get(i);
+        
+                            DbUtils.markAsNotRead(getActivity(), season);
+                        }
+                    }
+                    else {
+                        for (int i = 0; i < mSeasonsAdapter.size(); i++) {
+                            Season season = (Season)mSeasonsAdapter.get(i);
+        
+                            DbUtils.markAsRead(getActivity(), season);
+                        }
+                    }
+                }
+                else if (mActionId == TvshowActionAdapter.ACTION_UNINDEX) {
+                    for (int i = 0; i < mSeasonsAdapter.size(); i++) {
+                        Season season = (Season)mSeasonsAdapter.get(i);
+    
+                        DbUtils.markAsHiddenByUser(getActivity(), season);
+                    }
+                }
+                else if (mActionId == TvshowActionAdapter.ACTION_DELETE) {
+                    if (!mConfirmDelete) {
+                        mConfirmDelete = true;
+
+                        mActionButton.setText(getString(R.string.confirm_delete_short));
+                    }
+                    else {
+                        ArrayList<Uri> uris = new ArrayList<Uri>();
+
+                        for (int i = 0; i < mSeasonsAdapter.size(); i++) {
+                            Season season = (Season)mSeasonsAdapter.get(i);
+        
+                            for(String filePath : DbUtils.getFilePaths(getActivity(), season)) {
+                                Uri uri = VideoUtils.getFileUriFromMediaLibPath(filePath);
+                                
+                                uris.add(uri);
+                            }
+                        }
+
+                        Delete delete = new Delete(SeasonFragment.this, getActivity());
+
+                        if (uris.size() == 1)
+                            delete.startDeleteProcess(uris.get(0));
+                        else if (uris.size() > 1)
+                            delete.startMultipleDeleteProcess(uris);
+                    }
+                }
+            }
+         });
+        titleView.addView(mActionButton);
     }
 
     @Override
