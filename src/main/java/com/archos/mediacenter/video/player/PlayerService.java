@@ -1345,6 +1345,17 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (mSession == null) {
             mSession = new MediaSession(this, "PlayerActivity");
             MediaSession.Callback mediaSessionCallback = new  MediaSession.Callback() {
+                @Override
+                public void onPlay() {
+                    super.onPlay();
+                    Player.sPlayer.start();
+                }
+
+                @Override
+                public void onPause() {
+                    super.onPause();
+                    Player.sPlayer.pause();
+                }
             };
             mSession.setCallback(mediaSessionCallback);
             mSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS |
