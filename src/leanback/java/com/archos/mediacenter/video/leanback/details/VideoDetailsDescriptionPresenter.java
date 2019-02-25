@@ -334,14 +334,40 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
             }
 
             // Audio badge
-            boolean hasFiveDotOneAudio = false;
+            int audioChannels = -1;
+
             for (int n=0; n<metadata.getAudioTrackNb(); n++) {
-                if (metadata.getAudioTrack(n).channels!=null&&metadata.getAudioTrack(n).channels.startsWith("5")) {
-                    hasFiveDotOneAudio = true;
-                    break;
+                if (metadata.getAudioTrack(n).channels!=null) {
+                    int channels = -1;
+
+                    if (metadata.getAudioTrack(n).channels.startsWith("7.1"))
+                        channels = 7;
+                    else if (metadata.getAudioTrack(n).channels.startsWith("5.1"))
+                        channels = 5;
+                    else if (metadata.getAudioTrack(n).channels.startsWith("Stereo"))
+                        channels = 2;
+
+                    if (channels > audioChannels)
+                        audioChannels = channels;
                 }
             }
-            mSingleViewHolder.mAudioBadge.setVisibility( hasFiveDotOneAudio ? View.VISIBLE : View.GONE);
+
+            if (audioChannels != -1) {
+                int audioBadgeResId = -1;
+
+                if (audioChannels == 7)
+                    audioBadgeResId = R.drawable.badge_7_1;
+                else if (audioChannels == 5)
+                    audioBadgeResId = R.drawable.badge_5_1;
+                else if (audioChannels == 2)
+                    audioBadgeResId = R.drawable.badge_2_0;
+
+                mSingleViewHolder.mAudioBadge.setImageResource(audioBadgeResId);
+                mSingleViewHolder.mAudioBadge.setVisibility(View.VISIBLE);
+            }
+            else {
+                mSingleViewHolder.mAudioBadge.setVisibility(View.GONE);
+            }
 
         }
     }
