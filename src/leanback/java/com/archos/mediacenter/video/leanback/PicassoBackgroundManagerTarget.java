@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.leanback;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.support.v17.leanback.app.BackgroundManager;
 
@@ -34,7 +35,11 @@ public class PicassoBackgroundManagerTarget implements Target {
     @Override
     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
         if (this.mBackgroundManager.isAttached()) { // try to fix some cases of "java.lang.IllegalStateException: Must attach before setting background drawable"
-            this.mBackgroundManager.setBitmap(bitmap);
+            Bitmap newBitmap = bitmap.copy(bitmap.getConfig(), true);
+            Canvas canvas = new Canvas(newBitmap);
+
+            canvas.drawARGB(32, 0, 0, 0);
+            this.mBackgroundManager.setBitmap(newBitmap);
         }
     }
 
