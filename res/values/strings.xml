@@ -136,7 +136,7 @@
     <string name="scrap_no_info">You have no movie or TV show description for this video.</string>
     <string name="scrap_remove">Remove the description</string>
     <string name="scrap_remove_short">Remove</string> <!-- for small screens -->
-    <string name="scrap_change">Change the description for all episodes</string>
+    <string name="scrap_change">Change info for all episodes</string>
     <string name="scrap_series_change">Change series info</string>
 
     <string name="scrap_change_confirmation">Change all episodes from\n\t\"%1$s\"\nto\n\t\"%2$s\"?</string>
