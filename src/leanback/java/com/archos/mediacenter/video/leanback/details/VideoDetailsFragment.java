@@ -27,6 +27,7 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
@@ -36,6 +37,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.DetailsFragmentWithLessTopOffset;
 import android.support.v17.leanback.transition.TransitionHelper;
@@ -109,6 +111,7 @@ import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.StoreRatingDialogBuilder;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
 import com.archos.mediacenter.video.utils.VideoMetadata;
+import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
 import com.archos.mediacenter.video.utils.WebUtils;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
@@ -1301,8 +1304,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     mAdapter.add(mCastRow);
                 }
             }
+            
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            boolean showTrailerRow = prefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_TRAILER_ROW, VideoPreferencesFragment.SHOW_TRAILER_ROW_DEFAULT);
 
-            if(mTrailers!=null&&mTrailers.size()>0){
+            if(mTrailers!=null&&mTrailers.size()>0 && showTrailerRow){
                 ArrayObjectAdapter postersRowAdapter = new ArrayObjectAdapter(new TrailerPresenter(getActivity()));
                 postersRowAdapter.addAll(0, mTrailers);
 
