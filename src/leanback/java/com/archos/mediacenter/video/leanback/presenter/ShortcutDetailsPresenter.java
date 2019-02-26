@@ -26,8 +26,10 @@ public class ShortcutDetailsPresenter extends AbstractDetailsDescriptionPresente
         viewHolder.getTitle().setText(shortcut.getName());
         
         String uri = shortcut.getFriendlyUri();
-        String newUri = uri.substring(0, uri.length() - 1);
+        
+        if (uri.endsWith("/"))
+            uri = uri.substring(0, uri.length() - 1);
 
-        viewHolder.getSubtitle().setText(newUri);
+        viewHolder.getSubtitle().setText(uri);
     }
 }
