@@ -134,7 +134,7 @@
     <string name="upnp_not_allowed">You are not allowed to access this UPnP server. Please change your access configuration first.</string>
 
     <string name="scrap_no_info">You have no movie or TV show description for this video.</string>
-    <string name="scrap_remove">Remove the description</string>
+    <string name="scrap_remove">Remove info</string>
     <string name="scrap_remove_short">Remove</string> <!-- for small screens -->
     <string name="scrap_change">Change info of all episodes</string>
     <string name="scrap_series_change">Change series info</string>
@@ -189,7 +189,7 @@
     <string name="scrap_enable_network_first">"Please connect to a network first to be able to run this application."</string>
     <string name="scrap_failed">Movie not found in online database.</string>
     <string name="start_auto_scraper_activity">Search info online</string>
-    <string name="scraper_settigns">Posters &amp; descriptions</string>
+    <string name="scraper_settigns">Posters &amp; info</string>
     <string name="scrap_status_initial">Queued</string>
     <string name="scrap_status_busy">Searching…</string>
     <string name="scrap_status_success">Updated</string>
@@ -221,6 +221,7 @@
     <string name="rescanning">Rescanning storage devices</string>
     <string name="rescan_storage_summary">Rescan internal, SD Card and USB storage devices</string>
     <string name="preference_display_all_files">Display all files in browser</string>
+    <string name="preference_display_all_files_summary">Display non-video files too</string>
     <string name="info_processing">Checking media properties…</string>
     <string name="info_video">Video</string>
     <string name="info_audio">Audio</string>
@@ -508,8 +509,8 @@
     <string name="preferences_force_audio_passthrough_summary">for HDMI and S/PDIF connections, transmit compressed audio</string>
     <string name="preferences_allow_3rd_party_player">Allow using another video player</string>
     <string name="preferences_allow_3rd_party_player_summary">Other compatible video player applications will be proposed by Android when launching a video playback. Be aware that some features will not work (resume, bookmarks, etc.)</string>
-    <string name="preference_tv_3d_automatic_switch">Enable automatic 3D TV switch"</string>
-    <string name="preference_tv_3d_automatic_switch_summary">Use this feature only if your 3D TV supports it"</string>
+    <string name="preference_tv_3d_automatic_switch">Enable automatic 3D TV switch</string>
+    <string name="preference_tv_3d_automatic_switch_summary">Use this feature only if your 3D TV supports it</string>
     <string name="preference_tv_refreshrate_switch">Enable automatic TV refresh rate switch</string>
     <string name="preference_tv_refreshrate_switch_summary">Remove judder effect by adapting refresh rate (TV support may vary)</string>
     <string name="category_languages">Subtitles</string>
@@ -538,7 +539,7 @@
 
     <string name="tv_scraper">TV Shows</string>
     <string name="movie_scraper">Movies</string>
-    <string name="enable_auto_scrap">Automatically get descriptions for new videos</string>
+    <string name="enable_auto_scrap">Automatically get info for new videos</string>
     <string name="locale">System language</string>
 
     <string name="yes">Yes</string>
@@ -607,8 +608,8 @@
     <string name="auto_brightness_message">Brightness cannot be changed because automatic brightness mode is currently enabled.</string>
 
    <!--  Nfo File parsing -->
-   <string name="network_nfo_parse">Process \'nfo\' files</string>
-   <string name="network_nfo_parse_summary">Read Boxee / XBMC \'.nfo\' files during (re-)scanning to gather media information and posters.</string>
+   <string name="network_nfo_parse">Process \'.nfo\' files</string>
+   <string name="network_nfo_parse_summary">Read Kodi \'.nfo\' files during (re-)scanning to gather media information and posters.</string>
    <string name="ask_to_mail_media_DB">Do you want to mail your Video database to Nova development team in order to help them check a bug?\n\nThe video files are (of course) not mailed, but the full list of file names is.</string>
    <string name="no_email_installed">No email application found</string>
    <string name="zipping_library_before_mailing">Zipping a copy of the library before mailing it…</string>
@@ -634,8 +635,8 @@
    <string name="sort_by_recently_added_episode_desc">Recently added episodes first</string>
 
    <string name="preferences_category_sort_order">Sort order</string>
-   <string name="preferences_tv_show_sort_order_title">Tv show sort order</string>
-   <string name="preferences_tv_show_sort_order_summary">Select the sort order for your Tv shows</string>
+   <string name="preferences_tv_show_sort_order_title">All TV show row sort order</string>
+   <string name="preferences_tv_show_sort_order_summary">Select the sort order of the all TV show row</string>
 
    <string name="dec_choice_title">Choose decoder</string>
    <string name="dec_choice_summary">Advanced preference, may break video decoding.</string>
@@ -659,6 +660,8 @@
    <string name="preferences_show_all_movies_row">Show all movie row</string>
    <string name="preferences_show_all_tv_shows_row_summary">Check to show a row with all your TV shows instead of the TV show categories row</string>
    <string name="preferences_show_all_tv_shows_row">Show all TV show row</string>
+   <string name="preferences_show_trailer_row_summary">Check to show a row with trailers in movies</string>
+   <string name="preferences_show_trailer_row">Show trailer row in movies</string>
 
    <string name="codepage_title">Subtitles encoding</string>
    <string name="codepage_summary">Set the encoding used in text subtitles</string>
@@ -767,9 +770,9 @@
     <string name="leanback_backdrop_changed">The backdrop has been changed</string>
     <string name="leanback_weblinks_header">Links</string>
     <string name="leanback_action_more_details">More details</string>
-    <string name="leanback_scrap">Get a description</string>
-    <string name="leanback_scrap_choose_the_description">Choose the description</string>
-    <string name="leanback_scrap_choose_the_description_for">"Choose the description for \"%s\""</string>
+    <string name="leanback_scrap">Get info</string>
+    <string name="leanback_scrap_choose_the_description">Choose info</string>
+    <string name="leanback_scrap_choose_the_description_for">"Choose info for \"%s\""</string>
     <string name="leanback_scrap_searching_general_hint">Name of the movie or TV show</string>
     <string name="leanback_scrap_searching_tvshow_hint">Name of the TV show</string>
     <string name="leanback_unscrap">@string/scrap_remove</string>
