@@ -16,14 +16,29 @@ package com.archos.mediacenter.video.utils;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.archos.mediacenter.video.R;
 
-public class VideoPreferencesLicencesActivity extends Activity {
+public class VideoPreferencesLicencesActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.preferences_licences);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        boolean ret = super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                    onBackPressed();
+                break;
+        }
+        return ret;
     }
 }
