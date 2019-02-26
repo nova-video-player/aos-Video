@@ -15,17 +15,31 @@
 package com.archos.mediacenter.video.utils.credentialsmanager;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.archos.mediacenter.video.R;
 
 
-public class CredentialsManagerPreferenceActivity extends FragmentActivity {
+public class CredentialsManagerPreferenceActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.credentials_manager_activity);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
         getSupportFragmentManager().beginTransaction().add(R.id.root,new CredentialsManagerPreferencesFragment()).commit();
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        boolean ret = super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                    onBackPressed();
+                break;
+        }
+        return ret;
     }
 }
