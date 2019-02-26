@@ -117,6 +117,12 @@
             android:key="show_all_tv_shows_row"
             android:summary="@string/preferences_show_all_tv_shows_row_summary"
             android:title="@string/preferences_show_all_tv_shows_row" />
+	    
+	<CheckBoxPreference
+            android:defaultValue="true"
+            android:key="show_trailer_row"
+            android:summary="@string/preferences_show_trailer_row_summary"
+            android:title="@string/preferences_show_trailer_row" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/category_languages" >
         <CheckBoxPreference
@@ -265,6 +271,7 @@
         </Preference>
         <CheckBoxPreference
             android:defaultValue="false" android:title="@string/preference_display_all_files"
+            android:summary="@string/preference_display_all_files_summary"
             android:key="preference_display_all_files" />
 
     </PreferenceCategory>
