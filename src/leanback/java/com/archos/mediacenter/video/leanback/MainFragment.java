@@ -210,9 +210,9 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         loadRows();
         getLoaderManager().initLoader(LOADER_ID_LAST_ADDED, null, this);
         getLoaderManager().initLoader(LOADER_ID_LAST_PLAYED, null, this);
+        getLoaderManager().initLoader(LOADER_ID_ALL_MOVIES, null, this);
         Bundle args = new Bundle();
         args.putString("sort", mTvShowSortOrder);
-        getLoaderManager().initLoader(LOADER_ID_ALL_MOVIES, args, this);
         getLoaderManager().initLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
         getLoaderManager().initLoader(LOADER_ID_NON_SCRAPED_VIDEOS_COUNT, null, this);
     }
