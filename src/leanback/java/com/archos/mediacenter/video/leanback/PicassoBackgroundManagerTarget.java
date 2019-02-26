@@ -38,7 +38,7 @@ public class PicassoBackgroundManagerTarget implements Target {
             Bitmap newBitmap = bitmap.copy(bitmap.getConfig(), true);
             Canvas canvas = new Canvas(newBitmap);
 
-            canvas.drawARGB(85, 0, 0, 0);
+            canvas.drawARGB(32, 0, 0, 0);
             this.mBackgroundManager.setBitmap(newBitmap);
         }
     }
