@@ -93,7 +93,7 @@
             android:title="@string/preferences_display_resume_box" />
 
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/preferences_user_interface" android:key="category_leanback_user_interface" >
+    <PreferenceCategory android:title="@string/preferences_leanback_user_interface" android:key="category_leanback_user_interface" >
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="show_last_added_row"
