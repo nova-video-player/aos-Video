@@ -320,8 +320,9 @@
             android:excludeFromRecents="true"
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round"
+            android:label="@string/samba_settings_title"
             android:launchMode="singleTask"
-            android:theme="@style/ArchosThemeBlue" >
+            android:theme="@style/ArchosThemeBlueCompat" >
 
         </activity>
         <activity
@@ -343,9 +344,9 @@
             android:excludeFromRecents="true"
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round"
-            android:label="@string/preferences"
+            android:label="@string/preferences_video_licenses"
             android:launchMode="singleTop"
-            android:theme="@style/ArchosThemeBlue" >
+            android:theme="@style/ArchosThemeBlueCompat" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
