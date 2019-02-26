@@ -18,7 +18,7 @@
         android:title="AudioCompress" >
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="http://beesbuzz.biz/code/audiocompress.php" />
+            android:data="https://github.com/fluffy-critter/AudioCompress/blob/master/COPYING" />
     </PreferenceScreen>
     <PreferenceScreen
         android:summary="BSD"
