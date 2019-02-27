@@ -617,8 +617,8 @@
    <string name="zipped_library_mail_text">Please describe the problem you\'re experiencing\n\n</string>
 
    <string name="sort_mode">Sort mode</string>
-   <string name="sort_by_name_asc">Sort by name (a > z)</string>
-   <string name="sort_by_name_desc">Sort by name (z > a)</string>
+   <string name="sort_by_name_asc">Sort by name (a - z)</string>
+   <string name="sort_by_name_desc">Sort by name (z - a)</string>
    <string name="sort_by_year_asc">Sort by year (oldest first)</string>
    <string name="sort_by_year_desc">Sort by year (newest first)</string>
    <string name="sort_by_date_asc">Sort by date (oldest first)</string>
@@ -633,10 +633,6 @@
    <string name="sort_by_date_premiered_desc">Sort by date premiered (newest first)</string>
    <string name="sort_by_date_premiered_asc">Sort by date premiered (oldest first)</string>
    <string name="sort_by_recently_added_episode_desc">Recently added episodes first</string>
-
-   <string name="preferences_category_sort_order">Sort order</string>
-   <string name="preferences_tv_show_sort_order_title">All TV show row sort order</string>
-   <string name="preferences_tv_show_sort_order_summary">Select the sort order of the all TV show row</string>
 
    <string name="dec_choice_title">Choose decoder</string>
    <string name="dec_choice_summary">Advanced preference, may break video decoding.</string>
@@ -659,8 +655,12 @@
    <string name="preferences_show_last_played_row">Show last played row</string>
    <string name="preferences_show_all_movies_row_summary">Check to show a row with all your movies instead of the movie categories row</string>
    <string name="preferences_show_all_movies_row">Show all movie row</string>
+   <string name="preferences_movie_sort_order_summary">Select the sort order of the all movie row</string>
+   <string name="preferences_movie_sort_order_title">All movie row sort order</string>
    <string name="preferences_show_all_tv_shows_row_summary">Check to show a row with all your TV shows instead of the TV show categories row</string>
    <string name="preferences_show_all_tv_shows_row">Show all TV show row</string>
+   <string name="preferences_tv_show_sort_order_summary">Select the sort order of the all TV show row</string>
+   <string name="preferences_tv_show_sort_order_title">All TV show row sort order</string>
    <string name="preferences_show_trailer_row_summary">Check to show a row with trailers in movies</string>
    <string name="preferences_show_trailer_row">Show trailer row in movies</string>
 
