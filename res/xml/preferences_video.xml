@@ -111,6 +111,13 @@
             android:key="show_all_movies_row"
             android:summary="@string/preferences_show_all_movies_row_summary"
             android:title="@string/preferences_show_all_movies_row" />
+	    
+	<ListPreference
+            android:dialogTitle="@string/preferences_movie_sort_order_title"
+            android:key="preferences_movie_sort_order"
+            android:persistent="true"
+            android:summary="@string/preferences_movie_sort_order_summary"
+            android:title="@string/preferences_movie_sort_order_title" />
 
         <CheckBoxPreference
             android:defaultValue="false"
@@ -118,7 +125,14 @@
             android:summary="@string/preferences_show_all_tv_shows_row_summary"
             android:title="@string/preferences_show_all_tv_shows_row" />
 	    
-	<CheckBoxPreference
+	<ListPreference
+            android:dialogTitle="@string/preferences_tv_show_sort_order_title"
+            android:key="preferences_tv_show_sort_order"
+            android:persistent="true"
+            android:summary="@string/preferences_tv_show_sort_order_summary"
+            android:title="@string/preferences_tv_show_sort_order_title" />
+	    
+        <CheckBoxPreference
             android:defaultValue="true"
             android:key="show_trailer_row"
             android:summary="@string/preferences_show_trailer_row_summary"
@@ -154,16 +168,6 @@
             android:persistent="true"
             android:summary="@string/codepage_summary"
             android:title="@string/codepage_title" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:key="preferences_sort_order_category"
-        android:title="@string/preferences_category_sort_order" >
-        <ListPreference
-            android:dialogTitle="@string/preferences_tv_show_sort_order_title"
-            android:key="preferences_tv_show_sort_order"
-            android:persistent="true"
-            android:summary="@string/preferences_tv_show_sort_order_summary"
-            android:title="@string/preferences_tv_show_sort_order_title" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="trakt_category"
