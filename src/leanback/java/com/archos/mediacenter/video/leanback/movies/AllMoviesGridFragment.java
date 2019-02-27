@@ -70,7 +70,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
     private CharSequence[] mSortOrderEntries;
     private BackgroundManager bgMngr = null;
 
-    private static SparseArray<MoviesSortOrderEntry> sortOrderIndexer = new SparseArray<MoviesSortOrderEntry>();
+    public static SparseArray<MoviesSortOrderEntry> sortOrderIndexer = new SparseArray<MoviesSortOrderEntry>();
     static {
         sortOrderIndexer.put(0, new MoviesSortOrderEntry(R.string.sort_by_name_asc,        "name COLLATE NOCASE ASC"));
         sortOrderIndexer.put(1, new MoviesSortOrderEntry(R.string.sort_by_date_added_desc, VideoStore.MediaColumns.DATE_ADDED + " DESC"));
