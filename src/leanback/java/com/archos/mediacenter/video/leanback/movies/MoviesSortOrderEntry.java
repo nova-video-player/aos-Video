@@ -33,10 +33,18 @@ public class MoviesSortOrderEntry {
         mSortOrder = sortOrder;
     }
 
-    static protected CharSequence[] getSortOrderEntries(Context context, SparseArray<MoviesSortOrderEntry> indexer) {
+    static public CharSequence[] getSortOrderEntries(Context context, SparseArray<MoviesSortOrderEntry> indexer) {
         List<CharSequence> entries = new ArrayList<>();
         for (int index=0; index<indexer.size(); index++) {
             entries.add(context.getResources().getString(indexer.get(index).mId));
+        }
+        return entries.toArray(new CharSequence[entries.size()]);
+    }
+    
+    static public CharSequence[] getSortOrderEntryValues(Context context, SparseArray<MoviesSortOrderEntry> indexer) {
+        List<CharSequence> entries = new ArrayList<>();
+        for (int index=0; index<indexer.size(); index++) {
+            entries.add(indexer.get(index).mSortOrder);
         }
         return entries.toArray(new CharSequence[entries.size()]);
     }
