@@ -128,6 +128,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
     private boolean mShowLastAddedRow;
     private boolean mShowLastPlayedRow;
     private boolean mShowMoviesRow;
+    private String mMovieSortOrder;
     private boolean mShowTvshowsRow;
     private String mTvShowSortOrder;
 
@@ -184,6 +185,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         mShowLastAddedRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_LAST_ADDED_ROW, VideoPreferencesFragment.SHOW_LAST_ADDED_ROW_DEFAULT);
         mShowLastPlayedRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_LAST_PLAYED_ROW, VideoPreferencesFragment.SHOW_LAST_PLAYED_ROW_DEFAULT);
         mShowMoviesRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_ALL_MOVIES_ROW, VideoPreferencesFragment.SHOW_ALL_MOVIES_ROW_DEFAULT);
+        mMovieSortOrder = mPrefs.getString(VideoPreferencesFragment.KEY_MOVIE_SORT_ORDER, MoviesLoader.DEFAULT_SORT);
         mShowTvshowsRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_ALL_TV_SHOWS_ROW, VideoPreferencesFragment.SHOW_ALL_TV_SHOWS_ROW_DEFAULT);
         mTvShowSortOrder = mPrefs.getString(VideoPreferencesFragment.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
 
@@ -210,10 +212,16 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         loadRows();
         getLoaderManager().initLoader(LOADER_ID_LAST_ADDED, null, this);
         getLoaderManager().initLoader(LOADER_ID_LAST_PLAYED, null, this);
-        getLoaderManager().initLoader(LOADER_ID_ALL_MOVIES, null, this);
-        Bundle args = new Bundle();
-        args.putString("sort", mTvShowSortOrder);
-        getLoaderManager().initLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
+        
+        Bundle movieArgs = new Bundle();
+
+        movieArgs.putString("sort", mMovieSortOrder);
+        getLoaderManager().initLoader(LOADER_ID_ALL_MOVIES, movieArgs, this);
+        
+        Bundle tvshowArgs = new Bundle();
+
+        tvshowArgs.putString("sort", mTvShowSortOrder);
+        getLoaderManager().initLoader(LOADER_ID_ALL_TV_SHOWS, tvshowArgs, this);
         getLoaderManager().initLoader(LOADER_ID_NON_SCRAPED_VIDEOS_COUNT, null, this);
     }
 
@@ -267,12 +275,23 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
             updateTvShowsRow(null);
         }
 
+        String newMovieSortOrder = mPrefs.getString(VideoPreferencesFragment.KEY_MOVIE_SORT_ORDER, MoviesLoader.DEFAULT_SORT);
+
+        if (!newMovieSortOrder.equals(mMovieSortOrder)) {
+            mMovieSortOrder = newMovieSortOrder;
+            Bundle args = new Bundle();
+
+            args.putString("sort", mMovieSortOrder);
+            getLoaderManager().restartLoader(LOADER_ID_ALL_MOVIES, args, this);
+        }
+
         String newTvShowSortOrder = mPrefs.getString(VideoPreferencesFragment.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
+
         if (!newTvShowSortOrder.equals(mTvShowSortOrder)) {
             mTvShowSortOrder = newTvShowSortOrder;
             Bundle args = new Bundle();
+
             args.putString("sort", mTvShowSortOrder);
-            getLoaderManager().restartLoader(LOADER_ID_ALL_MOVIES, args, this);
             getLoaderManager().restartLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
         }
 
