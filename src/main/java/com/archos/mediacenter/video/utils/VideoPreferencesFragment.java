@@ -49,6 +49,11 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.UiChoiceDialog;
 import com.archos.mediacenter.video.billingutils.BillingUtils;
 import com.archos.mediacenter.video.billingutils.IsPaidCallback;
+import com.archos.mediacenter.video.browser.loader.MoviesLoader;
+import com.archos.mediacenter.video.leanback.movies.AllMoviesGridFragment;
+import com.archos.mediacenter.video.leanback.movies.MoviesSortOrderEntry;
+import com.archos.mediacenter.video.leanback.tvshow.AllTvshowsGridFragment;
+import com.archos.mediacenter.video.leanback.tvshow.TvshowsSortOrderEntry;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.credentialsmanager.CredentialsManagerPreferenceActivity;
 import com.archos.medialib.MediaFactory;
@@ -84,7 +89,9 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
     public static final String KEY_SHOW_LAST_ADDED_ROW = "show_last_added_row";
     public static final String KEY_SHOW_LAST_PLAYED_ROW = "show_last_played_row";
     public static final String KEY_SHOW_ALL_MOVIES_ROW = "show_all_movies_row";
+    public static final String KEY_MOVIE_SORT_ORDER ="preferences_movie_sort_order";
     public static final String KEY_SHOW_ALL_TV_SHOWS_ROW = "show_all_tv_shows_row";
+    public static final String KEY_TV_SHOW_SORT_ORDER ="preferences_tv_show_sort_order";
     public static final String KEY_SHOW_TRAILER_ROW = "show_trailer_row";
 
     public static final String KEY_VIDEO_OS = "preferences_video_os";
@@ -93,9 +100,6 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
     public static final String KEY_TRAKT="preferences_video_trakt";
     public static final String KEY_TRAKT_SYNC_PROGRESS ="trakt_sync_resume";
     public static final String KEY_LICENCES="preferences_video_licences";
-
-    public static final String KEY_SORT_ORDER_CATEGORY ="preferences_sort_order_category";
-    public static final String KEY_TV_SHOW_SORT_ORDER ="preferences_tv_show_sort_order";
 
     public static final String KEY_DEC_CHOICE = "dec_choice";
     public static final String KEY_SUBTITLES_HIDE = "subtitles_hide_default";
@@ -601,25 +605,27 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
                     userInterfaceCategory.removePreference(findPreference("ui_zoom")); // remove the zoom settings
                 }
             }
-
-            PreferenceCategory sortOrderCategory = (PreferenceCategory)findPreference(KEY_SORT_ORDER_CATEGORY);
-            if (sortOrderCategory != null) {
-                if (!UiChoiceDialog.applicationIsInLeanbackMode(getActivity())) {
-                    getPreferenceScreen().removePreference(sortOrderCategory);
-                } else {
-                    ListPreference tvshowSortOrderPref = (ListPreference)findPreference(KEY_TV_SHOW_SORT_ORDER);
-                    tvshowSortOrderPref.setEntries(TvshowSortOrderEntries.getSortOrderEntries(getActivity()));
-                    tvshowSortOrderPref.setEntryValues(TvshowSortOrderEntries.getSortOrderEntryValues(getActivity()));
-                    tvshowSortOrderPref.setDefaultValue(TvshowSortOrderEntries.DEFAULT_SORT);
-                }
-            }
         }
         
         PreferenceCategory leanbackUserInterfaceCategory = (PreferenceCategory)findPreference("category_leanback_user_interface");
         
         if (leanbackUserInterfaceCategory != null) {
-            if (!UiChoiceDialog.applicationIsInLeanbackMode(getActivity()))
+            if (!UiChoiceDialog.applicationIsInLeanbackMode(getActivity())) {
                 getPreferenceScreen().removePreference(leanbackUserInterfaceCategory);
+            }
+            else {
+                ListPreference movieSortOrderPref = (ListPreference)findPreference(KEY_MOVIE_SORT_ORDER);
+                
+                movieSortOrderPref.setEntries(MoviesSortOrderEntry.getSortOrderEntries(getActivity(), AllMoviesGridFragment.sortOrderIndexer));
+                movieSortOrderPref.setEntryValues(MoviesSortOrderEntry.getSortOrderEntryValues(getActivity(), AllMoviesGridFragment.sortOrderIndexer));
+                movieSortOrderPref.setDefaultValue(MoviesLoader.DEFAULT_SORT);
+
+                ListPreference tvshowSortOrderPref = (ListPreference)findPreference(KEY_TV_SHOW_SORT_ORDER);
+
+                tvshowSortOrderPref.setEntries(TvshowsSortOrderEntry.getSortOrderEntries(getActivity(), AllTvshowsGridFragment.sortOrderIndexer));
+                tvshowSortOrderPref.setEntryValues(TvshowsSortOrderEntry.getSortOrderEntryValues(getActivity(), AllTvshowsGridFragment.sortOrderIndexer));
+                tvshowSortOrderPref.setDefaultValue(TvshowSortOrderEntries.DEFAULT_SORT);
+            }
         }
 
         // Free / Paid
