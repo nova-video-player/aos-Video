@@ -313,5 +313,8 @@ public abstract class VideosByFragment extends BrowseFragment  implements  Loade
             bgMngr.setDrawable(new ColorDrawable(r.getColor(R.color.leanback_background)));
         }
     }
-
+    
+    public ArrayObjectAdapter getRowsAdapter() {
+        return mRowsAdapter;
+    }
 }
