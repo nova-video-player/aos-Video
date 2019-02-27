@@ -1587,7 +1587,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             //[infomenu]
             TVCardView tcv = tma.createAndAddView(null, getResources().getDrawable(R.drawable.tv_info),
                                                   getResources().getString(R.string.menu_info));
-            String decoder = VideoInfoCommonClass.getDecoder(mPlayer.getVideoMetadata(), getResources(), mPlayer.getType());
+            String decoder = VideoInfoCommonClass.getShortDecoder(mPlayer.getVideoMetadata(), getResources(), mPlayer.getType());
             
             tcv.setText2(decoder);
             tcv.setOnSwitchClickListener(new View.OnClickListener() {

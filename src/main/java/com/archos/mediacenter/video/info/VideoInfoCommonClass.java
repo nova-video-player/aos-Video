@@ -106,6 +106,24 @@ public class VideoInfoCommonClass {
         return videoMetaData;
 
     }
+    
+    public static String getShortDecoder(VideoMetadata videoMetadata, Resources resources, int playerType){
+        VideoMetadata.VideoTrack video = videoMetadata.getVideoTrack();
+        int videoDecoderStringResId = -1;
+        if (playerType == IMediaPlayer.TYPE_AVOS  && video != null) {
+            switch (video.decoder) {
+                case LibAvos.MP_DECODER_SW:            videoDecoderStringResId = R.string.dec_sw; break;
+                case LibAvos.MP_DECODER_HW_OMX:
+                case LibAvos.MP_DECODER_HW_OMXPLUS:
+                case LibAvos.MP_DECODER_HW_OMXCODEC:
+                case LibAvos.MP_DECODER_HW_MEDIACODEC: videoDecoderStringResId = R.string.dec_hw; break;
+                default: break;
+            }
+        }
+        if(videoDecoderStringResId==-1)
+            return null;
+        return resources.getString(videoDecoderStringResId);
+    }
 
     public static String getDecoder(VideoMetadata videoMetadata, Resources resources, int playerType){
         // Video Decoder (only when launched from player)
