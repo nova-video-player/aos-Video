@@ -1,10 +1,13 @@
 package com.archos.mediacenter.video.leanback;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v17.leanback.widget.SearchOrbView;
+import android.support.v17.leanback.widget.Row;
 import android.util.SparseArray;
 import android.view.View;
 
@@ -12,7 +15,9 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.VideosByListLoader;
 import com.archos.mediacenter.video.browser.loader.VideosSelectionLoader;
 import com.archos.mediacenter.video.leanback.movies.MoviesSortOrderEntry;
+import com.archos.mediaprovider.video.VideoStore;
 
+import java.util.ArrayList;
 
 public class VideosByListFragment extends VideosByFragment {
 
@@ -24,8 +29,31 @@ public class VideosByListFragment extends VideosByFragment {
 
         setTitle(getString(R.string.video_lists));
         SearchOrbView searchOrbView = (SearchOrbView) getView().findViewById(R.id.title_orb);
-        searchOrbView.setVisibility(View.INVISIBLE);
-        setOnSearchClickedListener(null);
+        searchOrbView.setOrbIcon(getResources().getDrawable(R.drawable.orb_minus));
+        setOnSearchClickedListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                ArrayList<String> names = new ArrayList<String>();
+
+                for (int i = 0; i < getRowsAdapter().size(); i++) {
+                    Row row = (Row)getRowsAdapter().get(i);
+
+                    names.add(row.getHeaderItem().getName());
+                }
+                if (names.size() > 0) {
+                    new AlertDialog.Builder(getActivity())
+                            .setItems(names.toArray(new String[names.size()]), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Row row = (Row)getRowsAdapter().get(which);
+                                    String id = String.valueOf(row.getId());
+
+                                    getActivity().getContentResolver().delete(VideoStore.List.LIST_CONTENT_URI, VideoStore.List.Columns.ID + " = ?", new String[] {id});
+                                    dialog.dismiss();
+                                }
+                            })
+                            .create().show();
+                }
+            }
+        });
     }
 
     @Override
