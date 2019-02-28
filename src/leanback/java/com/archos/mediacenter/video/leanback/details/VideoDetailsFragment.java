@@ -56,6 +56,7 @@ import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
+import android.text.SpannableString;
 import android.transition.Transition;
 import android.transition.Transition.TransitionListener;
 import android.util.Log;
@@ -1290,14 +1291,14 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 }
 
                 // Cast
-                String cast = tags.getActorsFormatted();
+                SpannableString cast = tags.getSpannableActorsFormatted();
                 // If cast is null and this is an episode, get the cast of the Show
                 if (cast == null & tags instanceof EpisodeTags) {
                     ShowTags showTags = ((EpisodeTags) tags).getShowTags();
-                    cast = showTags != null ? showTags.getActorsFormatted() : null;
+                    cast = showTags != null ? showTags.getSpannableActorsFormatted() : null;
                 }
                 // Keep it simple: we do not display the row if cast==null && directors!=null (very unlikely and not a big deal)
-                if (cast != null && !cast.isEmpty()) {
+                if (cast != null && cast.length() > 0) {
                     if(mCastRow!=null&&mAdapter.indexOf(mCastRow)!=-1)
                         mAdapter.remove(mCastRow);
                     mCastRow = new CastRow(getString(R.string.scrap_cast), cast, tags.getDirectorsFormatted());
