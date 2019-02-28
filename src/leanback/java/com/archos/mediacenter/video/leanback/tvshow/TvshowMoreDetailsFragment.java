@@ -40,9 +40,9 @@ import android.widget.Toast;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.leanback.BackdropTask;
-import com.archos.mediacenter.video.leanback.FullTextRow;
-import com.archos.mediacenter.video.leanback.FullTextRowPresenter;
 import com.archos.mediacenter.video.leanback.adapter.object.WebPageLink;
+import com.archos.mediacenter.video.leanback.details.CastRow;
+import com.archos.mediacenter.video.leanback.details.CastRowPresenter;
 import com.archos.mediacenter.video.leanback.details.PlotAndGenresRow;
 import com.archos.mediacenter.video.leanback.details.PlotAndGenresRowPresenter;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
@@ -74,7 +74,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
 
     private DetailsOverviewRow mDetailsRow;
     private PlotAndGenresRow mPlotAndGenresRow;
-    private FullTextRow mCastRow;
+    private CastRow mCastRow;
     private ListRow mPostersRow;
     private ListRow mBackdropsRow;
     private ListRow mWebLinksRow;
@@ -246,8 +246,8 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                 mPlotAndGenresRow = null;
             }
 
-            if (tags.getActorsFormatted()!=null) {
-                mCastRow = new FullTextRow(getString(R.string.scrap_cast), tags.getActorsFormatted());
+            if (tags.getSpannableActorsFormatted()!=null) {
+                mCastRow = new CastRow(getString(R.string.scrap_cast), tags.getSpannableActorsFormatted(), "");
             }
             else {
                 mCastRow = null;
