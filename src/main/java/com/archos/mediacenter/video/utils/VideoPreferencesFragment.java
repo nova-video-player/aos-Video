@@ -618,13 +618,17 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
                 
                 movieSortOrderPref.setEntries(MoviesSortOrderEntry.getSortOrderEntries(getActivity(), AllMoviesGridFragment.sortOrderIndexer));
                 movieSortOrderPref.setEntryValues(MoviesSortOrderEntry.getSortOrderEntryValues(getActivity(), AllMoviesGridFragment.sortOrderIndexer));
-                movieSortOrderPref.setDefaultValue(MoviesLoader.DEFAULT_SORT);
+                
+                if (movieSortOrderPref.getValue() == null)
+                    movieSortOrderPref.setValue(MoviesLoader.DEFAULT_SORT);
 
                 ListPreference tvshowSortOrderPref = (ListPreference)findPreference(KEY_TV_SHOW_SORT_ORDER);
 
                 tvshowSortOrderPref.setEntries(TvshowsSortOrderEntry.getSortOrderEntries(getActivity(), AllTvshowsGridFragment.sortOrderIndexer));
                 tvshowSortOrderPref.setEntryValues(TvshowsSortOrderEntry.getSortOrderEntryValues(getActivity(), AllTvshowsGridFragment.sortOrderIndexer));
-                tvshowSortOrderPref.setDefaultValue(TvshowSortOrderEntries.DEFAULT_SORT);
+                
+                if (tvshowSortOrderPref.getValue() == null)
+                    tvshowSortOrderPref.setValue(TvshowSortOrderEntries.DEFAULT_SORT);
             }
         }
 
