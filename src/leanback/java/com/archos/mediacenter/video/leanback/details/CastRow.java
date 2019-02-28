@@ -15,22 +15,23 @@
 package com.archos.mediacenter.video.leanback.details;
 
 import android.support.v17.leanback.widget.HeaderItem;
+import android.text.SpannableString;
 
 /**
  * Created by vapillon on 16/07/15.
  */
 public class CastRow extends FullWidthRow {
 
-    final private String mCast;
+    final private SpannableString mCast;
     final private String mDirectors;
 
-    public CastRow(String header, String cast, String directors) {
+    public CastRow(String header, SpannableString cast, String directors) {
         super(new HeaderItem(header));
         mCast = cast;
         mDirectors = directors;
     }
 
-    public String getCast() {
+    public SpannableString getCast() {
         return mCast;
     }
     public String getDirectors() {
