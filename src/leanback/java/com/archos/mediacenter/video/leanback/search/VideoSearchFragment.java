@@ -37,6 +37,7 @@ import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.ShadowLessListRow;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
 import com.archos.mediacenter.video.leanback.adapter.object.EmptyView;
+import com.archos.mediacenter.video.browser.loader.SearchEpisodeLoader;
 import com.archos.mediacenter.video.browser.loader.SearchMovieLoader;
 import com.archos.mediacenter.video.browser.loader.SearchNonScrapedVideoLoader;
 import com.archos.mediacenter.video.browser.loader.SearchVideoLoader;
@@ -102,8 +103,11 @@ public class VideoSearchFragment extends SearchFragment implements SearchFragmen
         if (searchMode == VideoSearchActivity.SEARCH_MODE_MOVIE) {
             setTitle(getString(R.string.movies));
             mSearchLoader = new SearchMovieLoader(getActivity());
+        } else if (searchMode == VideoSearchActivity.SEARCH_MODE_EPISODE) {
+            setTitle(getString(R.string.all_tv_shows));
+            mSearchLoader = new SearchEpisodeLoader(getActivity());
         } else if (searchMode == VideoSearchActivity.SEARCH_MODE_NON_SCRAPED) {
-            setTitle(getString(R.string.videos));
+            setTitle(getString(R.string.non_scraped_videos));
             mSearchLoader = new SearchNonScrapedVideoLoader(getActivity());
         } else {
             setTitle(getString(R.string.videos));
@@ -165,6 +169,8 @@ public class VideoSearchFragment extends SearchFragment implements SearchFragmen
                 ContentResolver cr = getActivity().getContentResolver();
                 if (mSearchLoader instanceof SearchMovieLoader) {
                     ((SearchMovieLoader)mSearchLoader).setQuery(query);
+                } else if (mSearchLoader instanceof SearchEpisodeLoader) {
+                    ((SearchEpisodeLoader)mSearchLoader).setQuery(query);
                 } else if (mSearchLoader instanceof SearchNonScrapedVideoLoader) {
                         ((SearchNonScrapedVideoLoader)mSearchLoader).setQuery(query);
                 } else {
