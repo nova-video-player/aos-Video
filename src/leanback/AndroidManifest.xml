@@ -162,7 +162,8 @@
         <activity
             android:name="com.archos.mediacenter.video.utils.WebViewActivity"
             android:label="@string/leanback_archos_video_webview"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme"
+            android:excludeFromRecents="true"/>
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.network.rescan.RescanActivity"
