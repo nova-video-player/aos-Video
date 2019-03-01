@@ -15,15 +15,18 @@
 package com.archos.mediacenter.video.leanback.presenter;
 
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.view.View;
 
 import com.archos.environment.ArchosUtils;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.player.PlayerActivity;
+import com.archos.mediaprovider.video.VideoProvider;
 
 /**
  * ListPresenter for Video objects including Video, Episodes, Tvshow (though not technically a Video)
@@ -47,8 +50,10 @@ public class VideoListPresenter extends ListPresenter {
             final Uri posterUri = video.getPosterUri();
             if (posterUri != null)
                 vh.updateImageViewPoster(posterUri, video.getId());
-            else
+            else if (video.isIndexed()&& (FileUtils.isLocal(video.getFileUri())||PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean(VideoProvider.PREFERENCE_CREATE_REMOTE_THUMBS, false)))
                 vh.updateImageViewThumbnail(video.getId());
+            else
+                vh.getImageView().setImageResource(R.drawable.filetype_new_video);
             if (item instanceof Episode) {
                 Episode episode = (Episode) item;
                 vh.setTitleText(vh.view.getResources().getString(R.string.leanback_episode_name_for_browser_list,
