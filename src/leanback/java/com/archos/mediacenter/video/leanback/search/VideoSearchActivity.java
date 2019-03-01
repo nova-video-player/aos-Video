@@ -35,6 +35,7 @@ public class VideoSearchActivity extends Activity {
     public static final String EXTRA_SEARCH_MODE = "searchMode";
     public static final int SEARCH_MODE_ALL = 0;
     public static final int SEARCH_MODE_MOVIE = 1;
+    public static final int SEARCH_MODE_EPISODE = 3;
     public static final int SEARCH_MODE_NON_SCRAPED = 2;
 
     @Override

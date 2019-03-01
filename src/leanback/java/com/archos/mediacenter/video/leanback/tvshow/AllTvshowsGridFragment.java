@@ -151,8 +151,8 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), VideoSearchActivity.class);
-                // TODO: make a VideoSearchActivity.SEARCH_MODE_SERIES
-                intent.putExtra(VideoSearchActivity.EXTRA_SEARCH_MODE, VideoSearchActivity.SEARCH_MODE_ALL);
+                
+                intent.putExtra(VideoSearchActivity.EXTRA_SEARCH_MODE, VideoSearchActivity.SEARCH_MODE_EPISODE);
                 startActivity(intent);
             }
         });
