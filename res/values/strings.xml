@@ -780,7 +780,7 @@
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Legacy interface</string>
     <string name="leanback_hint_long_press_on_back">HINT: long press on BACK key closes the file browser</string>
-    <string name="leanback_archos_video_webview">Nova Video Basic WebView</string>
+    <string name="leanback_archos_video_webview">Nova Video WebView</string>
     <string name="file_access_error">Did not manage to access the file</string>
 
     <string name="interface_size">Interface size</string>
