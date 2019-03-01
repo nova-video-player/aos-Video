@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.leanback.presenter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v17.leanback.widget.BaseCardView;
@@ -53,7 +54,7 @@ public abstract class ListPresenter extends Presenter {
         public ListViewHolder(Context context) {
             super(new BaseCardView(context));
             mBaseCardView = (BaseCardView)view;
-            mBaseCardView.setBackgroundColor(context.getResources().getColor(R.color.lb_basic_card_bg_color));
+            mBaseCardView.setBackgroundColor(Color.rgb(55, 71, 79));
             mBaseCardView.setFocusable(true);
             mBaseCardView.setFocusableInTouchMode(true);
             mBaseCardView.setCardType(BaseCardView.CARD_TYPE_MAIN_ONLY);
@@ -140,6 +141,10 @@ public abstract class ListPresenter extends Presenter {
 
     public ListPresenter() {
         super();
+    }
+
+    public Context getContext() {
+        return mContext;
     }
 
     @Override

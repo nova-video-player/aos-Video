@@ -79,6 +79,7 @@ public class PosterImageCardPresenter extends Presenter {
             mCardView.addViewToRoot(mOccurenciesView);
             mCardView.setMainImageDimensions(getWidth(context), getHeight(context));
             mCardView.setMainImage(new ColorDrawable(context.getResources().getColor(R.color.lb_basic_card_bg_color)));
+            mCardView.getMainImageView().setBackgroundColor(context.getResources().getColor(R.color.lightblue900));
             mCardView.setFocusable(true);
             mCardView.setFocusableInTouchMode(true);
 
