@@ -41,12 +41,14 @@ import java.util.List;
 public class AllMoviesIconBuilder {
 
     final static String[] PROJECTION = {
+            VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER,
             VideoStore.Video.VideoColumns._ID,
             VideoStore.Video.VideoColumns.SCRAPER_COVER
     };
 
     final static String SELECTION =
-            VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL AND "+
+            VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER + "=0 AND " +
+            VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL AND " +
             VideoStore.Video.VideoColumns.SCRAPER_COVER + " IS NOT NULL";
 
     private static final String TAG = "AllMoviesIconManager";
