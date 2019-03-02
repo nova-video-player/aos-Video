@@ -413,7 +413,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         }
         else {
             // fallback to regular default icon
-            return new Box(Box.ID.ALL_MOVIES, getString(R.string.all_movies), R.drawable.movies_banner);
+            return new Box(Box.ID.ALL_MOVIES, getString(R.string.all_movies), R.drawable.filetype_new_video);
         }
     }
 
@@ -424,7 +424,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         }
         else {
             // fallback to regular default icon
-            return new Box(Box.ID.ALL_TVSHOWS, getString(R.string.all_tvshows), R.drawable.movies_banner);
+            return new Box(Box.ID.ALL_TVSHOWS, getString(R.string.all_tvshows), R.drawable.filetype_new_video);
         }
     }
 
