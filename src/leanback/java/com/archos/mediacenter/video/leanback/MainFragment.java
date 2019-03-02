@@ -83,6 +83,7 @@ import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
 import com.archos.mediacenter.video.utils.WebUtils;
 import com.archos.mediaprovider.ArchosMediaIntent;
+import com.archos.mediaprovider.video.VideoStore;
 
 public class MainFragment extends BrowseFragment  implements  LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -639,11 +640,15 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
             mInitLastPlayedCount = cursor.getCount();
         }
         else if (cursorLoader.getId() == LOADER_ID_ALL_MOVIES) {
-            ((ArrayObjectAdapter)mMovieRow.getAdapter()).replace(0, buildAllMoviesBox());
+            if (isVideosListModified(mMoviesAdapter.getCursor(), cursor))
+                ((ArrayObjectAdapter)mMovieRow.getAdapter()).replace(0, buildAllMoviesBox());
+            
             updateMoviesRow(cursor);
         }
         else if (cursorLoader.getId() == LOADER_ID_ALL_TV_SHOWS) {
-            ((ArrayObjectAdapter)mTvshowRow.getAdapter()).replace(0, buildAllTvshowsBox());
+            if (isVideosListModified(mTvshowsAdapter.getCursor(), cursor))
+                ((ArrayObjectAdapter)mTvshowRow.getAdapter()).replace(0, buildAllTvshowsBox());
+            
             updateTvShowsRow(cursor);
         }
         else if (cursorLoader.getId() == LOADER_ID_NON_SCRAPED_VIDEOS_COUNT) {
@@ -656,6 +661,28 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) { }
 
+    private boolean isVideosListModified(Cursor oldCursor, Cursor newCursor) {
+        if ((oldCursor == null && newCursor != null) || (oldCursor != null && newCursor == null))
+            return true;
+
+        if (oldCursor.getCount() != newCursor.getCount())
+            return true;
+
+        final int oldVideoNameColumn = oldCursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_TITLE);
+        final int newVideoNameColumn = newCursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_TITLE);
+
+        oldCursor.moveToFirst();
+        newCursor.moveToFirst();
+        while (!oldCursor.isAfterLast() && !newCursor.isAfterLast()) {
+            final String oldName = oldCursor.getString(oldVideoNameColumn);
+            final String newName = newCursor.getString(newVideoNameColumn);
+            if (oldName != null && !oldName.equals(newName))
+                return true;
+            oldCursor.moveToNext();
+            newCursor.moveToNext();
+        }
+        return false;
+    }
 
     /**
      * When opening, LastAdded and LastPlayed rows are not created yet, hence selection is on Movies.
