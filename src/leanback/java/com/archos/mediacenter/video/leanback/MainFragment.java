@@ -413,7 +413,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         }
         else {
             // fallback to regular default icon
-            return new Box(Box.ID.ALL_MOVIES, getString(R.string.all_movies), R.drawable.filetype_new_video);
+            return new Box(Box.ID.ALL_MOVIES, getString(R.string.all_movies), R.drawable.movies_banner);
         }
     }
 
@@ -424,7 +424,7 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         }
         else {
             // fallback to regular default icon
-            return new Box(Box.ID.ALL_TVSHOWS, getString(R.string.all_tvshows), R.drawable.filetype_new_video);
+            return new Box(Box.ID.ALL_TVSHOWS, getString(R.string.all_tvshows), R.drawable.movies_banner);
         }
     }
 
@@ -667,20 +667,8 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
 
         if (oldCursor.getCount() != newCursor.getCount())
             return true;
-
-        final int oldVideoNameColumn = oldCursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_TITLE);
-        final int newVideoNameColumn = newCursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_TITLE);
-
-        oldCursor.moveToFirst();
-        newCursor.moveToFirst();
-        while (!oldCursor.isAfterLast() && !newCursor.isAfterLast()) {
-            final String oldName = oldCursor.getString(oldVideoNameColumn);
-            final String newName = newCursor.getString(newVideoNameColumn);
-            if (oldName != null && !oldName.equals(newName))
-                return true;
-            oldCursor.moveToNext();
-            newCursor.moveToNext();
-        }
+        
+        // estimate
         return false;
     }
 
