@@ -245,7 +245,6 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
         updateBackground();
 
         getActivity().registerReceiver(mUpdateReceiver, mUpdateFilter);
-        new AllMoviesIconBuilder(getActivity());
         
         boolean newShowLastAddedRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_LAST_ADDED_ROW, VideoPreferencesFragment.SHOW_LAST_ADDED_ROW_DEFAULT);
 
@@ -640,9 +639,11 @@ public class MainFragment extends BrowseFragment  implements  LoaderManager.Load
             mInitLastPlayedCount = cursor.getCount();
         }
         else if (cursorLoader.getId() == LOADER_ID_ALL_MOVIES) {
+            ((ArrayObjectAdapter)mMovieRow.getAdapter()).replace(0, buildAllMoviesBox());
             updateMoviesRow(cursor);
         }
         else if (cursorLoader.getId() == LOADER_ID_ALL_TV_SHOWS) {
+            ((ArrayObjectAdapter)mTvshowRow.getAdapter()).replace(0, buildAllTvshowsBox());
             updateTvShowsRow(cursor);
         }
         else if (cursorLoader.getId() == LOADER_ID_NON_SCRAPED_VIDEOS_COUNT) {
