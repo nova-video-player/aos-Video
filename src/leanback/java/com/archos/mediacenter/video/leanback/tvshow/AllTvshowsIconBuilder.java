@@ -41,12 +41,13 @@ public class AllTvshowsIconBuilder {
 
     final static String[] PROJECTION = {
             VideoStore.Video.VideoColumns._ID,
-            VideoStore.Video.VideoColumns.SCRAPER_COVER
+            VideoStore.Video.VideoColumns.SCRAPER_S_COVER
     };
 
     final static String SELECTION =
-            VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " IS NOT NULL AND "+
-            VideoStore.Video.VideoColumns.SCRAPER_COVER + " IS NOT NULL";
+            VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " IS NOT NULL AND " +
+            VideoStore.Video.VideoColumns.SCRAPER_S_COVER + " IS NOT NULL" +
+            ") GROUP BY (" + VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID;
 
     private static final String TAG = "AllTvshowsIconBuilder";
     final Context mContext;
@@ -80,7 +81,7 @@ public class AllTvshowsIconBuilder {
     private Bitmap buildIconBitmap(ContentResolver cr) {
         List<String> posters = getPostersList(cr);
 
-        if (posters.size()<8) {
+        if (posters.size() == 0) {
             Log.d(TAG, "not enough tvshows with poster to build the icon");
             return null;
         }
@@ -98,7 +99,7 @@ public class AllTvshowsIconBuilder {
             return Collections.emptyList();
         }
 
-        final int coverIndex = c.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_COVER);
+        final int coverIndex = c.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_S_COVER);
         c.moveToFirst();
 
         ArrayList<String> list = new ArrayList<>(c.getCount());
@@ -128,6 +129,9 @@ public class AllTvshowsIconBuilder {
         // Decode the posters and assign to the image views
         Iterator<String> poster = posters.iterator();
         for (ImageView iv : imageViews) {
+            if (!poster.hasNext())
+                poster = posters.iterator();
+            
             // try next posters in case the first one fails to decode
             while (poster.hasNext()) {
                 Bitmap b = BitmapFactory.decodeFile(poster.next(), options);

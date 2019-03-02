@@ -81,7 +81,7 @@ public class AllMoviesIconBuilder {
     private Bitmap buildIconBitmap(ContentResolver cr) {
         List<String> posters = getPostersList(cr);
 
-        if (posters.size()<8) {
+        if (posters.size() == 0) {
             Log.d(TAG, "not enough movies with poster to build the icon");
             return null;
         }
@@ -129,6 +129,9 @@ public class AllMoviesIconBuilder {
         // Decode the posters and assign to the image views
         Iterator<String> poster = posters.iterator();
         for (ImageView iv : imageViews) {
+            if (!poster.hasNext())
+                poster = posters.iterator();
+            
             // try next posters in case the first one fails to decode
             while (poster.hasNext()) {
                 Bitmap b = BitmapFactory.decodeFile(poster.next(), options);
