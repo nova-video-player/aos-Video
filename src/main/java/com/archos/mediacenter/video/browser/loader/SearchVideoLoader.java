@@ -22,7 +22,8 @@ public class SearchVideoLoader extends VideoLoader {
 
     // search based on scraper title and file title
     private static final String SELECTION = VideoStore.Video.VideoColumns.SCRAPER_TITLE + " LIKE ? OR "
-            + VideoStore.MediaColumns.TITLE + " LIKE ?";
+            + VideoStore.MediaColumns.TITLE + " LIKE ? OR "
+            + VideoStore.Video.VideoColumns.SCRAPER_E_NAME + " LIKE ?";
 
     private static final String DEFAULT_QUERY = "";
     private static final String DEFAULT_SORT = "name COLLATE NOCASE ASC,"
@@ -60,7 +61,7 @@ public class SearchVideoLoader extends VideoLoader {
 
     @Override
     public String[] getSelectionArgs() {
-        return new String[] { "%" + mQuery + "%", "%" + mQuery + "%" };
+        return new String[] { "%" + mQuery + "%", "%" + mQuery + "%", "%" + mQuery + "%" };
     }
 
 }
