@@ -28,6 +28,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
@@ -349,8 +350,16 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 if(item instanceof ScraperTrailer){
                     // Breaks AndroidTV acceptance but needed to launch scraper in Youtube app instead of browser
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, ((ScraperTrailer)item).getUrl());
-                    startActivity(browserIntent);
-                    //WebUtils.openWebLink(getActivity(), ((ScraperTrailer)item).getUrl().toString());
+                    ActivityInfo activityInfo = browserIntent.resolveActivityInfo(getActivity().getPackageManager(), browserIntent.getFlags());
+                    
+                    if (activityInfo != null && !activityInfo.processName.equals("com.google.android.tv.frameworkpackagestubs")) {
+                        startActivity(browserIntent);
+                    }
+                    else {
+                        String url = ((ScraperTrailer)item).getUrl().toString().replace("https://www.youtube.com/watch", "https://www.youtube.com/tv#/watch");
+
+                        WebUtils.openWebLink(getActivity(), url);
+                    }
                 }
                 else if (item instanceof ScraperImage) {
                     if (row == mPostersRow) {
