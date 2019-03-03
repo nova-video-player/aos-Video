@@ -15,9 +15,11 @@
 package com.archos.mediacenter.video.utils;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebViewFragment;
@@ -47,13 +49,13 @@ public class WebViewActivity extends Activity {
     protected void onResume() {
         super.onResume();
         //WebViewFragment wvf = (WebViewFragment)getFragmentManager().findFragmentById(R.id.webview_fragment);
-        initWebView(mWebView);
+        initWebView(mWebView, mUri);
 
         mWebView.requestFocus();
         mWebView.loadUrl(mUri.toString());
     }
 
-    private static void initWebView(WebView webview) {
+    private static void initWebView(WebView webview, Uri uri) {
         webview.setFocusable(true);
         webview.setInitialScale(0); // imdb does not look good in fullscreen with anything but this
         webview.getSettings().setJavaScriptEnabled(true);
@@ -68,11 +70,22 @@ public class WebViewActivity extends Activity {
         String userAgent = webview.getSettings().getUserAgentString();
         userAgent = userAgent.replace("Mobile", " ");
         webview.getSettings().setUserAgentString(userAgent);
+
+        if (uri.toString().startsWith("https://www.youtube.com/tv#/watch")) {
+            webview.getSettings().setDomStorageEnabled(true);
+            webview.getSettings().setMediaPlaybackRequiresUserGesture(false);
+            webview.setWebChromeClient(new WebChromeClient() {
+                @Override
+                public Bitmap getDefaultVideoPoster() {
+                    return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+                }
+            });
+        }  
     }
 
     @Override
     public void onBackPressed() {
-        if (mWebView!=null && mWebView.canGoBack()) {
+        if (mWebView!=null && mWebView.canGoBack() && !mWebView.getUrl().startsWith("https://www.youtube.com/tv#/watch")) {
             mWebView.goBack();
         }
         else {
