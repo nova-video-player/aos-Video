@@ -66,7 +66,7 @@ public class Season extends Base implements Serializable {
     }
 
     public boolean allEpisodesWatched() {
-        return mEpisodeWatchedCount==mEpisodeTotalCount;
+        return mEpisodeWatchedCount>=mEpisodeTotalCount;
     }
 
     public boolean allEpisodesNotWatched() {
