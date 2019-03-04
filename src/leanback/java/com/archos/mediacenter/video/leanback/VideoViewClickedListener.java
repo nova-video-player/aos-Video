@@ -31,6 +31,7 @@ import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsActivity;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsFragment;
 import com.archos.mediacenter.video.leanback.presenter.ListPresenter;
+import com.archos.mediacenter.video.leanback.search.VideoSearchFragment;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowFragment;
 
@@ -48,7 +49,7 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
     @Override
     public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
         if (item instanceof Video) {
-            if(row!=null&&(row.getId() == MainFragment.ROW_ID_LAST_PLAYED || row.getId() == MainFragment.ROW_ID_LAST_ADDED || row.getId() == MainFragment.ROW_ID_ALL_MOVIES)){
+            if(row!=null&&(row.getId() == MainFragment.ROW_ID_LAST_PLAYED || row.getId() == MainFragment.ROW_ID_LAST_ADDED || row.getId() == MainFragment.ROW_ID_ALL_MOVIES || row.getId() == VideoSearchFragment.ROW_ID)){
                 showVideoDetails(mActivity, (Video) item, itemViewHolder, true, -1);
             }
             else
