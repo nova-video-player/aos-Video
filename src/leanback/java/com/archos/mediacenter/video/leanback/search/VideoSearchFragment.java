@@ -49,6 +49,7 @@ import android.support.v17.leanback.widget.SpeechRecognitionCallback;
 
 
 public class VideoSearchFragment extends SearchFragment implements SearchFragment.SearchResultProvider {
+    public static final int ROW_ID = 2000;
 
     private static final int SEARCH_DELAY_MS = 300;
 
@@ -181,7 +182,7 @@ public class VideoSearchFragment extends SearchFragment implements SearchFragmen
                     CursorObjectAdapter listRowAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
                     listRowAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
                     listRowAdapter.changeCursor(cursor);
-                    return new ListRow(new HeaderItem(getString(R.string.search_results)), listRowAdapter);
+                    return new ListRow(ROW_ID, new HeaderItem(getString(R.string.search_results)), listRowAdapter);
                 } else {
                     ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new EmptyViewPresenter());
                     listRowAdapter.add(new EmptyView(getString(R.string.no_results_found)));
