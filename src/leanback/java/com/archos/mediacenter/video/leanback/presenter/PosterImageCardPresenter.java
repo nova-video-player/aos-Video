@@ -255,7 +255,10 @@ public class PosterImageCardPresenter extends Presenter {
             }
         }
         if (posterUri!=null) {
-            vh.updateCardView(posterUri, video.getId(),isLarge);
+            if (!isLarge)
+                vh.updateCardView(posterUri, video.getId(),isLarge);
+            else
+                vh.updateCardView(posterUri, -1, isLarge);
         }
         //don't try to load thumb when not indexed or not local && create remote thumb is set to false
         else if (video.isIndexed()&& (FileUtils.isLocal(video.getFileUri())||PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoProvider.PREFERENCE_CREATE_REMOTE_THUMBS, false))) {

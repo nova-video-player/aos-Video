@@ -112,6 +112,7 @@ public abstract class ListPresenter extends Presenter {
         }
 
         protected void updateImageViewThumbnail(long videoId) {
+            mImageViewTarget.setVideoId(-1);
             Picasso.get()
                     // must use an Uri here, does not work with path only
                     .load(ThumbnailRequestHandler.buildUri(videoId))
