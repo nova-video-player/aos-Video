@@ -126,7 +126,7 @@ public class VideoBadgePresenter extends Presenter {
                 mSourceTextView.setText("Local");
             }
             else {
-                mSourceTextView.setText(source.getScheme());
+                mSourceTextView.setText(source.getScheme().toUpperCase().replace("UPNP", "UPnP"));
             }
 
         }
@@ -157,7 +157,13 @@ public class VideoBadgePresenter extends Presenter {
                             iv.setVisibility(View.INVISIBLE);
                         else
                             iv.setVisibility(View.VISIBLE);
-                        iv.setImageResource(channel.startsWith("5") ? R.drawable.badge_5_1 : R.drawable.badge_stereo_wide);
+                        
+                        if (channel.startsWith("7.1"))
+                            iv.setImageResource(R.drawable.badge_7_1);
+                        else if (channel.startsWith("5.1"))
+                            iv.setImageResource(R.drawable.badge_5_1);
+                        else if (channel.startsWith("Stereo"))
+                            iv.setImageResource(R.drawable.badge_2_0);
                     }
                     mAudioFormatContainer.addView(v);
 
