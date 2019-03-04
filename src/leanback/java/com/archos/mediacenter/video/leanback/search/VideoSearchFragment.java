@@ -58,6 +58,7 @@ public class VideoSearchFragment extends SearchFragment implements SearchFragmen
     private SearchRunnable mDelayedLoad;
     private VideoLoader mSearchLoader;
     private SpeechRecognitionCallback mSpeechRecognitionCallback;
+    private String mLastQuery;
     private static final int SEARCH_REQUEST_CODE = 1;
 
     private class SearchRunnable implements Runnable {
@@ -151,10 +152,14 @@ public class VideoSearchFragment extends SearchFragment implements SearchFragmen
     }
 
     private void loadQuery(String query, boolean valid) {
-        mHandler.removeCallbacks(mDelayedLoad);
-        if (valid) {
-            mDelayedLoad.setSearchQuery(query);
-            mHandler.postDelayed(mDelayedLoad, SEARCH_DELAY_MS);
+        if (!query.equals(mLastQuery)) {
+            mLastQuery = query;
+
+            mHandler.removeCallbacks(mDelayedLoad);
+            if (valid) {
+                mDelayedLoad.setSearchQuery(query);
+                mHandler.postDelayed(mDelayedLoad, SEARCH_DELAY_MS);
+            }
         }
     }
 
