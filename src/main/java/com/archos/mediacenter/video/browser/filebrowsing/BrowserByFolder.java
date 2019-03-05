@@ -154,7 +154,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             hideSubMenu(mMenu);
             listFiles(true);
         }
-
+        LoaderManager.getInstance(getActivity()).restartLoader(0, null, this);
     }
 
     @Override
