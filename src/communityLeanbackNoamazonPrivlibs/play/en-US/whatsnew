@@ -1,7 +1,10 @@
-Add new TV show cathergoeies to browse quicker through large TV show collections
+Add support for SMB2/SMB3 through jcifs-ng migration
+Add new TV show categories to browse quicker through large TV show collections
+Countless TV UI improvements (player cards, roles, movie trailers, audio badges, global deletion/deindexing etc.) 
 Add AV1 soft decoding (ffmpeg 4.2dev + dav1d)
 Add new player shortcuts (A/S switch audio/sub track, U/D = volume up/down) and menu support
 Improve audio passthrough stability
 Make private mode is persistent
 Migration to NDK-r19 and support for x86_64 arch
 Fix application crash in presence of a damaged sdcard (unmountable state)
+Fix cloud support (inherent limitation: streaming not supported)
