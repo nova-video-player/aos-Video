@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -71,7 +72,7 @@ public class WebViewActivity extends Activity {
         userAgent = userAgent.replace("Mobile", " ");
         webview.getSettings().setUserAgentString(userAgent);
 
-        if (uri.toString().startsWith("https://www.youtube.com/tv#/watch")) {
+        if (uri.toString().startsWith("https://www.youtube.com/tv#")) {
             webview.getSettings().setDomStorageEnabled(true);
             webview.getSettings().setMediaPlaybackRequiresUserGesture(false);
             webview.setWebChromeClient(new WebChromeClient() {
@@ -85,7 +86,11 @@ public class WebViewActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (mWebView!=null && mWebView.canGoBack() && !mWebView.getUrl().startsWith("https://www.youtube.com/tv#/watch")) {
+        if (mWebView != null && (mWebView.getUrl().startsWith("https://www.youtube.com/tv#/watch/ads/control")
+                || mWebView.getUrl().startsWith("https://www.youtube.com/tv#/watch/video/control"))) {
+            mWebView.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ESCAPE));
+        }
+        else if (mWebView!=null && mWebView.canGoBack() && !mWebView.getUrl().startsWith("https://www.youtube.com/tv#")) {
             mWebView.goBack();
         }
         else {
