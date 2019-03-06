@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.leanback;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v17.leanback.widget.BaseCardView;
@@ -61,10 +62,10 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
     }
 
     public static void showVideoDetails(Activity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean forceSelection, long listId) {
-        showVideoDetails(activity,video, itemViewHolder, true, forceSelection, true, listId);
+        showVideoDetails(activity,video, itemViewHolder, true, forceSelection, true, listId, null, -1);
     }
 
-    public static void showVideoDetails(Activity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean animate, boolean forceSelection, boolean shouldLoadBackdrop, long listId) {
+    public static void showVideoDetails(Activity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean animate, boolean forceSelection, boolean shouldLoadBackdrop, long listId, Fragment fragment, int requestCode) {
         Intent intent = new Intent(activity, VideoDetailsActivity.class);
         intent.putExtra(VideoDetailsFragment.EXTRA_VIDEO, video);
         intent.putExtra(VideoDetailsFragment.EXTRA_LIST_ID, listId);
@@ -82,10 +83,16 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
                     sourceView,
                     VideoDetailsActivity.SHARED_ELEMENT_NAME).toBundle();
 
-            activity.startActivity(intent,bundle);
+            if (fragment == null || requestCode == -1)
+                activity.startActivity(intent, bundle);
+            else
+                fragment.startActivityForResult(intent, requestCode, bundle);
         }
         else{
-            activity.startActivity(intent);
+            if (fragment == null || requestCode == -1)
+                activity.startActivity(intent);
+            else
+                fragment.startActivityForResult(intent, requestCode);
         }
     }
 
