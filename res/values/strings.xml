@@ -767,7 +767,9 @@
     <string name="leanback_subtitles_integrated">Integrated subtitles</string>
     <string name="leanback_subtitles_external">External subtitles</string>
     <string name="leanback_posters_header">Posters</string>
+    <string name="leanback_season_posters_header">Posters of the season</string>
     <string name="leanback_backdrops_header">Backdrops</string>
+    <string name="leanback_tvshow_backdrops_header">Backdrops of the TV show</string>
     <string name="leanback_poster_changed">The poster has been changed</string>
     <string name="leanback_backdrop_changed">The backdrop has been changed</string>
     <string name="leanback_weblinks_header">Links</string>
