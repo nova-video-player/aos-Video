@@ -83,6 +83,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
     public static final int REQUEST_CODE_MORE_DETAILS = 8574; // some random integer may be useful for grep/debug...
     public static final int REQUEST_CODE_CHANGE_TVSHOW = 8575; // some random integer may be useful for grep/debug...
+    public static final int REQUEST_CODE_VIDEO = 8576;
 
     private static final int INDEX_DETAILS = 0;
     private static final int INDEX_FIRST_SEASON = 1;
@@ -211,7 +212,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 if (item instanceof Video) {
                     //animate only if episode picture isn't displayed
                     boolean animate =!((item instanceof Episode)&&((Episode)item).getPictureUri()!=null);
-                    VideoViewClickedListener.showVideoDetails(getActivity(), (Video) item, itemViewHolder, animate, false, false, -1);
+                    VideoViewClickedListener.showVideoDetails(getActivity(), (Video) item, itemViewHolder, animate, false, false, -1, TvshowFragment.this, REQUEST_CODE_VIDEO);
                 }
             }
         });
@@ -272,7 +273,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_MORE_DETAILS && resultCode == Activity.RESULT_OK) {
+        if ((requestCode == REQUEST_CODE_MORE_DETAILS || requestCode == REQUEST_CODE_VIDEO) && resultCode == Activity.RESULT_OK) {
             Log.d(TAG, "Get RESULT_OK from TvshowMoreDetailsFragment");
 
             // Only Poster and/or backdrop has been changed.

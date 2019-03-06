@@ -1323,7 +1323,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 if(mPostersRow!=null&&mAdapter.indexOf(mPostersRow)!=-1)
                     mAdapter.remove(mPostersRow);
                 mPostersRow = new ListRow(
-                        new HeaderItem(getString(R.string.leanback_posters_header)),
+                        new HeaderItem(getString(!mIsTvEpisode ? R.string.leanback_posters_header : R.string.leanback_season_posters_header)),
                         postersRowAdapter);
                 mAdapter.add(mPostersRow);
             }
@@ -1335,7 +1335,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 if(mBackdropsRow!=null&&mAdapter.indexOf(mBackdropsRow)!=-1)
                     mAdapter.remove(mBackdropsRow);
                 mBackdropsRow = new ListRow(
-                        new HeaderItem(getString(R.string.leanback_backdrops_header)),
+                        new HeaderItem(getString(!mIsTvEpisode ? R.string.leanback_backdrops_header : R.string.leanback_tvshow_backdrops_header)),
                         backdropsRowAdapter);
                 mAdapter.add(mBackdropsRow);
             }
@@ -1559,6 +1559,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mVideo);
             }
             Toast.makeText(getActivity(), R.string.leanback_backdrop_changed, Toast.LENGTH_SHORT).show();
+            getActivity().setResult(Activity.RESULT_OK);
         }
     }
 
