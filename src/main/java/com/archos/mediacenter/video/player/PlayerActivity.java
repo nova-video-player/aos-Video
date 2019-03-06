@@ -1221,7 +1221,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         View separator = LayoutInflater.from(mContext).inflate(R.layout.menu_separator_layout, null);
         tvmenu.addTVMenuItem(separator);
 
-        tvmenu.createAndAddTVMenuItem(getText(R.string.subtitle_delay_speed).toString(), false,false).setFocusable(false);
+        tvmenu.createAndAddTVMenuItem(getText(R.string.subtitle_delay_speed).toString(), false);
         tvmenu.setItems(R.array.subtitle_delay_ratio_array, mVideoInfo.subtitleRatio, true);
         tvmenu.setOnItemClickListener(new View.OnClickListener() {
             @Override
@@ -1265,7 +1265,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mPlayerController.getTVMenuAdapter().setDiscrete(true);
         final TVMenu tvmenu = mPlayerController.getTVMenuAdapter().createTVMenu();
 
-        tvmenu.createAndAddTVMenuItem(getText(R.string.subtitle_style_text).toString(), false, false).setFocusable(false);
+        tvmenu.createAndAddTVMenuItem(getText(R.string.subtitle_style_text).toString(), false);
         final SubtitleDelayTVPicker tvPicker = (SubtitleDelayTVPicker)LayoutInflater.from(mContext)
                 .inflate(R.layout.subtitle_delay_tv_picker, null);
         tvPicker.setStep(1);
@@ -1302,7 +1302,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         });
         tvmenu.addTVMenuItem(colorPicker);
 
-        tvmenu.createAndAddTVMenuItem(getText(R.string.subtitle_vert_text).toString(), false,false).setFocusable(false);
+        tvmenu.createAndAddTVMenuItem(getText(R.string.subtitle_vert_text).toString(), false);
 
         // adding tv picker
         final SubtitleDelayTVPicker tvPicker2 = (SubtitleDelayTVPicker)LayoutInflater.from(mContext)

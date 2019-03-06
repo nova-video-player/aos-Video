@@ -117,6 +117,18 @@ public class TVMenu extends LinearLayout implements FocusableTVCardView, TVSlave
             i++;
         }
     }
+
+    public TVMenuItem createAndAddTVMenuItem(String text, boolean isFocusable){
+        TVMenuItem tvmi = createAndAddTVMenuItem(text, false, false);
+
+        if (!isFocusable) {
+            tvmi.setFocusable(false);
+            tvmi.findViewById(R.id.info_text).setFocusable(false);
+        }
+
+        return tvmi;
+    }
+
     public TVMenuItem createAndAddTVMenuItem(String text, boolean isCheckable, boolean isChecked){
         View v;
         View v2;
