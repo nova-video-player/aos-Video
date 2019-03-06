@@ -15,15 +15,15 @@
 package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.app.AlertDialog;
-import android.app.LoaderManager;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v17.leanback.app.BackgroundManager;
-import android.support.v17.leanback.app.BrowseFragment;
+import android.support.v17.leanback.app.BrowseSupportFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.CursorObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
@@ -56,7 +56,7 @@ import java.util.ArrayList;
 /**
  * Created by vapillon on 16/06/15.
  */
-public class SeasonFragment extends BrowseFragment implements  LoaderManager.LoaderCallbacks<Cursor>, Delete.DeleteListener {
+public class SeasonFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor>, Delete.DeleteListener {
 
     private static final String TAG = "SeasonFragment";
 
@@ -239,7 +239,7 @@ public class SeasonFragment extends BrowseFragment implements  LoaderManager.Loa
         mOverlay.resume();
 
         // Start loading the list of seasons
-        getLoaderManager().restartLoader(1, null, this);
+        LoaderManager.getInstance(this).restartLoader(1, null, this);
     }
 
     @Override
