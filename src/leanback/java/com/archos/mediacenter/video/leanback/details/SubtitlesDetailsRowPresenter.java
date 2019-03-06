@@ -42,7 +42,7 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
     final SubtitleDownloadInterface mSubtitleDownloadInterface;
     private int mColor;
 
-
+    private SubtitlesDetailsViewHolder mHolder;
 
     public class SubtitlesDetailsViewHolder extends RowPresenter.ViewHolder {
         /** the parent viewholder */
@@ -80,6 +80,9 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
     @Override
     public void setBackgroundColor(int color) {
         mColor = color;
+
+        if (mHolder != null)
+            mHolder.mFullWidthViewHolder.getMainContainer().setBackgroundColor(color);
     }
 
     @Override
@@ -166,6 +169,8 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
             vh.mExternalSubsRow.setVisibility(View.VISIBLE);
             vh.mExternalSubsLabel.setVisibility(View.VISIBLE);
         }
+
+        mHolder = vh;
     }
 
     @Override

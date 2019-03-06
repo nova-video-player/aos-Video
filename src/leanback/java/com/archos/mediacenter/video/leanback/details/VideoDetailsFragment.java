@@ -1480,8 +1480,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             Bitmap bitmap=null;
             try {
                 bitmap = Picasso.get()
-                        .load(poster.getLargeUrl())
+                        .load(poster.getLargeFileF())
                         .noFade()
+                        .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
+                        .centerCrop()
                         .get();
 
             } catch (IOException e) {
@@ -1499,6 +1501,22 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 mPoster = result;
                 mDetailsOverviewRow.setImageBitmap(getActivity(), result);
                 mDetailsOverviewRow.setImageScaleUpAllowed(true);
+
+                Palette palette = Palette.from(result).generate();
+                int color = palette.getDarkVibrantColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
+
+                if (color != mColor) {
+                    mColor = color;
+
+                    mVideoBadgePresenter.setSelectedBackgroundColor(color);
+                    mOverviewRowPresenter.setBackgroundColor(color);
+
+                    for (Presenter pres : mAdapter.getPresenterSelector().getPresenters()){
+                        if (pres instanceof BackgroundColorPresenter)
+                            ((BackgroundColorPresenter) pres).setBackgroundColor(color);
+                    }
+                }
+
                 Toast.makeText(getActivity(), R.string.leanback_poster_changed, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();

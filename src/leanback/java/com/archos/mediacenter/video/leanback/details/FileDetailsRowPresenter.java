@@ -39,8 +39,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
     private int mColor;
     Resources mR;
 
-
-
+    private FileDetailsViewHolder mHolder;
 
     public class FileDetailsViewHolder extends RowPresenter.ViewHolder {
         /** the parent viewholder */
@@ -80,6 +79,9 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
     @Override
     public void setBackgroundColor(int color) {
         mColor = color;
+
+        if (mHolder != null)
+            mHolder.mFullWidthViewHolder.getMainContainer().setBackgroundColor(color);
     }
 
     @Override
@@ -178,6 +180,8 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
 
         // Subtitles tracks info
         vh.mSubtitlesGroup.setVisibility(View.GONE);
+
+        mHolder = vh;
     }
 
     private String getSubtitleTrackList(Context context, int number, int offset, String separator, VideoMetadata videoMetadata) {

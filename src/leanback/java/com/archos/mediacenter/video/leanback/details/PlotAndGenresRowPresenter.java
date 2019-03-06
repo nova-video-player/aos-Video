@@ -34,7 +34,7 @@ public class PlotAndGenresRowPresenter extends FullWidthRowPresenter implements 
     Resources mR;
     final int mMaxLines;
 
-
+    private PlotAndGenresViewHolder mHolder;
 
     public class PlotAndGenresViewHolder extends RowPresenter.ViewHolder {
         /** the parent viewholder */
@@ -65,6 +65,8 @@ public class PlotAndGenresRowPresenter extends FullWidthRowPresenter implements 
     public void setBackgroundColor(int color) {
         mColor = color;
 
+        if (mHolder != null)
+            mHolder.mFullWidthViewHolder.getMainContainer().setBackgroundColor(color);
     }
 
     public PlotAndGenresRowPresenter(int maxLines, int color) {
@@ -112,5 +114,7 @@ public class PlotAndGenresRowPresenter extends FullWidthRowPresenter implements 
         } else {
             vh.mGenresTv.setVisibility(View.GONE);
         }
+
+        mHolder = vh;
     }
 }
