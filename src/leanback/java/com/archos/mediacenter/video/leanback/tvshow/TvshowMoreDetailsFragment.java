@@ -41,6 +41,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.adapter.object.WebPageLink;
+import com.archos.mediacenter.video.leanback.details.BackgroundColorPresenter;
 import com.archos.mediacenter.video.leanback.details.CastRow;
 import com.archos.mediacenter.video.leanback.details.CastRowPresenter;
 import com.archos.mediacenter.video.leanback.details.PlotAndGenresRow;
@@ -334,7 +335,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
             Bitmap bitmap=null;
             try {
                 bitmap = Picasso.get()
-                        .load(poster.getLargeUrl())
+                        .load(poster.getLargeFileF())
                         .noFade()
                         .get();
 
@@ -350,6 +351,21 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
             if (result != null) {
                 mDetailsRow.setImageBitmap(getActivity(), result);
                 mDetailsRow.setImageScaleUpAllowed(true);
+
+                Palette palette = Palette.from(result).generate();
+                int color = palette.getDarkVibrantColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
+
+                if (color != mColor) {
+                    mColor = color;
+
+                    mOverviewRowPresenter.setBackgroundColor(color);
+
+                    for (Presenter pres : mRowsAdapter.getPresenterSelector().getPresenters()){
+                        if (pres instanceof BackgroundColorPresenter)
+                            ((BackgroundColorPresenter) pres).setBackgroundColor(color);
+                    }
+                }
+
                 Toast.makeText(getActivity(), R.string.leanback_poster_changed, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
