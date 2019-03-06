@@ -34,7 +34,7 @@ public class CastRowPresenter extends FullWidthRowPresenter implements Backgroun
     Resources mR;
     final int mMaxLines;
 
-
+    private CastViewHolder mHolder;
 
     public class CastViewHolder extends RowPresenter.ViewHolder {
         /** the parent viewholder */
@@ -64,6 +64,9 @@ public class CastRowPresenter extends FullWidthRowPresenter implements Backgroun
     @Override
     public void setBackgroundColor(int color) {
         mColor = color;
+
+        if (mHolder != null)
+            mHolder.mFullWidthViewHolder.getMainContainer().setBackgroundColor(color);
     }
 
     public CastRowPresenter(int maxLines, int color) {
@@ -110,5 +113,7 @@ public class CastRowPresenter extends FullWidthRowPresenter implements Backgroun
         } else {
             vh.mDirectorsTv.setVisibility(View.GONE);
         }
+
+        mHolder = vh;
     }
 }
