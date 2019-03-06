@@ -537,8 +537,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     }
 
     private void updateHeaderHeight() {
-
         mHeaderHeight = mTitleBar.getMeasuredHeight();
+        if (mHeaderHeight == 0)
+            Log.d(TAG,"Warning updateHeaderHeight sets mHeaderHeight to zero!");
         if (mIsPortraitMode) {
             View scrollView = mRoot.findViewById(R.id.scroll_content);
             scrollView.setPadding(scrollView.getPaddingLeft(), mHeaderHeight, scrollView.getPaddingRight(), scrollView.getPaddingBottom());
@@ -1180,20 +1181,24 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     @Override
     public void onScrollChanged(int i, boolean b, boolean b1) {
-
         updateHeaderBackground(i, true);
 
     }
 
     private void updateHeaderBackground(int scroll, boolean animate) {
-
-
-            float coeff = (float) scroll / (float) mHeaderHeight;
-            if (coeff > 1)
-                coeff = 1;
-            if (coeff < 0)
-                coeff=0;
-            int alpha = (int) (coeff * 255);
+        // belt and suspenders to be sure that mHeaderHeight is not null
+        float coeff = 1;
+        if (mHeaderHeight != 0)
+            coeff = (float) scroll / (float) mHeaderHeight;
+        else {
+            Log.d(TAG, "updateHeaderBackground Warning mHeaderHeight is null!!! Generating stacktrace...", new Exception());
+            coeff = 1;
+        }
+        if (coeff > 1)
+            coeff = 1;
+        if (coeff < 0)
+            coeff=0;
+        int alpha = (int) (coeff * 255);
         if(mIsPortraitMode) {
             mTitleBar.setBackgroundColor(VideoInfoCommonClass.getAlphaColor(mColor, alpha));
             ViewCompat.setElevation(mTitleBar, coeff * 5);
@@ -1338,9 +1343,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        updateHeaderBackground(mScrollView.getCurrentScrollY(), false );
+        //seems that at this point mHeaderHeight is null even if force measured via updateHeaderHeight(), thus do not do it here
+        //updateHeaderBackground(mScrollView.getCurrentScrollY(), false );
     }
-
 
     @Override
     public void onDetach(){
