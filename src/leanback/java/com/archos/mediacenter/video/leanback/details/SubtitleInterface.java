@@ -18,8 +18,9 @@ package com.archos.mediacenter.video.leanback.details;
  * A minimalist interface for SubtitlesDetailsRowPresenter to query a subtitle download
  * Created by vapillon on 19/05/15.
  */
-public interface SubtitleDownloadInterface {
+public interface SubtitleInterface {
 
     void performSubtitleDownload();
+    void performSubtitleChoose();
 
 }

@@ -12,6 +12,7 @@
         android:layout_marginLeft="40dip"
         android:layout_marginRight="40dip"
         android:gravity="center"
-        style="@style/textAppearanceMedium" />
+        style="@style/textAppearanceMedium"
+        android:textColor="#c0ffffff" />
 
 </LinearLayout>

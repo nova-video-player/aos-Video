@@ -309,8 +309,9 @@
             android:excludeFromRecents="true"
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round"
+            android:label="@string/get_subtitles_on_drive"
             android:launchMode="singleTask"
-            android:theme="@style/ArchosThemeBlue" >
+            android:theme="@style/ArchosThemeBlueCompat" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

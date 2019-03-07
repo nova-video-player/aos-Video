@@ -39,7 +39,7 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
 
     private static final String TAG = "SubtitlesDetailsRowP";
 
-    final SubtitleDownloadInterface mSubtitleDownloadInterface;
+    final SubtitleInterface mSubtitleInterface;
     private int mColor;
 
     private SubtitlesDetailsViewHolder mHolder;
@@ -53,6 +53,7 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
         final View mExternalSubsLabel, mExternalSubsRow;
         final TextView mExternalSubsCol1Tv, mExternalSubsCol2Tv;
         final Button mDownloadSubsButton;
+        final Button mChooseSubsButton;
 
         public SubtitlesDetailsViewHolder(ViewHolder parentViewHolder, View contentView) {
             super(parentViewHolder.view);
@@ -67,13 +68,14 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
             mExternalSubsCol1Tv = (TextView)contentView.findViewById(R.id.external_subtitles_values_col1);
             mExternalSubsCol2Tv = (TextView)contentView.findViewById(R.id.external_subtitles_values_col2);
             mDownloadSubsButton = (Button)contentView.findViewById(R.id.action_get_online_subtitles);
+            mChooseSubsButton = (Button)contentView.findViewById(R.id.action_choose_subtitles);
         }
     }
 
-    public SubtitlesDetailsRowPresenter(SubtitleDownloadInterface subtitleDownloadInterface, int color) {
+    public SubtitlesDetailsRowPresenter(SubtitleInterface subtitleInterface, int color) {
         super();
         mColor = color;
-        mSubtitleDownloadInterface = subtitleDownloadInterface;
+        mSubtitleInterface = subtitleInterface;
         setHeaderPresenter(new RowHeaderPresenter());
     }
 
@@ -116,7 +118,13 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
         vh.mDownloadSubsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mSubtitleDownloadInterface.performSubtitleDownload();
+                mSubtitleInterface.performSubtitleDownload();
+            }
+        });
+        vh.mChooseSubsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSubtitleInterface.performSubtitleChoose();
             }
         });
 

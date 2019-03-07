@@ -112,6 +112,7 @@ import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.StoreRatingDialogBuilder;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
+import com.archos.mediacenter.video.utils.SubtitlesWizardActivity;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
 import com.archos.mediacenter.video.utils.WebUtils;
@@ -136,7 +137,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor>, PlayUtils.SubtitleDownloadListener, SubtitleDownloadInterface, Delete.DeleteListener, XmlDb.ResumeChangeListener, ExternalPlayerWithResultStarter {
+public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor>, PlayUtils.SubtitleDownloadListener, SubtitleInterface, Delete.DeleteListener, XmlDb.ResumeChangeListener, ExternalPlayerWithResultStarter {
 
     private static final String TAG = "VideoDetailsFragment";
 
@@ -154,7 +155,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     public static final int REQUEST_CODE_LOCAL_RESUME_AFTER_ADS_ACTIVITY = 985;
     public static final int REQUEST_CODE_REMOTE_RESUME_AFTER_ADS_ACTIVITY = 986;
-    public static final int REQUEST_CODE_SUBTITLES_DOWNLOADER_ACTIVITY      = 987;
+    public static final int REQUEST_CODE_SUBTITLES_ACTIVITY                 = 987;
     public static final int REQUEST_CODE_RESUME_AFTER_ADS_ACTIVITY          = 988;
     public static final int REQUEST_CODE_PLAY_FROM_BEGIN_AFTER_ADS_ACTIVITY = 989;
     public static final int PLAY_ACTIVITY_REQUEST_CODE = 990;
@@ -1408,7 +1409,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         }
     }
 
-    /** Implements SubtitleDownloadQueryInterface */
+    /** Implements SubtitleInterface */
     @Override
     public void performSubtitleDownload() {
             HashMap<String, Long> videoSizes = new HashMap<>();
@@ -1418,8 +1419,19 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             intent.setClass(getActivity(), SubtitlesDownloaderActivity.class);
             intent.putExtra(SubtitlesDownloaderActivity.FILE_URL, mVideo.getFilePath());
             intent.putExtra(SubtitlesDownloaderActivity.FILE_SIZES, videoSizes);
-            startActivityForResult(intent, REQUEST_CODE_SUBTITLES_DOWNLOADER_ACTIVITY);
+            startActivityForResult(intent, REQUEST_CODE_SUBTITLES_ACTIVITY);
 
+    }
+
+    /** Implements SubtitleInterface */
+    @Override
+    public void performSubtitleChoose() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        Uri uri = Uri.parse(mVideo.getFilePath());
+
+        intent.setClass(getActivity(), SubtitlesWizardActivity.class);
+        intent.setData(uri);
+        startActivityForResult(intent, REQUEST_CODE_SUBTITLES_ACTIVITY);
     }
 
     private void startAds(int requestCode) {
@@ -1449,8 +1461,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_SUBTITLES_DOWNLOADER_ACTIVITY && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Get RESULT_OK from SubtitlesDownloaderActivity");
+        if (requestCode == REQUEST_CODE_SUBTITLES_ACTIVITY && resultCode == Activity.RESULT_OK) {
+            Log.d(TAG, "Get RESULT_OK from SubtitlesDownloaderActivity/SubstitlesWizardActivity");
             // Update the subtitle row
             if (mSubtitleFilesListerTask !=null) {
                 mSubtitleFilesListerTask.cancel(true);

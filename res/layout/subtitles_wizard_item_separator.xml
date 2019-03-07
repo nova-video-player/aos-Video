@@ -13,6 +13,8 @@
             android:paddingTop="8dip"
             android:paddingLeft="10dip"
             style="@style/textAppearanceMedium"
+            android:textColor="@color/lightblue500"
+            android:textStyle="bold"
             android:singleLine="true" />
 
 </LinearLayout>
