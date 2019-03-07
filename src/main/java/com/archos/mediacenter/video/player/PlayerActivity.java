@@ -92,6 +92,7 @@ import com.archos.mediacenter.video.player.tvmenu.TVMenuItem;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
 import com.archos.mediacenter.video.player.tvmenu.TimerDelayTVPicker;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
+import com.archos.mediacenter.video.utils.SubtitlesWizardActivity;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoMetadata.AudioTrack;
 import com.archos.mediacenter.video.utils.VideoMetadata.SubtitleTrack;
@@ -217,7 +218,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     // from WindowManagerPolicy.java ; should be aligned in case of change
     private static final String ACTION_HDMI_PLUGGED = "android.intent.action.HDMI_PLUGGED";
     private static final String EXTRA_HDMI_PLUGGED_STATE = "state";
-    private static final int SUBTITLE_DOWNLOAD_REQUEST = 0;
+    private static final int SUBTITLE_REQUEST = 0;
     
 
     private boolean mHasAskedFloatingPermission;
@@ -1457,6 +1458,13 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 @Override
                 public void onClick(View v) {
                     downloadSubtitles();
+                    mPlayerController.showTVMenu(false);
+                }
+            });
+            mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.get_subtitles_on_drive).toString(), false, false).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    chooseSubtitles();
                     mPlayerController.showTVMenu(false);
                 }
             });
@@ -3047,12 +3055,22 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         Intent subIntent = new Intent(Intent.ACTION_MAIN);
         subIntent.setClass(mContext, SubtitlesDownloaderActivity.class);
         subIntent.putExtra(SubtitlesDownloaderActivity.FILE_URL, PlayerService.sPlayerService.getStreamingUri().toString());
-        startActivityForResult(subIntent, SUBTITLE_DOWNLOAD_REQUEST);
+        startActivityForResult(subIntent, SUBTITLE_REQUEST);
     }
 
+    private void chooseSubtitles() {
+        Intent subIntent = new Intent(Intent.ACTION_MAIN);
+
+        subIntent.setClass(mContext, SubtitlesWizardActivity.class);
+        subIntent.setData(mUri);
+        startActivityForResult(subIntent, SUBTITLE_REQUEST);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == SUBTITLE_DOWNLOAD_REQUEST){
+        if(requestCode == SUBTITLE_REQUEST){
+            Log.d(TAG, "Get result from SubtitlesDownloaderActivity/SubstitlesWizardActivity");
             mPlayer.checkSubtitles();
         }
     }

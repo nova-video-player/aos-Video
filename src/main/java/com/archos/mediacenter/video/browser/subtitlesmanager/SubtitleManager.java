@@ -320,6 +320,15 @@ public class SubtitleManager {
         return subs;
     }
 
+    public static List<MetaFile2> getAllSubtitleList(Uri video) throws SftpException, AuthenticationException, JSchException, IOException {
+        final Uri parentUri = FileUtils.getParentUrl(video);
+
+
+        ArrayList<MetaFile2> subs = new ArrayList<>();
+        subs.addAll(recursiveSubListing(parentUri,stripExtension(video), true));
+        return subs;
+    }
+
     private static ArrayList<MetaFile2> recursiveSubListing(Uri parentUri, String filenameWithoutExtension, boolean addAllSubs)  {
         ArrayList<MetaFile2> subs = new ArrayList<>();
         List<MetaFile2> metaFile2List = null;
