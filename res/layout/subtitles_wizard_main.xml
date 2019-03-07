@@ -1,7 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:paddingTop="20dip"
               android:paddingLeft="@dimen/content_list_left_margin"
               android:paddingRight="@dimen/content_list_left_margin"
               android:orientation="vertical" >
@@ -10,7 +9,6 @@
               android:id="@+id/help_message_header"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="#44000000"
               android:padding="8dip" />
 
     <ListView android:id="@+id/list_items"
