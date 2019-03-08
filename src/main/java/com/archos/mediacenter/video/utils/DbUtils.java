@@ -254,4 +254,15 @@ public class DbUtils {
         
         return filePaths;
     }
+
+    public static void markAllAsUnplayed(final Context context) {
+        final ContentResolver cr = context.getContentResolver();
+        
+        final ContentValues values = new ContentValues();
+        values.put(VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED, 0);
+        
+        final String where = VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + "<>0";
+        
+        cr.update(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, values, where, null);
+    }
 }

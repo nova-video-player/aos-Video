@@ -614,6 +614,16 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
                 getPreferenceScreen().removePreference(leanbackUserInterfaceCategory);
             }
             else {
+                findPreference("reset_last_played_row").setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        DbUtils.markAllAsUnplayed(getActivity());
+                        Toast.makeText(getActivity(), R.string.reset_last_played_row_in_progress, Toast.LENGTH_SHORT).show();
+
+                        return true;
+                    }
+                });
+
                 ListPreference movieSortOrderPref = (ListPreference)findPreference(KEY_MOVIE_SORT_ORDER);
                 
                 movieSortOrderPref.setEntries(MoviesSortOrderEntry.getSortOrderEntries(getActivity(), AllMoviesGridFragment.sortOrderIndexer));

@@ -654,6 +654,8 @@
    <string name="preferences_show_last_added_row">Show last added row</string>
    <string name="preferences_show_last_played_row_summary">Check to show a row with your last played media</string>
    <string name="preferences_show_last_played_row">Show last played row</string>
+   <string name="preferences_reset_last_played_row">Reset last played row</string>
+   <string name="reset_last_played_row_in_progress">Resetting last played row</string>
    <string name="preferences_show_all_movies_row_summary">Check to show a row with all your movies instead of the movie categories row</string>
    <string name="preferences_show_all_movies_row">Show all movie row</string>
    <string name="preferences_movie_sort_order_summary">Select the sort order of the all movie row</string>
