@@ -75,6 +75,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 	public void onResume() {
 		((MainActivity)getActivity()).setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		super.onResume();
+		LoaderManager.getInstance(getActivity()).restartLoader(0, null, this);
 	}
 	
 	@Override
@@ -84,7 +85,11 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 		.putString(getSortOrderParamKey(), mSortOrder)
 		.commit();
 
-		super.onDestroy();
+        super.onDestroy();
+        if (mCursor != null && ! mCursor.isClosed()) {
+            mCursor.close();
+        }
+		mCursor = null;
 	}
 
 	@Override
@@ -162,8 +167,8 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 
     @Override
     protected void setupAdapter(boolean createNewAdapter) {
-        if (createNewAdapter || mBrowserAdapter == null) {
-            mBrowserAdapter = new GroupOfMovieAdapter(getActivity().getApplicationContext(), mThumbnailEngine, mCursor, mViewMode);
+		if (createNewAdapter || mBrowserAdapter == null) {
+		    mBrowserAdapter = new GroupOfMovieAdapter(getActivity().getApplicationContext(), mThumbnailEngine, mCursor, mViewMode);
         } else {
             GroupOfMovieAdapter adapter = (GroupOfMovieAdapter)mBrowserAdapter;
             adapter.setData(mCursor, mViewMode);

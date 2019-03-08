@@ -100,7 +100,7 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if(loader.getId()==0) { //if was called with this fragment, not a child
-            if (mCursor == null) {
+            if (mCursor == null || mCursor.isClosed()) {
                 mCursor = cursor;
                 bindAdapter();
             } else {
@@ -116,6 +116,9 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
 
     public void onLoaderReset(Loader<Cursor> loader) {
         ((CursorAdapter) mBrowserAdapter).swapCursor(null);
+        if (mCursor != null && ! mCursor.isClosed()) {
+            mCursor.close();
+        }
         mCursor = null;
     }
     protected void refresh(){
@@ -124,10 +127,8 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
     @Override
     public void onResume() {
         super.onResume();
-        if (mCursor != null) {
+        if (mCursor != null && !mCursor.isClosed())
 	        bindAdapter();
-        }
-
         LoaderManager.getInstance(getActivity()).restartLoader(0, null, this);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getActionBarTitle());
     }

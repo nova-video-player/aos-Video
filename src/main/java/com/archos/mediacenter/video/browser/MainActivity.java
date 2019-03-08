@@ -417,6 +417,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         registerReceiver(mTraktRelogBroadcastReceiver,new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN));
         getContentResolver().registerContentObserver(VideoStore.Video.Media.EXTERNAL_CONTENT_URI,
                 false, mGlobalResumeContentObserver);
+        LoaderManager.getInstance(this).restartLoader(0, null, mNewVideosActionProvider);
     }
 
 
