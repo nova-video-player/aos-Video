@@ -1784,7 +1784,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
     
     public void showControlBar() {
-        show(FLAG_SIDE_CONTROL_BAR, SHOW_TIMEOUT);
+        show(FLAG_SIDE_CONTROL_BAR|FLAG_SIDE_ACTION_BAR|FLAG_SIDE_SYSTEM_BAR, SHOW_TIMEOUT);
     }
     //this will be sent by activity
     public boolean onTouch(MotionEvent event){
@@ -1954,7 +1954,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         case KeyEvent.KEYCODE_MEDIA_NEXT:
                             Log.d(TAG, "sending");
                             if (Player.sPlayer.canSeekForward() && mSeekKeyDirection != 1) {
-                                show(FLAG_SIDE_CONTROL_BAR, 0);
+                                show(FLAG_SIDE_CONTROL_BAR|FLAG_SIDE_ACTION_BAR|FLAG_SIDE_SYSTEM_BAR, 0);
                                 mSeekKeyDirection = 1;
                                 onSeek(1, true);
                             }
@@ -1963,7 +1963,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         case KeyEvent.KEYCODE_DPAD_LEFT:
                         case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
                             if (Player.sPlayer.canSeekBackward() && mSeekKeyDirection != -1) {
-                                show(FLAG_SIDE_CONTROL_BAR, 0);
+                                show(FLAG_SIDE_CONTROL_BAR|FLAG_SIDE_ACTION_BAR|FLAG_SIDE_SYSTEM_BAR, 0);
                                 mSeekKeyDirection = -1;
                                 onSeek(-1, true);
                             }
