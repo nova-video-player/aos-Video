@@ -106,13 +106,17 @@
             android:summary="@string/preferences_show_last_played_row_summary"
             android:title="@string/preferences_show_last_played_row" />
 
+        <Preference
+            android:key="reset_last_played_row"
+            android:title="@string/preferences_reset_last_played_row" />
+
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="show_all_movies_row"
             android:summary="@string/preferences_show_all_movies_row_summary"
             android:title="@string/preferences_show_all_movies_row" />
 	    
-	<ListPreference
+	    <ListPreference
             android:dialogTitle="@string/preferences_movie_sort_order_title"
             android:key="preferences_movie_sort_order"
             android:persistent="true"
@@ -125,7 +129,7 @@
             android:summary="@string/preferences_show_all_tv_shows_row_summary"
             android:title="@string/preferences_show_all_tv_shows_row" />
 	    
-	<ListPreference
+	    <ListPreference
             android:dialogTitle="@string/preferences_tv_show_sort_order_title"
             android:key="preferences_tv_show_sort_order"
             android:persistent="true"
