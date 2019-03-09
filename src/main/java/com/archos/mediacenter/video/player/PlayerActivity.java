@@ -1461,13 +1461,16 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     mPlayerController.showTVMenu(false);
                 }
             });
-            mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.get_subtitles_on_drive).toString(), false, false).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    chooseSubtitles();
-                    mPlayerController.showTVMenu(false);
-                }
-            });
+
+            if (mUri.getScheme().equals("file") || mUri.getScheme().equals("smb")) {
+                mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.get_subtitles_on_drive).toString(), false, false).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        chooseSubtitles();
+                        mPlayerController.showTVMenu(false);
+                    }
+                });
+            }
         }
     }
 
@@ -3070,7 +3073,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == SUBTITLE_REQUEST){
-            Log.d(TAG, "Get result from SubtitlesDownloaderActivity/SubstitlesWizardActivity");
+            Log.d(TAG, "Get result from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
             mPlayer.checkSubtitles();
         }
     }
