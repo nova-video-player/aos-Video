@@ -856,7 +856,17 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 smoothUpdate = true;
             }
 
+            if (smoothUpdate) {
+                mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
+                
+                mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
+                mOverviewRowPresenter.setBackgroundColor(mColor);
 
+                for (Presenter pres : mAdapter.getPresenterSelector().getPresenters()){
+                    if (pres instanceof BackgroundColorPresenter)
+                        ((BackgroundColorPresenter) pres).setBackgroundColor(mColor);
+                }
+            }
         }else {
             smoothUpdate = true;
         }
