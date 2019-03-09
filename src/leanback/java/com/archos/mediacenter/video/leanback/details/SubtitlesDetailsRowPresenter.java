@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.leanback.details;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v17.leanback.widget.RowHeaderPresenter;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.view.LayoutInflater;
@@ -130,11 +131,20 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
 
         if (videoMetadata!=null) {
             vh.mDownloadSubsButton.setVisibility(View.VISIBLE);
+
+            Uri uri = videoObject.getFileUri();
+
+            if (uri.getScheme().equals("file") || uri.getScheme().equals("smb"))
+                vh.mChooseSubsButton.setVisibility(View.VISIBLE);
+            else
+                vh.mChooseSubsButton.setVisibility(View.GONE);
+
             vh.mProgress.setVisibility(View.GONE);
         }
         else {
             // I leave the button visible here so that it catches the focus even if the video info is not loaded yet
             vh.mDownloadSubsButton.setVisibility(View.VISIBLE);
+            vh.mChooseSubsButton.setVisibility(View.GONE);
             vh.mProgress.setVisibility(View.VISIBLE);
         }
 

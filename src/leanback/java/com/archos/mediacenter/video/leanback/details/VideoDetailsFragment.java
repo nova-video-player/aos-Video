@@ -1437,10 +1437,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void performSubtitleChoose() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
-        Uri uri = Uri.parse(mVideo.getFilePath());
 
         intent.setClass(getActivity(), SubtitlesWizardActivity.class);
-        intent.setData(uri);
+        intent.setData(mVideo.getFileUri());
         startActivityForResult(intent, REQUEST_CODE_SUBTITLES_ACTIVITY);
     }
 
@@ -1472,7 +1471,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_SUBTITLES_ACTIVITY && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Get RESULT_OK from SubtitlesDownloaderActivity/SubstitlesWizardActivity");
+            Log.d(TAG, "Get RESULT_OK from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
             // Update the subtitle row
             if (mSubtitleFilesListerTask !=null) {
                 mSubtitleFilesListerTask.cancel(true);
