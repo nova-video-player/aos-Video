@@ -1349,12 +1349,14 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 public void onPlay() {
                     super.onPlay();
                     Player.sPlayer.start();
+                    updateNowPlayingState();
                 }
 
                 @Override
                 public void onPause() {
                     super.onPause();
                     Player.sPlayer.pause();
+                    updateNowPlayingState();
                 }
             };
             mSession.setCallback(mediaSessionCallback);
