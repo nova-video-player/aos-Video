@@ -66,7 +66,7 @@
     <string name="video_lists">Listy odtwarzania</string>
     <!-- The string used in main storage list -->
     <string name="external_storage">Zewnętrzna</string>
-    <string name="internal_storage">Wewnętrzna</string>
+    <string name="internal_storage">Pamięć wewnętrzna</string>
     <string name="network_storage">Sieć</string>
     <string name="sd_card_storage">Karta SD</string>
     <string name="usb_host_storage">Dysk zewnętrzny</string>
@@ -92,6 +92,9 @@
     <string name="movies_by_genre">Filmy według gatunku</string>
     <string name="movies_by_year">Filmy wg roku</string>
     <string name="all_tv_shows">Seriale</string>
+    <string name="all_tvshows">Wszystkie seriale</string>
+    <string name="tvshows_by_alpha">Seriale alfabetycznie</string>
+    <string name="tvshows_by_genre">Seriale wg gatunków</string>
     <string name="all_movies_and_tv_shows">Filmy i seriale</string>
     <string name="no_server">Nie znaleziono serwera mediów</string>
     <string name="cannot_open_video">Nie można otworzyć filmu</string>
@@ -483,8 +486,6 @@
     <string name="sort_by_date_premiered_desc">Sortuj po dacie premiery (najpierw nowsze)</string>
     <string name="sort_by_date_premiered_asc">Sortuj po dacie premiery (najpierw starsze)</string>
     <string name="sort_by_recently_added_episode_desc">Najpierw ostatnio dodane odcinki</string>
-    <string name="preferences_category_sort_order">Porządek sortowania</string>
-    <string name="preferences_tv_show_sort_order_title">Porządek sortowania seriali</string>
     <string name="dec_choice_title">Wybierz dekoder</string>
     <string name="dec_hw_omx">Dekoder sprzętowy (IOMX w/ swbuf)</string>
     <string name="dec_hw_omxplus">Dekoder sprzętowy (IOMX w/ hwbuf)</string>
@@ -494,6 +495,7 @@
     <string name="dec_any">Domyślne</string>
     <string name="dec_android">Android MediaPlayer</string>
     <string name="preferences_user_interface">Interfejs użytkownika</string>
+    <string name="preferences_tv_show_sort_order_title">Porządek sortowania seriali</string>
     <string name="codepage_title">Kodowanie napisów</string>
     <string name="codepage_summary">Ustaw kodowanie używane w napisach tekstowych</string>
     <string name="codepage_default">Język urządzenia %s</string>
@@ -567,7 +569,7 @@
     <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
     <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
     <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
-    <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Sieć &amp; Pliki</string>
+    <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Sieć i Pliki</string>
     <string name="leanback_subtitles_integrated">Zintegrowane napisy</string>
     <string name="leanback_subtitles_external">Napisy zewnętrzne</string>
     <string name="leanback_posters_header">Plakaty</string>
@@ -599,7 +601,6 @@
     <string name="scheduled_rescan_period_every_hour">Co godzinę</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Zobacz więcej</string>
-    <string name="nfo_export_manual_prefkey">export_manual_prefkey</string>
     <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="system">System</string>
     <string name="save_delay_setting_pref_key">save_setting_pref_key</string>

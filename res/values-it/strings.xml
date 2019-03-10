@@ -558,9 +558,6 @@
     <string name="sort_by_date_premiered_desc">Ordina per data di messa in onda (prima i più nuovi)</string>
     <string name="sort_by_date_premiered_asc">Ordina per data di messa in onda (prima i più vecchi)</string>
     <string name="sort_by_recently_added_episode_desc">Prima gli episodi aggiunti di recente</string>
-    <string name="preferences_category_sort_order">Ordine</string>
-    <string name="preferences_tv_show_sort_order_title">Ordine delle serie TV</string>
-    <string name="preferences_tv_show_sort_order_summary">Seleziona l\'ordine per le tue serie TV</string>
     <string name="dec_choice_title">Scegli il decoder</string>
     <string name="dec_choice_summary">Preferenze avanzate, potrebbero interferire con la decodifica video</string>
     <string name="dec_hw_omx">Decodifica hardware (IOMX con swbuf)</string>
@@ -573,6 +570,8 @@
     <string name="preferences_user_interface">Interfaccia Utente</string>
     <string name="preferences_display_resume_box_summary">Mostra o nascondi i tasti quando riprendi l\'ultimo video nella schermata principale</string>
     <string name="preferences_display_resume_box">Mostra l\'area di ripresa</string>
+    <string name="preferences_tv_show_sort_order_summary">Seleziona l\'ordine per le tue serie TV</string>
+    <string name="preferences_tv_show_sort_order_title">Ordine delle serie TV</string>
     <string name="codepage_title">Codifica dei sottotitoli</string>
     <string name="codepage_summary">Imposta la codifica usata nel testo dei sottotitoli</string>
     <string name="codepage_default">Lingua del dispositivo %s</string>
@@ -712,7 +711,6 @@
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Vedi altro</string>
-    <string name="nfo_export_manual_prefkey">export_manual_prefkey</string>
     <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="nfo_export_in_progress">Esportazione dei NFO in corso</string>
     <string name="rescrap_in_progress">Analisi dell\'intera libreria</string>
