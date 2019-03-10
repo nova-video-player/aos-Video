@@ -1,23 +1,26 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory
         android:key="preferences_category_complete"
-        android:title="@string/preferences_category_complete" >
+        android:title="@string/preferences_category_complete"
+        app:iconSpaceReserved="false">
         <Preference
             android:key="video_ad_free"
             android:title="@string/upgrade_to_add_free_version"
-            android:summary="@string/upgrade_to_add_free_version_description"/>
+            android:summary="@string/upgrade_to_add_free_version_description"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="preferences_category_video"
-        android:title="@string/preferences_category_video" >
+        android:title="@string/preferences_category_video"
+        app:iconSpaceReserved="false">
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="force_software_decoding"
             android:persistent="true"
             android:summary="@string/preferences_force_software_decoding_summary"
-            android:title="@string/preferences_force_software_decoding" />
-
+            android:title="@string/preferences_force_software_decoding"
+            app:iconSpaceReserved="false"/>
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/dec_choice_entries"
@@ -25,15 +28,15 @@
             android:key="dec_choice"
             android:persistent="true"
             android:summary="@string/dec_choice_summary"
-            android:title="@string/dec_choice_title" />
-
+            android:title="@string/dec_choice_title"
+            app:iconSpaceReserved="false"/>
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="allow_3rd_party_player"
             android:persistent="true"
             android:summary="@string/preferences_allow_3rd_party_player_summary"
-            android:title="@string/preferences_allow_3rd_party_player" />
-
+            android:title="@string/preferences_allow_3rd_party_player"
+            app:iconSpaceReserved="false"/>
         <com.archos.mediacenter.video.utils.CustomListPreference
             android:defaultValue="0"
             android:dialogTitle="@string/preferences_force_audio_passthrough"
@@ -42,22 +45,25 @@
             android:key="force_audio_passthrough_multiple"
             android:persistent="true"
             android:summary="@string/preferences_force_audio_passthrough_summary"
-            android:title="@string/preferences_force_audio_passthrough" />
-
-	<CheckBoxPreference
-		android:defaultValue="false"
-		android:key="enable_tv_refreshrate_switch"
-		android:persistent="true"
-		android:summary="@string/preference_tv_refreshrate_switch_summary"
-		android:title="@string/preference_tv_refreshrate_switch" />
+            android:title="@string/preferences_force_audio_passthrough"
+            app:iconSpaceReserved="false"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="enable_tv_refreshrate_switch"
+            android:persistent="true"
+            android:summary="@string/preference_tv_refreshrate_switch_summary"
+            android:title="@string/preference_tv_refreshrate_switch"
+            app:iconSpaceReserved="false"/>
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="activate_tv_switch"
             android:persistent="true"
             android:summary="@string/preference_tv_3d_automatic_switch_summary"
-            android:title="@string/preference_tv_3d_automatic_switch" />
+            android:title="@string/preference_tv_3d_automatic_switch"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/preferences_user_interface" android:key="category_user_interface" >
+    <PreferenceCategory android:title="@string/preferences_user_interface" android:key="category_user_interface"
+        app:iconSpaceReserved="false" >
 
         <!-- first "uimode" item is for Android before 4.2 that does not support leanback -->
         <!-- second "uimode" item is for Android >= 4.2 that does support leanback -->
@@ -71,7 +77,8 @@
             android:key="uimode"
             android:persistent="true"
             android:summary="@string/ui_mode_summary"
-            android:title="@string/ui_mode_title" />
+            android:title="@string/ui_mode_title"
+            app:iconSpaceReserved="false"/>
 
         <ListPreference
             android:dialogTitle="@string/ui_mode_title"
@@ -80,31 +87,37 @@
             android:key="uimode_leanback"
             android:persistent="true"
             android:summary="@string/ui_mode_summary"
-            android:title="@string/ui_mode_title" />
+            android:title="@string/ui_mode_title"
+            app:iconSpaceReserved="false"/>
 
         <Preference android:title="@string/interface_size"
             android:key="ui_zoom"
-            android:summary="@string/interface_size_summary"/>
+            android:summary="@string/interface_size_summary"
+            app:iconSpaceReserved="false"/>
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="display_resume_box"
             android:summary="@string/preferences_display_resume_box_summary"
-            android:title="@string/preferences_display_resume_box" />
+            android:title="@string/preferences_display_resume_box"
+            app:iconSpaceReserved="false"/>
 
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/preferences_leanback_user_interface" android:key="category_leanback_user_interface" >
+    <PreferenceCategory android:title="@string/preferences_leanback_user_interface" android:key="category_leanback_user_interface"
+        app:iconSpaceReserved="false" >
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="show_last_added_row"
             android:summary="@string/preferences_show_last_added_row_summary"
-            android:title="@string/preferences_show_last_added_row" />
+            android:title="@string/preferences_show_last_added_row"
+            app:iconSpaceReserved="false"/>
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="show_last_played_row"
             android:summary="@string/preferences_show_last_played_row_summary"
-            android:title="@string/preferences_show_last_played_row" />
+            android:title="@string/preferences_show_last_played_row"
+            app:iconSpaceReserved="false"/>
 
         <Preference
             android:key="reset_last_played_row"
@@ -114,40 +127,47 @@
             android:defaultValue="false"
             android:key="show_all_movies_row"
             android:summary="@string/preferences_show_all_movies_row_summary"
-            android:title="@string/preferences_show_all_movies_row" />
+            android:title="@string/preferences_show_all_movies_row"
+            app:iconSpaceReserved="false"/>
 	    
 	    <ListPreference
             android:dialogTitle="@string/preferences_movie_sort_order_title"
             android:key="preferences_movie_sort_order"
             android:persistent="true"
             android:summary="@string/preferences_movie_sort_order_summary"
-            android:title="@string/preferences_movie_sort_order_title" />
+            android:title="@string/preferences_movie_sort_order_title"
+        app:iconSpaceReserved="false"/>
 
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="show_all_tv_shows_row"
             android:summary="@string/preferences_show_all_tv_shows_row_summary"
-            android:title="@string/preferences_show_all_tv_shows_row" />
+            android:title="@string/preferences_show_all_tv_shows_row"
+            app:iconSpaceReserved="false"/>
 	    
 	    <ListPreference
             android:dialogTitle="@string/preferences_tv_show_sort_order_title"
             android:key="preferences_tv_show_sort_order"
             android:persistent="true"
             android:summary="@string/preferences_tv_show_sort_order_summary"
-            android:title="@string/preferences_tv_show_sort_order_title" />
+            android:title="@string/preferences_tv_show_sort_order_title"
+        app:iconSpaceReserved="false"/>
 	    
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="show_trailer_row"
             android:summary="@string/preferences_show_trailer_row_summary"
-            android:title="@string/preferences_show_trailer_row" />
+            android:title="@string/preferences_show_trailer_row"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/category_languages" >
+    <PreferenceCategory android:title="@string/category_languages"
+        app:iconSpaceReserved="false" >
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="subtitles_hide_default"
             android:summary="@string/subtitles_hide_default_summary"
-            android:title="@string/subtitles_hide_default" />
+            android:title="@string/subtitles_hide_default"
+            app:iconSpaceReserved="false"/>
 
         <ListPreference
             android:dialogTitle="@string/favSubLang_title"
@@ -155,13 +175,15 @@
             android:entryValues="@array/entryvalues_list_preference"
             android:key="favSubLang"
             android:summary="@string/favSubLang_summary"
-            android:title="@string/favSubLang_title" />
+            android:title="@string/favSubLang_title"
+            app:iconSpaceReserved="false"/>
 
         <Preference
             android:dialogTitle="@string/preferences_languages"
             android:key="languages_list"
             android:summary="@string/summary_list_preference_primary"
-            android:title="@string/preferences_languages" />
+            android:title="@string/preferences_languages"
+            app:iconSpaceReserved="false"/>
 
         <ListPreference
             android:defaultValue="0"
@@ -171,47 +193,57 @@
             android:key="codepage"
             android:persistent="true"
             android:summary="@string/codepage_summary"
-            android:title="@string/codepage_title" />
+            android:title="@string/codepage_title"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="trakt_category"
-        android:title="@string/category_trakt" >
+        android:title="@string/category_trakt"
+        app:iconSpaceReserved="false" >
         <Preference
             android:key="trakt_getfull"
             android:summary="@string/trakt_getfull_summary"
-            android:title="@string/upgrade_to_add_free_version" />
+            android:title="@string/upgrade_to_add_free_version"
+            app:iconSpaceReserved="false"/>
 
         <com.archos.mediacenter.video.utils.TraktSigninDialogPreference
             android:dialogTitle="@string/trakt_signin_dialog_title"
             android:key="trakt_signin"
-            android:title="@string/trakt_signin_title" />
+            android:title="@string/trakt_signin_title"
+            app:iconSpaceReserved="false"/>
 
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="trakt_live_scrobbling"
             android:summary="@string/trakt_live_scrobbling_summary"
-            android:title="@string/trakt_live_scrobbling_title" />
+            android:title="@string/trakt_live_scrobbling_title"
+            app:iconSpaceReserved="false"/>
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="trakt_sync_collection"
             android:summary="@string/trakt_sync_collection_summary"
-            android:title="@string/trakt_sync_collection_title" />
+            android:title="@string/trakt_sync_collection_title"
+            app:iconSpaceReserved="false"/>
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="trakt_sync_resume"
             android:persistent="true"
             android:summary="@string/trakt_sync_trakt_resume"
-            android:title="@string/trakt_sync_trakt_resume_title" />
+            android:title="@string/trakt_sync_trakt_resume_title"
+            app:iconSpaceReserved="false"/>
 
         <com.archos.mediacenter.video.utils.TraktWipeDialogPreference
             android:key="trakt_wipe"
-            android:title="@string/trakt_wipe_title" />
+            android:title="@string/trakt_wipe_title"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/network_shared_folders" >
+    <PreferenceCategory android:title="@string/network_shared_folders"
+        app:iconSpaceReserved="false" >
         <PreferenceScreen
             android:summary="@string/samba_settings_summary"
             android:title="@string/samba_settings_title"
             android:key="share_folders"
+            app:iconSpaceReserved="false"
             >
 
         </PreferenceScreen>
@@ -220,111 +252,137 @@
             android:defaultValue="false"
             android:key="pref_create_remote_thumbs"
             android:summary="@string/network_thumbnails_summary"
-            android:title="@string/network_thumbnails" />
+            android:title="@string/network_thumbnails"
+            app:iconSpaceReserved="false"/>
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="network_bookmarks"
             android:summary="@string/network_bookmarks_summary"
-            android:title="@string/network_bookmarks" />
+            android:title="@string/network_bookmarks"
+            app:iconSpaceReserved="false"/>
 
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/preferences_network_mobile_vpn_key"
             android:summary="@string/preferences_network_mobile_vpn_summary"
-            android:title="@string/preferences_network_mobile_vpn_title" />
+            android:title="@string/preferences_network_mobile_vpn_title"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/scraper_settigns"
-        android:key="scraper_category">
+        android:key="scraper_category"
+        app:iconSpaceReserved="false" >
         <CheckBoxPreference
             android:defaultValue="true" android:title="@string/enable_auto_scrap"
-            android:key="enable_auto_scrap_key" />
+            android:key="enable_auto_scrap_key"
+            app:iconSpaceReserved="false"/>
         <PreferenceScreen android:title="@string/tv_scraper"
-            android:key="tv_shows">
+            android:key="tv_shows"
+            app:iconSpaceReserved="false">
         </PreferenceScreen>
         <PreferenceScreen android:title="@string/movie_scraper"
-            android:key="movies">
+            android:key="movies"
+            app:iconSpaceReserved="false">
 
         </PreferenceScreen>
         <CheckBoxPreference
             android:defaultValue="@bool/network_nfo_parse_default"
             android:key="@string/network_nfo_parse_prefkey"
             android:summary="@string/network_nfo_parse_summary"
-            android:title="@string/network_nfo_parse" />
+            android:title="@string/network_nfo_parse"
+            app:iconSpaceReserved="false"/>
         <CheckBoxPreference
             android:defaultValue="@bool/nfo_export_auto_default"
             android:key="@string/nfo_export_auto_prefkey"
             android:summary="@string/nfo_export_auto_summary"
-            android:title="@string/nfo_export_auto_title" />
+            android:title="@string/nfo_export_auto_title"
+            app:iconSpaceReserved="false"/>
         <Preference
             android:key="@string/rescrap_all_prefkey"
-            android:title="@string/rescrap_all_title" />
+            android:title="@string/rescrap_all_title"
+            app:iconSpaceReserved="false"/>
         <Preference
             android:key="@string/nfo_export_manual_prefkey"
             android:summary="@string/nfo_export_manual_summary"
-            android:title="@string/nfo_export_manual_title" />
+            android:title="@string/nfo_export_manual_title"
+            app:iconSpaceReserved="false"/>
         <Preference
             android:key="@string/db_export_manual_prefkey"
             android:summary="@string/db_export_manual_summary"
-            android:title="@string/db_export_manual_title" />
+            android:title="@string/db_export_manual_title"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/storage" >
+    <PreferenceCategory android:title="@string/storage"
+        app:iconSpaceReserved="false" >
 
         <Preference android:title="@string/rescan_storage"
             android:summary="@string/rescan_storage_summary"
-            android:key="rescan_storage">
+            android:key="rescan_storage"
+            app:iconSpaceReserved="false">
         </Preference>
         <CheckBoxPreference
             android:defaultValue="false" android:title="@string/preference_display_all_files"
             android:summary="@string/preference_display_all_files_summary"
-            android:key="preference_display_all_files" />
+            android:key="preference_display_all_files"
+            app:iconSpaceReserved="false"/>
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/torrent_category" >
+    <PreferenceCategory android:title="@string/torrent_category"
+        app:iconSpaceReserved="false">
     <com.archos.mediacenter.video.utils.TorrentPathDialogPreference
             android:dialogTitle="@string/torrent_path"
             android:key="preferences_torrent_path"
-            android:title="@string/torrent_path" />
+            android:title="@string/torrent_path"
+        app:iconSpaceReserved="false" />
     
           <com.archos.mediacenter.video.utils.TorrentBlocklistDialogPreference
             android:dialogTitle="@string/torrent_blocklist"
             android:key="preferences_torrent_blocklist"
             android:title="@string/torrent_blocklist" 
-            android:widgetLayout="@layout/preferences_blocklist_button"/>
+            android:widgetLayout="@layout/preferences_blocklist_button"
+              app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/preferences_video_about" >
+    <PreferenceCategory android:title="@string/preferences_video_about"
+        app:iconSpaceReserved="false" >
         <Preference
             android:key="preferences_video_os"
             android:title="@string/preferences_video_os_text"
-            android:widgetLayout="@layout/preferences_video_os_button" />
+            android:widgetLayout="@layout/preferences_video_os_button"
+            app:iconSpaceReserved="false"/>
         <Preference
             android:key="preferences_video_tmdb"
             android:title="@string/preferences_video_tmdb_text"
-            android:widgetLayout="@layout/preferences_video_tmdb_button" />
+            android:widgetLayout="@layout/preferences_video_tmdb_button"
+            app:iconSpaceReserved="false"/>
         <Preference
             android:key="preferences_video_tvdb"
             android:title="@string/preferences_video_tvdb_text"
-            android:widgetLayout="@layout/preferences_video_tvdb_button" />
+            android:widgetLayout="@layout/preferences_video_tvdb_button"
+            app:iconSpaceReserved="false"/>
         <Preference
             android:key="preferences_video_trakt"
             android:title="@string/preferences_video_trakt_text"
-            android:widgetLayout="@layout/preferences_video_trakt_button" />
+            android:widgetLayout="@layout/preferences_video_trakt_button"
+            app:iconSpaceReserved="false"/>
         <PreferenceScreen
             android:key="preferences_video_licences"
-            android:title="@string/preferences_video_licenses" />
+            android:title="@string/preferences_video_licenses"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="preferences_category_advanced_video"
-        android:title="@string/preferences_video_advanced" >
+        android:title="@string/preferences_video_advanced"
+        app:iconSpaceReserved="false" >
         <Preference
             android:key="preferences_video_advanced_quit"
             android:summary="@string/preferences_video_advanced_quit_summary"
-            android:title="@string/preferences_video_advanced_quit_title" />
+            android:title="@string/preferences_video_advanced_quit_title"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
 </PreferenceScreen>
