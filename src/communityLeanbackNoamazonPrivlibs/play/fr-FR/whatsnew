@@ -4,6 +4,6 @@ Décodage AV1 logiciel
 Nouveaux raccourcis clavier
 Amélioration de la stabilité du passthrough audio
 Mode privé désormais persistent
-Migration ndk-r19 et ajout arch x86_64
+Migration NDK-r19 et ajout arch x86_64
 Evite de planter en présence d'une carte SD endommagée
 Correction du support cloud (toujours pas de streaming)
