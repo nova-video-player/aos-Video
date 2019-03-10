@@ -71,8 +71,6 @@ import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.utils.videodb.XmlDb;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.billingutils.BillingUtils;
-import com.archos.mediacenter.video.billingutils.IsPaidCallback;
 import com.archos.mediacenter.video.browser.BootupRecommandationService;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.lists.ListDialog;
 import com.archos.mediacenter.video.browser.Delete;
@@ -244,7 +242,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private boolean mFirst = true;
     private VideoActionAdapter mVideoActionAdapter;
     private Uri mLastIndexed;
-    private boolean mHasBeenPaid;
     private boolean mShouldUpdateRemoteResume;
     private boolean mShouldDisplayRemoveFromList;
     private boolean mShouldDisplayConfirmDelete = false;
@@ -305,17 +302,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     if (mDescriptionPresenter != null) {
                         mDescriptionPresenter.allowVideoBadgesAnimation();
                     }
-                }
-            });
-        }
-        mHasBeenPaid = !ArchosUtils.isFreeVersion(getActivity());
-        if(!mHasBeenPaid){
-            BillingUtils inappUtil = new BillingUtils(getActivity());
-            inappUtil.checkPayement(new IsPaidCallback(getActivity()) {
-                @Override
-                public void hasBeenPaid(int isPaid) {
-                    super.hasBeenPaid(isPaid);
-                    mHasBeenPaid = checkPayement(isPaid);
                 }
             });
         }

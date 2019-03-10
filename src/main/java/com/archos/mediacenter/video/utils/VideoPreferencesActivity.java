@@ -42,10 +42,6 @@ public class VideoPreferencesActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
     }
 
-    public void videoPreferenceVideoFreeClick(View v) {
-        if(getFragmentManager().findFragmentById(R.id.preferencesFragment)!=null){
-            ((VideoPreferencesFragment)getFragmentManager().findFragmentById(R.id.preferencesFragment)).launchPurchase();
-        } }
     public void videoPreferenceOsClick(View v) {
         //remove because not appropriate links displayed
         //WebUtils.openWebLink(this,"https://www.opensubtitles.org");

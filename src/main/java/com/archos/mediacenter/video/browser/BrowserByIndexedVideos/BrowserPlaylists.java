@@ -4,7 +4,6 @@ import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.utils.ActionBarSubmenu;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.billingutils.BillingUtils;
 import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.browser.ThumbnailEngineVideo;
 import com.archos.mediacenter.video.browser.adapters.GroupOfMovieAdapter;
@@ -59,23 +58,17 @@ public class BrowserPlaylists extends BrowserMoviesBy {
     protected boolean onEmptyviewButtonClick(){
         if(mHasLaunchedTrakt)
             return true;
-        if(!ArchosUtils.isFreeVersion(getActivity()) || PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(BillingUtils.PAID_STATUS_PREF, false)){
             //connect to trakt
-            TraktSigninDialogPreference dialogPreference = new TraktSigninDialogPreference(getContext(),null);
-            dialogPreference.showDialog(true);
-            dialogPreference.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialogInterface) {
-                    postBindAdapter();
-                    mHasLaunchedTrakt = false;
-                }
-            });
-        }else {
-            Intent intent = new Intent(getActivity(), VideoPreferencesActivity.class);
-            intent.putExtra(VideoPreferencesActivity.EXTRA_LAUNCH_INAPP_PURCHASE, true);
-            startActivityForResult(intent, ACTIVITY_REQUEST_CODE_PREFERENCES);
-        }
-        mHasLaunchedTrakt = true;
+        TraktSigninDialogPreference dialogPreference = new TraktSigninDialogPreference(getContext(),null);
+        dialogPreference.showDialog(true);
+        dialogPreference.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                postBindAdapter();
+                mHasLaunchedTrakt = false;
+            }
+        });
+    mHasLaunchedTrakt = true;
         return true;
     }
     public void onResume(){

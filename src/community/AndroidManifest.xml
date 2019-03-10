@@ -18,7 +18,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:replace="android:sharedUserId"
     android:sharedUserId="archos.openmediacenter" >
-    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application>
         <receiver android:name="com.amazon.device.iap.ResponseReceiver">
