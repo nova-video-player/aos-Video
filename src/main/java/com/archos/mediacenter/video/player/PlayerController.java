@@ -60,8 +60,6 @@ import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.utils.RepeatingImageButton;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.billingutils.BillingUtils;
-import com.archos.mediacenter.video.billingutils.IsPaidCallback;
 import com.archos.mediacenter.video.player.tvmenu.TVCardDialog;
 import com.archos.mediacenter.video.player.tvmenu.TVCardView;
 import com.archos.mediacenter.video.player.tvmenu.TVMenuAdapter;

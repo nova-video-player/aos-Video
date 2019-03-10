@@ -47,8 +47,6 @@ import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.EntryActivity;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.UiChoiceDialog;
-import com.archos.mediacenter.video.billingutils.BillingUtils;
-import com.archos.mediacenter.video.billingutils.IsPaidCallback;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridFragment;
 import com.archos.mediacenter.video.leanback.movies.MoviesSortOrderEntry;
@@ -151,9 +149,7 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
     private CheckBoxPreference mTraktSyncProgressPreference = null;
     private CheckBoxPreference mAutoScrapPreference = null;
     private Handler mHanlder = null;
-    BillingUtils u ;
 
-    private IsPaidCallback isPaidCallback ;
     private Preference mTraktFull;
     private PreferenceCategory mCompleteCategory;
 
@@ -194,11 +190,6 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
             getPreferenceScreen().removePreference(mAdvancedPreferences);
         }
     }
-    public void launchPurchase() {
-        // TODO Auto-generated method stub
-        u.purchase(getActivity(), isPaidCallback);
-
-    }
 
     public static void resetPassthroughPref(SharedPreferences preferences){
         if(Integer.valueOf(preferences.getString("force_audio_passthrough_multiple","-1"))==-1&&preferences.getBoolean("force_audio_passthrough",false)){ //has never been set
@@ -210,32 +201,12 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        u = new BillingUtils(getActivity());
         mSharedPreferences = getPreferenceManager().getSharedPreferences();
         // Load the preferences from an XML resource
         resetPassthroughPref(mSharedPreferences);
 
         addPreferencesFromResource(R.xml.preferences_video);
-        isPaidCallback =new IsPaidCallback(getActivity()) {
 
-            @Override
-            public void hasBeenPaid(int isPaid) {
-                super.hasBeenPaid(isPaid);
-                if(!isAdded())
-                    return;
-                if (checkPayement(isPaid)) {
-                    setPaidStatus();
-                    if(getActivity().getIntent().getBooleanExtra(VideoPreferencesActivity.EXTRA_LAUNCH_INAPP_PURCHASE, false)){
-                        Toast.makeText(getActivity(), R.string.premium_already_purchased, Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    setFreeStatus();
-                    if(getActivity().getIntent().getBooleanExtra(VideoPreferencesActivity.EXTRA_LAUNCH_INAPP_PURCHASE, false)){
-                        launchPurchase();
-                    }
-                }
-            }
-        };
         mSharedPreferences = getPreferenceManager().getSharedPreferences();
         mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
         final Preference pref = (Preference) findPreference(KEY_VIDEO_OS);
@@ -632,16 +603,31 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
             }
         }
 
-        // Free / Paid
-        if(ArchosUtils.isFreeVersion(getActivity())){
-            if(getPreferenceManager().getSharedPreferences().getBoolean(BillingUtils.PAID_STATUS_PREF, false))
-                setPaidStatus();
-            else
-                setFreeStatus();
-            u.checkPayement(isPaidCallback );
-        }
-        else {
-            setPaidStatus();
+        // Free / Paid below was before in setPaidStatus();
+        PreferenceCategory prefCategorty = (PreferenceCategory) findPreference(KEY_TRAKT_CATEGORY);
+        prefCategorty.removePreference(mTraktFull);
+        getPreferenceScreen().removePreference(mCompleteCategory);
+        mTraktSigninPreference.setEnabled(true);
+        findPreference(KEY_TORRENT_BLOCKLIST).setOnPreferenceClickListener(null);
+        findPreference(KEY_TORRENT_PATH).setOnPreferenceClickListener(null);
+
+        mLastTraktUser = Trakt.getUserFromPreferences(mSharedPreferences);
+        if (onTraktUserChange()) {
+            Trakt trakt = new Trakt(getActivity());
+            trakt.setListener(new Trakt.Listener() {
+                @Override
+                public void onResult(Trakt.Result result) {
+                    mTraktStatus = result.status;
+                    mHanlder.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (isVisible())
+                                onTraktUserChange();
+                        }
+                    });
+                }
+            });
+
         }
     }
 
@@ -670,92 +656,6 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
         return result;
     }
 
-    private void setFreeStatus(){
-        PreferenceCategory prefCategorty = (PreferenceCategory) findPreference(KEY_TRAKT_CATEGORY);
-        if(prefCategorty!=null){
-
-            if(prefCategorty.findPreference(KEY_TRAKT_GETFULL)==null)
-                prefCategorty.addPreference(mTraktFull);
-            if(findPreference(KEY_VIDEO_AD_FREE_CATEGORY)==null)
-                getPreferenceScreen().addPreference(mCompleteCategory);
-        }
-        if(findPreference(KEY_TRAKT_GETFULL)!=null)
-            findPreference(KEY_TRAKT_GETFULL).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    launchPurchase();
-                    return true;
-                }
-            });
-        findPreference(KEY_VIDEO_AD_FREE).setEnabled(true);
-        findPreference(KEY_VIDEO_AD_FREE).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                launchPurchase();
-                return true;
-            }
-        });
-        mTraktSigninPreference.setEnabled(false);
-        findPreference(KEY_TORRENT_BLOCKLIST).setOnPreferenceClickListener(new OnPreferenceClickListener() {
-
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                showTorrentBuyDialog();
-                return true;
-            }
-        });
-        findPreference(KEY_TORRENT_PATH).setOnPreferenceClickListener(new OnPreferenceClickListener() {
-
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                showTorrentBuyDialog();
-                return true;
-            }
-        });
-        setTraktPreferencesEnabled(false);
-    }
-    private void showTorrentBuyDialog(){
-        new AlertDialog.Builder(getActivity())
-                .setMessage(R.string.torrent_buy_premium_message)
-                .setPositiveButton(R.string.torrent_buy_premium, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        launchPurchase();
-                    }
-                })
-
-                .create().show();
-
-    }
-    private void setPaidStatus(){
-
-        PreferenceCategory prefCategorty = (PreferenceCategory) findPreference(KEY_TRAKT_CATEGORY);
-        prefCategorty.removePreference(mTraktFull);
-        getPreferenceScreen().removePreference(mCompleteCategory);
-        mTraktSigninPreference.setEnabled(true);
-        findPreference(KEY_TORRENT_BLOCKLIST).setOnPreferenceClickListener(null);
-        findPreference(KEY_TORRENT_PATH).setOnPreferenceClickListener(null);
-
-        mLastTraktUser = Trakt.getUserFromPreferences(mSharedPreferences);
-        if (onTraktUserChange()) {
-            Trakt trakt = new Trakt(getActivity());
-            trakt.setListener(new Trakt.Listener() {
-                @Override
-                public void onResult(Trakt.Result result) {
-                    mTraktStatus = result.status;
-                    mHanlder.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (isVisible())
-                                onTraktUserChange();
-                        }
-                    });
-                }
-            });
-
-        }
-    }
     public void videoPreferenceOsClick() {
         // Breaks AndroidTV acceptance: inappropriate content TV-AA rating on opensubtitles web site
         //WebUtils.openWebLink(getActivity(), "https://www.opensubtitles.org/support");
@@ -828,22 +728,18 @@ public class VideoPreferencesFragment extends PreferenceFragment implements OnSh
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (!u.handleActivityResult(requestCode, resultCode, data)) {
-            if(requestCode==VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE){
-                if (resultCode == Activity.RESULT_OK) {
-                    String newPath = data.getStringExtra(FolderPicker.EXTRA_SELECTED_FOLDER);
-                    if (newPath!=null) {
-                        File f = new File(newPath);
-                        if ((f!=null) && f.isDirectory() && f.exists()) { //better safe than sorry x3
-                            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString(VideoPreferencesFragment.KEY_TORRENT_PATH, f.getAbsolutePath()).apply();
-                            ((TorrentPathDialogPreference)findPreference(KEY_TORRENT_PATH)).refresh();
-                        }
+        if(requestCode==VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE){
+            if (resultCode == Activity.RESULT_OK) {
+                String newPath = data.getStringExtra(FolderPicker.EXTRA_SELECTED_FOLDER);
+                if (newPath!=null) {
+                    File f = new File(newPath);
+                    if ((f!=null) && f.isDirectory() && f.exists()) { //better safe than sorry x3
+                        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString(VideoPreferencesFragment.KEY_TORRENT_PATH, f.getAbsolutePath()).apply();
+                        ((TorrentPathDialogPreference)findPreference(KEY_TORRENT_PATH)).refresh();
                     }
                 }
             }
         }
-
-
     }
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,

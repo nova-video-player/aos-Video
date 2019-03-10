@@ -39,8 +39,6 @@ import com.archos.filecorelibrary.MimeUtils;
 import com.archos.filecorelibrary.OperationEngineListener;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.billingutils.BillingUtils;
-import com.archos.mediacenter.video.billingutils.IsPaidCallback;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
 import com.archos.mediacenter.video.browser.TorrentObserverService.TorrentServiceBinder;
 import com.archos.mediacenter.video.browser.TorrentObserverService.TorrentThreadObserver;
@@ -180,18 +178,6 @@ public class TorrentLoaderActivity extends Activity implements TorrentThreadObse
     }
 
     private TorrentObserverService mTorrent;
-    private BillingUtils u;
-    private IsPaidCallback isPaidCallback = new IsPaidCallback(this) {
-        @Override
-        public  void hasBeenPaid(int isPaid){
-            super.hasBeenPaid(isPaid);
-            if(checkPayement(isPaid)){
-                preloadTorrent();
-            }
-            else
-                displayFreeVersion();
-        }
-    };
     private Uri mTorrentToLaunch;
 
     public void onCreate(Bundle d){
@@ -221,38 +207,7 @@ public class TorrentLoaderActivity extends Activity implements TorrentThreadObse
         });
         mProgress.show();
 
-        if(ArchosUtils.isFreeVersion(this)){
-            u = new BillingUtils(this);
-            u.checkPayement(isPaidCallback);
-
-        }
-        else 
-            preloadTorrent();
-
-    }
-    public void launchPurchase() {
-        u.purchase(this, isPaidCallback); 
-    }
-    protected void displayFreeVersion() {
-        mProgress.dismiss();
-        new AlertDialog.Builder(TorrentLoaderActivity.this)
-        .setTitle(R.string.error_listing)
-        .setMessage(R.string.torrent_buy_premium_message)
-        .setPositiveButton(R.string.torrent_buy_premium, new OnClickListener() {
-            
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                launchPurchase();
-            }
-        })
-        .setOnCancelListener(new OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                TorrentLoaderActivity.this.finish();
-            }
-        })
-        .create().show();
-
+        preloadTorrent();
 
     }
     private void preloadTorrent(){
@@ -434,12 +389,6 @@ public class TorrentLoaderActivity extends Activity implements TorrentThreadObse
     @Override
     public void warnOnNotEnoughSpace() {
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(u==null|| !u.handleActivityResult(requestCode, resultCode, data))
-            this.finish();
     }
 
 }
