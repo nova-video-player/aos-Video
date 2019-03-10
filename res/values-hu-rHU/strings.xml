@@ -93,6 +93,9 @@
     <string name="movies_by_genre">Filmek műfaj szerint</string>
     <string name="movies_by_year">Filmek év szerint</string>
     <string name="all_tv_shows">Sorozatok</string>
+    <string name="all_tvshows">Minden sorozat</string>
+    <string name="tvshows_by_alpha">Sorozatok ABC sorrendben</string>
+    <string name="tvshows_by_genre">Sorozatok műfaj szerint</string>
     <string name="all_movies_and_tv_shows">Filmek és Sorozatok</string>
     <string name="non_scraped_videos">Feldolgozatlan videók</string>
     <string name="no_server">Nem található médiakiszolgáló</string>
@@ -179,6 +182,7 @@
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="storage">Tárhely</string>
     <string name="rescan_storage">Tárhely újravizsgálása</string>
+    <string name="rescanning">Tárhely újravizsgálása folyamatban</string>
     <string name="rescan_storage_summary">Belső tárhely, SD kártya és USB tárhelyek újravizsgálata</string>
     <string name="preference_display_all_files">Az összes fájl megjelenítése a böngészőben</string>
     <string name="info_processing">Médiatulajdonságok ellenőrzése…</string>
@@ -399,6 +403,15 @@
     <!-- Preferences -->
     <string name="preferences">Beállítások</string>
     <string name="get_the_ad_free_version">Szerezze meg a reklámmentes verzíót a Google Play-en</string>
+    <string name="preferences_category_video">Videó</string>
+    <string name="preferences_force_software_decoding">Szoftveres dekódolás kényszerítése</string>
+    <string name="preferences_force_audio_passthrough_disabled">Kikapcsolva</string>
+    <string name="preferences_force_audio_passthrough_enable">Mód 1</string>
+    <string name="category_languages">Feliratok</string>
+    <string name="subtitles_hide_default">Feliratok elrejtése alapértelmezetten</string>
+    <string name="subtitles_hide_default_summary">Jelőlje be, ha alapértelmezetten szeretné elrejteni a feliratokat</string>
+    <string name="preferences_languages">Letöltött feliratok nyelve</string>
+    <string name="summary_list_preference_primary">Válassza ki a letöltendő feliratok nyelveit</string>
     <string name="locale">Rendszernyelv</string>
     <string name="yes">Igen</string>
     <string name="no">Nem</string>
@@ -454,11 +467,12 @@
     <string name="sort_by_rating_asc">Értékelés szerint (legjobb előbb)</string>
     <string name="sort_by_date_added_desc">Hozzáadás dátuma szerint (legújabb előbb)</string>
     <string name="sort_by_date_added_asc">Hozzáadás dátuma szerint (legrégebbi előbb)</string>
-    <string name="preferences_category_sort_order">Rendezési sorrend</string>
-    <string name="preferences_tv_show_sort_order_title">Sorozatok rendezése</string>
-    <string name="preferences_tv_show_sort_order_summary">Válassza ki a sorozatok rendezési sorrendjét</string>
     <string name="dec_choice_title">Dekóder választása</string>
+    <string name="preferences_tv_show_sort_order_summary">Válassza ki a sorozatok rendezési sorrendjét</string>
+    <string name="preferences_tv_show_sort_order_title">Sorozatok rendezése</string>
     <string name="nfo_export_manual_title">Már feldolgozott videók exportálása</string>
     <string name="nfo_export_manual_summary">.nfo fájlok exportálása minden feldolgozott videóhoz</string>
+    <string name="db_export_manual_title">Média adatbázís exportálása</string>
+    <string name="db_export_in_progress">Adatbázís exportálása folyamatban</string>
     <string name="cast_info">Infó</string>
 </resources>

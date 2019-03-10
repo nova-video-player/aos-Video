@@ -19,25 +19,98 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- Menu item that takes the user back to the top level screen of the music player -->
+    <string name="goto_start">Biblioteca</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
     <!-- Menu item to refresh servers list -->
+    <string name="refresh_servers_list">Atualizar lista de servidores</string>
     <!-- Menu item to enable network shares -->
+    <string name="enable_network_shares">Habilitar compartilhamento de rede</string>
+    <string name="initial_scan">Verificação inicial</string>
     <!-- Library screen, menu item -->
+    <string name="search_title">Buscar</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
+    <string name="unknown_track_name">Desconhecido</string>
     <!-- Toast after turning shuffle on -->
     <!-- Toast after turning shuffle off -->
     <!-- Toast after turning single repeat on -->
     <!-- Context menu item -->
+    <string name="info">Info.</string>
     <!-- Context menu item -->
+    <string name="play_selection">Tocar</string>
     <!-- Context menu item -->
+    <string name="multiple_selection">Seleção múltipla</string>
     <!-- Context menu item -->
+    <string name="play_from_beginning">Tocar do início</string>
     <!-- Dialog box button -->
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <!-- The string used in file/folder infos dialog. -->
+    <string name="info_duration">Duração</string>
+    <string name="video_sources">Fontes</string>
     <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">Filme</string>
+    <string name="info_tab_show">Show</string>
+    <string name="info_tab_episode">Episódio</string>
+    <string name="info_tab_video">Vídeo</string>
+    <string name="info_tab_file">Info. do arquivo</string>
+    <string name="info_tab_backdrop_chooser">Seletor de pano de fundo</string>
+    <string name="info_tab_poster_chooser">Seletor de poster</string>
+    <string name="info_tab_share">Compartilhar</string>
+    <string name="info_menu_backdrop_select">Pano de fundo</string>
+    <string name="info_menu_series_backdrop_select">Pano de fundo de série</string>
+    <string name="info_menu_poster_select">Selecionar outro poster</string>
+    <string name="info_menu_series_poster_select">Selecionar outro poster</string>
     <!-- COVER ROLL -->
+    <string name="recently_added">Adicionado recentemente</string>
+    <string name="recently_added_videos">Adicionado recentemente</string>
+    <string name="recently_played">Reproduzido recentemente</string>
+    <string name="recently_played_videos">Reproduzido recentemente</string>
+    <string name="video_lists">Playlists</string>
     <!-- The string used in main storage list -->
+    <string name="external_storage">Externo</string>
+    <string name="internal_storage">Interno</string>
+    <string name="network_storage">Rede</string>
+    <string name="sd_card_storage">Cartão SD</string>
+    <string name="usb_host_storage">Disco externo</string>
+    <string name="other_storage">Disco</string>
+    <string name="network_media_servers">Servidores de mídia (UPnP)</string>
+    <string name="network_shared_folders">Pastas compartilhadas (SMB)</string>
+    <string name="network_connected_as">Conectado como %s</string>
+    <string name="network_guest">convidado</string>
+    <string name="sftp_folders">FTP</string>
+    <string name="network_jcifs">Samba (Experimental)</string>
+    <string name="network_cling">UPNP (Experimental)</string>
+    <string name="recordings_storage">Gravações</string>
+    <string name="root_storage">Armazenamento interno</string>
+    <string name="cannot_list">Não é possível listar o conteúdo</string>
     <!-- VIDEO -->
+    <string name="video">Nova Video</string>
+    <string name="videos">Vídeos</string>
+    <string name="all_videos">Todos os vídeos</string>
+    <string name="not_played_yet_videos">Ainda não iniciado</string>
+    <string name="video_folder">Pastas</string>
+    <string name="movies">Filmes</string>
+    <string name="all_movies">Todos os filmes</string>
+    <string name="movies_by_genre">Filmes por gênero</string>
+    <string name="movies_by_year">Filmes por ano</string>
+    <string name="all_tv_shows">Séries de TV</string>
+    <string name="all_tvshows">Todas as séries de TV</string>
+    <string name="tvshows_by_alpha">Séries de TV alfabeticamente</string>
+    <string name="tvshows_by_genre">Séries de TV por gênero</string>
+    <string name="all_movies_and_tv_shows">Filmes e séries de TV</string>
+    <string name="non_scraped_videos">Vídeos não processados</string>
+    <string name="no_server">Nenhum servidor de mídia encontrado</string>
+    <string name="cannot_open_video">Não é possível abrir este vídeo</string>
+    <string name="confirm_delete">Deseja realmente excluir?</string>
+    <string name="deleting">Por favor aguarde a exclusão…</string>
+    <string name="cannot_delete_directory">Não é possível excluir a pasta</string>
+    <string name="cannot_delete_file">Não é possível excluir o arquivo</string>
+    <string name="directory_deleted">A pasta foi excluída</string>
+    <string name="file_deleted">O arquivo foi excluído</string>
+    <string name="resume">Continuar</string>
+    <string name="remote_resume">Continuar (remoto)</string>
+    <string name="bookmark">Marcador</string>
+    <string name="delete">Excluir</string>
     <!-- for small screens -->
     <!-- Generic strings for Movies or TV shows -->
     <!-- Specific strings for TV shows -->
@@ -65,4 +138,9 @@
     <!-- Info dialog, not indexed file -->
     <!-- Brightness -->
     <!--  Nfo File parsing -->
+    <string name="nfo_export_manual_prefkey">export_manual_prefkey</string>
+    <string name="db_export_manual_prefkey">db_export_manual_prefkey</string>
+    <string name="db_export_manual_title">Exportar base de dados de mídia</string>
+    <string name="db_export_manual_summary">Exportar arquivo media.db para /sdcard para fins de diagnóstico</string>
+    <string name="db_export_in_progress">Exportação da base de dados em andamento</string>
 </resources>

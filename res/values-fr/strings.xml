@@ -587,6 +587,8 @@
     <string name="preferences_show_last_added_row">Afficher la ligne des derniers ajouts</string>
     <string name="preferences_show_last_played_row_summary">Cochez pour afficher une ligne avec vos dernières vidéos jouées</string>
     <string name="preferences_show_last_played_row">Afficher la ligne des dernières vidéos jouées</string>
+    <string name="preferences_reset_last_played_row">Réinitialiser la ligne des vidéos récemment jouées</string>
+    <string name="reset_last_played_row_in_progress">Réinitialisation de la ligne des vidéos récemment jouées</string>
     <string name="preferences_show_all_movies_row_summary">Cochez pour afficher une ligne avec tous vos films au lieu de la ligne des catégories film</string>
     <string name="preferences_show_all_movies_row">Afficher la ligne regroupant tous les films</string>
     <string name="preferences_movie_sort_order_summary">Sélectionner l\'ordre de tri de la ligne \'tous les films\'</string>
@@ -690,7 +692,9 @@
     <string name="leanback_subtitles_integrated">Sous-titres intégrés</string>
     <string name="leanback_subtitles_external">Sous-titres externes</string>
     <string name="leanback_posters_header">Affiches</string>
+    <string name="leanback_season_posters_header">Affiches de la saison</string>
     <string name="leanback_backdrops_header">Images de fond</string>
+    <string name="leanback_tvshow_backdrops_header">Images de fond de la série</string>
     <string name="leanback_poster_changed">L\'affiche a été changée</string>
     <string name="leanback_backdrop_changed">L\'image de fond a été changée</string>
     <string name="leanback_weblinks_header">Liens</string>
