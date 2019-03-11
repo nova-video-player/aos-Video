@@ -876,7 +876,7 @@
     <string name="create_new_list">Create new list</string>
     <string name="add_to_list">Add to list</string>
     <string name="no_resume_available">No resume currently available</string>
-    <string name="no_list_detected">No list currently detected. List can be created by adding new items directly from video info, or can be synced with your trakt account (premium only).</string>
+    <string name="no_list_detected">No list currently detected. List can be created by adding new items directly from video info, or can be synced with your trakt account.</string>
     <string name="premium_already_purchased">Premium has already been purchased</string>
     <string name="remove_from_list">Remove from list</string>
     <string name="warning_swdec">Warning: hardware decoding disabled!</string>
