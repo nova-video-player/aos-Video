@@ -147,6 +147,7 @@
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Director</string>
     <string name="scrap_director_format">Director: %s</string>
+    <string name="scrap_director_title">Director:</string>
     <string name="scrap_rating">Rating</string>
     <string name="scrap_rating_format">Rating: %s</string>
     <string name="scrap_year">Year</string>
@@ -158,6 +159,7 @@
     <string name="scrap_cast_format">Cast: %s</string>
     <string name="scrap_genre">Genre</string>
     <string name="scrap_genre_format">Genres: %s</string>
+    <string name="scrap_genre_title">Genres:</string>
     <string name="scrap_aired">Aired</string>
     <string name="scrap_aired_format">Aired: %s</string>
     <string name="scrap_guests">Guests</string>

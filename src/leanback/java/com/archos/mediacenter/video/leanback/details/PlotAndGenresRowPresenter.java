@@ -40,6 +40,7 @@ public class PlotAndGenresRowPresenter extends FullWidthRowPresenter implements 
         /** the parent viewholder */
         final ViewHolder mFullWidthViewHolder;
         final TextView mPlotTv;
+        final View mGenresLayout;
         final TextView mGenresTv;
 
         public PlotAndGenresViewHolder(ViewHolder parentViewHolder, View contentView) {
@@ -51,6 +52,7 @@ public class PlotAndGenresRowPresenter extends FullWidthRowPresenter implements 
                 mPlotTv.setMaxLines(mMaxLines);
                 mPlotTv.setEllipsize(TextUtils.TruncateAt.END);
             }
+            mGenresLayout = contentView.findViewById(R.id.genres_layout);
             mGenresTv = (TextView)contentView.findViewById(R.id.genres);
         }
     }
@@ -109,10 +111,10 @@ public class PlotAndGenresRowPresenter extends FullWidthRowPresenter implements 
         vh.mPlotTv.setText(row.getPlot());
 
         if (row.getGenres()!=null && !row.getGenres().isEmpty()) {
-            vh.mGenresTv.setText(mR.getString(R.string.scrap_genre_format, row.getGenres()));
-            vh.mGenresTv.setVisibility(View.VISIBLE);
+            vh.mGenresTv.setText(row.getGenres());
+            vh.mGenresLayout.setVisibility(View.VISIBLE);
         } else {
-            vh.mGenresTv.setVisibility(View.GONE);
+            vh.mGenresLayout.setVisibility(View.GONE);
         }
 
         mHolder = vh;
