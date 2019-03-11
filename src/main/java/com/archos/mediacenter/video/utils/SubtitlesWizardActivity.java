@@ -495,7 +495,7 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
                     cacheOldFile.renameTo(cacheNewFile);
                     if (DBG) Log.d(TAG, "onItemClick : selected file renamed as " + cacheNewFilePath);
                 }
-                catch (SecurityException e) {
+                catch (Exception e) {
                     Log.d(TAG, "renameFile : can not rename file as " + cacheNewFilePath);
                 }
             }
@@ -549,7 +549,7 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
                     cacheFile.delete();
                     if (DBG) Log.d(TAG, "deleteFile : file " + cacheFilePath + " deleted");
                 }
-                catch (SecurityException e) {
+                catch (Exception e) {
                     Log.d(TAG, "deleteFile : can not delete file " + cacheFilePath);
                 }
             }
