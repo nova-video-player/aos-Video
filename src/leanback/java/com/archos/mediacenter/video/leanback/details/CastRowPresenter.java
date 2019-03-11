@@ -39,6 +39,7 @@ public class CastRowPresenter extends FullWidthRowPresenter implements Backgroun
     public class CastViewHolder extends RowPresenter.ViewHolder {
         /** the parent viewholder */
         final ViewHolder mFullWidthViewHolder;
+        final View mDirectorsLayout;
         final TextView mDirectorsTv;
         final TextView mCastTv;
 
@@ -46,6 +47,7 @@ public class CastRowPresenter extends FullWidthRowPresenter implements Backgroun
             super(parentViewHolder.view);
 
             mFullWidthViewHolder = parentViewHolder;
+            mDirectorsLayout = contentView.findViewById(R.id.directors_layout);
             mDirectorsTv = (TextView)contentView.findViewById(R.id.directors);
             mCastTv = (TextView)contentView.findViewById(R.id.cast);
             if (mMaxLines>0) {
@@ -108,10 +110,10 @@ public class CastRowPresenter extends FullWidthRowPresenter implements Backgroun
         vh.mCastTv.setText(row.getCast());
 
         if (row.getDirectors()!=null && !row.getDirectors().isEmpty()) {
-            vh.mDirectorsTv.setText( mR.getString(R.string.scrap_director_format, row.getDirectors()));
-            vh.mDirectorsTv.setVisibility(View.VISIBLE);
+            vh.mDirectorsTv.setText(row.getDirectors());
+            vh.mDirectorsLayout.setVisibility(View.VISIBLE);
         } else {
-            vh.mDirectorsTv.setVisibility(View.GONE);
+            vh.mDirectorsLayout.setVisibility(View.GONE);
         }
 
         mHolder = vh;

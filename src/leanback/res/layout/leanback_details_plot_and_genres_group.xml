@@ -32,13 +32,32 @@
         android:singleLine="false"
         />
 
-    <TextView
-        android:id="@+id/genres"
-        style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dip"
-        android:singleLine="false"
-        android:textColor="@color/lb_details_description_body_color"
-        />
+    <RelativeLayout
+      android:id="@+id/genres_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="left" >
+
+      <TextView
+          android:id="@+id/genres_title"
+          style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="12dip"
+          android:textColor="@color/lb_details_description_body_color"
+          android:text="@string/scrap_genre_title"
+          />
+
+      <TextView
+          android:id="@+id/genres"
+          style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="4dip"
+          android:layout_marginTop="12dip"
+          android:layout_toRightOf="@id/genres_title"
+          android:singleLine="false"
+          android:textColor="@color/lb_details_description_body_color"
+          />
+    </RelativeLayout>
 </LinearLayout>
