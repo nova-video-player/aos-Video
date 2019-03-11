@@ -485,6 +485,21 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
                 Log.d(TAG, "renameFile : can not rename file as " + newFilePath);
             }
 
+            String cacheOldFilePath = MediaUtils.getSubsDir(this).getPath() + "/" + FileUtils.getName(oldUri);
+            String cacheNewFilePath = MediaUtils.getSubsDir(this).getPath() + "/" + FileUtils.getName(newUri);
+
+            File cacheOldFile = new File(cacheOldFilePath);
+            File cacheNewFile = new File(cacheNewFilePath);
+            if (cacheOldFile.exists()) {
+                try {
+                    cacheOldFile.renameTo(cacheNewFile);
+                    if (DBG) Log.d(TAG, "onItemClick : selected file renamed as " + cacheNewFilePath);
+                }
+                catch (SecurityException e) {
+                    Log.d(TAG, "renameFile : can not rename file as " + cacheNewFilePath);
+                }
+            }
+
             if (fileRenamed) {
                 // Update the medialib
                 Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, oldUri);
@@ -534,7 +549,7 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
                     cacheFile.delete();
                     if (DBG) Log.d(TAG, "deleteFile : file " + cacheFilePath + " deleted");
                 }
-                catch (Exception e) {
+                catch (SecurityException e) {
                     Log.d(TAG, "deleteFile : can not delete file " + cacheFilePath);
                 }
             }
