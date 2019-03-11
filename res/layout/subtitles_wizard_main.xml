@@ -1,22 +1,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:paddingLeft="@dimen/content_list_left_margin"
-              android:paddingRight="@dimen/content_list_left_margin"
               android:orientation="vertical" >
 
     <TextView style="?android:attr/textAppearanceMedium"
               android:id="@+id/help_message_header"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:padding="8dip" />
+              android:paddingLeft="16dip"
+              android:paddingTop="14dip"
+              android:paddingRight="16dip"
+              android:paddingBottom="14dip" />
 
     <ListView android:id="@+id/list_items"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:textSize="18sp"
               android:divider="@null"
-              android:dividerHeight="@dimen/content_list_vertical_spacing_between_items"
+              android:dividerHeight="1dip"
               android:drawSelectorOnTop="false"
               android:fastScrollEnabled="true" /> 
               

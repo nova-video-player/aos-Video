@@ -389,8 +389,8 @@
     <!-- Subtitles wizard -->
     <string name="get_subtitles_on_drive">Select subtitles on storage</string>
     <string name="subtitles_wizard_no_files">No subtitles files found</string>
-    <string name="subtitles_wizard_current_files">Current subtitles files:</string>
-    <string name="subtitles_wizard_available_files">Available subtitles files:</string>
+    <string name="subtitles_wizard_current_files">Current subtitles files</string>
+    <string name="subtitles_wizard_available_files">Available subtitles files</string>
     <string name="subtitles_wizard_associate">Associate this file to the video</string>
     <string name="subtitles_wizard_delete">Delete this file</string>
     <string name="subtitles_wizard_empty_list">No file found</string>
