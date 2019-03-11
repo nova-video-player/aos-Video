@@ -127,18 +127,20 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                         Episode firstEpisode = null;
                         int i = 0;
 
-                        while(i < mSeasonAdapters.size() && resumeEpisode == null) {
+                        while(i < mSeasonAdapters.size() && (resumeEpisode == null || resumeEpisode != null && resumeEpisode.getSeasonNumber() == 0)) {
                             CursorObjectAdapter seasonAdapter = mSeasonAdapters.valueAt(i);
                             int j = 0;
 
-                            while (j < seasonAdapter.size() && resumeEpisode == null) {
+                            while (j < seasonAdapter.size() && (resumeEpisode == null || resumeEpisode != null && resumeEpisode.getSeasonNumber() == 0)) {
                                 Episode episode = (Episode)seasonAdapter.get(j);
 
-                                if (firstEpisode == null)
-                                    firstEpisode = episode;
-
-                                if (episode.getResumeMs() != PlayerActivity.LAST_POSITION_END)
+                                if (episode.getResumeMs() != PlayerActivity.LAST_POSITION_END
+                                        && (resumeEpisode == null || resumeEpisode != null && episode.getEpisodeDate() < resumeEpisode.getEpisodeDate())) {
                                     resumeEpisode = episode;
+                                }
+
+                                if (firstEpisode == null || (firstEpisode != null && episode.getEpisodeDate() < firstEpisode.getEpisodeDate()))
+                                    firstEpisode = episode;
 
                                 j++;
                             }
