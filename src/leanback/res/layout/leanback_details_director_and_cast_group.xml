@@ -24,15 +24,34 @@
     android:orientation="vertical"
     android:focusable="true">
 
-    <TextView
-        android:id="@+id/directors"
-        style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dip"
-        android:singleLine="false"
-        android:textColor="@color/lb_details_description_body_color"
-        />
+    <RelativeLayout
+      android:id="@+id/directors_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="left" >
+
+      <TextView
+          android:id="@+id/directors_title"
+          style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="12dip"
+          android:textColor="@color/lb_details_description_body_color"
+          android:text="@string/scrap_director_title"
+          />
+
+      <TextView
+          android:id="@+id/directors"
+          style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="4dip"
+          android:layout_marginBottom="12dip"
+          android:layout_toRightOf="@id/directors_title"
+          android:singleLine="false"
+          android:textColor="@color/lb_details_description_body_color"
+          />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/cast"
