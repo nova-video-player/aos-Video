@@ -575,6 +575,8 @@
     <string name="preferences_show_last_added_row">Zobrazit řádku s naposledy přidanými</string>
     <string name="preferences_show_last_played_row_summary">Zvolte pro zobrazení řádku s nedávno přehrávanými videi</string>
     <string name="preferences_show_last_played_row">Zobrazit řádku s nedávno přehrávanými</string>
+    <string name="preferences_reset_last_played_row">Vyprázdnit řádku s nedávno přehrávanými</string>
+    <string name="reset_last_played_row_in_progress">Vyprazdňování řádky s nedávno přehrávanými</string>
     <string name="preferences_show_all_movies_row_summary">Zvolte pro zobrazení řádku se všemi filmy místo kategorií filmů</string>
     <string name="preferences_show_all_movies_row">Zobrazit řádku se všemi filmy</string>
     <string name="preferences_movie_sort_order_summary">Vyberte způsob řazení v řádku se všemi filmy</string>
@@ -678,7 +680,9 @@
     <string name="leanback_subtitles_integrated">Integrované titulky</string>
     <string name="leanback_subtitles_external">Externí titulky</string>
     <string name="leanback_posters_header">Plakáty</string>
+    <string name="leanback_season_posters_header">Poster pro sezónu</string>
     <string name="leanback_backdrops_header">Pozadí</string>
+    <string name="leanback_tvshow_backdrops_header">Pozadí pro seriál</string>
     <string name="leanback_poster_changed">Plakát byl změněn</string>
     <string name="leanback_backdrop_changed">Pozadí bylo změněno</string>
     <string name="leanback_weblinks_header">Odkazy</string>
