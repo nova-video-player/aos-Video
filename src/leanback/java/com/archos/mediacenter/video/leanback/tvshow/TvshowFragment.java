@@ -139,7 +139,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                                     resumeEpisode = episode;
                                 }
 
-                                if (firstEpisode == null || (firstEpisode != null && episode.getEpisodeDate() < firstEpisode.getEpisodeDate()))
+                                if (firstEpisode == null || (firstEpisode != null && firstEpisode.getSeasonNumber() == 0 && episode.getEpisodeDate() < firstEpisode.getEpisodeDate()))
                                     firstEpisode = episode;
 
                                 j++;
