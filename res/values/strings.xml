@@ -642,6 +642,7 @@
    <string name="dec_hw_mediacodec">Hardware decoding (MediaCodec)</string>
    <string name="dec_sw">Software decoding</string>
    <string name="dec_hw">Hardware decoding</string>
+   <string name="dec_unknown">Unknown decoding</string>
    <string name="dec_any">Default</string>
    <string name="dec_android">Android MediaPlayer</string>
 
