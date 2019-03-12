@@ -19,11 +19,8 @@ allprojects {
         jcenter()
         mavenCentral()
         mavenLocal()
-        maven {
-            url 'http://4thline.org/m2'
-        }
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-        maven { url 'https://jitpack.io' }
+	//maven { url 'https://mvnrepository.com/artifact' }
+        maven { url 'http://4thline.org/m2' }
     }
 }
 
@@ -221,7 +218,6 @@ dependencies {
     implementation project(':FileCoreLibrary')
     implementation project(':MediaLib')
     implementation 'com.squareup.picasso:picasso:2.71828'
-
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support:cardview-v7:27.1.1'
@@ -230,6 +226,4 @@ dependencies {
     implementation 'com.github.ksoichiro:android-observablescrollview:1.6.0'
     implementation 'com.android.support:design:27.1.1'
     leanbackImplementation 'com.android.support:leanback-v17:27.1.1'
-
-    openImplementation 'com.github.archos-sa:AOS-FakeLibs:517a7ca02f'
 }
