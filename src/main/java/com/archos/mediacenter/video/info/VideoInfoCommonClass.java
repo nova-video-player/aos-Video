@@ -120,6 +120,9 @@ public class VideoInfoCommonClass {
                 default: break;
             }
         }
+        else if (playerType == IMediaPlayer.TYPE_ANDROID) {
+            videoDecoderStringResId = R.string.dec_unknown;
+        }
         if(videoDecoderStringResId==-1)
             return null;
         return resources.getString(videoDecoderStringResId);

@@ -1605,7 +1605,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                                                   getResources().getString(R.string.menu_info));
             String decoder = VideoInfoCommonClass.getShortDecoder(mPlayer.getVideoMetadata(), getResources(), mPlayer.getType());
             
-            tcv.setText2(decoder);
+            if (decoder != null)
+                tcv.setText2(decoder);
+            
             tcv.setOnSwitchClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
