@@ -1462,7 +1462,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 }
             });
 
-            if (mUri.getScheme().equals("file") || mUri.getScheme().equals("smb")) {
+            Uri uri = VideoUtils.getFileUriFromMediaLibPath(mUri.toString());
+
+            if (uri.getScheme().equals("file") || uri.getScheme().equals("smb")) {
                 mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.get_subtitles_on_drive).toString(), false, false).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -3065,9 +3067,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     private void chooseSubtitles() {
         Intent subIntent = new Intent(Intent.ACTION_MAIN);
+        Uri uri = VideoUtils.getFileUriFromMediaLibPath(mUri.toString());
 
         subIntent.setClass(mContext, SubtitlesWizardActivity.class);
-        subIntent.setData(mUri);
+        subIntent.setData(uri);
         startActivityForResult(subIntent, SUBTITLE_REQUEST);
     }
 
