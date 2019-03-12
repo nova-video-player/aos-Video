@@ -86,21 +86,15 @@ android {
         versionCode getDate()
         versionName '1.0-' + getFormattedDate()
         if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
+        applicationId "org.courville.nova"
     }
     aaptOptions {
         additionalParameters "--no-version-vectors"
     }
-    flavorDimensions "version", "tv", "amazon", "privDeps"
+    flavorDimensions "version", "tv", "amazon"
     productFlavors {
         community {
             dimension "version"
-            applicationId "org.courville.nova"
-        }
-        privlibs {
-            dimension "privDeps"
-        }
-        open {
-            dimension "privDeps"
         }
         amazon {
             dimension "amazon"
@@ -176,29 +170,6 @@ android {
             assemble.doLast {
                 println outputFileName
             }
-        }
-    }
-    variantFilter { variant ->
-        if (variant.getFlavors().get(2).name == "amazon"
-                && variant.getFlavors().get(0).name != "free" && variant.getFlavors().get(0).name != "ki") {
-            variant.setIgnore(true)
-        }
-
-        if (variant.getFlavors().get(3).name == "open"
-                && variant.getFlavors().get(0).name != "community") {
-            variant.setIgnore(true)
-        }
-        if (variant.getFlavors().get(2).name == "noamazon"
-                && variant.getFlavors().get(0).name == "ki") {
-            variant.setIgnore(true)
-        }
-        if (variant.getFlavors().get(1).name == "leanback"
-                && (variant.getFlavors().get(0).name == "aw" ||
-                variant.getFlavors().get(0).name == "mtk" ||
-                variant.getFlavors().get(0).name == "qc" ||
-                variant.getFlavors().get(0).name == "rk" ||
-                variant.getFlavors().get(0).name == "ti")) {
-            variant.setIgnore(true)
         }
     }
 }
