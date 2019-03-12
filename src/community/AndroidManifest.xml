@@ -20,14 +20,6 @@
     android:sharedUserId="archos.openmediacenter" >
 
     <application>
-        <receiver android:name="com.amazon.device.iap.ResponseReceiver">
-            <intent-filter>
-                <action android:name="com.amazon.inapp.purchasing.NOTIFY" android:permission="com.amazon.inapp.purchasing.Permission.NOTIFY">
-                </action></intent-filter>
-        </receiver>
-        <activity
-            android:name="com.amazon.device.ads.AdActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"/>
         <provider
             tools:replace="android:authorities"
             android:name="com.archos.mediaprovider.video.VideoProvider"
