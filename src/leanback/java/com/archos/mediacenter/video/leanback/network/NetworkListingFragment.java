@@ -164,10 +164,11 @@ public class NetworkListingFragment extends ListingFragment {
     /** Remove current Uri from the shortcut list */
     private void deleteShortcut() {
         String shortcutPath = mUri.toString();
+        String shortcutName = getArguments().getString(ARG_TITLE)!=null?getArguments().getString(ARG_TITLE):mUri.getLastPathSegment(); //to avoid name like "33" in upnp
 
         boolean result = ShortcutDbAdapter.VIDEO.deleteShortcut(getActivity(), mUri.toString());
         if (result) {
-            Toast.makeText(getActivity(), getString(R.string.indexed_folder_removed, shortcutPath), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.indexed_folder_removed, shortcutName), Toast.LENGTH_SHORT).show();
             getActivity().setResult(NetworkRootFragment.RESULT_CODE_SHORTCUTS_MODIFIED);
             // Tell MediaScanner to remove the videos from this directory
             NetworkScanner.removeVideos(getActivity(), mUri);
