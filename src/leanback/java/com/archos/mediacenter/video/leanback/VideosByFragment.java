@@ -44,9 +44,6 @@ import com.archos.mediacenter.video.player.PrivateMode;
 
 import java.util.ArrayList;
 
-import static com.amazon.device.iap.internal.util.c.c;
-
-
 public abstract class VideosByFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "MoviesByFragment";
