@@ -1157,7 +1157,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 break;
         }
 
-
+        LoaderManager.getInstance(getActivity()).restartLoader(1, null, this);
         return true;
     }
 
@@ -1775,6 +1775,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             StoreRatingDialogBuilder.displayStoreRatingDialogIfNeeded(getContext());
         mIsLeavingPlayerActivity = false;
         super.onResume();
+        LoaderManager.getInstance(getActivity()).restartLoader(1, null, this);
     }
 
     @Override
