@@ -196,7 +196,6 @@ public class VideoPreferencesFragment extends PreferenceFragmentCompat implement
             prefScraperCategory.removePreference(mDbExportManualPreference);
             getPreferenceScreen().removePreference(mAdvancedPreferences);
         }
-
     }
 
     public static void resetPassthroughPref(SharedPreferences preferences){
@@ -206,6 +205,7 @@ public class VideoPreferencesFragment extends PreferenceFragmentCompat implement
         }
     }
 
+    @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         mSharedPreferences = getPreferenceManager().getSharedPreferences();
         // Load the preferences from an XML resource
@@ -759,7 +759,7 @@ public class VideoPreferencesFragment extends PreferenceFragmentCompat implement
                     File f = new File(newPath);
                     if ((f!=null) && f.isDirectory() && f.exists()) { //better safe than sorry x3
                         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString(VideoPreferencesFragment.KEY_TORRENT_PATH, f.getAbsolutePath()).apply();
-                        ((TorrentPathDialogPreference)findPreference(KEY_TORRENT_PATH)).refresh();
+                        ((TorrentPathDialogPreference)findPreference(KEY_TORRENT_PATH)).notifyChanged();
                     }
                 }
             }
