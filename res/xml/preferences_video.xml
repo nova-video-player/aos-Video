@@ -121,7 +121,8 @@
 
         <Preference
             android:key="reset_last_played_row"
-            android:title="@string/preferences_reset_last_played_row" />
+	    android:title="@string/preferences_reset_last_played_row" 
+	    app:iconSpaceReserved="false" />
 
         <CheckBoxPreference
             android:defaultValue="false"
