@@ -172,6 +172,7 @@ android {
         variant.outputs.all { output ->
             def api = variant.mergedFlavor.minSdkVersion.apiLevel
             outputFileName = outputFileName.replace("-noleanback-", "-API_" + "${api}" + "+-")
+                    .replace("-community-", "-")
                     .replace("-leanback-", "-API_" + "${api}" + "+-")
                     .replace("-noamazon-", "-")
             assemble.doLast {
