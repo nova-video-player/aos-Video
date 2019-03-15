@@ -105,7 +105,7 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
                 public boolean onPreDraw() {
                     final boolean titleOnTwoLines = (mTitle.getLineCount() > 1);
                     final boolean hasEpisodeLine = (mEpisodeGroup.getVisibility()==View.VISIBLE);
-                    int bodymaxLines = titleOnTwoLines ? 3 : 5; // MAGICAL
+                    int bodymaxLines = titleOnTwoLines ? 4 : 6; // MAGICAL
                     if (hasEpisodeLine) bodymaxLines-=1; // MAGICAL
 
                     if (mBody.getMaxLines() != bodymaxLines) {

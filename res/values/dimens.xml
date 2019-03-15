@@ -50,4 +50,9 @@
     <dimen name="categories_list_top_padding">@dimen/video_info_margin_half</dimen>
 
     <dimen name="lb_browse_title_text_width">584dp</dimen>
+
+    <dimen name="lb_details_v2_card_height">294dp</dimen>
+    <dimen name="lb_details_v2_align_pos_for_actions">138dp</dimen>
+    <dimen name="lb_details_v2_description_margin_end">132dp</dimen>
+
 </resources>
