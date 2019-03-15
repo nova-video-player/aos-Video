@@ -96,7 +96,7 @@
     <string name="all_tv_shows">Seriály</string>
     <string name="all_tvshows">Všechny seriály</string>
     <string name="tvshows_by_alpha">Seriály dle abecedy</string>
-    <string name="tvshows_by_genre">Seriály dle žánru</string>
+    <string name="tvshows_by_genre">Seriály dle žánrů</string>
     <string name="all_movies_and_tv_shows">Filmy a seriály</string>
     <string name="non_scraped_videos">Videa bez získaných informací</string>
     <string name="no_server">Nebyl nalezen žádný mediální server</string>
@@ -195,7 +195,7 @@
     <string name="rescanning">Probíhá skenování úložných zařízení</string>
     <string name="rescan_storage_summary">Znovu skenovat interní úložiště, kartu SD a USB zařízení</string>
     <string name="preference_display_all_files">Zobrazit všechny soubory v prohlížeči</string>
-    <string name="preference_display_all_files_summary">Zobrazit i ostatní soubory (nejsou video)</string>
+    <string name="preference_display_all_files_summary">Zobrazit i ostatní soubory (které neobsahují video)</string>
     <string name="info_processing">Kontrola vlastností médií…</string>
     <string name="info_video">Video</string>
     <string name="info_audio">Audio</string>
