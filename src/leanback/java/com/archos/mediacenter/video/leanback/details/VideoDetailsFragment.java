@@ -32,6 +32,7 @@ import android.content.pm.ActivityInfo;
 import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -46,7 +47,6 @@ import android.support.v17.leanback.widget.Action;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.DetailsOverviewRow;
-import android.support.v17.leanback.widget.DetailsOverviewRowPresenter;
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
@@ -295,7 +295,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         helper.setSharedElementEnterTransition(getActivity(), VideoDetailsActivity.SHARED_ELEMENT_NAME, 1000);
         mOverviewRowPresenter.setListener(helper);
         mOverviewRowPresenter.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
-        mOverviewRowPresenter.setActionsBackgroundColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
+        mOverviewRowPresenter.setActionsBackgroundColor(getDarkerColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background)));
         mOverviewRowPresenter.setOnActionClickedListener(mOnActionClickedListener);
         mVideoBadgePresenter = new VideoBadgePresenter(getActivity());
         mFileListAdapter = new ArrayObjectAdapter(mVideoBadgePresenter);
@@ -401,6 +401,13 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     }
 
+    private int getDarkerColor(int color) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        hsv[2] *= 0.8f;
+        return Color.HSVToColor(hsv);
+    }
+
     //hack to avoid fullscreen overview
     @Override
     protected void onSetRowStatus(RowPresenter presenter, RowPresenter.ViewHolder viewHolder, int
@@ -415,11 +422,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     }
                 });
             } else if (oldPos == 1) {
-                setSelectedPosition(1, false);
+                setSelectedPosition(1);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        setSelectedPosition(0, true);
+                        setSelectedPosition(0);
                     }
                 });
             }
@@ -899,7 +906,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
                 
                 mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
-                mOverviewRowPresenter.setBackgroundColor(mColor);
+                mOverviewRowPresenter.updateBackgroundColor(mColor);
+                mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
 
                 for (Presenter pres : mAdapter.getPresenterSelector().getPresenters()){
                     if (pres instanceof BackgroundColorPresenter)
@@ -1082,6 +1090,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 mAdapter.removeItems(INDEX_FILEDETAILS+1, mAdapter.size()-INDEX_FILEDETAILS-1);
         }
 
+        mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
+        mOverviewRowPresenter.updateBackgroundColor(mColor);
+        mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
 
         //set background color :
         for(Presenter pres : mAdapter.getPresenterSelector().getPresenters()){
@@ -1179,8 +1190,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                         Palette palette = Palette.from(bitmap).generate();
                         mColor = palette.getDarkVibrantColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
                         mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
-                        mOverviewRowPresenter.setBackgroundColor(mColor);
-                        mOverviewRowPresenter.setActionsBackgroundColor(mColor);
+                        mOverviewRowPresenter.updateBackgroundColor(mColor);
+                        mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
                         return bitmap;
 
                     }
@@ -1570,7 +1581,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     mColor = color;
 
                     mVideoBadgePresenter.setSelectedBackgroundColor(color);
-                    mOverviewRowPresenter.setBackgroundColor(color);
+                    mOverviewRowPresenter.updateBackgroundColor(color);
+                    mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(color));
 
                     for (Presenter pres : mAdapter.getPresenterSelector().getPresenters()){
                         if (pres instanceof BackgroundColorPresenter)

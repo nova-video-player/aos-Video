@@ -21,10 +21,12 @@ import android.support.v4.content.Loader;
 
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.DetailsFragmentWithLessTopOffset;
 import android.support.v17.leanback.widget.Action;
@@ -32,7 +34,7 @@ import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.CursorObjectAdapter;
 import android.support.v17.leanback.widget.DetailsOverviewRow;
-import android.support.v17.leanback.widget.DetailsOverviewRowPresenter;
+import android.support.v17.leanback.widget.FullWidthDetailsOverviewSharedElementHelper;
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
@@ -61,6 +63,7 @@ import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
+import com.archos.mediacenter.video.leanback.details.ArchosDetailsOverviewRowPresenter;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.leanback.scrapping.ManualShowScrappingActivity;
@@ -100,11 +103,14 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     private AsyncTask mFullScraperTagsTask;
     private AsyncTask mDetailRowBuilderTask;
 
-    private DetailsOverviewRowPresenter mOverviewRowPresenter;
+    private ArchosDetailsOverviewRowPresenter mOverviewRowPresenter;
     private TvshowDetailsDescriptionPresenter mDescriptionPresenter;
 
     private Overlay mOverlay;
     private int mColor;
+    private Handler mHandler;
+    private int oldPos = 0;
+    private int oldSelectedSubPosition = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,11 +120,15 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
         mTvshow = (Tvshow) getActivity().getIntent().getSerializableExtra(EXTRA_TVSHOW);
         mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
+        mHandler = new Handler();
         mDescriptionPresenter = new TvshowDetailsDescriptionPresenter();
-        mOverviewRowPresenter = new DetailsOverviewRowPresenter(mDescriptionPresenter);
-        mOverviewRowPresenter.setSharedElementEnterTransition(getActivity(), SHARED_ELEMENT_NAME, 1000);
+        mOverviewRowPresenter = new ArchosDetailsOverviewRowPresenter(mDescriptionPresenter);
+        //be aware of a hack to avoid fullscreen overview : cf onSetRowStatus
+        FullWidthDetailsOverviewSharedElementHelper helper = new FullWidthDetailsOverviewSharedElementHelper();
+        helper.setSharedElementEnterTransition(getActivity(), SHARED_ELEMENT_NAME, 1000);
+        mOverviewRowPresenter.setListener(helper);
         mOverviewRowPresenter.setBackgroundColor(getResources().getColor(R.color.leanback_details_background));
-        mOverviewRowPresenter.setStyleLarge(true);
+        mOverviewRowPresenter.setActionsBackgroundColor(getDarkerColor(getResources().getColor(R.color.leanback_details_background)));
         mOverviewRowPresenter.setOnActionClickedListener(new OnActionClickedListener() {
             @Override
             public void onActionClicked(Action action) {
@@ -219,6 +229,40 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 }
             }
         });
+    }
+
+    private int getDarkerColor(int color) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        hsv[2] *= 0.8f;
+        return Color.HSVToColor(hsv);
+    }
+
+    //hack to avoid fullscreen overview
+    @Override
+    protected void onSetRowStatus(RowPresenter presenter, RowPresenter.ViewHolder viewHolder, int
+            adapterPosition, int selectedPosition, int selectedSubPosition) {
+        super.onSetRowStatus(presenter, viewHolder, adapterPosition, selectedPosition, selectedSubPosition);
+        if(selectedPosition == 0 && selectedSubPosition != 0) {
+            if (oldPos == 0 && oldSelectedSubPosition == 0) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setSelectedPosition(1);
+                    }
+                });
+            } else if (oldPos == 1) {
+                setSelectedPosition(1);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setSelectedPosition(0);
+                    }
+                });
+            }
+        }
+        oldPos = selectedPosition;
+        oldSelectedSubPosition = selectedSubPosition;
     }
 
     @Override
@@ -429,6 +473,8 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                     bitmap = Picasso.get()
                             .load(posterUri)
                             .noFade() // no fade since we are using activity transition anyway
+                            .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
+                            .centerCrop()
                             .get();
                     Log.d("XXX", "------ "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
                 }
@@ -444,6 +490,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                     Palette palette = Palette.from(bitmap).generate();
                     mColor = palette.getDarkVibrantColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
                     mOverviewRowPresenter.setBackgroundColor(mColor);
+                    mOverviewRowPresenter.setActionsBackgroundColor(getDarkerColor(mColor));
                     detailsRow.setImageBitmap(getActivity(), bitmap);
                     detailsRow.setImageScaleUpAllowed(true);
                 }
