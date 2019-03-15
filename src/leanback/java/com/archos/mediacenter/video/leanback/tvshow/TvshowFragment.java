@@ -426,7 +426,10 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         }
         else {
             // We got the list of episode for one season, load it
-            mSeasonAdapters.get(cursorLoader.getId()).changeCursor(cursor);
+            CursorObjectAdapter seasonAdapter = mSeasonAdapters.get(cursorLoader.getId());
+
+            if (seasonAdapter != null)
+                seasonAdapter.changeCursor(cursor);
             
             if (cursor.getCount() == 0) {
                 for (int i = 0; i < mRowsAdapter.size(); i++) {
