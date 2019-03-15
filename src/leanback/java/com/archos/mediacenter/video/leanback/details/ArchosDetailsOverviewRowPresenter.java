@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.leanback.details;
 
 import android.content.res.Resources;
 import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter;
+import android.support.v17.leanback.widget.HorizontalGridView;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.view.View;
@@ -140,6 +141,14 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
 
         if (mViewHolder != null)
             mViewHolder.getOverviewView().findViewById(android.support.v17.leanback.R.id.details_overview_actions_background).setBackgroundColor(color);
+    }
+
+    public void moveSelectedPosition(int offset) {
+        if (mViewHolder != null) {
+            int position = ((HorizontalGridView)mViewHolder.getActionsRow()).getSelectedPosition();
+
+            ((HorizontalGridView)mViewHolder.getActionsRow()).setSelectedPosition(position + offset);
+        }
     }
 
     public int getState() {

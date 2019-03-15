@@ -655,9 +655,27 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 DbUtils.markAsNotHiddenByUser(getActivity(), mVideo);
             }
             else if (action.getId() == VideoActionAdapter.ACTION_MARK_AS_WATCHED) {
+                int offset = 0;
+
+                if (mVideo.getResumeMs() > 0)
+                    offset--;
+                
+                if (mVideo.getRemoteResumeMs() > 0 && mVideo.getRemoteResumeMs() != mVideo.getResumeMs())
+                    offset--;
+
+                mOverviewRowPresenter.moveSelectedPosition(offset);
                 DbUtils.markAsRead(getActivity(), mVideo);
             }
             else if (action.getId() == VideoActionAdapter.ACTION_MARK_AS_NOT_WATCHED) {
+                int offset = 0;
+
+                if (mVideo.getResumeMs() > 0)
+                    offset--;
+                
+                if (mVideo.getRemoteResumeMs() > 0 && mVideo.getRemoteResumeMs() != mVideo.getResumeMs())
+                    offset--;
+
+                mOverviewRowPresenter.moveSelectedPosition(offset);
                 DbUtils.markAsNotRead(getActivity(), mVideo);
             }
         }
