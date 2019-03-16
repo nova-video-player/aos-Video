@@ -17,27 +17,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4dip"
-    android:layout_marginEnd="48dip"
-    android:layout_marginStart="48dip"
+    android:layout_marginBottom="3dip"
     android:layout_marginTop="4dip"
     android:orientation="vertical"
     android:focusable="true">
 
-    <RelativeLayout
+    <LinearLayout
       android:id="@+id/directors_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:gravity="left" >
+      android:orientation="vertical">
 
       <TextView
-          android:id="@+id/directors_title"
-          style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
+          style="@style/TextAppearance.Leanback.DetailsDescriptionTitle"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="12dip"
-          android:textColor="@color/lb_details_description_body_color"
-          android:text="@string/scrap_director_title"
+          android:layout_marginBottom="6dip"
+          android:maxLines="1"
+          android:textSize="20sp"
+          android:text="@string/scrap_director"
           />
 
       <TextView
@@ -45,13 +43,20 @@
           style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="4dip"
           android:layout_marginBottom="12dip"
-          android:layout_toRightOf="@id/directors_title"
           android:singleLine="false"
-          android:textColor="@color/lb_details_description_body_color"
           />
-    </RelativeLayout>
+    </LinearLayout>
+
+    <TextView
+        style="@style/TextAppearance.Leanback.DetailsDescriptionTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dip"
+        android:maxLines="1"
+        android:textSize="20sp"
+        android:text="@string/scrap_cast"
+        />
 
     <TextView
         android:id="@+id/cast"

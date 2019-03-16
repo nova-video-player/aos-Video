@@ -23,8 +23,6 @@
     android:clipToPadding="false"
     android:paddingBottom="@dimen/lb_details_overview_margin_bottom"
     android:background="@null"
-    android:paddingLeft="@dimen/lb_details_overview_margin_start"
-    android:paddingRight="@dimen/lb_details_overview_margin_end"
     >
 
     <!-- Background is applied to this inner layout -->
@@ -36,8 +34,8 @@
         android:background="@color/lb_basic_card_bg_color"
         android:elevation="@dimen/lb_details_overview_z"
         android:paddingBottom="16dip"
-        android:paddingEnd="32dip"
-        android:paddingStart="32dip"
+        android:paddingEnd="@dimen/lb_details_overview_margin_end"
+        android:paddingStart="@dimen/lb_details_overview_margin_start"
         android:paddingTop="16dip"
         android:foreground="#ffffff"
         >

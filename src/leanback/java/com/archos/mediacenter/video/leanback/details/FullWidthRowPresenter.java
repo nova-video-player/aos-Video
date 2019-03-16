@@ -69,9 +69,9 @@ public class FullWidthRowPresenter extends RowPresenter {
     protected void onBindRowViewHolder(RowPresenter.ViewHolder vh, Object item) {
         super.onBindRowViewHolder(vh, item);
         
-        // hacky
         View headerView = vh.getHeaderViewHolder().view;
-        headerView.setPadding((int)dipToPixels(75), headerView.getPaddingTop(), headerView.getPaddingRight(), headerView.getPaddingBottom());
+        
+        headerView.setVisibility(View.GONE);
     }
     
     private static float dipToPixels(float dipValue) {

@@ -21,18 +21,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dip"
-        android:layout_marginBottom="4dip"
+        android:layout_marginTop="6dip"
+        android:layout_marginBottom="8dip"
         android:layout_gravity="center"
         android:orientation="vertical"
         android:visibility="visible">
+
+        <TextView
+          style="@style/TextAppearance.Leanback.DetailsDescriptionTitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="6dip"
+          android:maxLines="1"
+          android:textSize="20sp"
+          android:text="@string/info_subtitle"
+          />
 
         <ProgressBar
             android:id="@+id/progress"
             style="?android:attr/progressBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dip" />
+            android:layout_marginBottom="7dip" />
 
         <TextView
             android:id="@+id/integrated_subtitles_label"
@@ -47,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dip"
-            android:layout_marginBottom="12dip">
+            android:layout_marginBottom="7dip">
             <TextView
                 android:id="@+id/integrated_subtitles_values_col1"
                 style="@style/TextAppearance.Leanback.DetailsDescriptionBody"
@@ -76,7 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dip"
-            android:layout_marginBottom="12dip">
+            android:layout_marginBottom="7dip">
             <TextView
                 android:id="@+id/external_subtitles_values_col1"
                 style="@style/TextAppearance.Leanback.DetailsDescriptionBody"
@@ -96,6 +106,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dip"
+            android:layout_marginBottom="2dip"
             android:gravity="left" >
 
             <Button
@@ -103,8 +115,6 @@
                 style="?attr/detailsActionButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/lb_action_1_line_height"
-                android:layout_marginTop="4dip"
-                android:layout_marginBottom="4dip"
                 android:lines="1"
                 android:text="@string/get_subtitles_online"/>
 
@@ -114,8 +124,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/lb_action_1_line_height"
                 android:layout_marginLeft="16dip"
-                android:layout_marginTop="4dip"
-                android:layout_marginBottom="4dip"
                 android:layout_toRightOf="@id/action_get_online_subtitles"
                 android:lines="1"
                 android:text="@string/get_subtitles_on_drive"/>

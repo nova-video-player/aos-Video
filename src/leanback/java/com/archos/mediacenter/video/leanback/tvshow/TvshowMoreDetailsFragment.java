@@ -303,8 +303,8 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
         protected void onPostExecute(Void avoid) {
             ClassPresenterSelector ps = new ClassPresenterSelector();
             ps.addClassPresenter(DetailsOverviewRow.class, mOverviewRowPresenter);
-            ps.addClassPresenter(PlotAndGenresRow.class, new PlotAndGenresRowPresenter(16,mColor)); // 16 lines max to fit on screen
-            ps.addClassPresenter(CastRow.class, new CastRowPresenter(18,mColor)); // 18 lines max to fit on screen
+            ps.addClassPresenter(PlotAndGenresRow.class, new PlotAndGenresRowPresenter(14,mColor)); // 14 lines max to fit on screen
+            ps.addClassPresenter(CastRow.class, new CastRowPresenter(17,mColor)); // 17 lines max to fit on screen
             ps.addClassPresenter(ListRow.class, new ListRowPresenter());
             mOverviewRowPresenter.setBackgroundColor(mColor);
             mRowsAdapter = new ArrayObjectAdapter(ps);

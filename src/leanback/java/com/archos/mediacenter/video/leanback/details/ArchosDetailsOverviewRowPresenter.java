@@ -121,8 +121,8 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
             description.setLayoutParams(lpDesc);
             View action = viewHolder.getActionsRow();
             MarginLayoutParams lpActions = (MarginLayoutParams) action.getLayoutParams();
-            lpActions.setMarginStart(res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_description_margin_end));
-            lpActions.setMarginEnd(res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_description_margin_end));
+            lpActions.setMarginStart(res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_overview_margin_start));
+            lpActions.setMarginEnd(res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_overview_margin_end));
             lpActions.height =
                     isBanner ? 0 : res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_actions_height);
             action.setLayoutParams(lpActions);

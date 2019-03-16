@@ -1070,8 +1070,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             ps.addClassPresenter(FileDetailsRow.class,  new FileDetailsRowPresenter(mColor));
             ps.addClassPresenter(ListRow.class, new ListRowPresenter());
             ps.addClassPresenter(SelectableListRow.class, mFileListRowPresenter);
-            ps.addClassPresenter(PlotAndGenresRow.class, new PlotAndGenresRowPresenter(16,mColor)); // 16 lines max to fit on screen
-            ps.addClassPresenter(CastRow.class, new CastRowPresenter(16,mColor)); // 16 lines max to fit on screen
+            ps.addClassPresenter(PlotAndGenresRow.class, new PlotAndGenresRowPresenter(14,mColor)); // 14 lines max to fit on screen
+            ps.addClassPresenter(CastRow.class, new CastRowPresenter(14,mColor)); // 14 lines max to fit on screen
             mAdapter = new ArrayObjectAdapter(ps);
             setAdapter(mAdapter);
             // Buttons
