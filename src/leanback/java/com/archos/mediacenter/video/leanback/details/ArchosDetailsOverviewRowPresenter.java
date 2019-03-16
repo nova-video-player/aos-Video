@@ -34,6 +34,7 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
 
     private final Presenter mDetailsPresenter;
     private ViewHolder mViewHolder;
+    private boolean mHideActions;
 
     /**
      * Constructor for a DetailsOverviewRowPresenter.
@@ -42,9 +43,15 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
      *                         description of the row.
      */
     public ArchosDetailsOverviewRowPresenter(Presenter detailsPresenter) {
+        this(detailsPresenter, false);
+    }
+
+    public ArchosDetailsOverviewRowPresenter(Presenter detailsPresenter, boolean hideActions) {
         super(detailsPresenter);
         mDetailsPresenter = detailsPresenter;
+        mHideActions = hideActions;
     }
+
     @Override
     protected RowPresenter.ViewHolder createRowViewHolder(ViewGroup parent) {
         mViewHolder = (ViewHolder)super.createRowViewHolder(parent);
@@ -114,6 +121,11 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
             lpFrame.topMargin = isBanner ? 0
                     : res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_blank_height);
             lpFrame.leftMargin = lpFrame.rightMargin = frameMarginStart;
+            if (mHideActions) {
+                lpFrame.topMargin += res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_actions_height);
+                lpFrame.height = res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_card_height)
+                        - res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_actions_height);
+            }
             viewHolder.getOverviewView().setLayoutParams(lpFrame);
             View description = viewHolder.getDetailsDescriptionFrame();
             MarginLayoutParams lpDesc = (MarginLayoutParams) description.getLayoutParams();
@@ -125,6 +137,8 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
             lpActions.setMarginEnd(res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_overview_margin_end));
             lpActions.height =
                     isBanner ? 0 : res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_actions_height);
+            if (mHideActions)
+                lpActions.height = 0;
             action.setLayoutParams(lpActions);
         }
     }

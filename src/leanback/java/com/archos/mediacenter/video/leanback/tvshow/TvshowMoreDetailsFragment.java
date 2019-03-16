@@ -19,12 +19,15 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v17.leanback.app.DetailsFragmentWithLessTopOffset;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.DetailsOverviewRow;
-import android.support.v17.leanback.widget.DetailsOverviewRowPresenter;
+import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter;
+import android.support.v17.leanback.widget.FullWidthDetailsOverviewSharedElementHelper;
 import android.support.v17.leanback.widget.HeaderItem;
+import android.support.v17.leanback.widget.ItemAlignmentFacet;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
@@ -41,6 +44,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.adapter.object.WebPageLink;
+import com.archos.mediacenter.video.leanback.details.ArchosDetailsOverviewRowPresenter;
 import com.archos.mediacenter.video.leanback.details.BackgroundColorPresenter;
 import com.archos.mediacenter.video.leanback.details.CastRow;
 import com.archos.mediacenter.video.leanback.details.CastRowPresenter;
@@ -88,8 +92,11 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     private AsyncTask mBackdropSaverTask;
 
     private Overlay mOverlay;
-    private DetailsOverviewRowPresenter mOverviewRowPresenter;
+    private ArchosDetailsOverviewRowPresenter mOverviewRowPresenter;
     private int mColor;
+    private Handler mHandler;
+    private int oldPos = 0;
+    private int oldSelectedSubPosition = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,10 +106,13 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
         final Intent intent = getActivity().getIntent();
         mShowId = intent.getLongExtra(EXTRA_TVSHOW_ID, -1);
         mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
-        mOverviewRowPresenter = new DetailsOverviewRowPresenter(new TvshowMoreDetailsDescriptionPresenter());
-        mOverviewRowPresenter.setSharedElementEnterTransition(getActivity(), SHARED_ELEMENT_NAME, 1000);
+        mHandler = new Handler();
+        mOverviewRowPresenter = new ArchosDetailsOverviewRowPresenter(new TvshowMoreDetailsDescriptionPresenter(), true);
+        //be aware of a hack to avoid fullscreen overview : cf onSetRowStatus
+        FullWidthDetailsOverviewSharedElementHelper helper = new FullWidthDetailsOverviewSharedElementHelper();
+        helper.setSharedElementEnterTransition(getActivity(), SHARED_ELEMENT_NAME, 1000);
+        mOverviewRowPresenter.setListener(helper);
         mOverviewRowPresenter.setBackgroundColor(getResources().getColor(R.color.leanback_details_background));
-        mOverviewRowPresenter.setStyleLarge(false);
         mOverviewRowPresenter.setOnActionClickedListener(null);
 
 
@@ -129,6 +139,56 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
         // else it does not work later.
         // --> This instance of BackdropTask() will not be used but it must be created here!
         mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+    }
+
+    @Override
+    protected void setupDetailsOverviewRowPresenter(FullWidthDetailsOverviewRowPresenter presenter) {
+        ItemAlignmentFacet facet = new ItemAlignmentFacet();
+        // by default align details_frame to half window height
+        ItemAlignmentFacet.ItemAlignmentDef alignDef1 = new ItemAlignmentFacet.ItemAlignmentDef();
+        alignDef1.setItemAlignmentViewId(R.id.details_frame);
+        alignDef1.setItemAlignmentOffset(- getResources()
+                .getDimensionPixelSize(R.dimen.lb_details_v2_align_pos_for_actions)
+                - getResources().getDimensionPixelSize(R.dimen.lb_details_v2_actions_height));
+        alignDef1.setItemAlignmentOffsetPercent(0);
+        // when description is selected, align details_frame to top edge
+        ItemAlignmentFacet.ItemAlignmentDef alignDef2 = new ItemAlignmentFacet.ItemAlignmentDef();
+        alignDef2.setItemAlignmentViewId(R.id.details_frame);
+        alignDef2.setItemAlignmentFocusViewId(R.id.details_overview_description);
+        alignDef2.setItemAlignmentOffset(- getResources()
+                .getDimensionPixelSize(R.dimen.lb_details_v2_align_pos_for_description));
+        alignDef2.setItemAlignmentOffsetPercent(0);
+        ItemAlignmentFacet.ItemAlignmentDef[] defs =
+                new ItemAlignmentFacet.ItemAlignmentDef[] {alignDef1, alignDef2};
+        facet.setAlignmentDefs(defs);
+        presenter.setFacet(ItemAlignmentFacet.class, facet);
+    }
+
+    //hack to avoid fullscreen overview
+    @Override
+    protected void onSetRowStatus(RowPresenter presenter, RowPresenter.ViewHolder viewHolder, int
+            adapterPosition, int selectedPosition, int selectedSubPosition) {
+        super.onSetRowStatus(presenter, viewHolder, adapterPosition, selectedPosition, selectedSubPosition);
+        if(selectedPosition == 0 && selectedSubPosition != 0) {
+            if (oldPos == 0 && oldSelectedSubPosition == 0) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setSelectedPosition(1);
+                    }
+                });
+            } else if (oldPos == 1) {
+                setSelectedPosition(1);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setSelectedPosition(0);
+                    }
+                });
+            }
+        }
+        oldPos = selectedPosition;
+        oldSelectedSubPosition = selectedSubPosition;
     }
 
     @Override
@@ -225,6 +285,8 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                     bitmap = Picasso.get()
                             .load(file)
                             .noFade() // no fade since we are using activity transition anyway
+                            .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
+                            .centerCrop()
                             .get();
                 }
             } catch (IOException e) {
@@ -306,7 +368,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
             ps.addClassPresenter(PlotAndGenresRow.class, new PlotAndGenresRowPresenter(14,mColor)); // 14 lines max to fit on screen
             ps.addClassPresenter(CastRow.class, new CastRowPresenter(17,mColor)); // 17 lines max to fit on screen
             ps.addClassPresenter(ListRow.class, new ListRowPresenter());
-            mOverviewRowPresenter.setBackgroundColor(mColor);
+            mOverviewRowPresenter.updateBackgroundColor(mColor);
             mRowsAdapter = new ArrayObjectAdapter(ps);
             mRowsAdapter.clear();
             // Add all the non-null rows
@@ -321,10 +383,10 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
 
 
     /** Saves a Poster as default poster for a show and update the current poster */
-    private class ShowPosterSaverTask extends AsyncTask<ScraperImage, Void, Bitmap> {
+    private class ShowPosterSaverTask extends AsyncTask<ScraperImage, Void, Bitmap[]> {
 
         @Override
-        protected Bitmap doInBackground(ScraperImage... params) {
+        protected Bitmap[] doInBackground(ScraperImage... params) {
             ScraperImage poster = params[0];
 
             // Save in DB and download
@@ -337,28 +399,41 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                 bitmap = Picasso.get()
                         .load(poster.getLargeFileF())
                         .noFade()
+                        .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
+                        .centerCrop()
                         .get();
 
             } catch (IOException e) {
                 Log.d(TAG, "ShowPosterSaverTask Picasso load exception", e);
             }
 
-            return bitmap;
+            Bitmap paletteBitmap=null;
+            try {
+                paletteBitmap = Picasso.get()
+                        .load(poster.getLargeFileF())
+                        .noFade()
+                        .get();
+
+            } catch (IOException e) {
+                Log.d(TAG, "ShowPosterSaverTask Picasso load exception", e);
+            }
+
+            return new Bitmap[] { bitmap, paletteBitmap };
         }
 
         @Override
-        protected void onPostExecute(Bitmap result) {
-            if (result != null) {
-                mDetailsRow.setImageBitmap(getActivity(), result);
+        protected void onPostExecute(Bitmap[] results) {
+            if (results[0] != null && results[1] != null) {
+                mDetailsRow.setImageBitmap(getActivity(), results[0]);
                 mDetailsRow.setImageScaleUpAllowed(true);
 
-                Palette palette = Palette.from(result).generate();
+                Palette palette = Palette.from(results[1]).generate();
                 int color = palette.getDarkVibrantColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
 
                 if (color != mColor) {
                     mColor = color;
 
-                    mOverviewRowPresenter.setBackgroundColor(color);
+                    mOverviewRowPresenter.updateBackgroundColor(color);
 
                     for (Presenter pres : mRowsAdapter.getPresenterSelector().getPresenters()){
                         if (pres instanceof BackgroundColorPresenter)
