@@ -116,6 +116,10 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
                     }
                     break;
             }
+            MarginLayoutParams lpRoot =
+                    (MarginLayoutParams) ((ViewGroup)viewHolder.getOverviewView().getParent()).getLayoutParams();
+            lpRoot.leftMargin = res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_overview_margin_start);
+            lpRoot.rightMargin = res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_overview_margin_end);
             MarginLayoutParams lpFrame =
                     (MarginLayoutParams) viewHolder.getOverviewView().getLayoutParams();
             lpFrame.topMargin = isBanner ? 0
@@ -133,8 +137,8 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
             description.setLayoutParams(lpDesc);
             View action = viewHolder.getActionsRow();
             MarginLayoutParams lpActions = (MarginLayoutParams) action.getLayoutParams();
-            lpActions.setMarginStart(res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_overview_margin_start));
-            lpActions.setMarginEnd(res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_overview_margin_end));
+            lpActions.setMarginStart(res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_logo_margin_start));
+            lpActions.setMarginEnd(res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_description_margin_end));
             lpActions.height =
                     isBanner ? 0 : res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_actions_height);
             if (mHideActions)
