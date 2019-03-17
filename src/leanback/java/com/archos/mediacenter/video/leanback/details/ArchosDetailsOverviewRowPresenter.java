@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.leanback.details;
 
 import android.content.res.Resources;
 import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter;
+import android.support.v17.leanback.widget.HorizontalGridView;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.view.View;
@@ -33,6 +34,7 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
 
     private final Presenter mDetailsPresenter;
     private ViewHolder mViewHolder;
+    private boolean mHideActions;
 
     /**
      * Constructor for a DetailsOverviewRowPresenter.
@@ -41,9 +43,15 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
      *                         description of the row.
      */
     public ArchosDetailsOverviewRowPresenter(Presenter detailsPresenter) {
+        this(detailsPresenter, false);
+    }
+
+    public ArchosDetailsOverviewRowPresenter(Presenter detailsPresenter, boolean hideActions) {
         super(detailsPresenter);
         mDetailsPresenter = detailsPresenter;
+        mHideActions = hideActions;
     }
+
     @Override
     protected RowPresenter.ViewHolder createRowViewHolder(ViewGroup parent) {
         mViewHolder = (ViewHolder)super.createRowViewHolder(parent);
@@ -108,11 +116,20 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
                     }
                     break;
             }
+            MarginLayoutParams lpRoot =
+                    (MarginLayoutParams) ((ViewGroup)viewHolder.getOverviewView().getParent()).getLayoutParams();
+            lpRoot.leftMargin = res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_overview_margin_start);
+            lpRoot.rightMargin = res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_overview_margin_end);
             MarginLayoutParams lpFrame =
                     (MarginLayoutParams) viewHolder.getOverviewView().getLayoutParams();
             lpFrame.topMargin = isBanner ? 0
                     : res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_blank_height);
             lpFrame.leftMargin = lpFrame.rightMargin = frameMarginStart;
+            if (mHideActions) {
+                lpFrame.topMargin += res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_actions_height);
+                lpFrame.height = res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_card_height)
+                        - res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_actions_height);
+            }
             viewHolder.getOverviewView().setLayoutParams(lpFrame);
             View description = viewHolder.getDetailsDescriptionFrame();
             MarginLayoutParams lpDesc = (MarginLayoutParams) description.getLayoutParams();
@@ -120,10 +137,12 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
             description.setLayoutParams(lpDesc);
             View action = viewHolder.getActionsRow();
             MarginLayoutParams lpActions = (MarginLayoutParams) action.getLayoutParams();
-            lpActions.setMarginStart(res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_description_margin_end));
+            lpActions.setMarginStart(res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_logo_margin_start));
             lpActions.setMarginEnd(res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_description_margin_end));
             lpActions.height =
                     isBanner ? 0 : res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_actions_height);
+            if (mHideActions)
+                lpActions.height = 0;
             action.setLayoutParams(lpActions);
         }
     }
@@ -140,6 +159,14 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
 
         if (mViewHolder != null)
             mViewHolder.getOverviewView().findViewById(android.support.v17.leanback.R.id.details_overview_actions_background).setBackgroundColor(color);
+    }
+
+    public void moveSelectedPosition(int offset) {
+        if (mViewHolder != null) {
+            int position = ((HorizontalGridView)mViewHolder.getActionsRow()).getSelectedPosition();
+
+            ((HorizontalGridView)mViewHolder.getActionsRow()).setSelectedPosition(position + offset);
+        }
     }
 
     public int getState() {

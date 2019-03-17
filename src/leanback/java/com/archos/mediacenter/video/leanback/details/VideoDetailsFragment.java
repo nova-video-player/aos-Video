@@ -655,9 +655,27 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 DbUtils.markAsNotHiddenByUser(getActivity(), mVideo);
             }
             else if (action.getId() == VideoActionAdapter.ACTION_MARK_AS_WATCHED) {
+                int offset = 0;
+
+                if (mVideo.getResumeMs() > 0)
+                    offset--;
+                
+                if (mVideo.getRemoteResumeMs() > 0 && mVideo.getRemoteResumeMs() != mVideo.getResumeMs())
+                    offset--;
+
+                mOverviewRowPresenter.moveSelectedPosition(offset);
                 DbUtils.markAsRead(getActivity(), mVideo);
             }
             else if (action.getId() == VideoActionAdapter.ACTION_MARK_AS_NOT_WATCHED) {
+                int offset = 0;
+
+                if (mVideo.getResumeMs() > 0)
+                    offset--;
+                
+                if (mVideo.getRemoteResumeMs() > 0 && mVideo.getRemoteResumeMs() != mVideo.getResumeMs())
+                    offset--;
+
+                mOverviewRowPresenter.moveSelectedPosition(offset);
                 DbUtils.markAsNotRead(getActivity(), mVideo);
             }
         }
@@ -1052,8 +1070,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             ps.addClassPresenter(FileDetailsRow.class,  new FileDetailsRowPresenter(mColor));
             ps.addClassPresenter(ListRow.class, new ListRowPresenter());
             ps.addClassPresenter(SelectableListRow.class, mFileListRowPresenter);
-            ps.addClassPresenter(PlotAndGenresRow.class, new PlotAndGenresRowPresenter(16,mColor)); // 16 lines max to fit on screen
-            ps.addClassPresenter(CastRow.class, new CastRowPresenter(16,mColor)); // 16 lines max to fit on screen
+            ps.addClassPresenter(PlotAndGenresRow.class, new PlotAndGenresRowPresenter(14,mColor)); // 14 lines max to fit on screen
+            ps.addClassPresenter(CastRow.class, new CastRowPresenter(14,mColor)); // 14 lines max to fit on screen
             mAdapter = new ArrayObjectAdapter(ps);
             setAdapter(mAdapter);
             // Buttons

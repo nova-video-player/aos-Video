@@ -147,7 +147,6 @@
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Director</string>
     <string name="scrap_director_format">Director: %s</string>
-    <string name="scrap_director_title">Director:</string>
     <string name="scrap_rating">Rating</string>
     <string name="scrap_rating_format">Rating: %s</string>
     <string name="scrap_year">Year</string>
@@ -159,7 +158,7 @@
     <string name="scrap_cast_format">Cast: %s</string>
     <string name="scrap_genre">Genre</string>
     <string name="scrap_genre_format">Genres: %s</string>
-    <string name="scrap_genre_title">Genres:</string>
+    <string name="scrap_genre_title">Genres</string>
     <string name="scrap_aired">Aired</string>
     <string name="scrap_aired_format">Aired: %s</string>
     <string name="scrap_guests">Guests</string>
@@ -769,8 +768,8 @@
     <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Network &amp; Files</string>
 
-    <string name="leanback_subtitles_integrated">Integrated subtitles</string>
-    <string name="leanback_subtitles_external">External subtitles</string>
+    <string name="leanback_subtitles_integrated">Integrated</string>
+    <string name="leanback_subtitles_external">External</string>
     <string name="leanback_posters_header">Posters</string>
     <string name="leanback_season_posters_header">Posters of the season</string>
     <string name="leanback_backdrops_header">Backdrops</string>

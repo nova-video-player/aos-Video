@@ -51,8 +51,11 @@
 
     <dimen name="lb_browse_title_text_width">584dp</dimen>
 
+    <dimen name="lb_details_overview_margin_start">100dp</dimen>
+    <dimen name="lb_details_overview_margin_end">100dp</dimen>
     <dimen name="lb_details_v2_card_height">294dp</dimen>
+    <dimen name="lb_details_v2_logo_margin_start">32dp</dimen>
+    <dimen name="lb_details_v2_description_margin_end">32dp</dimen>
     <dimen name="lb_details_v2_align_pos_for_actions">138dp</dimen>
-    <dimen name="lb_details_v2_description_margin_end">132dp</dimen>
 
 </resources>
