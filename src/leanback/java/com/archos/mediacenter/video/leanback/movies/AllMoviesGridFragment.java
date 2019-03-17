@@ -245,6 +245,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         if (cursorLoader.getId()==0) {
             mMoviesAdapter.swapCursor(cursor);
             setEmptyViewVisiblity(cursor.getCount()<1);
+            setTitle(getString(R.string.all_movies_format, cursor.getCount()));
         }
     }
 
