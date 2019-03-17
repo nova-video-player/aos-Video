@@ -174,8 +174,10 @@ public class VideoBadgePresenter extends Presenter {
 
         }
         public void setSize(long size) {
-            if(size>0)
+            if(size>0) {
                 mSizeTv.setText(Formatter.formatFileSize(mContext, size));
+                mSizeTv.setVisibility(View.VISIBLE);
+            }
             else mSizeTv.setVisibility(View.GONE);
         }
 
@@ -223,7 +225,7 @@ public class VideoBadgePresenter extends Presenter {
         vh.setAudioBadge(video.getCalculatedBestAudiotrack());
         vh.setResolution(video.getNormalizedDefinition(), video.is3D());
         vh.setSource(video.getFileUri());
-        vh.setSize(video.getSize());
+        vh.setSize(video.getMetadata() == null ? video.getSize() : video.getMetadata().getFileSize());
     }
 
 
