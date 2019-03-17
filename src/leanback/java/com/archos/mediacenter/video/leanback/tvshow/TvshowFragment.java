@@ -491,7 +491,12 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             finally {
                 if (bitmap!=null) {
                     Palette palette = Palette.from(bitmap).generate();
-                    mColor = palette.getDarkVibrantColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
+                    if (palette.getDarkVibrantSwatch() != null)
+                        mColor = palette.getDarkVibrantSwatch().getRgb();
+                    else if (palette.getDarkMutedSwatch() != null)
+                        mColor = palette.getDarkMutedSwatch().getRgb();
+                    else
+                        mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
                     mOverviewRowPresenter.setBackgroundColor(mColor);
                     mOverviewRowPresenter.setActionsBackgroundColor(getDarkerColor(mColor));
                     detailsRow.setImageBitmap(getActivity(), bitmap);

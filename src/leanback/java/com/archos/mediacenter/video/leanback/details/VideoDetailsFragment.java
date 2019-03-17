@@ -1206,7 +1206,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                             .get();
                     if(bitmap!=null) {
                         Palette palette = Palette.from(bitmap).generate();
-                        mColor = palette.getDarkVibrantColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
+                        if (palette.getDarkVibrantSwatch() != null)
+                            mColor = palette.getDarkVibrantSwatch().getRgb();
+                        else if (palette.getDarkMutedSwatch() != null)
+                            mColor = palette.getDarkMutedSwatch().getRgb();
+                        else
+                            mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
                         mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
                         mOverviewRowPresenter.updateBackgroundColor(mColor);
                         mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
@@ -1593,7 +1598,14 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 mDetailsOverviewRow.setImageScaleUpAllowed(true);
 
                 Palette palette = Palette.from(result).generate();
-                int color = palette.getDarkVibrantColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
+                int color;
+                
+                if (palette.getDarkVibrantSwatch() != null)
+                    color = palette.getDarkVibrantSwatch().getRgb();
+                else if (palette.getDarkMutedSwatch() != null)
+                    color = palette.getDarkMutedSwatch().getRgb();
+                else
+                    color = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
 
                 if (color != mColor) {
                     mColor = color;
