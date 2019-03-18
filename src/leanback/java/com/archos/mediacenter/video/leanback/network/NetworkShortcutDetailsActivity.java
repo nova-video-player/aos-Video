@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.leanback.network;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.leanback.LeanbackActivity;
@@ -24,5 +25,13 @@ public class NetworkShortcutDetailsActivity extends LeanbackActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.androidtv_network_shortcut_details_activity);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
+            return true;
+        
+        return super.onKeyDown(keyCode, event);
     }
 }
