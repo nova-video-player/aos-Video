@@ -244,6 +244,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
         if (cursorLoader.getId()==0) {
             mTvshowsAdapter.swapCursor(cursor);
             setEmptyViewVisiblity(cursor.getCount()<1);
+            setTitle(getString(R.string.all_tvshows_format, cursor.getCount()));
         }
     }
 

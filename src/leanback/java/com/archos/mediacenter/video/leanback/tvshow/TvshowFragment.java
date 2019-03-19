@@ -111,6 +111,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     private Handler mHandler;
     private int oldPos = 0;
     private int oldSelectedSubPosition = 0;
+    private boolean mHasDetailRow;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -213,6 +214,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         ps.addClassPresenter(ListRow.class, new ListRowPresenter());
 
         mRowsAdapter = new ArrayObjectAdapter(ps);
+        mHasDetailRow = false;
 
         // WORKAROUND: at least one instance of BackdropTask must be created soon in the process (onCreate ?)
         // else it does not work later.
@@ -328,6 +330,10 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             // The simpler is to reload everything...
             // Well for now at least, because the result is a big ugly glitch...
             mRowsAdapter.removeItems(0, mRowsAdapter.size());
+
+            mSeasonAdapters = null;
+            mHasDetailRow = false;
+
             if (mFullScraperTagsTask!=null) {
                 mFullScraperTagsTask.cancel(true);
             }
@@ -350,6 +356,8 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             // Clear the rows
             mRowsAdapter.removeItems(0, mRowsAdapter.size());
 
+            mSeasonAdapters = null;
+            mHasDetailRow = false;
         }
     }
 
@@ -408,39 +416,59 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             cursor.moveToFirst();
             final int seasonNumberColumn = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON);
 
-            mSeasonAdapters = new SparseArray<CursorObjectAdapter>();
+            SparseArray<CursorObjectAdapter> seasonAdapters = new SparseArray<CursorObjectAdapter>();
+            int size = !mHasDetailRow ? mRowsAdapter.size() : mRowsAdapter.size() - 1;
+            int i = 0;
 
             // Build one row for each season
             while (!cursor.isAfterLast()) {
                 int seasonNumber = cursor.getInt(seasonNumberColumn);
-                CursorObjectAdapter seasonAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity(), PosterImageCardPresenter.EpisodeDisplayMode.FOR_SEASON_LIST));
-                seasonAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
-                mSeasonAdapters.put(seasonNumber, seasonAdapter);
-                mRowsAdapter.add(new ListRow(seasonNumber,
-                        new HeaderItem(seasonNumber, getString(R.string.episode_season) + " " + seasonNumber),
-                        seasonAdapter));
+                CursorObjectAdapter seasonAdapter;
+
+                if (mSeasonAdapters != null && mSeasonAdapters.get(seasonNumber) != null) {
+                    seasonAdapter = mSeasonAdapters.get(seasonNumber);
+                }
+                else {
+                    seasonAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity(), PosterImageCardPresenter.EpisodeDisplayMode.FOR_SEASON_LIST));
+                    seasonAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
+                }
+
+                seasonAdapters.put(seasonNumber, seasonAdapter);
+
+                ListRow row = new ListRow(seasonNumber,
+                        new HeaderItem(seasonNumber, seasonNumber != 0 ? getString(R.string.episode_season) + " " + seasonNumber : getString(R.string.episode_specials)),
+                        seasonAdapter);
+                
+                if (mHasDetailRow && i == INDEX_DETAILS)
+                    i++;
+
+                if (i >= size)
+                    mRowsAdapter.add(row);
+                else if (row.getId() != ((ListRow)mRowsAdapter.get(i)).getId())
+                    mRowsAdapter.replace(i, row);
+
+                i++;
+
                 LoaderManager.getInstance(this).restartLoader(seasonNumber, null, this);
                 cursor.moveToNext();
             }
-            cursor.close();
+
+            mSeasonAdapters = seasonAdapters;
+
+            for (int j = i; j < mRowsAdapter.size(); j++) {
+                if (!mHasDetailRow || (mHasDetailRow && j != INDEX_DETAILS))
+                    mRowsAdapter.removeItems(j, 1);
+            }
         }
         else {
             // We got the list of episode for one season, load it
-            CursorObjectAdapter seasonAdapter = mSeasonAdapters.get(cursorLoader.getId());
+            if (mSeasonAdapters != null) {
+                CursorObjectAdapter seasonAdapter = mSeasonAdapters.get(cursorLoader.getId());
 
-            if (seasonAdapter != null)
-                seasonAdapter.changeCursor(cursor);
-            
-            if (cursor.getCount() == 0) {
-                for (int i = 0; i < mRowsAdapter.size(); i++) {
-                    Row row = (Row)mRowsAdapter.get(i);
-
-                    if (row.getId() == cursorLoader.getId()) {
-                        mRowsAdapter.remove(row);
-
-                        break;
-                    }
-                }
+                if (seasonAdapter != null)
+                    seasonAdapter.changeCursor(cursor);
+                else
+                    LoaderManager.getInstance(this).destroyLoader(cursorLoader.getId());
             }
         }
     }
@@ -491,7 +519,12 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             finally {
                 if (bitmap!=null) {
                     Palette palette = Palette.from(bitmap).generate();
-                    mColor = palette.getDarkVibrantColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
+                    if (palette.getDarkVibrantSwatch() != null)
+                        mColor = palette.getDarkVibrantSwatch().getRgb();
+                    else if (palette.getDarkMutedSwatch() != null)
+                        mColor = palette.getDarkMutedSwatch().getRgb();
+                    else
+                        mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
                     mOverviewRowPresenter.setBackgroundColor(mColor);
                     mOverviewRowPresenter.setActionsBackgroundColor(getDarkerColor(mColor));
                     detailsRow.setImageBitmap(getActivity(), bitmap);
@@ -507,6 +540,17 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             BackgroundManager.getInstance(getActivity()).setDrawable(new ColorDrawable(VideoInfoCommonClass.getDarkerColor(mColor)));
             mRowsAdapter.add(INDEX_DETAILS, detailRow);
             setAdapter(mRowsAdapter);
+
+            if (getRowsSupportFragment().getSelectedPosition() == 0) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setSelectedPosition(INDEX_DETAILS, false);
+                    }
+                });
+            }
+
+            mHasDetailRow = true;
         }
     }
 }

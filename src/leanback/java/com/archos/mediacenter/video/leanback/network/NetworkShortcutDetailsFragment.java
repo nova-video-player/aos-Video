@@ -15,14 +15,16 @@
 package com.archos.mediacenter.video.leanback.network;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.DetailsSupportFragment;
 import android.support.v17.leanback.widget.Action;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.DetailsOverviewRow;
-import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter;
 import android.support.v17.leanback.widget.OnActionClickedListener;
+import android.support.v17.leanback.widget.RowPresenter;
 import android.view.View;
 import android.widget.Toast;
 
@@ -30,6 +32,7 @@ import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.adapter.object.Shortcut;
+import com.archos.mediacenter.video.leanback.details.ArchosDetailsOverviewRowPresenter;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
 import com.archos.mediacenter.video.leanback.presenter.ShortcutDetailsPresenter;
 import com.archos.mediaprovider.NetworkScanner;
@@ -49,9 +52,12 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
 
     protected Shortcut mShortcut;
 
-    private FullWidthDetailsOverviewRowPresenter mDetailsRowPresenter;
+    private ArchosDetailsOverviewRowPresenter mDetailsRowPresenter;
 
     private Overlay mOverlay;
+    private Handler mHandler;
+    private int oldPos = 0;
+    private int oldSelectedSubPosition = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,15 +72,53 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
         DetailsOverviewRow detailRow = new DetailsOverviewRow(mShortcut);
         detailRow.setImageScaleUpAllowed(false);
         addActions(detailRow);
-        mDetailsRowPresenter = new FullWidthDetailsOverviewRowPresenter(new ShortcutDetailsPresenter());
+        mHandler = new Handler();
+        mDetailsRowPresenter = new ArchosDetailsOverviewRowPresenter(new ShortcutDetailsPresenter());
+        //be aware of a hack to avoid fullscreen overview : cf onSetRowStatus
 
         mDetailsRowPresenter.setBackgroundColor(getResources().getColor(R.color.lightblue900));
+        mDetailsRowPresenter.setActionsBackgroundColor(getDarkerColor(getResources().getColor(R.color.lightblue900)));
         mDetailsRowPresenter.setOnActionClickedListener(this);
 
         ArrayObjectAdapter adapter = new ArrayObjectAdapter(mDetailsRowPresenter);
         adapter.add(detailRow);
         setAdapter(adapter);
     }
+
+    private int getDarkerColor(int color) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        hsv[2] *= 0.8f;
+        return Color.HSVToColor(hsv);
+    }
+
+    //hack to avoid fullscreen overview
+    @Override
+    protected void onSetRowStatus(RowPresenter presenter, RowPresenter.ViewHolder viewHolder, int
+            adapterPosition, int selectedPosition, int selectedSubPosition) {
+        super.onSetRowStatus(presenter, viewHolder, adapterPosition, selectedPosition, selectedSubPosition);
+        if(selectedPosition == 0 && selectedSubPosition != 0) {
+            if (oldPos == 0 && oldSelectedSubPosition == 0) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setSelectedPosition(1);
+                    }
+                });
+            } else if (oldPos == 1) {
+                setSelectedPosition(1);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setSelectedPosition(0);
+                    }
+                });
+            }
+        }
+        oldPos = selectedPosition;
+        oldSelectedSubPosition = selectedSubPosition;
+    }
+
     public void addActions(DetailsOverviewRow detailRow){
         detailRow.addAction(new Action(ACTION_OPEN, getResources().getString(R.string.open_indexed_folder)));
         detailRow.addAction(new Action(ACTION_REINDEX, getResources().getString(R.string.network_reindex)));

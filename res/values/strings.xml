@@ -105,10 +105,12 @@
     <string name="video_folder">Folders</string>
     <string name="movies">Movies</string>
     <string name="all_movies">All movies</string>
+    <string name="all_movies_format">All movies  -  %d</string>
     <string name="movies_by_genre">Movies by genre</string>
     <string name="movies_by_year">Movies by year</string>
     <string name="all_tv_shows">TV shows</string>
     <string name="all_tvshows">All TV shows</string>
+    <string name="all_tvshows_format">All TV shows  -  %d</string>
     <string name="tvshows_by_alpha">TV shows alphabetical</string>
     <string name="tvshows_by_genre">TV shows by genre</string>
     <string name="all_movies_and_tv_shows">Movies and TV shows</string>
@@ -168,6 +170,7 @@
     <string name="show_network">Network</string>
     <string name="episode_name">Episode</string>
     <string name="episode_season">Season</string>
+    <string name="episode_specials">Specials</string>
     <string name="episode_identification">Season %1$d Episode %2$d</string>
     <string name="season_identification">Season %1$d</string>
     <string name="next_episode">Next episode</string>

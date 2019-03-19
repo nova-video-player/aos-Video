@@ -296,7 +296,12 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
             } finally {
                 if (bitmap != null) {
                     Palette palette = Palette.from(bitmap).generate();
-                    mColor = palette.getDarkVibrantColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
+                    if (palette.getDarkVibrantSwatch() != null)
+                        mColor = palette.getDarkVibrantSwatch().getRgb();
+                    else if (palette.getDarkMutedSwatch() != null)
+                        mColor = palette.getDarkMutedSwatch().getRgb();
+                    else
+                        mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
                     mDetailsRow.setImageBitmap(getActivity(), bitmap);
                     mDetailsRow.setImageScaleUpAllowed(true);
                 }
@@ -428,7 +433,14 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                 mDetailsRow.setImageScaleUpAllowed(true);
 
                 Palette palette = Palette.from(results[1]).generate();
-                int color = palette.getDarkVibrantColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
+                int color;
+                
+                if (palette.getDarkVibrantSwatch() != null)
+                    color = palette.getDarkVibrantSwatch().getRgb();
+                else if (palette.getDarkMutedSwatch() != null)
+                    color = palette.getDarkMutedSwatch().getRgb();
+                else
+                    color = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
 
                 if (color != mColor) {
                     mColor = color;
