@@ -96,7 +96,7 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
         if (container != null) {
             LayoutInflater.from(getActivity()).inflate(R.layout.leanback_empty_view, container, true);
             mEmptyView = (TextView) container.findViewById(R.id.empty_view);
-            mEmptyView.setText(R.string.you_have_no_movies);
+            mEmptyView.setText(R.string.you_have_no_tv_shows);
         } else {
             throw new IllegalArgumentException("Did not find R.id.browse_frame in BrowseFragment! Need to update the emptyview hack!");
         }
