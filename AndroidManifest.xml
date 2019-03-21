@@ -327,7 +327,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/get_subtitles_on_drive"
             android:launchMode="singleTask"
-            android:theme="@style/ArchosThemeBlueCompat" >
+            android:theme="@style/ArchosThemeBlueCompatTransparent" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
