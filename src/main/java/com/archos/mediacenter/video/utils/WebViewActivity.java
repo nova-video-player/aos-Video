@@ -30,7 +30,7 @@ import com.archos.mediacenter.video.R;
 public class WebViewActivity extends Activity {
 
     private static final String TAG = "WebViewActivity";
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
 
     private Uri mUri;
     private WebView mWebView;

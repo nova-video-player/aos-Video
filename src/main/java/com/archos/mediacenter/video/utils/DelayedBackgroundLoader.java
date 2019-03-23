@@ -28,7 +28,7 @@ import com.archos.mediascraper.ScraperImage;
 public class DelayedBackgroundLoader extends ImageProcessor {
 
     protected static final String TAG = "DelayedBackgroundLoader";
-    protected static final boolean DBG = true;
+    protected static final boolean DBG = false;
 
     private final Context mContext;
     private final long mSleep;

@@ -62,7 +62,7 @@ import android.widget.TextView;
 public class FolderPicker extends FragmentActivity {
 
     private static final String TAG = "FolderPicker";
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
 
     private static final Uri INTERNAL_STORAGE = Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath());
     // Our virtual root where we list all the available storages: internal, sdcard, otg, etc.

@@ -36,7 +36,7 @@ public enum ShortcutDb {
     STATIC();
 
     private static final String TAG = "ShortcutDb";
-    protected final static boolean DBG = true;
+    protected final static boolean DBG = false;
 
     private static final String DATABASE_NAME = "shortcuts2_db";
     private static final String TABLE_NAME = "shortcuts";

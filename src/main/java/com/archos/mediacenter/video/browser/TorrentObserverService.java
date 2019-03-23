@@ -48,7 +48,7 @@ public class TorrentObserverService extends Service{
     private boolean isDaemonRunning;
     private static Process sProcess;
     private IBinder binder ;
-    private boolean DBG  =true;
+    private boolean DBG = false;
     private Thread mTorrentThread;
     private boolean hasToStop=false;
     private Integer mPort;

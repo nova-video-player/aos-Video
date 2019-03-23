@@ -124,7 +124,7 @@ SubtitleDelayPickerDialog.OnDelayChangeListener, AudioDelayPickerDialog.OnAudioD
 DialogInterface.OnDismissListener, TrackInfoListener,
 IndexHelper.Listener, PermissionChecker.PermissionListener {
 
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
     private static final String TAG = "PlayerActivity";
 
     public static final int RESUME_NO = 0;
