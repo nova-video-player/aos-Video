@@ -105,7 +105,7 @@ import java.util.Locale;
 public class PlayerController implements View.OnTouchListener, OnGenericMotionListener
 {
     private static final String TAG = "PlayerController";
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
     private static final boolean DBG_ALWAYS_SHOW = false;
 
     private static final int MSG_FADE_OUT = 1;

@@ -75,7 +75,7 @@ public class  UpdateRecommendationsService extends IntentService {
 	protected static final String COALESCE = "COALESCE(";
 	protected static final String EPISODE = "|| 'E' || ";
 	protected static final String SEASON = " || ' S' || ";
-	private static final boolean DBG = true;
+	private static final boolean DBG = false;
 	protected  final String COVER = COALESCE
 			+ VideoStore.Video.VideoColumns.SCRAPER_COVER + ",'') AS " + Columns.COVER_PATH;
 	public  final String NAME = COALESCE + VideoStore.Video.VideoColumns.SCRAPER_TITLE

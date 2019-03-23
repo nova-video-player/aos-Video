@@ -131,7 +131,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public static final int RESUME_FROM_LOCAL_POS = 4;
     public static final String RESUME = "resume";
     private static final String TAG = "PlayerService";
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
     public static final String PLAY_INTENT = "playerservice.play";
     public static final String PAUSE_INTENT = "playerservice.pause";
     public static final String EXIT_INTENT = "playerservice.exit";
