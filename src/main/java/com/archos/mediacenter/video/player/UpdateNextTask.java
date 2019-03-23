@@ -63,7 +63,7 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
     private final Video mVideo;
     private Uri mUri;
     private Listener mListener;
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
     private static final String TAG = "UpdateNextTask";
     protected static class Result {
         public final Uri uri;

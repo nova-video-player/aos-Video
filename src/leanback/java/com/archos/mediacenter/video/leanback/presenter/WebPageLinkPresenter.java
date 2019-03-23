@@ -35,7 +35,7 @@ import com.archos.mediacenter.video.leanback.adapter.object.WebPageLink;
 public class WebPageLinkPresenter extends Presenter {
 
     private static final String TAG = "WebPageLinkPresenter";
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
 
     public class WebPageLinkViewHolder extends ViewHolder {
         BaseCardView mCard;

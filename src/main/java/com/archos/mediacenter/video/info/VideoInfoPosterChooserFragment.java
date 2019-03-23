@@ -48,7 +48,7 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
         AdapterView.OnItemClickListener,
         View.OnClickListener {
     private static final String TAG = VideoInfoPosterChooserFragment.class.getSimpleName();
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
     // debug fragment lifecycle
     private static final boolean DBG_LC = false;
 
