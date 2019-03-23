@@ -78,6 +78,7 @@ import java.io.IOException;
 
 public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final boolean DBG = false;
     private static final String TAG = "TvshowFragment";
 
     public static final String EXTRA_TVSHOW = "TVSHOW";
@@ -507,7 +508,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                             .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
                             .centerCrop()
                             .get();
-                    Log.d("XXX", "------ "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
+                    if (DBG) Log.d("XXX", "------ "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
                 }
             }
             catch (IOException e) {
