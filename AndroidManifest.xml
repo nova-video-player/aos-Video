@@ -38,6 +38,9 @@
     <uses-feature android:required="false" android:name="android.hardware.usb.host" />
     <uses-permission android:name="android.permission.USB_PERMISSION" />
 
+    <!-- Used to for scanning and trakt -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <!--<uses-permission android:name="android.permission.WRITE_SETTINGS" />-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
