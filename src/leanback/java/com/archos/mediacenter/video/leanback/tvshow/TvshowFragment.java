@@ -74,6 +74,7 @@ import java.io.IOException;
 
 public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements  LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final boolean DBG = false;
     private static final String TAG = "TvshowFragment";
 
     public static final String EXTRA_TVSHOW = "TVSHOW";
@@ -429,7 +430,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                             .load(posterUri)
                             .noFade() // no fade since we are using activity transition anyway
                             .get();
-                    Log.d("XXX", "------ "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
+                    if (DBG) Log.d("XXX", "------ "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
                 }
             }
             catch (IOException e) {

@@ -65,6 +65,7 @@ import java.io.IOException;
 public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
 
+    private static final boolean DBG = false;
     static final private String BROWSER_SHOW = BrowserListOfEpisodes.class.getName();
     public static final String EXTRA_SHOW_ITEM = "show_item";
     private final static int SUBMENU_ITEM_LIST_INDEX = 0;
@@ -307,7 +308,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                             .resizeDimen(R.dimen.video_details_poster_width,R.dimen.video_details_poster_height)
                             .noFade() // no fade since we are using activity transition anyway
                             .get();
-                    Log.d("XXX", "------ "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
+                    if (DBG) Log.d("XXX", "------ "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
                     if(bitmap!=null) {
                         Palette palette = Palette.from(bitmap).generate();
                         mColor = palette.getDarkVibrantColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));

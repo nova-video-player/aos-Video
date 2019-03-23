@@ -29,6 +29,7 @@ import com.archos.mediacenter.video.browser.adapters.object.Season;
  * Created by alexandre on 27/10/15.
  */
 public class SeasonPresenter extends CommonPresenter implements Presenter {
+    private static final boolean DBG = false;
     public SeasonPresenter(Context context, AdapterDefaultValues defaultValues, ExtendedClickListener listener) {
         super(context, defaultValues, listener);
     }
@@ -66,7 +67,7 @@ public class SeasonPresenter extends CommonPresenter implements Presenter {
         }
 
         int count = tvShow.getEpisodeTotalCount();
-        Log.d("XXX", "getInfo() count=" + count);
+        if (DBG) Log.d("XXX", "getInfo() count=" + count);
         String format = mContext.getResources().getQuantityText(R.plurals.Nepisodes, count).toString();
 
         if(holder.info!=null)
