@@ -220,12 +220,14 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         super.onResume();
         mOverlay.resume();
         updateBackground();
+        LoaderManager.getInstance(getActivity()).getLoader(0).startLoading();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mOverlay.pause();
+        LoaderManager.getInstance(getActivity()).getLoader(0).stopLoading();
     }
 
     @Override
