@@ -1294,13 +1294,14 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             }
 
 
-            if(mPlayerFrontend!=null) {
-                mPlayerFrontend.onSubtitleMetadataUpdated(vMetadata, newSubtitleTrack);
-            }
             firstTimeCalled=false;
         }
         else
             firstTimeCalled = true;
+        
+        if(mPlayerFrontend!=null) {
+            mPlayerFrontend.onSubtitleMetadataUpdated(vMetadata, newSubtitleTrack);
+        }
     }
 
     @Override

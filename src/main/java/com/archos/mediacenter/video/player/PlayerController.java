@@ -2340,6 +2340,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             else if (!show && isTVMenuDisplayed) {
                 mTVMenuAdapter.hideAnimation();
             }
+            else if (show && isTVMenuDisplayed) {
+                mTVMenuAdapter.refocus();
+            }
             if (mClock!=null) {
                 setVisibility(mClock, show && !splitView, true);
             }

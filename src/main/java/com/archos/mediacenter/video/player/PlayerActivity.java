@@ -1464,7 +1464,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 @Override
                 public void onClick(View v) {
                     downloadSubtitles();
-                    mPlayerController.showTVMenu(false);
                 }
             });
 
@@ -1475,7 +1474,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     @Override
                     public void onClick(View v) {
                         chooseSubtitles();
-                        mPlayerController.showTVMenu(false);
                     }
                 });
             }
@@ -1535,29 +1533,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         if (mPlayerController != null && mPlayerController.getTVMenuAdapter() != null) {
             TVMenuAdapter tma = mPlayerController.getTVMenuAdapter();
 
-            //[audiotrack]
-            mAudioTracksTVCardView = tma.createAndAddView(null, getResources().getDrawable(R.drawable.tv_languages),
-                                                          getResources().getString(R.string.menu_audio));
-            mAudioTracksTVMenu = tma.createTVMenu();
-            mAudioTracksTVMenu.setOnItemClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // TODO Auto-generated method stub
-                    int pos = mAudioTracksTVMenu.getItemPostion(v);
-                    if (pos != -1) {
-                        if (onTrackSelected(mAudioInfoController, pos, "", "")) {
-                            if (v instanceof Checkable) {
-                                mAudioTracksTVMenu.unCheckAll();
-                                ((Checkable) v).setChecked(true);
-                            }
-                        }
-                    }
-                }
-            });
-            mAudioTracksTVCardView.addOtherView(mAudioTracksTVMenu);
-            refreshAudioTracksTVMenu();
-            //[/audiotrack]
-
             //[subtitles]
             mSubtitleTVCardView = tma.createAndAddView(null, getResources().getDrawable(R.drawable.tv_subtitles),
                                                        getResources().getString(R.string.menu_subtitles));
@@ -1580,6 +1555,29 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             mSubtitleTVCardView.addOtherView(mSubtitleTVMenu);
             refreshSubtitleTVMenu();
             //[/subtitles]
+
+            //[audiotrack]
+            mAudioTracksTVCardView = tma.createAndAddView(null, getResources().getDrawable(R.drawable.tv_languages),
+                                                          getResources().getString(R.string.menu_audio));
+            mAudioTracksTVMenu = tma.createTVMenu();
+            mAudioTracksTVMenu.setOnItemClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                    int pos = mAudioTracksTVMenu.getItemPostion(v);
+                    if (pos != -1) {
+                        if (onTrackSelected(mAudioInfoController, pos, "", "")) {
+                            if (v instanceof Checkable) {
+                                mAudioTracksTVMenu.unCheckAll();
+                                ((Checkable) v).setChecked(true);
+                            }
+                        }
+                    }
+                }
+            });
+            mAudioTracksTVCardView.addOtherView(mAudioTracksTVMenu);
+            refreshAudioTracksTVMenu();
+            //[/audiotrack]
 
             if (isStereoEffectOn()) {
                 TVCardView cv = tma.createAndAddView(getResources().getDrawable(R.drawable.tv_3d), null,
@@ -3083,7 +3081,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == SUBTITLE_REQUEST){
+        if(requestCode == SUBTITLE_REQUEST && resultCode == Activity.RESULT_OK){
             Log.d(TAG, "Get result from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
             mPlayer.checkSubtitles();
         }
@@ -3320,8 +3318,12 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 if (mSubtitleInfoController.getTrack() == noneTrack) {
                     mSubtitleInfoController.enableSettings(SUBTITLE_MENU_DELAY, false, false);
                 }
-                refreshSubtitleTVMenu();
             }
+
+            refreshSubtitleTVMenu();
+
+            if (mPlayerController.isTVMenuDisplayed())
+                mPlayerController.showTVMenu(true);
         }
 
         public void onBufferingUpdate(int percent) {

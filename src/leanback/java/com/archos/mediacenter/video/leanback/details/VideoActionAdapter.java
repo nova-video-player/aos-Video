@@ -197,6 +197,7 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
         } else {
             clear(ACTION_NEXT_EPISODE);
         }
+        notifyChanged();
     }
 
     public void setListEpisodesStatus(boolean visible) {
@@ -205,6 +206,7 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
         } else {
             clear(ACTION_LIST_EPISODES);
         }
+        notifyChanged();
     }
 
     public void updateRemoteResume(Context context, Video video) {

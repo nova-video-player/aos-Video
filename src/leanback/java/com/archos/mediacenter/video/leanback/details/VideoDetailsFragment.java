@@ -498,6 +498,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         // Update the details when back from player (we may have miss some DB updates while in background)
         else if (mResumeFromPlayer) {
             LoaderManager.getInstance(this).restartLoader(1, null, this);
+
+            if (mSubtitleFilesListerTask !=null) {
+                mSubtitleFilesListerTask.cancel(true);
+            }
+            mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,mVideo);
         }
 
         // reset flags

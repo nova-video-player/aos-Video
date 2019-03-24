@@ -53,9 +53,13 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
     }
 
     @Override
-    protected RowPresenter.ViewHolder createRowViewHolder(ViewGroup parent) {
-        mViewHolder = (ViewHolder)super.createRowViewHolder(parent);
-        return mViewHolder;
+    protected void onBindRowViewHolder(RowPresenter.ViewHolder holder, Object item) {
+        super.onBindRowViewHolder(holder, item);
+
+        mViewHolder = (ViewHolder)holder;
+        
+        updateBackgroundColor(getBackgroundColor());
+        updateActionsBackgroundColor(getActionsBackgroundColor());
     }
 
     @Override
