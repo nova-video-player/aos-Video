@@ -93,7 +93,7 @@ import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.TraktSigninDialogPreference;
 import com.archos.mediacenter.video.utils.VideoPreferencesActivity;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.ScraperStore;
@@ -604,7 +604,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
         // Preference activity sets RESULT_OK if something need to be checked when back
         if (requestCode == ACTIVITY_REQUEST_CODE_PREFERENCES) {
-            if (resultCode == VideoPreferencesFragment.ACTIVITY_RESULT_UI_MODE_CHANGED) {
+            if (resultCode == VideoPreferencesCommon.ACTIVITY_RESULT_UI_MODE_CHANGED) {
                 // Check if the UI mode changed
                 String newUiModeLeanback = PreferenceManager.getDefaultSharedPreferences(this).getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
                 if (!newUiModeLeanback.equals(mCurrentUiModeLeanback)) {
@@ -614,7 +614,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 }
                 mCurrentUiModeLeanback = null; // reset
             }
-            else if (resultCode == VideoPreferencesFragment.ACTIVITY_RESULT_UI_ZOOM_CHANGED) {
+            else if (resultCode == VideoPreferencesCommon.ACTIVITY_RESULT_UI_ZOOM_CHANGED) {
                 new DensityTweak(this)
                         .forceDensityDialogAtNextStart();
                 // restart the leanback activity for user to change the zoom

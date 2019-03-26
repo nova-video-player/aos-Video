@@ -1,5 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:title="@string/preferences">
     <PreferenceCategory
         android:key="preferences_category_complete"
         android:title="@string/preferences_category_complete"
@@ -37,7 +38,7 @@
             android:summary="@string/preferences_allow_3rd_party_player_summary"
             android:title="@string/preferences_allow_3rd_party_player"
             app:iconSpaceReserved="false"/>
-        <com.archos.mediacenter.video.utils.CustomListPreference
+        <ListPreference
             android:defaultValue="0"
             android:dialogTitle="@string/preferences_force_audio_passthrough"
             android:entries="@array/pref_passthrough_mode_entries"

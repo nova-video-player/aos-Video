@@ -64,7 +64,7 @@ public class TorrentPathDialogPreference extends Preference {
 
     public static File getDefaultDirectory(SharedPreferences pref) {
         // Check if there is one specified in the preferences
-        String defaultDirectoryPath = pref.getString(VideoPreferencesFragment.KEY_TORRENT_PATH, null);
+        String defaultDirectoryPath = pref.getString(VideoPreferencesCommon.KEY_TORRENT_PATH, null);
         if (defaultDirectoryPath != null) {
             return new File(defaultDirectoryPath);
         } else {

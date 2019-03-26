@@ -27,7 +27,7 @@ import com.archos.mediacenter.video.browser.loader.VideosSelectionInPlaylistLoad
 import com.archos.mediacenter.video.browser.loader.VideosSelectionLoader;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.utils.SubtitlesWizardActivity;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.EpisodeTags;
@@ -80,7 +80,7 @@ public class BrowserVideosInPlaylist extends BrowserByVideoSelection {
 		if (getArguments() != null) {
 			String listOfMoviesIds = getArguments().getString(BrowserByVideoSelection.LIST_OF_IDS);
 			if (listOfMoviesIds != null)
-				return new VideosSelectionInPlaylistLoader(getContext(), listOfMoviesIds).getV4CursorLoader(true, mPreferences.getBoolean(VideoPreferencesFragment.KEY_HIDE_WATCHED, false));
+				return new VideosSelectionInPlaylistLoader(getContext(), listOfMoviesIds).getV4CursorLoader(true, mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
 		}
 		return null;
 	}

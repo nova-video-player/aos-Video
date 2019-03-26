@@ -34,7 +34,7 @@ import android.view.WindowManager.LayoutParams;
 
 import com.archos.filecorelibrary.MetaFile;
 import com.archos.mediacenter.video.utils.VideoMetadata;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.medialib.IMediaPlayer;
 import com.archos.medialib.MediaFactory;
 import com.archos.medialib.MediaMetadata;
@@ -895,7 +895,7 @@ public class Player implements IPlayerControl,
 
         mResumeCtx.onPrepared();
 
-        boolean  refreshRateSwitchEnabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesFragment.KEY_ACTIVATE_REFRESHRATE_SWITCH, false);
+        boolean  refreshRateSwitchEnabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_ACTIVATE_REFRESHRATE_SWITCH, false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP&&mWindow!=null && refreshRateSwitchEnabled) {
             VideoMetadata.VideoTrack video = mVideoMetadata.getVideoTrack();
 

@@ -43,7 +43,7 @@ import com.archos.mediacenter.video.browser.presenter.TvshowDetailedPresenter;
 import com.archos.mediacenter.video.browser.presenter.TvshowGridPresenter;
 import com.archos.mediacenter.video.browser.presenter.TvshowGridShortPresenter;
 import com.archos.mediacenter.video.browser.presenter.TvshowListPresenter;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
@@ -74,8 +74,8 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 		else {
 			mSortOrder = mPreferences.getString(SORT_PARAM_KEY, DEFAULT_SORT);
 		}
-		mHideOption = mPreferences.getBoolean(VideoPreferencesFragment.KEY_TRAKT_SYNC_COLLECTION, false) 
-		        || mPreferences.getBoolean(VideoPreferencesFragment.KEY_TRAKT_LIVE_SCROBBLING, false);
+		mHideOption = mPreferences.getBoolean(VideoPreferencesCommon.KEY_TRAKT_SYNC_COLLECTION, false) 
+		        || mPreferences.getBoolean(VideoPreferencesCommon.KEY_TRAKT_LIVE_SCROBBLING, false);
         if (!mHideOption){
             mHideWatched = false;
         }
@@ -365,7 +365,7 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		return new AllTvshowsLoader(getContext(), mSortOrder).getV4CursorLoader(false, mPreferences.getBoolean(VideoPreferencesFragment.KEY_HIDE_WATCHED, false));
+		return new AllTvshowsLoader(getContext(), mSortOrder).getV4CursorLoader(false, mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
 	}
 
 

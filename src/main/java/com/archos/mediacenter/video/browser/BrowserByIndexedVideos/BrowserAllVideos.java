@@ -31,7 +31,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.Browser;
 import com.archos.mediacenter.video.browser.loader.AllVideosLoader;
 import com.archos.mediacenter.video.utils.SortOrder;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStore.MediaColumns;
 import com.archos.mediaprovider.video.VideoStore.Video.VideoColumns;
@@ -245,6 +245,6 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-		return new AllVideosLoader(getContext(), mSortOrder).getV4CursorLoader(false, mPreferences.getBoolean(VideoPreferencesFragment.KEY_HIDE_WATCHED, false));
+		return new AllVideosLoader(getContext(), mSortOrder).getV4CursorLoader(false, mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
 	}
 }

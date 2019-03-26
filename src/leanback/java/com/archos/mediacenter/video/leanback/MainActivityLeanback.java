@@ -26,8 +26,8 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.UiChoiceDialog;
 import com.archos.mediacenter.video.browser.BootupRecommandationService;
 import com.archos.mediacenter.video.browser.PermissionChecker;
-import com.archos.mediacenter.video.utils.VideoPreferencesActivity;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.leanback.settings.VideoSettingsActivity;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediascraper.AutoScrapeService;
 import com.archos.environment.ArchosUtils;
 
@@ -79,13 +79,13 @@ public class MainActivityLeanback extends LeanbackActivity {
      * This is ugly I know. It's because VideoViewClickedListener has lost a lot of context...
      */
     public void startPreferencesActivity() {
-        startActivityForResult(new Intent(this, VideoPreferencesActivity.class), ACTIVITY_REQUEST_CODE_PREFERENCES);
+        startActivityForResult(new Intent(this, VideoSettingsActivity.class), ACTIVITY_REQUEST_CODE_PREFERENCES);
         // Save the uimode_leanback to check if it changed when back from preferences
         mCurrentUiModeLeanback = PreferenceManager.getDefaultSharedPreferences(this).getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
     }
 
     /**
-     * Handle the return from VideoPreferencesActivity, check if the UiMode has been changed or if
+     * Handle the return from VideoSettingsActivity, check if the UiMode has been changed or if
      * the zoom dialog must be displayed
      * @param requestCode
      * @param resultCode
@@ -97,7 +97,7 @@ public class MainActivityLeanback extends LeanbackActivity {
 
         // Preference activity sets RESULT_OK if something need to be checked when back
         if (requestCode == ACTIVITY_REQUEST_CODE_PREFERENCES) {
-            if (resultCode == VideoPreferencesFragment.ACTIVITY_RESULT_UI_MODE_CHANGED) {
+            if (resultCode == VideoPreferencesCommon.ACTIVITY_RESULT_UI_MODE_CHANGED) {
                 // Check if the UI mode changed
                 String newUiModeLeanback = PreferenceManager.getDefaultSharedPreferences(this).getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
                 if (!newUiModeLeanback.equals(mCurrentUiModeLeanback)) {
@@ -106,7 +106,7 @@ public class MainActivityLeanback extends LeanbackActivity {
                     startActivity(new Intent(this, EntryActivity.class));
                 }
                 mCurrentUiModeLeanback = null; // reset
-            } else if (resultCode == VideoPreferencesFragment.ACTIVITY_RESULT_UI_ZOOM_CHANGED) {
+            } else if (resultCode == VideoPreferencesCommon.ACTIVITY_RESULT_UI_ZOOM_CHANGED) {
                 new DensityTweak(this)
                         .forceDensityDialogAtNextStart();
                 // restart the leanback activity for user to change the zoom

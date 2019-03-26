@@ -68,7 +68,7 @@ import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.leanback.presenter.VideoListPresenter;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.utils.PlayUtils;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 
 import java.util.HashMap;
@@ -379,7 +379,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
      * @param listingEngine
      */
     protected void setListingEngineOptions(ListingEngine listingEngine){
-        if(!VideoPreferencesFragment.PreferenceHelper.shouldDisplayAllFiles(getActivity()))
+        if(!VideoPreferencesCommon.PreferenceHelper.shouldDisplayAllFiles(getActivity()))
             mListingEngine.setFilter(VideoUtils.getVideoFilterMimeTypes(), null); // display video files only
     }
     protected int getListingTimeout(){ //different timeout for ftp

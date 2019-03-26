@@ -22,7 +22,7 @@ import android.support.v4.content.Loader;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesSelectionLoader;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 
 public class BrowserAllMovies extends BrowserByVideoSelection {
@@ -43,8 +43,8 @@ public class BrowserAllMovies extends BrowserByVideoSelection {
 		if(getArguments()!=null){
 			String listOfMoviesIds = getArguments().getString(BrowserAllMovies.LIST_OF_IDS);
 			if (listOfMoviesIds != null)
-				return new MoviesSelectionLoader(getContext(), listOfMoviesIds, mSortOrder).getV4CursorLoader(true, mPreferences.getBoolean(VideoPreferencesFragment.KEY_HIDE_WATCHED, false));
+				return new MoviesSelectionLoader(getContext(), listOfMoviesIds, mSortOrder).getV4CursorLoader(true, mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
 		}
-		return new MoviesLoader(getContext(), mSortOrder, true).getV4CursorLoader(true, mPreferences.getBoolean(VideoPreferencesFragment.KEY_HIDE_WATCHED, false));
+		return new MoviesLoader(getContext(), mSortOrder, true).getV4CursorLoader(true, mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
 	}
 }

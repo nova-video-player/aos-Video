@@ -156,7 +156,7 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
                 mId = args2.getLong(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID, 0);
                 mSeason = args2.getInt(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON, 0);
             }
-            return new EpisodesLoader(getContext(), mId, mSeason, true).getV4CursorLoader(true, false);//mPreferences.getBoolean(VideoPreferencesFragment.KEY_HIDE_WATCHED, false));
+            return new EpisodesLoader(getContext(), mId, mSeason, true).getV4CursorLoader(true, false);//mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
         }
         else return super.onCreateLoader(id, args);
     }

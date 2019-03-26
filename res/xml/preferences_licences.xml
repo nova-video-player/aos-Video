@@ -1,4 +1,5 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/preferences_video_licenses" >
     <PreferenceScreen
         android:summary="LGPL v2.1"
         android:title="FFmpeg" >

@@ -82,6 +82,7 @@ import com.archos.mediacenter.video.browser.PermissionChecker;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
+import com.archos.mediacenter.video.leanback.settings.VideoSettingsActivity;
 import com.archos.mediacenter.video.player.TrackInfoController.TrackInfoListener;
 import com.archos.mediacenter.video.player.tvmenu.AudioDelayTVPicker;
 import com.archos.mediacenter.video.player.tvmenu.SubtitleDelayTVPicker;
@@ -99,7 +100,7 @@ import com.archos.mediacenter.video.utils.VideoMetadata.AudioTrack;
 import com.archos.mediacenter.video.utils.VideoMetadata.SubtitleTrack;
 import com.archos.mediacenter.video.utils.VideoMetadata.VideoTrack;
 import com.archos.mediacenter.video.utils.VideoPreferencesActivity;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.medialib.IMediaPlayer;
 import com.archos.medialib.LibAvos;
@@ -715,7 +716,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mSurfaceController.setVideoFormat(Integer.parseInt(mPreferences.getString(KEY_PLAYER_FORMAT, "-1")),
                 Integer.parseInt(mPreferences.getString(KEY_PLAYER_AUTO_FORMAT, "-1")));
         if (LibAvos.isAvailable()) {
-            VideoPreferencesFragment.resetPassthroughPref(mPreferences);
+            VideoPreferencesCommon.resetPassthroughPref(mPreferences);
             LibAvos.setPassthrough(Integer.valueOf(mPreferences.getString("force_audio_passthrough_multiple","0")));
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) // Android is recent enough not to require downmix on phones/tablets
                 LibAvos.setDownmix(0);
@@ -1737,7 +1738,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 public void onClick(View v) {
                     // TODO Auto-generated method stub
                     Intent p = new Intent(Intent.ACTION_MAIN);
-                    p.setComponent(new ComponentName(mActivity, VideoPreferencesActivity.class));
+                    p.setComponent(new ComponentName(mActivity, VideoSettingsActivity.class));
                     startActivity(p);
                 }
             });

@@ -21,7 +21,7 @@ import android.support.v4.content.Loader;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.LastPlayedLoader;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 
 
@@ -46,6 +46,6 @@ public class BrowserLastPlayed extends CursorBrowserByVideo {
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new LastPlayedLoader(getContext()).getV4CursorLoader(false, mPreferences.getBoolean(VideoPreferencesFragment.KEY_HIDE_WATCHED, false));
+        return new LastPlayedLoader(getContext()).getV4CursorLoader(false, mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
     }
 }
