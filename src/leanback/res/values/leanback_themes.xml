@@ -35,6 +35,10 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
+    <style name="MyLeanbackTheme.Wizard" parent="Theme.Leanback.GuidedStep">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
     <style name="MyLeanbackTheme.Preferences" parent="Theme.Leanback">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Leanback</item>
         <item name="android:windowIsTranslucent">true</item>

@@ -170,6 +170,10 @@
             android:theme="@style/Theme.Leanback.GuidedStep"/>
 
         <activity
+            android:name="com.archos.mediacenter.video.leanback.wizard.SubtitlesWizardActivity"
+            android:theme="@style/MyLeanbackTheme.Wizard"/>
+
+        <activity
             android:name="com.archos.mediacenter.video.leanback.settings.VideoSettingsActivity"
             android:theme="@style/MyLeanbackTheme.Preferences"/>
 
