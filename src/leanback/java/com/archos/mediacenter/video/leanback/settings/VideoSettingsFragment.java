@@ -46,7 +46,7 @@ public class VideoSettingsFragment extends LeanbackSettingsFragment {
 
     public static class PrefsFragment extends LeanbackPreferenceFragment {
 
-        VideoPreferencesCommon mPreferencesCommon = new VideoPreferencesCommon(this);
+        private VideoPreferencesCommon mPreferencesCommon = new VideoPreferencesCommon(this);
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.view.KeyEvent;
 
 import com.archos.mediacenter.video.DensityTweak;
 import com.archos.mediacenter.video.EntryActivity;
@@ -114,5 +115,16 @@ public class MainActivityLeanback extends LeanbackActivity {
                 startActivity(new Intent(this, EntryActivity.class));
             }
         }
+    }
+
+    @Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            startPreferencesActivity();
+
+            return true;
+        }
+        
+        return super.onKeyLongPress(keyCode, event);
     }
 }

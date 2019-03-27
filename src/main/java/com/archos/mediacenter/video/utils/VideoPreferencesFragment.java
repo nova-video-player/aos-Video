@@ -19,7 +19,7 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 
 public class VideoPreferencesFragment extends PreferenceFragmentCompat {
 
-    VideoPreferencesCommon mPreferencesCommon = new VideoPreferencesCommon(this);
+    private VideoPreferencesCommon mPreferencesCommon = new VideoPreferencesCommon(this);
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
