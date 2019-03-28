@@ -20,7 +20,6 @@ import com.archos.filecorelibrary.FileEditorFactory;
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.MetaFile2Factory;
-import com.archos.filecorelibrary.RawListerFactory;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
@@ -117,7 +116,7 @@ public class SubtitlesWizardCommon {
                 if (DBG) Log.d(TAG, "onCreate : mCurrentFilesCount = " + mCurrentFilesCount);
 
                 // Get the list of subtitles files available in the current folder
-                mAvailableFilesCount = buildAvailableSubtitlesFilesList(FileUtils.getParentUrl(mVideoUri).toString());
+                mAvailableFilesCount = buildAvailableSubtitlesFilesList(mVideoPath);
                 if (DBG) Log.d(TAG, "onCreate : mAvailableFilesCount = " + mAvailableFilesCount);
             }
         }
@@ -138,11 +137,14 @@ public class SubtitlesWizardCommon {
 
         try {
             Uri videoUri = Uri.parse(videoPath);
-            List<SubtitleManager.SubtitleFile> list = lister.listLocalAndRemotesSubtitles(videoUri);
+            List<SubtitleManager.SubtitleFile> list = lister.listLocalAndRemotesSubtitles(videoUri, false, true);
 
             // Retrieve the path of each file found and add it to the available subtitles list
-            for(SubtitleManager.SubtitleFile sub : list)
-                mCurrentFiles.add(sub.mFile.getUri().toString());
+            for(SubtitleManager.SubtitleFile sub : list) {
+                String path = sub.mFile.getUri().toString();
+
+                mCurrentFiles.add(path);
+            }
         } catch (Exception ex) {
             Log.e(TAG, "buildCurrentSubtitlesFilesList error : failed to get data from SubtitleManager");
         }
@@ -150,68 +152,30 @@ public class SubtitlesWizardCommon {
         return mCurrentFiles.size();
     }
 
-    public int buildAvailableSubtitlesFilesList(String folderPath) {
-        if (DBG) Log.d(TAG, "buildAvailableSubtitlesFilesList : search subtitles files in folder " + folderPath);
-        
+    public int buildAvailableSubtitlesFilesList(String videoPath) {
+        if (DBG) Log.d(TAG, "buildAvailableSubtitlesFilesList : get available subtitles files");
+
         mAvailableFiles = new ArrayList<String>();
 
-        // Make sure the provided path corresponds to a folder
-        Uri folderUri = Uri.parse(folderPath);
-        MetaFile2 folder = null;
+        // Get subtitles files from SubtitleManager
+        SubtitleManager lister = new SubtitleManager(mWizardActivity, null);
+
         try {
-            folder = MetaFile2Factory.getMetaFileForUrl(folderUri);
-        }
-        catch (Exception e) {
-            Log.e(TAG, "buildAvailableSubtitlesFilesList error : can not get folder");
-            return 0;
-        }
-        if (!folder.isDirectory()) {
-            return 0;
-        }
+            Uri videoUri = Uri.parse(videoPath);
+            List<SubtitleManager.SubtitleFile> list = lister.listLocalAndRemotesSubtitles(videoUri, true, true);
 
-        // Get the list of entries contained in the provided directory
-        List<MetaFile2> files = null;
-        try {
-            files = RawListerFactory.getRawListerForUrl(folderUri).getFileList();
-        }
-        catch (Exception e) {
-            Log.e(TAG, "buildAvailableSubtitlesFilesList error : can not get list of files");
-            return 0;
-        }
+            // Retrieve the path of each file found and add it to the available subtitles list
+            // if it is not already associated to the selected video
+            for(SubtitleManager.SubtitleFile sub : list) {
+                String path = sub.mFile.getUri().toString();
 
-        // Check the entries and keep only those which correspond to subtitles files
-        for (MetaFile2 f : files) {
-            // Make sure this is a file
-            if (f.isFile()) {
-                // Ignore files starting with a dot
-                if (!f.getName().startsWith(".")) {
-                    // Check the file extension
-                    String path = f.getUri().toString();
-                    String extension = f.getExtension();
-                    if ((extension != null) && VideoUtils.getSubtitleExtensions().contains(extension)) {
-                        // We found a subtitles file => add it to the available list
-                        // if it is not already associated to the selected video
-                        int i;
-                        boolean fileAlreadyAssociated = false;
-
-                        for (i = 0; i < mCurrentFilesCount; i++) {
-                            String pathToCheck = mCurrentFiles.get(i);
-                            if (pathToCheck.equals(path)) {
-                                // This file already belongs to the current list of subtitles files => skip it
-                                fileAlreadyAssociated = true;
-                                break;
-                            }
-                        }
-
-                        if (!fileAlreadyAssociated) {
-                            mAvailableFiles.add(path);
-                        }
-                    }
-                }
+                if (!mCurrentFiles.contains(path))
+                    mAvailableFiles.add(path);
             }
+        } catch (Exception ex) {
+            Log.e(TAG, "buildAvailableSubtitlesFilesList error : failed to get data from SubtitleManager");
         }
-
-        if (DBG) Log.d(TAG, "Found " + mAvailableFiles.size() + " subtitles files out of " + files.size());
+        
         return mAvailableFiles.size();
     }
 
@@ -254,7 +218,7 @@ public class SubtitlesWizardCommon {
             if (extension != null) {
                 String name = path.substring(0, path.length() - extension.length() - 1);
                 int nameLength = name.length();
-                if (nameLength >= videoNameLength && name.startsWith(videoName)) {
+                if (nameLength >= videoNameLength && name.startsWith(videoName) && extension.equals(subtitlesExtension)) {
                     sameNameFound = true;
                     String suffix = name.substring(videoNameLength);
                     if (suffix.startsWith(SUBTITLES_FILES_SUFFIX)) {
@@ -305,17 +269,20 @@ public class SubtitlesWizardCommon {
         }
 
         String cacheOldFilePath = MediaUtils.getSubsDir(mWizardActivity).getPath() + "/" + FileUtils.getName(oldUri);
-        String cacheNewFilePath = MediaUtils.getSubsDir(mWizardActivity).getPath() + "/" + FileUtils.getName(newUri);
 
-        File cacheOldFile = new File(cacheOldFilePath);
-        File cacheNewFile = new File(cacheNewFilePath);
-        if (cacheOldFile.exists()) {
-            try {
-                cacheOldFile.renameTo(cacheNewFile);
-                if (DBG) Log.d(TAG, "onItemClick : selected file renamed as " + cacheNewFilePath);
-            }
-            catch (Exception e) {
-                Log.d(TAG, "renameFile : can not rename file as " + cacheNewFilePath);
+        if (!cacheOldFilePath.equals(oldFilePath)) {
+            String cacheNewFilePath = MediaUtils.getSubsDir(mWizardActivity).getPath() + "/" + FileUtils.getName(newUri);
+
+            File cacheOldFile = new File(cacheOldFilePath);
+            File cacheNewFile = new File(cacheNewFilePath);
+            if (cacheOldFile.exists()) {
+                try {
+                    cacheOldFile.renameTo(cacheNewFile);
+                    if (DBG) Log.d(TAG, "onItemClick : selected file renamed as " + cacheNewFilePath);
+                }
+                catch (Exception e) {
+                    Log.d(TAG, "renameFile : can not rename file as " + cacheNewFilePath);
+                }
             }
         }
 
@@ -360,14 +327,17 @@ public class SubtitlesWizardCommon {
         fileDeleted = !file.exists();
 
         String cacheFilePath = MediaUtils.getSubsDir(mWizardActivity).getPath() + "/" + FileUtils.getName(uri);
-        File cacheFile = new File(cacheFilePath);
-        if (cacheFile.exists()) {
-            try {
-                cacheFile.delete();
-                if (DBG) Log.d(TAG, "deleteFile : file " + cacheFilePath + " deleted");
-            }
-            catch (Exception e) {
-                Log.d(TAG, "deleteFile : can not delete file " + cacheFilePath);
+
+        if (!cacheFilePath.equals(path)) {
+            File cacheFile = new File(cacheFilePath);
+            if (cacheFile.exists()) {
+                try {
+                    cacheFile.delete();
+                    if (DBG) Log.d(TAG, "deleteFile : file " + cacheFilePath + " deleted");
+                }
+                catch (Exception e) {
+                    Log.d(TAG, "deleteFile : can not delete file " + cacheFilePath);
+                }
             }
         }
 
