@@ -47,7 +47,7 @@ public class SubtitlesWizardFragment extends GuidedStepSupportFragment {
         return new GuidanceStylist.Guidance(
                 getString(R.string.get_subtitles_on_drive),
                 mWizardCommon.getHelpMessage(), "",
-                getResources().getDrawable(R.drawable.filetype_video_subtitles));
+                getResources().getDrawable(R.drawable.filetype_new_subtitles));
     }
 
     @Override
