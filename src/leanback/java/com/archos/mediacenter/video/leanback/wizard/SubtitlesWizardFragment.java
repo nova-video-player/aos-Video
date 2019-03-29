@@ -160,7 +160,7 @@ public class SubtitlesWizardFragment extends GuidedStepSupportFragment {
                     actions.add(new GuidedAction.Builder()
                         .id(fileId)
                         .title(mWizardCommon.getFileName(path))
-                        .description(mWizardCommon.getFileSize(path))
+                        .description(mWizardCommon.getFileSize(path) + (mWizardCommon.isCacheFile(path) ? " - Cache" : ""))
                         .multilineDescription(true)
                         .subActions(subActions)
                         .build());
@@ -212,7 +212,7 @@ public class SubtitlesWizardFragment extends GuidedStepSupportFragment {
                     actions.add(new GuidedAction.Builder()
                         .id(fileId)
                         .title(mWizardCommon.getFileName(path))
-                        .description(mWizardCommon.getFileSize(path))
+                        .description(mWizardCommon.getFileSize(path) + (mWizardCommon.isCacheFile(path) ? " - Cache" : ""))
                         .multilineDescription(true)
                         .subActions(subActions)
                         .build());

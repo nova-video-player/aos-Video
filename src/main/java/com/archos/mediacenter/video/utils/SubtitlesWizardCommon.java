@@ -268,10 +268,11 @@ public class SubtitlesWizardCommon {
             Log.d(TAG, "renameFile : can not rename file as " + newFilePath);
         }
 
-        String cacheOldFilePath = MediaUtils.getSubsDir(mWizardActivity).getPath() + "/" + FileUtils.getName(oldUri);
+        String cacheDirPath = Uri.fromFile(MediaUtils.getSubsDir(mWizardActivity)).toString();
+        String cacheOldFilePath = cacheDirPath + "/" + FileUtils.getName(oldUri);
 
         if (!cacheOldFilePath.equals(oldFilePath)) {
-            String cacheNewFilePath = MediaUtils.getSubsDir(mWizardActivity).getPath() + "/" + FileUtils.getName(newUri);
+            String cacheNewFilePath = cacheDirPath + "/" + FileUtils.getName(newUri);
 
             File cacheOldFile = new File(cacheOldFilePath);
             File cacheNewFile = new File(cacheNewFilePath);
@@ -326,7 +327,8 @@ public class SubtitlesWizardCommon {
 
         fileDeleted = !file.exists();
 
-        String cacheFilePath = MediaUtils.getSubsDir(mWizardActivity).getPath() + "/" + FileUtils.getName(uri);
+        String cacheDirPath = Uri.fromFile(MediaUtils.getSubsDir(mWizardActivity)).toString();
+        String cacheFilePath = cacheDirPath + "/" + FileUtils.getName(uri);
 
         if (!cacheFilePath.equals(path)) {
             File cacheFile = new File(cacheFilePath);
@@ -402,5 +404,12 @@ public class SubtitlesWizardCommon {
         }
 
         return size;
+    }
+
+    public boolean isCacheFile(String path) {
+        String cacheDirPath = Uri.fromFile(MediaUtils.getSubsDir(mWizardActivity)).toString();
+        boolean cache = path.startsWith(cacheDirPath + "/");
+
+        return cache;
     }
 }
