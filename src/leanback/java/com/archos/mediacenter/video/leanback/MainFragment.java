@@ -731,7 +731,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         mFileBrowsingRowAdapter.clear();
         mFileBrowsingRowAdapter.add(new Box(Box.ID.NETWORK, getString(R.string.network_storage), R.drawable.filetype_new_server));
         mFileBrowsingRowAdapter.add(new Box(Box.ID.FOLDERS, getString(R.string.internal_storage), R.drawable.filetype_new_folder));
-        mFileBrowsingRowAdapter.add(new Box(Box.ID.VIDEOS_BY_LISTS, getString(R.string.video_lists), R.drawable.filetype_new_playlist));
 
         if (hasExternal) {
             for(String s : storageManager.getExtSdcards()) {
@@ -747,6 +746,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 mFileBrowsingRowAdapter.add(item);
             }
         }
+
+        mFileBrowsingRowAdapter.add(new Box(Box.ID.VIDEOS_BY_LISTS, getString(R.string.video_lists), R.drawable.filetype_new_playlist));
     }
 
     private void updatePrivateMode(Icon icon) {
