@@ -66,6 +66,7 @@ import com.archos.mediacenter.video.leanback.filebrowsing.LocalListingActivity;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridActivity;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesIconBuilder;
 import com.archos.mediacenter.video.leanback.movies.MoviesByGenreActivity;
+import com.archos.mediacenter.video.leanback.movies.MoviesByRatingActivity;
 import com.archos.mediacenter.video.leanback.movies.MoviesByYearActivity;
 import com.archos.mediacenter.video.leanback.network.NetworkRootActivity;
 import com.archos.mediacenter.video.leanback.nonscraped.NonScrapedVideosActivity;
@@ -78,6 +79,7 @@ import com.archos.mediacenter.video.leanback.tvshow.AllTvshowsGridActivity;
 import com.archos.mediacenter.video.leanback.tvshow.AllTvshowsIconBuilder;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowsByAlphaActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowsByGenreActivity;
+import com.archos.mediacenter.video.leanback.tvshow.TvshowsByRatingActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
@@ -361,13 +363,15 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         ArrayObjectAdapter movieRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         movieRowAdapter.add(buildAllMoviesBox());
         movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_GENRE, getString(R.string.movies_by_genre), R.drawable.genres_banner));
+        movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_RATING, getString(R.string.movies_by_rating), R.drawable.ratings_banner));
         movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_YEAR, getString(R.string.movies_by_year), R.drawable.years_banner_2019));
         mMovieRow = new ListRow(ROW_ID_MOVIES, new HeaderItem(getString(R.string.movies)), movieRowAdapter);
 
         ArrayObjectAdapter tvshowRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         tvshowRowAdapter.add(buildAllTvshowsBox());
-        tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_ALPHA, getString(R.string.tvshows_by_alpha), R.drawable.alpha_banner));
+        //tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_ALPHA, getString(R.string.tvshows_by_alpha), R.drawable.alpha_banner));
         tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_GENRE, getString(R.string.tvshows_by_genre), R.drawable.genres_banner));
+        tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_RATING, getString(R.string.tvshows_by_rating), R.drawable.ratings_banner));
         mTvshowRow = new ListRow(ROW_ID_TVSHOW2, new HeaderItem(getString(R.string.all_tv_shows)), tvshowRowAdapter);
         
         mMoviesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
@@ -794,6 +798,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     case MOVIES_BY_GENRE:
                         mActivity.startActivity(new Intent(mActivity, MoviesByGenreActivity.class));
                         break;
+                    case MOVIES_BY_RATING:
+                        mActivity.startActivity(new Intent(mActivity, MoviesByRatingActivity.class));
+                        break;
                     case MOVIES_BY_YEAR:
                         mActivity.startActivity(new Intent(mActivity, MoviesByYearActivity.class));
                         break;
@@ -825,6 +832,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                         break;
                     case TVSHOWS_BY_GENRE:
                         mActivity.startActivity(new Intent(mActivity, TvshowsByGenreActivity.class));
+                        break;
+                    case TVSHOWS_BY_RATING:
+                        mActivity.startActivity(new Intent(mActivity, TvshowsByRatingActivity.class));
                         break;
 
                 }

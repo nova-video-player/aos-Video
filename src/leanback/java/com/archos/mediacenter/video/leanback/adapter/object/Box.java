@@ -24,6 +24,7 @@ public class Box {
     public enum ID {
         ALL_MOVIES,
         MOVIES_BY_GENRE,
+        MOVIES_BY_RATING,
         MOVIES_BY_YEAR,
         VIDEOS_BY_LISTS,
         FOLDERS,
@@ -36,6 +37,7 @@ public class Box {
         NON_SCRAPED_VIDEOS,
         ALL_TVSHOWS,
         TVSHOWS_BY_ALPHA,
+        TVSHOWS_BY_RATING,
         TVSHOWS_BY_GENRE
     }
 

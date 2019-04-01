@@ -74,6 +74,10 @@
             android:theme="@style/MyLeanbackTheme"/>
 
         <activity
+            android:name="com.archos.mediacenter.video.leanback.movies.MoviesByRatingActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
             android:name="com.archos.mediacenter.video.leanback.movies.MoviesByYearActivity"
             android:theme="@style/MyLeanbackTheme"/>
 
@@ -83,6 +87,10 @@
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.tvshow.TvshowsByGenreActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.tvshow.TvshowsByRatingActivity"
             android:theme="@style/MyLeanbackTheme"/>
 
         <activity
