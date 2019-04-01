@@ -41,6 +41,6 @@ public class LastPlayedLoader extends VideoLoader {
 
     @Override
     public String getSortOrder() {
-        return VideoStore.Video.VideoColumns.BOOKMARK + "=0, " + VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + " DESC LIMIT 100";
+        return VideoStore.Video.VideoColumns.BOOKMARK + "<=0, " + VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + " DESC LIMIT 100";
     }
 }
