@@ -106,17 +106,18 @@
     <string name="movies">Movies</string>
     <string name="all_movies">All movies</string>
     <string name="all_movies_format">All movies  -  %d</string>
-    <string name="unseen_movies_format">Unseen movies  -  %d</string>
+    <string name="not_watched_movies_format">Not watched  -  %d</string>
+    <string name="movies_by_alpha">Movies alphabetical</string>
     <string name="movies_by_genre">Movies by genre</string>
     <string name="movies_by_rating">Movies by rating</string>
     <string name="movies_by_year">Movies by year</string>
     <string name="all_tv_shows">TV shows</string>
     <string name="all_tvshows">All TV shows</string>
     <string name="all_tvshows_format">All TV shows  -  %d</string>
-    <string name="unseen_tvshows_format">Unseen TV shows  -  %d</string>
+    <string name="not_watched_tvshows_format">Not watched  -  %d</string>
     <string name="tvshows_by_alpha">TV shows alphabetical</string>
-    <string name="tvshows_by_rating">TV shows by rating</string>
     <string name="tvshows_by_genre">TV shows by genre</string>
+    <string name="tvshows_by_rating">TV shows by rating</string>
     <string name="all_movies_and_tv_shows">Movies and TV shows</string>
     <string name="non_scraped_videos">Non scraped videos</string>
 

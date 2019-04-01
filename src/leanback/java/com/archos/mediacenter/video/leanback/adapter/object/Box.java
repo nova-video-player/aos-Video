@@ -23,6 +23,7 @@ public class Box {
 
     public enum ID {
         ALL_MOVIES,
+        MOVIES_BY_ALPHA,
         MOVIES_BY_GENRE,
         MOVIES_BY_RATING,
         MOVIES_BY_YEAR,

@@ -157,6 +157,8 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         else
             getTitleView().setOrb4IconResId(R.drawable.orb_show);
 
+        getTitleView().setOrb5IconResId(R.drawable.orb_alpha);
+
         // Set orb color
         setSearchAffordanceColor(getResources().getColor(R.color.lightblueA200));
         
@@ -234,6 +236,15 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
                 LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllMoviesGridFragment.this);
             }
         });
+
+        // Set fifth orb action
+        getTitleView().setOnOrb5ClickedListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), MoviesByAlphaActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -285,7 +296,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
             if (mShowWatched)
                 setTitle(getString(R.string.all_movies_format, cursor.getCount()));
             else
-                setTitle(getString(R.string.unseen_movies_format, cursor.getCount()));
+                setTitle(getString(R.string.not_watched_movies_format, cursor.getCount()));
         }
     }
 

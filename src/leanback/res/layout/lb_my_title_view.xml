@@ -75,6 +75,17 @@
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical|start"
         android:layout_toEndOf="@id/title_orb3"
+        android:layout_marginEnd="28dip"
+        android:transitionGroup="true"
+        android:visibility="visible" />
+
+    <android.support.v17.leanback.widget.SearchOrbView
+        android:id="@+id/title_orb5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical|start"
+        android:layout_toEndOf="@id/title_orb4"
         android:transitionGroup="true"
         android:visibility="visible" />
 
@@ -146,6 +157,22 @@
         android:layout_alignBottom="@+id/title_orb4"
         android:layout_alignEnd="@+id/title_orb4"
         android:layout_alignStart="@+id/title_orb4"
+        android:layout_marginEnd="-64dip"
+        android:layout_marginStart="-64dip"
+        android:layout_marginTop="0dip"
+        android:alpha="0"
+        android:textColor="@color/leanback_discreet_text_over_background"
+        android:singleLine="true"
+        android:gravity="center"
+        android:translationY="32dip"/>
+
+    <TextView
+        android:id="@+id/orb5_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/title_orb5"
+        android:layout_alignEnd="@+id/title_orb5"
+        android:layout_alignStart="@+id/title_orb5s"
         android:layout_marginEnd="-64dip"
         android:layout_marginStart="-64dip"
         android:layout_marginTop="0dip"

@@ -70,6 +70,10 @@
             android:theme="@style/MyLeanbackTheme"/>
 
         <activity
+            android:name="com.archos.mediacenter.video.leanback.movies.MoviesByAlphaActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
             android:name="com.archos.mediacenter.video.leanback.movies.MoviesByGenreActivity"
             android:theme="@style/MyLeanbackTheme"/>
 

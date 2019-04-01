@@ -155,6 +155,8 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
         else
             getTitleView().setOrb4IconResId(R.drawable.orb_show);
 
+        getTitleView().setOrb5IconResId(R.drawable.orb_alpha);
+
         // Set orb color
         setSearchAffordanceColor(getResources().getColor(R.color.lightblueA200));
 
@@ -233,6 +235,15 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
                 LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllTvshowsGridFragment.this);
             }
         });
+
+        // Set fifth orb action
+        getTitleView().setOnOrb5ClickedListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), TvshowsByAlphaActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -282,7 +293,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
             if (mShowWatched)
                 setTitle(getString(R.string.all_tvshows_format, cursor.getCount()));
             else
-                setTitle(getString(R.string.unseen_tvshows_format, cursor.getCount()));
+                setTitle(getString(R.string.not_watched_tvshows_format, cursor.getCount()));
         }
     }
 

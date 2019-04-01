@@ -38,12 +38,14 @@ public class MyTitleView extends RelativeLayout {
     private SearchOrbView mSearchOrbView2; // ARCHOS added
     private SearchOrbView mSearchOrbView3; // ARCHOS added
     private SearchOrbView mSearchOrbView4; // ARCHOS added
+    private SearchOrbView mSearchOrbView5; // ARCHOS added
 
     private HintView mHintView; // ARCHOS added
     private TextView mOrb1Description; // ARCHOS added
     private TextView mOrb2Description; // ARCHOS added
     private TextView mOrb3Description; // ARCHOS added
     private TextView mOrb4Description; // ARCHOS added
+    private TextView mOrb5Description; // ARCHOS added
 
     public MyTitleView(Context context) {
         this(context, null);
@@ -66,17 +68,21 @@ public class MyTitleView extends RelativeLayout {
         mSearchOrbView3 = (SearchOrbView) rootView.findViewById(R.id.title_orb3); // ARCHOS added
         mSearchOrbView4 = (SearchOrbView) rootView.findViewById(R.id.title_orb4); // ARCHOS added
         mSearchOrbView4.setVisibility(GONE);
+        mSearchOrbView5 = (SearchOrbView) rootView.findViewById(R.id.title_orb5); // ARCHOS added
+        mSearchOrbView5.setVisibility(GONE);
         mHintView = (HintView) rootView.findViewById(R.id.hint_view); // ARCHOS added
 
         mOrb1Description = (TextView) rootView.findViewById(R.id.orb1_description); // ARCHOS added
         mOrb2Description = (TextView) rootView.findViewById(R.id.orb2_description); // ARCHOS added
         mOrb3Description = (TextView) rootView.findViewById(R.id.orb3_description); // ARCHOS added
         mOrb4Description = (TextView) rootView.findViewById(R.id.orb4_description); // ARCHOS added
+        mOrb5Description = (TextView) rootView.findViewById(R.id.orb5_description); // ARCHOS added
 
         mSearchOrbView.setOnFocusChangeListener(mOrbsFocusListener);
         mSearchOrbView2.setOnFocusChangeListener(mOrbsFocusListener);
         mSearchOrbView3.setOnFocusChangeListener(mOrbsFocusListener);
         mSearchOrbView4.setOnFocusChangeListener(mOrbsFocusListener);
+        mSearchOrbView5.setOnFocusChangeListener(mOrbsFocusListener);
 
         setClipToPadding(false);
         setClipChildren(false);
@@ -144,6 +150,10 @@ public class MyTitleView extends RelativeLayout {
         mSearchOrbView4.setVisibility(listener != null ? View.VISIBLE : View.GONE);
     }
 
+    public void setOnOrb5ClickedListener(View.OnClickListener listener) {
+        mSearchOrbView5.setOnOrbClickedListener(listener);
+        mSearchOrbView5.setVisibility(listener != null ? View.VISIBLE : View.GONE);
+    }
 
     /**
      * ARCHOS added
@@ -206,6 +216,21 @@ public class MyTitleView extends RelativeLayout {
     }
 
     /**
+     * ARCHOS added
+     * * Set a short description displayed below the orb when is is selected
+     */
+    public void setOnOrb5Description(CharSequence description) {
+        mOrb5Description.setTextColor(Color.WHITE);
+        mOrb5Description.setText(description);
+
+        // Avoid description changing without animation (in case it was displayed already)
+        mOrb5Description.setAlpha(0);
+        if (mSearchOrbView5.isFocused()) {
+            animateDescription(mOrb5Description, true);
+        }
+    }
+
+    /**
      *  Returns the view for the search affordance.
      */
     public View getSearchAffordanceView() {
@@ -220,6 +245,7 @@ public class MyTitleView extends RelativeLayout {
         mSearchOrbView2.setOrbColors(colors);
         mSearchOrbView3.setOrbColors(colors);
         mSearchOrbView4.setOrbColors(colors);
+        mSearchOrbView5.setOrbColors(colors);
     }
 
     public void setOrb1IconResId(int iconResId) {
@@ -238,6 +264,10 @@ public class MyTitleView extends RelativeLayout {
         mSearchOrbView4.setOrbIcon(this.getResources().getDrawable(iconResId));
     }
 
+    public void setOrb5IconResId(int iconResId) {
+        mSearchOrbView5.setOrbIcon(this.getResources().getDrawable(iconResId));
+    }
+
     /**
      * Returns the {@link SearchOrbView.Colors} used to draw the search affordance.
      */
@@ -253,6 +283,7 @@ public class MyTitleView extends RelativeLayout {
         mSearchOrbView2.enableOrbColorAnimation(enable && mSearchOrbView2.hasFocus());
         mSearchOrbView3.enableOrbColorAnimation(enable && mSearchOrbView3.hasFocus());
         mSearchOrbView4.enableOrbColorAnimation(enable && mSearchOrbView4.hasFocus());
+        mSearchOrbView5.enableOrbColorAnimation(enable && mSearchOrbView5.hasFocus());
     }
 
     /**
@@ -287,6 +318,8 @@ public class MyTitleView extends RelativeLayout {
                 descriptionView = mOrb3Description;
             } else if (view.equals(mSearchOrbView4)) {
                 descriptionView = mOrb4Description;
+            } else if (view.equals(mSearchOrbView5)) {
+                descriptionView = mOrb5Description;
             }
 
             if (descriptionView != null) {
