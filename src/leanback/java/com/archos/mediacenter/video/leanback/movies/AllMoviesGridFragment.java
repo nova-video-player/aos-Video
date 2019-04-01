@@ -60,6 +60,8 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
 
     private static final String SORT_PARAM_KEY = AllMoviesGridFragment.class.getName() + "_SORT";
 
+    private static final String SHOW_WATCHED_KEY = AllMoviesGridFragment.class.getName() + "_SHOW_WATCHED";
+
     private CursorObjectAdapter mMoviesAdapter;
     private DisplayMode mDisplayMode;
     private SharedPreferences mPrefs;
@@ -69,6 +71,8 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
     private String mSortOrder;
     private CharSequence[] mSortOrderEntries;
     private BackgroundManager bgMngr = null;
+
+    private boolean mShowWatched;
 
     public static SparseArray<MoviesSortOrderEntry> sortOrderIndexer = new SparseArray<MoviesSortOrderEntry>();
     static {
@@ -93,6 +97,8 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         }
         mSortOrder = mPrefs.getString(SORT_PARAM_KEY, MoviesLoader.DEFAULT_SORT);
         mSortOrderEntries = MoviesSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
+
+        mShowWatched = mPrefs.getBoolean(SHOW_WATCHED_KEY, true);
 
         updateBackground();
 
@@ -128,6 +134,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         setGridPresenter(vgp);
         Bundle args = new Bundle();
         args.putString("sort", mSortOrder);
+        args.putBoolean("showWatched", mShowWatched);
         LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllMoviesGridFragment.this);
     }
 
@@ -145,9 +152,14 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
 
         getTitleView().setOrb3IconResId(R.drawable.orb_sort);
 
+        if (mShowWatched)
+            getTitleView().setOrb4IconResId(R.drawable.orb_hide);
+        else
+            getTitleView().setOrb4IconResId(R.drawable.orb_show);
+
         // Set orb color
         setSearchAffordanceColor(getResources().getColor(R.color.lightblueA200));
-
+        
         // Set first orb action
         getTitleView().setOnOrb1ClickedListener(new View.OnClickListener() {
             @Override
@@ -192,12 +204,34 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
                                     mSortOrder = MoviesSortOrderEntry.item2SortOrder(mSortOrderItem, sortOrderIndexer);
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
+                                    args.putBoolean("showWatched", mShowWatched);
                                     LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllMoviesGridFragment.this);
                                 }
                                 dialog.dismiss();
                             }
                         })
                         .create().show();
+            }
+        });
+
+        // Set fourth orb action
+        getTitleView().setOnOrb4ClickedListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mShowWatched = !mShowWatched;
+                // Save the new setting
+                mPrefs.edit().putBoolean(SHOW_WATCHED_KEY, mShowWatched).commit();
+
+                if (mShowWatched)
+                    getTitleView().setOrb4IconResId(R.drawable.orb_hide);
+                else
+                    getTitleView().setOrb4IconResId(R.drawable.orb_show);
+                
+                // Reload
+                Bundle args = new Bundle();
+                args.putString("sort", mSortOrder);
+                args.putBoolean("showWatched", mShowWatched);
+                LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllMoviesGridFragment.this);
             }
         });
     }
@@ -236,7 +270,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
             if (args == null) {
                 return new MoviesLoader(getActivity(), true);
             } else {
-                return new MoviesLoader(getActivity(), args.getString("sort"), true);
+                return new MoviesLoader(getActivity(), args.getString("sort"), args.getBoolean("showWatched"), true);
             }
         }
         else return null;
@@ -247,7 +281,11 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         if (cursorLoader.getId()==0) {
             mMoviesAdapter.swapCursor(cursor);
             setEmptyViewVisiblity(cursor.getCount()<1);
-            setTitle(getString(R.string.all_movies_format, cursor.getCount()));
+
+            if (mShowWatched)
+                setTitle(getString(R.string.all_movies_format, cursor.getCount()));
+            else
+                setTitle(getString(R.string.unseen_movies_format, cursor.getCount()));
         }
     }
 

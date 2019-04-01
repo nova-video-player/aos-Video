@@ -612,14 +612,14 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             if (args == null) {
                 return new MoviesLoader(getActivity(), true);
             } else {
-                return new MoviesLoader(getActivity(), args.getString("sort"), true);
+                return new MoviesLoader(getActivity(), args.getString("sort"), true, true);
             }
         }
         else if (id == LOADER_ID_ALL_TV_SHOWS) {
             if (args == null) {
                 return new AllTvshowsLoader(getActivity());
             } else {
-                return new AllTvshowsLoader(getActivity(), args.getString("sort"));
+                return new AllTvshowsLoader(getActivity(), args.getString("sort"), true);
             }
         }
         else if (id == LOADER_ID_NON_SCRAPED_VIDEOS_COUNT) {

@@ -18,6 +18,7 @@ import android.content.Context;
 import android.provider.BaseColumns;
 
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
+import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
 /**
@@ -32,17 +33,20 @@ public class AllTvshowsLoader extends VideoLoader {
     public final static String SORT_COUMN_LAST_ADDED = "max_date";
     private String mSortOrder;
 
+    private boolean mShowWatched;
+
     /**
      * List all shows
      * @param context
      */
     public AllTvshowsLoader(Context context) {
-        this(context, TvshowSortOrderEntries.DEFAULT_SORT);
+        this(context, TvshowSortOrderEntries.DEFAULT_SORT, true);
     }
 
-    public AllTvshowsLoader(Context context, String SortOrder) {
+    public AllTvshowsLoader(Context context, String SortOrder, boolean showWatched) {
         super(context);
         mSortOrder = SortOrder;
+        mShowWatched = showWatched;
         init();
     }
 
@@ -84,6 +88,10 @@ public class AllTvshowsLoader extends VideoLoader {
 
         if (sb.length()>0) { sb.append(" AND "); }
         sb.append( VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " > '0'");
+        if (!mShowWatched) {
+            sb.append(" AND ");
+            sb.append(LoaderUtils.HIDE_WATCHED_FILTER);
+        }
         sb.append(") GROUP BY (");
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID);
         return sb.toString();
