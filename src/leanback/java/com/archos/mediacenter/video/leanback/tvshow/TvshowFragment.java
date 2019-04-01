@@ -362,6 +362,15 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         }
     }
 
+    private void slightlyDelayedFinish() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getActivity().finish();
+            }
+        }, 200);
+    }
+
     /** Fill the ShowTags in the given TvShow instance */
     private class FullScraperTagsTask extends AsyncTask<Tvshow, Void, Tvshow> {
 
@@ -450,7 +459,6 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
                 i++;
 
-                LoaderManager.getInstance(this).restartLoader(seasonNumber, null, this);
                 cursor.moveToNext();
             }
 
@@ -460,6 +468,14 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 if (!mHasDetailRow || (mHasDetailRow && j != INDEX_DETAILS))
                     mRowsAdapter.removeItems(j, 1);
             }
+
+            if (mSeasonAdapters.size() == 0) {
+                slightlyDelayedFinish();
+            }
+            else {
+                for (int k = 0; k < mSeasonAdapters.size(); k++)
+                    LoaderManager.getInstance(this).restartLoader(mSeasonAdapters.keyAt(k), null, this);
+            }  
         }
         else {
             // We got the list of episode for one season, load it

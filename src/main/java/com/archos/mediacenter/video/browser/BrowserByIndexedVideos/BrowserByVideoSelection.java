@@ -15,7 +15,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.Browser;
 import com.archos.mediacenter.video.browser.loader.VideosSelectionLoader;
 import com.archos.mediacenter.video.utils.SortOrder;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStore.MediaColumns;
@@ -54,7 +54,7 @@ public class BrowserByVideoSelection extends CursorBrowserByVideo {
 		    mTitle = args.getString(CursorBrowserByVideo.SUBCATEGORY_NAME);
 		}
 		mHideOption = true;
-        mHideWatched = mPreferences.getBoolean(VideoPreferencesFragment.KEY_HIDE_WATCHED,false);
+        mHideWatched = mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED,false);
 	}
 
 	@Override
@@ -232,7 +232,7 @@ public class BrowserByVideoSelection extends CursorBrowserByVideo {
 		if(getArguments()!=null){
 			String listOfMoviesIds = getArguments().getString(BrowserByVideoSelection.LIST_OF_IDS);
 			if (listOfMoviesIds != null)
-				return new VideosSelectionLoader(getContext(), listOfMoviesIds, mSortOrder).getV4CursorLoader(true, mPreferences.getBoolean(VideoPreferencesFragment.KEY_HIDE_WATCHED, false));
+				return new VideosSelectionLoader(getContext(), listOfMoviesIds, mSortOrder).getV4CursorLoader(true, mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
 		}
 		return null;
 	}

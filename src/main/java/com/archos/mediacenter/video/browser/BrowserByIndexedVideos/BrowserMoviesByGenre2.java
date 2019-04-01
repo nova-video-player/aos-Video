@@ -18,7 +18,7 @@ import com.archos.mediacenter.utils.ActionBarSubmenu;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.ThumbnailEngineVideo;
 import com.archos.mediacenter.video.browser.loader.MoviesByGenreLoader;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 
 import android.database.Cursor;
@@ -53,6 +53,6 @@ public class BrowserMoviesByGenre2 extends BrowserMoviesBy {
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new MoviesByGenreLoader(getContext(), mSortOrder).getV4CursorLoader(false, mPreferences.getBoolean(VideoPreferencesFragment.KEY_HIDE_WATCHED, false));
+        return new MoviesByGenreLoader(getContext(), mSortOrder).getV4CursorLoader(false, mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
     }
 }

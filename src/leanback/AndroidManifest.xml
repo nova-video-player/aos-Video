@@ -169,6 +169,18 @@
             android:name="com.archos.mediacenter.video.leanback.network.rescan.RescanActivity"
             android:theme="@style/Theme.Leanback.GuidedStep"/>
 
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.wizard.SubtitlesWizardActivity"
+            android:theme="@style/MyLeanbackTheme.Wizard"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.settings.VideoSettingsActivity"
+            android:theme="@style/MyLeanbackTheme.Preferences"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.settings.VideoSettingsLicencesActivity"
+            android:theme="@style/MyLeanbackTheme.Preferences"/>
+
     </application>
 
 </manifest>

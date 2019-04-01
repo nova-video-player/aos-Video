@@ -312,20 +312,15 @@ public class SubtitleManager {
      * @throws IOException
      */
     public static List<MetaFile2> getSubtitleList(Uri video) throws SftpException, AuthenticationException, JSchException, IOException {
-        final Uri parentUri = FileUtils.getParentUrl(video);
-
-
-        ArrayList<MetaFile2> subs = new ArrayList<>();
-        subs.addAll(recursiveSubListing(parentUri,stripExtension(video), false));
-        return subs;
+        return getSubtitleList(video, false);
     }
 
-    public static List<MetaFile2> getAllSubtitleList(Uri video) throws SftpException, AuthenticationException, JSchException, IOException {
+    public static List<MetaFile2> getSubtitleList(Uri video, boolean addAllSubs) throws SftpException, AuthenticationException, JSchException, IOException {
         final Uri parentUri = FileUtils.getParentUrl(video);
 
 
         ArrayList<MetaFile2> subs = new ArrayList<>();
-        subs.addAll(recursiveSubListing(parentUri,stripExtension(video), true));
+        subs.addAll(recursiveSubListing(parentUri,stripExtension(video), addAllSubs));
         return subs;
     }
 
@@ -383,12 +378,16 @@ public class SubtitleManager {
      * @return
      */
     public List<SubtitleFile> listLocalAndRemotesSubtitles(Uri video) {
+        return listLocalAndRemotesSubtitles(video, false, false);
+    }
+
+    public List<SubtitleFile> listLocalAndRemotesSubtitles(Uri video, boolean addAllSubs, boolean includeIdx) {
         List<MetaFile2> allFiles = new ArrayList<MetaFile2>();
         List<SubtitleFile> subList = new LinkedList<SubtitleFile>();
 
         // List files next to the video files
         if(UriUtils.isImplementedByFileCore(video)) try {
-            allFiles.addAll(getSubtitleList(video));
+            allFiles.addAll(getSubtitleList(video, addAllSubs));
         } catch (SftpException e) {
             e.printStackTrace();
         } catch (AuthenticationException e) {
@@ -405,7 +404,7 @@ public class SubtitleManager {
             try {
                 List<MetaFile2> files = RawListerFactoryWithUpnp.getRawListerForUrl(localSubsDirUri).getFileList();
                 for (MetaFile2 file : files) {
-                    if (file.getName().startsWith(filenameWithoutExtension))
+                    if (file.getName().startsWith(filenameWithoutExtension) || addAllSubs)
                         allFiles.add(file);
                 }
             }
@@ -426,7 +425,7 @@ public class SubtitleManager {
                 final String fileExtension = file.getExtension();
                 if (fileExtension != null) {
                     String subtitleName = null;
-                    if (SubtitleExtensions.contains(fileExtension.toLowerCase(Locale.US))&&!fileExtension.toLowerCase(Locale.US).equals("idx")) {
+                    if (SubtitleExtensions.contains(fileExtension.toLowerCase(Locale.US))&&(!fileExtension.toLowerCase(Locale.US).equals("idx") || includeIdx)) {
                         //Log.d(TAG, "Found external subtitle file: " + file.getUri().toString());
                         // Check if there is    a language extension
                         String language = "";

@@ -15,34 +15,23 @@
 /***************************************************************************************************
 **  This activity is a ListView which contains the following items:
 **    - a SEPARATOR ("subtitles files already associated to the video")
-**    - [mCurrentFilesCount] FILES, or a MESSAGE ("list is empty") if mCurrentFilesCount = 0
+**    - [mWizardCommon.getCurrentFilesCount()] FILES, or a MESSAGE ("list is empty") if mWizardCommon.getCurrentFilesCount() = 0
 **    - a SEPARATOR : "other subtitles files available"
-**    - [mAvailableFilesCount] FILES, or a MESSAGE ("list is empty") if mAvailableFilesCount = 0
+**    - [mWizardCommon.getAvailableFilesCount()] FILES, or a MESSAGE ("list is empty") if mWizardCommon.getAvailableFilesCount() = 0
 ***************************************************************************************************/
 
 package com.archos.mediacenter.video.utils;
 
-import com.archos.filecorelibrary.FileEditor;
-import com.archos.filecorelibrary.FileEditorFactory;
-import com.archos.filecorelibrary.FileUtils;
-import com.archos.filecorelibrary.MetaFile2;
-import com.archos.filecorelibrary.MetaFile2Factory;
 import com.archos.filecorelibrary.OperationEngineListener;
-import com.archos.filecorelibrary.RawListerFactory;
-import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.medialib.IMediaMetadataRetriever;
 import com.archos.medialib.MediaFactory;
-import com.archos.environment.ArchosUtils;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.Formatter;
 import android.util.Log;
@@ -61,18 +50,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-
 public class SubtitlesWizardActivity extends AppCompatActivity implements OnItemClickListener, View.OnCreateContextMenuListener {
     private final static String TAG = "SubtitlesWizardActivity";
     private final static boolean DBG = false;
-
-    // Subtitles files will be renamed as : video_name + SUBTITLES_FILES_SUFFIX + file_counter + extension
-    // (for instance "." => myvideo.srt, myvideo.1.srt, myvideo.2.srt, ...)
-    private final static String SUBTITLES_FILES_SUFFIX = ".";
 
     private static final int ITEM_DATA_TYPE_SEPARATOR = 0;
     private static final int ITEM_DATA_TYPE_CURRENT = 1;
@@ -82,16 +62,9 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
     private ListView mListView;
     private TextView mEmptyView;
 
-    private String mVideoPath;
-    private Uri mVideoUri;
-
-    private List<String> mCurrentFiles;
-    private int mCurrentFilesCount;
-
-    private List<String> mAvailableFiles;
-    private int mAvailableFilesCount;
-
     private int mPosition;
+
+    private SubtitlesWizardCommon mWizardCommon = new SubtitlesWizardCommon(this);
     
     //private int mDefaultIconsColor;
 
@@ -113,44 +86,12 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
 
         setContentView(R.layout.subtitles_wizard_main);
 
-        // Extract the path of the video to handle from the intent
-        Uri videoUri = getIntent().getData();
-        if (videoUri != null) {
-            mVideoUri = videoUri;
-            mVideoPath = videoUri.toString();
-            if (DBG) Log.d(TAG, "onCreate : video to process = " + mVideoPath);
-
-            if (mVideoPath != null) {
-                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
-                StrictMode.setThreadPolicy(policy);
-
-                // Retrieve the list of subtitles files already associated with the video
-                mCurrentFilesCount = buildCurrentSubtitlesFilesList(mVideoPath);
-                if (DBG) Log.d(TAG, "onCreate : mCurrentFilesCount = " + mCurrentFilesCount);
-
-                // Get the list of subtitles files available in the current folder
-                mAvailableFilesCount = buildAvailableSubtitlesFilesList(FileUtils.getParentUrl(mVideoUri).toString());
-                if (DBG) Log.d(TAG, "onCreate : mAvailableFilesCount = " + mAvailableFilesCount);
-            }
-        }
-        else {
-            // Bad intent
-            Log.e(TAG, "onCreate error : no folder provided");
-            mVideoUri = null;
-        }
+        mWizardCommon.onCreate();
 
         // Use the name of the video to build the help message displayed at the top of the screen
         TextView helpMessageHeader = (TextView) findViewById(R.id.help_message_header);
-        String name = FileUtils.getFileNameWithoutExtension(mVideoUri);
 
-        String helpMessage;
-        if (mAvailableFilesCount == 0 && mCurrentFilesCount == 0) {
-            helpMessage = getString(R.string.subtitles_wizard_empty_list_help).replace("%s", name);
-        }
-        else {
-            helpMessage = getString(R.string.subtitles_wizard_help).replace("%s", name);
-        }
+        String helpMessage = mWizardCommon.getHelpMessage();
         helpMessageHeader.setText(helpMessage);
 
         // Inflate the view to show if no subtitles files are found
@@ -164,11 +105,12 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
         mListView.setCacheColorHint(0);
         mListView.setOnItemClickListener(this);
         mListView.setOnCreateContextMenuListener(this);
+        mListView.setSelector(R.drawable.list_selector_no_background);
 
         //mDefaultIconsColor = getResources().getColor(R.color.default_icons_color_filter);
         
         // Handle the message to display when there are no files
-        enableEmptyView(mAvailableFilesCount == 0 && mCurrentFilesCount == 0);
+        enableEmptyView(mWizardCommon.getAvailableFilesCount() == 0 && mWizardCommon.getCurrentFilesCount() == 0);
     }
 
     private void enableEmptyView(boolean empty) {
@@ -216,8 +158,7 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
         }
 
         // Show the name of the file in the header
-        Uri uri = Uri.parse(itemData.path);
-        menu.setHeaderTitle(FileUtils.getName(uri));
+        menu.setHeaderTitle(mWizardCommon.getFileName(itemData.path));
 
         if (itemData.type == ITEM_DATA_TYPE_CURRENT) {
             // Contextual menu for current subtitles files
@@ -255,8 +196,8 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
      */
     private int getItemsCount() {
         // Take into account the "list is empty" message when a list is empty
-        int currentListItemsCount = Math.max(mCurrentFilesCount, 1);
-        int availableListItemsCount = Math.max(mAvailableFilesCount, 1);
+        int currentListItemsCount = Math.max(mWizardCommon.getCurrentFilesCount(), 1);
+        int availableListItemsCount = Math.max(mWizardCommon.getAvailableFilesCount(), 1);
 
         // Add the separators
         return currentListItemsCount + availableListItemsCount + 2;
@@ -269,7 +210,7 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
     private ItemData getItemData(int position) {
         ItemData data = new ItemData();
 
-        int currentListItemsCount = Math.max(mCurrentFilesCount, 1);
+        int currentListItemsCount = Math.max(mWizardCommon.getCurrentFilesCount(), 1);
 
         if (position == 0 || position == currentListItemsCount + 1) {
             data.type = ITEM_DATA_TYPE_SEPARATOR;
@@ -277,10 +218,10 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
             data.path = null;
         }
         else if (position <= currentListItemsCount) {
-            if (mCurrentFilesCount > 0) {
+            if (mWizardCommon.getCurrentFilesCount() > 0) {
                 data.type = ITEM_DATA_TYPE_CURRENT;
                 data.index = position - 1;
-                data.path =  mCurrentFiles.get(data.index);
+                data.path =  mWizardCommon.getCurrentFile(data.index);
             }
             else {
                 data.type = ITEM_DATA_TYPE_MESSAGE;
@@ -289,10 +230,10 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
             }
         }
         else {
-            if (mAvailableFilesCount > 0) {
+            if (mWizardCommon.getAvailableFilesCount() > 0) {
                 data.type = ITEM_DATA_TYPE_AVAILABLE;
                 data.index = position - currentListItemsCount - 2;
-                data.path =  mAvailableFiles.get(data.index);
+                data.path =  mWizardCommon.getAvailableFile(data.index);
             }
             else {
                 // "List is empty" message
@@ -305,222 +246,14 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
         return data;
     }
 
-    private int buildCurrentSubtitlesFilesList(String videoPath) {
-        if (DBG) Log.d(TAG, "buildCurrentSubtitlesFilesList : get current subtitles files");
-
-        mCurrentFiles = new ArrayList<String>();
-
-        // Get subtitles files from SubtitleManager
-        SubtitleManager lister = new SubtitleManager(this, null);
-
-        try {
-            Uri videoUri = Uri.parse(videoPath);
-            List<SubtitleManager.SubtitleFile> list = lister.listLocalAndRemotesSubtitles(videoUri);
-
-            // Retrieve the path of each file found and add it to the available subtitles list
-            for(SubtitleManager.SubtitleFile sub : list)
-                mCurrentFiles.add(sub.mFile.getUri().toString());
-        } catch (Exception ex) {
-            Log.e(TAG, "buildCurrentSubtitlesFilesList error : failed to get data from SubtitleManager");
-        }
-        
-        return mCurrentFiles.size();
-    }
-
-    private int buildAvailableSubtitlesFilesList(String folderPath) {
-        if (DBG) Log.d(TAG, "buildAvailableSubtitlesFilesList : search subtitles files in folder " + folderPath);
-        
-        mAvailableFiles = new ArrayList<String>();
-
-        // Make sure the provided path corresponds to a folder
-        Uri folderUri = Uri.parse(folderPath);
-        MetaFile2 folder = null;
-        try {
-            folder = MetaFile2Factory.getMetaFileForUrl(folderUri);
-        }
-        catch (Exception e) {
-            Log.e(TAG, "buildAvailableSubtitlesFilesList error : can not get folder");
-            return 0;
-        }
-        if (!folder.isDirectory()) {
-            return 0;
-        }
-
-        // Get the list of entries contained in the provided directory
-        List<MetaFile2> files = null;
-        try {
-            files = RawListerFactory.getRawListerForUrl(folderUri).getFileList();
-        }
-        catch (Exception e) {
-            Log.e(TAG, "buildAvailableSubtitlesFilesList error : can not get list of files");
-            return 0;
-        }
-
-        // Check the entries and keep only those which correspond to subtitles files
-        for (MetaFile2 f : files) {
-            // Make sure this is a file
-            if (f.isFile()) {
-                // Ignore files starting with a dot
-                if (!f.getName().startsWith(".")) {
-                    // Check the file extension
-                    String path = f.getUri().toString();
-                    String extension = f.getExtension();
-                    if ((extension != null) && VideoUtils.getSubtitleExtensions().contains(extension)) {
-                        // We found a subtitles file => add it to the available list
-                        // if it is not already associated to the selected video
-                        int i;
-                        boolean fileAlreadyAssociated = false;
-
-                        for (i = 0; i < mCurrentFilesCount; i++) {
-                            String pathToCheck = mCurrentFiles.get(i);
-                            if (pathToCheck.equals(path)) {
-                                // This file already belongs to the current list of subtitles files => skip it
-                                fileAlreadyAssociated = true;
-                                break;
-                            }
-                        }
-
-                        if (!fileAlreadyAssociated) {
-                            mAvailableFiles.add(path);
-                        }
-                    }
-                }
-            }
-        }
-
-        if (DBG) Log.d(TAG, "Found " + mAvailableFiles.size() + " subtitles files out of " + files.size());
-        return mAvailableFiles.size();
-    }
-
-    /*
-     * Builds a new name for a subtitles file when it is associated to the selected video
-     */
-    private String buildSubtitlesFilename(String subtitlesPath) {
-        int i;
-        int count;
-        int maxCount = 0;
-        boolean sameNameFound = false;
-
-        // Split the path of the provided subtitles file
-        String subtitlesExtension = FileUtils.getExtension(subtitlesPath);
-        // String subtitlesName;
-        // if (subtitlesExtension != null) {
-        //     subtitlesName = subtitlesPath.substring(0, subtitlesPath.length() - subtitlesExtension.length() - 1);
-        // }
-        // else {
-        //     subtitlesName = subtitlesPath;
-        // }
-
-        // Split the path of the selected video
-        String videoExtension = FileUtils.getExtension(mVideoPath);
-        String videoName;
-        if (videoExtension != null) {
-            videoName = mVideoPath.substring(0, mVideoPath.length() - videoExtension.length() - 1);
-        }
-        else {
-            videoName = mVideoPath;
-        }
-        int videoNameLength = videoName.length();
-
-        // Compare the name of the selected video to the name of all current subtitle files
-        // in order to check if there is a suffix after the name
-        for (i = 0; i < mCurrentFilesCount; i++) {
-            // Remove the extension
-            String path = mCurrentFiles.get(i);
-            String extension = FileUtils.getExtension(path);
-            if (extension != null) {
-                String name = path.substring(0, path.length() - extension.length() - 1);
-                int nameLength = name.length();
-                if (nameLength >= videoNameLength && name.startsWith(videoName)) {
-                    sameNameFound = true;
-                    String suffix = name.substring(videoNameLength);
-                    if (suffix.startsWith(SUBTITLES_FILES_SUFFIX)) {
-                        // cs should correspond to a number (for instance path="Big Buck Bunny.17.srt" => cs="17"
-                        String cs = suffix.substring(SUBTITLES_FILES_SUFFIX.length());
-                        try   {
-                            // valid index, remember the highest value
-                            count = Integer.parseInt(cs);
-                            if (count > maxCount) {
-                                maxCount = count;
-                            }
-                        }
-                        catch (NumberFormatException e) {
-                            // Invalid format  => ignore this file
-                        }
-                    }
-                }
-            }
-        }
-
-        // Build a name for the provided subtitles file starting with the name of the video
-        if (sameNameFound) {
-            return (videoName + SUBTITLES_FILES_SUFFIX + String.valueOf(maxCount + 1) + "." + subtitlesExtension);
-        }
-        else {
-            return (videoName + "." + subtitlesExtension);
-        }
-    }
-
     private void renameFile(int position) {
         ItemData itemData = getItemData(position);
 
         // Only files from the available list can be renamed
         if (itemData.type == ITEM_DATA_TYPE_AVAILABLE) {
-            boolean fileRenamed = false;
-
-            // Find a name for this file
-            String oldFilePath = itemData.path;
-            String newFilePath = buildSubtitlesFilename(oldFilePath);
-
-            Uri oldUri = Uri.parse(oldFilePath);
-            FileEditor oldFile = FileEditorFactory.getFileEditorForUrl(oldUri, this);
-            Uri newUri = Uri.parse(newFilePath);
-            String newName = FileUtils.getName(newUri);
-            // Rename the file
-            try {
-                fileRenamed = oldFile.rename(newName);
-                if (DBG) Log.d(TAG, "onItemClick : selected file renamed as " + newFilePath);
-            }
-            catch (Exception e) {
-                Log.d(TAG, "renameFile : can not rename file as " + newFilePath);
-            }
-
-            String cacheOldFilePath = MediaUtils.getSubsDir(this).getPath() + "/" + FileUtils.getName(oldUri);
-            String cacheNewFilePath = MediaUtils.getSubsDir(this).getPath() + "/" + FileUtils.getName(newUri);
-
-            File cacheOldFile = new File(cacheOldFilePath);
-            File cacheNewFile = new File(cacheNewFilePath);
-            if (cacheOldFile.exists()) {
-                try {
-                    cacheOldFile.renameTo(cacheNewFile);
-                    if (DBG) Log.d(TAG, "onItemClick : selected file renamed as " + cacheNewFilePath);
-                }
-                catch (Exception e) {
-                    Log.d(TAG, "renameFile : can not rename file as " + cacheNewFilePath);
-                }
-            }
+            boolean fileRenamed = mWizardCommon.renameFile(itemData.path, itemData.index);
 
             if (fileRenamed) {
-                // Update the medialib
-                Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, oldUri);
-                intent1.setPackage(ArchosUtils.getGlobalContext().getPackageName());
-                sendBroadcast(intent1);
-                Intent intent2 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, newUri);
-                intent2.setPackage(ArchosUtils.getGlobalContext().getPackageName());
-                sendBroadcast(intent2);
-
-                if (DBG) Log.d(TAG, "rescanning Video: " + mVideoUri.toString());
-                Intent intent3 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, mVideoUri);
-                intent3.setPackage(ArchosUtils.getGlobalContext().getPackageName());
-                sendBroadcast(intent3);
-
-                // Update the local data : add the file to current subtitles list
-                // and remove it from the available subtitles list
-                mCurrentFiles.add(newFilePath);
-                mCurrentFilesCount++;
-                mAvailableFiles.remove(itemData.index);
-                mAvailableFilesCount--;
-
                 // Update the activity screen
                 mListView.invalidateViews();
                 setResult(Activity.RESULT_OK);
@@ -532,49 +265,10 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
         ItemData itemData = getItemData(position);
 
         if (itemData.type == ITEM_DATA_TYPE_CURRENT || itemData.type == ITEM_DATA_TYPE_AVAILABLE) {
-            Uri uri = Uri.parse(itemData.path);
-            FileEditor file = FileEditorFactory.getFileEditorForUrl(uri, this);
-            try {
-                file.delete();
-                if (DBG) Log.d(TAG, "deleteFile : file " + itemData.path + " deleted");
-            }
-            catch (Exception e) {
-                Log.d(TAG, "deleteFile : can not delete file " + itemData.path);
-            }
+            boolean fileDeleted = mWizardCommon.deleteFile(itemData.path, itemData.index, itemData.type == ITEM_DATA_TYPE_CURRENT);
 
-            String cacheFilePath = MediaUtils.getSubsDir(this).getPath() + "/" + FileUtils.getName(uri);
-            File cacheFile = new File(cacheFilePath);
-            if (cacheFile.exists()) {
-                try {
-                    cacheFile.delete();
-                    if (DBG) Log.d(TAG, "deleteFile : file " + cacheFilePath + " deleted");
-                }
-                catch (Exception e) {
-                    Log.d(TAG, "deleteFile : can not delete file " + cacheFilePath);
-                }
-            }
-
-            if (!file.exists()) {
-                // Update the medialib
-                Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri);
-                intent1.setPackage(ArchosUtils.getGlobalContext().getPackageName());
-                sendBroadcast(intent1);
-
-                if (DBG) Log.d(TAG, "rescanning Video: " + mVideoUri.toString());
-                Intent intent2 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, mVideoUri);
-                intent2.setPackage(ArchosUtils.getGlobalContext().getPackageName());
-                sendBroadcast(intent2);
-                // Update the local data : remove the file from the list it belongs
-                if (itemData.type == ITEM_DATA_TYPE_CURRENT) {
-                    mCurrentFiles.remove(itemData.index);
-                    mCurrentFilesCount--;
-                }
-                else {
-                    mAvailableFiles.remove(itemData.index);
-                    mAvailableFilesCount--;
-                }
-
-                if (mCurrentFilesCount == 0 && mAvailableFilesCount == 0) {
+            if (fileDeleted) {
+                if (mWizardCommon.getCurrentFilesCount() == 0 && mWizardCommon.getAvailableFilesCount() == 0) {
                     // The user deleted the last subtitles file of the folder
                     enableEmptyView(true);
                 }
@@ -668,6 +362,12 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
             //-------------------------------------------------------
             // Update the item
             //-------------------------------------------------------
+            // Background bitmap
+            if (holder.container != null) {
+                int resId = (itemType == ITEM_VIEW_TYPE_FILE) ? R.drawable.list_item_background : 0;
+                holder.container.setBackgroundResource(resId);
+            }
+            
             // Icon
             if (holder.icon != null && isFile) {
                 holder.icon.setImageResource(R.drawable.filetype_video_subtitles);
@@ -684,17 +384,7 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
                 String size = "";
 
                 if (isFile && itemData.path != null) {
-                    Uri uri = Uri.parse(itemData.path);
-                    MetaFile2 file = null;
-                    try {
-                        file = MetaFile2Factory.getMetaFileForUrl(uri);
-                    }
-                    catch (Exception e) {
-                        Log.e(TAG, "getView error : can not get file");
-                    }
-                    if (file != null) {
-                        size = Formatter.formatFileSize(mActivity, file.length());
-                    }
+                    size = mWizardCommon.getFileSize(itemData.path);
                 }
 
                 holder.size.setText(size);
@@ -769,8 +459,7 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
 
                 default:
                     // File
-                    Uri uri = Uri.parse(itemData.path);
-                    text = FileUtils.getName(uri);
+                    text = mWizardCommon.getFileName(itemData.path);
             }
 
             return text;

@@ -80,7 +80,7 @@ import com.archos.mediacenter.video.leanback.tvshow.TvshowsByAlphaActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowsByGenreActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.WebUtils;
 import com.archos.mediaprovider.ArchosMediaIntent;
 import com.archos.mediaprovider.video.VideoStore;
@@ -183,12 +183,12 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         super.onActivityCreated(savedInstanceState);
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mShowLastAddedRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_LAST_ADDED_ROW, VideoPreferencesFragment.SHOW_LAST_ADDED_ROW_DEFAULT);
-        mShowLastPlayedRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_LAST_PLAYED_ROW, VideoPreferencesFragment.SHOW_LAST_PLAYED_ROW_DEFAULT);
-        mShowMoviesRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_ALL_MOVIES_ROW, VideoPreferencesFragment.SHOW_ALL_MOVIES_ROW_DEFAULT);
-        mMovieSortOrder = mPrefs.getString(VideoPreferencesFragment.KEY_MOVIE_SORT_ORDER, MoviesLoader.DEFAULT_SORT);
-        mShowTvshowsRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_ALL_TV_SHOWS_ROW, VideoPreferencesFragment.SHOW_ALL_TV_SHOWS_ROW_DEFAULT);
-        mTvShowSortOrder = mPrefs.getString(VideoPreferencesFragment.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
+        mShowLastAddedRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_ADDED_ROW, VideoPreferencesCommon.SHOW_LAST_ADDED_ROW_DEFAULT);
+        mShowLastPlayedRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_PLAYED_ROW, VideoPreferencesCommon.SHOW_LAST_PLAYED_ROW_DEFAULT);
+        mShowMoviesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_MOVIES_ROW, VideoPreferencesCommon.SHOW_ALL_MOVIES_ROW_DEFAULT);
+        mMovieSortOrder = mPrefs.getString(VideoPreferencesCommon.KEY_MOVIE_SORT_ORDER, MoviesLoader.DEFAULT_SORT);
+        mShowTvshowsRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_TV_SHOWS_ROW, VideoPreferencesCommon.SHOW_ALL_TV_SHOWS_ROW_DEFAULT);
+        mTvShowSortOrder = mPrefs.getString(VideoPreferencesCommon.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
 
         if (mPrefs.getBoolean(PREF_PRIVATE_MODE, false) !=  PrivateMode.isActive()) {
             PrivateMode.toggle();
@@ -247,35 +247,35 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         getActivity().registerReceiver(mUpdateReceiver, mUpdateFilter);
         
-        boolean newShowLastAddedRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_LAST_ADDED_ROW, VideoPreferencesFragment.SHOW_LAST_ADDED_ROW_DEFAULT);
+        boolean newShowLastAddedRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_ADDED_ROW, VideoPreferencesCommon.SHOW_LAST_ADDED_ROW_DEFAULT);
 
         if (newShowLastAddedRow != mShowLastAddedRow) {
             mShowLastAddedRow = newShowLastAddedRow;
             updateLastAddedRow(null);
         }
 
-        boolean newShowLastPlayedRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_LAST_PLAYED_ROW, VideoPreferencesFragment.SHOW_LAST_PLAYED_ROW_DEFAULT);
+        boolean newShowLastPlayedRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_PLAYED_ROW, VideoPreferencesCommon.SHOW_LAST_PLAYED_ROW_DEFAULT);
 
         if (newShowLastPlayedRow != mShowLastPlayedRow) {
             mShowLastPlayedRow = newShowLastPlayedRow;
             updateLastPlayedRow(null);
         }
 
-        boolean newShowMoviesRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_ALL_MOVIES_ROW, VideoPreferencesFragment.SHOW_ALL_MOVIES_ROW_DEFAULT);
+        boolean newShowMoviesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_MOVIES_ROW, VideoPreferencesCommon.SHOW_ALL_MOVIES_ROW_DEFAULT);
         
         if (newShowMoviesRow != mShowMoviesRow) {
             mShowMoviesRow = newShowMoviesRow;
             updateMoviesRow(null);
         }
 
-        boolean newShowTvshowsRow = mPrefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_ALL_TV_SHOWS_ROW, VideoPreferencesFragment.SHOW_ALL_TV_SHOWS_ROW_DEFAULT);
+        boolean newShowTvshowsRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_TV_SHOWS_ROW, VideoPreferencesCommon.SHOW_ALL_TV_SHOWS_ROW_DEFAULT);
 
         if (newShowTvshowsRow != mShowTvshowsRow) {
             mShowTvshowsRow = newShowTvshowsRow;
             updateTvShowsRow(null);
         }
 
-        String newMovieSortOrder = mPrefs.getString(VideoPreferencesFragment.KEY_MOVIE_SORT_ORDER, MoviesLoader.DEFAULT_SORT);
+        String newMovieSortOrder = mPrefs.getString(VideoPreferencesCommon.KEY_MOVIE_SORT_ORDER, MoviesLoader.DEFAULT_SORT);
 
         if (!newMovieSortOrder.equals(mMovieSortOrder)) {
             mMovieSortOrder = newMovieSortOrder;
@@ -285,7 +285,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             getLoaderManager().restartLoader(LOADER_ID_ALL_MOVIES, args, this);
         }
 
-        String newTvShowSortOrder = mPrefs.getString(VideoPreferencesFragment.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
+        String newTvShowSortOrder = mPrefs.getString(VideoPreferencesCommon.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
 
         if (!newTvShowSortOrder.equals(mTvShowSortOrder)) {
             mTvShowSortOrder = newTvShowSortOrder;
@@ -731,7 +731,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         mFileBrowsingRowAdapter.clear();
         mFileBrowsingRowAdapter.add(new Box(Box.ID.NETWORK, getString(R.string.network_storage), R.drawable.filetype_new_server));
         mFileBrowsingRowAdapter.add(new Box(Box.ID.FOLDERS, getString(R.string.internal_storage), R.drawable.filetype_new_folder));
-        mFileBrowsingRowAdapter.add(new Box(Box.ID.VIDEOS_BY_LISTS, getString(R.string.video_lists), R.drawable.filetype_new_playlist));
 
         if (hasExternal) {
             for(String s : storageManager.getExtSdcards()) {
@@ -747,6 +746,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 mFileBrowsingRowAdapter.add(item);
             }
         }
+
+        mFileBrowsingRowAdapter.add(new Box(Box.ID.VIDEOS_BY_LISTS, getString(R.string.video_lists), R.drawable.filetype_new_playlist));
     }
 
     private void updatePrivateMode(Icon icon) {

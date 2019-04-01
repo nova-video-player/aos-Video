@@ -14,7 +14,7 @@
 
 package com.archos.mediacenter.video.player;
 
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 
 import android.content.Context;
 import android.content.Intent;
@@ -49,7 +49,7 @@ public class StereoMergeArchosEffect extends VideoEffect
         super.setEffectMode(mode);
         mode = getEffectMode();
         if (mode != 0) mode = Integer.numberOfTrailingZeros(mode);
-        if(mPreferences.getBoolean(VideoPreferencesFragment.KEY_ACTIVATE_3D_SWITCH, false)){
+        if(mPreferences.getBoolean(VideoPreferencesCommon.KEY_ACTIVATE_3D_SWITCH, false)){
             String msg = S3D_MODE[mode];
             Intent intent = new Intent (SET_S3D_MODE_INTENT);
             intent.putExtra ("mode", msg);
@@ -64,7 +64,7 @@ public class StereoMergeArchosEffect extends VideoEffect
     }
     
     public int getUIMode() {
-        if(!mPreferences.getBoolean(VideoPreferencesFragment.KEY_ACTIVATE_3D_SWITCH, false)){
+        if(!mPreferences.getBoolean(VideoPreferencesCommon.KEY_ACTIVATE_3D_SWITCH, false)){
             switch (getEffectMode()) {
                 case VideoEffect.STEREO_2D_MODE:
                 case VideoEffect.SBS_MODE:

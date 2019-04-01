@@ -16,7 +16,7 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.SearchVideoLoader;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 
 import android.database.Cursor;
@@ -84,6 +84,6 @@ public class BrowserByQuery extends CursorBrowserByVideo {
         }
         SearchVideoLoader loader = new SearchVideoLoader(getContext());
         loader.setQuery(filterString);
-        return loader.getV4CursorLoader(true, mPreferences.getBoolean(VideoPreferencesFragment.KEY_HIDE_WATCHED, false));
+        return loader.getV4CursorLoader(true, mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
     }
 }

@@ -103,6 +103,7 @@ import com.archos.mediacenter.video.leanback.presenter.VideoBadgePresenter;
 import com.archos.mediacenter.video.leanback.scrapping.ManualVideoScrappingActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowFragment;
+import com.archos.mediacenter.video.leanback.wizard.SubtitlesWizardActivity;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
@@ -112,9 +113,8 @@ import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.StoreRatingDialogBuilder;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
-import com.archos.mediacenter.video.utils.SubtitlesWizardActivity;
 import com.archos.mediacenter.video.utils.VideoMetadata;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.WebUtils;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
@@ -1392,7 +1392,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             }
             
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            boolean showTrailerRow = prefs.getBoolean(VideoPreferencesFragment.KEY_SHOW_TRAILER_ROW, VideoPreferencesFragment.SHOW_TRAILER_ROW_DEFAULT);
+            boolean showTrailerRow = prefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_TRAILER_ROW, VideoPreferencesCommon.SHOW_TRAILER_ROW_DEFAULT);
 
             if(mTrailers!=null&&mTrailers.size()>0 && showTrailerRow){
                 ArrayObjectAdapter postersRowAdapter = new ArrayObjectAdapter(new TrailerPresenter(getActivity()));

@@ -65,7 +65,7 @@ import com.archos.mediacenter.video.browser.presenter.Metafile2GridPresenter;
 import com.archos.mediacenter.video.browser.presenter.Metafile2ListPresenter;
 import com.archos.mediacenter.video.browser.presenter.VideoPresenter;
 import com.archos.mediacenter.video.utils.PlayUtils;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 
 import java.io.File;
@@ -258,7 +258,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         ArrayList<String>ext = new ArrayList<>(VideoUtils.getSubtitleExtensions());
         ext.add(XmlDb.FILE_EXTENSION);
         mListingEngine.setKeepHiddenFiles(true);
-        if(!VideoPreferencesFragment.PreferenceHelper.shouldDisplayAllFiles(getActivity()))
+        if(!VideoPreferencesCommon.PreferenceHelper.shouldDisplayAllFiles(getActivity()))
             mListingEngine.setFilter(VideoUtils.getVideoFilterMimeTypes(), ext.toArray(new String[0])); // display video files only but retrieve xml DB + subs
         mListingEngine.setListener(this);
         mListingEngine.start();

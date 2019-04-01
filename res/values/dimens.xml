@@ -58,4 +58,7 @@
     <dimen name="lb_details_v2_description_margin_end">32dp</dimen>
     <dimen name="lb_details_v2_align_pos_for_actions">138dp</dimen>
 
+    <item name="wrap_content" format="integer" type="dimen">-2</item>
+    <dimen name="lb_guidedactions_item_icon_width">@dimen/wrap_content</dimen>
+
 </resources>

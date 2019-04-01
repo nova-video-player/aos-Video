@@ -80,7 +80,7 @@ import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
 import com.archos.mediacenter.video.utils.SubtitlesWizardActivity;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.ImportState;
 
@@ -1052,7 +1052,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
         if (item.getItemId() == MENU_VIEW_HIDE_SEEN){
             mHideWatched = !mHideWatched;
             item.setTitle(mHideWatched ? R.string.hide_seen : R.string.show_all);
-            mPreferences.edit().putBoolean(VideoPreferencesFragment.KEY_HIDE_WATCHED, mHideWatched).apply();
+            mPreferences.edit().putBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, mHideWatched).apply();
         }
 
         else if (item.getItemId()==R.string.multiple_selection){

@@ -28,7 +28,7 @@ import com.archos.mediacenter.video.browser.adapters.object.NonIndexedVideo;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingFragment;
 import com.archos.mediacenter.video.leanback.network.NetworkListingFragment;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class SmbListingFragment extends NetworkListingFragment {
     @Override
     protected void setListingEngineOptions(ListingEngine listingEngine) {
         listingEngine.setKeepHiddenFiles(true);
-        if(!VideoPreferencesFragment.PreferenceHelper.shouldDisplayAllFiles(getActivity()))
+        if(!VideoPreferencesCommon.PreferenceHelper.shouldDisplayAllFiles(getActivity()))
             listingEngine.setFilter(VideoUtils.getVideoFilterMimeTypes(), new String[]{XmlDb.FILE_EXTENSION}); // display video files only but retrieve xml DB
 
     }

@@ -38,7 +38,7 @@ import com.archos.mediacenter.video.browser.ThumbnailRequesterVideo;
 import com.archos.mediacenter.video.browser.adapters.CursorAdapterByVideo;
 import com.archos.mediacenter.video.browser.adapters.PresenterAdapterByCursor;
 import com.archos.mediacenter.video.browser.adapters.PresenterAdapterInterface;
-import com.archos.mediacenter.video.utils.VideoPreferencesFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 
 import java.io.File;
 
@@ -80,7 +80,7 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
             mTitle = args.getString(SUBCATEGORY_NAME);
         }
         mHideOption = true;
-        mHideWatched = mPreferences.getBoolean(VideoPreferencesFragment.KEY_HIDE_WATCHED, false);
+        mHideWatched = mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false);
     }
 
 
@@ -194,7 +194,7 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
         if (item.getItemId() == MENU_VIEW_HIDE_SEEN){
             mHideWatched = !mHideWatched;
             item.setTitle(mHideWatched ? R.string.hide_seen : R.string.show_all);
-            mPreferences.edit().putBoolean(VideoPreferencesFragment.KEY_HIDE_WATCHED, mHideWatched).apply();
+            mPreferences.edit().putBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, mHideWatched).apply();
             LoaderManager.getInstance(getActivity()).restartLoader(0, null, this);
             return true;
         } else
