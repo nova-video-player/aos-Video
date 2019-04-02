@@ -43,7 +43,7 @@ public class TvshowsByRatingLoader extends TvshowsByLoader {
                 "    count( s_id ) AS number\n" +
                 "FROM  ( \n" +
                 "  SELECT s_id, s_po_large_file, s_rating FROM video\n"+
-                "  WHERE s_id IS NOT NULL AND s_rating IS NOT NULL"+ getCommonSelection()+"\n"+
+                "  WHERE s_id IS NOT NULL AND s_rating > 0"+ getCommonSelection()+"\n"+
                 ") \n" +
                 "GROUP BY name\n" +
                 " ORDER BY " + mSortOrder;

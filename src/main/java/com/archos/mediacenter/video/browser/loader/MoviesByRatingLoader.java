@@ -43,7 +43,7 @@ public class MoviesByRatingLoader extends MoviesByLoader {
                 "    count( m_id ) AS number\n" +
                 "FROM  ( \n" +
                 "  SELECT m_id, m_po_large_file, m_rating FROM video\n"+
-                "  WHERE m_id IS NOT NULL AND m_rating IS NOT NULL" + getCommonSelection()+"\n"+
+                "  WHERE m_id IS NOT NULL AND m_rating > 0" + getCommonSelection()+"\n"+
                 ") \n" +
                 "GROUP BY name\n" +
                 " ORDER BY "+mSortOrder;
