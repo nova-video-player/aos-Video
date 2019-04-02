@@ -670,6 +670,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
                 mOverviewRowPresenter.moveSelectedPosition(offset);
                 DbUtils.markAsRead(getActivity(), mVideo);
+                getActivity().setResult(Activity.RESULT_OK);
             }
             else if (action.getId() == VideoActionAdapter.ACTION_MARK_AS_NOT_WATCHED) {
                 int offset = 0;
@@ -682,6 +683,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
                 mOverviewRowPresenter.moveSelectedPosition(offset);
                 DbUtils.markAsNotRead(getActivity(), mVideo);
+                getActivity().setResult(Activity.RESULT_OK);
             }
         }
     };
