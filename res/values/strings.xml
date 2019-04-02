@@ -674,8 +674,6 @@
    <string name="preferences_show_all_tv_shows_row">Show all TV show row</string>
    <string name="preferences_tv_show_sort_order_summary">Select the sort order of the all TV show row</string>
    <string name="preferences_tv_show_sort_order_title">All TV show row sort order</string>
-   <string name="preferences_show_trailer_row_summary">Check to show a row with trailers in movies</string>
-   <string name="preferences_show_trailer_row">Show trailer row in movies</string>
 
    <string name="codepage_title">Subtitles encoding</string>
    <string name="codepage_summary">Set the encoding used in text subtitles</string>

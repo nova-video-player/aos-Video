@@ -193,6 +193,10 @@
             android:name="com.archos.mediacenter.video.leanback.settings.VideoSettingsLicencesActivity"
             android:theme="@style/MyLeanbackTheme.Preferences"/>
 
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.settings.VideoSettingsMoreLeanbackActivity"
+            android:theme="@style/MyLeanbackTheme.Preferences"/>
+
     </application>
 
 </manifest>

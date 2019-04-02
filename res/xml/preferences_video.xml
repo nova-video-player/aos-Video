@@ -154,13 +154,6 @@
             android:summary="@string/preferences_tv_show_sort_order_summary"
             android:title="@string/preferences_tv_show_sort_order_title"
         app:iconSpaceReserved="false"/>
-	    
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="show_trailer_row"
-            android:summary="@string/preferences_show_trailer_row_summary"
-            android:title="@string/preferences_show_trailer_row"
-            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/category_languages"
         app:iconSpaceReserved="false" >

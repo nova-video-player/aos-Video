@@ -54,6 +54,7 @@ import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridFragment;
 import com.archos.mediacenter.video.leanback.movies.MoviesSortOrderEntry;
 import com.archos.mediacenter.video.leanback.settings.VideoSettingsLicencesActivity;
+import com.archos.mediacenter.video.leanback.settings.VideoSettingsMoreLeanbackActivity;
 import com.archos.mediacenter.video.leanback.tvshow.AllTvshowsGridFragment;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowsSortOrderEntry;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
@@ -100,7 +101,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_MOVIE_SORT_ORDER ="preferences_movie_sort_order";
     public static final String KEY_SHOW_ALL_TV_SHOWS_ROW = "show_all_tv_shows_row";
     public static final String KEY_TV_SHOW_SORT_ORDER ="preferences_tv_show_sort_order";
+
+    public static final String KEY_SHOW_POSITIVE_TIME = "show_positive_time";
     public static final String KEY_SHOW_TRAILER_ROW = "show_trailer_row";
+    public static final String KEY_HIDE_BY_RATING = "hide_by_rating";
 
     public static final String KEY_VIDEO_OS = "preferences_video_os";
     public static final String KEY_TMDB="preferences_video_tmdb";
@@ -125,7 +129,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final boolean SHOW_LAST_PLAYED_ROW_DEFAULT = true;
     public static final boolean SHOW_ALL_MOVIES_ROW_DEFAULT = false;
     public static final boolean SHOW_ALL_TV_SHOWS_ROW_DEFAULT = false;
+
+    public static final boolean SHOW_POSITIVE_TIME_DEFAULT = true;
     public static final boolean SHOW_TRAILER_ROW_DEFAULT = true;
+    public static final boolean HIDE_BY_RATING_DEFAULT = true;
 
     public static final boolean TRAKT_SYNC_COLLECTION_DEFAULT = false;
     public static final boolean TRAKT_LIVE_SCROBBLING_DEFAULT = true;
@@ -141,6 +148,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private long mAdvancedPrefsClickLastTime = 0;
     private int mEmailMediaDBPrefsClickCount = 0;
     private long mEmailMediaDBPrefsClickLastTime = 0;
+    private int mMoreLeanbackPrefsClickCount = 0;
+    private long mMoreLeanbackPrefsClickLastTime = 0;
     private ListPreference mDecChoicePreferences = null;
     private CheckBoxPreference mForceSwDecPreferences = null;
     private CheckBoxPreference mForceAudioPassthrough = null;
@@ -733,6 +742,27 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 
                 if (tvshowSortOrderPref.getValue() == null)
                     tvshowSortOrderPref.setValue(TvshowSortOrderEntries.DEFAULT_SORT);
+
+                findPreference(KEY_SHOW_ALL_TV_SHOWS_ROW).setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        // Check click speed
+                        long currentTime = System.currentTimeMillis();
+                        if (currentTime - mMoreLeanbackPrefsClickLastTime < 1000) {
+                            mMoreLeanbackPrefsClickCount++;
+                        } else {
+                            mMoreLeanbackPrefsClickCount = 0;
+                        }
+                        mMoreLeanbackPrefsClickLastTime = currentTime;
+
+                        if (mMoreLeanbackPrefsClickCount > 4) {
+                            if (UiChoiceDialog.applicationIsInLeanbackMode(getActivity()))
+                                startActivity(new Intent(getActivity(), VideoSettingsMoreLeanbackActivity.class));
+                            mMoreLeanbackPrefsClickCount = 0; // reset
+                        }
+                        return false;
+                    }
+                });
             }
         }
 
