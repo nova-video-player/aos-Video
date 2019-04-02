@@ -361,7 +361,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         mLastPlayedAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
         mLastPlayedRow = new ListRow(ROW_ID_LAST_PLAYED, new HeaderItem(getString(R.string.recently_played)), mLastPlayedAdapter);
 
-        boolean hideByRating = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_TRAILER_ROW, VideoPreferencesCommon.SHOW_TRAILER_ROW_DEFAULT);
+        boolean hideByRating = mPrefs.getBoolean(VideoPreferencesCommon.KEY_HIDE_BY_RATING, VideoPreferencesCommon.HIDE_BY_RATING_DEFAULT);
 
         ArrayObjectAdapter movieRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         movieRowAdapter.add(buildAllMoviesBox());
