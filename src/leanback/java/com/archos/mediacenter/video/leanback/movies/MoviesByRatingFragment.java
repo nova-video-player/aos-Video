@@ -42,6 +42,10 @@ public class MoviesByRatingFragment extends VideosByFragment {
         sortOrderIndexer.put(4, new MoviesSortOrderEntry(R.string.sort_by_duration_asc,    SortOrder.DURATION.getAsc()));
     }
 
+    public MoviesByRatingFragment() {
+        super(SortOrder.SCRAPER_M_RATING.getDesc());
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

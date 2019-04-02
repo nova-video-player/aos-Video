@@ -39,6 +39,10 @@ public class TvshowsByRatingFragment extends TvshowsByFragment {
         sortOrderIndexer.put(3, new TvshowsSortOrderEntry(R.string.sort_by_date_premiered_desc,       VideoStore.Video.VideoColumns.SCRAPER_S_PREMIERED + " DESC"));
     }
 
+    public TvshowsByRatingFragment() {
+        super("IFNULL(" + VideoStore.Video.VideoColumns.SCRAPER_S_RATING + ", 0) DESC");
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

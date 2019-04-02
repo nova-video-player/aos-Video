@@ -67,6 +67,8 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
      */
     private Cursor mCurrentCategoriesCursor;
 
+    private String mDefaultSort;
+
     /**
      * Map to update the adapter when we get the onLoadFinished() callback
      */
@@ -80,6 +82,14 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
     abstract protected String item2SortOrder(int item);
     abstract protected int sortOrder2Item(String sortOrder);
     abstract protected String getSortOrderParamKey();
+
+    public VideosByFragment() {
+        this(MoviesLoader.DEFAULT_SORT);
+    }
+
+    public VideosByFragment(String defaultSort) {
+        mDefaultSort = defaultSort;
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -133,7 +143,7 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
         super.onActivityCreated(savedInstanceState);
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mSortOrder = mPrefs.getString(getSortOrderParamKey(), MoviesLoader.DEFAULT_SORT);
+        mSortOrder = mPrefs.getString(getSortOrderParamKey(), mDefaultSort);
 
         Resources r = getResources();
         updateBackground();

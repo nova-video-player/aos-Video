@@ -39,6 +39,7 @@ import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.player.PrivateMode;
+import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 
 import java.util.ArrayList;
 
@@ -66,6 +67,8 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
      */
     private Cursor mCurrentCategoriesCursor;
 
+    private String mDefaultSort;
+
     /**
      * Map to update the adapter when we get the onLoadFinished() callback
      */
@@ -79,6 +82,14 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
     abstract protected String item2SortOrder(int item);
     abstract protected int sortOrder2Item(String sortOrder);
     abstract protected String getSortOrderParamKey();
+
+    public TvshowsByFragment() {
+        this(TvshowSortOrderEntries.DEFAULT_SORT);
+    }
+
+    public TvshowsByFragment(String defaultSort) {
+        mDefaultSort = defaultSort;
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -132,7 +143,7 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
         super.onActivityCreated(savedInstanceState);
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mSortOrder = mPrefs.getString(getSortOrderParamKey(), TvshowsByAlphaLoader.DEFAULT_SORT);
+        mSortOrder = mPrefs.getString(getSortOrderParamKey(), mDefaultSort);
 
         Resources r = getResources();
         updateBackground();
