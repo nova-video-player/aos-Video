@@ -91,6 +91,7 @@ public class VideoListPresenter extends ListPresenter {
             vh.setTitleText(tvshow.getName());
             vh.setContentText(tvshow.getCountString(ArchosUtils.getGlobalContext()));
             vh.setContentTextVisibility(View.VISIBLE);
+            vh.setWatched(tvshow.isWatched());
         }
     }
 }

@@ -18,6 +18,7 @@ import android.support.v17.leanback.widget.Presenter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.archos.mediacenter.video.R;
@@ -29,11 +30,14 @@ import java.util.Date;
 public class TvshowMoreDetailsDescriptionPresenter extends Presenter {
 
     private static final String TAG = "TvshowMoreDetailsDescriptionPresenter";
+
+    private boolean mShowWatched;
     
     public static class ViewHolder extends Presenter.ViewHolder {
         final TextView mTitle;
         final TextView mDate;
         final TextView mRating;
+        final ImageView mTraktWatched;
 
         public ViewHolder(final View view) {
             super(view);
@@ -41,7 +45,12 @@ public class TvshowMoreDetailsDescriptionPresenter extends Presenter {
             mTitle = (TextView) view.findViewById(android.support.v17.leanback.R.id.lb_details_description_title);
             mDate = (TextView) view.findViewById(R.id.date);
             mRating = (TextView) view.findViewById(R.id.rating);
+            mTraktWatched = (ImageView) view.findViewById(R.id.trakt_watched);
         }
+    }
+
+    public TvshowMoreDetailsDescriptionPresenter(boolean showWatched) {
+        mShowWatched = showWatched;
     }
     
     @Override
@@ -59,6 +68,8 @@ public class TvshowMoreDetailsDescriptionPresenter extends Presenter {
         vh.mTitle.setText(tags.getTitle());
         setTextOrSetGoneIfEmpty(vh.mDate, getYearFormatted(tags.getPremiered()));
         setTextOrSetGoneIfZero(vh.mRating, tags.getRating());
+
+        vh.mTraktWatched.setVisibility(mShowWatched ? View.VISIBLE : View.GONE);
     }
     
     @Override

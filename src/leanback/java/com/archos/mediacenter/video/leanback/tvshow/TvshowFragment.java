@@ -169,6 +169,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 else if (action.getId() == TvshowActionAdapter.ACTION_MORE_DETAILS) {
                     Intent intent = new Intent(getActivity(), TvshowMoreDetailsActivity.class);
                     intent.putExtra(TvshowMoreDetailsFragment.EXTRA_TVSHOW_ID, mTvshow.getTvshowId());
+                    intent.putExtra(TvshowMoreDetailsFragment.EXTRA_TVSHOW_WATCHED, mTvshow.isWatched());
                     Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                             getActivity(),
                             getView().findViewById(R.id.details_overview_image),
@@ -345,7 +346,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             // First update the TvShow instance we have here with the data returned by ManualShowScrappingActivity
             String newName = data.getStringExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_NAME);
             Long newId = data.getLongExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_ID, -1);
-            mTvshow = new Tvshow(newId, newName, null, mTvshow.getSeasonCount(), mTvshow.getEpisodeCount());
+            mTvshow = new Tvshow(newId, newName, null, mTvshow.getSeasonCount(), mTvshow.getEpisodeCount(), mTvshow.getEpisodeWatchedCount());
             // Clear all the loader managers because they need to be recreated with the new ID
             LoaderManager.getInstance(this).destroyLoader(SEASONS_LOADER_ID);
             if (mSeasonAdapters != null){

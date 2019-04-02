@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.browser.loader;
 import android.content.Context;
 import android.provider.BaseColumns;
 
+import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
@@ -30,6 +31,7 @@ public class AllTvshowsLoader extends VideoLoader {
 
     public final static String COLUMN_SEASON_COUNT = "season_count";
     public final static String COLUMN_EPISODE_COUNT = "episode_count";
+    public final static String COLUMN_EPISODE_WATCHED_COUNT = "episode_watched_count";
     public final static String SORT_COUMN_LAST_ADDED = "max_date";
     private String mSortOrder;
 
@@ -71,6 +73,7 @@ public class AllTvshowsLoader extends VideoLoader {
                 "max(" + VideoStore.Video.VideoColumns.DATE_ADDED + ") AS " + SORT_COUMN_LAST_ADDED,
                 "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + ") AS " + COLUMN_SEASON_COUNT,
                 "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE + ") AS " + COLUMN_EPISODE_COUNT,
+                "COUNT(CASE "+VideoStore.Video.VideoColumns.BOOKMARK+" WHEN "+PlayerActivity.LAST_POSITION_END+" THEN 1 ELSE NULL END) AS " + COLUMN_EPISODE_WATCHED_COUNT,
                 getTraktProjection(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN),
                 getTraktProjection(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_LIBRARY),
         };

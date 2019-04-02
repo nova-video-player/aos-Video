@@ -270,10 +270,10 @@ public class PosterImageCardPresenter extends Presenter {
 
         }
         int resumeMs = video.getResumeMs();
-        if (resumeMs == 0 || resumeMs == PlayerActivity.LAST_POSITION_UNKNOWN) {
+        if (resumeMs == 0 || resumeMs == PlayerActivity.LAST_POSITION_UNKNOWN || resumeMs == PlayerActivity.LAST_POSITION_END) {
             vh.setResumeInPercent(0, isLarge);
-        } else if (resumeMs == PlayerActivity.LAST_POSITION_END) {
-            vh.setResumeInPercent(100f, isLarge);
+        /*} else if (resumeMs == PlayerActivity.LAST_POSITION_END) {
+            vh.setResumeInPercent(100f, isLarge);*/
         } else {
             vh.setResumeInPercent(100*resumeMs/(float)video.getDurationMs(), isLarge);
         }
@@ -288,6 +288,10 @@ public class PosterImageCardPresenter extends Presenter {
      */
     private void bindTvshow(VideoViewHolder vh, Tvshow tvshow) {
         final ImageCardView card = vh.getImageCardView();
+
+        // setup the watched flag BEFORE the poster because it is handled in a strange way in the ImageCardViewTarget
+        vh.mImageCardViewTarget.setWatchedFlag(tvshow.isWatched());
+
         card.setTitleText(tvshow.getName());
 
         card.setContentText(tvshow.getCountString(card.getContext()));

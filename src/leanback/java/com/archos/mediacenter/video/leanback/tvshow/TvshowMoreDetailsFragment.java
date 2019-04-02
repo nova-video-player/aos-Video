@@ -69,10 +69,12 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     private static final String TAG = "TvshowMoreDetails";
 
     public static final String EXTRA_TVSHOW_ID = "TVSHOW_ID";
+    public static final String EXTRA_TVSHOW_WATCHED = "TVSHOW_WATCHED";
     public static final String SHARED_ELEMENT_NAME = "hero";
 
     /** The show we're displaying */
     private long mShowId;
+    private boolean mShowWatched;
 
     /** all the data about this show in the DB */
     private ShowTags mShowTags;
@@ -93,6 +95,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
 
     private Overlay mOverlay;
     private ArchosDetailsOverviewRowPresenter mOverviewRowPresenter;
+    private TvshowMoreDetailsDescriptionPresenter mDescriptionPresenter;
     private int mColor;
     private Handler mHandler;
     private int oldPos = 0;
@@ -105,9 +108,11 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
 
         final Intent intent = getActivity().getIntent();
         mShowId = intent.getLongExtra(EXTRA_TVSHOW_ID, -1);
+        mShowWatched = intent.getBooleanExtra(EXTRA_TVSHOW_WATCHED, false);
         mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
         mHandler = new Handler();
-        mOverviewRowPresenter = new ArchosDetailsOverviewRowPresenter(new TvshowMoreDetailsDescriptionPresenter(), true);
+        mDescriptionPresenter = new TvshowMoreDetailsDescriptionPresenter(mShowWatched);
+        mOverviewRowPresenter = new ArchosDetailsOverviewRowPresenter(mDescriptionPresenter, true);
         //be aware of a hack to avoid fullscreen overview : cf onSetRowStatus
         FullWidthDetailsOverviewSharedElementHelper helper = new FullWidthDetailsOverviewSharedElementHelper();
         helper.setSharedElementEnterTransition(getActivity(), SHARED_ELEMENT_NAME, 1000);
