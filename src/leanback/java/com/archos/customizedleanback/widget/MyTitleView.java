@@ -50,6 +50,8 @@ public class MyTitleView extends RelativeLayout {
     private TextView mOrb4Description; // ARCHOS added
     private TextView mOrb5Description; // ARCHOS added
 
+    private SearchOrbView lastOrb;
+
     public MyTitleView(Context context) {
         this(context, null);
     }
@@ -95,6 +97,9 @@ public class MyTitleView extends RelativeLayout {
 
     @Override
     protected boolean onRequestFocusInDescendants(int direction, Rect previouslyFocusedRect) {
+        if (lastOrb != null && lastOrb.getVisibility() == View.VISIBLE && lastOrb.requestFocus())
+            return true;
+
         ArrayList<SearchOrbView> visibleOrbs = new ArrayList<>();
 
         if (mSearchOrbView.getVisibility() == View.VISIBLE)
@@ -346,14 +351,21 @@ public class MyTitleView extends RelativeLayout {
             View descriptionView = null;
             if (view.equals(mSearchOrbView)) {
                 descriptionView = mOrb1Description;
+                lastOrb = mSearchOrbView;
             } else if (view.equals(mSearchOrbView2)) {
                 descriptionView = mOrb2Description;
+                lastOrb = mSearchOrbView2;
             } else if (view.equals(mSearchOrbView3)) {
                 descriptionView = mOrb3Description;
+                lastOrb = mSearchOrbView3;
             } else if (view.equals(mSearchOrbView4)) {
                 descriptionView = mOrb4Description;
+                lastOrb = mSearchOrbView4;
             } else if (view.equals(mSearchOrbView5)) {
                 descriptionView = mOrb5Description;
+                lastOrb = mSearchOrbView5;
+            } else {
+                lastOrb = null;
             }
 
             if (descriptionView != null) {
