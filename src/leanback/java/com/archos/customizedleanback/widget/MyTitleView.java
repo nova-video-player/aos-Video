@@ -15,6 +15,7 @@ package com.archos.customizedleanback.widget;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v17.leanback.widget.SearchOrbView;
 import android.util.AttributeSet;
@@ -26,6 +27,8 @@ import android.widget.TextView;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.leanback.widget.HintView;
+
+import java.util.ArrayList;
 
 /**
  * Title view for a leanback fragment.
@@ -58,6 +61,8 @@ public class MyTitleView extends RelativeLayout {
     public MyTitleView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
+        setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
+
         LayoutInflater inflater = LayoutInflater.from(context);
         View rootView = inflater.inflate(R.layout.lb_my_title_view, this);
 
@@ -86,6 +91,35 @@ public class MyTitleView extends RelativeLayout {
 
         setClipToPadding(false);
         setClipChildren(false);
+    }
+
+    @Override
+    protected boolean onRequestFocusInDescendants(int direction, Rect previouslyFocusedRect) {
+        ArrayList<SearchOrbView> visibleOrbs = new ArrayList<>();
+
+        if (mSearchOrbView.getVisibility() == View.VISIBLE)
+            visibleOrbs.add(mSearchOrbView);
+        if (mSearchOrbView2.getVisibility() == View.VISIBLE)
+            visibleOrbs.add(mSearchOrbView2);
+        if (mSearchOrbView3.getVisibility() == View.VISIBLE)
+            visibleOrbs.add(mSearchOrbView3);
+        if (mSearchOrbView4.getVisibility() == View.VISIBLE)
+            visibleOrbs.add(mSearchOrbView4);
+        if (mSearchOrbView5.getVisibility() == View.VISIBLE)
+            visibleOrbs.add(mSearchOrbView5);
+
+        if (visibleOrbs.size() == 1)
+            return visibleOrbs.get(0).requestFocus();
+        else if (visibleOrbs.size() == 2)
+            return visibleOrbs.get(0).requestFocus();
+        else if (visibleOrbs.size() == 3)
+            return visibleOrbs.get(1).requestFocus();
+        else if (visibleOrbs.size() == 4)
+            return visibleOrbs.get(1).requestFocus();
+        else if (visibleOrbs.size() == 5)
+            return visibleOrbs.get(2).requestFocus();
+        
+        return false;
     }
 
     /**
