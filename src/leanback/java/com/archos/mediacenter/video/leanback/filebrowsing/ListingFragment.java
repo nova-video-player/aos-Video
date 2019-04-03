@@ -226,6 +226,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
             mRefreshOnNextResume = false;
         }
         updateBackground();
+        getTitleView().resetLastOrb();
     }
 
     @Override
