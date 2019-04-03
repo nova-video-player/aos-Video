@@ -3,17 +3,17 @@
     android:title="More TV User Interface">
 
     <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="show_positive_time"
-            android:title="Show positive remaining time in player"/>
+            android:defaultValue="false"
+            android:key="make_time_negative"
+            android:title="Make remaining time negative in player"/>
 
     <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="show_trailer_row"
-            android:title="Show trailer row in movies"/>
+            android:defaultValue="false"
+            android:key="hide_trailer_row"
+            android:title="Hide trailer row in movies"/>
 
     <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="hide_by_rating"
-            android:title="Hide movies/tv shows by rating"/>
+            android:defaultValue="false"
+            android:key="show_by_rating"
+            android:title="Show movies/tv shows by rating"/>
 </PreferenceScreen>

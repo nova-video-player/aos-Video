@@ -102,9 +102,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_SHOW_ALL_TV_SHOWS_ROW = "show_all_tv_shows_row";
     public static final String KEY_TV_SHOW_SORT_ORDER ="preferences_tv_show_sort_order";
 
-    public static final String KEY_SHOW_POSITIVE_TIME = "show_positive_time";
-    public static final String KEY_SHOW_TRAILER_ROW = "show_trailer_row";
-    public static final String KEY_HIDE_BY_RATING = "hide_by_rating";
+    public static final String KEY_MAKE_TIME_NEGATIVE = "make_time_negative";
+    public static final String KEY_HIDE_TRAILER_ROW = "hide_trailer_row";
+    public static final String KEY_SHOW_BY_RATING = "show_by_rating";
 
     public static final String KEY_VIDEO_OS = "preferences_video_os";
     public static final String KEY_TMDB="preferences_video_tmdb";
@@ -130,9 +130,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final boolean SHOW_ALL_MOVIES_ROW_DEFAULT = false;
     public static final boolean SHOW_ALL_TV_SHOWS_ROW_DEFAULT = false;
 
-    public static final boolean SHOW_POSITIVE_TIME_DEFAULT = true;
-    public static final boolean SHOW_TRAILER_ROW_DEFAULT = true;
-    public static final boolean HIDE_BY_RATING_DEFAULT = true;
+    public static final boolean MAKE_TIME_NEGATIVE_DEFAULT = false;
+    public static final boolean HIDE_TRAILER_ROW_DEFAULT = false;
+    public static final boolean SHOW_BY_RATING_DEFAULT = false;
 
     public static final boolean TRAKT_SYNC_COLLECTION_DEFAULT = false;
     public static final boolean TRAKT_LIVE_SCROBBLING_DEFAULT = true;

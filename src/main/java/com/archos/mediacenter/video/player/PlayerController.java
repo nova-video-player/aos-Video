@@ -1268,9 +1268,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 currentText = stringForTime(position);
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-                boolean showPositiveTime = prefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_POSITIVE_TIME, VideoPreferencesCommon.SHOW_POSITIVE_TIME_DEFAULT);
+                boolean makeTimeNegative = prefs.getBoolean(VideoPreferencesCommon.KEY_MAKE_TIME_NEGATIVE, VideoPreferencesCommon.MAKE_TIME_NEGATIVE_DEFAULT);
 
-                endText = (showPositiveTime ? "" : "-") + stringForTime(duration-position > 0 ? duration-position : 0);
+                endText = (!makeTimeNegative ? "" : "-") + stringForTime(duration-position > 0 ? duration-position : 0);
             } else {
                 if (mDragging || !mSeekComplete) {
                     mProgress.setProgress(position);

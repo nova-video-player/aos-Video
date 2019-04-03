@@ -1394,9 +1394,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             }
             
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            boolean showTrailerRow = prefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_TRAILER_ROW, VideoPreferencesCommon.SHOW_TRAILER_ROW_DEFAULT);
+            boolean hideTrailerRow = prefs.getBoolean(VideoPreferencesCommon.KEY_HIDE_TRAILER_ROW, VideoPreferencesCommon.HIDE_TRAILER_ROW_DEFAULT);
 
-            if(mTrailers!=null&&mTrailers.size()>0 && showTrailerRow){
+            if(mTrailers!=null&&mTrailers.size()>0 && !hideTrailerRow){
                 ArrayObjectAdapter postersRowAdapter = new ArrayObjectAdapter(new TrailerPresenter(getActivity()));
                 postersRowAdapter.addAll(0, mTrailers);
 
