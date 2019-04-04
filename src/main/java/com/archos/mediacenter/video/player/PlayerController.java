@@ -30,6 +30,7 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -64,6 +65,7 @@ import com.archos.mediacenter.video.player.tvmenu.TVCardDialog;
 import com.archos.mediacenter.video.player.tvmenu.TVCardView;
 import com.archos.mediacenter.video.player.tvmenu.TVMenuAdapter;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 
 import java.lang.reflect.Method;
@@ -1264,7 +1266,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 if(mProgress2!=null)
                     mProgress2.setProgress((int) pos);
                 currentText = stringForTime(position);
-                endText = stringForTime(duration-position > 0 ? duration-position : 0);
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+                boolean makeTimeNegative = prefs.getBoolean(VideoPreferencesCommon.KEY_MAKE_TIME_NEGATIVE, VideoPreferencesCommon.MAKE_TIME_NEGATIVE_DEFAULT);
+
+                endText = (!makeTimeNegative ? "" : "-") + stringForTime(duration-position > 0 ? duration-position : 0);
             } else {
                 if (mDragging || !mSeekComplete) {
                     mProgress.setProgress(position);

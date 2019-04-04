@@ -58,6 +58,7 @@ public class Tvshow extends Base implements Serializable {
     private long mTvshowId;
     private int mSeasonCount;
     private int mEpisodeCount;
+    private int mEpisodeWatchedCount;
 
     /**
      * Not computed by this class but only a place to store it.
@@ -65,8 +66,8 @@ public class Tvshow extends Base implements Serializable {
      */
     private ShowTags mShowTags;
 
-    public Tvshow(long tvshowId, String name, Uri posterUri, int seasonCount, int episodeCount) {
-        this(tvshowId,name, posterUri, seasonCount, episodeCount, false, false, null, null,null, -1,-1);
+    public Tvshow(long tvshowId, String name, Uri posterUri, int seasonCount, int episodeCount, int episodeWatchedCount) {
+        this(tvshowId,name, posterUri, seasonCount, episodeCount, episodeWatchedCount, false, false, null, null,null, -1,-1);
     }
 
 
@@ -75,6 +76,7 @@ public class Tvshow extends Base implements Serializable {
                   Uri posterUri,
                   int seasonCount,
                   int episodeCount,
+                  int episodeWatchedCount,
                   boolean traktSeen,
                   boolean traktLibrary,
                   String plot,
@@ -88,6 +90,7 @@ public class Tvshow extends Base implements Serializable {
         mIsTraktSeen = traktSeen;
         mIsTraktLibrary = traktLibrary;
         mEpisodeCount = episodeCount;
+        mEpisodeWatchedCount = episodeWatchedCount;
         mStudio = studio;
         mPlot = plot;
         mActors = actors;
@@ -110,6 +113,14 @@ public class Tvshow extends Base implements Serializable {
 
     public int getEpisodeCount() {
         return mEpisodeCount;
+    }
+
+    public int getEpisodeWatchedCount() {
+        return mEpisodeWatchedCount;
+    }
+
+    public boolean isWatched() {
+        return mEpisodeWatchedCount>=mEpisodeCount;
     }
 
     public long getTvshowId() {

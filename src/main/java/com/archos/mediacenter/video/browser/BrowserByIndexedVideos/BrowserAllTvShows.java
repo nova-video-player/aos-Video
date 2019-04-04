@@ -365,7 +365,7 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		return new AllTvshowsLoader(getContext(), mSortOrder).getV4CursorLoader(false, mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
+		return new AllTvshowsLoader(getContext(), mSortOrder, true).getV4CursorLoader(false, mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
 	}
 
 

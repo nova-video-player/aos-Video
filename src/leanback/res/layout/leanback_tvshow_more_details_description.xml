@@ -57,5 +57,12 @@
             android:drawablePadding="4dip"
             android:text="7,3"
             />
+
+        <ImageView
+            android:id="@+id/trakt_watched"
+            android:layout_width="wrap_content"
+            android:layout_toRightOf="@+id/rating"
+            android:layout_height="wrap_content"
+            android:src="@drawable/trakt_watched" />
     </RelativeLayout>
 </RelativeLayout>

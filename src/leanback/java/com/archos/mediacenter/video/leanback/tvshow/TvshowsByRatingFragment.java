@@ -21,44 +21,41 @@ import android.os.Bundle;
 import android.util.SparseArray;
 
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.loader.TvshowsByGenreLoader;
-import com.archos.mediacenter.video.leanback.VideosByFragment;
-import com.archos.mediacenter.video.utils.SortOrder;
+import com.archos.mediacenter.video.browser.loader.TvshowsByRatingLoader;
 import com.archos.mediaprovider.video.VideoStore;
 
 
-public class TvshowsByGenreFragment extends TvshowsByFragment {
+public class TvshowsByRatingFragment extends TvshowsByFragment {
 
-    private static final String SORT_PARAM_KEY = TvshowsByGenreFragment.class.getName() + "_SORT";
+    private static final String SORT_PARAM_KEY = TvshowsByRatingFragment.class.getName() + "_SORT";
 
     private CharSequence[] mSortOrderEntries;
 
     private static SparseArray<TvshowsSortOrderEntry> sortOrderIndexer = new SparseArray<TvshowsSortOrderEntry>();
     static {
-        //sortOrderIndexer.put(0, new TvshowsSortOrderEntry(R.string.sort_by_name_asc,        "name COLLATE NOCASE ASC"));
-        //sortOrderIndexer.put(1, new TvshowsSortOrderEntry(R.string.sort_by_date_added_desc, VideoStore.MediaColumns.DATE_ADDED + " DESC"));
-        //sortOrderIndexer.put(2, new TvshowsSortOrderEntry(R.string.sort_by_duration_asc,    SortOrder.DURATION.getAsc()));
-        //sortOrderIndexer.put(3, new TvshowsSortOrderEntry(R.string.sort_by_rating_asc,      SortOrder.SCRAPER_M_RATING.getDesc()));
-        // TODO: look in BrowserAllTvShows.java for all the sort possibilities
-        sortOrderIndexer.put(0, new TvshowsSortOrderEntry(R.string.sort_by_name_asc,        VideoStore.Video.VideoColumns.SCRAPER_TITLE + " ASC"));
-        sortOrderIndexer.put(1, new TvshowsSortOrderEntry(R.string.sort_by_date_added_desc, "max(" + VideoStore.Video.VideoColumns.DATE_ADDED + ") DESC"));
-        sortOrderIndexer.put(2, new TvshowsSortOrderEntry(R.string.sort_by_date_played_desc, "max(" + VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + ") DESC"));
-        sortOrderIndexer.put(3, new TvshowsSortOrderEntry(R.string.sort_by_date_premiered_desc,       VideoStore.Video.VideoColumns.SCRAPER_S_PREMIERED + " DESC"));
-        sortOrderIndexer.put(4, new TvshowsSortOrderEntry(R.string.sort_by_rating_asc,      "IFNULL(" + VideoStore.Video.VideoColumns.SCRAPER_S_RATING + ", 0) DESC"));
+        sortOrderIndexer.put(0, new TvshowsSortOrderEntry(R.string.sort_by_rating_asc,      "IFNULL(" + VideoStore.Video.VideoColumns.SCRAPER_S_RATING + ", 0) DESC"));
+        sortOrderIndexer.put(1, new TvshowsSortOrderEntry(R.string.sort_by_name_asc,        VideoStore.Video.VideoColumns.SCRAPER_TITLE + " ASC"));
+        sortOrderIndexer.put(2, new TvshowsSortOrderEntry(R.string.sort_by_date_added_desc, "max(" + VideoStore.Video.VideoColumns.DATE_ADDED + ") DESC"));
+        sortOrderIndexer.put(3, new TvshowsSortOrderEntry(R.string.sort_by_date_played_desc, "max(" + VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + ") DESC"));
+        sortOrderIndexer.put(4, new TvshowsSortOrderEntry(R.string.sort_by_date_premiered_desc,       VideoStore.Video.VideoColumns.SCRAPER_S_PREMIERED + " DESC"));
+    }
+
+    public TvshowsByRatingFragment() {
+        super("IFNULL(" + VideoStore.Video.VideoColumns.SCRAPER_S_RATING + ", 0) DESC");
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setTitle(getString(R.string.tvshows_by_genre));
+        setTitle(getString(R.string.tvshows_by_rating));
 
         mSortOrderEntries = TvshowsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
     }
 
     @Override
     protected Loader<Cursor> getSubsetLoader(Context context) {
-        return new TvshowsByGenreLoader(context);
+        return new TvshowsByRatingLoader(context);
     }
 
     @Override

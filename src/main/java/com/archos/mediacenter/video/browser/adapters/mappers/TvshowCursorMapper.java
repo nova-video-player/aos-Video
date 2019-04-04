@@ -32,6 +32,7 @@ public class TvshowCursorMapper implements CompatibleCursorMapper {
     int mPosterPathColumn;
     int mSeasonCountColumn;
     int mEpisodeCountColumn;
+    int mEpisodeWatchedCountColumn;
     int mTraktSeenColumn;
     int mTraktLibraryColumn;
     int mActorsColumn;
@@ -49,6 +50,7 @@ public class TvshowCursorMapper implements CompatibleCursorMapper {
         mPosterPathColumn = cursor.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_S_COVER);
         mSeasonCountColumn = cursor.getColumnIndexOrThrow(AllTvshowsLoader.COLUMN_SEASON_COUNT);
         mEpisodeCountColumn = cursor.getColumnIndexOrThrow(AllTvshowsLoader.COLUMN_EPISODE_COUNT);
+        mEpisodeWatchedCountColumn = cursor.getColumnIndex(AllTvshowsLoader.COLUMN_EPISODE_WATCHED_COUNT);
         mTraktSeenColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN);
         mTraktLibraryColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.ARCHOS_TRAKT_LIBRARY);
         mYearColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_S_PREMIERED);
@@ -66,6 +68,7 @@ public class TvshowCursorMapper implements CompatibleCursorMapper {
                 getPosterUri(cursor),
                 cursor.getInt(mSeasonCountColumn),
                 cursor.getInt(mEpisodeCountColumn),
+                mEpisodeWatchedCountColumn != -1 ? cursor.getInt(mEpisodeWatchedCountColumn) : -1,
                 VideoCursorMapper.isTraktSeenOrLibrary(cursor, mTraktSeenColumn),
                 VideoCursorMapper.isTraktSeenOrLibrary(cursor, mTraktLibraryColumn),
                 cursor.getString(mPlotColumn),

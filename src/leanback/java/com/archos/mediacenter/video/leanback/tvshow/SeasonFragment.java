@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.tvshow;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -108,6 +109,8 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
                     else {
                         DbUtils.markAsRead(getActivity(), season);
                     }
+
+                    getActivity().setResult(Activity.RESULT_OK);
                 }
                 else if (mActionId == TvshowActionAdapter.ACTION_UNINDEX) {
                     DbUtils.markAsHiddenByUser(getActivity(), season);
@@ -187,6 +190,8 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
                             DbUtils.markAsRead(getActivity(), season);
                         }
                     }
+
+                    getActivity().setResult(Activity.RESULT_OK);
                 }
                 else if (mActionId == TvshowActionAdapter.ACTION_UNINDEX) {
                     for (int i = 0; i < mSeasonsAdapter.size(); i++) {

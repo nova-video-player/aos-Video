@@ -53,12 +53,14 @@ import android.widget.Toast;
 
 import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.loader.EpisodesLoader;
 import com.archos.mediacenter.video.browser.loader.SeasonsLoader;
+import com.archos.mediacenter.video.browser.loader.TvshowLoader;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
@@ -89,6 +91,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     public static final int REQUEST_CODE_MORE_DETAILS = 8574; // some random integer may be useful for grep/debug...
     public static final int REQUEST_CODE_CHANGE_TVSHOW = 8575; // some random integer may be useful for grep/debug...
     public static final int REQUEST_CODE_VIDEO = 8576;
+    public static final int REQUEST_CODE_MARK_WATCHED = 8577;
 
     private static final int INDEX_DETAILS = 0;
     private static final int INDEX_FIRST_SEASON = 1;
@@ -170,6 +173,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 else if (action.getId() == TvshowActionAdapter.ACTION_MORE_DETAILS) {
                     Intent intent = new Intent(getActivity(), TvshowMoreDetailsActivity.class);
                     intent.putExtra(TvshowMoreDetailsFragment.EXTRA_TVSHOW_ID, mTvshow.getTvshowId());
+                    intent.putExtra(TvshowMoreDetailsFragment.EXTRA_TVSHOW_WATCHED, mTvshow.isWatched());
                     Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                             getActivity(),
                             getView().findViewById(R.id.details_overview_image),
@@ -181,7 +185,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                     intent.putExtra(SeasonFragment.EXTRA_ACTION_ID, action.getId());
                     intent.putExtra(SeasonFragment.EXTRA_TVSHOW_ID, mTvshow.getTvshowId());
                     intent.putExtra(SeasonFragment.EXTRA_TVSHOW_NAME, mTvshow.getName());
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUEST_CODE_MARK_WATCHED);
                 }
                 else if (action.getId() == TvshowActionAdapter.ACTION_UNINDEX) {
                     Intent intent = new Intent(getActivity(), SeasonActivity.class);
@@ -323,10 +327,10 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if ((requestCode == REQUEST_CODE_MORE_DETAILS || requestCode == REQUEST_CODE_VIDEO) && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Get RESULT_OK from TvshowMoreDetailsFragment");
+        if ((requestCode == REQUEST_CODE_MORE_DETAILS || requestCode == REQUEST_CODE_VIDEO || requestCode == REQUEST_CODE_MARK_WATCHED) && resultCode == Activity.RESULT_OK) {
+            Log.d(TAG, "Get RESULT_OK from TvshowMoreDetailsFragment/VideoDetailsFragment/SeasonFragment");
 
-            // Only Poster and/or backdrop has been changed.
+            // Only Poster and/or backdrop and/or watched has been changed.
             // But the ShowTags must be recomputed as well.
             // The simpler is to reload everything...
             // Well for now at least, because the result is a big ugly glitch...
@@ -335,6 +339,16 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             mSeasonAdapters = null;
             mHasDetailRow = false;
 
+            // TvshowLoader is a CursorLoader
+            TvshowLoader tvshowLoader = new TvshowLoader(getActivity(), mTvshow.getTvshowId());
+            Cursor cursor = tvshowLoader.loadInBackground();
+            if(cursor != null && cursor.getCount()>0) {
+                cursor.moveToFirst();
+                TvshowCursorMapper tvshowCursorMapper = new TvshowCursorMapper();
+                tvshowCursorMapper.bindColumns(cursor);
+                mTvshow = (Tvshow) tvshowCursorMapper.bind(cursor);
+            }
+            
             if (mFullScraperTagsTask!=null) {
                 mFullScraperTagsTask.cancel(true);
             }
@@ -346,7 +360,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             // First update the TvShow instance we have here with the data returned by ManualShowScrappingActivity
             String newName = data.getStringExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_NAME);
             Long newId = data.getLongExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_ID, -1);
-            mTvshow = new Tvshow(newId, newName, null, mTvshow.getSeasonCount(), mTvshow.getEpisodeCount());
+            mTvshow = new Tvshow(newId, newName, null, mTvshow.getSeasonCount(), mTvshow.getEpisodeCount(), mTvshow.getEpisodeWatchedCount());
             // Clear all the loader managers because they need to be recreated with the new ID
             LoaderManager.getInstance(this).destroyLoader(SEASONS_LOADER_ID);
             if (mSeasonAdapters != null){

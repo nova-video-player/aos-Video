@@ -59,6 +59,8 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
 
     private static final String SORT_PARAM_KEY = AllTvshowsGridFragment.class.getName() + "_SORT";
 
+    private static final String SHOW_WATCHED_KEY = AllTvshowsGridFragment.class.getName() + "_SHOW_WATCHED";
+
     private CursorObjectAdapter mTvshowsAdapter;
     private DisplayMode mDisplayMode;
     private SharedPreferences mPrefs;
@@ -69,12 +71,15 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
     private CharSequence[] mSortOrderEntries;
     private BackgroundManager bgMngr = null;
 
+    private boolean mShowWatched;
+
     public static SparseArray<TvshowsSortOrderEntry> sortOrderIndexer = new SparseArray<TvshowsSortOrderEntry>();
     static {
         sortOrderIndexer.put(0, new TvshowsSortOrderEntry(R.string.sort_by_name_asc,        VideoStore.Video.VideoColumns.SCRAPER_TITLE + " ASC"));
         sortOrderIndexer.put(1, new TvshowsSortOrderEntry(R.string.sort_by_date_added_desc, "max(" + VideoStore.Video.VideoColumns.DATE_ADDED + ") DESC"));
-        sortOrderIndexer.put(2, new TvshowsSortOrderEntry(R.string.sort_by_date_premiered_desc,       VideoStore.Video.VideoColumns.SCRAPER_S_PREMIERED + " DESC"));
-        sortOrderIndexer.put(3, new TvshowsSortOrderEntry(R.string.sort_by_rating_asc,      "IFNULL(" + VideoStore.Video.VideoColumns.SCRAPER_S_RATING + ", 0) DESC"));
+        sortOrderIndexer.put(2, new TvshowsSortOrderEntry(R.string.sort_by_date_played_desc, "max(" + VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + ") DESC"));
+        sortOrderIndexer.put(3, new TvshowsSortOrderEntry(R.string.sort_by_date_premiered_desc,       VideoStore.Video.VideoColumns.SCRAPER_S_PREMIERED + " DESC"));
+        sortOrderIndexer.put(4, new TvshowsSortOrderEntry(R.string.sort_by_rating_asc,      "IFNULL(" + VideoStore.Video.VideoColumns.SCRAPER_S_RATING + ", 0) DESC"));
     }
 
 
@@ -91,6 +96,8 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
         }
         mSortOrder = mPrefs.getString(SORT_PARAM_KEY, TvshowSortOrderEntries.DEFAULT_SORT);
         mSortOrderEntries = TvshowsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
+
+        mShowWatched = mPrefs.getBoolean(SHOW_WATCHED_KEY, true);
 
         updateBackground();
 
@@ -126,6 +133,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
         setGridPresenter(vgp);
         Bundle args = new Bundle();
         args.putString("sort", mSortOrder);
+        args.putBoolean("showWatched", mShowWatched);
         LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllTvshowsGridFragment.this);
     }
 
@@ -142,6 +150,13 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
         }
 
         getTitleView().setOrb3IconResId(R.drawable.orb_sort);
+
+        if (mShowWatched)
+            getTitleView().setOrb4IconResId(R.drawable.orb_hide);
+        else
+            getTitleView().setOrb4IconResId(R.drawable.orb_show);
+
+        getTitleView().setOrb5IconResId(R.drawable.orb_alpha);
 
         // Set orb color
         setSearchAffordanceColor(getResources().getColor(R.color.lightblueA200));
@@ -191,12 +206,43 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
                                     mSortOrder = TvshowsSortOrderEntry.item2SortOrder(mSortOrderItem, sortOrderIndexer);
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
+                                    args.putBoolean("showWatched", mShowWatched);
                                     LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllTvshowsGridFragment.this);
                                 }
                                 dialog.dismiss();
                             }
                         })
                         .create().show();
+            }
+        });
+
+        // Set fourth orb action
+        getTitleView().setOnOrb4ClickedListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mShowWatched = !mShowWatched;
+                // Save the new setting
+                mPrefs.edit().putBoolean(SHOW_WATCHED_KEY, mShowWatched).commit();
+
+                if (mShowWatched)
+                    getTitleView().setOrb4IconResId(R.drawable.orb_hide);
+                else
+                    getTitleView().setOrb4IconResId(R.drawable.orb_show);
+                
+                // Reload
+                Bundle args = new Bundle();
+                args.putString("sort", mSortOrder);
+                args.putBoolean("showWatched", mShowWatched);
+                LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllTvshowsGridFragment.this);
+            }
+        });
+
+        // Set fifth orb action
+        getTitleView().setOnOrb5ClickedListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), TvshowsByAlphaActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -233,7 +279,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
             if (args == null) {
                 return new AllTvshowsLoader(getActivity());
             } else {
-                return new AllTvshowsLoader(getActivity(), args.getString("sort"));
+                return new AllTvshowsLoader(getActivity(), args.getString("sort"), args.getBoolean("showWatched"));
             }
         }
         else return null;
@@ -244,7 +290,11 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
         if (cursorLoader.getId()==0) {
             mTvshowsAdapter.swapCursor(cursor);
             setEmptyViewVisiblity(cursor.getCount()<1);
-            setTitle(getString(R.string.all_tvshows_format, cursor.getCount()));
+
+            if (mShowWatched)
+                setTitle(getString(R.string.all_tvshows_format, cursor.getCount()));
+            else
+                setTitle(getString(R.string.not_watched_tvshows_format, cursor.getCount()));
         }
     }
 

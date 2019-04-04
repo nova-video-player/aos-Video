@@ -65,7 +65,9 @@ import com.archos.mediacenter.video.leanback.filebrowsing.ExtStorageListingActiv
 import com.archos.mediacenter.video.leanback.filebrowsing.LocalListingActivity;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridActivity;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesIconBuilder;
+import com.archos.mediacenter.video.leanback.movies.MoviesByAlphaActivity;
 import com.archos.mediacenter.video.leanback.movies.MoviesByGenreActivity;
+import com.archos.mediacenter.video.leanback.movies.MoviesByRatingActivity;
 import com.archos.mediacenter.video.leanback.movies.MoviesByYearActivity;
 import com.archos.mediacenter.video.leanback.network.NetworkRootActivity;
 import com.archos.mediacenter.video.leanback.nonscraped.NonScrapedVideosActivity;
@@ -78,6 +80,7 @@ import com.archos.mediacenter.video.leanback.tvshow.AllTvshowsGridActivity;
 import com.archos.mediacenter.video.leanback.tvshow.AllTvshowsIconBuilder;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowsByAlphaActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowsByGenreActivity;
+import com.archos.mediacenter.video.leanback.tvshow.TvshowsByRatingActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
@@ -358,16 +361,27 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         mLastPlayedAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
         mLastPlayedRow = new ListRow(ROW_ID_LAST_PLAYED, new HeaderItem(getString(R.string.recently_played)), mLastPlayedAdapter);
 
+        boolean showByRating = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_BY_RATING, VideoPreferencesCommon.SHOW_BY_RATING_DEFAULT);
+
         ArrayObjectAdapter movieRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         movieRowAdapter.add(buildAllMoviesBox());
+        //movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_ALPHA, getString(R.string.movies_by_alpha), R.drawable.alpha_banner));
         movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_GENRE, getString(R.string.movies_by_genre), R.drawable.genres_banner));
+
+        if (showByRating)
+            movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_RATING, getString(R.string.movies_by_rating), R.drawable.ratings_banner));
+
         movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_YEAR, getString(R.string.movies_by_year), R.drawable.years_banner_2019));
         mMovieRow = new ListRow(ROW_ID_MOVIES, new HeaderItem(getString(R.string.movies)), movieRowAdapter);
 
         ArrayObjectAdapter tvshowRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         tvshowRowAdapter.add(buildAllTvshowsBox());
-        tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_ALPHA, getString(R.string.tvshows_by_alpha), R.drawable.alpha_banner));
+        //tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_ALPHA, getString(R.string.tvshows_by_alpha), R.drawable.alpha_banner));
         tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_GENRE, getString(R.string.tvshows_by_genre), R.drawable.genres_banner));
+
+        if (showByRating)
+            tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_RATING, getString(R.string.tvshows_by_rating), R.drawable.ratings_banner));
+        
         mTvshowRow = new ListRow(ROW_ID_TVSHOW2, new HeaderItem(getString(R.string.all_tv_shows)), tvshowRowAdapter);
         
         mMoviesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
@@ -612,14 +626,14 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             if (args == null) {
                 return new MoviesLoader(getActivity(), true);
             } else {
-                return new MoviesLoader(getActivity(), args.getString("sort"), true);
+                return new MoviesLoader(getActivity(), args.getString("sort"), true, true);
             }
         }
         else if (id == LOADER_ID_ALL_TV_SHOWS) {
             if (args == null) {
                 return new AllTvshowsLoader(getActivity());
             } else {
-                return new AllTvshowsLoader(getActivity(), args.getString("sort"));
+                return new AllTvshowsLoader(getActivity(), args.getString("sort"), true);
             }
         }
         else if (id == LOADER_ID_NON_SCRAPED_VIDEOS_COUNT) {
@@ -791,8 +805,14 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     case ALL_MOVIES:
                         mActivity.startActivity(new Intent(mActivity, AllMoviesGridActivity.class));
                         break;
+                    case MOVIES_BY_ALPHA:
+                        mActivity.startActivity(new Intent(mActivity, MoviesByAlphaActivity.class));
+                        break;
                     case MOVIES_BY_GENRE:
                         mActivity.startActivity(new Intent(mActivity, MoviesByGenreActivity.class));
+                        break;
+                    case MOVIES_BY_RATING:
+                        mActivity.startActivity(new Intent(mActivity, MoviesByRatingActivity.class));
                         break;
                     case MOVIES_BY_YEAR:
                         mActivity.startActivity(new Intent(mActivity, MoviesByYearActivity.class));
@@ -825,6 +845,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                         break;
                     case TVSHOWS_BY_GENRE:
                         mActivity.startActivity(new Intent(mActivity, TvshowsByGenreActivity.class));
+                        break;
+                    case TVSHOWS_BY_RATING:
+                        mActivity.startActivity(new Intent(mActivity, TvshowsByRatingActivity.class));
                         break;
 
                 }

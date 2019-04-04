@@ -15,6 +15,7 @@ package com.archos.customizedleanback.widget;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v17.leanback.widget.SearchOrbView;
 import android.util.AttributeSet;
@@ -27,6 +28,8 @@ import android.widget.TextView;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.leanback.widget.HintView;
 
+import java.util.ArrayList;
+
 /**
  * Title view for a leanback fragment.
  */
@@ -38,12 +41,16 @@ public class MyTitleView extends RelativeLayout {
     private SearchOrbView mSearchOrbView2; // ARCHOS added
     private SearchOrbView mSearchOrbView3; // ARCHOS added
     private SearchOrbView mSearchOrbView4; // ARCHOS added
+    private SearchOrbView mSearchOrbView5; // ARCHOS added
 
     private HintView mHintView; // ARCHOS added
     private TextView mOrb1Description; // ARCHOS added
     private TextView mOrb2Description; // ARCHOS added
     private TextView mOrb3Description; // ARCHOS added
     private TextView mOrb4Description; // ARCHOS added
+    private TextView mOrb5Description; // ARCHOS added
+
+    private SearchOrbView mLastOrb;
 
     public MyTitleView(Context context) {
         this(context, null);
@@ -56,6 +63,8 @@ public class MyTitleView extends RelativeLayout {
     public MyTitleView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
+        setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
+
         LayoutInflater inflater = LayoutInflater.from(context);
         View rootView = inflater.inflate(R.layout.lb_my_title_view, this);
 
@@ -66,20 +75,56 @@ public class MyTitleView extends RelativeLayout {
         mSearchOrbView3 = (SearchOrbView) rootView.findViewById(R.id.title_orb3); // ARCHOS added
         mSearchOrbView4 = (SearchOrbView) rootView.findViewById(R.id.title_orb4); // ARCHOS added
         mSearchOrbView4.setVisibility(GONE);
+        mSearchOrbView5 = (SearchOrbView) rootView.findViewById(R.id.title_orb5); // ARCHOS added
+        mSearchOrbView5.setVisibility(GONE);
         mHintView = (HintView) rootView.findViewById(R.id.hint_view); // ARCHOS added
 
         mOrb1Description = (TextView) rootView.findViewById(R.id.orb1_description); // ARCHOS added
         mOrb2Description = (TextView) rootView.findViewById(R.id.orb2_description); // ARCHOS added
         mOrb3Description = (TextView) rootView.findViewById(R.id.orb3_description); // ARCHOS added
         mOrb4Description = (TextView) rootView.findViewById(R.id.orb4_description); // ARCHOS added
+        mOrb5Description = (TextView) rootView.findViewById(R.id.orb5_description); // ARCHOS added
 
         mSearchOrbView.setOnFocusChangeListener(mOrbsFocusListener);
         mSearchOrbView2.setOnFocusChangeListener(mOrbsFocusListener);
         mSearchOrbView3.setOnFocusChangeListener(mOrbsFocusListener);
         mSearchOrbView4.setOnFocusChangeListener(mOrbsFocusListener);
+        mSearchOrbView5.setOnFocusChangeListener(mOrbsFocusListener);
 
         setClipToPadding(false);
         setClipChildren(false);
+    }
+
+    @Override
+    protected boolean onRequestFocusInDescendants(int direction, Rect previouslyFocusedRect) {
+        if (mLastOrb != null && mLastOrb.getVisibility() == View.VISIBLE && mLastOrb.requestFocus())
+            return true;
+
+        ArrayList<SearchOrbView> visibleOrbs = new ArrayList<>();
+
+        if (mSearchOrbView.getVisibility() == View.VISIBLE)
+            visibleOrbs.add(mSearchOrbView);
+        if (mSearchOrbView2.getVisibility() == View.VISIBLE)
+            visibleOrbs.add(mSearchOrbView2);
+        if (mSearchOrbView3.getVisibility() == View.VISIBLE)
+            visibleOrbs.add(mSearchOrbView3);
+        if (mSearchOrbView4.getVisibility() == View.VISIBLE)
+            visibleOrbs.add(mSearchOrbView4);
+        if (mSearchOrbView5.getVisibility() == View.VISIBLE)
+            visibleOrbs.add(mSearchOrbView5);
+
+        if (visibleOrbs.size() == 1)
+            return visibleOrbs.get(0).requestFocus();
+        else if (visibleOrbs.size() == 2)
+            return visibleOrbs.get(0).requestFocus();
+        else if (visibleOrbs.size() == 3)
+            return visibleOrbs.get(1).requestFocus();
+        else if (visibleOrbs.size() == 4)
+            return visibleOrbs.get(1).requestFocus();
+        else if (visibleOrbs.size() == 5)
+            return visibleOrbs.get(2).requestFocus();
+        
+        return false;
     }
 
     /**
@@ -144,6 +189,10 @@ public class MyTitleView extends RelativeLayout {
         mSearchOrbView4.setVisibility(listener != null ? View.VISIBLE : View.GONE);
     }
 
+    public void setOnOrb5ClickedListener(View.OnClickListener listener) {
+        mSearchOrbView5.setOnOrbClickedListener(listener);
+        mSearchOrbView5.setVisibility(listener != null ? View.VISIBLE : View.GONE);
+    }
 
     /**
      * ARCHOS added
@@ -206,6 +255,21 @@ public class MyTitleView extends RelativeLayout {
     }
 
     /**
+     * ARCHOS added
+     * * Set a short description displayed below the orb when is is selected
+     */
+    public void setOnOrb5Description(CharSequence description) {
+        mOrb5Description.setTextColor(Color.WHITE);
+        mOrb5Description.setText(description);
+
+        // Avoid description changing without animation (in case it was displayed already)
+        mOrb5Description.setAlpha(0);
+        if (mSearchOrbView5.isFocused()) {
+            animateDescription(mOrb5Description, true);
+        }
+    }
+
+    /**
      *  Returns the view for the search affordance.
      */
     public View getSearchAffordanceView() {
@@ -220,6 +284,7 @@ public class MyTitleView extends RelativeLayout {
         mSearchOrbView2.setOrbColors(colors);
         mSearchOrbView3.setOrbColors(colors);
         mSearchOrbView4.setOrbColors(colors);
+        mSearchOrbView5.setOrbColors(colors);
     }
 
     public void setOrb1IconResId(int iconResId) {
@@ -238,6 +303,10 @@ public class MyTitleView extends RelativeLayout {
         mSearchOrbView4.setOrbIcon(this.getResources().getDrawable(iconResId));
     }
 
+    public void setOrb5IconResId(int iconResId) {
+        mSearchOrbView5.setOrbIcon(this.getResources().getDrawable(iconResId));
+    }
+
     /**
      * Returns the {@link SearchOrbView.Colors} used to draw the search affordance.
      */
@@ -253,6 +322,7 @@ public class MyTitleView extends RelativeLayout {
         mSearchOrbView2.enableOrbColorAnimation(enable && mSearchOrbView2.hasFocus());
         mSearchOrbView3.enableOrbColorAnimation(enable && mSearchOrbView3.hasFocus());
         mSearchOrbView4.enableOrbColorAnimation(enable && mSearchOrbView4.hasFocus());
+        mSearchOrbView5.enableOrbColorAnimation(enable && mSearchOrbView5.hasFocus());
     }
 
     /**
@@ -281,12 +351,21 @@ public class MyTitleView extends RelativeLayout {
             View descriptionView = null;
             if (view.equals(mSearchOrbView)) {
                 descriptionView = mOrb1Description;
+                mLastOrb = mSearchOrbView;
             } else if (view.equals(mSearchOrbView2)) {
                 descriptionView = mOrb2Description;
+                mLastOrb = mSearchOrbView2;
             } else if (view.equals(mSearchOrbView3)) {
                 descriptionView = mOrb3Description;
+                mLastOrb = mSearchOrbView3;
             } else if (view.equals(mSearchOrbView4)) {
                 descriptionView = mOrb4Description;
+                mLastOrb = mSearchOrbView4;
+            } else if (view.equals(mSearchOrbView5)) {
+                descriptionView = mOrb5Description;
+                mLastOrb = mSearchOrbView5;
+            } else {
+                mLastOrb = null;
             }
 
             if (descriptionView != null) {
@@ -299,5 +378,9 @@ public class MyTitleView extends RelativeLayout {
         float alpha = focus ? 1f : 0f;
         long startDelay = focus ? 300 : 0; // delay the display, not the hide
         v.animate().alpha(alpha).setStartDelay(startDelay);
+    }
+
+    public void resetLastOrb() {
+        mLastOrb = null;
     }
 }

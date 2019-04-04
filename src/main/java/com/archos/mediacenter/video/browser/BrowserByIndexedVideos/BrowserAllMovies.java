@@ -45,6 +45,6 @@ public class BrowserAllMovies extends BrowserByVideoSelection {
 			if (listOfMoviesIds != null)
 				return new MoviesSelectionLoader(getContext(), listOfMoviesIds, mSortOrder).getV4CursorLoader(true, mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
 		}
-		return new MoviesLoader(getContext(), mSortOrder, true).getV4CursorLoader(true, mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
+		return new MoviesLoader(getContext(), mSortOrder, true, true).getV4CursorLoader(true, mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
 	}
 }

@@ -115,8 +115,7 @@ public class TvshowDetailsDescriptionPresenter extends Presenter {
         setTextOrSetGoneIfEmpty(vh.mDate, getYearFormatted(tags.getPremiered()));
         setTextOrSetGoneIfZero(vh.mRating, tags.getRating());
 
-        // Limitation/Keep it simple: No watched boolean management at TvShow level
-        vh.mTraktWatched.setVisibility( View.GONE);
+        vh.mTraktWatched.setVisibility(show.isWatched() ? View.VISIBLE : View.GONE);
     }
 
     private void setTextOrSetGoneIfEmpty(TextView mTextView, String text) {

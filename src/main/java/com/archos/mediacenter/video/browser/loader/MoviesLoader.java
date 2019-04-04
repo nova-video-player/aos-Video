@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.browser.loader;
 
 import android.content.Context;
 
+import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
 /**
@@ -28,14 +29,17 @@ public class MoviesLoader extends VideoLoader {
 
     private String mSortOrder;
 
+    private boolean mShowWatched;
+
     public MoviesLoader(Context context, boolean groupbyOnlineId) {
-        this(context, DEFAULT_SORT, groupbyOnlineId);
+        this(context, DEFAULT_SORT, true, groupbyOnlineId);
     }
 
-    public MoviesLoader(Context context, String SortOrder, boolean groupByOnlineId) {
+    public MoviesLoader(Context context, String SortOrder, boolean showWatched, boolean groupByOnlineId) {
         super(context);
         mGroupByOnlineId = groupByOnlineId;
         mSortOrder = SortOrder;
+        mShowWatched = showWatched;
         init();
     }
     @Override
@@ -70,7 +74,11 @@ public class MoviesLoader extends VideoLoader {
         StringBuilder sb = new StringBuilder();
         sb.append(super.getSelection()); // get common selection from the parent
         sb.append(" AND ");
-        sb.append(VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL ");
+        sb.append(VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL");
+        if (!mShowWatched) {
+            sb.append(" AND ");
+            sb.append(LoaderUtils.HIDE_WATCHED_FILTER);
+        }
         return sb.toString();
     }
 
