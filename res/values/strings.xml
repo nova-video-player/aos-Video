@@ -639,6 +639,7 @@
    <string name="sort_by_rating_asc">Sort by rating (best first)</string>
    <string name="sort_by_date_added_desc">Sort by date added (newest first)</string>
    <string name="sort_by_date_added_asc">Sort by date added (oldest first)</string>
+   <string name="sort_by_date_played_desc">Sort by date played (newest first)</string>
    <string name="sort_by_date_premiered_desc">Sort by date premiered (newest first)</string>
    <string name="sort_by_date_premiered_asc">Sort by date premiered (oldest first)</string>
    <string name="sort_by_recently_added_episode_desc">Recently added episodes first</string>
