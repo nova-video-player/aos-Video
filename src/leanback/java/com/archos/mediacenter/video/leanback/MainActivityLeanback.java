@@ -29,6 +29,9 @@ import com.archos.mediacenter.video.browser.BootupRecommandationService;
 import com.archos.mediacenter.video.browser.PermissionChecker;
 import com.archos.mediacenter.video.leanback.settings.VideoSettingsActivity;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
+import com.archos.mediacenter.video.leanback.channels.ChannelManager;
+
+
 import com.archos.mediascraper.AutoScrapeService;
 import com.archos.environment.ArchosUtils;
 
@@ -67,7 +70,9 @@ public class MainActivityLeanback extends LeanbackActivity {
         Intent intent = new Intent(BootupRecommandationService.UPDATE_ACTION);
         intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
         sendBroadcast(intent);
+        ChannelManager.refreshChannels(this);
     }
+
 
     @Override
     protected void onDestroy(){

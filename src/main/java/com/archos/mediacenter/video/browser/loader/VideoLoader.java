@@ -63,7 +63,7 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
 
     public static String[] mProjection = {
             VideoStore.Video.VideoColumns._ID,
-
+            "poster_id",
             // Columns for all video files
             VideoStore.Video.VideoColumns.DATA,
             NAME,

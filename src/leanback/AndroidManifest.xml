@@ -92,6 +92,7 @@
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.details.VideoDetailsActivity"
+            android:exported="true"
             android:theme="@style/MyLeanbackTheme"/>
 
         <activity
