@@ -3,9 +3,10 @@ package com.archos.mediacenter.video.leanback.channels;
 import android.app.Notification;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v4.content.CursorLoader;
+
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
