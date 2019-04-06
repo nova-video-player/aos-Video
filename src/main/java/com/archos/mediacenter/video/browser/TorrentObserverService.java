@@ -273,8 +273,8 @@ public class TorrentObserverService extends Service{
                 try {
                     final StatFs stat = new StatFs(TorrentPathDialogPreference.getDefaultDirectory(
                             PreferenceManager.getDefaultSharedPreferences(mContext)).getAbsolutePath());
-                    final long blockSize = stat.getBlockSize();
-                    final long availableBlocks = stat.getAvailableBlocks();
+                    final long blockSize = stat.getBlockSizeLong();
+                    final long availableBlocks = stat.getAvailableBlocksLong();
                     size = availableBlocks * blockSize;
                 }
                 catch (IllegalArgumentException e) {
