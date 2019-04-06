@@ -36,6 +36,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.provider.BaseColumns;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -950,7 +951,7 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
             //int defaultIconColor = getResources().getColor(R.color.default_icons_color_filter);
             ImageViewSetterConfiguration config = ImageViewSetterConfiguration.Builder
                     .createNew()
-                    .setDrawableWhileLoading(context.getResources().getDrawable(R.drawable.filetype_video))
+                    .setDrawableWhileLoading(ContextCompat.getDrawable(context, R.drawable.filetype_video))
                     .build();
             mSetter = new ImageViewSetter(context, config);
             mPosterProcessor = new PosterProcessor(mPosterWidth, mPosterHeight/*, defaultIconColor*/);// , mSetter);

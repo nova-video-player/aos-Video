@@ -42,6 +42,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -407,7 +408,7 @@ public class FolderPicker extends FragmentActivity {
             Item internal = new Item();
             internal.mUri = INTERNAL_STORAGE;
             internal.mName = res.getString(R.string.external_storage_fake_name);
-            internal.mHolder = res.getDrawable(R.drawable.folder);
+            internal.mHolder = ContextCompat.getDrawable(getActivity(), R.drawable.folder);
             internal.mEnabled = true; // internal storage always available (almost...)
             mListItems.add(internal);
 
@@ -426,7 +427,7 @@ public class FolderPicker extends FragmentActivity {
                     Item usbHost = new Item();
                     usbHost.mUri = Uri.parse(s);
                     usbHost.mName = res.getString(R.string.usb_host_fake_name);
-                    usbHost.mHolder = res.getDrawable(R.drawable.usb);
+                    usbHost.mHolder = ContextCompat.getDrawable(getActivity(), R.drawable.usb);
                     usbHost.mEnabled = true;
                     mListItems.add(usbHost);
                 }
@@ -559,10 +560,10 @@ public class FolderPicker extends FragmentActivity {
                 Item item = new Item();
                 item.mUri = file.getUri();
                 if (file.isDirectory()) {
-                    item.mHolder = res.getDrawable(R.drawable.filetype_music_folder);
+                    item.mHolder = ContextCompat.getDrawable(getActivity(), R.drawable.filetype_music_folder);
                     item.mEnabled = true; // Only the folders are enabled
                 } else {
-                    item.mHolder = res.getDrawable(R.drawable.filetype_generic2);
+                    item.mHolder = ContextCompat.getDrawable(getActivity(), R.drawable.filetype_generic2);
                     item.mEnabled = false; // Only the folders are enabled
                 }
                 mListItems.add(item);
