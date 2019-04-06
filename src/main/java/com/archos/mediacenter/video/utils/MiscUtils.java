@@ -38,8 +38,7 @@ public class MiscUtils {
     }
 
     public static boolean isOnTV(Context context) {
-        return(context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEVISION)
-                || context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK));
+        return(context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK));
     }
 
     public static boolean isAndroidTV(Context context) {
