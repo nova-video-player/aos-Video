@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.browser.presenter;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -64,7 +65,12 @@ public class VideoListPresenter extends VideoPresenter{
         }
         if (name == null) name = "";
         if (name.endsWith(ITALIC)&&holder.name!=null) {
-            Spanned htmlName = Html.fromHtml(name);
+            Spanned htmlName = null;
+            if (Build.VERSION.SDK_INT >= 24) {
+                htmlName = Html.fromHtml(name, 0);
+            } else {
+                htmlName = Html.fromHtml(name);
+            }
             // Display a string containing several display
             // styles
             // (use a SpannableStringBuilder in order to
