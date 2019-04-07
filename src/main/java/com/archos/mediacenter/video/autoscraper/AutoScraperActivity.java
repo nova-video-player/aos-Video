@@ -995,11 +995,8 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
 
             // For some reason I do not manage to have the accent color defined in the theme applied to this progress bar.
             // Doing it by hand then...
-            if (Build.VERSION.SDK_INT >= 21 /*Build.VERSION_CODES.LOLLIPOP*/) {
-                int accentColor = getResources().getColor(R.color.lightblue400);
-                vh.initial_spinbar.getIndeterminateDrawable().setColorFilter(accentColor, android.graphics.PorterDuff.Mode.MULTIPLY);
-            }
-
+            int accentColor = ContextCompat.getColor(context, R.color.lightblue400);
+            vh.initial_spinbar.getIndeterminateDrawable().setColorFilter(accentColor, android.graphics.PorterDuff.Mode.MULTIPLY);
             v.setTag(vh);
             return v;
         }
