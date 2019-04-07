@@ -110,6 +110,7 @@
     <string name="remote_resume">Távoli folytatás</string>
     <string name="bookmark">Könyvjelző</string>
     <string name="delete">Törlés</string>
+    <string name="confirm_delete_short">Törlés megerősítése</string>
     <string name="delete_resume">Folytatási pont törlése</string>
     <string name="delete_bookmark">Könyvjelző törlése</string>
     <string name="mark_as_watched">Látottként jelölés</string>
@@ -138,6 +139,7 @@
     <string name="scrap_cast">Szereplők</string>
     <string name="scrap_cast_format">Szereplők: %s</string>
     <string name="scrap_genre">Műfaj</string>
+    <string name="scrap_genre_format">Műfajok: %s</string>
     <string name="scrap_aired">Sugározva</string>
     <string name="scrap_aired_format">Sugározva: %s</string>
     <string name="scrap_guests">Vendégszereplők</string>
@@ -151,6 +153,8 @@
     <string name="next_episode">Következő epizód</string>
     <string name="list_episodes">Epizódok mutatása</string>
     <string name="how_to_mark_season_watched">Kattintson egy évadra a benne lévő epizódok megnézettként vagy nem látottként jelőléshez</string>
+    <string name="unindex_show">Összes epizód eltávolítása a könyvtárból</string>
+    <string name="delete_show">Összes epizód törlése</string>
     <string name="no_episode_watched">Nincs megnézett epizód</string>
     <string name="all_episodes_watched">Minden epizód megnézve</string>
     <plurals name="n_episodes_watched">
@@ -403,15 +407,22 @@
     <!-- Preferences -->
     <string name="preferences">Beállítások</string>
     <string name="get_the_ad_free_version">Szerezze meg a reklámmentes verzíót a Google Play-en</string>
+    <string name="preferences_category_complete">Teljes verzió</string>
     <string name="preferences_category_video">Videó</string>
     <string name="preferences_force_software_decoding">Szoftveres dekódolás kényszerítése</string>
+    <string name="preferences_force_audio_passthrough">Hangtovábbítás</string>
     <string name="preferences_force_audio_passthrough_disabled">Kikapcsolva</string>
     <string name="preferences_force_audio_passthrough_enable">Mód 1</string>
+    <string name="preferences_force_audio_passthrough_enable2">Mód 2</string>
     <string name="category_languages">Feliratok</string>
     <string name="subtitles_hide_default">Feliratok elrejtése alapértelmezetten</string>
     <string name="subtitles_hide_default_summary">Jelőlje be, ha alapértelmezetten szeretné elrejteni a feliratokat</string>
     <string name="preferences_languages">Letöltött feliratok nyelve</string>
     <string name="summary_list_preference_primary">Válassza ki a letöltendő feliratok nyelveit</string>
+    <string name="preferences_video_about">Névjegy</string>
+    <string name="preferences_video_advanced">Haladó</string>
+    <string name="tv_scraper">Sorozatok</string>
+    <string name="movie_scraper">Filmek</string>
     <string name="locale">Rendszernyelv</string>
     <string name="yes">Igen</string>
     <string name="no">Nem</string>
@@ -468,8 +479,13 @@
     <string name="sort_by_date_added_desc">Hozzáadás dátuma szerint (legújabb előbb)</string>
     <string name="sort_by_date_added_asc">Hozzáadás dátuma szerint (legrégebbi előbb)</string>
     <string name="dec_choice_title">Dekóder választása</string>
+    <string name="preferences_leanback_user_interface">TV felhasználói felület</string>
+    <string name="preferences_reset_last_played_row">Utoljára játszott törlése most</string>
+    <string name="reset_last_played_row_in_progress">Utoljára játszott törlés alatt</string>
     <string name="preferences_tv_show_sort_order_summary">Válassza ki a sorozatok rendezési sorrendjét</string>
     <string name="preferences_tv_show_sort_order_title">Sorozatok rendezése</string>
+    <string name="leanback_season_posters_header">Évad poszterek</string>
+    <string name="leanback_tvshow_backdrops_header">Sorozat háttérképe</string>
     <string name="nfo_export_manual_title">Már feldolgozott videók exportálása</string>
     <string name="nfo_export_manual_summary">.nfo fájlok exportálása minden feldolgozott videóhoz</string>
     <string name="db_export_manual_title">Média adatbázís exportálása</string>

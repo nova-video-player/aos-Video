@@ -37,6 +37,7 @@
     <!-- Context menu item -->
     <string name="play_selection">Reproducir</string>
     <!-- Context menu item -->
+    <string name="multiple_selection">Selección Múltiple</string>
     <!-- Context menu item -->
     <string name="play_from_beginning">Reproducir desde el principio</string>
     <!-- Dialog box button -->
@@ -44,6 +45,7 @@
     <string name="fast_scroll_alphabet"> ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <!-- The string used in file/folder infos dialog. -->
     <string name="info_duration">Duración:</string>
+    <string name="video_sources">Fuentes</string>
     <!-- Infos dialog tabs -->
     <string name="info_tab_movie">Película</string>
     <string name="info_tab_show">Mostrar</string>
@@ -53,19 +55,30 @@
     <string name="info_tab_backdrop_chooser">Selector de fondo</string>
     <string name="info_tab_poster_chooser">Selector de carátula</string>
     <string name="info_tab_share">Compartir</string>
+    <string name="info_menu_backdrop_select">Arte de Fondo</string>
+    <string name="info_menu_series_backdrop_select">Arte de Fondo Series</string>
+    <string name="info_menu_poster_select">Seleccione otro poster</string>
+    <string name="info_menu_series_poster_select">Seleccionar otro poster</string>
     <!-- COVER ROLL -->
     <string name="recently_added">Añadidos recientemente</string>
     <string name="recently_added_videos">Añadidos recientemente</string>
     <string name="recently_played">Reproducidos recientemente</string>
     <string name="recently_played_videos">Reproducidos recientemente</string>
+    <string name="video_lists">Lista de reproducción</string>
     <!-- The string used in main storage list -->
     <string name="external_storage">Externa</string>
     <string name="internal_storage">Interna</string>
     <string name="network_storage">Red</string>
     <string name="sd_card_storage">Tarjeta SD</string>
     <string name="usb_host_storage">Unidad externa</string>
+    <string name="other_storage">Disco</string>
     <string name="network_media_servers">Servidores de media (UPnP)</string>
     <string name="network_shared_folders">Carpetas compartidas (SMB)</string>
+    <string name="network_connected_as">Conectado como %s</string>
+    <string name="network_guest">invitado</string>
+    <string name="sftp_folders">FTP</string>
+    <string name="network_jcifs">Samba (Experimental)</string>
+    <string name="network_cling">UPNP (Experimental)</string>
     <string name="recordings_storage">Grabaciones</string>
     <string name="root_storage">Memoria interna</string>
     <string name="cannot_list">No se puede listar contenido</string>
@@ -76,6 +89,7 @@
     <string name="not_played_yet_videos">No reproducidos</string>
     <string name="video_folder">Carpetas</string>
     <string name="movies">Películas</string>
+    <string name="all_movies">Todas las películas</string>
     <string name="all_tv_shows">Programas de TV</string>
     <string name="all_movies_and_tv_shows">Películas y programas de TV</string>
     <string name="no_server">No se ha encontrado ningún servidor de medios</string>

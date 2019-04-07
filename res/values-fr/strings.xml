@@ -72,7 +72,7 @@
     <string name="network_storage">Réseau</string>
     <string name="sd_card_storage">Carte SD</string>
     <string name="usb_host_storage">Disque externe</string>
-    <string name="other_storage">Disque dur</string>
+    <string name="other_storage">Disque</string>
     <string name="network_media_servers">Serveurs de Média (UPnP)</string>
     <string name="network_shared_folders">Répertoires partagés (SMB)</string>
     <string name="network_connected_as">Connecté comme %s</string>
@@ -91,12 +91,19 @@
     <string name="video_folder">Dossiers</string>
     <string name="movies">Films</string>
     <string name="all_movies">Tous les films</string>
+    <string name="all_movies_format">Tous les films  -  %d</string>
+    <string name="not_watched_movies_format">Non visonnés -  %d</string>
+    <string name="movies_by_alpha">Films alphabétique</string>
     <string name="movies_by_genre">Films par genre</string>
+    <string name="movies_by_rating">Films par note</string>
     <string name="movies_by_year">Films par année</string>
     <string name="all_tv_shows">Séries</string>
     <string name="all_tvshows">Toutes les séries</string>
+    <string name="all_tvshows_format">Toutes les séries TV -  %d</string>
+    <string name="not_watched_tvshows_format">Non visonnés -  %d</string>
     <string name="tvshows_by_alpha">Séries ordre alphabétique</string>
     <string name="tvshows_by_genre">Séries par genre</string>
+    <string name="tvshows_by_rating">Séries TV par note</string>
     <string name="all_movies_and_tv_shows">Films et séries</string>
     <string name="non_scraped_videos">Vidéos sans description</string>
     <string name="no_server">Pas de serveur de media trouvé</string>
@@ -141,6 +148,7 @@
     <string name="scrap_cast_format">Distribution: %s</string>
     <string name="scrap_genre">Genre</string>
     <string name="scrap_genre_format">Genres: %s</string>
+    <string name="scrap_genre_title">Genres</string>
     <string name="scrap_aired">Diffusé le</string>
     <string name="scrap_aired_format">Diffusé le: %s</string>
     <string name="scrap_guests">Invités</string>
@@ -149,6 +157,7 @@
     <string name="show_network">Réseau</string>
     <string name="episode_name">Épisode</string>
     <string name="episode_season">Saison</string>
+    <string name="episode_specials">Spéciaux</string>
     <string name="episode_identification">Saison %1$d Épisode %2$d</string>
     <string name="season_identification">Saison %1$d</string>
     <string name="next_episode">Épisode suivant</string>
@@ -566,6 +575,7 @@
     <string name="sort_by_rating_asc">Trier par note</string>
     <string name="sort_by_date_added_desc">Trier par date d\'ajout (récent en premier)</string>
     <string name="sort_by_date_added_asc">Trier par date d\'ajout (ancien en premier)</string>
+    <string name="sort_by_date_played_desc">Trier par date de visionnage (récents en premier)</string>
     <string name="sort_by_date_premiered_desc">Trier par date de 1ère diff. (récent en premier)</string>
     <string name="sort_by_date_premiered_asc">Trier par date de 1ère diff. (ancien en premier)</string>
     <string name="sort_by_recently_added_episode_desc">Episodes ajoutés récemment en premier</string>
@@ -577,6 +587,7 @@
     <string name="dec_hw_mediacodec">Décodage matériel (MediaCodec)</string>
     <string name="dec_sw">Décodage logiciel</string>
     <string name="dec_hw">Décodage matériel</string>
+    <string name="dec_unknown">Décodage inconnu</string>
     <string name="dec_any">Par défaut</string>
     <string name="dec_android">MediaPlayer Android</string>
     <string name="preferences_user_interface">Interface utilisateur</string>
@@ -597,8 +608,6 @@
     <string name="preferences_show_all_tv_shows_row">Afficher la ligne regroupant toutes les séries TV</string>
     <string name="preferences_tv_show_sort_order_summary">Sélectionnez l\'ordre de tri pour vos séries</string>
     <string name="preferences_tv_show_sort_order_title">Ordre de tri des séries</string>
-    <string name="preferences_show_trailer_row_summary">Cocher pour afficher une ligne avec les bandes annonce associées au film</string>
-    <string name="preferences_show_trailer_row">Afficher la ligne des bandes annonces des films</string>
     <string name="codepage_title">Encodage des sous-titres</string>
     <string name="codepage_summary">Sélectionnez l\'encodage utilisé pour les sous-titres</string>
     <string name="codepage_default">Langue de l\'appareil %s</string>

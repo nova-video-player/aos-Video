@@ -535,6 +535,7 @@
     <string name="network_thumbnails">Remote Thumbnails erstellen</string>
     <string name="network_thumbnails_summary">Erstellen Sie Thumbnails von Remote-Videos, wenn kein Poster zur Verfügung steht</string>
     <string name="network_bookmarks_summary">Wenn möglich Fortsetzungspunkte und Lesezeichen auf Netzwerkfreigaben speichern</string>
+    <string name="connection_abnormally_long">Die Verbindung dauert ungewöhnlich lange. Möchtest Du sie zurücksetzen?</string>
     <string name="connection_reset">Zurücksetzen</string>
     <!-- Info dialog, not indexed file -->
     <string name="video_info_unindexed_message">Dieses Video ist nicht in Ihrer Video Bibliothek indiziert.\nDie Suche nach Postern und Informationen ist somit nicht möglich.\nMöchten Sie die Datei jetzt der Bibliothek hinzufügen?</string>
@@ -546,8 +547,11 @@
     <!--  Nfo File parsing -->
     <string name="network_nfo_parse">\'nfo\' Dateien lesen</string>
     <string name="network_nfo_parse_summary">Lese Boxee / XBMC \'.nfo\' Dateien während des (neu-)indizierens um Medieninformationen und Poster zur Bibliothek hinzuzufügen.</string>
+    <string name="ask_to_mail_media_DB">Möchtest Du Deine Video-Datenbank an das Nova Entwicklungsteam mailen um Ihnen bei der Behebung eines Fehlers zu helfen?\n\nDie Video-Dateien werden (natürlich) nicht übermittelt, aber die komplette Liste der Dateinamen wird übermittelt.</string>
     <string name="no_email_installed">Keine E-Mail-App gefunden</string>
+    <string name="zipping_library_before_mailing">Komprimiere eine Kopie der Bibliothek bevor sie verschickt wird…</string>
     <string name="zipped_library_mail_subject">Nova Video Database Dump</string>
+    <string name="zipped_library_mail_text">Bitte beschreibe das Problem, das auftritt\n\n</string>
     <string name="sort_mode">Sortierung</string>
     <string name="sort_by_name_asc">Sortierung: Name (A &#x2192; Z)</string>
     <string name="sort_by_name_desc">Sortierung: Name (Z &#x2192; A)</string>
@@ -577,9 +581,17 @@
     <string name="dec_android">Android MediaPlayer</string>
     <string name="preferences_user_interface">Benutzeroberfläche</string>
     <string name="preferences_display_resume_box_summary">Button anzeigen oder verbergen, um das neueste Video im Hauptbildschirm fortzusetzen</string>
+    <string name="preferences_display_resume_box">Wiederherstellungsfeld anzeigen</string>
     <string name="preferences_leanback_user_interface">TV-Benutzeroberfläche</string>
+    <string name="preferences_show_last_added_row_summary">Anhaken um eine Zeile mit den zuletzt hinzugefügten Medien anzuzeigen</string>
+    <string name="preferences_show_last_added_row">Letzte hinzugefügte Zeile anzeigen</string>
+    <string name="preferences_show_last_played_row_summary">Anhaken um eine Zeile mit den zuletzt abgespielten Medien anzuzeigen</string>
+    <string name="preferences_show_last_played_row">Letzte gespielte Zeile anzeigen</string>
     <string name="preferences_reset_last_played_row">Zurücksetzen der zuletzt gespielten Reihe</string>
     <string name="reset_last_played_row_in_progress">Setze zuletzt gespielte Reihe zurück</string>
+    <string name="preferences_show_all_movies_row_summary">Anhaken um eine Zeile mit all Deinen Filmen anstatt von Film-Kategorien anzuzeigen</string>
+    <string name="preferences_show_all_tv_shows_row_summary">Anhaken um eine Zeile mit all Deinen TV Shows anstatt von TV Show-Kategorien anzuzeigen</string>
+    <string name="preferences_show_all_tv_shows_row">Zeige eine Zeile mit allen Fernsehserien</string>
     <string name="preferences_tv_show_sort_order_title">TV-Serien-Sortierreihenfolge</string>
     <string name="codepage_title">Textkodierung</string>
     <string name="codepage_summary">Wählen Sie die Textkodierung von Untertiteln</string>
@@ -618,10 +630,13 @@
     <string name="blocklist_empty">URL sollte nicht leer sein</string>
     <string name="blocklist_invalid">Blockliste ungültig</string>
     <string name="blocklist_file_not_found">Datei nicht gefunden</string>
+    <string name="blocklist_success">Das Aktualisieren der Blocklist war erfolgreich</string>
     <string name="blocklist_unknown_error">Unbekannt</string>
     <string name="blocklist_not_loaded">Nicht geladen</string>
     <string name="torrent_blocklist_url">Blocklisten-URL</string>
     <string name="sdk_not_supported">Android 4.3 wird noch nicht unterstützt.\nWir arbeiten hart daran, dies zu beheben und hoffen, bald eine neue Version zu haben!</string>
+    <string name="manually_create_share">Indexierter Ordner per URI hinzufügen</string>
+    <string name="share_infos_incomplete">Sie müssen den Pfad ausfüllen</string>
     <string name="share_path">Pfad</string>
     <string name="category_trakt">Trakt</string>
     <string name="trakt_user">Benutzername</string>
@@ -632,6 +647,7 @@
     <string name="trakt_signin_summary_logged">Angemeldet</string>
     <string name="trakt_signin_summary_logged_error">Anmeldung fehlgeschlagen</string>
     <string name="trakt_signin_summary">Nicht Angemeldet</string>
+    <string name="trakt_relog_description">Ein Problem mit Trakt wurde erkannt und Anmeldedaten müssen zurückgesetzt werden. Bitte loggen Sie sich erneut ein.</string>
     <string name="trakt_signin_dialog_title">Anmelden</string>
     <string name="trakt_signin_title">Anmelden</string>
     <string name="trakt_wipe_dialog_title">Von Trakt.tv abmelden\?</string>
@@ -647,12 +663,18 @@
     <string name="hide_seen">Nicht angesehen</string>
     <string name="search_results">Suchergebnisse</string>
     <string name="no_results_found">Keine Ergebnisse gefunden.</string>
+    <string name="no_results_found_show_helper">Geben Sie für Serie Saison und Episode, wie \"S01E01\", ein</string>
     <string name="leanback_video_info_custom_search_file_hint">"Filmname oder Serienname S01E01"</string>
     <string name="activate_private_mode">Aktiviere Privat-Modus</string>
     <string name="deactivate_private_mode">Deaktiviere Privat-Modus</string>
     <string name="private_mode_is_on">Privat-Modus ist AN</string>
     <string name="private_mode_is_off">Privat-Modus ist AUS</string>
     <string name="private_mode">Privat-Modus</string>
+    <string name="private_mode_description">Im privaten Modus sind die folgenden Funktionen deaktiviert:\n-
+        - Auto-Indizierung und Auto-Kürzung des abgespielten Videos\n
+        - Kürzlich Abgespieltes\n
+        - Wiederaufnahmepunkt\n
+        - Trakt Synchronisation</string>
     <string name="dont_show_again">Nicht erneut anzeigen</string>
     <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
     <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
@@ -668,8 +690,28 @@
     <string name="leanback_poster_changed">Das Poster wurde geändert</string>
     <string name="leanback_backdrop_changed">Der Hintergrund wurde geändert</string>
     <string name="leanback_weblinks_header">Verknüpfungen</string>
+    <string name="leanback_action_more_details">Weitere Details</string>
     <string name="leanback_scrap">Info erhalten</string>
+    <string name="leanback_scrap_choose_the_description">Info auswählen</string>
     <string name="leanback_scrap_choose_the_description_for">"Info für \"%s\" auswählen"</string>
+    <string name="leanback_scrap_searching_general_hint">Name des Films oder der Fernsehserie</string>
+    <string name="leanback_scrap_searching_tvshow_hint">Name der Fernsehserie</string>
+    <string name="leanback_legacy_ui">Altes Interface</string>
+    <string name="leanback_archos_video_webview">Nova Video WebView</string>
+    <string name="interface_size">Größe der Benutzeroberfläche</string>
+    <string name="interface_size_very_small">Sehr klein (mdpi)</string>
+    <string name="interface_size_small">Klein (Hdpi)</string>
+    <string name="interface_size_standard">Standard (Xhdpi)</string>
+    <string name="interface_size_large">Groß (Xxhdpi)</string>
+    <string name="rescan">Erneut scannen</string>
+    <string name="rescan_description">Neu-Scannen von indizierten Ordnern um neue Inhalte in die Bibliothek aufnehmen</string>
+    <string name="rescan_now">Jetzt neu scannen</string>
+    <string name="rescan_now_description">Manueller Re-Scan</string>
+    <string name="rescan_error_wifi_info_standby">WiFi scheint im Standby-Modus deaktiviert werden. Um den Erfolg von Auto-Rescan zu gewährleisten, aktivieren Sie WiFi im Standby-Modus.</string>
+    <string name="rescan_error_wifi">Fehler: W-Lan war während des Scans deaktiviert</string>
+    <string name="rescan_error_wifi_click_for_more_info">Klicke für mehr Informationen</string>
+    <string name="rescan_error_server">Server nicht erreichbar</string>
+    <string name="scan_running">Scan läuft</string>
     <string name="scheduled_rescan">Geplanter Re-Scan</string>
     <string name="scheduled_rescan_period">Re-Scan-Zeitraum</string>
     <string name="scheduled_rescan_period_no">Nie</string>
@@ -681,6 +723,7 @@
     <string name="scheduled_rescan_time">Re-scan Zeit</string>
     <string name="rescan_when_opening_application">Re-Scan beim App-Start</string>
     <string name="last_rescan_occured">Letzter Re-Scan:</string>
+    <string name="intro_overlay_text">Berühre, um Videos zu Deinem Fernseher zu übertragen</string>
     <string name="view_more">Mehr ansehen</string>
     <string name="nfo_export_in_progress">.nfo-Export wird durchgeführt</string>
     <string name="rescrap_in_progress">Rescraping der ganzen Bibliothek</string>
