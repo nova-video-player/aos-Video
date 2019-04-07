@@ -1,9 +1,5 @@
-Nouvelles catégories série TV pour une navigation plus rapide dans une large collection
-Nombreuses améliorations de l'UI TV (rôles, bandes-annonces, badges, actions globale, sélecteur de sous-titres)
-Décodage AV1 logiciel
-Nouveaux raccourcis clavier
-Amélioration de la stabilité du passthrough audio
-Mode privé désormais persistent
-Migration NDK-r19 et ajout arch x86_64
-Evite de planter en présence d'une carte SD endommagée
-Correction du support cloud (toujours pas de streaming)
+Nouvelle vue de description des vidéos
+Paramètres style leanback pour AndroidTV
+Ajout des chaînes TV sur AndroidTV pours les vidéos récemment ajoutées
+Apparence améliorée de l'assistant de sélection de sous-titres
+Migration en API28
