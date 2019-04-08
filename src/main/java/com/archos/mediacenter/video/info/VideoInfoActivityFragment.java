@@ -1519,7 +1519,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mPosterImageView.setImageBitmap(result.first);
                     mPosterImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 } else {
-                    mPosterImageView.setImageDrawable(getResources().getDrawable(R.drawable.filetype_new_video_poster));
+                    mPosterImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.filetype_new_video_poster));
                     mPosterImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 }
                 setBackground();
@@ -1632,7 +1632,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             }
                         });
                         button.setText(trailer.mName);
-                        Drawable img = ContextCompat.getDrawable(getActivity(), TrailerServiceIconFactory.getIconForService(trailer.mSite));
+                        Drawable img = ContextCompat.getDrawable(getContext(), TrailerServiceIconFactory.getIconForService(trailer.mSite));
                         img.setBounds(0, 0, 60, 60);
                         button.setCompoundDrawablePadding(10);
                         button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));

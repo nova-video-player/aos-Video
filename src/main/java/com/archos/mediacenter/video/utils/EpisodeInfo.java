@@ -149,7 +149,7 @@ public class EpisodeInfo extends BaseInfo {
                 // Append the episode name in italics: " <<episode name>>"
                 String episodeNameFormat = context.getString(R.string.quotation_format);
                 String episodeName = String.format(episodeNameFormat, mEpisodeTitle);
-                return Html.fromHtml(ret + " <i>" + episodeName + "</i>");
+                return Html.fromHtml(ret + " <i>" + episodeName + "</i>", 0);
             }
         }
         return ret;
