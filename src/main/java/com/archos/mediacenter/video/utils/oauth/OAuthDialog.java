@@ -29,13 +29,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -111,10 +111,8 @@ public class OAuthDialog extends Dialog {
         
         Display display = getWindow().getWindowManager().getDefaultDisplay();
 		addContentView(mLayout, new FrameLayout.LayoutParams(display.getWidth() - 20, display.getHeight() - 20));
-		CookieSyncManager.createInstance(getContext());
-		CookieManager cookieManager = CookieManager.getInstance();
-		cookieManager.removeAllCookie();
-		
+		CookieManager.getInstance().removeAllCookies(null);
+
 	}
 
 	public WebView getWebView(){
