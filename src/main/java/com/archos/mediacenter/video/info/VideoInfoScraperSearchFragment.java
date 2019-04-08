@@ -118,9 +118,9 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
     private SearchInfo mSearchInfo;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mScraper = new Scraper(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mScraper = new Scraper(context);
     }
 
     @Override

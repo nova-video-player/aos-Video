@@ -15,9 +15,11 @@
 package com.archos.mediacenter.video.browser.filebrowsing.network;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -98,7 +100,7 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
 
         ActionItem rescanAction = new ActionItem();
         rescanAction.setTitle(getString(R.string.network_reindex));
-        rescanAction.setIcon(getResources().getDrawable(R.drawable.ic_menu_refresh));
+        rescanAction.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_menu_refresh));
         rescanAction.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Rescan the contents of the folder
@@ -130,8 +132,8 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
 
     }
     @Override
-    public void onAttach(Activity activity){
-        super.onAttach(activity);
+    public void onAttach(Context context){
+        super.onAttach(context);
         // Adapter need to be instantiate ASAP because setOnShareOpenListener() may be called before onCreateView()
         mAdapter = getAdapter();
         mAdapter.setOnRefreshClickListener(this);
