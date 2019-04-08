@@ -110,9 +110,9 @@ public class VideoInfoShowScraperFragment extends Fragment implements
     // ---------------------- FRAGMENT LIFECYCLE ---------------------------- //
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mScraper = new Scraper(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mScraper = new Scraper(context);
     }
 
     @Override

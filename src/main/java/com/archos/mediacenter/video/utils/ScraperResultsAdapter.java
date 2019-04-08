@@ -26,6 +26,7 @@ import com.archos.mediascraper.ShowTags;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,7 +94,7 @@ public class ScraperResultsAdapter extends BaseAdapter {
         mPosterHeight = mPosterWidth * 3 / 2;
 
         // setup image loader
-        Drawable defaultImage = context.getResources().getDrawable(R.drawable.filetype_video_vertical);
+        Drawable defaultImage = ContextCompat.getDrawable(context, R.drawable.filetype_video_vertical);
         ImageViewSetterConfiguration config = ImageViewSetterConfiguration.Builder
                 .createNew()
                 .setDrawableWhileLoading(defaultImage)

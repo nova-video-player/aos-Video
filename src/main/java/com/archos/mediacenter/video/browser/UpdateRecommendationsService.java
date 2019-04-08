@@ -21,6 +21,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentUris;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
@@ -257,7 +258,7 @@ public class  UpdateRecommendationsService extends IntentService {
 					.setOngoing(true)
 					.setPriority(mPriority)
 					.setOnlyAlertOnce(true)
-					.setColor(UpdateRecommendationsService.this.getResources().getColor(R.color.lightblue800))
+					.setColor(ContextCompat.getColor(UpdateRecommendationsService.this, R.color.lightblue800))
 					.setCategory(NotificationCompat.CATEGORY_RECOMMENDATION)
 					.setLargeIcon(mImageUri)
 					.setSmallIcon(mSmallIcon)

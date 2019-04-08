@@ -198,7 +198,7 @@ public class VideoBadgePresenter implements Presenter {
 
     public VideoBadgePresenter(Context context) {
         super();
-        mErrorDrawable = context.getResources().getDrawable(R.drawable.filetype_new_video);
+        mErrorDrawable = ContextCompat.getDrawable(context, R.drawable.filetype_new_video);
     }
 
 
