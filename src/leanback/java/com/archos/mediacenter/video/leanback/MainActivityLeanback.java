@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.leanback;
 
 import android.content.Intent;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -67,10 +68,13 @@ public class MainActivityLeanback extends LeanbackActivity {
 
         setContentView(R.layout.androidtv_root_activity);
         AutoScrapeService.registerObserver(this);
-        Intent intent = new Intent(BootupRecommandationService.UPDATE_ACTION);
-        intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
-        sendBroadcast(intent);
-        ChannelManager.refreshChannels(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            ChannelManager.refreshChannels(this);
+        else {
+            Intent intent = new Intent(BootupRecommandationService.UPDATE_ACTION);
+            intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+            sendBroadcast(intent);
+        }
     }
 
 
