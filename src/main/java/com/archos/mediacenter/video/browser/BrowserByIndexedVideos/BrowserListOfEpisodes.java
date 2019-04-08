@@ -85,10 +85,7 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
         super.onDestroyView();
         ((ListView)mArchosGridView).setDivider(null); //unset otherwise, crash in listview
         ((ListView)mArchosGridView).setDividerHeight(0);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-            mApplicationFrameLayout.setBackground(null);
-        else
-            mApplicationFrameLayout.setBackgroundDrawable(null);
+        mApplicationFrameLayout.setBackground(null);
         ((MainActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.color.leanback_background_transparent));
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -231,10 +228,7 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
         int darkColor = VideoInfoCommonClass.getDarkerColor(color);
         ColorDrawable[] colord = {new ColorDrawable(mLastColor), new ColorDrawable(darkColor)};
         TransitionDrawable trans = new TransitionDrawable(colord);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-            mApplicationFrameLayout.setBackground(trans);
-        else
-            mApplicationFrameLayout.setBackgroundDrawable(trans);
+        mApplicationFrameLayout.setBackground(trans);
         trans.startTransition(200);
         mLastColor = darkColor;
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
