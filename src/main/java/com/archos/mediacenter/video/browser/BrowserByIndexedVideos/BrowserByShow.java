@@ -231,10 +231,7 @@ public class BrowserByShow extends BrowserWithShowHeader {
         int darkColor = VideoInfoCommonClass.getDarkerColor(color);
         ColorDrawable[] colord = {new ColorDrawable(mLastColor), new ColorDrawable(darkColor)};
         TransitionDrawable trans = new TransitionDrawable(colord);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-            mApplicationFrameLayout.setBackground(trans);
-        else
-            mApplicationFrameLayout.setBackgroundDrawable(trans);
+        mApplicationFrameLayout.setBackground(trans);
         trans.startTransition(200);
         mLastColor = darkColor;
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
