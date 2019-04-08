@@ -84,6 +84,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     private static final String TAG = "TvshowFragment";
 
     public static final String EXTRA_TVSHOW = "TVSHOW";
+    public static final String EXTRA_TV_SHOW_ID = "tv_show_id";
     public static final String SHARED_ELEMENT_NAME = "hero";
 
     public static final int SEASONS_LOADER_ID = -42;
@@ -123,7 +124,25 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
         setTopOffsetRatio(0.6f);
 
-        mTvshow = (Tvshow) getActivity().getIntent().getSerializableExtra(EXTRA_TVSHOW);
+        Intent intent = getActivity().getIntent();
+        mTvshow = (Tvshow) intent.getSerializableExtra(EXTRA_TVSHOW);
+
+        if (mTvshow == null) {
+            long tvShowId = intent.getLongExtra(EXTRA_TV_SHOW_ID, -1);
+
+            if (tvShowId != -1) {
+                // TvshowLoader is a CursorLoader
+                TvshowLoader tvshowLoader = new TvshowLoader(getActivity(), tvShowId);
+                Cursor cursor = tvshowLoader.loadInBackground();
+                if(cursor != null && cursor.getCount()>0) {
+                    cursor.moveToFirst();
+                    TvshowCursorMapper tvshowCursorMapper = new TvshowCursorMapper();
+                    tvshowCursorMapper.bindColumns(cursor);
+                    mTvshow = (Tvshow) tvshowCursorMapper.bind(cursor);
+                }
+            }
+        }
+
         mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
         mHandler = new Handler();
         mDescriptionPresenter = new TvshowDetailsDescriptionPresenter();
