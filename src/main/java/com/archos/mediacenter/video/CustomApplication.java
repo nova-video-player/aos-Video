@@ -125,7 +125,8 @@ public class CustomApplication extends MultiDexApplication {
         //init credentials db
         NetworkCredentialsDatabase.getInstance().loadCredentials(this);
         ArchosUtils.setGlobalContext(this.getApplicationContext());
-        if(ArchosFeatures.isAndroidTV(this))
+        // only launch BootupRecommandation if on AndroidTV and before Android O otherwise target TV channels
+        if(ArchosFeatures.isAndroidTV(this) && Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
             BootupRecommandationService.init();
 
         if (getMyProcessName(this).equals(getPackageName())) {
