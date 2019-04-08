@@ -80,7 +80,7 @@ public class TVMenuItem extends LinearLayout implements Checkable, TVSlaveView{
             this.setBackgroundResource(R.color.video_info_next_prev_button_focused);
         }
         else
-            this.setBackgroundDrawable(null);
+            this.setBackground(null);
     }
     
 

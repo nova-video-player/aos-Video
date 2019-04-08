@@ -53,16 +53,16 @@ public class SubtitleSpacerView extends View {
     
     public void setRenderingSurface(Surface s) {
         //mExternalSurface = s;
-        setBackgroundDrawable(mBackground);
+        setBackground(mBackground);
     }
     
     @Override
-    public void setBackgroundDrawable(Drawable background) {
+    public void setBackground(Drawable background) {
         mBackground=background;
         if (mExternalSurface == null)
-            super.setBackgroundDrawable(mBackground);
+            super.setBackground(mBackground);
         else
-            super.setBackgroundDrawable(null);
+            super.setBackground(null);
     }
     
     @Override

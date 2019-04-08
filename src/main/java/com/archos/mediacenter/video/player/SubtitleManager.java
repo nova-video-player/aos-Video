@@ -142,7 +142,7 @@ public class SubtitleManager {
                     mTextShadowSpan = new TextShadowSpan(shadowRadius, shadowDx, shadowDy, shadowColor);
                 }
                 mSpannableStringBuilder.clear();
-                mSpannableStringBuilder.append(Html.fromHtml(cleanText(subtitle.getText())));
+                mSpannableStringBuilder.append(Html.fromHtml(cleanText(subtitle.getText()), 0));
                 if (mSpannableStringBuilder.length() > 0) {
                     // Html.fromHtml override shadow style, so add a shadowSpan for whole text.
                     mSpannableStringBuilder.setSpan(mTextShadowSpan, 0, mSpannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -560,9 +560,9 @@ public class SubtitleManager {
             return;
         mSubtitleSpacer.setAlpha(0);
         if (show) {
-            mSubtitleSpacer.setBackgroundDrawable(mSubtitlePosHintDrawable);
+            mSubtitleSpacer.setBackground(mSubtitlePosHintDrawable);
         } else {
-            mSubtitleSpacer.setBackgroundDrawable(null);
+            mSubtitleSpacer.setBackground(null);
         }
     }
 
