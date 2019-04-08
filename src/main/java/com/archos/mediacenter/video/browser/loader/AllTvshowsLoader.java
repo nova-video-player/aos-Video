@@ -64,6 +64,7 @@ public class AllTvshowsLoader extends VideoLoader {
                 VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " AS " + BaseColumns._ID,
                 VideoStore.Video.VideoColumns.SCRAPER_TITLE,
                 VideoStore.Video.VideoColumns.SCRAPER_S_COVER,
+                VideoStore.Video.VideoColumns.SCRAPER_S_POSTER_ID,
                 VideoStore.Video.VideoColumns.SCRAPER_E_SEASON,
                 VideoStore.Video.VideoColumns.SCRAPER_S_PREMIERED,
                 VideoStore.Video.VideoColumns.SCRAPER_S_STUDIOS,
