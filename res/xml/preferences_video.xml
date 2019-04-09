@@ -108,6 +108,13 @@
         app:iconSpaceReserved="false" >
         <CheckBoxPreference
             android:defaultValue="true"
+            android:key="show_next_episodes_row"
+            android:summary="@string/preferences_show_next_episodes_row_summary"
+            android:title="@string/preferences_show_next_episodes_row"
+            app:iconSpaceReserved="false"/>
+        
+        <CheckBoxPreference
+            android:defaultValue="true"
             android:key="show_last_added_row"
             android:summary="@string/preferences_show_last_added_row_summary"
             android:title="@string/preferences_show_last_added_row"

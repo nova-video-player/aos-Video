@@ -95,6 +95,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_ACTIVATE_REFRESHRATE_SWITCH = "enable_tv_refreshrate_switch";
     public static final String KEY_ACTIVATE_3D_SWITCH = "activate_tv_switch";
     
+    public static final String KEY_SHOW_NEXT_EPISODES_ROW = "show_next_episodes_row";
     public static final String KEY_SHOW_LAST_ADDED_ROW = "show_last_added_row";
     public static final String KEY_SHOW_LAST_PLAYED_ROW = "show_last_played_row";
     public static final String KEY_SHOW_ALL_MOVIES_ROW = "show_all_movies_row";
@@ -125,6 +126,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_HIDE_WATCHED = "hide_watched";
     public static final String KEY_CREATE_REMOTE_THUMBS = VideoProvider.PREFERENCE_CREATE_REMOTE_THUMBS;
     
+    public static final boolean SHOW_NEXT_EPISODES_ROW_DEFAULT = true;
     public static final boolean SHOW_LAST_ADDED_ROW_DEFAULT = true;
     public static final boolean SHOW_LAST_PLAYED_ROW_DEFAULT = true;
     public static final boolean SHOW_ALL_MOVIES_ROW_DEFAULT = false;

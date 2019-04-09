@@ -28,6 +28,7 @@ import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.LastAddedLoader;
 import com.archos.mediacenter.video.browser.loader.LastPlayedLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
+import com.archos.mediacenter.video.browser.loader.NextEpisodesLoader;
 import com.archos.mediacenter.video.browser.loader.VideoLoader;
 import com.archos.mediacenter.video.browser.loader.VideosByListLoader;
 import com.archos.mediacenter.video.browser.loader.VideosSelectionLoader;
@@ -51,6 +52,7 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ChannelManager {
@@ -61,11 +63,12 @@ public class ChannelManager {
     private static ChannelManager mInstance;
     
     private final Context mContext;
+    private final String mNextEpisodes;
     private final String mRecentlyAdded;
     private final String mRecentlyPlayed;
     private final String mAllMovies;
     private final String mAllTvShows;
-    private ArrayMap<String, ChannelData> mChannels;
+    private LinkedHashMap<String, ChannelData> mChannels;
     private PrepareEmptyPosterTask mPrepareEmptyPosterTask;
     private PrepareChannelsTask mPrepareChannelsTask;
     private ArrayMap<String, CreateChannelTask> mCreateChannelTasks = new ArrayMap<>();
@@ -85,6 +88,7 @@ public class ChannelManager {
 
     public ChannelManager(Context context) {
         mContext = context;
+        mNextEpisodes = mContext.getString(R.string.next_episodes);
         mRecentlyAdded = mContext.getString(R.string.recently_added);
         mRecentlyPlayed = mContext.getString(R.string.recently_played);
         mAllMovies = mContext.getString(R.string.all_movies);
@@ -229,8 +233,9 @@ public class ChannelManager {
         }
 
         private void addInternalChannels() {
-            ArrayMap<String, ChannelData> newChannels = new ArrayMap<>();
+            LinkedHashMap<String, ChannelData> newChannels = new LinkedHashMap<>();
             
+            addInternalChannel(newChannels, mNextEpisodes);
             addInternalChannel(newChannels, mRecentlyAdded);
             addInternalChannel(newChannels, mRecentlyPlayed);
             addInternalChannel(newChannels, mAllMovies);
@@ -253,11 +258,11 @@ public class ChannelManager {
             mChannels = newChannels;
         }
 
-        private void addInternalChannel(ArrayMap<String, ChannelData> newChannels, String name) {
+        private void addInternalChannel(LinkedHashMap<String, ChannelData> newChannels, String name) {
             addInternalChannel(newChannels, name, -1, null);
         }
 
-        private void addInternalChannel(ArrayMap<String, ChannelData> newChannels, String name, long listId, String listVideoIds) {
+        private void addInternalChannel(LinkedHashMap<String, ChannelData> newChannels, String name, long listId, String listVideoIds) {
             if (newChannels.containsKey(name))
                 return;
             
@@ -268,6 +273,7 @@ public class ChannelManager {
             else
                 channel = new ChannelData(name);
 
+            channel.setOrder(newChannels.size() + 1);
             channel.setListId(listId);
             channel.setListVideoIds(listVideoIds);
             newChannels.put(name, channel);
@@ -296,6 +302,7 @@ public class ChannelManager {
             String allMoviesSortOrder = prefs.getString(VideoPreferencesCommon.KEY_MOVIE_SORT_ORDER, MoviesLoader.DEFAULT_SORT);
             String allTvShowsSortOrder = prefs.getString(VideoPreferencesCommon.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
 
+            mChannels.get(mNextEpisodes).setLoader(new NextEpisodesLoader(mContext));
             mChannels.get(mRecentlyAdded).setLoader(new LastAddedLoader(mContext));
             mChannels.get(mRecentlyPlayed).setLoader(new LastPlayedLoader(mContext));
             mChannels.get(mAllMovies).setLoader(new MoviesLoader(mContext, allMoviesSortOrder, true, true));
@@ -316,10 +323,14 @@ public class ChannelManager {
 
             long channelId = getChannelId(channel);
 
-            if (channelId == -1)
+            if (channelId == -1) {
                 channelId = createChannel(channel);
-
-            channel.setId(channelId);
+                channel.setId(channelId);
+            }
+            else {
+                channel.setId(channelId);
+                updateChannel(channel);
+            }
             
             return null;
         }
@@ -348,17 +359,26 @@ public class ChannelManager {
         }
 
         private long createChannel(ChannelData channel) {
-            Channel.Builder builder = new Channel.Builder();
-            builder.setType(TvContractCompat.Channels.TYPE_PREVIEW)
-                    .setDisplayName(channel.getName())
-                    .setAppLinkIntentUri(Uri.parse(mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName()).toUri(Intent.URI_INTENT_SCHEME)));
-
-            Uri uri = mContext.getContentResolver().insert(TvContractCompat.Channels.CONTENT_URI, builder.build().toContentValues());
+            Uri uri = mContext.getContentResolver().insert(TvContractCompat.Channels.CONTENT_URI, buildChannel(channel).toContentValues());
             long id = ContentUris.parseId(uri);
             
             ChannelLogoUtils.storeChannelLogo(mContext, id, BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.video2_full));
             
             return id;
+        }
+
+        private void updateChannel(ChannelData channel) {
+            mContext.getContentResolver().update(TvContractCompat.buildChannelUri(channel.getId()), buildChannel(channel).toContentValues(), null, null);
+        }
+
+        private Channel buildChannel(ChannelData channel) {
+            Channel.Builder builder = new Channel.Builder();
+            builder.setType(TvContractCompat.Channels.TYPE_PREVIEW)
+                    .setDisplayName(channel.getName())
+                    .setConfigurationDisplayOrder(channel.getOrder())
+                    .setAppLinkIntentUri(Uri.parse(mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName()).toUri(Intent.URI_INTENT_SCHEME)));
+
+            return builder.build();
         }
     }
 
@@ -447,6 +467,8 @@ public class ChannelManager {
                         intent = new Intent(mContext, TvshowActivity.class);
                         intent.putExtra(TvshowFragment.EXTRA_TV_SHOW_ID, videoOrTvShowId);
                     }
+
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     
                     PreviewProgram.Builder builder = new PreviewProgram.Builder();
                     builder.setChannelId(channel.getId())
@@ -686,13 +708,31 @@ public class ChannelManager {
 
     private class ChannelData {
         private String mName;
+        private int mOrder;
+        private long mId = -1;
+
         private long mListId;
         private String mListVideoIds;
         private CursorLoader mLoader;
-        private long mId = -1;
 
         public String getName() {
             return mName;
+        }
+
+        public void setOrder(int order) {
+            mOrder = order;
+        }
+
+        public int getOrder() {
+            return mOrder;
+        }
+
+        public void setId(long id) {
+            mId = id;
+        }
+
+        public long getId() {
+            return mId;
         }
 
         public void setListId(long listId) {
@@ -717,14 +757,6 @@ public class ChannelManager {
 
         public CursorLoader getLoader() {
             return mLoader;
-        }
-
-        public void setId(long id) {
-            mId = id;
-        }
-
-        public long getId() {
-            return mId;
         }
 
         public ChannelData(String name) {
