@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -54,8 +55,8 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
         super.onSaveInstanceState(outState);
     }
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
     }
     @Override

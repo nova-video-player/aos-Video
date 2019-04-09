@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.browser.filebrowsing.network;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,8 +34,8 @@ public abstract class UpnpSmbCommonRootFragment extends NewRootFragment implemen
 
     }
     @Override
-    public void onAttach(Activity activity){
-        super.onAttach(activity);
+    public void onAttach(Context context){
+        super.onAttach(context);
         ((WorkgroupShortcutAndServerAdapter)mAdapter).setOnShareOpenListener(this);
     }
     @Override

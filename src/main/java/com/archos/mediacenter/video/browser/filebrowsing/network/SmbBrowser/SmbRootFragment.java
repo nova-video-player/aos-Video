@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -114,8 +115,10 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
         outState.putBoolean("isRunning", mSambaDiscovery.isRunning());
     }
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        Activity activity = getActivity();
 
         // Instantiate the SMB discovery as soon as we get the activity context
         mSambaDiscovery = new SambaDiscovery(activity);
