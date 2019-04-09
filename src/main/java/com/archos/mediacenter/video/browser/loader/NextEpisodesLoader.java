@@ -1,5 +1,7 @@
 package com.archos.mediacenter.video.browser.loader;
 
+import com.archos.mediacenter.video.browser.loader.VideoLoader;
+
 import android.content.Context;
 
 public class NextEpisodesLoader extends VideoLoader {
@@ -42,6 +44,6 @@ public class NextEpisodesLoader extends VideoLoader {
 
     @Override
     public String getSortOrder() {
-        return "null LIMIT 100";
+        return VideoLoader.DEFAULT_SORT + " LIMIT 100";
     }
 }

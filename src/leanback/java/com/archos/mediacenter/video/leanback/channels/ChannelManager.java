@@ -310,7 +310,7 @@ public class ChannelManager {
 
             for(ChannelData channel : mChannels.values()) {
                 if (channel.getListVideoIds() != null)
-                    channel.setLoader(new VideosSelectionLoader(mContext, channel.getListVideoIds(), null));
+                    channel.setLoader(new VideosSelectionLoader(mContext, channel.getListVideoIds(), VideoLoader.DEFAULT_SORT));
             }
         }
     }

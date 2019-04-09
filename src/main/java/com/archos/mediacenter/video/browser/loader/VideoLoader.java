@@ -34,6 +34,10 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
     public static final String COLUMN_DATE = "date";
     public static final String COLUMN_RATING = "rating";
 
+    public static final String DEFAULT_SORT = COLUMN_NAME + ", "
+            + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + ", "
+            + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE;
+
     protected static final String COALESCE = "COALESCE(";
     protected static final String COVER = COALESCE
             + VideoStore.Video.VideoColumns.SCRAPER_COVER + ",'') AS " + COLUMN_COVER_PATH;

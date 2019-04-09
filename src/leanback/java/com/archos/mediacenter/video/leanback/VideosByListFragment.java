@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.VideosByListLoader;
+import com.archos.mediacenter.video.browser.loader.VideoLoader;
 import com.archos.mediacenter.video.browser.loader.VideosSelectionLoader;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -92,7 +93,7 @@ public class VideosByListFragment extends VideosByFragment {
             return getSubsetLoader(getActivity());
         } else {
             // One of the row
-            return new VideosSelectionLoader(getActivity(), args.getString("ids"), args.getString("sort"));
+            return new VideosSelectionLoader(getActivity(), args.getString("ids"), VideoLoader.DEFAULT_SORT);
         }
     }
 
