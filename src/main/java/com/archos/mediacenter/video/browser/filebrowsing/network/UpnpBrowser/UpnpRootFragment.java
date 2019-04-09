@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.browser.filebrowsing.network.UpnpBrowser;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -56,8 +57,8 @@ public class UpnpRootFragment extends UpnpSmbCommonRootFragment implements UpnpS
         // Remember if the discovery is still running in order to restart it when restoring the fragment
     }
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
 // Start UPnP
         UpnpServiceManager
