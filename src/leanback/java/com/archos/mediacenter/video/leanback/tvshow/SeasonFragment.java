@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.BrowseSupportFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
-import android.support.v17.leanback.widget.CursorObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
@@ -37,13 +36,13 @@ import android.support.v17.leanback.widget.RowPresenter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.SeasonCursorMapper;
 import com.archos.mediacenter.video.browser.Delete;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
+import com.archos.mediacenter.video.leanback.adapter.PlaceholderCursorObjectAdapter;
 import com.archos.mediacenter.video.utils.DbUtils;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediacenter.video.browser.adapters.object.Season;
@@ -64,20 +63,20 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
     public static final String EXTRA_ACTION_ID = "ACTION_ID";
     public static final String EXTRA_TVSHOW_ID = "TVSHOW_ID";
     public static final String EXTRA_TVSHOW_NAME = "TVSHOW_NAME";
+    public static final String EXTRA_TVSHOW_POSTER = "TVSHOW_POSTER";
 
     private long mActionId;
     /** The show we're displaying */
     private long mTvshowId;
     private String mTvshowName;
+    private Uri mTvshowPosterUri;
 
     private ArrayObjectAdapter mRowsAdapter;
-    private CursorObjectAdapter mSeasonsAdapter;
+    private SeasonPresenter mSeasonPresenter;
+    private PlaceholderCursorObjectAdapter mSeasonsAdapter;
     private ListRow mSeasonsListRow;
 
     private Overlay mOverlay;
-    
-    private Button mActionButton;
-    private boolean mConfirmDelete = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,6 +85,7 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
         mActionId = getActivity().getIntent().getLongExtra(EXTRA_ACTION_ID, -1);
         mTvshowId = getActivity().getIntent().getLongExtra(EXTRA_TVSHOW_ID, -1);
         mTvshowName = getActivity().getIntent().getStringExtra(EXTRA_TVSHOW_NAME);
+        mTvshowPosterUri = Uri.parse(getActivity().getIntent().getStringExtra(EXTRA_TVSHOW_POSTER));
 
         // Just need to attach the background manager to keep the background of the parent activity
         BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
@@ -100,6 +100,75 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
         mOnItemViewClickedListener = new OnItemViewClickedListener() {
             @Override
             public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
+                if (item == null) {
+                    if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED) {
+                        boolean allEpisodesWatched = true;
+    
+                        for (int i = 1; i < mSeasonsAdapter.size(); i++) {
+                            Season season = (Season)mSeasonsAdapter.get(i);
+        
+                            if (!season.allEpisodesWatched()) {
+                                allEpisodesWatched = false;
+    
+                                break;
+                            }
+                        }
+    
+                        if (allEpisodesWatched) {
+                            for (int i = 1; i < mSeasonsAdapter.size(); i++) {
+                                Season season = (Season)mSeasonsAdapter.get(i);
+            
+                                DbUtils.markAsNotRead(getActivity(), season);
+                            }
+                        }
+                        else {
+                            for (int i = 1; i < mSeasonsAdapter.size(); i++) {
+                                Season season = (Season)mSeasonsAdapter.get(i);
+            
+                                DbUtils.markAsRead(getActivity(), season);
+                            }
+                        }
+    
+                        getActivity().setResult(Activity.RESULT_OK);
+                    }
+                    else if (mActionId == TvshowActionAdapter.ACTION_UNINDEX) {
+                        for (int i = 1; i < mSeasonsAdapter.size(); i++) {
+                            Season season = (Season)mSeasonsAdapter.get(i);
+        
+                            DbUtils.markAsHiddenByUser(getActivity(), season);
+                        }
+                    }
+                    else if (mActionId == TvshowActionAdapter.ACTION_DELETE) {
+                        SeasonPresenter.VideoViewHolder vh = (SeasonPresenter.VideoViewHolder)itemViewHolder;
+
+                        if (!vh.getConfirmDelete()) {
+                            vh.enableConfirmDelete();
+                        }
+                        else {
+                            ArrayList<Uri> uris = new ArrayList<Uri>();
+    
+                            for (int i = 1; i < mSeasonsAdapter.size(); i++) {
+                                Season season = (Season)mSeasonsAdapter.get(i);
+            
+                                for(String filePath : DbUtils.getFilePaths(getActivity(), season)) {
+                                    Uri uri = VideoUtils.getFileUriFromMediaLibPath(filePath);
+                                    
+                                    uris.add(uri);
+                                }
+                            }
+    
+                            Delete delete = new Delete(SeasonFragment.this, getActivity());
+    
+                            if (uris.size() == 1)
+                                delete.startDeleteProcess(uris.get(0));
+                            else if (uris.size() > 1)
+                                delete.startMultipleDeleteProcess(uris);
+                        }
+                    }
+
+                    return;
+                }
+
                 Season season = (Season)item;
                 
                 if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED) {
@@ -148,88 +217,6 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mOverlay = new Overlay(this);
-        
-        ViewGroup titleView = (ViewGroup)getTitleView();
-        mActionButton = (Button)LayoutInflater.from(getContext()).inflate(R.layout.leanback_season_action_button, titleView, false);
-        String text = "";
-        
-        if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED)
-            text = getString(R.string.mark_show_watched);
-        else if (mActionId == TvshowActionAdapter.ACTION_UNINDEX)
-            text = getString(R.string.unindex_show);
-        else if (mActionId == TvshowActionAdapter.ACTION_DELETE)
-            text = getString(R.string.delete_show);
-
-        mActionButton.setText(text);
-        mActionButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED) {
-                    boolean allEpisodesWatched = true;
-
-                    for (int i = 0; i < mSeasonsAdapter.size(); i++) {
-                        Season season = (Season)mSeasonsAdapter.get(i);
-    
-                        if (!season.allEpisodesWatched()) {
-                            allEpisodesWatched = false;
-
-                            break;
-                        }
-                    }
-
-                    if (allEpisodesWatched) {
-                        for (int i = 0; i < mSeasonsAdapter.size(); i++) {
-                            Season season = (Season)mSeasonsAdapter.get(i);
-        
-                            DbUtils.markAsNotRead(getActivity(), season);
-                        }
-                    }
-                    else {
-                        for (int i = 0; i < mSeasonsAdapter.size(); i++) {
-                            Season season = (Season)mSeasonsAdapter.get(i);
-        
-                            DbUtils.markAsRead(getActivity(), season);
-                        }
-                    }
-
-                    getActivity().setResult(Activity.RESULT_OK);
-                }
-                else if (mActionId == TvshowActionAdapter.ACTION_UNINDEX) {
-                    for (int i = 0; i < mSeasonsAdapter.size(); i++) {
-                        Season season = (Season)mSeasonsAdapter.get(i);
-    
-                        DbUtils.markAsHiddenByUser(getActivity(), season);
-                    }
-                }
-                else if (mActionId == TvshowActionAdapter.ACTION_DELETE) {
-                    if (!mConfirmDelete) {
-                        mConfirmDelete = true;
-
-                        mActionButton.setText(getString(R.string.confirm_delete_short));
-                    }
-                    else {
-                        ArrayList<Uri> uris = new ArrayList<Uri>();
-
-                        for (int i = 0; i < mSeasonsAdapter.size(); i++) {
-                            Season season = (Season)mSeasonsAdapter.get(i);
-        
-                            for(String filePath : DbUtils.getFilePaths(getActivity(), season)) {
-                                Uri uri = VideoUtils.getFileUriFromMediaLibPath(filePath);
-                                
-                                uris.add(uri);
-                            }
-                        }
-
-                        Delete delete = new Delete(SeasonFragment.this, getActivity());
-
-                        if (uris.size() == 1)
-                            delete.startDeleteProcess(uris.get(0));
-                        else if (uris.size() > 1)
-                            delete.startMultipleDeleteProcess(uris);
-                    }
-                }
-            }
-         });
-        titleView.addView(mActionButton);
     }
 
     @Override
@@ -256,7 +243,8 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
     private void loadRows() {
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
 
-        mSeasonsAdapter = new CursorObjectAdapter(new SeasonPresenter(getActivity(), mActionId));
+        mSeasonPresenter = new SeasonPresenter(getActivity(), mActionId);
+        mSeasonsAdapter = new PlaceholderCursorObjectAdapter(mSeasonPresenter);
         mSeasonsAdapter.setMapper(new CompatibleCursorMapperConverter(new SeasonCursorMapper()));
         String desc = "";
         if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED)
@@ -280,7 +268,23 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        mSeasonPresenter.setAllSeasons(null);
         mSeasonsAdapter.changeCursor(cursor);
+
+        int episodeTotalCount = 0;
+        int episodeWatchedCount = 0;
+    
+        for (int i = 1; i < mSeasonsAdapter.size(); i++) {
+            Season season = (Season)mSeasonsAdapter.get(i);
+
+            episodeTotalCount += season.getEpisodeTotalCount();
+            episodeWatchedCount += season.getEpisodeWatchedCount();
+        }
+
+        Season allSeasons = new Season(mTvshowId, mTvshowName, mTvshowPosterUri, -1, episodeTotalCount, episodeWatchedCount);
+
+        mSeasonPresenter.setAllSeasons(allSeasons);
+        mSeasonsAdapter.onCursorChanged();
     }
 
     @Override

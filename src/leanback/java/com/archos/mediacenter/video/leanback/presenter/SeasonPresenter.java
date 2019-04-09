@@ -42,6 +42,7 @@ public class SeasonPresenter extends Presenter {
     final Drawable mErrorDrawable;
     
     private long mActionId;
+    private Season mAllSeasons;
 
     private Context mContext;
 
@@ -128,6 +129,10 @@ public class SeasonPresenter extends Presenter {
         mActionId = actionId;
     }
 
+    public void setAllSeasons(Season allSeasons) {
+        mAllSeasons = allSeasons;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
         mContext = parent.getContext();
@@ -137,6 +142,12 @@ public class SeasonPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Object item) {
+        if (mAllSeasons == null)
+            return;
+        
+        if (item == null)
+            item = mAllSeasons;
+
         VideoViewHolder vh = (VideoViewHolder)viewHolder;
         Season season = (Season) item;
 
@@ -147,7 +158,12 @@ public class SeasonPresenter extends Presenter {
         vh.updateCardView(season.getPosterUri());
 
         final ImageCardView card = vh.getImageCardView();
-        card.setTitleText(mContext.getString(R.string.season_identification, season.getSeasonNumber()));
+
+        if (season.getSeasonNumber() == -1)
+            card.setTitleText(mContext.getString(R.string.all_seasons));
+        else
+            card.setTitleText(mContext.getString(R.string.season_identification, season.getSeasonNumber()));
+
         card.setContentText(mContext.getResources().getQuantityString(R.plurals.Nepisodes, season.getEpisodeTotalCount(), season.getEpisodeTotalCount()));
 
         if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED) {
