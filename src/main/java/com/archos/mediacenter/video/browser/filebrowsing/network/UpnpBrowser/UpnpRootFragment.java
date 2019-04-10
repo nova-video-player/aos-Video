@@ -62,7 +62,7 @@ public class UpnpRootFragment extends UpnpSmbCommonRootFragment implements UpnpS
 
 // Start UPnP
         UpnpServiceManager
-                .startServiceIfNeeded(activity);
+                .startServiceIfNeeded(context);
         Log.d(TAG, "onAttach this=" + this);
         Log.d(TAG, "onAttach mSambaDiscovery=");
 
