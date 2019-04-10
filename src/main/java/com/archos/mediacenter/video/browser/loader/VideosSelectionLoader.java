@@ -25,7 +25,7 @@ public class VideosSelectionLoader extends MoviesLoader {
 
     @Override
     public String getSortOrder() {
-        return null;
+        return mSortOrder;
     }
 
     @Override

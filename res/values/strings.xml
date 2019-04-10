@@ -72,6 +72,7 @@
     <string name="info_menu_series_poster_select">Select another poster</string>
 
     <!-- COVER ROLL -->
+    <string name="next_episodes">Next episodes</string>
     <string name="recently_added">Recently added</string>
     <string name="recently_added_videos">Recently added</string>
     <string name="recently_played">Recently played</string>
@@ -115,6 +116,7 @@
     <string name="all_tvshows">All TV shows</string>
     <string name="all_tvshows_format">All TV shows  -  %d</string>
     <string name="not_watched_tvshows_format">Not watched  -  %d</string>
+    <string name="all_seasons">All seasons</string>
     <string name="tvshows_by_alpha">TV shows alphabetical</string>
     <string name="tvshows_by_genre">TV shows by genre</string>
     <string name="tvshows_by_rating">TV shows by rating</string>
@@ -661,6 +663,8 @@
    <string name="preferences_display_resume_box">Display resume box</string>
 
    <string name="preferences_leanback_user_interface">TV User Interface</string>
+   <string name="preferences_show_next_episodes_row_summary">Check to show a row with your next episodes</string>
+   <string name="preferences_show_next_episodes_row">Show next episodes row</string>
    <string name="preferences_show_last_added_row_summary">Check to show a row with your last added media</string>
    <string name="preferences_show_last_added_row">Show last added row</string>
    <string name="preferences_show_last_played_row_summary">Check to show a row with your last played media</string>

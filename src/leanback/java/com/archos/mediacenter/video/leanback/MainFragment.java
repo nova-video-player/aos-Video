@@ -57,6 +57,7 @@ import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.LastAddedLoader;
 import com.archos.mediacenter.video.browser.loader.LastPlayedLoader;
+import com.archos.mediacenter.video.browser.loader.NextEpisodesLoader;
 import com.archos.mediacenter.video.browser.loader.NonScrapedVideosCountLoader;
 import com.archos.mediacenter.video.leanback.adapter.object.Box;
 import com.archos.mediacenter.video.leanback.adapter.object.EmptyView;
@@ -93,12 +94,14 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private static final String TAG = "MainFragment";
     private static final String PREF_PRIVATE_MODE = "PREF_PRIVATE_MODE";
 
+    final static int LOADER_ID_NEXT_EPISODES = 47;
     final static int LOADER_ID_LAST_ADDED = 42;
     final static int LOADER_ID_LAST_PLAYED = 43;
     final static int LOADER_ID_ALL_MOVIES = 46;
     final static int LOADER_ID_ALL_TV_SHOWS = 44;
     final static int LOADER_ID_NON_SCRAPED_VIDEOS_COUNT = 45;
 
+    final static int ROW_ID_NEXT_EPISODES = 1008;
     final static int ROW_ID_LAST_ADDED = 1000;
     final static int ROW_ID_LAST_PLAYED = 1001;
     final static int ROW_ID_MOVIES = 1002;
@@ -117,11 +120,13 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private ArrayObjectAdapter mRowsAdapter;
     private CursorObjectAdapter mMoviesAdapter;
     private CursorObjectAdapter mTvshowsAdapter;
+    private CursorObjectAdapter mNextEpisodesAdapter;
     private CursorObjectAdapter mLastAddedAdapter;
     private CursorObjectAdapter mLastPlayedAdapter;
     private ArrayObjectAdapter mFileBrowsingRowAdapter;
     private ArrayObjectAdapter mPreferencesRowAdapter;
 
+    private ListRow mNextEpisodesRow;
     private ListRow mLastAddedRow;
     private ListRow mLastPlayedRow;
     private ListRow mMoviesRow;
@@ -129,6 +134,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private ListRow mMovieRow;
     private ListRow mTvshowRow;
     
+    private boolean mShowNextEpisodesRow;
     private boolean mShowLastAddedRow;
     private boolean mShowLastPlayedRow;
     private boolean mShowMoviesRow;
@@ -186,6 +192,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         super.onActivityCreated(savedInstanceState);
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mShowNextEpisodesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_NEXT_EPISODES_ROW, VideoPreferencesCommon.SHOW_NEXT_EPISODES_ROW_DEFAULT);
         mShowLastAddedRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_ADDED_ROW, VideoPreferencesCommon.SHOW_LAST_ADDED_ROW_DEFAULT);
         mShowLastPlayedRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_PLAYED_ROW, VideoPreferencesCommon.SHOW_LAST_PLAYED_ROW_DEFAULT);
         mShowMoviesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_MOVIES_ROW, VideoPreferencesCommon.SHOW_ALL_MOVIES_ROW_DEFAULT);
@@ -214,6 +221,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         setupEventListeners();
 
         loadRows();
+        LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_NEXT_EPISODES, null, this);
         LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_LAST_ADDED, null, this);
         LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_LAST_PLAYED, null, this);
         
@@ -249,6 +257,13 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         updateBackground();
 
         getActivity().registerReceiver(mUpdateReceiver, mUpdateFilter);
+
+        boolean newShowNextEpisodesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_NEXT_EPISODES_ROW, VideoPreferencesCommon.SHOW_NEXT_EPISODES_ROW_DEFAULT);
+
+        if (newShowNextEpisodesRow != mShowNextEpisodesRow) {
+            mShowNextEpisodesRow = newShowNextEpisodesRow;
+            updateNextEpisodesRow(null);
+        }
         
         boolean newShowLastAddedRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_ADDED_ROW, VideoPreferencesCommon.SHOW_LAST_ADDED_ROW_DEFAULT);
 
@@ -353,6 +368,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         mRowsAdapter = new ArrayObjectAdapter(rowsPresenterSelector);
 
+        mNextEpisodesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
+        mNextEpisodesAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
+        mNextEpisodesRow = new ListRow(ROW_ID_NEXT_EPISODES, new HeaderItem(getString(R.string.next_episodes)), mNextEpisodesAdapter);
+
         mLastAddedAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
         mLastAddedAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
         mLastAddedRow = new ListRow(ROW_ID_LAST_ADDED, new HeaderItem(getString(R.string.recently_added)), mLastAddedAdapter);
@@ -442,6 +461,27 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         }
     }
 
+    private void updateNextEpisodesRow(Cursor cursor) {
+        if (cursor != null)
+            mNextEpisodesAdapter.changeCursor(cursor);
+        else
+            cursor = mNextEpisodesAdapter.getCursor();
+
+        int currentPosition = getRowPosition(ROW_ID_NEXT_EPISODES);
+
+        if (cursor.getCount() == 0 || !mShowNextEpisodesRow) {
+            if (currentPosition != -1)
+                mRowsAdapter.removeItems(currentPosition, 1);
+        }
+        else {
+            if (currentPosition == -1) {
+                int newPosition = 0;
+                
+                mRowsAdapter.add(newPosition, mNextEpisodesRow);
+            }
+        }
+    }
+
     private void updateLastAddedRow(Cursor cursor) {
         if (cursor != null)
             mLastAddedAdapter.changeCursor(cursor);
@@ -457,6 +497,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         else {
             if (currentPosition == -1) {
                 int newPosition = 0;
+
+                if (getRowPosition(ROW_ID_NEXT_EPISODES) != -1)
+                    newPosition = getRowPosition(ROW_ID_NEXT_EPISODES) + 1;
                 
                 mRowsAdapter.add(newPosition, mLastAddedRow);
             }
@@ -481,6 +524,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
                 if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
                     newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
+                else if (getRowPosition(ROW_ID_NEXT_EPISODES) != -1)
+                    newPosition = getRowPosition(ROW_ID_NEXT_EPISODES) + 1;
                 
                 mRowsAdapter.add(newPosition, mLastPlayedRow);
             }
@@ -505,6 +550,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
                 else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
                     newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
+                else if (getRowPosition(ROW_ID_NEXT_EPISODES) != -1)
+                    newPosition = getRowPosition(ROW_ID_NEXT_EPISODES) + 1;
                 
                 mRowsAdapter.add(newPosition, mMovieRow);
             }
@@ -519,6 +566,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
                 else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
                     newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
+                else if (getRowPosition(ROW_ID_NEXT_EPISODES) != -1)
+                    newPosition = getRowPosition(ROW_ID_NEXT_EPISODES) + 1;
                 
                 mRowsAdapter.add(newPosition, mMoviesRow);
             }
@@ -547,6 +596,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
                 else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
                     newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
+                else if (getRowPosition(ROW_ID_NEXT_EPISODES) != -1)
+                    newPosition = getRowPosition(ROW_ID_NEXT_EPISODES) + 1;
                 
                 mRowsAdapter.add(newPosition, mTvshowRow);
             }
@@ -565,6 +616,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
                 else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
                     newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
+                else if (getRowPosition(ROW_ID_NEXT_EPISODES) != -1)
+                    newPosition = getRowPosition(ROW_ID_NEXT_EPISODES) + 1;
                 
                 mRowsAdapter.add(newPosition, mTvshowsRow);
             }
@@ -616,7 +669,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (id == LOADER_ID_LAST_ADDED) {
+        if (id == LOADER_ID_NEXT_EPISODES) {
+            return new NextEpisodesLoader(getActivity());
+        }
+        else if (id == LOADER_ID_LAST_ADDED) {
             return new LastAddedLoader(getActivity());
         }
         else if (id == LOADER_ID_LAST_PLAYED) {
@@ -645,7 +701,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         Log.d(TAG,"onLoadFinished() cursor id="+cursorLoader.getId());
-        if (cursorLoader.getId() == LOADER_ID_LAST_ADDED) {
+        if (cursorLoader.getId() == LOADER_ID_NEXT_EPISODES) {
+            updateNextEpisodesRow(cursor);
+            mInitNextEpisodesCount = cursor.getCount();
+        }
+        else if (cursorLoader.getId() == LOADER_ID_LAST_ADDED) {
             updateLastAddedRow(cursor);
             mInitLastAddedCount = cursor.getCount();
         }
@@ -687,18 +747,19 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     }
 
     /**
-     * When opening, LastAdded and LastPlayed rows are not created yet, hence selection is on Movies.
-     * Here we wait for the Loaders to return their results to know if we need to select the first row again (which will be LastAdded or LastPlayed)
+     * When opening, NextEpisodes, LastAdded and LastPlayed rows are not created yet, hence selection is on Movies.
+     * Here we wait for the Loaders to return their results to know if we need to select the first row again (which will be NextEpisodes, LastAdded or LastPlayed)
      */
+    private int mInitNextEpisodesCount = -1;
     private int mInitLastAddedCount = -1;
     private int mInitLastPlayedCount = -1;
     private boolean mFocusInitializationDone = false;
 
     private void checkFocusInitialization() {
-        // Check if we have both Last Added and Last Played loader results
-        if (!mFocusInitializationDone && mInitLastAddedCount>-1 && mInitLastPlayedCount>-1) {
+        // Check if we have NextEpisodes, LastAdded and LastPlayed loader results
+        if (!mFocusInitializationDone && mInitNextEpisodesCount>-1 && mInitLastAddedCount>-1 && mInitLastPlayedCount>-1) {
             // If at least one of them is non empty we select the first line (which contains one of them)
-            if (mInitLastAddedCount>0 || mInitLastPlayedCount>0) {
+            if (mInitNextEpisodesCount>0 || mInitLastAddedCount>0 || mInitLastPlayedCount>0) {
                 this.setSelectedPosition(0, true);
                 mFocusInitializationDone = true; // this must be done only once
             }
