@@ -15,11 +15,14 @@
 package com.archos.mediacenter.video.browser.dialogs;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 
@@ -27,27 +30,58 @@ import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
  * Created by alexandre on 17/06/15.
  */
 public class DialogRetrieveSubtitles extends DialogFragment {
-    private ProgressDialog pd;
+
     private SubtitleManager mEngine;
+    private static boolean isShowing = false;
+    private final static boolean DBG = false;
+    private final static String TAG = "DialogRetrieveSubtitles";
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        pd = new ProgressDialog(getActivity());
-        pd.setMessage(getString(R.string.dialog_subloader_copying));
-        pd.setIndeterminate(true);
-        pd.setCancelable(true);
-
-        return pd;
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.subtitle_retreive_dialog, container, false);
+        Dialog dialog = getDialog();
+        getDialog().requestWindowFeature(STYLE_NO_TITLE);
+        dialog.setCanceledOnTouchOutside(true);
+        setCancelable(true);
+        ProgressBar progressBar = view.findViewById(R.id.progressBar);
+        progressBar.setIndeterminate(true);
+        progressBar.setVisibility(View.VISIBLE);
+        isShowing = true;
+
+        if (DBG) Log.d(TAG,"dialog created");
+
+        return view;
+    }
+
     public void setDownloader(SubtitleManager engine){
         mEngine = engine;
     }
+
     public boolean isShowing(){
-        return pd!=null&&pd.isShowing();
+        return isShowing;
     }
+
     @Override
     public void onCancel(DialogInterface dialog) {
         if(mEngine!=null)
             mEngine.abort();
+        dialog.cancel();
+        isShowing = false;
     }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (mEngine != null)
+            mEngine.abort();
+        dialog.cancel();
+        isShowing = false;
+    }
+
 }

@@ -14,46 +14,64 @@
 
 package com.archos.mediacenter.video.browser.dialogs;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ProgressBar;
 
 import com.archos.mediacenter.video.R;
 
 /**
  * Created by alexandre on 18/05/15.
  */
-@SuppressLint("ValidFragment")
 public class DeleteDialog extends DialogFragment  {
-    public final static String TODELETE = "todelete";
-    private DialogInterface.OnClickListener mOnCancelListener;
 
-    public void setOnCancelListener(DialogInterface.OnClickListener onCancelListener){
-        mOnCancelListener = onCancelListener;
+    private final static boolean DBG = false;
+    private final static String TAG = "DeleteDialog";
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        String title ="";
-        int icon=-1 ;
-        icon= R.drawable.filetype_video;
-        ProgressDialog pd = new ProgressDialog(getActivity());
-        pd.setTitle(title);
-        if(icon >=0)
-            pd.setIcon(icon);
-        pd.setMessage(getText(R.string.deleting));
-        pd.setIndeterminate(true);
-        pd.setCancelable(true);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        return pd;
+        View view = inflater.inflate(R.layout.delete_dialog, container, false);
+        Dialog dialog = getDialog();
+        getDialog().requestWindowFeature(STYLE_NO_TITLE);
+        dialog.setCanceledOnTouchOutside(true);
+        setCancelable(true);
 
+        //dialog.requestWindowFeature(Window.FEATURE_LEFT_ICON);
+        //dialog.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.filetype_video);
+
+        ProgressBar progressBar = view.findViewById(R.id.progressBar);
+        progressBar.setIndeterminate(true);
+        progressBar.setVisibility(View.VISIBLE);
+        
+        if (DBG) Log.d(TAG,"DeleteDialog create");
+
+        return view;
     }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        dialog.cancel();
+    }
+
     @Override
     public void onCancel(DialogInterface dialog) {
-        if(mOnCancelListener!=null)
-            mOnCancelListener.onClick(dialog,0);
+        super.onCancel(dialog);
+        dialog.cancel();
     }
+
 }
