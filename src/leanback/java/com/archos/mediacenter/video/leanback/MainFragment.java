@@ -152,8 +152,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private BackgroundManager bgMngr;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         IntentFilter intentFilter = new IntentFilter(ExtStorageReceiver.ACTION_MEDIA_MOUNTED);
         intentFilter.addAction(ExtStorageReceiver.ACTION_MEDIA_UNMOUNTED);
         intentFilter.addAction(ExtStorageReceiver.ACTION_MEDIA_CHANGED);
