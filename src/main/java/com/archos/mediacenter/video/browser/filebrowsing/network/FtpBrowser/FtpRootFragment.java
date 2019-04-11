@@ -20,6 +20,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -157,7 +158,7 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
 
         ActionItem rescanAction = new ActionItem();
         rescanAction.setTitle(getString(R.string.add_to_library));
-        rescanAction.setIcon(getResources().getDrawable(R.drawable.ic_menu_refresh));
+        rescanAction.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_menu_refresh));
         rescanAction.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 addToIndexed(uri, name);
