@@ -29,6 +29,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.v7.preference.PreferenceManager;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.CopyCutEngine;
@@ -191,14 +194,14 @@ public class TorrentLoaderActivity extends Activity implements TorrentThreadObse
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(R.layout.progressbar_dialog);
-        builder.setMessage(getString(R.string.loading_torrent));
         builder.setNegativeButton(getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 TorrentLoaderActivity.this.finish();
             }
         });
-        AlertDialog mProgressBarAlertDialog = builder.create();
+        mProgressBarAlertDialog = builder.create();
+
 
         mProgressBarAlertDialog.setOnCancelListener(new OnCancelListener() {
 
@@ -208,6 +211,13 @@ public class TorrentLoaderActivity extends Activity implements TorrentThreadObse
             }
         });
         mProgressBarAlertDialog.show();
+
+        // this can only be after the show otherwise null
+        TextView textView = mProgressBarAlertDialog.findViewById(R.id.textView);
+        textView.setText(R.string.loading_torrent);
+        ProgressBar progressBar = mProgressBarAlertDialog.findViewById(R.id.progressBar);
+        progressBar.setIndeterminate(true);
+        progressBar.setVisibility(View.VISIBLE);
 
         preloadTorrent();
 

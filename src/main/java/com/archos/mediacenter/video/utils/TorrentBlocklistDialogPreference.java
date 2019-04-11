@@ -51,272 +51,266 @@ import java.util.zip.ZipException;
 
 
 public class TorrentBlocklistDialogPreference extends Preference {
-	AlertDialog od=null;
+    AlertDialog od = null;
 
-	protected File mCurrentDirectory;
-	Dialog mProgressBarDialog;
-	private View mView;
-	private String defaultBlocklist = "https://list.iblocklist.com/?list=bt_level1&fileformat=p2p&archiveformat=gz";
+    protected File mCurrentDirectory;
+    Dialog mProgressBarDialog;
+    private View mView;
+    private String defaultBlocklist = "https://list.iblocklist.com/?list=bt_level1&fileformat=p2p&archiveformat=gz";
 
-	private String mCurrentBlockList;
+    private String mCurrentBlockList;
 
-	public TorrentBlocklistDialogPreference(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		
-	}
-	@Override
-    public void onBindViewHolder(PreferenceViewHolder holder) {
-		super.onBindViewHolder(holder);
-		mView = holder.itemView;
-		setup();
+    public TorrentBlocklistDialogPreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
+
     }
-	public TorrentBlocklistDialogPreference(Context context, AttributeSet attrs,
-			int defStyle) {
-		super(context, attrs, defStyle); 
-	}
 
-	public CharSequence getSummary() {
-		if((mCurrentBlockList=getSharedPreferences().getString(getKey(), defaultBlocklist))!=null){
-			File file = getContext().getFileStreamPath(TorrentObserverService.BLOCKLIST);
-			if(file.exists()) {
-				return  mCurrentBlockList;
-			}
-			else {
-				return getContext().getResources().getString(R.string.blocklist_not_loaded);
-			}
-		}
-		return "";
-	}
+    @Override
+    public void onBindViewHolder(PreferenceViewHolder holder) {
+        super.onBindViewHolder(holder);
+        mView = holder.itemView;
+        setup();
+    }
 
-	private void setup() {
+    public TorrentBlocklistDialogPreference(Context context, AttributeSet attrs,
+                                            int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
-		mProgressBarDialog = new Dialog(getContext());
+    public CharSequence getSummary() {
+        if ((mCurrentBlockList = getSharedPreferences().getString(getKey(), defaultBlocklist)) != null) {
+            File file = getContext().getFileStreamPath(TorrentObserverService.BLOCKLIST);
+            if (file.exists()) {
+                return mCurrentBlockList;
+            } else {
+                return getContext().getResources().getString(R.string.blocklist_not_loaded);
+            }
+        }
+        return "";
+    }
+
+    private void setup() {
+
+        mProgressBarDialog = new Dialog(getContext());
         mProgressBarDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mProgressBarDialog.setContentView(R.layout.progressbar_dialog);
-		mProgressBarDialog.setCanceledOnTouchOutside(true);
-		mProgressBarDialog.setCancelable(false);
-        TextView textView = mProgressBarDialog.findViewById(R.id.textView);
-		textView.setText(R.string.blocklist_downloading);
-		ProgressBar progressBar = mProgressBarDialog.findViewById(R.id.progressBar);
-		progressBar.setIndeterminate(true);
-		progressBar.setVisibility(View.VISIBLE);
-		
-		if((mCurrentBlockList=getSharedPreferences().getString(getKey(), defaultBlocklist))!=null){
+        mProgressBarDialog.setCanceledOnTouchOutside(true);
+        mProgressBarDialog.setCancelable(false);
+
+        if ((mCurrentBlockList = getSharedPreferences().getString(getKey(), defaultBlocklist)) != null) {
             File file = getContext().getFileStreamPath(TorrentObserverService.BLOCKLIST);
-			if(file.exists()) {
+            if (file.exists()) {
                 mView.findViewById(R.id.button).setVisibility(View.VISIBLE);
-            }
-			else {
+            } else {
                 mView.findViewById(R.id.button).setVisibility(View.GONE);
             }
-		}
-		else
-			mView.findViewById(R.id.button).setVisibility(View.GONE);
+        } else
+            mView.findViewById(R.id.button).setVisibility(View.GONE);
 
-		mView.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+        mView.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 startDownload(getSharedPreferences().getString(getKey(), defaultBlocklist));
             }
         });
-	}
+    }
 
-	public boolean isDialogShowing(){
-		return od!=null&&od.isShowing();
-	}
-	@Override
-	public void onClick() {
-		if(getOnPreferenceClickListener()==null){
+    public boolean isDialogShowing() {
+        return od != null && od.isShowing();
+    }
 
-			mCurrentDirectory =new File("/");
-			final EditText ed = new EditText(getContext());
-			ed.setText(getSharedPreferences().getString(getKey(), defaultBlocklist));
-			Builder b = new Builder(getContext());
-			b.setTitle(R.string.torrent_blocklist_url);
+    @Override
+    public void onClick() {
+        if (getOnPreferenceClickListener() == null) {
 
-			b.setView(ed);
-			b.setNegativeButton(android.R.string.cancel, null);
-			b.setPositiveButton(android.R.string.ok, new OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					if(ed.getText().toString().isEmpty()){
-						showErrorDialog(getErrorString(-3));
-						return;
-					}
-					//trying to download
-					Uri uri = Uri.parse(ed.getText().toString());
-					String path = "";
-					String query = "";
-					try {
-						if(uri.getPath()!=null)
-							path= URLEncoder.encode(uri.getPath(), "UTF-8").replace("+", "%20").replace("%2F", "/");
-						if(uri.getQuery()!=null){
-							
-							for(String param : uri.getQueryParameterNames()){
-								if(!query.isEmpty())
-									query+="&";
-								query+=URLEncoder.encode(param, "UTF-8")+"=";
-								query+=uri.getQueryParameter(param);
-									
-							}
-						}
-					} catch (UnsupportedEncodingException e) {
-						return;
-					}
+            mCurrentDirectory = new File("/");
+            final EditText ed = new EditText(getContext());
+            ed.setText(getSharedPreferences().getString(getKey(), defaultBlocklist));
+            Builder b = new Builder(getContext());
+            b.setTitle(R.string.torrent_blocklist_url);
 
-					startDownload(uri.getScheme()+"://"+uri.getHost()+path+(!query.isEmpty()?"?"+query:""));
+            b.setView(ed);
+            b.setNegativeButton(android.R.string.cancel, null);
+            b.setPositiveButton(android.R.string.ok, new OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (ed.getText().toString().isEmpty()) {
+                        showErrorDialog(getErrorString(-3));
+                        return;
+                    }
+                    //trying to download
+                    Uri uri = Uri.parse(ed.getText().toString());
+                    String path = "";
+                    String query = "";
+                    try {
+                        if (uri.getPath() != null)
+                            path = URLEncoder.encode(uri.getPath(), "UTF-8").replace("+", "%20").replace("%2F", "/");
+                        if (uri.getQuery() != null) {
 
-				}
+                            for (String param : uri.getQueryParameterNames()) {
+                                if (!query.isEmpty())
+                                    query += "&";
+                                query += URLEncoder.encode(param, "UTF-8") + "=";
+                                query += uri.getQueryParameter(param);
 
+                            }
+                        }
+                    } catch (UnsupportedEncodingException e) {
+                        return;
+                    }
 
-			});
-			od =b.create();
+                    startDownload(uri.getScheme() + "://" + uri.getHost() + path + (!query.isEmpty() ? "?" + query : ""));
 
-			od.show();
-		}
-	}
-
-	private void startDownload(final String url){
-		if(url == null)
-			return;
-
-		new AsyncTask<Void, Void, Integer>() {
-			@Override
-			protected void onPreExecute() {    
-				mProgressBarDialog.show();
-			}
-			@Override
-			protected void onProgressUpdate(Void... rien){
-			}
-			@Override
-			protected Integer doInBackground(Void... rien) {
+                }
 
 
+            });
+            od = b.create();
+
+            od.show();
+        }
+    }
+
+    private void startDownload(final String url) {
+        if (url == null)
+            return;
+
+        new AsyncTask<Void, Void, Integer>() {
+            @Override
+            protected void onPreExecute() {
+                mProgressBarDialog.show();
+                // this can only be after the show otherwise null
+                TextView textView = mProgressBarDialog.findViewById(R.id.textView);
+                textView.setText(R.string.blocklist_downloading);
+                ProgressBar progressBar = mProgressBarDialog.findViewById(R.id.progressBar);
+                progressBar.setIndeterminate(true);
+                progressBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            protected void onProgressUpdate(Void... rien) {
+            }
+
+            @Override
+            protected Integer doInBackground(Void... rien) {
 
 
+                try {
+                    URL urlCo = new URL(url);
+                    URLConnection mUrlConnection = urlCo.openConnection();
+                    mUrlConnection.setConnectTimeout(20000);
+                    mUrlConnection.setReadTimeout(40000);
+                    int error = ((HttpURLConnection) mUrlConnection).getResponseCode();
+                    ((HttpURLConnection) mUrlConnection).setInstanceFollowRedirects(true);
 
+                    if (!(200 <= error && 300 > error))
+                        //error
+                        return error;
 
+                    InputStream inputStream = mUrlConnection.getInputStream();
+                    FileOutputStream fileOutput = getContext().openFileOutput(TorrentObserverService.BLOCKLIST, Context.MODE_PRIVATE);
+                    byte[] buffer = new byte[1024];
+                    int bufferLength = 0;
+                    while ((bufferLength = inputStream.read(buffer)) > 0) {
+                        fileOutput.write(buffer, 0, bufferLength);
+                    }
+                    fileOutput.close();
+                    //now we check is gzip
+                    try {
+                        getContext().openFileInput(
+                                TorrentObserverService.BLOCKLIST);
+                        InputStream is;
+                        try {
+                            is = new GZIPInputStream(
+                                    getContext().openFileInput(
+                                            TorrentObserverService.BLOCKLIST));
+                        } catch (IOException e) {
+                            return 200;
+                        }
 
-				try {
-					URL urlCo = new URL(url);
-					URLConnection mUrlConnection =  urlCo.openConnection();
-					mUrlConnection.setConnectTimeout(20000);
-					mUrlConnection.setReadTimeout(40000);
-					int error = ((HttpURLConnection)mUrlConnection).getResponseCode();
-					((HttpURLConnection)mUrlConnection).setInstanceFollowRedirects(true);
+                        FileOutputStream output = getContext().openFileOutput(
+                                TorrentObserverService.BLOCKLIST + "_tmp", Context.MODE_PRIVATE);
+                        int bufferSize = 1024;
+                        buffer = new byte[bufferSize];
+                        int len = 0;
+                        while ((len = is.read(buffer)) != -1) {
+                            output.write(buffer, 0, len);
+                        }
+                        try {
+                            output.close();
+                            is.close();
+                            is = getContext().openFileInput(TorrentObserverService.BLOCKLIST + "_tmp");
+                            output = getContext().openFileOutput(
+                                    TorrentObserverService.BLOCKLIST, Context.MODE_PRIVATE);
+                            buffer = new byte[bufferSize];
+                            len = 0;
+                            while ((len = is.read(buffer)) != -1) {
+                                output.write(buffer, 0, len);
+                            }
+                            output.close();
+                            is.close();
+                            getContext().getFileStreamPath(TorrentObserverService.BLOCKLIST + "_tmp").delete();
+                            return 200;
+                        } catch (IOException i) {
+                        }
+                    } catch (ZipException z) {
+                        return 200;
+                    } //not a gzip
+                    catch (FileNotFoundException e) {
 
-					if(!(200<=error&&300>error))
-						//error
-						return error;
+                    } catch (IOException e) {
+                    }
+                } catch (IOException e) {
+                } catch (IllegalStateException e) {
+                }
+                return -1;
 
-					InputStream inputStream = mUrlConnection.getInputStream();
-					FileOutputStream fileOutput = getContext().openFileOutput(TorrentObserverService.BLOCKLIST, Context.MODE_PRIVATE);
-					byte[] buffer = new byte[1024];
-					int bufferLength = 0;
-					while ( (bufferLength = inputStream.read(buffer)) > 0 ) {
-						fileOutput.write(buffer, 0, bufferLength);
-					}
-					fileOutput.close();
-					//now we check is gzip
-					try  {
-						getContext().openFileInput(
-								TorrentObserverService.BLOCKLIST);
-						InputStream is;
-						try{
-							is = new GZIPInputStream(
-								getContext().openFileInput(
-										TorrentObserverService.BLOCKLIST));
-						}
-						catch (IOException e) {
-							return 200;
-						} 
+            }
 
-						FileOutputStream output = getContext().openFileOutput(
-								TorrentObserverService.BLOCKLIST+"_tmp", Context.MODE_PRIVATE); 
-						int bufferSize = 1024;
-						buffer = new byte[bufferSize];
-						int len = 0;
-						while ((len = is.read(buffer)) != -1) {
-							output.write(buffer, 0, len);
-						}
-						try{
-							output.close();
-							is.close();
-							is = getContext().openFileInput(TorrentObserverService.BLOCKLIST+"_tmp"); 
-							output = getContext().openFileOutput(
-									TorrentObserverService.BLOCKLIST, Context.MODE_PRIVATE);
-							buffer = new byte[bufferSize];
-							len = 0;
-							while ((len = is.read(buffer)) != -1) {
-								output.write(buffer, 0, len);
-							}
-							output.close();
-							is.close();
-							getContext().getFileStreamPath(TorrentObserverService.BLOCKLIST+"_tmp").delete();
-							return 200;
-						}
-						catch(IOException i){                   
-						}
-					} 
-					catch (ZipException z) {                    
-						return 200;} //not a gzip
-					catch (FileNotFoundException e) {
-
-					} 
-					catch (IOException e) {
-					} 
-				}
-				catch (IOException e) {
-				} 
-				catch (IllegalStateException e) {
-				}
-				return -1;
-
-			}
-
-			@Override
-			protected void onPostExecute(Integer success) {
+            @Override
+            protected void onPostExecute(Integer success) {
                 mProgressBarDialog.dismiss();
-				if(200<=success&&300>success){
-					//saving url
-					setSummary(url);
-					mCurrentBlockList = url;
-					getSharedPreferences().edit().putString(getKey(), url).commit();
-					Toast.makeText(getContext(), getErrorString(200), Toast.LENGTH_SHORT).show();
-					mView.findViewById(R.id.button).setVisibility(View.VISIBLE);
-				}
-				else{
-					showErrorDialog(getErrorString(success));
-				}
+                if (200 <= success && 300 > success) {
+                    //saving url
+                    setSummary(url);
+                    mCurrentBlockList = url;
+                    getSharedPreferences().edit().putString(getKey(), url).commit();
+                    Toast.makeText(getContext(), getErrorString(200), Toast.LENGTH_SHORT).show();
+                    mView.findViewById(R.id.button).setVisibility(View.VISIBLE);
+                } else {
+                    showErrorDialog(getErrorString(success));
+                }
 
-			}
-		}.execute();
+            }
+        }.execute();
 
-	}
-	private String getErrorString(int success){
-		switch(success){
-			case 404:
-				return getContext().getString(R.string.blocklist_file_not_found);
-			case 200:
-				return getContext().getString(R.string.blocklist_success);
-			case -2 :
-				return getContext().getString(R.string.blocklist_invalid);
-			case -3 :
-				return getContext().getString(R.string.blocklist_empty);
-				
-			
-			default:
-				return getContext().getString(R.string.blocklist_unknown_error);
-		}
-	}
-	private void showErrorDialog(String message){
-		new AlertDialog.Builder(getContext())
-		.setTitle(R.string.error_listing)
-		.setMessage(message)
+    }
 
-		.create().show();
-	}
+    private String getErrorString(int success) {
+        switch (success) {
+            case 404:
+                return getContext().getString(R.string.blocklist_file_not_found);
+            case 200:
+                return getContext().getString(R.string.blocklist_success);
+            case -2:
+                return getContext().getString(R.string.blocklist_invalid);
+            case -3:
+                return getContext().getString(R.string.blocklist_empty);
+
+
+            default:
+                return getContext().getString(R.string.blocklist_unknown_error);
+        }
+    }
+
+    private void showErrorDialog(String message) {
+        new AlertDialog.Builder(getContext())
+                .setTitle(R.string.error_listing)
+                .setMessage(message)
+
+                .create().show();
+    }
 
 
 }

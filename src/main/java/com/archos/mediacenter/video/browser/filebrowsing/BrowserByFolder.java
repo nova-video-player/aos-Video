@@ -17,12 +17,14 @@ package com.archos.mediacenter.video.browser.filebrowsing;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -37,8 +39,10 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewStub;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +68,7 @@ import com.archos.mediacenter.video.browser.presenter.CommonPresenter;
 import com.archos.mediacenter.video.browser.presenter.Metafile2GridPresenter;
 import com.archos.mediacenter.video.browser.presenter.Metafile2ListPresenter;
 import com.archos.mediacenter.video.browser.presenter.VideoPresenter;
+import com.archos.mediacenter.video.player.TorrentLoaderActivity;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
@@ -326,7 +331,10 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             emptyView.setVisibility(View.VISIBLE);
             // Update the text of the empty view
             TextView emptyViewText = (TextView)emptyView.findViewById(R.id.empty_view_text);
-            emptyViewText.setTextAppearance(getActivity(), android.R.style.TextAppearance_Large);
+            if (Build.VERSION.SDK_INT < 23)
+                emptyViewText.setTextAppearance(getActivity(), android.R.style.TextAppearance_Large);
+            else
+                emptyViewText.setTextAppearance(android.R.style.TextAppearance_Large);
             emptyViewText.setText(R.string.error_credentials);
             // Check if a button is needed in the empty view
             Button emptyViewButton = (Button)emptyView.findViewById(R.id.empty_view_button);
@@ -710,14 +718,22 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            ProgressDialog pd = new ProgressDialog(getActivity());
-            pd.setTitle(mCurrentDirectory.getLastPathSegment());
-            pd.setIcon(R.drawable.filetype_video_folder);
-            pd.setMessage(getText(R.string.loading));
-            pd.setIndeterminate(true);
-            pd.setCancelable(true);
 
-            return pd;
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setView(R.layout.progressbar_dialog);
+            builder.setTitle(mCurrentDirectory.getLastPathSegment());
+            builder.setIcon(R.drawable.filetype_video_folder);
+            builder.setCancelable(true);
+            AlertDialog mProgressBarAlertDialog = builder.create();
+            mProgressBarAlertDialog.show();
+            // TODO MARC!!! this can only be after the show otherwise null
+            TextView textView = mProgressBarAlertDialog.findViewById(R.id.textView);
+            textView.setText(R.string.loading);
+            ProgressBar progressBar = mProgressBarAlertDialog.findViewById(R.id.progressBar);
+            progressBar.setIndeterminate(true);
+            progressBar.setVisibility(View.VISIBLE);
+
+            return mProgressBarAlertDialog;
         }
 
         @Override
