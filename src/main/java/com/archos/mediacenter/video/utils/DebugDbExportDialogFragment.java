@@ -39,6 +39,7 @@ import java.io.File;
  */
 public class DebugDbExportDialogFragment extends DialogFragment {
 
+    private final static boolean DBG = false;
     private final static String TAG = "DebugDbExport";
 
     ProgressDialog mDialog = null;
@@ -46,7 +47,7 @@ public class DebugDbExportDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateDialog");
+        if (DBG) Log.d(TAG, "onCreateDialog");
         mDialog = new ProgressDialog(getActivity());
         mDialog.setIndeterminate(true);
         mDialog.setCancelable(false);
@@ -62,7 +63,7 @@ public class DebugDbExportDialogFragment extends DialogFragment {
 
     @Override
     public void onResume() {
-        Log.d(TAG, "onResume");
+        if (DBG) Log.d(TAG, "onResume");
         super.onResume();
 
         if (mExportTask !=null) {
@@ -74,7 +75,7 @@ public class DebugDbExportDialogFragment extends DialogFragment {
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        Log.d(TAG, "onDismiss");
+        if (DBG) Log.d(TAG, "onDismiss");
         super.onDismiss(dialog);
 
         if (mExportTask !=null) {
@@ -85,7 +86,7 @@ public class DebugDbExportDialogFragment extends DialogFragment {
 
     @Override
     public void onPause() {
-        Log.d(TAG, "onPause");
+        if (DBG) Log.d(TAG, "onPause");
         super.onPause();
 
         // Better hide the dialog in case of screen rotation, to avoid having to recreate a new zip
@@ -97,13 +98,13 @@ public class DebugDbExportDialogFragment extends DialogFragment {
 
         @Override
         protected void onPreExecute() {
-            Log.d(TAG, "onPreExecute ");
+            if (DBG) Log.d(TAG, "onPreExecute ");
             super.onPreExecute();
         }
 
         @Override
         protected File doInBackground(Object... params) {
-            Log.d(TAG, "doInBackground");
+            if (DBG) Log.d(TAG, "doInBackground");
             File libFile = VideoOpenHelper.getDatabaseFile(getActivity());
             if (!libFile.exists()) {
                 Toast.makeText(getActivity(), R.string.error_file_not_found, Toast.LENGTH_SHORT).show();
@@ -113,7 +114,7 @@ public class DebugDbExportDialogFragment extends DialogFragment {
             File zipFileDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
             zipFileDir.mkdir(); // make the dir if it does not exist (very unlikely)
             File zipFile = new File(zipFileDir.getAbsolutePath()+"/video_db.zip");
-            Log.d(TAG, "zipFile = "+zipFile);
+            if (DBG) Log.d(TAG, "zipFile = "+zipFile);
 
             // Erase zipped library if there is already one
             if (zipFile.exists()) {
@@ -122,14 +123,14 @@ public class DebugDbExportDialogFragment extends DialogFragment {
 
             // Zip it!
             boolean zipSuccess = ZipUtils.compressFile(libFile, zipFile);
-            Log.d(TAG, "Size uncompressed: " + libFile.length());
-            Log.d(TAG, "Size compressed:   " + zipFile.length());
+            if (DBG) Log.d(TAG, "Size uncompressed: " + libFile.length());
+            if (DBG) Log.d(TAG, "Size compressed:   " + zipFile.length());
             return zipSuccess ? zipFile : null;
         }
 
         @Override
         protected void onPostExecute(File zipFile) {
-            Log.d(TAG, "onPostExecute "+zipFile);
+            if (DBG) Log.d(TAG, "onPostExecute "+zipFile);
             if (zipFile!=null) {
                 // Build and send the intent
                 Intent emailIntent = new Intent(Intent.ACTION_SEND);

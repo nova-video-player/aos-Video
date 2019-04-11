@@ -97,6 +97,7 @@ public class SubtitlesDownloaderActivity extends Activity{
     HashMap<String, String> mIndexableUri = null;
     boolean stop = false;
     private ProgressDialog mDialog;
+    private Dialog mProgressBarDialog;
     private AlertDialog mSumUpDialog;
     private OpenSubtitlesTask mOpenSubtitlesTask = null;
 

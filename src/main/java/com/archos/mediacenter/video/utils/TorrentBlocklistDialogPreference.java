@@ -16,7 +16,7 @@ package com.archos.mediacenter.video.utils;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -26,8 +26,9 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,7 +54,7 @@ public class TorrentBlocklistDialogPreference extends Preference {
 	AlertDialog od=null;
 
 	protected File mCurrentDirectory;
-	ProgressDialog mProgress; 
+	Dialog mProgressBarDialog;
 	private View mView;
 	private String defaultBlocklist = "https://list.iblocklist.com/?list=bt_level1&fileformat=p2p&archiveformat=gz";
 
@@ -88,10 +89,17 @@ public class TorrentBlocklistDialogPreference extends Preference {
 	}
 
 	private void setup() {
-		
-		mProgress = new ProgressDialog(getContext());
-		mProgress.setMessage(getContext().getString(R.string.blocklist_downloading));
-		mProgress.setCancelable(false);
+
+		mProgressBarDialog = new Dialog(getContext());
+        mProgressBarDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mProgressBarDialog.setContentView(R.layout.progressbar_dialog);
+		mProgressBarDialog.setCanceledOnTouchOutside(true);
+		mProgressBarDialog.setCancelable(false);
+        TextView textView = mProgressBarDialog.findViewById(R.id.textView);
+		textView.setText(R.string.blocklist_downloading);
+		ProgressBar progressBar = mProgressBarDialog.findViewById(R.id.progressBar);
+		progressBar.setIndeterminate(true);
+		progressBar.setVisibility(View.VISIBLE);
 		
 		if((mCurrentBlockList=getSharedPreferences().getString(getKey(), defaultBlocklist))!=null){
             File file = getContext().getFileStreamPath(TorrentObserverService.BLOCKLIST);
@@ -176,7 +184,7 @@ public class TorrentBlocklistDialogPreference extends Preference {
 		new AsyncTask<Void, Void, Integer>() {
 			@Override
 			protected void onPreExecute() {    
-				mProgress.show();
+				mProgressBarDialog.show();
 			}
 			@Override
 			protected void onProgressUpdate(Void... rien){
@@ -269,7 +277,7 @@ public class TorrentBlocklistDialogPreference extends Preference {
 
 			@Override
 			protected void onPostExecute(Integer success) {
-				mProgress.dismiss();
+                mProgressBarDialog.dismiss();
 				if(200<=success&&300>success){
 					//saving url
 					setSummary(url);

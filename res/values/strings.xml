@@ -896,4 +896,6 @@
 
     <string name="list_title">List title</string>
 
+    <string name="loading">Loading…</string>
+
 </resources>

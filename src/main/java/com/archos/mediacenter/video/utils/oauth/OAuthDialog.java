@@ -24,23 +24,30 @@ import java.net.URLDecoder;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Display;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import com.archos.mediacenter.video.R;
 
 /**
  * A full screen OAuth dialog which contains a webview. This takes an authorize url
@@ -48,7 +55,10 @@ import android.widget.LinearLayout;
  */
 public class OAuthDialog extends Dialog {
 
-	private ProgressDialog mProgress;
+    private final static boolean DBG = false;
+    private final static String TAG = "OAuthDialog";
+
+	private Dialog mProgressBarDialog;
 	private LinearLayout mLayout;
 	private WebView mWebView;
 	private OAuthCallback mListener;
@@ -88,10 +98,17 @@ public class OAuthDialog extends Dialog {
 		super.onCreate(savedInstanceState);
 		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
-		mProgress = new ProgressDialog(getContext());
-		mProgress.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		mProgress.setMessage("Loading...");
+
+		mProgressBarDialog = new Dialog(getContext());
+        mProgressBarDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mProgressBarDialog.setContentView(R.layout.progressbar_dialog);
+		mProgressBarDialog.setCanceledOnTouchOutside(true);
+		mProgressBarDialog.setCancelable(true);
+        TextView textView = mProgressBarDialog.findViewById(R.id.textView);
+		textView.setText(R.string.loading);
+		ProgressBar progressBar = mProgressBarDialog.findViewById(R.id.progressBar);
+		progressBar.setIndeterminate(true);
+		progressBar.setVisibility(View.VISIBLE);
 		
 		mLayout = new LinearLayout(getContext());
 		mLayout.setOrientation(LinearLayout.VERTICAL);
@@ -135,15 +152,17 @@ public class OAuthDialog extends Dialog {
         **  Manage if the url should be load or not, and get the result of the request
         **
         */
+		// this one is for Android API 21-23
+        @SuppressWarnings("deprecation")
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url)
         {
-            Log.d("pref", url);
+            if (DBG) Log.d(TAG, url);
            	String urldecode = null;
         	try {
 				urldecode = URLDecoder.decode(url, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
-				
+
 			}
 			Uri uri=Uri.parse(urldecode);
 			if (!"localhost".equals(uri.getHost())||! urldecode.contains("code="))
@@ -151,8 +170,31 @@ public class OAuthDialog extends Dialog {
         	mdata.code=uri.getQueryParameter("code");
 			OAuthDialog.this.dismiss();
 	     	mListener.onFinished(mdata);
-            
+
 	     	return true;
+        }
+
+        // this one is for Android API 24+
+        @RequiresApi(Build.VERSION_CODES.N)
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request)
+        {
+            String url = request.getUrl().toString();
+            if (DBG) Log.d(TAG, url);
+            String urldecode = null;
+            try {
+                urldecode = URLDecoder.decode(url, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+
+            }
+            Uri uri=Uri.parse(urldecode);
+            if (!"localhost".equals(uri.getHost())||! urldecode.contains("code="))
+                return false;
+            mdata.code=uri.getQueryParameter("code");
+            OAuthDialog.this.dismiss();
+            mListener.onFinished(mdata);
+
+            return true;
         }
 
 
@@ -160,12 +202,25 @@ public class OAuthDialog extends Dialog {
         **  Catch the error if an error occurs
         ** 
         */
+        // for Android 21-22
+        @SuppressWarnings("deprecation")
         @Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
         {
         	super.onReceivedError(view, errorCode, description, failingUrl);
         	if(mListener!=null)
         		mListener.onFinished(mdata);
+            OAuthDialog.this.dismiss();
+        }
+
+        // for Android 23+
+        @RequiresApi(Build.VERSION_CODES.M)
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request,  WebResourceError error)
+        {
+            super.onReceivedError(view, request, error);
+            if(mListener!=null)
+                mListener.onFinished(mdata);
             OAuthDialog.this.dismiss();
         }
 
@@ -178,7 +233,7 @@ public class OAuthDialog extends Dialog {
         public void onPageStarted(WebView view, String url, Bitmap favicon)
         {
         	super.onPageStarted(view, url, favicon);
-           	mProgress.show();
+            mProgressBarDialog.show();
         }
 
 
@@ -190,8 +245,8 @@ public class OAuthDialog extends Dialog {
 		public void onPageFinished(WebView view, String url)
 		{
 			super.onPageFinished(view, url);
-			mProgress.dismiss();
-			injectCSS();
+            mProgressBarDialog.dismiss();
+            injectCSS();
 		}
 	}
 
