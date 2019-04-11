@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.archos.mediacenter.video.R;
 
@@ -44,19 +45,21 @@ public class DeleteDialog extends DialogFragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.delete_dialog, container, false);
+        View view = inflater.inflate(R.layout.progressbar_dialog, container, false);
         Dialog dialog = getDialog();
-        getDialog().requestWindowFeature(STYLE_NO_TITLE);
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCanceledOnTouchOutside(true);
         setCancelable(true);
 
         //dialog.requestWindowFeature(Window.FEATURE_LEFT_ICON);
         //dialog.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.filetype_video);
 
+        TextView textView = view.findViewById(R.id.textView);
+        textView.setText(R.string.deleting);
         ProgressBar progressBar = view.findViewById(R.id.progressBar);
         progressBar.setIndeterminate(true);
         progressBar.setVisibility(View.VISIBLE);
-        
+
         if (DBG) Log.d(TAG,"DeleteDialog create");
 
         return view;

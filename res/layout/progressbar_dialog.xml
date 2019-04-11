@@ -11,9 +11,10 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"/>
 <TextView
+    android:id="@+id/textView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"
     android:layout_toEndOf="@+id/progressBar"
-    android:text="@string/deleting" />
+    android:text="" />
 </LinearLayout>

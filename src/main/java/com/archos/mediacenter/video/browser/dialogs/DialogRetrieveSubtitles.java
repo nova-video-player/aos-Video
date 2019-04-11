@@ -22,7 +22,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 
@@ -44,11 +47,13 @@ public class DialogRetrieveSubtitles extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.subtitle_retreive_dialog, container, false);
+        View view = inflater.inflate(R.layout.progressbar_dialog, container, false);
         Dialog dialog = getDialog();
-        getDialog().requestWindowFeature(STYLE_NO_TITLE);
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCanceledOnTouchOutside(true);
         setCancelable(true);
+        TextView textView = view.findViewById(R.id.textView);
+        textView.setText(R.string.dialog_subloader_copying);
         ProgressBar progressBar = view.findViewById(R.id.progressBar);
         progressBar.setIndeterminate(true);
         progressBar.setVisibility(View.VISIBLE);
