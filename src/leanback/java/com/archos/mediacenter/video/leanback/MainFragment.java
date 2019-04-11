@@ -87,7 +87,10 @@ import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.WebUtils;
 import com.archos.mediaprovider.ArchosMediaIntent;
+import com.archos.mediaprovider.ImportState;
+import com.archos.mediaprovider.video.NetworkScannerReceiver;
 import com.archos.mediaprovider.video.VideoStore;
+import com.archos.mediascraper.AutoScrapeService;
 
 public class MainFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -300,7 +303,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             Bundle args = new Bundle();
 
             args.putString("sort", mMovieSortOrder);
-            getLoaderManager().restartLoader(LOADER_ID_ALL_MOVIES, args, this);
+            LoaderManager.getInstance(getActivity()).restartLoader(LOADER_ID_ALL_MOVIES, args, this);
         }
 
         String newTvShowSortOrder = mPrefs.getString(VideoPreferencesCommon.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
@@ -714,13 +717,17 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             mInitLastPlayedCount = cursor.getCount();
         }
         else if (cursorLoader.getId() == LOADER_ID_ALL_MOVIES) {
-            if (isVideosListModified(mMoviesAdapter.getCursor(), cursor))
+            boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking() || AutoScrapeService.isScraping() || ImportState.VIDEO.isInitialImport();
+
+            if (isVideosListModified(mMoviesAdapter.getCursor(), cursor) && !scanningOnGoing)
                 ((ArrayObjectAdapter)mMovieRow.getAdapter()).replace(0, buildAllMoviesBox());
             
             updateMoviesRow(cursor);
         }
         else if (cursorLoader.getId() == LOADER_ID_ALL_TV_SHOWS) {
-            if (isVideosListModified(mTvshowsAdapter.getCursor(), cursor))
+            boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking() || AutoScrapeService.isScraping() || ImportState.VIDEO.isInitialImport();
+
+            if (isVideosListModified(mTvshowsAdapter.getCursor(), cursor) && !scanningOnGoing)
                 ((ArrayObjectAdapter)mTvshowRow.getAdapter()).replace(0, buildAllTvshowsBox());
             
             updateTvShowsRow(cursor);
