@@ -85,10 +85,7 @@ public class BrowserByShow extends BrowserWithShowHeader {
         super.onDestroyView();
         ((ListView)mArchosGridView).setDivider(null); //unset otherwise, crash in listview
         ((ListView)mArchosGridView).setDividerHeight(0);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-            mApplicationFrameLayout.setBackground(null);
-        else
-            mApplicationFrameLayout.setBackgroundDrawable(null);
+        mApplicationFrameLayout.setBackground(null);
         ((MainActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.color.leanback_background_transparent));
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
