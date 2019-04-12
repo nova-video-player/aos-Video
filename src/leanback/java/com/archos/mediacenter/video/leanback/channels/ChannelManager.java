@@ -417,6 +417,7 @@ public class ChannelManager {
                 boolean isVideo = cursor.getColumnIndex(VideoLoader.COLUMN_NAME) != -1;
 
                 int typeColumn = isVideo ? cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE) : -1;
+                int onlineIdColumn = isVideo ? cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID) : cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_S_ONLINE_ID);
                 int posterIdColumn = isVideo ? cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_POSTER_ID) : cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_S_POSTER_ID);
                 int titleColumn = isVideo ? cursor.getColumnIndex(VideoLoader.COLUMN_NAME) : cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_TITLE);
                 int videoOrTvShowIdColumn = cursor.getColumnIndex(VideoStore.Video.VideoColumns._ID);
@@ -436,14 +437,15 @@ public class ChannelManager {
                     boolean isEpisode = type == BaseTags.TV_SHOW;
 
                     // poster id
+                    long onlineId = cursor.getLong(onlineIdColumn);
                     long posterId = cursor.getLong(posterIdColumn);
                     Uri posterUri = null;
 
                     if (posterId != 0) {
                         if (isEpisode || !isVideo)
-                            posterUri = Uri.parse(ScraperStore.ShowPosters.URI.BASE.toString() + "/" + posterId);
+                            posterUri = Uri.parse(ScraperStore.ShowPosters.URI.BASE.toString() + "/" + onlineId + "/" + posterId);
                         else
-                            posterUri = Uri.parse(ScraperStore.MoviePosters.URI.BASE.toString() + "/" + posterId);
+                            posterUri = Uri.parse(ScraperStore.MoviePosters.URI.BASE.toString() + "/" + onlineId + "/" + posterId);
                     }
                     else {
                         posterUri = Uri.parse(VideoStore.Video.Thumbnails.EXTERNAL_CONTENT_URI.toString() + "/0");
