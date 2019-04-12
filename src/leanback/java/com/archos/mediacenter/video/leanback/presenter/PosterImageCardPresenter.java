@@ -295,7 +295,12 @@ public class PosterImageCardPresenter extends Presenter {
         card.setTitleText(tvshow.getName());
 
         card.setContentText(tvshow.getCountString(card.getContext()));
-        vh.updateCardView(tvshow.getPosterUri(), -1, false);
+
+        if (tvshow.getPosterUri() != null)
+            vh.updateCardView(tvshow.getPosterUri(), -1, false);
+        else
+            vh.updateCardView(mErrorDrawable);
+        
         vh.setOccurencies(0);
     }
 
