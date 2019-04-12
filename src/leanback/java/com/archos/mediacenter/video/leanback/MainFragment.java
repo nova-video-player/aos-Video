@@ -154,6 +154,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     private BackgroundManager bgMngr;
 
+    private boolean mNeedBuildAllMoviesBox = false;
+    private boolean mNeedBuildAllTvshowsBox = false;
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -717,18 +720,30 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             mInitLastPlayedCount = cursor.getCount();
         }
         else if (cursorLoader.getId() == LOADER_ID_ALL_MOVIES) {
+            if (!mNeedBuildAllMoviesBox && isVideosListModified(mMoviesAdapter.getCursor(), cursor))
+                mNeedBuildAllMoviesBox = true;
+            
             boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking() || AutoScrapeService.isScraping() || ImportState.VIDEO.isInitialImport();
 
-            if (isVideosListModified(mMoviesAdapter.getCursor(), cursor) && !scanningOnGoing)
+            if (mNeedBuildAllMoviesBox && !scanningOnGoing) {
                 ((ArrayObjectAdapter)mMovieRow.getAdapter()).replace(0, buildAllMoviesBox());
+
+                mNeedBuildAllMoviesBox = false;
+            }
             
             updateMoviesRow(cursor);
         }
         else if (cursorLoader.getId() == LOADER_ID_ALL_TV_SHOWS) {
+            if (!mNeedBuildAllTvshowsBox && isVideosListModified(mTvshowsAdapter.getCursor(), cursor))
+                mNeedBuildAllTvshowsBox = true;
+            
             boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking() || AutoScrapeService.isScraping() || ImportState.VIDEO.isInitialImport();
 
-            if (isVideosListModified(mTvshowsAdapter.getCursor(), cursor) && !scanningOnGoing)
+            if (mNeedBuildAllTvshowsBox && !scanningOnGoing) {
                 ((ArrayObjectAdapter)mTvshowRow.getAdapter()).replace(0, buildAllTvshowsBox());
+
+                mNeedBuildAllTvshowsBox = false;
+            }
             
             updateTvShowsRow(cursor);
         }
