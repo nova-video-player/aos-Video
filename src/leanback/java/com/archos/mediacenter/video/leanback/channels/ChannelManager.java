@@ -28,7 +28,7 @@ import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.LastAddedLoader;
 import com.archos.mediacenter.video.browser.loader.LastPlayedLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
-import com.archos.mediacenter.video.browser.loader.NextEpisodesLoader;
+import com.archos.mediacenter.video.browser.loader.WatchingUpNextLoader;
 import com.archos.mediacenter.video.browser.loader.VideoLoader;
 import com.archos.mediacenter.video.browser.loader.VideosByListLoader;
 import com.archos.mediacenter.video.browser.loader.VideosSelectionLoader;
@@ -63,7 +63,7 @@ public class ChannelManager {
     private static ChannelManager mInstance;
     
     private final Context mContext;
-    private final String mNextEpisodes;
+    private final String mWatchingUpNext;
     private final String mRecentlyAdded;
     private final String mRecentlyPlayed;
     private final String mAllMovies;
@@ -88,7 +88,7 @@ public class ChannelManager {
 
     public ChannelManager(Context context) {
         mContext = context;
-        mNextEpisodes = mContext.getString(R.string.next_episodes);
+        mWatchingUpNext = mContext.getString(R.string.watching_up_next);
         mRecentlyAdded = mContext.getString(R.string.recently_added);
         mRecentlyPlayed = mContext.getString(R.string.recently_played);
         mAllMovies = mContext.getString(R.string.all_movies);
@@ -235,7 +235,7 @@ public class ChannelManager {
         private void addInternalChannels() {
             LinkedHashMap<String, ChannelData> newChannels = new LinkedHashMap<>();
             
-            addInternalChannel(newChannels, mNextEpisodes);
+            addInternalChannel(newChannels, mWatchingUpNext);
             addInternalChannel(newChannels, mRecentlyAdded);
             addInternalChannel(newChannels, mRecentlyPlayed);
             addInternalChannel(newChannels, mAllMovies);
@@ -302,7 +302,7 @@ public class ChannelManager {
             String allMoviesSortOrder = prefs.getString(VideoPreferencesCommon.KEY_MOVIE_SORT_ORDER, MoviesLoader.DEFAULT_SORT);
             String allTvShowsSortOrder = prefs.getString(VideoPreferencesCommon.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
 
-            mChannels.get(mNextEpisodes).setLoader(new NextEpisodesLoader(mContext));
+            mChannels.get(mWatchingUpNext).setLoader(new WatchingUpNextLoader(mContext));
             mChannels.get(mRecentlyAdded).setLoader(new LastAddedLoader(mContext));
             mChannels.get(mRecentlyPlayed).setLoader(new LastPlayedLoader(mContext));
             mChannels.get(mAllMovies).setLoader(new MoviesLoader(mContext, allMoviesSortOrder, true, true));
@@ -417,6 +417,7 @@ public class ChannelManager {
                 boolean isVideo = cursor.getColumnIndex(VideoLoader.COLUMN_NAME) != -1;
 
                 int typeColumn = isVideo ? cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE) : -1;
+                int onlineIdColumn = isVideo ? cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID) : cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_S_ONLINE_ID);
                 int posterIdColumn = isVideo ? cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_POSTER_ID) : cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_S_POSTER_ID);
                 int titleColumn = isVideo ? cursor.getColumnIndex(VideoLoader.COLUMN_NAME) : cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_TITLE);
                 int videoOrTvShowIdColumn = cursor.getColumnIndex(VideoStore.Video.VideoColumns._ID);
@@ -436,14 +437,15 @@ public class ChannelManager {
                     boolean isEpisode = type == BaseTags.TV_SHOW;
 
                     // poster id
+                    long onlineId = cursor.getLong(onlineIdColumn);
                     long posterId = cursor.getLong(posterIdColumn);
                     Uri posterUri = null;
 
                     if (posterId != 0) {
                         if (isEpisode || !isVideo)
-                            posterUri = Uri.parse(ScraperStore.ShowPosters.URI.BASE.toString() + "/" + posterId);
+                            posterUri = Uri.parse(ScraperStore.ShowPosters.URI.BASE.toString() + "/" + onlineId + "/" + posterId);
                         else
-                            posterUri = Uri.parse(ScraperStore.MoviePosters.URI.BASE.toString() + "/" + posterId);
+                            posterUri = Uri.parse(ScraperStore.MoviePosters.URI.BASE.toString() + "/" + onlineId + "/" + posterId);
                     }
                     else {
                         posterUri = Uri.parse(VideoStore.Video.Thumbnails.EXTERNAL_CONTENT_URI.toString() + "/0");

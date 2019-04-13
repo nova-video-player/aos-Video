@@ -1,12 +1,13 @@
 package com.archos.mediacenter.video.browser.loader;
 
-import com.archos.mediacenter.video.browser.loader.VideoLoader;
-
 import android.content.Context;
 
-public class NextEpisodesLoader extends VideoLoader {
+import com.archos.mediacenter.video.browser.loader.VideoLoader;
+import com.archos.mediaprovider.video.VideoStore;
 
-    public NextEpisodesLoader(Context context) {
+public class WatchingUpNextLoader extends VideoLoader {
+
+    public WatchingUpNextLoader(Context context) {
         super(context);
         init();
     }
@@ -20,7 +21,7 @@ public class NextEpisodesLoader extends VideoLoader {
             builder.append(" AND ");
 
         builder.append(
-            "e_id in (" +
+            "(bookmark > 0 OR e_id in (" +
                 "SELECT n.e_id " +
                 "FROM video n " +
                 "INNER JOIN video w " +
@@ -36,7 +37,7 @@ public class NextEpisodesLoader extends VideoLoader {
                     "END" +
                 ") " +
                 "WHERE n.e_id IS NOT NULL AND n.Archos_lastTimePlayed = 0 AND w.e_id IS NOT NULL AND w.Archos_lastTimePlayed != 0" +
-            ")"
+            "))"
         );
 
         return builder.toString();
@@ -44,6 +45,6 @@ public class NextEpisodesLoader extends VideoLoader {
 
     @Override
     public String getSortOrder() {
-        return VideoLoader.DEFAULT_SORT + " LIMIT 100";
+        return "CASE WHEN " + VideoStore.Video.VideoColumns.BOOKMARK + " > 0 THEN 0 ELSE 1 END, " + VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + " DESC, " + VideoLoader.DEFAULT_SORT + " LIMIT 100";
     }
 }

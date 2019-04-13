@@ -204,7 +204,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                     intent.putExtra(SeasonFragment.EXTRA_ACTION_ID, action.getId());
                     intent.putExtra(SeasonFragment.EXTRA_TVSHOW_ID, mTvshow.getTvshowId());
                     intent.putExtra(SeasonFragment.EXTRA_TVSHOW_NAME, mTvshow.getName());
-                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_POSTER, mTvshow.getPosterUri().toString());
+                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_POSTER, mTvshow.getPosterUri() != null ? mTvshow.getPosterUri().toString() : null);
                     startActivityForResult(intent, REQUEST_CODE_MARK_WATCHED);
                 }
                 else if (action.getId() == TvshowActionAdapter.ACTION_UNINDEX) {
@@ -212,7 +212,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                     intent.putExtra(SeasonFragment.EXTRA_ACTION_ID, action.getId());
                     intent.putExtra(SeasonFragment.EXTRA_TVSHOW_ID, mTvshow.getTvshowId());
                     intent.putExtra(SeasonFragment.EXTRA_TVSHOW_NAME, mTvshow.getName());
-                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_POSTER, mTvshow.getPosterUri().toString());
+                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_POSTER, mTvshow.getPosterUri() != null ? mTvshow.getPosterUri().toString() : null);
                     startActivity(intent);
                 }
                 else if (action.getId() == TvshowActionAdapter.ACTION_CHANGE_INFO) {
@@ -230,7 +230,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                     intent.putExtra(SeasonFragment.EXTRA_ACTION_ID, action.getId());
                     intent.putExtra(SeasonFragment.EXTRA_TVSHOW_ID, mTvshow.getTvshowId());
                     intent.putExtra(SeasonFragment.EXTRA_TVSHOW_NAME, mTvshow.getName());
-                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_POSTER, mTvshow.getPosterUri().toString());
+                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_POSTER, mTvshow.getPosterUri() != null ? mTvshow.getPosterUri().toString() : null);
                     startActivity(intent);
                 }
             }
@@ -547,7 +547,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 // Poster: we must take the poster from the showTags because they are updated (in case they have
                 // been changed in TvshowMoreDetailsFragment) while the Tvshow instance has not been updated.
                 Uri posterUri;
-                if (tvshow.getShowTags()!=null) {
+                if (tvshow.getShowTags()!=null && tvshow.getShowTags().getDefaultPoster() != null) {
                     posterUri = Uri.parse("file://"+tvshow.getShowTags().getDefaultPoster().getLargeFile());
                 } else {
                     posterUri = tvshow.getPosterUri(); // fallback
@@ -582,6 +582,10 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                     mOverviewRowPresenter.setActionsBackgroundColor(getDarkerColor(mColor));
                     detailsRow.setImageBitmap(getActivity(), bitmap);
                     detailsRow.setImageScaleUpAllowed(true);
+                }
+                else {
+                    detailsRow.setImageDrawable(getResources().getDrawable(R.drawable.filetype_new_video));
+                    detailsRow.setImageScaleUpAllowed(false);
                 }
             }
 

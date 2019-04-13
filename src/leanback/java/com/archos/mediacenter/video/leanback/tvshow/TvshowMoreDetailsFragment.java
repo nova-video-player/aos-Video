@@ -284,15 +284,17 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
             mDetailsRow = new DetailsOverviewRow(tags);
             Bitmap bitmap = null;
             try {
-                // Poster
-                File file = tags.getDefaultPoster().getLargeFileF();
-                if (file != null) {
-                    bitmap = Picasso.get()
-                            .load(file)
-                            .noFade() // no fade since we are using activity transition anyway
-                            .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
-                            .centerCrop()
-                            .get();
+                if (tags.getDefaultPoster() != null) {
+                    // Poster
+                    File file = tags.getDefaultPoster().getLargeFileF();
+                    if (file != null) {
+                        bitmap = Picasso.get()
+                                .load(file)
+                                .noFade() // no fade since we are using activity transition anyway
+                                .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
+                                .centerCrop()
+                                .get();
+                    }
                 }
             } catch (IOException e) {
                 Log.d(TAG, "TvshowMoreDetailsFragment Picasso load exception", e);
@@ -309,6 +311,10 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                         mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
                     mDetailsRow.setImageBitmap(getActivity(), bitmap);
                     mDetailsRow.setImageScaleUpAllowed(true);
+                }
+                else {
+                    mDetailsRow.setImageDrawable(getResources().getDrawable(R.drawable.filetype_new_video));
+                    mDetailsRow.setImageScaleUpAllowed(false);
                 }
             }
 

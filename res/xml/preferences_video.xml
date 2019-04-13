@@ -108,9 +108,9 @@
         app:iconSpaceReserved="false" >
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="show_next_episodes_row"
-            android:summary="@string/preferences_show_next_episodes_row_summary"
-            android:title="@string/preferences_show_next_episodes_row"
+            android:key="show_watching_up_next_row"
+            android:summary="@string/preferences_show_watching_up_next_row_summary"
+            android:title="@string/preferences_show_watching_up_next_row"
             app:iconSpaceReserved="false"/>
         
         <CheckBoxPreference

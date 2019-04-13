@@ -57,6 +57,7 @@ public class SeasonPresenter extends Presenter {
             mCardView = (ImageCardView)view;
             mCardView.setMainImageDimensions(getWidth(context), getHeight(context));
             mCardView.setMainImage(new ColorDrawable(context.getResources().getColor(R.color.lb_basic_card_bg_color)));
+            mCardView.getMainImageView().setBackgroundColor(context.getResources().getColor(R.color.lightblue900));
             mCardView.setFocusable(true);
             mCardView.setFocusableInTouchMode(true);
             
@@ -121,6 +122,13 @@ public class SeasonPresenter extends Presenter {
                     .error(mErrorDrawable)
                     .into(mImageCardViewTarget);
         }
+
+        public void updateCardView(Drawable drawable) {
+            if(mCardView.getMainImage()!=drawable){
+                mCardView.setMainImageScaleType(ImageView.ScaleType.CENTER);
+                mCardView.setMainImage(drawable, false);
+            }
+        }
     }
 
     public SeasonPresenter(Context context, long actionId) {
@@ -155,7 +163,10 @@ public class SeasonPresenter extends Presenter {
         // We show the top-right corner icon like for the individual videos, for consistency
         vh.mImageCardViewTarget.setWatchedFlag(mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED && season.allEpisodesWatched());
 
-        vh.updateCardView(season.getPosterUri());
+        if (season.getPosterUri() != null)
+            vh.updateCardView(season.getPosterUri());
+        else
+            vh.updateCardView(mErrorDrawable);
 
         final ImageCardView card = vh.getImageCardView();
 

@@ -85,7 +85,8 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
         mActionId = getActivity().getIntent().getLongExtra(EXTRA_ACTION_ID, -1);
         mTvshowId = getActivity().getIntent().getLongExtra(EXTRA_TVSHOW_ID, -1);
         mTvshowName = getActivity().getIntent().getStringExtra(EXTRA_TVSHOW_NAME);
-        mTvshowPosterUri = Uri.parse(getActivity().getIntent().getStringExtra(EXTRA_TVSHOW_POSTER));
+        String tvshowPoster = getActivity().getIntent().getStringExtra(EXTRA_TVSHOW_POSTER);
+        mTvshowPosterUri = tvshowPoster != null ? Uri.parse(tvshowPoster) : null;
 
         // Just need to attach the background manager to keep the background of the parent activity
         BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());

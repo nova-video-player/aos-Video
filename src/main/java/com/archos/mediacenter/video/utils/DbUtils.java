@@ -93,6 +93,7 @@ public class DbUtils {
         values.put(VideoStore.Video.VideoColumns.BOOKMARK, PlayerActivity.LAST_POSITION_UNKNOWN);
         // In the TRAKT_DB_UNMARK case we must write it ourselves to the DB (unlike for TRAKT_DB_MARKED)
         values.put(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN, Trakt.TRAKT_DB_UNMARK);
+        values.put(VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED, 0);
 
         cr.update(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, values,
                 VideoStore.Video.VideoColumns._ID + " =?",
@@ -207,6 +208,7 @@ public class DbUtils {
         values.put(VideoStore.Video.VideoColumns.BOOKMARK, PlayerActivity.LAST_POSITION_UNKNOWN);
         // In the TRAKT_DB_UNMARK case we must write it ourselves to the DB (unlike for TRAKT_DB_MARKED)
         values.put(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN, Trakt.TRAKT_DB_UNMARK);
+        values.put(VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED, 0);
 
         final String where = "_id IN (SELECT video_id FROM episode e JOIN show s ON e.show_episode=s._id WHERE s._id=? AND e.season_episode=?)";
         final String[] selectionArgs = new String[]{Long.toString(season.getShowId()), Integer.toString(season.getSeasonNumber())};
@@ -255,14 +257,30 @@ public class DbUtils {
         return filePaths;
     }
 
-    public static void markAllAsUnplayed(final Context context) {
+    public static void markAsNotRead(final Context context) {
         final ContentResolver cr = context.getContentResolver();
-        
+        Log.d(TAG, "markAsNotRead");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        final boolean traktSync = Trakt.isTraktV2Enabled(context, prefs);
+
         final ContentValues values = new ContentValues();
+        values.put(VideoStore.Video.VideoColumns.BOOKMARK, PlayerActivity.LAST_POSITION_UNKNOWN);
+        // In the TRAKT_DB_UNMARK case we must write it ourselves to the DB (unlike for TRAKT_DB_MARKED)
+        values.put(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN, Trakt.TRAKT_DB_UNMARK);
         values.put(VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED, 0);
-        
-        final String where = VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + "<>0";
-        
-        cr.update(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, values, where, null);
+
+        cr.update(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, values, null, null);
+
+        if (traktSync) {
+            syncTrakt(context);
+        }
+    }
+
+    static private void syncTrakt(Context context) {
+        int flags = TraktService.FLAG_SYNC_TO_TRAKT_WATCHED|TraktService.FLAG_SYNC_NOW|TraktService.FLAG_SYNC_SHOWS|TraktService.FLAG_SYNC_MOVIES;
+
+        new TraktService.Client(context, null, false).sync(flags);
+        Toast.makeText(context, R.string.trakt_toast_syncing, Toast.LENGTH_SHORT).show();
     }
 }
