@@ -408,6 +408,7 @@
     <string name="subtitles_wizard_add_files">You can copy more subtitles files to this folder in order to associate them to this video.</string>
     <string name="subtitles_wizard_help">Select any of the available subtitles files to associate it with the video %s. The file will be renamed in order to match the name of the video.</string>
     <string name="subtitles_wizard_empty_list_help">No subtitles files found. You must copy first one or more subtitles files to this folder in order to associate them with the video %s.</string>
+    <string name="subtitles_wizard_cache">Cache</string>
 
     <!-- Subloader -->
     <string name="get_subtitles_online">Get subtitles online</string>
