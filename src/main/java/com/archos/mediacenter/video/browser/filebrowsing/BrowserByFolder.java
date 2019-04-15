@@ -83,7 +83,9 @@ import httpimage.HttpImageManager;
 
 abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         Observer, LoaderManager.LoaderCallbacks<Cursor>, ListingEngine.Listener, VideoPresenter.ExtendedClickListener {
+
     private static final String TAG = "BrowserByFolder";
+    private static final boolean DBG = false;
 
     private static final int DIALOG_LISTING = 4;
 
@@ -144,6 +146,11 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             mCurrentDirectory = getDefaultDirectory();
         mFileList = new ArrayList();
         mFullFileList = new ArrayList<>();
+        // close mCursor before initLoader
+        if (mCursor != null && ! mCursor.isClosed()) {
+            mCursor.close();
+        }
+        mCursor = null;
         LoaderManager.getInstance(getActivity()).initLoader(0, null, this);
     }
 
@@ -159,6 +166,11 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             hideSubMenu(mMenu);
             listFiles(true);
         }
+        // close mCursor before restartLoader
+        if (mCursor != null && ! mCursor.isClosed()) {
+            mCursor.close();
+        }
+        mCursor = null;
         LoaderManager.getInstance(getActivity()).restartLoader(0, null, this);
     }
 
@@ -199,6 +211,12 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         super.onDestroy();
         if(mListingEngine!=null)
             mListingEngine.abort();
+        // close mCursor before destroyLoader
+        if (mCursor != null && ! mCursor.isClosed()) {
+            mCursor.close();
+        }
+        mCursor = null;
+        LoaderManager.getInstance(getActivity()).destroyLoader(0);
     }
 
     @Override
@@ -210,8 +228,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     }
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-            return new VideosInFolderLoader(getContext(), getIndexableRootFolder()).getV4CursorLoader(true, false);
+        return new VideosInFolderLoader(getContext(), getIndexableRootFolder()).getV4CursorLoader(true, false);
     }
 
     protected String getIndexableRootFolder() {
@@ -273,6 +290,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     public void onListingStart() {
 
     }
+
     @Override
     public void onFolderRemoved(final Uri folder) {
         super.onFolderRemoved(folder);
@@ -280,6 +298,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             getActivity().onBackPressed();
         }
     }
+
     @Override
     public void onListingUpdate(List<? extends MetaFile2> files) {
         if (mHandler.hasMessages(DIALOG_LISTING))
@@ -291,7 +310,8 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
 
         mFileList.clear();
         mFileList.addAll(files);
-        updateAdapterIfReady();
+        //Do not updateAdapterIfReady if onLoadFinished not completed: make sure that the mCursor is null in this case
+        if (mCursor != null) updateAdapterIfReady();
 
         mReady |= READY_LISTING_DONE;
         if(getActivity()==null)//too late
@@ -726,7 +746,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             builder.setCancelable(true);
             AlertDialog mProgressBarAlertDialog = builder.create();
             mProgressBarAlertDialog.show();
-            // TODO MARC!!! this can only be after the show otherwise null
             TextView textView = mProgressBarAlertDialog.findViewById(R.id.textView);
             textView.setText(R.string.loading);
             ProgressBar progressBar = mProgressBarAlertDialog.findViewById(R.id.progressBar);
