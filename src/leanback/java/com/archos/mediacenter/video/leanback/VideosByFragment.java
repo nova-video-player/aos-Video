@@ -120,13 +120,6 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
     }
 
     @Override
-    public void onDestroy() {
-        // Save the sort mode
-        mPrefs.edit().putString(getSortOrderParamKey(), mSortOrder).commit();
-        super.onDestroy();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         mOverlay.resume();
@@ -180,6 +173,8 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
                                 if (mSortOrderItem != which) {
                                     mSortOrderItem = which;
                                     mSortOrder = item2SortOrder(mSortOrderItem);
+                                    // Save the sort mode
+                                    mPrefs.edit().putString(getSortOrderParamKey(), mSortOrder).commit();
                                     loadCategoriesRows(mCurrentCategoriesCursor);
                                 }
                                 dialog.dismiss();

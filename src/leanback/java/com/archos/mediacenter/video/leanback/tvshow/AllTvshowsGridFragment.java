@@ -205,6 +205,8 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
                                 if (mSortOrderItem != which) {
                                     mSortOrderItem = which;
                                     mSortOrder = TvshowsSortOrderEntry.item2SortOrder(mSortOrderItem, sortOrderIndexer);
+                                    // Save the sort mode
+                                    mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).commit();
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
                                     args.putBoolean("showWatched", mShowWatched);
@@ -246,13 +248,6 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
                 startActivity(intent);
             }
         });
-    }
-
-    @Override
-    public void onDestroy() {
-        // Save the sort mode
-        mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).commit();
-        super.onDestroy();
     }
 
     @Override
