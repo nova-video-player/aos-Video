@@ -226,6 +226,12 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
     }
 
     @Override
+    public void onDestroy() {
+        LoaderManager.getInstance(this).destroyLoader(0);
+        super.onDestroy();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         mOverlay.resume();
