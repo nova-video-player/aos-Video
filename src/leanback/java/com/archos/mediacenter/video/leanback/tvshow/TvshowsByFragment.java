@@ -121,8 +121,9 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
 
     @Override
     public void onDestroy() {
-        // Save the sort mode
-        mPrefs.edit().putString(getSortOrderParamKey(), mSortOrder).commit();
+        for (int i = 0; i < mAdaptersMap.size(); i++)
+            LoaderManager.getInstance(this).destroyLoader(mAdaptersMap.keyAt(i));
+        
         super.onDestroy();
     }
 
@@ -180,6 +181,8 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
                                 if (mSortOrderItem != which) {
                                     mSortOrderItem = which;
                                     mSortOrder = item2SortOrder(mSortOrderItem);
+                                    // Save the sort mode
+                                    mPrefs.edit().putString(getSortOrderParamKey(), mSortOrder).commit();
                                     loadCategoriesRows(mCurrentCategoriesCursor);
                                 }
                                 dialog.dismiss();

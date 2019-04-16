@@ -204,6 +204,8 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
                                 if (mSortOrderItem != which) {
                                     mSortOrderItem = which;
                                     mSortOrder = MoviesSortOrderEntry.item2SortOrder(mSortOrderItem, sortOrderIndexer);
+                                    // Save the sort mode
+                                    mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).commit();
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
                                     args.putBoolean("showWatched", mShowWatched);
@@ -248,16 +250,15 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
     }
 
     @Override
-    public void onDestroy() {
-        // Save the sort mode
-        mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).commit();
-        super.onDestroy();
-    }
-
-    @Override
     public void onDestroyView() {
         mOverlay.destroy();
         super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        LoaderManager.getInstance(this).destroyLoader(0);
+        super.onDestroy();
     }
 
     @Override

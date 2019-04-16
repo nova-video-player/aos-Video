@@ -408,6 +408,7 @@
     <string name="subtitles_wizard_add_files">You can copy more subtitles files to this folder in order to associate them to this video.</string>
     <string name="subtitles_wizard_help">Select any of the available subtitles files to associate it with the video %s. The file will be renamed in order to match the name of the video.</string>
     <string name="subtitles_wizard_empty_list_help">No subtitles files found. You must copy first one or more subtitles files to this folder in order to associate them with the video %s.</string>
+    <string name="subtitles_wizard_cache">Cache</string>
 
     <!-- Subloader -->
     <string name="get_subtitles_online">Get subtitles online</string>
@@ -644,6 +645,7 @@
    <string name="sort_by_date_played_desc">Sort by date played (newest first)</string>
    <string name="sort_by_date_premiered_desc">Sort by date premiered (newest first)</string>
    <string name="sort_by_date_premiered_asc">Sort by date premiered (oldest first)</string>
+   <string name="sort_by_date_aired_desc">Sort by date aired (newest first)</string>
    <string name="sort_by_recently_added_episode_desc">Recently added episodes first</string>
 
    <string name="dec_choice_title">Choose decoder</string>

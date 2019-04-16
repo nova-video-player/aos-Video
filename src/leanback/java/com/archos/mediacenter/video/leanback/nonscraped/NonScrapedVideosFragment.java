@@ -192,6 +192,8 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
                                 if (mSortOrderItem != which) {
                                     mSortOrderItem = which;
                                     mSortOrder = NonScrapedSortOrderEntry.item2SortOrder(mSortOrderItem, sortOrderIndexer);
+                                    // Save the sort mode
+                                    mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).commit();
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
                                     LoaderManager.getInstance(getActivity()).restartLoader(0, args, NonScrapedVideosFragment.this);
@@ -218,16 +220,15 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
     }
 
     @Override
-    public void onDestroy() {
-        // Save the sort mode
-        mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).commit();
-        super.onDestroy();
-    }
-
-    @Override
     public void onDestroyView() {
         mOverlay.destroy();
         super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        LoaderManager.getInstance(this).destroyLoader(0);
+        super.onDestroy();
     }
 
     @Override
