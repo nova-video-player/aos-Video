@@ -90,7 +90,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
 
     public BrowserWithShowHeader() {
-        Log.d(Browser.TAG, "BrowserBySeason()");
+        if (DBG) Log.d(Browser.TAG, "BrowserBySeason()");
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -254,8 +254,15 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 getArguments().putSerializable(EXTRA_SHOW_ITEM, mShow); //saving in arguments
                 if (mTvShowAsyncTask != null)
                     mTvShowAsyncTask.cancel(true);
-                mTvShowAsyncTask = new TvShowAsyncTask().executeOnExecutor(mSerialExecutor,getPosterUri(),mShow);
-                getActivity().invalidateOptionsMenu();
+                // FIXME: for some unexplained reason when doing BrowserAllTvShows->BrowserListOfSeasons->BrowserAllMovies->open movie
+                // calls at the end BrowserWithShowHeaders for no apparent reason (tried to determine code path)
+                // since this happens when getActivity() == null avoid doing UI stuff hides the issue that still remains to be fixed properly
+                if (getActivity() != null) {
+                    mTvShowAsyncTask = new TvShowAsyncTask().executeOnExecutor(mSerialExecutor,getPosterUri(),mShow);
+                    getActivity().invalidateOptionsMenu();
+                } else {
+                    if (DBG) Log.w(TAG,"FIXME: onLoadFinished getActivity is null");
+                }
             }
 
         }
@@ -263,11 +270,11 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
 
     private boolean needToReload(Tvshow oldShow, Tvshow newShow) {
-        if (oldShow==null || newShow==null) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate null"); return true;}
-        if (oldShow.getClass() != newShow.getClass()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate class"); return true;}
-        if (oldShow.getTvshowId() != newShow.getTvshowId()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate getTvshowId"); return true;}
-        if (oldShow.isTraktSeen() != newShow.isTraktSeen()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isTraktSeen"); return true;}
-        if (oldShow.getPosterUri()!=null&&!oldShow.getPosterUri().equals(newShow.getPosterUri())||newShow.getPosterUri()!=null&&newShow.getPosterUri().equals(oldShow.getPosterUri())) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate getPosterUri"); return true;}
+        if (oldShow==null || newShow==null) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate null"); return true;}
+        if (oldShow.getClass() != newShow.getClass()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate class"); return true;}
+        if (oldShow.getTvshowId() != newShow.getTvshowId()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate getTvshowId"); return true;}
+        if (oldShow.isTraktSeen() != newShow.isTraktSeen()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isTraktSeen"); return true;}
+        if (oldShow.getPosterUri()!=null&&!oldShow.getPosterUri().equals(newShow.getPosterUri())||newShow.getPosterUri()!=null&&newShow.getPosterUri().equals(oldShow.getPosterUri())) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate getPosterUri"); return true;}
         return false;
     }
 
