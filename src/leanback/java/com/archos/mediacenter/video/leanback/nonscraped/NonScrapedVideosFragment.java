@@ -235,12 +235,14 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
     public void onResume() {
         super.onResume();
         mOverlay.resume();
+        LoaderManager.getInstance(getActivity()).getLoader(0).startLoading();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mOverlay.pause();
+        LoaderManager.getInstance(getActivity()).getLoader(0).stopLoading();
     }
 
     @Override

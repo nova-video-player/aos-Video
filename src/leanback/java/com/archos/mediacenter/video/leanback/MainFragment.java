@@ -174,7 +174,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             @Override
             public void onReceive(Context context, Intent intent) {
                 if(intent!=null&& ArchosMediaIntent.ACTION_VIDEO_SCANNER_SCAN_FINISHED.equals(intent.getAction())) {
-                    LoaderManager.getInstance(getActivity()).restartLoader(LOADER_ID_LAST_ADDED, null, MainFragment.this);
                     Log.d(TAG, "manual reload");
                 }
             }
@@ -264,6 +263,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         getActivity().registerReceiver(mUpdateReceiver, mUpdateFilter);
 
+        LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_WATCHING_UP_NEXT).startLoading();
+        LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_LAST_ADDED).startLoading();
+        LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_LAST_PLAYED).startLoading();
+        LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_ALL_MOVIES).startLoading();
+
         boolean newShowWatchingUpNextRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_WATCHING_UP_NEXT_ROW, VideoPreferencesCommon.SHOW_WATCHING_UP_NEXT_ROW_DEFAULT);
 
         if (newShowWatchingUpNextRow != mShowWatchingUpNextRow) {
@@ -327,6 +331,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         super.onPause();
         mOverlay.pause();
         getActivity().unregisterReceiver(mUpdateReceiver);
+
+        LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_WATCHING_UP_NEXT).stopLoading();
+        LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_LAST_ADDED).stopLoading();
+        LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_LAST_PLAYED).stopLoading();
+        LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_ALL_MOVIES).stopLoading();
     }
 
     private void updateBackground() {
