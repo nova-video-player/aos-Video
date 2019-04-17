@@ -111,6 +111,9 @@ import java.util.Map;
  */
 public class MainActivity extends BrowserActivity implements ExternalPlayerWithResultStarter {
 
+    private static final boolean DBG = false;
+    private static final String TAG = "MainActivity";
+
     public final static int DIALOG_DELETE = 1;
     public final static int DIALOG_DELETING = 2;
     public final static int MENU_SCRAPER_GROUP = 1;
@@ -659,7 +662,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
                                 @Override
                                 protected Void doInBackground(File... params) {
-                                    Log.d(TAG,
+                                    if (DBG) Log.d(TAG,
                                             "DIALOG_DELETE:doInBackground deleting "
                                                     + params[0].getPath());
                                     ContentResolver cr = context.getContentResolver();
@@ -669,7 +672,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                                     cr.delete(uri, where, selectionArgs);
                                     // Remove the subtitle files that may be
                                     // associated to this video file
-                                    Log.d(TAG,
+                                    if (DBG) Log.d(TAG,
                                             "DIALOG_DELETE:doInBackground deleteAssociatedSubtitles");
                                     VideoUtils.deleteAssociatedSubtitles(params[0]);
                                     return null;
@@ -1019,7 +1022,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             case InputDevice.SOURCE_GAMEPAD:
             case InputDevice.SOURCE_JOYSTICK:
             case InputDevice.SOURCE_HDMI:
-                Log.d(TAG, "event source = "+event.getSource()+" -> probably TV");
+                if (DBG) Log.d(TAG, "event source = "+event.getSource()+" -> probably TV");
                 probablyTv = true;
                 break;
             case InputDevice.SOURCE_STYLUS:
@@ -1027,7 +1030,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             case InputDevice.SOURCE_TRACKBALL:
             case InputDevice.SOURCE_MOUSE:
             default:
-                Log.d(TAG, "event source = "+event.getSource()+" -> probably not TV");
+                if (DBG) Log.d(TAG, "event source = "+event.getSource()+" -> probably not TV");
                 probablyTv = false;
                 break;
         }

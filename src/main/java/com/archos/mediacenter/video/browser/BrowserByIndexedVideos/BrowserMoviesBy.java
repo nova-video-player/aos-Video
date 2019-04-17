@@ -44,6 +44,9 @@ import java.util.ArrayList;
 
 public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final boolean DBG = false;
+    private static final String TAG = "BrowserMoviesBy";
+
     /**
      * The column in which we copy the name to display. Can be the name of the genre or the "name" for the year
      */
@@ -210,7 +213,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 				break;
 		}
 
-		Log.d(Browser.TAG, "itemid2sortorder: sortOrder="+sortOrder);
+		if (DBG) Log.d(TAG, "itemid2sortorder: sortOrder="+sortOrder);
 		return sortOrder;
 	}
 
@@ -245,7 +248,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 	    // Prepare the list of movies and the title, to be given to the opened fragment
         Bundle args = new Bundle(2);
         args.putString(BrowserByVideoSelection.LIST_OF_IDS, ((GroupOfMovieAdapter)mBrowserAdapter).getListOfMoviesIds(position));
-        Log.d(Browser.TAG, "onItemClick: Selection: "+((GroupOfMovieAdapter)mBrowserAdapter).getListOfMoviesIds(position));
+        if (DBG) Log.d(TAG, "onItemClick: Selection: "+((GroupOfMovieAdapter)mBrowserAdapter).getListOfMoviesIds(position));
         args.putString(CursorBrowserByVideo.SUBCATEGORY_NAME, ((GroupOfMovieAdapter)mBrowserAdapter).getName(position));
 		completeNewFragmentBundle(args, position);
         //Load fragment

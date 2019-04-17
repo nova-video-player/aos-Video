@@ -99,6 +99,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
 
 
     private static final boolean DBG = false;
+    protected static final String TAG = "Browser";
 
     // Options menu items
     protected static final int MENU_VIEW_MODE_GROUP = 2;
@@ -121,7 +122,6 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     static final private String LAST_POSITION = "lastPosition";
     static final protected String RESUME = "resume";
     static final private String SELECTED_POSITION = "selectedPosition";
-    protected static final String TAG = "Browser";
     static final private String TIME_HOUR = "%kh%M'";
     static final private String TIME_MINUTE = "%M'%S''";
     static final private String TIME_SECOND = "%S''";

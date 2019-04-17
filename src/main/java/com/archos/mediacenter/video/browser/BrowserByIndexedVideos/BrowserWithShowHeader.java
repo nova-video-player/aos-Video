@@ -65,8 +65,9 @@ import java.io.IOException;
 
 public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
-
     private static final boolean DBG = false;
+    private static final String TAG = "BrowserWithShowHeader";
+
     static final private String BROWSER_SHOW = BrowserListOfEpisodes.class.getName();
     public static final String EXTRA_SHOW_ITEM = "show_item";
     private final static int SUBMENU_ITEM_LIST_INDEX = 0;
@@ -90,7 +91,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
 
     public BrowserWithShowHeader() {
-        if (DBG) Log.d(Browser.TAG, "BrowserBySeason()");
+        if (DBG) Log.d(TAG, "BrowserBySeason()");
     }
 
     public void onCreate(Bundle savedInstanceState) {

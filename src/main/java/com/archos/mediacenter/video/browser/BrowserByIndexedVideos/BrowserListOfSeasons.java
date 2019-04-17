@@ -46,6 +46,8 @@ import com.archos.mediaprovider.video.VideoStore;
 
 public class BrowserListOfSeasons extends BrowserWithShowHeader  {
 
+    private static final String TAG = "BrowserListOfSeasons";
+    private static final boolean DBG = false;
 
     static final private String BROWSER_SHOW = BrowserListOfEpisodes.class.getName();
     public static final String EXTRA_SHOW_ITEM = "show_item";
@@ -54,7 +56,7 @@ public class BrowserListOfSeasons extends BrowserWithShowHeader  {
 
 
     public BrowserListOfSeasons() {
-        Log.d(Browser.TAG, "BrowserBySeason()");
+        if (DBG) Log.d(TAG, "BrowserBySeason()");
     }
 
 

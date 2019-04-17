@@ -39,6 +39,9 @@ import java.util.Map;
 
 public class BrowserVideosInPlaylist extends BrowserByVideoSelection {
 
+	private static final boolean DBG = false;
+    private static final String TAG = "BrowserVideosInPlaylist";
+
 	public static final String EXTRA_PLAYLIST_ID = "extra_playlist_id";
 	public static final String EXTRA_MAP_MOVIES = "extra_map_movies";
 	public static final String EXTRA_MAP_EPISODES = "extra_map_episodes";

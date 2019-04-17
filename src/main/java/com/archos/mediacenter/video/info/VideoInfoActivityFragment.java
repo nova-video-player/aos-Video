@@ -128,6 +128,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         Toolbar.OnMenuItemClickListener, Delete.DeleteListener, ObservableScrollViewCallbacks, Animation.AnimationListener, ExternalPlayerWithResultStarter {
 
     private static final String TAG = "VideoInfoActivityFrag";
+    private static final boolean DBG = false;
 
     /** A serialized com.archos.mediacenter.video.leanback.adapter.object.Video */
     public static final String EXTRA_VIDEO = "VIDEO";
@@ -539,7 +540,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private void updateHeaderHeight() {
         mHeaderHeight = mTitleBar.getMeasuredHeight();
         if (mHeaderHeight == 0)
-            Log.d(TAG,"Warning updateHeaderHeight sets mHeaderHeight to zero!");
+            if (DBG) Log.d(TAG,"Warning updateHeaderHeight sets mHeaderHeight to zero!");
         if (mIsPortraitMode) {
             View scrollView = mRoot.findViewById(R.id.scroll_content);
             scrollView.setPadding(scrollView.getPaddingLeft(), mHeaderHeight, scrollView.getPaddingRight(), scrollView.getPaddingBottom());
@@ -557,7 +558,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_SUBTITLES_DOWNLOADER_ACTIVITY && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Get RESULT_OK from SubtitlesDownloaderActivity");
+            if (DBG) Log.d(TAG, "Get RESULT_OK from SubtitlesDownloaderActivity");
             // Update the subtitle row
             if (mSubtitleFilesListerTask != null) {
                 mSubtitleFilesListerTask.cancel(true);
@@ -704,7 +705,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             //execute async task BEFORE xml parsing
             startAsyncTasks();
             if(!mIsLaunchFromPlayer&&!FileUtils.isLocal(video.getFileUri())&& UriUtils.isCompatibleWithRemoteDB(video.getFileUri())) {
-                Log.d(TAG, "addParseListener");
+                if (DBG) Log.d(TAG, "addParseListener");
                 XmlDb.getInstance().addParseListener(this);
                 XmlDb.getInstance().parseXmlLocation(video.getFileUri());
             }
@@ -822,18 +823,18 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
 
     private boolean shouldChangeVideo(Video v1, Video v2) {
-        if (v1==null || v2==null) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate null"); return true;}
-        if (v1.getClass() != v2.getClass()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate class"); return true;}
-        if (v1.getId() != v2.getId()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate id"); return true;}
-        if (v1.hasScraperData() != v2.hasScraperData()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate hasScraperData"); return true;}
-        if (v1.getResumeMs() != v2.getResumeMs()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate resumeMs"); return true;}
-        if (v1.isWatched() != v2.isWatched()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isWatched"); return true;}
-        if (v1.isUserHidden() != v2.isUserHidden()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isUserHidden"); return true;}
+        if (v1==null || v2==null) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate null"); return true;}
+        if (v1.getClass() != v2.getClass()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate class"); return true;}
+        if (v1.getId() != v2.getId()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate id"); return true;}
+        if (v1.hasScraperData() != v2.hasScraperData()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate hasScraperData"); return true;}
+        if (v1.getResumeMs() != v2.getResumeMs()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate resumeMs"); return true;}
+        if (v1.isWatched() != v2.isWatched()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isWatched"); return true;}
+        if (v1.isUserHidden() != v2.isUserHidden()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isUserHidden"); return true;}
         if (v1.getPosterUri()!=null&&!v1.getPosterUri().equals(v2.getPosterUri())
-                ||v2.getPosterUri()!=null&&!v2.getPosterUri().equals(v1.getPosterUri())) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate getPosterUri"); return true;}
+                ||v2.getPosterUri()!=null&&!v2.getPosterUri().equals(v1.getPosterUri())) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate getPosterUri"); return true;}
 
-        //if (v1.subtitleCount() != v2.subtitleCount()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate subtitleCount"); return true;}
-        //if (v1.externalSubtitleCountexternalSubtitleCount() != v2.externalSubtitleCount()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate externalSubtitleCount"); return true;}
+        //if (v1.subtitleCount() != v2.subtitleCount()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate subtitleCount"); return true;}
+        //if (v1.externalSubtitleCountexternalSubtitleCount() != v2.externalSubtitleCount()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate externalSubtitleCount"); return true;}
         return false;
     }
 
@@ -937,7 +938,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         int subtitleTrackNb = videoMetadata!=null?videoMetadata.getSubtitleTrackNb():0;
 
         if (subtitleTrackNb > 0 || externalSubs!=null&&externalSubs.size()>0) {
-            Log.d(TAG, "updateAudioVideoInfo: subtitle");
+            if (DBG) Log.d(TAG, "updateAudioVideoInfo: subtitle");
             ArrayList<CharSequence> lines = new ArrayList<>();
             int totSubs = 0;
             if(videoMetadata!=null) {
@@ -1089,20 +1090,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     @Override
     public void onParseOk(XmlDb.ParseResult result) {
         XmlDb.getInstance().removeParseListener(this);
-        Log.d(TAG, "onParseOk");
+        if (DBG) Log.d(TAG, "onParseOk");
         XmlDb xmlDb = XmlDb.getInstance();
         //xmlDb.removeParseListener(this);
         if(getActivity()==null) { //too late
 
-            Log.d(TAG, "getActivity is null, leaving");
+            if (DBG) Log.d(TAG, "getActivity is null, leaving");
             return;
         }
         VideoDbInfo videoInfo = null;
         if (result.success) {
-            Log.d(TAG, "result.success");
+            if (DBG) Log.d(TAG, "result.success");
             videoInfo = xmlDb.getEntry(mCurrentVideo.getFileUri());
             if(videoInfo!=null){
-                Log.d(TAG, "videoInfo!=null "+videoInfo.resume);
+                if (DBG) Log.d(TAG, "videoInfo!=null "+videoInfo.resume);
                 mCurrentVideo.setRemoteResumeMs(videoInfo.resume);
                 updateActionButtons();
             }
@@ -1191,7 +1192,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         if (mHeaderHeight != 0)
             coeff = (float) scroll / (float) mHeaderHeight;
         else {
-            Log.d(TAG, "updateHeaderBackground Warning mHeaderHeight is null!!! Generating stacktrace...", new Exception());
+            if (DBG) Log.d(TAG, "updateHeaderBackground Warning mHeaderHeight is null!!! Generating stacktrace...", new Exception());
             coeff = 1;
         }
         if (coeff > 1)
@@ -1272,7 +1273,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             String startingPath= video.getFilePath();
 
             if(mVideoMetadateCache.containsKey(startingPath)){
-                Log.d(TAG, "metadata retrieved from cache "+startingPath);
+                if (DBG) Log.d(TAG, "metadata retrieved from cache "+startingPath);
                 return mVideoMetadateCache.get(startingPath);
             }
             else {
@@ -1280,10 +1281,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 // Get metadata from file
                 VideoMetadata videoMetaData = VideoInfoCommonClass.retrieveMetadata(video, getActivity());
                 if(video!=null&&video.isIndexed()) {
-                    Log.d(TAG, "saving "+startingPath);
+                    if (DBG) Log.d(TAG, "saving "+startingPath);
 
                     videoMetaData.save(getActivity(), startingPath);
-                    Log.d(TAG, "saved " + startingPath);
+                    if (DBG) Log.d(TAG, "saved " + startingPath);
 
 
                 }
@@ -1439,7 +1440,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
             //TODO remove sources list
         } else {
-            Log.d(TAG, "found " + cursor.getCount() + " videos");
+            if (DBG) Log.d(TAG, "found " + cursor.getCount() + " videos");
             // Build video objects from the new cursor data
 
             cursor.moveToFirst();
@@ -1450,10 +1451,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
                 Video video =  (Video) cursorMapper.publicBind(cursor);
 
-                Log.d(TAG, "online id " + cursor.getLong(cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID)));
+                if (DBG) Log.d(TAG, "online id " + cursor.getLong(cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID)));
                 mVideoList.add(video);
                 video.setMetadata(mVideoMetadateCache.get(video.getFilePath()));
-                Log.d(TAG, "found video : " + video.getFileUri());
+                if (DBG) Log.d(TAG, "found video : " + video.getFileUri());
                 if(!mSelectCurrentVideo){ // get most advanced video
                     if(video.getLastPlayed()>0&&newVideo==null||newVideo!=null&&video.getLastPlayed()>newVideo.getLastPlayed()){
                         newVideo = video;

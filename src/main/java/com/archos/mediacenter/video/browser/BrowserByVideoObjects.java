@@ -71,6 +71,9 @@ import httpimage.HttpImageManager;
 
 public abstract class BrowserByVideoObjects extends Browser implements CommonPresenter.ExtendedClickListener, ExternalPlayerWithResultStarter {
 
+    private static final boolean DBG = false;
+    protected static final String TAG = "BrowserByVideoObjects";
+
     private static final int PLAY_ACTIVITY_REQUEST_CODE = 780;
     protected AdapterByVideoObjectsInterface mAdapterByVideoObjects;
 

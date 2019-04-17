@@ -46,11 +46,12 @@ import com.archos.mediacenter.video.browser.presenter.EpisodePresenter;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.VideoStore;
-
+import android.util.Log;
 
 public class BrowserListOfEpisodes extends BrowserWithShowHeader {
 
     private static final String TAG = "BrowserByShow";
+    private static final boolean DBG = false;
 
     private static final String SELECTION = VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID
             + " = ? AND " + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + " = ? ";

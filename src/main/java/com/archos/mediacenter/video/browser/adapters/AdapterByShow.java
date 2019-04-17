@@ -24,9 +24,11 @@ import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 
 public class AdapterByShow extends PresenterAdapterByCursor implements AdapterByVideoObjectsInterface {
+
     private final VideoCursorMapper mVideoCursorMapper;
     public static final int ITEM_VIEW_TYPE_SHOW = 0;
     private final static boolean DBG = false;
+    private final static String TAG = "AdapterByShow";
 
     public AdapterByShow(Context context, Cursor c) {
         super(context, c);
@@ -35,30 +37,24 @@ public class AdapterByShow extends PresenterAdapterByCursor implements AdapterBy
         mVideoCursorMapper.publicBindColumns(c);
     }
 
-
-
-
     private int getItemType(int position) {
         return  ITEM_VIEW_TYPE_SHOW;
     }
+
     @Override
     public Object getItem(int position){
         if (DBG) Log.d("showdebug", "get " + position);
         getCursor().moveToPosition(position);
-         return mVideoCursorMapper.publicBind(getCursor());
-
-
+        return mVideoCursorMapper.publicBind(getCursor());
     }
 
-
     public boolean isEnabled(int position) {
-
-                return true;
-
+        return true;
     }
 
     @Override
     public Video getVideoItem(int position) {
             return (Video) getItem(position);
     }
+
 }

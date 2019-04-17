@@ -53,6 +53,9 @@ import java.util.ArrayList;
 
 public class BrowserAllTvShows extends CursorBrowserByVideo {
 
+    private static final boolean DBG = false;
+    private static final String TAG = "BrowserAllTvShows";
+
     static final public String SELECTION = VideoColumns.SCRAPER_SHOW_ID + " > '0') GROUP BY (" +VideoColumns.SCRAPER_SHOW_ID;
     static final public String SELECTION_HIDE_WATCHED = VideoColumns.SCRAPER_SHOW_ID + " > '0') AND "+VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN + " != "+Trakt.TRAKT_DB_MARKED+" GROUP BY (" +VideoColumns.SCRAPER_SHOW_ID;
 	
@@ -257,7 +260,7 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 				break;
 		}
 
-		Log.d(Browser.TAG, "itemid2sortorder: sortOrder="+sortOrder);
+		if (DBG) Log.d(TAG, "itemid2sortorder: sortOrder="+sortOrder);
 		return sortOrder;
 	}
 

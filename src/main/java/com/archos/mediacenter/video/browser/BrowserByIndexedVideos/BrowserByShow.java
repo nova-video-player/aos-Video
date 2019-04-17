@@ -51,6 +51,7 @@ import com.archos.mediaprovider.video.VideoStore;
 public class BrowserByShow extends BrowserWithShowHeader {
 
     private static final String TAG = "BrowserByShow";
+    private static final boolean DBG = false;
 
     private static final String SELECTION = VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID
             + " = ? AND " + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + " = ? ";

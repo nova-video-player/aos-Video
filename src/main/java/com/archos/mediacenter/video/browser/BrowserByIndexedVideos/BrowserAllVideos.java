@@ -39,6 +39,9 @@ import com.archos.mediascraper.AutoScrapeService;
 
 public class BrowserAllVideos extends CursorBrowserByVideo {
 
+    private static final boolean DBG = false;
+    private static final String TAG = "BrowserAllVideos";
+
     private static final String SELECTION = VideoStore.Video.VideoColumns.ARCHOS_HIDE_FILE + "=0";
 
 	private static final String DEFAULT_SORT = "name COLLATE NOCASE ASC,"
@@ -200,7 +203,7 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 			}
 		}
 
-		Log.d(Browser.TAG, "itemid2sortorder: sortOrder="+sortOrder);
+		if (DBG) Log.d(TAG, "itemid2sortorder: sortOrder="+sortOrder);
 		return sortOrder;
 	}
 

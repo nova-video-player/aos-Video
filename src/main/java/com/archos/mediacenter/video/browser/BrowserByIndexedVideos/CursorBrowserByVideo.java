@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
+import android.util.Log;
 
 import com.archos.filecorelibrary.MetaFile.FileType;
 import com.archos.mediacenter.utils.trakt.Trakt;
@@ -45,8 +46,8 @@ import java.io.File;
 abstract public class CursorBrowserByVideo extends BrowserByVideoObjects implements
          LoaderManager.LoaderCallbacks<Cursor> {
 
-
-
+    private static final boolean DBG = true;
+    private static final String TAG = "CursorBrowserByVideo";
 
     // Sort constants
 	protected static final int MENU_ITEM_SORT = 0x1000;

@@ -33,6 +33,7 @@ import com.archos.mediascraper.BaseTags;
 public class VideoCursorMapper implements CompatibleCursorMapper {
 
     private static final String TAG = "VideoCursorMapper";
+    private static final boolean DBG = false;
 
     int mIdColumn, mScraperTypeColumn, mPathColumn, mNameColumn, mPosterPathColumn, mDateColumn, mRatingColumn, mPlotColumn;
     int mDurationColumn, mResumeColumn, mBookmarkColumn, m3dColumn, mGuessedDefinitionColumn;
