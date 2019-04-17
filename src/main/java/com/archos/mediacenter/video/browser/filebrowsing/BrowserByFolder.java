@@ -171,6 +171,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             mCursor.close();
         }
         mCursor = null;
+        // need this to avoid getting an empty view
         LoaderManager.getInstance(getActivity()).restartLoader(0, null, this);
     }
 
