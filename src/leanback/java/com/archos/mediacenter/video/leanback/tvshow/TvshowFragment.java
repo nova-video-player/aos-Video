@@ -454,17 +454,12 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         if (cursorLoader.getId()==SEASONS_LOADER_ID) {
-            //TODO:
-            // CAUTION: we get an update here each time a single episode resume point is changed...
-            // Basic solution: fill the season rows only the first time, i.e. guess it does not change over
-            // time, which is true with the current feature set at least...
-
-            cursor.moveToFirst();
             final int seasonNumberColumn = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON);
 
             SparseArray<CursorObjectAdapter> seasonAdapters = new SparseArray<CursorObjectAdapter>();
-            int size = !mHasDetailRow ? mRowsAdapter.size() : mRowsAdapter.size() - 1;
             int i = 0;
+
+            cursor.moveToFirst();
 
             // Build one row for each season
             while (!cursor.isAfterLast()) {
@@ -488,7 +483,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 if (mHasDetailRow && i == INDEX_DETAILS)
                     i++;
 
-                if (i >= size)
+                if (i >= mRowsAdapter.size())
                     mRowsAdapter.add(row);
                 else if (row.getId() != ((ListRow)mRowsAdapter.get(i)).getId())
                     mRowsAdapter.replace(i, row);
