@@ -1775,7 +1775,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             StoreRatingDialogBuilder.displayStoreRatingDialogIfNeeded(getContext());
         mIsLeavingPlayerActivity = false;
         super.onResume();
-        LoaderManager.getInstance(getActivity()).restartLoader(1, null, this);
+        //For some reasons this generates an SQLiteLog statement aborts: avoid to do it
+        //LoaderManager.getInstance(getActivity()).restartLoader(1, null, this);
     }
 
     @Override
