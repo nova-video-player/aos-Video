@@ -217,7 +217,8 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             mCursor.close();
         }
         mCursor = null;
-        LoaderManager.getInstance(getActivity()).destroyLoader(0);
+        // for some reasons this makes empty view when switching from BrowserByFolder->BrowserAllTvShows|Recently added/played
+        //LoaderManager.getInstance(getActivity()).destroyLoader(0);
     }
 
     @Override
