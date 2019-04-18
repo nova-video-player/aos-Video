@@ -19,18 +19,16 @@ package com.archos.mediacenter.video.player;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
+import androidx.preference.PreferenceManager;
+import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -39,9 +37,6 @@ import android.widget.TextView;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
-import com.archos.medialib.Subtitle;
-
-import java.io.File;
 
 public class SubtitleSettingsDialog extends AlertDialog implements
         SeekBar.OnSeekBarChangeListener, View.OnTouchListener, SubtitleColorPicker.ColorPickListener {

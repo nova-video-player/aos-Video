@@ -22,9 +22,9 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
+
+import androidx.loader.content.CursorLoader;
+
 import android.util.Log;
 
 import java.io.Serializable;

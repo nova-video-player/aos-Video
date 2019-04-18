@@ -19,7 +19,7 @@ import android.animation.TimeInterpolator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.support.v7.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,7 +29,9 @@ import android.view.animation.DecelerateInterpolator;
 import com.archos.mediacenter.utils.GlobalResumeView;
 import com.archos.medialib.R;
 
-public class BrowserLayout extends android.support.v4.widget.DrawerLayout {
+import androidx.drawerlayout.widget.DrawerLayout;
+
+public class BrowserLayout extends DrawerLayout {
 
     public interface Callback {
         /** Called when animation is done. */

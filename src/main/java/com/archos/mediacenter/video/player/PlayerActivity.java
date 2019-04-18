@@ -36,13 +36,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.v7.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.provider.Settings;
-import android.provider.Settings.Secure;
 import android.provider.Settings.SettingNotFoundException;
-import android.support.annotation.NonNull;
-import android.support.v4.app.LoaderManager;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.loader.app.LoaderManager;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
@@ -52,7 +51,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -521,7 +519,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         });
         // We use the ActionBar for the top-right menu only
         // our PlayerController puts the Title in there
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        androidx.appcompat.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setBackgroundDrawable(null);

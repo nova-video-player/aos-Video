@@ -28,12 +28,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.v7.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.CopyCutEngine;
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.MetaFile2;

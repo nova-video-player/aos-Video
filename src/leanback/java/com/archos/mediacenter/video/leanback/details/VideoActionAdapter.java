@@ -15,8 +15,8 @@
 package com.archos.mediacenter.video.leanback.details;
 
 import android.content.Context;
-import android.support.v17.leanback.widget.Action;
-import android.support.v17.leanback.widget.SparseArrayObjectAdapter;
+import androidx.leanback.widget.Action;
+import androidx.leanback.widget.SparseArrayObjectAdapter;
 import android.util.Log;
 
 import com.archos.mediacenter.utils.MediaUtils;

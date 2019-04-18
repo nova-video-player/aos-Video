@@ -15,8 +15,8 @@
 package com.archos.mediacenter.video.leanback;
 
 import android.content.res.Resources;
-import android.support.v17.leanback.widget.RowHeaderPresenter;
-import android.support.v17.leanback.widget.RowPresenter;
+import androidx.leanback.widget.RowHeaderPresenter;
+import androidx.leanback.widget.RowPresenter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -15,7 +15,7 @@
 package com.archos.mediacenter.video.leanback.details;
 
 import android.content.Context;
-import android.support.v17.leanback.widget.HeaderItem;
+import androidx.leanback.widget.HeaderItem;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;

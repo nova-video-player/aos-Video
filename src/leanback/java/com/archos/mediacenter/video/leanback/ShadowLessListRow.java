@@ -14,9 +14,9 @@
 
 package com.archos.mediacenter.video.leanback;
 
-import android.support.v17.leanback.widget.HeaderItem;
-import android.support.v17.leanback.widget.ListRow;
-import android.support.v17.leanback.widget.ObjectAdapter;
+import androidx.leanback.widget.HeaderItem;
+import androidx.leanback.widget.ListRow;
+import androidx.leanback.widget.ObjectAdapter;
 
 /**
  * This class is only to be able to make the difference between regular ListRow for which the

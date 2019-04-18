@@ -16,12 +16,12 @@ package com.archos.mediacenter.video.leanback.network.rescan;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.v17.leanback.app.GuidedStepSupportFragment;
-import android.support.v17.leanback.widget.GuidanceStylist;
-import android.support.v17.leanback.widget.GuidedAction;
+import androidx.annotation.NonNull;
+import androidx.leanback.app.GuidedStepSupportFragment;
+import androidx.leanback.widget.GuidanceStylist;
+import androidx.leanback.widget.GuidedAction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

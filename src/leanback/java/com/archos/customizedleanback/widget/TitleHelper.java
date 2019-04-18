@@ -16,15 +16,15 @@
 
 package com.archos.customizedleanback.widget;
 
-import android.support.v17.leanback.transition.LeanbackTransitionHelper;
-import android.support.v17.leanback.transition.TransitionHelper;
-import android.support.v17.leanback.widget.BrowseFrameLayout;
-import android.support.v4.view.ViewCompat;
+import androidx.leanback.transition.LeanbackTransitionHelper;
+import androidx.leanback.transition.TransitionHelper;
+import androidx.leanback.widget.BrowseFrameLayout;
+import androidx.core.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Helper for managing {@link android.support.v17.leanback.widget.TitleView}, including
+ * Helper for managing {@link androidx.leanback.widget.TitleView}, including
  * transitions and focus movement.
  * Assumes the TitleView is overlayed on the topmost portion of the scene root view.
  */
@@ -111,7 +111,7 @@ public class TitleHelper {
 
     /**
      * Returns a
-     * {@link android.support.v17.leanback.widget.BrowseFrameLayout.OnFocusSearchListener} which
+     * {@link androidx.leanback.widget.BrowseFrameLayout.OnFocusSearchListener} which
      * may be used to manage focus switching between the title view and scene root.
      */
     public BrowseFrameLayout.OnFocusSearchListener getOnFocusSearchListener() {

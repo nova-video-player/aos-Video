@@ -22,8 +22,8 @@ import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.Loader;
+import androidx.core.content.ContextCompat;
+import androidx.loader.content.Loader;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -46,7 +46,6 @@ import com.archos.mediacenter.video.browser.presenter.EpisodePresenter;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.VideoStore;
-import android.util.Log;
 
 public class BrowserListOfEpisodes extends BrowserWithShowHeader {
 

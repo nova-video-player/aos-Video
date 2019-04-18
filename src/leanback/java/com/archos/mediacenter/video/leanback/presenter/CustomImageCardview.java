@@ -15,8 +15,8 @@
 package com.archos.mediacenter.video.leanback.presenter;
 
 import android.content.Context;
-import android.os.Build;
-import android.support.v17.leanback.widget.ImageCardView;
+
+import androidx.leanback.widget.ImageCardView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;

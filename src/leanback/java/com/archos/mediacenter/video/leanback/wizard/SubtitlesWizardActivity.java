@@ -1,7 +1,7 @@
 package com.archos.mediacenter.video.leanback.wizard;
 
 import android.os.Bundle;
-import android.support.v17.leanback.app.GuidedStepSupportFragment;
+import androidx.leanback.app.GuidedStepSupportFragment;
 
 import com.archos.mediacenter.video.leanback.LeanbackActivity;
 

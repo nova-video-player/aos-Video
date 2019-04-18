@@ -34,7 +34,7 @@ import android.os.IBinder;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.StatFs;
-import android.support.v7.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 public class TorrentObserverService extends Service{

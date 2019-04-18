@@ -6,7 +6,7 @@
 
 
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:focusable="false"
         android:id="@+id/discovery_list"
         android:padding="5dip"

@@ -1,13 +1,10 @@
 
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -15,18 +12,10 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.archos.environment.ArchosUtils;
-import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.adapters.object.Episode;
-import com.archos.mediacenter.video.browser.adapters.object.NonIndexedVideo;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
-import com.archos.mediacenter.video.browser.loader.MoviesLoader;
-import com.archos.mediacenter.video.browser.loader.MoviesSelectionLoader;
 import com.archos.mediacenter.video.browser.loader.VideosSelectionInPlaylistLoader;
-import com.archos.mediacenter.video.browser.loader.VideosSelectionLoader;
-import com.archos.mediacenter.video.player.PlayerActivity;
-import com.archos.mediacenter.video.utils.SubtitlesWizardActivity;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.BaseTags;

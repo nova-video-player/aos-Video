@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package android.support.v17.leanback.widget;
+package androidx.leanback.widget;
 
 /**
  * Created by vapillon on 29/04/15.

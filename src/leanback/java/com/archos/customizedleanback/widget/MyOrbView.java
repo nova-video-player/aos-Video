@@ -25,7 +25,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.support.v17.leanback.R;
+import androidx.leanback.R;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;

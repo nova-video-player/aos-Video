@@ -17,7 +17,7 @@ package com.archos.mediacenter.video.leanback.network;
 import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.widget.Toast;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.leanback.SingleFragmentActivity;

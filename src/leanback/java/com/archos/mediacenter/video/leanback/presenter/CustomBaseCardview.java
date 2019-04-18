@@ -16,7 +16,7 @@ package com.archos.mediacenter.video.leanback.presenter;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.v17.leanback.widget.BaseCardView;
+import androidx.leanback.widget.BaseCardView;
 import android.util.AttributeSet;
 import android.view.View;
 

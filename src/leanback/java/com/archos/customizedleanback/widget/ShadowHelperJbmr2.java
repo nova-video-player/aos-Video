@@ -15,7 +15,7 @@ package com.archos.customizedleanback.widget;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.support.v17.leanback.R;
+import androidx.leanback.R;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

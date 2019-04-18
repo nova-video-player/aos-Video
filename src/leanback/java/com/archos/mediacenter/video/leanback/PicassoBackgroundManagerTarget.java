@@ -17,7 +17,7 @@ package com.archos.mediacenter.video.leanback;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.support.v17.leanback.app.BackgroundManager;
+import androidx.leanback.app.BackgroundManager;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;

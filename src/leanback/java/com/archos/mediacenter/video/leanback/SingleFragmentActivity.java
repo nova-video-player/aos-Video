@@ -15,7 +15,7 @@
 package com.archos.mediacenter.video.leanback;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.archos.mediacenter.video.R;
 

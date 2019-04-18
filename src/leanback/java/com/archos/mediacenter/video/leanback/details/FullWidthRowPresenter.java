@@ -16,8 +16,8 @@ package com.archos.mediacenter.video.leanback.details;
 
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v17.leanback.graphics.ColorOverlayDimmer;
-import android.support.v17.leanback.widget.RowPresenter;
+import androidx.leanback.graphics.ColorOverlayDimmer;
+import androidx.leanback.widget.RowPresenter;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;

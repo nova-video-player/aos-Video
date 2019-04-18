@@ -19,7 +19,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <android.support.v17.leanback.widget.BrowseFrameLayout
+    <androidx.leanback.widget.BrowseFrameLayout
         android:id="@+id/grid_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,7 +34,7 @@
 
         <include layout="@layout/lb_my_browse_title" />
 
-    </android.support.v17.leanback.widget.BrowseFrameLayout>
+    </androidx.leanback.widget.BrowseFrameLayout>
 
     <include layout="@layout/leanback_empty_view"/>
 

@@ -14,10 +14,10 @@
 package com.archos.mediacenter.video.leanback.adapter;
 import android.database.Cursor;
 import android.util.LruCache;
-import android.support.v17.leanback.database.CursorMapper;
-import android.support.v17.leanback.widget.ObjectAdapter;
-import android.support.v17.leanback.widget.Presenter;
-import android.support.v17.leanback.widget.PresenterSelector;
+import androidx.leanback.database.CursorMapper;
+import androidx.leanback.widget.ObjectAdapter;
+import androidx.leanback.widget.Presenter;
+import androidx.leanback.widget.PresenterSelector;
 /**
  * An {@link ObjectAdapter} implemented with a {@link Cursor}.
  */

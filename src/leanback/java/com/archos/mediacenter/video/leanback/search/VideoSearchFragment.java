@@ -21,15 +21,15 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v17.leanback.app.BackgroundManager;
-import android.support.v17.leanback.app.SearchSupportFragment;
-import android.support.v17.leanback.widget.ArrayObjectAdapter;
-import android.support.v17.leanback.widget.ClassPresenterSelector;
-import android.support.v17.leanback.widget.CursorObjectAdapter;
-import android.support.v17.leanback.widget.HeaderItem;
-import android.support.v17.leanback.widget.ListRow;
-import android.support.v17.leanback.widget.ListRowPresenter;
-import android.support.v17.leanback.widget.ObjectAdapter;
+import androidx.leanback.app.BackgroundManager;
+import androidx.leanback.app.SearchSupportFragment;
+import androidx.leanback.widget.ArrayObjectAdapter;
+import androidx.leanback.widget.ClassPresenterSelector;
+import androidx.leanback.widget.CursorObjectAdapter;
+import androidx.leanback.widget.HeaderItem;
+import androidx.leanback.widget.ListRow;
+import androidx.leanback.widget.ListRowPresenter;
+import androidx.leanback.widget.ObjectAdapter;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
@@ -44,8 +44,8 @@ import com.archos.mediacenter.video.browser.loader.SearchVideoLoader;
 import com.archos.mediacenter.video.browser.loader.VideoLoader;
 import com.archos.mediacenter.video.leanback.presenter.EmptyViewPresenter;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
-import android.support.v17.leanback.widget.ShadowLessRowPresenter;
-import android.support.v17.leanback.widget.SpeechRecognitionCallback;
+import androidx.leanback.widget.ShadowLessRowPresenter;
+import androidx.leanback.widget.SpeechRecognitionCallback;
 
 
 public class VideoSearchFragment extends SearchSupportFragment implements SearchSupportFragment.SearchResultProvider {

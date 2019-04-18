@@ -24,7 +24,7 @@ import com.archos.mediaprovider.video.VideoStore;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.Loader;
+import androidx.loader.content.Loader;
 
 public class BrowserMoviesByGenre2 extends BrowserMoviesBy {
 

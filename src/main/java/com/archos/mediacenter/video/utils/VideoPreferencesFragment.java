@@ -15,7 +15,7 @@ package com.archos.mediacenter.video.utils;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceFragmentCompat;
 
 public class VideoPreferencesFragment extends PreferenceFragmentCompat {
 

@@ -1,9 +1,8 @@
 package com.archos.mediacenter.video.browser.loader;
 
 import android.content.Context;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.util.Log;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserMoviesBy;
 import com.archos.mediaprovider.video.ListTables;
@@ -77,7 +76,7 @@ public class VideosByListLoader extends CursorLoader implements CompatAndSDKCurs
 
     public Loader getV4CursorLoader(boolean detailed, boolean hideWatchedVideos){
         mForceHideVideos = hideWatchedVideos;
-        return  new android.support.v4.content.CursorLoader(getContext(),
+        return  new CursorLoader(getContext(),
                 getUri(), getProjection(), getSelection(), getSelectionArgs(),
                 getSortOrder());
     }}

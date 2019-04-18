@@ -9,16 +9,15 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.media.tv.Channel;
-import android.support.media.tv.ChannelLogoUtils;
-import android.support.media.tv.PreviewProgram;
-import android.support.media.tv.TvContractCompat;
-import android.support.v4.content.CursorLoader;
-import android.support.v7.preference.PreferenceManager;
+import androidx.tvprovider.media.tv.Channel;
+import androidx.tvprovider.media.tv.ChannelLogoUtils;
+import androidx.tvprovider.media.tv.PreviewProgram;
+import androidx.tvprovider.media.tv.TvContractCompat;
+import androidx.loader.content.CursorLoader;
+import androidx.preference.PreferenceManager;
 import android.util.ArrayMap;
 import android.util.Log;
 
@@ -38,7 +37,6 @@ import com.archos.mediacenter.video.leanback.tvshow.TvshowActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowFragment;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
-import com.archos.mediaprovider.ArchosMediaCommon;
 import com.archos.mediaprovider.video.ScraperStore;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.BaseTags;
@@ -53,7 +51,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public class ChannelManager {
 

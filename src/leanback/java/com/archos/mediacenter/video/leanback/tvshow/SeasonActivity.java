@@ -14,7 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.tvshow;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.archos.mediacenter.video.leanback.SingleFragmentActivity;
 

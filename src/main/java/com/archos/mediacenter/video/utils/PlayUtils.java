@@ -18,8 +18,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.content.FileProvider;
-import android.support.v7.preference.PreferenceManager;
+import androidx.core.content.FileProvider;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 

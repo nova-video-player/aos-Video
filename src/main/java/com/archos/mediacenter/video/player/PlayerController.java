@@ -16,7 +16,6 @@ package com.archos.mediacenter.video.player;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -31,7 +30,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBar;
+import androidx.appcompat.app.ActionBar;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Gravity;
@@ -57,7 +56,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.archos.environment.ArchosFeatures;
-import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.utils.RepeatingImageButton;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
@@ -66,7 +64,6 @@ import com.archos.mediacenter.video.player.tvmenu.TVCardView;
 import com.archos.mediacenter.video.player.tvmenu.TVMenuAdapter;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
-import com.archos.mediacenter.video.utils.VideoUtils;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;

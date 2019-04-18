@@ -13,12 +13,9 @@
  */
 package com.archos.customizedleanback.widget;
 
-import android.support.v17.leanback.R;
-import android.content.res.Resources;
-import android.graphics.Color;
+import androidx.leanback.R;
+
 import android.graphics.Outline;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.view.ViewGroup;
 import android.view.View;
 import android.view.ViewOutlineProvider;

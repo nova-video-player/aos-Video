@@ -1,6 +1,5 @@
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
-import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.utils.ActionBarSubmenu;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.R;
@@ -9,7 +8,6 @@ import com.archos.mediacenter.video.browser.ThumbnailEngineVideo;
 import com.archos.mediacenter.video.browser.adapters.GroupOfMovieAdapter;
 import com.archos.mediacenter.video.browser.loader.VideosByListLoader;
 import com.archos.mediacenter.video.utils.TraktSigninDialogPreference;
-import com.archos.mediacenter.video.utils.VideoPreferencesActivity;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -18,9 +16,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
+import androidx.preference.PreferenceManager;
+import androidx.loader.content.Loader;
+import androidx.appcompat.app.ActionBar;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;

@@ -1,8 +1,7 @@
 package com.archos.mediacenter.video.browser.loader;
 
 import android.content.Context;
-import android.support.v4.content.CursorLoader;
-import android.net.Uri;
+import androidx.loader.content.CursorLoader;
 
 import com.archos.mediaprovider.video.VideoStore;
 

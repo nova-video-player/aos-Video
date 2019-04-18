@@ -15,16 +15,16 @@
 package com.archos.mediacenter.video.leanback;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v17.leanback.widget.BaseCardView;
-import android.support.v17.leanback.widget.ImageCardView;
-import android.support.v17.leanback.widget.OnItemViewClickedListener;
-import android.support.v17.leanback.widget.Presenter;
-import android.support.v17.leanback.widget.Row;
-import android.support.v17.leanback.widget.RowPresenter;
-import android.support.v4.app.ActivityOptionsCompat;
+import androidx.leanback.widget.BaseCardView;
+import androidx.leanback.widget.ImageCardView;
+import androidx.leanback.widget.OnItemViewClickedListener;
+import androidx.leanback.widget.Presenter;
+import androidx.leanback.widget.Row;
+import androidx.leanback.widget.RowPresenter;
+import androidx.core.app.ActivityOptionsCompat;
 import android.view.View;
 
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
@@ -32,7 +32,6 @@ import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsActivity;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsFragment;
 import com.archos.mediacenter.video.leanback.presenter.ListPresenter;
-import com.archos.mediacenter.video.leanback.search.VideoSearchFragment;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowFragment;
 

@@ -24,14 +24,13 @@ import java.net.URLDecoder;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;

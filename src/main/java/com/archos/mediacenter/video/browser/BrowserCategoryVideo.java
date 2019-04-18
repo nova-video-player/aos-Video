@@ -17,10 +17,10 @@ package com.archos.mediacenter.video.browser;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -43,7 +43,7 @@ import com.archos.mediacenter.video.browser.filebrowsing.network.UpnpBrowser.Upn
 
 import java.util.ArrayList;
 
-public class BrowserCategoryVideo extends BrowserCategory implements android.support.v7.app.ActionBar.OnNavigationListener {
+public class BrowserCategoryVideo extends BrowserCategory implements androidx.appcompat.app.ActionBar.OnNavigationListener {
     static final String TAG = "BrowserCategoryVideo";
 
     static final String KEY_ACTIONBAR_NAVIGATION_MODE = "KEY_ACTIONBAR_NAVIGATION_MODE";
@@ -194,7 +194,7 @@ public class BrowserCategoryVideo extends BrowserCategory implements android.sup
      * @param setupTheFragmentAsWell: if true, the fragment corresponding to the selected drop-down item will also be created
      */
     private void setupMovieActionBarNavigation(boolean setupTheFragmentAsWell) {
-         android.support.v7.app.ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
+         androidx.appcompat.app.ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
         // no title in that case
         ab.setTitle("");
         // navigation drop-down instead

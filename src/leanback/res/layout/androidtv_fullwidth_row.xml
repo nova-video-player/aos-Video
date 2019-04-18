@@ -46,7 +46,7 @@
              (i.e. take the whole width). It found it by checking how it is done in lb_details_overview.xml (see DetailsOverviewRowPresenter.java)
              It is made invisible to not get the focus, because for some reason it catches the focus even with focusable="false"....
         -->
-        <android.support.v17.leanback.widget.HorizontalGridView
+        <androidx.leanback.widget.HorizontalGridView
             android:id="@+id/useless_but_needed"
             android:layout_width="match_parent"
             android:layout_height="0dip"

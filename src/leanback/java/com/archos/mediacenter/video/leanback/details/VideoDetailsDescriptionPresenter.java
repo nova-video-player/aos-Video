@@ -16,7 +16,7 @@ package com.archos.mediacenter.video.leanback.details;
 
 import android.animation.LayoutTransition;
 import android.graphics.Paint;
-import android.support.v17.leanback.widget.Presenter;
+import androidx.leanback.widget.Presenter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,14 +68,14 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
 
         public ViewHolder(final View view) {
             super(view);
-            mTitle = (TextView) view.findViewById(android.support.v17.leanback.R.id.lb_details_description_title);
+            mTitle = (TextView) view.findViewById(androidx.leanback.R.id.lb_details_description_title);
             mEpisodeGroup = view.findViewById(R.id.episode_group);
             mEpisodeSXEX = (TextView) view.findViewById(R.id.episode_sxex);
             mEpisodeTitle = (TextView) view.findViewById(R.id.episode_title);
             mDate = (TextView) view.findViewById(R.id.date);
             mDuration = (TextView) view.findViewById(R.id.duration);
             mRating = (TextView) view.findViewById(R.id.rating);
-            mBody = (TextView) view.findViewById(android.support.v17.leanback.R.id.lb_details_description_body);
+            mBody = (TextView) view.findViewById(androidx.leanback.R.id.lb_details_description_body);
             mTraktWatched = (ImageView) view.findViewById(R.id.trakt_watched);
             mResolutionBadge = (ImageView) view.findViewById(R.id.badge_resolution);
             mAudioBadge = (ImageView) view.findViewById(R.id.badge_audio);

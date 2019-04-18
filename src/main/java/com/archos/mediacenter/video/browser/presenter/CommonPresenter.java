@@ -15,7 +15,7 @@
 package com.archos.mediacenter.video.browser.presenter;
 
 import android.content.Context;
-import android.support.v7.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

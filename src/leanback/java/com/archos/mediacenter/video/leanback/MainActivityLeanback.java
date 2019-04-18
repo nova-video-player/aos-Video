@@ -18,8 +18,8 @@ import android.content.Intent;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceManager;
-import android.support.annotation.NonNull;
+import androidx.preference.PreferenceManager;
+import androidx.annotation.NonNull;
 import android.view.KeyEvent;
 
 import com.archos.mediacenter.video.DensityTweak;

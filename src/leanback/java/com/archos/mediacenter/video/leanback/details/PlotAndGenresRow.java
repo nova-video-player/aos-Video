@@ -14,7 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.details;
 
-import android.support.v17.leanback.widget.HeaderItem;
+import androidx.leanback.widget.HeaderItem;
 
 /**
  * Created by vapillon on 16/07/15.

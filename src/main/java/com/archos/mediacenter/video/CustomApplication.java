@@ -19,8 +19,8 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
-import android.os.StrictMode;
-import android.support.multidex.MultiDexApplication;
+
+import androidx.multidex.MultiDexApplication;
 
 import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosUtils;

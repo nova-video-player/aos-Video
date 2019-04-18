@@ -10,7 +10,7 @@
 
 
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_marginTop="@dimen/video_info_cardview_top_margin"
         card_view:cardCornerRadius="4dp"
@@ -43,8 +43,8 @@
 
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
-    <android.support.v7.widget.CardView
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_marginTop="@dimen/video_info_cardview_top_margin"
         card_view:cardCornerRadius="4dp"
@@ -126,5 +126,5 @@
 
 
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </LinearLayout>

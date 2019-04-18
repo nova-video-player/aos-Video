@@ -15,7 +15,7 @@
 package com.archos.mediacenter.video.leanback;
 
 import android.app.Activity;
-import android.support.v4.app.LoaderManager;
+import androidx.loader.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,22 +26,22 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v17.leanback.app.BackgroundManager;
-import android.support.v17.leanback.app.BrowseSupportFragment;
-import android.support.v17.leanback.widget.ArrayObjectAdapter;
-import android.support.v17.leanback.widget.ClassPresenterSelector;
-import android.support.v17.leanback.widget.CursorObjectAdapter;
-import android.support.v17.leanback.widget.HeaderItem;
-import android.support.v17.leanback.widget.IconItemRowPresenter;
-import android.support.v17.leanback.widget.ListRow;
-import android.support.v17.leanback.widget.ListRowPresenter;
-import android.support.v17.leanback.widget.ObjectAdapter;
-import android.support.v17.leanback.widget.Presenter;
-import android.support.v17.leanback.widget.Row;
-import android.support.v17.leanback.widget.RowHeaderPresenter;
-import android.support.v17.leanback.widget.RowPresenter;
-import android.support.v4.content.Loader;
+import androidx.preference.PreferenceManager;
+import androidx.leanback.app.BackgroundManager;
+import androidx.leanback.app.BrowseSupportFragment;
+import androidx.leanback.widget.ArrayObjectAdapter;
+import androidx.leanback.widget.ClassPresenterSelector;
+import androidx.leanback.widget.CursorObjectAdapter;
+import androidx.leanback.widget.HeaderItem;
+import androidx.leanback.widget.IconItemRowPresenter;
+import androidx.leanback.widget.ListRow;
+import androidx.leanback.widget.ListRowPresenter;
+import androidx.leanback.widget.ObjectAdapter;
+import androidx.leanback.widget.Presenter;
+import androidx.leanback.widget.Row;
+import androidx.leanback.widget.RowHeaderPresenter;
+import androidx.leanback.widget.RowPresenter;
+import androidx.loader.content.Loader;
 import android.util.Log;
 import android.view.View;
 
@@ -89,7 +89,6 @@ import com.archos.mediacenter.video.utils.WebUtils;
 import com.archos.mediaprovider.ArchosMediaIntent;
 import com.archos.mediaprovider.ImportState;
 import com.archos.mediaprovider.video.NetworkScannerReceiver;
-import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.AutoScrapeService;
 
 public class MainFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor> {

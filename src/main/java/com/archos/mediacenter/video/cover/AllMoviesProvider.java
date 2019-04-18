@@ -16,7 +16,7 @@ package com.archos.mediacenter.video.cover;
 
 
 import android.content.Context;
-import android.support.v4.content.CursorLoader;
+import androidx.loader.content.CursorLoader;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;

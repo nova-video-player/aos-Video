@@ -17,7 +17,7 @@ package com.archos.mediacenter.video.player;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.support.v7.app.ActionBar;
+import androidx.appcompat.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;

@@ -15,9 +15,9 @@ package com.archos.customizedleanback.app;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v17.leanback.widget.SearchOrbView;
-import android.support.v17.leanback.widget.TitleView;
-import android.support.v4.app.Fragment;
+import androidx.leanback.widget.SearchOrbView;
+import androidx.leanback.widget.TitleView;
+import androidx.fragment.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,7 +26,7 @@ import com.archos.customizedleanback.widget.TitleHelper;
 
 /**
  * Fragment support for managing branding on a
- * {@link android.support.v17.leanback.widget.TitleView}.
+ * {@link androidx.leanback.widget.TitleView}.
  * @hide
  */
 public class MyBrandedFragment extends Fragment {
@@ -103,7 +103,7 @@ public class MyBrandedFragment extends Fragment {
     }
 
     /**
-     * Shows or hides the {@link android.support.v17.leanback.widget.TitleView}.
+     * Shows or hides the {@link androidx.leanback.widget.TitleView}.
      */
     void showTitle(boolean show) {
         // TODO: handle interruptions?
@@ -176,7 +176,7 @@ public class MyBrandedFragment extends Fragment {
     }
 
     /**
-     * Sets the {@link android.support.v17.leanback.widget.SearchOrbView.Colors} used to draw the search affordance.
+     * Sets the {@link androidx.leanback.widget.SearchOrbView.Colors} used to draw the search affordance.
      */
     public void setSearchAffordanceColors(SearchOrbView.Colors colors) {
         mSearchAffordanceColors = colors;
@@ -187,7 +187,7 @@ public class MyBrandedFragment extends Fragment {
     }
 
     /**
-     * Returns the {@link android.support.v17.leanback.widget.SearchOrbView.Colors}
+     * Returns the {@link androidx.leanback.widget.SearchOrbView.Colors}
      * used to draw the search affordance.
      */
     public SearchOrbView.Colors getSearchAffordanceColors() {

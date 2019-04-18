@@ -15,7 +15,7 @@
 package com.archos.mediacenter.video.leanback;
 
 import android.database.Cursor;
-import android.support.v17.leanback.database.CursorMapper;
+import androidx.leanback.database.CursorMapper;
 
 import com.archos.mediacenter.video.browser.adapters.mappers.CompatibleCursorMapper;
 

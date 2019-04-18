@@ -15,7 +15,7 @@
 package com.archos.mediacenter.video.utils.credentialsmanager;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.archos.mediacenter.video.R;

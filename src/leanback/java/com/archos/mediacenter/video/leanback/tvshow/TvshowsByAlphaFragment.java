@@ -15,7 +15,7 @@
 package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.content.Context;
-import android.support.v4.content.Loader;
+import androidx.loader.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.SparseArray;

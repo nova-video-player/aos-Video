@@ -16,12 +16,12 @@
 package com.archos.mediacenter.video.browser;
 
 import android.app.Activity;
-import android.support.v4.app.LoaderManager;
+import androidx.loader.app.LoaderManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.support.v4.content.CursorLoader;
+import androidx.loader.content.CursorLoader;
 import android.content.Intent;
-import android.support.v4.content.Loader;
+import androidx.loader.content.Loader;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
@@ -32,8 +32,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v4.view.ActionProvider;
+import androidx.preference.PreferenceManager;
+import androidx.core.view.ActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;

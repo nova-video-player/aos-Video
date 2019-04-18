@@ -14,8 +14,7 @@
 
 package com.archos.mediacenter.video.browser.loader;
 
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
+import androidx.loader.content.Loader;
 
 /**
  * Created by alexandre on 22/10/15.

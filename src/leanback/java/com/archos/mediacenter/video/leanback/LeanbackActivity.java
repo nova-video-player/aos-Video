@@ -14,7 +14,6 @@
 
 package com.archos.mediacenter.video.leanback;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,7 +21,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 import android.view.KeyEvent;
 
 import com.archos.mediacenter.utils.trakt.Trakt;

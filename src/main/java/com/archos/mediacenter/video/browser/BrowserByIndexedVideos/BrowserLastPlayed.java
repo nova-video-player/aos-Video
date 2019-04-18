@@ -17,7 +17,7 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.content.Loader;
+import androidx.loader.content.Loader;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.LastPlayedLoader;

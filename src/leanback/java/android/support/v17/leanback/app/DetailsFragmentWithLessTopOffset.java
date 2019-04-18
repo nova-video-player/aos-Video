@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package android.support.v17.leanback.app;
+package androidx.leanback.app;
 
-import android.support.v17.leanback.widget.VerticalGridView;
+import androidx.leanback.widget.VerticalGridView;
 
 /**
  * This class exists only to reduce the vertical offset above the DetailsRow in the DetailsFragment

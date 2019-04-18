@@ -26,7 +26,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
+import androidx.loader.app.LoaderManager;
 
 import com.archos.filecorelibrary.ExtStorageReceiver;
 import com.archos.filecorelibrary.ListingEngine;

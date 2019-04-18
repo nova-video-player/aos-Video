@@ -14,11 +14,10 @@
 
 package com.archos.mediacenter.video.leanback.scrapping;
 
-import android.app.Activity;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.os.Bundle;
-import android.support.v17.leanback.app.SearchSupportFragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.leanback.app.SearchSupportFragment;
+import androidx.fragment.app.FragmentActivity;
 import android.view.KeyEvent;
 
 import com.archos.mediacenter.video.R;

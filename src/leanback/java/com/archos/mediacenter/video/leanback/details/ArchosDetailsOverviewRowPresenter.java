@@ -15,10 +15,10 @@
 package com.archos.mediacenter.video.leanback.details;
 
 import android.content.res.Resources;
-import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter;
-import android.support.v17.leanback.widget.HorizontalGridView;
-import android.support.v17.leanback.widget.Presenter;
-import android.support.v17.leanback.widget.RowPresenter;
+import androidx.leanback.widget.FullWidthDetailsOverviewRowPresenter;
+import androidx.leanback.widget.HorizontalGridView;
+import androidx.leanback.widget.Presenter;
+import androidx.leanback.widget.RowPresenter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
@@ -71,18 +71,18 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
             case ALIGN_MODE_START:
             default:
                 lp.setMarginStart(v.getResources().getDimensionPixelSize(
-                        android.support.v17.leanback.R.dimen.lb_details_v2_logo_margin_start));
+                        androidx.leanback.R.dimen.lb_details_v2_logo_margin_start));
                 break;
             case ALIGN_MODE_MIDDLE:
-                lp.setMarginStart(v.getResources().getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_left)
+                lp.setMarginStart(v.getResources().getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_left)
                         - lp.width);
                 break;
         }
         lp.topMargin = v.getResources().getDimensionPixelSize(
-                    android.support.v17.leanback.R.dimen.lb_details_v2_blank_height) + v.getResources()
-                    .getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_actions_height) + v
+                    androidx.leanback.R.dimen.lb_details_v2_blank_height) + v.getResources()
+                    .getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_actions_height) + v
                     .getResources().getDimensionPixelSize(
-                    android.support.v17.leanback.R.dimen.lb_details_v2_description_margin_top);
+                    androidx.leanback.R.dimen.lb_details_v2_description_margin_top);
         v.setLayoutParams(lp);
     }
 
@@ -100,39 +100,39 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
                 default:
                     if (isBanner) {
                         frameMarginStart = res.getDimensionPixelSize(
-                                android.support.v17.leanback.R.dimen.lb_details_v2_logo_margin_start);
+                                androidx.leanback.R.dimen.lb_details_v2_logo_margin_start);
                         descriptionMarginStart = logoWidth;
                     } else {
                         frameMarginStart = 0;
                         descriptionMarginStart = logoWidth + res.getDimensionPixelSize(
-                                android.support.v17.leanback.R.dimen.lb_details_v2_logo_margin_start);
+                                androidx.leanback.R.dimen.lb_details_v2_logo_margin_start);
                     }
                     break;
                 case ALIGN_MODE_MIDDLE:
                     if (isBanner) {
-                        frameMarginStart = res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_left)
+                        frameMarginStart = res.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_left)
                                 - logoWidth;
                         descriptionMarginStart = logoWidth;
                     } else {
                         frameMarginStart = 0;
                         descriptionMarginStart = res.getDimensionPixelSize(
-                                android.support.v17.leanback.R.dimen.lb_details_v2_left);
+                                androidx.leanback.R.dimen.lb_details_v2_left);
                     }
                     break;
             }
             MarginLayoutParams lpRoot =
                     (MarginLayoutParams) ((ViewGroup)viewHolder.getOverviewView().getParent()).getLayoutParams();
-            lpRoot.leftMargin = res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_overview_margin_start);
-            lpRoot.rightMargin = res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_overview_margin_end);
+            lpRoot.leftMargin = res.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_overview_margin_start);
+            lpRoot.rightMargin = res.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_overview_margin_end);
             MarginLayoutParams lpFrame =
                     (MarginLayoutParams) viewHolder.getOverviewView().getLayoutParams();
             lpFrame.topMargin = isBanner ? 0
-                    : res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_blank_height);
+                    : res.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_blank_height);
             lpFrame.leftMargin = lpFrame.rightMargin = frameMarginStart;
             if (mHideActions) {
-                lpFrame.topMargin += res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_actions_height);
-                lpFrame.height = res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_card_height)
-                        - res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_actions_height);
+                lpFrame.topMargin += res.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_actions_height);
+                lpFrame.height = res.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_card_height)
+                        - res.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_actions_height);
             }
             viewHolder.getOverviewView().setLayoutParams(lpFrame);
             View description = viewHolder.getDetailsDescriptionFrame();
@@ -141,10 +141,10 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
             description.setLayoutParams(lpDesc);
             View action = viewHolder.getActionsRow();
             MarginLayoutParams lpActions = (MarginLayoutParams) action.getLayoutParams();
-            lpActions.setMarginStart(res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_logo_margin_start));
-            lpActions.setMarginEnd(res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_description_margin_end));
+            lpActions.setMarginStart(res.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_logo_margin_start));
+            lpActions.setMarginEnd(res.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_description_margin_end));
             lpActions.height =
-                    isBanner ? 0 : res.getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_actions_height);
+                    isBanner ? 0 : res.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_actions_height);
             if (mHideActions)
                 lpActions.height = 0;
             action.setLayoutParams(lpActions);
@@ -162,7 +162,7 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
         setActionsBackgroundColor(color);
 
         if (mViewHolder != null)
-            mViewHolder.getOverviewView().findViewById(android.support.v17.leanback.R.id.details_overview_actions_background).setBackgroundColor(color);
+            mViewHolder.getOverviewView().findViewById(androidx.leanback.R.id.details_overview_actions_background).setBackgroundColor(color);
     }
 
     public void moveSelectedPosition(int offset) {

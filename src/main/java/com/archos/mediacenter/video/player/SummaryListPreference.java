@@ -15,7 +15,7 @@
 package com.archos.mediacenter.video.player;
 
 import android.content.Context;
-import android.support.v7.preference.ListPreference;
+import androidx.preference.ListPreference;
 import android.util.AttributeSet;
 
 public class SummaryListPreference extends ListPreference {

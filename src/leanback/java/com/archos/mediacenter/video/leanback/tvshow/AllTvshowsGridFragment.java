@@ -15,7 +15,7 @@
 package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.app.AlertDialog;
-import android.support.v4.app.LoaderManager;
+import androidx.loader.app.LoaderManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,16 +23,16 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v17.leanback.app.BackgroundManager;
-import android.support.v17.leanback.widget.CursorObjectAdapter;
-import android.support.v17.leanback.widget.FocusHighlight;
-import android.support.v17.leanback.widget.OnItemViewSelectedListener;
-import android.support.v17.leanback.widget.Presenter;
-import android.support.v17.leanback.widget.Row;
-import android.support.v17.leanback.widget.RowPresenter;
-import android.support.v17.leanback.widget.VerticalGridPresenter;
-import android.support.v4.content.Loader;
+import androidx.preference.PreferenceManager;
+import androidx.leanback.app.BackgroundManager;
+import androidx.leanback.widget.CursorObjectAdapter;
+import androidx.leanback.widget.FocusHighlight;
+import androidx.leanback.widget.OnItemViewSelectedListener;
+import androidx.leanback.widget.Presenter;
+import androidx.leanback.widget.Row;
+import androidx.leanback.widget.RowPresenter;
+import androidx.leanback.widget.VerticalGridPresenter;
+import androidx.loader.content.Loader;
 import android.util.SparseArray;
 import android.view.View;
 

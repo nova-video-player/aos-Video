@@ -18,16 +18,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.v17.leanback.widget.BaseCardView;
-import android.support.v17.leanback.widget.ImageCardView;
-import android.support.v17.leanback.widget.Presenter;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
+import androidx.leanback.widget.BaseCardView;
+import androidx.leanback.widget.ImageCardView;
+import androidx.leanback.widget.Presenter;
+
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.leanback.adapter.object.Box;
 import com.archos.mediacenter.video.utils.TrailerServiceIconFactory;
 import com.archos.mediascraper.ScraperTrailer;
 import com.squareup.picasso.Picasso;

@@ -15,21 +15,16 @@
 package com.archos.mediacenter.video.browser;
 
 import android.app.SearchManager;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserByQuery;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
-import com.archos.mediacenter.video.player.PlayerActivity;
-import com.archos.mediacenter.video.utils.VideoPreferencesActivity;
 
 
 public class QueryBrowserActivityVideo extends AppCompatActivity {

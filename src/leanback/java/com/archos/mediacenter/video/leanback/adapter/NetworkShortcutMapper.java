@@ -16,7 +16,7 @@ package com.archos.mediacenter.video.leanback.adapter;
 
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v17.leanback.database.CursorMapper;
+import androidx.leanback.database.CursorMapper;
 
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.leanback.adapter.object.NetworkShortcut;

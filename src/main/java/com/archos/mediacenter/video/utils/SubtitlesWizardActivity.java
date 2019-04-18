@@ -22,18 +22,14 @@
 
 package com.archos.mediacenter.video.utils;
 
-import com.archos.filecorelibrary.OperationEngineListener;
 import com.archos.mediacenter.video.R;
-import com.archos.medialib.IMediaMetadataRetriever;
-import com.archos.medialib.MediaFactory;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.text.format.Formatter;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;

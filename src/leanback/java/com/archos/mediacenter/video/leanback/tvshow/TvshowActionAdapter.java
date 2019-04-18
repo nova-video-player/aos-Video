@@ -15,8 +15,8 @@
 package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.content.Context;
-import android.support.v17.leanback.widget.Action;
-import android.support.v17.leanback.widget.ObjectAdapter;
+import androidx.leanback.widget.Action;
+import androidx.leanback.widget.ObjectAdapter;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;

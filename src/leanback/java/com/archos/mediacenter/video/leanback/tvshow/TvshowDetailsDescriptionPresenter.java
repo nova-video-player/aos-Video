@@ -15,7 +15,7 @@
 package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.graphics.Paint;
-import android.support.v17.leanback.widget.Presenter;
+import androidx.leanback.widget.Presenter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,10 +47,10 @@ public class TvshowDetailsDescriptionPresenter extends Presenter {
 
         public ViewHolder(final View view) {
             super(view);
-            mTitle = (TextView) view.findViewById(android.support.v17.leanback.R.id.lb_details_description_title);
+            mTitle = (TextView) view.findViewById(androidx.leanback.R.id.lb_details_description_title);
             mDate = (TextView) view.findViewById(R.id.date);
             mRating = (TextView) view.findViewById(R.id.rating);
-            mBody = (TextView) view.findViewById(android.support.v17.leanback.R.id.lb_details_description_body);
+            mBody = (TextView) view.findViewById(androidx.leanback.R.id.lb_details_description_body);
             mTraktWatched = (ImageView) view.findViewById(R.id.trakt_watched);
 
             mTitle.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {

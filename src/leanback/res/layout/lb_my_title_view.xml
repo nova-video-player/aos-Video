@@ -36,7 +36,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"/>
 
-    <android.support.v17.leanback.widget.SearchOrbView
+    <androidx.leanback.widget.SearchOrbView
         android:id="@+id/title_orb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
         android:transitionGroup="true"
         android:visibility="visible" />
 
-    <android.support.v17.leanback.widget.SearchOrbView
+    <androidx.leanback.widget.SearchOrbView
         android:id="@+id/title_orb2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
         android:transitionGroup="true"
         android:visibility="visible" />
 
-    <android.support.v17.leanback.widget.SearchOrbView
+    <androidx.leanback.widget.SearchOrbView
         android:id="@+id/title_orb3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
         android:layout_marginEnd="28dip"
         android:transitionGroup="true"
         android:visibility="visible" />
-    <android.support.v17.leanback.widget.SearchOrbView
+    <androidx.leanback.widget.SearchOrbView
         android:id="@+id/title_orb4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
         android:transitionGroup="true"
         android:visibility="visible" />
 
-    <android.support.v17.leanback.widget.SearchOrbView
+    <androidx.leanback.widget.SearchOrbView
         android:id="@+id/title_orb5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

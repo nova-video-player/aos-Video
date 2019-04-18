@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/genres_banner" />
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_above="@+id/miniController1"
@@ -40,7 +40,7 @@
                 layout="@layout/video_info2_titlebar_layout"
                 />
             </RelativeLayout>
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/titlebar"
                 android:layout_width="match_parent"
@@ -52,11 +52,11 @@
                 android:paddingLeft="0dip">
 
 
-            </android.support.v7.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
         </FrameLayout>
 
         <!-- inside a coordinator layout : floating button will put itself in the right place-->
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/play_toolbar"
             android:layout_gravity="bottom|end"
             android:visibility="gone"
@@ -67,6 +67,6 @@
             android:src="@drawable/button_icon_play"
             app:elevation="4dp"/>
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </RelativeLayout>

@@ -14,9 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.network.ftp;
 
-import android.content.Intent;
-import android.support.v17.leanback.widget.Action;
-import android.support.v17.leanback.widget.DetailsOverviewRow;
+import androidx.leanback.widget.Action;
+import androidx.leanback.widget.DetailsOverviewRow;
 import android.widget.Toast;
 
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
