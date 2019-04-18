@@ -307,16 +307,6 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     }
 
     @Override
-    public void onDestroy() {
-        if (mSeasonAdapters != null) {
-            for (int i = 0; i < mSeasonAdapters.size(); i++)
-                LoaderManager.getInstance(this).destroyLoader(mSeasonAdapters.keyAt(i));
-        }
-        
-        super.onDestroy();
-    }
-
-    @Override
     public void onStop() {
         mBackdropTask.cancel(true);
         if (mFullScraperTagsTask!=null) {
