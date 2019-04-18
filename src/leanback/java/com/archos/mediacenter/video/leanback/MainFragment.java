@@ -718,15 +718,21 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         Log.d(TAG,"onLoadFinished() cursor id="+cursorLoader.getId());
         if (cursorLoader.getId() == LOADER_ID_WATCHING_UP_NEXT) {
             updateWatchingUpNextRow(cursor);
-            mInitWatchingUpNextCount = cursor.getCount();
+            
+            if (mWatchingUpNextInitFocus == InitFocus.NOT_FOCUSED)
+                mWatchingUpNextInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
         }
         else if (cursorLoader.getId() == LOADER_ID_LAST_ADDED) {
             updateLastAddedRow(cursor);
-            mInitLastAddedCount = cursor.getCount();
+            
+            if (mLastAddedInitFocus == InitFocus.NOT_FOCUSED)
+                mLastAddedInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
         }
         else if (cursorLoader.getId() == LOADER_ID_LAST_PLAYED) {
             updateLastPlayedRow(cursor);
-            mInitLastPlayedCount = cursor.getCount();
+            
+            if (mLastPlayedInitFocus == InitFocus.NOT_FOCUSED)
+                mLastPlayedInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
         }
         else if (cursorLoader.getId() == LOADER_ID_ALL_MOVIES) {
             if (!mNeedBuildAllMoviesBox && isVideosListModified(mMoviesAdapter.getCursor(), cursor))
@@ -760,7 +766,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             updateNonScrapedVideosVisibility(cursor);
         }
 
-        checkFocusInitialization();
+        checkInitFocus();
     }
 
     @Override
@@ -777,24 +783,32 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         return false;
     }
 
-    /**
-     * When opening, WatchingUpNext, LastAdded and LastPlayed rows are not created yet, hence selection is on Movies.
-     * Here we wait for the Loaders to return their results to know if we need to select the first row again (which will be WatchingUpNext, LastAdded or LastPlayed)
-     */
-    private int mInitWatchingUpNextCount = -1;
-    private int mInitLastAddedCount = -1;
-    private int mInitLastPlayedCount = -1;
-    private boolean mFocusInitializationDone = false;
+    private enum InitFocus {
+        NOT_FOCUSED, NO_NEED_FOCUS, NEED_FOCUS, FOCUSED
+    }
 
-    private void checkFocusInitialization() {
-        // Check if we have WatchingUpNext, LastAdded and LastPlayed loader results
-        if (!mFocusInitializationDone && mInitWatchingUpNextCount>-1 && mInitLastAddedCount>-1 && mInitLastPlayedCount>-1) {
-            // If at least one of them is non empty we select the first line (which contains one of them)
-            if (mInitWatchingUpNextCount>0 || mInitLastAddedCount>0 || mInitLastPlayedCount>0) {
-                this.setSelectedPosition(0, true);
-                mFocusInitializationDone = true; // this must be done only once
-            }
+    private InitFocus mWatchingUpNextInitFocus = InitFocus.NOT_FOCUSED;
+    private InitFocus mLastAddedInitFocus = InitFocus.NOT_FOCUSED;
+    private InitFocus mLastPlayedInitFocus = InitFocus.NOT_FOCUSED;
+
+    private void checkInitFocus() {
+        if (mWatchingUpNextInitFocus == InitFocus.NEED_FOCUS) {
+            mWatchingUpNextInitFocus = InitFocus.FOCUSED;
+            mLastAddedInitFocus = InitFocus.NO_NEED_FOCUS;
+            mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
         }
+        else if (mLastAddedInitFocus == InitFocus.NEED_FOCUS) {
+            mLastAddedInitFocus = InitFocus.FOCUSED;
+            mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
+        }
+        else if (mLastPlayedInitFocus == InitFocus.NEED_FOCUS) {
+            mLastPlayedInitFocus = InitFocus.FOCUSED;
+        }
+        else {
+            return;
+        }
+
+        setSelectedPosition(0);
     }
 
     /**
