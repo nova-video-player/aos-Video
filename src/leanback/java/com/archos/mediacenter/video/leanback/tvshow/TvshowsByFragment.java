@@ -120,14 +120,6 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
     }
 
     @Override
-    public void onDestroy() {
-        for (int i = 0; i < mAdaptersMap.size(); i++)
-            LoaderManager.getInstance(this).destroyLoader(mAdaptersMap.keyAt(i));
-        
-        super.onDestroy();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         mOverlay.resume();

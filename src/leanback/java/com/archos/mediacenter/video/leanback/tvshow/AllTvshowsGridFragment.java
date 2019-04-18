@@ -257,12 +257,6 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
     }
 
     @Override
-    public void onDestroy() {
-        LoaderManager.getInstance(this).destroyLoader(0);
-        super.onDestroy();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         mOverlay.resume();

@@ -120,23 +120,21 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
     }
 
     @Override
-    public void onDestroy() {
-        for (int i = 0; i < mAdaptersMap.size(); i++)
-            LoaderManager.getInstance(this).destroyLoader(mAdaptersMap.keyAt(i));
-        
-        super.onDestroy();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         mOverlay.resume();
+
+        for (int i = 0; i < mAdaptersMap.size(); i++)
+            LoaderManager.getInstance(this).getLoader(mAdaptersMap.keyAt(i)).startLoading();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mOverlay.pause();
+
+        for (int i = 0; i < mAdaptersMap.size(); i++)
+            LoaderManager.getInstance(this).getLoader(mAdaptersMap.keyAt(i)).stopLoading();
     }
 
     @Override

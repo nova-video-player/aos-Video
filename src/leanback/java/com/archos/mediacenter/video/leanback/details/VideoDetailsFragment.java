@@ -1131,6 +1131,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             mFileListRow.setStartingSelectedPosition(mVideoList.indexOf(video));
 
         }
+
+        mIsTvEpisode = video instanceof Episode;
+
         if(mDetailsOverviewRow.getActionsAdapter()==null || !(mDetailsOverviewRow.getActionsAdapter() instanceof  VideoActionAdapter))
             mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), video, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode));
         else{
@@ -1328,7 +1331,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 mTrailers = null;
             // Check if we have the next episode
             if (tags instanceof EpisodeTags) {
-                mIsTvEpisode = true;
                 // Using a CursorLoader but outside of the LoaderManager : need to make sure the Looper is ready
                 if (Looper.myLooper()==null) Looper.prepare();
                 CursorLoader loader = new NextEpisodeLoader(getActivity(), (EpisodeTags)tags);
@@ -1338,8 +1340,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     mNextEpisode = (Episode)new CompatibleCursorMapperConverter(new VideoCursorMapper()).convert(c);
                 }
                 c.close();
-            } else {
-                mIsTvEpisode = false;
             }
 
             return tags;
