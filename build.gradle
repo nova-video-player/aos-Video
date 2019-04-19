@@ -1,17 +1,21 @@
-def keystorePropertiesFile = rootProject.file("keystore.properties");
-def keystoreProperties = new Properties()
-if (keystorePropertiesFile.exists()) keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
 buildscript {
     repositories {
         google()
         jcenter()
+	maven { url 'https://mvnrepository.com/artifact/' } // for play-publisher
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.2'
-	classpath 'com.github.triplet.gradle:play-publisher:1.2.2'
     }
 }
+
+plugins {
+    id "com.github.triplet.play" version "2.2.0"
+}
+
+def keystorePropertiesFile = rootProject.file("keystore.properties");
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 allprojects {
     repositories {
@@ -19,18 +23,15 @@ allprojects {
         jcenter()
         mavenCentral()
         mavenLocal()
-	//maven { url 'https://mvnrepository.com/artifact' }
-        maven { url 'http://4thline.org/m2' }
+        maven { url 'http://4thline.org/m2' } // for cling
     }
-}
-
-allprojects {
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
         }
     }
 }
+
 static def getDate() {
     // we increment version number every 1000 seconds,
     // we start on 31/08/2016
@@ -44,14 +45,17 @@ static def getFormattedDate() {
     return formattedDate
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'com.android.application'
-apply plugin: 'com.github.triplet.play'
+apply {
+    plugin("com.android.application")
+    plugin("com.github.triplet.play")
+}
 
 play {
-    jsonFile = file('nova.json')
+    serviceAccountCredentials = file("nova.json")
+    //jsonFile = file('nova.json')
     track = 'internal' // rollout, beta, alpha, release, internal
     userFraction = 1.0 // rollout rate in %/100
+    releaseStatus = "completed"
 }
 
 android {

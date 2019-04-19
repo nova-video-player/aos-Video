@@ -1,0 +1,9 @@
+New TV show categories for quicker browsing through large collection
+Countless TV UI improvements (roles, trailers, badges, global del/deindex, subs picker)
+AV1 soft decoding
+New player shortcuts
+Improve audio passthrough stability
+Make private mode persistent
+Migration to NDK-r19, support for x86_64 arch
+Fix crash in presence of damaged sdcard
+Fix cloud support (still no streaming)
