@@ -100,7 +100,7 @@
     <string name="movies_by_year">Films par année</string>
     <string name="all_tv_shows">Séries</string>
     <string name="all_tvshows">Toutes les séries</string>
-    <string name="all_tvshows_format">Toutes les séries TV -  %d</string>
+    <string name="all_tvshows_format">Toutes les séries  -  %d</string>
     <string name="not_watched_tvshows_format">Non visonnés -  %d</string>
     <string name="all_seasons">Toutes les saisons</string>
     <string name="tvshows_by_alpha">Séries ordre alphabétique</string>
