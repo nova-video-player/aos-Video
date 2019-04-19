@@ -1,0 +1,3 @@
+Make TV show next episode cross seasons.
+Translations improvements through crowdin contributors (thanks to dzejba, fodber, kaosnewsd).
+Removal of buggy experimental features and stability enhancement.

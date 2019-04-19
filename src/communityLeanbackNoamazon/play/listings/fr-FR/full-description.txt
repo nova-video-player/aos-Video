@@ -1,4 +1,4 @@
-Nova est un lecteur vidéo open-source conçu pour les téléphones, tablettes et Android TV.
+Nova est un lecteur vidéo open-source conçu pour les téléphones, tablettes et Android TV disponible sur https://github.com/nova-video-player/aos-AVP
 
 Lecteur universel:
 - Lit les vidéos stockées sur votre ordinateur / serveur (FTP, SFTP) / NAS (SMB, UPnP)
@@ -13,7 +13,7 @@ Le meilleur lecteur:
 - Formats de fichiers compatibles : MKV, MP4, AVI, WMV, FLV, etc.
 - Formats de sous-titres compatibles : SRT, SUB, ASS, SMI, etc.
 
-Parfait pour la TV=
+Parfait pour la TV:
 - Interface “leanback” spécialement pour Android TV
 - AC3/DTS passthrough (HDMI ou S/PDIF) pour les appareils compatibles: Nexus Player, NVidia SHIELD TV, boitiers TV à base Rockchip et AmLogic
 - Gestion de la 3D avec support des modes side-by-side et top-bottom sur les TV compatibles
@@ -34,10 +34,10 @@ Et encore plus:
 - Ajustement manuel de la synchronisation audio/video
 - Ajustement manuel de la synchronisation des sous-titres
 
-En cas de problème ou de question, merci de nous joindre sur notre groupe Google+ à cette adresse : https://goo.gl/PXyUfM
+En cas de problème ou de question, merci de nous joindre sur notre communauté Reddit à cette adresse : https://www.reddit.com/r/NovaVideoPlayer
 
 Si vous rencontrez des difficultés à décoder certaines vidéos, vous pouvez forcer le décodage logiciel dans les préférences de l'application.
 
-Cette application est dérivée de la version open-source de Archos Video Player disponible sur https://github.com/nova-video-player/aos-AVP
+Toute contribution à la traduction de l'application via crowdin: https://crowdin.com/project/nova-video-player est bienvenue.
 
 NOVA est l'acronyme de "opeN sOurce Video plAyer".

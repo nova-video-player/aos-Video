@@ -1,0 +1,45 @@
+Nova je open source přehrávač videa určený pro tablety, telefony a zařízení Android TV.
+Je dostupná na https://github.com/nova-video-player/aos-AVP.
+
+Univerzální přehrávač: 
+- přehrávání videí z vašeho počítače, serveru (FTP, SFTP), NAS (SMB, UPnP)
+- přehrávání videí z USB úložišť
+- videa ze všech zdrojů jsou dostupná v unifikované knihovně multimédií
+- automatické získávání informací o filmech a seriálech z online zdrojů včetně plakátů a pozadí
+- integrované stahování titulků
+
+Nejlepší přehrávač:
+- hardwarově akcelerované zpracování videa na většině zařízení a pro většinu formátů videí
+- podpora souborů s více zvukovými a titulkovými stopami
+- podporované formáty souborů: MKV, MP4, AVI, WMV, FLV, atd.
+- podporované formáty titulků: SRT, SUB, ASS, SMI, atd.
+
+Jednoduché použití na TV:
+- dedikované uživatelské rozhraní pro jednoduché použití na Android TV (tzv. “leanback” rozhraní)
+- režim AC3/DTS audio pass-through (HDMI nebo S/PDIF) na podporovaných zařízeních: Nexus Player, NVidia SHIELD TV, TV boxy založené na Rockchip a AmLogic
+- podpora režimu 3D ve formátech side-by-side a top-bottom pro 3D televize
+- režim Audio Boost pro zvýšení úrovně zvuku
+- noční režim pro snížení dynamického rozsahu a úrovně zvuku
+
+Procházejte média způsobem, který vám vyhovuje:
+- okamžitý přístup k nedávno přidaným a nedávno přehrávaným videím
+- procházejte filmy dle názvu, žánru, roku, stopáže nebo hodnocení
+- procházejte seriály dle sezón
+- podpora procházení složek
+
+A ještě více:
+- obnovení přehrávání pro síťová zařízení
+- zpracování metadat z NFO souborů pro získání popisů a plakátů
+- možnost naplánovat opětovné skenování vašeho obsahu na síti (pouze v rozhraní "leanback")
+- soukromý režim: dočasně vypnuté ukládání historie sledování
+- možnost ručního nastavení synchronizace titulků
+- možnost ručního nastavení synchronizace audia a videa
+- spravujte vaší sbírku a historii sledování v Trakt
+
+V případě, že narazíte na chybu nebo máte požadavek na vylepšení této aplikace, použijte prosím naší skupinu pro podporu aplikace na Reddit na této adrese: https://www.reddit.com/r/NovaVideoPlayer.
+
+Pokud zaznamenáte problémy s přehráváním hardwarově dekódovaného videa, můžete vynutit softwarové dekódování v nastavení aplikace.
+
+Oceníme, pokud přispějete k překladu této aplikace na https://crowdin.com/project/nova-video-player
+
+Název aplikace NOVA pochází z "opeN sOurce Video plAyer".
