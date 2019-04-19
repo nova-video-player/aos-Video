@@ -43,6 +43,7 @@
     <string name="play_from_beginning">Lejátszás az elejétől</string>
     <!-- Dialog box button -->
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <!-- The string used in file/folder infos dialog. -->
     <string name="info_duration">Időtartam</string>
     <string name="video_sources">Források</string>

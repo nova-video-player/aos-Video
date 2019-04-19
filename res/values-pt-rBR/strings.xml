@@ -597,8 +597,6 @@
     <string name="preferences_show_all_tv_shows_row">Mostrar lista com todos os programas de TV</string>
     <string name="preferences_tv_show_sort_order_summary">Selecione a ordem da lista de programas de TV</string>
     <string name="preferences_tv_show_sort_order_title">Ordem da lista de programas de TV</string>
-    <string name="preferences_show_trailer_row_summary">Marque para mostrar uma lista com todos os trailers de filmes</string>
-    <string name="preferences_show_trailer_row">Mostrar uma lista com todos os trailers de filmes</string>
     <string name="codepage_title">Codificação de legendas</string>
     <string name="codepage_summary">Definir a codificação usada nas legendas de texto</string>
     <string name="codepage_default">Idioma do dispositivo %s</string>
@@ -704,8 +702,8 @@
     <string name="leanback_scrap_choose_the_description_for">"Escolher informações para \"%s\""</string>
     <string name="leanback_scrap_searching_general_hint">Nome do filme ou programa de TV</string>
     <string name="leanback_scrap_searching_tvshow_hint">Nome do programa de TV</string>
-    <string name="leanback_legacy_ui">Interface normal</string>
     <string name="leanback_unscrap">@string/scrap_remove</string>
+    <string name="leanback_legacy_ui">Interface normal</string>
     <string name="leanback_hint_long_press_on_back">DICA: longo clique na tecla VOLTAR fecha o navegador de arquivos</string>
     <string name="leanback_archos_video_webview">Nova Video WebView</string>
     <string name="file_access_error">Não foi possível acessar o arquivo</string>

@@ -61,6 +61,7 @@
     <string name="info_menu_poster_select">Poster</string>
     <string name="info_menu_series_poster_select">Changer de poster</string>
     <!-- COVER ROLL -->
+    <string name="watching_up_next">En cours/suivant</string>
     <string name="recently_added">Ajouts récents</string>
     <string name="recently_added_videos">Ajouts récents</string>
     <string name="recently_played">Joué récemment</string>
@@ -101,6 +102,7 @@
     <string name="all_tvshows">Toutes les séries</string>
     <string name="all_tvshows_format">Toutes les séries TV -  %d</string>
     <string name="not_watched_tvshows_format">Non visonnés -  %d</string>
+    <string name="all_seasons">Toutes les saisons</string>
     <string name="tvshows_by_alpha">Séries ordre alphabétique</string>
     <string name="tvshows_by_genre">Séries par genre</string>
     <string name="tvshows_by_rating">Séries TV par note</string>
@@ -370,6 +372,7 @@
     <string name="subtitles_wizard_add_files">Vous pouvez copier d\'autres fichiers de sous-titres dans ce dossier pour pouvoir les associer à cette vidéo.</string>
     <string name="subtitles_wizard_help">Sélectionnez l\'un des fichiers de sous-titres disponibles pour l\'associer à la vidéo %s. Le fichier sera renommé de façon à ce que son nom corresponde à celui de la vidéo.</string>
     <string name="subtitles_wizard_empty_list_help">Aucun fichier de sous-titres n\'a été trouvé. Veuillez copier d\'abord des fichiers de sous-titres dans ce dossier pour pouvoir les associer à la vidéo %s.</string>
+    <string name="subtitles_wizard_cache">Cache</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Télécharger des sous-titres</string>
     <string name="toast_subloader_sub_found">Sous-titres téléchargés avec succès</string>
@@ -578,6 +581,7 @@
     <string name="sort_by_date_played_desc">Trier par date de visionnage (récents en premier)</string>
     <string name="sort_by_date_premiered_desc">Trier par date de 1ère diff. (récent en premier)</string>
     <string name="sort_by_date_premiered_asc">Trier par date de 1ère diff. (ancien en premier)</string>
+    <string name="sort_by_date_aired_desc">Trier par date de 1ère diff. (récent en premier)</string>
     <string name="sort_by_recently_added_episode_desc">Episodes ajoutés récemment en premier</string>
     <string name="dec_choice_title">Choix du décodeur</string>
     <string name="dec_choice_summary">Préférence avancée, peut interférer avec le décodage vidéo.</string>
@@ -594,6 +598,8 @@
     <string name="preferences_display_resume_box_summary">Afficher ou cacher le bouton de reprise de la dernière vidéo dans l\'écran principal</string>
     <string name="preferences_display_resume_box">Afficher le bouton de reprise de la vidéo</string>
     <string name="preferences_leanback_user_interface">Interface utilisateur TV</string>
+    <string name="preferences_show_watching_up_next_row_summary">Cochez pour afficher une ligne avec les vidéos en cours et les prochaines</string>
+    <string name="preferences_show_watching_up_next_row">Afficher la ligne en cours/prochaines</string>
     <string name="preferences_show_last_added_row_summary">Cochez pour afficher une ligne avec vos dernières vidéos ajoutées</string>
     <string name="preferences_show_last_added_row">Afficher la ligne des derniers ajouts</string>
     <string name="preferences_show_last_played_row_summary">Cochez pour afficher une ligne avec vos dernières vidéos jouées</string>
@@ -803,4 +809,5 @@
     <string name="remove_from_list">Retirer de la liste</string>
     <string name="warning_swdec">Attention: décodage matériel désactivé!</string>
     <string name="list_title">Liste de titres</string>
+    <string name="loading">Chargement en cours…</string>
 </resources>

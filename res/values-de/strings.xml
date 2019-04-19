@@ -91,12 +91,19 @@
     <string name="video_folder">Ordner</string>
     <string name="movies">Filme</string>
     <string name="all_movies">Alle Filme</string>
+    <string name="all_movies_format">Alle Filme  -  %d</string>
+    <string name="not_watched_movies_format">Nicht angesehen  -  %d</string>
+    <string name="movies_by_alpha">Filme alphabetisch</string>
     <string name="movies_by_genre">Filme nach Genre</string>
+    <string name="movies_by_rating">Filme nach Bewertung</string>
     <string name="movies_by_year">Filme nach Jahr</string>
-    <string name="all_tv_shows">Fernsehserien</string>
+    <string name="all_tv_shows">Serien</string>
     <string name="all_tvshows">Alle Serien</string>
+    <string name="all_tvshows_format">Alle TV-Serien  -  %d</string>
+    <string name="not_watched_tvshows_format">Nicht angesehen  -  %d</string>
     <string name="tvshows_by_alpha">Serien alphabetisch</string>
     <string name="tvshows_by_genre">Serien nach Genre</string>
+    <string name="tvshows_by_rating">TV-Serien nach Bewertung</string>
     <string name="all_movies_and_tv_shows">Filme und Serien</string>
     <string name="non_scraped_videos">Nicht gescrapte Videos</string>
     <string name="no_server">Kein Medien-Server gefunden</string>
@@ -141,6 +148,7 @@
     <string name="scrap_cast_format">Besetzung: %s</string>
     <string name="scrap_genre">Genre</string>
     <string name="scrap_genre_format">Genres: %s</string>
+    <string name="scrap_genre_title">Genres</string>
     <string name="scrap_aired">Ausgestrahlt</string>
     <string name="scrap_aired_format">Ausgestrahlt: %s</string>
     <string name="scrap_guests">Gäste</string>
@@ -149,6 +157,7 @@
     <string name="show_network">Sender:</string>
     <string name="episode_name">Folge</string>
     <string name="episode_season">Staffel</string>
+    <string name="episode_specials">Extras</string>
     <string name="episode_identification">Staffel %1$d Folge %2$d</string>
     <string name="season_identification">Staffel %1$d</string>
     <string name="next_episode">Nächste Episode</string>
@@ -216,7 +225,7 @@
     <string name="you_have_no_video">Keine Videos</string>
     <string name="you_have_no_video_yet">Videos werden gesucht&#8230;</string>
     <string name="you_have_no_movies">Keine Filme</string>
-    <string name="you_have_no_tv_shows">Keine Fernsehserien</string>
+    <string name="you_have_no_tv_shows">Keine Serien</string>
     <string name="you_have_no_non_scraped_videos">Nicht gescrapte Videos</string>
     <plurals name="Nmovies">
         <item quantity="one">Ein Film</item>
@@ -344,7 +353,7 @@
     <string name="player_plugin_audio_msg">Diese Datei enthält das <xliff:g id="audio">%1$s</xliff:g> Audioformat.</string>
     <string name="player_plugin_video_audio_msg">Diese Datei enthält das<xliff:g id="video">%1$s</xliff:g> Videoformat und das <xliff:g id="audio">%2$s</xliff:g> Audioformat.</string>
     <string name="player_plugin_purchase_msg">Sie müssen das <xliff:g id="plugin">%1$s</xliff:g> im www.archos.com/store erwerben.</string>
-    <string name="player_plugin_purchase">Zum Onlineshop gehen</string>
+    <string name="player_plugin_purchase">Zum Play-Store gehen</string>
     <string name="player_plugin_purchase_archos_msg">Sie können zusätzliche Codec Plugins auf www.archos.com erwerben.</string>
     <string name="player_plugin_purchase_google_play_msg">Sie können zusätzliche Codec Plugins via Google Play erwerben.</string>
     <string name="player_plugin_purchase_google_play_button">Google Play öffnen</string>
@@ -436,7 +445,7 @@
     <string name="indexed_folder_added">%s wurde zur Bibliothek hinzugefügt.</string>
     <string name="remove_from_indexed_folders">Ordner aus Bibliothek entfernen</string>
     <string name="indexed_folder_removed">%s aus Bibliothek entfernt</string>
-    <string name="indexed_folders_list_empty">Es sind derzeit keine Ordner indiziert.\n\nSie können den jeweils aktuellen Ordner zur Bibliothek hinzufügen indem Sie \"%s\" in der Aktionleiste am oberen Bildschirmrand auswählen.</string>
+    <string name="indexed_folders_list_empty">Es sind derzeit keine Netzwerk-Ordner indiziert.\n\nSie können den jeweils aktuellen Ordner zur Bibliothek hinzufügen indem Sie \"%s\" in der Aktionsleiste am oberen Bildschirmrand auswählen.</string>
     <string name="indexed_folders_list_empty_ftp">Derzeit sind keine FTP-Ordner indiziert.</string>
     <string name="open_indexed_folder">"Öffnen"</string>
     <string name="rescan_indexed_folders">Alle indizierten Ordner aktualisieren</string>
@@ -491,7 +500,7 @@
     <string name="preferences_video_advanced_quit_title">Standard-Einstellungen</string>
     <string name="preferences_video_advanced_quit_summary">Zurück zu Standard-Einstellungen</string>
     <string name="trakt_change">Eine Änderung der Trakt-API erfordert eine Neuverbindung.</string>
-    <string name="tv_scraper">Fernsehserien</string>
+    <string name="tv_scraper">Serien</string>
     <string name="movie_scraper">Filme</string>
     <string name="enable_auto_scrap">Automatisch Beschreibungen für neue Videos erhalten</string>
     <string name="locale">System Sprache</string>
@@ -502,7 +511,7 @@
     <string name="video_picker_title">Video auswählen</string>
     <!-- Archos File Info -->
     <string name="video_info_custom_search_file_hint">"\"Filmname\" oder \"Serienname S01E01\""</string>
-    <string name="video_info_custom_search_show_hint">Fernsehserie</string>
+    <string name="video_info_custom_search_show_hint">Name der Serie</string>
     <string name="scrap_show_no_result">Es wurde keine passende Serie gefunden.</string>
     <string name="video_info_backdrop_select">Anderen Hintergrund wählen</string>
     <string name="video_info_backdrop_remove">Entfernen</string>
@@ -566,6 +575,7 @@
     <string name="sort_by_rating_asc">Sortierung: Bewertung (beste zuerst)</string>
     <string name="sort_by_date_added_desc">Sortierung: Bibliothek hinzugefügt (neu zuerst)</string>
     <string name="sort_by_date_added_asc">Sortierung: Bibliothek hinzugefügt (alt zuerst)</string>
+    <string name="sort_by_date_played_desc">Sortierung: zur Bibliothek hinzugefügt (neueste zuerst)</string>
     <string name="sort_by_date_premiered_desc">Sortierung: Erstausstrahlung (neu zuerst)</string>
     <string name="sort_by_date_premiered_asc">Sortierung: Erstausstrahlung (alt zuerst)</string>
     <string name="sort_by_recently_added_episode_desc">Zuletzt Episoden hinzugefügt</string>
@@ -577,6 +587,7 @@
     <string name="dec_hw_mediacodec">Hardware decoding (MediaCodec)</string>
     <string name="dec_sw">Software decoding</string>
     <string name="dec_hw">Hardware-Dekodierung</string>
+    <string name="dec_unknown">Unbekannte Dekodierung</string>
     <string name="dec_any">Standard</string>
     <string name="dec_android">Android MediaPlayer</string>
     <string name="preferences_user_interface">Benutzeroberfläche</string>
@@ -590,8 +601,12 @@
     <string name="preferences_reset_last_played_row">Zurücksetzen der zuletzt gespielten Reihe</string>
     <string name="reset_last_played_row_in_progress">Setze zuletzt gespielte Reihe zurück</string>
     <string name="preferences_show_all_movies_row_summary">Anhaken um eine Zeile mit all Deinen Filmen anstatt von Film-Kategorien anzuzeigen</string>
+    <string name="preferences_show_all_movies_row">Zeige Zeile \"alle Filme\"</string>
+    <string name="preferences_movie_sort_order_summary">Wählen Sie die Sortierreihenfolge der gesamten Zeile \"alle Filme\"</string>
+    <string name="preferences_movie_sort_order_title">Reihenfolge Zeile \"alle Filme\"</string>
     <string name="preferences_show_all_tv_shows_row_summary">Anhaken um eine Zeile mit all Deinen TV Shows anstatt von TV Show-Kategorien anzuzeigen</string>
-    <string name="preferences_show_all_tv_shows_row">Zeige eine Zeile mit allen Fernsehserien</string>
+    <string name="preferences_show_all_tv_shows_row">Zeige eine Zeile mit \"allen Serien\"</string>
+    <string name="preferences_tv_show_sort_order_summary">Wählen Sie die Sortierreihenfolge der gesamten Zeile \"alle Serien\"</string>
     <string name="preferences_tv_show_sort_order_title">TV-Serien-Sortierreihenfolge</string>
     <string name="codepage_title">Textkodierung</string>
     <string name="codepage_summary">Wählen Sie die Textkodierung von Untertiteln</string>
@@ -629,6 +644,7 @@
     <string name="torrent_blocklist">Sperrliste</string>
     <string name="blocklist_empty">URL sollte nicht leer sein</string>
     <string name="blocklist_invalid">Blockliste ungültig</string>
+    <string name="blocklist_downloading">Blockliste wird heruntergeladen</string>
     <string name="blocklist_file_not_found">Datei nicht gefunden</string>
     <string name="blocklist_success">Das Aktualisieren der Blocklist war erfolgreich</string>
     <string name="blocklist_unknown_error">Unbekannt</string>
@@ -644,9 +660,9 @@
     <string name="trakt_signin">Anmelden</string>
     <string name="trakt_list_signin">In Trakt einloggen</string>
     <string name="trakt_status_login">Anmeldung&#8230;</string>
-    <string name="trakt_signin_summary_logged">Angemeldet</string>
-    <string name="trakt_signin_summary_logged_error">Anmeldung fehlgeschlagen</string>
-    <string name="trakt_signin_summary">Nicht Angemeldet</string>
+    <string name="trakt_signin_summary_logged">Bei Trakt angemeldet</string>
+    <string name="trakt_signin_summary_logged_error">Trakt-Anmeldung fehlgeschlagen</string>
+    <string name="trakt_signin_summary">Nicht bei Trakt angemeldet</string>
     <string name="trakt_relog_description">Ein Problem mit Trakt wurde erkannt und Anmeldedaten müssen zurückgesetzt werden. Bitte loggen Sie sich erneut ein.</string>
     <string name="trakt_signin_dialog_title">Anmelden</string>
     <string name="trakt_signin_title">Anmelden</string>
@@ -657,6 +673,7 @@
     <string name="trakt_getfull_summary">Trakt Scrobbler ist nur in der bezahlten Vollversion erhältlich</string>
     <string name="trakt_sync_collection_title">Filme und TV-Serien mit Trakt synchronisieren</string>
     <string name="trakt_sync_trakt_resume_title">Wiedergabeposition mit Trakt synchronisieren</string>
+    <string name="trakt_sync_trakt_resume">Verwende Trakt Abspielposition wenn weiter fortgeschtrittener als lokal</string>
     <string name="trakt_sync_collection_summary">Video automatisch zu Trakt hinzufügen</string>
     <string name="trakt_toast_syncing">Synchronisiere mit Trakt&#8230;</string>
     <string name="show_all">Alle Videos</string>
@@ -694,11 +711,14 @@
     <string name="leanback_scrap">Info erhalten</string>
     <string name="leanback_scrap_choose_the_description">Info auswählen</string>
     <string name="leanback_scrap_choose_the_description_for">"Info für \"%s\" auswählen"</string>
-    <string name="leanback_scrap_searching_general_hint">Name des Films oder der Fernsehserie</string>
-    <string name="leanback_scrap_searching_tvshow_hint">Name der Fernsehserie</string>
+    <string name="leanback_scrap_searching_general_hint">Name des Films oder der Serie</string>
+    <string name="leanback_scrap_searching_tvshow_hint">Name der Serie</string>
     <string name="leanback_legacy_ui">Altes Interface</string>
+    <string name="leanback_hint_long_press_on_back">TIPP: Langes Drücken auf ZURÜCK-Taste schließt den Dateibrowser</string>
     <string name="leanback_archos_video_webview">Nova Video WebView</string>
+    <string name="file_access_error">Zugriff auf die Datei nicht möglich</string>
     <string name="interface_size">Größe der Benutzeroberfläche</string>
+    <string name="interface_size_summary">Ändern Sie dies, wenn die Benutzeroberfläche zu klein oder zu groß ist</string>
     <string name="interface_size_very_small">Sehr klein (mdpi)</string>
     <string name="interface_size_small">Klein (Hdpi)</string>
     <string name="interface_size_standard">Standard (Xhdpi)</string>
@@ -723,7 +743,8 @@
     <string name="scheduled_rescan_time">Re-scan Zeit</string>
     <string name="rescan_when_opening_application">Re-Scan beim App-Start</string>
     <string name="last_rescan_occured">Letzter Re-Scan:</string>
-    <string name="intro_overlay_text">Berühre, um Videos zu Deinem Fernseher zu übertragen</string>
+    <string name="error_permission_display_over_apps">Fenstermodus benötigt spezielle Berechtigungen, um über anderen Apps angezeigt zu werden. Bitte gewähren Sie Nova Video Player diese Berechtigung, um in den Fenstermodus zu wechseln.</string>
+    <string name="intro_overlay_text">Berühre, um Videos zu Deinem Fernseher per Cast zu übertragen</string>
     <string name="view_more">Mehr ansehen</string>
     <string name="nfo_export_in_progress">.nfo-Export wird durchgeführt</string>
     <string name="rescrap_in_progress">Rescraping der ganzen Bibliothek</string>
@@ -738,18 +759,28 @@
     <string name="system">System</string>
     <string name="keep_setting">Diese Einstellung beibehalten</string>
     <string name="select_sub_file"><![CDATA[Exakte Untertitel für Datei <font color=#29b6f6><i>%s</i></font><br /> nicht gefunden. Bitte aus dieser Liste auswählen:]]></string>
+    <string name="switch_remote_empty_message">Ein Wechsel zum Remote-Display-Modus könnte mehr Track-Optionen ermöglichen</string>
     <string name="cast_stream_mode">Stream-Modus</string>
     <string name="cast_remote_display_mode">Bildschirmübertragung</string>
     <string name="cast_remote_display_mode_description">Jedes von nova Video Player unterstützte Format kann mit Remote-Display abgespielt werden. Die Qualität kann jedoch schlechtert sein.</string>
+    <string name="cast_stream_mode_description">Optimale Qualität, aber einige Formate werden nicht unterstützt</string>
     <string name="sleep_timer_title">Einschlaf-Timer</string>
     <string name="sleep_timer_description">Halte Video an nach: </string>
     <string name="cast_mode">Cast-Modus</string>
     <string name="cast_info">Info</string>
+    <string name="troubleshoot_streammode_msg">Nova-Video-Player ist derzeit im Stream-Modus.
+        \nDies führt zu einer guten Videoqualität, kann aber Probleme mit Tonspuren und Untertiteln verursachen.
+        Versuchen Sie, in den Remote-Display-Modus zu wechseln.</string>
+    <string name="troubleshoot_remotemode_msg">Nova-Video-Player ist derzeit im Remote-Display-Modus.
+        \nAbhängig von Ihrem Gerät und Ihrer Netzwerkqualität können einige Qualitätsverluste und Leistungsprobleme auftreten. </string>
     <string name="picture_in_picture">Bild-in-Bild</string>
     <string name="cast">Cast</string>
+    <string name="cast_warning">Die Cast-Unterstützung ist aufgrund der Codecs von Chromecast begrenzt. Um diese Einschränkungen abzumildern, werden 2 Cast-Modi implementiert: Chromecast und Screencast (mit automatischem Fallback). Beachten Sie, dass Leistungs- und Qualitätsprobleme auch auf Netzwerkbeschränkungen oder Gerätebeschränkungen zurückzuführen sein können.</string>
     <string name="cast_warning_title">Experimentelle Funktionen</string>
     <string name="cast_fallback_message">Fehler: Fallback to Screen-Cast</string>
     <string name="cast_introduction">Neue experimentelle Funktion : \nGoogle cast</string>
+    <string name="cast_select_for_full_control">Berühren um die Bedienung zu erweitern</string>
+    <string name="cast_audio_background">Der Ton funktioniert nicht, während Nova Video Player im Hintergrund ist</string>
     <string name="help_faq">Hilfe / FAQ</string>
     <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Cloud</string>
@@ -759,6 +790,8 @@
     <string name="rate_us_title">☆ Unterstütze uns</string>
     <string name="create_new_list">Neue Liste erstellen</string>
     <string name="add_to_list">Zur Liste hinzufügen</string>
+    <string name="no_resume_available">Derzeit kann die Wiedergabe nicht wieder fortgesetzt werden</string>
+    <string name="no_list_detected">Keine Liste vorhanden. Die Liste kann durch das Hinzufügen neuer Elemente direkt aus Videoinformationen erstellt werden oder kann mit Ihrem Trakt-Konto synchronisiert werden.</string>
     <string name="premium_already_purchased">Premium wurde bereits gekauft</string>
     <string name="remove_from_list">Von der Liste entfernen</string>
     <string name="warning_swdec">Warnung: Hardware decoding abgeschaltet!</string>
