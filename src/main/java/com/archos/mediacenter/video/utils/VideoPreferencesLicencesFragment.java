@@ -22,7 +22,7 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.archos.mediacenter.video.R;
 
-public class VideoPreferencesLicencesFragment extends PreferenceFragmentCompat {
+public class VideoPreferencesLicencesFragment extends NovaPreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

@@ -1,43 +1,50 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/preferences_video_licenses" >
     <PreferenceScreen
         android:summary="LGPL v2.1"
-        android:title="FFmpeg" >
+        android:title="FFmpeg"
+        app:iconSpaceReserved="false">
         <intent
             android:action="android.intent.action.VIEW"
             android:data="https://www.ffmpeg.org/legal.html" />
     </PreferenceScreen>
     <PreferenceScreen
         android:summary="Curl license"
-        android:title="libcurl" >
+        android:title="libcurl"
+        app:iconSpaceReserved="false">
         <intent
             android:action="android.intent.action.VIEW"
             android:data="http://curl.haxx.se/docs/copyright.html" />
     </PreferenceScreen>
     <PreferenceScreen
         android:summary="LGPL v2.1"
-        android:title="AudioCompress" >
+        android:title="AudioCompress"
+        app:iconSpaceReserved="false">
         <intent
             android:action="android.intent.action.VIEW"
             android:data="https://github.com/fluffy-critter/AudioCompress/blob/master/COPYING" />
     </PreferenceScreen>
     <PreferenceScreen
         android:summary="BSD"
-        android:title="libyuv" >
+        android:title="libyuv"
+        app:iconSpaceReserved="false">
         <intent
             android:action="android.intent.action.VIEW"
             android:data="https://chromium.googlesource.com/libyuv/libyuv/+/master/LICENSE" />
     </PreferenceScreen>
     <PreferenceScreen
         android:summary="Boost Software License - Version 1.0"
-        android:title="Boost" >
+        android:title="Boost"
+        app:iconSpaceReserved="false">
         <intent
             android:action="android.intent.action.VIEW"
             android:data="http://www.boost.org/users/license.html" />
     </PreferenceScreen>
     <PreferenceScreen
         android:summary="BSD"
-        android:title="libtorrent" >
+        android:title="libtorrent"
+        app:iconSpaceReserved="false">
         <intent
             android:action="android.intent.action.VIEW"
             android:data="http://www.libtorrent.org/" />

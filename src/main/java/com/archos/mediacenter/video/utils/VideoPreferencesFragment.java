@@ -13,11 +13,22 @@
 // limitations under the License.
 package com.archos.mediacenter.video.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import androidx.preference.PreferenceFragmentCompat;
+import android.view.View;
+import android.view.ViewGroup;
 
-public class VideoPreferencesFragment extends PreferenceFragmentCompat {
+import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceGroupAdapter;
+import androidx.preference.PreferenceScreen;
+import androidx.preference.PreferenceViewHolder;
+import androidx.recyclerview.widget.RecyclerView;
+
+public class VideoPreferencesFragment extends NovaPreferenceFragmentCompat {
 
     private VideoPreferencesCommon mPreferencesCommon = new VideoPreferencesCommon(this);
 
