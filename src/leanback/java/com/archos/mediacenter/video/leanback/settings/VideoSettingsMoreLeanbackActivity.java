@@ -1,11 +1,11 @@
 package com.archos.mediacenter.video.leanback.settings;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.leanback.LeanbackActivity;
 
-public class VideoSettingsMoreLeanbackActivity extends Activity {
+public class VideoSettingsMoreLeanbackActivity extends LeanbackActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

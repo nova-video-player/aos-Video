@@ -40,10 +40,14 @@
     </style>
 
     <style name="MyLeanbackTheme.Preferences" parent="Theme.Leanback">
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Leanback</item>
+        <item name="preferenceTheme">@style/MyLeanbackPreferenceTheme</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="MyLeanbackPreferenceTheme" parent="PreferenceThemeOverlayLeanback">
+        <item name="android:windowBackground">@color/leanback_background</item>
         <item name="android:colorPrimary">@color/lightblue900</item>
     </style>
 </resources>
