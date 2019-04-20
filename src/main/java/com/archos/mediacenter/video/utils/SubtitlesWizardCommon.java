@@ -24,6 +24,7 @@ import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.StrictMode;
@@ -79,23 +80,20 @@ public class SubtitlesWizardCommon {
         mWizardActivity = wizardActivity;
     }
 
+    private Activity getActivity() {
+        return mWizardActivity;
+    }
+
     private Intent getIntent() {
-        if (mWizardActivity != null)
-            return mWizardActivity.getIntent();
-        else
-            return null;
+        return mWizardActivity.getIntent();
     }
 
     private String getString(int arg0) {
-        if (mWizardActivity != null)
-            return mWizardActivity.getString(arg0);
-        else
-            return null;
+        return mWizardActivity.getString(arg0);
     }
 
     private void sendBroadcast(Intent arg0) {
-        if (mWizardActivity != null)
-            mWizardActivity.sendBroadcast(arg0);
+        mWizardActivity.sendBroadcast(arg0);
     }
 
     public void onCreate() {
@@ -133,7 +131,7 @@ public class SubtitlesWizardCommon {
         mCurrentFiles = new ArrayList<String>();
 
         // Get subtitles files from SubtitleManager
-        SubtitleManager lister = new SubtitleManager(mWizardActivity, null);
+        SubtitleManager lister = new SubtitleManager(getActivity(), null);
 
         try {
             Uri videoUri = Uri.parse(videoPath);
@@ -158,7 +156,7 @@ public class SubtitlesWizardCommon {
         mAvailableFiles = new ArrayList<String>();
 
         // Get subtitles files from SubtitleManager
-        SubtitleManager lister = new SubtitleManager(mWizardActivity, null);
+        SubtitleManager lister = new SubtitleManager(getActivity(), null);
 
         try {
             Uri videoUri = Uri.parse(videoPath);
@@ -256,7 +254,7 @@ public class SubtitlesWizardCommon {
         String newFilePath = buildSubtitlesFilename(oldFilePath);
 
         Uri oldUri = Uri.parse(oldFilePath);
-        FileEditor oldFile = FileEditorFactory.getFileEditorForUrl(oldUri, mWizardActivity);
+        FileEditor oldFile = FileEditorFactory.getFileEditorForUrl(oldUri, getActivity());
         Uri newUri = Uri.parse(newFilePath);
         String newName = FileUtils.getName(newUri);
         // Rename the file
@@ -268,7 +266,7 @@ public class SubtitlesWizardCommon {
             Log.d(TAG, "renameFile : can not rename file as " + newFilePath);
         }
 
-        String cacheDirPath = Uri.fromFile(MediaUtils.getSubsDir(mWizardActivity)).toString();
+        String cacheDirPath = Uri.fromFile(MediaUtils.getSubsDir(getActivity())).toString();
         String cacheOldFilePath = cacheDirPath + "/" + FileUtils.getName(oldUri);
 
         if (!cacheOldFilePath.equals(oldFilePath)) {
@@ -316,7 +314,7 @@ public class SubtitlesWizardCommon {
         boolean fileDeleted = false;
         
         Uri uri = Uri.parse(path);
-        FileEditor file = FileEditorFactory.getFileEditorForUrl(uri, mWizardActivity);
+        FileEditor file = FileEditorFactory.getFileEditorForUrl(uri, getActivity());
         try {
             file.delete();
             if (DBG) Log.d(TAG, "deleteFile : file " + path + " deleted");
@@ -327,7 +325,7 @@ public class SubtitlesWizardCommon {
 
         fileDeleted = !file.exists();
 
-        String cacheDirPath = Uri.fromFile(MediaUtils.getSubsDir(mWizardActivity)).toString();
+        String cacheDirPath = Uri.fromFile(MediaUtils.getSubsDir(getActivity())).toString();
         String cacheFilePath = cacheDirPath + "/" + FileUtils.getName(uri);
 
         if (!cacheFilePath.equals(path)) {
@@ -400,14 +398,14 @@ public class SubtitlesWizardCommon {
             Log.e(TAG, "getFileSize error : can not get file");
         }
         if (file != null) {
-            size = Formatter.formatFileSize(mWizardActivity, file.length());
+            size = Formatter.formatFileSize(getActivity(), file.length());
         }
 
         return size;
     }
 
     public boolean isCacheFile(String path) {
-        String cacheDirPath = Uri.fromFile(MediaUtils.getSubsDir(mWizardActivity)).toString();
+        String cacheDirPath = Uri.fromFile(MediaUtils.getSubsDir(getActivity())).toString();
         boolean cache = path.startsWith(cacheDirPath + "/");
 
         return cache;

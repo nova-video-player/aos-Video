@@ -38,7 +38,6 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
-import androidx.preference.PreferenceFragment;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
@@ -172,106 +171,54 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private Preference mExportManualPreference;
     private Preference mDbExportManualPreference = null;
 
-    private Object mPreferencesFragment;
+    private PreferenceFragmentCompat mPreferencesFragment;
 
-    public VideoPreferencesCommon(Object preferencesFragment) {
+    public VideoPreferencesCommon(PreferenceFragmentCompat preferencesFragment) {
         mPreferencesFragment = preferencesFragment;
     }
 
     private Activity getActivity() {
-        if (mPreferencesFragment instanceof PreferenceFragmentCompat)
-            return ((PreferenceFragmentCompat)mPreferencesFragment).getActivity();
-        else if (mPreferencesFragment instanceof PreferenceFragment)
-            return ((PreferenceFragment)mPreferencesFragment).getActivity();
-        else
-            return null;
+        return mPreferencesFragment.getActivity();
     }
 
     private Context getContext() {
-        if (mPreferencesFragment instanceof PreferenceFragmentCompat)
-            return ((PreferenceFragmentCompat)mPreferencesFragment).getContext();
-        else if (mPreferencesFragment instanceof PreferenceFragment)
-            return ((PreferenceFragment)mPreferencesFragment).getContext();
-        else
-            return null;
+        return mPreferencesFragment.getContext();
     }
 
     private FragmentManager getFragmentManager() {
-        if (mPreferencesFragment instanceof PreferenceFragmentCompat)
-            return ((PreferenceFragmentCompat)mPreferencesFragment).getFragmentManager();
-        // FIXME
-        else if (mPreferencesFragment instanceof PreferenceFragment)
-            return null;
-        else
-            return null;
+        return mPreferencesFragment.getFragmentManager();
     }
 
     private Resources getResources() {
-        if (mPreferencesFragment instanceof PreferenceFragmentCompat)
-            return ((PreferenceFragmentCompat)mPreferencesFragment).getResources();
-        else if (mPreferencesFragment instanceof PreferenceFragment)
-            return ((PreferenceFragment)mPreferencesFragment).getResources();
-        else
-            return null;
+        return mPreferencesFragment.getResources();
     }
 
     private String getString(int resId) {
-        if (mPreferencesFragment instanceof PreferenceFragmentCompat)
-            return ((PreferenceFragmentCompat)mPreferencesFragment).getString(resId);
-        else if (mPreferencesFragment instanceof PreferenceFragment)
-            return ((PreferenceFragment)mPreferencesFragment).getString(resId);
-        else
-            return null;
+        return mPreferencesFragment.getString(resId);
     }
 
     private boolean isVisible() {
-        if (mPreferencesFragment instanceof PreferenceFragmentCompat)
-            return ((PreferenceFragmentCompat)mPreferencesFragment).isVisible();
-        else if (mPreferencesFragment instanceof PreferenceFragment)
-            return ((PreferenceFragment)mPreferencesFragment).isVisible();
-        else
-            return false;
+        return mPreferencesFragment.isVisible();
     }
 
     private void startActivity(Intent intent) {
-        if (mPreferencesFragment instanceof PreferenceFragmentCompat)
-            ((PreferenceFragmentCompat)mPreferencesFragment).startActivity(intent);
-        else if (mPreferencesFragment instanceof PreferenceFragment)
-            ((PreferenceFragment)mPreferencesFragment).startActivity(intent);
+        mPreferencesFragment.startActivity(intent);
     }
 
     private void addPreferencesFromResource(int preferencesResId) {
-        if (mPreferencesFragment instanceof PreferenceFragmentCompat)
-            ((PreferenceFragmentCompat)mPreferencesFragment).addPreferencesFromResource(preferencesResId);
-        else if (mPreferencesFragment instanceof PreferenceFragment)
-            ((PreferenceFragment)mPreferencesFragment).addPreferencesFromResource(preferencesResId);
+        mPreferencesFragment.addPreferencesFromResource(preferencesResId);
     }
 
     private Preference findPreference(CharSequence key) {
-        if (mPreferencesFragment instanceof PreferenceFragmentCompat)
-            return ((PreferenceFragmentCompat)mPreferencesFragment).findPreference(key);
-        else if (mPreferencesFragment instanceof PreferenceFragment)
-            return ((PreferenceFragment)mPreferencesFragment).findPreference(key);
-        else
-            return null;
+        return mPreferencesFragment.findPreference(key);
     }
 
     private PreferenceManager getPreferenceManager() {
-        if (mPreferencesFragment instanceof PreferenceFragmentCompat)
-            return ((PreferenceFragmentCompat)mPreferencesFragment).getPreferenceManager();
-        else if (mPreferencesFragment instanceof PreferenceFragment)
-            return ((PreferenceFragment)mPreferencesFragment).getPreferenceManager();
-        else
-            return null;
+        return mPreferencesFragment.getPreferenceManager();
     }
 
     private PreferenceScreen getPreferenceScreen() {
-        if (mPreferencesFragment instanceof PreferenceFragmentCompat)
-            return ((PreferenceFragmentCompat)mPreferencesFragment).getPreferenceScreen();
-        else if (mPreferencesFragment instanceof PreferenceFragment)
-            return ((PreferenceFragment)mPreferencesFragment).getPreferenceScreen();
-        else
-            return null;
+        return mPreferencesFragment.getPreferenceScreen();
     }
 
     private void switchAdvancedPreferences() {

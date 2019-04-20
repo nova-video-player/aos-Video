@@ -211,6 +211,6 @@ dependencies {
     implementation 'com.github.ksoichiro:android-observablescrollview:1.6.0'
     implementation 'com.google.android.material:material:1.0.0'
     leanbackImplementation 'androidx.leanback:leanback:1.0.0'
-    leanbackImplementation 'androidx.leanback:leanback-preference:1.0.0'
+    leanbackImplementation 'androidx.leanback:leanback-preference:1.1.0-alpha01'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
 }

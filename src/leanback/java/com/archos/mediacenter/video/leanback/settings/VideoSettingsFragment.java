@@ -4,14 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import androidx.preference.PreferenceFragment;
-import androidx.preference.PreferenceDialogFragment;
-import androidx.leanback.preference.LeanbackPreferenceFragment;
-import androidx.leanback.preference.LeanbackSettingsFragment;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.leanback.preference.LeanbackPreferenceFragmentCompat;
+import androidx.leanback.preference.LeanbackSettingsFragmentCompat;
 
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 
-public class VideoSettingsFragment extends LeanbackSettingsFragment {
+public class VideoSettingsFragment extends LeanbackSettingsFragmentCompat {
 
     private PrefsFragment mPrefsFragment;
 
@@ -22,15 +21,15 @@ public class VideoSettingsFragment extends LeanbackSettingsFragment {
     }
 
     @Override
-    public boolean onPreferenceStartFragment(PreferenceFragment caller, Preference pref) {
+    public boolean onPreferenceStartFragment(PreferenceFragmentCompat caller, Preference pref) {
         return false;
     }
 
     @Override
-    public boolean onPreferenceStartScreen(PreferenceFragment caller, PreferenceScreen pref) {
+    public boolean onPreferenceStartScreen(PreferenceFragmentCompat caller, PreferenceScreen pref) {
         mPrefsFragment = new PrefsFragment();
         final Bundle args = new Bundle(1);
-        args.putString(PreferenceFragment.ARG_PREFERENCE_ROOT, pref.getKey());
+        args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, pref.getKey());
         mPrefsFragment.setArguments(args);
         startPreferenceFragment(mPrefsFragment);
         return true;
@@ -44,7 +43,7 @@ public class VideoSettingsFragment extends LeanbackSettingsFragment {
             mPrefsFragment.onActivityResult(requestCode, resultCode, data);
     }
 
-    public static class PrefsFragment extends LeanbackPreferenceFragment {
+    public static class PrefsFragment extends LeanbackPreferenceFragmentCompat {
 
         private VideoPreferencesCommon mPreferencesCommon = new VideoPreferencesCommon(this);
 
