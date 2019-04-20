@@ -47,6 +47,7 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import android.util.Log;
+import android.util.Pair;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.Toast;
@@ -359,28 +360,20 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if ((requestCode == REQUEST_CODE_MORE_DETAILS || requestCode == REQUEST_CODE_VIDEO || requestCode == REQUEST_CODE_MARK_WATCHED) && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Get RESULT_OK from TvshowMoreDetailsFragment/VideoDetailsFragment/SeasonFragment");
+        if ((requestCode == REQUEST_CODE_MORE_DETAILS || requestCode == REQUEST_CODE_VIDEO) && resultCode == Activity.RESULT_OK) {
+            Log.d(TAG, "Get RESULT_OK from TvshowMoreDetailsFragment/VideoDetailsFragment");
 
-            // Only Poster and/or backdrop and/or watched has been changed.
+            // Only Poster and/or backdrop has been changed.
             // But the ShowTags must be recomputed as well.
             // The simpler is to reload everything...
             // Well for now at least, because the result is a big ugly glitch...
-            mRowsAdapter.removeItems(0, mRowsAdapter.size());
+            for (int i = 0; i < mRowsAdapter.size(); i++) {
+                if (i != INDEX_DETAILS)
+                    mRowsAdapter.removeItems(i, 1);
+            }
 
             mSeasonAdapters = null;
-            mHasDetailRow = false;
 
-            // TvshowLoader is a CursorLoader
-            TvshowLoader tvshowLoader = new TvshowLoader(getActivity(), mTvshow.getTvshowId());
-            Cursor cursor = tvshowLoader.loadInBackground();
-            if(cursor != null && cursor.getCount()>0) {
-                cursor.moveToFirst();
-                TvshowCursorMapper tvshowCursorMapper = new TvshowCursorMapper();
-                tvshowCursorMapper.bindColumns(cursor);
-                mTvshow = (Tvshow) tvshowCursorMapper.bind(cursor);
-            }
-            
             if (mFullScraperTagsTask!=null) {
                 mFullScraperTagsTask.cancel(true);
             }
@@ -405,6 +398,21 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
             mSeasonAdapters = null;
             mHasDetailRow = false;
+        }
+        else if (requestCode == REQUEST_CODE_MARK_WATCHED && resultCode == Activity.RESULT_OK) {
+            // TvshowLoader is a CursorLoader
+            TvshowLoader tvshowLoader = new TvshowLoader(getActivity(), mTvshow.getTvshowId());
+            Cursor cursor = tvshowLoader.loadInBackground();
+            if(cursor != null && cursor.getCount()>0) {
+                cursor.moveToFirst();
+                TvshowCursorMapper tvshowCursorMapper = new TvshowCursorMapper();
+                tvshowCursorMapper.bindColumns(cursor);
+                Tvshow tvshow = (Tvshow) tvshowCursorMapper.bind(cursor);
+                tvshow.setShowTags(mTvshow.getShowTags());
+                mTvshow = tvshow;
+            }
+
+            mDetailsOverviewRow.setItem(mTvshow);
         }
     }
 
@@ -537,15 +545,11 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
     //--------------------------------------------
 
-    private class DetailRowBuilderTask extends AsyncTask<Tvshow, Integer, DetailsOverviewRow> {
+    private class DetailRowBuilderTask extends AsyncTask<Tvshow, Void, Pair<Tvshow, Bitmap>> {
 
         @Override
-        protected DetailsOverviewRow doInBackground(Tvshow... shows) {
+        protected Pair<Tvshow, Bitmap> doInBackground(Tvshow... shows) {
             Tvshow tvshow = shows[0];
-
-            // Buttons
-            DetailsOverviewRow detailsRow = new DetailsOverviewRow(tvshow);
-            detailsRow.setActionsAdapter(new TvshowActionAdapter(getActivity(), tvshow));
 
             Bitmap bitmap = null;
             try {
@@ -583,36 +587,45 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                         mColor = palette.getDarkMutedSwatch().getRgb();
                     else
                         mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
-                    mOverviewRowPresenter.setBackgroundColor(mColor);
-                    mOverviewRowPresenter.setActionsBackgroundColor(getDarkerColor(mColor));
-                    detailsRow.setImageBitmap(getActivity(), bitmap);
-                    detailsRow.setImageScaleUpAllowed(true);
-                }
-                else {
-                    detailsRow.setImageDrawable(getResources().getDrawable(R.drawable.filetype_new_video));
-                    detailsRow.setImageScaleUpAllowed(false);
                 }
             }
 
-            return detailsRow;
+            return new Pair<>(tvshow, bitmap);
         }
 
         @Override
-        protected void onPostExecute(DetailsOverviewRow detailRow) {
-            BackgroundManager.getInstance(getActivity()).setDrawable(new ColorDrawable(VideoInfoCommonClass.getDarkerColor(mColor)));
-            mRowsAdapter.add(INDEX_DETAILS, detailRow);
-            setAdapter(mRowsAdapter);
+        protected void onPostExecute(Pair<Tvshow, Bitmap> result) {
+            Tvshow tvshow = result.first;
+            Bitmap bitmap = result.second;
 
-            if (getRowsSupportFragment().getSelectedPosition() == 0) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setSelectedPosition(INDEX_DETAILS, false);
-                    }
-                });
+            // Buttons
+            if (mDetailsOverviewRow == null) {
+                mDetailsOverviewRow = new DetailsOverviewRow(tvshow);
+                mDetailsOverviewRow.setActionsAdapter(new TvshowActionAdapter(getActivity(), tvshow));
+            }
+            else {
+                mDetailsOverviewRow.setItem(tvshow);
             }
 
-            mHasDetailRow = true;
+            if (bitmap!=null) {
+                mOverviewRowPresenter.updateBackgroundColor(mColor);
+                mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
+                mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
+                mDetailsOverviewRow.setImageScaleUpAllowed(true);
+            }
+            else {
+                mDetailsOverviewRow.setImageDrawable(getResources().getDrawable(R.drawable.filetype_new_video));
+                mDetailsOverviewRow.setImageScaleUpAllowed(false);
+            }
+
+            if (!mHasDetailRow) {
+                BackgroundManager.getInstance(getActivity()).setDrawable(new ColorDrawable(VideoInfoCommonClass.getDarkerColor(mColor)));
+                mRowsAdapter.add(INDEX_DETAILS, mDetailsOverviewRow);
+            
+                setAdapter(mRowsAdapter);
+
+                mHasDetailRow = true;
+            }
         }
     }
 }
