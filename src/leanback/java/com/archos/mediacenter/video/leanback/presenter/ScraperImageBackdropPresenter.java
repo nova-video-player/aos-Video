@@ -19,6 +19,8 @@ import android.content.Context;
 import com.archos.mediacenter.video.R;
 import com.archos.mediascraper.ScraperImage;
 
+import java.util.List;
+
 /**
  * Poster, just poster (no name, no details, just the image)
  * Created by vapillon on 10/04/15.
@@ -29,6 +31,10 @@ public class ScraperImageBackdropPresenter extends ScraperImagePresenter {
 
     public ScraperImageBackdropPresenter() {
         super();
+    }
+
+    public ScraperImageBackdropPresenter(Context context, List<ScraperImage> images) {
+        super(context, images);
     }
 
     public int getWidth(Context context) {

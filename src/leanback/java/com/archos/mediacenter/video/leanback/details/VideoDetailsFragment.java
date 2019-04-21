@@ -1408,7 +1408,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             }
             // Posters
             if (mPosters!=null && !mPosters.isEmpty()) {
-                ArrayObjectAdapter postersRowAdapter = new ArrayObjectAdapter(new ScraperImagePosterPresenter());
+                ArrayObjectAdapter postersRowAdapter = new ArrayObjectAdapter(new ScraperImagePosterPresenter(getContext(), mPosters));
                 postersRowAdapter.addAll(0, mPosters);
                 if(mPostersRow!=null&&mAdapter.indexOf(mPostersRow)!=-1)
                     mAdapter.remove(mPostersRow);
@@ -1420,7 +1420,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
             // Backdrops
             if (mBackdrops!=null && !mBackdrops.isEmpty()) {
-                ArrayObjectAdapter backdropsRowAdapter = new ArrayObjectAdapter(new ScraperImageBackdropPresenter());
+                ArrayObjectAdapter backdropsRowAdapter = new ArrayObjectAdapter(new ScraperImageBackdropPresenter(getContext(), mBackdrops));
                 backdropsRowAdapter.addAll(0, mBackdrops);
                 if(mBackdropsRow!=null&&mAdapter.indexOf(mBackdropsRow)!=-1)
                     mAdapter.remove(mBackdropsRow);

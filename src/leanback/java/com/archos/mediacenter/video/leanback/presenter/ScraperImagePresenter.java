@@ -14,19 +14,26 @@
 
 package com.archos.mediacenter.video.leanback.presenter;
 
+import android.content.Intent;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import androidx.leanback.widget.BaseCardView;
 import androidx.leanback.widget.Presenter;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.leanback.details.ImagePreviewActivity;
+import com.archos.mediacenter.video.leanback.details.ImagePreviewFragment;
 import com.archos.mediascraper.ScraperImage;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Poster, just poster (no name, no details, just the image)
@@ -36,8 +43,24 @@ public abstract class ScraperImagePresenter extends Presenter {
 
     private static final String TAG = "ScraperImagePresenter";
 
+    private Context mContext;
+    private List<ScraperImage> mImages;
+    private String mImageUrls;
+
     public ScraperImagePresenter() {
-        super();
+        this(null, null);
+    }
+
+    public ScraperImagePresenter(Context context, List<ScraperImage> images) {
+        mContext = context;
+        mImages = images;
+
+        ArrayList<String> imageUrls = new ArrayList<>();
+        
+        for(ScraperImage image : images)
+            imageUrls.add(image.getLargeUrl());
+
+        mImageUrls = String.join(",", imageUrls);
     }
 
     abstract public int getWidth(Context context);
@@ -89,13 +112,28 @@ public abstract class ScraperImagePresenter extends Presenter {
         ViewHolder vh = (ViewHolder)viewHolder;
         Context c = vh.view.getContext();
 
-        ScraperImage image = (ScraperImage)item;
+        final ScraperImage image = (ScraperImage)item;
         Picasso.get()
                 .load(getImageUrl(image))
                 .resize(getWidth(c), getHeight(c)) // better resize to card size, since backdrop files are pretty large
                 .centerCrop()
                 .error(R.drawable.filetype_new_image)
                 .into(vh.mImageViewTarget);
+
+        if (mContext != null && mImages != null) {
+            viewHolder.view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Intent intent = new Intent(mContext, ImagePreviewActivity.class);
+                    
+                    intent.putExtra(ImagePreviewFragment.EXTRA_IMAGE_URLS, mImageUrls);
+                    intent.putExtra(ImagePreviewFragment.EXTRA_SELECTED_IMAGE, mImages.indexOf(image));
+                    mContext.startActivity(intent);
+
+                    return true;
+                }
+            });
+        }
     }
 
     public class PicassoImageViewTarget implements Target {
