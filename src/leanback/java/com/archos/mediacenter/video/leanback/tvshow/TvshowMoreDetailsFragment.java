@@ -339,7 +339,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
             // Posters
             List<ScraperImage> posters = tags.getAllPostersInDb(getActivity());
             if (!posters.isEmpty()) {
-                ArrayObjectAdapter postersRowAdapter = new ArrayObjectAdapter(new ScraperImagePosterPresenter(getContext(), posters));
+                ArrayObjectAdapter postersRowAdapter = new ArrayObjectAdapter(new ScraperImagePosterPresenter());
                 postersRowAdapter.addAll(0, posters);
                 mPostersRow = new ListRow( new HeaderItem(getString(R.string.leanback_posters_header)), postersRowAdapter);
             } else {
@@ -354,7 +354,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
             // Backdrops
             List<ScraperImage> backdrops = tags.getAllBackdropsInDb(getActivity());
             if (!backdrops.isEmpty()) {
-                ArrayObjectAdapter backdropsRowAdapter = new ArrayObjectAdapter(new ScraperImageBackdropPresenter(getContext(), backdrops));
+                ArrayObjectAdapter backdropsRowAdapter = new ArrayObjectAdapter(new ScraperImageBackdropPresenter());
                 backdropsRowAdapter.addAll(0, backdrops);
                 mBackdropsRow = new ListRow( new HeaderItem(getString(R.string.leanback_backdrops_header)), backdropsRowAdapter);
             } else {

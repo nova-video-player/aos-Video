@@ -199,10 +199,6 @@
             android:name="com.archos.mediacenter.video.leanback.settings.VideoSettingsMoreLeanbackActivity"
             android:theme="@style/MyLeanbackTheme.Preferences"/>
 
-        <activity
-            android:name="com.archos.mediacenter.video.leanback.details.ImagePreviewActivity"
-            android:theme="@style/MyLeanbackTheme.Black"/>
-
     </application>
 
 </manifest>

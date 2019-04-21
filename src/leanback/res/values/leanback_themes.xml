@@ -35,10 +35,6 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
-    <style name="MyLeanbackTheme.Black" parent="Theme.Leanback">
-        <item name="android:windowBackground">@android:color/black</item>
-    </style>
-
     <style name="MyLeanbackTheme.Wizard" parent="Theme.Leanback.GuidedStep">
         <item name="android:windowIsTranslucent">true</item>
     </style>
