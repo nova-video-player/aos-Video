@@ -20,6 +20,7 @@ import android.graphics.drawable.Drawable;
 import androidx.leanback.widget.BaseCardView;
 import androidx.leanback.widget.Presenter;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -28,6 +29,8 @@ import com.archos.mediascraper.ScraperImage;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.ArrayList;
+
 /**
  * Poster, just poster (no name, no details, just the image)
  * Created by vapillon on 10/04/15.
@@ -35,6 +38,9 @@ import com.squareup.picasso.Target;
 public abstract class ScraperImagePresenter extends Presenter {
 
     private static final String TAG = "ScraperImagePresenter";
+    
+    private ArrayList<ViewHolder> mViewHolders = new ArrayList<>();
+    private boolean mBigMode = false;
 
     public ScraperImagePresenter() {
         super();
@@ -53,6 +59,8 @@ public abstract class ScraperImagePresenter extends Presenter {
         final private ImageView mImageView;
         final private PicassoImageViewTarget mImageViewTarget;
 
+        private ScraperImage mImage;
+
         public ViewHolder(Context context) {
             super(new CustomBaseCardview(context));
             mBaseCardView = (BaseCardView)view;
@@ -63,39 +71,103 @@ public abstract class ScraperImagePresenter extends Presenter {
             mBaseCardView.setLayoutParams(new ViewGroup.LayoutParams(getWidth(context), getHeight(context)));
             mImageView = (ImageView)LayoutInflater.from(context).inflate(R.layout.leanback_imageonly_cardview_content, mBaseCardView, false);
             mBaseCardView.addView(mImageView);
-            ViewGroup.LayoutParams lp = mImageView.getLayoutParams();
-            lp.width = getWidth(context);
-            lp.height = getHeight(context);
-            mImageView.setLayoutParams(lp);
             mImageViewTarget = new PicassoImageViewTarget(mImageView);
+            
+            updateSize();
         }
-        public void setImage(Drawable d) {
+        public void setDrawable(Drawable d) {
             mImageView.setImageDrawable(d);
         }
+
+        public void updateSize() {
+            Context c = view.getContext();
+
+            ViewGroup.LayoutParams cardLayoutParams = mBaseCardView.getLayoutParams();
+            cardLayoutParams.width = getAdjustedWidth(c);
+            cardLayoutParams.height = getAdjustedHeight(c);
+            mBaseCardView.setLayoutParams(cardLayoutParams);
+
+            ViewGroup.LayoutParams imageLayoutParams = mImageView.getLayoutParams();
+            imageLayoutParams.width = getAdjustedWidth(c);
+            imageLayoutParams.height = getAdjustedHeight(c);
+            mImageView.setLayoutParams(imageLayoutParams);
+        }
+
+        public void setImage(ScraperImage image) {
+            mImage = image;
+        }
+
+        public void loadImage() {
+            Context c = view.getContext();
+
+            Picasso.get()
+                    .load(getAdjustedImageUrl(mImage))
+                    .resize(getAdjustedWidth(c), getAdjustedHeight(c)) // better resize to card size, since backdrop files are pretty large
+                    .centerCrop()
+                    .error(R.drawable.filetype_new_image)
+                    .into(mImageViewTarget);
+        }
+    }
+
+    private int getAdjustedWidth(Context context) {
+        int width = getWidth(context);
+
+        if (mBigMode)
+            width *= 2;
+
+        return width;
+    }
+
+    private int getAdjustedHeight(Context context) {
+        int height = getHeight(context);
+
+        if (mBigMode)
+            height *= 2;
+
+        return height;
+    }
+
+    private String getAdjustedImageUrl(ScraperImage image) {
+        String imageUrl = getImageUrl(image);
+
+        if (mBigMode)
+            imageUrl = image.getLargeUrl().replace("/w342/", "/w780/");
+
+        return imageUrl;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
-        return new ViewHolder(parent.getContext());
+        ViewHolder viewHolder = new ViewHolder(parent.getContext());
+        mViewHolders.add(viewHolder);
+        return viewHolder;
     }
 
     @Override
     public void onUnbindViewHolder(Presenter.ViewHolder viewHolder) {
-        ((ViewHolder)viewHolder).setImage(null);
+        ((ViewHolder)viewHolder).setDrawable(null);
     }
 
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
         ViewHolder vh = (ViewHolder)viewHolder;
-        Context c = vh.view.getContext();
-
         ScraperImage image = (ScraperImage)item;
-        Picasso.get()
-                .load(getImageUrl(image))
-                .resize(getWidth(c), getHeight(c)) // better resize to card size, since backdrop files are pretty large
-                .centerCrop()
-                .error(R.drawable.filetype_new_image)
-                .into(vh.mImageViewTarget);
+        
+        vh.setImage(image);
+        vh.loadImage();
+        vh.view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mBigMode = !mBigMode;
+
+                for(ViewHolder holder : mViewHolders) {
+                    holder.updateSize();
+                    holder.loadImage();
+                }
+
+                return true;
+            }
+        });
     }
 
     public class PicassoImageViewTarget implements Target {
