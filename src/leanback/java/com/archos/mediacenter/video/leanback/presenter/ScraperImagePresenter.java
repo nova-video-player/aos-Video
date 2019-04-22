@@ -113,7 +113,7 @@ public abstract class ScraperImagePresenter extends Presenter {
         int width = getWidth(context);
 
         if (mBigMode)
-            width *= 2;
+            width = Math.round(width * getBigModeRatio(context));
 
         return width;
     }
@@ -122,7 +122,7 @@ public abstract class ScraperImagePresenter extends Presenter {
         int height = getHeight(context);
 
         if (mBigMode)
-            height *= 2;
+            height = Math.round(height * getBigModeRatio(context));
 
         return height;
     }
@@ -134,6 +134,13 @@ public abstract class ScraperImagePresenter extends Presenter {
             imageUrl = image.getLargeUrl().replace("/w342/", "/w780/");
 
         return imageUrl;
+    }
+
+    private float getBigModeRatio(Context context) {
+        float widthRatio = (context.getResources().getDisplayMetrics().widthPixels * 0.73f) / getWidth(context); // magic number
+        float heightRatio = (context.getResources().getDisplayMetrics().heightPixels * 0.73f) / getHeight(context); // magic number
+
+        return Math.min(widthRatio, heightRatio);
     }
 
     @Override
