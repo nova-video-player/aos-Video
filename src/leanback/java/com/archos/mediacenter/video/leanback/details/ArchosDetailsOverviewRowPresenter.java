@@ -23,7 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 
-
+import com.archos.mediacenter.video.R;
 
 /**
  * Created by alexandre on 20/02/17.
@@ -79,8 +79,7 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
                 break;
         }
         lp.topMargin = v.getResources().getDimensionPixelSize(
-                    androidx.leanback.R.dimen.lb_details_v2_blank_height) + v.getResources()
-                    .getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_actions_height) + v
+                    androidx.leanback.R.dimen.lb_details_v2_blank_height) + v
                     .getResources().getDimensionPixelSize(
                     androidx.leanback.R.dimen.lb_details_v2_description_margin_top);
         v.setLayoutParams(lp);
@@ -130,7 +129,6 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
                     : res.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_blank_height);
             lpFrame.leftMargin = lpFrame.rightMargin = frameMarginStart;
             if (mHideActions) {
-                lpFrame.topMargin += res.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_actions_height);
                 lpFrame.height = res.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_card_height)
                         - res.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_actions_height);
             }
@@ -149,6 +147,11 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
                 lpActions.height = 0;
             action.setLayoutParams(lpActions);
         }
+    }
+
+    @Override
+    protected int getLayoutResourceId() {
+        return R.layout.leanback_details_overview;
     }
 
     public void updateBackgroundColor(int color) {
