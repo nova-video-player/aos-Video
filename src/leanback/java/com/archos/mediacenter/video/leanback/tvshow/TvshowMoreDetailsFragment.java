@@ -399,10 +399,10 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
 
 
     /** Saves a Poster as default poster for a show and update the current poster */
-    private class ShowPosterSaverTask extends AsyncTask<ScraperImage, Void, Bitmap[]> {
+    private class ShowPosterSaverTask extends AsyncTask<ScraperImage, Void, Bitmap> {
 
         @Override
-        protected Bitmap[] doInBackground(ScraperImage... params) {
+        protected Bitmap doInBackground(ScraperImage... params) {
             ScraperImage poster = params[0];
 
             // Save in DB and download
@@ -423,27 +423,16 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                 Log.d(TAG, "ShowPosterSaverTask Picasso load exception", e);
             }
 
-            Bitmap paletteBitmap=null;
-            try {
-                paletteBitmap = Picasso.get()
-                        .load(poster.getLargeFileF())
-                        .noFade()
-                        .get();
-
-            } catch (IOException e) {
-                Log.d(TAG, "ShowPosterSaverTask Picasso load exception", e);
-            }
-
-            return new Bitmap[] { bitmap, paletteBitmap };
+            return bitmap;
         }
 
         @Override
-        protected void onPostExecute(Bitmap[] results) {
-            if (results[0] != null && results[1] != null) {
-                mDetailsRow.setImageBitmap(getActivity(), results[0]);
+        protected void onPostExecute(Bitmap result) {
+            if (result != null) {
+                mDetailsRow.setImageBitmap(getActivity(), result);
                 mDetailsRow.setImageScaleUpAllowed(true);
 
-                Palette palette = Palette.from(results[1]).generate();
+                Palette palette = Palette.from(result).generate();
                 int color;
                 
                 if (palette.getDarkVibrantSwatch() != null)
