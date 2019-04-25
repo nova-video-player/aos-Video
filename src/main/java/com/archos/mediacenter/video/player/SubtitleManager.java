@@ -414,44 +414,14 @@ public class SubtitleManager {
         mSubtitleSpacerParams.height = mSubtitleEvadedVPos;
         
         setUIExternalSurface(mUiSurface);
-
-        if (PlayerConfig.useOneWindowPerView()&&!mForbidWindow) {
-            mLayoutParams = new WindowManager.LayoutParams();
-
-            mLayoutParams.gravity = Gravity.TOP;
-            mLayoutParams.width = mScreenWidth;
-            mLayoutParams.height = mScreenHeight;
-            mLayoutParams.x = 0;
-            mLayoutParams.y = 0;
-            mLayoutParams.format = PixelFormat.TRANSLUCENT;
-            mLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_PANEL;
-            mLayoutParams.flags |= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN |
-                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
-            mLayoutParams.token = null;
-            mLayoutParams.windowAnimations = 0;
-
-            mWindow.addView(mSubtitleLayout, mLayoutParams);
-        } else {
-            mPlayerView.addView(mSubtitleLayout, mScreenWidth, mScreenHeight);
-        }
+        mPlayerView.addView(mSubtitleLayout, mScreenWidth, mScreenHeight);
     }
 
     private void detachWindow() {
         if (mSubtitleLayout == null)
             return;
         if (DBG) Log.d(TAG, "detachWindow");
-        if (PlayerConfig.useOneWindowPerView()) {
-            try {
-                mWindow.removeView(mSubtitleLayout);
-                mLayoutParams = null;
-            } catch (IllegalArgumentException ignored) {
-            }
-        } else {
-            mPlayerView.removeView(mSubtitleLayout);
-        }
+        mPlayerView.removeView(mSubtitleLayout);
         mSubtitleLayout = null;
     }
 

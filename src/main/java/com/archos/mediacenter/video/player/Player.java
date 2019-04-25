@@ -435,7 +435,7 @@ public class Player implements IPlayerControl,
             mStopPosition = -1;
         }
         try {
-            mMediaPlayer = MediaFactory.createPlayer(mContext, PlayerConfig.useAvosPlayer(mUri.getPath()), mForceSoftwareDecoding);
+            mMediaPlayer = MediaFactory.createPlayer(mContext, mForceSoftwareDecoding);
             mMediaPlayer.setOnPreparedListener(this);
             mMediaPlayer.setOnCompletionListener(this);
             mMediaPlayer.setOnInfoListener(this);

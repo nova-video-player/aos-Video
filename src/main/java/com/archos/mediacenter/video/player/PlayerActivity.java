@@ -247,7 +247,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     showDialog(DIALOG_NOT_ENOUGHT_SPACE);
                     break;
                 case MSG_TORRENT_UPDATE :
-                    try { 
+                    try {
                         String toParse = (String)msg.obj;
                         String[] parsed = toParse.split(";");
                         String toDisplay = parsed[0]+" peers "+
@@ -260,7 +260,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                         torrent_status.setVisibility(View.VISIBLE);
                         ((TextView)torrent_status).setText(toDisplay);
 
-                    } catch(NumberFormatException e) { 
+                    } catch(NumberFormatException e) {
 						Log.d("AVP", "Display update", e);
                     } catch(java.lang.ArrayIndexOutOfBoundsException e) {
                         Log.d("AVP", "Display update, out of bound", e);
@@ -489,17 +489,14 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         requestWindowFeature(Window.FEATURE_ACTION_BAR);
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 
-        // Android 4.4 translucent
-        if (Build.VERSION.SDK_INT >= 19) {
-            getWindow().addFlags(0x08000000 /* FLAG_TRANSLUCENT_NAVIGATION  */);
-            getWindow().addFlags(0x04000000 /* FLAG_TRANSLUCENT_STATUS */);
-        }
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
         /*
          * transparent background for archos devices
          * (hide black bars on TVOUT)
          */
-        getWindow().setBackgroundDrawable(new ColorDrawable(PlayerConfig.hasArchosEnhancement() ? 0x00000000 : 0xFF000000));
+        getWindow().setBackgroundDrawable(new ColorDrawable(0xFF000000));
 
         setContentView(R.layout.player);
         mRootView = findViewById(R.id.root);
@@ -523,16 +520,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setBackgroundDrawable(null);
-
-        if (PlayerConfig.hasArchosEnhancement()) {
-            Method setShowHideAnimationEnabled;
-            try {
-                setShowHideAnimationEnabled = ActionBar.class.getMethod("setShowHideAnimationEnabled", boolean.class);
-                setShowHideAnimationEnabled.invoke(actionBar, false);
-            } catch (Exception e) {
-                //Method doesn't exist, no big deal
-            }
-        }
 
         mPaused = false;
         mPlayerControllerPlaceholder = findViewById(R.id.player_controller_placeholder);
@@ -817,7 +804,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         if (DBG) Log.d(TAG, "onPause");
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && ArchosFeatures.isAndroidTV(this)) {
+        if (ArchosFeatures.isAndroidTV(this)) {
             if (mPlayer.isPlaying()) {
                 if (!requestVisibleBehind(true)&&!mLaunchFloatingPlayer) {
                     // Try to play behind launcher, but if it fails, so paused.
@@ -927,7 +914,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         }
         Log.d(TAG, "isInMultiWindowMode() :");
 
-        if (PlayerConfig.hasFullScreen()&&!isInPictureInPictureMode&&!isInMultiWindowMode) {
+        if (!isInPictureInPictureMode&&!isInMultiWindowMode) {
             width = displayWidth;
             height = displayHeight;
         } else {
@@ -935,7 +922,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             height = layoutHeight;
         }
 
-        if (DBG) Log.d(TAG, "trueFullscreen: " + PlayerConfig.hasFullScreen() + ", size: " + width+"x"+height);
+        if (DBG) Log.d(TAG, "trueFullscreen true size: " + width+"x"+height);
         if(!isChromebook) { //keeping things as it was on other devices
             ViewGroup.LayoutParams lp = mRootView.getLayoutParams();
             lp.width = width;

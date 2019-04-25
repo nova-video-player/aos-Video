@@ -279,34 +279,12 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mActionBar.setCustomView(mVideoTitle);
         manualVisibilityChange=false;
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) { /* JB and more */
-            mSystemUiVisibility = 0x00000400 /* View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN */
-                    | 0x00000200 /* View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION */
-                    | 0x00000100 /* View.SYSTEM_UI_FLAG_LAYOUT_STABLE */;
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                mSystemUiVisibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;
-            mPlayerView.setSystemUiVisibility(mSystemUiVisibility);
-            manualVisibilityChange=true;
-        }
-
-        /*
-         * Hack when using one window for the player controller:
-         * The window is fullscreen and can't send events to the ActionBar.
-         * So, manually get the size of the ActionBar to dispatch touch events when it's needed.
-         */
-        
-        if (PlayerConfig.useOneWindowPerView()) {
-            ViewTreeObserver observer = mPlayerView.getViewTreeObserver();
-            observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    mActionBarHeight = mActionBar.isShowing() ? mActionBar.getHeight() : 0;
-                    Rect rect = new Rect();
-                    mWindow.getDecorView().getWindowVisibleDisplayFrame(rect);
-                    mActionBarHeight += rect.top;
-                }
-            });
-        }
+        mSystemUiVisibility = 0x00000400 /* View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN */
+            | 0x00000200 /* View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION */
+            | 0x00000100 /* View.SYSTEM_UI_FLAG_LAYOUT_STABLE */;
+        mSystemUiVisibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;
+        mPlayerView.setSystemUiVisibility(mSystemUiVisibility);
+        manualVisibilityChange=true;
 
         /* Hack:
          * dispatch touch events to the VolumeBar that is under the ActionBar
@@ -468,7 +446,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             mProgress.setMax(1000);
         }
 
-
         View volumeBar = v.findViewById(R.id.volume_bar);
         if(ArchosFeatures.isChromeOS(mContext)) {
             volumeBar.setVisibility(View.GONE);
@@ -582,16 +559,14 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     public void setSizes(int layoutWidth, int layoutHeight, int displayWidth, int displayHeight) {
-        Log.d(TAG, "layout: " + layoutWidth + "x" + layoutHeight + " / display: " + displayWidth + "x" + displayHeight);
-        mSystemBarHeight = PlayerConfig.canSystemBarHide() ? displayHeight - layoutHeight : 0;
+        Log.d(TAG, "setSizes layout: " + layoutWidth + "x" + layoutHeight + " / display: " + displayWidth + "x" + displayHeight);
+        mSystemBarHeight = displayHeight - layoutHeight;
         mLayoutWidth = layoutWidth;
         mLayoutHeight = layoutHeight;
-
         if (mControllerView != null) {
             // size changed and maybe orientation too, recreate the whole layout
             detachWindow();
             attachWindow();
-
         }
     }
 
@@ -635,30 +610,10 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         playerControllersContainer = (FrameLayout)mControllerView.findViewById(R.id.playerControllersContainer);
         playerControllersContainer.addView(mControllerViewLeft);
 
-        if (PlayerConfig.useOneWindowPerView()) {
-            WindowManager wm = mWindow.getWindowManager();
-
-            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-
-            lp.gravity = Gravity.TOP | Gravity.LEFT;
-            lp.width = mLayoutWidth;
-            lp.height = mLayoutHeight;
-            lp.x = 0;
-            lp.y = 0;
-            lp.format = PixelFormat.TRANSLUCENT;
-            lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_PANEL;
-            lp.flags |= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-            lp.token = null;
-            lp.windowAnimations = 0;
-
-            wm.addView(mControllerView, lp);
-            Log.d(TAG, "wm.addView");
-        } else {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mLayoutWidth, mLayoutHeight);
-            mPlayerView.addView(mControllerView, params);
-            updateOrientation();
-            Log.d(TAG, "mPlayerView.addView");
-        }
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mLayoutWidth, mLayoutHeight);
+        mPlayerView.addView(mControllerView, params);
+        updateOrientation();
+        Log.d(TAG, "mPlayerView.addView");
 
         initMenuAdapter(mControllerViewLeft);
         switchMode(TVUtils.isTV(mContext));
@@ -710,15 +665,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         if (mControllerView == null)
             return;
         if (DBG) Log.d(TAG, "detachWindow");
-        if (PlayerConfig.useOneWindowPerView()) {
-            try {
-                mWindow.getWindowManager().removeView(mControllerView);
-            } catch (IllegalArgumentException ex) {
-                Log.w(TAG, "already removed");
-            }
-        } else {
-            mPlayerView.removeView(mControllerView);
-        }
+        mPlayerView.removeView(mControllerView);
         mControllerView = null;
         mControllerViewLeft=null;
         mControllerViewRight=null;
@@ -794,28 +741,20 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     private void showActionBar(boolean show) {
         if (mActionBarShowing != show) {
-            if (PlayerConfig.hasArchosEnhancement()) {
-                Method setShowHideAnimationEnabled;
-                try {
-                    setShowHideAnimationEnabled = ActionBar.class.getMethod("setShowHideAnimationEnabled", boolean.class);
-                    setShowHideAnimationEnabled.invoke(mActionBar, false);
-                } catch (Exception e) {
-                    //Method doesn't exist, no big deal
-                }
-            }
             if (show) {
-
                 if(mVolumeBar!=null){
                     mVolumeBar.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);                    
                     RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)  mVolumeBar.getLayoutParams();
                   
                     lp.topMargin=getStatusBarHeight();
+                    if (DBG) Log.d(TAG, "showActionBar getStatusBarHeight=" + lp.topMargin);
                     mVolumeBar.setLayoutParams(lp);
                 }
                 if(mVolumeBar2!=null){
                     mVolumeBar2.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);                    
                     RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)  mVolumeBar2.getLayoutParams();
                     lp.topMargin=getStatusBarHeight();
+                    if (DBG) Log.d(TAG, "showActionBar getStatusBarHeight=" + lp.topMargin);
                     mVolumeBar2.setLayoutParams(lp);
                 }
                 mActionBar.show();
@@ -846,43 +785,21 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     protected void showSystemBar(boolean show) {
         if (mSystemBarShowing == show) return;
         mSystemUiVisibility = mPlayerView.getSystemUiVisibility();
-        if (PlayerConfig.hasHackedFullScreen()) {
-            final int STATUS_BAR_GONE =  (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 ? 0x00000004 : 0x000008);
-            if (show)
-                mSystemUiVisibility &= ~STATUS_BAR_GONE;
-            else
-                mSystemUiVisibility |= STATUS_BAR_GONE;
-            manualVisibilityChange=true;
-            mPlayerView.setSystemUiVisibility(mSystemUiVisibility);
-            mSystemBarGone = !show;
-        } else {
-            int systemUiFlag = View.SYSTEM_UI_FLAG_LOW_PROFILE;
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) { /* ICS and less */
-                if (show)
-                    mWindow.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                else
-                    mWindow.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            } else { /* JB and more */
-                systemUiFlag |= 0x00000004 /* View.SYSTEM_UI_FLAG_FULLSCREEN */;
-            }
-            if (show) {
-                mSystemUiVisibility &= ~systemUiFlag;
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                    mSystemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE;
-            }
-            else {
-                mSystemUiVisibility |= systemUiFlag;
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                        mSystemUiVisibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;
-            }
-            mPlayerView.setSystemUiVisibility(mSystemUiVisibility);
-            manualVisibilityChange=true;
-            mSystemBarGone = false;
-            if (PlayerConfig.canSystemBarHide()) {
-                if (!show)
-                    mHandler.sendEmptyMessageDelayed(MSG_HIDE_SYSTEM_BAR, 1000);
-            }
+        int systemUiFlag = View.SYSTEM_UI_FLAG_LOW_PROFILE;
+        systemUiFlag |= View.SYSTEM_UI_FLAG_FULLSCREEN;
+        if (show) {
+            mSystemUiVisibility &= ~systemUiFlag;
+            mSystemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE;
         }
+        else {
+            mSystemUiVisibility |= systemUiFlag;
+            mSystemUiVisibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;
+        }
+        mPlayerView.setSystemUiVisibility(mSystemUiVisibility);
+        manualVisibilityChange=true;
+        mSystemBarGone = false;
+        if (!show)
+            mHandler.sendEmptyMessageDelayed(MSG_HIDE_SYSTEM_BAR, 1000);
         mSystemBarShowing = show;
     }
 
@@ -938,7 +855,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             int height;
             if (mControlBarShowing)
                 height = mControlBar.getHeight() + mSystemBarHeight;
-            else if (PlayerConfig.canSystemBarHide() && !mSystemBarGone)
+            else if (!mSystemBarGone)
                 height = mSystemBarHeight;
             else
                 height = 0;
@@ -2204,21 +2121,20 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mPlayerView.setSystemUiVisibility(mSystemUiVisibility);
         manualVisibilityChange=true;
     }
-    public int getStatusBarHeight() { 
+
+    public int getStatusBarHeight() {
         int result = 0;
         int resourceId = mContext.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
+        if (resourceId > 0)
             result = mContext.getResources().getDimensionPixelSize(resourceId);
-        } 
         return result;
-    } 
+    }
     public View getActionBarView() {
         View v = mWindow.getDecorView();
-        return v.findViewById(R.id.action_bar_container );
+        return v.findViewById(R.id.action_bar_container);
     }
 
     private void setRecursiveOnTouchListener(OnTouchListener t, View v){
-
         for(int i=0; i<((ViewGroup)v).getChildCount(); ++i) {
             View nextChild = ((ViewGroup)v).getChildAt(i);
             nextChild.setOnTouchListener(t);
@@ -2382,8 +2298,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private View mUnlockInstructions;
     private View mUnlockInstructions2;
     private boolean mIsLocked;
-
-
 
     public void lock(){
         mIsLocked = true;
