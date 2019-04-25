@@ -45,6 +45,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
+import android.view.DisplayCutout;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -489,8 +490,15 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         requestWindowFeature(Window.FEATURE_ACTION_BAR);
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 
+        WindowManager.LayoutParams attributes = getWindow().getAttributes();
+
+        // cutout mode: display below cutout
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        getWindow().setAttributes(attributes);
 
         /*
          * transparent background for archos devices
