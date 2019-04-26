@@ -1,7 +1,6 @@
 package com.archos.mediacenter.video.player;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -25,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.display.DisplayManager;
 import android.media.AudioManager;
@@ -36,6 +36,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import androidx.appcompat.app.ActionBar;
 import androidx.preference.PreferenceManager;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
@@ -57,12 +58,14 @@ import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Checkable;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -112,9 +115,9 @@ import com.archos.environment.ArchosUtils;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.Override;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -220,7 +223,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private static final String ACTION_HDMI_PLUGGED = "android.intent.action.HDMI_PLUGGED";
     private static final String EXTRA_HDMI_PLUGGED_STATE = "state";
     private static final int SUBTITLE_REQUEST = 0;
-    
 
     private boolean mHasAskedFloatingPermission;
     private boolean mIsInfoActivityDisplayed;
@@ -228,7 +230,43 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private boolean mIsReadytoStart;
     private PermissionChecker mPermissionChecker;
 
+    public static int safeInsetLeft = 0;
+    public static int safeInsetTop = 0;
+    public static int safeInsetRight = 0;
+    public static int safeInsetBottom = 0;
+    public static boolean hasCutout = false;
+    public static boolean seekBarOverlapWithCutout = true;
 
+    public void setCutoutMetrics() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
+                if (cutout == null) {
+                    if (DBG) Log.d(TAG, "device without cutout");
+                } else {
+                    hasCutout = true;
+                    List<Rect> rects = cutout.getBoundingRects();
+                    if (rects.size() == 1) {
+                        if (DBG) Log.d(TAG, "one cutout");
+                        Rect rect = rects.get(0);
+                        if (DBG) Log.d(TAG, "cutout bounding rect " + rect);
+                    } else {
+                        if (DBG) Log.d(TAG, "cutout: more than one cutout");
+                        for (Rect rect : rects) {
+                            if (DBG) Log.d(TAG, "cutout: cutout bounding rect " + rect);
+                        }
+                    }
+                    safeInsetLeft = cutout.getSafeInsetLeft();
+                    safeInsetTop = cutout.getSafeInsetTop();
+                    safeInsetRight = cutout.getSafeInsetRight();
+                    safeInsetBottom = cutout.getSafeInsetBottom();
+                    if (DBG) Log.d(TAG, "setCutoutMetrics safeInsetLeft=" + safeInsetLeft +", safeInsetTop=" + safeInsetTop + ", safeInsetRight=" + safeInsetRight + ", safeInsetBottom=" + safeInsetBottom );
+                }
+            }
+        } catch (Exception e) {
+            Log.w(TAG,"cutout evaluation exception, perhaps view not attached yet!!!");
+        }
+    }
 
     private Handler mHandler = new Handler() {
         @Override
@@ -492,14 +530,22 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         WindowManager.LayoutParams attributes = getWindow().getAttributes();
 
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         // cutout mode: display below cutout
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-            attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            if(mPreferences.getBoolean("enable_cutout_mode_short_edges", true)) {
+                if (DBG) Log.d(TAG,"onCreate applying LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES");
+                attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            }
+            else {
+                if (DBG) Log.d(TAG,"onCreate applying LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT");
+                attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT;
+            }
+        }
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
         getWindow().setAttributes(attributes);
-
         /*
          * transparent background for archos devices
          * (hide black bars on TVOUT)
@@ -508,6 +554,19 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         setContentView(R.layout.player);
         mRootView = findViewById(R.id.root);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //getWindow().getDecorView().setOnApplyWindowInsetsListener( new View.OnApplyWindowInsetsListener() {
+            mRootView.setOnApplyWindowInsetsListener( new View.OnApplyWindowInsetsListener() {
+            @SuppressLint("NewApi")
+                @Override
+                public WindowInsets onApplyWindowInsets(View view, WindowInsets insets) {
+                    setCutoutMetrics();
+                    getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
+                    return view.onApplyWindowInsets(insets);
+                }
+            });
+        }
 
         mRootView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -524,7 +583,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         });
         // We use the ActionBar for the top-right menu only
         // our PlayerController puts the Title in there
-        androidx.appcompat.app.ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setBackgroundDrawable(null);
@@ -560,7 +619,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mSubtitleInfoController = new TrackInfoController(this, getLayoutInflater(), menuAnchor, actionBar);
         mSubtitleInfoController.setListener(this);
         mSubtitleInfoController.setAlwayDisplay(true);
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mResumeFromLast = false;
 
         // Set the specific player behaviour if playing the demo video
@@ -604,7 +662,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             displayManager.registerDisplayListener(mDisplayListener, mHandler);
 
         }
-
     }
 
     public boolean isInfoActivityDisplayed(){
@@ -913,6 +970,11 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         display.getSize(point);
         layoutWidth = point.x;
         layoutHeight = point.y;
+        if (DBG) Log.d(TAG, "updateSizes layoutWidth=" + layoutWidth +
+                ", layoutHeight=" + layoutHeight +
+                ", displayWidth=" + displayWidth +
+                ", displayHeight=" + displayHeight );
+
         boolean isChromebook = getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
         if(isChromebook){
             View content = findViewById(android.R.id.content);
@@ -940,7 +1002,17 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mSurfaceController.setScreenSize(width, height);
         mSubtitleManager.setScreenSize(width, height);
         if(!isInPictureInPictureMode) {
-            mPlayerController.setSizes(layoutWidth, layoutHeight, displayWidth, displayHeight);
+            if (DBG) Log.d(TAG, "updateSizes safeInsetLeft=" + PlayerActivity.safeInsetLeft +", safeInsetTop=" + PlayerActivity.safeInsetTop + ", safeInsetRight=" + PlayerActivity.safeInsetRight + ", safeInsetBottom=" + PlayerActivity.safeInsetBottom );
+            if (DBG) Log.d(TAG, "updateSizes mPlayerController.setSizes layoutWidth=" + layoutWidth +", layoutHeight=" + layoutHeight + ", displayWidth=" + displayWidth + ", displayHeight=" + displayHeight );
+            int orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+            if(orientation == Surface.ROTATION_270) {
+                // TODO: in this case stretch the layoutWidth to go over the safeInsetRight (cutout) only if there is no overlap. For this iterate through all the cutout Rects.
+                //ImageButton switchFormat = (ImageButton) findViewById(R.id.format);
+                //mPlayerController.setSizes(layoutWidth + safeInsetRight, layoutHeight, displayWidth, displayHeight);
+                mPlayerController.setSizes(layoutWidth, layoutHeight, displayWidth, displayHeight);
+            } else {
+                mPlayerController.setSizes(layoutWidth, layoutHeight, displayWidth, displayHeight);
+            }
             // Close the menus if needed
             mAudioInfoController.resetPopup();
             mSubtitleInfoController.resetPopup();

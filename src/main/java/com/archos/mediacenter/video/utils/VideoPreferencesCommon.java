@@ -147,6 +147,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mForceSwDecPreferences = null;
     private CheckBoxPreference mForceAudioPassthrough = null;
     private CheckBoxPreference mActivateRefreshrateTVSwitch = null;
+    private CheckBoxPreference mEnableCutoutModeShortEdge = null;
     private CheckBoxPreference mActivate3DTVSwitch = null;
     private PreferenceCategory mAdvancedPreferences = null;
     private PreferenceCategory mScraperCategory = null;
@@ -226,9 +227,16 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         if (!ArchosFeatures.isTV(getActivity())) {
             prefCategory.removePreference(mActivate3DTVSwitch);
             prefCategory.removePreference(mActivateRefreshrateTVSwitch);
+            if (MiscUtils.hasCutout) {
+                prefCategory.addPreference(mEnableCutoutModeShortEdge);
+            }
+            else {
+                prefCategory.removePreference(mEnableCutoutModeShortEdge);
+            }
         } else {
             prefCategory.addPreference(mActivate3DTVSwitch);
             prefCategory.addPreference(mActivateRefreshrateTVSwitch);
+            prefCategory.removePreference(mEnableCutoutModeShortEdge);
         }
 
         PreferenceCategory prefScraperCategory = (PreferenceCategory) findPreference(KEY_SCRAPER_CATEGORY);
@@ -317,6 +325,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mForceSwDecPreferences = (CheckBoxPreference) findPreference(KEY_FORCE_SW);
         mForceAudioPassthrough = (CheckBoxPreference) findPreference(KEY_FORCE_AUDIO_PASSTHROUGH);
         mActivate3DTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_3D_SWITCH);
+        mEnableCutoutModeShortEdge = (CheckBoxPreference) findPreference("enable_cutout_mode_short_edges");
         mActivateRefreshrateTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_REFRESHRATE_SWITCH);
         mTraktSyncProgressPreference = (CheckBoxPreference) findPreference(KEY_TRAKT_SYNC_PROGRESS);
         mAdvancedPreferences = (PreferenceCategory) findPreference(KEY_ADVANCED_VIDEO_CATEGORY);

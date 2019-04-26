@@ -20,8 +20,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
@@ -33,7 +33,6 @@ import android.preference.PreferenceManager;
 import androidx.appcompat.app.ActionBar;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -44,7 +43,6 @@ import android.view.View.OnFocusChangeListener;
 import android.view.View.OnGenericMotionListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -65,7 +63,6 @@ import com.archos.mediacenter.video.player.tvmenu.TVMenuAdapter;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Formatter;
@@ -279,9 +276,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mActionBar.setCustomView(mVideoTitle);
         manualVisibilityChange=false;
 
-        mSystemUiVisibility = 0x00000400 /* View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN */
-            | 0x00000200 /* View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION */
-            | 0x00000100 /* View.SYSTEM_UI_FLAG_LAYOUT_STABLE */;
+        mSystemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
         mSystemUiVisibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;
         mPlayerView.setSystemUiVisibility(mSystemUiVisibility);
         manualVisibilityChange=true;
@@ -340,13 +337,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             mVolumeBar2.setVisibility(View.GONE);
         }
     }
+
     public void addToMenuContainer(View v){
-        
         View container1 = mControllerViewLeft.findViewById(R.id.tv_menu_container);
-        
         if(container1!=null && container1 instanceof FrameLayout){
             ((FrameLayout)container1).addView(v);
-            
         }
         if(mControllerViewRight!=null){
             View container2 = mControllerViewRight.findViewById(R.id.tv_menu_container);
@@ -355,14 +350,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 if(v.findViewById(R.id.card_view)!=null&&v.findViewById(R.id.card_view)instanceof TVCardDialog){
                     tvCardDialog  =(TVCardDialog) v.findViewById(R.id.card_view);
                     ((FrameLayout)container2).addView(((TVCardDialog)v.findViewById(R.id.card_view)).createSlaveView());
-                    
                 }
-                
             }
-                
         }
-
     }
+
     private void initMenuAdapter(View v){
         mTVMenuView = v.findViewById(R.id.my_recycler_view);
         if(mTVMenuView!=null){
@@ -573,6 +565,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private void attachWindow() {
         if (DBG) Log.d(TAG, "attachWindow");
 
+        if (DBG) Log.d(TAG,"attachWindow getStatusBarHeight=" + getStatusBarHeight() +
+                ", getNavigationBarHeight=" + getNavigationBarHeight() +
+                ", getActionBarHeight=" + getActionBarHeight() +
+                ", ");
+
         if (mControllerView != null)
             return;
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -641,10 +638,30 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     public void updateOrientation() {
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N_MR1) {
             int orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-            if(orientation== Surface.ROTATION_270)
-                ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            else
+            // if for rotation 270, ALIGN_PARENT_LEFT is used, volume bar appears under the button bar
+            if(orientation == Surface.ROTATION_270) {
+                //((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                // need new solution since in presence if cutout display whole relative layout is shifted by safeInsetRight+safeInsetLeft+navigationBarHeight...
+                // set manually the margin to the navigationBarHeight relative to left alignment
                 ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                RelativeLayout.LayoutParams relativeParams = ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams());
+                relativeParams.setMargins(getNavigationBarHeight(), 0, 0, 0);
+                mControllerView.setLayoutParams(relativeParams);
+                mControllerView.requestLayout();
+
+            }
+            else {
+                // this is to shift layout when cutout is on the left so that the volumeBar does not overlap with cutout when using LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+
+                SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+                if(mPreferences.getBoolean("enable_cutout_mode_short_edges", true)) {
+                    RelativeLayout.LayoutParams relativeParams = ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams());
+                    relativeParams.setMargins(PlayerActivity.safeInsetLeft, 0, 0, 0);
+                    mControllerView.setLayoutParams(relativeParams);
+                    mControllerView.requestLayout();
+                }
+            }
         }
     }
 
@@ -2129,6 +2146,25 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             result = mContext.getResources().getDimensionPixelSize(resourceId);
         return result;
     }
+
+    public int getNavigationBarHeight() {
+        int navigationBarHeight = 0;
+        int resourceId = mContext.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0)
+            navigationBarHeight = mContext.getResources().getDimensionPixelSize(resourceId);
+        return navigationBarHeight;
+    }
+
+    public int getActionBarHeight(){
+        int actionBarHeight = 0;
+        final TypedArray styledAttributes = mContext.getTheme().obtainStyledAttributes(
+            new int[] { android.R.attr.actionBarSize }
+        );
+        actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+        styledAttributes.recycle();
+        return actionBarHeight;
+    }
+
     public View getActionBarView() {
         View v = mWindow.getDecorView();
         return v.findViewById(R.id.action_bar_container);

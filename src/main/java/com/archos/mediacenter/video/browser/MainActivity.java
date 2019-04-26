@@ -16,6 +16,7 @@
 package com.archos.mediacenter.video.browser;
 
 import android.animation.Animator;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -42,6 +43,7 @@ import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.preference.PreferenceManager;
@@ -57,6 +59,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.SearchView;
 import android.text.Html;
 import android.util.Log;
+import android.view.DisplayCutout;
 import android.view.InputDevice;
 import android.view.InputEvent;
 import android.view.KeyEvent;
@@ -67,6 +70,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.Window;
+import android.view.WindowInsets;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -90,6 +94,7 @@ import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
+import com.archos.mediacenter.video.utils.MiscUtils;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.TraktSigninDialogPreference;
 import com.archos.mediacenter.video.utils.VideoPreferencesActivity;
@@ -104,7 +109,6 @@ import com.archos.mediascraper.AutoScrapeService;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
 
 /*
  * This is the launch class for the video browser.
@@ -175,7 +179,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     private GlobalResumeView mGlobalResumeView;
     private MenuItem mSearchItem;
     private int mNavigationMode;
-
     private void updateStereoMode(Intent intent) {
         mStereoForced = false;
         try {
@@ -224,6 +227,26 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             if(savedInstanceState==null && !isShortcutIntent())
                 mDrawerLayout.openDrawer(GravityCompat.START);
 
+        }
+
+        // determine if display has cutouts
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setOnApplyWindowInsetsListener( new View.OnApplyWindowInsetsListener() {
+                @SuppressLint("NewApi")
+                @Override
+                public WindowInsets onApplyWindowInsets(View view, WindowInsets insets) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
+                        if (cutout != null) {
+                            if (DBG) Log.d(TAG, "device with cutout");
+                            MiscUtils.hasCutout = true;
+                        } else
+                        if (DBG) Log.d(TAG, "device without cutout");
+                    }
+                    getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
+                    return view.onApplyWindowInsets(insets);
+                }
+            });
         }
 
         mGlobalResumeViewStub = (ViewStub) findViewById(R.id.global_resume_stub);

@@ -14,11 +14,15 @@
 
 package com.archos.mediacenter.video.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.app.UiModeManager;
 import android.content.res.Configuration;
+import android.os.Build;
+import android.util.Log;
+import android.view.DisplayCutout;
 
 import static android.content.Context.UI_MODE_SERVICE;
 
@@ -27,6 +31,8 @@ import static android.content.Context.UI_MODE_SERVICE;
  */
 
 public class MiscUtils {
+
+    public static boolean hasCutout = false;
 
     public static boolean isGooglePlayServicesAvailable(Context context){
         try {

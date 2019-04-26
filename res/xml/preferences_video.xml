@@ -56,6 +56,13 @@
             android:title="@string/preference_tv_refreshrate_switch"
             app:iconSpaceReserved="false"/>
         <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="enable_cutout_mode_short_edges"
+            android:persistent="true"
+            android:summary="@string/preference_cutout_short_edges_summary"
+            android:title="@string/preference_cutout_short_edges"
+            app:iconSpaceReserved="false"/>
+        <CheckBoxPreference
             android:defaultValue="false"
             android:key="activate_tv_switch"
             android:persistent="true"
