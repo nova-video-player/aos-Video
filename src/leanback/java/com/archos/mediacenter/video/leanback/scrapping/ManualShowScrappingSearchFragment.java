@@ -49,7 +49,6 @@ import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.TagsFactory;
 import com.archos.mediascraper.preprocess.SearchInfo;
 import com.archos.mediascraper.preprocess.SearchPreprocessor;
-import com.archos.mediascraper.saxhandler.ShowAllDetailsHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -367,7 +366,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
         }
 
         private EpisodeTags getEpisode(Map<String, EpisodeTags> map, int episode, int season, ShowTags show) {
-            EpisodeTags newEpTag = map.get(ShowAllDetailsHandler.getKey(season, episode));
+            EpisodeTags newEpTag = map.get(season + "|" + episode);
             if (newEpTag == null) {
                 newEpTag = new EpisodeTags();
                 // assume episode / season of request
