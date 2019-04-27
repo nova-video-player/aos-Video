@@ -12,29 +12,16 @@
 
 # Add any project specific keep options here:
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
--optimizationpasses 5
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
 -dontpreverify
 -dontshrink
 -dontoptimize
 -dontobfuscate
-#-verbose
-#-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
 
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
 -keepattributes Exceptions,InnerClasses
-
--keepclasseswithmember class * {
-    native <methods>;
-}
 
 -keep class com.archos.mediacenter.video.browser.BrowserByCling { *; }
 -keep class com.archos.mediacenter.video.browser.BrowserBySeason
@@ -157,12 +144,6 @@
 #jsch
 -keep class com.jcraft.jsch.**
 -keep interface com.jcraft.jsch.**
-
-#amazon
--dontwarn com.amazon.**
--keep class com.amazon.** {*;}
--keepattributes *Annotation*
-
 
 # Platform calls Class.forName on types which do not exist on Android to determine platform.
 -dontnote retrofit2.Platform
