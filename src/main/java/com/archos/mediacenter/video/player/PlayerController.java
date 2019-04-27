@@ -655,7 +655,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 
                 SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-                if(mPreferences.getBoolean("enable_cutout_mode_short_edges", true)) {
+                if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false)) {
                     RelativeLayout.LayoutParams relativeParams = ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams());
                     relativeParams.setMargins(PlayerActivity.safeInsetLeft, 0, 0, 0);
                     mControllerView.setLayoutParams(relativeParams);
