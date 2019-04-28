@@ -217,7 +217,7 @@ public class PosterImageCardPresenter extends Presenter {
         final ImageCardView card = vh.getImageCardView();
 
         // setup the trakt flag BEFORE the poster because it is handled in a strange way in the ImageCardViewTarget
-        vh.mImageCardViewTarget.setWatchedFlag(video.isWatched());
+        vh.mImageCardViewTarget.setWatchedFlag(video.isWatched() || video.getResumeMs() == PlayerActivity.LAST_POSITION_END);
 
 
         Uri posterUri = video.getPosterUri();
