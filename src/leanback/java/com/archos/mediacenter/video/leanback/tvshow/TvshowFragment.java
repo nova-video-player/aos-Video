@@ -360,6 +360,21 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if ((requestCode == REQUEST_CODE_MARK_WATCHED || requestCode == REQUEST_CODE_VIDEO) && resultCode == Activity.RESULT_OK) {
+            // TvshowLoader is a CursorLoader
+            TvshowLoader tvshowLoader = new TvshowLoader(getActivity(), mTvshow.getTvshowId());
+            Cursor cursor = tvshowLoader.loadInBackground();
+            if(cursor != null && cursor.getCount()>0) {
+                cursor.moveToFirst();
+                TvshowCursorMapper tvshowCursorMapper = new TvshowCursorMapper();
+                tvshowCursorMapper.bindColumns(cursor);
+                Tvshow tvshow = (Tvshow) tvshowCursorMapper.bind(cursor);
+                tvshow.setShowTags(mTvshow.getShowTags());
+                mTvshow = tvshow;
+            }
+
+            mDetailsOverviewRow.setItem(mTvshow);
+        }
         if ((requestCode == REQUEST_CODE_MORE_DETAILS || requestCode == REQUEST_CODE_VIDEO) && resultCode == Activity.RESULT_OK) {
             Log.d(TAG, "Get RESULT_OK from TvshowMoreDetailsFragment/VideoDetailsFragment");
 
@@ -398,21 +413,6 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
             mSeasonAdapters = null;
             mHasDetailRow = false;
-        }
-        else if (requestCode == REQUEST_CODE_MARK_WATCHED && resultCode == Activity.RESULT_OK) {
-            // TvshowLoader is a CursorLoader
-            TvshowLoader tvshowLoader = new TvshowLoader(getActivity(), mTvshow.getTvshowId());
-            Cursor cursor = tvshowLoader.loadInBackground();
-            if(cursor != null && cursor.getCount()>0) {
-                cursor.moveToFirst();
-                TvshowCursorMapper tvshowCursorMapper = new TvshowCursorMapper();
-                tvshowCursorMapper.bindColumns(cursor);
-                Tvshow tvshow = (Tvshow) tvshowCursorMapper.bind(cursor);
-                tvshow.setShowTags(mTvshow.getShowTags());
-                mTvshow = tvshow;
-            }
-
-            mDetailsOverviewRow.setItem(mTvshow);
         }
     }
 
