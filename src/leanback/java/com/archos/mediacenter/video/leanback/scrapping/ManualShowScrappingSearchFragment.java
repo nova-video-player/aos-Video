@@ -126,8 +126,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
         }
 
         if (tags == null) {
-            // 2015: I didn't test this case...
-            buildNewShowTags(result.getTitle());
+            tags = buildNewShowTags(result.getTitle());
         }
 
         if(DBG) Log.d(TAG, "put in mTagsToSearchResultMap: "+tags);
@@ -293,8 +292,10 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             }
             if (DBG) {
                 Log.d(TAG, "--------------------\nAll episodes for the new show:");
-                for (String key : epMap.keySet()) {
-                    Log.d(TAG, "epMap "+key+" -> "+epMap.get(key).getShowTitle()+" "+epMap.get(key).getSeason()+ " "+epMap.get(key).getEpisode());
+                if (epMap != null) {
+                    for (String key : epMap.keySet()) {
+                        Log.d(TAG, "epMap "+key+" -> "+epMap.get(key).getShowTitle()+" "+epMap.get(key).getSeason()+ " "+epMap.get(key).getEpisode());
+                    }
                 }
                 Log.d(TAG, "--------------------");
             }
@@ -366,7 +367,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
         }
 
         private EpisodeTags getEpisode(Map<String, EpisodeTags> map, int episode, int season, ShowTags show) {
-            EpisodeTags newEpTag = map.get(season + "|" + episode);
+            EpisodeTags newEpTag = map != null ? map.get(season + "|" + episode) : null;
             if (newEpTag == null) {
                 newEpTag = new EpisodeTags();
                 // assume episode / season of request
