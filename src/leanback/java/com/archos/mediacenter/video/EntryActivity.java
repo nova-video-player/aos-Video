@@ -30,6 +30,7 @@ import com.archos.mediacenter.video.leanback.MainActivityLeanback;
 public class EntryActivity extends Activity {
 
     private static final String TAG = "EntryActivity";
+    private static boolean DBG = false;
 
     /**
      * @return true if this APK build integrate the leanback UI
@@ -41,7 +42,7 @@ public class EntryActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate");
+        if (DBG) Log.d(TAG, "onCreate");
 
         Class activityToLaunch = null;
 
