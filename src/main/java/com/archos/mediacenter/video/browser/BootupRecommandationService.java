@@ -30,6 +30,7 @@ import android.util.Log;
 
 public class BootupRecommandationService extends BroadcastReceiver {
 	private static final String TAG = "BootupActivity";
+	private static final boolean DBG = false;
 
 	private static final AppState.OnForeGroundListener sForegroundListener = new AppState.OnForeGroundListener() {
 		@Override
@@ -42,7 +43,7 @@ public class BootupRecommandationService extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.d(TAG, "BootupActivity initiated");
+		if (DBG) Log.d(TAG, "BootupActivity initiated");
 		if (intent.getAction().endsWith(Intent.ACTION_BOOT_COMPLETED)||intent.getAction().equalsIgnoreCase(UPDATE_ACTION)) {
 			scheduleRecommendationUpdate(context);
 		}

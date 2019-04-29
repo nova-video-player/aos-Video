@@ -48,6 +48,8 @@ import java.util.List;
 public class FileManagerService extends Service implements OperationEngineListener{
 
     private static final String TAG = "FileManagerService";
+    private static final boolean DBG = false;
+
     private ArrayList<MetaFile2> mProcessedFiles = null;
     private IBinder localBinder;
     private static final int PASTE_NOTIFICATION_ID = 1;
@@ -210,6 +212,7 @@ public class FileManagerService extends Service implements OperationEngineListen
 
     @Override
     public void onDestroy() {
+        setCanceledStatus();
     	super.onDestroy();
     	unregisterReceiver(receiver);
     }
@@ -334,13 +337,13 @@ public class FileManagerService extends Service implements OperationEngineListen
     private void acquireWakeLock() {
 
         releaseWakeLock();
-        Log.d(TAG, "acquireWakeLock");
+        if (DBG) Log.d(TAG, "acquireWakeLock");
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "FileManagerWakeLock");
         mWakeLock.acquire();
     }
     private void releaseWakeLock(){
-        Log.d(TAG, "releaseWakeLock");
+        if (DBG) Log.d(TAG, "releaseWakeLock");
         if(mWakeLock!=null&&mWakeLock.isHeld())
             mWakeLock.release();
     }
@@ -482,8 +485,10 @@ public class FileManagerService extends Service implements OperationEngineListen
         PendingIntent contentIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, 0);
         Builder notificationBuilder = new NotificationCompat.Builder(this);
         notificationBuilder.setSmallIcon(icon);
+        notificationBuilder.setPriority(NotificationCompat.PRIORITY_LOW);
         notificationBuilder.setTicker(null);
         notificationBuilder.setOnlyAlertOnce(true);
+        notificationBuilder.setOngoing(true);
         notificationBuilder.setContentTitle(title);
         notificationBuilder.setContentText(mProcessedFiles.get(0).getName());
         notificationBuilder.setContentIntent(contentIntent);
