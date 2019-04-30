@@ -156,6 +156,7 @@
     <string name="scrap_change_title">Modifying all episodes</string>
     <string name="scrap_change_initializing">Initializing…</string>
     <string name="scrap_change_finalizing">Finalizing…</string>
+    <string name="scrap_get_title">Getting info</string>
 
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Director</string>
