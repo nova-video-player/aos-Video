@@ -57,11 +57,14 @@ import androidx.leanback.widget.RowPresenter;
 import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import android.text.SpannableString;
+import android.transition.Slide;
 import androidx.transition.Transition;
 import androidx.leanback.transition.TransitionHelper;
 import androidx.leanback.transition.TransitionListener;
 import android.util.Log;
 import android.util.Pair;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -82,6 +85,8 @@ import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.NonIndexedVideo;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
+import com.archos.mediacenter.video.browser.loader.EpisodesLoader;
+import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.browser.loader.NextEpisodeLoader;
 import com.archos.mediacenter.video.browser.loader.TvshowLoader;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
@@ -93,6 +98,7 @@ import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.adapter.object.WebPageLink;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
+import com.archos.mediacenter.video.leanback.movies.AllMoviesGridFragment;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.ScraperImageBackdropPresenter;
 import com.archos.mediacenter.video.leanback.presenter.ScraperImagePosterPresenter;
@@ -267,6 +273,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 @Override
                 public void onTransitionStart(Object transition) {
                     mAnimationIsRunning = true;
+                    mOverlay.hide();
                 }
 
                 @Override
@@ -277,6 +284,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                         mDetailsOverviewRow.setImageScaleUpAllowed(true);
 
                     }
+                    mOverlay.show();
                 }
             });
         }
@@ -1854,5 +1862,107 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 getActivity().finish();
             }
         }, 200);
+    }
+
+    public void onKeyDown(int keyCode) {
+        int direction = -1;
+
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_MENU:
+                setSelectedPosition(0);
+                break;
+            case KeyEvent.KEYCODE_MEDIA_PLAY:
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+                VideoMetadata mMetadata = mVideo.getMetadata();
+                isFilePlayable = true;
+                // test from FileDetailsRowPresenter to check if file is playable
+                if (mMetadata != null) {
+                    if (mMetadata.getFileSize() == 0 && mMetadata.getVideoTrack() == null && mMetadata.getAudioTrackNb() == 0) {
+                        isFilePlayable = false;
+                    }
+                }
+                if (isFilePlayable) {
+                    startAds(REQUEST_CODE_RESUME_AFTER_ADS_ACTIVITY);
+                } else {
+                    Toast.makeText(getActivity(), R.string.player_err_cantplayvideo, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
+            case KeyEvent.KEYCODE_MEDIA_NEXT:
+                direction = Gravity.RIGHT;
+                break;
+            case KeyEvent.KEYCODE_MEDIA_REWIND:
+            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                direction = Gravity.LEFT;
+                break;
+        }
+
+        if (direction != -1) {
+            CursorLoader loader = null;
+            if (mVideo instanceof Movie) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String sortOrder = prefs.getString(AllMoviesGridFragment.SORT_PARAM_KEY, MoviesLoader.DEFAULT_SORT);
+                boolean showWatched = prefs.getBoolean(AllMoviesGridFragment.SHOW_WATCHED_KEY, true);
+                loader = new MoviesLoader(getActivity(), sortOrder, showWatched, true);
+            }
+            else if (mVideo instanceof Episode) {
+                EpisodeTags tags = (EpisodeTags)mVideo.getFullScraperTags(getActivity());
+                loader = new EpisodesLoader(getActivity(), tags.getShowId(), -1, true);
+            }
+            if (loader != null) {
+                // Using a CursorLoader but outside of the LoaderManager : need to make sure the Looper is ready
+                if (Looper.myLooper()==null) Looper.prepare();
+                Cursor c = loader.loadInBackground();
+                Video video = null;
+                for (int i = 0; i < c.getCount(); i++) {
+                    c.moveToPosition(i);
+                    Video v = (Video)new CompatibleCursorMapperConverter(new VideoCursorMapper()).convert(c);
+                    if (v.getId() == mVideo.getId()) {
+                        if (direction == Gravity.LEFT) {
+                            if (i - 1 >= 0)
+                                c.moveToPosition(i - 1);
+                            else
+                                c.moveToPosition(c.getCount() - 1);
+                        }
+                        else if (direction == Gravity.RIGHT) {
+                            if (i + 1 <= c.getCount() - 1)
+                                c.moveToPosition(i + 1);
+                            else
+                                c.moveToPosition(0);
+                        }
+                        Video nv = (Video)new CompatibleCursorMapperConverter(new VideoCursorMapper()).convert(c);
+                        if (nv.getId() != v.getId())
+                            video = nv;
+                        break;
+                    }
+                }
+                c.close();
+                if (video != null) {
+                    if (direction == Gravity.LEFT)
+                        getActivity().getWindow().setExitTransition(new Slide(Gravity.RIGHT));
+                    else if (direction == Gravity.RIGHT)
+                        getActivity().getWindow().setExitTransition(new Slide(Gravity.LEFT));
+                    final Intent intent = new Intent(getActivity(), VideoDetailsActivity.class);
+                    intent.putExtra(VideoDetailsFragment.EXTRA_VIDEO, video);
+                    intent.putExtra(VideoDetailsActivity.SLIDE_TRANSITION_EXTRA, true);
+                    intent.putExtra(VideoDetailsActivity.SLIDE_DIRECTION_EXTRA, direction);
+                    // Launch next activity with slide animation
+                    // Starting from lollipop we need to give an empty "SceneTransitionAnimation" for this to work
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                    } else {
+                        startActivity(intent);
+                    }
+                    // Delay the finish the "old" activity, else it breaks the animation
+                    mHandler.postDelayed(new Runnable() {
+                        public void run() {
+                            if (getActivity()!=null) // better safe than sorry
+                                getActivity().finish();
+                        }
+                    }, 1000);
+                }
+            }
+        }
     }
 }

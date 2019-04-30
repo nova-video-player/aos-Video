@@ -57,9 +57,9 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
 
     private static final String PREF_ALL_TVSHOWS_DISPLAY_MODE = "PREF_ALL_TVSHOWS_DISPLAY_MODE";
 
-    private static final String SORT_PARAM_KEY = AllTvshowsGridFragment.class.getName() + "_SORT";
+    public static final String SORT_PARAM_KEY = AllTvshowsGridFragment.class.getName() + "_SORT";
 
-    private static final String SHOW_WATCHED_KEY = AllTvshowsGridFragment.class.getName() + "_SHOW_WATCHED";
+    public static final String SHOW_WATCHED_KEY = AllTvshowsGridFragment.class.getName() + "_SHOW_WATCHED";
 
     private CursorObjectAdapter mTvshowsAdapter;
     private DisplayMode mDisplayMode;

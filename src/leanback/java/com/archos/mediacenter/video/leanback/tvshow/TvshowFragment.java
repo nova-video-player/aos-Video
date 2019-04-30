@@ -15,8 +15,10 @@
 package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import androidx.loader.app.LoaderManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import androidx.loader.content.Loader;
 
 import android.database.Cursor;
@@ -25,8 +27,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.preference.PreferenceManager;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.DetailsFragmentWithLessTopOffset;
 import androidx.leanback.widget.Action;
@@ -46,11 +51,17 @@ import androidx.leanback.widget.RowPresenter;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
+import android.transition.Slide;
 import android.util.Log;
 import android.util.Pair;
 import android.util.SparseArray;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
+import androidx.leanback.transition.TransitionHelper;
+import androidx.leanback.transition.TransitionListener;
+import androidx.loader.content.CursorLoader;
 
 import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.video.R;
@@ -59,6 +70,7 @@ import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
+import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.EpisodesLoader;
 import com.archos.mediacenter.video.browser.loader.SeasonsLoader;
 import com.archos.mediacenter.video.browser.loader.TvshowLoader;
@@ -71,6 +83,7 @@ import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.leanback.scrapping.ManualShowScrappingActivity;
 import com.archos.mediacenter.video.player.PlayerActivity;
+import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.ShowTags;
@@ -123,6 +136,21 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Object transition = TransitionHelper.getEnterTransition(getActivity().getWindow());
+        if(transition!=null) {
+            TransitionHelper.addTransitionListener(transition, new TransitionListener() {
+                @Override
+                public void onTransitionStart(Object transition) {
+                    mOverlay.hide();
+                }
+
+                @Override
+                public void onTransitionEnd(Object transition) {
+                    mOverlay.show();
+                }
+            });
+        }
+
         setTopOffsetRatio(0.6f);
 
         Intent intent = getActivity().getIntent();
@@ -158,37 +186,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             @Override
             public void onActionClicked(Action action) {
                 if (action.getId() == TvshowActionAdapter.ACTION_PLAY) {
-                    if (mSeasonAdapters != null) {
-                        Episode resumeEpisode = null;
-                        Episode firstEpisode = null;
-                        int i = 0;
-
-                        while(i < mSeasonAdapters.size() && (resumeEpisode == null || resumeEpisode != null && resumeEpisode.getSeasonNumber() == 0)) {
-                            CursorObjectAdapter seasonAdapter = mSeasonAdapters.valueAt(i);
-                            int j = 0;
-
-                            while (j < seasonAdapter.size() && (resumeEpisode == null || resumeEpisode != null && resumeEpisode.getSeasonNumber() == 0)) {
-                                Episode episode = (Episode)seasonAdapter.get(j);
-
-                                if (episode.getResumeMs() != PlayerActivity.LAST_POSITION_END
-                                        && (resumeEpisode == null || resumeEpisode != null && episode.getEpisodeDate() < resumeEpisode.getEpisodeDate())) {
-                                    resumeEpisode = episode;
-                                }
-
-                                if (firstEpisode == null || (firstEpisode != null && firstEpisode.getSeasonNumber() == 0 && episode.getEpisodeDate() < firstEpisode.getEpisodeDate()))
-                                    firstEpisode = episode;
-
-                                j++;
-                            }
-
-                            i++;
-                        }
-
-                        if (resumeEpisode != null)
-                            PlayUtils.startVideo(getActivity(), (Video)resumeEpisode, PlayerActivity.RESUME_FROM_LAST_POS, false, -1, null, -1);
-                        else if (firstEpisode != null)
-                            PlayUtils.startVideo(getActivity(), (Video)firstEpisode, PlayerActivity.RESUME_FROM_LAST_POS, false, -1, null, -1);
-                    }
+                    playEpisode();
                 }
                 else if (action.getId() == TvshowActionAdapter.ACTION_MORE_DETAILS) {
                     Intent intent = new Intent(getActivity(), TvshowMoreDetailsActivity.class);
@@ -259,6 +257,40 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 }
             }
         });
+    }
+
+    private void playEpisode() {
+        if (mSeasonAdapters != null) {
+            Episode resumeEpisode = null;
+            Episode firstEpisode = null;
+            int i = 0;
+
+            while(i < mSeasonAdapters.size() && (resumeEpisode == null || resumeEpisode != null && resumeEpisode.getSeasonNumber() == 0)) {
+                CursorObjectAdapter seasonAdapter = mSeasonAdapters.valueAt(i);
+                int j = 0;
+
+                while (j < seasonAdapter.size() && (resumeEpisode == null || resumeEpisode != null && resumeEpisode.getSeasonNumber() == 0)) {
+                    Episode episode = (Episode)seasonAdapter.get(j);
+
+                    if (episode.getResumeMs() != PlayerActivity.LAST_POSITION_END
+                            && (resumeEpisode == null || resumeEpisode != null && episode.getEpisodeDate() < resumeEpisode.getEpisodeDate())) {
+                        resumeEpisode = episode;
+                    }
+
+                    if (firstEpisode == null || (firstEpisode != null && firstEpisode.getSeasonNumber() == 0 && episode.getEpisodeDate() < firstEpisode.getEpisodeDate()))
+                        firstEpisode = episode;
+
+                    j++;
+                }
+
+                i++;
+            }
+
+            if (resumeEpisode != null)
+                PlayUtils.startVideo(getActivity(), (Video)resumeEpisode, PlayerActivity.RESUME_FROM_LAST_POS, false, -1, null, -1);
+            else if (firstEpisode != null)
+                PlayUtils.startVideo(getActivity(), (Video)firstEpisode, PlayerActivity.RESUME_FROM_LAST_POS, false, -1, null, -1);
+        }
     }
 
     private int getDarkerColor(int color) {
@@ -625,6 +657,92 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 setAdapter(mRowsAdapter);
 
                 mHasDetailRow = true;
+            }
+        }
+    }
+
+    public void onKeyDown(int keyCode) {
+        int direction = -1;
+
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_MENU:
+                setSelectedPosition(0);
+                break;
+            case KeyEvent.KEYCODE_MEDIA_PLAY:
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+                playEpisode();
+                break;
+            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
+            case KeyEvent.KEYCODE_MEDIA_NEXT:
+                direction = Gravity.RIGHT;
+                break;
+            case KeyEvent.KEYCODE_MEDIA_REWIND:
+            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                direction = Gravity.LEFT;
+                break;
+        }
+
+        if (direction != -1) {
+            CursorLoader loader = null;
+            if (mTvshow != null) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String sortOrder = prefs.getString(AllTvshowsGridFragment.SORT_PARAM_KEY, TvshowSortOrderEntries.DEFAULT_SORT);
+                boolean showWatched = prefs.getBoolean(AllTvshowsGridFragment.SHOW_WATCHED_KEY, true);
+                loader = new AllTvshowsLoader(getActivity(), sortOrder, showWatched);
+            }
+            if (loader != null) {
+                // Using a CursorLoader but outside of the LoaderManager : need to make sure the Looper is ready
+                if (Looper.myLooper()==null) Looper.prepare();
+                Cursor c = loader.loadInBackground();
+                Tvshow tvshow = null;
+                for (int i = 0; i < c.getCount(); i++) {
+                    c.moveToPosition(i);
+                    Tvshow t = (Tvshow)new CompatibleCursorMapperConverter(new TvshowCursorMapper()).convert(c);
+                    if (t.getTvshowId() == mTvshow.getTvshowId()) {
+                        if (direction == Gravity.LEFT) {
+                            if (i - 1 >= 0)
+                                c.moveToPosition(i - 1);
+                            else
+                                c.moveToPosition(c.getCount() - 1);
+                        }
+                        else if (direction == Gravity.RIGHT) {
+                            if (i + 1 <= c.getCount() - 1)
+                                c.moveToPosition(i + 1);
+                            else
+                                c.moveToPosition(0);
+                        }
+                        Tvshow nt = (Tvshow)new CompatibleCursorMapperConverter(new TvshowCursorMapper()).convert(c);
+                        if (nt.getTvshowId() != t.getTvshowId())
+                            tvshow = nt;
+                        break;
+                    }
+                }
+                c.close();
+                if (tvshow != null) {
+                    if (direction == Gravity.LEFT)
+                        getActivity().getWindow().setExitTransition(new Slide(Gravity.RIGHT));
+                    else if (direction == Gravity.RIGHT)
+                        getActivity().getWindow().setExitTransition(new Slide(Gravity.LEFT));
+                    final Intent intent = new Intent(getActivity(), TvshowActivity.class);
+                    intent.putExtra(TvshowFragment.EXTRA_TVSHOW, tvshow);
+                    intent.putExtra(TvshowActivity.SLIDE_TRANSITION_EXTRA, true);
+                    intent.putExtra(TvshowActivity.SLIDE_DIRECTION_EXTRA, direction);
+                    // Launch next activity with slide animation
+                    // Starting from lollipop we need to give an empty "SceneTransitionAnimation" for this to work
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                    } else {
+                        startActivity(intent);
+                    }
+                    // Delay the finish the "old" activity, else it breaks the animation
+                    mHandler.postDelayed(new Runnable() {
+                        public void run() {
+                            if (getActivity()!=null) // better safe than sorry
+                                getActivity().finish();
+                        }
+                    }, 1000);
+                }
             }
         }
     }

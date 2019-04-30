@@ -58,9 +58,9 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
 
     private static final String PREF_ALL_MOVIES_DISPLAY_MODE = "PREF_ALL_MOVIES_DISPLAY_MODE";
 
-    private static final String SORT_PARAM_KEY = AllMoviesGridFragment.class.getName() + "_SORT";
+    public static final String SORT_PARAM_KEY = AllMoviesGridFragment.class.getName() + "_SORT";
 
-    private static final String SHOW_WATCHED_KEY = AllMoviesGridFragment.class.getName() + "_SHOW_WATCHED";
+    public static final String SHOW_WATCHED_KEY = AllMoviesGridFragment.class.getName() + "_SHOW_WATCHED";
 
     private CursorObjectAdapter mMoviesAdapter;
     private DisplayMode mDisplayMode;
