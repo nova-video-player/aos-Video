@@ -108,9 +108,12 @@ public class Overlay {
 
     /**
      * To be called whenever you want to hide the overlay widgets
-     * (Did not implement the show() because I don't need it...)
      */
     public void hide() {
         mOverlayRoot.setVisibility(View.GONE);
+    }
+
+    public void show() {
+        mOverlayRoot.setVisibility(View.VISIBLE);
     }
 }

@@ -18,7 +18,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Window;
+import androidx.fragment.app.Fragment;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
@@ -28,6 +30,7 @@ public class VideoDetailsActivity extends LeanbackActivity {
 
     public static final String SHARED_ELEMENT_NAME = "hero";
     public static final String SLIDE_TRANSITION_EXTRA = "slide_transition";
+    public static final String SLIDE_DIRECTION_EXTRA = "slide_direction";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,8 @@ public class VideoDetailsActivity extends LeanbackActivity {
 
             // Set the enter animation only when asked (i.e. it is a "Next Episode" transition)
             if (getIntent().getBooleanExtra(SLIDE_TRANSITION_EXTRA, false)) {
-                getWindow().setEnterTransition(new Slide(Gravity.RIGHT));
+                int direction = getIntent().getIntExtra(SLIDE_DIRECTION_EXTRA, Gravity.RIGHT);
+                getWindow().setEnterTransition(new Slide(direction));
             }
         }
 
@@ -58,5 +62,26 @@ public class VideoDetailsActivity extends LeanbackActivity {
         super.onResume();
         if(getIntent().getBooleanExtra(VideoDetailsFragment.EXTRA_LAUNCHED_FROM_PLAYER, false))
             TorrentObserverService.resumed(this);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_MENU:
+            case KeyEvent.KEYCODE_MEDIA_PLAY:
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
+            case KeyEvent.KEYCODE_MEDIA_NEXT:
+            case KeyEvent.KEYCODE_MEDIA_REWIND:
+            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_browse_fragment);
+                if (fragment instanceof VideoDetailsFragment) {
+                    ((VideoDetailsFragment)fragment).onKeyDown(keyCode);
+                    return true;
+                }
+                break;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

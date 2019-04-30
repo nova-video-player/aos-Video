@@ -51,7 +51,7 @@ public class EpisodesLoader extends VideoLoader {
 
     @Override
     public String getSortOrder() {
-        return VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE;
+        return VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + ", " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE;
     }
 
     @Override
@@ -68,16 +68,25 @@ public class EpisodesLoader extends VideoLoader {
 
         if (sb.length()>0) { sb.append(" AND "); }
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + "=?");
-        sb.append(" AND ");
-        sb.append(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + "=?");
+        if (mSeasonNumber != -1) {
+            sb.append(" AND ");
+            sb.append(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + "=?");
+        }
         return sb.toString();
     }
 
     @Override
     public String[] getSelectionArgs() {
-        return new String[] {
+        if (mSeasonNumber != -1) {
+            return new String[] {
                 Long.toString(mShowId),
                 Integer.toString(mSeasonNumber)
-        };
+            };
+        }
+        else {
+            return new String[] {
+                Long.toString(mShowId)
+            };
+        }
     }
 }
