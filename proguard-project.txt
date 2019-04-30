@@ -174,8 +174,11 @@
 -keepattributes Exceptions
 -dontwarn okio.**
 
-#okhttp3
+# OkHttp platform used only on JVM and when Conscrypt dependency is available.
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
+
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
 
 -dontwarn org.ietf.**
 -dontwarn java.lang.annotation.Annotation
