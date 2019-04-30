@@ -116,7 +116,9 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
     @Override
     protected BaseTags getTagFromSearchResult(SearchResult result) {
         // Get the details for this match
-        ScrapeDetailResult detail = mScraper.getDetails(result, null);
+        Bundle b = new Bundle();
+        b.putBoolean(Scraper.ITEM_REQUEST_BASIC_SHOW, true);
+        ScrapeDetailResult detail = mScraper.getDetails(result, b);
         BaseTags tags = detail.tag;
 
         // In theory we should get a ShowTags here but in practice we did a search for Episodes.
@@ -173,6 +175,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
 
     private class EpSaveTask extends AsyncTask<ShowTags, Integer, ShowTags> {
 
+        final int PROGRESS_ID_MAX = -3;
         final int PROGRESS_ID_FINALIZING = -2;
 
         final Context mContext;
@@ -214,14 +217,16 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            if (values[0]==PROGRESS_ID_FINALIZING) {
+            if (values[0]==PROGRESS_ID_MAX) {
+                mProgressDialog.setMax(values[1]);
+            }
+            else if (values[0]==PROGRESS_ID_FINALIZING) {
                 mProgressDialog.setMessage(getString(R.string.scrap_change_finalizing));
             }
             else {
-                mProgressDialog.setMax(values[1]);
                 mProgressDialog.setProgress(values[0]);
-                int season = values[2];
-                int episode = values[3];
+                int season = values[1];
+                int episode = values[2];
                 mProgressDialog.setMessage(getString(R.string.episode_identification, season, episode));
             }
         }
@@ -272,6 +277,8 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
          * @return the new show with its ID set up
          */
         private ShowTags handleSave(ShowTags newShow, List<EpisodeTags> targetEpisodesList) {
+            publishProgress(PROGRESS_ID_MAX, targetEpisodesList.size());
+
             // TODO make this nicer
             NfoWriter.ExportContext exportContext = null;
             if (NfoWriter.isNfoAutoExportEnabled(mContext)) {
@@ -287,6 +294,8 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             ScrapeDetailResult detail = Scraper.getDetails(sr, b);
             HashMap<String, EpisodeTags> epMap = null;
             if (detail.isOkay()) {
+                if (detail.tag instanceof EpisodeTags)
+                    newShow = ((EpisodeTags)detail.tag).getShowTags();
                 Bundle episodeList = detail.extras;
                 epMap = toMap(episodeList);
             }
@@ -327,7 +336,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
                         }
                     }
                 }
-                publishProgress(i, size, newEpisodeTag.getSeason(), newEpisodeTag.getEpisode());
+                publishProgress(i, newEpisodeTag.getSeason(), newEpisodeTag.getEpisode());
             }
             publishProgress(PROGRESS_ID_FINALIZING);
             Log.d(TAG, "preparations took:" + t.step());
