@@ -637,31 +637,47 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     public void updateOrientation() {
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N_MR1) {
+
             int orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-            // if for rotation 270, ALIGN_PARENT_LEFT is used, volume bar appears under the button bar
-            if(orientation == Surface.ROTATION_270) {
-                //((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                // need new solution since in presence if cutout display whole relative layout is shifted by safeInsetRight+safeInsetLeft+navigationBarHeight...
-                // set manually the margin to the navigationBarHeight relative to left alignment
-                ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                RelativeLayout.LayoutParams relativeParams = ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams());
-                relativeParams.setMargins(getNavigationBarHeight(), 0, 0, 0);
-                mControllerView.setLayoutParams(relativeParams);
-                mControllerView.requestLayout();
+            if (DBG) Log.d(TAG,"orientation is " + orientation);
 
+            SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+            RelativeLayout.LayoutParams relativeParams = ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams());
+            switch (orientation) {
+                case Surface.ROTATION_270:
+                    if (DBG) Log.d(TAG,"rotation is 270 shifting right from getNavigationBarHeight=" + getNavigationBarHeight());
+                    ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                    relativeParams.setMargins(getNavigationBarHeight(), 0, 0, 0);
+                    break;
+                case Surface.ROTATION_90:
+                    if (DBG) Log.d(TAG,"rotation is 90");
+                    // FIXME: ALIGN_PARENT_RIGHT should have been simpler but results in shifted layout by safeInsetRight+safeInsetLeft+navigationBarHeight
+                    ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                    if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false)) {
+                        if (DBG) Log.d(TAG,"shifting right PlayerActivity.safeInsetLeft=" + PlayerActivity.safeInsetLeft);
+                        relativeParams.setMargins(PlayerActivity.safeInsetLeft, 0, 0, 0);
+                    }
+                    break;
+                case Surface.ROTATION_0:
+                    if (DBG) Log.d(TAG,"rotation is 0 shifting up from getNavigationBarHeight=" + getNavigationBarHeight());
+                    // FIXME: this is the only way found to get in portrait the seekbar on top of navigationBar
+                    if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false))
+                        ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                    else
+                        ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                    relativeParams.setMargins(0, 0, 0, getNavigationBarHeight());
+                    break;
+                case Surface.ROTATION_180:
+                    if (DBG) Log.d(TAG,"rotation is 180");
+                    ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                    if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false)) {
+                        if (DBG) Log.d(TAG,"shifting right PlayerActivity.safeInsetTop=" + PlayerActivity.safeInsetTop);
+                        relativeParams.setMargins(0, 0, 0, PlayerActivity.safeInsetTop);
+                    }
+                    break;
             }
-            else {
-                // this is to shift layout when cutout is on the left so that the volumeBar does not overlap with cutout when using LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-                ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-
-                SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-                if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false)) {
-                    RelativeLayout.LayoutParams relativeParams = ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams());
-                    relativeParams.setMargins(PlayerActivity.safeInsetLeft, 0, 0, 0);
-                    mControllerView.setLayoutParams(relativeParams);
-                    mControllerView.requestLayout();
-                }
-            }
+            mControllerView.setLayoutParams(relativeParams);
+            mControllerView.requestLayout();
         }
     }
 

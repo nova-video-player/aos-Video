@@ -538,8 +538,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
             }
             else {
-                if (DBG) Log.d(TAG,"onCreate applying LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT");
-                attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT;
+                if (DBG) Log.d(TAG,"onCreate applying LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER");
+                attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER;
             }
         }
 
@@ -645,7 +645,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 @Override
                 public void onDisplayChanged(int displayId) {
                     int orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-                    if(mOldOrientation!=orientation &&(orientation==Surface.ROTATION_270&&mOldOrientation == Surface.ROTATION_90||orientation==Surface.ROTATION_90&&mOldOrientation == Surface.ROTATION_270))
+                    if(mOldOrientation!=orientation &&
+                            (orientation==Surface.ROTATION_270&&mOldOrientation == Surface.ROTATION_90
+                                    ||orientation==Surface.ROTATION_90&&mOldOrientation == Surface.ROTATION_270))
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
