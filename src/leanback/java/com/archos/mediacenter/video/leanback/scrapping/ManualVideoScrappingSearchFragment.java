@@ -101,6 +101,10 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
         ScrapeDetailResult detail = mScraper.getDetails(result, b);
         BaseTags tags = detail.tag;
 
+        if (tags instanceof  EpisodeTags) {
+            ((EpisodeTags)tags).getShowTags().setTitle(result.getTitle());
+        }
+
         if (tags == null) {
             // No tags were found online for this movie/show but we know at least its title
             // => build an empty tags structure containing only the title
