@@ -120,6 +120,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Collections;
 
 
 public class PlayerActivity extends AppCompatActivity implements PlayerController.Settings,
@@ -230,14 +231,19 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private boolean mIsReadytoStart;
     private PermissionChecker mPermissionChecker;
 
-    public static int safeInsetLeft = 0;
-    public static int safeInsetTop = 0;
-    public static int safeInsetRight = 0;
-    public static int safeInsetBottom = 0;
+    // safeInset = { safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom};
+    public static ArrayList<Integer> safeInset = new ArrayList<Integer>();
+
     public static boolean hasCutout = false;
     public static boolean seekBarOverlapWithCutout = true;
 
     public void setCutoutMetrics() {
+        if (safeInset.size() != 4) {
+            if (DBG) Log.d(TAG, "setCutoutMetrics safeInset list is of size " + safeInset.size() + ", resetting the list to zero elements");
+            safeInset.clear();
+            for (int i = 0; i < 4; i++)
+                safeInset.add(0);
+        }
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
@@ -256,16 +262,25 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                             if (DBG) Log.d(TAG, "cutout: cutout bounding rect " + rect);
                         }
                     }
-                    safeInsetLeft = cutout.getSafeInsetLeft();
-                    safeInsetTop = cutout.getSafeInsetTop();
-                    safeInsetRight = cutout.getSafeInsetRight();
-                    safeInsetBottom = cutout.getSafeInsetBottom();
-                    if (DBG) Log.d(TAG, "setCutoutMetrics safeInsetLeft=" + safeInsetLeft +", safeInsetTop=" + safeInsetTop + ", safeInsetRight=" + safeInsetRight + ", safeInsetBottom=" + safeInsetBottom );
+                    safeInset.set(0, cutout.getSafeInsetLeft());
+                    safeInset.set(1, cutout.getSafeInsetTop());
+                    safeInset.set(2, cutout.getSafeInsetRight());
+                    safeInset.set(3, cutout.getSafeInsetBottom());
+                    if (DBG) Log.d(TAG, "setCutoutMetrics safeInset=" + safeInset);
                 }
             }
         } catch (Exception e) {
             Log.w(TAG,"cutout evaluation exception, perhaps view not attached yet!!!");
         }
+    }
+
+    private void updateInsetsOnRotation(int oldRotation) {
+        int orientation = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+        if (DBG) Log.d(TAG, "oldRotation=" + oldRotation + ", orientation=" + orientation);
+        //ROTATION_0 = 0; ROTATION_90 = 1; ROTATION_180 = 2; ROTATION_270 = 3;
+        if (DBG) Log.d(TAG, "before rotation safeInset=" + safeInset);
+        Collections.rotate(safeInset, oldRotation-orientation);
+        if (DBG) Log.d(TAG, "after rotation safeInset=" + safeInset);
     }
 
     private Handler mHandler = new Handler() {
@@ -561,6 +576,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             @SuppressLint("NewApi")
                 @Override
                 public WindowInsets onApplyWindowInsets(View view, WindowInsets insets) {
+                    if (DBG) Log.d(TAG, "setOnApplyWindowInsetsListener");
                     setCutoutMetrics();
                     getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
                     return view.onApplyWindowInsets(insets);
@@ -575,7 +591,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                                updateSizes();
+                            if (DBG) Log.d(TAG, "addOnLayoutChangeListener");
+                            updateSizes();
                         }
                     });
                 }
@@ -645,12 +662,14 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 @Override
                 public void onDisplayChanged(int displayId) {
                     int orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-                    if(mOldOrientation!=orientation &&
-                            (orientation==Surface.ROTATION_270&&mOldOrientation == Surface.ROTATION_90
-                                    ||orientation==Surface.ROTATION_90&&mOldOrientation == Surface.ROTATION_270))
+                    if(mOldOrientation != orientation)
+                            //&& (orientation==Surface.ROTATION_270 && mOldOrientation == Surface.ROTATION_90
+                            //        || orientation==Surface.ROTATION_90 && mOldOrientation == Surface.ROTATION_270))
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                if (DBG) Log.d(TAG, "onDisplayChanged");
+                                updateInsetsOnRotation(mOldOrientation);
                                 updateSizes();
                             }
                         });
@@ -976,7 +995,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 ", layoutHeight=" + layoutHeight +
                 ", displayWidth=" + displayWidth +
                 ", displayHeight=" + displayHeight );
-
         boolean isChromebook = getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
         if(isChromebook){
             View content = findViewById(android.R.id.content);
@@ -1004,7 +1022,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mSurfaceController.setScreenSize(width, height);
         mSubtitleManager.setScreenSize(width, height);
         if(!isInPictureInPictureMode) {
-            if (DBG) Log.d(TAG, "updateSizes safeInsetLeft=" + PlayerActivity.safeInsetLeft +", safeInsetTop=" + PlayerActivity.safeInsetTop + ", safeInsetRight=" + PlayerActivity.safeInsetRight + ", safeInsetBottom=" + PlayerActivity.safeInsetBottom );
             if (DBG) Log.d(TAG, "updateSizes mPlayerController.setSizes layoutWidth=" + layoutWidth +", layoutHeight=" + layoutHeight + ", displayWidth=" + displayWidth + ", displayHeight=" + displayHeight );
             int orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
             if(orientation == Surface.ROTATION_270) {

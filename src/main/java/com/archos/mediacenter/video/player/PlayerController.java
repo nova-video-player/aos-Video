@@ -654,8 +654,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     // FIXME: ALIGN_PARENT_RIGHT should have been simpler but results in shifted layout by safeInsetRight+safeInsetLeft+navigationBarHeight
                     ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                     if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false)) {
-                        if (DBG) Log.d(TAG,"shifting right PlayerActivity.safeInsetLeft=" + PlayerActivity.safeInsetLeft);
-                        relativeParams.setMargins(PlayerActivity.safeInsetLeft, 0, 0, 0);
+                        if (DBG) Log.d(TAG,"shifting right PlayerActivity.safeInsetLeft=" + PlayerActivity.safeInset.get(0));
+                        relativeParams.setMargins(PlayerActivity.safeInset.get(0), 0, 0, 0); // safeInset.get(0) is safeInsetLeft
                     }
                     break;
                 case Surface.ROTATION_0:
@@ -671,8 +671,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     if (DBG) Log.d(TAG,"rotation is 180");
                     ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                     if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false)) {
-                        if (DBG) Log.d(TAG,"shifting right PlayerActivity.safeInsetTop=" + PlayerActivity.safeInsetTop);
-                        relativeParams.setMargins(0, 0, 0, PlayerActivity.safeInsetTop);
+                        if (DBG) Log.d(TAG,"shifting right PlayerActivity.safeInsetTop=" + PlayerActivity.safeInset.get(1));
+                        relativeParams.setMargins(0, 0, 0, PlayerActivity.safeInset.get(1)); // safeInset.get(1) is safeInsetTop
                     }
                     break;
             }
