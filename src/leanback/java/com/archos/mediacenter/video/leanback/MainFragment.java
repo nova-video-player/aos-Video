@@ -79,6 +79,7 @@ import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
 import com.archos.mediacenter.video.leanback.tvshow.AllTvshowsGridActivity;
 import com.archos.mediacenter.video.leanback.tvshow.AllTvshowsIconBuilder;
+import com.archos.mediacenter.video.leanback.tvshow.EpisodesByDateActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowsByAlphaActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowsByGenreActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowsByRatingActivity;
@@ -415,6 +416,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         if (showByRating)
             tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_RATING, getString(R.string.tvshows_by_rating), R.drawable.ratings_banner));
         
+        tvshowRowAdapter.add(new Box(Box.ID.EPISODES_BY_DATE, getString(R.string.episodes_by_date), R.drawable.years_banner_2019));
         mTvshowRow = new ListRow(ROW_ID_TVSHOW2, new HeaderItem(getString(R.string.all_tv_shows)), tvshowRowAdapter);
         
         mMoviesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
@@ -953,6 +955,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                         break;
                     case TVSHOWS_BY_RATING:
                         mActivity.startActivity(new Intent(mActivity, TvshowsByRatingActivity.class));
+                        break;
+                    case EPISODES_BY_DATE:
+                        mActivity.startActivity(new Intent(mActivity, EpisodesByDateActivity.class));
                         break;
 
                 }
