@@ -101,6 +101,7 @@
     <string name="all_tvshows">Alle Serien</string>
     <string name="all_tvshows_format">Alle TV-Serien  -  %d</string>
     <string name="not_watched_tvshows_format">Nicht angesehen  -  %d</string>
+    <string name="all_seasons">Alle Staffeln</string>
     <string name="tvshows_by_alpha">Serien alphabetisch</string>
     <string name="tvshows_by_genre">Serien nach Genre</string>
     <string name="tvshows_by_rating">TV-Serien nach Bewertung</string>
@@ -370,6 +371,7 @@
     <string name="subtitles_wizard_add_files">Sie können mehr Untertitel Dateien in diesen Ordner kopieren um sie mit diesem Video zu verknüpfen.</string>
     <string name="subtitles_wizard_help">Wählen Sie eine der verfügbaren Untertitel Dateien aus um sie mit \"%s\" zu verknüpfen. Die Datei wird automatisch dem Namen des Videos entsprechend umbenannt.</string>
     <string name="subtitles_wizard_empty_list_help">Keine Untertitel Dateien gefunden. Bitte kopieren Sie zuerst eine oder mehrere Untertitel Dateien in diesen Ordner um sie mit \"%s\" zu verknüpfen.</string>
+    <string name="subtitles_wizard_cache">Cache</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Untertitel Online suchen</string>
     <string name="toast_subloader_sub_found">Untertitel für diese Sprache gefunden</string>
@@ -578,6 +580,7 @@
     <string name="sort_by_date_played_desc">Sortierung: zur Bibliothek hinzugefügt (neueste zuerst)</string>
     <string name="sort_by_date_premiered_desc">Sortierung: Erstausstrahlung (neu zuerst)</string>
     <string name="sort_by_date_premiered_asc">Sortierung: Erstausstrahlung (alt zuerst)</string>
+    <string name="sort_by_date_aired_desc">Sortierung: Erstausstrahlung (neueste zuerst)</string>
     <string name="sort_by_recently_added_episode_desc">Zuletzt Episoden hinzugefügt</string>
     <string name="dec_choice_title">Decoder auswählen</string>
     <string name="dec_choice_summary">Erweiterte Einstellungen, kann Video-Decoding stören.</string>
@@ -594,6 +597,7 @@
     <string name="preferences_display_resume_box_summary">Button anzeigen oder verbergen, um das neueste Video im Hauptbildschirm fortzusetzen</string>
     <string name="preferences_display_resume_box">Wiederherstellungsfeld anzeigen</string>
     <string name="preferences_leanback_user_interface">TV-Benutzeroberfläche</string>
+    <string name="preferences_show_watching_up_next_row_summary">Anhaken, um eine Zeile mit den gerade laufenden oder anstehenden Videos anzuzeigen</string>
     <string name="preferences_show_last_added_row_summary">Anhaken um eine Zeile mit den zuletzt hinzugefügten Medien anzuzeigen</string>
     <string name="preferences_show_last_added_row">Letzte hinzugefügte Zeile anzeigen</string>
     <string name="preferences_show_last_played_row_summary">Anhaken um eine Zeile mit den zuletzt abgespielten Medien anzuzeigen</string>
@@ -796,4 +800,5 @@
     <string name="remove_from_list">Von der Liste entfernen</string>
     <string name="warning_swdec">Warnung: Hardware decoding abgeschaltet!</string>
     <string name="list_title">Listenname</string>
+    <string name="loading">Lade…</string>
 </resources>

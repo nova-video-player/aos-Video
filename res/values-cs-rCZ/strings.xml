@@ -61,6 +61,7 @@
     <string name="info_menu_poster_select">Vybrat jiný plakát</string>
     <string name="info_menu_series_poster_select">Vybrat jiný plakát</string>
     <!-- COVER ROLL -->
+    <string name="watching_up_next">Sledované/následující</string>
     <string name="recently_added">Nedávno přidané</string>
     <string name="recently_added_videos">Nedávno přidané</string>
     <string name="recently_played">Nedávno přehrávané</string>
@@ -101,6 +102,7 @@
     <string name="all_tvshows">Všechny seriály</string>
     <string name="all_tvshows_format">Všechny seriály - %d</string>
     <string name="not_watched_tvshows_format">Nezhlédnuté - %d</string>
+    <string name="all_seasons">Všechny sezóny</string>
     <string name="tvshows_by_alpha">Seriály dle abecedy</string>
     <string name="tvshows_by_genre">Seriály dle žánrů</string>
     <string name="tvshows_by_rating">Seriály dle hodnocení</string>
@@ -358,6 +360,7 @@
     <string name="subtitles_wizard_add_files">Můžete okopírovat více souborů s titulky do této složky pro jejich přiřazení k videu.</string>
     <string name="subtitles_wizard_help">Vyberte libovolný z dostupných souborů s titulky pro propojení s videem %s. Soubor bude přejmenován, aby odpovídal názvu videa.</string>
     <string name="subtitles_wizard_empty_list_help">Nebyly nalezeny žádné soubory s titulky. Musíte nejdříve nakopírovat jeden nebo několik souborů s titulky do této složky, aby je bylo možné přiřadit k videu %s.</string>
+    <string name="subtitles_wizard_cache">Cache</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Získat titulky online</string>
     <string name="toast_subloader_sub_found">Byla nalezena stopa titulků pro tento jazyk</string>
@@ -566,6 +569,7 @@
     <string name="sort_by_date_played_desc">Řadit dle data zhlédnutí (od nejnovějších)</string>
     <string name="sort_by_date_premiered_desc">Řadit podle data premiéry (od nejnovějších)</string>
     <string name="sort_by_date_premiered_asc">Řadit podle data premiéry (od nejstarších)</string>
+    <string name="sort_by_date_aired_desc">Řadit dle data vysílání (od nejnovějších)</string>
     <string name="sort_by_recently_added_episode_desc">Nejdříve zobrazit nedávno přidané epizody</string>
     <string name="dec_choice_title">Vyberte dekodér</string>
     <string name="dec_choice_summary">Rozšířené nastavení; může poškodit dekódování videa.</string>
@@ -582,6 +586,8 @@
     <string name="preferences_display_resume_box_summary">Zobrazit nebo schovat tlačítko pro obnovení posledního videa na hlavní obrazovce</string>
     <string name="preferences_display_resume_box">Zobrazit panel pro obnovení</string>
     <string name="preferences_leanback_user_interface">Uživatelské rozhraní pro TV</string>
+    <string name="preferences_show_watching_up_next_row_summary">Zvolte pro zobrazení řádku s právě sledovanými/následujícími videi</string>
+    <string name="preferences_show_watching_up_next_row">Zobrazit řádku se sledovanými/následujícími</string>
     <string name="preferences_show_last_added_row_summary">Zvolte pro zobrazení řádku s naposledy přidanými videi</string>
     <string name="preferences_show_last_added_row">Zobrazit řádku s naposledy přidanými</string>
     <string name="preferences_show_last_played_row_summary">Zvolte pro zobrazení řádku s nedávno přehrávanými videi</string>
@@ -791,4 +797,5 @@
     <string name="remove_from_list">Odebrat z playlistu</string>
     <string name="warning_swdec">Varování: hardwarové dekódování vypnuto!</string>
     <string name="list_title">Název</string>
+    <string name="loading">Načítání…</string>
 </resources>

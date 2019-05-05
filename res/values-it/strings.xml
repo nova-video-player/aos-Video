@@ -61,6 +61,8 @@
     <string name="info_menu_poster_select">Seleziona un altro poster</string>
     <string name="info_menu_series_poster_select">Seleziona un altro poster</string>
     <!-- COVER ROLL -->
+    <string name="watching_up_next">Guardare su prossimo
+Copertina (rotolo di copertina)</string>
     <string name="recently_added">Aggiunti di recente</string>
     <string name="recently_added_videos">Aggiunti di recente</string>
     <string name="recently_played">Visti di recente</string>

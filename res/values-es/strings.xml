@@ -40,13 +40,13 @@
     <!-- Context menu item -->
     <string name="multiple_selection">Selección múltiple</string>
     <!-- Context menu item -->
-    <string name="play_from_beginning">Reproducir desde el principio</string>
+    <string name="play_from_beginning">Reproducir desde el inicio</string>
     <!-- Dialog box button -->
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <!-- The string used in file/folder infos dialog. -->
     <string name="info_duration">Duración</string>
-    <string name="video_sources">Origenes</string>
+    <string name="video_sources">Fuentes</string>
     <!-- Infos dialog tabs -->
     <string name="info_tab_movie">Película</string>
     <string name="info_tab_show">Mostrar</string>
@@ -61,6 +61,7 @@
     <string name="info_menu_poster_select">Seleccione otro poster</string>
     <string name="info_menu_series_poster_select">Seleccionar otro poster</string>
     <!-- COVER ROLL -->
+    <string name="watching_up_next">Viendo/Próximo</string>
     <string name="recently_added">Añadidos recientemente</string>
     <string name="recently_added_videos">Añadidos recientemente</string>
     <string name="recently_played">Reproducidos recientemente</string>
@@ -101,6 +102,7 @@
     <string name="all_tvshows">Todos los programas de TV</string>
     <string name="all_tvshows_format">Todos los programas de TV - %d</string>
     <string name="not_watched_tvshows_format">No visto -  %d</string>
+    <string name="all_seasons">Todas las temporadas</string>
     <string name="tvshows_by_alpha">Programas de TV por orden alfabético</string>
     <string name="tvshows_by_genre">Programas de TV por tipo</string>
     <string name="tvshows_by_rating">Programas de TV por calificación</string>
@@ -370,6 +372,7 @@
     <string name="subtitles_wizard_add_files">Puede copiar más archivos de subtítulos en esta carpeta para asociarlos a este vídeo.</string>
     <string name="subtitles_wizard_help">Seleccione cualquiera de los archivos de subtítulos disponibles para asociarlo con el vídeo %s. El nombre del archivo se cambiará para que coincida con el nombre del vídeo.</string>
     <string name="subtitles_wizard_empty_list_help">No se ha encontrado ningún archivo de subtítulos. Debe copiar primero uno o más archivos de subtítulos en esta carpeta para asociarlos con el vídeo %s.</string>
+    <string name="subtitles_wizard_cache">Caché</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Obtener subtítulos online</string>
     <string name="toast_subloader_sub_found">Pista de subtítulos encontrada para este idioma</string>
@@ -578,6 +581,7 @@
     <string name="sort_by_date_played_desc">Ordenar por fecha reproducción (primero más reciente)</string>
     <string name="sort_by_date_premiered_desc">Ordenar por fecha de estreno (más nueva primera)</string>
     <string name="sort_by_date_premiered_asc">Ordenar por fecha de estreno (el más antiguo primero)</string>
+    <string name="sort_by_date_aired_desc">Ordenar por fecha emisión (más nuevos primero)</string>
     <string name="sort_by_recently_added_episode_desc">Episodios añadidos recientemente primero</string>
     <string name="dec_choice_title">Seleccione descodificador</string>
     <string name="dec_choice_summary">Preferencias avanzadas, puede romper la descodificadoción de vídeo.</string>
@@ -594,6 +598,8 @@
     <string name="preferences_display_resume_box_summary">Mostrar u ocultar el botón reanudar el último vídeo en la pantalla principal</string>
     <string name="preferences_display_resume_box">Mostrar cuadro de reanudación</string>
     <string name="preferences_leanback_user_interface">Interfaz de usuario TV</string>
+    <string name="preferences_show_watching_up_next_row_summary">Marcar para mostrar una fila con lo que estas viendo y los siguientes videos</string>
+    <string name="preferences_show_watching_up_next_row">Mostrar fila viendo/próximos</string>
     <string name="preferences_show_last_added_row_summary">Marcar para mostrar una fila con tus últimos medios añadidos</string>
     <string name="preferences_show_last_added_row">Mostrar última fila añadida</string>
     <string name="preferences_show_last_played_row_summary">Marca para mostrar una fila con tus últimos medios reproducidos</string>
@@ -803,4 +809,5 @@
     <string name="remove_from_list">Eliminar de la lista</string>
     <string name="warning_swdec">Advertencia: La decodificación por hardware está desactivada!</string>
     <string name="list_title">Título de la lista</string>
+    <string name="loading">Cargando…</string>
 </resources>

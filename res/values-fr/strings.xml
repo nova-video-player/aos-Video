@@ -61,7 +61,7 @@
     <string name="info_menu_poster_select">Poster</string>
     <string name="info_menu_series_poster_select">Changer de poster</string>
     <!-- COVER ROLL -->
-    <string name="watching_up_next">En cours/suivant</string>
+    <string name="watching_up_next">En cours/suivants</string>
     <string name="recently_added">Ajouts récents</string>
     <string name="recently_added_videos">Ajouts récents</string>
     <string name="recently_played">Joué récemment</string>
@@ -481,6 +481,8 @@
     <string name="preference_tv_3d_automatic_switch_summary">Utiliser cette option si votre télé 3D supporte cette fonctionnalité\"</string>
     <string name="preference_tv_refreshrate_switch">Ajuster automatiquement le taux de rafraîchissement</string>
     <string name="preference_tv_refreshrate_switch_summary">Supprime les saccades à l\'affichage (dépend des capacités de la TV)</string>
+    <string name="preference_cutout_short_edges">Vidéo plein écran même en présence d\'encoche</string>
+    <string name="preference_cutout_short_edges_summary">Permet la vidéo plein écran en orientation paysage avec des écrans à encoches</string>
     <string name="category_languages">Sous-titres</string>
     <string name="subtitles_hide_default">Ne pas afficher les sous-titres par défaut</string>
     <string name="subtitles_hide_default_summary">Cochez afin de ne pas afficher les sous-titres par défaut</string>
