@@ -34,11 +34,13 @@ import androidx.leanback.widget.RowPresenter;
 import androidx.leanback.widget.VerticalGridPresenter;
 import androidx.loader.content.Loader;
 import android.util.SparseArray;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.archos.customizedleanback.app.MyVerticalGridFragment;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
+import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.DisplayMode;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
@@ -47,7 +49,9 @@ import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.leanback.presenter.VideoListPresenter;
 import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
+import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
+import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.SortOrder;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -326,4 +330,38 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         }
     }
 
+    public void onKeyDown(int keyCode) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_MENU:
+                if (!getTitleView().isShown() && mMoviesAdapter != null && mMoviesAdapter.size() > 0)
+                    setSelectedPosition(0);
+                if (!getTitleView().isFocused())
+                    getTitleView().requestFocus();
+                break;
+            case KeyEvent.KEYCODE_MEDIA_PLAY:
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+                if (mMoviesAdapter != null) {
+                    Video video = (Video)mMoviesAdapter.get(getSelectedPosition());
+                    if (video != null)
+                        PlayUtils.startVideo(getActivity(), video, PlayerActivity.RESUME_FROM_LAST_POS, false, -1, null, -1);
+                }
+                break;
+            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
+            case KeyEvent.KEYCODE_MEDIA_NEXT:
+                if (mMoviesAdapter != null && mMoviesAdapter.size() > 0) {
+                    setSelectedPosition(mMoviesAdapter.size() - 1);
+                    if (!getView().isFocused())
+                        getView().requestFocus();
+                }
+                break;
+            case KeyEvent.KEYCODE_MEDIA_REWIND:
+            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                if (mMoviesAdapter != null && mMoviesAdapter.size() > 0) {
+                    setSelectedPosition(0);
+                    if (!getView().isFocused())
+                        getView().requestFocus();
+                }
+                break;
+        }
+    }
 }

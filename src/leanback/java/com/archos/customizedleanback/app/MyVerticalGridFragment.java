@@ -23,6 +23,8 @@ import androidx.leanback.widget.Presenter;
 import androidx.leanback.widget.Row;
 import androidx.leanback.widget.RowPresenter;
 import androidx.leanback.widget.VerticalGridPresenter;
+import androidx.leanback.widget.ViewHolderTask;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -249,8 +251,20 @@ public class MyVerticalGridFragment extends MyBrandedFragment {
     public void setSelectedPosition(int position) {
         mSelectedPosition = position;
         if(mGridViewHolder != null && mGridViewHolder.getGridView().getAdapter() != null) {
-            mGridViewHolder.getGridView().setSelectedPositionSmooth(position);
+            mGridViewHolder.getGridView().setSelectedPositionSmooth(position, new ViewHolderTask() {
+                @Override
+                public void run(final RecyclerView.ViewHolder rvh) {
+                    showOrHideTitle();
+                }
+            });
         }
+    }
+
+    public int getSelectedPosition() {
+        if (mGridViewHolder != null)
+            return mGridViewHolder.getGridView().getSelectedPosition();
+        
+        return -1;
     }
 
     private void updateAdapter() {

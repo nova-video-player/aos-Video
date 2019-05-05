@@ -34,6 +34,7 @@ import androidx.leanback.widget.RowPresenter;
 import androidx.leanback.widget.VerticalGridPresenter;
 import androidx.loader.content.Loader;
 import android.util.SparseArray;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.archos.customizedleanback.app.MyVerticalGridFragment;
@@ -325,4 +326,34 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
         }
     }
 
+    public void onKeyDown(int keyCode) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_MENU:
+                if (!getTitleView().isShown() && mTvshowsAdapter != null && mTvshowsAdapter.size() > 0)
+                    setSelectedPosition(0);
+                if (!getTitleView().isFocused())
+                    getTitleView().requestFocus();
+                break;
+            case KeyEvent.KEYCODE_MEDIA_PLAY:
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+                // TODO
+                break;
+            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
+            case KeyEvent.KEYCODE_MEDIA_NEXT:
+                if (mTvshowsAdapter != null && mTvshowsAdapter.size() > 0) {
+                    setSelectedPosition(mTvshowsAdapter.size() - 1);
+                    if (!getView().isFocused())
+                        getView().requestFocus();
+                }
+                break;
+            case KeyEvent.KEYCODE_MEDIA_REWIND:
+            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                if (mTvshowsAdapter != null && mTvshowsAdapter.size() > 0) {
+                    setSelectedPosition(0);
+                    if (!getView().isFocused())
+                        getView().requestFocus();
+                }
+                break;
+        }
+    }
 }
