@@ -60,7 +60,7 @@ public class EpisodesByDateFragment extends VideosByFragment {
                 String[] names = { getString(R.string.date_view_week), getString(R.string.date_view_month), getString(R.string.date_view_year) };
 
                 new AlertDialog.Builder(getActivity())
-                        .setItems(names, new DialogInterface.OnClickListener() {
+                        .setSingleChoiceItems(names, mDateView, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 if (mDateView != which) {
                                     mDateView = which;
