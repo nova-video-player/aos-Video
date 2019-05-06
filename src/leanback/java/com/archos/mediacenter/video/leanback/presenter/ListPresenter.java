@@ -49,6 +49,7 @@ public abstract class ListPresenter extends Presenter {
         final private PicassoImageViewTarget mImageViewTarget;
         final private View mProgressBar;
         final private View mWatchedIcon;
+        final private View mPinnedIcon;
 
         public ListViewHolder(Context context) {
             super(new BaseCardView(context));
@@ -64,9 +65,11 @@ public abstract class ListPresenter extends Presenter {
             mContentTv = (TextView)mBaseCardView.findViewById(R.id.content);
             mProgressBar = mBaseCardView.findViewById(R.id.resume_bar);
             mWatchedIcon = mBaseCardView.findViewById(R.id.watched_icon);
+            mPinnedIcon = mBaseCardView.findViewById(R.id.pinned_icon);
             // Hide progressbar and watched icon by default
             mProgressBar.setVisibility(View.GONE);
             mWatchedIcon.setVisibility(View.GONE);
+            mPinnedIcon.setVisibility(View.GONE);
 
             mImageViewTarget = new PicassoImageViewTarget(mImageView);
         }
@@ -136,6 +139,10 @@ public abstract class ListPresenter extends Presenter {
         }
         public void setWatched(boolean value) {
             mWatchedIcon.setVisibility( value ? View.VISIBLE : View.GONE);
+        }
+
+        public void setPinned(boolean value) {
+            mPinnedIcon.setVisibility( value ? View.VISIBLE : View.GONE);
         }
     }
 

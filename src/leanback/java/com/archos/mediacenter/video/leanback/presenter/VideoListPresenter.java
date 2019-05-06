@@ -36,9 +36,16 @@ public class VideoListPresenter extends ListPresenter {
 
     final private boolean mDisplayFileName;
 
+    private View.OnLongClickListener mLongClickListener;
+
     public VideoListPresenter(boolean displayFileName) {
         super();
         mDisplayFileName = displayFileName;
+    }
+
+    public VideoListPresenter(boolean displayFileName, View.OnLongClickListener longClickListener) {
+        this(displayFileName);
+        mLongClickListener = longClickListener;
     }
 
     @Override
@@ -58,8 +65,13 @@ public class VideoListPresenter extends ListPresenter {
                 Episode episode = (Episode) item;
                 vh.setTitleText(vh.view.getResources().getString(R.string.leanback_episode_name_for_browser_list,
                         episode.getShowName(), episode.getSeasonNumber(), episode.getEpisodeNumber(), episode.getEpisodeName()));
-            } else if (item instanceof Movie)
+            } else if (item instanceof Movie) {
                 vh.setTitleText(video.getName());
+                if (mLongClickListener != null) {
+                    vh.view.setOnLongClickListener(mLongClickListener);
+                    vh.setPinned(((Movie)video).isPinned());
+                }
+            }
             else // Non-indexed or non-scraped video
                 vh.setTitleText(video.getFilenameNonCryptic());
             if (item instanceof Movie || item instanceof Episode)
@@ -89,6 +101,10 @@ public class VideoListPresenter extends ListPresenter {
                 vh.updateImageViewThumbnail(tvshow.getTvshowId());
             }
             vh.setTitleText(tvshow.getName());
+            if (mLongClickListener != null) {
+                vh.view.setOnLongClickListener(mLongClickListener);
+                vh.setPinned(tvshow.isPinned());
+            }
             vh.setContentText(tvshow.getCountString(ArchosUtils.getGlobalContext()));
             vh.setContentTextVisibility(View.VISIBLE);
             vh.setWatched(tvshow.isWatched());

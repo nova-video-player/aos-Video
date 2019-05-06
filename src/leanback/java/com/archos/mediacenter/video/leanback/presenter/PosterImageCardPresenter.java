@@ -47,6 +47,8 @@ import com.archos.mediaprovider.video.VideoProvider;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.ArrayList;
+
 /**
  * Display a video, a movie, an episode (Poster or Thumbnail) or a TvShow (Poster)
  * using a regular ImageCardView
@@ -63,6 +65,8 @@ public class PosterImageCardPresenter extends Presenter {
     final Drawable mErrorDrawable;
 
     protected Context mContext;
+
+    private View.OnLongClickListener mLongClickListener;
 
     public class VideoViewHolder extends ViewHolder {
         private final View mOccurenciesView;
@@ -184,6 +188,11 @@ public class PosterImageCardPresenter extends Presenter {
         mErrorDrawable = context.getResources().getDrawable(R.drawable.filetype_new_video);
     }
 
+    public PosterImageCardPresenter(Context context, View.OnLongClickListener longClickListener) {
+        this(context);
+        mLongClickListener = longClickListener;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
         mContext = parent.getContext();
@@ -248,6 +257,10 @@ public class PosterImageCardPresenter extends Presenter {
                 // Special Movie binding
                 card.setTitleText(video.getName());
                 card.setContentText("");
+                if (mLongClickListener != null) {
+                    vh.view.setOnLongClickListener(mLongClickListener);
+                    vh.mImageCardViewTarget.setPinnedFlag(((Movie)video).isPinned());
+                }
             } else {
                 // Non indexed case
                 card.setTitleText(video.getFilenameNonCryptic());
@@ -296,6 +309,11 @@ public class PosterImageCardPresenter extends Presenter {
 
         card.setContentText(tvshow.getCountString(card.getContext()));
 
+        if (mLongClickListener != null) {
+            vh.view.setOnLongClickListener(mLongClickListener);
+            vh.mImageCardViewTarget.setPinnedFlag(tvshow.isPinned());
+        }
+
         if (tvshow.getPosterUri() != null)
             vh.updateCardView(tvshow.getPosterUri(), -1, false);
         else
@@ -322,6 +340,7 @@ public class PosterImageCardPresenter extends Presenter {
     public class PicassoImageCardViewTarget implements Target {
         final private ImageCardView mImageCardView;
         private boolean mWatchedFlag;
+        private boolean mPinnedFlag;
         private long mVideoId;
         private Uri mLastImageUri;
         private boolean mIsLastStateError;
@@ -344,18 +363,29 @@ public class PosterImageCardPresenter extends Presenter {
             mWatchedFlag = watched;
         }
 
+        public void setPinnedFlag(boolean pinned) {
+            mPinnedFlag = pinned;
+        }
+
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
             mIsLastStateError = false;
             Drawable posterDrawable = new BitmapDrawable(mContext.getResources(), bitmap);
             Drawable finalDrawable;
-            if (mWatchedFlag) {
-                Drawable layer[] = new Drawable[2];
-                layer[0] = posterDrawable;
-                BitmapDrawable icon = (BitmapDrawable) mContext.getResources().getDrawable(R.drawable.watched_icon_corner);
-                icon.setGravity(Gravity.TOP | Gravity.RIGHT);
-                layer[1] = icon;
-                finalDrawable = new LayerDrawable(layer);
+            if (mWatchedFlag || mPinnedFlag) {
+                ArrayList<Drawable> layer = new ArrayList<>();
+                layer.add(posterDrawable);
+                if (mWatchedFlag) {
+                    BitmapDrawable icon = (BitmapDrawable) mContext.getResources().getDrawable(R.drawable.watched_icon_corner);
+                    icon.setGravity(Gravity.TOP | Gravity.RIGHT);
+                    layer.add(icon);
+                }
+                if (mPinnedFlag) {
+                    BitmapDrawable icon = (BitmapDrawable) mContext.getResources().getDrawable(R.drawable.pinned_icon_corner);
+                    icon.setGravity(Gravity.TOP | Gravity.LEFT);
+                    layer.add(icon);
+                }
+                finalDrawable = new LayerDrawable(layer.toArray(new Drawable[layer.size()]));
             } else {
                 finalDrawable = posterDrawable; // simple
             }

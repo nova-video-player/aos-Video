@@ -32,10 +32,11 @@ public class Movie extends Video implements Serializable {
     final float mRating;
     final String mPlot;
     private final long mOnlineId;
+    private long mPinned;
 
     public Movie(long id, String filePath, String name, long movieId, String plot, int year, float rating, Uri posterUri, int duration, int resume,
                  int video3dMode, int guessedDefinition, boolean traktSeen, boolean isTraktLibrary,boolean hasSubs, boolean isUserHidden, long onlineId, long lastTimePlayed,
-                 int calculatedWidth, int calculatedHeight, String audioFormat, String videoFormat, String guessedAudioFormat, String guessedVideoFormat,  int calculatedBestAudiotrack, int occurencies, long size) {
+                 int calculatedWidth, int calculatedHeight, String audioFormat, String videoFormat, String guessedAudioFormat, String guessedVideoFormat,  int calculatedBestAudiotrack, int occurencies, long size, long pinned) {
         super(id, filePath, name, posterUri,
                 duration, resume, video3dMode, guessedDefinition,  traktSeen, isTraktLibrary,hasSubs, isUserHidden,lastTimePlayed,
                 calculatedWidth, calculatedHeight, audioFormat, videoFormat, guessedAudioFormat, guessedVideoFormat, calculatedBestAudiotrack,occurencies,size);
@@ -44,6 +45,7 @@ public class Movie extends Video implements Serializable {
         mRating = rating;
         mPlot = plot;
         mOnlineId = onlineId;
+        mPinned = pinned;
     }
 
     public long getOnlineId(){
@@ -75,5 +77,13 @@ public class Movie extends Video implements Serializable {
 
     public String getActors() {
         return "";
+    }
+
+    public boolean isPinned() {
+        return mPinned > 0;
+    }
+
+    public long getMovieId() {
+        return mMovieId;
     }
 }

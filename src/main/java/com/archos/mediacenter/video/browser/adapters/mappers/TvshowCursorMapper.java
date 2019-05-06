@@ -40,6 +40,7 @@ public class TvshowCursorMapper implements CompatibleCursorMapper {
     int mPlotColumn;
     int mStudioColumn;
     int mRatingColumn;
+    int mPinnedColumn;
     public TvshowCursorMapper() {
     }
 
@@ -58,6 +59,7 @@ public class TvshowCursorMapper implements CompatibleCursorMapper {
         mPlotColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_S_PLOT);
         mActorsColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_E_ACTORS);
         mRatingColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_S_RATING);
+        mPinnedColumn = cursor.getColumnIndex(VideoStore.Video.VideoColumns.NOVA_PINNED);
     }
 
 
@@ -75,8 +77,8 @@ public class TvshowCursorMapper implements CompatibleCursorMapper {
                 cursor.getString(mStudioColumn),
                 cursor.getString(mActorsColumn),
                 cursor.getInt(mYearColumn),
-                cursor.getFloat(mRatingColumn)
-
+                cursor.getFloat(mRatingColumn),
+                mPinnedColumn != -1 ? cursor.getLong(mPinnedColumn) : -1
         );
     }
 
