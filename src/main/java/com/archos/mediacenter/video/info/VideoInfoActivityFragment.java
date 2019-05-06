@@ -454,7 +454,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             mSelectCurrentVideo = bundle.getBoolean(EXTRA_FORCE_VIDEO_SELECTION,false);
             mIsLaunchFromPlayer = getActivity().getIntent().getExtras().getBoolean(EXTRA_LAUNCHED_FROM_PLAYER, false);
             Video video = (Video) bundle.get(EXTRA_VIDEO);
-
             if(video == null){
 
                 mVideoIdFromPlayer = bundle.getLong(EXTRA_VIDEO_ID, -1);
@@ -462,18 +461,23 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mPath = bundle.getString(EXTRA_VIDEO_PATH);
                 }
                 CursorLoader loader = (CursorLoader) onCreateLoader(1, null);
-                Cursor cursor = loader.loadInBackground();
-                if(cursor!=null&&cursor.getCount()>0) {
-                    cursor.moveToFirst();
-                    VideoCursorMapper videoCursorMapper = new VideoCursorMapper();
-                    videoCursorMapper.bindColumns(cursor);
-                    video = (Video) videoCursorMapper.publicBind(cursor);
+                if (loader == null) {
+                    if (DBG) Log.w(TAG, "onCreateView loader is null");
+                } else {
+                    Cursor cursor = loader.loadInBackground();
+                    if (cursor != null && cursor.getCount() > 0) {
+                        cursor.moveToFirst();
+                        VideoCursorMapper videoCursorMapper = new VideoCursorMapper();
+                        videoCursorMapper.bindColumns(cursor);
+                        video = (Video) videoCursorMapper.publicBind(cursor);
 
+                    }
                 }
             }
             if(video!=null)
                 setCurrentVideo(video);
-            LoaderManager.getInstance(getActivity()).restartLoader(1, null, this);
+            if (LoaderManager.getInstance(getActivity()).getLoader(1) != null)
+                LoaderManager.getInstance(getActivity()).restartLoader(1, null, this);
         }
         setBackground();
         mTitleBar.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
