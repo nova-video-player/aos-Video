@@ -35,6 +35,7 @@ import com.archos.mediacenter.video.browser.adapters.object.Season;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.player.PlayerActivity;
+import com.archos.mediaprovider.video.ScraperStore;
 import com.archos.mediaprovider.video.VideoStore;
 
 import java.util.ArrayList;
@@ -282,5 +283,43 @@ public class DbUtils {
 
         new TraktService.Client(context, null, false).sync(flags);
         Toast.makeText(context, R.string.trakt_toast_syncing, Toast.LENGTH_SHORT).show();
+    }
+
+    static public void markAsPinned(final Context context, final Base base) {
+        final ContentResolver cr = context.getContentResolver();
+        Log.d(TAG, "markAsPinned " + base.getName());
+
+        final ContentValues values = new ContentValues();
+        values.put(VideoStore.Video.VideoColumns.NOVA_PINNED, (long)(System.currentTimeMillis() / 1000));
+
+        if (base instanceof Movie) {
+            cr.update(ScraperStore.Movie.URI.BASE, values,
+                    VideoStore.Video.VideoColumns._ID + " =?",
+                    new String[]{Long.toString(((Movie)base).getMovieId())});
+        }
+        else if (base instanceof Tvshow) {
+            cr.update(ScraperStore.Show.URI.BASE, values,
+                    VideoStore.Video.VideoColumns._ID + " =?",
+                    new String[]{Long.toString(((Tvshow)base).getTvshowId())});
+        }
+    }
+
+    static public  void markAsNotPinned(final Context context, final Base base) {
+        final ContentResolver cr = context.getContentResolver();
+        Log.d(TAG, "markAsNotPinned " + base.getName());
+
+        final ContentValues values = new ContentValues();
+        values.put(VideoStore.Video.VideoColumns.NOVA_PINNED, 0);
+
+        if (base instanceof Movie) {
+            cr.update(ScraperStore.Movie.URI.BASE, values,
+                    VideoStore.Video.VideoColumns._ID + " =?",
+                    new String[]{Long.toString(((Movie)base).getMovieId())});
+        }
+        else if (base instanceof Tvshow) {
+            cr.update(ScraperStore.Show.URI.BASE, values,
+                    VideoStore.Video.VideoColumns._ID + " =?",
+                    new String[]{Long.toString(((Tvshow)base).getTvshowId())});
+        }
     }
 }

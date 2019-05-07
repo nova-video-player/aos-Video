@@ -39,7 +39,8 @@ public class Box {
         ALL_TVSHOWS,
         TVSHOWS_BY_ALPHA,
         TVSHOWS_BY_RATING,
-        TVSHOWS_BY_GENRE
+        TVSHOWS_BY_GENRE,
+        EPISODES_BY_DATE
     }
 
     final private ID mBoxId;

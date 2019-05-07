@@ -34,11 +34,14 @@ import androidx.leanback.widget.RowPresenter;
 import androidx.leanback.widget.VerticalGridPresenter;
 import androidx.loader.content.Loader;
 import android.util.SparseArray;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.archos.customizedleanback.app.MyVerticalGridFragment;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
+import com.archos.mediacenter.video.browser.adapters.object.Movie;
+import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.DisplayMode;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
@@ -47,7 +50,10 @@ import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.leanback.presenter.VideoListPresenter;
 import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
+import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
+import com.archos.mediacenter.video.utils.DbUtils;
+import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.SortOrder;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -113,15 +119,35 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
     private void initGridOrList() {
         VerticalGridPresenter vgp = null;
         Presenter filePresenter = null;
+        View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mMoviesAdapter != null) {
+                    Movie movie = (Movie)mMoviesAdapter.get(getSelectedPosition());
+                    if (movie != null) {
+                        if (!movie.isPinned())
+                            DbUtils.markAsPinned(getActivity(), movie);
+                        else
+                            DbUtils.markAsNotPinned(getActivity(), movie);
+                        Bundle args = new Bundle();
+                        args.putString("sort", mSortOrder);
+                        args.putBoolean("showWatched", mShowWatched);
+                        LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllMoviesGridFragment.this);
+                    }
+                }
+
+                return true;
+            }
+        };
 
         switch (mDisplayMode) {
             case GRID:
-                filePresenter = new PosterImageCardPresenter(getActivity());
+                filePresenter = new PosterImageCardPresenter(getActivity(), longClickListener);
                 vgp = new VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_LARGE, false); // No focus dimmer
                 vgp.setNumberOfColumns(6);
                 break;
             case LIST:
-                filePresenter = new VideoListPresenter(false);
+                filePresenter = new VideoListPresenter(false, longClickListener);
                 vgp = new VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_SMALL, false); // No focus dimmer
                 vgp.setNumberOfColumns(1);
                 break;
@@ -276,7 +302,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
             if (args == null) {
                 return new MoviesLoader(getActivity(), true);
             } else {
-                return new MoviesLoader(getActivity(), args.getString("sort"), args.getBoolean("showWatched"), true);
+                return new MoviesLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"), true);
             }
         }
         else return null;
@@ -326,4 +352,38 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         }
     }
 
+    public void onKeyDown(int keyCode) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_MENU:
+                if (!getTitleView().isShown() && mMoviesAdapter != null && mMoviesAdapter.size() > 0)
+                    setSelectedPosition(0);
+                if (!getTitleView().isFocused())
+                    getTitleView().requestFocus();
+                break;
+            case KeyEvent.KEYCODE_MEDIA_PLAY:
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+                if (mMoviesAdapter != null) {
+                    Video video = (Video)mMoviesAdapter.get(getSelectedPosition());
+                    if (video != null)
+                        PlayUtils.startVideo(getActivity(), video, PlayerActivity.RESUME_FROM_LAST_POS, false, -1, null, -1);
+                }
+                break;
+            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
+            case KeyEvent.KEYCODE_MEDIA_NEXT:
+                if (mMoviesAdapter != null && mMoviesAdapter.size() > 0) {
+                    setSelectedPosition(mMoviesAdapter.size() - 1);
+                    if (!getView().isFocused())
+                        getView().requestFocus();
+                }
+                break;
+            case KeyEvent.KEYCODE_MEDIA_REWIND:
+            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                if (mMoviesAdapter != null && mMoviesAdapter.size() > 0) {
+                    setSelectedPosition(0);
+                    if (!getView().isFocused())
+                        getView().requestFocus();
+                }
+                break;
+        }
+    }
 }

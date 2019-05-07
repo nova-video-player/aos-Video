@@ -99,6 +99,10 @@
             android:theme="@style/MyLeanbackTheme"/>
 
         <activity
+            android:name="com.archos.mediacenter.video.leanback.tvshow.EpisodesByDateActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
             android:name="com.archos.mediacenter.video.leanback.VideosByListActivity"
             android:theme="@style/MyLeanbackTheme"/>
 

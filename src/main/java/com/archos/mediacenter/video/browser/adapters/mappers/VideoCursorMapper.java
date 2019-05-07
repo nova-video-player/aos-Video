@@ -56,7 +56,7 @@ public class VideoCursorMapper implements CompatibleCursorMapper {
     private int mGuessedAudioFormatColumn;
     private int mGuessedVideoFormatColumn;
     private int mCountColumn;
-
+    private int mPinnedColumn;
 
     public void bindColumns(Cursor c) {
         mIdColumn = c.getColumnIndex(BaseColumns._ID);
@@ -107,6 +107,8 @@ public class VideoCursorMapper implements CompatibleCursorMapper {
         mTraktLibraryColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_LIBRARY);
         // User can show/hide some files
         mUserHiddenColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER);
+
+        mPinnedColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.NOVA_PINNED);
     }
 
 
@@ -222,7 +224,8 @@ public class VideoCursorMapper implements CompatibleCursorMapper {
                     guessedAudioFormat,
                     videoFormat,
                     calculatedBestAudiotrack,
-                    count, c.getLong(mSizeColumn));
+                    count, c.getLong(mSizeColumn),
+                    c.getLong(mPinnedColumn));
         }
 
         else {

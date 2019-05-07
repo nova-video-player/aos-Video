@@ -34,11 +34,13 @@ import androidx.leanback.widget.RowPresenter;
 import androidx.leanback.widget.VerticalGridPresenter;
 import androidx.loader.content.Loader;
 import android.util.SparseArray;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.archos.customizedleanback.app.MyVerticalGridFragment;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
+import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.DisplayMode;
@@ -49,6 +51,7 @@ import com.archos.mediacenter.video.leanback.presenter.VideoListPresenter;
 import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
+import com.archos.mediacenter.video.utils.DbUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
 public class AllTvshowsGridFragment extends MyVerticalGridFragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -113,15 +116,35 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
     private void initGridOrList() {
         VerticalGridPresenter vgp = null;
         Presenter filePresenter = null;
+        View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mTvshowsAdapter != null) {
+                    Tvshow tvshow = (Tvshow)mTvshowsAdapter.get(getSelectedPosition());
+                    if (tvshow != null) {
+                        if (!tvshow.isPinned())
+                            DbUtils.markAsPinned(getActivity(), tvshow);
+                        else
+                            DbUtils.markAsNotPinned(getActivity(), tvshow);
+                        Bundle args = new Bundle();
+                        args.putString("sort", mSortOrder);
+                        args.putBoolean("showWatched", mShowWatched);
+                        LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllTvshowsGridFragment.this);
+                    }
+                }
+
+                return true;
+            }
+        };
 
         switch (mDisplayMode) {
             case GRID:
-                filePresenter = new PosterImageCardPresenter(getActivity());
+                filePresenter = new PosterImageCardPresenter(getActivity(), longClickListener);
                 vgp = new VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_LARGE, false); // No focus dimmer
                 vgp.setNumberOfColumns(6);
                 break;
             case LIST:
-                filePresenter = new VideoListPresenter(false);
+                filePresenter = new VideoListPresenter(false, longClickListener);
                 vgp = new VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_SMALL, false); // No focus dimmer
                 vgp.setNumberOfColumns(1);
                 break;
@@ -275,7 +298,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
             if (args == null) {
                 return new AllTvshowsLoader(getActivity());
             } else {
-                return new AllTvshowsLoader(getActivity(), args.getString("sort"), args.getBoolean("showWatched"));
+                return new AllTvshowsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"));
             }
         }
         else return null;
@@ -325,4 +348,34 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
         }
     }
 
+    public void onKeyDown(int keyCode) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_MENU:
+                if (!getTitleView().isShown() && mTvshowsAdapter != null && mTvshowsAdapter.size() > 0)
+                    setSelectedPosition(0);
+                if (!getTitleView().isFocused())
+                    getTitleView().requestFocus();
+                break;
+            case KeyEvent.KEYCODE_MEDIA_PLAY:
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+                // TODO
+                break;
+            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
+            case KeyEvent.KEYCODE_MEDIA_NEXT:
+                if (mTvshowsAdapter != null && mTvshowsAdapter.size() > 0) {
+                    setSelectedPosition(mTvshowsAdapter.size() - 1);
+                    if (!getView().isFocused())
+                        getView().requestFocus();
+                }
+                break;
+            case KeyEvent.KEYCODE_MEDIA_REWIND:
+            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                if (mTvshowsAdapter != null && mTvshowsAdapter.size() > 0) {
+                    setSelectedPosition(0);
+                    if (!getView().isFocused())
+                        getView().requestFocus();
+                }
+                break;
+        }
+    }
 }

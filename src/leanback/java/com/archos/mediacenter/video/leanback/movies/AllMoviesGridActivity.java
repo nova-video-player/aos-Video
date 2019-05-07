@@ -14,13 +14,36 @@
 
 package com.archos.mediacenter.video.leanback.movies;
 
+import android.view.KeyEvent;
 import androidx.fragment.app.Fragment;
 
+import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.leanback.SingleFragmentActivity;
 
 public class AllMoviesGridActivity extends SingleFragmentActivity {
     @Override
     public Fragment getFragmentInstance() {
         return new AllMoviesGridFragment();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_MENU:
+            case KeyEvent.KEYCODE_MEDIA_PLAY:
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
+            case KeyEvent.KEYCODE_MEDIA_NEXT:
+            case KeyEvent.KEYCODE_MEDIA_REWIND:
+            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                if (fragment instanceof AllMoviesGridFragment) {
+                    ((AllMoviesGridFragment)fragment).onKeyDown(keyCode);
+                    return true;
+                }
+                break;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

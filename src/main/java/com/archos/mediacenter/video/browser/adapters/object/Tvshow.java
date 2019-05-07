@@ -60,6 +60,8 @@ public class Tvshow extends Base implements Serializable {
     private int mEpisodeCount;
     private int mEpisodeWatchedCount;
 
+    private long mPinned;
+
     /**
      * Not computed by this class but only a place to store it.
      * Need to be set with setShowTags()
@@ -67,7 +69,7 @@ public class Tvshow extends Base implements Serializable {
     private ShowTags mShowTags;
 
     public Tvshow(long tvshowId, String name, Uri posterUri, int seasonCount, int episodeCount, int episodeWatchedCount) {
-        this(tvshowId,name, posterUri, seasonCount, episodeCount, episodeWatchedCount, false, false, null, null,null, -1,-1);
+        this(tvshowId,name, posterUri, seasonCount, episodeCount, episodeWatchedCount, false, false, null, null,null, -1,-1, 0);
     }
 
 
@@ -83,7 +85,8 @@ public class Tvshow extends Base implements Serializable {
                   String studio,
                   String actors,
                   int year,
-                  float rating) {
+                  float rating,
+                  long pinned) {
         super(name, posterUri);
         mTvshowId = tvshowId;
         mSeasonCount = seasonCount;
@@ -96,7 +99,7 @@ public class Tvshow extends Base implements Serializable {
         mActors = actors;
         mYear = year;
         mRating = rating;
-
+        mPinned = pinned;
     }
 
     public String getCountString(Context context) {
@@ -121,6 +124,10 @@ public class Tvshow extends Base implements Serializable {
 
     public boolean isWatched() {
         return mEpisodeWatchedCount>=mEpisodeCount;
+    }
+
+    public boolean isPinned() {
+        return mPinned > 0;
     }
 
     public long getTvshowId() {

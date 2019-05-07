@@ -103,7 +103,9 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
             VideoStore.Video.VideoColumns.SCRAPER_E_NAME,
             VideoStore.Video.VideoColumns.SCRAPER_E_SEASON,
             VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE,
-            VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE
+            VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE,
+
+            VideoStore.Video.VideoColumns.NOVA_PINNED
     };
     public static String[] mDetailedProjection = concatTwoStringArrays(mProjection,new String[] {
             DETAIL_LINE_ONE,DETAIL_LINE_TWO, DETAIL_LINE_THREE,
