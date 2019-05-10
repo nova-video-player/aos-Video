@@ -56,6 +56,7 @@ import com.archos.mediacenter.video.browser.BootupRecommandationService;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
+import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.medialib.Subtitle;
@@ -725,11 +726,14 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     mVideoInfo.lastTimePlayed = Long.valueOf(System.currentTimeMillis() / 1000L);
                     mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
                     startTrakt(); //this writes mVideoInfo.traktResume
-
-                    Intent intent = new Intent(BootupRecommandationService.UPDATE_ACTION);
-                    intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
-                    sendBroadcast(intent);
-
+                    // BootupRecommendationService is for before Android O otherwise TV channels are used
+                    if (ArchosFeatures.isAndroidTV(this))
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                            Intent intent = new Intent(BootupRecommandationService.UPDATE_ACTION);
+                            intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+                            sendBroadcast(intent);
+                        } else
+                            ChannelManager.refreshChannels(this);
                 }
             }
         }

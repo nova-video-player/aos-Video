@@ -23,19 +23,6 @@
     <application
         android:name="com.archos.mediacenter.video.CustomApplication" >
 
-
-
-        <receiver
-            android:name="com.archos.mediacenter.video.browser.BootupRecommandationService"
-            android:enabled="true"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="com.archos.mediacenter.video.browser.BootupRecommandationService.UPDATE_ACTION" />
-
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name="com.archos.mediacenter.video.leanback.MainActivityLeanback"
             android:banner="@drawable/androidtv_banner"

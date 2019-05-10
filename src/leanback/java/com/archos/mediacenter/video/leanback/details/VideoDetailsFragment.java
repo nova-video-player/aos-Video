@@ -68,6 +68,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
@@ -97,6 +98,7 @@ import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.adapter.object.WebPageLink;
+import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridFragment;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
@@ -1822,11 +1824,13 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 VideoStore.MediaColumns.DATA + " = ?",
                 new String[]{mVideo.getFilePath()});
         // BootupRecommendationService is for before Android O otherwise TV channels are used
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            Intent intent = new Intent(BootupRecommandationService.UPDATE_ACTION);
-            intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
-            getActivity().sendBroadcast(intent);
-        }
+        if (ArchosFeatures.isAndroidTV(getContext()))
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                Intent intent = new Intent(BootupRecommandationService.UPDATE_ACTION);
+                intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+                getActivity().sendBroadcast(intent);
+            } else
+                ChannelManager.refreshChannels(getContext());
         if (numberDeleted!=1) {
             Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
         }
