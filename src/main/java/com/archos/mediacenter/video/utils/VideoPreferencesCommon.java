@@ -26,6 +26,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -146,6 +147,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private ListPreference mDecChoicePreferences = null;
     private CheckBoxPreference mForceSwDecPreferences = null;
     private CheckBoxPreference mForceAudioPassthrough = null;
+    private CheckBoxPreference mDisableDownmix = null;
     private CheckBoxPreference mActivateRefreshrateTVSwitch = null;
     private CheckBoxPreference mEnableCutoutModeShortEdge = null;
     private CheckBoxPreference mActivate3DTVSwitch = null;
@@ -224,9 +226,13 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     private void switchAdvancedPreferences() {
         PreferenceCategory prefCategory = (PreferenceCategory) findPreference("preferences_category_video");
-        if (!ArchosFeatures.isTV(getActivity())) {
+        if (!ArchosFeatures.isTV(getActivity())) { // not a TV
             prefCategory.removePreference(mActivate3DTVSwitch);
             prefCategory.removePreference(mActivateRefreshrateTVSwitch);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N)
+                prefCategory.removePreference(mDisableDownmix); // on old Android downmix is forced: do not show the option
+            else
+                prefCategory.addPreference(mDisableDownmix);
             if (MiscUtils.hasCutout) {
                 prefCategory.addPreference(mEnableCutoutModeShortEdge);
             }
@@ -234,6 +240,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 prefCategory.removePreference(mEnableCutoutModeShortEdge);
             }
         } else {
+            prefCategory.removePreference(mDisableDownmix); // on TV downmix is disabled: do not show the option
             prefCategory.addPreference(mActivate3DTVSwitch);
             prefCategory.addPreference(mActivateRefreshrateTVSwitch);
             prefCategory.removePreference(mEnableCutoutModeShortEdge);
@@ -324,6 +331,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mDecChoicePreferences = (ListPreference) findPreference(KEY_DEC_CHOICE);
         mForceSwDecPreferences = (CheckBoxPreference) findPreference(KEY_FORCE_SW);
         mForceAudioPassthrough = (CheckBoxPreference) findPreference(KEY_FORCE_AUDIO_PASSTHROUGH);
+        mDisableDownmix = (CheckBoxPreference) findPreference("disable_downmix");
         mActivate3DTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_3D_SWITCH);
         mEnableCutoutModeShortEdge = (CheckBoxPreference) findPreference("enable_cutout_mode_short_edges");
         mActivateRefreshrateTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_REFRESHRATE_SWITCH);

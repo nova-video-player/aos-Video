@@ -523,6 +523,8 @@
     <string name="preferences_force_audio_passthrough_enable">Mode 1</string>
     <string name="preferences_force_audio_passthrough_enable2">Mode 2</string>
     <string name="preferences_force_audio_passthrough_summary">for HDMI and S/PDIF connections, transmit compressed audio</string>
+    <string name="preferences_disable_downmix_title">Disable audio stereo downmix</string>
+    <string name="preferences_disable_downmix_summary">Always decode all channels and let Android downmix depending on audio output capability (can result in loosing voice channels)</string>
     <string name="preferences_allow_3rd_party_player">Allow using another video player</string>
     <string name="preferences_allow_3rd_party_player_summary">Other compatible video player applications will be proposed by Android when launching a video playback. Be aware that some features will not work (resume, bookmarks, etc.)</string>
     <string name="preference_tv_3d_automatic_switch">Enable automatic 3D TV switch</string>
