@@ -716,12 +716,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         if (LibAvos.isAvailable()) {
             VideoPreferencesFragment.resetPassthroughPref(mPreferences);
             LibAvos.setPassthrough(Integer.valueOf(mPreferences.getString("force_audio_passthrough_multiple","0")));
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) // Android is recent enough not to require downmix on phones/tablets
-                LibAvos.setDownmix(0);
-            else if(ArchosFeatures.isAndroidTV(this)&&!"AFTM".equals(Build.MODEL))  // no downmix on AndroidTV except if on the firestick
-                LibAvos.setDownmix(0);
-            else
-                LibAvos.setDownmix(1);
+            LibAvos.setDownmix(ArchosFeatures.isAndroidTV(this)&&!"AFTM".equals(Build.MODEL)?0:1);//not with firestick
         }
         //if not started from floating player, we have to stop our video
         if (mForceSWDecoding)
