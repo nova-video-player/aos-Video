@@ -129,12 +129,13 @@ public class CustomApplication extends MultiDexApplication {
         if(ArchosFeatures.isAndroidTV(this) && Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
             BootupRecommandationService.init();
 
-        if (getMyProcessName(this).equals(getPackageName())) {
-            //if main process
-            MediaUtils.clearOldSubDir(this);
-            Debug.startLogcatRecording();
-        }
-
+        String MyProcessName = getMyProcessName(this);
+        if (MyProcessName != null)
+            if (getMyProcessName(this).equals(getPackageName())) {
+                //if main process
+                MediaUtils.clearOldSubDir(this);
+                Debug.startLogcatRecording();
+            }
     }
 
     private static String getMyProcessName(Context ct) {
