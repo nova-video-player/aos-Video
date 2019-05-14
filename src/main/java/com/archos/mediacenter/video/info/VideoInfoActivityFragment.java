@@ -470,7 +470,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         VideoCursorMapper videoCursorMapper = new VideoCursorMapper();
                         videoCursorMapper.bindColumns(cursor);
                         video = (Video) videoCursorMapper.publicBind(cursor);
-
+                        cursor.close();
                     }
                 }
             }
