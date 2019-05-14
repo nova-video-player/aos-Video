@@ -272,15 +272,19 @@ public class ThumbnailEngineVideo extends ThumbnailEngine {
 
 	private Bitmap decodeCover(String poster) {
 		Bitmap scaledBitmap = null;
-		if (poster != null) {
-			Bitmap coverBitmap = BitmapFactory.decodeFile(poster);
-			if (coverBitmap != null) {
-				// There is a valid poster
-				if(DBG) Log.d(TAG, "Destination size=" + mThumbnailWidth + "x" + mThumbnailHeight);
-
-				scaledBitmap = BitmapUtils.scaleThumbnailCenterCrop(coverBitmap, mThumbnailWidth, mThumbnailHeight);
+		if (poster != null)
+			if (poster.length() != 0) {
+				if (DBG)
+					Log.d(TAG, "decodeCover before for " + poster + " of length " + poster.length());
+				Bitmap coverBitmap = BitmapFactory.decodeFile(poster);
+				if (DBG) Log.d(TAG, "decodeCover after");
+				if (coverBitmap != null) {
+					// There is a valid poster
+					if (DBG)
+						Log.d(TAG, "Destination size=" + mThumbnailWidth + "x" + mThumbnailHeight);
+					scaledBitmap = BitmapUtils.scaleThumbnailCenterCrop(coverBitmap, mThumbnailWidth, mThumbnailHeight);
+				}
 			}
-		}
 		return scaledBitmap;
 	}
 
