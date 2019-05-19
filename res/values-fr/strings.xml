@@ -789,7 +789,7 @@
     <string name="create_new_list">Créer une nouvelle liste</string>
     <string name="add_to_list">Ajouter à la liste</string>
     <string name="no_resume_available">Reprise indisponible</string>
-    <string name="no_list_detected">Aucune liste détectée. Une liste peut être crée en ajoutant des vidéos à partir de leur vue d\'information ou en les synchronisant avec Trakt (seulement en version premium).</string>
+    <string name="no_list_detected">Aucune liste détectée. Une liste peut être crée en ajoutant des vidéos à partir de leur vue d\'information ou en les synchronisant avec Trakt.</string>
     <string name="premium_already_purchased">Nova Video Premium a déjà été acheté</string>
     <string name="remove_from_list">Retirer de la liste</string>
     <string name="warning_swdec">Attention: décodage matériel désactivé!</string>
