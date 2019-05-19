@@ -84,7 +84,15 @@ public class CustomApplication extends MultiDexApplication {
                     .build());
         } */
 
-
+        if (BuildConfig.DEBUG) {
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectLeakedSqlLiteObjects()
+                    .detectLeakedClosableObjects()
+                    .detectActivityLeaks()
+                    .detectLeakedRegistrationObjects()
+                    .penaltyLog()
+                    .build());
+        }
 
         super.onCreate();
         Trakt.initApiKeys(this);
