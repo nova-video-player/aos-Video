@@ -19,6 +19,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
+import android.os.StrictMode;
 
 import androidx.multidex.MultiDexApplication;
 
@@ -84,7 +85,15 @@ public class CustomApplication extends MultiDexApplication {
                     .build());
         } */
 
-
+        if (BuildConfig.DEBUG) {
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectLeakedSqlLiteObjects()
+                    .detectLeakedClosableObjects()
+                    .detectActivityLeaks()
+                    .detectLeakedRegistrationObjects()
+                    .penaltyLog()
+                    .build());
+        }
 
         super.onCreate();
         Trakt.initApiKeys(this);
