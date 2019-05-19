@@ -61,8 +61,8 @@
     <string name="info_menu_poster_select">Seleziona un altro poster</string>
     <string name="info_menu_series_poster_select">Seleziona un altro poster</string>
     <!-- COVER ROLL -->
-    <string name="watching_up_next">Guardare su prossimo
-Copertina (rotolo di copertina)</string>
+    <string name="watching_up_next">"Guardare su prossimo
+Copertina (rotolo di copertina)"</string>
     <string name="recently_added">Aggiunti di recente</string>
     <string name="recently_added_videos">Aggiunti di recente</string>
     <string name="recently_played">Visti di recente</string>
@@ -93,9 +93,20 @@ Copertina (rotolo di copertina)</string>
     <string name="video_folder">Cartelle</string>
     <string name="movies">Film</string>
     <string name="all_movies">Tutti i film</string>
+    <string name="all_movies_format">Tutti i film -  %d</string>
+    <string name="not_watched_movies_format">Non visto -  %d</string>
+    <string name="movies_by_alpha">Film in ordine alfabetico</string>
     <string name="movies_by_genre">Film per genere</string>
+    <string name="movies_by_rating">Film per valutazione</string>
     <string name="movies_by_year">Film per anno</string>
     <string name="all_tv_shows">Serie TV</string>
+    <string name="all_tvshows">Tutti gli spettacoli TV</string>
+    <string name="all_tvshows_format">Tutti gli spettacoli TV - %d</string>
+    <string name="not_watched_tvshows_format">Non visto -  %d</string>
+    <string name="all_seasons">Tutte le stagioni</string>
+    <string name="tvshows_by_alpha">Spettacoli TV in ordine alfabetico</string>
+    <string name="tvshows_by_genre">Spettacoli TV per genere</string>
+    <string name="tvshows_by_rating">Spettacoli TV per valutazione</string>
     <string name="all_movies_and_tv_shows">Film e serie TV</string>
     <string name="non_scraped_videos">Video non analizzati</string>
     <string name="no_server">Nessun server multimediale trovato</string>
@@ -110,6 +121,7 @@ Copertina (rotolo di copertina)</string>
     <string name="remote_resume">Riprendi da remoto</string>
     <string name="bookmark">Segnalibro</string>
     <string name="delete">Cancella</string>
+    <string name="confirm_delete_short">Conferma eliminazione</string>
     <string name="delete_resume">Elimina ripresa</string>
     <string name="delete_bookmark">Elimina segnalibro</string>
     <string name="mark_as_watched">Segna come visto</string>
@@ -138,6 +150,8 @@ Copertina (rotolo di copertina)</string>
     <string name="scrap_cast">Cast</string>
     <string name="scrap_cast_format">Cast: %s</string>
     <string name="scrap_genre">Genere</string>
+    <string name="scrap_genre_format">Generi: %s</string>
+    <string name="scrap_genre_title">Generi</string>
     <string name="scrap_aired">In onda</string>
     <string name="scrap_aired_format">In onda: %s</string>
     <string name="scrap_guests">Ospiti</string>
@@ -146,11 +160,17 @@ Copertina (rotolo di copertina)</string>
     <string name="show_network">Rete</string>
     <string name="episode_name">Episodio</string>
     <string name="episode_season">Stagione</string>
+    <string name="episode_specials">Speciali</string>
     <string name="episode_identification">Stagione %1$d Episodio %2$d</string>
     <string name="season_identification">Stagione %1$d</string>
     <string name="next_episode">Prossimo episodio</string>
     <string name="list_episodes">Lista degli episodi</string>
     <string name="how_to_mark_season_watched">Clicca su una stagione per marcare tutti gli episodi come visti o non visti</string>
+    <string name="how_to_unindex_season">Clicca su una stagione per rimuovere tutti i suoi episodi dalla biblioteca</string>
+    <string name="how_to_delete_season">Clicca su una stagione per cancellare tutti i suoi episodi</string>
+    <string name="mark_show_watched">Segna tutti gli episodi visti o non visti</string>
+    <string name="unindex_show">Rimuovi tutti gli episodi dalla libreria</string>
+    <string name="delete_show">Elimina tutti gli episodi</string>
     <string name="no_episode_watched">Nessun episodio visto</string>
     <string name="all_episodes_watched">Tutti gli episodi visti</string>
     <plurals name="n_episodes_watched">
@@ -191,6 +211,7 @@ Copertina (rotolo di copertina)</string>
     <string name="rescanning">Sto scansionando nuovamente le memorie di archiviazione</string>
     <string name="rescan_storage_summary">Scansiona nuovamente la memoria interna, la scheda SD e l\'unità esterna</string>
     <string name="preference_display_all_files">Mostra tutti i file</string>
+    <string name="preference_display_all_files_summary">Visualizza anche i file non video</string>
     <string name="info_processing">Controllo delle proprietà multimediali...</string>
     <string name="info_video">Video</string>
     <string name="info_audio">Audio</string>
@@ -352,6 +373,7 @@ Copertina (rotolo di copertina)</string>
     <string name="subtitles_wizard_add_files">Puoi copiare più file di sottotitoli in questa cartella in modo da poterli associare a questo video</string>
     <string name="subtitles_wizard_help">Seleziona uno qualsiasi dei file di sottotitoli per poterlo associare con il video %s. Il file verrà rinominato in modo da poter combaciare con il nome del video</string>
     <string name="subtitles_wizard_empty_list_help">Nessun file di sottotitolo trovato. Devi prima copiare uno o più file di sottotitoli in questa cartella in modo da poterli associare con il video %s</string>
+    <string name="subtitles_wizard_cache">Cache</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Scarica i sottotitoli online</string>
     <string name="toast_subloader_sub_found">Sottotitoli trovati per questa lingua</string>
@@ -460,6 +482,8 @@ Copertina (rotolo di copertina)</string>
     <string name="preference_tv_3d_automatic_switch_summary">Usa questa funzione solo se la tua TV 3D la supporta</string>
     <string name="preference_tv_refreshrate_switch">Abilita lo switch refresh rate automatico</string>
     <string name="preference_tv_refreshrate_switch_summary">Rimuovi l\'effetto judder adattando il refresh rate (potrebbe cambiare a seconda della TV utilizzata)</string>
+    <string name="preference_cutout_short_edges">Video a schermo intero con i ritagli</string>
+    <string name="preference_cutout_short_edges_summary">Consenti video a schermo intero in modalità schermo intero con ritagli</string>
     <string name="category_languages">Sottotitoli</string>
     <string name="subtitles_hide_default">Nascondi sempre i sottotitoli</string>
     <string name="subtitles_hide_default_summary">Chiedi sempre se vuoi nascondere i sottotitoli</string>
@@ -653,11 +677,11 @@ Copertina (rotolo di copertina)</string>
     <string name="private_mode_is_on">La Modalità Privata è attiva</string>
     <string name="private_mode_is_off">La Modalità Privata è disattiva</string>
     <string name="private_mode">Modalità Privata</string>
-    <string name="private_mode_description">Durante l\'uso della Modalità Privata, le seguenti funzioni sono disabilitate:\n
+    <string name="private_mode_description">"Durante l'uso della Modalità Privata, le seguenti funzioni sono disabilitate:\n
         - Indicizzazione e analisi automatiche dei video riprodotti\n
         - Riprodotti di recente\n
         - Punti di ripristino\n
-        - Sincronizzazione con Trakt</string>
+        - Sincronizzazione con Trakt"</string>
     <string name="dont_show_again">Non mostrare più</string>
     <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
     <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
@@ -734,11 +758,11 @@ Copertina (rotolo di copertina)</string>
     <string name="sleep_timer_description">Interrompi il video dopo: </string>
     <string name="cast_mode">Modalità Cast</string>
     <string name="cast_info">Informazioni</string>
-    <string name="troubleshoot_streammode_msg">Nova Video Player sta riproducendo in Modalità Cast.
+    <string name="troubleshoot_streammode_msg">"Nova Video Player sta riproducendo in Modalità Cast.
         \nCiò comporta una buona qualità video, ma potrebbero verificarsi problemi con le tracce audio e i sottotitoli.
-        Prova a passare alla Modalità Display Remoto</string>
-    <string name="troubleshoot_remotemode_msg">Nova Video Player sta riproducendo in Modalità Display Remoto.
-        \nA seconda del tuo dispositivo e dalla qualità della tua rete, potrebbero verificarsi problemi di perdità di qualità e prestazioni</string>
+        Prova a passare alla Modalità Display Remoto"</string>
+    <string name="troubleshoot_remotemode_msg">"Nova Video Player sta riproducendo in Modalità Display Remoto.
+        \nA seconda del tuo dispositivo e dalla qualità della tua rete, potrebbero verificarsi problemi di perdità di qualità e prestazioni"</string>
     <string name="picture_in_picture">Picture in picture</string>
     <string name="cast">Cast</string>
     <string name="cast_warning">Il supporto al cast è limitato per mancanza dei codec appropriati nella Chromecast. Per mitigare queste limitazioni, sono state implementate due modalità di casting: Chromecast e Screencast (con fallback automatico). I cali di prestazioni e di qualità potrebbero essere dovuti anche a limitazioni della rete o del device</string>

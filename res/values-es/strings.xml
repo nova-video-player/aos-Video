@@ -693,11 +693,11 @@
     <string name="private_mode_is_on">Modo privado activado</string>
     <string name="private_mode_is_off">Modo privado desactivado</string>
     <string name="private_mode">Modo privado</string>
-    <string name="private_mode_description">Mientras en modo privado, las siguientes características están desactivadas:\n
+    <string name="private_mode_description">"Mientras en modo privado, las siguientes características están desactivadas:\n
         - Auto-indexación y auto-raspado de videos reproducidos\n
         - Reproducido recientemente\n
         - Punto de reanudación\n
-        - Sincronización con Trakt</string>
+        - Sincronización con Trakt"</string>
     <string name="dont_show_again">No mostrar de nuevo</string>
     <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
     <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
@@ -781,11 +781,11 @@
     <string name="sleep_timer_description">Detiene el vídeo después de: </string>
     <string name="cast_mode">Modo de lanzamiento</string>
     <string name="cast_info">Información</string>
-    <string name="troubleshoot_streammode_msg">El reproductor de vídeo Nova está actualmente en modo  transmisión.
+    <string name="troubleshoot_streammode_msg">"El reproductor de vídeo Nova está actualmente en modo  transmisión.
         \nEsto da como resultado una buena calidad de vídeo pero puede causar problemas con pistas audio y subtítulos.
-        Intenta cambiar al modo de visualización remota.</string>
-    <string name="troubleshoot_remotemode_msg">El reproductor de vídeo Nova está actualmente en modo de visualización remota.
-        \nDependiendo de su dispositivo y de la calidad de su red, puede experimentar algunos problemas de pérdidas de calidad y rendimiento. </string>
+        Intenta cambiar al modo de visualización remota."</string>
+    <string name="troubleshoot_remotemode_msg">"El reproductor de vídeo Nova está actualmente en modo de visualización remota.
+        \nDependiendo de su dispositivo y de la calidad de su red, puede experimentar algunos problemas de pérdidas de calidad y rendimiento. "</string>
     <string name="picture_in_picture">Imagen en imagen</string>
     <string name="cast">Reparto</string>
     <string name="cast_warning">El soporte está limitado debido a las limitaciones del códec de Chromecast. Para mitigar estas limitaciones, se implementan 2 modos de lanzamiento: Chromecast y Screencast (con retroceso automático). Tenga en cuenta que el rendimiento y los problemas de calidad también pueden deberse a limitaciones de red o de dispositivo.</string>

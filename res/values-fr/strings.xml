@@ -695,11 +695,11 @@
     <string name="private_mode_is_on">Mode privé activé</string>
     <string name="private_mode_is_off">Mode privé non activé</string>
     <string name="private_mode">Mode privé</string>
-    <string name="private_mode_description">Dans le mode privé, les fonctions suivantes sont désactivées:\n
+    <string name="private_mode_description">"Dans le mode privé, les fonctions suivantes sont désactivées:\n
         - Auto-indexation et Auto-description des vidéos jouées\n
         - Joué récemment\n
         - Point de reprise\n
-        - Synchronisation Trakt</string>
+        - Synchronisation Trakt"</string>
     <string name="dont_show_again">Ne plus afficher</string>
     <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
     <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
@@ -783,11 +783,11 @@
     <string name="sleep_timer_description">Arrêt de la vidéo après : </string>
     <string name="cast_mode">Mode de diffusion</string>
     <string name="cast_info">Info</string>
-    <string name="troubleshoot_streammode_msg">Nova video player est en Mode Streaming.
+    <string name="troubleshoot_streammode_msg">"Nova video player est en Mode Streaming.
         \nLa qualité vidéo sera optimale mais vous pouvez rencontrer des soucis avec vos pistes de sous-titres et pistes audio.
-        En ce cas, vous pouvez passer en mode \"Écran distant\".</string>
-    <string name="troubleshoot_remotemode_msg">Nova video player est en Écran distant.
-\nEn fonction de votre appareil et selon les performances de votre réseau, la qualité vidéo peut être détériorée. </string>
+        En ce cas, vous pouvez passer en mode \"Écran distant\"."</string>
+    <string name="troubleshoot_remotemode_msg">"Nova video player est en Écran distant.
+\nEn fonction de votre appareil et selon les performances de votre réseau, la qualité vidéo peut être détériorée. "</string>
     <string name="picture_in_picture">Image incrustée</string>
     <string name="cast">Diffuser</string>
     <string name="cast_warning">Le cast est limité par le peu de codecs supportés par la Chromecast. Pour contourner ces limitations, l\'application passe automatiquement en Écran distant si le format n\'est pas supporté. La qualité et la vitesse de chargement dépendent fortement de votre appareil et de votre réseau.</string>
@@ -806,7 +806,7 @@
     <string name="create_new_list">Créer une nouvelle liste</string>
     <string name="add_to_list">Ajouter à la liste</string>
     <string name="no_resume_available">Reprise indisponible</string>
-    <string name="no_list_detected">Aucune liste détectée. Une liste peut être crée en ajoutant des vidéos à partir de leur vue d\'information ou en les synchronisant avec Trakt (seulement en version premium).</string>
+    <string name="no_list_detected">Aucune liste détectée. Une liste peut être crée en ajoutant des vidéos à partir de leur vue d\'information ou en les synchronisant avec Trakt.</string>
     <string name="premium_already_purchased">Nova Video Premium a déjà été acheté</string>
     <string name="remove_from_list">Retirer de la liste</string>
     <string name="warning_swdec">Attention: décodage matériel désactivé!</string>
