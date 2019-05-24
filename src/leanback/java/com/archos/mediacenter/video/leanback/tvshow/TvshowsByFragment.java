@@ -294,7 +294,12 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
             Bundle args = new Bundle();
             args.putString("ids", listOfTvshowIds);
             args.putString("sort", mSortOrder);
-            LoaderManager.getInstance(getActivity()).restartLoader(subsetId, args, this);
+            // cf. https://github.com/nova-video-player/aos-AVP/issues/141
+            try {
+                LoaderManager.getInstance(getActivity()).restartLoader(subsetId, args, this);
+            } catch (Exception e) {
+                Log.w(TAG, "caught exception in loadCategoriesRows ",e);
+            }
 
             c.moveToNext();
         }

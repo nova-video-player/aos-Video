@@ -295,7 +295,12 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
             Bundle args = new Bundle();
             args.putString("ids", listOfMovieIds);
             args.putString("sort", mSortOrder);
-            LoaderManager.getInstance(this).restartLoader(subsetId, args, this);
+            // cf. https://github.com/nova-video-player/aos-AVP/issues/141
+            try {
+                LoaderManager.getInstance(this).restartLoader(subsetId, args, this);
+            } catch (Exception e) {
+                Log.w(TAG, "caught exception in loadCategoriesRows ",e);
+            }
 
             c.moveToNext();
         }
