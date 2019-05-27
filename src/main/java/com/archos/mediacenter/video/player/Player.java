@@ -45,6 +45,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
+import android.view.Display.Mode;
+
 /**
  * Displays a video file.  The PlayerView class
  * can load images from various sources (such as resources or content
@@ -904,6 +906,14 @@ public class Player implements IPlayerControl,
             float[] rates = d.getSupportedRefreshRates();
             Arrays.sort(rates);
             LayoutParams lp = mWindow.getAttributes();
+
+            if (Build.VERSION.SDK_INT >= 23) {
+                Mode[] modes = d.getSupportedModes();
+                for (Mode m : modes) {
+                    if (DBG) Log.d(TAG, "Display supported mode " + m);
+                }
+            }
+
             // octave style v=23.976; r=[24 25 30 50 60]; [ abs(v*floor(r/v+0.5)-r); abs(v-r) ]
             // Algorithm proposed: v=video rate, RR={r supported rates by TV}, d_r=abs(v*floor(r/v+0.5)-r) (diff wrt multiple of r)
             // L_0={r in RR / d_r<0.01} (0.01Hz is epsilon), L_1={r in RR / d_r<0.1} (0.1Hz is the acceptable threshold)
