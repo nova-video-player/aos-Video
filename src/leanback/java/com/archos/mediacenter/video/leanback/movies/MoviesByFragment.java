@@ -305,7 +305,11 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
             Bundle args = new Bundle();
             args.putString("ids", listOfMovieIds);
             args.putString("sort", mSortOrder);
-            LoaderManager.getInstance(getActivity()).restartLoader(subsetId, args, this);
+            try {
+                LoaderManager.getInstance(getActivity()).restartLoader(subsetId, args, this);
+            } catch (Exception e) {
+                Log.w(TAG, "caught exception in loadCategoriesRows ",e);
+            }
 
             c.moveToNext();
         }

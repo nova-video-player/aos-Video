@@ -122,7 +122,11 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
         mOverlay.resume();
 
         for (int i = 0; i < mAdaptersMap.size(); i++)
-            LoaderManager.getInstance(this).getLoader(mAdaptersMap.keyAt(i)).startLoading();
+            try {
+                LoaderManager.getInstance(this).getLoader(mAdaptersMap.keyAt(i)).startLoading();
+            } catch (Exception e) {
+                Log.w(TAG, "caught exception in onResume ",e);
+            }
     }
 
     @Override
@@ -131,7 +135,11 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
         mOverlay.pause();
 
         for (int i = 0; i < mAdaptersMap.size(); i++)
-            LoaderManager.getInstance(this).getLoader(mAdaptersMap.keyAt(i)).stopLoading();
+            try {
+                LoaderManager.getInstance(this).getLoader(mAdaptersMap.keyAt(i)).stopLoading();
+            } catch (Exception e) {
+                Log.w(TAG, "caught exception in onPause ",e);
+            }
     }
 
     @Override
@@ -279,6 +287,7 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
         // Build the array of categories from the cursor
         ArrayList<ListRow> rows = new ArrayList<>(c.getCount());
         c.moveToFirst();
+
         while(!c.isAfterLast())
         {
             int subsetId = (int) c.getLong(subsetIdColumn);
