@@ -153,7 +153,7 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
     }
 
     // limit to 1 thread for less epileptic visual effect and a queue of 5200 = 100 years of 52 weeks
-    private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS,
+    private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(4, 4, 10, TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>(5200));
 
     public VideoLoader(Context context) {
