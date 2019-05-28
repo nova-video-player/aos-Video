@@ -46,10 +46,10 @@ public class EpisodesByDateLoader extends MoviesByLoader {
         String formatter = "e_aired";
         switch (mDateView) {
             case WEEK:
-                formatter = "strftime('%d/%m', e_aired / 1000, 'unixepoch', 'localtime', '-6 days', 'weekday 1') || strftime(' - %d/%m (%Y)', e_aired / 1000, 'unixepoch', 'localtime', 'weekday 0')";
+                formatter = "strftime('%Y %m/%d', e_aired / 1000, 'unixepoch', 'localtime', '-6 days', 'weekday 1') || strftime('-%m/%d', e_aired / 1000, 'unixepoch', 'localtime', 'weekday 0')";
                 break;
             case MONTH:
-                formatter = "strftime('%m (%Y)', e_aired / 1000, 'unixepoch', 'localtime')";
+                formatter = "strftime('%Y/%m', e_aired / 1000, 'unixepoch', 'localtime')";
                 break;
             case YEAR:
                 formatter = "strftime('%Y', e_aired / 1000, 'unixepoch', 'localtime')";
