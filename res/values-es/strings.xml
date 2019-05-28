@@ -95,8 +95,8 @@
     <string name="all_movies_format">Todas las películas -  %d</string>
     <string name="not_watched_movies_format">No visto  %d</string>
     <string name="movies_by_alpha">Películas en orden alfabético</string>
-    <string name="movies_by_genre">Películas por tipo</string>
-    <string name="movies_by_rating">Películas por calificación</string>
+    <string name="movies_by_genre">Películas por género</string>
+    <string name="movies_by_rating">Películas por valoración</string>
     <string name="movies_by_year">Películas por año</string>
     <string name="all_tv_shows">Programas de TV</string>
     <string name="all_tvshows">Todos los programas de TV</string>
@@ -104,8 +104,8 @@
     <string name="not_watched_tvshows_format">No visto -  %d</string>
     <string name="all_seasons">Todas las temporadas</string>
     <string name="tvshows_by_alpha">Programas de TV por orden alfabético</string>
-    <string name="tvshows_by_genre">Programas de TV por tipo</string>
-    <string name="tvshows_by_rating">Programas de TV por calificación</string>
+    <string name="tvshows_by_genre">Programas de TV por género</string>
+    <string name="tvshows_by_rating">Programas de TV por valoración</string>
     <string name="all_movies_and_tv_shows">Películas y programas de TV</string>
     <string name="non_scraped_videos">Videos sin analizar</string>
     <string name="no_server">No se encontró ningún servidor multimedia</string>
@@ -121,7 +121,7 @@
     <string name="bookmark">Marcador</string>
     <string name="delete">Eliminar</string>
     <string name="confirm_delete_short">Confirmar eliminación</string>
-    <string name="delete_resume">Borrar reanudar</string>
+    <string name="delete_resume">Eliminar reanudación</string>
     <string name="delete_bookmark">Eliminar marcador</string>
     <string name="mark_as_watched">Marcar como visto</string>
     <string name="mark_as_not_watched">Marcar como no visto</string>
@@ -481,6 +481,8 @@
     <string name="preference_tv_3d_automatic_switch_summary">Utilice esta función sólo si su TV es compatible con la función 3D</string>
     <string name="preference_tv_refreshrate_switch">Activar el cambio de tasa de refresco automático de TV</string>
     <string name="preference_tv_refreshrate_switch_summary">Elimina el efecto judder adaptando la tasa de refresco de la pantalla (las TV compatibles pueden variar)</string>
+    <string name="preference_cutout_short_edges">Pantalla completa con recortes de pantalla</string>
+    <string name="preference_cutout_short_edges_summary">Permitir vídeo en pantalla completa en pantalla panorámica con recortes</string>
     <string name="category_languages">Subtítulos</string>
     <string name="subtitles_hide_default">Ocultar subtítulos por defecto</string>
     <string name="subtitles_hide_default_summary">Marcar si desea ocultar los subtítulos por defecto</string>
@@ -693,11 +695,11 @@
     <string name="private_mode_is_on">Modo privado activado</string>
     <string name="private_mode_is_off">Modo privado desactivado</string>
     <string name="private_mode">Modo privado</string>
-    <string name="private_mode_description">"Mientras en modo privado, las siguientes características están desactivadas:\n
+    <string name="private_mode_description">Mientras en modo privado, las siguientes características están desactivadas:\n
         - Auto-indexación y auto-raspado de videos reproducidos\n
         - Reproducido recientemente\n
         - Punto de reanudación\n
-        - Sincronización con Trakt"</string>
+        - Sincronización con Trakt</string>
     <string name="dont_show_again">No mostrar de nuevo</string>
     <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
     <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
@@ -781,11 +783,11 @@
     <string name="sleep_timer_description">Detiene el vídeo después de: </string>
     <string name="cast_mode">Modo de lanzamiento</string>
     <string name="cast_info">Información</string>
-    <string name="troubleshoot_streammode_msg">"El reproductor de vídeo Nova está actualmente en modo  transmisión.
+    <string name="troubleshoot_streammode_msg">El reproductor de vídeo Nova está actualmente en modo  transmisión.
         \nEsto da como resultado una buena calidad de vídeo pero puede causar problemas con pistas audio y subtítulos.
-        Intenta cambiar al modo de visualización remota."</string>
-    <string name="troubleshoot_remotemode_msg">"El reproductor de vídeo Nova está actualmente en modo de visualización remota.
-        \nDependiendo de su dispositivo y de la calidad de su red, puede experimentar algunos problemas de pérdidas de calidad y rendimiento. "</string>
+        Intenta cambiar al modo de visualización remota.</string>
+    <string name="troubleshoot_remotemode_msg">El reproductor de vídeo Nova está actualmente en modo de visualización remota.
+        \nDependiendo de su dispositivo y de la calidad de su red, puede experimentar algunos problemas de pérdidas de calidad y rendimiento. </string>
     <string name="picture_in_picture">Imagen en imagen</string>
     <string name="cast">Reparto</string>
     <string name="cast_warning">El soporte está limitado debido a las limitaciones del códec de Chromecast. Para mitigar estas limitaciones, se implementan 2 modos de lanzamiento: Chromecast y Screencast (con retroceso automático). Tenga en cuenta que el rendimiento y los problemas de calidad también pueden deberse a limitaciones de red o de dispositivo.</string>

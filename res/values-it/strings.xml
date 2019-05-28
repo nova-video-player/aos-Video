@@ -61,8 +61,8 @@
     <string name="info_menu_poster_select">Seleziona un altro poster</string>
     <string name="info_menu_series_poster_select">Seleziona un altro poster</string>
     <!-- COVER ROLL -->
-    <string name="watching_up_next">"Guardare su prossimo
-Copertina (rotolo di copertina)"</string>
+    <string name="watching_up_next">Guardare su prossimo
+Copertina (rotolo di copertina)</string>
     <string name="recently_added">Aggiunti di recente</string>
     <string name="recently_added_videos">Aggiunti di recente</string>
     <string name="recently_played">Visti di recente</string>
@@ -677,11 +677,11 @@ Copertina (rotolo di copertina)"</string>
     <string name="private_mode_is_on">La Modalità Privata è attiva</string>
     <string name="private_mode_is_off">La Modalità Privata è disattiva</string>
     <string name="private_mode">Modalità Privata</string>
-    <string name="private_mode_description">"Durante l'uso della Modalità Privata, le seguenti funzioni sono disabilitate:\n
+    <string name="private_mode_description">Durante l\'uso della Modalità Privata, le seguenti funzioni sono disabilitate:\n
         - Indicizzazione e analisi automatiche dei video riprodotti\n
         - Riprodotti di recente\n
         - Punti di ripristino\n
-        - Sincronizzazione con Trakt"</string>
+        - Sincronizzazione con Trakt</string>
     <string name="dont_show_again">Non mostrare più</string>
     <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
     <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
@@ -758,11 +758,11 @@ Copertina (rotolo di copertina)"</string>
     <string name="sleep_timer_description">Interrompi il video dopo: </string>
     <string name="cast_mode">Modalità Cast</string>
     <string name="cast_info">Informazioni</string>
-    <string name="troubleshoot_streammode_msg">"Nova Video Player sta riproducendo in Modalità Cast.
+    <string name="troubleshoot_streammode_msg">Nova Video Player sta riproducendo in Modalità Cast.
         \nCiò comporta una buona qualità video, ma potrebbero verificarsi problemi con le tracce audio e i sottotitoli.
-        Prova a passare alla Modalità Display Remoto"</string>
-    <string name="troubleshoot_remotemode_msg">"Nova Video Player sta riproducendo in Modalità Display Remoto.
-        \nA seconda del tuo dispositivo e dalla qualità della tua rete, potrebbero verificarsi problemi di perdità di qualità e prestazioni"</string>
+        Prova a passare alla Modalità Display Remoto</string>
+    <string name="troubleshoot_remotemode_msg">Nova Video Player sta riproducendo in Modalità Display Remoto.
+        \nA seconda del tuo dispositivo e dalla qualità della tua rete, potrebbero verificarsi problemi di perdità di qualità e prestazioni</string>
     <string name="picture_in_picture">Picture in picture</string>
     <string name="cast">Cast</string>
     <string name="cast_warning">Il supporto al cast è limitato per mancanza dei codec appropriati nella Chromecast. Per mitigare queste limitazioni, sono state implementate due modalità di casting: Chromecast e Screencast (con fallback automatico). I cali di prestazioni e di qualità potrebbero essere dovuti anche a limitazioni della rete o del device</string>

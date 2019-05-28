@@ -24,6 +24,8 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Обновить список серверов</string>
     <!-- Menu item to enable network shares -->
+    <string name="enable_network_shares">Включить сетевые ресурсы</string>
+    <string name="initial_scan">Начальный поиск</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Поиск</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -36,36 +38,72 @@
     <!-- Context menu item -->
     <string name="play_selection">Воспроизвести</string>
     <!-- Context menu item -->
+    <string name="multiple_selection">Несколько вариантов</string>
     <!-- Context menu item -->
+    <string name="play_from_beginning">Играть с начала</string>
     <!-- Dialog box button -->
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet"> АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ</string>
     <!-- The string used in file/folder infos dialog. -->
     <string name="info_duration">Длительность:</string>
+    <string name="video_sources">Источники</string>
     <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">Фильм</string>
+    <string name="info_tab_show">Шоу</string>
+    <string name="info_tab_episode">Серии</string>
+    <string name="info_tab_video">Видео</string>
+    <string name="info_tab_file">Информация о файле</string>
+    <string name="info_tab_backdrop_chooser">Выбор фона</string>
+    <string name="info_tab_poster_chooser">Выбор постера</string>
+    <string name="info_tab_share">Поделиться</string>
+    <string name="info_menu_backdrop_select">Фон</string>
+    <string name="info_menu_series_backdrop_select">Фон для серии</string>
+    <string name="info_menu_poster_select">Выбрать другой постер</string>
+    <string name="info_menu_series_poster_select">Выбрать другой постер</string>
     <!-- COVER ROLL -->
     <string name="recently_added">Недавно добавленные</string>
     <string name="recently_added_videos">Недавно добавленные</string>
     <string name="recently_played">Недавно воспроизведенные</string>
     <string name="recently_played_videos">Недавно воспроизведенные</string>
+    <string name="video_lists">Плейлисты</string>
     <!-- The string used in main storage list -->
     <string name="external_storage">Внешн.</string>
     <string name="internal_storage">Внутр.</string>
     <string name="network_storage">Сеть</string>
     <string name="sd_card_storage">Карта SD</string>
     <string name="usb_host_storage">Внешний диск</string>
+    <string name="other_storage">Хранилище файлов</string>
     <string name="network_media_servers">Медиа серверы (UPnP)</string>
     <string name="network_shared_folders">Общие папки (SMB)</string>
+    <string name="network_connected_as">Подключен как %s</string>
+    <string name="network_guest">гость</string>
+    <string name="sftp_folders">FTP</string>
+    <string name="network_jcifs">Samba (Экспериментальный)</string>
+    <string name="network_cling">UPNP (Экспериментальный)</string>
     <string name="recordings_storage">Записи</string>
     <string name="root_storage">Встроенная память</string>
     <string name="cannot_list">Невозможно отобразить содержимое</string>
     <!-- VIDEO -->
     <string name="video">Archos Видео</string>
+    <string name="videos">Видео</string>
     <string name="all_videos">Все видео</string>
     <string name="not_played_yet_videos">Еще не вопроизв.</string>
     <string name="video_folder">папки</string>
     <string name="movies">Фильмы</string>
+    <string name="all_movies">Все фильмы</string>
+    <string name="all_movies_format">Все фильмы - %d</string>
+    <string name="not_watched_movies_format">Не просмотрено -  %d</string>
+    <string name="movies_by_alpha">Фильмы по алфавиту</string>
+    <string name="movies_by_genre">Фильмы по жанру</string>
+    <string name="movies_by_rating">Фильмы по рейтингу</string>
+    <string name="movies_by_year">Фильмы по году</string>
     <string name="all_tv_shows">ТВ-программы</string>
+    <string name="all_tvshows">Все сериалы</string>
+    <string name="all_tvshows_format">Все сериалы -  %d</string>
+    <string name="not_watched_tvshows_format">Не просмотрено -  %d</string>
+    <string name="all_seasons">Все сезоны</string>
+    <string name="tvshows_by_alpha">Серии по алфавиту</string>
+    <string name="tvshows_by_genre">Серии по жанру</string>
     <string name="all_movies_and_tv_shows">Фильмы и ТВ-программы</string>
     <string name="no_server">Медиа-серверы не обнаружены</string>
     <string name="cannot_open_video">Невозможно открыть это видео</string>
@@ -78,11 +116,18 @@
     <string name="resume">Возобновить</string>
     <string name="bookmark">Закладка</string>
     <string name="delete">Удалить</string>
+    <string name="confirm_delete_short">Подтвердить удаление</string>
     <string name="delete_resume">Удалить возобновл.</string>
     <string name="delete_bookmark">Удалить закладку</string>
+    <string name="mark_as_watched">Просмотрено</string>
+    <string name="mark_as_not_watched">Не просмотрено</string>
     <string name="upnp_not_allowed">Доступ к серверу UPnP запрещен. Измените настройки доступа.</string>
     <string name="scrap_remove">Удалить информацию</string>
+    <string name="scrap_remove_short">Удалить</string>
     <!-- for small screens -->
+    <string name="scrap_change">Изменить информацию всех серий</string>
+    <string name="scrap_series_change">Изменить информацию о сериале</string>
+    <string name="scrap_change_finalizing">Завершение…</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Режиссер</string>
     <string name="scrap_director_format">Режиссер: %s</string>
@@ -92,16 +137,24 @@
     <string name="scrap_year_format">Год: %d</string>
     <string name="scrap_studio">Студия</string>
     <string name="scrap_plot">Сюжет</string>
+    <string name="scrap_trailer">Трейлеры</string>
     <string name="scrap_cast">Актеры</string>
     <string name="scrap_cast_format">Актеры: %s</string>
     <string name="scrap_genre">Жанр</string>
+    <string name="scrap_genre_format">Жанры: %s</string>
+    <string name="scrap_genre_title">Жанры</string>
     <string name="scrap_aired">Дата выхода</string>
     <string name="scrap_aired_format">Дата выхода: %s</string>
     <string name="scrap_guests">Гости</string>
     <!-- Specific strings for TV shows -->
+    <string name="show_network">Сеть</string>
     <string name="episode_name">Эпизод</string>
     <string name="episode_season">Сезон</string>
+    <string name="episode_specials">Специальные выпуски</string>
     <string name="episode_identification">Сезон %1$d Эпизод %2$d</string>
+    <string name="season_identification">Сезон %1$d</string>
+    <string name="next_episode">Следующая серия</string>
+    <string name="list_episodes">Список серий</string>
     <string name="scrap_processing">Получение метаданных…</string>
     <string name="scrap_no_network">Нет подключения к сети.</string>
     <string name="scrap_enable_network_first">"Включите соединение к сети для запуска данного приложения."</string>
@@ -119,11 +172,13 @@
     <string name="scraper_notification_progress">\"%1$d of %2$d файлов обработано</string>
     <string name="scraper_suggest_message">Вы можете найти постеры и информацию о Ваших видео в сети при помощи меню \'Поиск информации в сети\'.</string>
     <!-- To be translated only in case there is a localized IMDB -->
+    <string name="storage">Хранилище</string>
     <string name="info_processing">Проверка свойств медиа…</string>
     <string name="info_video">Видео</string>
     <string name="info_audio">Аудио</string>
     <string name="info_plugin_required">(требуется плагин)</string>
     <string name="info_subtitle">Субтитры</string>
+    <string name="info_file">Информация о файле</string>
     <!-- VIDEO COVER ROLL -->
     <string name="you_have_no_recently_added_video">Нет недавно добавленных видео</string>
     <string name="you_have_no_recently_played_video">Нет недавно воспроизведенных видео</string>
@@ -135,18 +190,30 @@
     <string name="view_mode_list">Список</string>
     <string name="view_mode_grid">Постеры</string>
     <string name="view_mode_details">Постеры с детальной информацией</string>
+    <string name="switch_to_list">Список</string>
+    <string name="switch_to_grid">Сетка</string>
     <!-- VideoPlayer -->
     <string name="player_loading_video">Загрузка видео \u2026</string>
     <string name="player_audio_track_toast">Аудио дорожка:</string>
     <string name="player_subtitle_track_toast">Дорожка субтитров:</string>
     <string name="player_bookmark_set">Установка закладки в</string>
     <string name="player_pref_subtitle_delay_title">Задержка</string>
+    <string name="floating_player_pause">Пауза</string>
+    <string name="player_pref_audio_delay_title">Задержка аудио</string>
+    <string name="now_playing">Сейчас играет</string>
+    <string name="player_window_mode">Режим окна</string>
     <string name="pref_play_mode_title">Режим воспроизведения</string>
     <string name="pref_play_mode_entry_single">Один файл</string>
     <string name="pref_play_mode_entry_folder">Папка</string>
     <string name="pref_play_mode_entry_repeat_folder">Повтор папки</string>
     <string name="pref_play_mode_entry_repeat_single">Повтор одного файла</string>
     <string name="pref_audio_parameters_title">Aудио</string>
+    <string name="pref_audio_filt_night_mode">Ночной режим</string>
+    <string name="ui_mode_auto">Авто</string>
+    <string name="ui_mode_tv">ТВ</string>
+    <string name="ui_mode_normal">Планшет/Телефон</string>
+    <string name="pref_s3d_mode_title">Режим 3D</string>
+    <string name="pref_s3d_mode_entry_off">Выкл</string>
     <string name="menu_info">Информация</string>
     <string name="menu_bookmark">Установить закладку</string>
     <string name="menu_brightness_settings">Яркость</string>
@@ -171,17 +238,25 @@
     <string name="s_dutch">Голландский</string>
     <string name="s_norwegian">Норвежский</string>
     <string name="s_polish">Польский</string>
+    <string name="s_brazilian">Бразильский</string>
     <string name="s_portuguese">Португальский</string>
     <string name="s_russian">Русский</string>
     <string name="Romanian">Румынский</string>
     <string name="Serbo_Croatian">Сербохорватский</string>
+    <string name="Croatian">Хорватский</string>
     <string name="Serbian">Сербский</string>
+    <string name="Slovenian">Словенский</string>
     <string name="s_swedish">Шведский</string>
+    <string name="s_thai">Тайский</string>
     <string name="s_turkish">Турецкий</string>
     <string name="s_chinese">Китайский</string>
+    <string name="s_vietnamese">Вьетнамский</string>
     <string name="s_none">Нет</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Воспроизведение видео невозможно</string>
+    <string name="player_err_cantplaysound">Не удается воспроизвести аудиозапись</string>
+    <string name="audiocodec_not_supported">Этот аудио формат (<xliff:g id="codec">%s</xliff:g>) не поддерживается.</string>
+    <string name="videocodec_not_supported">Этот формат видео (<xliff:g id="codec">%s</xliff:g>) не поддерживается.</string>
     <string name="player_err_file">Видео файл не существует.</string>
     <string name="player_err_sizetoobig">Изображение слишком велико</string>
     <string name="player_err_unknown">Неизвестная ошибка.</string>
@@ -200,14 +275,37 @@
     <!-- Player plug-in -->
     <string name="player_plugin_cinema_title">Программный модуль КИНО</string>
     <string name="player_plugin_cinema">Программный модуль КИНО (DVD, MPEG-2, AC3)</string>
+    <string name="player_plugin_ac3_title">AC3 плагин</string>
+    <string name="player_plugin_ac3">AC3 плагин</string>
+    <string name="player_plugin_mpeg2_title">Плагин MPEG-2</string>
+    <string name="player_plugin_mpeg2">Плагин MPEG-2 (DVD)</string>
     <string name="player_plugin_video_msg">Данный файл содержит <xliff:g id="video">%1$s</xliff:g> формат видео.</string>
     <string name="player_plugin_audio_msg">Данный файл содержит <xliff:g id="audio">%1$s</xliff:g> формат аудио.</string>
     <string name="player_plugin_video_audio_msg">Данный файл содержит <xliff:g id="video">%1$s</xliff:g> формат видео и <xliff:g id="audio">%2$s</xliff:g> формат аудио. </string>
     <string name="player_plugin_purchase_msg"> Необходимо приобрести <xliff:g id="plugin">%1$s</xliff:g></string>
     <string name="player_plugin_purchase">Перейти в магазин</string>
+    <string name="player_plugin_purchase_archos_msg">Вы можете приобрести дополнительные плагины на www.archos.com.</string>
+    <string name="player_plugin_purchase_google_play_msg">Вы можете приобрести дополнительные плагины в Google Play.</string>
+    <string name="player_plugin_purchase_google_play_button">Перейти в Google Play</string>
     <!-- Subtitles wizard -->
+    <string name="get_subtitles_on_drive">Выберите субтитры на накопителе</string>
+    <string name="subtitles_wizard_no_files">Файлы субтитров не найдены</string>
+    <string name="subtitles_wizard_current_files">Текущие файлы субтитров</string>
+    <string name="subtitles_wizard_available_files">Доступные файлы субтитров</string>
+    <string name="subtitles_wizard_associate">Связать этот файл с видео</string>
+    <string name="subtitles_wizard_delete">Удалить этот файл</string>
+    <string name="subtitles_wizard_empty_list">Файл не найден</string>
+    <string name="subtitles_wizard_cache">Кэш</string>
     <!-- Subloader -->
+    <string name="dialog_subloader_copying">Копирование субтитров…</string>
+    <string name="dialog_subloader_downloading">Загрузка субтитров…</string>
+    <string name="dialog_subloader_sumup">Загрузка завершена</string>
+    <string name="dialog_subloader_success">Найдены субтитры для:</string>
+    <string name="dialog_subloader_fails">Субтитры не найдены для:</string>
+    <string name="sub_force_all_title">Принудительно загрузить субтитры</string>
+    <string name="dialog_subloader_nonetwork_title">Нет подключения к Интернету</string>
     <!-- Subtitle Settings Dialog -->
+    <string name="subtitle_size_text">Размер:</string>
     <!-- Subtitle Delay Dialog -->
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
@@ -216,17 +314,91 @@
     <!-- torrent -->
     <!-- Shortcuts -->
     <string name="add_to_shortcuts">Сделать выборку</string>
+    <string-array name="ssh_types">
+        <item>FTP</item>
+        <item>SFTP</item>
+        <item>FTPS</item>
+    </string-array>
     <string name="remove_from_shortcuts">Удалить выборку</string>
+    <string name="media_servers">Медиа-серверы</string>
+    <string name="ftp_shortcuts">Ярлыки FTP</string>
+    <string name="add_to_library">Добавить в библиотеку</string>
+    <string name="remove_from_indexed_folders">Удалить из библиотеки</string>
+    <string name="open_indexed_folder">"Открыть"</string>
+    <string name="ssh_port">Порт</string>
+    <string name="ssh_password">Пароль</string>
+    <string name="ssh_username">Имя пользователя</string>
+    <string name="ssh_shortcut_name">Имя ярлыка</string>
     <!-- Preferences -->
+    <string name="preferences">Настройки</string>
+    <string name="upgrade_to_add_free_version">Обновить до версии без рекламы</string>
+    <string name="upgrade_to_add_free_version_description">Купите лицензию приложения, чтобы удалить рекламу и активировать все функции</string>
+    <string name="preferences_category_complete">Полная версия</string>
+    <string name="preferences_category_video">Видео</string>
+    <string name="preferences_force_software_decoding">Принудительное программное декодирование</string>
+    <string name="preferences_force_software_decoding_summary">Вы можете попробовать эту опцию, если некоторые видео проигрываются не правильно</string>
+    <string name="preferences_force_audio_passthrough_disabled">Отключено</string>
+    <string name="preferences_force_audio_passthrough_enable">Режим 1</string>
+    <string name="preferences_force_audio_passthrough_enable2">Режим 2</string>
+    <string name="preferences_allow_3rd_party_player">Разрешить использование другого видео-плеера</string>
+    <string name="preference_tv_3d_automatic_switch_summary">Используйте эту функцию только если ваш 3D TV поддерживает ее</string>
+    <string name="category_languages">Субтитры</string>
+    <string name="subtitles_hide_default">Скрыть субтитры по умолчанию</string>
+    <string name="ui_mode_title">Режим пользовательского интерфейса</string>
+    <string name="preferences_video_about">О программе</string>
+    <string name="preferences_video_tmdb_text">Информация о фильме предоставлена</string>
+    <string name="preferences_video_tvdb_text">Информация о ТВ-шоу предоставлена</string>
+    <string name="preferences_video_licenses">Лицензии</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="abort">Прервать</string>
     <!--  Title of the video picker activity. -->
     <string name="video_picker_title">Выбрать видео</string>
     <!-- Archos File Info -->
+    <string name="video_info_backdrop_remove">Удалить</string>
+    <string name="video_info_backdrop_set_as">Установить изображение как</string>
+    <string name="video_info_share_message">"Я смотрю видео \"%1$s\" на своем Nova %2$s"</string>
     <string name="notification_mode">Уведомления</string>
+    <string name="notifications_all">Все уведомления</string>
+    <string name="pref_format_mode_title">Формат</string>
+    <string name="format_fullscreen">На весь экран</string>
     <!-- Help overlay -->
+    <string name="connection_reset">Сброс</string>
     <!-- Info dialog, not indexed file -->
+    <string name="video_browser_index_file">Добавить в библиотеку</string>
+    <string name="video_browser_unindex_file">Удалить из библиотеки</string>
     <!-- Brightness -->
     <!--  Nfo File parsing -->
+    <string name="network_nfo_parse">Обработать \'.nfo\' файлы</string>
+    <string name="no_email_installed">Приложение электронной почты не найдено</string>
+    <string name="sort_mode">Тип сортировки</string>
+    <string name="sort_by_name_asc">Сортировать по имени (a - z)</string>
+    <string name="sort_by_name_desc">Сортировать по имени (z - a)</string>
+    <string name="sort_by_year_asc">Сортировать по году (сначала старые)</string>
+    <string name="sort_by_year_desc">Сортировать по году (сначала новые)</string>
+    <string name="sort_by_date_asc">Сортировать по дате (сначала старые)</string>
+    <string name="sort_by_date_desc">Сортировать по дате (сначала новые)</string>
+    <string name="dec_any">По умолчанию</string>
+    <string name="codepage_extra_950">(Big5)</string>
+    <string name="codepage_extra_1250">(CP1250)</string>
+    <string name="codepage_extra_1251">(CP1251)</string>
+    <string name="codepage_extra_1252">(CP1252)</string>
+    <string name="codepage_extra_1253">(CP1253)</string>
+    <string name="blocklist_empty">URL не должен быть пустым</string>
+    <string name="blocklist_file_not_found">Файл не найден</string>
+    <string name="share_path">Путь</string>
+    <string name="trakt_signin">Войти</string>
+    <string name="trakt_list_signin">Войти в Trakt</string>
+    <string name="trakt_status_login">Вход в&#8230;</string>
+    <string name="show_all">Все видео</string>
+    <string name="search_results">Результаты поиска</string>
+    <string name="no_results_found">Ничего не найдено.</string>
+    <string name="activate_private_mode">Включить приватный режим</string>
+    <string name="deactivate_private_mode">Отключить приватный режим</string>
+    <string name="private_mode_is_on">Приватный режим включен</string>
+    <string name="private_mode_is_off">Приватный режим выключен</string>
+    <string name="private_mode">Приватный режим</string>
+    <string name="leanback_scrap">Получить информацию</string>
+    <string name="cast_info">Информация</string>
+    <string name="loading">Загрузка…</string>
 </resources>

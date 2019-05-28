@@ -695,11 +695,11 @@
     <string name="private_mode_is_on">Privat-Modus ist AN</string>
     <string name="private_mode_is_off">Privat-Modus ist AUS</string>
     <string name="private_mode">Privat-Modus</string>
-    <string name="private_mode_description">"Im privaten Modus sind die folgenden Funktionen deaktiviert:\n-
+    <string name="private_mode_description">Im privaten Modus sind die folgenden Funktionen deaktiviert:\n-
         - Auto-Indizierung und Auto-Kürzung des abgespielten Videos\n
         - Kürzlich Abgespieltes\n
         - Wiederaufnahmepunkt\n
-        - Trakt Synchronisation"</string>
+        - Trakt Synchronisation</string>
     <string name="dont_show_again">Nicht erneut anzeigen</string>
     <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
     <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
@@ -776,11 +776,11 @@
     <string name="sleep_timer_description">Halte Video an nach: </string>
     <string name="cast_mode">Cast-Modus</string>
     <string name="cast_info">Info</string>
-    <string name="troubleshoot_streammode_msg">"Nova-Video-Player ist derzeit im Stream-Modus.
+    <string name="troubleshoot_streammode_msg">Nova-Video-Player ist derzeit im Stream-Modus.
         \nDies führt zu einer guten Videoqualität, kann aber Probleme mit Tonspuren und Untertiteln verursachen.
-        Versuchen Sie, in den Remote-Display-Modus zu wechseln."</string>
-    <string name="troubleshoot_remotemode_msg">"Nova-Video-Player ist derzeit im Remote-Display-Modus.
-        \nAbhängig von Ihrem Gerät und Ihrer Netzwerkqualität können einige Qualitätsverluste und Leistungsprobleme auftreten. "</string>
+        Versuchen Sie, in den Remote-Display-Modus zu wechseln.</string>
+    <string name="troubleshoot_remotemode_msg">Nova-Video-Player ist derzeit im Remote-Display-Modus.
+        \nAbhängig von Ihrem Gerät und Ihrer Netzwerkqualität können einige Qualitätsverluste und Leistungsprobleme auftreten. </string>
     <string name="picture_in_picture">Bild-in-Bild</string>
     <string name="cast">Cast</string>
     <string name="cast_warning">Die Cast-Unterstützung ist aufgrund der Codecs von Chromecast begrenzt. Um diese Einschränkungen abzumildern, werden 2 Cast-Modi implementiert: Chromecast und Screencast (mit automatischem Fallback). Beachten Sie, dass Leistungs- und Qualitätsprobleme auch auf Netzwerkbeschränkungen oder Gerätebeschränkungen zurückzuführen sein können.</string>
