@@ -213,10 +213,8 @@ public class PlayUtils implements IndexHelper.Listener {
         if (!allow3rdPartyPlayer(context)) {
             intent.putExtra(PlayerService.VIDEO, video);
             intent.setClass(context, PlayerActivity.class);
-            intent.setDataAndType(dataUri, mimeType);
         }
         else {
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             // do not check Uri below because it can be a MediaDB Uri starting with content:
             if (!FileUtils.isLocal(video.getFileUri())) {
                 if (!"upnp".equals(video.getFileUri().getScheme())) {
