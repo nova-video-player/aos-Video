@@ -18,7 +18,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.preference.PreferenceManager;
+import androidx.core.content.FileProvider;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ import com.archos.mediacenter.video.player.PlayerService;
 import com.archos.mediacenter.video.player.TorrentLoaderActivity;
 import com.archos.mediascraper.ScrapeDetailResult;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -210,6 +212,7 @@ public class PlayUtils implements IndexHelper.Listener {
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         Uri dataUri = video.getUri();
+        Uri FileUri = null;
         if (!allow3rdPartyPlayer(context)) {
             intent.putExtra(PlayerService.VIDEO, video);
             intent.setClass(context, PlayerActivity.class);
@@ -228,11 +231,15 @@ public class PlayUtils implements IndexHelper.Listener {
                 } else if (video.getStreamingUri() != null && !"upnp".equals(video.getStreamingUri().getScheme())) { //when upnp, try to open streamingUri
                     dataUri = video.getStreamingUri();
                 }
+                intent.setDataAndType(dataUri, mimeType);
+            }
+            else {
+                // in case of a local file, need to rely on FileProvider since API24+ to avoid android.os.FileUriExposedException
+                File localFile = new File(video.getFileUri().getPath());
+                FileUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", localFile);
+                intent.setDataAndType(FileUri, mimeType);
             }
         }
-
-
-        intent.setDataAndType(dataUri, mimeType);
         //this differs from the file uri for upnp
         intent.putExtra(PlayerActivity.KEY_STREAMING_URI, video.getStreamingUri());
         intent.putExtra(PlayerActivity.RESUME, resume);
@@ -264,6 +271,7 @@ public class PlayUtils implements IndexHelper.Listener {
             mimeType = "*/" + file.getExtension();
         }
         Uri uri = file.getUri();
+        Uri FileUri = null;
         if(!FileUtils.isLocal(uri)){
             try {
                 StreamOverHttp streamOverHttp = new StreamOverHttp(file,mimeType);
@@ -271,10 +279,17 @@ public class PlayUtils implements IndexHelper.Listener {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            intent.setDataAndType(uri, mimeType);
+        }
+        else {
+            // in case of a local file, need to rely on FileProvider since API24+ to avoid android.os.FileUriExposedException
+            File localFile = new File(uri.getPath());
+            FileUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", localFile);
+            intent.setDataAndType(FileUri, mimeType);
         }
         Log.d(TAG, "data=" + uri);
         Log.d(TAG, "type=" + mimeType);
-        intent.setDataAndType(uri, mimeType);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         try {
             context.startActivity(intent);
         } catch (ActivityNotFoundException e) {
@@ -282,7 +297,8 @@ public class PlayUtils implements IndexHelper.Listener {
             // data type set to *, because Android does not handle well Mime-type in some cases
             if (!file.isRemote()) {
                 Intent intent2 = new Intent(Intent.ACTION_VIEW);
-                intent2.setDataAndType(uri, "*/*");
+                intent2.setDataAndType(FileUri, "*/*");
+                intent2.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 try {
                     context.startActivity(intent2);
                 } catch (ActivityNotFoundException e2) {
