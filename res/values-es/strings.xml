@@ -106,6 +106,10 @@
     <string name="tvshows_by_alpha">Programas de TV por orden alfabético</string>
     <string name="tvshows_by_genre">Programas de TV por género</string>
     <string name="tvshows_by_rating">Programas de TV por valoración</string>
+    <string name="episodes_by_date">Episodios por fecha</string>
+    <string name="date_view_week">Semana</string>
+    <string name="date_view_month">Mes</string>
+    <string name="date_view_year">Año</string>
     <string name="all_movies_and_tv_shows">Películas y programas de TV</string>
     <string name="non_scraped_videos">Videos sin analizar</string>
     <string name="no_server">No se encontró ningún servidor multimedia</string>
@@ -475,6 +479,7 @@
     <string name="preferences_force_audio_passthrough_enable">Modo 1</string>
     <string name="preferences_force_audio_passthrough_enable2">Modo 2</string>
     <string name="preferences_force_audio_passthrough_summary">para conexiones HDMI y S/PDIF, transmitir audio comprimido</string>
+    <string name="preferences_disable_downmix_title">Desactivar audio stereo downmix</string>
     <string name="preferences_allow_3rd_party_player">Permitir usar otro reproductor de vídeo</string>
     <string name="preferences_allow_3rd_party_player_summary">Otras aplicaciones compatibles de reproductor de vídeo serán propuestas por Android al lanzar una reproducción de vídeo. Tenga en cuenta que algunas características no funcionarán (reanudar, marcadores, etc.)</string>
     <string name="preference_tv_3d_automatic_switch">Activar el conmutador automático de TV 3D</string>

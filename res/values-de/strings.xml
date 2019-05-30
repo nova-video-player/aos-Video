@@ -106,6 +106,10 @@
     <string name="tvshows_by_alpha">Serien alphabetisch</string>
     <string name="tvshows_by_genre">Serien nach Genre</string>
     <string name="tvshows_by_rating">TV-Serien nach Bewertung</string>
+    <string name="episodes_by_date">Folgen nach Datum</string>
+    <string name="date_view_week">Woche</string>
+    <string name="date_view_month">Monat</string>
+    <string name="date_view_year">Jahr</string>
     <string name="all_movies_and_tv_shows">Filme und Serien</string>
     <string name="non_scraped_videos">Nicht gescrapte Videos</string>
     <string name="no_server">Kein Medien-Server gefunden</string>
@@ -475,6 +479,8 @@
     <string name="preferences_force_audio_passthrough_enable">Modus 1</string>
     <string name="preferences_force_audio_passthrough_enable2">Modus 2</string>
     <string name="preferences_force_audio_passthrough_summary">Audio Passthrough für HDMI und S/PDIF, überträgt komprimierte Daten</string>
+    <string name="preferences_disable_downmix_title">Audio Stereo-Downmix deaktivieren</string>
+    <string name="preferences_disable_downmix_summary">Immer alle Kanäle dekodieren und Android den Downmix abhängig von der Audio-Ausgabefähigkeit durchführen lassen (kann zu verlorenen Sprachkanälen führen)</string>
     <string name="preferences_allow_3rd_party_player">Videos mit anderen Apps abspielen</string>
     <string name="preferences_allow_3rd_party_player_summary">Kompatible Apps werden zum Abspielen vorgeschlagen. Einige Features wie Fortsetzungspunkte und Lesezeichen werden allerdings nicht funktionieren.</string>
     <string name="preference_tv_3d_automatic_switch">Automatische 3D-Umschaltung\"</string>

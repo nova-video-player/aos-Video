@@ -104,6 +104,11 @@
     <string name="all_seasons">Все сезоны</string>
     <string name="tvshows_by_alpha">Серии по алфавиту</string>
     <string name="tvshows_by_genre">Серии по жанру</string>
+    <string name="tvshows_by_rating">ТВ-шоу по рейтингу</string>
+    <string name="episodes_by_date">Серии по дате</string>
+    <string name="date_view_week">Неделя</string>
+    <string name="date_view_month">Месяц</string>
+    <string name="date_view_year">Год</string>
     <string name="all_movies_and_tv_shows">Фильмы и ТВ-программы</string>
     <string name="no_server">Медиа-серверы не обнаружены</string>
     <string name="cannot_open_video">Невозможно открыть это видео</string>
@@ -127,6 +132,8 @@
     <!-- for small screens -->
     <string name="scrap_change">Изменить информацию всех серий</string>
     <string name="scrap_series_change">Изменить информацию о сериале</string>
+    <string name="scrap_change_confirmation">Изменить все выпуски с\n\t\"%1$s\"\nна\n\t\"%2$s\"?</string>
+    <string name="scrap_change_initializing">Инициализация…</string>
     <string name="scrap_change_finalizing">Завершение…</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Режиссер</string>
@@ -155,6 +162,9 @@
     <string name="season_identification">Сезон %1$d</string>
     <string name="next_episode">Следующая серия</string>
     <string name="list_episodes">Список серий</string>
+    <string name="delete_show">Удалить все серии</string>
+    <string name="no_episode_watched">Серии не просмотрены</string>
+    <string name="all_episodes_watched">Все серии просмотрены</string>
     <string name="scrap_processing">Получение метаданных…</string>
     <string name="scrap_no_network">Нет подключения к сети.</string>
     <string name="scrap_enable_network_first">"Включите соединение к сети для запуска данного приложения."</string>
@@ -168,14 +178,19 @@
     <string name="scrap_status_unknown">Неизв.</string>
     <string name="scraper_abort_request">Хотите отменить поиск?</string>
     <string name="scraper_no_files">Нет файлов для обработки</string>
+    <string name="scraper_no_new_files">Нет новых файлов для обработки</string>
+    <string name="scraper_folder_try_again">Хотите попробовать еще раз?</string>
     <string name="scraper_notification_title">Поиск информации в сети</string>
     <string name="scraper_notification_progress">\"%1$d of %2$d файлов обработано</string>
     <string name="scraper_suggest_message">Вы можете найти постеры и информацию о Ваших видео в сети при помощи меню \'Поиск информации в сети\'.</string>
+    <string name="scraper_no_movie_button_label">Поиск информации о фильме</string>
+    <string name="imdb_title_url">https://www.imdb.com/title/</string>
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="storage">Хранилище</string>
     <string name="info_processing">Проверка свойств медиа…</string>
     <string name="info_video">Видео</string>
     <string name="info_audio">Аудио</string>
+    <string name="info_audio_vbr">VBR</string>
     <string name="info_plugin_required">(требуется плагин)</string>
     <string name="info_subtitle">Субтитры</string>
     <string name="info_file">Информация о файле</string>
@@ -187,6 +202,7 @@
     <string name="you_have_no_tv_shows">Нет ТВ-программ</string>
     <!-- Media Center -->
     <string name="mediacenterlabel">Медиа-центр</string>
+    <string name="view_mode">Режим</string>
     <string name="view_mode_list">Список</string>
     <string name="view_mode_grid">Постеры</string>
     <string name="view_mode_details">Постеры с детальной информацией</string>
@@ -198,6 +214,8 @@
     <string name="player_subtitle_track_toast">Дорожка субтитров:</string>
     <string name="player_bookmark_set">Установка закладки в</string>
     <string name="player_pref_subtitle_delay_title">Задержка</string>
+    <string name="floating_player_restore">Восстановить</string>
+    <string name="floating_player_play">Воспроизвести</string>
     <string name="floating_player_pause">Пауза</string>
     <string name="player_pref_audio_delay_title">Задержка аудио</string>
     <string name="now_playing">Сейчас играет</string>
@@ -208,16 +226,22 @@
     <string name="pref_play_mode_entry_repeat_folder">Повтор папки</string>
     <string name="pref_play_mode_entry_repeat_single">Повтор одного файла</string>
     <string name="pref_audio_parameters_title">Aудио</string>
+    <string name="pref_audio_filt_title">Усиление аудио</string>
     <string name="pref_audio_filt_night_mode">Ночной режим</string>
     <string name="ui_mode_auto">Авто</string>
     <string name="ui_mode_tv">ТВ</string>
     <string name="ui_mode_normal">Планшет/Телефон</string>
     <string name="pref_s3d_mode_title">Режим 3D</string>
+    <string name="pref_s3d_mode_entry_topbottom">Снизу и сверху</string>
     <string name="pref_s3d_mode_entry_off">Выкл</string>
     <string name="menu_info">Информация</string>
+    <string name="menu_audio">Звуковая дорожка</string>
     <string name="menu_bookmark">Установить закладку</string>
     <string name="menu_brightness_settings">Яркость</string>
     <string name="menu_player_settings">Настройки</string>
+    <string name="menu_change_folder">Изменить папку</string>
+    <string name="menu_change_folder_details">Выберите папку для начала</string>
+    <string name="unlock_instructions">Долгое нажатие на иконку для разблокировки</string>
     <!-- Subtitles/Audio languages -->
     <string name="s_arabic">Арабский</string>
     <string name="s_bulgarian">Болгарский</string>
@@ -306,14 +330,25 @@
     <string name="dialog_subloader_nonetwork_title">Нет подключения к Интернету</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_size_text">Размер:</string>
+    <string name="subtitle_color_default">#ffffff</string>
     <!-- Subtitle Delay Dialog -->
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
     because the right part of the quote is
     not visible otherwise -->
+    <string name="allow">Разрешить</string>
+    <string name="exit">Выйти</string>
     <!-- torrent -->
+    <string name="loading_torrent">Загрузка торрента…</string>
+    <string name="error_no_video_file">Нет видео файлов</string>
+    <string name="torrent_file_to_play">Выберите файл для воспроизведения</string>
+    <string name="torrent_buy_premium_message">Торрент-стриминг доступен только в платной версии</string>
+    <string name="torrent_buy_premium">Купить премиум-версию</string>
     <!-- Shortcuts -->
     <string name="add_to_shortcuts">Сделать выборку</string>
+    <string name="add_ssh_server">Просмотр FTP-сервера</string>
+    <string name="add_ssh_shortcut">Добавить как ярлык</string>
+    <string name="ssh_prompt">Тип FTP</string>
     <string-array name="ssh_types">
         <item>FTP</item>
         <item>SFTP</item>
@@ -325,6 +360,7 @@
     <string name="add_to_library">Добавить в библиотеку</string>
     <string name="remove_from_indexed_folders">Удалить из библиотеки</string>
     <string name="open_indexed_folder">"Открыть"</string>
+    <string name="last_rescan_never">Никогда</string>
     <string name="ssh_port">Порт</string>
     <string name="ssh_password">Пароль</string>
     <string name="ssh_username">Имя пользователя</string>
@@ -349,6 +385,9 @@
     <string name="preferences_video_tmdb_text">Информация о фильме предоставлена</string>
     <string name="preferences_video_tvdb_text">Информация о ТВ-шоу предоставлена</string>
     <string name="preferences_video_licenses">Лицензии</string>
+    <string name="preferences_video_advanced">Расширенный</string>
+    <string name="movie_scraper">Фильмы</string>
+    <string name="locale">Язык системы</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="abort">Прервать</string>
@@ -390,7 +429,9 @@
     <string name="trakt_signin">Войти</string>
     <string name="trakt_list_signin">Войти в Trakt</string>
     <string name="trakt_status_login">Вход в&#8230;</string>
+    <string name="trakt_signin_title">Войти</string>
     <string name="show_all">Все видео</string>
+    <string name="hide_seen">Не просмотрено</string>
     <string name="search_results">Результаты поиска</string>
     <string name="no_results_found">Ничего не найдено.</string>
     <string name="activate_private_mode">Включить приватный режим</string>
@@ -399,6 +440,25 @@
     <string name="private_mode_is_off">Приватный режим выключен</string>
     <string name="private_mode">Приватный режим</string>
     <string name="leanback_scrap">Получить информацию</string>
+    <string name="leanback_scrap_choose_the_description">Выбрать информацию</string>
+    <string name="interface_size">Размер интерфейса</string>
+    <string name="interface_size_very_small">Очень маленький (mdpi)</string>
+    <string name="interface_size_small">Маленький (hdpi)</string>
+    <string name="interface_size_standard">Стандартный (xhdpi)</string>
+    <string name="interface_size_large">Большой (xxhdpi)</string>
+    <string name="rescan">Пересканировать</string>
+    <string name="scheduled_rescan_period_twice_a_day">Дважды в день</string>
+    <string name="scheduled_rescan_period_every_six_hours">Каждые 6 часов</string>
+    <string name="scheduled_rescan_period_every_two_hours">Каждые 2 часа</string>
+    <string name="scheduled_rescan_period_every_hour">Каждый час</string>
+    <string name="view_more">Подробнее</string>
+    <string name="system">Система</string>
+    <string name="cast_stream_mode">Режим потока</string>
+    <string name="sleep_timer_title">Таймер сна</string>
     <string name="cast_info">Информация</string>
+    <string name="picture_in_picture">Картинка в картинке</string>
+    <string name="help_faq">Справка/FAQ</string>
+    <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
+    <string name="provider_folders">Облако</string>
     <string name="loading">Загрузка…</string>
 </resources>
