@@ -205,14 +205,10 @@ public class PlayUtils implements IndexHelper.Listener {
         mPlaylistId = -1;
     }
 
-
     private void onResumeReady(Context context, Video video, final String mimeType, int resume, boolean legacyPlayer, int resumePosition, ExternalPlayerWithResultStarter externalPlayerWithResultStarter, long playlistId){
-
-
-
         Intent intent = new Intent(Intent.ACTION_VIEW);
         Uri dataUri = video.getUri();
-        Uri FileUri = null;
+        Uri fileUri = null;
         if (!allow3rdPartyPlayer(context)) {
             intent.putExtra(PlayerService.VIDEO, video);
             intent.setClass(context, PlayerActivity.class);
@@ -238,8 +234,8 @@ public class PlayUtils implements IndexHelper.Listener {
             else {
                 // in case of a local file, need to rely on FileProvider since API24+ to avoid android.os.FileUriExposedException
                 File localFile = new File(video.getFileUri().getPath());
-                FileUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", localFile);
-                intent.setDataAndType(FileUri, mimeType);
+                fileUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", localFile);
+                intent.setDataAndType(fileUri, mimeType);
             }
         }
         //this differs from the file uri for upnp
@@ -273,7 +269,7 @@ public class PlayUtils implements IndexHelper.Listener {
             mimeType = "*/" + file.getExtension();
         }
         Uri uri = file.getUri();
-        Uri FileUri = null;
+        Uri fileUri = null;
         if(!FileUtils.isLocal(uri)){
             try {
                 StreamOverHttp streamOverHttp = new StreamOverHttp(file,mimeType);
@@ -286,8 +282,8 @@ public class PlayUtils implements IndexHelper.Listener {
         else {
             // in case of a local file, need to rely on FileProvider since API24+ to avoid android.os.FileUriExposedException
             File localFile = new File(uri.getPath());
-            FileUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", localFile);
-            intent.setDataAndType(FileUri, mimeType);
+            fileUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", localFile);
+            intent.setDataAndType(fileUri, mimeType);
         }
         Log.d(TAG, "data=" + uri);
         Log.d(TAG, "type=" + mimeType);
@@ -299,7 +295,7 @@ public class PlayUtils implements IndexHelper.Listener {
             // data type set to *, because Android does not handle well Mime-type in some cases
             if (!file.isRemote()) {
                 Intent intent2 = new Intent(Intent.ACTION_VIEW);
-                intent2.setDataAndType(FileUri, "*/*");
+                intent2.setDataAndType(fileUri, "*/*");
                 intent2.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 try {
                     context.startActivity(intent2);
@@ -309,8 +305,6 @@ public class PlayUtils implements IndexHelper.Listener {
             }
         }
     }
-
-
 
     static private boolean allow3rdPartyPlayer(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
