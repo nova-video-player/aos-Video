@@ -1099,7 +1099,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
         missingSubVideoPaths : all videos with no subs
         allVideoPaths : all videos
      */
-    protected void getMissingSubtitles(boolean force,ArrayList<String> allVideoPaths, ArrayList<String> missingSubVideoPaths){
+    public void getMissingSubtitles(boolean force,ArrayList<String> allVideoPaths, ArrayList<String> missingSubVideoPaths){
         ArrayList<String> videoPaths;
         if(!force)
             videoPaths = missingSubVideoPaths;
@@ -1107,11 +1107,11 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             videoPaths = allVideoPaths;
         if (videoPaths.isEmpty()&&!force){
             mDialogForceDlSubtitles = new DialogForceDlSubtitles();
-
             Bundle args = new Bundle();
             args.putSerializable(SubtitlesDownloaderActivity.FILE_URLS, allVideoPaths);
             mDialogForceDlSubtitles.setArguments(args);
-            mDialogForceDlSubtitles.show(getFragmentManager(), null);
+            mDialogForceDlSubtitles.setTargetFragment(this, 0);
+            mDialogForceDlSubtitles.show(getFragmentManager(), "dialog_force_dl_subtitles");
         }else {
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.setClass(mContext, SubtitlesDownloaderActivity.class);
@@ -1188,7 +1188,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
      */
     protected abstract void refresh();
     @SuppressLint("ValidFragment") // XXX
-    private class DialogForceDlSubtitles extends DialogFragment {
+    public static class DialogForceDlSubtitles extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             String title = getString(R.string.sub_force_all_title);
@@ -1198,7 +1198,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                     .setNegativeButton(android.R.string.no, null)
                     .setPositiveButton(android.R.string.yes, new OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            getMissingSubtitles(true, getArguments().getStringArrayList(SubtitlesDownloaderActivity.FILE_URLS), getArguments().getStringArrayList(SubtitlesDownloaderActivity.FILE_URLS));
+                            ((Browser)getTargetFragment()).getMissingSubtitles(true, getArguments().getStringArrayList(SubtitlesDownloaderActivity.FILE_URLS), getArguments().getStringArrayList(SubtitlesDownloaderActivity.FILE_URLS));
                         }
                     }).create();
         }
