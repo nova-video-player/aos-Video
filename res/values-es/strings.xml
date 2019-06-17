@@ -480,6 +480,7 @@
     <string name="preferences_force_audio_passthrough_enable2">Modo 2</string>
     <string name="preferences_force_audio_passthrough_summary">para conexiones HDMI y S/PDIF, transmitir audio comprimido</string>
     <string name="preferences_disable_downmix_title">Desactivar audio stereo downmix</string>
+    <string name="preferences_disable_downmix_summary">Decodifica siempre todos los canales y permite que Android realize downmix dependiendo de la capacidades de salida de audio (puede resultar en la pérdida de canales de voz)</string>
     <string name="preferences_allow_3rd_party_player">Permitir usar otro reproductor de vídeo</string>
     <string name="preferences_allow_3rd_party_player_summary">Otras aplicaciones compatibles de reproductor de vídeo serán propuestas por Android al lanzar una reproducción de vídeo. Tenga en cuenta que algunas características no funcionarán (reanudar, marcadores, etc.)</string>
     <string name="preference_tv_3d_automatic_switch">Activar el conmutador automático de TV 3D</string>
@@ -535,7 +536,7 @@
     <string name="format_fullscreen">Pantalla completa</string>
     <string name="format_optimized">Optimizado</string>
     <string name="format_original">Original</string>
-    <string name="stereo_dive_enable">Efecto estéreo dive</string>
+    <string name="stereo_dive_enable">Efecto de inmersión estéreo</string>
     <string name="stereo_dive_disable">Desactivar efecto de inmersión estéreo</string>
     <string name="rotation_unlock">Activar rotación automática de pantalla</string>
     <string name="rotation_locked">Rotación automática de pantalla desactivada</string>
@@ -786,7 +787,7 @@
     <string name="cast_stream_mode_description">Calidad óptima pero algún formato puede no ser compatible</string>
     <string name="sleep_timer_title">Temporizador de apagado</string>
     <string name="sleep_timer_description">Detiene el vídeo después de: </string>
-    <string name="cast_mode">Modo de lanzamiento</string>
+    <string name="cast_mode">Modo de emisión</string>
     <string name="cast_info">Información</string>
     <string name="troubleshoot_streammode_msg">El reproductor de vídeo Nova está actualmente en modo  transmisión.
         \nEsto da como resultado una buena calidad de vídeo pero puede causar problemas con pistas audio y subtítulos.
