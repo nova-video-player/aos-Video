@@ -38,7 +38,7 @@ import com.archos.mediascraper.ScrapeDetailResult;
 public class ExternalPlayerResultListener implements ExternalPlayerWithResultStarter.ResultListener, IndexHelper.Listener {
 
     private static String TAG = "ExternalPlayerResultListener";
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
 
     private static ExternalPlayerResultListener sExternalPlayerResultListener;
     private Context mContext;
@@ -102,39 +102,48 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
         if (DBG) Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
         if (DBG) Log.d(TAG, "onActivityResult: mVideoDbInfo!=null " + (mVideoDbInfo!=null));
         if (DBG) Log.d(TAG, "onActivityResult: mPlayerUri " + mPlayerUri);
-        if (DBG) Log.d(TAG, "onActivityResult: data.getData()=" + data.getData());
-        // for vlc data.getData() is null
-        // for mxplayer mPlayerUri is content://com.archos.media.videocommunity/external/video/media/xxxx and data.getData() is content://org.courville.nova.provider/external_files/emulated/0/path/file.mkv
-        //if(!PrivateMode.isActive() && resultCode== Activity.RESULT_OK && mVideoDbInfo!=null && data.getData()!= null && data.getData().equals(mPlayerUri)){
-        if(!PrivateMode.isActive() && resultCode== Activity.RESULT_OK && mVideoDbInfo!=null){
-            if (DBG) Log.d(TAG, "onActivityResult: process the if");
-            int position = 0;
-            if (DBG) Log.d(TAG, "onActivityResult: MXPLAYER_RESULT_EXTRA_position=" + data.getIntExtra(ExternalPositionExtra.MXPLAYER_RESULT_EXTRA_position,-1));
-            if (DBG) Log.d(TAG, "onActivityResult: VLC_RESULT_EXTRA_position=" + data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_position,-1));
-            if (DBG) Log.d(TAG, "onActivityResult: MXPLAYER_RESULT_EXTRA_duration=" + data.getIntExtra(ExternalPositionExtra.MXPLAYER_RESULT_EXTRA_duration,-1));
-            if (DBG) Log.d(TAG, "onActivityResult: VLC_RESULT_EXTRA_duration=" + data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_duration,-1));
-            if (DBG) Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
-            if(data.getIntExtra(ExternalPositionExtra.MXPLAYER_RESULT_EXTRA_position,-1)!=-1){//mxplayer
-                position = data.getIntExtra(ExternalPositionExtra.MXPLAYER_RESULT_EXTRA_position,-1);
+        if (data != null) {
+            if (DBG) Log.d(TAG, "onActivityResult: data.getData()=" + data.getData());
+            // for vlc data.getData() is null
+            // for mxplayer mPlayerUri is content://com.archos.media.videocommunity/external/video/media/xxxx and data.getData() is content://org.courville.nova.provider/external_files/emulated/0/path/file.mkv
+            //if(!PrivateMode.isActive() && resultCode== Activity.RESULT_OK && mVideoDbInfo!=null && data.getData()!= null && data.getData().equals(mPlayerUri)){
+            if (!PrivateMode.isActive() && resultCode == Activity.RESULT_OK && mVideoDbInfo != null) {
+                if (DBG) Log.d(TAG, "onActivityResult: process the if");
+                int position = 0;
+                if (DBG)
+                    Log.d(TAG, "onActivityResult: MXPLAYER_RESULT_EXTRA_position=" + data.getIntExtra(ExternalPositionExtra.MXPLAYER_RESULT_EXTRA_position, -1));
+                if (DBG)
+                    Log.d(TAG, "onActivityResult: VLC_RESULT_EXTRA_position=" + data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_position, -1));
+                if (DBG)
+                    Log.d(TAG, "onActivityResult: MXPLAYER_RESULT_EXTRA_duration=" + data.getIntExtra(ExternalPositionExtra.MXPLAYER_RESULT_EXTRA_duration, -1));
+                if (DBG)
+                    Log.d(TAG, "onActivityResult: VLC_RESULT_EXTRA_duration=" + data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_duration, -1));
+                if (DBG)
+                    Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+                if (data.getIntExtra(ExternalPositionExtra.MXPLAYER_RESULT_EXTRA_position, -1) != -1) {//mxplayer
+                    position = data.getIntExtra(ExternalPositionExtra.MXPLAYER_RESULT_EXTRA_position, -1);
+                } else if (data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_position, -1) != -1) {//vlc
+                    position = (int) data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_position, -1);
+                }
+                if (data.getIntExtra(ExternalPositionExtra.MXPLAYER_RESULT_EXTRA_duration, -1) > 0) {
+                    mDuration = data.getIntExtra(ExternalPositionExtra.MXPLAYER_RESULT_EXTRA_duration, -1);
+                } else if (data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_duration, -1) > 0) {
+                    mDuration = (int) data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_duration, -1);
+                }
+                if (DBG)
+                    Log.d(TAG, "onActivityResult: position=" + position + ", duration=" + mDuration);
+                mVideoDbInfo.lastTimePlayed = Long.valueOf(System.currentTimeMillis() / 1000L);
+                if (position != -1) {
+                    mVideoDbInfo.resume = position;
+                    mIndexHelper.writeVideoInfo(mVideoDbInfo, true);
+                }
+                TorrentObserverService.staticExitProcess();
+                TorrentObserverService.killProcess();
+                stopTrakt(getPercentProgress(position));
             }
-            else if(data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_position,-1)!=-1){//vlc
-                position = (int) data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_position,-1);
-            }
-            if(data.getIntExtra(ExternalPositionExtra.MXPLAYER_RESULT_EXTRA_duration,-1)>0){
-                mDuration = data.getIntExtra(ExternalPositionExtra.MXPLAYER_RESULT_EXTRA_duration,-1);
-            }
-            else if(data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_duration,-1)>0){
-                mDuration = (int) data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_duration,-1);
-            }
-            if (DBG) Log.d(TAG, "onActivityResult: position=" + position + ", duration=" + mDuration);
-            mVideoDbInfo.lastTimePlayed = Long.valueOf(System.currentTimeMillis() / 1000L);
-            if(position!=-1){
-                mVideoDbInfo.resume = position;
-                mIndexHelper.writeVideoInfo(mVideoDbInfo, true);
-            }
-            TorrentObserverService.staticExitProcess();
-            TorrentObserverService.killProcess();
-            stopTrakt(getPercentProgress(position));
+        } else {
+            // happens when hitting back before selecting the player
+            if (DBG) Log.d(TAG, "onActivityResult: data is null!");
         }
     }
     private int getPercentProgress(int position) {
