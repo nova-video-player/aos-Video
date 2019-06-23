@@ -425,8 +425,10 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             cursorMapper.publicBindColumns(c);
             c.moveToFirst();
             Video video = (Video) cursorMapper.publicBind(c);
+            if (c != null) c.close();
             return video;
         }
+        if (c != null) c.close();
         return null;
     }
 
