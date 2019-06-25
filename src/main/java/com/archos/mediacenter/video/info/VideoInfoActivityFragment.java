@@ -316,7 +316,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 .build();
         mBackgroundSetter = new ImageViewSetter(getActivity(), config);
         mSubtitleListCache = new HashMap<>();
-
     }
 
 
@@ -495,7 +494,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     }
 
     private void updateGenericButtonAction() {
-
         int resume = 0;
         int resumePos = -1;
         if(mCurrentVideo.getResumeMs()>0 && mCurrentVideo.getRemoteResumeMs()<=mCurrentVideo.getResumeMs()){
@@ -514,6 +512,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         }
         final int finalResume = resume;
         final int finalResumePos = resumePos;
+        if (DBG) Log.d(TAG,"updateGenericButtonAction: resume=" + resume + ", resumePos=" + resumePos);
         mGenericPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -556,9 +555,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         super.onAttach(context);
         context.registerReceiver(mNetworkStateReceiver, INTENT_FILTER);
     }
-
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_SUBTITLES_DOWNLOADER_ACTIVITY && resultCode == Activity.RESULT_OK) {
@@ -583,6 +579,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         else super.onActivityResult(requestCode,resultCode, data);
     }
     private void updateActionButtons(){
+        if (DBG) Log.d(TAG,"updateActionButtons: RemoteResumeMs=" + mCurrentVideo.getRemoteResumeMs() + ", getResumeMs=" + mCurrentVideo.getResumeMs());
         if(mCurrentVideo.getRemoteResumeMs()>0&&mCurrentVideo.getResumeMs()!=mCurrentVideo.getRemoteResumeMs()) {
             mRemoteResumeButton.setVisibility(View.VISIBLE);
             mRemoteResumeButton.setText(getResources().getString(R.string.remote_resume)+" "+MediaUtils.formatTime(mCurrentVideo.getRemoteResumeMs()));
@@ -592,7 +589,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         if(mCurrentVideo.getResumeMs()>0) {
             mResumeLocalButton.setVisibility(View.VISIBLE);
             mResumeLocalButton.setText(getResources().getString(R.string.resume) + " " + MediaUtils.formatTime(mCurrentVideo.getResumeMs()));
-
         }
         else mResumeLocalButton.setVisibility(View.GONE);
         updateGenericButtonAction();
@@ -601,11 +597,14 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     @Override
     public void onSaveInstanceState(Bundle bundle){
+        super.onSaveInstanceState(bundle);
+        Log.d(TAG, "onSaveInstanceState: mCurrentVideo.getFilePath()=" + ((mCurrentVideo!=null) ? mCurrentVideo.getFilePath() : "null"));
         bundle.putSerializable(EXTRA_METADATA_CACHE, mVideoMetadateCache);
         bundle.putSerializable(EXTRA_SUBTITLE_CACHE, mSubtitleListCache);
         bundle.putBoolean(EXTRA_FORCE_VIDEO_SELECTION, true);
         bundle.putSerializable(EXTRA_VIDEO, mCurrentVideo);
     }
+
     private void setBackdropToApplicationBackground() {
         mApplicationBackdrop = (ImageView) mRoot.findViewById(R.id.backdrop);
     }
@@ -632,8 +631,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
 
     private void setCurrentVideo(Video video){
+        if (DBG) Log.d(TAG, "setCurrentVideo: " + video.getFilePath());
         updateWatchedStatus(); //independant of current video
-        if( shouldChangeVideo(mCurrentVideo, video)) {
+        Log.d(TAG, "setCurrentVideo: mCurrentVideo.getFilePath()=" + ((mCurrentVideo!=null) ? mCurrentVideo.getFilePath() : "null"));
+        if(shouldChangeVideo(mCurrentVideo, video)) {
+            if (DBG) Log.d(TAG, "setCurrentVideo: should change video");
             mTitleBar.getMenu().clear();
 
 
@@ -741,6 +743,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }
             if(!mIsLaunchFromPlayer)
             addMenu(0, R.string.delete, DELETE_GROUP, R.string.delete);
+        } else {
+            if (DBG) Log.d(TAG, "setCurrentVideo: should not change video");
         }
     }
 
@@ -827,6 +831,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
 
     private boolean shouldChangeVideo(Video v1, Video v2) {
+        if (DBG) Log.d(TAG, "shouldChangeVideo: called on videos " + ((v1 == null) ? "null" : v1.getFilePath()) + " and " + ((v2 == null) ? "null" : v2.getFilePath()));
         if (v1==null || v2==null) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate null"); return true;}
         if (v1.getClass() != v2.getClass()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate class"); return true;}
         if (v1.getId() != v2.getId()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate id"); return true;}
@@ -977,9 +982,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             } else if (view == mResumeLocalButton) {
                 resume = PlayerService.RESUME_FROM_LOCAL_POS;
                 resumePos = mCurrentVideo.getResumeMs();
+                if (DBG) Log.d(TAG,"onClick: resume from local resumePos=" + resumePos);
             } else if (view == mRemoteResumeButton) {
                 resume = PlayerService.RESUME_FROM_REMOTE_POS;
                 resumePos = mCurrentVideo.getRemoteResumeMs();
+                if (DBG) Log.d(TAG,"onClick: resume from remote resumePos=" + resumePos);
             }
             mIsLeavingPlayerActivity = true;
             VideoMetadata mMetadata = mCurrentVideo.getMetadata();
@@ -990,6 +997,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 }
             }
             if (isFilePlayable) {
+                if (DBG) Log.d(TAG, "onClick: startVideo resumePos=" + resumePos);
+                // note to self: resumePos only used for external player...
+                // real resume for local file is VideoDbInfo.resume
                 PlayUtils.startVideo(
                         getActivity(),
                         mCurrentVideo,
@@ -1088,6 +1098,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     @Override
     public void onParseFail(XmlDb.ParseResult parseResult) {
+        if (DBG) Log.d(TAG, "onParseFail");
         XmlDb.getInstance().removeParseListener(this);
     }
 
@@ -1098,7 +1109,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         XmlDb xmlDb = XmlDb.getInstance();
         //xmlDb.removeParseListener(this);
         if(getActivity()==null) { //too late
-
             if (DBG) Log.d(TAG, "getActivity is null, leaving");
             return;
         }
@@ -1410,6 +1420,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     }
 
     private void setSelectedSource(Video video) {
+        if (DBG) Log.d(TAG, "setSelectedSource");
+
         setCurrentVideo(video);
 
         LoaderManager.getInstance(getActivity()).restartLoader(1, null, this);
@@ -1417,7 +1429,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     @Override
     public void onLoadFinished(Loader loader, Cursor cursor) {
-
         Video oldVideoObject = mCurrentVideo;
         Video newVideo =null;
         List<Video> oldVideoList = new ArrayList<>(mVideoList);
@@ -1427,6 +1438,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         if (cursor.getCount()<1) {
             // we're changing from indexed case to non-indexed case (user probably unindexed file some milliseconds ago)
             if (oldVideoObject!=null) {
+                if (DBG) Log.d(TAG,"onLoadFinished: " + ((oldVideoObject == null) ? "null" : oldVideoObject.getFilePath()) );
                 // building a new unindexed video object using the Uri and name we had in the previous video object
                 newVideo = new NonIndexedVideo( oldVideoObject.getStreamingUri(),oldVideoObject.getFileUri(), oldVideoObject.getName(), oldVideoObject.getPosterUri() );
 
@@ -1440,6 +1452,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             // If we have no Video object (case it's launched from player with path only)
             else {
                 newVideo = new NonIndexedVideo(mPath); // TODO corner case BUG: gte only cryptic name from url for non-indexed UPnP when Details are opened from player
+                if (DBG) Log.d(TAG,"onLoadFinished: " + ((newVideo == null) ? "null" : newVideo.getFilePath()) );
             }
 
             //TODO remove sources list
@@ -1454,6 +1467,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             do {
 
                 Video video =  (Video) cursorMapper.publicBind(cursor);
+                if (DBG) Log.d(TAG,"onLoadFinished: " + ((video == null) ? "null" : video.getFilePath()) );
 
                 if (DBG) Log.d(TAG, "online id " + cursor.getLong(cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID)));
                 mVideoList.add(video);
@@ -1477,6 +1491,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         VideoMetadata alreadyComputedVideoMetadata = mVideoMetadateCache.get(newVideo.getFileUri().toString());
         // Keep the video decoder metadata if we already have it
         newVideo.setMetadata(alreadyComputedVideoMetadata); // may be null (fyi)
+        if (DBG) Log.d(TAG,"onLoadFinished: setCurrentVideo " + ((newVideo == null) ? "null" : newVideo.getFilePath()) );
         setCurrentVideo(newVideo);
 
         updateSourceList();
@@ -1500,7 +1515,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     @Override
     public void onLoaderReset(Loader loader) {
-
     }
 
     private class ThumbnailAsyncTask extends AsyncTask<Video, Void, Pair<Bitmap,Video>> {
@@ -1780,13 +1794,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             StoreRatingDialogBuilder.displayStoreRatingDialogIfNeeded(getContext());
         mIsLeavingPlayerActivity = false;
         super.onResume();
-        //For some reasons this generates an SQLiteLog statement aborts: avoid to do it
-        //LoaderManager.getInstance(getActivity()).restartLoader(1, null, this);
+        if (mCurrentVideo != null) {
+            if (DBG) Log.d(TAG, "onResume: mCurrentVideo.getName()=" + mCurrentVideo.getName());
+            // this is needed to refresh resume pos returning from player after API28 (before onLoadFinished was called)
+            LoaderManager.getInstance(getActivity()).restartLoader(1, null, this);
+        } else {
+            if (DBG) Log.d(TAG, "onResume: mCurrentVideo=null");
+        }
     }
 
     @Override
     public void onPause() {
-
         super.onPause();
     }
 
