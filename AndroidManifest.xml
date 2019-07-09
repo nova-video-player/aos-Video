@@ -721,6 +721,56 @@
             android:name=".browser.UpdateRecommendationsService"
             android:enabled="true" />
 
+        <!-- ************** WIDGET ************** -->
+
+        <activity
+            android:name="com.archos.mediacenter.video.widget.VideoWidgetConfigure"
+            android:icon="@mipmap/video2"
+            android:label="@string/video"
+            android:theme="@style/Theme.DialogMinWidth" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name="com.archos.mediacenter.video.widget.WidgetProviderVideo"
+            android:label="@string/video" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name=".widget.RELOAD_ACTION" />
+                <action android:name=".widget.UPDATE_ACTION" />
+                <action android:name=".widget.INITIAL_UPDATE_ACTION" />
+                <action android:name=".widget.EMPTY_DATA_ACTION" />
+                <action android:name=".widget.SHOW_UPDATE_SPINBAR" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/videowidgetinfo" />
+        </receiver>
+
+        <service
+            android:name="com.archos.mediacenter.video.widget.RemoteViewsServiceMovies"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service
+            android:name="com.archos.mediacenter.video.widget.RemoteViewsServiceTVShows"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service
+            android:name="com.archos.mediacenter.video.widget.RemoteViewsServiceAllVideos"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service
+            android:name="com.archos.mediacenter.video.widget.RemoteViewsServiceRecentlyAdded"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service
+            android:name="com.archos.mediacenter.video.widget.RemoteViewsServiceRecentlyPlayed"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
     </application>
 
 </manifest>

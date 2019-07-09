@@ -95,16 +95,10 @@ android {
     aaptOptions {
         additionalParameters "--no-version-vectors"
     }
-    flavorDimensions "version", "tv", "amazon"
+    flavorDimensions "version", "tv"
     productFlavors {
         community {
             dimension "version"
-        }
-        amazon {
-            dimension "amazon"
-        }
-        noamazon {
-            dimension "amazon"
         }
         leanback {
             minSdkVersion 21
@@ -179,7 +173,6 @@ android {
             outputFileName = outputFileName.replace("-noleanback-", "-API_" + "${api}" + "+-")
                     .replace("-community-", "-")
                     .replace("-leanback-", "-API_" + "${api}" + "+-")
-                    .replace("-noamazon-", "-")
             variant.getAssembleProvider().configure() {
                 it.doLast {
                     println outputFileName
