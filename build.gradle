@@ -87,37 +87,14 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode getDate()
+	// 2000000 is there because before there was a distinction between noleanback 1000000 and leanback 2000000 with different API levels
+        versionCode 2000000 + getDate()
         versionName '1.0-' + getFormattedDate()
         if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
         applicationId "org.courville.nova"
     }
     aaptOptions {
         additionalParameters "--no-version-vectors"
-    }
-    flavorDimensions "version", "tv"
-    productFlavors {
-        community {
-            dimension "version"
-        }
-        leanback {
-            minSdkVersion 21
-            dimension "tv"
-            versionCode 2
-        }
-        noleanback {
-            dimension "tv"
-            versionCode 1
-        }
-    }
-    // make per-variant version code
-    applicationVariants.all { variant ->
-        // get the version code of each flavor
-        def compatVersion = variant.productFlavors.get(1).versionCode
-        // set the composite code
-        variant.outputs.all { output ->
-            output.setVersionCodeOverride(compatVersion * 1000000 + defaultConfig.versionCode)
-        }
     }
     buildTypes {
         release {
@@ -169,10 +146,9 @@ android {
     }
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            def api = variant.mergedFlavor.minSdkVersion.apiLevel
-            outputFileName = outputFileName.replace("-noleanback-", "-API_" + "${api}" + "+-")
-                    .replace("-community-", "-")
-                    .replace("-leanback-", "-API_" + "${api}" + "+-")
+            def api = defaultConfig.minSdkVersion.apiLevel
+            outputFileName = outputFileName.replace("-release.apk", "-API_${api}+-release.apk")
+                    .replace("-debug.apk", "-API_${api}+-debug.apk")
             variant.getAssembleProvider().configure() {
                 it.doLast {
                     println outputFileName
@@ -205,7 +181,7 @@ dependencies {
     implementation 'androidx.preference:preference:1.0.0'
     implementation 'com.github.ksoichiro:android-observablescrollview:1.6.0'
     implementation 'com.google.android.material:material:1.0.0'
-    leanbackImplementation 'androidx.leanback:leanback:1.0.0'
-    leanbackImplementation 'androidx.leanback:leanback-preference:1.1.0-alpha01'
+    implementation 'androidx.leanback:leanback:1.0.0'
+    implementation 'androidx.leanback:leanback-preference:1.1.0-alpha01'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
 }

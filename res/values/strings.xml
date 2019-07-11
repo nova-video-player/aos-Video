@@ -838,8 +838,6 @@
     <string name="rescan_when_opening_application">Re-scan when opening the application</string>
     <string name="last_rescan_occured">Last re-scan occurred:</string>
     <string name="error_permission_display_over_apps">Window mode needs special permissions to be displayed in front of other apps. Please, grant Nova Video Player this permission to switch to window mode.</string>
-    <string name="app_id"></string>
-    <string name="app_id_surface"></string>
 
     <string name="intro_overlay_text">Touch to cast videos to your TV</string>
 
@@ -907,5 +905,8 @@
     <string name="list_title">List title</string>
 
     <string name="loading">Loading…</string>
+
+    <string name="app_id">08FEA4DD</string>
+    <string name="app_id_surface">C44FB232</string>
 
 </resources>

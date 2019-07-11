@@ -19,7 +19,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.archos.mediacenter.video"
     android:installLocation="auto"
-    android:sharedUserId="archos.mediacenter" >
+    android:sharedUserId="archos.openmediacenter" >
     
     <supports-screens android:largeScreens="true" />
 
@@ -169,7 +169,7 @@
         <!-- Provides search suggestions for video search. -->
         <provider
             android:name="com.archos.mediacenter.video.browser.SearchProviderVideo"
-            android:authorities="browser.SearchProviderVideo" />
+            android:authorities="browser.SearchProviderVideocommunity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -456,7 +456,7 @@
         <!-- ContentProvider for media -->
         <provider
             android:name="com.archos.mediaprovider.video.VideoProvider"
-            android:authorities="com.archos.media.video;com.archos.media.scraper"
+            android:authorities="com.archos.media.videocommunity;com.archos.media.scrapercommunity"
             android:exported="true" />
         <!-- BroadcastReceiver to trigger database import -->
         <receiver android:name="com.archos.mediaprovider.video.VideoStoreImportReceiver" >
@@ -770,6 +770,173 @@
             android:name="com.archos.mediacenter.video.widget.RemoteViewsServiceRecentlyPlayed"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.MainActivityLeanback"
+            android:banner="@drawable/androidtv_banner"
+            android:icon="@mipmap/video2"
+            android:taskAffinity="archos.task.video"
+            android:label="@string/video"
+            android:theme="@style/MyLeanbackTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.movies.AllMoviesGridActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.tvshow.AllTvshowsGridActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.tvshow.TvshowActivity"
+            android:exported="true"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.tvshow.TvshowMoreDetailsActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.tvshow.SeasonActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.movies.MoviesByAlphaActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.movies.MoviesByGenreActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.movies.MoviesByRatingActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.movies.MoviesByYearActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.tvshow.TvshowsByAlphaActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.tvshow.TvshowsByGenreActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.tvshow.TvshowsByRatingActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.tvshow.EpisodesByDateActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.VideosByListActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.details.VideoDetailsActivity"
+            android:exported="true"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.details.VideoDetailsOverlayActivity"
+            android:theme="@style/MyLeanbackTheme.Transparent"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.scrapping.ManualVideoScrappingActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.scrapping.ManualShowScrappingActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.filebrowsing.LocalListingActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.filebrowsing.ExtStorageListingActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.network.NetworkRootActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.network.NetworkShortcutDetailsActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.network.ftp.FtpShortcutDetailsActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.network.ftp.FtpListingActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.network.smb.SmbListingActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.network.upnp.UpnpListingActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.nonscraped.NonScrapedVideosActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.search.VideoSearchActivity"
+            android:theme="@style/MyLeanbackTheme"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/androidtv_searchable_video" />
+        </activity>
+
+        <provider android:name="com.archos.mediacenter.video.leanback.search.VideoSearchProvider"
+            android:authorities="${applicationId}.leanback.search.VideoSearchProvider"
+            android:exported="true" />
+
+
+        <activity
+            android:name="com.archos.mediacenter.video.utils.WebViewActivity"
+            android:label="@string/leanback_archos_video_webview"
+            android:theme="@style/MyLeanbackTheme"
+            android:excludeFromRecents="true"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.network.rescan.RescanActivity"
+            android:theme="@style/Theme.Leanback.GuidedStep"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.wizard.SubtitlesWizardActivity"
+            android:theme="@style/MyLeanbackTheme.Wizard"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.settings.VideoSettingsActivity"
+            android:theme="@style/MyLeanbackTheme.Preferences"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.settings.VideoSettingsLicencesActivity"
+            android:theme="@style/MyLeanbackTheme.Preferences"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.settings.VideoSettingsMoreLeanbackActivity"
+            android:theme="@style/MyLeanbackTheme.Preferences"/>
 
     </application>
 
