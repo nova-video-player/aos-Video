@@ -84,7 +84,7 @@
     <string name="root_storage">Встроенная память</string>
     <string name="cannot_list">Невозможно отобразить содержимое</string>
     <!-- VIDEO -->
-    <string name="video">Archos Видео</string>
+    <string name="video">Nova Видео</string>
     <string name="videos">Видео</string>
     <string name="all_videos">Все видео</string>
     <string name="not_played_yet_videos">Еще не вопроизв.</string>
