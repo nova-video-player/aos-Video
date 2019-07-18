@@ -289,13 +289,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         if(FileManagerService.fileManagerService==null)
             startService(new Intent(this, FileManagerService.class));
 
-        // ====== TMP ARCHOS DEVICE ONLY CHECK =======
-        //ArchosUtils.ArchosRKDeviceOnlyBarrier(this);
-        // ===========================================
-
-
-
-
         //in case we need to re-log in trakt
         mTraktRelogBroadcastReceiver = new BroadcastReceiver(){
 
