@@ -293,7 +293,7 @@
     <string name="abort">إنهاء</string>
     <!--  Title of the video picker activity. -->
     <!-- Archos File Info -->
-    <string name="video_info_share_message">"I've been watching the video \"%1$s\" on my Archos %2$s"</string>
+    <string name="video_info_share_message">"I've been watching the video \"%1$s\" on Nova %2$s"</string>
     <string name="notification_mode">التنبيهات</string>
     <!-- Help overlay -->
     <!-- Info dialog, not indexed file -->

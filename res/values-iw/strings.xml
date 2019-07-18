@@ -322,7 +322,7 @@
     <string name="video_info_backdrop_select">בחר תמונה נוספת</string>
     <string name="video_info_backdrop_remove">הסר</string>
     <string name="video_info_backdrop_set_as">קבע תמונה כ- </string>
-    <string name="video_info_share_message">"צפיתי בסרטון \"%1$s\" על מכשיר ה- Archos %2$s שלי"</string>
+    <string name="video_info_share_message">"צפיתי בסרטון \"%1$s\" על מכשיר ה- Nova %2$s שלי"</string>
     <string name="notification_mode">התראות</string>
     <string name="notifications_all">כל ההתרעות</string>
     <string name="notifications_alerts">צלילי התרעות בלבד</string>

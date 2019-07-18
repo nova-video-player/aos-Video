@@ -321,6 +321,9 @@
     <string name="subtitles_wizard_empty_list">Файл не найден</string>
     <string name="subtitles_wizard_cache">Кэш</string>
     <!-- Subloader -->
+    <string name="get_subtitles_online">Получить субтитры онлайн</string>
+    <string name="toast_subloader_sub_found">Найдены субтитры для этого языка</string>
+    <string name="toast_subloader_sub_not_found">Субтитры не найдены</string>
     <string name="dialog_subloader_copying">Копирование субтитров…</string>
     <string name="dialog_subloader_downloading">Загрузка субтитров…</string>
     <string name="dialog_subloader_sumup">Загрузка завершена</string>
@@ -328,17 +331,25 @@
     <string name="dialog_subloader_fails">Субтитры не найдены для:</string>
     <string name="sub_force_all_title">Принудительно загрузить субтитры</string>
     <string name="dialog_subloader_nonetwork_title">Нет подключения к Интернету</string>
+    <string name="dialog_subloader_nonetwork_message">Для загрузки субтитров требуется подключение к Интернету</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_size_text">Размер:</string>
+    <string name="subtitle_vert_text">Положение по вертикали:</string>
     <string name="subtitle_color_default">#ffffff</string>
     <!-- Subtitle Delay Dialog -->
+    <string name="subtitle_delay_speed">Настройка скорости</string>
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
     because the right part of the quote is
     not visible otherwise -->
+    <string name="error_permission">Недостаточно прав</string>
+    <string name="error_permission_storage">Nova Video Player требуется разрешение на чтение локальных видео, пожалуйста, предоставьте это разрешение.</string>
     <string name="allow">Разрешить</string>
     <string name="exit">Выйти</string>
     <!-- torrent -->
+    <string name="error">Произошла ошибка</string>
+    <string name="error_loading_torrent">Ошибка при загрузке торрента</string>
+    <string name="error_downloading_not_enough_space">Ошибка при загрузке торрента: недостаточно места</string>
     <string name="loading_torrent">Загрузка торрента…</string>
     <string name="error_no_video_file">Нет видео файлов</string>
     <string name="torrent_file_to_play">Выберите файл для воспроизведения</string>
@@ -349,24 +360,45 @@
     <string name="add_ssh_server">Просмотр FTP-сервера</string>
     <string name="add_ssh_shortcut">Добавить как ярлык</string>
     <string name="ssh_prompt">Тип FTP</string>
+    <string name="ssh_empty_view"> \"Вы можете просматривать с собственного ftp сервера\"</string>
     <string-array name="ssh_types">
         <item>FTP</item>
         <item>SFTP</item>
         <item>FTPS</item>
     </string-array>
     <string name="remove_from_shortcuts">Удалить выборку</string>
+    <string name="shortcut_added">Ярлык %s создан</string>
+    <string name="shortcut_removed">Ярлык %s удален</string>
+    <string name="server_not_available">Сервер недоступен</string>
+    <string name="cannot_open_shortcut">Содержимое этого ярлыка недоступно.\nПожалуйста, проверьте, что у вас есть необходимые разрешения.</string>
+    <string name="network_shortcuts">Сетевые ярлыки</string>
     <string name="media_servers">Медиа-серверы</string>
+    <string name="shortcut_list_empty">Не создано ярлыков сети.\n\nЧтобы создать ярлыки сетевой папки, нажмите на нужную папку и выберите \"%s\" в верхней панели действий.</string>
+    <string name="ftp_shortcut_list_empty">Чтобы создать ярлык сетевой папки, выберите \"%s\" в верхней панели действий при просмотре сервера.</string>
+    <string name="indexed_folders">Индексированные папки</string>
     <string name="ftp_shortcuts">Ярлыки FTP</string>
+    <string name="add_to_indexed_folders">Индексировать папку</string>
     <string name="add_to_library">Добавить в библиотеку</string>
+    <string name="add_all_items_to_library">Добавить все видео в библиотеку сейчас?</string>
+    <string name="indexed_folder_added">Папка %s добавлена в библиотеку</string>
     <string name="remove_from_indexed_folders">Удалить из библиотеки</string>
+    <string name="indexed_folder_removed">Папка %s удалена из библиотеки</string>
+    <string name="indexed_folders_list_empty">Нет индексированных сетевых папок.\n\nВы можете добавить содержимое сетевой папки в библиотеку, просматривая эту папку и выбрав \"%s\" в верхней панели действий.</string>
+    <string name="indexed_folders_list_empty_ftp">Нет индексированных папок ftp.</string>
     <string name="open_indexed_folder">"Открыть"</string>
+    <string name="rescan_indexed_folders">Пересканировать все индексированные папки</string>
     <string name="last_rescan_never">Никогда</string>
+    <string name="upnp_indexing_warning_title">Индексация UPnP</string>
+    <string name="upnp_indexing_warning_message">Индексация UPnP имеет меньше возможностей, чем индексация SMB.\nРекомендуется индексировать папку SMB, если ваш сервер или ПК поддерживает её.\n</string>
+    <string name="ssh_error">Не удается подключиться: проверьте подключение и учетные данные</string>
+    <string name="ssh_remote_address">Удалённый адрес</string>
     <string name="ssh_port">Порт</string>
     <string name="ssh_password">Пароль</string>
     <string name="ssh_username">Имя пользователя</string>
     <string name="ssh_shortcut_name">Имя ярлыка</string>
     <!-- Preferences -->
     <string name="preferences">Настройки</string>
+    <string name="get_the_ad_free_version">Получите версию без рекламы на Google Play</string>
     <string name="upgrade_to_add_free_version">Обновить до версии без рекламы</string>
     <string name="upgrade_to_add_free_version_description">Купите лицензию приложения, чтобы удалить рекламу и активировать все функции</string>
     <string name="preferences_category_complete">Полная версия</string>
