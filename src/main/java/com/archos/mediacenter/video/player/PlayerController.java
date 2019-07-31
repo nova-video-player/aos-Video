@@ -551,19 +551,21 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     public void setSizes(int layoutWidth, int layoutHeight, int displayWidth, int displayHeight) {
-        Log.d(TAG, "setSizes layout: " + layoutWidth + "x" + layoutHeight + " / display: " + displayWidth + "x" + displayHeight);
+        if (DBG) Log.d(TAG, "setSizes layout: " + layoutWidth + "x" + layoutHeight + " / display: " + displayWidth + "x" + displayHeight);
         mSystemBarHeight = displayHeight - layoutHeight;
         mLayoutWidth = layoutWidth;
         mLayoutHeight = layoutHeight;
         if (mControllerView != null) {
+            if (DBG) Log.d(TAG, "setSizes, mControllerView != null, recreate whole layout");
             // size changed and maybe orientation too, recreate the whole layout
             detachWindow();
             attachWindow();
+        } else {
+            if (DBG) Log.d(TAG, "setSizes, mControllerView == null, doing nothing");
         }
     }
 
     private void attachWindow() {
-        if (DBG) Log.d(TAG, "attachWindow");
 
         if (DBG) Log.d(TAG,"attachWindow getStatusBarHeight=" + getStatusBarHeight() +
                 ", getNavigationBarHeight=" + getNavigationBarHeight() +
@@ -609,8 +611,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mLayoutWidth, mLayoutHeight);
         mPlayerView.addView(mControllerView, params);
+        if (DBG) Log.d(TAG, "attachWindow, updateOrientation();");
         updateOrientation();
-        Log.d(TAG, "mPlayerView.addView");
+        if (DBG) Log.d(TAG, "attachWindow, mPlayerView.addView");
 
         initMenuAdapter(mControllerViewLeft);
         switchMode(TVUtils.isTV(mContext));
@@ -639,27 +642,27 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N_MR1) {
 
             int orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-            if (DBG) Log.d(TAG,"orientation is " + orientation);
+            if (DBG) Log.d(TAG,"updateOrientation, orientation is " + orientation);
 
             SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
             RelativeLayout.LayoutParams relativeParams = ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams());
             switch (orientation) {
                 case Surface.ROTATION_270:
-                    if (DBG) Log.d(TAG,"rotation is 270 shifting right from getNavigationBarHeight=" + getNavigationBarHeight());
+                    if (DBG) Log.d(TAG,"updateOrientation, rotation is 270 shifting right from getNavigationBarHeight=" + getNavigationBarHeight());
                     ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                     relativeParams.setMargins(getNavigationBarHeight(), 0, 0, 0);
                     break;
                 case Surface.ROTATION_90:
-                    if (DBG) Log.d(TAG,"rotation is 90");
+                    if (DBG) Log.d(TAG,"updateOrientation, rotation is 90");
                     // FIXME: ALIGN_PARENT_RIGHT should have been simpler but results in shifted layout by safeInsetRight+safeInsetLeft+navigationBarHeight
                     ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                     if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false)) {
-                        if (DBG) Log.d(TAG,"shifting right PlayerActivity.safeInsetLeft=" + PlayerActivity.safeInset.get(0));
+                        if (DBG) Log.d(TAG,"updateOrientation, shifting right PlayerActivity.safeInsetLeft=" + PlayerActivity.safeInset.get(0));
                         relativeParams.setMargins(PlayerActivity.safeInset.get(0), 0, 0, 0); // safeInset.get(0) is safeInsetLeft
                     }
                     break;
                 case Surface.ROTATION_0:
-                    if (DBG) Log.d(TAG,"rotation is 0 shifting up from getNavigationBarHeight=" + getNavigationBarHeight());
+                    if (DBG) Log.d(TAG,"updateOrientation, rotation is 0 shifting up from getNavigationBarHeight=" + getNavigationBarHeight());
                     // FIXME: this is the only way found to get in portrait the seekbar on top of navigationBar
                     if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false))
                         ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -668,10 +671,10 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     relativeParams.setMargins(0, 0, 0, getNavigationBarHeight());
                     break;
                 case Surface.ROTATION_180:
-                    if (DBG) Log.d(TAG,"rotation is 180");
+                    if (DBG) Log.d(TAG,"updateOrientation, rotation is 180");
                     ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                     if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false)) {
-                        if (DBG) Log.d(TAG,"shifting right PlayerActivity.safeInsetTop=" + PlayerActivity.safeInset.get(1));
+                        if (DBG) Log.d(TAG,"updateOrientation, shifting right PlayerActivity.safeInsetTop=" + PlayerActivity.safeInset.get(1));
                         relativeParams.setMargins(0, 0, 0, PlayerActivity.safeInset.get(1)); // safeInset.get(1) is safeInsetTop
                     }
                     break;
@@ -838,7 +841,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     private void showControlBar(boolean show) {
         if (mControlBar != null && mControlBarShowing != show) {
-            Log.d(TAG, "showControlBar "+String.valueOf(show));
+            if (DBG) Log.d(TAG, "showControlBar "+String.valueOf(show));
             setVisibility(mControlBar, show, true);
             if(mPlayPauseTouchZone!=null){
                 setVisibility(mPlayPauseTouchZone, show, false);
@@ -865,11 +868,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     private void showVolumeBar(boolean show) {
         if (mVolumeBarEnabled && mVolumeBarShowing != show) {
-            Log.d(TAG, "volume2");
+            if (DBG) Log.d(TAG, "showVolumeBar, volume2");
             setVisibility(mVolumeBar, show, true);
             if(mVolumeBar2!=null&&splitView){
                 setVisibility(mVolumeBar2, show, true);
-                Log.d(TAG, "showing volume bar2");
+                if (DBG) Log.d(TAG, "showVolumeBar, showing volume bar2");
             }
             mVolumeBarShowing = show;
         }
@@ -897,7 +900,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     private void setOSDVisibility(boolean visible, int flags) {
-        Log.d(TAG, "visiblity "+flags);
+        if (DBG) Log.d(TAG, "setOSDVisibility, visiblity "+flags);
         if ((flags & FLAG_SIDE_CONTROL_BAR) != 0) {
             showControlBar(visible);
             // On phone we don't know how to display control bar without volume bar nicely, so force volume bar
@@ -910,7 +913,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             showActionBar(visible);
         }
         if ((flags & FLAG_SIDE_VOLUME_BAR) != 0) {
-            Log.d(TAG, "volume");
+            if (DBG) Log.d(TAG, "setOSDVisibility, volume");
             showVolumeBar(visible);
         }
         if((flags & FLAG_SIDE_UNLOCK_INSTRUCTIONS)!=0){
@@ -1335,7 +1338,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     public void start() {
-        Log.d(TAG, "start");
+        if (DBG) Log.d(TAG, "start");
         attachWindow();
         setEnabled(true);
         if (DBG_ALWAYS_SHOW)
@@ -1343,7 +1346,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     public void stop() {
-        Log.d(TAG, "stop");
+        if (DBG) Log.d(TAG, "stop");
 
         if (mIsStopped)
             return;
@@ -1798,7 +1801,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     public boolean onKey(int keyCode, KeyEvent event) {
-        Log.d(TAG, "onKey()");
+        if (DBG) Log.d(TAG, "onKey()");
         if (mLastTouchEventTime == event.getEventTime()) {
             return true;
         }
@@ -1844,7 +1847,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 }
                 if (!isTVMenuDisplayed) {
                     showTVMenu(true);
-                    Log.d(TAG, "showing menu");
+                    if (DBG) Log.d(TAG, "onKey, showing menu");
                     return true;
                 }
             }
@@ -1898,12 +1901,12 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                             return true;
                         case KeyEvent.KEYCODE_DPAD_DOWN:
                             showControlBar();
-                            Log.d(TAG, "dpad down");
+                            if (DBG) Log.d(TAG, "onKey, dpad down");
                             return true;
                         case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
                         case KeyEvent.KEYCODE_DPAD_RIGHT:
                         case KeyEvent.KEYCODE_MEDIA_NEXT:
-                            Log.d(TAG, "sending");
+                            if (DBG) Log.d(TAG, "onKey, sending");
                             if (Player.sPlayer.canSeekForward() && mSeekKeyDirection != 1) {
                                 show(FLAG_SIDE_CONTROL_BAR|FLAG_SIDE_ACTION_BAR|FLAG_SIDE_SYSTEM_BAR, 0);
                                 mSeekKeyDirection = 1;
@@ -1991,7 +1994,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         case KeyEvent.KEYCODE_DPAD_LEFT:
                         case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
                             mSeekKeyDirection = 0;
-                            Log.d(TAG, "button up");
+                            if (DBG) Log.d(TAG, "onKey, button up");
                             return true;
                         case KeyEvent.KEYCODE_O:
                             if (isShowing())
@@ -2102,7 +2105,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         if ((mJoystickZone == MediaUtils.JOYSTICK_ZONE_RIGHT || mJoystickZone == MediaUtils.JOYSTICK_ZONE_FAR_RIGHT) && !mJoystickSeekingActive) {
             // Only call onSeek() once when starting to seek but set longPress=true so that
             // the seek event will be sent periodically until the joystick is released
-            if (DBG) Log.d(TAG, "Joystick moved to the right => start seeking forward");
+            if (DBG) Log.d(TAG, "handleJoystickEvent, Joystick moved to the right => start seeking forward");
             if(mControlBar.isFocused()){
                 mJoystickSeekingActive = true;
                 onSeek(1, true);
@@ -2111,7 +2114,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         else if ((mJoystickZone == MediaUtils.JOYSTICK_ZONE_LEFT || mJoystickZone == MediaUtils.JOYSTICK_ZONE_FAR_LEFT) && !mJoystickSeekingActive) {
             // Only call onSeek() once when starting to seek but set longPress=true so that
             // the seek event will be sent periodically until the joystick is released
-            if (DBG) Log.d(TAG, "Joystick moved to the left => start seeking backward");
+            if (DBG) Log.d(TAG, "handleJoystickEvent, Joystick moved to the left => start seeking backward");
             if(mControlBar.isFocused()){
                 mJoystickSeekingActive = true;
                 onSeek(-1, true);
@@ -2119,7 +2122,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }
         else if (mJoystickZone == MediaUtils.JOYSTICK_ZONE_CENTER && mJoystickSeekingActive) {
             // The joystick is released (i.e. is back in the dead zone)
-            if (DBG) Log.d(TAG, "Joystick released => stop seeking");
+            if (DBG) Log.d(TAG, "handleJoystickEvent, Joystick released => stop seeking");
             mJoystickSeekingActive = false;
             mSeekKeyDirection = 0;
         }
@@ -2285,7 +2288,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     public void setUIMode(int mode) {
         UIMode = mode;
-        Log.d(TAG, "setting ui mode "+mode);
+        if (DBG) Log.d(TAG, "setUIMode, setting ui mode "+mode);
         // TODO Auto-generated method stub
         if(mode==VideoEffect.SBS_MODE){
         	  if(!mControlBarShowing)

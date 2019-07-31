@@ -233,11 +233,13 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     // safeInset = { safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom};
     public static ArrayList<Integer> safeInset = new ArrayList<Integer>();
+    public static int safeInsetRotation;
 
     public static boolean hasCutout = false;
     public static boolean seekBarOverlapWithCutout = true;
 
     public void setCutoutMetrics() {
+        // create list of 4 elements {L,T,R,B}
         if (safeInset.size() != 4) {
             if (DBG) Log.d(TAG, "setCutoutMetrics safeInset list is of size " + safeInset.size() + ", resetting the list to zero elements");
             safeInset.clear();
@@ -266,6 +268,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     safeInset.set(1, cutout.getSafeInsetTop());
                     safeInset.set(2, cutout.getSafeInsetRight());
                     safeInset.set(3, cutout.getSafeInsetBottom());
+                    safeInsetRotation = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
                     if (DBG) Log.d(TAG, "setCutoutMetrics safeInset=" + safeInset);
                 }
             }
@@ -274,13 +277,16 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         }
     }
 
-    private void updateInsetsOnRotation(int oldRotation) {
+    private void updateInsetsOnRotation() {
         int orientation = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-        if (DBG) Log.d(TAG, "oldRotation=" + oldRotation + ", orientation=" + orientation);
-        //ROTATION_0 = 0; ROTATION_90 = 1; ROTATION_180 = 2; ROTATION_270 = 3;
-        if (DBG) Log.d(TAG, "before rotation safeInset=" + safeInset);
-        Collections.rotate(safeInset, oldRotation-orientation);
-        if (DBG) Log.d(TAG, "after rotation safeInset=" + safeInset);
+        if (DBG) Log.d(TAG, "updateInsetsOnRotation, safeInsetRotation=" + safeInsetRotation + ", orientation=" + orientation);
+        if (orientation != safeInsetRotation) {
+            //ROTATION_0 = 0; ROTATION_90 = 1; ROTATION_180 = 2; ROTATION_270 = 3;
+            if (DBG) Log.d(TAG, "updateInsetsOnRotation, before rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
+            Collections.rotate(safeInset, safeInsetRotation - orientation);
+            safeInsetRotation = orientation;
+            if (DBG) Log.d(TAG, "updateInsetsOnRotation, after rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
+        }
     }
 
     private Handler mHandler = new Handler() {
@@ -356,7 +362,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private int                 mShowingDialogId;
     private boolean             mNetworkFailed = false;
     private boolean             mPaused;
-
     private Resources           mResources;
     private SharedPreferences   mPreferences;
     private TrackInfoController mAudioInfoController;
@@ -591,7 +596,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (DBG) Log.d(TAG, "addOnLayoutChangeListener");
+                            if (DBG) Log.d(TAG, "addOnLayoutChangeListener, do updateSizes()");
                             updateSizes();
                         }
                     });
@@ -653,27 +658,28 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N_MR1){ //detect any kind of rotation, even from 270 to 90°
             DisplayManager.DisplayListener mDisplayListener = new DisplayManager.DisplayListener() {
-                public int mOldOrientation;
-
+                int orientation;
                 @Override
                 public void onDisplayAdded(int displayId) {
                 }
 
                 @Override
                 public void onDisplayChanged(int displayId) {
-                    int orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-                    if(mOldOrientation != orientation)
-                            //&& (orientation==Surface.ROTATION_270 && mOldOrientation == Surface.ROTATION_90
-                            //        || orientation==Surface.ROTATION_90 && mOldOrientation == Surface.ROTATION_270))
+                    orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+                    if(safeInsetRotation != orientation) {
+                        //&& (orientation==Surface.ROTATION_270 && mOldOrientation == Surface.ROTATION_90
+                        //        || orientation==Surface.ROTATION_90 && mOldOrientation == Surface.ROTATION_270))
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (DBG) Log.d(TAG, "onDisplayChanged");
-                                updateInsetsOnRotation(mOldOrientation);
+                                if (DBG)
+                                    Log.d(TAG, "onDisplayChanged do updateInsetsOnRotation()+updateSizes() and safeInsetRotation=" + safeInsetRotation + ", orientation=" + orientation);
+                                updateInsetsOnRotation();
                                 updateSizes();
                             }
                         });
-                    mOldOrientation = orientation;                }
+                    }
+                }
 
                 @Override
                 public void onDisplayRemoved(int displayId) {
@@ -783,6 +789,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mSubsFavoriteLanguage = mPreferences.getString(KEY_SUBTITLES_FAVORITE_LANGUAGE, Locale.getDefault().getISO3Language());
         mForceSWDecoding = mPreferences.getBoolean(KEY_FORCE_SW, false);
         setLockRotation(mLockRotation);
+        if (DBG) Log.d(TAG, "onStart, do updateSizes()");
         updateSizes();
         mSurfaceController.setVideoFormat(Integer.parseInt(mPreferences.getString(KEY_PLAYER_FORMAT, "-1")),
                 Integer.parseInt(mPreferences.getString(KEY_PLAYER_AUTO_FORMAT, "-1")));
@@ -927,7 +934,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             return;
         if(mTorrent!=null){
 
-            Log.d(TAG, "unbinding torrentObserver");
+            Log.d(TAG, "onStop, unbinding torrentObserver");
         }
 
         /*
@@ -1005,7 +1012,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             displayHeight = content.getHeight();
 
         }
-        Log.d(TAG, "isInMultiWindowMode() :");
+        if (DBG) Log.d(TAG, "updateSizes isInMultiWindowMode() :");
 
         if (!isInPictureInPictureMode&&!isInMultiWindowMode) {
             width = displayWidth;
@@ -1015,7 +1022,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             height = layoutHeight;
         }
 
-        if (DBG) Log.d(TAG, "trueFullscreen true size: " + width+"x"+height);
+        if (DBG) Log.d(TAG, "updateSizes trueFullscreen true size: " + width+"x"+height);
         if(!isChromebook) { //keeping things as it was on other devices
             ViewGroup.LayoutParams lp = mRootView.getLayoutParams();
             lp.width = width;
@@ -1058,6 +1065,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (DBG) Log.d(TAG, "onConfigurationChanged, do updateSizes()");
                 updateSizes();
             }
         });
@@ -1068,7 +1076,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private void setLockRotation(boolean avpLock) {
         Display display = getWindowManager().getDefaultDisplay();
         int rotation = display.getRotation();
-        if (DBG) Log.d(TAG, "rotation status: " + rotation);
+        if (DBG) Log.d(TAG, "setLockRotation, rotation status: " + rotation);
 
         boolean systemLock;
         try {
@@ -2530,7 +2538,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
             mVideoId = mVideoInfo.id;
             mUri = mVideoInfo.uri;
-            if (DBG) Log.d(TAG, "mVideoId: " + mVideoId);
+            if (DBG) Log.d(TAG, "setVideoInfo mVideoId: " + mVideoId);
 
 
             // get resume position only if video was played
