@@ -1,9 +1,9 @@
 New TV show categories for quicker browsing through large collection
-Countless TV UI improvements (roles, trailers, badges, global del/deindex, subs picker)
-AV1 soft decoding
+Countless TV UI improvements (roles, trailers, badges, global del/deindex, subs picker, poster/backdrop zoom))
 New player shortcuts
-Improve audio passthrough stability
-Make private mode persistent
-Migration to NDK-r19, support for x86_64 arch
-Fix crash in presence of damaged sdcard
-Fix cloud support (still no streaming)
+API28 and AndroidX migration
+FFmpeg upstep to 4.2 and dav1d to 0.4.0
+Fix database crash preventing application to start on some custom ROMs
+Option to have landscape fullscreen video on display with cutouts
+Scanning and scraping proper Notifications
+Option to force disabling stereo downmix on phones/tablets

@@ -1,1 +1,1 @@
-Improve audio passthrough robustness
+Evite un plantage de l'application systématique sur certaines ROMs alternatives

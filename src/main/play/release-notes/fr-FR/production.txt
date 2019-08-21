@@ -1,4 +1,1 @@
-Fix authentication issue on Trakt
-Attempt to fix UPnP playback of files containing a "/"
-Do not crash when opening non-video files in browser
-Stability improvements
+Corrige le problème d'authentification sur Trakt
