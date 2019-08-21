@@ -462,7 +462,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 if (mVideoIdFromPlayer == -1) {
                     mPath = bundle.getString(EXTRA_VIDEO_PATH);
                 }
-                CursorLoader loader = (CursorLoader) onCreateLoader(1, null);
+                CursorLoader loader = (CursorLoader) onCreateLoader(System.identityHashCode(this), null);
                 if (loader == null) {
                     if (DBG) Log.w(TAG, "onCreateView loader is null");
                 } else {
@@ -478,7 +478,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }
             if(video!=null)
                 setCurrentVideo(video);
-            LoaderManager.getInstance(this).restartLoader(1, null, this);
+            LoaderManager.getInstance(getActivity()).restartLoader(System.identityHashCode(this), null, this);
         }
         setBackground();
         mTitleBar.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -1455,7 +1455,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private void setSelectedSource(Video video) {
         if (DBG) Log.d(TAG, "setSelectedSource video.getFilepath()=" + video.getFilePath());
         setCurrentVideo(video);
-        LoaderManager.getInstance(this).restartLoader(1, null, this);
+        LoaderManager.getInstance(getActivity()).restartLoader(System.identityHashCode(this), null, this);
     }
 
     @Override
@@ -1477,7 +1477,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 // It is not indexed anymore hence we need to change our query and have it based on the path now
                 // (else a new indexing would need to no cursor loader update callback)
                 if (oldVideoObject.isIndexed()) {
-                    LoaderManager.getInstance(this).restartLoader(1, null, this);
+                    LoaderManager.getInstance(getActivity()).restartLoader(System.identityHashCode(this), null, this);
                 }
             }
             // If we have no Video object (case it's launched from player with path only)
