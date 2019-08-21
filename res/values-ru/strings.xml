@@ -61,6 +61,7 @@
     <string name="info_menu_poster_select">Выбрать другой постер</string>
     <string name="info_menu_series_poster_select">Выбрать другой постер</string>
     <!-- COVER ROLL -->
+    <string name="watching_up_next">Смотрю/Следующий</string>
     <string name="recently_added">Недавно добавленные</string>
     <string name="recently_added_videos">Недавно добавленные</string>
     <string name="recently_played">Недавно воспроизведенные</string>
@@ -110,6 +111,7 @@
     <string name="date_view_month">Месяц</string>
     <string name="date_view_year">Год</string>
     <string name="all_movies_and_tv_shows">Фильмы и ТВ-программы</string>
+    <string name="non_scraped_videos">Нераспознанные видео</string>
     <string name="no_server">Медиа-серверы не обнаружены</string>
     <string name="cannot_open_video">Невозможно открыть это видео</string>
     <string name="confirm_delete">Вы действительно подтверждаете удаление?</string>
@@ -119,6 +121,7 @@
     <string name="directory_deleted">Папка удалена</string>
     <string name="file_deleted">Файл удален</string>
     <string name="resume">Возобновить</string>
+    <string name="remote_resume">Продолжить воспроизведение по сети</string>
     <string name="bookmark">Закладка</string>
     <string name="delete">Удалить</string>
     <string name="confirm_delete_short">Подтвердить удаление</string>
@@ -127,12 +130,14 @@
     <string name="mark_as_watched">Просмотрено</string>
     <string name="mark_as_not_watched">Не просмотрено</string>
     <string name="upnp_not_allowed">Доступ к серверу UPnP запрещен. Измените настройки доступа.</string>
+    <string name="scrap_no_info">У вас нет описания для этого видео.</string>
     <string name="scrap_remove">Удалить информацию</string>
     <string name="scrap_remove_short">Удалить</string>
     <!-- for small screens -->
     <string name="scrap_change">Изменить информацию всех серий</string>
     <string name="scrap_series_change">Изменить информацию о сериале</string>
     <string name="scrap_change_confirmation">Изменить все выпуски с\n\t\"%1$s\"\nна\n\t\"%2$s\"?</string>
+    <string name="scrap_change_title">Изменение всех эпизодов</string>
     <string name="scrap_change_initializing">Инициализация…</string>
     <string name="scrap_change_finalizing">Завершение…</string>
     <!-- Generic strings for Movies or TV shows -->
@@ -153,6 +158,7 @@
     <string name="scrap_aired">Дата выхода</string>
     <string name="scrap_aired_format">Дата выхода: %s</string>
     <string name="scrap_guests">Гости</string>
+    <string name="scrap_premiered">Премьера</string>
     <!-- Specific strings for TV shows -->
     <string name="show_network">Сеть</string>
     <string name="episode_name">Эпизод</string>
@@ -162,14 +168,26 @@
     <string name="season_identification">Сезон %1$d</string>
     <string name="next_episode">Следующая серия</string>
     <string name="list_episodes">Список серий</string>
+    <string name="how_to_mark_season_watched">Нажмите на сезон, чтобы отметить все его эпизоды просмотренными или непросмотренными</string>
+    <string name="how_to_unindex_season">Нажмите на сезон, чтобы удалить все его эпизоды из библиотеки</string>
+    <string name="how_to_delete_season">Нажмите на сезон, чтобы удалить все его эпизоды</string>
+    <string name="mark_show_watched">Отметить все эпизоды просмотренными или непросмотренными</string>
+    <string name="unindex_show">Удалить все эпизоды из библиотеки</string>
     <string name="delete_show">Удалить все серии</string>
     <string name="no_episode_watched">Серии не просмотрены</string>
     <string name="all_episodes_watched">Все серии просмотрены</string>
+    <plurals name="n_episodes_watched">
+        <item quantity="one">%d эпизод просмотрен</item>
+        <item quantity="few">%d эпизода просмотрено</item>
+        <item quantity="many">%d эпизодов просмотрено</item>
+        <item quantity="other">%d эпизодов просмотрено</item>
+    </plurals>
     <string name="scrap_processing">Получение метаданных…</string>
     <string name="scrap_no_network">Нет подключения к сети.</string>
     <string name="scrap_enable_network_first">"Включите соединение к сети для запуска данного приложения."</string>
     <string name="scrap_failed">Фильм не найден в сетевой базе данных.</string>
     <string name="start_auto_scraper_activity">Поиск информации в сети</string>
+    <string name="scraper_settigns">Информация о постерах &amp;</string>
     <string name="scrap_status_initial">В очереди</string>
     <string name="scrap_status_busy">Поиск…</string>
     <string name="scrap_status_success">Обновлено</string>
@@ -179,27 +197,44 @@
     <string name="scraper_abort_request">Хотите отменить поиск?</string>
     <string name="scraper_no_files">Нет файлов для обработки</string>
     <string name="scraper_no_new_files">Нет новых файлов для обработки</string>
+    <string name="scraper_no_new_files_in_folder">Нет новых файлов для обработки в этой папке</string>
+    <string name="scraper_folder_no_files">Однако еще есть %d видео, для которых информация не найдена ранее.</string>
+    <string name="scraper_folder_no_file">Однако еще есть одно видео, для которого ранее не было найдено никакой информации.</string>
     <string name="scraper_folder_try_again">Хотите попробовать еще раз?</string>
     <string name="scraper_notification_title">Поиск информации в сети</string>
     <string name="scraper_notification_progress">\"%1$d of %2$d файлов обработано</string>
+    <string name="scraper_no_episode_found">Эпизод не найден</string>
     <string name="scraper_suggest_message">Вы можете найти постеры и информацию о Ваших видео в сети при помощи меню \'Поиск информации в сети\'.</string>
+    <string name="scraper_no_movie_text">В настоящее время у вас нет постера и описания для ваших фильмов</string>
     <string name="scraper_no_movie_button_label">Поиск информации о фильме</string>
+    <string name="scraper_no_tv_show_text">В настоящее время у вас нет постера и описания для ваших ТВ-шоу</string>
+    <string name="scraper_no_tv_show_button_label">Поиск информации о ТВ-шоу онлайн</string>
     <string name="imdb_title_url">https://www.imdb.com/title/</string>
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="storage">Хранилище</string>
+    <string name="rescan_storage">Пересканировать хранилище</string>
+    <string name="rescanning">Пересканирование внутренних накопителей</string>
+    <string name="rescan_storage_summary">Пересканировать SD-карты, внутренние и USB-накопители</string>
+    <string name="preference_display_all_files">Показывать все файлы в браузере</string>
+    <string name="preference_display_all_files_summary">Показывать не видеофайлы также</string>
     <string name="info_processing">Проверка свойств медиа…</string>
     <string name="info_video">Видео</string>
     <string name="info_audio">Аудио</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_plugin_required">(требуется плагин)</string>
     <string name="info_subtitle">Субтитры</string>
+    <string name="info_resume">Возобновить позицию</string>
+    <string name="info_bookmark">Добавить позицию в закладки</string>
     <string name="info_file">Информация о файле</string>
+    <string name="use_remote_resume">Восстановить позицию по сети?</string>
     <!-- VIDEO COVER ROLL -->
     <string name="you_have_no_recently_added_video">Нет недавно добавленных видео</string>
     <string name="you_have_no_recently_played_video">Нет недавно воспроизведенных видео</string>
     <string name="you_have_no_video">Нет видео</string>
+    <string name="you_have_no_video_yet">Поиск видео&#8230;</string>
     <string name="you_have_no_movies">Нет фильмов</string>
     <string name="you_have_no_tv_shows">Нет ТВ-программ</string>
+    <string name="you_have_no_non_scraped_videos">Нет нераспознанных видео</string>
     <!-- Media Center -->
     <string name="mediacenterlabel">Медиа-центр</string>
     <string name="view_mode">Режим</string>
@@ -233,6 +268,7 @@
     <string name="ui_mode_normal">Планшет/Телефон</string>
     <string name="pref_s3d_mode_title">Режим 3D</string>
     <string name="pref_s3d_mode_entry_topbottom">Снизу и сверху</string>
+    <string name="pref_s3d_mode_entry_anaglyph">Анаглиф</string>
     <string name="pref_s3d_mode_entry_off">Выкл</string>
     <string name="menu_info">Информация</string>
     <string name="menu_audio">Звуковая дорожка</string>
@@ -311,6 +347,8 @@
     <string name="player_plugin_purchase_archos_msg">Вы можете приобрести дополнительные плагины на www.archos.com.</string>
     <string name="player_plugin_purchase_google_play_msg">Вы можете приобрести дополнительные плагины в Google Play.</string>
     <string name="player_plugin_purchase_google_play_button">Перейти в Google Play</string>
+    <string name="plugin_update_required_title">Требуется обновленеи кодека</string>
+    <string name="plugin_update_required_message">Похоже, что у вас установлены дополнительные кодеки для Nova Video Player.\n\nНовая версия Nova Video Player требует обновления этих кодеков.\n\nПожалуйста, перейдите в Google Play для обновления и повторной установки кодеков.</string>
     <!-- Subtitles wizard -->
     <string name="get_subtitles_on_drive">Выберите субтитры на накопителе</string>
     <string name="subtitles_wizard_no_files">Файлы субтитров не найдены</string>
@@ -319,29 +357,43 @@
     <string name="subtitles_wizard_associate">Связать этот файл с видео</string>
     <string name="subtitles_wizard_delete">Удалить этот файл</string>
     <string name="subtitles_wizard_empty_list">Файл не найден</string>
+    <string name="subtitles_wizard_add_files">Вы можете скопировать больше субтитров в эту папку, чтобы связать их с этим видео.</string>
+    <string name="subtitles_wizard_help">Выберите любой из доступных файлов субтитров, чтобы связать его с видео %s. Файл будет переименован в соответствии с именем видео.</string>
     <string name="subtitles_wizard_cache">Кэш</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Получить субтитры онлайн</string>
     <string name="toast_subloader_sub_found">Найдены субтитры для этого языка</string>
     <string name="toast_subloader_sub_not_found">Субтитры не найдены</string>
+    <string name="toast_subloader_service_unreachable">сервер с субтитрами недоступен</string>
+    <string name="menu_subloader_allfolder">Получить недостающие субтитры</string>
     <string name="dialog_subloader_copying">Копирование субтитров…</string>
     <string name="dialog_subloader_downloading">Загрузка субтитров…</string>
     <string name="dialog_subloader_sumup">Загрузка завершена</string>
     <string name="dialog_subloader_success">Найдены субтитры для:</string>
     <string name="dialog_subloader_fails">Субтитры не найдены для:</string>
     <string name="sub_force_all_title">Принудительно загрузить субтитры</string>
+    <string name="sub_force_all">Все ваши видео уже имеют хотя бы один набор субтитров. Вы все равно желаете загрузить новые?</string>
     <string name="dialog_subloader_nonetwork_title">Нет подключения к Интернету</string>
     <string name="dialog_subloader_nonetwork_message">Для загрузки субтитров требуется подключение к Интернету</string>
+    <string name="dialog_subloader_connecting">Подключение к www.opensubtitles.org…</string>
     <!-- Subtitle Settings Dialog -->
+    <string name="subtitle_settings_title">Параметры субтитры</string>
+    <string name="subtitle_sample_text">«образец»</string>
     <string name="subtitle_size_text">Размер:</string>
+    <string name="subtitle_style_text">Стиль:</string>
     <string name="subtitle_vert_text">Положение по вертикали:</string>
     <string name="subtitle_color_default">#ffffff</string>
+    <string name="subtitle_outline">Обводка субтитров</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Настройка скорости</string>
+    <string name="subtitle_delay_radio_none">нет</string>
+    <string name="subtitle_delay_radio_ntsc2pal">NTSC &#x2192; PAL</string>
+    <string name="subtitle_delay_radio_pal2ntsc">PAL &#x2192; NTSC</string>
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
     because the right part of the quote is
     not visible otherwise -->
+    <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
     <string name="error_permission">Недостаточно прав</string>
     <string name="error_permission_storage">Nova Video Player требуется разрешение на чтение локальных видео, пожалуйста, предоставьте это разрешение.</string>
     <string name="allow">Разрешить</string>
@@ -412,12 +464,19 @@
     <string name="preference_tv_3d_automatic_switch_summary">Используйте эту функцию только если ваш 3D TV поддерживает ее</string>
     <string name="category_languages">Субтитры</string>
     <string name="subtitles_hide_default">Скрыть субтитры по умолчанию</string>
+    <string name="subtitles_hide_default_summary">Отметьте, если желаете скрывать субтиты по умолчанию</string>
+    <string name="preferences_languages">Язык загружаемых субтитров</string>
+    <string name="summary_list_preference_primary">Выберите язык для загружаемых субтитров</string>
+    <string name="favSubLang_summary">Выберите предпочтительный язык для чтения субтитров</string>
     <string name="ui_mode_title">Режим пользовательского интерфейса</string>
+    <string name="ui_mode_summary">Интерфейс ТВ или Планшета/Телефона</string>
     <string name="preferences_video_about">О программе</string>
+    <string name="preferences_video_os_text">Субтитры предоставлены</string>
     <string name="preferences_video_tmdb_text">Информация о фильме предоставлена</string>
     <string name="preferences_video_tvdb_text">Информация о ТВ-шоу предоставлена</string>
     <string name="preferences_video_licenses">Лицензии</string>
     <string name="preferences_video_advanced">Расширенный</string>
+    <string name="tv_scraper">Сериалы</string>
     <string name="movie_scraper">Фильмы</string>
     <string name="locale">Язык системы</string>
     <string name="yes">Да</string>
@@ -436,6 +495,7 @@
     <!-- Help overlay -->
     <string name="connection_reset">Сброс</string>
     <!-- Info dialog, not indexed file -->
+    <string name="video_info_unindexed_message">Этот файл в настоящее время не индексирован в вашей видеобиблиотеке.\nПоиск постеров и информации доступен только для индексированных файлов.\nВы хотите индексировать его сейчас?</string>
     <string name="video_browser_index_file">Добавить в библиотеку</string>
     <string name="video_browser_unindex_file">Удалить из библиотеки</string>
     <!-- Brightness -->
@@ -449,6 +509,8 @@
     <string name="sort_by_year_desc">Сортировать по году (сначала новые)</string>
     <string name="sort_by_date_asc">Сортировать по дате (сначала старые)</string>
     <string name="sort_by_date_desc">Сортировать по дате (сначала новые)</string>
+    <string name="sort_by_genre_asc">Сортировать по жанру ( &gt; z)</string>
+    <string name="sort_by_genre_desc">Сортировать по жанру (z &gt; a)</string>
     <string name="dec_any">По умолчанию</string>
     <string name="codepage_extra_950">(Big5)</string>
     <string name="codepage_extra_1250">(CP1250)</string>
