@@ -25,6 +25,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +38,9 @@ import com.archos.mediacenter.video.browser.adapters.object.Video;
 import java.util.ArrayList;
 
 public class VideoInfoActivity extends AppCompatActivity {
+
+    private static final String TAG = "VideoInfoActivity";
+    private static final boolean DBG = false;
 
     public static final String SHARED_ELEMENT_NAME = "poster";
     public static final int MAX_VIDEO = 200;
@@ -63,6 +68,7 @@ public class VideoInfoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (DBG) Log.d(TAG,"onCreate");
         super.onCreate(savedInstanceState);
         ViewGroup globalLayout = (ViewGroup) getWindow().getDecorView();
 
@@ -91,6 +97,7 @@ public class VideoInfoActivity extends AppCompatActivity {
     }
 
     protected void onStop(){
+        if (DBG) Log.d(TAG,"onStop");
         super.onStop();
     }
 
@@ -114,6 +121,7 @@ public class VideoInfoActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (DBG) Log.d(TAG,"onOptionsItemSelected");
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -134,6 +142,7 @@ public class VideoInfoActivity extends AppCompatActivity {
                                      boolean forceVideoSelection,
                                      long playlistId){
 
+        if (DBG) Log.d(TAG, "startInstance: " + currentVideo.getFilePath());
         Intent intent = new Intent(context, VideoInfoActivity.class);
         if(currentVideo!=null)
             intent.putExtra(VideoInfoActivityFragment.EXTRA_VIDEO, currentVideo);
@@ -156,6 +165,7 @@ public class VideoInfoActivity extends AppCompatActivity {
 
     }
     public static void startInstance(Context context, Video video, Uri path, Long id){
+        if (DBG) Log.d(TAG, "startInstance: " + path);
         ArrayList<Uri> paths = new ArrayList<>();
         paths.add(path);
         startInstance(context,null,video, 0,paths,id, false, -1);
