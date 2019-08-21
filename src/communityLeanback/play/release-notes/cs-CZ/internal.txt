@@ -1,6 +1,0 @@
-New video overview
-Leanback style settings on AndroidTV
-Add recently added TV channels
-Improved subtitles picker wizard look
-Option to have landscape fullscreen video on display with cutouts
-API28 and AndroidX migration

@@ -1,3 +1,0 @@
-Le bouton "épisode suivant" pour une série TV permet de passer à la saison suivante.
-Amélioration des traductions grace aux contributions via le service crowdin (merci à dzejba, fodber, kaosnewsd).
-Suppression de fonctionnalités expérimentales instables et corrections de bugs.

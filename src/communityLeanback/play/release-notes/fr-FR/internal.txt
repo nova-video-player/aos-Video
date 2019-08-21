@@ -1,7 +1,0 @@
-Nouvelle vue de description des vidéos
-Paramètres style leanback pour AndroidTV
-Ajout des chaînes TV sur AndroidTV pours les vidéos récemment ajoutées
-Apparence améliorée de l'assistant de sélection de sous-titres
-Option permettant d'afficher les vidéos plein écran en paysage sur téléphones avec encoche
-Landscape fullscreen video on display with cutouts via an option.
-Migration en API28 et AndroidX
