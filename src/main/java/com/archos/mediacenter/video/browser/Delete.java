@@ -434,6 +434,9 @@ public class Delete {
                 }
             }
         }
+
+        if (cursor != null) cursor.close();
+
         return result;
     }
 }
