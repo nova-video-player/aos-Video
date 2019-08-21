@@ -478,8 +478,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }
             if(video!=null)
                 setCurrentVideo(video);
-            if (LoaderManager.getInstance(getActivity()).getLoader(1) != null)
-                LoaderManager.getInstance(getActivity()).restartLoader(1, null, this);
+            LoaderManager.getInstance(this).restartLoader(1, null, this);
         }
         setBackground();
         mTitleBar.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -604,8 +603,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     @Override
     public void onSaveInstanceState(Bundle bundle){
-        super.onSaveInstanceState(bundle);
-        Log.d(TAG, "onSaveInstanceState: mCurrentVideo.getFilePath()=" + ((mCurrentVideo!=null) ? mCurrentVideo.getFilePath() : "null"));
+        if (DBG) Log.d(TAG, "onSaveInstanceState: mCurrentVideo.getFilePath()=" + ((mCurrentVideo!=null) ? mCurrentVideo.getFilePath() : "null"));
         bundle.putSerializable(EXTRA_METADATA_CACHE, mVideoMetadateCache);
         bundle.putSerializable(EXTRA_SUBTITLE_CACHE, mSubtitleListCache);
         bundle.putBoolean(EXTRA_FORCE_VIDEO_SELECTION, true);
@@ -1025,9 +1023,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }
         }
         else if(view == mIndexButton){
+            if (DBG) Log.d(TAG, "onClick: mIndexButton " + mCurrentVideo.getFileUri());
             VideoStore.requestIndexing(mCurrentVideo.getFileUri(), getActivity());
 
         }else if(view == mScrapButton) {
+            if (DBG) Log.d(TAG, "onClick: mScrapButton " + mCurrentVideo.getFileUri());
             Intent intent = new Intent(getActivity(), VideoInfoScraperActivity.class);
             intent.putExtra(VideoInfoScraperActivity.EXTRA_VIDEO, mCurrentVideo);
             startActivity(intent);
@@ -1187,19 +1187,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 break;
         }
 
-        LoaderManager.getInstance(getActivity()).restartLoader(1, null, this);
         return true;
     }
 
     public void startAsyncTasks() {
-        if (DBG) Log.d(TAG,"startAsyncTasks");
+        if (DBG) Log.d(TAG,"startAsyncTasks with " + mCurrentVideo.getFilePath());
         //do not execute file info task when torrent file
         if(!mCurrentVideo.getFileUri().getLastPathSegment().endsWith("torrent")||mIsLaunchFromPlayer) {
+            if (DBG) Log.d(TAG,"startAsyncTasks not a torrent or mIsLaunchFromPlayer starting VideoInfoTask for " + mCurrentVideo.getFilePath());
             if (mVideoInfoTask != null)
                 mVideoInfoTask.cancel(true);
             mVideoInfoTask = new VideoInfoTask().execute(mCurrentVideo);//crash when different executor (can't run 2, when leaving activity and launching another)
         }
         else{
+            if (DBG) Log.d(TAG,"startAsyncTasks torrent and not mIsLaunchFromPlayer removing views " + mCurrentVideo.getFilePath());
             mFileInfoAudioVideoContainer.setVisibility(View.GONE);
             mFileError.setVisibility(View.GONE);
             mFileInfoContainerLoading.setVisibility(View.GONE);
@@ -1297,15 +1298,16 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
         @Override
         protected VideoMetadata doInBackground(Video... videos) {
-            if (DBG) Log.d(TAG,"doInBackground");
-
             if(mIsLaunchFromPlayer&&mVideoMetadataFromPlayer!=null&&mVideoMetadataFromPlayer.getVideoTrack()!=null)//use this video info only when video track is available
                 return mVideoMetadataFromPlayer;
             Video video = videos[0];
             String startingPath= video.getFilePath();
 
+            if (DBG) Log.d(TAG,"VideoInfoTask doInBackground for " + startingPath);
+
+
             if(mVideoMetadateCache.containsKey(startingPath)){
-                if (DBG) Log.d(TAG, "doInBackground, metadata retrieved from cache "+startingPath);
+                if (DBG) Log.d(TAG, "VideoInfoTask doInBackground, metadata retrieved from cache "+startingPath);
                 return mVideoMetadateCache.get(startingPath);
             }
             else {
@@ -1313,21 +1315,22 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 // Get metadata from file
                 VideoMetadata videoMetaData = VideoInfoCommonClass.retrieveMetadata(video, getActivity());
                 if(video!=null&&video.isIndexed()) {
-                    if (DBG) Log.d(TAG, "doInBackground, saving "+startingPath);
+                    if (DBG) Log.d(TAG, "VideoInfoTask doInBackground, saving "+startingPath);
 
                     videoMetaData.save(getActivity(), startingPath);
-                    if (DBG) Log.d(TAG, "doInBackground, saved " + startingPath);
+                    if (DBG) Log.d(TAG, "VideoInfoTask doInBackground, saved " + startingPath);
 
 
                 }
                 mVideoMetadateCache.put(startingPath, videoMetaData);
+                if (DBG) Log.d(TAG, "VideoInfoTask doInBackground, set MetaData " + startingPath);
                 video.setMetadata(videoMetaData);
                 return videoMetaData;
             }
         }
 
         protected void onPostExecute(VideoMetadata videoInfo) {
-
+            if (DBG) Log.d(TAG, "onPostExecute");
             if(isCancelled())
                 return;
             // Update the video object with the computed metadata
@@ -1452,7 +1455,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private void setSelectedSource(Video video) {
         if (DBG) Log.d(TAG, "setSelectedSource video.getFilepath()=" + video.getFilePath());
         setCurrentVideo(video);
-        LoaderManager.getInstance(getActivity()).restartLoader(1, null, this);
+        LoaderManager.getInstance(this).restartLoader(1, null, this);
     }
 
     @Override
@@ -1474,7 +1477,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 // It is not indexed anymore hence we need to change our query and have it based on the path now
                 // (else a new indexing would need to no cursor loader update callback)
                 if (oldVideoObject.isIndexed()) {
-                    LoaderManager.getInstance(getActivity()).restartLoader(1, null, this);
+                    LoaderManager.getInstance(this).restartLoader(1, null, this);
                 }
             }
             // If we have no Video object (case it's launched from player with path only)
@@ -1485,7 +1488,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
             //TODO remove sources list
         } else {
-            if (DBG) Log.d(TAG, "found " + cursor.getCount() + " videos");
+            if (DBG) Log.d(TAG, "onLoadFinished: found " + cursor.getCount() + " videos");
             // Build video objects from the new cursor data
 
             cursor.moveToFirst();
@@ -1828,8 +1831,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         super.onResume();
         if (mCurrentVideo != null) {
             if (DBG) Log.d(TAG, "onResume: mCurrentVideo.getName()=" + mCurrentVideo.getName());
-            // this is needed to refresh resume pos returning from player after API28 (before onLoadFinished was called)
-            LoaderManager.getInstance(getActivity()).restartLoader(1, null, this);
         } else {
             if (DBG) Log.d(TAG, "onResume: mCurrentVideo=null");
         }
