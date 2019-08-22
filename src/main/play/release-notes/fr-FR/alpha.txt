@@ -7,3 +7,4 @@ Evite un plantage de l'application systématique sur certaines ROMs alternatives
 Option pour le jouer les vidéos en plein écran sur écran avec encoche
 Notifications de scraping et de scan.
 Option pour désactiver le downmix en stéréo sur téléphone/tablette
+Corrige le black listing stockage interne
