@@ -1,10 +1,10 @@
 New TV show categories for quicker browsing through large collection
-Countless TV UI improvements (roles, trailers, badges, global del/deindex, subs picker, poster/backdrop zoom))
+Countless TV UI improvements (roles, trailers, badges, global actions, subs picker, poster zoom)
 New player shortcuts
-API28 and AndroidX migration
-FFmpeg upstep to 4.2 and dav1d to 0.4.0
-Fix database crash preventing application to start on some custom ROMs
-Option to have landscape fullscreen video on display with cutouts
-Scanning and scraping proper Notifications
-Option to force disabling stereo downmix on phones/tablets
+API28/AndroidX migration
+Upstep FFmpeg 4.2 and dav1d 0.4.0
+Fix database crash preventing app to start on some custom ROMs
+Landscape fullscreen video option on cutout displays
+Proper scanning/scraping notifications
+Force disabling stereo downmix option on phones/tablets
 Fix video blacklisting on local storage
