@@ -478,7 +478,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }
             if(video!=null)
                 setCurrentVideo(video);
-            LoaderManager.getInstance(getActivity()).restartLoader(System.identityHashCode(this), null, this);
+            if (LoaderManager.getInstance(getActivity()).getLoader(System.identityHashCode(this)) != null)
+                LoaderManager.getInstance(getActivity()).restartLoader(System.identityHashCode(this), null, this);
         }
         setBackground();
         mTitleBar.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
