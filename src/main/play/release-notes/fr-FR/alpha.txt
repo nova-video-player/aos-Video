@@ -1,4 +1,4 @@
-src/main/play/release-notes/en-US/alpha.txtAméliorations de l'UI TV (cathégories, rôles, bandes-annonces, badges, actions globale, sélecteur de sous-titres, zoom sur les affiches)
+Améliorations de l'UI TV (chaînes, catégories, rôles, bandes-annonces, badges, actions globale, sélecteur de sous-titres, zoom sur les affiches)
 Nouveaux raccourcis clavier
 Migration API28/AndroidX
 Mise à jour FFmpeg 4.2 et dav1d 0.4.0
