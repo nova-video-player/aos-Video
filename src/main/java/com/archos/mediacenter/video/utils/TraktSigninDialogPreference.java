@@ -60,8 +60,6 @@ public class TraktSigninDialogPreference extends Preference {
     @Override
     public void onClick() {
         try {
-
-
             OAuthClientRequest t = Trakt.getAuthorizationRequest(getSharedPreferences());
             final OAuthData oa = new OAuthData();
             OAuthCallback codeCallBack = new OAuthCallback() {
@@ -77,18 +75,17 @@ public class TraktSigninDialogPreference extends Preference {
                             }
                             @Override
                             protected Object doInBackground(Object... params) {
-                                OAuthAccessTokenResponse res= Trakt.getAccessToken(oa.code);
+                                final Trakt.accessToken res = Trakt.getAccessToken(oa.code);
                                 return res;
                             }
                             @Override
                             protected void onPostExecute(Object result) {
                                 mProgress.dismiss();
-                                if (result!=null&&result instanceof OAuthAccessTokenResponse){
-                                    OAuthAccessTokenResponse res = (OAuthAccessTokenResponse) result;
-
-                                    if(res.getAccessToken()!=null){
-                                    	Trakt.setAccessToken(getSharedPreferences(), res.getAccessToken());
-                                        Trakt.setRefreshToken(getSharedPreferences(), res.getRefreshToken());
+                                if (result!=null&&result instanceof Trakt.accessToken){
+                                    Trakt.accessToken res = (Trakt.accessToken) result;
+                                    if(res.access_token!=null){
+                                        Trakt.setAccessToken(getSharedPreferences(), res.access_token);
+                                        Trakt.setRefreshToken(getSharedPreferences(), res.refresh_token);
                                         TraktSigninDialogPreference.this.notifyChanged();
                                     }
                                 }   
@@ -102,7 +99,6 @@ public class TraktSigninDialogPreference extends Preference {
                     	.setMessage(R.string.dialog_subloader_nonetwork_title)
                         .setIcon(android.R.drawable.ic_dialog_alert)
                          .show();
-
                     }
                     	
                 }
