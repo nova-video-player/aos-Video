@@ -1,1 +1,9 @@
-Fix database crash preventing application to start on some devices
+Countless TV UI improvements (categories, channels, roles, trailers, badges, global actions, subs picker, poster zoom)
+New player shortcuts
+API28/AndroidX migration
+Upstep FFmpeg 4.2 and dav1d 0.4.0
+Fix database crash preventing app to start on some custom ROMs
+Fullscreen landscape video option on cutout displays
+Proper scanning/scraping notifications
+Force disabling stereo downmix option on phones/tablets
+Fix video blacklisting on local storage

@@ -1,1 +1,8 @@
-Evite un plantage de l'application systématique sur certaines ROMs alternatives
+Améliorations de l'UI TV (chaînes, catégories, rôles, bandes-annonces, badges, actions globale, sélecteur de sous-titres, zoom sur les affiches)
+Nouveaux raccourcis clavier
+Migration API28/AndroidX
+Mise à jour FFmpeg 4.2 et dav1d 0.4.0
+Option pour jouer les vidéos plein écran sur écran avec encoche
+Notifications de scraping et de scan
+Option pour désactiver le downmix en stéréo sur téléphone/tablette
+Corrige le black listing sur stockage interne
