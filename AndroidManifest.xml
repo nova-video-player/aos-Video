@@ -456,7 +456,7 @@
         <!-- ContentProvider for media -->
         <provider
             android:name="com.archos.mediaprovider.video.VideoProvider"
-            android:authorities="com.archos.media.video;com.archos.media.scraper;com.archos.media.videocommunity;com.archos.media.scrapercommunity"
+            android:authorities="com.archos.media.videocommunity;com.archos.media.scrapercommunity"
             android:exported="true" />
         <!-- BroadcastReceiver to trigger database import -->
         <receiver android:name="com.archos.mediaprovider.video.VideoStoreImportReceiver" >
