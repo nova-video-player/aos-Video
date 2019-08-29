@@ -1,1 +1,2 @@
-Fix coexistence with Archos Video Player.
+Fix HEVC decoding for some files on MTK based devices
+Do not revert on SW decoding in presence of high bitrate spike occurring on some 4k high bitrate videos

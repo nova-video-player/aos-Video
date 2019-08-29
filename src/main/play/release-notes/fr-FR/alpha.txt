@@ -1,1 +1,2 @@
-Permet la coexistence avec Archos Video Player
+Corrige le décodage HEVC sur certains fichiers sur processeur MTK
+Permet d'encaisser des pics plus importants en bitrate sur certaines vidéos 4k
