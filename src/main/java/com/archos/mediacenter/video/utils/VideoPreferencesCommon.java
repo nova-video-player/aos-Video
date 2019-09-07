@@ -117,8 +117,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_TRAKT_SYNC_COLLECTION = "trakt_sync_collection";
     public static final String KEY_HIDE_WATCHED = "hide_watched";
     public static final String KEY_CREATE_REMOTE_THUMBS = VideoProvider.PREFERENCE_CREATE_REMOTE_THUMBS;
-    
-    public static final boolean SHOW_WATCHING_UP_NEXT_ROW_DEFAULT = true;
+
+    // TODO: disabled until issue #186 is fixed
+    public static final boolean SHOW_WATCHING_UP_NEXT_ROW_DEFAULT = false;
     public static final boolean SHOW_LAST_ADDED_ROW_DEFAULT = true;
     public static final boolean SHOW_LAST_PLAYED_ROW_DEFAULT = true;
     public static final boolean SHOW_ALL_MOVIES_ROW_DEFAULT = false;

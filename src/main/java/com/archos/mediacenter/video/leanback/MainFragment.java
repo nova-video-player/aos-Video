@@ -92,6 +92,8 @@ import com.archos.mediaprovider.ImportState;
 import com.archos.mediaprovider.video.NetworkScannerReceiver;
 import com.archos.mediascraper.AutoScrapeService;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
+
 public class MainFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "MainFragment";
@@ -123,21 +125,24 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private ArrayObjectAdapter mRowsAdapter;
     private CursorObjectAdapter mMoviesAdapter;
     private CursorObjectAdapter mTvshowsAdapter;
-    private CursorObjectAdapter mWatchingUpNextAdapter;
+    // TODO: disabled until issue #186 is fixed
+    //private CursorObjectAdapter mWatchingUpNextAdapter;
     private CursorObjectAdapter mLastAddedAdapter;
     private CursorObjectAdapter mLastPlayedAdapter;
     private ArrayObjectAdapter mFileBrowsingRowAdapter;
     private ArrayObjectAdapter mPreferencesRowAdapter;
 
-    private ListRow mWatchingUpNextRow;
+    // TODO: disabled until issue #186 is fixed
+    //private ListRow mWatchingUpNextRow;
     private ListRow mLastAddedRow;
     private ListRow mLastPlayedRow;
     private ListRow mMoviesRow;
     private ListRow mTvshowsRow;
     private ListRow mMovieRow;
     private ListRow mTvshowRow;
-    
-    private boolean mShowWatchingUpNextRow;
+
+    // TODO: disabled until issue #186 is fixed
+    //private boolean mShowWatchingUpNextRow;
     private boolean mShowLastAddedRow;
     private boolean mShowLastPlayedRow;
     private boolean mShowMoviesRow;
@@ -197,7 +202,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         super.onActivityCreated(savedInstanceState);
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mShowWatchingUpNextRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_WATCHING_UP_NEXT_ROW, VideoPreferencesCommon.SHOW_WATCHING_UP_NEXT_ROW_DEFAULT);
+        // TODO: disabled until issue #186 is fixed
+        //mShowWatchingUpNextRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_WATCHING_UP_NEXT_ROW, VideoPreferencesCommon.SHOW_WATCHING_UP_NEXT_ROW_DEFAULT);
         mShowLastAddedRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_ADDED_ROW, VideoPreferencesCommon.SHOW_LAST_ADDED_ROW_DEFAULT);
         mShowLastPlayedRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_PLAYED_ROW, VideoPreferencesCommon.SHOW_LAST_PLAYED_ROW_DEFAULT);
         mShowMoviesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_MOVIES_ROW, VideoPreferencesCommon.SHOW_ALL_MOVIES_ROW_DEFAULT);
@@ -226,7 +232,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         setupEventListeners();
 
         loadRows();
-        LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
+        // TODO: disabled until issue #186 is fixed
+        //LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
         LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_LAST_ADDED, null, this);
         LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_LAST_PLAYED, null, this);
         
@@ -263,17 +270,21 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         getActivity().registerReceiver(mUpdateReceiver, mUpdateFilter);
 
-        LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_WATCHING_UP_NEXT).startLoading();
+        // TODO: disabled until issue #186 is fixed
+        //LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_WATCHING_UP_NEXT).startLoading();
         LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_LAST_ADDED).startLoading();
         LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_LAST_PLAYED).startLoading();
         LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_ALL_MOVIES).startLoading();
 
+        // TODO: disabled until issue #186 is fixed
+        /*
         boolean newShowWatchingUpNextRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_WATCHING_UP_NEXT_ROW, VideoPreferencesCommon.SHOW_WATCHING_UP_NEXT_ROW_DEFAULT);
 
         if (newShowWatchingUpNextRow != mShowWatchingUpNextRow) {
             mShowWatchingUpNextRow = newShowWatchingUpNextRow;
             updateWatchingUpNextRow(null);
         }
+         */
         
         boolean newShowLastAddedRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_ADDED_ROW, VideoPreferencesCommon.SHOW_LAST_ADDED_ROW_DEFAULT);
 
@@ -332,7 +343,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         mOverlay.pause();
         getActivity().unregisterReceiver(mUpdateReceiver);
 
-        LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_WATCHING_UP_NEXT).stopLoading();
+        // TODO: disabled until issue #186 is fixed
+        //LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_WATCHING_UP_NEXT).stopLoading();
         LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_LAST_ADDED).stopLoading();
         LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_LAST_PLAYED).stopLoading();
         LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_ALL_MOVIES).stopLoading();
@@ -383,9 +395,12 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         mRowsAdapter = new ArrayObjectAdapter(rowsPresenterSelector);
 
+        // TODO: disabled until issue #186 is fixed
+        /*
         mWatchingUpNextAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
         mWatchingUpNextAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
         mWatchingUpNextRow = new ListRow(ROW_ID_WATCHING_UP_NEXT, new HeaderItem(getString(R.string.watching_up_next)), mWatchingUpNextAdapter);
+         */
 
         mLastAddedAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
         mLastAddedAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
@@ -477,6 +492,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         }
     }
 
+    // TODO: disabled until issue #186 is fixed
+    /*
     private void updateWatchingUpNextRow(Cursor cursor) {
         if (cursor != null)
             mWatchingUpNextAdapter.changeCursor(cursor);
@@ -497,6 +514,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             }
         }
     }
+     */
 
     private void updateLastAddedRow(Cursor cursor) {
         if (cursor != null)
@@ -514,9 +532,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             if (currentPosition == -1) {
                 int newPosition = 0;
 
+                // TODO: disabled until issue #186 is fixed
+                /*
                 if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
                     newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
-                
+                 */
                 mRowsAdapter.add(newPosition, mLastAddedRow);
             }
         }
@@ -540,8 +560,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
                 if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
                     newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
-                else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
+                // TODO: disabled until issue #186 is fixed
+                /* else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
                     newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
+                 */
                 
                 mRowsAdapter.add(newPosition, mLastPlayedRow);
             }
@@ -566,8 +588,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
                 else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
                     newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
-                else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
+                // TODO: disabled until issue #186 is fixed
+                /* else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
                     newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
+                 */
                 
                 mRowsAdapter.add(newPosition, mMovieRow);
             }
@@ -582,8 +606,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
                 else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
                     newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
-                else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
+                // TODO: disabled until issue #186 is fixed
+                /* else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
                     newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
+                 */
                 
                 mRowsAdapter.add(newPosition, mMoviesRow);
             }
@@ -612,8 +638,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
                 else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
                     newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
-                else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
+                // TODO: disabled until issue #186 is fixed
+                /* else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
                     newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
+                 */
                 
                 mRowsAdapter.add(newPosition, mTvshowRow);
             }
@@ -632,9 +660,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
                 else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
                     newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
-                else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
+                // TODO: disabled until issue #186 is fixed
+                /* else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
                     newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
-                
+                 */
                 mRowsAdapter.add(newPosition, mTvshowsRow);
             }
         }
@@ -685,10 +714,13 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        // TODO: disabled until issue #186 is fixed
+        /*
         if (id == LOADER_ID_WATCHING_UP_NEXT) {
             return new WatchingUpNextLoader(getActivity());
         }
-        else if (id == LOADER_ID_LAST_ADDED) {
+        else */
+        if (id == LOADER_ID_LAST_ADDED) {
             return new LastAddedLoader(getActivity());
         }
         else if (id == LOADER_ID_LAST_PLAYED) {
@@ -717,13 +749,16 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         Log.d(TAG,"onLoadFinished() cursor id="+cursorLoader.getId());
+        // TODO: disabled until issue #186 is fixed
+        /*
         if (cursorLoader.getId() == LOADER_ID_WATCHING_UP_NEXT) {
             updateWatchingUpNextRow(cursor);
             
             if (mWatchingUpNextInitFocus == InitFocus.NOT_FOCUSED)
                 mWatchingUpNextInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
         }
-        else if (cursorLoader.getId() == LOADER_ID_LAST_ADDED) {
+        else */
+        if (cursorLoader.getId() == LOADER_ID_LAST_ADDED) {
             updateLastAddedRow(cursor);
             
             if (mLastAddedInitFocus == InitFocus.NOT_FOCUSED)
@@ -788,17 +823,21 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         NOT_FOCUSED, NO_NEED_FOCUS, NEED_FOCUS, FOCUSED
     }
 
-    private InitFocus mWatchingUpNextInitFocus = InitFocus.NOT_FOCUSED;
+    // TODO: disabled until issue #186 is fixed
+    //private InitFocus mWatchingUpNextInitFocus = InitFocus.NOT_FOCUSED;
     private InitFocus mLastAddedInitFocus = InitFocus.NOT_FOCUSED;
     private InitFocus mLastPlayedInitFocus = InitFocus.NOT_FOCUSED;
 
     private void checkInitFocus() {
+        // TODO: disabled until issue #186 is fixed
+        /*
         if (mWatchingUpNextInitFocus == InitFocus.NEED_FOCUS) {
             mWatchingUpNextInitFocus = InitFocus.FOCUSED;
             mLastAddedInitFocus = InitFocus.NO_NEED_FOCUS;
             mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
         }
-        else if (mLastAddedInitFocus == InitFocus.NEED_FOCUS) {
+        else */
+        if (mLastAddedInitFocus == InitFocus.NEED_FOCUS) {
             mLastAddedInitFocus = InitFocus.FOCUSED;
             mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
         }

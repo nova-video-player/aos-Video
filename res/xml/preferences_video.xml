@@ -10,6 +10,13 @@
             android:title="@string/upgrade_to_add_free_version"
             android:summary="@string/upgrade_to_add_free_version_description"
             app:iconSpaceReserved="false"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="enable_cutout_mode_short_edges"
+            android:persistent="true"
+            android:summary="@string/preference_cutout_short_edges_summary"
+            android:title="@string/preference_cutout_short_edges"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="preferences_category_video"
@@ -64,13 +71,6 @@
             app:iconSpaceReserved="false"/>
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="enable_cutout_mode_short_edges"
-            android:persistent="true"
-            android:summary="@string/preference_cutout_short_edges_summary"
-            android:title="@string/preference_cutout_short_edges"
-            app:iconSpaceReserved="false"/>
-        <CheckBoxPreference
-            android:defaultValue="false"
             android:key="activate_tv_switch"
             android:persistent="true"
             android:summary="@string/preference_tv_3d_automatic_switch_summary"
@@ -120,12 +120,13 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/preferences_leanback_user_interface" android:key="category_leanback_user_interface"
         app:iconSpaceReserved="false" >
-        <CheckBoxPreference
+        <!-- TODO: disabled until issue #186 is fixed -->
+        <!--CheckBoxPreference
             android:defaultValue="true"
             android:key="show_watching_up_next_row"
             android:summary="@string/preferences_show_watching_up_next_row_summary"
             android:title="@string/preferences_show_watching_up_next_row"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false"/-->
         
         <CheckBoxPreference
             android:defaultValue="true"

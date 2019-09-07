@@ -60,7 +60,8 @@ public class ChannelManager {
     private static ChannelManager mInstance;
     
     private final Context mContext;
-    private final String mWatchingUpNext;
+    // TODO: disabled until issue #186 is fixed
+    //private final String mWatchingUpNext;
     private final String mRecentlyAdded;
     private final String mRecentlyPlayed;
     private final String mAllMovies;
@@ -85,7 +86,8 @@ public class ChannelManager {
 
     public ChannelManager(Context context) {
         mContext = context;
-        mWatchingUpNext = mContext.getString(R.string.watching_up_next);
+        // TODO: disabled until issue #186 is fixed
+        //mWatchingUpNext = mContext.getString(R.string.watching_up_next);
         mRecentlyAdded = mContext.getString(R.string.recently_added);
         mRecentlyPlayed = mContext.getString(R.string.recently_played);
         mAllMovies = mContext.getString(R.string.all_movies);
@@ -231,8 +233,8 @@ public class ChannelManager {
 
         private void addInternalChannels() {
             LinkedHashMap<String, ChannelData> newChannels = new LinkedHashMap<>();
-            
-            addInternalChannel(newChannels, mWatchingUpNext);
+            // TODO: disabled until issue #186 is fixed
+            //addInternalChannel(newChannels, mWatchingUpNext);
             addInternalChannel(newChannels, mRecentlyAdded);
             addInternalChannel(newChannels, mRecentlyPlayed);
             addInternalChannel(newChannels, mAllMovies);
@@ -299,7 +301,8 @@ public class ChannelManager {
             String allMoviesSortOrder = prefs.getString(VideoPreferencesCommon.KEY_MOVIE_SORT_ORDER, MoviesLoader.DEFAULT_SORT);
             String allTvShowsSortOrder = prefs.getString(VideoPreferencesCommon.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
 
-            mChannels.get(mWatchingUpNext).setLoader(new WatchingUpNextLoader(mContext));
+            // TODO: disabled until issue #186 is fixed
+            //mChannels.get(mWatchingUpNext).setLoader(new WatchingUpNextLoader(mContext));
             mChannels.get(mRecentlyAdded).setLoader(new LastAddedLoader(mContext));
             mChannels.get(mRecentlyPlayed).setLoader(new LastPlayedLoader(mContext));
             mChannels.get(mAllMovies).setLoader(new MoviesLoader(mContext, allMoviesSortOrder, true, true));
