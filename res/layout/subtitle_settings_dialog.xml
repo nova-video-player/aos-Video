@@ -51,12 +51,13 @@
         android:textColor="#ffffffff"
         android:textSize="22sp"
         android:textStyle="bold" />
+
     <TextView
         android:id="@+id/subtitle_size_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/subtitles_settings_dialog_margin_small"
-        android:text="@string/subtitle_style_text" />
+        android:text="@string/subtitle_size_text" />
     <RelativeLayout
         android:id="@+id/seekbar_container"
         android:layout_width="match_parent"
