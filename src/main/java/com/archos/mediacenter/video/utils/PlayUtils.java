@@ -46,6 +46,8 @@ import java.io.IOException;
  */
 public class PlayUtils implements IndexHelper.Listener {
     private final static String TAG = "PlayUtils";
+    private static final boolean DBG = true;
+
     private IndexHelper mIndexHelper;
     private VideoDbInfo mVideoDbInfo;
     private int mResume;
@@ -230,12 +232,34 @@ public class PlayUtils implements IndexHelper.Listener {
                     dataUri = video.getStreamingUri();
                 }
                 intent.setDataAndType(dataUri, mimeType);
+
             }
             else {
                 // in case of a local file, need to rely on FileProvider since API24+ to avoid android.os.FileUriExposedException
                 File localFile = new File(video.getFileUri().getPath());
                 fileUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", localFile);
                 intent.setDataAndType(fileUri, mimeType);
+                // TODO: add support for 3rd party player subs here /!\ will only work for local files
+                // for vlc https://wiki.videolan.org/Android_Player_Intents/ subtitles_location path
+                // for mxplayer http://mx.j2inter.com/api subs android.net.Uri[], subs.name String[], subs.filename String[]
+                // mxplayer is clever enough for local files to find local subs, thus no need to implement it
+                final VideoMetadata videoMetadata = video.getMetadata();
+                if (videoMetadata!=null) {
+                    Boolean subFound = false;
+                    VideoMetadata.SubtitleTrack sub;
+                    int n = 0;
+                    // find first external subtitle file and pass it to vlc
+                    while (n < videoMetadata.getSubtitleTrackNb() && ! subFound) {
+                        sub = videoMetadata.getSubtitleTrack(n);
+                        if (sub.isExternal) {
+                            subFound = true;
+                            if (DBG) Log.d(TAG, "onResumeReady: adding external subtitle name=" + sub.name + ", path=" + sub.path);
+                            // vlc
+                            intent.putExtra("subtitles_location", sub.path);
+                        }
+                        n++;
+                    }
+                }
             }
         }
         //this differs from the file uri for upnp
