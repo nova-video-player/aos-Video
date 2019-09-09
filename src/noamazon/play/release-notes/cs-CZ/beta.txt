@@ -1,0 +1,3 @@
+Switch to AudioTrack instead of openSLES to solve audio/video delay
+Disable for now UpNext row/channel preventing display of indexed folders
+Upgrade trakt-java to solve two way sync

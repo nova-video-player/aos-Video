@@ -100,6 +100,15 @@ android {
     aaptOptions {
         additionalParameters "--no-version-vectors"
     }
+    flavorDimensions "amazon"
+    productFlavors {
+        amazon {
+            dimension "amazon"
+        }
+        noamazon {
+            dimension "amazon"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
@@ -151,7 +160,8 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
             def api = defaultConfig.minSdkVersion.apiLevel
-            outputFileName = outputFileName.replace("-release.apk", "-API_${api}+-release.apk")
+            outputFileName = outputFileName.replace("-noamazon-", "-")
+                    .replace("-release.apk", "-API_${api}+-release.apk")
                     .replace("-debug.apk", "-API_${api}+-debug.apk")
             variant.getAssembleProvider().configure() {
                 it.doLast {
