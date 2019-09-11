@@ -701,7 +701,8 @@
    <string name="codepage_1250">Eastern European (CP1250)</string>
    <string name="codepage_1251">Cyrillic (CP1251)</string>
    <string name="codepage_1252">Western European (CP1252)</string>
-   <string name="codepage_1253">Greek (CP1253)</string>
+    <string name="codepage_28606">Southern European (CP28606)</string>
+    <string name="codepage_1253">Greek (CP1253)</string>
    <string name="codepage_1254">Turkish (CP1254)</string>
    <string name="codepage_1255">Hebrew (CP1255)</string>
    <string name="codepage_1256">Arabic (CP1256)</string>
@@ -722,7 +723,6 @@
    <string name="codepage_extra_1256">(CP1256)</string>
    <string name="codepage_extra_1257">(CP1257)</string>
    <string name="codepage_extra_1258">(CP1258)</string>
-
 
    <string name="torrent_category">Torrent</string>
    <string name="torrent_path">Download path</string>

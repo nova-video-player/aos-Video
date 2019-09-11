@@ -162,6 +162,7 @@
         <item>@string/codepage_1250</item> <!-- Eastern European (CP1250) -->
         <item>@string/codepage_1251</item> <!-- Cyrillic (CP1251) -->
         <item>@string/codepage_1252</item> <!-- Western European (CP1252) -->
+        <item>@string/codepage_28606</item> <!-- Eastern European (CP28606) -->
         <item>@string/codepage_1253</item> <!-- Greek (CP1253) -->
         <item>@string/codepage_1254</item> <!-- Turkish (CP1254) -->
         <item>@string/codepage_1255</item> <!-- Hebrew (CP1255) -->
