@@ -633,6 +633,7 @@
     <string name="codepage_1250">Europe de l’Est (CP1250)</string>
     <string name="codepage_1251">Cyrillique (CP1251)</string>
     <string name="codepage_1252">Europe de l’Ouest (CP1252)</string>
+    <string name="codepage_28606">Europe du Sud (CP28606)</string>
     <string name="codepage_1253">Grec (CP1253)</string>
     <string name="codepage_1254">Turc (CP1254)</string>
     <string name="codepage_1255">Hébreu (CP1255)</string>

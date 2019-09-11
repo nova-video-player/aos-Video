@@ -272,6 +272,7 @@
     <string name="pref_s3d_mode_entry_off">Выкл</string>
     <string name="menu_info">Информация</string>
     <string name="menu_audio">Звуковая дорожка</string>
+    <string name="menu_lock_player">Заблокировать плеер</string>
     <string name="menu_bookmark">Установить закладку</string>
     <string name="menu_brightness_settings">Яркость</string>
     <string name="menu_player_settings">Настройки</string>
@@ -359,6 +360,7 @@
     <string name="subtitles_wizard_empty_list">Файл не найден</string>
     <string name="subtitles_wizard_add_files">Вы можете скопировать больше субтитров в эту папку, чтобы связать их с этим видео.</string>
     <string name="subtitles_wizard_help">Выберите любой из доступных файлов субтитров, чтобы связать его с видео %s. Файл будет переименован в соответствии с именем видео.</string>
+    <string name="subtitles_wizard_empty_list_help">Файлы субтитров не найдены. Вы должны скопировать в эту папку один или несколько файлов субтитров, чтобы связать их с видео %s.</string>
     <string name="subtitles_wizard_cache">Кэш</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Получить субтитры онлайн</string>
@@ -457,9 +459,12 @@
     <string name="preferences_category_video">Видео</string>
     <string name="preferences_force_software_decoding">Принудительное программное декодирование</string>
     <string name="preferences_force_software_decoding_summary">Вы можете попробовать эту опцию, если некоторые видео проигрываются не правильно</string>
+    <string name="preferences_force_audio_passthrough">Прямой проброс звука</string>
     <string name="preferences_force_audio_passthrough_disabled">Отключено</string>
     <string name="preferences_force_audio_passthrough_enable">Режим 1</string>
     <string name="preferences_force_audio_passthrough_enable2">Режим 2</string>
+    <string name="preferences_force_audio_passthrough_summary">Передавать сжатый звук по HDMI и S/PDIF</string>
+    <string name="preferences_disable_downmix_title">Запретить даунмикс звука в стерео</string>
     <string name="preferences_allow_3rd_party_player">Разрешить использование другого видео-плеера</string>
     <string name="preference_tv_3d_automatic_switch_summary">Используйте эту функцию только если ваш 3D TV поддерживает ее</string>
     <string name="category_languages">Субтитры</string>
@@ -485,14 +490,21 @@
     <!--  Title of the video picker activity. -->
     <string name="video_picker_title">Выбрать видео</string>
     <!-- Archos File Info -->
+    <string name="video_info_backdrop_select">Выбрать другое изображение</string>
     <string name="video_info_backdrop_remove">Удалить</string>
     <string name="video_info_backdrop_set_as">Установить изображение как</string>
     <string name="video_info_share_message">"Я смотрю видео \"%1$s\" на своем Nova %2$s"</string>
     <string name="notification_mode">Уведомления</string>
     <string name="notifications_all">Все уведомления</string>
+    <string name="notifications_none">Без уведомлений</string>
     <string name="pref_format_mode_title">Формат</string>
     <string name="format_fullscreen">На весь экран</string>
+    <string name="format_optimized">Оптимизировано</string>
+    <string name="format_original">Оригинал</string>
+    <string name="network_reindex">Пересканировать содержимое</string>
     <!-- Help overlay -->
+    <string name="new_videos_count">Новые видео: %d</string>
+    <string name="new_videos_scrape_message">У вас есть новые видео, которые пока не имеют описания и постеров.</string>
     <string name="connection_reset">Сброс</string>
     <!-- Info dialog, not indexed file -->
     <string name="video_info_unindexed_message">Этот файл в настоящее время не индексирован в вашей видеобиблиотеке.\nПоиск постеров и информации доступен только для индексированных файлов.\nВы хотите индексировать его сейчас?</string>
