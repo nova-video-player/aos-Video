@@ -22,6 +22,7 @@ import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
@@ -142,7 +143,10 @@ public class SubtitleManager {
                     mTextShadowSpan = new TextShadowSpan(shadowRadius, shadowDx, shadowDy, shadowColor);
                 }
                 mSpannableStringBuilder.clear();
-                mSpannableStringBuilder.append(Html.fromHtml(cleanText(subtitle.getText()), 0));
+                if (Build.VERSION.SDK_INT >= 24)
+                    mSpannableStringBuilder.append(Html.fromHtml(cleanText(subtitle.getText()), Html.FROM_HTML_MODE_LEGACY));
+                else
+                    mSpannableStringBuilder.append(Html.fromHtml(cleanText(subtitle.getText())));
                 if (mSpannableStringBuilder.length() > 0) {
                     // Html.fromHtml override shadow style, so add a shadowSpan for whole text.
                     mSpannableStringBuilder.setSpan(mTextShadowSpan, 0, mSpannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);

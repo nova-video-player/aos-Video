@@ -30,6 +30,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import androidx.preference.PreferenceManager;
 import android.text.Html;
@@ -739,7 +740,10 @@ public class SubtitlesDownloaderActivity extends Activity{
 
             }
             View view = LayoutInflater.from(SubtitlesDownloaderActivity.this).inflate(R.layout.subtitle_chooser_title_layout, null);
-            ((TextView) view.findViewById(R.id.video_name)).setText(Html.fromHtml(getString(R.string.select_sub_file, getFriendlyFilename(videoFilePath))));
+            if (Build.VERSION.SDK_INT >= 24)
+                ((TextView) view.findViewById(R.id.video_name)).setText(Html.fromHtml(getString(R.string.select_sub_file, getFriendlyFilename(videoFilePath)), Html.FROM_HTML_MODE_LEGACY));
+            else
+                ((TextView) view.findViewById(R.id.video_name)).setText(Html.fromHtml(getString(R.string.select_sub_file, getFriendlyFilename(videoFilePath))));
             new AlertDialog.Builder(SubtitlesDownloaderActivity.this)
                     .setCustomTitle(view)
                     .setAdapter(new BaseAdapter() {

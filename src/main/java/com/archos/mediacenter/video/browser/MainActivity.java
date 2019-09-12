@@ -842,10 +842,16 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                                     .getColumnIndex(ScraperStore.AllVideos.EPISODE_NAME);
                             String episodeName = String.format(getString(R.string.quotation_format),
                                     scraperCursor.getString(index_episode_name));
-                            name = Html.fromHtml(String.format(TITLE_FORMAT,
-                                    scraperCursor.getString(index_name),
-                                    scraperCursor.getInt(index_season),
-                                    scraperCursor.getInt(index_number), episodeName));
+                            if (Build.VERSION.SDK_INT >= 24)
+                                name = Html.fromHtml(String.format(TITLE_FORMAT,
+                                        scraperCursor.getString(index_name),
+                                        scraperCursor.getInt(index_season),
+                                        scraperCursor.getInt(index_number), episodeName), Html.FROM_HTML_MODE_LEGACY);
+                            else
+                                name = Html.fromHtml(String.format(TITLE_FORMAT,
+                                        scraperCursor.getString(index_name),
+                                        scraperCursor.getInt(index_season),
+                                        scraperCursor.getInt(index_number), episodeName));
 
                         }
                     } // else: cursor is empty -> no thumbnail

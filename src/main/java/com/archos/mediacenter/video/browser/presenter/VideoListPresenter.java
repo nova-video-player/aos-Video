@@ -67,7 +67,7 @@ public class VideoListPresenter extends VideoPresenter{
         if (name.endsWith(ITALIC)&&holder.name!=null) {
             Spanned htmlName = null;
             if (Build.VERSION.SDK_INT >= 24) {
-                htmlName = Html.fromHtml(name, 0);
+                htmlName = Html.fromHtml(name, Html.FROM_HTML_MODE_LEGACY);
             } else {
                 htmlName = Html.fromHtml(name);
             }

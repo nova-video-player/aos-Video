@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.text.Html;
 import android.text.TextUtils.TruncateAt;
 import android.util.Log;
@@ -149,7 +150,10 @@ public class EpisodeInfo extends BaseInfo {
                 // Append the episode name in italics: " <<episode name>>"
                 String episodeNameFormat = context.getString(R.string.quotation_format);
                 String episodeName = String.format(episodeNameFormat, mEpisodeTitle);
-                return Html.fromHtml(ret + " <i>" + episodeName + "</i>", 0);
+                if (Build.VERSION.SDK_INT >= 24)
+                    return Html.fromHtml(ret + " <i>" + episodeName + "</i>", Html.FROM_HTML_MODE_LEGACY);
+                else
+                    return Html.fromHtml(ret + " <i>" + episodeName + "</i>");
             }
         }
         return ret;
