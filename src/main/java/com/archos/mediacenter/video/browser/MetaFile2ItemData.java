@@ -21,36 +21,20 @@ import com.archos.mediacenter.utils.UpnpItemData;
  * Created by alexandre on 30/04/15.
  */
 public class MetaFile2ItemData extends ItemData {
-    private final static String TAG = "SshItemData";
+    private final static String TAG = "MetaFile2ItemData";
     protected MetaFile2 mMetafile;
-
 
     public MetaFile2ItemData(MetaFile2 metafile) {
         super();
         this.mMetafile = metafile;
     }
-    @Override
+
     public int getType() {
         return ITEM_VIEW_TYPE_FILE;
     }
-    @Override
+
     public Object getData() {
         return null;
-    }
-
-    @Override
-    public String getTextData() {
-        return mMetafile.getName();
-    }
-
-    @Override
-    public UpnpItemData getUpnpItemData() {
-        return null;
-    }
-
-    @Override
-    public boolean isTextItem() {
-        return false;
     }
 
     @Override
@@ -65,11 +49,6 @@ public class MetaFile2ItemData extends ItemData {
 
     @Override
     public String getPath() {
-        return mMetafile.getUri().toString();
-    }
-
-    @Override
-    public String getIndexablePath() {
         return mMetafile.getUri().toString();
     }
 

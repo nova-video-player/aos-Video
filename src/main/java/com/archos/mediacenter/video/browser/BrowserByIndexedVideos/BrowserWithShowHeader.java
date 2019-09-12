@@ -67,6 +67,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     private static final boolean DBG = false;
     private static final String TAG = "BrowserWithShowHeader";
 
+    private static final boolean DBG = false;
     static final private String BROWSER_SHOW = BrowserListOfEpisodes.class.getName();
     public static final String EXTRA_SHOW_ITEM = "show_item";
     private final static int SUBMENU_ITEM_LIST_INDEX = 0;

@@ -63,7 +63,9 @@ import android.widget.Toast;
 
 import com.archos.environment.ArchosSettings;
 import com.archos.environment.ArchosUtils;
-import com.archos.filecorelibrary.MetaFile;
+import com.archos.filecorelibrary.MetaFile2;
+import com.archos.filecorelibrary.MetaFile2Factory;
+import com.archos.filecorelibrary.localstorage.JavaFile2;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.imageview.ChainProcessor;
 import com.archos.mediacenter.utils.imageview.ImageProcessor;
@@ -88,6 +90,7 @@ import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.preprocess.SearchInfo;
 import com.archos.mediascraper.preprocess.SearchPreprocessor;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -451,7 +454,7 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
         int position = adapterMenuInfo.position;
         mActivityFileCursor.moveToPosition(position);
         String path = mActivityFileCursor.getString(mDataIndex);
-        MetaFile file = MetaFile.from(path);
+        MetaFile2 file = new JavaFile2(new File(path));
         menu.setHeaderTitle(file.getName());
 
         // Add the context menu items
@@ -469,7 +472,7 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
         int menuId = item.getItemId();
         if (menuId == R.string.info) {
             // Ask to display the info dialog with the "online update" feature disabled
-            MetaFile file = MetaFile.from(mContextMenuPath);
+            MetaFile2 file = new JavaFile2(new File(mContextMenuPath));
             Intent intent = new Intent(this, VideoInfoActivity.class);
             intent.setData(file.getUri());
             intent.putExtra(VideoInfoActivity.EXTRA_NO_ONLINE_UPDATE, true);

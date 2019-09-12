@@ -60,7 +60,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.archos.filecorelibrary.MetaFile.FileType;
+import com.archos.filecorelibrary.FileExtendedInfo;
 import com.archos.mediacenter.utils.ActionBarSubmenu;
 import com.archos.mediacenter.utils.ActionBarSubmenu.ActionBarSubmenuListener;
 import com.archos.mediacenter.utils.ThumbnailEngine;
@@ -411,7 +411,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                         // Check that there is a visible "expander" in the selected list item
                         View expandView = selectedView.findViewById(R.id.expanded);
                         if ((expandView != null) && (expandView.getVisibility() == View.VISIBLE)) {
-                            if (getFileType(list.getSelectedItemPosition()) == FileType.SmbDir)
+                            if (getFileType(list.getSelectedItemPosition()) == FileExtendedInfo.FileType.SmbDir)
                                 return false;
                             expandView.requestFocus(); //test
                             displayInfo(list.getSelectedItemPosition());
@@ -711,7 +711,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     /**
      * Check the file type at this position
      */
-    abstract public FileType getFileType(int position);
+    abstract public FileExtendedInfo.FileType getFileType(int position);
 
     /**
      * Return the number of files (including the folders!)
