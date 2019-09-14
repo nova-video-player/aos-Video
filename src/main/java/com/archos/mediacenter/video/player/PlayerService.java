@@ -635,8 +635,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             prepareSubs();
         if(mPlayerFrontend!=null)
             mPlayerFrontend.setUri(mUri, mStreamingUri);
-
-        mPlayer.setVideoURI(mStreamingUri, null);
+        new Thread(() -> {
+            mPlayer.setVideoURI(mStreamingUri, null);
+        }).start();
     }
 
     public void setPlayer(){
