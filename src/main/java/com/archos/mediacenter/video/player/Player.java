@@ -431,51 +431,53 @@ public class Player implements IPlayerControl,
             mResumeCtx.setSeek(mStopPosition);
             mStopPosition = -1;
         }
-        try {
-            mMediaPlayer = MediaFactory.createPlayer(mContext, mForceSoftwareDecoding);
-            mMediaPlayer.setOnPreparedListener(this);
-            mMediaPlayer.setOnCompletionListener(this);
-            mMediaPlayer.setOnInfoListener(this);
-            mMediaPlayer.setOnErrorListener(this);
-            mMediaPlayer.setOnBufferingUpdateListener(this);
-            mMediaPlayer.setOnRelativePositionUpdateListener(this);
-            mMediaPlayer.setOnSeekCompleteListener(this);
-            mMediaPlayer.setOnVideoSizeChangedListener(this);
-            mMediaPlayer.setOnSubtitleListener(this);
-            mDuration = -1;
-            if (mExtraMap != null)
-                mMediaPlayer.setDataSource(mContext, mUri, mExtraMap);
-            else
-                mMediaPlayer.setDataSource(mContext, mUri);
-            if (mSurfaceHolder != null) {
-                mMediaPlayer.setDisplay(mSurfaceHolder);
-                hasBeenSet=true;
+        new Thread(() -> {
+            try {
+                mMediaPlayer = MediaFactory.createPlayer(mContext, mForceSoftwareDecoding);
+                mMediaPlayer.setOnPreparedListener(this);
+                mMediaPlayer.setOnCompletionListener(this);
+                mMediaPlayer.setOnInfoListener(this);
+                mMediaPlayer.setOnErrorListener(this);
+                mMediaPlayer.setOnBufferingUpdateListener(this);
+                mMediaPlayer.setOnRelativePositionUpdateListener(this);
+                mMediaPlayer.setOnSeekCompleteListener(this);
+                mMediaPlayer.setOnVideoSizeChangedListener(this);
+                mMediaPlayer.setOnSubtitleListener(this);
+                mDuration = -1;
+                if (mExtraMap != null)
+                    mMediaPlayer.setDataSource(mContext, mUri, mExtraMap);
+                else
+                    mMediaPlayer.setDataSource(mContext, mUri);
+                if (mSurfaceHolder != null) {
+                    mMediaPlayer.setDisplay(mSurfaceHolder);
+                    hasBeenSet=true;
+                }
+                else if (mVideoTexture != null) {
+                    Surface surface = new Surface(mVideoTexture);
+                    mMediaPlayer.setSurface(surface);
+                    surface.release();
+                }
+                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mMediaPlayer.setScreenOnWhilePlaying(true);
+                if (mResumeCtx.getSeek() != -1 && !mSurfaceController.supportOpenGLVideoEffect()) {
+                    if (mMediaPlayer.setStartTime(mResumeCtx.getSeek()))
+                        mResumeCtx.setSeek(-1);
+                }
+                mMediaPlayer.prepareAsync();
+                // we don't set the target state here either, but preserve the
+                // target state that was there before.
+                mCurrentState = STATE_PREPARING;
+            } catch (IOException ex) {
+                onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, null);
+                return;
+            } catch (IllegalArgumentException ex) {
+                onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, null);
+                return;
+            } catch (IllegalStateException ex) {
+                onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, null);
+                return;
             }
-            else if (mVideoTexture != null) {
-                Surface surface = new Surface(mVideoTexture);
-                mMediaPlayer.setSurface(surface);
-                surface.release();
-            }
-            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mMediaPlayer.setScreenOnWhilePlaying(true);
-            if (mResumeCtx.getSeek() != -1 && !mSurfaceController.supportOpenGLVideoEffect()) {
-                if (mMediaPlayer.setStartTime(mResumeCtx.getSeek()))
-                    mResumeCtx.setSeek(-1);
-            }
-            mMediaPlayer.prepareAsync();
-            // we don't set the target state here either, but preserve the
-            // target state that was there before.
-            mCurrentState = STATE_PREPARING;
-        } catch (IOException ex) {
-            onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, null);
-            return;
-        } catch (IllegalArgumentException ex) {
-            onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, null);
-            return;
-        } catch (IllegalStateException ex) {
-            onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, null);
-            return;
-        }
+        }).start();
     }
 
     /*
