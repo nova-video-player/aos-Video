@@ -1,5 +1,5 @@
 Fix HEVC decoding for some files on MTK based devices
 Do not revert on SW decoding in presence of high bitrate spike occurring on some 4k high bitrate videos
-Switch to AudioTrack instead of openSLES to solve audio/video delay
+Switch to AudioTrack instead of openSLES to solve audio/video delay on amlogic based devices
 Disable for now UpNext row/channel preventing display of indexed folders
-Upgrade trakt-java to solve two way sync
+Upgrade trakt-java to solve two ways sync
