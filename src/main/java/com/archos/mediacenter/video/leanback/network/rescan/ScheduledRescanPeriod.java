@@ -121,7 +121,7 @@ public class ScheduledRescanPeriod extends GuidedStepSupportFragment {
         final int currentId = getIdFromPeriod(sPeriod);
 
         for (long id : new long[] {DO_NOT_ID, ONCE_A_DAY_ID, TWICE_A_DAY_ID, EVERY_6_HOURS_ID, EVERY_2_HOURS_ID, EVERY_HOUR_ID}) {
-            actions.add(new GuidedAction.Builder()
+            actions.add(new GuidedAction.Builder(getActivity())
                     .id(id)
                     .checkSetId(RescanFragment.SCHEDULED_RESCAN_PERIOD_ID)
                     .checked(id == currentId)

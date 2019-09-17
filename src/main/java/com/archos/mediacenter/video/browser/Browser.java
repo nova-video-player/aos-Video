@@ -33,6 +33,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Parcelable;
+
+import androidx.core.widget.TextViewCompat;
 import androidx.preference.PreferenceManager;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -565,7 +567,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                 emptyView.setVisibility(View.VISIBLE);
                 // Update the text of the empty view
                 TextView emptyViewText = (TextView)emptyView.findViewById(R.id.empty_view_text);
-                emptyViewText.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
+                TextViewCompat.setTextAppearance(emptyViewText, android.R.style.TextAppearance_Medium);
                 emptyViewText.setText(R.string.loading);
                 // Check if a button is needed in the empty view
                 Button emptyViewButton = (Button)emptyView.findViewById(R.id.empty_view_button);
@@ -596,7 +598,8 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             emptyView.setVisibility(View.VISIBLE);
             // Update the text of the empty view
             TextView emptyViewText = (TextView)emptyView.findViewById(R.id.empty_view_text);
-            emptyViewText.setTextAppearance(getActivity(), android.R.style.TextAppearance_Large);
+            TextViewCompat.setTextAppearance(emptyViewText, android.R.style.TextAppearance_Large);
+
             emptyViewText.setText(R.string.network_timeout);
             // Check if a button is needed in the empty view
             Button emptyViewButton = (Button)emptyView.findViewById(R.id.empty_view_button);
@@ -634,7 +637,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             if (emptyView != null) {
                 // Update the text of the empty view
                 TextView emptyViewText = (TextView)emptyView.findViewById(R.id.empty_view_text);
-                emptyViewText.setTextAppearance(getActivity(), android.R.style.TextAppearance_Large);
+                TextViewCompat.setTextAppearance(emptyViewText, android.R.style.TextAppearance_Large);
                 emptyViewText.setText(getEmptyMessage());
                 // Check if a button is needed in the empty view
                 Button emptyViewButton = (Button)emptyView.findViewById(R.id.empty_view_button);

@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.leanback.network.rescan;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
@@ -103,7 +104,7 @@ public class ScheduledRescanTime extends GuidedStepSupportFragment {
             }
             Intent intent = new Intent();
             intent.putExtra("START",t);
-            actions.add(new GuidedAction.Builder()
+            actions.add(new GuidedAction.Builder(getActivity())
                     .id(RESCAN_TIME_ID + t)
                     .checkSetId(RESCAN_TIME_ID)
                     .checked(t == sTime) //TODO

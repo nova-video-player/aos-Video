@@ -73,27 +73,27 @@ public class RescanFragment extends GuidedStepSupportFragment implements Network
     @Override
     public void onCreateActions(@NonNull List<GuidedAction> actions, Bundle savedInstanceState) {
 
-        actions.add(new GuidedAction.Builder()
+        actions.add(new GuidedAction.Builder(getActivity())
                 .id(MANUAL_RESCAN_ID)
                 .title(getString(R.string.rescan_now))
                 .description(getString(R.string.rescan_now_description))
                 .build());
 
-        actions.add(new GuidedAction.Builder()
+        actions.add(new GuidedAction.Builder(getActivity())
                 .id(SCHEDULED_RESCAN_PERIOD_ID)
                 .title(getString(R.string.scheduled_rescan))
                 .description("") //updated in onCreateView()
                 .hasNext(true)
                 .build());
 
-        actions.add(new GuidedAction.Builder()
+        actions.add(new GuidedAction.Builder(getActivity())
                 .id(RESCAN_WHEN_OPENING_ID)
                 .title(getString(R.string.rescan_when_opening_application))
                 .description("")  //updated in onCreateView()
                 .hasNext(true)
                 .build());
 
-        actions.add(new GuidedAction.Builder()
+        actions.add(new GuidedAction.Builder(getActivity())
                 .id(LAST_RESCAN_ID)
                 .title(getString(R.string.last_rescan_occured))
                 .description("") //updated in refreshLastRescanAction()

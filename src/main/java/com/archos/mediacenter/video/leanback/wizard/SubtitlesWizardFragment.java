@@ -1,6 +1,7 @@
 package com.archos.mediacenter.video.leanback.wizard;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -117,7 +118,7 @@ public class SubtitlesWizardFragment extends GuidedStepSupportFragment {
         mFiles.clear();
 
         if (mWizardCommon.getCurrentFilesCount() == 0 && mWizardCommon.getAvailableFilesCount() == 0) {
-            actions.add(new GuidedAction.Builder()
+            actions.add(new GuidedAction.Builder(getActivity())
                 .id(NO_FILE_MESSAGE_ID)
                 .title(getString(R.string.subtitles_wizard_no_files))
                 .multilineDescription(true)
@@ -125,7 +126,7 @@ public class SubtitlesWizardFragment extends GuidedStepSupportFragment {
                 .build());
         }
         else {
-            actions.add(new GuidedAction.Builder()
+            actions.add(new GuidedAction.Builder(getActivity())
                 .id(CURRENT_TITLE_ID)
                 .icon(ContextCompat.getDrawable(getActivity(), R.drawable.wizard_dot))
                 .title(getString(R.string.subtitles_wizard_current_files))
@@ -133,7 +134,7 @@ public class SubtitlesWizardFragment extends GuidedStepSupportFragment {
                 .build());
 
             if (mWizardCommon.getCurrentFilesCount() == 0) {
-                actions.add(new GuidedAction.Builder()
+                actions.add(new GuidedAction.Builder(getActivity())
                     .id(NO_CURRENT_MESSAGE_ID)
                     .title(getString(R.string.subtitles_wizard_empty_list))
                     .multilineDescription(true)
@@ -149,7 +150,7 @@ public class SubtitlesWizardFragment extends GuidedStepSupportFragment {
                     ActionData deleteData = new ActionData(true, fileId);
 
                     mActions.put(deleteId, deleteData);
-                    subActions.add(new GuidedAction.Builder()
+                    subActions.add(new GuidedAction.Builder(getActivity())
                         .id(deleteId)
                         .title(getString(R.string.subtitles_wizard_delete))
                         .build());
@@ -158,7 +159,7 @@ public class SubtitlesWizardFragment extends GuidedStepSupportFragment {
                     FileData fileData = new FileData(true, i, path);
 
                     mFiles.put(fileId, fileData);
-                    actions.add(new GuidedAction.Builder()
+                    actions.add(new GuidedAction.Builder(getActivity())
                         .id(fileId)
                         .title(mWizardCommon.getFileName(path))
                         .description(mWizardCommon.getFileSize(path) + (mWizardCommon.isCacheFile(path) ? " - " + getString(R.string.subtitles_wizard_cache) : ""))
@@ -168,7 +169,7 @@ public class SubtitlesWizardFragment extends GuidedStepSupportFragment {
                 }
             }
 
-            actions.add(new GuidedAction.Builder()
+            actions.add(new GuidedAction.Builder(getActivity())
                 .id(AVAILABLE_TITLE_ID)
                 .icon(ContextCompat.getDrawable(getActivity(), R.drawable.wizard_dot))
                 .title(getString(R.string.subtitles_wizard_available_files))
@@ -176,7 +177,7 @@ public class SubtitlesWizardFragment extends GuidedStepSupportFragment {
                 .build());
 
             if (mWizardCommon.getAvailableFilesCount() == 0) {
-                actions.add(new GuidedAction.Builder()
+                actions.add(new GuidedAction.Builder(getActivity())
                     .id(NO_AVAILABLE_MESSAGE_ID)
                     .title(getString(R.string.subtitles_wizard_empty_list) + ". " + getString(R.string.subtitles_wizard_add_files))
                     .multilineDescription(true)
@@ -192,7 +193,7 @@ public class SubtitlesWizardFragment extends GuidedStepSupportFragment {
                     ActionData associateData = new ActionData(false, fileId);
 
                     mActions.put(associateId, associateData);
-                    subActions.add(new GuidedAction.Builder()
+                    subActions.add(new GuidedAction.Builder(getActivity())
                         .id(associateId)
                         .title(getString(R.string.subtitles_wizard_associate))
                         .build());
@@ -201,7 +202,7 @@ public class SubtitlesWizardFragment extends GuidedStepSupportFragment {
                     ActionData deleteData = new ActionData(true, fileId);
 
                     mActions.put(deleteId, deleteData);
-                    subActions.add(new GuidedAction.Builder()
+                    subActions.add(new GuidedAction.Builder(getActivity())
                         .id(deleteId)
                         .title(getString(R.string.subtitles_wizard_delete))
                         .build());
@@ -210,13 +211,13 @@ public class SubtitlesWizardFragment extends GuidedStepSupportFragment {
                     FileData fileData = new FileData(false, i, path);
 
                     mFiles.put(fileId, fileData);
-                    actions.add(new GuidedAction.Builder()
-                        .id(fileId)
-                        .title(mWizardCommon.getFileName(path))
-                        .description(mWizardCommon.getFileSize(path) + (mWizardCommon.isCacheFile(path) ? " - " + getString(R.string.subtitles_wizard_cache) : ""))
-                        .multilineDescription(true)
-                        .subActions(subActions)
-                        .build());
+                    actions.add(new GuidedAction.Builder(getActivity())
+                            .id(fileId)
+                            .title(mWizardCommon.getFileName(path))
+                            .description(mWizardCommon.getFileSize(path) + (mWizardCommon.isCacheFile(path) ? " - " + getString(R.string.subtitles_wizard_cache) : ""))
+                            .multilineDescription(true)
+                            .subActions(subActions)
+                            .build());
                 }
             }
         }

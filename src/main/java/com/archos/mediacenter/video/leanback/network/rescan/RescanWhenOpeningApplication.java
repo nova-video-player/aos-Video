@@ -56,13 +56,13 @@ public class RescanWhenOpeningApplication extends GuidedStepSupportFragment {
     @Override
     public void onCreateActions(@NonNull List<GuidedAction> actions, Bundle savedInstanceState) {
         sGeneralSwitch = NetworkAutoRefresh.autoRescanAtStart(getActivity());
-        actions.add(new GuidedAction.Builder()
+        actions.add(new GuidedAction.Builder(getActivity())
                 .id(RESCAN_WHEN_OPENING_NO_ID)
                 .checkSetId(RescanFragment.RESCAN_WHEN_OPENING_ID)
                 .checked(!isOn())
                 .title(getString(R.string.no))
                 .build());
-        actions.add(new GuidedAction.Builder()
+        actions.add(new GuidedAction.Builder(getActivity())
                 .id(RESCAN_WHEN_OPENING_YES_ID)
                 .checkSetId(RescanFragment.RESCAN_WHEN_OPENING_ID)
                 .checked(isOn())
