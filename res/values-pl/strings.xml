@@ -49,7 +49,9 @@
     <string name="video_sources">Źródła</string>
     <!-- Infos dialog tabs -->
     <string name="info_tab_movie">Film</string>
+    <string name="info_tab_show">Serie Tv</string>
     <string name="info_tab_episode">Odcinek</string>
+    <string name="info_tab_video">Wideo</string>
     <string name="info_tab_file">Informacje o pliku</string>
     <string name="info_tab_backdrop_chooser">Wybór tapet</string>
     <string name="info_tab_poster_chooser">Wybór plakatu</string>
@@ -196,6 +198,7 @@
     <string name="scraper_no_movie_button_label">Wyszukaj informacje o filmie online</string>
     <string name="scraper_no_tv_show_text">Nie masz aktualnie plakatu ani opisu dla twoich seriali</string>
     <string name="scraper_no_tv_show_button_label">Wyszukaj informacje o serialu online</string>
+    <string name="imdb_title_url">https://www.imdb.com/title/</string>
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="storage">Pamięć wewnętrzna</string>
     <string name="rescan_storage">Ponowne skanowanie pamięci masowej</string>

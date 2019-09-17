@@ -476,6 +476,7 @@ Copertina (rotolo di copertina)</string>
     <string name="preferences_force_audio_passthrough_enable">Mode 1</string>
     <string name="preferences_force_audio_passthrough_enable2">Mode 2</string>
     <string name="preferences_force_audio_passthrough_summary">Per la connessione HDMI e S/PDIF, trasmetti audio compresso</string>
+    <string name="preferences_disable_downmix_summary">Decodifica sempre tutti i canali e permetti il downmix di Android a seconda della capacità di uscita audio (si potrebbe avere interruzione dei canali vocali)</string>
     <string name="preferences_allow_3rd_party_player">Consenti l\'utilizzo di un altro lettore video</string>
     <string name="preferences_allow_3rd_party_player_summary">Altri lettori video verranno proposti da Android durante la riproduzione di un filmato. Alcune funzioni potrebbero non funzionare (riprendi, segnalibri, etc.)</string>
     <string name="preference_tv_3d_automatic_switch">Abilita lo switch 3D automatico</string>
@@ -581,6 +582,7 @@ Copertina (rotolo di copertina)</string>
     <string name="sort_by_rating_asc">Ordina per valutazione (prima i migliori)</string>
     <string name="sort_by_date_added_desc">Ordina per data di aggiunta (prima i più nuovi)</string>
     <string name="sort_by_date_added_asc">Ordina per data di aggiunta (prima i più vecchi)</string>
+    <string name="sort_by_date_played_desc">Ordina per data di esecuzione (prima i più nuovi)</string>
     <string name="sort_by_date_premiered_desc">Ordina per data di messa in onda (prima i più nuovi)</string>
     <string name="sort_by_date_premiered_asc">Ordina per data di messa in onda (prima i più vecchi)</string>
     <string name="sort_by_recently_added_episode_desc">Prima gli episodi aggiunti di recente</string>

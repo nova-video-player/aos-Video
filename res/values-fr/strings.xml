@@ -819,4 +819,6 @@
     <string name="warning_swdec">Attention: décodage matériel désactivé!</string>
     <string name="list_title">Liste de titres</string>
     <string name="loading">Chargement en cours…</string>
+    <string name="app_id">08FEA4DD</string>
+    <string name="app_id_surface">C44FB232</string>
 </resources>

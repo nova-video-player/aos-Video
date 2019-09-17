@@ -633,6 +633,7 @@
     <string name="codepage_1250">Europa Oriental (CP1250)</string>
     <string name="codepage_1251">Cirílico (CP1251)</string>
     <string name="codepage_1252">Europa Ocidental (CP1252)</string>
+    <string name="codepage_28606">Europa Meridional (CP28606)</string>
     <string name="codepage_1253">Grego (CP1253)</string>
     <string name="codepage_1254">Turco (CP1254)</string>
     <string name="codepage_1255">Hebraico (CP1255)</string>
@@ -818,4 +819,6 @@
     <string name="warning_swdec">Aviso: decodificação de hardware desativada!</string>
     <string name="list_title">Título da lista</string>
     <string name="loading">Carregando…</string>
+    <string name="app_id">08FEA4DD</string>
+    <string name="app_id_surface">C44FB232</string>
 </resources>

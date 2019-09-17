@@ -467,6 +467,7 @@
     <string name="preferences_disable_downmix_title">Запретить даунмикс звука в стерео</string>
     <string name="preferences_allow_3rd_party_player">Разрешить использование другого видео-плеера</string>
     <string name="preference_tv_3d_automatic_switch_summary">Используйте эту функцию только если ваш 3D TV поддерживает ее</string>
+    <string name="preference_tv_refreshrate_switch">Включить переключение частоты обновления ТВ</string>
     <string name="category_languages">Субтитры</string>
     <string name="subtitles_hide_default">Скрыть субтитры по умолчанию</string>
     <string name="subtitles_hide_default_summary">Отметьте, если желаете скрывать субтиты по умолчанию</string>
@@ -523,6 +524,9 @@
     <string name="sort_by_date_desc">Сортировать по дате (сначала новые)</string>
     <string name="sort_by_genre_asc">Сортировать по жанру ( &gt; z)</string>
     <string name="sort_by_genre_desc">Сортировать по жанру (z &gt; a)</string>
+    <string name="sort_by_date_added_asc">Сортировать по дате добавления (сначала старые)</string>
+    <string name="sort_by_date_premiered_desc">Сортировать по дате премьеры (сначала новые)</string>
+    <string name="sort_by_date_premiered_asc">Сортировать по дате премьеры (сначала старые)</string>
     <string name="dec_any">По умолчанию</string>
     <string name="codepage_extra_950">(Big5)</string>
     <string name="codepage_extra_1250">(CP1250)</string>

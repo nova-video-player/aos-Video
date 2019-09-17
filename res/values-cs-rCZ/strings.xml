@@ -106,6 +106,10 @@
     <string name="tvshows_by_alpha">Seriály dle abecedy</string>
     <string name="tvshows_by_genre">Seriály dle žánrů</string>
     <string name="tvshows_by_rating">Seriály dle hodnocení</string>
+    <string name="episodes_by_date">Epizody dle data</string>
+    <string name="date_view_week">Týden</string>
+    <string name="date_view_month">Měsíc</string>
+    <string name="date_view_year">Rok</string>
     <string name="all_movies_and_tv_shows">Filmy a seriály</string>
     <string name="non_scraped_videos">Videa bez získaných informací</string>
     <string name="no_server">Nebyl nalezen žádný mediální server</string>
@@ -613,6 +617,7 @@
     <string name="codepage_1250">Východní Evropa (CP1250)</string>
     <string name="codepage_1251">Cyrilice (CP1251)</string>
     <string name="codepage_1252">Západní Evropa (CP1252)</string>
+    <string name="codepage_28606">Jižní Evropa (CP28606)</string>
     <string name="codepage_1253">Řečtina (CP1253)</string>
     <string name="codepage_1254">Turečtina (CP1254)</string>
     <string name="codepage_1255">Hebrejština (CP1255)</string>
@@ -798,4 +803,6 @@
     <string name="warning_swdec">Varování: hardwarové dekódování vypnuto!</string>
     <string name="list_title">Název</string>
     <string name="loading">Načítání…</string>
+    <string name="app_id">08FEA4DD</string>
+    <string name="app_id_surface">C44FB232</string>
 </resources>

@@ -633,6 +633,7 @@
     <string name="codepage_1250">Ost-Europäisch (CP1250)</string>
     <string name="codepage_1251">Kyrillisch (CP1251)</string>
     <string name="codepage_1252">West-Europäisch (CP1252)</string>
+    <string name="codepage_28606">Südeuropäisch (CP28606)</string>
     <string name="codepage_1253">Griechisch (CP1253)</string>
     <string name="codepage_1254">Türkisch (CP1254)</string>
     <string name="codepage_1255">Hebräisch (CP1255)</string>
