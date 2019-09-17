@@ -15,6 +15,8 @@
 package com.archos.mediacenter.video.leanback;
 
 import android.app.Activity;
+
+import androidx.core.content.ContextCompat;
 import androidx.loader.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -219,15 +221,15 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         updateBackground();
 
         Resources r = getResources();
-        setBadgeDrawable(r.getDrawable(R.drawable.leanback_title));
+        setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.leanback_title));
         setHeadersState(HEADERS_ENABLED);
         setHeadersTransitionOnBackEnabled(true);
 
         // set fastLane (or headers) background color
-        setBrandColor(r.getColor(R.color.leanback_side));
+        setBrandColor(ContextCompat.getColor(getActivity(), R.color.leanback_side));
 
         // set search icon color
-        setSearchAffordanceColor(r.getColor(R.color.lightblueA200));
+        setSearchAffordanceColor(ContextCompat.getColor(getActivity(), R.color.lightblueA200));
 
         setupEventListeners();
 
@@ -358,11 +360,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             bgMngr.attach(getActivity().getWindow());
 
         if (PrivateMode.isActive()) {
-            bgMngr.setColor(r.getColor(R.color.private_mode));
-            bgMngr.setDrawable(r.getDrawable(R.drawable.private_background));
+            bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.private_mode));
+            bgMngr.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.private_background));
         } else {
-            bgMngr.setColor(r.getColor(R.color.leanback_background));
-            bgMngr.setDrawable(new ColorDrawable(r.getColor(R.color.leanback_background)));
+            bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.leanback_background));
+            bgMngr.setDrawable(new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.leanback_background)));
         }
     }
 

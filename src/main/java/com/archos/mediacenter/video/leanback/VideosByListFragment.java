@@ -3,6 +3,8 @@ package com.archos.mediacenter.video.leanback;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+
+import androidx.core.content.ContextCompat;
 import androidx.leanback.widget.SearchOrbView;
 import androidx.leanback.widget.Row;
 import androidx.loader.content.Loader;
@@ -27,7 +29,7 @@ public class VideosByListFragment extends VideosByFragment {
 
         setTitle(getString(R.string.video_lists));
         SearchOrbView searchOrbView = (SearchOrbView) getView().findViewById(R.id.title_orb);
-        searchOrbView.setOrbIcon(getResources().getDrawable(R.drawable.orb_minus));
+        searchOrbView.setOrbIcon(ContextCompat.getDrawable(getActivity(), R.drawable.orb_minus));
         setOnSearchClickedListener(new View.OnClickListener() {
             public void onClick(View view) {
                 ArrayList<String> names = new ArrayList<String>();

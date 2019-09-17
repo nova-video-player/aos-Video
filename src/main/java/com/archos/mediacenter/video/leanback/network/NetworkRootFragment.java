@@ -22,6 +22,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.core.content.ContextCompat;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.BrowseSupportFragment;
 import androidx.leanback.widget.ArrayObjectAdapter;
@@ -571,11 +573,11 @@ public class NetworkRootFragment extends BrowseSupportFragment {
             bgMngr.attach(getActivity().getWindow());
 
         if (PrivateMode.isActive()) {
-            bgMngr.setColor(r.getColor(R.color.private_mode));
-            bgMngr.setDrawable(r.getDrawable(R.drawable.private_background));
+            bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.private_mode));
+            bgMngr.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.private_background));
         } else {
-            bgMngr.setColor(r.getColor(R.color.leanback_background));
-            bgMngr.setDrawable(new ColorDrawable(r.getColor(R.color.leanback_background)));
+            bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.leanback_background));
+            bgMngr.setDrawable(new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.leanback_background)));
         }
     }
 }

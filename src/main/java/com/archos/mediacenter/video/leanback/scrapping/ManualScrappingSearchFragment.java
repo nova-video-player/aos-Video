@@ -19,6 +19,8 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
+import androidx.core.content.ContextCompat;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.SearchSupportFragment;
 import androidx.leanback.widget.ArrayObjectAdapter;
@@ -120,7 +122,7 @@ public abstract class ManualScrappingSearchFragment extends SearchSupportFragmen
         rowsPresenterSelector.addClassPresenter(ShadowLessListRow.class, new ShadowLessRowPresenter());
         mRowsAdapter = new ArrayObjectAdapter(rowsPresenterSelector);
 
-        setBadgeDrawable(getResources().getDrawable(R.mipmap.video2));
+        setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.video2));
         setSearchResultProvider(this);
         setOnItemViewClickedListener(new OnItemViewClickedListener() {
             @Override
@@ -157,7 +159,7 @@ public abstract class ManualScrappingSearchFragment extends SearchSupportFragmen
         Resources r = getResources();
         BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
         bgMngr.attach(getActivity().getWindow());
-        bgMngr.setColor(r.getColor(R.color.leanback_background));
+        bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.leanback_background));
         mNfoTask = new NfoTask();
         mNfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

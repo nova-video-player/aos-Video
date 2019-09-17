@@ -19,6 +19,8 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
+
+import androidx.core.content.ContextCompat;
 import androidx.leanback.widget.BaseCardView;
 import androidx.leanback.widget.Presenter;
 import android.view.LayoutInflater;
@@ -51,7 +53,7 @@ public class IconItemPresenter extends Presenter {
             super(new BaseCardView(parent.getContext()));
             final Context c = parent.getContext();
 
-            mTextColorRegular = c.getResources().getColor(R.color.lb_basic_card_title_text_color);
+            mTextColorRegular = ContextCompat.getColor(c, R.color.lb_basic_card_title_text_color);
             mTextColorDimmed = 0xFF707070; // MAGICAL
 
             mBaseCard = (BaseCardView)view;

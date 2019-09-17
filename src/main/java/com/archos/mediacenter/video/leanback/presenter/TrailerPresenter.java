@@ -18,6 +18,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+
+import androidx.core.content.ContextCompat;
 import androidx.leanback.widget.BaseCardView;
 import androidx.leanback.widget.ImageCardView;
 import androidx.leanback.widget.Presenter;
@@ -48,7 +50,7 @@ public class TrailerPresenter extends PosterImageCardPresenter {
         final VideoViewHolder vh = (VideoViewHolder)viewHolder;
 
         final ImageCardView card = vh.getImageCardView();
-        card.setMainImage(mContext.getResources().getDrawable(TrailerServiceIconFactory.getIconForService(box.mSite)), false);
+        card.setMainImage(ContextCompat.getDrawable(mContext, TrailerServiceIconFactory.getIconForService(box.mSite)), false);
         card.setMainImageScaleType(ImageView.ScaleType.CENTER);
         card.setTitleText(box.mName);
 

@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.network.ftp;
 
+import androidx.core.content.ContextCompat;
 import androidx.leanback.widget.Action;
 import androidx.leanback.widget.DetailsOverviewRow;
 import android.widget.Toast;
@@ -44,7 +45,7 @@ public class FtpShortcutDetailsFragment extends NetworkShortcutDetailsFragment {
         else
             detailRow.addAction(new Action(ACTION_REINDEX, getResources().getString(R.string.network_reindex)));
         detailRow.addAction(new Action(ACTION_REMOVE, getResources().getString(R.string.remove_from_shortcuts)));
-        detailRow.setImageDrawable(getResources().getDrawable(R.drawable.filetype_new_server));
+        detailRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_server));
     }
 
     @Override

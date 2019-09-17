@@ -21,6 +21,8 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.core.content.ContextCompat;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.SearchSupportFragment;
 import androidx.leanback.widget.ArrayObjectAdapter;
@@ -97,7 +99,7 @@ public class VideoSearchFragment extends SearchSupportFragment implements Search
 
         setSearchResultProvider(this);
         setOnItemViewClickedListener(new VideoViewClickedListener(getActivity()));
-        setBadgeDrawable(getResources().getDrawable(R.mipmap.video2));
+        setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.video2));
         mDelayedLoad = new SearchRunnable();
 
         int searchMode = getArguments() != null ? getArguments().getInt(VideoSearchActivity.EXTRA_SEARCH_MODE, VideoSearchActivity.SEARCH_MODE_ALL) : VideoSearchActivity.SEARCH_MODE_ALL;
@@ -129,7 +131,7 @@ public class VideoSearchFragment extends SearchSupportFragment implements Search
         Resources r = getResources();
         BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
         bgMngr.attach(getActivity().getWindow());
-        bgMngr.setColor(r.getColor(R.color.leanback_background));
+        bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.leanback_background));
     }
 
 

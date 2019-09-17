@@ -17,6 +17,8 @@ package com.archos.mediacenter.video.leanback.presenter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+
+import androidx.core.content.ContextCompat;
 import androidx.leanback.widget.BaseCardView;
 import androidx.leanback.widget.Presenter;
 import android.util.Log;
@@ -53,7 +55,7 @@ public class WebPageLinkPresenter extends Presenter {
 
             Context c = parent.getContext();
             mPlaceholder = new View(c);
-            mPlaceholder.setBackgroundColor(c.getResources().getColor(R.color.lb_basic_card_bg_color));
+            mPlaceholder.setBackgroundColor(ContextCompat.getColor(c, R.color.lb_basic_card_bg_color));
             BaseCardView.LayoutParams lp = new BaseCardView.LayoutParams(
                     c.getResources().getDimensionPixelSize(R.dimen.details_weblink_width),
                     c.getResources().getDimensionPixelSize(R.dimen.details_weblink_height));

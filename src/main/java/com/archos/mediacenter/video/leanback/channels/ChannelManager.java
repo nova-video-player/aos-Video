@@ -12,6 +12,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+
+import androidx.core.content.ContextCompat;
 import androidx.tvprovider.media.tv.Channel;
 import androidx.tvprovider.media.tv.ChannelLogoUtils;
 import androidx.tvprovider.media.tv.PreviewProgram;
@@ -174,7 +176,7 @@ public class ChannelManager {
                 try {
                     dest.createNewFile();
 
-                    BitmapDrawable drawable = (BitmapDrawable)mContext.getResources().getDrawable(R.drawable.empty_poster);
+                    BitmapDrawable drawable = (BitmapDrawable) ContextCompat.getDrawable(mContext, R.drawable.empty_poster);
                     Bitmap bitmap = drawable.getBitmap();
                     OutputStream stream = null;
 

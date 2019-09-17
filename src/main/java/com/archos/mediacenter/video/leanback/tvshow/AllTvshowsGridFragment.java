@@ -15,6 +15,8 @@
 package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.app.AlertDialog;
+
+import androidx.core.content.ContextCompat;
 import androidx.loader.app.LoaderManager;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -183,7 +185,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
         getTitleView().setOrb5IconResId(R.drawable.orb_alpha);
 
         // Set orb color
-        setSearchAffordanceColor(getResources().getColor(R.color.lightblueA200));
+        setSearchAffordanceColor(ContextCompat.getColor(getActivity(), R.color.lightblueA200));
 
         // Set first orb action
         getTitleView().setOnOrb1ClickedListener(new View.OnClickListener() {
@@ -333,18 +335,16 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
     }
 
     private void updateBackground() {
-        Resources r = getResources();
-
         bgMngr = BackgroundManager.getInstance(getActivity());
         if(!bgMngr.isAttached())
             bgMngr.attach(getActivity().getWindow());
 
         if (PrivateMode.isActive()) {
-            bgMngr.setColor(r.getColor(R.color.private_mode));
-            bgMngr.setDrawable(r.getDrawable(R.drawable.private_background));
+            bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.private_mode));
+            bgMngr.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.private_background));
         } else {
-            bgMngr.setColor(r.getColor(R.color.leanback_background));
-            bgMngr.setDrawable(new ColorDrawable(r.getColor(R.color.leanback_background)));
+            bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.leanback_background));
+            bgMngr.setDrawable(new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.leanback_background)));
         }
     }
 

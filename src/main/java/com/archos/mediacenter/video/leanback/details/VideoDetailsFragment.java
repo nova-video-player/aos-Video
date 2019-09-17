@@ -917,7 +917,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode));
                 else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode);
                 // update poster
-                mDetailsOverviewRow.setImageDrawable(getResources().getDrawable(R.drawable.filetype_new_video));
+                mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
                 mDetailsOverviewRow.setImageScaleUpAllowed(false);
                 smoothUpdate = true;
             }
@@ -930,7 +930,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode);
 
                 // update poster
-                mDetailsOverviewRow.setImageDrawable(getResources().getDrawable(R.drawable.filetype_new_video));
+                mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
                 mDetailsOverviewRow.setImageScaleUpAllowed(false);
                 smoothUpdate = true;
             }
@@ -1050,7 +1050,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                         else
                             mThumbnail = result.first;
                     } else {
-                        mDetailsOverviewRow.setImageDrawable(getResources().getDrawable(R.drawable.filetype_new_video));
+                        mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
                         mDetailsOverviewRow.setImageScaleUpAllowed(false);
                     }
                 }
@@ -1188,7 +1188,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             mVideoInfoTask = new VideoInfoTask().execute(video);
 
         if (poster == null) {
-            mDetailsOverviewRow.setImageDrawable(getResources().getDrawable(R.drawable.filetype_new_video));
+            mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
             mDetailsOverviewRow.setImageScaleUpAllowed(false);
             mThumbnailAsyncTask = new ThumbnailAsyncTask().execute(mVideo);
         }else{

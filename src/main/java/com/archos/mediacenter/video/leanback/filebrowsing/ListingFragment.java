@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.filebrowsing;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.loader.app.LoaderManager;
 import android.content.Intent;
@@ -192,7 +193,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         setSecondOrbAction();
 
         // Set orb color
-        setSearchAffordanceColor(getResources().getColor(R.color.lightblueA200));
+        setSearchAffordanceColor(ContextCompat.getColor(getActivity(), R.color.lightblueA200));
 
         // set null listener to hide the first orb
         getTitleView().setOnOrb1ClickedListener(null);
@@ -674,18 +675,16 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
     }
 
     private void updateBackground() {
-        Resources r = getResources();
-
         bgMngr = BackgroundManager.getInstance(getActivity());
         if(!bgMngr.isAttached())
             bgMngr.attach(getActivity().getWindow());
 
         if (PrivateMode.isActive()) {
-            bgMngr.setColor(r.getColor(R.color.private_mode));
-            bgMngr.setDrawable(r.getDrawable(R.drawable.private_background));
+            bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.private_mode));
+            bgMngr.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.private_background));
         } else {
-            bgMngr.setColor(r.getColor(R.color.leanback_background));
-            bgMngr.setDrawable(new ColorDrawable(r.getColor(R.color.leanback_background)));
+            bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.leanback_background));
+            bgMngr.setDrawable(new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.leanback_background)));
         }
     }
 }

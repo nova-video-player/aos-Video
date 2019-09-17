@@ -180,8 +180,8 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         FullWidthDetailsOverviewSharedElementHelper helper = new FullWidthDetailsOverviewSharedElementHelper();
         helper.setSharedElementEnterTransition(getActivity(), SHARED_ELEMENT_NAME, 1000);
         mOverviewRowPresenter.setListener(helper);
-        mOverviewRowPresenter.setBackgroundColor(getResources().getColor(R.color.leanback_details_background));
-        mOverviewRowPresenter.setActionsBackgroundColor(getDarkerColor(getResources().getColor(R.color.leanback_details_background)));
+        mOverviewRowPresenter.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
+        mOverviewRowPresenter.setActionsBackgroundColor(getDarkerColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background)));
         mOverviewRowPresenter.setOnActionClickedListener(new OnActionClickedListener() {
             @Override
             public void onActionClicked(Action action) {
@@ -646,7 +646,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 mDetailsOverviewRow.setImageScaleUpAllowed(true);
             }
             else {
-                mDetailsOverviewRow.setImageDrawable(getResources().getDrawable(R.drawable.filetype_new_video));
+                mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
                 mDetailsOverviewRow.setImageScaleUpAllowed(false);
             }
 

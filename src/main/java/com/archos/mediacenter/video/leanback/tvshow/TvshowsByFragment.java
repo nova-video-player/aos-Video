@@ -1,6 +1,8 @@
 package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.app.AlertDialog;
+
+import androidx.core.content.ContextCompat;
 import androidx.loader.app.LoaderManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -98,7 +100,7 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
 
         SearchOrbView searchOrbView = (SearchOrbView) getView().findViewById(R.id.title_orb);
         if (searchOrbView != null) {
-            searchOrbView.setOrbIcon(getResources().getDrawable(R.drawable.orb_sort));
+            searchOrbView.setOrbIcon(ContextCompat.getDrawable(getActivity(), R.drawable.orb_sort));
         } else {
             throw new IllegalArgumentException("Did not find R.id.title_orb in BrowseFragment! Need to update the orbview hack!");
         }
@@ -145,10 +147,10 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
         setHeadersTransitionOnBackEnabled(true);
 
         // set fastLane (or headers) background color
-        setBrandColor(r.getColor(R.color.leanback_side));
+        setBrandColor(ContextCompat.getColor(getActivity(), R.color.leanback_side));
 
         // set search icon color
-        setSearchAffordanceColor(r.getColor(R.color.lightblueA200));
+        setSearchAffordanceColor(ContextCompat.getColor(getActivity(),R.color.lightblueA200));
 
         setupEventListeners();
 
@@ -308,18 +310,16 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
     }
 
     private void updateBackground() {
-        Resources r = getResources();
-
         bgMngr = BackgroundManager.getInstance(getActivity());
         if(!bgMngr.isAttached())
             bgMngr.attach(getActivity().getWindow());
 
         if (PrivateMode.isActive()) {
-            bgMngr.setColor(r.getColor(R.color.private_mode));
-            bgMngr.setDrawable(r.getDrawable(R.drawable.private_background));
+            bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.private_mode));
+            bgMngr.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.private_background));
         } else {
-            bgMngr.setColor(r.getColor(R.color.leanback_background));
-            bgMngr.setDrawable(new ColorDrawable(r.getColor(R.color.leanback_background)));
+            bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.leanback_background));
+            bgMngr.setDrawable(new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.leanback_background)));
         }
     }
 

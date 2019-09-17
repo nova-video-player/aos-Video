@@ -22,6 +22,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 import androidx.leanback.widget.BaseCardView;
 import androidx.leanback.widget.ImageCardView;
@@ -82,8 +84,8 @@ public class PosterImageCardPresenter extends Presenter {
 
             mCardView.addViewToRoot(mOccurenciesView);
             mCardView.setMainImageDimensions(getWidth(context), getHeight(context));
-            mCardView.setMainImage(new ColorDrawable(context.getResources().getColor(R.color.lb_basic_card_bg_color)));
-            mCardView.getMainImageView().setBackgroundColor(context.getResources().getColor(R.color.lightblue900));
+            mCardView.setMainImage(new ColorDrawable(ContextCompat.getColor(context, R.color.lb_basic_card_bg_color)));
+            mCardView.getMainImageView().setBackgroundColor(ContextCompat.getColor(context, R.color.lightblue900));
             mCardView.setFocusable(true);
             mCardView.setFocusableInTouchMode(true);
 
@@ -179,13 +181,13 @@ public class PosterImageCardPresenter extends Presenter {
     public PosterImageCardPresenter(Context context) {
         super();
         mEpisodeDisplayMode = EpisodeDisplayMode.FOR_GENERAL_LIST; // default
-        mErrorDrawable = context.getResources().getDrawable(R.drawable.filetype_new_video);
+        mErrorDrawable = ContextCompat.getDrawable(context, R.drawable.filetype_new_video);
     }
 
     public PosterImageCardPresenter(Context context, EpisodeDisplayMode displayMode) {
         super();
         mEpisodeDisplayMode = displayMode;
-        mErrorDrawable = context.getResources().getDrawable(R.drawable.filetype_new_video);
+        mErrorDrawable = ContextCompat.getDrawable(context, R.drawable.filetype_new_video);
     }
 
     public PosterImageCardPresenter(Context context, View.OnLongClickListener longClickListener) {
@@ -324,7 +326,7 @@ public class PosterImageCardPresenter extends Presenter {
 
     private void bindMetaFile(VideoViewHolder vh, MetaFile2 file) {
         final ImageCardView card = vh.getImageCardView();
-        card.setMainImage(mContext.getResources().getDrawable(PresenterUtils.getIconResIdFor(file)), false);
+        card.setMainImage(ContextCompat.getDrawable(mContext, PresenterUtils.getIconResIdFor(file)), false);
         card.setMainImageScaleType(ImageView.ScaleType.CENTER);
         card.setTitleText(file.getName());
         card.setContentText("");
@@ -376,12 +378,12 @@ public class PosterImageCardPresenter extends Presenter {
                 ArrayList<Drawable> layer = new ArrayList<>();
                 layer.add(posterDrawable);
                 if (mWatchedFlag) {
-                    BitmapDrawable icon = (BitmapDrawable) mContext.getResources().getDrawable(R.drawable.watched_icon_corner);
+                    BitmapDrawable icon = (BitmapDrawable) ContextCompat.getDrawable(mContext, R.drawable.watched_icon_corner);
                     icon.setGravity(Gravity.TOP | Gravity.RIGHT);
                     layer.add(icon);
                 }
                 if (mPinnedFlag) {
-                    BitmapDrawable icon = (BitmapDrawable) mContext.getResources().getDrawable(R.drawable.pinned_icon_corner);
+                    BitmapDrawable icon = (BitmapDrawable) ContextCompat.getDrawable(mContext, R.drawable.pinned_icon_corner);
                     icon.setGravity(Gravity.TOP | Gravity.LEFT);
                     layer.add(icon);
                 }

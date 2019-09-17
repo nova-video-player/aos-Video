@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.leanback.nonscraped;
 import android.app.AlertDialog;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.loader.app.LoaderManager;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -95,7 +96,7 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
         BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
         if(!bgMngr.isAttached()) {
             bgMngr.attach(getActivity().getWindow());
-            bgMngr.setColor(getResources().getColor(R.color.leanback_background));
+            bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.leanback_background));
         }
 
         setTitle(getString(R.string.non_scraped_videos));
@@ -148,7 +149,7 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
         getTitleView().setOrb3IconResId(R.drawable.orb_sort);
 
         // Set orb color
-        setSearchAffordanceColor(getResources().getColor(R.color.lightblueA200));
+        setSearchAffordanceColor(ContextCompat.getColor(getActivity(), R.color.lightblueA200));
 
         // Set first orb action
         getTitleView().setOnOrb1ClickedListener(new View.OnClickListener() {

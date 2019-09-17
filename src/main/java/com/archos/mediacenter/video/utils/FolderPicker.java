@@ -418,7 +418,7 @@ public class FolderPicker extends FragmentActivity {
                     Item sdcard = new Item();
                     sdcard.mUri = Uri.parse(s);
                     sdcard.mName = res.getString(R.string.sdcard_fake_name);
-                    sdcard.mHolder = res.getDrawable(R.drawable.sdcard);
+                    sdcard.mHolder = ContextCompat.getDrawable(getActivity(), R.drawable.sdcard);
                     sdcard.mEnabled = true;
                     mListItems.add(sdcard);
                 }
@@ -517,7 +517,7 @@ public class FolderPicker extends FragmentActivity {
                 tag.mName.setText(item.getName());
                 tag.mInfo.setText(item.mUri.getPath());
                 if (item.mHolder == null) {
-                    tag.mIcon.setImageDrawable(getResources().getDrawable(R.drawable.folder));
+                    tag.mIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.folder));
                 } else {
                     tag.mIcon.setImageDrawable((Drawable)item.mHolder);
                 }

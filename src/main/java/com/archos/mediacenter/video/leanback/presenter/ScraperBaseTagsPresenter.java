@@ -19,6 +19,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+
+import androidx.core.content.ContextCompat;
 import androidx.leanback.widget.ImageCardView;
 import androidx.leanback.widget.Presenter;
 import android.view.ViewGroup;
@@ -47,7 +49,7 @@ public class ScraperBaseTagsPresenter extends Presenter {
             super(new ImageCardView(context));
             mCardView = (ImageCardView)view;
             mCardView.setMainImageDimensions(getWidth(context), getHeight(context));
-            mCardView.setMainImage(new ColorDrawable(context.getResources().getColor(R.color.lb_basic_card_bg_color)));
+            mCardView.setMainImage(new ColorDrawable(ContextCompat.getColor(context, R.color.lb_basic_card_bg_color)));
             mCardView.setFocusable(true);
             mCardView.setFocusableInTouchMode(true);
 

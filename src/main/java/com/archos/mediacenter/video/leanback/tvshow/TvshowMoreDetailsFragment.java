@@ -117,7 +117,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
         FullWidthDetailsOverviewSharedElementHelper helper = new FullWidthDetailsOverviewSharedElementHelper();
         helper.setSharedElementEnterTransition(getActivity(), SHARED_ELEMENT_NAME, 1000);
         mOverviewRowPresenter.setListener(helper);
-        mOverviewRowPresenter.setBackgroundColor(getResources().getColor(R.color.leanback_details_background));
+        mOverviewRowPresenter.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
         mOverviewRowPresenter.setOnActionClickedListener(null);
 
 
@@ -313,7 +313,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                     mDetailsRow.setImageScaleUpAllowed(true);
                 }
                 else {
-                    mDetailsRow.setImageDrawable(getResources().getDrawable(R.drawable.filetype_new_video));
+                    mDetailsRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
                     mDetailsRow.setImageScaleUpAllowed(false);
                 }
             }

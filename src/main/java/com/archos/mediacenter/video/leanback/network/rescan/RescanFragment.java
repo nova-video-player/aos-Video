@@ -16,6 +16,8 @@ package com.archos.mediacenter.video.leanback.network.rescan;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 import android.provider.Settings;
 import androidx.annotation.NonNull;
@@ -52,7 +54,7 @@ public class RescanFragment extends GuidedStepSupportFragment implements Network
         return new GuidanceStylist.Guidance(
                 getString(R.string.rescan),
                 getString(R.string.rescan_description), "",
-                getResources().getDrawable(R.drawable.pref_nas_rescan));
+                ContextCompat.getDrawable(getActivity(), R.drawable.pref_nas_rescan));
     }
 
     @Override

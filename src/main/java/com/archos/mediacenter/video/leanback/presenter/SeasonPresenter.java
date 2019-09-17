@@ -22,6 +22,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+
+import androidx.core.content.ContextCompat;
 import androidx.leanback.widget.BaseCardView;
 import androidx.leanback.widget.ImageCardView;
 import androidx.leanback.widget.Presenter;
@@ -56,8 +58,8 @@ public class SeasonPresenter extends Presenter {
             super(new ImageCardView(context));
             mCardView = (ImageCardView)view;
             mCardView.setMainImageDimensions(getWidth(context), getHeight(context));
-            mCardView.setMainImage(new ColorDrawable(context.getResources().getColor(R.color.lb_basic_card_bg_color)));
-            mCardView.getMainImageView().setBackgroundColor(context.getResources().getColor(R.color.lightblue900));
+            mCardView.setMainImage(new ColorDrawable(ContextCompat.getColor(context, R.color.lb_basic_card_bg_color)));
+            mCardView.getMainImageView().setBackgroundColor(ContextCompat.getColor(context, R.color.lightblue900));
             mCardView.setFocusable(true);
             mCardView.setFocusableInTouchMode(true);
             
@@ -106,7 +108,7 @@ public class SeasonPresenter extends Presenter {
             final Resources r = mContext.getResources();
 
             setInfoMessage(r.getString(R.string.confirm_delete_short));
-            setInfoColor(r.getColor(R.color.red));
+            setInfoColor(ContextCompat.getColor(mContext, R.color.red));
         }
 
         /**
@@ -133,7 +135,7 @@ public class SeasonPresenter extends Presenter {
 
     public SeasonPresenter(Context context, long actionId) {
         super();
-        mErrorDrawable = context.getResources().getDrawable(R.drawable.filetype_new_video);
+        mErrorDrawable = ContextCompat.getDrawable(context, R.drawable.filetype_new_video);
         mActionId = actionId;
     }
 
@@ -183,15 +185,15 @@ public class SeasonPresenter extends Presenter {
             int color;
             if (season.allEpisodesWatched()) {
                 desc = r.getString(R.string.all_episodes_watched);
-                color = r.getColor(R.color.leanback_all_episodes_watched);
+                color = ContextCompat.getColor(mContext, R.color.leanback_all_episodes_watched);
             }
             else if (season.allEpisodesNotWatched()) {
                 desc = r.getString(R.string.no_episode_watched);
-                color = r.getColor(R.color.leanback_no_episode_watched);
+                color = ContextCompat.getColor(mContext, R.color.leanback_no_episode_watched);
             }
             else {
                 desc = r.getQuantityString(R.plurals.n_episodes_watched, season.getEpisodeWatchedCount(), season.getEpisodeWatchedCount());
-                color = r.getColor(R.color.leanback_n_episodes_watched);
+                color = ContextCompat.getColor(mContext, R.color.leanback_n_episodes_watched);
             }
             vh.setInfoMessage(desc);
             vh.setInfoColor(color);
@@ -232,7 +234,7 @@ public class SeasonPresenter extends Presenter {
             if (mWatchedFlag) {
                 Drawable layer[] = new Drawable[2];
                 layer[0] = posterDrawable;
-                BitmapDrawable icon = (BitmapDrawable) mContext.getResources().getDrawable(R.drawable.watched_icon_corner);
+                BitmapDrawable icon = (BitmapDrawable) ContextCompat.getDrawable(mContext, R.drawable.watched_icon_corner);
                 icon.setGravity(Gravity.TOP | Gravity.RIGHT);
                 layer[1] = icon;
                 finalDrawable = new LayerDrawable(layer);

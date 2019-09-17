@@ -21,6 +21,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.core.content.ContextCompat;
 import androidx.leanback.widget.SearchOrbView;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -54,7 +56,7 @@ public class EpisodesByDateFragment extends VideosByFragment {
 
         setTitle(getString(R.string.episodes_by_date));
         SearchOrbView searchOrbView = (SearchOrbView) getView().findViewById(R.id.title_orb);
-        searchOrbView.setOrbIcon(getResources().getDrawable(R.drawable.orb_list));
+        searchOrbView.setOrbIcon(ContextCompat.getDrawable(getActivity(), R.drawable.orb_list));
         setOnSearchClickedListener(new View.OnClickListener() {
             public void onClick(View view) {
                 String[] names = { getString(R.string.date_view_week), getString(R.string.date_view_month), getString(R.string.date_view_year) };

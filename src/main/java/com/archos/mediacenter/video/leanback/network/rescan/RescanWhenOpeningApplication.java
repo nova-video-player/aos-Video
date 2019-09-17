@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.leanback.network.rescan;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.leanback.app.GuidedStepSupportFragment;
 import androidx.leanback.widget.GuidanceStylist;
 import androidx.leanback.widget.GuidedAction;
@@ -50,7 +51,7 @@ public class RescanWhenOpeningApplication extends GuidedStepSupportFragment {
         return new GuidanceStylist.Guidance(
                 getString(R.string.rescan_when_opening_application),
                 null, null,
-                getResources().getDrawable(R.drawable.pref_nas_rescan));
+                ContextCompat.getDrawable(getActivity(),R.drawable.pref_nas_rescan));
     }
     @Override
     public void onCreateActions(@NonNull List<GuidedAction> actions, Bundle savedInstanceState) {

@@ -17,6 +17,8 @@ package com.archos.mediacenter.video.leanback.network.rescan;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.leanback.app.GuidedStepSupportFragment;
@@ -53,7 +55,7 @@ public class ScheduledRescanTime extends GuidedStepSupportFragment {
                 getString(R.string.scheduled_rescan_time),
                 null,
                 getString(R.string.scheduled_rescan_period),
-                getResources().getDrawable(R.drawable.pref_clock));
+                ContextCompat.getDrawable(getActivity(),R.drawable.pref_clock));
     }
 
     @Override

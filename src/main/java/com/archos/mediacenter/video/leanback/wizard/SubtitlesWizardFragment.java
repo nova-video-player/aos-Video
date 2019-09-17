@@ -3,6 +3,7 @@ package com.archos.mediacenter.video.leanback.wizard;
 import android.app.Activity;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.leanback.app.GuidedStepSupportFragment;
 import androidx.leanback.widget.GuidanceStylist;
 import androidx.leanback.widget.GuidedAction;
@@ -47,7 +48,7 @@ public class SubtitlesWizardFragment extends GuidedStepSupportFragment {
         return new GuidanceStylist.Guidance(
                 getString(R.string.get_subtitles_on_drive),
                 mWizardCommon.getHelpMessage(), "",
-                getResources().getDrawable(R.drawable.filetype_new_subtitles));
+                ContextCompat.getDrawable(getActivity(),R.drawable.filetype_new_subtitles));
     }
 
     @Override
@@ -126,7 +127,7 @@ public class SubtitlesWizardFragment extends GuidedStepSupportFragment {
         else {
             actions.add(new GuidedAction.Builder()
                 .id(CURRENT_TITLE_ID)
-                .icon(getResources().getDrawable(R.drawable.wizard_dot))
+                .icon(ContextCompat.getDrawable(getActivity(), R.drawable.wizard_dot))
                 .title(getString(R.string.subtitles_wizard_current_files))
                 .focusable(false)
                 .build());
@@ -169,7 +170,7 @@ public class SubtitlesWizardFragment extends GuidedStepSupportFragment {
 
             actions.add(new GuidedAction.Builder()
                 .id(AVAILABLE_TITLE_ID)
-                .icon(getResources().getDrawable(R.drawable.wizard_dot))
+                .icon(ContextCompat.getDrawable(getActivity(), R.drawable.wizard_dot))
                 .title(getString(R.string.subtitles_wizard_available_files))
                 .focusable(false)
                 .build());

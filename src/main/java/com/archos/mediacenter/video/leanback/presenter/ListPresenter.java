@@ -18,6 +18,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+
+import androidx.core.content.ContextCompat;
 import androidx.leanback.widget.BaseCardView;
 import androidx.leanback.widget.Presenter;
 import android.view.LayoutInflater;
@@ -54,7 +56,7 @@ public abstract class ListPresenter extends Presenter {
         public ListViewHolder(Context context) {
             super(new BaseCardView(context));
             mBaseCardView = (BaseCardView)view;
-            mBaseCardView.setBackgroundColor(context.getResources().getColor(R.color.lb_basic_card_info_bg_color));
+            mBaseCardView.setBackgroundColor(ContextCompat.getColor(context, R.color.lb_basic_card_info_bg_color));
             mBaseCardView.setFocusable(true);
             mBaseCardView.setFocusableInTouchMode(true);
             mBaseCardView.setCardType(BaseCardView.CARD_TYPE_MAIN_ONLY);

@@ -18,6 +18,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.core.content.ContextCompat;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.DetailsSupportFragment;
 import androidx.leanback.widget.Action;
@@ -65,7 +67,7 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
 
         BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
         bgMngr.attach(getActivity().getWindow());
-        bgMngr.setColor(getResources().getColor(R.color.leanback_background));
+        bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.leanback_background));
 
         mShortcut = (Shortcut)getActivity().getIntent().getSerializableExtra(EXTRA_SHORTCUT);
 
@@ -76,8 +78,8 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
         mDetailsRowPresenter = new ArchosDetailsOverviewRowPresenter(new ShortcutDetailsPresenter());
         //be aware of a hack to avoid fullscreen overview : cf onSetRowStatus
 
-        mDetailsRowPresenter.setBackgroundColor(getResources().getColor(R.color.lightblue900));
-        mDetailsRowPresenter.setActionsBackgroundColor(getDarkerColor(getResources().getColor(R.color.lightblue900)));
+        mDetailsRowPresenter.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.lightblue900));
+        mDetailsRowPresenter.setActionsBackgroundColor(getDarkerColor(ContextCompat.getColor(getActivity(), R.color.lightblue900)));
         mDetailsRowPresenter.setOnActionClickedListener(this);
 
         ArrayObjectAdapter adapter = new ArrayObjectAdapter(mDetailsRowPresenter);
@@ -123,7 +125,7 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
         detailRow.addAction(new Action(ACTION_OPEN, getResources().getString(R.string.open_indexed_folder)));
         detailRow.addAction(new Action(ACTION_REINDEX, getResources().getString(R.string.network_reindex)));
         detailRow.addAction(new Action(ACTION_REMOVE, getResources().getString(R.string.remove_from_indexed_folders)));
-        detailRow.setImageDrawable(getResources().getDrawable(R.drawable.filetype_new_folder_indexed));
+        detailRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_folder_indexed));
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

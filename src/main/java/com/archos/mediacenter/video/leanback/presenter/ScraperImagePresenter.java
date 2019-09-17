@@ -17,6 +17,8 @@ package com.archos.mediacenter.video.leanback.presenter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+
+import androidx.core.content.ContextCompat;
 import androidx.leanback.widget.BaseCardView;
 import androidx.leanback.widget.Presenter;
 import android.view.LayoutInflater;
@@ -64,7 +66,7 @@ public abstract class ScraperImagePresenter extends Presenter {
         public ViewHolder(Context context) {
             super(new CustomBaseCardview(context));
             mBaseCardView = (BaseCardView)view;
-            mBaseCardView.setBackgroundColor(context.getResources().getColor(R.color.lb_basic_card_bg_color));
+            mBaseCardView.setBackgroundColor(ContextCompat.getColor(context, R.color.lb_basic_card_bg_color));
             mBaseCardView.setFocusable(true);
             mBaseCardView.setFocusableInTouchMode(true);
             mBaseCardView.setCardType(BaseCardView.CARD_TYPE_MAIN_ONLY);
