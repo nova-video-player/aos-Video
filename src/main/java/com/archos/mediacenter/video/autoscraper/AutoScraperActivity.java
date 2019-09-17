@@ -34,7 +34,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.PowerManager;
 import android.provider.BaseColumns;
 import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
@@ -48,6 +47,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -173,7 +173,6 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
     private View mEmptyView;
 
     private boolean mIsLargeScreen;
-    private PowerManager.WakeLock mWakeLock;
 
     protected final static class FileProperties {
         int id;
@@ -271,9 +270,7 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
         }
 
         mIsLargeScreen = getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE)|| TVUtils.isTV(this);
-
-        PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
-        mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "AutoScraperActivity");
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
@@ -286,9 +283,6 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
     public void onStart() {
         super.onStart();
 
-        // Allow the screen to be dimmed while the videos are processed in the foreground
-        mWakeLock.acquire();
-
         // Remove the notification when switching the activity to the foreground
         if (mNotification != null) {
             removeStatusbarNotification();
@@ -299,11 +293,6 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
 
     @Override
     public void onStop() {
-        // Make sure to restore the standard screen on/off behaviour when the activity is not visible
-        if (mWakeLock.isHeld()) {
-            mWakeLock.release();
-        }
-
         if (isResultTaskActive()) {
             // The user pressed HOME and the processing task is still running
             // => show a notification in the statusbar while the activity keeps on running the background
@@ -1387,10 +1376,6 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
             else {
                 // The activity is visible => update the control buttons
                 updateControlButtons(true);
-
-                // Processing is done, no need to keep the screen dimmed anymore
-                // in case the user doesn't close the activity immediately
-                mWakeLock.release();
             }
         }
     }
