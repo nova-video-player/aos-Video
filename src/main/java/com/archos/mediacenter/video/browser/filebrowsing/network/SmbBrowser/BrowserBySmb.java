@@ -26,6 +26,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.core.widget.TextViewCompat;
+
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.filebrowsing.network.BrowserByNetwork;
@@ -53,7 +55,7 @@ public class BrowserBySmb extends BrowserByNetwork {
                 askForCredentials();
             }
         });
-        mButton.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
+        TextViewCompat.setTextAppearance(mButton, android.R.style.TextAppearance_Medium);
         mButton.setVisibility(View.VISIBLE);
         displayConnectionDescription();
 

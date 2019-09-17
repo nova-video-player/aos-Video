@@ -17,6 +17,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+
+import androidx.core.content.ContextCompat;
 import androidx.leanback.widget.SearchOrbView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -288,23 +290,23 @@ public class MyTitleView extends RelativeLayout {
     }
 
     public void setOrb1IconResId(int iconResId) {
-        mSearchOrbView.setOrbIcon(this.getResources().getDrawable(iconResId));
+        mSearchOrbView.setOrbIcon(ContextCompat.getDrawable(getContext(), iconResId));
     }
 
     public void setOrb2IconResId(int iconResId) {
-        mSearchOrbView2.setOrbIcon(this.getResources().getDrawable(iconResId));
+        mSearchOrbView2.setOrbIcon(ContextCompat.getDrawable(getContext(), iconResId));
     }
 
     public void setOrb3IconResId(int iconResId) {
-        mSearchOrbView3.setOrbIcon(this.getResources().getDrawable(iconResId));
+        mSearchOrbView3.setOrbIcon(ContextCompat.getDrawable(getContext(), iconResId));
     }
 
     public void setOrb4IconResId(int iconResId) {
-        mSearchOrbView4.setOrbIcon(this.getResources().getDrawable(iconResId));
+        mSearchOrbView4.setOrbIcon(ContextCompat.getDrawable(getContext(), iconResId));
     }
 
     public void setOrb5IconResId(int iconResId) {
-        mSearchOrbView5.setOrbIcon(this.getResources().getDrawable(iconResId));
+        mSearchOrbView5.setOrbIcon(ContextCompat.getDrawable(getContext(), iconResId));
     }
 
     /**

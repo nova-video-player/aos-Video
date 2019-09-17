@@ -28,6 +28,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+
+import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
@@ -350,10 +352,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             emptyView.setVisibility(View.VISIBLE);
             // Update the text of the empty view
             TextView emptyViewText = (TextView)emptyView.findViewById(R.id.empty_view_text);
-            if (Build.VERSION.SDK_INT < 23)
-                emptyViewText.setTextAppearance(getActivity(), android.R.style.TextAppearance_Large);
-            else
-                emptyViewText.setTextAppearance(android.R.style.TextAppearance_Large);
+            TextViewCompat.setTextAppearance(emptyViewText, android.R.style.TextAppearance_Large);
             emptyViewText.setText(R.string.error_credentials);
             // Check if a button is needed in the empty view
             Button emptyViewButton = (Button)emptyView.findViewById(R.id.empty_view_button);
