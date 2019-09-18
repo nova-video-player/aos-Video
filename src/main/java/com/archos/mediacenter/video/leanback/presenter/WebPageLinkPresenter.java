@@ -14,17 +14,22 @@
 
 package com.archos.mediacenter.video.leanback.presenter;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 
 import androidx.core.content.ContextCompat;
 import androidx.leanback.widget.BaseCardView;
 import androidx.leanback.widget.Presenter;
+
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -96,6 +101,16 @@ public class WebPageLinkPresenter extends Presenter {
             mWebView.setInitialScale(80);
             mWebView.getSettings().setJavaScriptEnabled(true);
             mWebView.setWebViewClient(new WebViewClient() {
+                @SuppressWarnings("deprecation")
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                    final String url = request.getUrl().toString();
+                    if(DBG) Log.d(TAG, "shouldOverrideUrlLoading " + url);
+                    //view.loadUrl(url);
+                    return false;
+                }
+
+                @TargetApi(Build.VERSION_CODES.N)
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     if(DBG) Log.d(TAG, "shouldOverrideUrlLoading " + url);
