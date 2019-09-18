@@ -16,6 +16,8 @@
 package com.archos.mediacenter.video.browser;
 
 import android.app.Activity;
+
+import androidx.core.content.ContextCompat;
 import androidx.loader.app.LoaderManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -303,7 +305,7 @@ public class NewVideosActionProvider extends ActionProvider implements
             super(anchor.getContext());
             mAnchor = anchor;
             final Resources r = anchor.getResources();
-            setBackgroundDrawable(r.getDrawable(R.drawable.dialog_full_holo_dark));
+            setBackgroundDrawable(ContextCompat.getDrawable(contentView.getContext(), R.drawable.dialog_full_holo_dark));
             setWidth(r.getDimensionPixelSize(R.dimen.new_videos_action_dropdown_width)); // Takes too much space on tablets when using LayoutParams.WRAP_CONTENT
             setHeight(LayoutParams.WRAP_CONTENT);
 

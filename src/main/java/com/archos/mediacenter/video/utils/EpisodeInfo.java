@@ -38,6 +38,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class EpisodeInfo extends BaseInfo {
 
@@ -144,16 +145,18 @@ public class EpisodeInfo extends BaseInfo {
         String ret = null;
         if (mShowTitle != null) {
             // Build the first part of the title: "show name + SxEy"
-            ret = String.format(TITLE_FORMAT, mShowTitle, mSeasonNumber, mEpisodeNumber);
+            ret = String.format(Locale.ENGLISH, TITLE_FORMAT, mShowTitle, mSeasonNumber, mEpisodeNumber);
 
             if (viewMode == VideoUtils.VIEW_MODE_LIST) {
                 // Append the episode name in italics: " <<episode name>>"
                 String episodeNameFormat = context.getString(R.string.quotation_format);
                 String episodeName = String.format(episodeNameFormat, mEpisodeTitle);
+                CharSequence formattedTitle;
                 if (Build.VERSION.SDK_INT >= 24)
-                    return Html.fromHtml(ret + " <i>" + episodeName + "</i>", Html.FROM_HTML_MODE_LEGACY);
+                    formattedTitle = Html.fromHtml(ret + " <i>" + episodeName + "</i>", Html.FROM_HTML_MODE_LEGACY);
                 else
-                    return Html.fromHtml(ret + " <i>" + episodeName + "</i>");
+                    formattedTitle = Html.fromHtml(ret + " <i>" + episodeName + "</i>");
+                return formattedTitle;
             }
         }
         return ret;

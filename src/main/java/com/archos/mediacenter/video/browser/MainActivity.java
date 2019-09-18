@@ -108,6 +108,7 @@ import com.archos.mediascraper.AutoScrapeService;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /*
@@ -795,7 +796,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     private class GlobalResumeTask extends AsyncTask<Void, Void, Map> {
         protected Map doInBackground(Void... anything) {
-            Map result;
+            Map<String, Object> result;
             ContentResolver contentResolver = getContentResolver();
             Cursor c = contentResolver.query(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, CURSORS,
                     VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + "!=0" + (LoaderUtils.mustHideUserHiddenObjects() ? " AND " + LoaderUtils.HIDE_USER_HIDDEN_FILTER : ""), null,
@@ -843,12 +844,12 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                             String episodeName = String.format(getString(R.string.quotation_format),
                                     scraperCursor.getString(index_episode_name));
                             if (Build.VERSION.SDK_INT >= 24)
-                                name = Html.fromHtml(String.format(TITLE_FORMAT,
+                                name = Html.fromHtml(String.format(Locale.ENGLISH,TITLE_FORMAT,
                                         scraperCursor.getString(index_name),
                                         scraperCursor.getInt(index_season),
                                         scraperCursor.getInt(index_number), episodeName), Html.FROM_HTML_MODE_LEGACY);
                             else
-                                name = Html.fromHtml(String.format(TITLE_FORMAT,
+                                name = Html.fromHtml(String.format(Locale.ENGLISH, TITLE_FORMAT,
                                         scraperCursor.getString(index_name),
                                         scraperCursor.getInt(index_season),
                                         scraperCursor.getInt(index_number), episodeName));
@@ -868,12 +869,12 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                             VideoStore.Video.Thumbnails.MINI_KIND, null);
                 }
 
-                result = new HashMap(3);
+                result = new HashMap<>(3);
                 result.put("name", name);
                 result.put("thumbnail", thumbnail);
                 result.put("setListener", Boolean.valueOf(firstGlobalResume));
             } else {
-                result = new HashMap(0);
+                result = new HashMap<>(0);
             }
 
             if (c != null)
