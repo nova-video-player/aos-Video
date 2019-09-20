@@ -73,8 +73,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
+    buildToolsVersion '29.0.2'
     useLibrary 'org.apache.http.legacy'
     sourceSets {
         main {
@@ -89,7 +89,7 @@ android {
     defaultConfig {
         generatedDensities = []
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         multiDexEnabled true
 	// 2000000 is there because before there was a distinction between noleanback 1000000 and leanback 2000000 with different API levels
         versionCode 2000000 + getDate()
@@ -183,19 +183,19 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.media:media:1.0.1'
-    implementation 'androidx.core:core:1.0.1'
+    implementation 'androidx.media:media:1.1.0'
+    implementation 'androidx.core:core:1.1.0'
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
-    implementation 'androidx.fragment:fragment:1.0.0'
+    implementation 'androidx.fragment:fragment:1.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.preference:preference:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.preference:preference:1.1.0'
     implementation 'com.github.ksoichiro:android-observablescrollview:1.6.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.leanback:leanback:1.0.0'
-    implementation 'androidx.leanback:leanback-preference:1.1.0-alpha01'
+    implementation 'androidx.leanback:leanback-preference:1.1.0-alpha02'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
 }
