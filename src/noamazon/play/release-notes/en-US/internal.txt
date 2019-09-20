@@ -1,0 +1,3 @@
+Only switch to AudioTrack instead of openSLES to solve audio/video delay on Amlogic
+Upgrade to latest version of trakt-java containing NVP upstreamed contribution
+Add support for codepade 28606 - Latin-10 or South-Eastern European for subs

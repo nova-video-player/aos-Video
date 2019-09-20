@@ -1,5 +1,1 @@
-Corrige le décodage HEVC sur certains fichiers sur processeur MTK
-Permet d'encaisser des pics plus importants en bitrate sur certaines vidéos 4k
-Corrige le problème de délais AV sur processeur amlogic
-Désactive la ligne/chaîne UpNext empêchant l'accès aux dossiers indexés
-Corrige la synchronisation trakt-java bilatérale
+
