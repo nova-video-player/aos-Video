@@ -154,7 +154,7 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
     public void onBackPressed() {
         MultiBackHintManager.getInstance(this).onBackPressed();
 
-        boolean popped = getFragmentManager().popBackStackImmediate();
+        boolean popped = getSupportFragmentManager().popBackStackImmediate();
         if (!popped) {
             super.onBackPressed();
         }
