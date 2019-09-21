@@ -10,13 +10,6 @@
             android:title="@string/upgrade_to_add_free_version"
             android:summary="@string/upgrade_to_add_free_version_description"
             app:iconSpaceReserved="false"/>
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="enable_cutout_mode_short_edges"
-            android:persistent="true"
-            android:summary="@string/preference_cutout_short_edges_summary"
-            android:title="@string/preference_cutout_short_edges"
-            app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="preferences_category_video"
@@ -38,6 +31,13 @@
             android:summary="@string/dec_choice_summary"
             android:title="@string/dec_choice_title"
             app:iconSpaceReserved="false"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="enable_cutout_mode_short_edges"
+            android:persistent="true"
+            android:summary="@string/preference_cutout_short_edges_summary"
+            android:title="@string/preference_cutout_short_edges"
+            app:iconSpaceReserved="false" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="allow_3rd_party_player"
