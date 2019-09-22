@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.scrapping;
 
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,21 +29,23 @@ import com.archos.mediascraper.NfoParser;
 import com.archos.mediascraper.NfoWriter;
 import com.archos.mediascraper.ScrapeDetailResult;
 import com.archos.mediascraper.ScrapeSearchResult;
+import com.archos.mediascraper.Scraper;
 import com.archos.mediascraper.SearchResult;
 import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.preprocess.SearchInfo;
 import com.archos.mediascraper.preprocess.SearchPreprocessor;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFragment {
 
     public static final String TAG = "ManualVideoScrappingSF";
-
+    public static final boolean DBG = false;
 
     private Video mVideo;
     private SearchInfo mSearchInfo;
-
+    HashMap<BaseTags, SearchResult> mTagsToSearchResultMap = new HashMap<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,14 +89,21 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
      */
     @Override
     protected ScrapeSearchResult performSearch(String text) {
+        mTagsToSearchResultMap.clear();
         mSearchInfo.setUserInput(text);
         return mScraper.getBestMatches(mSearchInfo, SEARCH_RESULT_MAX_ITEMS);
     }
 
     protected BaseTags getTagFromSearchResult(SearchResult result) {
         // Get the details for this match
-        ScrapeDetailResult detail = mScraper.getDetails(result, null);
+        Bundle b = new Bundle();
+        b.putBoolean(Scraper.ITEM_REQUEST_BASIC_VIDEO, true);
+        ScrapeDetailResult detail = mScraper.getDetails(result, b);
         BaseTags tags = detail.tag;
+
+        if (tags instanceof  EpisodeTags) {
+            ((EpisodeTags)tags).getShowTags().setTitle(result.getTitle());
+        }
 
         if (tags == null) {
             // No tags were found online for this movie/show but we know at least its title
@@ -105,6 +115,10 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
                 tags = buildNewEpisodeTags(result.getTitle());
             }
         }
+
+        if(DBG) Log.d(TAG, "put in mTagsToSearchResultMap: "+tags);
+        mTagsToSearchResultMap.put(tags, result);
+
         return tags;
     }
 
@@ -113,22 +127,33 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
      * @param tags
      */
     @Override
-    protected void saveTagsAndFinish(final BaseTags tags) {
-        // since poster can be deleted again we refresh it here
-        tags.downloadPoster(getActivity());
+    protected void saveTagsAndFinish(final BaseTags fTags) {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle(R.string.scrap_get_title);
+        progressDialog.setMessage(getString(R.string.scrap_change_initializing));
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setIndeterminate(false);
+        progressDialog.setCancelable(false);
+        progressDialog.setMax(1);
+        progressDialog.show();
 
-        // saving will trigger database change notification and reloading in
-        // VideoInfoActivity
-        tags.save(getActivity(), mVideo.getId());
+        new Thread() {
+            @Override
+            public void run() {
+                BaseTags tags = fTags;
 
-        // Update Trakt
-        TraktService.onNewVideo(getActivity());
+                if (tags instanceof EpisodeTags) {
+                    SearchResult sr = mTagsToSearchResultMap.get(tags); // Get the searchResult from the map we built for it
+                    ScrapeDetailResult detail = Scraper.getDetails(sr, null);
+                    if (detail.isOkay())
+                        tags = detail.tag;
+                }
+        
+                // since poster can be deleted again we refresh it here
+                tags.downloadPoster(getActivity());
 
-        // Nfo export does network access => thread
-        if (NfoWriter.isNfoAutoExportEnabled(getActivity())) {
-            new Thread() {
-                @Override
-                public void run() {
+                // Nfo export does network access => thread
+                if (NfoWriter.isNfoAutoExportEnabled(getActivity())) {
                     // also auto-export all the data
                     try {
                         NfoWriter.export(mVideo.getFileUri(), tags, null);
@@ -136,10 +161,31 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
                         Log.w(TAG, e);
                     }
                 }
-            }.start();
-        }
 
-        getActivity().finish();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.setProgress(1);
+                        progressDialog.setMessage(getString(R.string.scrap_change_finalizing));
+                    }
+                });
+
+                // saving will trigger database change notification and reloading in
+                // VideoInfoActivity
+                tags.save(getActivity(), mVideo.getId());
+        
+                // Update Trakt
+                TraktService.onNewVideo(getActivity());
+                
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                        getActivity().finish();
+                    }
+                });
+            }
+        }.start();
     }
 
     private static MovieTags buildNewMovieTags(String movieTitle) {
