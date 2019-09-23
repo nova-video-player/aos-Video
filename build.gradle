@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-    id "com.github.triplet.play" version "2.2.0"
+    id "com.github.triplet.play" version "2.3.0"
 }
 
 def keystorePropertiesFile = rootProject.file("keystore.properties");
@@ -91,7 +91,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
         multiDexEnabled true
-	// 2000000 is there because before there was a distinction between noleanback 1000000 and leanback 2000000 with different API levels
+	    // 2000000 is there because before there was a distinction between noleanback 1000000 and leanback 2000000 with different API levels
         versionCode 2000000 + getDate()
         versionName '1.0-' + getFormattedDate()
         if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
@@ -170,11 +170,6 @@ android {
             }
         }
     }
-}
-
-if (file("../VideoInternal").exists()) {
-    apply from: "../VideoInternal/mc_apps_common_env.gradle"
-    apply from: '../VideoInternal/internal_build.gradle'
 }
 
 dependencies {
