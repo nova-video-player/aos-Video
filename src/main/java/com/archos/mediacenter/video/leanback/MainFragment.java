@@ -99,6 +99,7 @@ import java.nio.file.attribute.UserPrincipalNotFoundException;
 public class MainFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "MainFragment";
+    private static final Boolean DBG = false;
     private static final String PREF_PRIVATE_MODE = "PREF_PRIVATE_MODE";
 
     final static int LOADER_ID_WATCHING_UP_NEXT = 47;
@@ -380,7 +381,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     }
 
     private void loadRows() {
-        Log.d(TAG,"loadRows()");
+        if (DBG) Log.d(TAG,"loadRows()");
         // Two different row presenters, one standard for regular cards, one special for the icon items
         ListRowPresenter listRowPresenter = new ListRowPresenter();
         IconItemRowPresenter iconItemRowPresenter = new IconItemRowPresenter();
@@ -750,7 +751,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        Log.d(TAG,"onLoadFinished() cursor id="+cursorLoader.getId());
+        if (DBG) Log.d(TAG,"onLoadFinished() cursor id="+cursorLoader.getId());
         // TODO: disabled until issue #186 is fixed
         /*
         if (cursorLoader.getId() == LOADER_ID_WATCHING_UP_NEXT) {
