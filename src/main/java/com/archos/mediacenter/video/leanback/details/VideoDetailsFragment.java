@@ -1223,21 +1223,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                             .centerCrop()
                             .get();
                     if(bitmap!=null) {
-                        Palette palette = Palette.from(bitmap).generate();
-                        if (palette.getDarkVibrantSwatch() != null)
-                            mColor = palette.getDarkVibrantSwatch().getRgb();
-                        else if (palette.getDarkMutedSwatch() != null)
-                            mColor = palette.getDarkMutedSwatch().getRgb();
-                        else
-                            mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
-                        mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
-                        mOverviewRowPresenter.updateBackgroundColor(mColor);
-                        mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
                         return bitmap;
-
                     }
-
-
                 } catch (IOException e) {
                 }
             }
@@ -1251,8 +1238,19 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             if(isCancelled())
                 return;
             mPoster = result;
+            if(result!=null) {
+                Palette palette = Palette.from(result).generate();
+                if (palette.getDarkVibrantSwatch() != null)
+                    mColor = palette.getDarkVibrantSwatch().getRgb();
+                else if (palette.getDarkMutedSwatch() != null)
+                    mColor = palette.getDarkMutedSwatch().getRgb();
+                else
+                    mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
+                mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
+                mOverviewRowPresenter.updateBackgroundColor(mColor);
+                mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
+            }
             fullyReloadVideo(mVideo,result);
-
         }
     }
 
