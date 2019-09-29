@@ -467,13 +467,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     if (DBG) Log.w(TAG, "onCreateView loader is null");
                 } else {
                     Cursor cursor = loader.loadInBackground();
-                    if (cursor != null && cursor.getCount() > 0) {
-                        cursor.moveToFirst();
+                    if (cursor != null && cursor.moveToFirst()) {
                         VideoCursorMapper videoCursorMapper = new VideoCursorMapper();
                         videoCursorMapper.bindColumns(cursor);
                         video = (Video) videoCursorMapper.publicBind(cursor);
-                        cursor.close();
                     }
+                    if (cursor != null)
+                        cursor.close();
                 }
             }
             if(video!=null)
