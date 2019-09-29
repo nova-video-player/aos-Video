@@ -35,6 +35,7 @@ import android.os.Handler;
 import android.os.Parcelable;
 
 import androidx.core.widget.TextViewCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -668,7 +669,9 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                 mArchosGridView.onRestoreInstanceState(mListState);
 
         }
-        getActivity().invalidateOptionsMenu();
+        FragmentActivity activity = getActivity();
+        if (activity != null)
+            activity.invalidateOptionsMenu();
     }
 
     /*
