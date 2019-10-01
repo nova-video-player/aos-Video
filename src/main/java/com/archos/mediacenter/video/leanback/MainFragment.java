@@ -236,20 +236,20 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         loadRows();
         // TODO: disabled until issue #186 is fixed
-        //LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
-        LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_LAST_ADDED, null, this);
-        LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_LAST_PLAYED, null, this);
+        //LoaderManager.getInstance(this).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
+        LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_ADDED, null, this);
+        LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_PLAYED, null, this);
         
         Bundle movieArgs = new Bundle();
 
         movieArgs.putString("sort", mMovieSortOrder);
-        LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_ALL_MOVIES, movieArgs, this);
+        LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_MOVIES, movieArgs, this);
         
         Bundle tvshowArgs = new Bundle();
 
         tvshowArgs.putString("sort", mTvShowSortOrder);
-        LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_ALL_TV_SHOWS, tvshowArgs, this);
-        LoaderManager.getInstance(getActivity()).initLoader(LOADER_ID_NON_SCRAPED_VIDEOS_COUNT, null, this);
+        LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_TV_SHOWS, tvshowArgs, this);
+        LoaderManager.getInstance(this).initLoader(LOADER_ID_NON_SCRAPED_VIDEOS_COUNT, null, this);
     }
 
     @Override
@@ -272,12 +272,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         updateBackground();
 
         getActivity().registerReceiver(mUpdateReceiver, mUpdateFilter);
-
-        // TODO: disabled until issue #186 is fixed
-        //LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_WATCHING_UP_NEXT).startLoading();
-        LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_LAST_ADDED).startLoading();
-        LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_LAST_PLAYED).startLoading();
-        LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_ALL_MOVIES).startLoading();
 
         // TODO: disabled until issue #186 is fixed
         /*
@@ -324,7 +318,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             Bundle args = new Bundle();
 
             args.putString("sort", mMovieSortOrder);
-            LoaderManager.getInstance(getActivity()).restartLoader(LOADER_ID_ALL_MOVIES, args, this);
+            LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_MOVIES, args, this);
         }
 
         String newTvShowSortOrder = mPrefs.getString(VideoPreferencesCommon.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
@@ -334,7 +328,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             Bundle args = new Bundle();
 
             args.putString("sort", mTvShowSortOrder);
-            LoaderManager.getInstance(getActivity()).restartLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
+            LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
         }
 
         findAndUpdatePrivateModeIcon();
@@ -345,12 +339,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         super.onPause();
         mOverlay.pause();
         getActivity().unregisterReceiver(mUpdateReceiver);
-
-        // TODO: disabled until issue #186 is fixed
-        //LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_WATCHING_UP_NEXT).stopLoading();
-        LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_LAST_ADDED).stopLoading();
-        LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_LAST_PLAYED).stopLoading();
-        LoaderManager.getInstance(getActivity()).getLoader(LOADER_ID_ALL_MOVIES).stopLoading();
     }
 
     private void updateBackground() {

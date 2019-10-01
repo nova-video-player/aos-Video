@@ -84,6 +84,8 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
 
     private boolean mShowWatched;
 
+    private static Context mContext;
+
     public static SparseArray<MoviesSortOrderEntry> sortOrderIndexer = new SparseArray<MoviesSortOrderEntry>();
     static {
         sortOrderIndexer.put(0, new MoviesSortOrderEntry(R.string.sort_by_name_asc,        "name COLLATE NOCASE ASC"));
@@ -97,6 +99,8 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mContext = this.getContext();
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         int displayModeIndex = mPrefs.getInt(PREF_ALL_MOVIES_DISPLAY_MODE, -1);
@@ -136,7 +140,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
                         Bundle args = new Bundle();
                         args.putString("sort", mSortOrder);
                         args.putBoolean("showWatched", mShowWatched);
-                        LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllMoviesGridFragment.this);
+                        LoaderManager.getInstance(AllMoviesGridFragment.this).restartLoader(0, args, AllMoviesGridFragment.this);
                     }
                 }
 
@@ -165,7 +169,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         Bundle args = new Bundle();
         args.putString("sort", mSortOrder);
         args.putBoolean("showWatched", mShowWatched);
-        LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllMoviesGridFragment.this);
+        LoaderManager.getInstance(this).restartLoader(0, args, AllMoviesGridFragment.this);
     }
 
     @Override
@@ -239,7 +243,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
                                     args.putBoolean("showWatched", mShowWatched);
-                                    LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllMoviesGridFragment.this);
+                                    LoaderManager.getInstance(AllMoviesGridFragment.this).restartLoader(0, args, AllMoviesGridFragment.this);
                                 }
                                 dialog.dismiss();
                             }
@@ -265,7 +269,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
                 Bundle args = new Bundle();
                 args.putString("sort", mSortOrder);
                 args.putBoolean("showWatched", mShowWatched);
-                LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllMoviesGridFragment.this);
+                LoaderManager.getInstance(AllMoviesGridFragment.this).restartLoader(0, args, AllMoviesGridFragment.this);
             }
         });
 
@@ -290,14 +294,12 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         super.onResume();
         mOverlay.resume();
         updateBackground();
-        LoaderManager.getInstance(getActivity()).getLoader(0).startLoading();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mOverlay.pause();
-        LoaderManager.getInstance(getActivity()).getLoader(0).stopLoading();
     }
 
     @Override

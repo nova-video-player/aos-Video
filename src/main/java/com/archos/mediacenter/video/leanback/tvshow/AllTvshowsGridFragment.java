@@ -131,7 +131,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
                         Bundle args = new Bundle();
                         args.putString("sort", mSortOrder);
                         args.putBoolean("showWatched", mShowWatched);
-                        LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllTvshowsGridFragment.this);
+                        LoaderManager.getInstance(AllTvshowsGridFragment.this).restartLoader(0, args, AllTvshowsGridFragment.this);
                     }
                 }
 
@@ -160,7 +160,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
         Bundle args = new Bundle();
         args.putString("sort", mSortOrder);
         args.putBoolean("showWatched", mShowWatched);
-        LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllTvshowsGridFragment.this);
+        LoaderManager.getInstance(this).restartLoader(0, args, AllTvshowsGridFragment.this);
     }
 
     @Override
@@ -235,7 +235,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
                                     args.putBoolean("showWatched", mShowWatched);
-                                    LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllTvshowsGridFragment.this);
+                                    LoaderManager.getInstance(AllTvshowsGridFragment.this).restartLoader(0, args, AllTvshowsGridFragment.this);
                                 }
                                 dialog.dismiss();
                             }
@@ -261,7 +261,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
                 Bundle args = new Bundle();
                 args.putString("sort", mSortOrder);
                 args.putBoolean("showWatched", mShowWatched);
-                LoaderManager.getInstance(getActivity()).restartLoader(0, args, AllTvshowsGridFragment.this);
+                LoaderManager.getInstance(AllTvshowsGridFragment.this).restartLoader(0, args, AllTvshowsGridFragment.this);
             }
         });
 

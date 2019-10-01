@@ -127,7 +127,7 @@ public class BrowserVideosInPlaylist extends BrowserByVideoSelection {
 					}
 				}
 				getArguments().putString(BrowserByVideoSelection.LIST_OF_IDS, ids);
-				LoaderManager.getInstance(getActivity()).restartLoader(0, null, this);
+				LoaderManager.getInstance(this).restartLoader(0, null, this);
 				TraktService.sync(ArchosUtils.getGlobalContext(), TraktService.FLAG_SYNC_AUTO);
 				return true;
 			}
