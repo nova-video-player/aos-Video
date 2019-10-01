@@ -150,7 +150,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             mCursor.close();
         }
         mCursor = null;
-        LoaderManager.getInstance(getActivity()).initLoader(0, null, this);
+        LoaderManager.getInstance(this).initLoader(0, null, this);
     }
 
     @Override
@@ -165,13 +165,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             hideSubMenu(mMenu);
             listFiles(true);
         }
-        // close mCursor before restartLoader
-        if (mCursor != null && ! mCursor.isClosed()) {
-            mCursor.close();
-        }
-        mCursor = null;
-        // need this to avoid getting an empty view
-        LoaderManager.getInstance(getActivity()).restartLoader(0, null, this);
     }
 
     @Override
@@ -216,8 +209,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             mCursor.close();
         }
         mCursor = null;
-        // for some reasons this makes empty view when switching from BrowserByFolder->BrowserAllTvShows|Recently added/played
-        //LoaderManager.getInstance(getActivity()).destroyLoader(0);
+        LoaderManager.getInstance(this).destroyLoader(0);
     }
 
     @Override

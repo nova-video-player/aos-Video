@@ -191,8 +191,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             if(newShowID!=-1&&newShowID!=mShowId){
                 mShowId = newShowID;
                 getArguments().putLong(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID, mShowId);
-                LoaderManager.getInstance(getActivity()).restartLoader(0, null, this);
-                LoaderManager.getInstance(getActivity()).restartLoader(SHOW_LOADER_ID, null, this);
+                LoaderManager.getInstance(this).restartLoader(0, null, this);
+                LoaderManager.getInstance(this).restartLoader(SHOW_LOADER_ID, null, this);
             }
         }
     }
@@ -438,7 +438,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
                 mTvShowAsyncTask = new TvShowAsyncTask().executeOnExecutor(mSerialExecutor, getPosterUri(), mShow);
             }
-            LoaderManager.getInstance(getActivity()).restartLoader(SHOW_LOADER_ID, null, this);
+            LoaderManager.getInstance(this).restartLoader(SHOW_LOADER_ID, null, this);
         }
     }
 

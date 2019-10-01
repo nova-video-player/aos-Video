@@ -131,7 +131,7 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
         setGridPresenter(vgp);
         Bundle args = new Bundle();
         args.putString("sort", mSortOrder);
-        LoaderManager.getInstance(getActivity()).restartLoader(0, args, NonScrapedVideosFragment.this);
+        LoaderManager.getInstance(this).restartLoader(0, args, NonScrapedVideosFragment.this);
     }
 
     @Override
@@ -197,7 +197,7 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
                                     mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).commit();
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
-                                    LoaderManager.getInstance(getActivity()).restartLoader(0, args, NonScrapedVideosFragment.this);
+                                    LoaderManager.getInstance(NonScrapedVideosFragment.this).restartLoader(0, args, NonScrapedVideosFragment.this);
                                 }
                                 dialog.dismiss();
                             }
@@ -230,14 +230,12 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
     public void onResume() {
         super.onResume();
         mOverlay.resume();
-        LoaderManager.getInstance(getActivity()).getLoader(0).startLoading();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mOverlay.pause();
-        LoaderManager.getInstance(getActivity()).getLoader(0).stopLoading();
     }
 
     @Override

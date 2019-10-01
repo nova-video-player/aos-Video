@@ -354,14 +354,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     @Override
     public void onResume() {
         super.onResume();
-
         mOverlay.resume();
-
-        if (mSeasonAdapters != null) {
-            for (int i = 0; i < mSeasonAdapters.size(); i++)
-                LoaderManager.getInstance(this).getLoader(mSeasonAdapters.keyAt(i)).startLoading();
-        }
-
         // Start loading the detailed info about the show if needed
         if (mTvshow.getShowTags()==null) {
             mFullScraperTagsTask = new FullScraperTagsTask().execute(mTvshow);
@@ -377,11 +370,6 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     public void onPause() {
         super.onPause();
         mOverlay.pause();
-
-        if (mSeasonAdapters != null) {
-            for (int i = 0; i < mSeasonAdapters.size(); i++)
-                LoaderManager.getInstance(this).getLoader(mSeasonAdapters.keyAt(i)).stopLoading();
-        }
     }
 
     /**
@@ -484,7 +472,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(tvshow.getShowTags());
 
             // Start loading the list of seasons
-            LoaderManager.getInstance(getActivity()).restartLoader(SEASONS_LOADER_ID, null, TvshowFragment.this);
+            LoaderManager.getInstance(TvshowFragment.this).restartLoader(SEASONS_LOADER_ID, null, TvshowFragment.this);
         }
     }
 

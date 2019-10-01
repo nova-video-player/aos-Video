@@ -162,7 +162,7 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
         mTvshowPresenter = new PosterImageCardPresenter(getActivity());
         mTvshowMapper = new CompatibleCursorMapperConverter(new TvshowCursorMapper());
 
-        LoaderManager.getInstance(getActivity()).initLoader(-1, null, this);
+        LoaderManager.getInstance(this).initLoader(-1, null, this);
     }
 
     private void setupEventListeners() {
@@ -298,7 +298,7 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
             args.putString("sort", mSortOrder);
             // cf. https://github.com/nova-video-player/aos-AVP/issues/141
             try {
-                LoaderManager.getInstance(getActivity()).restartLoader(subsetId, args, this);
+                LoaderManager.getInstance(this).restartLoader(subsetId, args, this);
             } catch (Exception e) {
                 Log.w(TAG, "caught exception in loadCategoriesRows ",e);
             }

@@ -175,7 +175,7 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
         mVideoPresenter = new PosterImageCardPresenter(getActivity());
         mVideoMapper = new CompatibleCursorMapperConverter(new VideoCursorMapper());
 
-        LoaderManager.getInstance(getActivity()).initLoader(-1, null, this);
+        LoaderManager.getInstance(this).initLoader(-1, null, this);
     }
 
     private void setupEventListeners() {
@@ -308,7 +308,7 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
             args.putString("ids", listOfMovieIds);
             args.putString("sort", mSortOrder);
             try {
-                LoaderManager.getInstance(getActivity()).restartLoader(subsetId, args, this);
+                LoaderManager.getInstance(this).restartLoader(subsetId, args, this);
             } catch (Exception e) {
                 Log.w(TAG, "caught exception in loadCategoriesRows ",e);
             }

@@ -395,7 +395,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                             fullyReloadVideo(mVideo,mPoster);
 
                         }
-                        LoaderManager.getInstance(getActivity()).restartLoader(1, null, VideoDetailsFragment.this);
+                        LoaderManager.getInstance(VideoDetailsFragment.this).restartLoader(1, null, VideoDetailsFragment.this);
 
                     }
                 }

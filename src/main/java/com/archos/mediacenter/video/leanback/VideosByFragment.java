@@ -122,26 +122,12 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
     public void onResume() {
         super.onResume();
         mOverlay.resume();
-
-        for (int i = 0; i < mAdaptersMap.size(); i++)
-            try {
-                LoaderManager.getInstance(this).getLoader(mAdaptersMap.keyAt(i)).startLoading();
-            } catch (Exception e) {
-                Log.w(TAG, "caught exception in onResume ",e);
-            }
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mOverlay.pause();
-
-        for (int i = 0; i < mAdaptersMap.size(); i++)
-            try {
-                LoaderManager.getInstance(this).getLoader(mAdaptersMap.keyAt(i)).stopLoading();
-            } catch (Exception e) {
-                Log.w(TAG, "caught exception in onPause ",e);
-            }
     }
 
     @Override
