@@ -1,1 +1,3 @@
-
+SMBv2/3 support (still issue with guest) via jcifs-ng
+Migration to TheTVDB API v2 via thetvdb-java external library with request caching support
+Target API29 disabling scoped storage for now
