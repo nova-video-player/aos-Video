@@ -755,6 +755,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     };
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        if (getActivity() == null) return;
         long start = System.currentTimeMillis();
         Video oldVideoObject = mVideo;
         List<Video> oldVideoList = new ArrayList<>(mVideoList);

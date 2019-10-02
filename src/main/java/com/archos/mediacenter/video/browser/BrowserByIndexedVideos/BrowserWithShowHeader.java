@@ -244,6 +244,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         super.onLoadFinished(loader, cursor);
+        if (getActivity() == null) return;
         if(loader.getId()==SHOW_LOADER_ID) {
             cursor.moveToFirst();
             TvshowCursorMapper mTvShowMapper = new TvshowCursorMapper();

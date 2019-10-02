@@ -740,6 +740,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         if (DBG) Log.d(TAG,"onLoadFinished() cursor id="+cursorLoader.getId());
+        if (getActivity() == null) return;
         // TODO: disabled until issue #186 is fixed
         /*
         if (cursorLoader.getId() == LOADER_ID_WATCHING_UP_NEXT) {

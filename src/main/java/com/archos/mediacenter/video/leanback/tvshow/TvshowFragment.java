@@ -491,6 +491,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        if (getActivity() == null) return;
         if (cursorLoader.getId()==SEASONS_LOADER_ID) {
             final int seasonNumberColumn = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON);
 

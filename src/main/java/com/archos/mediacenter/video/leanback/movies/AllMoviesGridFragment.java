@@ -316,6 +316,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        if (getActivity() == null) return;
         if (cursorLoader.getId()==0) {
             mMoviesAdapter.swapCursor(cursor);
             setEmptyViewVisiblity(cursor.getCount()<1);

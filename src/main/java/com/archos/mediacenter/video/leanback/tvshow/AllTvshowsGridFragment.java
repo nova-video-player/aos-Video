@@ -308,6 +308,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        if (getActivity() == null) return;
         if (cursorLoader.getId()==0) {
             mTvshowsAdapter.swapCursor(cursor);
             setEmptyViewVisiblity(cursor.getCount()<1);

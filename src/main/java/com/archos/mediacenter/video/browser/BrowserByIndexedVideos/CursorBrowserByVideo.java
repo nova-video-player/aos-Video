@@ -99,6 +99,7 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
 
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if (getActivity() == null) return;
         if(loader.getId()==0) { //if was called with this fragment, not a child
             if (mCursor == null || mCursor.isClosed()) {
                 mCursor = cursor;
