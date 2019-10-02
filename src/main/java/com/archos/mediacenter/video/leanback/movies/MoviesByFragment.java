@@ -212,6 +212,7 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor c) {
+        if (getActivity() == null) return;
         // List of categories
         if (cursorLoader.getId() == -1) {
 

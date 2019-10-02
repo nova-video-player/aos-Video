@@ -252,6 +252,7 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        if (getActivity() == null) return;
         if (cursorLoader.getId()==0) {
             mNonScrapedAdapter.swapCursor(cursor);
             setEmptyViewVisiblity(cursor.getCount()<1);

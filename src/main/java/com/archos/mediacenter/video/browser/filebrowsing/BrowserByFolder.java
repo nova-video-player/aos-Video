@@ -229,6 +229,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if (getActivity() == null) return;
         mCursor = cursor;
         updateAdapterIfReady();
     }
