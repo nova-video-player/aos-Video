@@ -187,6 +187,8 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
         setSelection(getSelection());
         setSelectionArgs(getSelectionArgs());
         setSortOrder(getSortOrder());
+        // only updates the CursorLoader on data change every 2s
+        setUpdateThrottle(2000);
     }
 
     @Override
