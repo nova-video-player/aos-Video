@@ -850,8 +850,8 @@
     <string name="rescrap_in_progress">Rescraping whole library</string>
     <string name="acquire_external_usb_permission">Nova Video needs special permission to access external storage. Please select your storage on next screen</string>
 
-    <string name="rescrap_not_found">Rescrap videos without description</string>
-    <string name="rescrap_all_title">Rescrap all</string>
+    <string name="rescrap_not_found">Rescrape videos without description</string>
+    <string name="rescrap_all_title">Rescrape all</string>
     <string name="nfo_export_manual_title">Export already scraped videos</string>
     <string name="nfo_export_manual_summary">Export .nfo files of every already scraped videos</string>
     <string name="db_export_manual_prefkey">db_export_manual_prefkey</string>
