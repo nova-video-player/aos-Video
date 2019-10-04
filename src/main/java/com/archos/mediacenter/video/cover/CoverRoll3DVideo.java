@@ -21,6 +21,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -317,7 +319,7 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 			public boolean onMenuItemClick(MenuItem item) {
                 // Forbid deleting in DemoMode
                 if (ArchosSettings.isDemoModeActive(mActivity)) {
-                    mActivity.startService(new Intent(ArchosIntents.ACTION_DEMO_MODE_FEATURE_DISABLED));
+					ContextCompat.startForegroundService(mActivity, new Intent(ArchosIntents.ACTION_DEMO_MODE_FEATURE_DISABLED));
                 } else {
 					AlertDialog.Builder b = new AlertDialog.Builder(activity).setTitle("");
 					b.setIcon(R.drawable.filetype_new_video);

@@ -46,6 +46,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
@@ -288,7 +290,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         }
 
         if(FileManagerService.fileManagerService==null)
-            startService(new Intent(this, FileManagerService.class));
+            ContextCompat.startForegroundService(this, new Intent(this, FileManagerService.class));
 
         //in case we need to re-log in trakt
         mTraktRelogBroadcastReceiver = new BroadcastReceiver(){
