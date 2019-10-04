@@ -27,6 +27,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.core.content.ContextCompat;
+
 
 public class BootupRecommandationService extends BroadcastReceiver {
 	private static final String TAG = "BootupActivity";
@@ -52,7 +54,7 @@ public class BootupRecommandationService extends BroadcastReceiver {
 	private static void scheduleRecommendationUpdate(Context context) {
 		if(ArchosFeatures.isAndroidTV(context) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < Build.VERSION_CODES.O && AppState.isForeGround()){
 			Intent recommendationIntent = new Intent(context, UpdateRecommendationsService.class);
-			context.startService(recommendationIntent);
+			ContextCompat.startForegroundService(context, recommendationIntent);
 		}
 	}
 

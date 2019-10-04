@@ -37,6 +37,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import androidx.appcompat.app.ActionBar;
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
@@ -869,8 +870,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         if(!mWasInPictureInPicture){
             mPermissionChecker.checkAndRequestPermission(this);
             if(mHasAskedFloatingPermission&&Settings.canDrawOverlays(this)){ //permission has been granted
-                startService(new Intent(this, FloatingPlayerService.class));
-
+                ContextCompat.startForegroundService(this, new Intent(this, FloatingPlayerService.class));
             }
             mHasAskedFloatingPermission = false;
             TorrentObserverService.resumed(PlayerActivity.this);
@@ -2019,7 +2019,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     displayFloatingWindowPermissionDialog();
                 }
                 else
-                    startService(new Intent(this, FloatingPlayerService.class));
+                    ContextCompat.startForegroundService(this, new Intent(this, FloatingPlayerService.class));
                 //finish();
                 return true;
             case MENU_INFO_ID:
