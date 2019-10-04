@@ -18,8 +18,6 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import android.util.Log;
@@ -134,7 +132,7 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 			Intent intent = new Intent(getActivity(),AutoScrapeService.class);
 			intent.putExtra(AutoScrapeService.RESCAN_EVERYTHING, true);
 			intent.putExtra(AutoScrapeService.RESCAN_ONLY_DESC_NOT_FOUND, true);
-			ContextCompat.startForegroundService(getActivity(), intent);
+			getActivity().startService(intent);
 			Toast.makeText(getActivity(), R.string.rescrap_in_progress, Toast.LENGTH_SHORT).show();
 			return true;
 		} else
