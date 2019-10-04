@@ -20,8 +20,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
-
 import com.archos.customizedleanback.widget.MyTitleView;
 import com.archos.mediacenter.utils.BlacklistedDbAdapter;
 import com.archos.mediacenter.video.R;
@@ -137,7 +135,7 @@ public class LocalListingFragment extends ListingFragment {
             Intent serviceIntent = new Intent(getActivity(), VideoStoreImportService.class);
             serviceIntent.setAction(ArchosMediaIntent.ACTION_VIDEO_SCANNER_METADATA_UPDATE);
             serviceIntent.setData(mUri);
-            ContextCompat.startForegroundService(getActivity(), serviceIntent);
+            getActivity().startService(serviceIntent);
         }
         else {
             Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
@@ -157,7 +155,7 @@ public class LocalListingFragment extends ListingFragment {
             Intent serviceIntent = new Intent(getActivity(), VideoStoreImportService.class);
             serviceIntent.setAction(ArchosMediaIntent.ACTION_VIDEO_SCANNER_METADATA_UPDATE);
             serviceIntent.setData(mUri);
-            ContextCompat.startForegroundService(getActivity(), serviceIntent);
+            getActivity().startService(serviceIntent);
         }
         else {
             Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();

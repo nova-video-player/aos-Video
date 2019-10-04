@@ -34,8 +34,6 @@ import android.os.IBinder;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.StatFs;
-
-import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 import android.util.Log;
 
@@ -125,13 +123,13 @@ public class TorrentObserverService extends Service{
     static public void paused(Context ctxt) {
         Log.d("AVP", "Sending paused intent");
         Intent i = new Intent(intentPaused, Uri.EMPTY, ctxt.getApplicationContext(), TorrentObserverService.class);
-        ContextCompat.startForegroundService(ctxt.getApplicationContext(), i);
+        ctxt.getApplicationContext().startService(i);
     }
 
     static public void resumed(Context ctxt) {
         Log.d("AVP", "Sending resumed intent");
         Intent i = new Intent(intentResumed, Uri.EMPTY, ctxt.getApplicationContext(), TorrentObserverService.class);
-        ContextCompat.startForegroundService(ctxt.getApplicationContext(), i);
+        ctxt.getApplicationContext().startService(i);
     }
 
     public void setObserver(TorrentThreadObserver observer){

@@ -31,8 +31,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-import androidx.core.content.ContextCompat;
-
 import com.archos.environment.ArchosIntents;
 import com.archos.environment.ArchosSettings;
 import com.archos.filecorelibrary.FileUtils;
@@ -340,7 +338,8 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
                 // delete action
                 // Forbid deleting in DemoMode
                 if (ArchosSettings.isDemoModeActive(getActivity())) {
-                    ContextCompat.startForegroundService(getActivity(), new Intent(ArchosIntents.ACTION_DEMO_MODE_FEATURE_DISABLED));
+                    getActivity().startService(
+                            new Intent(ArchosIntents.ACTION_DEMO_MODE_FEATURE_DISABLED));
                 } else {
                     List<Uri> toDelete = new ArrayList<>();
                     toDelete.add(getRealPathUriFromPosition(info.position));

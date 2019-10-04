@@ -19,8 +19,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.view.Menu;
@@ -37,7 +35,7 @@ public class FloatingPlayerActivity extends FragmentActivity {
             Intent intent = new Intent(FloatingPlayerActivity.this, FloatingPlayerService.class);
             intent.setData(getIntent().getData());
             intent.putExtras(getIntent());
-            ContextCompat.startForegroundService(FloatingPlayerActivity.this, intent);
+            startService(intent);
             finish();
         }
 

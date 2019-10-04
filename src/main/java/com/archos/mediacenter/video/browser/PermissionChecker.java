@@ -115,7 +115,7 @@ public class PermissionChecker {
             // inform import service about the event
             Intent serviceIntent = new Intent(mActivity, VideoStoreImportService.class);
             serviceIntent.setAction(ArchosMediaIntent.ACTION_VIDEO_SCANNER_STORAGE_PERMISSION_GRANTED);
-            ContextCompat.startForegroundService(mActivity, serviceIntent);
+            mActivity.startService(serviceIntent);
             if(mListener!=null)
                 mListener.onPermissionGranted();
             isDialogDisplayed = false;

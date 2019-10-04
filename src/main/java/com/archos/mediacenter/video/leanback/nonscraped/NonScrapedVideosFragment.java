@@ -211,8 +211,9 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
                 Intent intent = new Intent(getActivity(),AutoScrapeService.class);
                 intent.putExtra(AutoScrapeService.RESCAN_EVERYTHING, true);
                 intent.putExtra(AutoScrapeService.RESCAN_ONLY_DESC_NOT_FOUND, true);
-                ContextCompat.startForegroundService(getActivity(), intent);
+                getActivity().startService(intent);
                 Toast.makeText(getActivity(), R.string.rescrap_in_progress, Toast.LENGTH_SHORT).show();
+
             }
         });
         getTitleView().setOnOrb4Description(getString(R.string.rescrap_all_title));
