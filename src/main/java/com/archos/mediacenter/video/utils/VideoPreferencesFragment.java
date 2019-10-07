@@ -28,7 +28,7 @@ import androidx.preference.PreferenceScreen;
 import androidx.preference.PreferenceViewHolder;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class VideoPreferencesFragment extends NovaPreferenceFragmentCompat {
+public class VideoPreferencesFragment extends PreferenceFragmentCompat {
 
     private VideoPreferencesCommon mPreferencesCommon = new VideoPreferencesCommon(this);
 
