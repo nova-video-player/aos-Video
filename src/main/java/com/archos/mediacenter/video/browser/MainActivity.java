@@ -46,6 +46,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
@@ -286,9 +288,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         	.setIcon(android.R.drawable.ic_dialog_alert)
         	.show();
         }
-
-        if(FileManagerService.fileManagerService==null)
-            startService(new Intent(this, FileManagerService.class));
 
         //in case we need to re-log in trakt
         mTraktRelogBroadcastReceiver = new BroadcastReceiver(){

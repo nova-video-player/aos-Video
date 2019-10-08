@@ -28,9 +28,9 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
+
 import androidx.preference.PreferenceManager;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationCompat.Builder;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.widget.Toast;
@@ -52,13 +52,17 @@ public class FileManagerService extends Service implements OperationEngineListen
 
     private ArrayList<MetaFile2> mProcessedFiles = null;
     private IBinder localBinder;
-    private static final int PASTE_NOTIFICATION_ID = 1;
-    private static final int OPEN_NOTIFICATION_ID = 2;
     private static String OPEN_AT_THE_END_KEY= "open_at_the_end_key";
     public static FileManagerService fileManagerService = null;
 
-    private NotificationManager mNotificationManager;
-    private Builder mNotificationBuilder;
+    private static final int PASTE_NOTIFICATION_ID = 9;
+    private static final int OPEN_NOTIFICATION_ID = 10;
+    private NotificationManager nm;
+    private NotificationCompat.Builder nb;
+    private static final String notifChannelId = "FileManagerService_id";
+    private static final String notifChannelName = "FileManagerService";
+    private static final String notifChannelDescr = "FileManagerService";
+
     private long mPasteTotalSize = 0;
     private int mCurrentFile = 0;
     private BroadcastReceiver receiver;
@@ -101,9 +105,24 @@ public class FileManagerService extends Service implements OperationEngineListen
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // need to do that early to avoid ANR on Android 26+
+        nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel nc = new NotificationChannel(notifChannelId, notifChannelName,
+                    nm.IMPORTANCE_LOW);
+            nc.setDescription(notifChannelDescr);
+            if (nm != null)
+                nm.createNotificationChannel(nc);
+        }
+        nb = new NotificationCompat.Builder(this, notifChannelId)
+                .setSmallIcon(R.drawable.video2)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setTicker(null).setOnlyAlertOnce(true).setOngoing(true).setAutoCancel(true);
+        startForeground(PASTE_NOTIFICATION_ID, nb.build());
+
         mLastStatus = ActionStatusEnum.NONE;
         localBinder = new FileManagerServiceBinder();
-        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mOpenAtTheEnd = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(OPEN_AT_THE_END_KEY, true);
         mHasOpenAtTheEndBeenSet = false;
         mListeners = new ArrayList<>();
@@ -135,7 +154,7 @@ public class FileManagerService extends Service implements OperationEngineListen
     private void openLastFile() {
         if(mTarget!=null&& mProcessedFiles !=null&& mProcessedFiles.size()==1&& mProcessedFiles.get(0).isFile()){
 
-            mNotificationManager.cancel(OPEN_NOTIFICATION_ID);
+            nm.cancel(OPEN_NOTIFICATION_ID);
             Uri uri = Uri.withAppendedPath(mTarget, mProcessedFiles.get(0).getName());
             String extension = "*";
             if(uri.getLastPathSegment().contains(".")&&!uri.getLastPathSegment().endsWith(".")){
@@ -215,6 +234,8 @@ public class FileManagerService extends Service implements OperationEngineListen
         setCanceledStatus();
     	super.onDestroy();
     	unregisterReceiver(receiver);
+        stopForeground(true);
+        stopSelf();
     }
 
 
@@ -281,17 +302,16 @@ public class FileManagerService extends Service implements OperationEngineListen
     private void updateStatusbarNotification(String text) {
         if (text != null) {
             // Update the notification text
-            mNotificationBuilder.setContentText(text);
+            nb.setContentText(text);
         }
-
         // Tell the notification manager about the changes
-        mNotificationManager.notify(PASTE_NOTIFICATION_ID, mNotificationBuilder.build());
+        nm.notify(PASTE_NOTIFICATION_ID, nb.build());
     }
 
     protected void removeStatusbarNotification() {
-        if (mNotificationBuilder != null) {
-            mNotificationManager.cancel(PASTE_NOTIFICATION_ID);
-            mNotificationBuilder = null;
+        if (nb != null) {
+            nm.cancel(PASTE_NOTIFICATION_ID);
+            nb = null;
         }
     }
 
@@ -335,7 +355,6 @@ public class FileManagerService extends Service implements OperationEngineListen
     }
 
     private void acquireWakeLock() {
-
         releaseWakeLock();
         if (DBG) Log.d(TAG, "acquireWakeLock");
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -374,6 +393,8 @@ public class FileManagerService extends Service implements OperationEngineListen
         for(ServiceListener fl :mListeners){
             fl.onActionStop();
         }
+        stopForeground(true);
+        stopSelf();
     }
 
     @Override
@@ -386,6 +407,8 @@ public class FileManagerService extends Service implements OperationEngineListen
         for (ServiceListener lis : mListeners){
             lis.onActionError();
         }
+        stopForeground(true);
+        stopSelf();
     }
 
 
@@ -433,73 +456,27 @@ public class FileManagerService extends Service implements OperationEngineListen
 
     /* Notification */
 
-    private static final String notifChannelId = "FileManagerService_id";
-    private static final String notifChannelName = "FileManagerService";
-    private static final String notifChannelDescr = "FileManagerService";
     public void startStatusbarNotification() {
-        mNotificationManager.cancel(OPEN_NOTIFICATION_ID);
-        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        int message =  R.string.copying;
-        CharSequence title = getResources().getText(message);
-        long when = System.currentTimeMillis();
-
+        nm.cancel(OPEN_NOTIFICATION_ID);
+        nb.setContentTitle(getText(R.string.copying))
         // Build the intent to send when the user clicks on the notification in the notification panel
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        notificationIntent.setAction(MainActivity.LAUNCH_DIALOG);
-
-        // Create the NotificationChannel, but only on API 26+ because the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel mNotifChannel = new NotificationChannel(notifChannelId, notifChannelName,
-                    mNotificationManager.IMPORTANCE_LOW);
-            mNotifChannel.setDescription(notifChannelDescr);
-            if (mNotificationManager != null)
-                mNotificationManager.createNotificationChannel(mNotifChannel);
-        }
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        // Create a new notification builder
-        mNotificationBuilder = new NotificationCompat.Builder(this, notifChannelId);
-        int icon = R.mipmap.video2;
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            icon = R.drawable.video2; //special white icon for lollipop
-        }
-        mNotificationBuilder.setSmallIcon(icon);
-        mNotificationBuilder.setTicker(null);
-
-        mNotificationBuilder.setOnlyAlertOnce(true);
-        mNotificationBuilder.setContentTitle(title);
-        mNotificationBuilder.setContentIntent(contentIntent);
-        mNotificationBuilder.setWhen(when);
-        mNotificationBuilder.setOngoing(true);
-        mNotificationBuilder.setDefaults(0); // no sound, no light, no vibrate
-
+                .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0))
+                .setWhen(System.currentTimeMillis());
         // Set the info to display in the notification panel and attach the notification to the notification manager
         updateStatusbarNotification(null);
-        mNotificationManager.notify(PASTE_NOTIFICATION_ID, mNotificationBuilder.build());
+        nm.notify(PASTE_NOTIFICATION_ID, nb.build());
     }
 
     private void displayOpenFileNotification() {
-        Intent notificationIntent = getOpenIntent();
-        int icon =  R.mipmap.video2;
-        CharSequence title = getResources().getText(R.string.open_file);
-        long when = System.currentTimeMillis();
-        PendingIntent contentIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, 0);
-        Builder notificationBuilder = new NotificationCompat.Builder(this);
-        notificationBuilder.setSmallIcon(icon);
-        notificationBuilder.setPriority(NotificationCompat.PRIORITY_LOW);
-        notificationBuilder.setTicker(null);
-        notificationBuilder.setOnlyAlertOnce(true);
-        notificationBuilder.setOngoing(true);
-        notificationBuilder.setContentTitle(title);
-        notificationBuilder.setContentText(mProcessedFiles.get(0).getName());
-        notificationBuilder.setContentIntent(contentIntent);
-        notificationBuilder.setWhen(when);
-        notificationBuilder.setDefaults(0); // no sound, no light, no vibrate
-        mNotificationManager.notify(OPEN_NOTIFICATION_ID, notificationBuilder.build());
+        nb.setContentTitle(getText(R.string.open_file))
+                .setContentText(mProcessedFiles.get(0).getName())
+                .setWhen(System.currentTimeMillis())
+                .setContentIntent(PendingIntent.getBroadcast(this, 0, getOpenIntent(), 0));
+        nm.notify(OPEN_NOTIFICATION_ID, nb.build());
     }
 
     private void updateStatusbarNotification(long currentSize, long totalSize, int currentFiles, int totalFiles) {
-
-        if (mNotificationBuilder != null) {
+        if (nb != null) {
             String formattedCurrentSize = Formatter.formatShortFileSize(this, currentSize);
             String formattedTotalSize = Formatter.formatShortFileSize(this, totalSize);
             int textId;
@@ -515,7 +492,7 @@ public class FileManagerService extends Service implements OperationEngineListen
                 formattedString = getResources().getString(textId, currentFiles, totalFiles,
                         formattedCurrentSize, formattedTotalSize);
             }
-            mNotificationBuilder.setProgress((int)totalSize, (int)currentSize, false);
+            nb.setProgress((int)totalSize, (int)currentSize, false);
             updateStatusbarNotification(formattedString);
         }
     }
@@ -526,13 +503,15 @@ public class FileManagerService extends Service implements OperationEngineListen
         for (ServiceListener lis : mListeners){
             lis.onActionCanceled();
         }
-        mNotificationManager.cancel(OPEN_NOTIFICATION_ID);
+        nm.cancel(OPEN_NOTIFICATION_ID);
     }
     @Override
     public void onCanceled() {
         releaseWakeLock();
         Toast.makeText(this, com.archos.filecorelibrary.R.string.copy_file_failed_one, Toast.LENGTH_LONG).show();
         setCanceledStatus();
+        stopForeground(true);
+        stopSelf();
     }
 
     @Override
