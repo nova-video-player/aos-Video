@@ -30,6 +30,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.ListPreference;
@@ -345,7 +347,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 Intent intent = new Intent(AutoScrapeService.EXPORT_EVERYTHING, null, getActivity(),AutoScrapeService.class);
-                getActivity().startService(intent);
+                ContextCompat.startForegroundService(getActivity(), intent);
                 Toast.makeText(getActivity(), R.string.nfo_export_in_progress, Toast.LENGTH_SHORT).show();
                 return true;
             }
@@ -356,7 +358,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             public boolean onPreferenceClick(Preference preference) {
                 Intent intent = new Intent(getActivity(),AutoScrapeService.class);
                 intent.putExtra(AutoScrapeService.RESCAN_EVERYTHING, true);
-                getActivity().startService(intent);
+                ContextCompat.startForegroundService(getActivity(), intent);
                 Toast.makeText(getActivity(), R.string.rescrap_in_progress, Toast.LENGTH_SHORT).show();
                 return true;
             }
