@@ -16,9 +16,13 @@ package com.archos.mediacenter.video.browser.dialogs;
 
 
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.text.format.Formatter;
 import android.text.method.ScrollingMovementMethod;
@@ -64,7 +68,17 @@ public class Paste extends AlertDialog implements FileManagerService.ServiceList
         mProgressText = (TextView) view.findViewById(com.archos.filecorelibrary.R.id.progress_text);
 
         setTitle(R.string.copying);
-        FileManagerService.fileManagerService.addListener(this);
+        if(FileManagerService.fileManagerService==null) {
+            getContext().bindService(new Intent(getContext(), FileManagerService.class), new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    FileManagerService.fileManagerService.addListener(Paste.this);
+                }
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                }
+            }, Context.BIND_AUTO_CREATE);
+        }
         setButton(DialogInterface.BUTTON_NEGATIVE, mContext.getText(android.R.string.cancel), new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -116,6 +130,7 @@ public class Paste extends AlertDialog implements FileManagerService.ServiceList
     @Override
     public void onProgressUpdate() {
         FileManagerService service = FileManagerService.fileManagerService;
+        if(service == null) return;
 
             if(service.getPasteTotalSize()>0)
                 mProgress.setProgress((int) (MAX_PROGRESS *  service.getPasteTotalProgress() / service.getPasteTotalSize()));

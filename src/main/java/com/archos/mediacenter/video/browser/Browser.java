@@ -20,10 +20,12 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
@@ -32,6 +34,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Parcelable;
 
 import androidx.core.widget.TextViewCompat;
@@ -1214,8 +1217,17 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     //download with metafile2
     public void startDownloadingVideo(List<Uri> uris) {
         showPasteDialog();
-
-        FileManagerService.fileManagerService.copyUri(uris, Uri.fromFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)));
+        if(FileManagerService.fileManagerService==null) {
+            getContext().bindService(new Intent(getContext(), FileManagerService.class), new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    FileManagerService.fileManagerService.copyUri(uris, Uri.fromFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)));
+                }
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                }
+            }, Context.BIND_AUTO_CREATE);
+        }
     }
 
 

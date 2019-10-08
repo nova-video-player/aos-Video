@@ -18,10 +18,12 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -47,6 +49,8 @@ import androidx.palette.graphics.Palette;
 import androidx.cardview.widget.CardView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.ToolbarWidgetWrapper;
+
+import android.os.IBinder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.util.Log;
@@ -1182,8 +1186,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 mPasteDialog.show();
                 List<Uri> list = new ArrayList<Uri>();
                 list.add(mCurrentVideo.getFileUri());
-                FileManagerService.fileManagerService.copyUri(list, Uri.fromFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)));
-
+                if(FileManagerService.fileManagerService==null) {
+                    getContext().bindService(new Intent(getContext(), FileManagerService.class), new ServiceConnection() {
+                        @Override
+                        public void onServiceConnected(ComponentName name, IBinder service) {
+                            FileManagerService.fileManagerService.copyUri(list, Uri.fromFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)));
+                        }
+                        @Override
+                        public void onServiceDisconnected(ComponentName name) {
+                        }
+                    }, Context.BIND_AUTO_CREATE);
+                }
                 break;
         }
 
