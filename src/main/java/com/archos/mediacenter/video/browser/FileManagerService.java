@@ -358,7 +358,7 @@ public class FileManagerService extends Service implements OperationEngineListen
         releaseWakeLock();
         if (DBG) Log.d(TAG, "acquireWakeLock");
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "FileManagerWakeLock");
+        mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Nova:FileManagerWakeLock");
         mWakeLock.acquire();
     }
     private void releaseWakeLock(){
@@ -458,9 +458,14 @@ public class FileManagerService extends Service implements OperationEngineListen
 
     public void startStatusbarNotification() {
         nm.cancel(OPEN_NOTIFICATION_ID);
-        nb.setContentTitle(getText(R.string.copying))
+
         // Build the intent to send when the user clicks on the notification in the notification panel
-                .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0))
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        notificationIntent.setAction(MainActivity.LAUNCH_DIALOG);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+        nb.setContentTitle(getText(R.string.copying))
+                .setContentIntent(contentIntent)
                 .setWhen(System.currentTimeMillis());
         // Set the info to display in the notification panel and attach the notification to the notification manager
         updateStatusbarNotification(null);
