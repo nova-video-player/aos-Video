@@ -81,6 +81,7 @@ public enum ShortcutDb {
             id = c.getLong(c.getColumnIndexOrThrow(BaseColumns._ID));
         }
         c.close();
+        db.close();
         return id;
     }
 
