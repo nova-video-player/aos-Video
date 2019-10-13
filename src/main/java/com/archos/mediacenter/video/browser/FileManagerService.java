@@ -346,7 +346,7 @@ public class FileManagerService extends Service implements OperationEngineListen
     }
 
     public static void startService(Context context) {
-        ContextCompat.startForegroundService(context, new Intent(context, AutoScrapeService.class));
+        ContextCompat.startForegroundService(context, new Intent(context, FileManagerService.class));
     }
 
     public void deleteObserver(ServiceListener listener) {
