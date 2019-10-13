@@ -37,6 +37,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Parcelable;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
@@ -173,6 +174,8 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     protected int mOffset=0;
     static final String CURRENT_SCROLL = "currentscroll";
     private Parcelable mListState;
+
+    private static Boolean isFileManagerServiceBound = false;
 
 
     /**
@@ -1216,17 +1219,24 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
 
     //download with metafile2
     public void startDownloadingVideo(List<Uri> uris) {
-        showPasteDialog();
         if(FileManagerService.fileManagerService==null) {
-            getContext().bindService(new Intent(getContext(), FileManagerService.class), new ServiceConnection() {
+            if (DBG) Log.d(TAG, "startDownloadingVideo: binding FileManagerService since FileManagerService.fileManagerService==null");
+            isFileManagerServiceBound = getContext().bindService(new Intent(getContext(), FileManagerService.class), new ServiceConnection() {
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
+                    if (DBG) Log.d(TAG, "startDownloadingVideo: FileManagerService connected, launching PasteDialog and copy of "+ uris);
                     FileManagerService.fileManagerService.copyUri(uris, Uri.fromFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)));
+                    showPasteDialog();
                 }
                 @Override
                 public void onServiceDisconnected(ComponentName name) {
+                    if (DBG) Log.d(TAG, "startDownloadingVideo: FileManagerService disconnected");
                 }
             }, Context.BIND_AUTO_CREATE);
+        } else {
+            if (DBG) Log.d(TAG, "startDownloadingVideo: FileManagerService exists we should not be there..., download video and show paste dialog...");
+            showPasteDialog();
+            FileManagerService.fileManagerService.copyUri(uris, Uri.fromFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)));
         }
     }
 
