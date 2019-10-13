@@ -40,7 +40,6 @@ import com.archos.filecorelibrary.CopyCutEngine;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.OperationEngineListener;
 import com.archos.mediacenter.video.R;
-import com.archos.mediascraper.AutoScrapeService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
