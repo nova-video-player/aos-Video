@@ -29,6 +29,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 import androidx.core.app.NotificationCompat;
 import android.text.format.Formatter;
@@ -39,6 +40,7 @@ import com.archos.filecorelibrary.CopyCutEngine;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.OperationEngineListener;
 import com.archos.mediacenter.video.R;
+import com.archos.mediascraper.AutoScrapeService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,12 +101,14 @@ public class FileManagerService extends Service implements OperationEngineListen
 
     public FileManagerService() {
         super();
+        if (DBG) Log.d(TAG, "FileManagerService: setting fileManagerService not to null");
         fileManagerService = this;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        if (DBG) Log.d(TAG, "onCreate: creating notification channel first");
 
         // need to do that early to avoid ANR on Android 26+
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -148,6 +152,8 @@ public class FileManagerService extends Service implements OperationEngineListen
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        if (DBG) Log.d(TAG, "onStartCommand");
+
         return START_NOT_STICKY;
     }
 
@@ -231,11 +237,11 @@ public class FileManagerService extends Service implements OperationEngineListen
 
     @Override
     public void onDestroy() {
+        if (DBG) Log.d(TAG, "onDestroy: removing Foreground notif and stopping self");
         setCanceledStatus();
     	super.onDestroy();
     	unregisterReceiver(receiver);
-        stopForeground(true);
-        stopSelf();
+        stopService();
     }
 
 
@@ -311,7 +317,7 @@ public class FileManagerService extends Service implements OperationEngineListen
     protected void removeStatusbarNotification() {
         if (nb != null) {
             nm.cancel(PASTE_NOTIFICATION_ID);
-            nb = null;
+            //nb = null;
         }
     }
 
@@ -327,11 +333,20 @@ public class FileManagerService extends Service implements OperationEngineListen
     }
 
     public void stopPasting() {
+        if (DBG) Log.d(TAG, "stopPasting");
         if(mIsActionRunning){
              if(mCopyCutEngine!=null)
                   mCopyCutEngine.stop();
-
         }
+    }
+
+    public void stopService() {
+        if (DBG) Log.d(TAG, "stopService");
+        stopForeground(true);
+    }
+
+    public static void startService(Context context) {
+        ContextCompat.startForegroundService(context, new Intent(context, AutoScrapeService.class));
     }
 
     public void deleteObserver(ServiceListener listener) {
@@ -368,6 +383,7 @@ public class FileManagerService extends Service implements OperationEngineListen
     }
     @Override
     public void onEnd() {
+        if (DBG) Log.d(TAG, "onEnd: releasing wakelock, removing Foreground notif and stopping self");
         releaseWakeLock();
         mLastStatus = ActionStatusEnum.STOP;
         mIsActionRunning = false;
@@ -393,12 +409,12 @@ public class FileManagerService extends Service implements OperationEngineListen
         for(ServiceListener fl :mListeners){
             fl.onActionStop();
         }
-        stopForeground(true);
-        stopSelf();
+        stopService();
     }
 
     @Override
     public void onFatalError(Exception e) {
+        if (DBG) Log.d(TAG, "onFatalError: releasing wakelock, removing Foreground notif and stopping self");
         releaseWakeLock();
         Toast.makeText(this, com.archos.filecorelibrary.R.string.copy_file_failed_one, Toast.LENGTH_LONG).show();
         mLastStatus = ActionStatusEnum.ERROR;
@@ -407,8 +423,7 @@ public class FileManagerService extends Service implements OperationEngineListen
         for (ServiceListener lis : mListeners){
             lis.onActionError();
         }
-        stopForeground(true);
-        stopSelf();
+        stopService();
     }
 
 
@@ -438,6 +453,7 @@ public class FileManagerService extends Service implements OperationEngineListen
 
     @Override
     public void onFilesListUpdate(List<MetaFile2> copyingMetaFiles,List<MetaFile2> rootFiles) {
+        if (DBG) Log.d(TAG, "onFilesListUpdate");
         mProcessedFiles.clear();
         mProcessedFiles.addAll(copyingMetaFiles);
         mProgress.clear();
@@ -457,6 +473,7 @@ public class FileManagerService extends Service implements OperationEngineListen
     /* Notification */
 
     public void startStatusbarNotification() {
+        if (DBG) Log.d(TAG, "startStatusbarNotification: stopping OPEN_NOTIFICATION_ID notif and doing PASTE_NOTIFICATION_ID");
         nm.cancel(OPEN_NOTIFICATION_ID);
 
         // Build the intent to send when the user clicks on the notification in the notification panel
@@ -473,6 +490,7 @@ public class FileManagerService extends Service implements OperationEngineListen
     }
 
     private void displayOpenFileNotification() {
+        if (DBG) Log.d(TAG, "displayOpenFileNotification");
         nb.setContentTitle(getText(R.string.open_file))
                 .setContentText(mProcessedFiles.get(0).getName())
                 .setWhen(System.currentTimeMillis())
@@ -481,6 +499,7 @@ public class FileManagerService extends Service implements OperationEngineListen
     }
 
     private void updateStatusbarNotification(long currentSize, long totalSize, int currentFiles, int totalFiles) {
+        if (DBG) Log.d(TAG, "updateStatusbarNotification");
         if (nb != null) {
             String formattedCurrentSize = Formatter.formatShortFileSize(this, currentSize);
             String formattedTotalSize = Formatter.formatShortFileSize(this, totalSize);
@@ -502,21 +521,23 @@ public class FileManagerService extends Service implements OperationEngineListen
         }
     }
     private void setCanceledStatus(){
+        if (DBG) Log.d(TAG, "setCanceledStatus");
         mLastStatus = ActionStatusEnum.CANCELED;
         mIsActionRunning = false;
         removeStatusbarNotification();
         for (ServiceListener lis : mListeners){
             lis.onActionCanceled();
         }
+        removeStatusbarNotification();
         nm.cancel(OPEN_NOTIFICATION_ID);
     }
     @Override
     public void onCanceled() {
+        if (DBG) Log.d(TAG, "onCanceled");
         releaseWakeLock();
         Toast.makeText(this, com.archos.filecorelibrary.R.string.copy_file_failed_one, Toast.LENGTH_LONG).show();
         setCanceledStatus();
-        stopForeground(true);
-        stopSelf();
+        stopService();
     }
 
     @Override

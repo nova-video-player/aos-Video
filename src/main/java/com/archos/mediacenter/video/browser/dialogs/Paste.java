@@ -26,6 +26,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.text.format.Formatter;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -39,8 +40,8 @@ import com.archos.mediacenter.video.browser.FileManagerService;
 
 public class Paste extends AlertDialog implements FileManagerService.ServiceListener {
 
-
-
+    private static String TAG = "Paste";
+    private static boolean DBG = false;
 
     static final private int MAX_PROGRESS = 100;
 
@@ -69,20 +70,20 @@ public class Paste extends AlertDialog implements FileManagerService.ServiceList
 
         setTitle(R.string.copying);
         if(FileManagerService.fileManagerService==null) {
-            getContext().bindService(new Intent(getContext(), FileManagerService.class), new ServiceConnection() {
-                @Override
-                public void onServiceConnected(ComponentName name, IBinder service) {
-                    FileManagerService.fileManagerService.addListener(Paste.this);
-                }
-                @Override
-                public void onServiceDisconnected(ComponentName name) {
-                }
-            }, Context.BIND_AUTO_CREATE);
+            if (DBG) Log.w(TAG, "Paste: FileManagerService.fileManagerService==null, it should not!");
+        } else {
+            if (DBG) Log.d(TAG, "Paste: FileManagerService exists, addListener");
+            FileManagerService.fileManagerService.addListener(this);
         }
         setButton(DialogInterface.BUTTON_NEGATIVE, mContext.getText(android.R.string.cancel), new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                FileManagerService.fileManagerService.stopPasting();
+                if(FileManagerService.fileManagerService==null) {
+                    if (DBG)
+                        Log.w(TAG, "Paste onClick: FileManagerService.fileManagerService==null, it should not!");
+                } else {
+                    FileManagerService.fileManagerService.stopPasting();
+                }
             }
         });
         setButton(DialogInterface.BUTTON_NEUTRAL, mContext.getText(R.string.run_in_background), new OnClickListener() {

@@ -273,6 +273,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private int mHeaderHeight;
     private boolean mIsPortraitMode;
 
+    private static boolean isFileManagerServiceBound = false;
 
 
     private Paste mPasteDialog;    //download dialog
@@ -1182,20 +1183,28 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 break;
             case R.string.copy_on_device:
 
-                mPasteDialog = new Paste(getActivity());
-                mPasteDialog.show();
                 List<Uri> list = new ArrayList<Uri>();
                 list.add(mCurrentVideo.getFileUri());
                 if(FileManagerService.fileManagerService==null) {
-                    getContext().bindService(new Intent(getContext(), FileManagerService.class), new ServiceConnection() {
+                    if (DBG) Log.d(TAG, "onMenuItemClick download video: binding FileManagerService since FileManagerService.fileManagerService==null");
+                    isFileManagerServiceBound = getContext().bindService(new Intent(getContext(), FileManagerService.class), new ServiceConnection() {
                         @Override
                         public void onServiceConnected(ComponentName name, IBinder service) {
+                            if (DBG) Log.d(TAG, "onMenuItemClick: FileManagerService connected");
                             FileManagerService.fileManagerService.copyUri(list, Uri.fromFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)));
+                            mPasteDialog = new Paste(getActivity());
+                            mPasteDialog.show();
                         }
                         @Override
                         public void onServiceDisconnected(ComponentName name) {
+                            if (DBG) Log.d(TAG, "onMenuItemClick: FileManagerService disconnected");
                         }
                     }, Context.BIND_AUTO_CREATE);
+                } else {
+                    if (DBG) Log.d(TAG, "onMenuItemClick: FileManagerService exists, download video and show paste dialog..");
+                    FileManagerService.fileManagerService.copyUri(list, Uri.fromFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)));
+                    mPasteDialog = new Paste(getActivity());
+                    mPasteDialog.show();
                 }
                 break;
         }
