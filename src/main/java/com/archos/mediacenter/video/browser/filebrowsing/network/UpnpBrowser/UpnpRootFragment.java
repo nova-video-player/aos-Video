@@ -39,6 +39,7 @@ import java.util.List;
  */
 public class UpnpRootFragment extends UpnpSmbCommonRootFragment implements UpnpServiceManager.Listener {
     private static final String TAG = "SmbRootFragment";
+    private static final boolean DBG = false;
 
     public UpnpRootFragment(){
         super();
@@ -63,8 +64,8 @@ public class UpnpRootFragment extends UpnpSmbCommonRootFragment implements UpnpS
 // Start UPnP
         UpnpServiceManager
                 .startServiceIfNeeded(context);
-        Log.d(TAG, "onAttach this=" + this);
-        Log.d(TAG, "onAttach mSambaDiscovery=");
+        if (DBG) Log.d(TAG, "onAttach this=" + this);
+        if (DBG) Log.d(TAG, "onAttach mSambaDiscovery=");
 
     }
     @Override
@@ -84,19 +85,19 @@ public class UpnpRootFragment extends UpnpSmbCommonRootFragment implements UpnpS
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy");
+        if (DBG) Log.d(TAG, "onDestroy");
         UpnpServiceManager
                 .startServiceIfNeeded(getActivity()).removeListener(this);
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d(TAG, "onDestroyView");
+        if (DBG) Log.d(TAG, "onDestroyView");
     }
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.d(TAG, "onDetach");
+        if (DBG) Log.d(TAG, "onDetach");
     }
     /**
      * Start or restart the discovery.

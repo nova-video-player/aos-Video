@@ -44,6 +44,8 @@ import java.util.List;
 public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaDiscovery.Listener {
     private SambaDiscovery mSambaDiscovery;
     private static final String TAG = "SmbRootFragment";
+    private static boolean DBG = false;
+
     private AsyncTask<Void, Void, Void> mCheckShortcutAvailabilityTask;
 
     public SmbRootFragment(){
@@ -124,8 +126,8 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
         mSambaDiscovery = new SambaDiscovery(activity);
         mSambaDiscovery.setMinimumUpdatePeriodInMs(100);
 
-        Log.d(TAG, "onAttach this=" + this);
-        Log.d(TAG, "onAttach mSambaDiscovery=" + mSambaDiscovery);
+        if (DBG) Log.d(TAG, "onAttach this=" + this);
+        if (DBG) Log.d(TAG, "onAttach mSambaDiscovery=" + mSambaDiscovery);
 
     }
     @Override
@@ -138,7 +140,7 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy");
+        if (DBG) Log.d(TAG, "onDestroy");
         mSambaDiscovery.removeListener(this);
         if(mCheckShortcutAvailabilityTask!=null)
             mCheckShortcutAvailabilityTask.cancel(true);
@@ -146,13 +148,13 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d(TAG, "onDestroyView");
+        if (DBG) Log.d(TAG, "onDestroyView");
         mSambaDiscovery.abort();
     }
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.d(TAG, "onDetach");
+        if (DBG) Log.d(TAG, "onDetach");
         mSambaDiscovery.abort();
     }
     /**
@@ -186,7 +188,7 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     // SambaDiscovery.Listener implementation
     @Override
     public void onDiscoveryFatalError() {
-        Log.d(TAG, "onDiscoveryFatalError");
+        if (DBG) Log.d(TAG, "onDiscoveryFatalError");
         ((WorkgroupShortcutAndServerAdapter)mAdapter).setIsLoadingWorkgroups(false);
     }
 

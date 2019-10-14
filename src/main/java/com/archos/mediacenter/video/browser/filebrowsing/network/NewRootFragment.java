@@ -46,6 +46,7 @@ import com.archos.mediaprovider.video.NetworkScannerServiceVideo;
 public abstract class NewRootFragment extends Fragment implements  WorkgroupShortcutAndServerAdapter.OnShortcutTapListener,  WorkgroupShortcutAndServerAdapter.OnRefreshClickListener, NetworkScannerServiceVideo.ScannerListener {
 
     private static final String TAG = "NewRootFragment";
+    private static final boolean DBG = false;
 
     private RecyclerView mDiscoveryList;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -126,7 +127,7 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
     }
 
     public NewRootFragment() {
-        Log.d(TAG, "SambaDiscoveryFragment() constructor " + this);
+        if (DBG) Log.d(TAG, "SambaDiscoveryFragment() constructor " + this);
         setRetainInstance(false);
 
     }
@@ -226,20 +227,20 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate");
+        if (DBG) Log.d(TAG, "onCreate");
         setHasOptionsMenu(true);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy");
+        if (DBG) Log.d(TAG, "onDestroy");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.d(TAG, "onDetach");
+        if (DBG) Log.d(TAG, "onDetach");
         NetworkScannerServiceVideo.removeListener(this);
 
     }
@@ -253,7 +254,7 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView");
+        if (DBG) Log.d(TAG, "onCreateView");
         View v = inflater.inflate(R.layout.samba_discovery_fragment, container, false);
 
         mDiscoveryList = (RecyclerView)v.findViewById(R.id.discovery_list);
@@ -274,13 +275,13 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d(TAG, "onDestroyView");
+        if (DBG) Log.d(TAG, "onDestroyView");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume");
+        if (DBG) Log.d(TAG, "onResume");
         loadIndexedShortcuts();
     }
 
@@ -289,7 +290,7 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause");
+        if (DBG) Log.d(TAG, "onPause");
     }
 
 }
