@@ -358,7 +358,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                 // First item is not an actual shortcut, it opens the re-scan settings
                 if (cursor.getCount()>0) {
                     Box rescanBox = new Box(Box.ID.INDEXED_FOLDERS_REFRESH, getString(R.string.rescan), R.drawable.filetype_new_rescan);
-                    Log.d(TAG, "ShortcutsLoaderTask NetworkScannerReceiver.isScannerWorking()="+NetworkScannerReceiver.isScannerWorking());
+                    if (DBG) Log.d(TAG, "ShortcutsLoaderTask NetworkScannerReceiver.isScannerWorking()="+NetworkScannerReceiver.isScannerWorking());
                     mIndexedFoldersAdapter.add(rescanBox);
                 }
 

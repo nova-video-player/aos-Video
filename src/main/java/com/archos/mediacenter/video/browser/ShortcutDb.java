@@ -150,7 +150,7 @@ public enum ShortcutDb {
      * @return true if the insert succeeded
      */
     public boolean insertShortcut(Context context, Uri uri, String name) {
-        Log.d(TAG, "insertShortcut "+uri+" "+name);
+        if (DBG) Log.d(TAG, "insertShortcut "+uri+" "+name);
         ContentValues initialValues = new ContentValues(2);
         initialValues.put(KEY_URI, uri.toString());
         initialValues.put(KEY_SHORTCUT_NAME, name);
@@ -171,7 +171,7 @@ public enum ShortcutDb {
 
         SQLiteDatabase db = getDb(context);
         int result = db.delete(TABLE_NAME, selection, selectionArgs);
-        Log.d(TAG, "removeShortcut "+uri.toString()+" mDb.delete returns "+result);
+        if (DBG) Log.d(TAG, "removeShortcut "+uri.toString()+" mDb.delete returns "+result);
 
         return result;
     }
@@ -186,7 +186,7 @@ public enum ShortcutDb {
 
         SQLiteDatabase db = getDb(context);
         int result = db.delete(TABLE_NAME, selection, selectionArgs);
-        Log.d(TAG, "removeShortcut "+id+" mDb.delete returns "+result);
+        if (DBG) Log.d(TAG, "removeShortcut "+id+" mDb.delete returns "+result);
 
         return result>0;
     }
