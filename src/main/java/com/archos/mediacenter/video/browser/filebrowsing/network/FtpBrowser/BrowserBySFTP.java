@@ -180,7 +180,7 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
          
         }
         else if (item.getItemId()==R.string.remove_from_shortcuts){
-            ShortcutDb.STATIC.removeShortcut(mCurrentDirectory);
+            ShortcutDb.STATIC.removeShortcut(getContext(), mCurrentDirectory);
             NetworkScanner.removeVideos(getActivity(), mCurrentDirectory);
             getActivity().invalidateOptionsMenu();
         }
@@ -200,7 +200,7 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
                             NetworkScanner.scanVideos(getActivity(), mCurrentDirectory);
                             addIndexedFolder(mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString());
                         }
-                        ShortcutDb.STATIC.insertShortcut(mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString());
+                        ShortcutDb.STATIC.insertShortcut(getContext(), mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString());
                         getActivity().invalidateOptionsMenu();
                     }
                 })
@@ -221,7 +221,7 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
 
     protected void createShortcut(String shortcutPath, String shortcutName) {
         super.createShortcut(shortcutPath,shortcutName);
-        ShortcutDb.STATIC.insertShortcut(mCurrentDirectory, shortcutName);
+        ShortcutDb.STATIC.insertShortcut(getContext(), mCurrentDirectory, shortcutName);
     }
 
     private void addIndexedFolder(Uri currentDirectory, String name) {

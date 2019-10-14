@@ -49,8 +49,11 @@ public enum ShortcutDb {
     private static final String[] SHORTCUT_COLS = { BaseColumns._ID, KEY_URI, KEY_SHORTCUT_NAME };
 
     private DatabaseHelper mDbHelper;
-
-    private SQLiteDatabase mDb;
+    private synchronized SQLiteDatabase getDb(Context context) {
+        if (mDbHelper == null)
+            mDbHelper = new DatabaseHelper(context.getApplicationContext());
+        return mDbHelper.getWritableDatabase();
+    }
 
     /**
      * get a CursorLoader to get all columns of all shortcuts
@@ -67,7 +70,7 @@ public enum ShortcutDb {
     }
 
     public long isShortcut(Context context, String path) {
-        SQLiteDatabase db = new DatabaseHelper(context).getReadableDatabase();
+        SQLiteDatabase db = getDb(context);
         Cursor c = db.query(TABLE_NAME,
                 SHORTCUT_COLS,
                 KEY_URI+" = ?",
@@ -98,12 +101,9 @@ public enum ShortcutDb {
      * @return
      */
     public Cursor getCursorAllShortcuts(Context context) {
-        //mContext = context;
-        mDbHelper = new DatabaseHelper(context);
-        mDb = mDbHelper.getWritableDatabase();
-
+        SQLiteDatabase db = getDb(context);
         try {
-            return mDb.query(TABLE_NAME,
+            return db.query(TABLE_NAME,
                     SHORTCUT_COLS,
                     null,
                     null,
@@ -149,13 +149,14 @@ public enum ShortcutDb {
      * @param name
      * @return true if the insert succeeded
      */
-    public boolean insertShortcut(Uri uri, String name) {
+    public boolean insertShortcut(Context context, Uri uri, String name) {
         Log.d(TAG, "insertShortcut "+uri+" "+name);
         ContentValues initialValues = new ContentValues(2);
         initialValues.put(KEY_URI, uri.toString());
         initialValues.put(KEY_SHORTCUT_NAME, name);
 
-        return (mDb.insert(TABLE_NAME, null, initialValues)!=-1);
+        SQLiteDatabase db = getDb(context);
+        return (db.insert(TABLE_NAME, null, initialValues)!=-1);
     }
 
     /**
@@ -164,11 +165,12 @@ public enum ShortcutDb {
      * @param uri 
      * @return the number of shortcuts removed
      */
-    public int removeShortcut(Uri uri) {
+    public int removeShortcut(Context context, Uri uri) {
         final String selection = KEY_URI+"=?";
         final String[] selectionArgs = new String[] {uri.toString()};
 
-        int result = mDb.delete(TABLE_NAME, selection, selectionArgs);
+        SQLiteDatabase db = getDb(context);
+        int result = db.delete(TABLE_NAME, selection, selectionArgs);
         Log.d(TAG, "removeShortcut "+uri.toString()+" mDb.delete returns "+result);
 
         return result;
@@ -178,11 +180,12 @@ public enum ShortcutDb {
      * Remove the shortcut(s) corresponding to the provided DB id
      * @return true if it erased something
      */
-    public boolean removeShortcut(long id) {
+    public boolean removeShortcut(Context context, long id) {
         final String selection = BaseColumns._ID+"=?";
         final String[] selectionArgs = new String[] {Long.toString(id)};
 
-        int result = mDb.delete(TABLE_NAME, selection, selectionArgs);
+        SQLiteDatabase db = getDb(context);
+        int result = db.delete(TABLE_NAME, selection, selectionArgs);
         Log.d(TAG, "removeShortcut "+id+" mDb.delete returns "+result);
 
         return result>0;
