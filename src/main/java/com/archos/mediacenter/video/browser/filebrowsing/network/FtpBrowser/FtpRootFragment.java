@@ -88,7 +88,7 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
                 addToIndexed(mSelectedUri, mSelectedName);
                 return true;
             case R.string.remove_from_shortcuts:
-                ShortcutDb.STATIC.removeShortcut(mSelectedUri);
+                ShortcutDb.STATIC.removeShortcut(getContext(), mSelectedUri);
                 ((FtpShortcutAdapter)mAdapter).updateShortcuts(ShortcutDb.STATIC.getAllShortcuts(getActivity()));
                 return true;
         }

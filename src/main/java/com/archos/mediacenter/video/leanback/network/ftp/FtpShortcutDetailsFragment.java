@@ -59,7 +59,7 @@ public class FtpShortcutDetailsFragment extends NetworkShortcutDetailsFragment {
             slightlyDelayedFinish();
         }
         else if (action.getId() == ACTION_REMOVE) {
-            boolean result = ShortcutDb.STATIC.removeShortcut(mShortcut.getUri())>0;
+            boolean result = ShortcutDb.STATIC.removeShortcut(getContext(), mShortcut.getUri())>0;
             if (result) {
                 Toast.makeText(getActivity(), getString(R.string.shortcut_removed, mShortcut.getName()), Toast.LENGTH_SHORT).show();
                 // Send a delete request to MediaScanner

@@ -250,7 +250,7 @@ public class FtpListingFragment extends ListingFragment {
     private void createShortcut() {
 
         String shortcutPath = mUri.toString();
-        boolean result = ShortcutDb.STATIC.insertShortcut(mUri, mUri.getLastPathSegment());
+        boolean result = ShortcutDb.STATIC.insertShortcut(getContext(), mUri, mUri.getLastPathSegment());
 
         if (result) {
             Toast.makeText(getActivity(), getString(R.string.indexed_folder_added, shortcutPath), Toast.LENGTH_SHORT).show();
@@ -269,7 +269,7 @@ public class FtpListingFragment extends ListingFragment {
     private void deleteShortcut() {
         String shortcutPath = mUri.toString();
 
-        boolean result = ShortcutDb.STATIC.removeShortcut(mUri)>0;
+        boolean result = ShortcutDb.STATIC.removeShortcut(getContext(), mUri)>0;
         ShortcutDbAdapter.VIDEO.deleteShortcut(getActivity(), mUri.toString());
         if (result) {
             Toast.makeText(getActivity(), getString(R.string.shortcut_removed, shortcutPath), Toast.LENGTH_SHORT).show();
