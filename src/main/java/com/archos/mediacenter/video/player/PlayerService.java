@@ -15,7 +15,6 @@
 package com.archos.mediacenter.video.player;
 
 import android.annotation.TargetApi;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -37,8 +36,9 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import androidx.preference.PreferenceManager;
+
 import androidx.annotation.Nullable;
+import androidx.preference.PreferenceManager;
 import androidx.core.app.NotificationCompat;
 import android.util.Log;
 
@@ -192,8 +192,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private static final String KEY_AUDIO_FILT_NIGHT = "pref_audio_filt_night_int_key";
     private boolean mCallOnDataUriOKWhenVideoInfoIsSet;
     private boolean mIsPreparingSubs;
-    private static final int PLAYER_NOTIFICATION_ID = 5;
-    private NotificationCompat.Builder mNotificationBuilder;
     private String mSubsFavoriteLanguage;
     private boolean mDestroyed;
     private Runnable mAutoSaveTask;
@@ -207,8 +205,12 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         STOPPED,
     }
 
-
-
+    private static final int PLAYER_NOTIFICATION_ID = 5;
+    private NotificationManager nm;
+    private NotificationCompat.Builder nb;
+    private static final String notifChannelId = "PlayerService_id";
+    private static final String notifChannelName = "PlayerService";
+    private static final String notifChannelDescr = "PlayerService";
 
     /* Torrent */
 
@@ -307,7 +309,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mUpdateNextTask.setListener(new UpdateNextTask.Listener() {
                 @Override
                 public void onResult(Uri uri, long id) {
-                    Log.d(TAG, "onResult: " + uri + ", id: "+id);
+                    if (DBG) Log.d(TAG, "onResult: " + uri + ", id: "+id);
                     mNextUri = uri;
                     mNextVideoId = id;
                     mUpdateNextTask = null;
@@ -345,7 +347,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     public void setPlayMode(int newPlaymode, boolean wait) {
         mPlayMode = newPlaymode;
-        Log.d(TAG, "new Playmode: " + newPlaymode);
+        if (DBG) Log.d(TAG, "new Playmode: " + newPlaymode);
         if (PLAYMODE_REPEAT_SINGLE == newPlaymode || mForceSingleRepeatMode) {
             mPlayer.setLooping(true);
             // just in Case we drop out to OnCompletion
@@ -362,7 +364,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             } else if (PLAYMODE_REPEAT_FOLDER == newPlaymode) {
                 updateNextVideo(true, wait);
             } else {
-                Log.d(TAG, "unknown Playmode: " + newPlaymode);
+                if (DBG) Log.d(TAG, "unknown Playmode: " + newPlaymode);
             }
         }
     }
@@ -381,11 +383,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "onCreate()");
+        if (DBG) Log.d(TAG, "onCreate()");
         sPlayerService = this;
         mHandler = new Handler();
         mAutoSaveTask = new Runnable(){
-
             @Override
             public void run() {
                 saveVideoStateIfReady();
@@ -421,7 +422,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (intent == null || intent.getData() == null)
             return;
 
-        Log.d(TAG, "onStart() ");
+        if (DBG) Log.d(TAG, "onStart() ");
         mCallOnDataUriOKWhenVideoInfoIsSet = true;
         mIntent = intent;
         boolean isDemoMode = (intent.getIntExtra(VIDEO_PLAYER_DEMO_MODE_EXTRA, 0) == 1);
@@ -442,7 +443,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if(mUri.toString().startsWith("file://")) {
             mUri = Uri.parse(mUri.toString().substring("file://".length())); // we need to remove "file://"
         }
-        Log.d(TAG, "onStart() "+mUri);
+        if (DBG) Log.d(TAG, "onStart() "+mUri);
         mStreamingUri = intent.getParcelableExtra(KEY_STREAMING_URI);
         if(mPlayerFrontend!=null)
             mPlayerFrontend.setUri(mUri, mStreamingUri);
@@ -478,11 +479,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         else if(mVideoId==-1){
             Uri correctedUri = FileUtils.getRealUriFromVideoURI(this,mUri);
             if(correctedUri!=null) {
-                Log.d(TAG, "correctedUri " + correctedUri);
+                if (DBG) Log.d(TAG, "correctedUri " + correctedUri);
                 mUri = correctedUri;
             }
         }
-        Log.d(TAG, "mIndexHelper != null " + String.valueOf(mIndexHelper != null));
+        if (DBG) Log.d(TAG, "mIndexHelper != null " + String.valueOf(mIndexHelper != null));
 
         if(mIndexHelper!=null&&mVideoInfo==null)
             requestVideoDb();
@@ -499,30 +500,30 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         return mStreamingUri;
     }
 
-    private static final String notifChannelId = "PlayerService_id";
-    private static final String notifChannelName = "PlayerService";
-    private static final String notifChannelDescr = "PlayerService";
-    private NotificationManager notificationManager;
     public void stopStatusbarNotification(){
+        nm.cancel(PLAYER_NOTIFICATION_ID);
         stopForeground(true);
     }
+
     public void startStatusbarNotification(boolean isDicreteOrMinimized) {
-        Intent notificationIntent = new Intent("DISPLAY_FLOATING_PLAYER");
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        // Create the NotificationChannel, but only on API 26+ because the NotificationChannel class is new and not in the support library
+
+        // need to do that early to avoid ANR on Android 26+
+        nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel mNotifChannel = new NotificationChannel(notifChannelId, notifChannelName,
-                    notificationManager.IMPORTANCE_LOW);
-            mNotifChannel.setDescription(notifChannelDescr);
-            if (notificationManager != null)
-                notificationManager.createNotificationChannel(mNotifChannel);
+            NotificationChannel nc = new NotificationChannel(notifChannelId, notifChannelName,
+                    nm.IMPORTANCE_LOW);
+            nc.setDescription(notifChannelDescr);
+            if (nm != null)
+                nm.createNotificationChannel(nc);
         }
+        nb = new NotificationCompat.Builder(this, notifChannelId)
+                .setSmallIcon(R.drawable.video2)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setTicker(null).setOnlyAlertOnce(true).setOngoing(true).setAutoCancel(true);
+
+        Intent notificationIntent = new Intent("DISPLAY_FLOATING_PLAYER");
         PendingIntent contentIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, 0);
-        mNotificationBuilder = new NotificationCompat.Builder(this, notifChannelId);
-        int icon = R.drawable.video2;
-        mNotificationBuilder.setSmallIcon(icon);
-        mNotificationBuilder.setTicker(null);
-        mNotificationBuilder.setOnlyAlertOnce(true);
+        nb.setContentIntent(contentIntent);
         String title = "";
         if(getVideoInfo()!=null&&PlayerService.sPlayerService.getVideoInfo().scraperTitle!=null&&!PlayerService.sPlayerService.getVideoInfo().scraperTitle.isEmpty())
             title = sPlayerService.getVideoInfo().scraperTitle;
@@ -530,29 +531,23 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             title = getVideoInfo().title;
         else
             title = FileUtils.getFileNameWithoutExtension(mUri);
-        mNotificationBuilder.setContentTitle(getString(R.string.now_playing));
-        mNotificationBuilder.setContentText(title);
-        mNotificationBuilder.setContentIntent(contentIntent);
+        nb.setContentTitle(getString(R.string.now_playing));
+        nb.setContentText(title);
         if(mPlayer!=null){
             if(mPlayer.isPlaying())
-                mNotificationBuilder.addAction(new NotificationCompat.Action(R.drawable.video_pause, getString(R.string.floating_player_pause), PendingIntent.getBroadcast(this, 0, new Intent(PAUSE_INTENT),0)));
+                nb.addAction(new NotificationCompat.Action(R.drawable.video_pause, getString(R.string.floating_player_pause), PendingIntent.getBroadcast(this, 0, new Intent(PAUSE_INTENT),0)));
             else if(mPlayer.isInPlaybackState())
-                mNotificationBuilder.addAction(new NotificationCompat.Action(R.drawable.video_play, getString(R.string.floating_player_play),  PendingIntent.getBroadcast(this, 0, new Intent(PLAY_INTENT),0)));
+                nb.addAction(new NotificationCompat.Action(R.drawable.video_play, getString(R.string.floating_player_play),  PendingIntent.getBroadcast(this, 0, new Intent(PLAY_INTENT),0)));
 
         }
         if(isDicreteOrMinimized)
-            mNotificationBuilder.addAction(new NotificationCompat.Action(R.drawable.ic_menu_unfade, getString(R.string.floating_player_restore), contentIntent));
+            nb.addAction(new NotificationCompat.Action(R.drawable.ic_menu_unfade, getString(R.string.floating_player_restore), contentIntent));
         else
-            mNotificationBuilder.addAction(new NotificationCompat.Action(R.drawable.video_format_fullscreen, getString(R.string.format_fullscreen), PendingIntent.getBroadcast(this, 0, new Intent(FULLSCREEN_INTENT),0)));
-        mNotificationBuilder.setDeleteIntent(PendingIntent.getBroadcast(this, 0, new Intent(EXIT_INTENT), 0));
-        mNotificationBuilder.setOngoing(false);
-        mNotificationBuilder.setDefaults(0);
-        mNotificationBuilder.setAutoCancel(true);
-        Notification notif = mNotificationBuilder.build();
-
+            nb.addAction(new NotificationCompat.Action(R.drawable.video_format_fullscreen, getString(R.string.format_fullscreen), PendingIntent.getBroadcast(this, 0, new Intent(FULLSCREEN_INTENT),0)));
+        nb.setDeleteIntent(PendingIntent.getBroadcast(this, 0, new Intent(EXIT_INTENT), 0));
         //notif.bigContentView = new RemoteViews(getPackageName(), R.layout.notification_controls);
+        startForeground(PLAYER_NOTIFICATION_ID, nb.build());
 
-        startForeground(PLAYER_NOTIFICATION_ID, notif);
     }
 
 
@@ -630,7 +625,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     private void onStreamingUriOK() {
-        Log.d(TAG, "onStreamingUriOK " + mStreamingUri);
+        if (DBG) Log.d(TAG, "onStreamingUriOK " + mStreamingUri);
         if(mTorrentFilePosition==-1)
             prepareSubs();
         if(mPlayerFrontend!=null)
@@ -683,7 +678,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void removePlayerFrontend(PlayerFrontend playerFrontend, boolean prepareForSurfaceSwitch) {
         if(mPlayerFrontend!=playerFrontend)
             return;
-        Log.d(TAG, "removePlayerFrontend "+String.valueOf(prepareForSurfaceSwitch));
+        if (DBG) Log.d(TAG, "removePlayerFrontend "+String.valueOf(prepareForSurfaceSwitch));
         mIsChangingSurface = prepareForSurfaceSwitch;
         mPlayerFrontend = null;
         stopAndSaveVideoState();
@@ -716,7 +711,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void saveVideoStateIfReady(){
         if(mIndexHelper!=null) {
             if ((mPlayerState != PlayerState.INIT && mPlayerState != PlayerState.PREPARING)) {// if it has really been played at least once, otherwise it would overwrite lastresume with 0
-                Log.d(TAG, "saveVideoStateIfReady");
+                if (DBG) Log.d(TAG, "saveVideoStateIfReady");
                 if (mLastPosition != LAST_POSITION_END) //if last position, we went there through "onCompletion"
                     mLastPosition = getBookmarkPosition();
                 if (mVideoInfo != null && !PrivateMode.isActive()) {
@@ -741,7 +736,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     public void stopAndSaveVideoState(){
-        Log.d(TAG, "stopAndSaveVideoState");
+        if (DBG) Log.d(TAG, "stopAndSaveVideoState");
         if(mIndexHelper!=null) {
             mIndexHelper.abort(); //too late : do not retrieve db info
             saveVideoStateIfReady();
@@ -1018,7 +1013,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             try {
                 unbindService(mTorrentObserverServiceConnection);
             }catch(java.lang.IllegalArgumentException e) {}
-        Log.d(TAG, "onDestroy");
+        if (DBG) Log.d(TAG, "onDestroy");
 
     }
 
@@ -1046,7 +1041,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if (mLastPosition == mPlayer.getDuration())
                 mLastPosition = 0;
             Player.sPlayer.seekTo(mLastPosition); //mLastPosition = mVideoInfo.resume when first start of service OR position on stop when switching player
-            Log.d(TAG, "seek to "+mLastPosition);
+            if (DBG) Log.d(TAG, "seek to "+mLastPosition);
             setAudioDelay(mAudioDelay, true);
             if(mPlayOnResume) {
                 mPlayerFrontend.onFirstPlay();
@@ -1096,7 +1091,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     @Override
     public void onPrepared() {
-        Log.d(TAG, "onPrepared()");
+        if (DBG) Log.d(TAG, "onPrepared()");
         mPlayerState = PlayerState.PREPARED;
         if(mPlayerFrontend!=null) {
             mPlayerFrontend.onPrepared();
