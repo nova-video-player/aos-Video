@@ -152,7 +152,7 @@ public class FileManagerService extends Service implements OperationEngineListen
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         if (DBG) Log.d(TAG, "onStartCommand");
-
+        startForeground(PASTE_NOTIFICATION_ID, nb.build());
         return START_NOT_STICKY;
     }
 
