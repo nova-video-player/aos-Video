@@ -27,7 +27,7 @@ import com.archos.mediaprovider.video.VideoStore;
 
 public class BrowserAllMovies extends BrowserByVideoSelection {
 
-	private static final boolean DBG = true;
+	private static final boolean DBG = false;
     private static final String TAG = "BrowserAllMovies";
 
 	public static final String SELECTION_ALL_MOVIES = VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL";
