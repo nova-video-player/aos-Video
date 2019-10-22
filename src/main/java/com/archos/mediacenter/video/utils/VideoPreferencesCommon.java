@@ -797,7 +797,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     }
 
     public void onDestroy() {
-        mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        if (mSharedPreferences != null)
+            mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     private void setTraktPreferencesEnabled(boolean enabled) {
