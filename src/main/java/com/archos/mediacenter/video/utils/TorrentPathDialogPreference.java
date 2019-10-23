@@ -18,7 +18,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.os.Environment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
@@ -51,14 +50,14 @@ public class TorrentPathDialogPreference extends Preference {
         super.onBindViewHolder(v);
     }
 
-    public void choosePath(Activity activity) {
-
-        Intent i = new Intent(getContext(), FolderPicker.class);
-        Bundle b = new Bundle();
-        i.putExtra(FolderPicker.EXTRA_CURRENT_SELECTION, getDefaultDirectory(getSharedPreferences()).getPath());
-        i.putExtra(FolderPicker.EXTRA_DIALOG_TITLE, getContext().getString(R.string.torrent_path));
-        activity.startActivityForResult(i, VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE);
-
+    @Override
+    public void onClick() {
+        if (getOnPreferenceClickListener() == null) {
+            Intent i = new Intent(getContext(), FolderPicker.class);
+            i.putExtra(FolderPicker.EXTRA_CURRENT_SELECTION, getDefaultDirectory(getSharedPreferences()).getPath());
+            i.putExtra(FolderPicker.EXTRA_DIALOG_TITLE, getContext().getString(R.string.torrent_path));
+            ((Activity) getContext()).startActivityForResult(i, VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE);
+        }
     }
 
     public static File getDefaultDirectory(SharedPreferences pref) {

@@ -475,14 +475,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             }
         });
 
-        final TorrentPathDialogPreference torrentPath = ((TorrentPathDialogPreference)findPreference(KEY_TORRENT_PATH));
-        torrentPath.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                torrentPath.choosePath(getActivity());
-                return true;
-            }
-        });
         switchAdvancedPreferences();
 
         CheckBoxPreference cbp = (CheckBoxPreference)findPreference(KEY_SUBTITLES_HIDE);

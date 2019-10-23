@@ -349,18 +349,18 @@
 
     <PreferenceCategory android:title="@string/torrent_category"
         app:iconSpaceReserved="false">
-    <com.archos.mediacenter.video.utils.TorrentPathDialogPreference
+        <com.archos.mediacenter.video.utils.TorrentPathDialogPreference
             android:dialogTitle="@string/torrent_path"
             android:key="preferences_torrent_path"
             android:title="@string/torrent_path"
-        app:iconSpaceReserved="false" />
+            app:iconSpaceReserved="false" />
     
-          <com.archos.mediacenter.video.utils.TorrentBlocklistDialogPreference
+        <com.archos.mediacenter.video.utils.TorrentBlocklistDialogPreference
             android:dialogTitle="@string/torrent_blocklist"
             android:key="preferences_torrent_blocklist"
             android:title="@string/torrent_blocklist" 
             android:widgetLayout="@layout/preferences_blocklist_button"
-              app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/preferences_video_about"
