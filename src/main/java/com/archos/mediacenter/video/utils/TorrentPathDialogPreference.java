@@ -16,12 +16,15 @@ package com.archos.mediacenter.video.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Environment;
+
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.archos.mediacenter.video.R;
@@ -30,15 +33,20 @@ import java.io.File;
 
 public class TorrentPathDialogPreference extends Preference {
 
+    private static String TAG = "TorrentPathDialogPreference";
+    private static boolean DBG = true;
+
     private View mView;
 
     public TorrentPathDialogPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
+        if (DBG) Log.d(TAG, "TorrentPathDialogPreference");
     }
 
     public TorrentPathDialogPreference(Context context, AttributeSet attrs,
                                        int defStyle) {
         super(context, attrs, defStyle);
+        if (DBG) Log.d(TAG, "TorrentPathDialogPreference");
     }
 
     public void notifyChanged(){
@@ -56,7 +64,11 @@ public class TorrentPathDialogPreference extends Preference {
             Intent i = new Intent(getContext(), FolderPicker.class);
             i.putExtra(FolderPicker.EXTRA_CURRENT_SELECTION, getDefaultDirectory(getSharedPreferences()).getPath());
             i.putExtra(FolderPicker.EXTRA_DIALOG_TITLE, getContext().getString(R.string.torrent_path));
-            ((Activity) getContext()).startActivityForResult(i, VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE);
+            // getContext() on phones/tablets is an activity but not a ContextThemeWrapper on AndroidTV
+            if (getContext() instanceof Activity)
+                ((Activity) getContext()).startActivityForResult(i, VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE);
+            else if (getContext() instanceof ContextWrapper)
+                ((Activity) ((ContextWrapper)getContext()).getBaseContext()).startActivityForResult(i, VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE);
         }
     }
 
