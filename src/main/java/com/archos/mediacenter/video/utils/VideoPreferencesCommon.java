@@ -35,6 +35,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.ListPreference;
+import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.Preference.OnPreferenceClickListener;
 import androidx.preference.PreferenceCategory;
@@ -68,10 +69,8 @@ import com.archos.mediascraper.AutoScrapeService;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import static com.archos.filecorelibrary.FileUtils.backupDatabase;
 
 public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener {
@@ -161,6 +160,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private PreferenceCategory mAdvancedPreferences = null;
     private PreferenceCategory mScraperCategory = null;
     private ListPreference mSubtitlesFavLangPreferences = null;
+    private MultiSelectListPreference mSubtitlesDownloadLanguagePreferences = null;
 
     private String mLastTraktUser = null;
     private Trakt.Status mTraktStatus = Trakt.Status.SUCCESS;
@@ -177,7 +177,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     final public static int ACTIVITY_RESULT_UI_MODE_CHANGED = 665;
     final public static int ACTIVITY_RESULT_UI_ZOOM_CHANGED = 667;
-    private Set<String> mDownloadSubsList;
     private Preference mExportManualPreference;
     private Preference mDbExportManualPreference = null;
 
@@ -516,48 +515,23 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         entries.toArray(newEntries);
         entryValues.toArray(newEntryValues);
-        final boolean[] toCheck = new boolean[newEntryValues.length];
         int systemLanguageIndex = -1;
         final String currentFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getISO3Language());
-        //fill list of languages user has already selected for download
-        mDownloadSubsList = getPreferenceManager().getSharedPreferences().getStringSet("languages_list", new HashSet<String>(   ));
-
         int i = 0;
         for(CharSequence value : newEntryValues){
             if(value.toString().equalsIgnoreCase(currentFavoriteLang)) {
                 systemLanguageIndex = i;
             }
-            toCheck[i] = mDownloadSubsList.contains(String.valueOf(value));
             i++;
         }
 
 
-        findPreference("languages_list").setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setMultiChoiceItems(newEntries, toCheck, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-                        String s = String.valueOf(newEntryValues[i]);
-                        if (!b)
-                            mDownloadSubsList.remove(s);
-                        else
-                            mDownloadSubsList.add(s);
-                        getPreferenceManager().getSharedPreferences().edit().putStringSet("languages_list", mDownloadSubsList).apply();
-                    }
-                }).setTitle(R.string.preferences_languages);
-                if(!ArchosFeatures.isAndroidTV(getActivity()))
-                    builder.setPositiveButton(android.R.string.ok, null);
-                builder.show();
-                return false;
-            }
-        });
-
-
+        mSubtitlesDownloadLanguagePreferences = (MultiSelectListPreference) findPreference("languages_list");
+        mSubtitlesDownloadLanguagePreferences.setEntries(newEntries);
+        mSubtitlesDownloadLanguagePreferences.setEntryValues(newEntryValues);
         mSubtitlesFavLangPreferences.setEntries(newEntries);
         mSubtitlesFavLangPreferences.setEntryValues(newEntryValues);
-        if(systemLanguageIndex>=0)
-        mSubtitlesFavLangPreferences.setValueIndex(systemLanguageIndex);
+        if(systemLanguageIndex>=0) mSubtitlesFavLangPreferences.setValueIndex(systemLanguageIndex);
 
         ListPreference lp = (ListPreference) findPreference("codepage");
         int cp = MediaFactory.getCodepage();
