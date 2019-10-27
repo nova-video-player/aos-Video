@@ -195,11 +195,13 @@
             android:title="@string/favSubLang_title"
             app:iconSpaceReserved="false"/>
 
-        <Preference
+        <MultiSelectListPreference
             android:dialogTitle="@string/preferences_languages"
             android:key="languages_list"
             android:summary="@string/summary_list_preference_primary"
             android:title="@string/preferences_languages"
+            android:entries="@array/entries_list_preference"
+            android:entryValues="@array/entryvalues_list_preference"
             app:iconSpaceReserved="false"/>
 
         <ListPreference
