@@ -1,4 +1,1 @@
-Support SMBv2/3 (problème avec GUEST) via jcifs-ng
-Migration à l'API v2 de TheTVDB via la librairie externe thetvdb-java avec cache des requêtes
-Cible API29 en désactivant scoped storage pour le moment
-Amélioration de la stabilité
+
