@@ -1785,36 +1785,36 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     @Override
     public void onVideoFileRemoved(final Uri videoFile,boolean askForFolderRemoval, final Uri folder) {
-        Toast.makeText(getActivity(), R.string.delete_done, Toast.LENGTH_SHORT).show();
-        if(askForFolderRemoval) {
-            AlertDialog.Builder b = new AlertDialog.Builder(getActivity()).setTitle("");
-            b.setIcon(R.drawable.filetype_new_folder);
-            b.setMessage(R.string.confirm_delete_parent_folder);
-            b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    sendDeleteResult(videoFile);
-                }
-            })
-                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Delete delete = new Delete(VideoInfoActivityFragment.this, getActivity());
-                            delete.deleteFolder(folder);
-                        }
-                    });
-            b.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialogInterface) {
-                    sendDeleteResult(videoFile);
-                }
-            });
-            b.create().show();
+        if (getActivity() != null) {
+            Toast.makeText(getActivity(), R.string.delete_done, Toast.LENGTH_SHORT).show();
+            if (askForFolderRemoval) {
+                AlertDialog.Builder b = new AlertDialog.Builder(getActivity()).setTitle("");
+                b.setIcon(R.drawable.filetype_new_folder);
+                b.setMessage(R.string.confirm_delete_parent_folder);
+                b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        sendDeleteResult(videoFile);
+                    }
+                })
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Delete delete = new Delete(VideoInfoActivityFragment.this, getActivity());
+                                delete.deleteFolder(folder);
+                            }
+                        });
+                b.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        sendDeleteResult(videoFile);
+                    }
+                });
+                b.create().show();
+            } else {
+                sendDeleteResult(videoFile);
+            }
         }
-        else {
-            sendDeleteResult(videoFile);
-        }
-
     }
 
     private void sendDeleteResult(Uri file){
@@ -1830,16 +1830,19 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     @Override
     public void onDeleteVideoFailed(Uri videoFile) {
-        Toast.makeText(getActivity(),R.string.delete_error, Toast.LENGTH_SHORT).show();
-
-        // close the fragment anyway because the un-indexing may work even if the actual delete fails
-        slightlyDelayedFinish();
+        if (getActivity() != null) {
+            Toast.makeText(getActivity(), R.string.delete_error, Toast.LENGTH_SHORT).show();
+            // close the fragment anyway because the un-indexing may work even if the actual delete fails
+            slightlyDelayedFinish();
+        }
     }
 
     @Override
     public void onFolderRemoved(Uri folder) {
-        Toast.makeText(getActivity(), R.string.delete_done, Toast.LENGTH_SHORT).show();
-        sendDeleteResult(folder);
+        if (getActivity() != null) {
+            Toast.makeText(getActivity(), R.string.delete_done, Toast.LENGTH_SHORT).show();
+            sendDeleteResult(folder);
+        }
     }
 
     @Override
