@@ -34,7 +34,7 @@ import java.io.File;
 public class TorrentPathDialogPreference extends Preference {
 
     private static String TAG = "TorrentPathDialogPreference";
-    private static boolean DBG = true;
+    private static boolean DBG = false;
 
     private View mView;
 
