@@ -76,7 +76,7 @@ import static com.archos.filecorelibrary.FileUtils.backupDatabase;
 public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener {
 
     private static String TAG = "VideoPreferencesCommon";
-    private static boolean DBG = true;
+    private static boolean DBG = false;
 
     public static final String KEY_VIDEO_AD_FREE = "video_ad_free";
     public static final String KEY_VIDEO_AD_FREE_CATEGORY = "preferences_category_complete";
