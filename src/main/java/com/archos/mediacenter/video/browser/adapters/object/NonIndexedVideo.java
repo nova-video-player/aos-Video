@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.browser.adapters.object;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.archos.filecorelibrary.contentstorage.DocumentUriBuilder;
 import com.archos.mediacenter.filecoreextension.UriUtils;
@@ -27,6 +28,9 @@ import java.io.Serializable;
  * Created by vapillon on 10/04/15.
  */
 public class NonIndexedVideo extends Video implements Serializable {
+
+    private static String TAG = "NonIndexedVideo";
+    private static boolean DBG = false;
 
     /**
      * Build a non indexed Video object from an uri and a name
@@ -46,8 +50,11 @@ public class NonIndexedVideo extends Video implements Serializable {
     }
 
     private static String buildName(String name, Uri uri){
-        if(name!=null)
-            return name;
+        if (name != null) return name;
+        if (uri == null) {
+            Log.w(TAG, "buildName: uri is null!");
+            return null;
+        }
         if(UriUtils.isContentUri(uri)){
             //try to find name in content provider
             name = DocumentUriBuilder.getNameFromContentProvider(uri);
@@ -63,10 +70,11 @@ public class NonIndexedVideo extends Video implements Serializable {
      */
     public NonIndexedVideo(String filepath) {
         super(-1L, filepath,
-                buildName(null, Uri.parse(filepath)),
+                buildName(null, filepath != null ? Uri.parse(filepath) : null),
                 null,
                 PlayerActivity.LAST_POSITION_UNKNOWN, -1,
                 -1, -1, false, false,false, false,0,0);
+        if (filepath == null ) Log.w(TAG, "NonIndexedVideo: filepath is null!");
     }
 
     /**
