@@ -146,6 +146,7 @@ import java.util.List;
 public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor>, PlayUtils.SubtitleDownloadListener, SubtitleInterface, Delete.DeleteListener, XmlDb.ResumeChangeListener, ExternalPlayerWithResultStarter {
 
     private static final String TAG = "VideoDetailsFragment";
+    private static boolean DBG = false;
 
     /** A serialized com.archos.mediacenter.video.leanback.adapter.object.Video */
     public static final String EXTRA_VIDEO = "VIDEO";
@@ -384,7 +385,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     if (row == mFileListRow) {
                         Video old = mVideo;
                         mVideo = (Video) item;
-                        Log.d(TAG, "Video selected");
+                        if (DBG) Log.d(TAG, "Video selected");
                         mShouldUpdateRemoteResume = true;
                         if(!smoothUpdateVideo(mVideo, old)){
                             // Full update if this is not a smooth update case
@@ -472,7 +473,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             }
         }
         //do not update remote resume
-        Log.d(TAG, "removeParseListener");
+        if (DBG) Log.d(TAG, "removeParseListener");
         XmlDb.getInstance().removeParseListener(mRemoteDbObserver);
         XmlDb.getInstance().removeResumeChangeListener(this);
         super.onStop();
@@ -728,20 +729,20 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         @Override
         public void onParseOk(XmlDb.ParseResult result) {
 
-            Log.d(TAG, "onParseOk");
+            if (DBG) Log.d(TAG, "onParseOk");
             XmlDb xmlDb = XmlDb.getInstance();
             //xmlDb.removeParseListener(this);
             if(getActivity()==null) { //too late
 
-                Log.d(TAG, "getActivity is null, leaving");
+                if (DBG) Log.d(TAG, "getActivity is null, leaving");
                 return;
             }
             VideoDbInfo videoInfo = null;
             if (result.success) {
-                Log.d(TAG, "result.success");
+                if (DBG) Log.d(TAG, "result.success");
                 videoInfo = xmlDb.getEntry(mVideo.getFileUri());
                 if(videoInfo!=null){
-                    Log.d(TAG, "videoInfo!=null "+videoInfo.resume);
+                    if (DBG) Log.d(TAG, "videoInfo!=null "+videoInfo.resume);
                     mVideo.setRemoteResumeMs(videoInfo.resume);
                     // Update the action adapter if there is a network resume
                     if (mDetailsOverviewRow!=null) {
@@ -783,7 +784,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             //TODO remove sources list
         }
         else {
-            Log.d(TAG, "found " + cursor.getCount() + " videos");
+            if (DBG) Log.d(TAG, "found " + cursor.getCount() + " videos");
             // Build video objects from the new cursor data
 
             mVideoBadgePresenter.setDisplay3dBadge(false);
@@ -796,9 +797,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 Video video =  (Video) cursorMapper.publicBind(cursor);
                 if(video.is3D())
                     mVideoBadgePresenter.setDisplay3dBadge(true);
-                Log.d(TAG, "online id " + cursor.getLong(cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID)));
+                if (DBG) Log.d(TAG, "online id " + cursor.getLong(cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID)));
                 mVideoList.add(video);
-                Log.d(TAG, "found video : " + video.getFileUri());
+                if (DBG) Log.d(TAG, "found video : " + video.getFileUri());
                 if(!mSelectCurrentVideo){ // get most advanced video
                     if(video.getLastPlayed()>0&&mVideo==null||mVideo!=null&&video.getLastPlayed()>mVideo.getLastPlayed()){
                         mVideo = video;
@@ -884,7 +885,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
      * @return
      */
     private boolean smoothUpdateVideo(Video currentVideo, Video oldVideoObject) {
-        Log.d(TAG, "smoothUpdateVideo");
+        if (DBG) Log.d(TAG, "smoothUpdateVideo");
         boolean smoothUpdate = false;
         // Check if we really need to update the fragment
         boolean needToUpdateDetailsOverview;
@@ -955,7 +956,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             //before that, we couldn't be sure to have the right file uri. Now that we are, try to get remote resume
             currentVideo.setRemoteResumeMs(-1);//reset remote resume
             if (!mLaunchedFromPlayer && !FileUtils.isLocal(currentVideo.getFileUri()) && UriUtils.isCompatibleWithRemoteDB(currentVideo.getFileUri())) {
-                Log.d(TAG, "addParseListener");
+                if (DBG) Log.d(TAG, "addParseListener");
                 XmlDb.getInstance().addParseListener(mRemoteDbObserver);
                 XmlDb.getInstance().parseXmlLocation(currentVideo.getFileUri());
             }
@@ -967,15 +968,15 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     }
 
     private boolean foundDifferencesRequiringDetailsUpdate(Video v1, Video v2) {
-        if (v1==null || v2==null) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate null"); return true;}
-        if (v1.getClass() != v2.getClass()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate class"); return true;}
-        if (v1.getId() != v2.getId()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate id"); return true;}
-        if (v1.hasScraperData() != v2.hasScraperData()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate hasScraperData"); return true;}
-        if (v1.getResumeMs() != v2.getResumeMs()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate resumeMs"); return true;}
-        if (v1.isWatched() != v2.isWatched()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isWatched"); return true;}
-        if (v1.isUserHidden() != v2.isUserHidden()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isUserHidden"); return true;}
-        //if (v1.subtitleCount() != v2.subtitleCount()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate subtitleCount"); return true;}
-        //if (v1.externalSubtitleCount() != v2.externalSubtitleCount()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate externalSubtitleCount"); return true;}
+        if (v1==null || v2==null) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate null"); return true;}
+        if (v1.getClass() != v2.getClass()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate class"); return true;}
+        if (v1.getId() != v2.getId()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate id"); return true;}
+        if (v1.hasScraperData() != v2.hasScraperData()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate hasScraperData"); return true;}
+        if (v1.getResumeMs() != v2.getResumeMs()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate resumeMs"); return true;}
+        if (v1.isWatched() != v2.isWatched()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isWatched"); return true;}
+        if (v1.isUserHidden() != v2.isUserHidden()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isUserHidden"); return true;}
+        //if (v1.subtitleCount() != v2.subtitleCount()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate subtitleCount"); return true;}
+        //if (v1.externalSubtitleCount() != v2.externalSubtitleCount()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate externalSubtitleCount"); return true;}
         return false;
     }
 
@@ -984,7 +985,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     @Override
     public void onResumeChange(Uri videoFile, int resumePercent) {
-        Log.d(TAG, "onResumeChange()");
+        if (DBG) Log.d(TAG, "onResumeChange()");
         if(mHasRetrievedDetails&&isAdded()&&!isDetached()&&videoFile.equals(mVideo.getFileUri())){
             VideoDbInfo info = XmlDb.getEntry(videoFile);
             if(info!=null) {
@@ -1068,9 +1069,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
      */
 
     private void fullyReloadVideo(Video video, Bitmap poster) {
+        if (DBG) Log.d(TAG, "fullyReloadVideo");
+        if (DBG) Log.d(TAG, "fullyReloadVideo: mShouldLoadBackdrop=" + mShouldLoadBackdrop);
         if(mShouldLoadBackdrop)
             BackgroundManager.getInstance(getActivity()).setDrawable(new ColorDrawable(VideoInfoCommonClass.getDarkerColor(mColor)));
-        Log.d(TAG, "fullyReloadVideo");
         mSubtitlesDetailsRow = new SubtitlesDetailsRow(getActivity(), video, null);
         mFileDetailsRow = new FileDetailsRow(getActivity(), video, mPlayerType);
         if(mDetailsOverviewRow==null)
@@ -1266,7 +1268,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             if(mLaunchedFromPlayer && mVideoMetadataFromPlayer!=null && mVideoMetadataFromPlayer.getVideoTrack()!=null)
                 return mVideoMetadataFromPlayer;
             else if(mVideoMetadateCache.containsKey(startingPath)){
-                Log.d(TAG, "metadata retrieved from cache "+startingPath);
+                if (DBG) Log.d(TAG, "metadata retrieved from cache "+startingPath);
                 return mVideoMetadateCache.get(startingPath);
             }
             else {
@@ -1365,7 +1367,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             if (tags!=null && !mLaunchedFromPlayer) { // in player case the player is displayed in the background, not the backdrop
                 if(mShouldLoadBackdrop) {
                     mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,tags);
-
+                    mShouldLoadBackdrop = false;
                 }
             }
             if (tags!=null) {
@@ -1545,7 +1547,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_SUBTITLES_ACTIVITY && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Get RESULT_OK from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
+            if (DBG) Log.d(TAG, "Get RESULT_OK from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
             // Update the subtitle row
             if (mSubtitleFilesListerTask !=null) {
                 mSubtitleFilesListerTask.cancel(true);
@@ -1841,7 +1843,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         // TMDB
         if (tags instanceof MovieTags) {
             final long onlineId = tags.getOnlineId();
-            //Log.d(TAG, "tags.getOnlineId() = " + onlineId);
+            //if (DBG) Log.d(TAG, "tags.getOnlineId() = " + onlineId);
             if (onlineId > 0) {
                 final String language = MovieScraper2.getLanguage(getActivity());
                 list.add(String.format(getResources().getString(R.string.tmdb_title_url), onlineId, language));
@@ -1850,7 +1852,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         // IMDB (valid for both movies and episodes)
         String imdbId=tags.getImdbId();
-        //Log.d(TAG, "tags.getImdbId() = "+imdbId);
+        //if (DBG) Log.d(TAG, "tags.getImdbId() = "+imdbId);
         if ((imdbId!=null) && (!imdbId.isEmpty())) {
             list.add(getResources().getString(R.string.imdb_title_url) + imdbId);
         }
