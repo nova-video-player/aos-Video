@@ -46,6 +46,7 @@ import java.util.ArrayList;
 public abstract class VideosByFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "MoviesByFragment";
+    private static boolean DBG = false;
 
     private ArrayObjectAdapter mRowsAdapter;
     private Overlay mOverlay;
@@ -231,7 +232,7 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
 
         // Modified for sure if has different length
         if (oldCursor.getCount() != newCursor.getCount()) {
-            Log.d(TAG, "Difference found in the category list (size changed)");
+            if (DBG) Log.d(TAG, "Difference found in the category list (size changed)");
             return true;
         }
 
@@ -247,14 +248,14 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
             final String newName = newCursor.getString(newSubsetNameColumn);
             if (oldName != null && !oldName.equals(newName)) {
                 // difference found
-                Log.d(TAG, "Difference found in the category list (" + oldName + " vs " + newName + ")");
+                if (DBG) Log.d(TAG, "Difference found in the category list (" + oldName + " vs " + newName + ")");
                 return true;
             }
             oldCursor.moveToNext();
             newCursor.moveToNext();
         }
         // no difference found
-        Log.d(TAG, "No difference found in the category list");
+        if (DBG) Log.d(TAG, "No difference found in the category list");
         return false;
     }
 
@@ -307,6 +308,7 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
     }
 
     private void updateBackground() {
+        if (DBG) Log.d(TAG, "updateBackground");
         bgMngr = BackgroundManager.getInstance(getActivity());
         if(!bgMngr.isAttached())
             bgMngr.attach(getActivity().getWindow());
