@@ -392,6 +392,7 @@ public class Delete {
                             break;
                         }
                     }while (cursor2.moveToNext());
+                    cursor2.close();
                 }
                 if(shouldDeleteSeasonExportedFiles){
                     //add nfo/jpg files to delete
@@ -412,6 +413,7 @@ public class Delete {
                                 break;
                             }
                         }while (cursor3.moveToNext());
+                        cursor3.close();
                     }
                     //add season poster file
                     String formatedName = parentUri+NfoParser.getCustomSeasonPosterName(tags.getShowTitle(), tags.getSeason());
