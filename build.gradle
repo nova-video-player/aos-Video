@@ -5,7 +5,7 @@ buildscript {
 	maven { url 'https://mvnrepository.com/artifact/' } // for play-publisher
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.1'
+        classpath 'com.android.tools.build:gradle:3.5.2'
     }
 }
 
