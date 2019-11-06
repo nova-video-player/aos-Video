@@ -59,8 +59,8 @@ import com.archos.mediacenter.video.browser.TorrentObserverService;
 import com.archos.mediaprovider.ArchosMediaIntent;
 import com.archos.mediaprovider.video.VideoStore;
 
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
+import de.timroes.axmlrpc.XMLRPCClient;
+import de.timroes.axmlrpc.XMLRPCException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -251,7 +251,7 @@ public class SubtitlesDownloaderActivity extends Activity{
 
     private class OpenSubtitlesTask extends AsyncTask<ArrayList<String>, Integer, Void>{
         HashMap<String, Object> map = null;
-        XMLRPCClient client = new XMLRPCClient(OpenSubtitlesAPIUrl);
+        XMLRPCClient client = null;
         private String token = null;
 
 
@@ -331,6 +331,12 @@ public class SubtitlesDownloaderActivity extends Activity{
          *************************************************/
         @SuppressWarnings("unchecked")
         public boolean logIn() {
+            try {
+                URL url = new URL(OpenSubtitlesAPIUrl);
+                client = new XMLRPCClient(url);
+            } catch (MalformedURLException e) {
+                Log.e(TAG, "logIn: caught MalformedURLException");
+            }
             try {
                 map = ((HashMap<String, Object>) client.call("LogIn","","","fre",USER_AGENT));
                 token = (String) map.get("token");
