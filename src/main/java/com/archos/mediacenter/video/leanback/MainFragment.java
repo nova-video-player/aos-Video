@@ -182,6 +182,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             @Override
             public void onReceive(Context context, Intent intent) {
                 if(intent!=null&& ArchosMediaIntent.ACTION_VIDEO_SCANNER_SCAN_FINISHED.equals(intent.getAction())) {
+                    // prepare first row to be displayed and lock on
+                    LoaderManager.getInstance(MainFragment.this).restartLoader(LOADER_ID_LAST_ADDED, null, MainFragment.this);
                     Log.d(TAG, "manual reload");
                 }
             }
