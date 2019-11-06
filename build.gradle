@@ -193,4 +193,5 @@ dependencies {
     implementation 'androidx.leanback:leanback:1.1.0-alpha2'
     implementation 'androidx.leanback:leanback-preference:1.1.0-alpha02'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
+    implementation 'fr.turri:aXMLRPC:1.12.0'
 }
