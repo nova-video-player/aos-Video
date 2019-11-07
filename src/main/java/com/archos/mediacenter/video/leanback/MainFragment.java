@@ -811,16 +811,21 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
      * When opening, WatchingUpNext, LastAdded and LastPlayed rows are not created yet, hence selection is on Movies.
      * Here we wait for the Loaders to return their results to know if we need to select the first row again (which will be WatchingUpNext, LastAdded or LastPlayed)
      */
-    private int mInitWatchingUpNextCount = -1;
+    // TODO: disabled until issue #186 is fixed
+    //private int mInitWatchingUpNextCount = -1;
     private int mInitLastAddedCount = -1;
     private int mInitLastPlayedCount = -1;
     private boolean mFocusInitializationDone = false;
 
     private void checkFocusInitialization() {
         // Check if we have WatchingUpNext, LastAdded and LastPlayed loader results
-        if (!mFocusInitializationDone && mInitWatchingUpNextCount>-1 && mInitLastAddedCount>-1 && mInitLastPlayedCount>-1) {
+        // TODO: disabled until issue #186 is fixed
+	    //if (!mFocusInitializationDone && mInitWatchingUpNextCount>-1 && mInitLastAddedCount>-1 && mInitLastPlayedCount>-1) {
+        if (!mFocusInitializationDone && mInitLastAddedCount>-1 && mInitLastPlayedCount>-1) {
             // If at least one of them is non empty we select the first line (which contains one of them)
-            if (mInitWatchingUpNextCount>0 || mInitLastAddedCount>0 || mInitLastPlayedCount>0) {
+            // TODO: disabled until issue #186 is fixed
+            //if (mInitWatchingUpNextCount>0 || mInitLastAddedCount>0 || mInitLastPlayedCount>0) {
+            if (mInitLastAddedCount>0 || mInitLastPlayedCount>0) {
                 this.setSelectedPosition(0, true);
                 mFocusInitializationDone = true; // this must be done only once
             }
