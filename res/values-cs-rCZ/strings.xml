@@ -140,6 +140,7 @@
     <string name="scrap_change_title">Modifikuji všechny epizody</string>
     <string name="scrap_change_initializing">Inicializace…</string>
     <string name="scrap_change_finalizing">Dokončování…</string>
+    <string name="scrap_get_title">Získávám informace</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Režie</string>
     <string name="scrap_director_format">Režie: %s</string>
@@ -467,12 +468,16 @@
     <string name="preferences_force_audio_passthrough_enable">Režim 1</string>
     <string name="preferences_force_audio_passthrough_enable2">Režim 2</string>
     <string name="preferences_force_audio_passthrough_summary">Přenos komprimovaného audia pro připojení přes HDMI a S/PDIF</string>
+    <string name="preferences_disable_downmix_title">Vypnout stereo down-mix</string>
+    <string name="preferences_disable_downmix_summary">Vždy dekódovat všechny kanály a nechat Android provést down-mix v závislosti na schopnostech audio výstupu (může vyústit ve ztrátu hlasových kanálů)</string>
     <string name="preferences_allow_3rd_party_player">Umožnit používání jiného přehrávače</string>
     <string name="preferences_allow_3rd_party_player_summary">Pokud zvolíte přehrávání videa, budou vám systémem nabídnuty další kompatibilní aplikace pro přehrávání. Vezměte na vědomí, že některé funkce nebudou dostupné (obnovení přehrávání, záložky apod.)</string>
     <string name="preference_tv_3d_automatic_switch">Zapnout automatické přepínání TV do 3D\"</string>
     <string name="preference_tv_3d_automatic_switch_summary">Použijte tuto funkci pouze pokud vaše TV podporuje 3D\"</string>
     <string name="preference_tv_refreshrate_switch">Aktivovat automatické přepínání obnovovací frekvence na TV</string>
     <string name="preference_tv_refreshrate_switch_summary">Potlačit \"judder\" efekt pomocí adaptivního režimu obnovovací frekvence (podpora TV se může lišit)</string>
+    <string name="preference_cutout_short_edges">Celá obrazovka s výřezy displeje</string>
+    <string name="preference_cutout_short_edges_summary">Povolit horizontální video na plnou obrazovku na displeji s výřezy</string>
     <string name="category_languages">Titulky</string>
     <string name="subtitles_hide_default">Ve výchozím stavu skrýt titulky</string>
     <string name="subtitles_hide_default_summary">Zvolte, zda chcete ve výchozím stavu skrýt titulky</string>
