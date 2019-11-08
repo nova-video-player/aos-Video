@@ -140,6 +140,7 @@
     <string name="scrap_change_title">Alle Episoden ändern</string>
     <string name="scrap_change_initializing">Initialisiere…</string>
     <string name="scrap_change_finalizing">Fertigstellen…</string>
+    <string name="scrap_get_title">Rufe Info ab</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Regisseur</string>
     <string name="scrap_director_format">Regisseur: %s</string>
