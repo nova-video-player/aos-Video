@@ -1,1 +1,4 @@
-../en-US/internal.txt
+Migration à l'API v2 de TheTVDB via la librairie externe thetvdb-java avec cache des requêtes
+Notification d'indexation, de récupération des informations et de copie de fichiers
+Cible API29 en désactivant scoped storage pour le moment
+Amélioration de la stabilité
