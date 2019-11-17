@@ -893,8 +893,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     final Uri uri = mCurrentVideo.getFileUri();
                     new Thread() {
                         public void run() {
-                            if (!VideoStoreImportImpl.isNoMediaPath(uri))
+                            if (!VideoStoreImportImpl.isNoMediaPath(uri)) {
+                                if (DBG) Log.d(TAG, "requestIndexAndScrap: isNoMediaPath asking VideoStore.requestIndexing " + uri);
                                 VideoStore.requestIndexing(uri, getActivity(),false);
+                            }
                         }
                     }.start();
                 }
