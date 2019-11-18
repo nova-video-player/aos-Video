@@ -365,7 +365,6 @@
     <string name="subtitle_size_text">Wielkość:</string>
     <string name="subtitle_style_text">Styl:</string>
     <string name="subtitle_vert_text">Pozycja pionowa:</string>
-    <string name="subtitle_color_default">#ffffff</string>
     <string name="subtitle_outline">Cień napisów</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Regulacja prędkości</string>

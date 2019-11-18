@@ -400,7 +400,6 @@
     <string name="subtitle_size_text">Tamaño:</string>
     <string name="subtitle_style_text">Estilo:</string>
     <string name="subtitle_vert_text">Posición vertical:</string>
-    <string name="subtitle_color_default">#ffffff</string>
     <string name="subtitle_outline">Contorno de subtitulos</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Ajuste de la velocidad</string>
