@@ -50,4 +50,6 @@
     <string name="action_recently_added">com.archos.mediacenter.video.action_recently_added</string>
     <string name="action_recently_played">com.archos.mediacenter.video.action_recently_played</string>
 
+    <string name="subtitle_color_default">#ffffff</string>
+
 </resources>

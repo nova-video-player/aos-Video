@@ -396,7 +396,6 @@ Copertina (rotolo di copertina)</string>
     <string name="subtitle_size_text">Dimensione:</string>
     <string name="subtitle_style_text">Stile:</string>
     <string name="subtitle_vert_text">Posizione verticale:</string>
-    <string name="subtitle_color_default">#ffffff</string>
     <string name="subtitle_outline">Contorno dei sottotitoli</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Aggiusta la velocità</string>

@@ -385,7 +385,6 @@
     <string name="subtitle_size_text">Размер:</string>
     <string name="subtitle_style_text">Стиль:</string>
     <string name="subtitle_vert_text">Положение по вертикали:</string>
-    <string name="subtitle_color_default">#ffffff</string>
     <string name="subtitle_outline">Обводка субтитров</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Настройка скорости</string>

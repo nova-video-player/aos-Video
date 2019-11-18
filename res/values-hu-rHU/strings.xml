@@ -344,7 +344,6 @@
     <string name="subtitle_size_text">Méret:</string>
     <string name="subtitle_style_text">Stílus:</string>
     <string name="subtitle_vert_text">Függőleges elhelyezkedés:</string>
-    <string name="subtitle_color_default">#ffffff</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Sebesség igazítása</string>
     <string name="subtitle_delay_radio_none">nincs</string>
