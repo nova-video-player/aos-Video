@@ -1,4 +1,5 @@
 Migration to TheTVDB API v2 via thetvdb-java external library with request caching support
 Target API29 disabling scoped storage for now
 Indexing, scraping and file copy proper foreground notifications
+Fix TV shows meta data retrieval issues due to to TheTVdb.com backend changes
 Stability enhancements
