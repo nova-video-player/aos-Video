@@ -291,6 +291,9 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             if (detail.isOkay()) {
                 Bundle episodeList = detail.extras;
                 epMap = toMap(episodeList);
+            } else {
+                // TODO: if notOkay then epMap is null -> should be handled
+                Log.w(TAG, "handleSave: episode details NOK!");
             }
             if (DBG) {
                 Log.d(TAG, "--------------------\nAll episodes for the new show:");
@@ -367,6 +370,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
         }
 
         private EpisodeTags getEpisode(Map<String, EpisodeTags> map, int episode, int season, ShowTags show) {
+            // TODO: handle map being null to avoid crash
             EpisodeTags newEpTag = map.get(ShowAllDetailsHandler.getKey(season, episode));
             if (newEpTag == null) {
                 newEpTag = new EpisodeTags();
