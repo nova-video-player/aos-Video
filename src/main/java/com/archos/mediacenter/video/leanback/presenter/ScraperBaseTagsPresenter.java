@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import com.archos.mediacenter.video.R;
 import com.archos.mediascraper.EpisodeTags;
 import com.archos.mediascraper.MovieTags;
+import com.archos.mediascraper.ScraperImage;
 import com.archos.mediascraper.ShowTags;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -39,11 +40,14 @@ import com.squareup.picasso.Target;
  */
 public class ScraperBaseTagsPresenter extends Presenter {
 
+    // TODO: this does not make use of the okhttp cache since it goes through picasso instead of ScraperImage
+
     private Context mContext;
 
     public class ViewHolder extends Presenter.ViewHolder {
         private ImageCardView mCardView;
         private PicassoImageCardViewTarget mImageCardViewTarget;
+        private String mFallbackUrl;
 
         public ViewHolder(Context context) {
             super(new ImageCardView(context));
@@ -53,7 +57,7 @@ public class ScraperBaseTagsPresenter extends Presenter {
             mCardView.setFocusable(true);
             mCardView.setFocusableInTouchMode(true);
 
-            mImageCardViewTarget = new PicassoImageCardViewTarget(mCardView);
+            mImageCardViewTarget = new PicassoImageCardViewTarget(mCardView, this);
         }
 
         public int getWidth(Context context) {
@@ -79,6 +83,10 @@ public class ScraperBaseTagsPresenter extends Presenter {
                     .error(R.drawable.filetype_new_video)
                     .into(mImageCardViewTarget);
         }
+
+        public void setFallbackUrl(String url) {
+            mFallbackUrl = url;
+        }
     }
 
     @Override
@@ -92,6 +100,7 @@ public class ScraperBaseTagsPresenter extends Presenter {
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
         ViewHolder vh = (ViewHolder)viewHolder;
 
+        boolean foundImage = false;
         if (item instanceof MovieTags) {
             MovieTags tags = (MovieTags)item;
             vh.getImageCardView().setTitleText(tags.getTitle());
@@ -103,25 +112,41 @@ public class ScraperBaseTagsPresenter extends Presenter {
             vh.getImageCardView().setContentText(content);
 
             if (tags.getDefaultPoster()!=null) {
+                vh.setFallbackUrl(tags.getDefaultPoster().getThumbUrl());
                 vh.updateCardViewPoster(tags.getDefaultPoster().getLargeUrl());
+                foundImage = true;
             }
         }
         else if (item instanceof EpisodeTags) {
             EpisodeTags tags = (EpisodeTags)item;
             vh.getImageCardView().setTitleText(tags.getShowTitle());
-            if (tags.getDefaultPoster()!=null) {
-                vh.updateCardViewPoster(tags.getDefaultPoster().getLargeUrl());
+
+            ScraperImage episodePoster = tags.getDefaultPoster();
+            if(episodePoster == null && tags.getShowTags() != null) {
+                episodePoster = tags.getShowTags().getDefaultPoster();
+            }
+            if (episodePoster != null) {
+                vh.setFallbackUrl(episodePoster.getThumbUrl());
+                vh.updateCardViewPoster(episodePoster.getLargeUrl());
+                foundImage = true;
+
             }
         }
         else if (item instanceof ShowTags) {
             ShowTags tags = (ShowTags)item;
             vh.getImageCardView().setTitleText(tags.getTitle());
             if (tags.getDefaultPoster()!=null) {
+                vh.setFallbackUrl(tags.getDefaultPoster().getThumbUrl());
                 vh.updateCardViewPoster(tags.getDefaultPoster().getLargeUrl());
+                foundImage = true;
             }
         }
         else {
             throw new IllegalArgumentException("invalid object! "+item.getClass().getCanonicalName());
+        }
+        if(!foundImage) {
+            vh.getImageCardView().setMainImageScaleType(ImageView.ScaleType.CENTER);
+            vh.getImageCardView().setMainImage(mContext.getResources().getDrawable(R.drawable.filetype_new_video), true);
         }
     }
 
@@ -132,6 +157,7 @@ public class ScraperBaseTagsPresenter extends Presenter {
 
     public class PicassoImageCardViewTarget implements Target {
         private ImageCardView mImageCardView;
+        private ViewHolder mViewHolder;
 
         // Picasso documentation: Objects implementing this class must have a working implementation of Object.equals(Object) and Object.hashCode() for proper storage internally.
         @Override
@@ -143,8 +169,9 @@ public class ScraperBaseTagsPresenter extends Presenter {
             return mImageCardView.equals( ((PicassoImageCardViewTarget)other).mImageCardView );
         }
 
-        public PicassoImageCardViewTarget(ImageCardView imageCardView) {
+        public PicassoImageCardViewTarget(ImageCardView imageCardView, ViewHolder viewHolder) {
             mImageCardView = imageCardView;
+            mViewHolder = viewHolder;
         }
 
         @Override
@@ -159,6 +186,12 @@ public class ScraperBaseTagsPresenter extends Presenter {
 
         @Override
         public void onBitmapFailed(Exception e, Drawable drawable){
+            String fallback = mViewHolder.mFallbackUrl;
+            if(fallback != null) {
+                mViewHolder.setFallbackUrl(null);
+                mViewHolder.updateCardViewPoster(fallback);
+                return;
+            }
             mImageCardView.setMainImageScaleType(ImageView.ScaleType.CENTER);
             mImageCardView.setMainImage(drawable, true);
         }
