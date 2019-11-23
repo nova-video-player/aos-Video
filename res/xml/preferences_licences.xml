@@ -49,4 +49,28 @@
             android:action="android.intent.action.VIEW"
             android:data="http://www.libtorrent.org/" />
     </PreferenceScreen>
+    <PreferenceScreen
+        android:summary="LGPL v2.1"
+        android:title="jcifs-ng"
+        app:iconSpaceReserved="false">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/AgNO3/jcifs-ng" />
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:summary="Unlicense"
+        android:title="trakt-java"
+        app:iconSpaceReserved="false">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/UweTrottmann/trakt-java" />
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:summary="Unlicense"
+        android:title="thetvdb-java"
+        app:iconSpaceReserved="false">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/UweTrottmann/thetvdb-java" />
+    </PreferenceScreen>
 </PreferenceScreen>
