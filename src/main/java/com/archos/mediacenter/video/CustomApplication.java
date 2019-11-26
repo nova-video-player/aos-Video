@@ -44,8 +44,25 @@ import java.util.List;
 import httpimage.FileSystemPersistence;
 import httpimage.HttpImageManager;
 
+import org.acra.*;
+import org.acra.annotation.*;
+import org.acra.data.StringFormat;
+import org.acra.sender.HttpSender;
+
+@AcraCore(buildConfigClass = BuildConfig.class,
+        reportFormat = StringFormat.JSON)
+
+@AcraHttpSender(uri = "https://collector.tracepot.com/a5806dc0",
+        httpMethod = HttpSender.Method.POST)
 
 public class CustomApplication extends MultiDexApplication {
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        // The following line triggers the initialization of ACRA
+        ACRA.init(this);
+    }
 
     public static String BASEDIR;
     private boolean mAutoScraperActive;
@@ -143,7 +160,6 @@ public class CustomApplication extends MultiDexApplication {
             MediaUtils.clearOldSubDir(this);
             Debug.startLogcatRecording();
         }
-
     }
 
     private static String getMyProcessName(Context ct) {

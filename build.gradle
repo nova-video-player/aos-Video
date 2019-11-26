@@ -175,6 +175,7 @@ dependencies {
     implementation project(':FileCoreLibrary')
     implementation project(':MediaLib')
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation "ch.acra:acra-http:5.4.0"
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.media:media:1.1.0'
