@@ -210,7 +210,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             }
             // step 2: save new show / episode info for those
             ShowTags newShow = handleSave(params[0], episodeList);
-            Log.d(TAG, "save finished");
+            if (DBG) Log.d(TAG, "save finished");
             return newShow;
         }
 
@@ -231,10 +231,15 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
         @Override
         protected void onPostExecute(ShowTags newShow) {
             mProgressDialog.dismiss();
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_ID, newShow.getId());
-            resultIntent.putExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_NAME, newShow.getTitle());
-            getActivity().setResult(Activity.RESULT_OK, resultIntent);
+            // if something went wrong newShow = null
+            if (newShow != null) {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_ID, newShow.getId());
+                resultIntent.putExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_NAME, newShow.getTitle());
+                getActivity().setResult(Activity.RESULT_OK, resultIntent);
+            } else {
+                Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+            }
             getActivity().finish();
         }
 
@@ -294,6 +299,8 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             } else {
                 // TODO: if notOkay then epMap is null -> should be handled
                 Log.w(TAG, "handleSave: episode details NOK!");
+                // scraping nok thus we assume that this is the wrong tv show selected for manual scraping and trigger abort
+                return null;
             }
             if (DBG) {
                 Log.d(TAG, "--------------------\nAll episodes for the new show:");
