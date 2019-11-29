@@ -383,17 +383,18 @@ public class NetworkRootFragment extends BrowseSupportFragment {
         }
         @Override
         protected void onPostExecute(Cursor cursor) {
-            mFtpShortcutsAdapter.clear();
-            mFtpShortcutsAdapter.add(new FtpBrowse(getString(R.string.add_ssh_server)));
-            if(cursor.getCount()>0) {
-                cursor.moveToFirst();
-                do {
-                    FtpShortcutMapper shortcutMapper = new FtpShortcutMapper();
-                    shortcutMapper.bindColumns(cursor);
-                    mFtpShortcutsAdapter.add(shortcutMapper.bind(cursor));
-                } while (cursor.moveToNext());
+            if (isAdded()) {
+                mFtpShortcutsAdapter.clear();
+                mFtpShortcutsAdapter.add(new FtpBrowse(getString(R.string.add_ssh_server)));
+                if (cursor.getCount() > 0) {
+                    cursor.moveToFirst();
+                    do {
+                        FtpShortcutMapper shortcutMapper = new FtpShortcutMapper();
+                        shortcutMapper.bindColumns(cursor);
+                        mFtpShortcutsAdapter.add(shortcutMapper.bind(cursor));
+                    } while (cursor.moveToNext());
+                }
             }
-
         }
     }
 
