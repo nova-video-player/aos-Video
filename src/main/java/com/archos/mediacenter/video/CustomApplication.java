@@ -49,11 +49,13 @@ import org.acra.annotation.*;
 import org.acra.data.StringFormat;
 import org.acra.sender.HttpSender;
 
+/*
 @AcraCore(buildConfigClass = BuildConfig.class,
         reportFormat = StringFormat.JSON)
 
 @AcraHttpSender(uri = "https://collector.tracepot.com/a5806dc0",
         httpMethod = HttpSender.Method.POST)
+ */
 
 public class CustomApplication extends MultiDexApplication {
 
@@ -61,7 +63,7 @@ public class CustomApplication extends MultiDexApplication {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         // The following line triggers the initialization of ACRA
-        ACRA.init(this);
+        //ACRA.init(this);
     }
 
     public static String BASEDIR;
