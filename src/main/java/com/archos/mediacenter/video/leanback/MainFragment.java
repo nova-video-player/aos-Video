@@ -182,6 +182,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             @Override
             public void onReceive(Context context, Intent intent) {
                 if(intent!=null&& ArchosMediaIntent.ACTION_VIDEO_SCANNER_SCAN_FINISHED.equals(intent.getAction())) {
+                    // prepare first row to be displayed and lock on
+                    LoaderManager.getInstance(MainFragment.this).restartLoader(LOADER_ID_LAST_ADDED, null, MainFragment.this);
                     Log.d(TAG, "manual reload");
                 }
             }
@@ -745,16 +747,19 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         /*
         if (cursorLoader.getId() == LOADER_ID_WATCHING_UP_NEXT) {
             updateWatchingUpNextRow(cursor);
-            mInitWatchingUpNextCount = cursor.getCount();
+            if (mWatchingUpNextInitFocus == InitFocus.NOT_FOCUSED)
+                mWatchingUpNextInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
         }
         else */
         if (cursorLoader.getId() == LOADER_ID_LAST_ADDED) {
             updateLastAddedRow(cursor);
-            mInitLastAddedCount = cursor.getCount();
+            if (mLastAddedInitFocus == InitFocus.NOT_FOCUSED)
+                mLastAddedInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
         }
         else if (cursorLoader.getId() == LOADER_ID_LAST_PLAYED) {
             updateLastPlayedRow(cursor);
-            mInitLastPlayedCount = cursor.getCount();
+            if (mLastPlayedInitFocus == InitFocus.NOT_FOCUSED)
+                mLastPlayedInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
         }
         else if (cursorLoader.getId() == LOADER_ID_ALL_MOVIES) {
             if (!mNeedBuildAllMoviesBox && isVideosListModified(mMoviesAdapter.getCursor(), cursor))
@@ -788,7 +793,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             updateNonScrapedVideosVisibility(cursor);
         }
 
-        checkFocusInitialization();
+        checkInitFocus();
     }
 
     @Override
@@ -805,20 +810,27 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         return false;
     }
 
+    private enum InitFocus {
+        NOT_FOCUSED, NO_NEED_FOCUS, NEED_FOCUS, FOCUSED
+    }
+
     /**
      * When opening, WatchingUpNext, LastAdded and LastPlayed rows are not created yet, hence selection is on Movies.
      * Here we wait for the Loaders to return their results to know if we need to select the first row again (which will be WatchingUpNext, LastAdded or LastPlayed)
      */
     // TODO: disabled until issue #186 is fixed
-    //private int mInitWatchingUpNextCount = -1;
-    private int mInitLastAddedCount = -1;
-    private int mInitLastPlayedCount = -1;
+    //private InitFocus mWatchingUpNextInitFocus = InitFocus.NOT_FOCUSED;
+    private InitFocus mLastAddedInitFocus = InitFocus.NOT_FOCUSED;
+    private InitFocus mLastPlayedInitFocus = InitFocus.NOT_FOCUSED;
     private boolean mFocusInitializationDone = false;
 
-    private void checkFocusInitialization() {
+    private void checkInitFocus() {
         // Check if we have WatchingUpNext, LastAdded and LastPlayed loader results
+
+        // drawback of previous method is that it waits for all the loaders to complete before providing focus
+        /*
         // TODO: disabled until issue #186 is fixed
-	    //if (!mFocusInitializationDone && mInitWatchingUpNextCount>-1 && mInitLastAddedCount>-1 && mInitLastPlayedCount>-1) {
+        // if (!mFocusInitializationDone && mInitWatchingUpNextCount>-1 && mInitLastAddedCount>-1 && mInitLastPlayedCount>-1) {
         if (!mFocusInitializationDone && mInitLastAddedCount>-1 && mInitLastPlayedCount>-1) {
             // If at least one of them is non empty we select the first line (which contains one of them)
             // TODO: disabled until issue #186 is fixed
@@ -828,6 +840,25 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 mFocusInitializationDone = true; // this must be done only once
             }
         }
+         */
+
+        // TODO: disabled until issue #186 is fixed
+        /*
+        if (mWatchingUpNextInitFocus == InitFocus.NEED_FOCUS) {
+            mWatchingUpNextInitFocus = InitFocus.FOCUSED;
+            mLastAddedInitFocus = InitFocus.NO_NEED_FOCUS;
+            mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
+        }
+        else */
+        if (mLastAddedInitFocus == InitFocus.NEED_FOCUS) {
+            mLastAddedInitFocus = InitFocus.FOCUSED;
+            mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
+        } else if (mLastPlayedInitFocus == InitFocus.NEED_FOCUS) {
+            mLastPlayedInitFocus = InitFocus.FOCUSED;
+        } else {
+            return;
+        }
+        setSelectedPosition(0);
     }
 
     /**
