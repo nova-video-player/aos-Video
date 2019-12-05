@@ -99,7 +99,7 @@ import java.nio.file.attribute.UserPrincipalNotFoundException;
 public class MainFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "MainFragment";
-    private static final Boolean DBG = true;
+    private static final Boolean DBG = false;
     private static final String PREF_PRIVATE_MODE = "PREF_PRIVATE_MODE";
 
     final static int LOADER_ID_WATCHING_UP_NEXT = 47;
