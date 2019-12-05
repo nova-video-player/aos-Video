@@ -100,8 +100,14 @@ public class PlayUtils implements IndexHelper.Listener {
 
         if(sPlayUtils==null)
             sPlayUtils = new PlayUtils();
-        Log.d(TAG, "startVideo " + resume);
-        Log.d(TAG, "streamingUri " + (video.getStreamingUri() == null ? "null" : video.getStreamingUri()));
+        if (video == null) {
+            Log.w(TAG, "video is null!");
+            Toast.makeText(context, "Error video is null", Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            Log.d(TAG, "startVideo " + resume);
+            Log.d(TAG, "streamingUri " + (video.getStreamingUri() == null ? "null" : video.getStreamingUri()));
+        }
         // try to find extension when none has been set
         String mimeType = video.getMimeType();
         if(mimeType==null&&video.getFileUri()!=null) {
