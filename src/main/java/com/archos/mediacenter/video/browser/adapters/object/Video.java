@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.browser.adapters.object;
 
 import android.content.ContentUris;
 import android.net.Uri;
+import android.util.Log;
 
 import com.archos.filecorelibrary.MimeUtils;
 import com.archos.mediacenter.video.utils.VideoMetadata;
@@ -30,6 +31,9 @@ import java.io.Serializable;
  * Created by vapillon on 10/04/15.
  */
 public class Video extends Base implements Serializable {
+
+    private final static String TAG = "Video";
+    private final static boolean DBG = false;
 
     final long mId;
     final String mFilePath;
@@ -103,6 +107,10 @@ public class Video extends Base implements Serializable {
     }
 
     static protected String buildFileNameWithExtension(String filePath) {
+        if (filePath == null) {
+            Log.w(TAG, "buildFileNameWithExtension: processing a null filePath!");
+            return "";
+        }
         int lastSlash = filePath.lastIndexOf('/');
         if (lastSlash>=0 && filePath.length()>lastSlash+1) {
             return filePath.substring(lastSlash+1);
