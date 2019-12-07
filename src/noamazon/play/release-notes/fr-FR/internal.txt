@@ -1,5 +1,3 @@
-Migration à l'API v2 de TheTVDB via la librairie externe thetvdb-java avec cache des requêtes
-Notification d'indexation, de récupération des informations et de copie de fichiers
-Cible API29 en désactivant scoped storage pour le moment
-Corrige la récupération d'information des séries TV dû au changement opérés par TheTVdb.com
+Affichage plus rapide à l'entrée de l'application en AndroidTV
+Essai de résolution d'un problème d'affichage sur boitier TV à base de Rockchip
 Amélioration de la stabilité
