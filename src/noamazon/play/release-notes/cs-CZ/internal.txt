@@ -1,3 +1,3 @@
-Faster AndroidTV display entering application
-Attempt to fix an UI glitch on Rockchip based TV boxes
-Stability enhancements
+Fix some shows not being scraped correctly after thetvdb.com site changes
+Fix player controller UI layout issues on tablets
+Update thetvdb-java to version 2.2.0

@@ -1,3 +1,3 @@
-Affichage plus rapide à l'entrée de l'application en AndroidTV
-Essai de résolution d'un problème d'affichage sur boitier TV à base de Rockchip
-Amélioration de la stabilité
+Meilleur identification des séries TV et récupération d'information suite aux modifications du site thetvdb.com.
+Correction de problèmes d'UI sur les tablettes pour le contrôle du lecteur vidéo. 
+Mise à jour de thetvdb-java en version 2.2.0.
