@@ -20,6 +20,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -32,6 +34,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import androidx.appcompat.app.ActionBar;
 import android.text.format.DateFormat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -646,11 +649,20 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
             SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
             RelativeLayout.LayoutParams relativeParams = ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams());
+            int shiftUp = 0;
+            int shiftLeft = 0;
             switch (orientation) {
                 case Surface.ROTATION_270:
                     if (DBG) Log.d(TAG,"updateOrientation, rotation is 270 shifting right from getNavigationBarHeight=" + getNavigationBarHeight());
                     ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    relativeParams.setMargins(getNavigationBarHeight(), 0, 0, 0);
+                    if (isSystemBarOnBottom(mContext)) {
+                        if (DBG) Log.d(TAG,"updateOrientation, SystemBarOnBottom shifting up by getNavigationBarHeight=" + getNavigationBarHeight());
+                        shiftUp += getNavigationBarHeight();
+                    } else {
+                        if (DBG) Log.d(TAG,"updateOrientation, ! SystemBarOnBottom shifting left/right by getNavigationBarHeight=" + getNavigationBarHeight());
+                        shiftLeft += getNavigationBarHeight();
+                    }
+                    relativeParams.setMargins(shiftLeft, 0, 0, shiftUp);
                     break;
                 case Surface.ROTATION_90:
                     if (DBG) Log.d(TAG,"updateOrientation, rotation is 90");
@@ -675,8 +687,14 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                     if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false)) {
                         if (DBG) Log.d(TAG,"updateOrientation, shifting right PlayerActivity.safeInsetTop=" + PlayerActivity.safeInset.get(1));
-                        relativeParams.setMargins(0, 0, 0, PlayerActivity.safeInset.get(1)); // safeInset.get(1) is safeInsetTop
+                        shiftUp += PlayerActivity.safeInset.get(1); // safeInset.get(1) is safeInsetTop
                     }
+                    if (isSystemBarOnBottom(mContext)) {
+                        if (DBG) Log.d(TAG,"updateOrientation, SystemBarOnBottom shifting up by getNavigationBarHeight=" + getNavigationBarHeight());
+                        shiftUp += getNavigationBarHeight();
+                    }
+                    if (shiftUp>0)
+                        relativeParams.setMargins(0, 0, 0, shiftUp);
                     break;
             }
             mControllerView.setLayoutParams(relativeParams);
@@ -2174,7 +2192,55 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         return navigationBarHeight;
     }
 
-    public int getActionBarHeight(){
+    public boolean isNavBarAtBottom() {
+        // detect navigation bar orientation https://stackoverflow.com/questions/21057035/detect-android-navigation-bar-orientation
+        final boolean isNavAtBottom = (mContext.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE)
+                || (mContext.getResources().getConfiguration().smallestScreenWidthDp >= 600);
+        if (DBG) Log.d(TAG, "setSizes: NavBarAtBottom=" + isNavAtBottom);
+        return isNavAtBottom;
+    }
+
+    public static boolean isSystemBarOnBottom(Context mContext) {
+        Resources res=mContext.getResources();
+        Configuration cfg=res.getConfiguration();
+        DisplayMetrics dm=res.getDisplayMetrics();
+        boolean canMove=(dm.widthPixels != dm.heightPixels &&
+                cfg.smallestScreenWidthDp < 600);
+        return(!canMove || dm.widthPixels < dm.heightPixels);
+    }
+
+    public static boolean hasNavBar(Resources resources) {
+        int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
+        if (id > 0) return resources.getBoolean(id);
+        else return false;
+    }
+
+    public static int getSystemBarHeight(Resources resources) {
+        if (!hasNavBar(resources))
+            return 0;
+        int orientation = resources.getConfiguration().orientation;
+        //Only phone between 0-599 has navigationbar can move
+        boolean isSmartphone = resources.getConfiguration().smallestScreenWidthDp < 600;
+        if (isSmartphone && Configuration.ORIENTATION_LANDSCAPE == orientation) return 0;
+        int id = resources
+                .getIdentifier(orientation == Configuration.ORIENTATION_PORTRAIT ? "navigation_bar_height" : "navigation_bar_height_landscape", "dimen", "android");
+        if (id > 0) return resources.getDimensionPixelSize(id);
+        return 0;
+    }
+
+    public static int getSystemBarWidth(Resources resources) {
+        if (hasNavBar(resources)) return 0;
+        int orientation = resources.getConfiguration().orientation;
+        //Only phone between 0-599 has navigationbar can move
+        boolean isSmartphone = resources.getConfiguration().smallestScreenWidthDp < 600;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE && isSmartphone) {
+            int id = resources.getIdentifier("navigation_bar_width", "dimen", "android");
+            if (id > 0) return resources.getDimensionPixelSize(id);
+        }
+        return 0;
+    }
+
+    public int getActionBarHeight() {
         int actionBarHeight = 0;
         final TypedArray styledAttributes = mContext.getTheme().obtainStyledAttributes(
             new int[] { android.R.attr.actionBarSize }
