@@ -142,7 +142,7 @@ public class SurfaceController {
     }
     
     public boolean supportOpenGLVideoEffect() {
-        if (DBG) Log.d(TAG, "supportOpenGLVideoEffect: " + ((mEffectView == mView) && (VideoEffect.openGLRequested(mEffectType)));
+        if (DBG) Log.d(TAG, "supportOpenGLVideoEffect: " + ((mEffectView == mView) && (VideoEffect.openGLRequested(mEffectType))));
         return (mEffectView == mView) && (VideoEffect.openGLRequested(mEffectType));
     }
 
