@@ -84,6 +84,5 @@
         android:layout_width="fill_parent"
         android:layout_height="30dip"
         android:layout_alignParentBottom="true"
-        android:focusable="true"
-        android:visibility="invisible"/>
+        android:focusable="true"/>
 </RelativeLayout>
