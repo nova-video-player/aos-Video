@@ -29,7 +29,7 @@ import android.view.ViewGroup;
 
 public class SurfaceController {
     private static String TAG = "SurfaceController";
-    private static boolean DBG = true;
+    private static boolean DBG = false;
 
     private boolean mEffectEnable = false;
 
