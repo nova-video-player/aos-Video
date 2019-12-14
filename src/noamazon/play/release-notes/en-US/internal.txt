@@ -1,3 +1,5 @@
-Fix some shows not being scraped correctly after thetvdb.com site changes
-Fix player controller UI layout issues on tablets
-Update thetvdb-java to version 2.2.0
+Fix more shows not being scraped correctly after thetvdb.com site changes
+Rollback on jcsh upgrade yielding issues on sftp
+Fix regression in pause/play with enter key on AndroidTV
+Fix some aspect ratio issues on devices where MediaCodec returns wrong video dimensions (firetv4k, rockchip, etc.)
+Reduce bottom player UI glitch on chromebook and rockchip leanback interfaces
