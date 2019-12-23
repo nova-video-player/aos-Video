@@ -536,6 +536,7 @@
     <string name="format_fullscreen">Plein écran</string>
     <string name="format_optimized">Optimisé</string>
     <string name="format_original">Original</string>
+    <string name="format_stretched">Étiré</string>
     <string name="stereo_dive_enable">Effet stéréo immersive</string>
     <string name="stereo_dive_disable">Désactiver l\'effet d\'immersion stéréo</string>
     <string name="rotation_unlock">Rotation auto. de l\'écran</string>

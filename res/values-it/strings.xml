@@ -49,7 +49,7 @@
     <string name="video_sources">Fonti</string>
     <!-- Infos dialog tabs -->
     <string name="info_tab_movie">Film</string>
-    <string name="info_tab_show">Serie TV</string>
+    <string name="info_tab_show">Serie Tv</string>
     <string name="info_tab_episode">Episodio</string>
     <string name="info_tab_video">Video</string>
     <string name="info_tab_file">Informazioni file</string>
@@ -100,13 +100,17 @@ Copertina (rotolo di copertina)</string>
     <string name="movies_by_rating">Film per valutazione</string>
     <string name="movies_by_year">Film per anno</string>
     <string name="all_tv_shows">Serie TV</string>
-    <string name="all_tvshows">Tutti gli spettacoli TV</string>
-    <string name="all_tvshows_format">Tutti gli spettacoli TV - %d</string>
+    <string name="all_tvshows">Tutte le serie TV</string>
+    <string name="all_tvshows_format">Tutte le serie TV - %d</string>
     <string name="not_watched_tvshows_format">Non visto -  %d</string>
     <string name="all_seasons">Tutte le stagioni</string>
-    <string name="tvshows_by_alpha">Spettacoli TV in ordine alfabetico</string>
-    <string name="tvshows_by_genre">Spettacoli TV per genere</string>
-    <string name="tvshows_by_rating">Spettacoli TV per valutazione</string>
+    <string name="tvshows_by_alpha">Serie TV in ordine alfabetico</string>
+    <string name="tvshows_by_genre">Serie TV per genere</string>
+    <string name="tvshows_by_rating">Serie TV per valutazione</string>
+    <string name="episodes_by_date">Episodi per data</string>
+    <string name="date_view_week">Settimana</string>
+    <string name="date_view_month">Mese</string>
+    <string name="date_view_year">Anno</string>
     <string name="all_movies_and_tv_shows">Film e serie TV</string>
     <string name="non_scraped_videos">Video non analizzati</string>
     <string name="no_server">Nessun server multimediale trovato</string>
@@ -137,6 +141,7 @@ Copertina (rotolo di copertina)</string>
     <string name="scrap_change_title">Sto modificando tutti gli episodi</string>
     <string name="scrap_change_initializing">Avvio in corso…</string>
     <string name="scrap_change_finalizing">Completamento in corso…</string>
+    <string name="scrap_get_title">Recupero informazioni</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Regista</string>
     <string name="scrap_director_format">Regista: %s</string>
@@ -282,7 +287,7 @@ Copertina (rotolo di copertina)</string>
     <string name="pref_s3d_mode_entry_off">Off</string>
     <string name="menu_info">Informazioni</string>
     <string name="menu_subtitles">Tracce dei sottotitoli</string>
-    <string name="menu_audio">Tracce audio </string>
+    <string name="menu_audio">Tracce audio</string>
     <string name="menu_lock_player">Blocca il player</string>
     <string name="menu_bookmark">Imposta segnalibro</string>
     <string name="menu_brightness_settings">Luminosità</string>
@@ -475,6 +480,7 @@ Copertina (rotolo di copertina)</string>
     <string name="preferences_force_audio_passthrough_enable">Mode 1</string>
     <string name="preferences_force_audio_passthrough_enable2">Mode 2</string>
     <string name="preferences_force_audio_passthrough_summary">Per la connessione HDMI e S/PDIF, trasmetti audio compresso</string>
+    <string name="preferences_disable_downmix_title">Disattiva il downmix audio stereo</string>
     <string name="preferences_disable_downmix_summary">Decodifica sempre tutti i canali e permetti il downmix di Android a seconda della capacità di uscita audio (si potrebbe avere interruzione dei canali vocali)</string>
     <string name="preferences_allow_3rd_party_player">Consenti l\'utilizzo di un altro lettore video</string>
     <string name="preferences_allow_3rd_party_player_summary">Altri lettori video verranno proposti da Android durante la riproduzione di un filmato. Alcune funzioni potrebbero non funzionare (riprendi, segnalibri, etc.)</string>
@@ -584,6 +590,7 @@ Copertina (rotolo di copertina)</string>
     <string name="sort_by_date_played_desc">Ordina per data di esecuzione (prima i più nuovi)</string>
     <string name="sort_by_date_premiered_desc">Ordina per data di messa in onda (prima i più nuovi)</string>
     <string name="sort_by_date_premiered_asc">Ordina per data di messa in onda (prima i più vecchi)</string>
+    <string name="sort_by_date_aired_desc">Ordina per data di messa in onda (prima i più nuovi)</string>
     <string name="sort_by_recently_added_episode_desc">Prima gli episodi aggiunti di recente</string>
     <string name="dec_choice_title">Scegli il decoder</string>
     <string name="dec_choice_summary">Preferenze avanzate, potrebbero interferire con la decodifica video</string>
@@ -592,11 +599,20 @@ Copertina (rotolo di copertina)</string>
     <string name="dec_hw_omxcodec">Decodifica hardware (OMXCodec)</string>
     <string name="dec_hw_mediacodec">Decodifica hardware (MediaCodec)</string>
     <string name="dec_sw">Decodifica software</string>
+    <string name="dec_hw">Decodifica hardware</string>
+    <string name="dec_unknown">Decodifica sconosciuta</string>
     <string name="dec_any">Predefinito</string>
     <string name="dec_android">Android MediaPlayer</string>
     <string name="preferences_user_interface">Interfaccia Utente</string>
     <string name="preferences_display_resume_box_summary">Mostra o nascondi i tasti quando riprendi l\'ultimo video nella schermata principale</string>
     <string name="preferences_display_resume_box">Mostra l\'area di ripresa</string>
+    <string name="preferences_leanback_user_interface">Interfaccia Utente TV</string>
+    <string name="preferences_show_watching_up_next_row_summary">Seleziona per mostrare una riga con i tuoi video che stai guardando e i prossimi</string>
+    <string name="preferences_show_last_added_row_summary">Seleziona per mostrare una riga con i tuoi ultimi media aggiunti</string>
+    <string name="preferences_show_last_added_row">Mostra l\'ultima riga aggiunta</string>
+    <string name="preferences_show_last_played_row_summary">Seleziona per mostrare una riga con i tuoi ultimi media riprodotti</string>
+    <string name="preferences_show_last_played_row">Mostra l\'ultima riga riprodotta</string>
+    <string name="preferences_reset_last_played_row">Resetta l\'ultima riga riprodotta</string>
     <string name="preferences_tv_show_sort_order_summary">Seleziona l\'ordine per le tue serie TV</string>
     <string name="preferences_tv_show_sort_order_title">Ordine delle serie TV</string>
     <string name="codepage_title">Codifica dei sottotitoli</string>
@@ -610,6 +626,7 @@ Copertina (rotolo di copertina)</string>
     <string name="codepage_1250">Est europeo (CP1250)</string>
     <string name="codepage_1251">Cirillico (CP1251)</string>
     <string name="codepage_1252">Europeo (CP1252)</string>
+    <string name="codepage_28606">Sud Europeo (CP28606)</string>
     <string name="codepage_1253">Greco (CP1253)</string>
     <string name="codepage_1254">Turco (CP1254)</string>
     <string name="codepage_1255">Ebraico (CP1255)</string>
@@ -692,7 +709,9 @@ Copertina (rotolo di copertina)</string>
     <string name="leanback_subtitles_integrated">Sottotitoli integrati</string>
     <string name="leanback_subtitles_external">Sottotitoli esterni</string>
     <string name="leanback_posters_header">Poster</string>
+    <string name="leanback_season_posters_header">Poster della stagione</string>
     <string name="leanback_backdrops_header">Sfondi</string>
+    <string name="leanback_tvshow_backdrops_header">Sfondi dello show TV</string>
     <string name="leanback_poster_changed">Il poster è stato cambiato</string>
     <string name="leanback_backdrop_changed">Lo sfondo è stato cambiato</string>
     <string name="leanback_weblinks_header">Collegamenti</string>
@@ -738,6 +757,7 @@ Copertina (rotolo di copertina)</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Vedi altro</string>
+    <string name="nfo_export_manual_prefkey">esporta_manual_prefkey</string>
     <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="nfo_export_in_progress">Esportazione dei NFO in corso</string>
     <string name="rescrap_in_progress">Analisi dell\'intera libreria</string>
@@ -746,6 +766,10 @@ Copertina (rotolo di copertina)</string>
     <string name="rescrap_all_title">Analizza tutto</string>
     <string name="nfo_export_manual_title">Esporta i video già analizzati</string>
     <string name="nfo_export_manual_summary">Esporta i file .nfo di ogni video già analizzato</string>
+    <string name="db_export_manual_prefkey">db_esporta_manual_prefkey</string>
+    <string name="db_export_manual_title">Esporta database dei media</string>
+    <string name="db_export_manual_summary">Esporta file media.db in /sdcard per scopi di debug</string>
+    <string name="db_export_in_progress">Esportazione database in corso</string>
     <string name="system">Sistema</string>
     <string name="save_delay_setting_pref_key">save_setting_pref_key</string>
     <string name="keep_setting">Mantieni questa impostazione</string>
@@ -787,4 +811,7 @@ Copertina (rotolo di copertina)</string>
     <string name="remove_from_list">Rimuovi dalla lista</string>
     <string name="warning_swdec">Attenzione: decodifica hardware disabilitata! </string>
     <string name="list_title">Titolo della lista</string>
+    <string name="loading">Caricamento…</string>
+    <string name="app_id">08FEA4DD</string>
+    <string name="app_id_surface">C44FB232</string>
 </resources>
