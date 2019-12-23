@@ -1,5 +1,3 @@
-Meilleur identification des séries TV et récupération d'information suite aux modifications du site thetvdb.com
-Correction du rapport d'aspect video lorsque MediaCodec retourne des valeurs incorrectes de dimension (firetv4k, rockchip, etc.)
-Réduction du problèmes d'UI du lecteur vidéo sur chromebook et rockchip en interface leanback
-Retour à la version précédente de jsch pour corriger des problèmes en sftp
-Correction de la régression play/pause avec la touche entrée
+Introduce stretched video format to fill entire display with video image (only way to preserve aspect ration on recent Philips TVs!)
+Add Brazilian Portuguese, Norwegian, Vietnamese scrape languages
+2020 banners for AndroidTV
