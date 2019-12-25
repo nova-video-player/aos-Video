@@ -536,6 +536,7 @@
     <string name="format_fullscreen">Vollbild</string>
     <string name="format_optimized">Optimiert</string>
     <string name="format_original">Original</string>
+    <string name="format_stretched">Gestreckt</string>
     <string name="stereo_dive_enable">Stereo-Dive-Effekt</string>
     <string name="stereo_dive_disable">Stereo-Dive-Effekt deaktivieren</string>
     <string name="rotation_unlock">Automatische Displaydrehung aktivieren</string>
@@ -728,6 +729,7 @@
     <string name="leanback_scrap_choose_the_description_for">"Info für \"%s\" auswählen"</string>
     <string name="leanback_scrap_searching_general_hint">Name des Films oder der Serie</string>
     <string name="leanback_scrap_searching_tvshow_hint">Name der Serie</string>
+    <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Altes Interface</string>
     <string name="leanback_hint_long_press_on_back">TIPP: Langes Drücken auf ZURÜCK-Taste schließt den Dateibrowser</string>
     <string name="leanback_archos_video_webview">Nova Video WebView</string>
@@ -760,7 +762,11 @@
     <string name="last_rescan_occured">Letzter Re-Scan:</string>
     <string name="error_permission_display_over_apps">Fenstermodus benötigt spezielle Berechtigungen, um über anderen Apps angezeigt zu werden. Bitte gewähren Sie Nova Video Player diese Berechtigung, um in den Fenstermodus zu wechseln.</string>
     <string name="intro_overlay_text">Berühre, um Videos zu Deinem Fernseher per Cast zu übertragen</string>
+    <string name="drawer_open">draweropen</string>
+    <string name="drawer_close">drawer_close</string>
     <string name="view_more">Mehr ansehen</string>
+    <string name="nfo_export_manual_prefkey">export_manual_prefkey</string>
+    <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="nfo_export_in_progress">.nfo-Export wird durchgeführt</string>
     <string name="rescrap_in_progress">Rescraping der ganzen Bibliothek</string>
     <string name="acquire_external_usb_permission">Der Datei-Manager benötigt eine spezielle Zugriffs-Berechtigung auf den externen Speicher. Bitte wählen Sie den Speicherplatz auf dem nächsten Bildschirm aus</string>
@@ -768,10 +774,12 @@
     <string name="rescrap_all_title">Re-scrap alles</string>
     <string name="nfo_export_manual_title">Bereits gescrapte Videos exportieren</string>
     <string name="nfo_export_manual_summary">.nfo-Dateien von jedem bereits gescraptem Video exportieren</string>
+    <string name="db_export_manual_prefkey">db_export_manual_prefkey</string>
     <string name="db_export_manual_title">Media-Datenbank exportieren</string>
     <string name="db_export_manual_summary">media.db-Datei zu /sdcard für Debug-Zwecke exportieren</string>
     <string name="db_export_in_progress">Datenbank Export läuft</string>
     <string name="system">System</string>
+    <string name="save_delay_setting_pref_key">save_setting_pref_key</string>
     <string name="keep_setting">Diese Einstellung beibehalten</string>
     <string name="select_sub_file"><![CDATA[Exakte Untertitel für Datei <font color=#29b6f6><i>%s</i></font><br /> nicht gefunden. Bitte aus dieser Liste auswählen:]]></string>
     <string name="switch_remote_empty_message">Ein Wechsel zum Remote-Display-Modus könnte mehr Track-Optionen ermöglichen</string>
@@ -812,4 +820,6 @@
     <string name="warning_swdec">Warnung: Hardware decoding abgeschaltet!</string>
     <string name="list_title">Listenname</string>
     <string name="loading">Lade…</string>
+    <string name="app_id">08FEA4DD</string>
+    <string name="app_id_surface">C44FB232</string>
 </resources>

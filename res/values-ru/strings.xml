@@ -502,6 +502,7 @@
     <string name="format_fullscreen">На весь экран</string>
     <string name="format_optimized">Оптимизировано</string>
     <string name="format_original">Оригинал</string>
+    <string name="format_stretched">Растянутый</string>
     <string name="network_reindex">Пересканировать содержимое</string>
     <!-- Help overlay -->
     <string name="new_videos_count">Новые видео: %d</string>
