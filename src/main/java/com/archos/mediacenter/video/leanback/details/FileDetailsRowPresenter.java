@@ -141,7 +141,8 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
 
         // Special error case (99.9% of the time it happens when the specified file is not reachable)
         if (videoMetadata.getFileSize()==0 && videoMetadata.getVideoTrack()==null && videoMetadata.getAudioTrackNb()==0) {
-            if (DBG) Log.w(TAG, "file not reacheable? fileSize=" + videoMetadata.getFileSize() + ", videoTrack=" + videoMetadata.getVideoTrack() + ", audioTrackNb=" + videoMetadata.getAudioTrackNb());
+            Log.w(TAG, "file not reacheable? fileSize=" + videoMetadata.getFileSize() + ", videoTrack=" + videoMetadata.getVideoTrack() + ", audioTrackNb=" + videoMetadata.getAudioTrackNb());
+            // TODO: figure out why sometimes metadata are set to zero but the file is there thus do not hide and continue (happens very often on chromebook)
             hideAudioVideoSubs(vh);
             vh.mFileErrorTv.setVisibility(View.VISIBLE);
             return;

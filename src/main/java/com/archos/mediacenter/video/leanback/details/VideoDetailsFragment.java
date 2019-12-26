@@ -541,7 +541,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             // test from FileDetailsRowPresenter to check if file is playable
             if (mMetadata != null) {
                 if (mMetadata.getFileSize() == 0 && mMetadata.getVideoTrack() == null && mMetadata.getAudioTrackNb() == 0) {
-                    isFilePlayable = false;
+                    // TODO: figure out why sometimes metadata are set to zero but the file is there thus do not hide and continue (happens very often on chromebook)
+                    //isFilePlayable = false;
                 }
             }
             if(action.getId() == VideoActionAdapter.ACTION_LOCAL_RESUME){
@@ -836,8 +837,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         // Keep the video decoder metadata if we already have it (we don't want to compute it again, it can be long)
         VideoMetadata alreadyComputedVideoMetadata = mVideoMetadateCache.get(mVideo.getFilePath());
-
-
 
         // Keep the video decoder metadata if we already have it
         if(alreadyComputedVideoMetadata!=null)
@@ -1883,7 +1882,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 // test from FileDetailsRowPresenter to check if file is playable
                 if (mMetadata != null) {
                     if (mMetadata.getFileSize() == 0 && mMetadata.getVideoTrack() == null && mMetadata.getAudioTrackNb() == 0) {
-                        isFilePlayable = false;
+                        // TODO: figure out why sometimes metadata are set to zero but the file is there thus do not hide and continue (happens very often on chromebook)
+                        //isFilePlayable = false;
                     }
                 }
                 if (isFilePlayable) {

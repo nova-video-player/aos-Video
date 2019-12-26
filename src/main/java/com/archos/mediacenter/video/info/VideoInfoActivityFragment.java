@@ -529,7 +529,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 VideoMetadata mMetadata = mCurrentVideo.getMetadata();
                 if (mMetadata != null) {
                     if (mMetadata.getFileSize() == 0 && mMetadata.getVideoTrack() == null && mMetadata.getAudioTrackNb() == 0) {
-                        isFilePlayable = false;
+                        // TODO: figure out why sometimes metadata are set to zero but the file is there thus do not hide and continue (happens very often on chromebook)
+                        //isFilePlayable = false;
                     }
                 }
                 if (isFilePlayable) {
@@ -933,6 +934,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         if (DBG) Log.d(TAG,"setFileInfo");
         // Special error case (99.9% of the time it happens when the specified file is not reachable)
         if (videoMetadata.getFileSize()==0 && videoMetadata.getVideoTrack()==null && videoMetadata.getAudioTrackNb()==0) {
+            // TODO: figure out why sometimes metadata are set to zero but the file is there thus do not hide and continue (happens very often on chromebook)
             mFileError.setVisibility(View.VISIBLE);
             mFileInfoContainerLoading.setVisibility(View.GONE);
             mFileInfoAudioVideoContainer.setVisibility(View.GONE);
@@ -1010,7 +1012,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             isFilePlayable = true;
             if (mMetadata != null) {
                 if (mMetadata.getFileSize() == 0 && mMetadata.getVideoTrack() == null && mMetadata.getAudioTrackNb() == 0) {
-                    isFilePlayable = false;
+                    // TODO: figure out why sometimes metadata are set to zero but the file is there thus do not hide and continue (happens very often on chromebook)
+                    //isFilePlayable = false;
                 }
             }
             if (isFilePlayable) {
