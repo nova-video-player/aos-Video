@@ -541,8 +541,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             // test from FileDetailsRowPresenter to check if file is playable
             if (mMetadata != null) {
                 if (mMetadata.getFileSize() == 0 && mMetadata.getVideoTrack() == null && mMetadata.getAudioTrackNb() == 0) {
-                    // TODO: figure out why sometimes metadata are set to zero but the file is there thus do not hide and continue (happens very often on chromebook)
-                    //isFilePlayable = false;
+                    // sometimes metadata are set to zero but the file is there, can be due to libavosjni not loaded
+                    isFilePlayable = false;
                 }
             }
             if(action.getId() == VideoActionAdapter.ACTION_LOCAL_RESUME){
@@ -1882,8 +1882,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 // test from FileDetailsRowPresenter to check if file is playable
                 if (mMetadata != null) {
                     if (mMetadata.getFileSize() == 0 && mMetadata.getVideoTrack() == null && mMetadata.getAudioTrackNb() == 0) {
-                        // TODO: figure out why sometimes metadata are set to zero but the file is there thus do not hide and continue (happens very often on chromebook)
-                        //isFilePlayable = false;
+                        // sometimes metadata are set to zero but the file is there, can be due to libavosjni not loaded
+                        isFilePlayable = false;
                     }
                 }
                 if (isFilePlayable) {
