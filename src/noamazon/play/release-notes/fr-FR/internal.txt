@@ -1,7 +1,7 @@
-Introduction d'un mode d´affichage étiré (seul moyen d'avoir une proportion correcte sur les télé Philips récentes!)
-Meilleur résultat de récupération d'information des série en implantant la distance de Levenshtein
+Introduction d'un mode d´affichage étiré pour une proportion correcte sur télé Philips
+Meilleur scrape en utilisant la distance de Levenshtein
 Répare l'indexation sftp
-Ajout de la récupération des informations vidéo en norvégien et vietnamien
+Ajout du support norvégien et vietnamien pour le scrape
 Bannière d'année 2020 sur Android TV
 Amélioration des règles de réjection pour la récupération de métadata
 Empêche l'apparition de notifications quand il n'y a rien à scraper
