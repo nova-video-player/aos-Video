@@ -1,6 +1,8 @@
-Introduce stretched video format to fill entire display with video image (only way to preserve aspect ration on recent Philips TVs!)
-Add Norwegian, Vietnamese scrape languages support
-2020 banners for AndroidTV
-Improve filename pre-processing garbage rules to improve scrape
+Introduce stretched video format to fill entire display with video image (only way to preserve aspect ratio on recent Philips TVs!)
+Better scrape result through Levenshtein result distance computation
 Prevent scrape notification to fire up when nothing is to be scraped
 Fix sftp indexing
+Add Norwegian, Vietnamese scrape languages support
+2020 year banners for Android TV
+Improve filename pre-processing garbage rules to improve scrape
+Stability enhancement
