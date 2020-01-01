@@ -1,8 +1,2 @@
-Introduction d'un mode d´affichage étiré pour une proportion correcte sur télé Philips
-Meilleur scrape en utilisant la distance de Levenshtein
-Répare l'indexation sftp
-Ajout du support norvégien et vietnamien pour le scrape
-Bannière d'année 2020 sur Android TV
-Amélioration des règles de réjection pour la récupération de métadata
-Empêche l'apparition de notifications quand il n'y a rien à scraper
-Amélioration de la stabilité
+ffmpeg update to 4.2.2
+dav1d update to 0.5.2
