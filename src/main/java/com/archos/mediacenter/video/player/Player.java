@@ -911,13 +911,9 @@ public class Player implements IPlayerControl,
                 }
             }
 
-            // octave style v=23.976; r=[24 25 30 50 60]; [ abs(v*floor(r/v+0.5)-r); abs(v-r) ]
+            // octave style v=23.976; r=[23.976 24 25 29.97 30 50 59.94 60]; [ abs(v*floor(r/v+0.5)-r); abs(v-r) ]
             // Algorithm proposed: v=video rate, RR={r supported rates by TV}, d_r=abs(v*floor(r/v+0.5)-r) (diff wrt multiple of r)
-            // L_0={r in RR / d_r<0.01} (0.01Hz is epsilon), L_1={r in RR / d_r<0.1} (0.1Hz is the acceptable threshold)
-            // if L_0 not empty, set R refresh rate = max(L_0)
-            // elif L_1 not empty, set R refresh rate = max(L_1)
-            // elif set R refresh rate that maximize the metric d_r, r in RR i.e. argmax_{r in RR}(d_r)
-            // But for now let's use the simplified below code that does the job oO
+            // rate selected is r=argmin_{r in RR}(d_r) and in case of multiple same results the lowest match is selected (dif<res and not dif<=res below)
             mWaitForNewRate = false;
             mRefreshRate = 0f;
             if (lp != null && video != null && video.fpsRate > 0 && video.fpsScale > 0) {
@@ -925,9 +921,9 @@ public class Player implements IPlayerControl,
                 float res = Float.MAX_VALUE;
                 for (float f :rates) {
                     if (DBG) Log.d(TAG, "supported rate is " + f);
-                    float dif = Math.abs(wantedFps * (int) ((f/wantedFps)+.5) - f);
-                    if (wantedFps - f < .1 && dif < .1) {
-                        if (dif < res) {
+                    float dif = Math.abs(wantedFps * (int) ((f/wantedFps)+.5) - f); // dif=|round(f/w)*w-f| round for closest integer
+                    if (wantedFps - f < .1 && dif < .1) { // f>=w and dif<0.1
+                        if (dif < res) { // implies that only min of closest match is selected (not highest refresh rate)
                             res = dif;
                             mWaitForNewRate = true;
                             mRefreshRate = f;
