@@ -475,10 +475,10 @@
     <string name="preferences_force_software_decoding">Forcer le décodage logiciel</string>
     <string name="preferences_force_software_decoding_summary">Essayez cette option si certaines de vos vidéos ne sont pas décodées correctement</string>
     <string name="preferences_force_audio_passthrough">Passthrough audio</string>
-    <string name="preferences_force_audio_passthrough_disabled">Désactivé</string>
-    <string name="preferences_force_audio_passthrough_enable">Mode 1</string>
+    <string name="preferences_force_audio_passthrough_disabled">Désactivé (recommandé)</string>
+    <string name="preferences_force_audio_passthrough_enable">Mode 1 (obsolète)</string>
     <string name="preferences_force_audio_passthrough_enable2">Mode 2</string>
-    <string name="preferences_force_audio_passthrough_summary">Pour les connexions HDMI et S/PDIF, transmettre le signal audio compressé</string>
+    <string name="preferences_force_audio_passthrough_summary">Pour les connexions HDMI et S/PDIF, transmettre le signal audio compressé. ⚠ Expérimental, peut occasionner une désynchronisation A/V</string>
     <string name="preferences_disable_downmix_title">Désactiver le mixage audio stéréo</string>
     <string name="preferences_disable_downmix_summary">Toujours décoder tous les canaux et laisser Android remixer l\'audio en fonction des capacités du récepteur (peut résulter dans la perte du canal voix)</string>
     <string name="preferences_allow_3rd_party_player">Permettre l\'utilisation d\'un autre player vidéo</string>
