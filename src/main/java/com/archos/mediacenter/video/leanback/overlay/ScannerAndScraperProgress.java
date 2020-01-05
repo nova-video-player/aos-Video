@@ -76,7 +76,7 @@ public class ScannerAndScraperProgress {
     private Runnable mRepeatRunnable = new Runnable() {
         @Override
         public void run() {
-            boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking() || AutoScrapeService.isScraping() || ImportState.VIDEO.isInitialImport();
+            boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking() || AutoScrapeService.isScraping() || ImportState.VIDEO.isInitialImport() || ImportState.VIDEO.isRegularImport();
             mStatusVisibility = scanningOnGoing ? View.VISIBLE : View.GONE;
             updateCount();
             updateVisibility();
