@@ -1,2 +1,3 @@
 ffmpeg update to 4.2.2
 dav1d update to 0.5.2
+Stability enhancement

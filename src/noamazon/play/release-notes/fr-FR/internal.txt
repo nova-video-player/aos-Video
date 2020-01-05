@@ -1,2 +1,3 @@
-ffmpeg update to 4.2.2
-dav1d update to 0.5.2
+Mise à jour de ffmpeg en 4.2.2
+Mise à jour de dav1d en 0.5.2
+Amélioration de la stabilité
