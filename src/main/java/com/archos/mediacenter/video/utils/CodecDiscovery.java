@@ -18,17 +18,16 @@ import android.annotation.TargetApi;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.os.Build;
+import android.util.Log;
 
 public class CodecDiscovery {
 
+
+	private static String TAG = "CodecDiscovery";
+	private static boolean DBG = false;
+
 	public static boolean isCodecTypeSupported(String codecType, boolean allowSwCodec) {
-		if (android.os.Build.VERSION.SDK_INT < 16)
-			return false;
-		else if (android.os.Build.VERSION.SDK_INT < 21) {
-			return isCodecTypeSupportedJB(codecType, allowSwCodec);
-		} else {
-			return isCodecTypeSupported(codecType, allowSwCodec, MediaCodecList.REGULAR_CODECS);
-		}
+		return isCodecTypeSupported(codecType, allowSwCodec, MediaCodecList.REGULAR_CODECS);
 	}
 
 	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -37,17 +36,7 @@ public class CodecDiscovery {
 		MediaCodecInfo[] codecInfos = codecList.getCodecInfos();
 
 		for (MediaCodecInfo codecInfo : codecInfos) {
-			if (isCodecInfoSupported(codecInfo, codecType, allowSwCodec))
-				return true;
-		}
-		return false;
-	}
-
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-	private static boolean isCodecTypeSupportedJB(String codecType, boolean allowSwCodec) {
-		int numCodecs = MediaCodecList.getCodecCount();
-		for (int i = 0; i < numCodecs; i++) {
-			MediaCodecInfo codecInfo = MediaCodecList.getCodecInfoAt(i);
+			if (DBG) Log.d(TAG, "isCodecTypeSupported: codecInfo.getName " + codecInfo.getName());
 			if (isCodecInfoSupported(codecInfo, codecType, allowSwCodec))
 				return true;
 		}
@@ -56,9 +45,11 @@ public class CodecDiscovery {
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	private static boolean isCodecInfoSupported(MediaCodecInfo codecInfo, String codecType, boolean allowSwCodec) {
-		if (codecInfo.isEncoder())
-// || (!allowSwCodec && ( codecInfo.getName().startsWith("OMX.google") 
-//                                                              || codecInfo.getName().toLowerCase().contains("sw") )))
+		if (codecInfo.isEncoder()
+				|| (!allowSwCodec && ( codecInfo.getName().startsWith("OMX.google")
+				|| codecInfo.getName().toLowerCase().contains("sw")
+				|| codecInfo.getName().toLowerCase().startsWith("c2.android")
+		)))
 			return false;
 
 		String[] types = codecInfo.getSupportedTypes();
