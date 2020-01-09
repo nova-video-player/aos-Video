@@ -411,8 +411,6 @@
     <string name="preferences_category_video">Videó</string>
     <string name="preferences_force_software_decoding">Szoftveres dekódolás kényszerítése</string>
     <string name="preferences_force_audio_passthrough">Hangtovábbítás</string>
-    <string name="preferences_force_audio_passthrough_disabled">Kikapcsolva</string>
-    <string name="preferences_force_audio_passthrough_enable">Mód 1</string>
     <string name="preferences_force_audio_passthrough_enable2">Mód 2</string>
     <string name="category_languages">Feliratok</string>
     <string name="subtitles_hide_default">Feliratok elrejtése alapértelmezetten</string>

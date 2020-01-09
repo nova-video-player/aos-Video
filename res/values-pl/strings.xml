@@ -61,6 +61,7 @@
     <string name="info_menu_poster_select">Wybierz inny plakat</string>
     <string name="info_menu_series_poster_select">Wybierz inny plakat</string>
     <!-- COVER ROLL -->
+    <string name="watching_up_next">Oglądane/Następnie</string>
     <string name="recently_added">Ostatnio dodane</string>
     <string name="recently_added_videos">Ostatnio dodane</string>
     <string name="recently_played">Ostatnio odtwarzane</string>
@@ -105,6 +106,10 @@
     <string name="tvshows_by_alpha">Seriale alfabetycznie</string>
     <string name="tvshows_by_genre">Seriale wg gatunków</string>
     <string name="tvshows_by_rating">Seriale według ocen</string>
+    <string name="episodes_by_date">Odcinki po dacie</string>
+    <string name="date_view_week">Tydzień</string>
+    <string name="date_view_month">Miesiąc</string>
+    <string name="date_view_year">Rok</string>
     <string name="all_movies_and_tv_shows">Filmy i seriale</string>
     <string name="non_scraped_videos">Nierozpoznane pliki wideo</string>
     <string name="no_server">Nie znaleziono serwera mediów</string>
@@ -135,6 +140,7 @@
     <string name="scrap_change_title">Modyfikuj wszystkie odcinki</string>
     <string name="scrap_change_initializing">Inicjowanie…</string>
     <string name="scrap_change_finalizing">Finalizowanie…</string>
+    <string name="scrap_get_title">Pobieranie informacji</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Reżyseria</string>
     <string name="scrap_director_format">Reżyseria: %s</string>
@@ -215,6 +221,7 @@
     <string name="info_resume">Wznów od pozycji</string>
     <string name="info_bookmark">Pozycja zakładki</string>
     <string name="info_file">Informacje o pliku</string>
+    <string name="use_remote_resume">Używaj wznawiania z sieci</string>
     <!-- VIDEO COVER ROLL -->
     <string name="you_have_no_recently_added_video">Nie znaleziono ostatnio dodanych plików wideo</string>
     <string name="you_have_no_recently_played_video">Nie znaleziono ostatnio odtwarzanych plików wideo</string>
@@ -222,6 +229,7 @@
     <string name="you_have_no_video_yet">Wyszukiwanie plików wideo&#8230;</string>
     <string name="you_have_no_movies">Brak filmów</string>
     <string name="you_have_no_tv_shows">Brak seriali</string>
+    <string name="you_have_no_non_scraped_videos">Brak nierozpoznanych multimediów</string>
     <!-- Media Center -->
     <string name="mediacenterlabel">Centrum multimediów</string>
     <string name="view_mode">Tryb wyświetlania</string>
@@ -266,7 +274,9 @@
     <string name="menu_brightness_settings">Jasność</string>
     <string name="menu_player_settings">Ustawienia</string>
     <string name="menu_change_folder">Zmień folder</string>
+    <string name="menu_change_folder_details">Wybierz folder startowy</string>
     <string name="unlock_instructions">Przytrzymaj na ikonie aby odblokować</string>
+    <string name="seek_to_percentage">\"Przeskakiwanie do %s%%</string>
     <!-- Subtitles/Audio languages -->
     <string name="s_arabic">arabski</string>
     <string name="s_bulgarian">bułgarski</string>
@@ -346,8 +356,14 @@
     <string name="subtitles_wizard_associate">Powiąż ten plik z wideo</string>
     <string name="subtitles_wizard_delete">Usuń ten plik</string>
     <string name="subtitles_wizard_empty_list">Nie znaleziono pliku</string>
+    <string name="subtitles_wizard_add_files">Możesz skopiować więcej plików napisów do tego folderu, aby powiązać je z tym filmem.</string>
+    <string name="subtitles_wizard_help">Wybierz dowolny z dostępnych plików napisów, aby powiązać je z wideo %s. Nazwa pliku zostanie zmieniona w celu dopasowania nazwy wideo.</string>
+    <string name="subtitles_wizard_empty_list_help">Nie znaleziono plików napisów. Musisz skopiować najpierw jeden lub więcej plików napisów do tego folderu, aby powiązać je z wideo %s.</string>
+    <string name="subtitles_wizard_cache">Pamięć podręczna</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Pobierz napisy online</string>
+    <string name="toast_subloader_sub_found">Znaleziono ścieżkę napisów dla tego języka</string>
+    <string name="toast_subloader_sub_not_found">Nie znaleziono ścieżki napisów dla tego języka</string>
     <string name="toast_subloader_service_unreachable">przerwa w działaniu serwisu z napisami</string>
     <string name="menu_subloader_allfolder">Pobierz brakujące napisy</string>
     <string name="dialog_subloader_copying">Kopiowanie napisów…</string>
@@ -356,6 +372,7 @@
     <string name="dialog_subloader_success">Znaleziono napisy dla:</string>
     <string name="dialog_subloader_fails">Nie znaleziono napisów dla:</string>
     <string name="sub_force_all_title">Wymuś pobranie napisów</string>
+    <string name="sub_force_all">Wszystkie filmy mają już co najmniej jedną ścieżkę napisów. Czy chcesz wymusić pobranie nowych napisów?</string>
     <string name="dialog_subloader_nonetwork_title">Brak połączenia z Internetem</string>
     <string name="dialog_subloader_nonetwork_message">Do pobrania napisów wymagane jest połączenie z internetem</string>
     <string name="dialog_subloader_connecting">Łączenie z www.opensubtitles.org…</string>
@@ -407,6 +424,8 @@
     <string name="cannot_open_shortcut">Zawartość tego skrótu jest obecnie niedostępna.\nSprawdź czy masz wymagane uprawnienia.</string>
     <string name="network_shortcuts">Skróty sieciowe</string>
     <string name="media_servers">Serwery mediów</string>
+    <string name="shortcut_list_empty">Nie utworzono skrótów sieciowych.\n\nAby utworzyć skróty do ulubionych folderów udostępnionych, przytrzymaj na folderze docelowym i wybierz \"%s\" na górnym pasku akcji.</string>
+    <string name="ftp_shortcut_list_empty">Aby utworzyć skróty do ulubionych folderów zdalnych, wybierz \"%s\" na górnym pasku akcji podczas przeglądania serwera.</string>
     <string name="indexed_folders">Foldery zindeksowane</string>
     <string name="ftp_shortcuts">FTP skróty</string>
     <string name="add_to_indexed_folders">Indeks folderu</string>
@@ -415,11 +434,13 @@
     <string name="indexed_folder_added">Folder %s dodany do biblioteki</string>
     <string name="remove_from_indexed_folders">Usuń z biblioteki</string>
     <string name="indexed_folder_removed">Folder %s usunięty z biblioteki</string>
+    <string name="indexed_folders_list_empty">Brak obecnie indeksowanych folderów sieciowych.\n\nMożesz dodać zawartość folderu sieciowego do biblioteki przeglądając ten folder i wybierając \"%s\" na górnym pasku akcji.</string>
     <string name="indexed_folders_list_empty_ftp">Brak aktualnie zindeksowanych folderów ftp.</string>
     <string name="open_indexed_folder">"Otwórz"</string>
     <string name="rescan_indexed_folders">Ponowne skanowanie wszystkich indeksowanych folderów</string>
     <string name="last_rescan_never">Nigdy</string>
     <string name="upnp_indexing_warning_title">Indeksowania UPnP</string>
+    <string name="upnp_indexing_warning_message">Indeksowanie UPnP nie pozwala na tak wiele funkcji jak indeksowanie SMB.\nZaleca się indeksowanie folderu SMB, jeśli Twój serwer lub komputer go obsługuje.\n</string>
     <string name="ssh_error">Nie można połączyć: Proszę sprawdzić połączenie i poświadczenia</string>
     <string name="ssh_remote_address">Adres zdalny</string>
     <string name="ssh_port">Port</string>
@@ -436,10 +457,10 @@
     <string name="preferences_force_software_decoding">Wymuś dekoder softwarowy</string>
     <string name="preferences_force_software_decoding_summary">Jeśli niektóre filmy nie są odtwarzane poprawnie, może spróbować tej opcji</string>
     <string name="preferences_force_audio_passthrough">Przekazywanie audio</string>
-    <string name="preferences_force_audio_passthrough_disabled">Wyłączone</string>
-    <string name="preferences_force_audio_passthrough_enable">Tryb 1</string>
+    <string name="preferences_force_audio_passthrough_disabled">Wyłączone (zalecane)</string>
+    <string name="preferences_force_audio_passthrough_enable">Tryb 1 (przestarzały)</string>
     <string name="preferences_force_audio_passthrough_enable2">Tryb 2</string>
-    <string name="preferences_force_audio_passthrough_summary">dla połączenia HDMI i S/PDIF przekazywanie skompresowanego dźwięku</string>
+    <string name="preferences_force_audio_passthrough_summary">Transmituj skompresowanych dźwięk dla połączeń HDMI i S/PDIF. ⚠ Eksperymentalne! Może spowodować desynchronizację A/V</string>
     <string name="preferences_allow_3rd_party_player">Zezwól na używanie innego odtwarzacza wideo</string>
     <string name="preference_tv_3d_automatic_switch">Włącz automatyczne przełączanie TV 3D\"</string>
     <string name="category_languages">Napisy</string>
@@ -479,6 +500,7 @@
     <string name="format_fullscreen">Pełny ekran</string>
     <string name="format_optimized">Zoptymalizowany</string>
     <string name="format_original">Oryginalny</string>
+    <string name="format_stretched">Rozciągnięty</string>
     <string name="rotation_unlock">Automatyczna orientacja ekranu</string>
     <string name="rotation_locked">Automatyczna rotacja ekranu wyłączona</string>
     <string name="rotation_unlocked">Automatyczna rotacja ekranu włączona</string>

@@ -475,10 +475,10 @@
     <string name="preferences_force_software_decoding">Software Dekoder verwenden</string>
     <string name="preferences_force_software_decoding_summary">Wählen Sie diese Option aus, falls einige Videos nicht korrekt wiedergegeben werden</string>
     <string name="preferences_force_audio_passthrough">Audio Passthrough</string>
-    <string name="preferences_force_audio_passthrough_disabled">Deaktiviert</string>
-    <string name="preferences_force_audio_passthrough_enable">Modus 1</string>
+    <string name="preferences_force_audio_passthrough_disabled">Deaktiviert (empfohlen)</string>
+    <string name="preferences_force_audio_passthrough_enable">Modus 1 (veraltet)</string>
     <string name="preferences_force_audio_passthrough_enable2">Modus 2</string>
-    <string name="preferences_force_audio_passthrough_summary">Audio Passthrough für HDMI und S/PDIF, überträgt komprimierte Daten</string>
+    <string name="preferences_force_audio_passthrough_summary">für HDMI und S/PDIF Verbindungen, überträgt komprimiertes Audio. ⚠ Warnung: Experimentell; kann dazu führen, dass A/V nicht synchronisiert ist</string>
     <string name="preferences_disable_downmix_title">Audio Stereo-Downmix deaktivieren</string>
     <string name="preferences_disable_downmix_summary">Immer alle Kanäle dekodieren und Android den Downmix abhängig von der Audio-Ausgabefähigkeit durchführen lassen (kann zu verlorenen Sprachkanälen führen)</string>
     <string name="preferences_allow_3rd_party_player">Videos mit anderen Apps abspielen</string>
@@ -729,7 +729,7 @@
     <string name="leanback_scrap_choose_the_description_for">"Info für \"%s\" auswählen"</string>
     <string name="leanback_scrap_searching_general_hint">Name des Films oder der Serie</string>
     <string name="leanback_scrap_searching_tvshow_hint">Name der Serie</string>
-    <string name="leanback_unscrap">@string/scrap_remove</string>
+    <string name="leanback_unscrap">Beschreibung löschen</string>
     <string name="leanback_legacy_ui">Altes Interface</string>
     <string name="leanback_hint_long_press_on_back">TIPP: Langes Drücken auf ZURÜCK-Taste schließt den Dateibrowser</string>
     <string name="leanback_archos_video_webview">Nova Video WebView</string>

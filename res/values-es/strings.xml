@@ -140,7 +140,7 @@
     <string name="scrap_change_title">Modificando todos los episodios</string>
     <string name="scrap_change_initializing">Inicializando…</string>
     <string name="scrap_change_finalizing">Finalizando…</string>
-    <string name="scrap_get_title">Recopilando información</string>
+    <string name="scrap_get_title">Obteniendo información</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Director</string>
     <string name="scrap_director_format">Director: %s</string>
@@ -475,10 +475,10 @@
     <string name="preferences_force_software_decoding">Forzar decodificación por software</string>
     <string name="preferences_force_software_decoding_summary">Puedes probar con esta opción si algunos vídeos no se reproducen correctamente</string>
     <string name="preferences_force_audio_passthrough">Audio passthrough</string>
-    <string name="preferences_force_audio_passthrough_disabled">Desactivado</string>
-    <string name="preferences_force_audio_passthrough_enable">Modo 1</string>
+    <string name="preferences_force_audio_passthrough_disabled">Deshabitado (recomendado)</string>
+    <string name="preferences_force_audio_passthrough_enable">Modo 1 (obsoleto)</string>
     <string name="preferences_force_audio_passthrough_enable2">Modo 2</string>
-    <string name="preferences_force_audio_passthrough_summary">para conexiones HDMI y S/PDIF, transmitir audio comprimido</string>
+    <string name="preferences_force_audio_passthrough_summary">para conexiones HDMI y S/PDIF, transmitir audio comprimido. ⚠ Experimental puede resultar en A/V fuera de sincronización</string>
     <string name="preferences_disable_downmix_title">Desactivar audio stereo downmix</string>
     <string name="preferences_disable_downmix_summary">Decodifica siempre todos los canales y permite que Android realize downmix dependiendo de la capacidades de salida de audio (puede resultar en la pérdida de canales de voz)</string>
     <string name="preferences_allow_3rd_party_player">Permitir usar otro reproductor de vídeo</string>
