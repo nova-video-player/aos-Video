@@ -1,3 +1,3 @@
-ffmpeg update to 4.2.2
-dav1d update to 0.5.2
-Stability enhancement
+- Fix hevc 10 bit support on rk devices
+- Prefer ffmpeg over c2.android or omx.google software codecs to avoid multimedia issues on pixel3xl phone
+- Stability enhancements
