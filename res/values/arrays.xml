@@ -142,9 +142,7 @@
     <string-array name="dec_choice_entries">
         <item>@string/dec_any</item>
         <item>@string/dec_hw_mediacodec</item>
-        <item>@string/dec_hw_omxcodec</item>
         <item>@string/dec_sw</item>
-        <item>@string/dec_hw_omxplus</item>
         <item>@string/dec_android</item>
     </string-array>
 
