@@ -603,6 +603,11 @@
     <string name="dec_unknown">Décodage inconnu</string>
     <string name="dec_any">Par défaut</string>
     <string name="dec_android">MediaPlayer Android</string>
+    <string name="audio_interface_choice_title">Choisir l\'interface audio</string>
+    <string name="audio_interface_choice_summary">Préférence avancée, peut interférer avec le décodage audio.</string>
+    <string name="audio_interface_opensles">Forcer OpenSL ES</string>
+    <string name="audio_interface_audiotrack">Forcer Audiotrack</string>
+    <string name="audio_interface_any">Logique par défaut</string>
     <string name="preferences_user_interface">Interface utilisateur</string>
     <string name="preferences_display_resume_box_summary">Afficher ou cacher le bouton de reprise de la dernière vidéo dans l\'écran principal</string>
     <string name="preferences_display_resume_box">Afficher le bouton de reprise de la vidéo</string>

@@ -433,7 +433,20 @@ desteklenmiyor.</string>
     <string name="add_all_items_to_library">Tüm videolar hemen kitaplığa eklensin mi?</string>
     <string name="indexed_folder_added">%s klasör kitaplığa eklendi</string>
     <string name="remove_from_indexed_folders">Kütüphaneden kaldır</string>
+    <string name="indexed_folder_removed">%s klasör kitaplıktan kaldırıldı</string>
     <string name="indexed_folders_list_empty">Şu anda dizine alınmış ağ klasörü yok. \n\nBir ağ klasörünün içeriğini bu klasöre göz atarak ve üst eylem çubuğunda \"%s\" seçeneğini seçerek kitaplığa ekleyebilirsiniz.</string>
+    <string name="indexed_folders_list_empty_ftp">Şu anda dizine eklenen ftp klasörü yok.</string>
+    <string name="open_indexed_folder">"Aç"</string>
+    <string name="rescan_indexed_folders">Dizine eklenen tüm klasörleri yeniden tara</string>
+    <string name="last_rescan_never">Asla</string>
+    <string name="upnp_indexing_warning_title">UPnP indeksleme</string>
+    <string name="upnp_indexing_warning_message">UPnP dizinleme, SMB dizinleme kadar çok özelliğe izin vermez. \nSunucu veya bilgisayarınız destekliyorsa, SMB klasörünü dizine eklemeniz önerilir.\n</string>
+    <string name="ssh_error">Bağlantı kurulamıyor: lütfen bağlantınızı ve kimlik bilgilerinizi kontrol edin</string>
+    <string name="ssh_remote_address">Uzak adres</string>
+    <string name="ssh_port">Port</string>
+    <string name="ssh_password">Şifre</string>
+    <string name="ssh_username">Kullanıcı Adı</string>
+    <string name="ssh_shortcut_name">Kısayol adı</string>
     <!-- Preferences -->
     <string name="preferences">Tercihler</string>
     <string name="preferences_force_software_decoding">Yazılım kod çözmeyi zorla</string>
@@ -457,13 +470,35 @@ desteklenmiyor.</string>
     <string name="preferences_video_os_text">Alt Yazı Sağlayıcıları</string>
     <string name="preferences_network_mobile_vpn_summary">Yalnızca VPN yapılandırması ile kullanın ve veri kullanımınıza dikkat edin.</string>
     <string name="preferences_network_mobile_vpn_title">Mobil bağlantıda ağ paylaşımını etkinleştir</string>
+    <string name="preferences_video_advanced">Gelişmiş</string>
     <string name="preferences_video_advanced_quit_title">Düzenli tercihler</string>
     <string name="preferences_video_advanced_quit_summary">Düzenli tercihlere dönün</string>
+    <string name="trakt_change">Trakt API\'sindeki bir değişiklik için yeniden bağlantı gerekir.</string>
+    <string name="tv_scraper">TV Şovları</string>
+    <string name="movie_scraper">Filmler</string>
     <string name="enable_auto_scrap">Yeni videolar için otomatik olarak bilgi alın</string>
+    <string name="locale">Sistem dili</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="abort">Abort</string>
     <!--  Title of the video picker activity. -->
     <string name="video_picker_title">Video seç</string>
     <!-- Archos File Info -->
+    <string name="video_info_custom_search_file_hint">"\"Moviename\" or \"Showname S01E01\""</string>
     <string name="video_info_custom_search_show_hint">TV şovunun adı</string>
+    <string name="scrap_show_no_result">Çevrimiçi eşleşen bir şov bulunamadı.</string>
+    <string name="video_info_backdrop_select">Başka bir resim seçin</string>
+    <string name="video_info_backdrop_remove">Kaldır</string>
+    <string name="video_info_backdrop_set_as">Resmi şu şekilde ayarla</string>
+    <string name="video_info_share_message">"Nova %2$s cihazımda \"%1$s\" videosunu izledim"</string>
+    <string name="notification_mode">Bildirimler</string>
+    <string name="notifications_all">Tüm bildirimler</string>
+    <string name="notifications_alerts">Yalnızca bildirim uyarıları</string>
+    <string name="notifications_none">Bildirim yok</string>
+    <string name="pref_format_mode_title">Biçim</string>
+    <string name="format_fullscreen">Tam Ekran</string>
+    <string name="format_optimized">Optimize edildi</string>
+    <string name="format_original">Orjinal</string>
     <!-- Help overlay -->
     <string name="help_overlay_network_indexing_text1">Bu klasörün ve alt klasörlerinin içeriğini Video Kitaplığı\'na entegre etmek için bu menü öğesine basın.</string>
     <string name="help_overlay_network_indexing_text1_lb">Bu klasörün ve alt klasörlerinin içeriğini Video Kitaplığı\'na entegre etmek için + düğmesini kullanın.</string>
