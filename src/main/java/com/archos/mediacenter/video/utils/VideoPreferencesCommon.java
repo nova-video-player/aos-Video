@@ -112,6 +112,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_LICENCES="preferences_video_licences";
 
     public static final String KEY_DEC_CHOICE = "dec_choice";
+    public static final String KEY_AUDIO_INTERFACE_CHOICE = "audio_interface_choice";
     public static final String KEY_SUBTITLES_HIDE = "subtitles_hide_default";
     public static final String KEY_SUBTITLES_FAV_LANG = "favSubLang";
     public static final String KEY_TRAKT_CATEGORY = "trakt_category";
@@ -151,6 +152,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private int mMoreLeanbackPrefsClickCount = 0;
     private long mMoreLeanbackPrefsClickLastTime = 0;
     private ListPreference mDecChoicePreferences = null;
+    private ListPreference mAudioInterfaceChoicePreferences = null;
     private CheckBoxPreference mForceSwDecPreferences = null;
     private CheckBoxPreference mForceAudioPassthrough = null;
     private CheckBoxPreference mDisableDownmix = null;
@@ -261,6 +263,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             editor.apply();
             prefCategory.removePreference(mForceSwDecPreferences);
             prefCategory.addPreference(mDecChoicePreferences);
+            prefCategory.addPreference(mAudioInterfaceChoicePreferences);
             prefScraperCategory.addPreference(mDbExportManualPreference);
             getPreferenceScreen().addPreference(mAdvancedPreferences);
         } else {
@@ -268,8 +271,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             //Editor editor = mDecChoicePreferences.getEditor();
             Editor editor = mSharedPreferences.edit();
             editor.remove(KEY_DEC_CHOICE);
+            editor.remove(KEY_AUDIO_INTERFACE_CHOICE);
             editor.apply();
             prefCategory.removePreference(mDecChoicePreferences);
+            prefCategory.removePreference(mAudioInterfaceChoicePreferences);
             prefCategory.addPreference(mForceSwDecPreferences);
             prefScraperCategory.removePreference(mDbExportManualPreference);
             getPreferenceScreen().removePreference(mAdvancedPreferences);
@@ -335,6 +340,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         });
 
         mDecChoicePreferences = (ListPreference) findPreference(KEY_DEC_CHOICE);
+        mAudioInterfaceChoicePreferences = (ListPreference) findPreference(KEY_AUDIO_INTERFACE_CHOICE);
         mForceSwDecPreferences = (CheckBoxPreference) findPreference(KEY_FORCE_SW);
         mForceAudioPassthrough = (CheckBoxPreference) findPreference(KEY_FORCE_AUDIO_PASSTHROUGH);
         mDisableDownmix = (CheckBoxPreference) findPreference("disable_downmix");

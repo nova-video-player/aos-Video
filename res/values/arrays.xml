@@ -153,6 +153,18 @@
         <item>-1</item>
     </string-array>
 
+    <string-array name="audio_interface_choice_entries">
+        <item>@string/audio_interface_any</item>
+        <item>@string/audio_interface_audiotrack</item>
+        <item>@string/audio_interface_opensles</item>
+    </string-array>
+
+    <string-array name="audio_interface_choice_entryvalues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
     <string-array name="codepage_entries">
         <item>@string/codepage_default</item>
         <item>@string/codepage_1250</item> <!-- Eastern European (CP1250) -->

@@ -669,6 +669,12 @@
    <string name="dec_any">Default</string>
    <string name="dec_android">Android MediaPlayer</string>
 
+    <string name="audio_interface_choice_title">Choose audio output interface</string>
+    <string name="audio_interface_choice_summary">Advanced preference, may break audio decoding.</string>
+    <string name="audio_interface_opensles">Force OpenSL ES</string>
+    <string name="audio_interface_audiotrack">Force Audiotrack</string>
+    <string name="audio_interface_any">Default logic</string>
+
    <string name="preferences_user_interface">User Interface</string>
    <string name="preferences_display_resume_box_summary">Display or hide the button resuming the latest video in the main screen</string>
    <string name="preferences_display_resume_box">Display resume box</string>

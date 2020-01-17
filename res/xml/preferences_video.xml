@@ -31,6 +31,15 @@
             android:summary="@string/dec_choice_summary"
             android:title="@string/dec_choice_title"
             app:iconSpaceReserved="false"/>
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/audio_interface_choice_entries"
+            android:entryValues="@array/audio_interface_choice_entryvalues"
+            android:key="audio_interface_choice"
+            android:persistent="true"
+            android:summary="@string/audio_interface_choice_summary"
+            android:title="@string/audio_interface_choice_title"
+            app:iconSpaceReserved="false"/>
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="enable_cutout_mode_short_edges"
