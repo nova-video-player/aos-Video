@@ -34,7 +34,7 @@
     <!-- Toast after turning shuffle off -->
     <!-- Toast after turning single repeat on -->
     <!-- Context menu item -->
-    <string name="info">Info.</string>
+    <string name="info">Info</string>
     <!-- Context menu item -->
     <string name="play_selection">Tocar</string>
     <!-- Context menu item -->
@@ -49,7 +49,7 @@
     <string name="video_sources">Fontes</string>
     <!-- Infos dialog tabs -->
     <string name="info_tab_movie">Filme</string>
-    <string name="info_tab_show">Séries</string>
+    <string name="info_tab_show">Séries de TV</string>
     <string name="info_tab_episode">Episódio</string>
     <string name="info_tab_video">Vídeo</string>
     <string name="info_tab_file">Info. do arquivo</string>
