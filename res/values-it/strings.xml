@@ -603,6 +603,11 @@ Copertina (rotolo di copertina)</string>
     <string name="dec_unknown">Decodifica sconosciuta</string>
     <string name="dec_any">Predefinito</string>
     <string name="dec_android">Android MediaPlayer</string>
+    <string name="audio_interface_choice_title">Scegli l\'interfaccia di uscita audio</string>
+    <string name="audio_interface_choice_summary">Preferenze avanzate, potrebbero interferire con la decodifica audio.</string>
+    <string name="audio_interface_opensles">Forza OpenSL ES</string>
+    <string name="audio_interface_audiotrack">Forza Audiotrack</string>
+    <string name="audio_interface_any">Logica predefinita</string>
     <string name="preferences_user_interface">Interfaccia Utente</string>
     <string name="preferences_display_resume_box_summary">Mostra o nascondi i tasti quando riprendi l\'ultimo video nella schermata principale</string>
     <string name="preferences_display_resume_box">Mostra l\'area di ripresa</string>
