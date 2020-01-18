@@ -343,7 +343,7 @@
     <string name="player_err_connection_failed">连接失败。</string>
     <string name="player_err_video_decoder_error">视频解码器错误：</string>
     <string name="player_err_qpel_and_gmc">\"四分之一像素\" 和 \"GMC\"</string>
-    <string name="player_err_profile_and_level">\"压缩方案\" 和 \"压缩等级\"</string>
+    <string name="player_err_profile_and_level">\"画质\" 和 \"压缩等级\"</string>
     <string name="player_err_interlaced">交错</string>
     <!-- Player plug-in -->
     <string name="player_plugin_cinema_title">电影插件</string>
@@ -477,7 +477,7 @@
     <string name="preferences_force_audio_passthrough_summary">对于 HDMI 和 S/PDIF 连接，传送经过压缩的音频。警告：实验性功能，可能导致音视频不同步</string>
     <string name="preferences_disable_downmix_title">禁用混音至立体声</string>
     <string name="preferences_disable_downmix_summary">总是解码所有声道，并根据音频输出能力让安卓混音(可能导致声道丢失)</string>
-    <string name="preferences_allow_3rd_party_player">允许使用另一个视频播放器</string>
+    <string name="preferences_allow_3rd_party_player">允许使用另外的视频播放器</string>
     <string name="preferences_allow_3rd_party_player_summary">在启动视频播放时安卓系统将提示其他兼容的视频播放器。 请注意，某些功能将无法工作 (恢复播放、书签等)</string>
     <string name="preference_tv_3d_automatic_switch">启用自动3D电视开关</string>
     <string name="preference_tv_3d_automatic_switch_summary">仅在您的3D电视支持的情况下使用此功能</string>
@@ -500,7 +500,6 @@
     <string name="preferences_video_tvdb_text">电视节目信息提供方</string>
     <string name="preferences_video_trakt_text">视频偏好收藏提供方</string>
     <string name="preferences_video_licenses">许可</string>
-    <string name="preferences_network_mobile_vpn_key">vpn_mobile</string>
     <string name="preferences_network_mobile_vpn_summary">仅在 VPN 配置环境时使用，并且要小心您的移动数据流量。</string>
     <string name="preferences_network_mobile_vpn_title">在移动网络连接上启用网络共享</string>
     <string name="preferences_video_advanced">高级选项</string>
@@ -564,7 +563,7 @@
     <!--  Nfo File parsing -->
     <string name="network_nfo_parse">处理 “.nfo” 文件</string>
     <string name="network_nfo_parse_summary">在(重新)扫描期间读取Kodi “.nfo”文件以获取媒体信息和海报。</string>
-    <string name="ask_to_mail_media_DB">要将您的视频数据库发送给Nova开发团队以帮助他们检查错误吗？\n\n当然发送的不是视频文件本身，而是文件名的完整列表。</string>
+    <string name="ask_to_mail_media_DB">要将您的视频数据库发送给 Nova 开发团队以帮助他们检查错误吗？\n\n当然发送的不是视频文件本身，而是文件名的完整列表。</string>
     <string name="no_email_installed">没有找到电子邮件应用程序</string>
     <string name="zipping_library_before_mailing">正在压缩媒体库副本并用邮件发送……</string>
     <string name="zipped_library_mail_subject">Nova 视频数据库转储</string>
@@ -691,7 +690,7 @@
     <string name="trakt_sync_collection_title">同步电视节目和电影收藏</string>
     <string name="trakt_sync_trakt_resume_title">同步 trakt 播放进度</string>
     <string name="trakt_sync_trakt_resume">如果比本地进度播放得更多，则使用trakt 的播放进度</string>
-    <string name="trakt_sync_collection_summary">自动将您 Nova库中的所有视频添加到您的Trakt 收藏</string>
+    <string name="trakt_sync_collection_summary">自动将您 Nova 库中的所有视频添加到您的Trakt 收藏</string>
     <string name="trakt_toast_syncing">正在与 Trakt&#8230; 同步</string>
     <string name="show_all">所有视频</string>
     <string name="hide_seen">未观看</string>
@@ -714,7 +713,7 @@
     <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
     <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
     <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
-    <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">网络 &amp; 文件</string>
+    <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">网络和文件</string>
     <string name="leanback_subtitles_integrated">内置</string>
     <string name="leanback_subtitles_external">外置</string>
     <string name="leanback_posters_header">海报</string>
@@ -780,7 +779,6 @@
     <string name="db_export_manual_summary">为调试目的将 media.db 文件导出到 /sdcard</string>
     <string name="db_export_in_progress">正在导出数据库</string>
     <string name="system">系统</string>
-    <string name="save_delay_setting_pref_key">save_setting_pref_key</string>
     <string name="keep_setting">记住此设置</string>
     <string name="select_sub_file"><![CDATA[找不到针对 <font color=#29b6f6><i>%s</i></font><br />的字幕文件，请在此列表中尝试：]]></string>
     <string name="switch_remote_empty_message">切换到远程显示模式可能会提供更多切换选项</string>

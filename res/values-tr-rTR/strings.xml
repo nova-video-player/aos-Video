@@ -517,7 +517,6 @@ desteklenmiyor.</string>
     <string name="preferences_video_tvdb_text">TV Şovu tarafından sağlanan bilgiler</string>
     <string name="preferences_video_trakt_text">Video scrobbler tarafından sağlanmıştır</string>
     <string name="preferences_video_licenses">Lisanslar</string>
-    <string name="preferences_network_mobile_vpn_key">vpn_mobile</string>
     <string name="preferences_network_mobile_vpn_summary">Yalnızca VPN yapılandırması ile kullanın ve veri kullanımınıza dikkat edin.</string>
     <string name="preferences_network_mobile_vpn_title">Mobil bağlantıda ağ paylaşımını etkinleştir</string>
     <string name="preferences_video_advanced">Gelişmiş</string>
@@ -796,7 +795,6 @@ desteklenmiyor.</string>
     <string name="db_export_manual_summary">Medya.db dosyasını hata ayıklama amacıyla /sd karta aktarma</string>
     <string name="db_export_in_progress">Veritabanı dışa aktarımı devam ediyor</string>
     <string name="system">Sistem</string>
-    <string name="save_delay_setting_pref_key">save_setting_pref_key</string>
     <string name="keep_setting">Bu ayarı koru</string>
     <string name="select_sub_file"><![CDATA[Dosya için kesin altyazılar bulunamadı <font color=#29b6f6><i>%s</i></font><br />Please try among this list:]]></string>
     <string name="switch_remote_empty_message">Uzaktan görüntü moduna geçmek daha fazla izleme seçeneği verebilir</string>

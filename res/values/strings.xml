@@ -865,7 +865,7 @@
     <string name="db_export_manual_summary">Export media.db file to /sdcard for debug purposes</string>
     <string name="db_export_in_progress">Database export in progress</string>
     <string name="system">System</string>
-    <string name="keep_setting">Keep this setting</string>
+    <string name="keep_setting">Keep this setting globally</string>
     <string name="select_sub_file"><![CDATA[Exact subtitles not found for file <font color=#29b6f6><i>%s</i></font><br />Please try among this list:]]></string>
     <string name="switch_remote_empty_message">Switching to remote display mode might give more track options</string>
     <string name="cast_stream_mode">Stream mode</string>

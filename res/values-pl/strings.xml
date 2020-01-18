@@ -472,7 +472,6 @@
     <string name="preferences_video_os_text">Dostawcy napisów</string>
     <string name="preferences_video_tmdb_text">Dostawca informacji o filmach</string>
     <string name="preferences_video_licenses">Licencje</string>
-    <string name="preferences_network_mobile_vpn_key">vpn_mobile</string>
     <string name="preferences_video_advanced">Zaawansowane</string>
     <string name="preferences_video_advanced_quit_title">Ustawienia zwykłe</string>
     <string name="preferences_video_advanced_quit_summary">Wróć do zwykłych ustawień</string>
@@ -651,7 +650,6 @@
     <string name="view_more">Zobacz więcej</string>
     <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="system">System</string>
-    <string name="save_delay_setting_pref_key">save_setting_pref_key</string>
     <string name="keep_setting">Zapamiętaj to ustawienie</string>
     <string name="cast_remote_display_mode">Zdalny ekran</string>
     <string name="cast_info">Informacje</string>

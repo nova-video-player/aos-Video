@@ -501,7 +501,6 @@
     <string name="preferences_video_tvdb_text">TV-serie informatie verstrekt door</string>
     <string name="preferences_video_trakt_text">Video scrobbler aangeboden door</string>
     <string name="preferences_video_licenses">Licenties</string>
-    <string name="preferences_network_mobile_vpn_key">vpn_mobiel</string>
     <string name="preferences_network_mobile_vpn_summary">Gebruik het alleen met VPN-configuratie en pas op voor uw gegevensgebruik.</string>
     <string name="preferences_network_mobile_vpn_title">Netwerkdelen inschakelen bij mobiele verbinding</string>
     <string name="preferences_video_advanced">Geavanceerd</string>

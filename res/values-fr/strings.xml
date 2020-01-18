@@ -504,7 +504,6 @@
     <string name="preferences_video_tvdb_text">Description des Séries fournies par</string>
     <string name="preferences_video_trakt_text">Scrobbler vidéo fourni par</string>
     <string name="preferences_video_licenses">Licences</string>
-    <string name="preferences_network_mobile_vpn_key">vpn_mobile</string>
     <string name="preferences_network_mobile_vpn_summary">N\'activez cette option que pour les connexions VPN. Attention à la consommation de données.</string>
     <string name="preferences_network_mobile_vpn_title">Activer les partages réseau avec une connexion mobile</string>
     <string name="preferences_video_advanced">Avancé</string>
@@ -784,8 +783,7 @@
     <string name="db_export_manual_summary">Exporter le fichier media.db vers /sdcard à des fins de débogage</string>
     <string name="db_export_in_progress">Export de la base de donnée en cours</string>
     <string name="system">Système</string>
-    <string name="save_delay_setting_pref_key">save_setting_pref_key</string>
-    <string name="keep_setting">Conserver ce réglage</string>
+    <string name="keep_setting">Conserver ce réglage globalement</string>
     <string name="select_sub_file"><![CDATA[Les sous-titres exacts n\'ont pas été trouvés pour ce fichier <font color=#29b6f6><i>%s</i></font><br />Choisissez un fichier parmi cette liste:]]></string>
     <string name="switch_remote_empty_message">Passer en mode d\'affichage distant pourrait vous permettre plus d\'options de piste</string>
     <string name="cast_stream_mode">Mode Streaming</string>

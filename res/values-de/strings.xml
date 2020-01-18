@@ -504,7 +504,6 @@
     <string name="preferences_video_tvdb_text">Serieninformationen von</string>
     <string name="preferences_video_trakt_text">Video-Scrobbler von</string>
     <string name="preferences_video_licenses">Lizenzen</string>
-    <string name="preferences_network_mobile_vpn_key">vpn_mobile</string>
     <string name="preferences_network_mobile_vpn_summary">Nur mit VPN-Konfiguration verwenden und passen sie auf Ihre Datennutzung auf.</string>
     <string name="preferences_network_mobile_vpn_title">Netzwerkfreigabe mit mobiler Daten-Verbindung aktivieren</string>
     <string name="preferences_video_advanced">Erweitert</string>
@@ -782,7 +781,6 @@
     <string name="db_export_manual_summary">media.db-Datei zu /sdcard für Debug-Zwecke exportieren</string>
     <string name="db_export_in_progress">Datenbank Export läuft</string>
     <string name="system">System</string>
-    <string name="save_delay_setting_pref_key">save_setting_pref_key</string>
     <string name="keep_setting">Diese Einstellung beibehalten</string>
     <string name="select_sub_file"><![CDATA[Exakte Untertitel für Datei <font color=#29b6f6><i>%s</i></font><br /> nicht gefunden. Bitte aus dieser Liste auswählen:]]></string>
     <string name="switch_remote_empty_message">Ein Wechsel zum Remote-Display-Modus könnte mehr Track-Optionen ermöglichen</string>

@@ -504,7 +504,6 @@ Copertina (rotolo di copertina)</string>
     <string name="preferences_video_tvdb_text">Infromazioni sulla serie TV fornite daTV</string>
     <string name="preferences_video_trakt_text">Video scrobbler fornito da</string>
     <string name="preferences_video_licenses">Licenze</string>
-    <string name="preferences_network_mobile_vpn_key">vpn_mobile</string>
     <string name="preferences_network_mobile_vpn_summary">Usalo solo con una VPN configurata e presta attenzione all\'utilizzo dei tuoi dati</string>
     <string name="preferences_network_mobile_vpn_title">Utilizza la condivisione di rete su connessione mobile</string>
     <string name="preferences_video_advanced">Avanzate</string>
@@ -776,7 +775,6 @@ Copertina (rotolo di copertina)</string>
     <string name="db_export_manual_summary">Esporta file media.db in /sdcard per scopi di debug</string>
     <string name="db_export_in_progress">Esportazione database in corso</string>
     <string name="system">Sistema</string>
-    <string name="save_delay_setting_pref_key">save_setting_pref_key</string>
     <string name="keep_setting">Mantieni questa impostazione</string>
     <string name="select_sub_file"><![CDATA[Sottotitoli non trovati per il file <font color=#29b6f6><i>%s</i></font><br />Prova uno di questa lista:]]></string>
     <string name="switch_remote_empty_message">Il passaggio alla Modalità Display Remoto potrebbe dare una maggior scelta di tracce</string>
