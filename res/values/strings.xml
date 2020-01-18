@@ -548,7 +548,6 @@
     <string name="preferences_video_tvdb_text">TV Show informations provided by</string>
     <string name="preferences_video_trakt_text">Video scrobbler provided by</string>
     <string name="preferences_video_licenses">Licenses</string>
-    <string name="preferences_network_mobile_vpn_key">vpn_mobile</string>
     <string name="preferences_network_mobile_vpn_summary">Use it only with VPN configuration, and beware of your data usage.</string>
     <string name="preferences_network_mobile_vpn_title">Enable network share on mobile connection</string>
 
@@ -866,7 +865,6 @@
     <string name="db_export_manual_summary">Export media.db file to /sdcard for debug purposes</string>
     <string name="db_export_in_progress">Database export in progress</string>
     <string name="system">System</string>
-    <string name="save_delay_setting_pref_key">save_setting_pref_key</string>
     <string name="keep_setting">Keep this setting</string>
     <string name="select_sub_file"><![CDATA[Exact subtitles not found for file <font color=#29b6f6><i>%s</i></font><br />Please try among this list:]]></string>
     <string name="switch_remote_empty_message">Switching to remote display mode might give more track options</string>

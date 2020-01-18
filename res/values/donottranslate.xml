@@ -52,4 +52,9 @@
 
     <string name="subtitle_color_default">#ffffff</string>
 
+    <string name="av_delay_key">av_delay_key</string>
+    <string name="save_delay_setting_pref_key">save_setting_pref_key</string>
+    <string name="preferences_network_mobile_vpn_key">vpn_mobile</string>
+
+
 </resources>
