@@ -1,10 +1,3 @@
-Countless TV UI improvements (categories, channels, roles, trailers, badges, global actions, subs picker, poster zoom)
-Fullscreen landscape video option on cutout displays
-API28/AndroidX migration
-Upstep FFmpeg 4.2.1 and dav1d 0.4.0
-Fix database crash preventing app to start on some custom ROMs
-Proper scanning/scraping notifications
-Force disabling stereo downmix option on phones/tablets
-Fix video blacklisting on local storage
-Smoother 4k and HEVC playback on Mediatek
-Fix A/V delay on amlogic
+ffmpeg update to 4.2.2
+dav1d update to 0.5.2
+Stability enhancement

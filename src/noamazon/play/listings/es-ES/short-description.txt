@@ -1,0 +1,1 @@
+Reproductor de vídeo contenido local/red con soporte de subtítulos/metadatos

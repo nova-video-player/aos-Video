@@ -1,0 +1,44 @@
+Nova 是一个专为平板、手机和安卓电视设计的开源视频播放器。 https://github.com/nova-video-player/aos-AVP
+
+全功能播放器：
+- 从您的电脑、服务器(FTP、SFTP)、NAS(SMB、UPnP)上播放视频
+- 从外置USB存储器上播放视频
+- 可以将来自全部媒体源的视频整合进一个单独的多媒体收藏库
+- 自动在线获取电影和连续剧的剧情说明以及海报和背景墙
+- 内置字幕下载功能
+
+最佳播放器：
+- 硬件视频解码加速，适用于绝大部分设备和视频格式
+- 支持多音频流和多字幕
+- 支持的文件格式：MKV、MP4、AVI、WMV、FLV等
+- 支持的字幕文件格式：SRT、SUB、ASS、SMI等
+
+适合电视的界面：
+- 适合于安卓电视的专用用户界面
+- 在支持的硬件上实现AC3/DTS直通(HDMI或S/PDIF)：Nexus Player、NVidia SHIELD TV、 基于Rockchip和AmLogic的电视盒子
+- 支持适用于3D电视的左-右和上-下3D格式播放
+- 包含音频增强模式可增大音量
+- 包含夜晚模式可动态调整音量
+
+自在浏览文件：
+- 迅速访问最近加入和播放的视频
+- 按名称、分类、年份、片长或评分来浏览电影
+- 按季浏览电视剧
+- 支持文件夹浏览
+
+还有还有：
+- 在多个设备上恢复网络视频播放进度
+- 剧情说明和海报NFO元数据处理
+- 为您的网络内容设置定期重新扫描计划(仅限电视界面)
+- 隐私模式：临时禁用播放历史记录
+- 手动调整字幕同步
+- 手动调整音频/视频同步
+- Track your video collection and what you have watched via Trakt
+
+In case you have an issue or a request about this app, please check our Reddit support community at this address: https://www.reddit.com/r/NovaVideoPlayer
+
+如果使用视频硬件解码时遇到问题，您可以在程序偏好设置里强制为软件解码。
+
+欢迎为本程序的翻译添砖加瓦： https://crowdin.com/project/nova-video-player
+
+NOVA是opeN sOurce Video plAyer的缩写。

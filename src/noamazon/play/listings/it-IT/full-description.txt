@@ -1,0 +1,44 @@
+Nova è un lettore multimediale open source pensato per tablet, telefoni e dispositivi Android TV disponibile su https://github.com/nova-video-player/aos-AVP
+
+Lettore universale:
+- Riproduci video dal tuo computer, server (FTP, SFTP), NAS (SMB, UPnP)
+- Riproduci video dall'archivio USB esterno
+- Video di tutte le fonti integrati in una collezione multimediale unificata
+- Recupero automatico online delle descrizioni dei film e delle serie TV con poster e sfondi
+- Download sottotitoli integrato
+
+Miglior player:
+- Decodifica video accelerata hardware per la maggior parte dei dispositivi e dei formati video
+- Supporto multi traccia audio e sottotitoli
+- Formati di file supportati: MKV, MP4, AVI, WMV, FLV, ecc.
+- Tipi di file di sottotitoli supportati: SRT, SUB, ASS, SMI, ecc.
+
+TV semplice:
+- Interfaccia utente "leanback" dedicata per Android TV
+-AC3/DTS passthrough (HDMI o S/PDIF) su hardware supportato: Nexus Player, NVidia SHIELD TV, Rockchip e AmLogic based TV-boxes
+- Supporto 3D con riproduzione di formati superiori e laterali per TV 3D
+- Modalità Boost Audio per aumentare il livello del volume
+- Modalità notturna per regolare dinamicamente il livello del volume
+
+Naviga come vuoi:
+- Accesso immediato ai video aggiunti di recente e riprodotti di recente
+- Sfoglia film per nome, genere, anno, durata, valutazione
+- Sfoglia serie TV per stagione
+- Navigazione delle cartelle supportata
+
+E molto altro:
+- Ripresa video di rete multi-dispositivo
+- Elaborazione dei metadati NFO per descrizioni e poster
+- Riscansione pianificata del contenuto della rete (solo UI Leanback)
+- Modalità Privata: disabilita temporaneamente la registrazione della cronologia di riproduzione
+- Regola manualmente la sincronizzazione dei sottotitoli
+- Regola manualmente la sincronizzazione dei sottotitoli
+- Track your video collection and what you have watched via Trakt
+
+In caso di problemi o richieste relative a questa applicazione, consulta la nostra comunità di supporto di Reddit a questo indirizzo: https://www.reddit.com/r/NovaVideoPlayer
+
+Se si verificano problemi con la decodifica dell'hardware video, è possibile forzare la decodifica software nelle preferenze dell'applicazione.
+
+Sei invitato a contribuire alla traduzione dell'applicazione su https://crowdin.com/project/nova-video-player
+
+NOVA sta per opeN sOurce Video plAyer.

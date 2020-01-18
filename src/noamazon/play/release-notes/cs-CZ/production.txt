@@ -1,4 +1,3 @@
-Fix authentication issue on Trakt
-Attempt to fix UPnP playback of files containing a "/"
-Do not crash when opening non-video files in browser
-Stability improvements
+ffmpeg update to 4.2.2
+dav1d update to 0.5.2
+Stability enhancement

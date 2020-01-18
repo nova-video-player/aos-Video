@@ -1,0 +1,44 @@
+Nova es un reproductor de vídeo de código abierto diseñado para tabletas, teléfonos y dispositivos AndroidTV, disponible en https://github.com/nova-video-player/aos-AVP
+
+Reproductor Universal:
+- Reproduce vídeos desde su ordenador, servidor (FTP, SFTP), NAS (SMB, UPnP)
+- Reproduce vídeos desde un almacenamiento USB externo
+- Integra todas las fuentes de vídeos en una colección multimedia unificada
+- Obtiene automáticacemente las descripciones, carteles y fondos online de películas y programas de televisión
+- Descarga subtítulos
+
+Mejor reproductor:
+- Decodificación acelerada por hardware de los videos para la mayoría de los dispositivos y formatos de vídeo
+- Soporte para múltiples pistas de audio y subtítulos
+- Formatos de archivo soportados: MKV, MP4, AVI, WMV, FLV, etc.
+- Estándares de subtítulos soportados: SRT, SUB, ASS, SMI, etc.
+
+TV friendly:
+- Interfaz de usuario "leanback" específica para las TV Android
+- Transferencia de AC3/DTS (HDMI o S/PDIF) al hardware soportado: Nexus Player, NVidia SHIELD TV, Rockchip y cajas de TV basadas en AmLogic
+- Soporta la reproducción 3D en los formatos lado a lado y de arriba a abajo en TVs 3D
+- Modo Audio Boost para aumentar el nivel de volumen
+- Modo Nocturno para ajustar dinámicamente el nivel de volumen
+
+Navegación amigable:
+- Acceso instantáneo a los videos recientemente añadidos y reproducidos
+- Navegar por las películas por nombre, género, año, duración, clasificación
+- Navegar por los programas de TV por temporadas
+- Exploración de carpetas
+
+Y aún más:
+- Reanudación de vídeo en red multidispositivo
+- Procesamiento de metadatos NFO para descripciones y carteles
+- Reanálisis programado del contenido de su red (sólo en la interfaz de usuario Leanback)
+- Modo privado: deshabilita temporalmente la grabación del historial de reproducción
+- Ajustar manualmente la sincronización de los subtítulos
+- Ajustar manualmente la sincronización del audio/vídeo
+- Hacer un seguimiento de su colección y de lo que ha visto a través de Trakt
+
+En caso de que surja algún problema o tenga una petición sobre esta aplicación, por favor, consulte nuestro grupo de soporte de Reddit en esta dirección: https://www.reddit.com/r/NovaVideoPlayer
+
+Si tiene algún problema con la decodificación del hardware de vídeo puede forzar la decodificación del software en las preferencias de la aplicación.
+
+Es bienvenido a contribuir a la traducción de la aplicación en https://crowdin.com/project/nova-video-player
+
+NOVA significa opeN sOurce Video plAyer.

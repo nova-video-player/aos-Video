@@ -1,0 +1,44 @@
+Nova is an opeN sOurce Video plAyer designed for tablets, phones and AndroidTV devices available at https://github.com/nova-video-player/aos-AVP
+
+Evrensel oynatıcı:
+Bilgisayarınızdan, sunucunuzdan (FTP, SFTP), NAS'dan (SMB, UPnP) video oynatın
+- Harici USB depolama biriminden video oynatma
+- Tüm kaynaklardan gelen videolar birleştirilmiş bir multimedya koleksiyonuna entegre edilmiştir
+- Film ve TV şovu açıklamalarının posterler ve arka planlarla otomatik olarak çevrimiçi alınması
+- Entegre altyazı indir
+
+Best oynatıcı:
+- Çoğu cihaz ve video formatı için donanım hızlandırmalı video kod çözme
+- Çoklu ses parçaları ve çoklu altyazı desteği
+- Desteklenen dosya formatları: MKV, MP4, AVI, WMV, FLV, vb.
+- Desteklenen altyazı dosya türleri: SRT, SUB, ASS, SMI, vb.
+
+TV dostu:
+- Android TV için özel “geri yaslanma” kullanıcı arayüzü
+- Desteklenen donanımda AC3 / DTS geçişi (HDMI veya S / PDIF): Nexus Oynatıcı, NVidia SHIELD TV, Rockchip ve AmLogic tabanlı TV kutuları
+- 3D TV'ler için yan yana ve üstten alta formatlı oynatma özellikli 3D desteği
+- Ses seviyesini artırmak için Ses Yükseltme modu
+- Ses seviyesini dinamik olarak ayarlamak için Gece Modu
+
+İstediğiniz şekilde göz atın:
+- Son eklenen ve son oynatılan videolara anında erişim
+- Filmlere ad, tür, yıl, süre, derecelendirme göre göz atın
+- Sezonlara göre TV şovlarına göz atın
+- Klasöre göz atma desteklenir
+
+Ve daha fazlası:
+- Çok cihazlı ağ video özgeçmişi
+- Açıklamalar ve posterler için NFO meta veri işleme
+- Ağ içeriğinizin zamanlanmış yeniden taranması (yalnızca Leanback UI)
+- Özel mod: oynatma geçmişi kaydını geçici olarak devre dışı bırakma
+- Altyazı senkronizasyonunu manuel olarak ayarlama
+- Ses/video senkronizasyonunu manuel olarak ayarlayın
+- Track your video collection and what you have watched via Trakt
+
+Bu uygulamayla ilgili bir sorununuz veya isteğiniz varsa, lütfen şu adresteki Reddit destek topluluğumuzu kontrol edin: https://www.reddit.com/r/NovaVideoPlayer
+
+Video donanım kod çözme ile ilgili herhangi bir sorun yaşarsanız, uygulama tercihlerinde yazılım kod çözmeyi zorlayabilirsiniz.
+
+Https://crowdin.com/project/nova-video-player adresinden uygulamanın çevirisine katkıda bulunabilirsiniz
+
+NOVA, OPOCE Video PlAyer'i temsil ediyor.

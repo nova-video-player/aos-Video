@@ -1,0 +1,1 @@
+Lettore video per contenuti locali/su rete con supporto di sottotitoli/metadati

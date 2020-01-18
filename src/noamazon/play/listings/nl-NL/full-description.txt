@@ -1,0 +1,44 @@
+Nova is een opeN sOurce videospeler ontworpen voor tablets, telefoons en AndroidTV apparaten beschikbaar op https://github.com/nova-video-player/aos-AVP
+
+Universele speler:
+- Speelt video's vanaf uw computer, server (FTP, SFTP), NAS (SMB, UPnP)
+- Play video's van externe USB opslag
+- Video's uit alle bronnen geïntegreerd in een uniforme multimedia collectie
+- Automatische online ophalen van film en TV-show beschrijvingen met posters en achtergronden
+- Geïntegreerde ondertiteling download
+
+Beste speler:
+- Hardware versnelde videodecodering voor de meeste apparaten en video formaten
+- Multi-Pro-audio tracks en mutli-subtitles steun
+- Ondersteunde bestandsindelingen: MKV, MP4, AVI, WMV, FLV, enz.
+- Ondersteunde ondertitel bestandstypen: SRT, SUB, KONT, SMI, etc.
+
+TV vriendelijk:
+- Dedicated "leanback" user interface voor Android TV
+- AC3/DTS passthrough (HDMI of S/PDIF) op ondersteunde hardware: Nexus Player NVidia SHIELD televisie Rockchip en AmLogic gebaseerd TV-vakken
+- 3D ondersteuning met side-by-side en top-bottom formaten afspelen voor 3D TV's
+- Audio Boost-modus om het volumeniveau
+- Nachtmodus dynamisch kunt het volume regelen
+
+Bladeren zoals u dat wilt:
+- Instant toegang tot onlangs toegevoegd en onlangs gespeelde video's
+- Browse films met naam, genre, jaar, duur, rating
+- Browse TV toont door seizoenen
+- Folder browsing ondersteund
+
+En nog meer:
+- Multi-device netwerk video hervatten
+- NFO metagegevens verwerking voor beschrijvingen en posters
+- gepland opnieuw scannen van de netwerkinhoud van uw (Leanback UI alleen)
+- Privé modus: tijdelijk uitschakelen afspelen geschiedenis opnemen
+- Manually ondertitels aanpassen synchronisatie
+- Manually synchronisatie van de audio/video
+- Track wat uw verzameling en aanpassen wat u hebt bekeken via Trakt
+
+In het geval dat u een probleem of een verzoek om over dit app, kijk op onze Reddit steungroep op dit adres: https://www.reddit.com/r/NovaVideoPlayer
+
+Als u een probleem ondervindt met video hardware decoding u kunt forceren dat software-decodering in de Toepassingsvoorkeuren.
+
+U bent welkom om bij te dragen tot de vertaling van de toepassing bij https://crowdin.com/project/nova-video-player
+
+NOVA staat voor opeN Bron videospeler.
