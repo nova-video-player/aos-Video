@@ -49,17 +49,17 @@
     <string name="video_sources">Fontes</string>
     <!-- Infos dialog tabs -->
     <string name="info_tab_movie">Filme</string>
-    <string name="info_tab_show">Show</string>
+    <string name="info_tab_show">Séries</string>
     <string name="info_tab_episode">Episódio</string>
     <string name="info_tab_video">Vídeo</string>
     <string name="info_tab_file">Info. do arquivo</string>
     <string name="info_tab_backdrop_chooser">Seletor de pano de fundo</string>
-    <string name="info_tab_poster_chooser">Seletor de poster</string>
+    <string name="info_tab_poster_chooser">Seletor de cartaz</string>
     <string name="info_tab_share">Compartilhar</string>
     <string name="info_menu_backdrop_select">Pano de fundo</string>
     <string name="info_menu_series_backdrop_select">Pano de fundo de série</string>
-    <string name="info_menu_poster_select">Selecionar outro poster</string>
-    <string name="info_menu_series_poster_select">Selecionar outro poster</string>
+    <string name="info_menu_poster_select">Selecionar outro cartaz</string>
+    <string name="info_menu_series_poster_select">Selecionar outro cartaz</string>
     <!-- COVER ROLL -->
     <string name="watching_up_next">Assistindo/A seguir</string>
     <string name="recently_added">Adicionado recentemente</string>
@@ -105,13 +105,13 @@
     <string name="all_seasons">Todas as temporadas</string>
     <string name="tvshows_by_alpha">Séries de TV alfabeticamente</string>
     <string name="tvshows_by_genre">Séries de TV por gênero</string>
-    <string name="tvshows_by_rating">Séries mais avaliadas</string>
+    <string name="tvshows_by_rating">Séries de TV por avaliação</string>
     <string name="episodes_by_date">Episódios por data</string>
     <string name="date_view_week">Semana</string>
     <string name="date_view_month">Mês</string>
     <string name="date_view_year">Ano</string>
     <string name="all_movies_and_tv_shows">Filmes e séries de TV</string>
-    <string name="non_scraped_videos">Vídeos não processados</string>
+    <string name="non_scraped_videos">Vídeos não pesquisados</string>
     <string name="no_server">Nenhum servidor de mídia encontrado</string>
     <string name="cannot_open_video">Não é possível abrir este vídeo</string>
     <string name="confirm_delete">Deseja realmente excluir?</string>
@@ -130,7 +130,7 @@
     <string name="mark_as_watched">Marcar como assistido</string>
     <string name="mark_as_not_watched">Marcar como não assistido</string>
     <string name="upnp_not_allowed">Você não tem permissão para acessar este servidor UPNP. Por favor, altere sua configuração de acesso primeiro.</string>
-    <string name="scrap_no_info">Você não tem uma descrição de vídeo ou TV para este vídeo.</string>
+    <string name="scrap_no_info">Você não tem nenhuma descrição para esse filme ou série de TV.</string>
     <string name="scrap_remove">Remover informação</string>
     <string name="scrap_remove_short">Remover</string>
     <!-- for small screens -->
@@ -156,8 +156,8 @@
     <string name="scrap_genre">Gênero</string>
     <string name="scrap_genre_format">Gêneros: %s</string>
     <string name="scrap_genre_title">Gêneros</string>
-    <string name="scrap_aired">Transmitido</string>
-    <string name="scrap_aired_format">Transmitido: %s</string>
+    <string name="scrap_aired">Data de exibição</string>
+    <string name="scrap_aired_format">Data de exibição: %s</string>
     <string name="scrap_guests">Convidados</string>
     <string name="scrap_premiered">Estreou</string>
     <!-- Specific strings for TV shows -->
@@ -183,14 +183,14 @@
     </plurals>
     <string name="scrap_processing">Buscando metadados…</string>
     <string name="scrap_no_network">Não conectado a uma rede.</string>
-    <string name="scrap_enable_network_first">"Por favor, conecte-se a uma rede primeiro para poder executar este aplicativo."</string>
+    <string name="scrap_enable_network_first">"Por favor, conecte-se a uma rede primeiro para poder executar esta aplicação."</string>
     <string name="scrap_failed">O filme não foi encontrado no banco de dados online.</string>
     <string name="start_auto_scraper_activity">Pesquisar informações online</string>
-    <string name="scraper_settigns">Informações dos pôsteres &amp;</string>
+    <string name="scraper_settigns">Cartazes &amp; informações</string>
     <string name="scrap_status_initial">Na fila</string>
     <string name="scrap_status_busy">Pesquisando…</string>
     <string name="scrap_status_success">Atualizado</string>
-    <string name="scrap_status_failed">Informação não encontrada</string>
+    <string name="scrap_status_failed">Informação não foi encontrada</string>
     <string name="scrap_status_rejected">Informação removida</string>
     <string name="scrap_status_unknown">Desconhecido</string>
     <string name="scraper_abort_request">Você realmente quer cancelar a pesquisa?</string>
@@ -203,17 +203,17 @@
     <string name="scraper_notification_title">Pesquisando informações online</string>
     <string name="scraper_notification_progress">\"%1$d de %2$d arquivos processados</string>
     <string name="scraper_no_episode_found">Nenhum episódio encontrado</string>
-    <string name="scraper_suggest_message">Você pode pesquisar pôsteres e informações online para seus vídeos através do menu \'Pesquisar informações on-line\'.</string>
-    <string name="scraper_no_movie_text">Você não tem atualmente um poster e descrição para seus filmes</string>
+    <string name="scraper_suggest_message">Você pode pesquisar cartazes e informações online para seus vídeos através do menu \'Pesquisar informações on-line\'.</string>
+    <string name="scraper_no_movie_text">Atualmente você não tem cartazes ou descrições para seus filmes</string>
     <string name="scraper_no_movie_button_label">Pesquisar informações do filme online</string>
-    <string name="scraper_no_tv_show_text">Você não tem atualmente um poster e descrição para suas séries de TV</string>
-    <string name="scraper_no_tv_show_button_label">Pesquisar informações do programa de TV online</string>
+    <string name="scraper_no_tv_show_text">Atualmente você não tem cartazes ou descrições para suas séries de TV</string>
+    <string name="scraper_no_tv_show_button_label">Pesquisar online por informações sobre série de TV</string>
     <string name="imdb_title_url">https://www.imdb.com/title/</string>
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="storage">Armazenamento</string>
-    <string name="rescan_storage">Reescanear armazenamento</string>
-    <string name="rescanning">Reescaneando armazenamento</string>
-    <string name="rescan_storage_summary">Reescanear Cartão SD e dispositivos USB</string>
+    <string name="rescan_storage">Verificar armazenamento</string>
+    <string name="rescanning">Verificando armazenamento</string>
+    <string name="rescan_storage_summary">Verificar Cartão SD e dispositivos USB novamente</string>
     <string name="preference_display_all_files">Exibir todos os arquivos no navegador</string>
     <string name="preference_display_all_files_summary">Exibir também arquivos não-vídeo</string>
     <string name="info_processing">Verificando propriedades da mídia…</string>
@@ -223,7 +223,7 @@
     <string name="info_plugin_required">(plug-in necessário)</string>
     <string name="info_subtitle">Legenda</string>
     <string name="info_resume">Posição de continuação</string>
-    <string name="info_bookmark">Posição do favorito</string>
+    <string name="info_bookmark">Marcar posição atual</string>
     <string name="info_file">Info. do arquivo</string>
     <string name="use_remote_resume">Usar a posição de retomada da rede?</string>
     <!-- VIDEO COVER ROLL -->
@@ -233,7 +233,7 @@
     <string name="you_have_no_video_yet">Procurando por vídeos&#8230;</string>
     <string name="you_have_no_movies">Sem filmes</string>
     <string name="you_have_no_tv_shows">Sem séries de TV</string>
-    <string name="you_have_no_non_scraped_videos">Nenhum vídeo sem pesquisar</string>
+    <string name="you_have_no_non_scraped_videos">Nenhum vídeo não pesquisado</string>
     <plurals name="Nmovies">
         <item quantity="one">1 filme</item>
         <item quantity="other"><xliff:g id="count">%d</xliff:g> filmes</item>
@@ -252,7 +252,7 @@
     <string name="mediacenterlabel">Media Center</string>
     <string name="view_mode">Modo de exibição</string>
     <string name="view_mode_list">Lista</string>
-    <string name="view_mode_grid">Poster</string>
+    <string name="view_mode_grid">Cartazes</string>
     <string name="view_mode_details">Detalhes</string>
     <string name="switch_to_list">Lista</string>
     <string name="switch_to_grid">Grade</string>
@@ -455,7 +455,7 @@
     <string name="indexed_folders_list_empty">Nenhuma pasta de rede está indexada.\n\nVocê pode adicionar o conteúdo de uma pasta de rede à biblioteca navegando para esta pasta e selecionando \"%s\" na barra de ação superior.</string>
     <string name="indexed_folders_list_empty_ftp">Nenhuma pasta ftp está indexada no momento.</string>
     <string name="open_indexed_folder">"Abrir"</string>
-    <string name="rescan_indexed_folders">Re-escanear todas as pastas indexadas</string>
+    <string name="rescan_indexed_folders">Verificar todas as pastas indexadas novamente</string>
     <string name="last_rescan_never">Nunca</string>
     <string name="upnp_indexing_warning_title">Indexação de UPnP</string>
     <string name="upnp_indexing_warning_message">A indexação UPnP não permite tantos recursos como a indexação SMB.\nÉ recomendado indexar uma pasta SMB em vez disso se seu servidor ou PC a suportarem.\n</string>
@@ -475,7 +475,10 @@
     <string name="preferences_force_software_decoding">Forçar decodificação de software</string>
     <string name="preferences_force_software_decoding_summary">Você pode tentar esta opção se alguns vídeos não estiverem reproduzindo corretamente</string>
     <string name="preferences_force_audio_passthrough">Audio passthrough</string>
+    <string name="preferences_force_audio_passthrough_disabled">Desativado (recomendado)</string>
+    <string name="preferences_force_audio_passthrough_enable">Modo 1 (descontinuado)</string>
     <string name="preferences_force_audio_passthrough_enable2">Modo 2</string>
+    <string name="preferences_force_audio_passthrough_summary">para conexões HDMI e S/PDIF, transmitir áudio comprimido. :ward: Experimental e pode resultar em problemas de sincronização de áudio e vídeo</string>
     <string name="preferences_disable_downmix_title">Desativar downmix de áudio estéreo</string>
     <string name="preferences_disable_downmix_summary">Sempre decodificar todos os canais e deixar o downmix do Android dependendo da capacidade de saída de áudio (pode resultar na perda de canais de voz)</string>
     <string name="preferences_allow_3rd_party_player">Permitir usar outro reprodutor de vídeo</string>
@@ -508,7 +511,7 @@
     <string name="preferences_video_advanced_quit_title">Preferências normais</string>
     <string name="preferences_video_advanced_quit_summary">Voltar para preferências normais</string>
     <string name="trakt_change">Uma modificação na API Trakt requer uma reconexão.</string>
-    <string name="tv_scraper">Programas de TV</string>
+    <string name="tv_scraper">Séries de TV</string>
     <string name="movie_scraper">Filmes</string>
     <string name="enable_auto_scrap">Obter informações automaticamente para novos vídeos</string>
     <string name="locale">Idioma do sistema</string>
@@ -518,9 +521,9 @@
     <!--  Title of the video picker activity. -->
     <string name="video_picker_title">Selecionar vídeo</string>
     <!-- Archos File Info -->
-    <string name="video_info_custom_search_file_hint">"\"Nome do filme ou nome do programa de TV S01E01\""</string>
-    <string name="video_info_custom_search_show_hint">Nome do programa de TV</string>
-    <string name="scrap_show_no_result">Nenhum show correspondente encontrado on-line.</string>
+    <string name="video_info_custom_search_file_hint">"\"Nome do Filme\" ou \"nome da Série de TV S01E01\""</string>
+    <string name="video_info_custom_search_show_hint">Nome da série de TV</string>
+    <string name="scrap_show_no_result">Nenhuma série correspondente foi encontrada on-line.</string>
     <string name="video_info_backdrop_select">Selecione outra imagem</string>
     <string name="video_info_backdrop_remove">Excluir</string>
     <string name="video_info_backdrop_set_as">Definir imagem como</string>
@@ -539,24 +542,24 @@
     <string name="rotation_unlock">Ativar rotação automática de tela</string>
     <string name="rotation_locked">Rotação automática de tela desativada</string>
     <string name="rotation_unlocked">Rotação automática da tela ativada</string>
-    <string name="network_reindex">Re-escanear conteúdo</string>
+    <string name="network_reindex">Verificar conteúdo novamente</string>
     <!-- Help overlay -->
     <string name="help_overlay_menu">Pressione a tecla de seta para Cima\npara exibir o menu da TV</string>
     <string name="help_overlay_ssh_indexing_text">Selecione a opção \"Adicionar como atalho\" para voltar rapidamente ao seu servidor.</string>
     <string name="help_overlay_network_indexing_text1">Pressione este item de menu para integrar o conteúdo desta pasta e suas subpastas na Biblioteca de Vídeo.</string>
     <string name="help_overlay_network_indexing_text1_lb">Use o botão + para integrar o conteúdo desta pasta e suas subpastas na Biblioteca de Vídeo.</string>
-    <string name="help_overlay_network_indexing_text2">Isso permitirá que você obtenha cartazes e descrições para os filmes e programas de TV.</string>
-    <string name="help_overlay_scraper_text">Pressione este item de menu para pesquisar poster e descrições online para seus vídeos. </string>
+    <string name="help_overlay_network_indexing_text2">Isso permitirá que você obtenha cartazes e descrições para os filmes e séries de TV.</string>
+    <string name="help_overlay_scraper_text">Pressione este item de menu para pesquisar cartazes e descrições online para seus vídeos. </string>
     <string name="new_videos_count">Novos vídeos: %d</string>
-    <string name="new_videos_scrape_message">Você tem novos vídeos que ainda não têm informações e pôsteres.</string>
+    <string name="new_videos_scrape_message">Você tem novos vídeos que ainda não têm informações e cartazes.</string>
     <string name="network_bookmarks">Retomar pontos e posicionar favoritos na rede</string>
     <string name="network_thumbnails">Criar miniaturas remotas</string>
-    <string name="network_thumbnails_summary">Criar miniaturas de vídeos remotos quando nenhum cartaz disponível</string>
+    <string name="network_thumbnails_summary">Criar miniaturas de vídeos remotos quando um cartaz não estiver disponível</string>
     <string name="network_bookmarks_summary">Salvar e verificar o ponto de retorno e posicionar favoritos na rede quando possível</string>
     <string name="connection_abnormally_long">A conexão parece anormalmente longa. Gostaria de redefini-la?</string>
     <string name="connection_reset">Redefinir</string>
     <!-- Info dialog, not indexed file -->
-    <string name="video_info_unindexed_message">Este arquivo não está indexado na sua biblioteca de vídeo.\nProcurando por cartazes e informações estão disponíveis apenas para arquivos indexados.\nVocê deseja indexá-lo agora?</string>
+    <string name="video_info_unindexed_message">Este arquivo não está indexado na sua biblioteca de vídeo.\nBuscar por cartazes e informações é possível apenas para arquivos indexados.\nVocê deseja indexá-lo agora?</string>
     <string name="video_info_unindexed_message2">O arquivo está sendo processado. Isto pode demorar um pouco.</string>
     <string name="video_browser_index_file">Adicionar à biblioteca</string>
     <string name="video_browser_unindex_file">Remover da biblioteca</string>
@@ -600,6 +603,11 @@
     <string name="dec_unknown">Decodificação desconhecida</string>
     <string name="dec_any">Padrão</string>
     <string name="dec_android">MediaPlayer Android</string>
+    <string name="audio_interface_choice_title">Escolher interface de áudio</string>
+    <string name="audio_interface_choice_summary">Preferência avançada, pode quebrar a decodificação de áudio.</string>
+    <string name="audio_interface_opensles">Forçar OpenSL ES</string>
+    <string name="audio_interface_audiotrack">Forçar Audiotrack</string>
+    <string name="audio_interface_any">Lógica padrão</string>
     <string name="preferences_user_interface">Interface de usuário</string>
     <string name="preferences_display_resume_box_summary">Exibir ou ocultar o botão de retomar o vídeo mais recente na tela principal</string>
     <string name="preferences_display_resume_box">Exibir caixa de resumo</string>
@@ -616,10 +624,10 @@
     <string name="preferences_show_all_movies_row">Mostrar lista com todos os filmes</string>
     <string name="preferences_movie_sort_order_summary">Selecione a ordem da lista de filmes</string>
     <string name="preferences_movie_sort_order_title">Ordem da lista de filmes</string>
-    <string name="preferences_show_all_tv_shows_row_summary">Marque para mostrar uma lista com todos os seus programas de TV em vez da lista de categorias de programas de TV</string>
-    <string name="preferences_show_all_tv_shows_row">Mostrar lista com todos os programas de TV</string>
-    <string name="preferences_tv_show_sort_order_summary">Selecione a ordem da lista de programas de TV</string>
-    <string name="preferences_tv_show_sort_order_title">Ordem da lista de programas de TV</string>
+    <string name="preferences_show_all_tv_shows_row_summary">Marque para mostrar uma lista com todas suas séries de TV em vez da lista de categorias de séries de TV</string>
+    <string name="preferences_show_all_tv_shows_row">Mostrar lista com todas as séries de TV</string>
+    <string name="preferences_tv_show_sort_order_summary">Selecione a ordem da lista de séries de TV</string>
+    <string name="preferences_tv_show_sort_order_title">Ordem da lista de séries de TV</string>
     <string name="codepage_title">Codificação de legendas</string>
     <string name="codepage_summary">Definir a codificação usada nas legendas de texto</string>
     <string name="codepage_default">Idioma do dispositivo %s</string>
@@ -687,14 +695,14 @@
     <string name="trakt_sync_collection_title">Sincronizar séries de TV e coleções de filmes</string>
     <string name="trakt_sync_trakt_resume_title">Sincronizar posição de retorno do trakt</string>
     <string name="trakt_sync_trakt_resume">Usar posição de retorno do trakt quando mais avançado do que local</string>
-    <string name="trakt_sync_collection_summary">Adicionar automaticamente todos os vídeos da sua biblioteca à sua coleção Trakt</string>
+    <string name="trakt_sync_collection_summary">Adicionar automaticamente todos os vídeos da sua biblioteca à sua coleção do Trakt</string>
     <string name="trakt_toast_syncing">Sincronizando com Trakt&#8230;</string>
     <string name="show_all">Todos os vídeos</string>
     <string name="hide_seen">Não assistidos</string>
     <string name="search_results">Resultado da busca</string>
     <string name="no_results_found">Nenhum resultado foi encontrado.</string>
-    <string name="no_results_found_show_helper">Para programas de TV, especifique temporada e episódio, como \"S01E01\"</string>
-    <string name="leanback_video_info_custom_search_file_hint">"Nome do filme ou nome do programa de TV S01E01"</string>
+    <string name="no_results_found_show_helper">Para séries de TV, especifique temporada e episódio, como \"S01E01\"</string>
+    <string name="leanback_video_info_custom_search_file_hint">"Nome do Filme ou nome da Série de TV S01E01"</string>
     <string name="activate_private_mode">Ativar modo privado</string>
     <string name="deactivate_private_mode">Desativar modo privado</string>
     <string name="private_mode_is_on">Modo privado está ativado</string>
@@ -713,19 +721,19 @@
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Arquivos de rede &amp;</string>
     <string name="leanback_subtitles_integrated">Legendas integradas</string>
     <string name="leanback_subtitles_external">Legendas externas</string>
-    <string name="leanback_posters_header">Pôsteres</string>
-    <string name="leanback_season_posters_header">Pôsteres da temporada</string>
-    <string name="leanback_backdrops_header">Planos de Fundo</string>
-    <string name="leanback_tvshow_backdrops_header">Planos de Fundo do programa de TV</string>
-    <string name="leanback_poster_changed">O poster foi alterado</string>
-    <string name="leanback_backdrop_changed">O plano de fundo foi alterado</string>
+    <string name="leanback_posters_header">Cartazes</string>
+    <string name="leanback_season_posters_header">Cartazes da temporada</string>
+    <string name="leanback_backdrops_header">Panos de Fundo</string>
+    <string name="leanback_tvshow_backdrops_header">Panos de Fundo do séries de TV</string>
+    <string name="leanback_poster_changed">O cartaz foi alterado</string>
+    <string name="leanback_backdrop_changed">O pano de fundo foi alterado</string>
     <string name="leanback_weblinks_header">Links</string>
     <string name="leanback_action_more_details">Mais detalhes</string>
     <string name="leanback_scrap">Obter Informações</string>
     <string name="leanback_scrap_choose_the_description">Escolher informações</string>
     <string name="leanback_scrap_choose_the_description_for">"Escolher informações para \"%s\""</string>
-    <string name="leanback_scrap_searching_general_hint">Nome do filme ou programa de TV</string>
-    <string name="leanback_scrap_searching_tvshow_hint">Nome do programa de TV</string>
+    <string name="leanback_scrap_searching_general_hint">Nome do filme ou série de TV</string>
+    <string name="leanback_scrap_searching_tvshow_hint">Nome da série de TV</string>
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Interface normal</string>
     <string name="leanback_hint_long_press_on_back">DICA: longo clique na tecla VOLTAR fecha o navegador de arquivos</string>
@@ -737,16 +745,16 @@
     <string name="interface_size_small">Pequeno (hdpi)</string>
     <string name="interface_size_standard">Padrão (xhdpi)</string>
     <string name="interface_size_large">Grande (xhdpi)</string>
-    <string name="rescan">Re-escanear</string>
-    <string name="rescan_description">Re-escanear pastas indexadas para adicionar novo conteúdo à biblioteca</string>
-    <string name="rescan_now">Re-escanear agora</string>
+    <string name="rescan">Verificar</string>
+    <string name="rescan_description">Verificar pastas indexadas para adicionar conteúdo novo à biblioteca</string>
+    <string name="rescan_now">Verificar agora</string>
     <string name="rescan_now_description">Verificação Manual</string>
-    <string name="rescan_error_wifi_info_standby">WiFi parece estar desativado em espera. Para garantir o sucesso de auto-rescan, por favor, defina a ativação de WiFi em espera.</string>
-    <string name="rescan_error_wifi">Erro: Wi-Fi foi desligado durante o rescan</string>
+    <string name="rescan_error_wifi_info_standby">WiFi parece estar desativado em espera. Para garantir o sucesso de verificação, por favor, defina a ativação de WiFi em espera.</string>
+    <string name="rescan_error_wifi">Erro: Wi-Fi foi desligado durante a verificação</string>
     <string name="rescan_error_wifi_click_for_more_info">Clique aqui para mais informações</string>
     <string name="rescan_error_server">Erro: incapaz de alcançar o servidor</string>
-    <string name="scan_running">Escaneando</string>
-    <string name="scheduled_rescan">Re-escaneamento agendado</string>
+    <string name="scan_running">Verificando</string>
+    <string name="scheduled_rescan">Verificação agendada</string>
     <string name="scheduled_rescan_period">Período de re-escaneamento</string>
     <string name="scheduled_rescan_period_no">Nenhum</string>
     <string name="scheduled_rescan_period_once_a_day">Uma vez por dia</string>
@@ -754,8 +762,8 @@
     <string name="scheduled_rescan_period_every_six_hours">A cada 6 horas</string>
     <string name="scheduled_rescan_period_every_two_hours">A cada 2 horas</string>
     <string name="scheduled_rescan_period_every_hour">A cada uma hora</string>
-    <string name="scheduled_rescan_time">Tempo de re-escaneamento</string>
-    <string name="rescan_when_opening_application">Re-escanear quando abrir o aplicativo</string>
+    <string name="scheduled_rescan_time">Horário de verificação</string>
+    <string name="rescan_when_opening_application">Verificar ao abrir o aplicativo</string>
     <string name="last_rescan_occured">Última verificação ocorreu:</string>
     <string name="error_permission_display_over_apps">Modo janela precisa de permissões especiais para ser exibida na frente de outros apps. Por favor, conceda a Nova Video Player esta permissão para alternar para o modo de janela.</string>
     <string name="intro_overlay_text">Toque para transmitir vídeos para sua TV</string>

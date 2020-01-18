@@ -603,6 +603,9 @@
     <string name="dec_unknown">Unbekannte Dekodierung</string>
     <string name="dec_any">Standard</string>
     <string name="dec_android">Android MediaPlayer</string>
+    <string name="audio_interface_choice_title">Audio-Schnittstelle auswählen</string>
+    <string name="audio_interface_opensles">OpenSL ES erzwingen</string>
+    <string name="audio_interface_any">Standard Logik</string>
     <string name="preferences_user_interface">Benutzeroberfläche</string>
     <string name="preferences_display_resume_box_summary">Button anzeigen oder verbergen, um das neueste Video im Hauptbildschirm fortzusetzen</string>
     <string name="preferences_display_resume_box">Wiederherstellungsfeld anzeigen</string>
