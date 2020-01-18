@@ -33,7 +33,7 @@ And even more:
 - Private mode: temporarily disable playback history recording
 - Manually adjust subtitles synchronization
 - Manually adjust audio/video synchronization
-- Track what your collection and what you have watched via Trakt
+- Track your video collection and what you have watched via Trakt
 
 In case you have an issue or a request about this app, please check our Reddit support community at this address: https://www.reddit.com/r/NovaVideoPlayer
 
