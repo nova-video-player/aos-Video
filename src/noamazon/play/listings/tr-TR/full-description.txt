@@ -1,4 +1,4 @@
-Nova is an opeN sOurce Video plAyer designed for tablets, phones and AndroidTV devices available at https://github.com/nova-video-player/aos-AVP
+Nova, https://github.com/nova-video-player/aos-AVP adresinde bulunan tabletler, telefonlar ve AndroidTV cihazları için tasarlanmış bir Video Player'dir.
 
 Evrensel oynatıcı:
 Bilgisayarınızdan, sunucunuzdan (FTP, SFTP), NAS'dan (SMB, UPnP) video oynatın
