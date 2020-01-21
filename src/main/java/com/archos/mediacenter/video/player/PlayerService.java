@@ -133,6 +133,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public static final String RESUME = "resume";
     private static final String TAG = "PlayerService";
     private static final boolean DBG = false;
+
+    private static final boolean PERIODIC_BOOKMARK_SAVE = false;
+
     public static final String PLAY_INTENT = "playerservice.play";
     public static final String PAUSE_INTENT = "playerservice.pause";
     public static final String EXIT_INTENT = "playerservice.exit";
@@ -386,13 +389,15 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (DBG) Log.d(TAG, "onCreate()");
         sPlayerService = this;
         mHandler = new Handler();
-        mAutoSaveTask = new Runnable(){
-            @Override
-            public void run() {
-                saveVideoStateIfReady();
-                mHandler.postDelayed(mAutoSaveTask, AUTO_SAVE_INTERVAL);
-            }
-        };
+        if (PERIODIC_BOOKMARK_SAVE) {
+            mAutoSaveTask = new Runnable() {
+                @Override
+                public void run() {
+                    saveVideoStateIfReady();
+                    mHandler.postDelayed(mAutoSaveTask, AUTO_SAVE_INTERVAL);
+                }
+            };
+        }
         mVideoObserver = new VideoObserver(new Handler());
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -747,7 +752,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 mUpdateNextTask.setListener(null);
                 mUpdateNextTask = null;
             }
-            mHandler.removeCallbacks(mAutoSaveTask);
+            if (PERIODIC_BOOKMARK_SAVE)
+                mHandler.removeCallbacks(mAutoSaveTask);
             mPlayer.pause();
             mPlayer.stopPlayback();
             mPlayerState = PlayerState.STOPPED;
@@ -825,6 +831,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     };
 
     private void startTrakt() {
+        if (DBG) Log.d(TAG, "Trakt: startTrakt");
         if (mTraktClient != null) {
             mTraktError = false;
             mTraktLiveScrobblingEnabled = Trakt.isLiveScrobblingEnabled(mPreferences);
@@ -1055,7 +1062,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             }
             setPlayMode(mPlayMode, false); //look for next uri
             setAudioFilt();
-            mHandler.postDelayed(mAutoSaveTask, AUTO_SAVE_INTERVAL);
+            if (PERIODIC_BOOKMARK_SAVE)
+                mHandler.postDelayed(mAutoSaveTask, AUTO_SAVE_INTERVAL);
         }
     }
 
@@ -1170,6 +1178,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     @Override
     public void onPlay() {
+        if (DBG) Log.d(TAG, "onPlay");
         startTrakt();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 && ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
@@ -1183,12 +1192,15 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     @Override
     public void onPause() {
+        if (DBG) Log.d(TAG, "onPause");
         pauseTrakt();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 && ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             updateNowPlayingState();
         }
         if(mPlayerFrontend!=null){
+            // save bookmark when paused
+            saveVideoStateIfReady();
             mPlayerFrontend.onPause();
         }
     }
