@@ -1,4 +1,9 @@
+- Use Audiotrack vs. OpenSLES for audio interface improving video fluidity
+- Fix TV show Trakt progress sync
+- Disable periodic bookmark save interfering with video decoding perf over slow network shares
+- Complete Turkish & Simplified Chinese translations
+- New icon compliant with Google Play Store requirements
+- Only launch SMB discovery on local networks
 - Fix HEVC 10 bit support on Rockchip devices
 - Better extradata management for AVC and HEVC for MediaCodec
-- Prefer ffmpeg over c2.android or omx.google software codecs to avoid multimedia issues on pixel3xl phone
 - Stability enhancements

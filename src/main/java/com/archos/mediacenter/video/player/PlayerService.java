@@ -132,7 +132,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public static final int RESUME_FROM_LOCAL_POS = 4;
     public static final String RESUME = "resume";
     private static final String TAG = "PlayerService";
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
 
     private static final boolean PERIODIC_BOOKMARK_SAVE = false;
 
@@ -419,6 +419,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
 
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (DBG) Log.d(TAG, "onStartCommand");
         super.onStartCommand(intent, flags, startId);
         return START_NOT_STICKY;
     }
@@ -1012,6 +1013,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
     @Override
     public void onDestroy(){
+        // MARC DO SOMETHING ON SAVE BMRK?
         super.onDestroy();
         if(mIndexHelper!=null)
             mIndexHelper.abort();
