@@ -590,6 +590,11 @@
     <string name="dec_unknown">Neznámé dekódování</string>
     <string name="dec_any">Výchozí</string>
     <string name="dec_android">Android MediaPlayer</string>
+    <string name="audio_interface_choice_title">Vyberte zvukové rozhraní</string>
+    <string name="audio_interface_choice_summary">Rozšířené nastavení, může poškodit dekódování audia.</string>
+    <string name="audio_interface_opensles">Vynutit OpenSL ES</string>
+    <string name="audio_interface_audiotrack">Vynutit Audiotrack</string>
+    <string name="audio_interface_any">Výchozí chování</string>
     <string name="preferences_user_interface">Uživatelské rozhraní</string>
     <string name="preferences_display_resume_box_summary">Zobrazit nebo schovat tlačítko pro obnovení posledního videa na hlavní obrazovce</string>
     <string name="preferences_display_resume_box">Zobrazit panel pro obnovení</string>

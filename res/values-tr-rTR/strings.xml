@@ -263,7 +263,7 @@ izlenen bölümler %d</item>
     <string name="mediacenterlabel">Medya Merkezi</string>
     <string name="view_mode">Görüntüleme modu</string>
     <string name="view_mode_list">Liste</string>
-    <string name="view_mode_grid">Poster</string>
+    <string name="view_mode_grid">Tablo</string>
     <string name="view_mode_details">Ayrıntılar</string>
     <string name="switch_to_list">Liste</string>
     <string name="switch_to_grid">Izgara</string>

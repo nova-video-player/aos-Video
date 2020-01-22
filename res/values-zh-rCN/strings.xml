@@ -73,7 +73,7 @@
     <string name="network_storage">网络</string>
     <string name="sd_card_storage">SD 卡</string>
     <string name="usb_host_storage">外部驱动器</string>
-    <string name="other_storage">云端硬盘</string>
+    <string name="other_storage">驱动器</string>
     <string name="network_media_servers">媒体服务器 (UPnP)</string>
     <string name="network_shared_folders">共享文件夹 (SMB)</string>
     <string name="network_connected_as">连接为 %s</string>
@@ -185,7 +185,7 @@
     <string name="scrap_enable_network_first">"请先连接到网络再运行此应用程序。"</string>
     <string name="scrap_failed">在线数据库中找不到此电影。</string>
     <string name="start_auto_scraper_activity">在线搜索信息</string>
-    <string name="scraper_settigns">海报 &amp; 信息</string>
+    <string name="scraper_settigns">海报和信息</string>
     <string name="scrap_status_initial">已加入队列</string>
     <string name="scrap_status_busy">正在搜索...</string>
     <string name="scrap_status_success">已更新</string>
@@ -274,7 +274,7 @@
     <string name="pref_audio_filt_night_mode">夜间模式</string>
     <string name="ui_mode_auto">自动</string>
     <string name="ui_mode_tv">电视</string>
-    <string name="ui_mode_normal">平板电脑/电话</string>
+    <string name="ui_mode_normal">平板电脑/手机</string>
     <string name="pref_s3d_mode_title">3D 模式</string>
     <string name="pref_s3d_mode_entry_sbs">并排</string>
     <string name="pref_s3d_mode_entry_topbottom">上下</string>
@@ -479,10 +479,10 @@
     <string name="preferences_disable_downmix_summary">总是解码所有声道，并根据音频输出能力让安卓混音(可能导致声道丢失)</string>
     <string name="preferences_allow_3rd_party_player">允许使用另外的视频播放器</string>
     <string name="preferences_allow_3rd_party_player_summary">在启动视频播放时安卓系统将提示其他兼容的视频播放器。 请注意，某些功能将无法工作 (恢复播放、书签等)</string>
-    <string name="preference_tv_3d_automatic_switch">启用自动3D电视开关</string>
-    <string name="preference_tv_3d_automatic_switch_summary">仅在您的3D电视支持的情况下使用此功能</string>
+    <string name="preference_tv_3d_automatic_switch">启用自动 3D 电视开关</string>
+    <string name="preference_tv_3d_automatic_switch_summary">仅在您的 3D 电视支持的情况下使用此功能</string>
     <string name="preference_tv_refreshrate_switch">启用电视自动刷新率切换</string>
-    <string name="preference_tv_refreshrate_switch_summary">通过适应刷新率来去除抖动效果 (受TV 支持限制)</string>
+    <string name="preference_tv_refreshrate_switch_summary">通过调整刷新率来去除抖动效果 (受电视支持限制)</string>
     <string name="preference_cutout_short_edges">异形屏视频全屏</string>
     <string name="preference_cutout_short_edges_summary">允许在异形屏上进行视频横屏全屏播放</string>
     <string name="category_languages">字幕</string>
