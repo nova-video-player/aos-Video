@@ -725,6 +725,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     if (duration > 0)
                         mVideoInfo.duration = duration;
                     mVideoInfo.lastTimePlayed = Long.valueOf(System.currentTimeMillis() / 1000L);
+                    Log.d(TAG, "saveVideoStateIfReady: save bookmark at " + mVideoInfo.lastTimePlayed);
                     mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
                     startTrakt(); //this writes mVideoInfo.traktResume
                     // BootupRecommendationService is for before Android O otherwise TV channels are used
@@ -1194,13 +1195,13 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void onPause() {
         if (DBG) Log.d(TAG, "onPause");
         pauseTrakt();
+        saveVideoStateIfReady();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 && ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             updateNowPlayingState();
         }
         if(mPlayerFrontend!=null){
             // save bookmark when paused
-            saveVideoStateIfReady();
             mPlayerFrontend.onPause();
         }
     }
