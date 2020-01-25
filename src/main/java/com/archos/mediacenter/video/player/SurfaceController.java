@@ -351,6 +351,6 @@ public class SurfaceController {
 
         mView.invalidate();
 
-        Log.d(TAG, "updateSurface: " + vw + "x" + vh + " -> " + dw + "x" + dh + " / formatCrop: " + cropW + "x" + cropH + " / mEffectMode: "+mEffectMode);
+        if (DBG) Log.d(TAG, "updateSurface: " + vw + "x" + vh + " -> " + dw + "x" + dh + " / formatCrop: " + cropW + "x" + cropH + " / mEffectMode: "+mEffectMode);
     }
 }

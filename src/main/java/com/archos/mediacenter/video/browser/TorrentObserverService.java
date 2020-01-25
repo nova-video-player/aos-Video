@@ -48,7 +48,7 @@ public class TorrentObserverService extends Service{
     private boolean isDaemonRunning;
     private static Process sProcess;
     private IBinder binder ;
-    private boolean DBG = false;
+    private final static boolean DBG = false;
     private Thread mTorrentThread;
     private boolean hasToStop=false;
     private Integer mPort;
@@ -111,7 +111,7 @@ public class TorrentObserverService extends Service{
     public int onStartCommand(Intent i, int flags, int id) {
         if(i==null)
             return START_STICKY;
-        Log.d("AVP", "Got intent " + i.getAction());
+        if (DBG) Log.d(TAG, "Got intent " + i.getAction());
         if(i.getAction().equals(intentPaused)) {
             _paused();
         } else if(i.getAction().equals(intentResumed)) {
@@ -121,13 +121,13 @@ public class TorrentObserverService extends Service{
     }
 
     static public void paused(Context ctxt) {
-        Log.d("AVP", "Sending paused intent");
+        if (DBG) Log.d(TAG, "Sending paused intent");
         Intent i = new Intent(intentPaused, Uri.EMPTY, ctxt.getApplicationContext(), TorrentObserverService.class);
         ctxt.getApplicationContext().startService(i);
     }
 
     static public void resumed(Context ctxt) {
-        Log.d("AVP", "Sending resumed intent");
+        if (DBG) Log.d(TAG, "Sending resumed intent");
         Intent i = new Intent(intentResumed, Uri.EMPTY, ctxt.getApplicationContext(), TorrentObserverService.class);
         ctxt.getApplicationContext().startService(i);
     }
@@ -179,8 +179,8 @@ public class TorrentObserverService extends Service{
                         cmdArray[0] = mContext.getApplicationInfo().nativeLibraryDir +"/libtorrentd.so";
                         cmdArray[1] =  mTorrent.replace("%20", " ");  
                         cmdArray[2] = mBlockList;
-                        
-                        Log.d(TAG,"starting url "+mTorrent);
+
+                        if (DBG) Log.d(TAG,"starting url "+mTorrent);
                         //path to save torrent
                         
                         String torrentDownloadPath = TorrentPathDialogPreference.getDefaultDirectory(
@@ -208,7 +208,7 @@ public class TorrentObserverService extends Service{
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
-                                Log.d(TAG,"end of error lines");
+                                if (DBG) Log.d(TAG,"end of error lines");
                             }
                         }.start();
                         
@@ -224,12 +224,12 @@ public class TorrentObserverService extends Service{
                         isDaemonRunning=false;
                         mHasSetFiles  =false;
                     } catch(IOException io){
-                        Log.d(TAG,"IOException ", io);
+                        Log.w(TAG,"IOException ", io);
                         isDaemonRunning=false;
                         mHasSetFiles  =false;
 
                     } catch(InterruptedException io){
-                        Log.d(TAG, "InterruptedException", io);
+                        Log.w(TAG, "InterruptedException", io);
                         isDaemonRunning = false;
                         mHasSetFiles = false;
 
@@ -299,7 +299,7 @@ public class TorrentObserverService extends Service{
     }
 
     public void exitProcess(){
-        Log.d(TAG,"calling exit");
+        if (DBG) Log.d(TAG,"calling exit");
         hasToStop=true;
         try {
             Runtime.getRuntime().exec("killall -2 libtorrentd.so").waitFor();
@@ -314,7 +314,7 @@ public class TorrentObserverService extends Service{
                 sProcess.getOutputStream().close();
             }
         } catch(IOException e) {
-            Log.d("AVP", "exitProcess.close", e);
+            Log.w(TAG, "exitProcess.close", e);
         }
         files = null;
         mHasSetFiles = false;
@@ -324,7 +324,7 @@ public class TorrentObserverService extends Service{
 
 
     public static void staticExitProcess(){
-        Log.d(TAG,"calling exit");
+        if (DBG) Log.d(TAG,"calling exit");
         try {
             Runtime.getRuntime().exec("killall -2 libtorrentd.so").waitFor();
         } catch (Exception e) {
@@ -338,13 +338,13 @@ public class TorrentObserverService extends Service{
                 sProcess.getOutputStream().close();
             }
         } catch(IOException e) {
-            Log.d("AVP", "exitProcess.close", e);
+            Log.w(TAG, "exitProcess.close", e);
         }
         sProcess = null;
     }
 
     public static void killProcess(){
-        Log.d(TAG,"calling kill");
+        if (DBG) Log.d(TAG,"calling kill");
 
         try {
             Runtime.getRuntime().exec("killall -9 libtorrentd.so").waitFor();
@@ -381,13 +381,13 @@ public class TorrentObserverService extends Service{
         public void handleMessage(android.os.Message msg) {
             switch(msg.what) {
                 case MSG_QUIT:
-                    Log.d("AVP", "Quitting");
+                    if (DBG)  Log.d(TAG, "Quitting");
                     exitProcess();
                     //Give .5s to save state
                     mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_KILL), 500);
                     break;
                 case MSG_KILL:
-                    Log.d("AVP", "Killing");
+                    if (DBG) Log.d(TAG, "Killing");
                     killProcess();
                     break;
                 default:
@@ -401,7 +401,7 @@ public class TorrentObserverService extends Service{
 
     private void _paused() {
         nPause++;
-        Log.d("AVP", "_paused = " + nPause + ", nResume = " + nResume );
+        if (DBG) Log.d(TAG, "_paused = " + nPause + ", nResume = " + nResume );
         if(nPause >= nResume) {
             //Give 2s grace period
             mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_QUIT), 2000);
@@ -410,7 +410,7 @@ public class TorrentObserverService extends Service{
 
     private void _resumed() {
         nResume++;
-        Log.d("AVP", "_resumed = " + nResume + ", nPause = " + nPause);
+        if (DBG) Log.d(TAG, "_resumed = " + nResume + ", nPause = " + nPause);
         if(nResume > nPause) {
             mHandler.removeMessages(MSG_QUIT);
         }

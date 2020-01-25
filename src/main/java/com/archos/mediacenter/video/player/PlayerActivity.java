@@ -3442,21 +3442,21 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         @Override
         public void onVideoDb(final VideoDbInfo localVideoInfo, final VideoDbInfo remoteVideoInfo) {
-            Log.d(TAG, "onVideoDb: videoInfo: " + localVideoInfo);
-            Log.d(TAG, "onVideoDb: trakt: " + localVideoInfo.traktResume+ " local "+ localVideoInfo.resume);
+            if (DBG) Log.d(TAG, "onVideoDb: videoInfo: " + localVideoInfo);
+            if (DBG) Log.d(TAG, "onVideoDb: trakt: " + localVideoInfo.traktResume+ " local "+ localVideoInfo.resume);
             if (localVideoInfo != null) {
                 final int localTraktPosition = Math.abs(localVideoInfo.duration>0 ? (int)(localVideoInfo.traktResume * (double) localVideoInfo.duration / 100) : 0);
                 Log.d(TAG, "onVideoDb: trakt calc: "+ localTraktPosition+ " local "+ localVideoInfo.resume);
 
                 if (localVideoInfo != null && remoteVideoInfo != null && mResume != RESUME_NO&& mResume !=  RESUME_FROM_LOCAL_POS) {
-                    Log.d(TAG, "hasRemoteVideoInfo");
+                    if (DBG) Log.d(TAG, "hasRemoteVideoInfo");
                     int localLastPosition = getLastPosition(localVideoInfo, mResume);
                     int remoteLastPosition = getLastPosition(remoteVideoInfo, mResume);
 
                     if (localLastPosition != remoteLastPosition && remoteLastPosition > 0) {
                         //do not display dialog if remote position is the only available
                         if (localLastPosition <= 0) {
-                            Log.d(TAG, "use remoteVideoInfo");
+                            if (DBG) Log.d(TAG, "use remoteVideoInfo");
                             showTraktResumeDialog(localTraktPosition,remoteVideoInfo);
 
                         } else {
