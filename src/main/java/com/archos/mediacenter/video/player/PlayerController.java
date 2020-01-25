@@ -948,7 +948,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
      */
     private void show(int flags, int timeout) {
         if (DBG) Log.d(TAG, "show(" +flags+ ", " +timeout+")");
-        Log.d(TAG, "show(" +flags+ ", " +timeout+")");
         if (mIsStopped)
             return;
 
@@ -1117,7 +1116,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         }
                         if (mSeekComplete && isSeekPressed()) {
                             mSeekComplete = false;
-                            Log.d(TAG, "current pos is " + Player.sPlayer.getCurrentPosition() + " seek to " + mNextSeek);
+                            if (DBG) Log.d(TAG, "current pos is " + Player.sPlayer.getCurrentPosition() + " seek to " + mNextSeek);
                             Player.sPlayer.seekTo((int) mNextSeek);
                             updatePauseButton();
                         }
@@ -1133,7 +1132,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         mDragging = false;
                         if (mNextSeek > 0 && mLongSeekTime > 2 * SEEK_LONG_DELAY) {
                             mSeekComplete = false;
-                            Log.d(TAG, "current pos is " + Player.sPlayer.getCurrentPosition() + " seek to " + mNextSeek);
+                            if (DBG) Log.d(TAG, "current pos is " + Player.sPlayer.getCurrentPosition() + " seek to " + mNextSeek);
                             Player.sPlayer.seekTo((int) mNextSeek);
                             updatePauseButton();
                         }
@@ -1176,7 +1175,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                             }
                             public void onAnimationCancel(Animator animation) {}
                         });
-                        Log.d(TAG, "hidding 1");
+                        if (DBG) Log.d(TAG, "hidding 1");
                     }
                     if(mControllerViewRight!=null){
                         final View overlay2 = mControllerViewRight.findViewById(R.id.help_overlay);
@@ -1191,7 +1190,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                                 }
                                 public void onAnimationCancel(Animator animation) {}
                             });
-                            Log.d(TAG, "hidding 2");
+                            if (DBG) Log.d(TAG, "hidding 2");
                         }
                     }
             }
@@ -1318,7 +1317,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private void doPauseResume() {
         if (mIsStopped)
             return;
-        Log.d(TAG, "doPauseResume: " + Player.sPlayer.isPlaying() + " - " + mSeekWasPlaying);
+        if (DBG) Log.d(TAG, "doPauseResume: " + Player.sPlayer.isPlaying() + " - " + mSeekWasPlaying);
         if (mNextSeek != -1) {
             mSeekWasPlaying = !mSeekWasPlaying;
         } else {
