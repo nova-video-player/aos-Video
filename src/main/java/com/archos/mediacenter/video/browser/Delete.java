@@ -242,6 +242,7 @@ public class Delete {
 
     }
     public static boolean deleteFileAndAssociatedFiles(Context context, Uri fileUri) {
+        // TODO if directory do not get associate files....
         // Get list of all files (video and associated)
         List<Uri> associatedFiles = getAssociatedFiles(fileUri);
         // Do not forget to add the video file!
