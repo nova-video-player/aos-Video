@@ -132,7 +132,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public static final int RESUME_FROM_LOCAL_POS = 4;
     public static final String RESUME = "resume";
     private static final String TAG = "PlayerService";
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
 
     private static final boolean PERIODIC_BOOKMARK_SAVE = false;
 

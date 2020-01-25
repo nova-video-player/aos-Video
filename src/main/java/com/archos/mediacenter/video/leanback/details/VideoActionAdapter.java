@@ -52,6 +52,7 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
     public static final int ACTION_REMOVE_FROM_LIST = 43;
 
     private static final String TAG = "VideoActionAdapter";
+    private static final Boolean DBG = false;
 
     final Context mContext;
     private Video mCurrentVideo;
@@ -66,7 +67,7 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
      * @param isTvEpisode true if it is a tv episode
      */
     public VideoActionAdapter(Context context, Video video, boolean inPlayer, boolean displayRemoveFromList, boolean displayConfirmDelete, Episode nextEpisode, boolean isTvEpisode) {
-        Log.d(TAG, "new VideoActionAdapter");
+        if (DBG) Log.d(TAG, "new VideoActionAdapter");
         mContext = context;
         update(video, inPlayer, displayRemoveFromList, displayConfirmDelete, nextEpisode, isTvEpisode);
 
@@ -176,18 +177,18 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
     //differs from VideoDetailsFragment
     private boolean foundDifferencesRequiringDetailsUpdate(Video v1, Video v2, int oldRemoteResume) {
 
-        if (v1==null || v2==null) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate null"); return true;}
-        Log.d(TAG, "foundDifferencesRequiringDetailsUpdate remotev1"+oldRemoteResume);
-        Log.d(TAG, "foundDifferencesRequiringDetailsUpdate remotev2"+v2.getRemoteResumeMs());
-        Log.d(TAG, "foundDifferencesRequiringDetailsUpdate v2"+v2.getResumeMs());
+        if (v1==null || v2==null) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate null"); return true;}
+        if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate remotev1"+oldRemoteResume);
+        if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate remotev2"+v2.getRemoteResumeMs());
+        if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate v2"+v2.getResumeMs());
 
-        if (v1.hasScraperData() != v2.hasScraperData()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate hasScraperData"); return true;}
-        if (v1.getResumeMs() != v2.getResumeMs()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate resumeMs"); return true;}
+        if (v1.hasScraperData() != v2.hasScraperData()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate hasScraperData"); return true;}
+        if (v1.getResumeMs() != v2.getResumeMs()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate resumeMs"); return true;}
 
-        if (oldRemoteResume != v2.getRemoteResumeMs()&&v2.getRemoteResumeMs()!=v2.getResumeMs()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate resumeMs"); return true;}
-        if (v1.isWatched() != v2.isWatched()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isWatched"); return true;}
-        if (v1.isIndexed() != v2.isIndexed()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isUserHidden"); return true;}
-        if (v1.locationSupportsDelete() != v2.locationSupportsDelete()) {Log.d(TAG, "foundDifferencesRequiringDetailsUpdate subtitleCount"); return true;}
+        if (oldRemoteResume != v2.getRemoteResumeMs()&&v2.getRemoteResumeMs()!=v2.getResumeMs()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate resumeMs"); return true;}
+        if (v1.isWatched() != v2.isWatched()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isWatched"); return true;}
+        if (v1.isIndexed() != v2.isIndexed()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isUserHidden"); return true;}
+        if (v1.locationSupportsDelete() != v2.locationSupportsDelete()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate subtitleCount"); return true;}
         return false;
     }
 
@@ -214,7 +215,7 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
         mCurrentVideo = video;
         int oldRemoteResume = mCurrentRemoteResume;
         mCurrentRemoteResume = video.getRemoteResumeMs();
-        Log.d(TAG, "updateRemoteResume");
+        if (DBG) Log.d(TAG, "updateRemoteResume");
         if(!foundDifferencesRequiringDetailsUpdate(oldVideo, video, oldRemoteResume))
             return;
         if(video.getRemoteResumeMs()>0 && video.getResumeMs()!=video.getRemoteResumeMs()){

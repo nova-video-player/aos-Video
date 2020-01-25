@@ -321,9 +321,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                         ((TextView)torrent_status).setText(toDisplay);
 
                     } catch(NumberFormatException e) {
-						Log.d("AVP", "Display update", e);
+						Log.w("AVP", "Display update", e);
                     } catch(java.lang.ArrayIndexOutOfBoundsException e) {
-                        Log.d("AVP", "Display update, out of bound", e);
+                        Log.w("AVP", "Display update, out of bound", e);
                     }
                     break;
                 case MSG_SLEEP:
@@ -416,7 +416,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private ServiceConnection mPlayerServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d(TAG, "Service connected");
+            if (DBG) Log.d(TAG, "Service connected");
             if(mIsReadytoStart)
                 postOnPlayerServiceBind();
         }
@@ -447,7 +447,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     if (size != null) {
                         w = size[0];
                         h = size[1];
-                        Log.d(TAG,"intent received ludo hdmi");
+                        if (DBG) Log.d(TAG,"intent received ludo hdmi");
                         mSurfaceController.setHdmiPlugged(plugged, w, h);
                         mLudoHmdiPlugged = plugged;
                     }
@@ -504,10 +504,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 return null;
             }
         } catch (IOException ex) {
-            Log.d(TAG, "couldn't read hdmi state from " + filename + ": " + ex);
+            Log.w(TAG, "readHdmiSize: couldn't read hdmi state from " + filename + ": " + ex);
             return null;
         } catch (NumberFormatException ex) {
-            Log.d(TAG, "couldn't read hdmi state from " + filename + ": " + ex);
+            Log.w(TAG, "readHdmiSize: couldn't read hdmi state from " + filename + ": " + ex);
             return null;
         } finally {
             if (reader != null) {
@@ -772,7 +772,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart()");
+        if (DBG) Log.d(TAG, "onStart()");
         mStopped = false;
 
         unregisterNetworkReceiver();
@@ -838,7 +838,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         }
 
         mIsReadytoStart = false;
-        Log.d(TAG, "postOnPlayerServiceBind() ");
+        if (DBG) Log.d(TAG, "postOnPlayerServiceBind() ");
         Intent intent = new Intent();
         intent.putExtras(getIntent());
         intent.setData(getIntent().getData());
@@ -847,7 +847,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         Player.sPlayer = mPlayer;
         PlayerService.sPlayerService.setPlayer();
         if(mPermissionChecker.hasExternalPermission(this)) {
-            Log.d(TAG, "hasExternalPermission ");
+            if (DBG) Log.d(TAG, "hasExternalPermission ");
             PlayerService.sPlayerService.onStart(intent);
             PlayerService.sPlayerService.setIndexHelper(mIndexHelper);
             start();
@@ -934,7 +934,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             return;
         if(mTorrent!=null){
 
-            Log.d(TAG, "onStop, unbinding torrentObserver");
+            if (DBG) Log.d(TAG, "onStop, unbinding torrentObserver");
         }
 
         /*
@@ -2996,7 +2996,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         // mThumbnailDone is the state of the thread: 0: not started yet, 1: started, 2: done
         if (mThumbnailDone == 0) {
-            Log.d("XXT", "starting new Thread");
+            if (DBG) Log.d("XXT", "starting new Thread");
             mThumbnailDone = 1;
             final ContentResolver cr = getContentResolver();
             final String posterPath = mPosterPath;
@@ -3178,7 +3178,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == SUBTITLE_REQUEST && resultCode == Activity.RESULT_OK){
-            Log.d(TAG, "Get result from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
+            if (DBG) Log.d(TAG, "Get result from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
             mPlayer.checkSubtitles();
         }
     }
@@ -3236,7 +3236,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         public boolean onError(int errorCode, int errorQualCode, String msg) {
             if (isFinishing())
                 return true;
-            Log.d(TAG, "onError: " + errorCode + ", " + errorQualCode);
+            Log.w(TAG, "onError: " + errorCode + ", " + errorQualCode);
 
             if (errorCode == IMediaPlayer.MEDIA_ERROR_VE_FILE_ERROR
                     && !mPlayer.isLocalVideo()

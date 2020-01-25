@@ -278,7 +278,7 @@ public class Player implements IPlayerControl,
 
     public Player(Context context, Window window, SurfaceController surfaceController, boolean forceSoftwareDecoding) { //force software decoding is specific for floating player
         sPlayer =this;
-        Log.d(TAG, "Player");
+        if (DBG) Log.d(TAG, "Player");
         reset();
         mSurfaceHolder = null;
         mVideoTexture = null;

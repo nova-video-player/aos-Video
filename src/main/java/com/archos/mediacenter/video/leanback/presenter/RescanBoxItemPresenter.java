@@ -32,6 +32,7 @@ import java.util.List;
 public class RescanBoxItemPresenter extends BoxItemPresenter implements NetworkScannerServiceVideo.ScannerListener {
 
     private static final String TAG = "RescanBoxItemPresenter";
+    private static final Boolean DBG = false;
     /**
      * Keep track of all attached views that are animated
      * (for now there is actually only one item IRL)
@@ -86,7 +87,7 @@ public class RescanBoxItemPresenter extends BoxItemPresenter implements NetworkS
 
             // Keep track of this view and register the NetworkScanner listener if not already registered
             mAttachedAnimatedViews.add(v);
-            Log.d(TAG, "onViewAttachedToWindow "+mAttachedAnimatedViews.size());
+            if (DBG) Log.d(TAG, "onViewAttachedToWindow "+mAttachedAnimatedViews.size());
 
             if (mNetworkScannerListenerRegistered == false) {
                 NetworkScannerServiceVideo.addListener(RescanBoxItemPresenter.this);
@@ -98,13 +99,13 @@ public class RescanBoxItemPresenter extends BoxItemPresenter implements NetworkS
 
         @Override
         public void onViewDetachedFromWindow(View v) {
-            Log.d(TAG, "onViewDetachedFromWindow");
+            if (DBG) Log.d(TAG, "onViewDetachedFromWindow");
 
             v.animate().cancel();
 
             // We do not track tis view anymore, check if we still need the listener
             mAttachedAnimatedViews.remove(v);
-            Log.d(TAG, "onViewDetachedFromWindow "+mAttachedAnimatedViews.size());
+            if (DBG) Log.d(TAG, "onViewDetachedFromWindow "+mAttachedAnimatedViews.size());
             if (mAttachedAnimatedViews.isEmpty()) {
                 NetworkScannerServiceVideo.removeListener(RescanBoxItemPresenter.this);
                 mNetworkScannerListenerRegistered = false;
@@ -117,7 +118,7 @@ public class RescanBoxItemPresenter extends BoxItemPresenter implements NetworkS
      */
     @Override
     public void onScannerStateChanged() {
-        Log.d(TAG, "onScannerStateChanged "+NetworkScannerServiceVideo.isScannerAlive());
+        if (DBG) Log.d(TAG, "onScannerStateChanged "+NetworkScannerServiceVideo.isScannerAlive());
         // Update all the animated views
         for (View v : mAttachedAnimatedViews) {
             updateAnimation(v);
@@ -130,11 +131,11 @@ public class RescanBoxItemPresenter extends BoxItemPresenter implements NetworkS
      */
     private void updateAnimation(View v) {
         if (NetworkScannerServiceVideo.isScannerAlive()) {
-            Log.d(TAG, "updateAnimation start");
+            if (DBG) Log.d(TAG, "updateAnimation start");
             // HACK: the rotation is actually not infinite, but 10000 times...
             v.animate().rotationBy(360 * 10000).setDuration(1200 * 10000).setInterpolator(null).start(); // 1,2sec rotation period
         } else {
-            Log.d(TAG, "updateAnimation stop");
+            if (DBG) Log.d(TAG, "updateAnimation stop");
             v.animate().cancel();
         }
     }

@@ -39,6 +39,7 @@ public class VideoMetadata implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private static final String TAG = "VideoMetadata";
+    private static final Boolean DBG = false;
 
     private File mFile;
     private String mRemotePath;
@@ -241,7 +242,7 @@ public class VideoMetadata implements Serializable {
                 retriever.setDataSource(mRemotePath);
             mFileSize = getMetadataRetrieverLong(retriever, IMediaMetadataRetriever.METADATA_KEY_FILE_SIZE);
             nbTrack = getMetadataRetrieverInt(retriever, IMediaMetadataRetriever.METADATA_KEY_NB_VIDEO_TRACK);
-            Log.d(TAG, "nbTrack: " + nbTrack);
+            if (DBG) Log.d(TAG, "nbTrack: " + nbTrack);
             if (nbTrack > 0)
                 mVideoTrack = new VideoTrack(retriever);
             nbTrack = getMetadataRetrieverInt(retriever, IMediaMetadataRetriever.METADATA_KEY_NB_AUDIO_TRACK);
@@ -346,7 +347,7 @@ public class VideoMetadata implements Serializable {
         try {
             return Integer.parseInt(retriever.extractMetadata(key));
         } catch (NumberFormatException e) {
-            Log.d(TAG, "key (" +key+ ") is null");
+            Log.w(TAG, "getMetadataRetrieverInt: key (" +key+ ") is null");
         }
         return 0;
     }
@@ -355,7 +356,7 @@ public class VideoMetadata implements Serializable {
         try {
             return Long.parseLong(retriever.extractMetadata(key));
         } catch (NumberFormatException e) {
-            Log.d(TAG, "key (" +key+ ") is null");
+            Log.w(TAG, "getMetadataRetrieverLong: key (" +key+ ") is null");
         }
         return 0;
     }
