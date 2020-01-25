@@ -642,9 +642,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
 
     private void setCurrentVideo(Video video){
-        if (DBG) Log.d(TAG, "setCurrentVideo: " + video.getFilePath());
         updateWatchedStatus(); //independant of current video
-        Log.d(TAG, "setCurrentVideo: mCurrentVideo.getFilePath()=" + ((mCurrentVideo!=null) ? mCurrentVideo.getFilePath() : "null"));
+        if (DBG) Log.d(TAG, "setCurrentVideo: mCurrentVideo.getFilePath()=" + ((mCurrentVideo!=null) ? mCurrentVideo.getFilePath() : "null"));
         if(shouldChangeVideo(mCurrentVideo, video)) {
             if (DBG) Log.d(TAG, "setCurrentVideo: should change video");
             mTitleBar.getMenu().clear();

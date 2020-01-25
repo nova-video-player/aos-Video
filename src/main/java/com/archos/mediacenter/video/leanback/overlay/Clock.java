@@ -35,6 +35,7 @@ import java.util.Date;
 public class Clock {
 
     private static final String TAG = "Clock";
+    private final static boolean DBG = false;
 
     final Context mContext;
     final private TextView mClockTextView;
@@ -75,7 +76,7 @@ public class Clock {
     final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "onReceive " + intent);
+            if (DBG) Log.d(TAG, "onReceive " + intent);
             updateClock();
         }
     };
