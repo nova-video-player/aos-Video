@@ -52,6 +52,7 @@ public class AllMoviesIconBuilder {
             VideoStore.Video.VideoColumns.SCRAPER_COVER + " IS NOT NULL";
 
     private static final String TAG = "AllMoviesIconManager";
+    private static final Boolean DBG = false;
     final Context mContext;
     final int mWidth;
     final int mHeight;
@@ -76,7 +77,7 @@ public class AllMoviesIconBuilder {
 
         long endThread = SystemClock.currentThreadTimeMillis();
         long end = SystemClock.elapsedRealtime();
-        Log.d(TAG, "buildNewBitmap took "+(endThread-startThread)+" | "+(end-start));
+        if (DBG) Log.d(TAG, "buildNewBitmap took "+(endThread-startThread)+" | "+(end-start));
         return bitmap;
     }
 
@@ -84,7 +85,7 @@ public class AllMoviesIconBuilder {
         List<String> posters = getPostersList(cr);
 
         if (posters.size() == 0) {
-            Log.d(TAG, "not enough movies with poster to build the icon");
+            if (DBG) Log.d(TAG, "not enough movies with poster to build the icon");
             return null;
         }
 

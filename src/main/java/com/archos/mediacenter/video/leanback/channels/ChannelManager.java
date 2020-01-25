@@ -57,6 +57,7 @@ import java.util.LinkedHashMap;
 public class ChannelManager {
 
     private static final String TAG = "ChannelManager";
+    private static final Boolean DBG = false;
     private static final int MAX_PROGRAM_COUNT = 20;
 
     private static ChannelManager mInstance;
@@ -392,7 +393,7 @@ public class ChannelManager {
         protected Void doInBackground(ChannelData... params) {
             ChannelData channel = params[0];
 
-            Log.d(TAG, "Refreshing " + channel.getName());
+            if (DBG) Log.d(TAG, "Refreshing " + channel.getName());
 
             boolean isVisible = isChannelVisible(channel);
 
@@ -551,7 +552,7 @@ public class ChannelManager {
                     
                     Uri uri = mContext.getContentResolver().insert(TvContractCompat.PreviewPrograms.CONTENT_URI, builder.build().toContentValues());
                     
-                    Log.d(TAG, "Adding " + title);
+                    if (DBG) Log.d(TAG, "Adding " + title);
 
                     count++;
                 }
