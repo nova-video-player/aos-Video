@@ -133,7 +133,7 @@ import com.archos.mediascraper.ScraperTrailer;
 import com.archos.mediascraper.ShowTags;
 
 import com.archos.mediascraper.VideoTags;
-import com.archos.mediascraper.xml.MovieScraper2;
+import com.archos.mediascraper.xml.MovieScraper3;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -1844,7 +1844,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             final long onlineId = tags.getOnlineId();
             //if (DBG) Log.d(TAG, "tags.getOnlineId() = " + onlineId);
             if (onlineId > 0) {
-                final String language = MovieScraper2.getLanguage(getActivity());
+                final String language = MovieScraper3.getLanguage(getActivity());
                 list.add(String.format(getResources().getString(R.string.tmdb_title_url), onlineId, language));
             }
         }

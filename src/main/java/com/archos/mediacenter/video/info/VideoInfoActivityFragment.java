@@ -111,7 +111,7 @@ import com.archos.mediascraper.NfoWriter;
 import com.archos.mediascraper.ScraperTrailer;
 import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.VideoTags;
-import com.archos.mediascraper.xml.MovieScraper2;
+import com.archos.mediascraper.xml.MovieScraper3;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -1055,7 +1055,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         }else if(view == mTMDBIcon){
 
             // Format TMDB URL with movie ID and preferred language
-            final String language = MovieScraper2.getLanguage(getActivity());
+            final String language = MovieScraper3.getLanguage(getActivity());
             final String tmdbUrl = String.format(getResources().getString(R.string.tmdb_title_url), mTMDBId, language);
             // Breaks AndroidTV acceptance
             Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(tmdbUrl));
