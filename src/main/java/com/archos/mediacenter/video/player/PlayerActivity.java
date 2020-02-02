@@ -570,7 +570,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
          * transparent background for archos devices
          * (hide black bars on TVOUT)
          */
-        getWindow().setBackgroundDrawable(new ColorDrawable(0xFF000000));
+        // needed on Bravia for HDR content to avoid grey bars cf. issue #270
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         setContentView(R.layout.player);
         mRootView = findViewById(R.id.root);
@@ -584,6 +585,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     if (DBG) Log.d(TAG, "setOnApplyWindowInsetsListener");
                     setCutoutMetrics();
                     getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
+                    // needed on Bravia for HDR content to avoid grey bars cf. issue #270
+                    getWindow().getDecorView().setBackgroundColor(Color.TRANSPARENT);
                     return view.onApplyWindowInsets(insets);
                 }
             });
