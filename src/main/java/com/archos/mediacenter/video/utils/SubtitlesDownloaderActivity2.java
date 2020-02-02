@@ -60,12 +60,14 @@ import com.archos.mediaprovider.ArchosMediaIntent;
 import com.archos.mediaprovider.video.VideoStore;
 import com.github.wtekiela.opensub4j.api.OpenSubtitlesClient;
 import com.github.wtekiela.opensub4j.impl.OpenSubtitlesClientImpl;
+import com.github.wtekiela.opensub4j.response.Response;
+import com.github.wtekiela.opensub4j.response.SubtitleInfo;
 
+import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
 import de.timroes.axmlrpc.XMLRPCClient;
 import de.timroes.axmlrpc.XMLRPCException;
-import okhttp3.Response;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -90,11 +92,13 @@ public class SubtitlesDownloaderActivity2 extends Activity{
     public static final String FILE_NAMES = "fileNames"; //friendly name for Upnp
     public static final String FILE_SIZES = "fileSizes";
 
-    private final String TAG = "SubtitlesDownloaderActivity2";
+    private static final String TAG = SubtitlesDownloaderActivity2.class.getSimpleName();
+    private static final boolean DBG = true;
+
     //to distinguished program dismiss and users
     private boolean mDoNotFinish;
     private final String OpenSubtitlesAPIUrl = "https://api.opensubtitles.org/xml-rpc";
-    private final String USER_AGENT = "ArchosMediaCenter";
+    private final String USER_AGENT = "NovaVideoPlayer";
     private SharedPreferences sharedPreferences;
     private File subsDir;
     Handler mHandler;
@@ -121,7 +125,7 @@ public class SubtitlesDownloaderActivity2 extends Activity{
     private static final int THIRD_PASS = 2;
 
     private static URL serverUrl;
-    private static OpenSubtitlesClient client;
+    private static OpenSubtitlesClient osClient;
     private final static int CONNECTION_TIMOUT = 100;
     private final static int REPLY_TIMOUT = 100;
 
@@ -146,7 +150,7 @@ public class SubtitlesDownloaderActivity2 extends Activity{
         config.setConnectionTimeout(CONNECTION_TIMOUT);
         config.setReplyTimeout(REPLY_TIMOUT);
         config.setGzipCompressing(true);
-        client = new OpenSubtitlesClientImpl(config);
+        osClient = new OpenSubtitlesClientImpl(config);
 
         mHandler = new Handler(getMainLooper());
         mIndexableUri = new HashMap<>();
@@ -352,28 +356,21 @@ public class SubtitlesDownloaderActivity2 extends Activity{
         /**************************************************
          *        OpenSubtitles framework
          *************************************************/
-        @SuppressWarnings("unchecked")
         public boolean logIn() {
-
-            /*
             // logging in
-            Response response = osClient.login("username", "password", "en", "TemporaryUserAgent");
-
-            // checking login status
-            response.getStatus();
-            osClient.isLoggedIn();
-             */
-
             try {
-                URL url = new URL(OpenSubtitlesAPIUrl);
-                client = new XMLRPCClient(url);
-            } catch (MalformedURLException e) {
-                Log.e(TAG, "logIn: caught MalformedURLException");
-            }
-            try {
-                map = ((HashMap<String, Object>) client.call("LogIn","","","fre",USER_AGENT));
-                token = (String) map.get("token");
-            } catch (XMLRPCException e) {
+                Response response = osClient.login("", "", "en", USER_AGENT);
+                if (!osClient.isLoggedIn()) {
+                    if (mDialog != null) {
+                        mDoNotFinish = true;
+                        mDialog.dismiss();
+                    }
+                    Log.e(TAG, "logIn: cannot login!");
+                    stop = true;
+                    return false;
+                }
+                return true;
+            } catch (XmlRpcException e) {
                 displayToast(getString(R.string.toast_subloader_service_unreachable));
                 if (mDialog != null) {
                     mDoNotFinish = true;
@@ -381,8 +378,8 @@ public class SubtitlesDownloaderActivity2 extends Activity{
                 }
                 stop = true;
                 return false;
-            } catch (Throwable e){ //for various service outages
-                e.printStackTrace();
+            } catch (Throwable e) { //for various service outages
+                Log.e(TAG, "logIn: caught exception",e);
                 displayToast(getString(R.string.toast_subloader_service_unreachable));
                 if (mDialog != null) {
                     mDoNotFinish = true;
@@ -391,39 +388,17 @@ public class SubtitlesDownloaderActivity2 extends Activity{
                 stop = true;
                 return false;
             }
-            map = null;
-            return true;
         }
 
-        @SuppressWarnings("unchecked")
         public void logOut() {
-            if (token == null)
+            if (osClient == null)
                 return;
             try {
-                map = ((HashMap<String, Object>)  client.call("LogOut", token));
-            } catch (XMLRPCException e1) {
-                e1.printStackTrace();
-                Log.w("subtitles", "XMLRPCException");
+                if (osClient.isLoggedIn()) osClient.logout();
+            } catch (XmlRpcException e1) {
+                Log.e(TAG, "logOut: caught XMLRPCException");
             } catch (Throwable e){ //for various service outages
-                e.printStackTrace();
-            }
-            token = null;
-            map = null;
-            return;
-        }
-
-        //WebService to use for checking session validity
-        @SuppressWarnings("unchecked")
-        public void keepAlive() {
-            if (token == null)
-                return;
-            try {
-                map = ((HashMap<String, Object>)  client.call("NoOperation", token));
-            } catch (XMLRPCException e1) {
-                e1.printStackTrace();
-                Log.w("subtitles", "XMLRPCException");
-            } catch (Throwable e){ //for various service outages
-                e.printStackTrace();
+                Log.e(TAG, "logOut: caught Exception");
             }
             return;
         }
@@ -448,6 +423,7 @@ public class SubtitlesDownloaderActivity2 extends Activity{
             }
             stop = false;
             boolean single = fileUrls.size() == 1;
+            // TODO MARC HERE:
             ArrayList<String> notFoundFiles = new ArrayList<String>();
             HashMap<String, String> index = new HashMap<String, String>();
             final HashMap<String, ArrayList<String>> success = new HashMap<String, ArrayList<String>>();
@@ -456,6 +432,7 @@ public class SubtitlesDownloaderActivity2 extends Activity{
             videoSearchList = prepareRequestList(fileUrls, languages, index, FIRST_PASS);
             Object[] subtitleMaps = null;
             try {
+                // TODO MARC HERE SEACH
                 map = (HashMap<String, Object>) client.call("SearchSubtitles", token, videoSearchList);
             } catch (Throwable e) { //for various service outages
                 Log.e("subs", "errrr", e);
@@ -517,6 +494,7 @@ public class SubtitlesDownloaderActivity2 extends Activity{
             if (!isCancelled() && !notFoundFiles.isEmpty() && 
                     !(videoSearchList = prepareRequestList(notFoundFiles, languages, index, SECOND_PASS)).isEmpty()) {
                 try {
+                    // TODO MARC HERE SEACH
                     map = (HashMap<String, Object>) client.call("SearchSubtitles", token,
                             videoSearchList);
                 } catch (Throwable e) { //for various service outages
@@ -585,6 +563,7 @@ public class SubtitlesDownloaderActivity2 extends Activity{
             if (!isCancelled() &&single&& !notFoundFiles.isEmpty() &&
                     !(videoSearchList = prepareRequestList(notFoundFiles, languages, index, THIRD_PASS)).isEmpty()) {
                 try {
+                    // TODO MARC HERE SEACH
                     map = (HashMap<String, Object>) client.call("SearchSubtitles", token,
                             videoSearchList);
                 } catch (Throwable e) { //for various service outages
