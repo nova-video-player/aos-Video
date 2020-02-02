@@ -58,9 +58,14 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
 import com.archos.mediaprovider.ArchosMediaIntent;
 import com.archos.mediaprovider.video.VideoStore;
+import com.github.wtekiela.opensub4j.api.OpenSubtitlesClient;
+import com.github.wtekiela.opensub4j.impl.OpenSubtitlesClientImpl;
+
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
 import de.timroes.axmlrpc.XMLRPCClient;
 import de.timroes.axmlrpc.XMLRPCException;
+import okhttp3.Response;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -115,6 +120,11 @@ public class SubtitlesDownloaderActivity2 extends Activity{
     private static final int SECOND_PASS = 1;
     private static final int THIRD_PASS = 2;
 
+    private static URL serverUrl;
+    private static OpenSubtitlesClient client;
+    private final static int CONNECTION_TIMOUT = 100;
+    private final static int REPLY_TIMOUT = 100;
+
     private static class NonConfigurationInstance {
         public ProgressDialog progressDialog;
         public AlertDialog sumUpDialog;
@@ -124,6 +134,19 @@ public class SubtitlesDownloaderActivity2 extends Activity{
     @Override
     public void onStart() {
         super.onStart();
+
+        try {
+            serverUrl = new URL("https", "api.opensubtitles.org", 443, "/xml-rpc");
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "onStart: MalformedURLException on opensubtitles server url!");
+        }
+
+        XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
+        config.setServerURL(serverUrl);
+        config.setConnectionTimeout(CONNECTION_TIMOUT);
+        config.setReplyTimeout(REPLY_TIMOUT);
+        config.setGzipCompressing(true);
+        client = new OpenSubtitlesClientImpl(config);
 
         mHandler = new Handler(getMainLooper());
         mIndexableUri = new HashMap<>();
@@ -331,6 +354,16 @@ public class SubtitlesDownloaderActivity2 extends Activity{
          *************************************************/
         @SuppressWarnings("unchecked")
         public boolean logIn() {
+
+            /*
+            // logging in
+            Response response = osClient.login("username", "password", "en", "TemporaryUserAgent");
+
+            // checking login status
+            response.getStatus();
+            osClient.isLoggedIn();
+             */
+
             try {
                 URL url = new URL(OpenSubtitlesAPIUrl);
                 client = new XMLRPCClient(url);
