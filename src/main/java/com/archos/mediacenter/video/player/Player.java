@@ -938,7 +938,7 @@ public class Player implements IPlayerControl,
                     if (DBG) Log.d(TAG, "supported rate is " + f);
                     float dif = Math.abs(wantedFps * (int) ((f/wantedFps)+.5) - f); // dif=|round(f/w)*w-f| round for closest integer
                     if (wantedFps - f < .1f && dif < REFRESH_RATE_EPSILON) { // f>=w and dif<epsilon
-                        if (dif < res) { // implies that only min of closest match is selected (not highest refresh rate)
+                        if (dif <= res) { // <= to match the closest highest refresh rate that is an integer multiple of the framerate
                             res = dif;
                             mWaitForNewRate = true;
                             numberRetries = NUMBER_RETRIES;
