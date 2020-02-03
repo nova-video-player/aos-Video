@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.player;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
+import android.hardware.display.DisplayManager;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -32,6 +33,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
+import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.medialib.IMediaPlayer;
@@ -45,6 +47,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import android.view.Display.Mode;
+import android.widget.Toast;
 
 /**
  * Displays a video file.  The PlayerView class
@@ -66,7 +69,7 @@ public class Player implements IPlayerControl,
                                SurfaceHolder.Callback,
                                TextureView.SurfaceTextureListener{
     private static String TAG = "Player";
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
     public static Player sPlayer;
     // settable by the client
     private Uri         mUri;
@@ -117,6 +120,9 @@ public class Player implements IPlayerControl,
     private boolean     mIsLocalVideo;
     private boolean     mIsTorrent;
     private boolean     mWaitForNewRate;
+    private final int   NUMBER_RETRIES = 5;
+    private int         numberRetries = NUMBER_RETRIES;
+    private static final float REFRESH_RATE_EPSILON = 0.01f;
     private float       mRefreshRate;
     private Window      mWindow;
     private AudioManager mAudioManager;
@@ -156,12 +162,18 @@ public class Player implements IPlayerControl,
                         View v = mWindow.getDecorView();
                         Display d = v.getDisplay();
                         float currentRefreshRate = d.getRefreshRate();
-                        if (Math.abs(mRefreshRate - currentRefreshRate) > .1) {
-                            if (DBG) Log.d(TAG, "current refresh rate is " + currentRefreshRate + " trying to switch to " + mRefreshRate);
-                            mHandler.postDelayed(mRefreshRateCheckerAsync, 200);
-                            return;
+                        if (numberRetries > 0) { // only try NUMBER_RETRIES
+                            if (Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
+                                if (DBG) Log.d(TAG, "current refresh rate is " + currentRefreshRate + " trying to switch to " + mRefreshRate);
+                                numberRetries--;
+                                mHandler.postDelayed(mRefreshRateCheckerAsync, 200);
+                                return;
+                            }
+                            if (DBG) Log.d(TAG, "refresh rate before video start is " + currentRefreshRate);
+                        } else {
+                            Log.w(TAG, "Failed to set refreshRate to " + mRefreshRate + " it is still " + currentRefreshRate);
+                            Toast.makeText(mContext, R.string.refreshrate_failed, Toast.LENGTH_SHORT).show();
                         }
-                        if (DBG) Log.d(TAG, "refresh rate before video start is " + currentRefreshRate);
                     }
                 }
 
@@ -894,7 +906,7 @@ public class Player implements IPlayerControl,
 
         mResumeCtx.onPrepared();
 
-        boolean  refreshRateSwitchEnabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_ACTIVATE_REFRESHRATE_SWITCH, false);
+        boolean refreshRateSwitchEnabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_ACTIVATE_REFRESHRATE_SWITCH, false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP&&mWindow!=null && refreshRateSwitchEnabled) {
             VideoMetadata.VideoTrack video = mVideoMetadata.getVideoTrack();
 
@@ -902,13 +914,16 @@ public class Player implements IPlayerControl,
             Display d = v.getDisplay();
             float[] rates = d.getSupportedRefreshRates();
             Arrays.sort(rates);
+            if (DBG)
+                for (float r : rates)
+                    Log.d(TAG, "Display supported refresh rate " + r);
             LayoutParams lp = mWindow.getAttributes();
 
             if (Build.VERSION.SDK_INT >= 23) {
                 Mode[] modes = d.getSupportedModes();
-                for (Mode m : modes) {
-                    if (DBG) Log.d(TAG, "Display supported mode " + m);
-                }
+                if (DBG)
+                    for (Mode m : modes)
+                        Log.d(TAG, "Display supported mode " + m);
             }
 
             // octave style v=23.976; r=[23.976 24 25 29.97 30 50 59.94 60]; [ abs(v*floor(r/v+0.5)-r); abs(v-r) ]
@@ -922,16 +937,18 @@ public class Player implements IPlayerControl,
                 for (float f :rates) {
                     if (DBG) Log.d(TAG, "supported rate is " + f);
                     float dif = Math.abs(wantedFps * (int) ((f/wantedFps)+.5) - f); // dif=|round(f/w)*w-f| round for closest integer
-                    if (wantedFps - f < .1 && dif < .1) { // f>=w and dif<0.1
+                    if (wantedFps - f < .1f && dif < REFRESH_RATE_EPSILON) { // f>=w and dif<epsilon
                         if (dif < res) { // implies that only min of closest match is selected (not highest refresh rate)
                             res = dif;
                             mWaitForNewRate = true;
+                            numberRetries = NUMBER_RETRIES;
                             mRefreshRate = f;
                             lp.preferredRefreshRate = mRefreshRate;
                             if (DBG) Log.d(TAG, "currently chosen refresh rate is " + mRefreshRate + " wanted fps was " + wantedFps);
                         }
                     }
                 }
+                // apply new refresh rate
                 mWindow.setAttributes(lp);
             }
         }
