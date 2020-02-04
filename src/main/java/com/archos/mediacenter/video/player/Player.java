@@ -907,52 +907,72 @@ public class Player implements IPlayerControl,
         mResumeCtx.onPrepared();
 
         boolean refreshRateSwitchEnabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_ACTIVATE_REFRESHRATE_SWITCH, false);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP&&mWindow!=null && refreshRateSwitchEnabled) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mWindow != null && refreshRateSwitchEnabled) {
             VideoMetadata.VideoTrack video = mVideoMetadata.getVideoTrack();
 
             View v = mWindow.getDecorView();
             Display d = v.getDisplay();
-            float[] rates = d.getSupportedRefreshRates();
-            Arrays.sort(rates);
-            if (DBG)
-                for (float r : rates)
-                    Log.d(TAG, "Display supported refresh rate " + r);
             LayoutParams lp = mWindow.getAttributes();
-
-            if (Build.VERSION.SDK_INT >= 23) {
-                Mode[] modes = d.getSupportedModes();
-                if (DBG)
-                    for (Mode m : modes)
-                        Log.d(TAG, "Display supported mode " + m);
-            }
-
-            // octave style v=23.976; r=[23.976 24 25 29.97 30 50 59.94 60]; [ abs(v*floor(r/v+0.5)-r); abs(v-r) ]
-            // Algorithm proposed: v=video rate, RR={r supported rates by TV}, d_r=abs(v*floor(r/v+0.5)-r) (diff wrt multiple of r)
-            // rate selected is r=argmin_{r in RR}(d_r) and in case of multiple same results the lowest match is selected (dif<res and not dif<=res below)
             mWaitForNewRate = false;
-            mRefreshRate = 0f;
             if (lp != null && video != null && video.fpsRate > 0 && video.fpsScale > 0) {
                 float wantedFps = (float) ((double) video.fpsRate / (double) video.fpsScale);
-                float res = Float.MAX_VALUE;
-                for (float f :rates) {
-                    if (DBG) Log.d(TAG, "supported rate is " + f);
-                    float dif = Math.abs(wantedFps * (int) ((f/wantedFps)+.5) - f); // dif=|round(f/w)*w-f| round for closest integer
-                    if (wantedFps - f < .1f && dif < REFRESH_RATE_EPSILON) { // f>=w and dif<epsilon
-                        if (dif <= res) { // <= to match the closest highest refresh rate that is an integer multiple of the framerate
-                            res = dif;
+                if (Build.VERSION.SDK_INT >= 23) { // select display mode of highest refresh rate matching 0 modulo fps
+                    Display.Mode[] supportedModes = d.getSupportedModes();
+                    Display.Mode currentMode = d.getMode();
+                    int currentModeId = currentMode.getModeId();
+                    if (DBG) {
+                        Log.d(TAG, "Current display mode is " + currentMode);
+                        for (Mode mode : supportedModes)
+                            Log.d(TAG, "Display supported mode " + mode);
+                    }
+                    int wantedModeId = 0;
+                    // find corresponding wantedModeId for wantedFps
+                    Mode sM;
+                    for (int i = 0; i < supportedModes.length; i++) {
+                        sM = supportedModes[i];
+                        //if (sM.matches(currentMode.getPhysicalWidth(), currentMode.getPhysicalHeight(), wantedFps)) {
+                        if (sM.getPhysicalHeight() == currentMode.getPhysicalWidth() &&
+                                sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
+                                Math.abs(sM.getRefreshRate() - wantedFps) < REFRESH_RATE_EPSILON) {
+                            wantedModeId = sM.getModeId();
+                        }
+                    }
+                    if (wantedModeId != 0 && wantedModeId != currentModeId) {
+                        // apply new display mode
+                        mWaitForNewRate = true;
+                        numberRetries = NUMBER_RETRIES;
+                        lp.preferredDisplayModeId = wantedModeId;
+                        mWindow.setAttributes(lp);
+                    }
+                } else { // select highest refresh rate matching 0 modulo fps
+                    float[] supportedRates = d.getSupportedRefreshRates();
+                    float currentRefreshRate = d.getRefreshRate();
+                    Arrays.sort(supportedRates);
+                    if (DBG)
+                        for (float r : supportedRates)
+                            Log.d(TAG, "Display supported refresh rate " + r);
+                    mRefreshRate = 0f;
+                    // octave style v=23.976; r=[23.976 24 25 29.97 30 50 59.94 60]; [abs(t%v)]
+                    mRefreshRate = 0;
+                    for (float rate : supportedRates) {
+                        if (DBG) Log.d(TAG, "supported rate is " + rate);
+                        if (Math.abs(rate % wantedFps) < REFRESH_RATE_EPSILON) { // is rate a multiple of wantedFps?
+                            if (rate > mRefreshRate) mRefreshRate = rate;
+                            if (DBG)
+                                Log.d(TAG, "currently chosen refresh rate is " + mRefreshRate + " wanted fps was " + wantedFps);
+                        }
+                        if (Math.abs(mRefreshRate) > 0 && Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
+                            // apply new refresh rate
                             mWaitForNewRate = true;
                             numberRetries = NUMBER_RETRIES;
-                            mRefreshRate = f;
                             lp.preferredRefreshRate = mRefreshRate;
-                            if (DBG) Log.d(TAG, "currently chosen refresh rate is " + mRefreshRate + " wanted fps was " + wantedFps);
+                            mWindow.setAttributes(lp);
                         }
                     }
                 }
-                // apply new refresh rate
-                mWindow.setAttributes(lp);
             }
+            mHandler.post(mRefreshRateCheckerAsync);
         }
-        mHandler.post(mRefreshRateCheckerAsync);
     }
 
     public void onCompletion(IMediaPlayer mp) {
