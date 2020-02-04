@@ -120,6 +120,8 @@ android {
         abortOnError false
     }
     packagingOptions {
+        exclude 'META-INF/*.kotlin_module'
+        exclude 'META-INF/*.version'
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
@@ -127,7 +129,15 @@ android {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/beans.xml'
         exclude 'META-INF/maven'
+        exclude 'META-INF/services/**'
         exclude 'README'
+        exclude 'com/**'
+        exclude 'jcifs2/**'
+        exclude 'kotlin/**'
+        exclude 'okhttp3/**'
+        exclude 'org/**'
+        exclude '**/*.txt'
+        exclude '**/*.xml'
         pickFirst 'lib/x86/libnativehelper.so'
         pickFirst 'lib/x86_64/libnativehelper.so'
         pickFirst 'lib/armeabi-v7a/libnativehelper.so'
