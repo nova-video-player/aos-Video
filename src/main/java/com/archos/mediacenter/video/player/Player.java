@@ -162,6 +162,7 @@ public class Player implements IPlayerControl,
                         View v = mWindow.getDecorView();
                         Display d = v.getDisplay();
                         float currentRefreshRate = d.getRefreshRate();
+                        // TODO MARC change this logic that is not API23!!!!!
                         if (numberRetries > 0) { // only try NUMBER_RETRIES
                             if (Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
                                 if (DBG) Log.d(TAG, "current refresh rate is " + currentRefreshRate + " trying to switch to " + mRefreshRate);
@@ -915,7 +916,9 @@ public class Player implements IPlayerControl,
             LayoutParams lp = mWindow.getAttributes();
             mWaitForNewRate = false;
             if (lp != null && video != null && video.fpsRate > 0 && video.fpsScale > 0) {
+                if (DBG) Log.d(TAG, "video.fpsRate=" + video.fpsRate + ", video.fpsScale=" + video.fpsScale);
                 float wantedFps = (float) ((double) video.fpsRate / (double) video.fpsScale);
+                if (DBG) Log.d(TAG, "wantedFps=" + wantedFps);
                 if (Build.VERSION.SDK_INT >= 23) { // select display mode of highest refresh rate matching 0 modulo fps
                     Display.Mode[] supportedModes = d.getSupportedModes();
                     Display.Mode currentMode = d.getMode();
@@ -926,15 +929,18 @@ public class Player implements IPlayerControl,
                             Log.d(TAG, "Display supported mode " + mode);
                     }
                     int wantedModeId = 0;
+                    float wantedRefreshRate = 0;
                     // find corresponding wantedModeId for wantedFps
                     Mode sM;
                     for (int i = 0; i < supportedModes.length; i++) {
                         sM = supportedModes[i];
+                        if (DBG) Log.d(TAG, "Math.abs(sM.getRefreshRate() % wantedFps)=" + Math.abs(sM.getRefreshRate() % wantedFps));
                         //if (sM.matches(currentMode.getPhysicalWidth(), currentMode.getPhysicalHeight(), wantedFps)) {
-                        if (sM.getPhysicalHeight() == currentMode.getPhysicalWidth() &&
+                        if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth()  &&
                                 sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
-                                Math.abs(sM.getRefreshRate() - wantedFps) < REFRESH_RATE_EPSILON) {
-                            wantedModeId = sM.getModeId();
+                                (Math.abs(sM.getRefreshRate() % wantedFps) < REFRESH_RATE_EPSILON || Math.abs((sM.getRefreshRate() % wantedFps) - wantedFps) < REFRESH_RATE_EPSILON)) {
+                            if (sM.getRefreshRate() > wantedRefreshRate) wantedModeId = sM.getModeId();
+                            if (DBG) Log.d(TAG, "currently chosen modeId is " + wantedModeId + " for " + sM.getRefreshRate() + " refreshrate and wanted fps was " + wantedFps);
                         }
                     }
                     if (wantedModeId != 0 && wantedModeId != currentModeId) {
@@ -956,7 +962,7 @@ public class Player implements IPlayerControl,
                     mRefreshRate = 0;
                     for (float rate : supportedRates) {
                         if (DBG) Log.d(TAG, "supported rate is " + rate);
-                        if (Math.abs(rate % wantedFps) < REFRESH_RATE_EPSILON) { // is rate a multiple of wantedFps?
+                        if (Math.abs(rate % wantedFps) < REFRESH_RATE_EPSILON || Math.abs((rate % wantedFps) - wantedFps) < REFRESH_RATE_EPSILON) { // is rate a multiple of wantedFps?
                             if (rate > mRefreshRate) mRefreshRate = rate;
                             if (DBG)
                                 Log.d(TAG, "currently chosen refresh rate is " + mRefreshRate + " wanted fps was " + wantedFps);
