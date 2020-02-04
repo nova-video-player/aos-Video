@@ -124,6 +124,7 @@ public class Player implements IPlayerControl,
     private int         numberRetries = NUMBER_RETRIES;
     private static final float REFRESH_RATE_EPSILON = 0.01f;
     private float       mRefreshRate;
+    private int         wantedModeId;
     private Window      mWindow;
     private AudioManager mAudioManager;
  
@@ -157,20 +158,38 @@ public class Player implements IPlayerControl,
     private Runnable mRefreshRateCheckerAsync =  new Runnable() {
         public void run() {
             if (mCurrentState == STATE_PREPARED) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    if (mWaitForNewRate) {
-                        View v = mWindow.getDecorView();
-                        Display d = v.getDisplay();
-                        float currentRefreshRate = d.getRefreshRate();
-                        // TODO MARC change this logic that is not API23!!!!!
+                if (mWaitForNewRate) {
+                    View v = mWindow.getDecorView();
+                    Display d = v.getDisplay();
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        Display.Mode currentMode = d.getMode();
+                        int currentModeId = currentMode.getModeId();
                         if (numberRetries > 0) { // only try NUMBER_RETRIES
-                            if (Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
-                                if (DBG) Log.d(TAG, "current refresh rate is " + currentRefreshRate + " trying to switch to " + mRefreshRate);
+                            if (currentModeId != wantedModeId) {
+                                if (DBG)
+                                    Log.d(TAG, "current modeId rate is " + currentModeId + " trying to switch to " + wantedModeId);
                                 numberRetries--;
                                 mHandler.postDelayed(mRefreshRateCheckerAsync, 200);
                                 return;
                             }
-                            if (DBG) Log.d(TAG, "refresh rate before video start is " + currentRefreshRate);
+                            if (DBG)
+                                Log.d(TAG, "modeId before video start is " + currentModeId);
+                        } else {
+                            Log.w(TAG, "Failed to set modeId to " + wantedModeId + " it is still " + currentModeId);
+                            Toast.makeText(mContext, R.string.refreshrate_failed, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        float currentRefreshRate = d.getRefreshRate();
+                        if (numberRetries > 0) { // only try NUMBER_RETRIES
+                            if (Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
+                                if (DBG)
+                                    Log.d(TAG, "current refresh rate is " + currentRefreshRate + " trying to switch to " + mRefreshRate);
+                                numberRetries--;
+                                mHandler.postDelayed(mRefreshRateCheckerAsync, 200);
+                                return;
+                            }
+                            if (DBG)
+                                Log.d(TAG, "refresh rate before video start is " + currentRefreshRate);
                         } else {
                             Log.w(TAG, "Failed to set refreshRate to " + mRefreshRate + " it is still " + currentRefreshRate);
                             Toast.makeText(mContext, R.string.refreshrate_failed, Toast.LENGTH_SHORT).show();
@@ -928,7 +947,7 @@ public class Player implements IPlayerControl,
                         for (Mode mode : supportedModes)
                             Log.d(TAG, "Display supported mode " + mode);
                     }
-                    int wantedModeId = 0;
+                    wantedModeId = 0;
                     float wantedRefreshRate = 0;
                     // find corresponding wantedModeId for wantedFps
                     Mode sM;
@@ -959,7 +978,6 @@ public class Player implements IPlayerControl,
                             Log.d(TAG, "Display supported refresh rate " + r);
                     mRefreshRate = 0f;
                     // octave style v=23.976; r=[23.976 24 25 29.97 30 50 59.94 60]; [abs(t%v)]
-                    mRefreshRate = 0;
                     for (float rate : supportedRates) {
                         if (DBG) Log.d(TAG, "supported rate is " + rate);
                         if (Math.abs(rate % wantedFps) < REFRESH_RATE_EPSILON || Math.abs((rate % wantedFps) - wantedFps) < REFRESH_RATE_EPSILON) { // is rate a multiple of wantedFps?
