@@ -995,8 +995,8 @@ public class Player implements IPlayerControl,
                     }
                 }
             }
-            mHandler.post(mRefreshRateCheckerAsync);
         }
+        mHandler.post(mRefreshRateCheckerAsync);
     }
 
     public void onCompletion(IMediaPlayer mp) {
