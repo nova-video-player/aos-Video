@@ -157,23 +157,21 @@ public class Player implements IPlayerControl,
 
     private Runnable mRefreshRateCheckerAsync =  new Runnable() {
         public void run() {
+            if (DBG) Log.d(TAG, "mRefreshRateCheckerAsync");
             if (mCurrentState == STATE_PREPARED) {
                 if (mWaitForNewRate) {
                     View v = mWindow.getDecorView();
                     Display d = v.getDisplay();
                     if (Build.VERSION.SDK_INT >= 23) {
-                        Display.Mode currentMode = d.getMode();
-                        int currentModeId = currentMode.getModeId();
+                        int currentModeId = d.getMode().getModeId();
                         if (numberRetries > 0) { // only try NUMBER_RETRIES
                             if (currentModeId != wantedModeId) {
-                                if (DBG)
-                                    Log.d(TAG, "current modeId rate is " + currentModeId + " trying to switch to " + wantedModeId);
+                                if (DBG) Log.d(TAG, "current modeId rate is " + currentModeId + " trying to switch to " + wantedModeId + ", number of retries=" + numberRetries);
                                 numberRetries--;
                                 mHandler.postDelayed(mRefreshRateCheckerAsync, 200);
                                 return;
                             }
-                            if (DBG)
-                                Log.d(TAG, "modeId before video start is " + currentModeId);
+                            if (DBG) Log.d(TAG, "modeId before video start is " + currentModeId);
                         } else {
                             Log.w(TAG, "Failed to set modeId to " + wantedModeId + " it is still " + currentModeId);
                             Toast.makeText(mContext, R.string.refreshrate_failed, Toast.LENGTH_SHORT).show();
@@ -182,8 +180,7 @@ public class Player implements IPlayerControl,
                         float currentRefreshRate = d.getRefreshRate();
                         if (numberRetries > 0) { // only try NUMBER_RETRIES
                             if (Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
-                                if (DBG)
-                                    Log.d(TAG, "current refresh rate is " + currentRefreshRate + " trying to switch to " + mRefreshRate);
+                                if (DBG) Log.d(TAG, "current refresh rate is " + currentRefreshRate + " trying to switch to " + mRefreshRate + ", number of retries=" + numberRetries);
                                 numberRetries--;
                                 mHandler.postDelayed(mRefreshRateCheckerAsync, 200);
                                 return;
@@ -927,7 +924,7 @@ public class Player implements IPlayerControl,
         mResumeCtx.onPrepared();
 
         boolean refreshRateSwitchEnabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_ACTIVATE_REFRESHRATE_SWITCH, false);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mWindow != null && refreshRateSwitchEnabled) {
+        if (mWindow != null && refreshRateSwitchEnabled) {
             VideoMetadata.VideoTrack video = mVideoMetadata.getVideoTrack();
 
             View v = mWindow.getDecorView();
