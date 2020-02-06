@@ -952,7 +952,7 @@ public class Player implements IPlayerControl,
                         int[] hdrSupportedTypes = d.getHdrCapabilities().getSupportedHdrTypes();
                         for (int i =0; i < hdrSupportedTypes.length; i++) {
                             switch (hdrSupportedTypes[i]) {
-                                case Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION):
+                                case Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION:
                                     Log.d(TAG, "HDR dolby vision supported");
                                     break;
                                 case Display.HdrCapabilities.HDR_TYPE_HDR10:
@@ -963,9 +963,6 @@ public class Player implements IPlayerControl,
                                     break;
                                 case Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS:
                                     Log.d(TAG, "HDR10+ supported");
-                                    break;
-                                case Display.HdrCapabilities.INVALID_LUMINANCE:
-                                    Log.d(TAG, "HDR invalid luminance");
                                     break;
                             }
                         }
