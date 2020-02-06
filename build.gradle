@@ -13,6 +13,7 @@ plugins {
     id "com.github.triplet.play" version "2.3.0"
 }
 
+import com.android.build.OutputFile
 def keystorePropertiesFile = rootProject.file("keystore.properties");
 def keystoreProperties = new Properties()
 if (keystorePropertiesFile.exists()) keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
@@ -58,6 +59,8 @@ play {
     releaseStatus = "completed"
 }
 
+ext.abiCodes = ['armeabi-v7a':1,'arm64-v8a':2, x86:3, x86_64:4]
+
 android {
     signingConfigs {
         release {
@@ -96,6 +99,12 @@ android {
         if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
         applicationId "org.courville.nova"
     }
+    splits {
+        abi {
+            enable true
+            universalApk true
+        }
+    }
     aaptOptions {
         additionalParameters "--no-version-vectors"
     }
@@ -120,6 +129,8 @@ android {
         abortOnError false
     }
     packagingOptions {
+        exclude 'META-INF/*.kotlin_module'
+        exclude 'META-INF/*.version'
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
@@ -127,7 +138,15 @@ android {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/beans.xml'
         exclude 'META-INF/maven'
+        exclude 'META-INF/services/**'
         exclude 'README'
+        exclude 'com/**'
+        exclude 'jcifs2/**'
+        exclude 'kotlin/**'
+        exclude 'okhttp3/**'
+        exclude 'org/**'
+        exclude '**/*.txt'
+        exclude '**/*.xml'
         pickFirst 'lib/x86/libnativehelper.so'
         pickFirst 'lib/x86_64/libnativehelper.so'
         pickFirst 'lib/armeabi-v7a/libnativehelper.so'
@@ -156,6 +175,18 @@ android {
             }
         }
     }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def baseAbiVersionCode =
+                    project.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
+            if (baseAbiVersionCode != null) {
+                output.versionCodeOverride =
+                        baseAbiVersionCode + variant.versionCode
+            }
+        }
+    }
+
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
             def api = defaultConfig.minSdkVersion.apiLevel
