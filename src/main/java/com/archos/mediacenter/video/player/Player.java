@@ -70,7 +70,7 @@ public class Player implements IPlayerControl,
                                SurfaceHolder.Callback,
                                TextureView.SurfaceTextureListener{
     private static String TAG = "Player";
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
     public static Player sPlayer;
     // settable by the client
     private Uri         mUri;
@@ -944,6 +944,31 @@ public class Player implements IPlayerControl,
                         Log.d(TAG, "Current display mode is " + currentMode);
                         for (Mode mode : supportedModes)
                             Log.d(TAG, "Display supported mode " + mode);
+                    }
+                    if (d.isHdr())
+                    if (DBG && Build.VERSION.SDK_INT >= 24) {
+                        if (Build.VERSION.SDK_INT >= 26)
+                            if (d.isHdr()) Log.d(TAG, "HDR display detected");
+                        int[] hdrSupportedTypes = d.getHdrCapabilities().getSupportedHdrTypes();
+                        for (int i =0; i < hdrSupportedTypes.length; i++) {
+                            switch (hdrSupportedTypes[i]) {
+                                case Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION):
+                                    Log.d(TAG, "HDR dolby vision supported");
+                                    break;
+                                case Display.HdrCapabilities.HDR_TYPE_HDR10:
+                                    Log.d(TAG, "HDR10 supported");
+                                    break;
+                                case Display.HdrCapabilities.HDR_TYPE_HLG:
+                                    Log.d(TAG, "HDR HLG supported");
+                                    break;
+                                case Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS:
+                                    Log.d(TAG, "HDR10+ supported");
+                                    break;
+                                case Display.HdrCapabilities.INVALID_LUMINANCE:
+                                    Log.d(TAG, "HDR invalid luminance");
+                                    break;
+                            }
+                        }
                     }
                     wantedModeId = 0;
                     float wantedRefreshRate = 0;
