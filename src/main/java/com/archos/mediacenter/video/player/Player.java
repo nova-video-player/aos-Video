@@ -973,7 +973,6 @@ public class Player implements IPlayerControl,
                     Mode sM;
                     for (int i = 0; i < supportedModes.length; i++) {
                         sM = supportedModes[i];
-                        if (DBG) Log.d(TAG, "Math.abs(sM.getRefreshRate() % wantedFps)=" + Math.abs(sM.getRefreshRate() % wantedFps));
                         //if (sM.matches(currentMode.getPhysicalWidth(), currentMode.getPhysicalHeight(), wantedFps)) {
                         if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth()  &&
                                 sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
