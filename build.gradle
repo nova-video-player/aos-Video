@@ -59,7 +59,7 @@ play {
     releaseStatus = "completed"
 }
 
-ext.abiCodes = ['armeabi-v7a':0,'arm64-v8a':1, 'x86':2, 'x86_64':3]
+ext.abiCodes = ['universal':0, 'armeabi-v7a':1, 'arm64-v8a':2, 'x86':3, 'x86_64':4]
 
 android {
     signingConfigs {
@@ -101,6 +101,11 @@ android {
     splits {
         abi {
             enable true
+            if (hasProperty("universal")) {
+                universalApk true
+            } else {
+                universalApk false
+            }
         }
     }
     aaptOptions {
@@ -118,6 +123,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
+	    shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-project.txt'
         }
     }
@@ -182,7 +188,7 @@ android {
 	    // 2000000 is there because before there was a distinction between noleanback 1000000 and leanback 2000000 with different API levels
 	    // 2108380 was the value at apk splits introduction
                 output.versionCodeOverride =
-                        2108380 + baseAbiVersionCode + 4 * variant.versionCode
+                        2108380 + baseAbiVersionCode + 5 * variant.versionCode
             }
         }
     }
