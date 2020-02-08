@@ -10,4 +10,4 @@
 - Turkish/Simplified Chinese translations completed
 - New app icon
 - App bundles to reduce apk size
-- Limmit SMB discovery on local networks
+- Limit SMB discovery on local networks
