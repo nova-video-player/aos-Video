@@ -1,9 +1,12 @@
-- Use Audiotrack vs. OpenSLES for audio interface improving video fluidity
+- Switch to Audiotrack audio interface for video fluidity
 - Fix TV show Trakt progress sync
-- Disable periodic bookmark save interfering with video decoding perf over slow network shares
-- Complete Turkish & Simplified Chinese translations
-- New icon compliant with Google Play Store requirements
-- Only launch SMB discovery on local networks
-- Fix HEVC 10 bit support on Rockchip devices
-- Better extradata management for AVC and HEVC for MediaCodec
-- Stability enhancements
+- Use tmdb-java movie scraper
+- Adaptive refresh rate via API23 mode switch (fix FireTV4k)
+- Fix grey bar on Sony with HDR content
+- Fix green bars with swdecoding on Nvidia
+- Fix audio night/boost mode
+- Fix HEVC 10b on Rockchip
+- Better MediaCodec extradata management
+- Turkish/Simplified Chinese translations completed
+- New app icon
+- Limmit SMB discovery on local networks
