@@ -945,7 +945,6 @@ public class Player implements IPlayerControl,
                         for (Mode mode : supportedModes)
                             Log.d(TAG, "Display supported mode " + mode);
                     }
-                    if (d.isHdr())
                     if (DBG && Build.VERSION.SDK_INT >= 24) {
                         if (Build.VERSION.SDK_INT >= 26)
                             if (d.isHdr()) Log.d(TAG, "HDR display detected");
