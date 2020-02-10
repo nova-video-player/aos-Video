@@ -1483,7 +1483,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         AudioDelayTVPicker tvPicker = (AudioDelayTVPicker)LayoutInflater.from(mContext)
                 .inflate(R.layout.audio_delay_tv_picker, null);
 
-        tvPicker.setStep(20);
+        tvPicker.setStep(10);
         if (mPlayer.getDuration() > 0) {
             tvPicker.setMax(mPlayer.getDuration());
             tvPicker.setMin(-mPlayer.getDuration());
