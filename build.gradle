@@ -101,7 +101,7 @@ android {
     splits {
         abi {
             enable true
-            if (hasProperty("universal")) {
+            if (project.hasProperty("universal")) {
                 universalApk true
             } else {
                 universalApk false
@@ -184,11 +184,13 @@ android {
         variant.outputs.each { output ->
             def baseAbiVersionCode =
                     project.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
+	    output.versionCodeOverride =
+		    2108380 + 5 * variant.versionCode
             if (baseAbiVersionCode != null) {
 	    // 2000000 is there because before there was a distinction between noleanback 1000000 and leanback 2000000 with different API levels
 	    // 2108380 was the value at apk splits introduction
                 output.versionCodeOverride =
-                        2108380 + baseAbiVersionCode + 5 * variant.versionCode
+                        output.versionCodeOverride + baseAbiVersionCode
             }
         }
     }
