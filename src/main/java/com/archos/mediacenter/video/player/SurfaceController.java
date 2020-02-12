@@ -44,11 +44,10 @@ public class SurfaceController {
          *  for 2:35 video on 4/3 screen:
          *  intermediate surface height in order to don't crop too much video
          */
-        public static final int STRETCHED = 2;
-        public static final int AUTO = 3;
+        public static final int AUTO = 2;
         public static final double VIDEO_FORMAT_AUTO_THRES = 0.7;
 
-        private final int[] mode = {ORIGINAL, FULLSCREEN, STRETCHED, AUTO};
+        private final int[] mode = {ORIGINAL, FULLSCREEN, AUTO};
         private final int max;
         private int idx;
         public VideoFormat(int max) {
@@ -97,8 +96,8 @@ public class SurfaceController {
     private int         mVideoWidth = 0;
     private int         mVideoHeight = 0;
     private double      mVideoAspect = 1.0f;
-    private VideoFormat mVideoFormat = new VideoFormat(3);
-    private VideoFormat mAutoVideoFormat = new VideoFormat(4);
+    private VideoFormat mVideoFormat = new VideoFormat(2);
+    private VideoFormat mAutoVideoFormat = new VideoFormat(3);
     
     private int mEffectMode = VideoEffect.getDefaultMode();
     private int mEffectType = VideoEffect.getDefaultType();
@@ -189,7 +188,6 @@ public class SurfaceController {
     }
     private VideoFormat getVideoFormat() {
         if (!mHdmiPlugged && ((mVideoWidth / (double) mVideoHeight) - (mLcdWidth / (double) mLcdHeight) > VideoFormat.VIDEO_FORMAT_AUTO_THRES)) {
-            // on special screen sizes that are closer to 4:3 then enable the "optimized" aspect ratio
             if (DBG) Log.d(TAG, "getVideoFormat: return mAutoVideoFormat");
             return mAutoVideoFormat;
         } else {
@@ -304,25 +302,14 @@ public class SurfaceController {
                 cropH = 1.0f;
                 if (dar > ar) {
                     dw = dw + (((int) (dh * ar)) - dw) / 2;
-                    cropH = (float) dh / (float) (dw / ar);
-                    if (DBG)
-                        Log.d(TAG, "updateSurface: VideoFormat.AUTO dar>ar dw=" + dw + ", dh=" + dh);
-                } else {
-                    dh = dh + (((int) (dw / ar)) - dh) / 2;
-                    cropW = (float) dw / (float) (dh * ar);
-                    if (DBG)
-                        Log.d(TAG, "updateSurface: VideoFormat.AUTO dar<=ar dw=" + dw + ", dh=" + dh);
+                    cropH = (float)dh / (float)(dw / ar);
+                    if (DBG) Log.d(TAG, "updateSurface: VideoFormat.AUTO dar>ar dw=" + dw + ", dh=" + dh);
                 }
-                break;
-            }
-            case VideoFormat.STRETCHED: { // display on full screen resolution stretched
-                cropW = 1.0f;
-                cropH = 1.0f;
-                // this is the original size no zoom/stretch
-                //dw = vw;
-                //dh = vh;
-                if (DBG)
-                    Log.d(TAG, "updateSurface: VideoFormat.STRETCHED dw=" + dw + ", dh=" + dh + ", cropW=" + cropW + ", cropH=" + cropH);
+                else {
+                    dh = dh + (((int) (dw / ar)) - dh) / 2;
+                    cropW = (float)dw / (float)(dh * ar);
+                    if (DBG) Log.d(TAG, "updateSurface: VideoFormat.AUTO dar<=ar dw=" + dw + ", dh=" + dh);
+                }
                 break;
             }
         }
