@@ -22,6 +22,8 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
 
+import androidx.core.text.HtmlCompat;
+
 import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesList;
@@ -67,7 +69,7 @@ public class VideoListPresenter extends VideoPresenter{
         if (name.endsWith(ITALIC)&&holder.name!=null) {
             Spanned htmlName = null;
             if (Build.VERSION.SDK_INT >= 24) {
-                htmlName = Html.fromHtml(name, Html.FROM_HTML_MODE_LEGACY);
+                htmlName = HtmlCompat.fromHtml(name, HtmlCompat.FROM_HTML_MODE_LEGACY);
             } else {
                 htmlName = Html.fromHtml(name);
             }
