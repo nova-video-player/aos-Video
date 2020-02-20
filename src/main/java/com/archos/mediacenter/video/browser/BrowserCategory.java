@@ -121,10 +121,10 @@ abstract public class BrowserCategory extends ListFragment {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-                final NetworkInfo networkInfo = (NetworkInfo) intent
-                        .getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-                if (networkInfo != null
-                        && (networkInfo.getState() == State.DISCONNECTED || networkInfo.getState() == State.CONNECTED)) {
+                ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                if (activeNetwork != null
+                        && (activeNetwork.getState() == State.DISCONNECTED || activeNetwork.getState() == State.CONNECTED)) {
                     updateExternalStorage();
                 }
             } else if (action.equals(ExtStorageReceiver.ACTION_MEDIA_MOUNTED)){
