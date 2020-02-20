@@ -39,7 +39,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.DetailsFragmentWithLessTopOffset;
 import androidx.leanback.widget.Action;
@@ -146,7 +146,7 @@ import java.util.List;
 public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor>, PlayUtils.SubtitleDownloadListener, SubtitleInterface, Delete.DeleteListener, XmlDb.ResumeChangeListener, ExternalPlayerWithResultStarter {
 
     private static final String TAG = "VideoDetailsFragment";
-    private static boolean DBG = false;
+    private static boolean DBG = true;
 
     /** A serialized com.archos.mediacenter.video.leanback.adapter.object.Video */
     public static final String EXTRA_VIDEO = "VIDEO";
@@ -311,6 +311,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         mFileListRow = new SelectableListRow(new HeaderItem(getString(R.string.video_sources)),mFileListAdapter);
 
         // allow Video Badges Animation at end of enter transition to prevent a huge animation glitch when opening VideoDetails
+        /*
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //getActivity().getWindow().getEnterTransition().addListener(new TransitionListener() {
             TransitionHelper.addTransitionListener(
@@ -328,6 +329,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     }
             );
         }
+         */
         Intent intent = getActivity().getIntent();
         mSelectCurrentVideo = intent.getBooleanExtra(EXTRA_FORCE_VIDEO_SELECTION, false) ;
 

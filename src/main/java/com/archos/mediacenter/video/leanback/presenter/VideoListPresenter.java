@@ -15,7 +15,7 @@
 package com.archos.mediacenter.video.leanback.presenter;
 
 import android.net.Uri;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.view.View;
 
 import com.archos.environment.ArchosUtils;
