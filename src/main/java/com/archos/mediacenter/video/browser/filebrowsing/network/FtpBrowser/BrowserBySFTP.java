@@ -23,6 +23,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+
+import androidx.core.widget.TextViewCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.appcompat.widget.SearchView;
 import android.view.Menu;
@@ -80,7 +82,7 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
                             emptyView.setVisibility(View.VISIBLE);
                             // Update the text of the empty view
                             TextView emptyViewText = (TextView)emptyView.findViewById(R.id.empty_view_text);
-                            emptyViewText.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
+                            TextViewCompat.setTextAppearance(emptyViewText, android.R.style.TextAppearance_Medium);
                             emptyViewText.setText(R.string.connection_abnormally_long);
                             // Check if a button is needed in the empty view
                             Button emptyViewButton = (Button)emptyView.findViewById(R.id.empty_view_button);
