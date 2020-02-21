@@ -68,11 +68,7 @@ public class VideoListPresenter extends VideoPresenter{
         if (name == null) name = "";
         if (name.endsWith(ITALIC)&&holder.name!=null) {
             Spanned htmlName = null;
-            if (Build.VERSION.SDK_INT >= 24) {
-                htmlName = HtmlCompat.fromHtml(name, HtmlCompat.FROM_HTML_MODE_LEGACY);
-            } else {
-                htmlName = Html.fromHtml(name);
-            }
+            htmlName = HtmlCompat.fromHtml(name, HtmlCompat.FROM_HTML_MODE_LEGACY);
             // Display a string containing several display
             // styles
             // (use a SpannableStringBuilder in order to
