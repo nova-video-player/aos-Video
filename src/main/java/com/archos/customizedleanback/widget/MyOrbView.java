@@ -25,6 +25,9 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.leanback.R;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -180,11 +183,11 @@ public class MyOrbView extends FrameLayout implements View.OnClickListener {
 
         Drawable img = a.getDrawable(R.styleable.lbSearchOrbView_searchOrbIcon);
         if (img == null) {
-            img = res.getDrawable(R.drawable.lb_ic_in_app_search);
+            img = ResourcesCompat.getDrawable(getResources(), R.drawable.lb_ic_in_app_search, null);
         }
         setOrbIcon(img);
 
-        int defColor = res.getColor(R.color.lb_default_search_color);
+        int defColor = ContextCompat.getColor(context, R.color.lb_default_search_color);
         int color = a.getColor(R.styleable.lbSearchOrbView_searchOrbColor, defColor);
         int brightColor = a.getColor(
                 R.styleable.lbSearchOrbView_searchOrbBrightColor, color);
