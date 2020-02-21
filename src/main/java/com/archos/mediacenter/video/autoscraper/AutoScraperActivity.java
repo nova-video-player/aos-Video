@@ -29,6 +29,9 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.graphics.BlendMode;
+import android.graphics.BlendModeColorFilter;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -988,7 +991,11 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
             // For some reason I do not manage to have the accent color defined in the theme applied to this progress bar.
             // Doing it by hand then...
             int accentColor = ContextCompat.getColor(context, R.color.lightblue400);
-            vh.initial_spinbar.getIndeterminateDrawable().setColorFilter(accentColor, android.graphics.PorterDuff.Mode.MULTIPLY);
+            if (Build.VERSION.SDK_INT >= 29) {
+                vh.initial_spinbar.getIndeterminateDrawable().setColorFilter(new BlendModeColorFilter(accentColor, BlendMode.MULTIPLY));
+            } else {
+                vh.initial_spinbar.getIndeterminateDrawable().setColorFilter(accentColor, PorterDuff.Mode.MULTIPLY);
+            }
             v.setTag(vh);
             return v;
         }
