@@ -201,7 +201,7 @@
     </style>
 
     <style name="CoverDescription.Overlay">
-        <item name="background">#BB555555</item>
+        <item name="android:background">#BB555555</item>
         <item name="android:paddingLeft">7dip</item>
     </style>
 
