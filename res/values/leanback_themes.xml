@@ -24,9 +24,9 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowContentTransitions">true</item>
-        <item name="android:colorPrimary">@color/lightblue500</item>
-        <item name="android:colorPrimaryDark">#002642</item>
-        <item name="android:colorAccent">@color/lightblue400</item>
+        <item name="colorPrimary">@color/lightblue500</item>
+        <item name="colorPrimaryDark">#002642</item>
+        <item name="colorAccent">@color/lightblue400</item>
     </style>
 
     <style name="MyLeanbackTheme.Transparent">
@@ -48,6 +48,6 @@
 
     <style name="MyLeanbackPreferenceTheme" parent="PreferenceThemeOverlayLeanback">
         <item name="android:windowBackground">@color/leanback_background</item>
-        <item name="android:colorPrimary">@color/lightblue900</item>
+        <item name="colorPrimary">@color/lightblue900</item>
     </style>
 </resources>

@@ -14,9 +14,10 @@
 
 package com.archos.mediacenter.video.player;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.WindowManager;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.archos.mediacenter.utils.AppState;
 
@@ -37,14 +38,14 @@ public class PlayerBrightnessManager implements AppState.OnForeGroundListener {
         return sPlayerBrightnessManager;
     }
 
-    public void setBrightness(Activity activity, int brightness){
+    public void setBrightness(AppCompatActivity activity, int brightness){
         mBrightness = brightness;
         WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
         lp.screenBrightness = brightness==-1?WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE:(float)brightness / 255f;
         activity.getWindow().setAttributes(lp);
     }
 
-    public void restoreBrightness(Activity activity){
+    public void restoreBrightness(AppCompatActivity activity){
         setBrightness(activity, mBrightness);
     }
 

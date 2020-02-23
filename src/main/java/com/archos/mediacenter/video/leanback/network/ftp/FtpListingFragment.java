@@ -14,7 +14,6 @@
 
 package com.archos.mediacenter.video.leanback.network.ftp;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,16 +22,18 @@ import android.os.Message;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.ListingEngine;
 import com.archos.filecorelibrary.MetaFile2;
-import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.ftp.Session;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.filecorelibrary.sftp.SFTPSession;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser.BrowserBySFTP;
 import com.archos.mediacenter.video.browser.ShortcutDb;
+import com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser.BrowserBySFTP;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingFragment;
 import com.archos.mediacenter.video.leanback.network.NetworkRootFragment;
 import com.archos.mediaprovider.NetworkScanner;

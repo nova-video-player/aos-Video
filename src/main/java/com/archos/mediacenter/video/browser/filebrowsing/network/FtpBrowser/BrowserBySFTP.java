@@ -15,7 +15,6 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.database.Cursor;
@@ -23,10 +22,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
-import androidx.core.widget.TextViewCompat;
-import androidx.loader.app.LoaderManager;
-import androidx.appcompat.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,6 +33,12 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
+import androidx.core.widget.TextViewCompat;
+import androidx.loader.app.LoaderManager;
+
 import com.archos.filecorelibrary.ListingEngine;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.ftp.Session;
@@ -45,11 +46,11 @@ import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.filecorelibrary.sftp.SFTPSession;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.filebrowsing.network.AdapterByNetwork;
-import com.archos.mediacenter.video.browser.filebrowsing.network.BrowserByNetwork;
 import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.browser.ShortcutDb;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
+import com.archos.mediacenter.video.browser.filebrowsing.network.AdapterByNetwork;
+import com.archos.mediacenter.video.browser.filebrowsing.network.BrowserByNetwork;
 import com.archos.mediaprovider.NetworkScanner;
 
 import java.util.ArrayList;
@@ -144,7 +145,7 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
                 mi= menu.add(0,R.string.add_ssh_shortcut, 0,R.string.add_ssh_shortcut);
             else
                 mi= menu.add(0,R.string.remove_from_shortcuts, 0,R.string.remove_from_shortcuts);
-           mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+           MenuItemCompat.setShowAsAction(mi, MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
         if(getActivity() instanceof MainActivity) {
             mSearchView = ((MainActivity) getActivity()).getSearchView();

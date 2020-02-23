@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:background="@android:color/black"
     android:layout_width="fill_parent" 
@@ -103,7 +104,7 @@
             android:layout_width="30dip"
             android:layout_height="30dip"
 
-            android:src="@drawable/video_reduce_selector"
+            app:srcCompat="@drawable/video_reduce_selector"
             android:layout_marginLeft="3dip"
             android:layout_marginRight="3dip"
             android:layout_alignParentTop="true"
@@ -114,7 +115,7 @@
             android:id="@+id/discrete_button"
             android:layout_width="30dip"
             android:layout_height="30dip"
-            android:src="@drawable/video_fade_selector"
+            app:srcCompat="@drawable/video_fade_selector"
             android:layout_marginLeft="3dip"
             android:layout_marginRight="3dip"
             android:layout_alignParentTop="true"
@@ -125,7 +126,7 @@
             android:id="@+id/fullscreen_button"
             android:layout_width="30dip"
             android:layout_height="30dip"
-            android:src="@drawable/video_format_fullscreen_selector"
+            app:srcCompat="@drawable/video_format_fullscreen_selector"
             android:layout_marginLeft="3dip"
             android:layout_marginRight="3dip"
             android:layout_alignParentTop="true"
@@ -136,7 +137,7 @@
             android:id="@+id/exit_button"
             android:layout_width="30dip"
             android:layout_height="30dip"
-            android:src="@drawable/video_exit_selector"
+            app:srcCompat="@drawable/video_exit_selector"
             android:layout_marginLeft="3dip"
             android:layout_marginRight="3dip"
             android:layout_alignParentTop="true"
@@ -147,7 +148,7 @@
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/video_play"/>
+            app:srcCompat="@drawable/video_play"/>
 
 
 

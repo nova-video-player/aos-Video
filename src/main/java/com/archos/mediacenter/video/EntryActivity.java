@@ -14,10 +14,11 @@
 
 package com.archos.mediacenter.video;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.leanback.MainActivityLeanback;
@@ -27,7 +28,7 @@ import com.archos.mediacenter.video.leanback.MainActivityLeanback;
  * depending on the user preferences
  * Created by vapillon on 08/06/15.
  */
-public class EntryActivity extends Activity {
+public class EntryActivity extends AppCompatActivity {
 
     private static final String TAG = "EntryActivity";
     private static boolean DBG = false;

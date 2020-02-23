@@ -17,7 +17,6 @@ package com.archos.mediacenter.video.browser.filebrowsing;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,6 +25,8 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.loader.app.LoaderManager;
 
 import com.archos.filecorelibrary.ExtStorageReceiver;

@@ -14,14 +14,15 @@
 
 package com.archos.mediacenter.video.player;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import androidx.preference.PreferenceManager;
 import android.view.View;
 import android.widget.CheckBox;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.video.R;
 
@@ -56,7 +57,7 @@ public class PrivateMode {
         editor.commit();
     }
 
-    public static void showDialog(final Activity activity) {
+    public static void showDialog(final AppCompatActivity activity) {
         View customView = activity.getLayoutInflater().inflate(R.layout.private_mode_dialog, null);
         final CheckBox dontShowAgain =  (CheckBox)customView.findViewById(R.id.dont_show_again);
         new AlertDialog.Builder(activity)

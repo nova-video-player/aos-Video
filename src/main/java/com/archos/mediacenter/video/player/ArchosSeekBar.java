@@ -15,14 +15,14 @@
 package com.archos.mediacenter.video.player;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.widget.SeekBar;
 
 /**
  * Created by alexandre on 01/06/16.
  */
-public class ArchosSeekBar extends SeekBar {
+public class ArchosSeekBar extends AppCompatSeekBar {
     private OnEnableListener mOnEnableListener;
 
     public interface OnEnableListener{

@@ -17,6 +17,7 @@
 */
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -71,7 +72,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignTop="@+id/subtitle_size_seekbar"
             android:padding="@dimen/subtitles_settings_dialog_margin_large"
-            android:src="@drawable/video_info_arrow_down" />
+            app:srcCompat="@drawable/video_info_arrow_down" />
 
         <SeekBar
             android:id="@+id/subtitle_size_seekbar"
@@ -90,7 +91,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/subtitle_size_seekbar"
             android:padding="@dimen/subtitles_settings_dialog_margin_large"
-            android:src="@drawable/video_info_arrow_up" />
+            app:srcCompat="@drawable/video_info_arrow_up" />
 
     </RelativeLayout>
     <!-- simple listDivider, should be using current Theme -->
@@ -107,7 +108,7 @@
         android:layout_marginBottom="@dimen/subtitles_settings_dialog_margin_large"
         android:layout_marginTop="@dimen/subtitles_settings_dialog_margin_large"
         android:scaleType="fitXY"
-        android:src="?android:attr/listDivider" />
+        app:srcCompat="?android:attr/listDivider" />
 
     <!-- Vertical Positon v (seekbar) ^ -->
 
@@ -131,7 +132,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignTop="@+id/subtitle_vert_seekbar"
             android:padding="@dimen/subtitles_settings_dialog_margin_large"
-            android:src="@drawable/video_info_arrow_down" />
+            app:srcCompat="@drawable/video_info_arrow_down" />
 
         <SeekBar
             android:id="@+id/subtitle_vert_seekbar"
@@ -152,7 +153,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/subtitle_vert_seekbar"
             android:padding="@dimen/subtitles_settings_dialog_margin_large"
-            android:src="@drawable/video_info_arrow_up" />
+            app:srcCompat="@drawable/video_info_arrow_up" />
 
     </RelativeLayout>
 

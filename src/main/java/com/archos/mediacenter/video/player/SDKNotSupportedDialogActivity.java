@@ -14,14 +14,15 @@
 
 package com.archos.mediacenter.video.player;
 
-import com.archos.mediacenter.video.R;
-
-import android.app.AlertDialog;
 import android.app.Dialog;
-import androidx.fragment.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
+
+import com.archos.mediacenter.video.R;
 
 public class SDKNotSupportedDialogActivity extends FragmentActivity {
 

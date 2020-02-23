@@ -14,9 +14,7 @@
 
 package com.archos.mediacenter.video.info;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -37,19 +35,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.fragment.app.Fragment;
-import androidx.loader.app.LoaderManager;
-import androidx.core.content.ContextCompat;
-import androidx.loader.content.CursorLoader;
-import androidx.loader.content.Loader;
-import androidx.core.view.ViewCompat;
-import androidx.palette.graphics.Palette;
-import androidx.cardview.widget.CardView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.appcompat.widget.ToolbarWidgetWrapper;
-
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
@@ -67,6 +52,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.ToolbarWidgetWrapper;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+import androidx.palette.graphics.Palette;
 
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
@@ -100,7 +100,6 @@ import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
 import com.archos.mediacenter.video.utils.TrailerServiceIconFactory;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoUtils;
-//import com.archos.mediacenter.video.utils.WebUtils;
 import com.archos.mediaprovider.NetworkState;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
@@ -115,6 +114,7 @@ import com.archos.mediascraper.xml.MovieScraper3;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -123,6 +123,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+
+//import com.archos.mediacenter.video.utils.WebUtils;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -1369,13 +1371,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     private class SubtitleFilesListerTask extends AsyncTask<Video, Void, List<SubtitleManager.SubtitleFile>> {
 
-        private final Activity mActivity;
+        private final AppCompatActivity mActivity;
 
-        public SubtitleFilesListerTask(Activity activity){
+        public SubtitleFilesListerTask(AppCompatActivity activity){
             mActivity = activity;
         }
 
-        private Activity getActivity(){
+        private AppCompatActivity getActivity(){
             return mActivity;
         }
 
@@ -1611,14 +1613,14 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
 
     private class FullScraperTagsTask extends AsyncTask<Video, Void, BaseTags> {
-        private final Activity mActivity;
+        private final AppCompatActivity mActivity;
         private List<ScraperTrailer> mTrailers;
 
 
-        public FullScraperTagsTask(Activity activity){
+        public FullScraperTagsTask(AppCompatActivity activity){
             mActivity = activity;
         }
-        private Activity getActivity(){
+        private AppCompatActivity getActivity(){
             return mActivity;
         }
         protected void onPreExecute() {

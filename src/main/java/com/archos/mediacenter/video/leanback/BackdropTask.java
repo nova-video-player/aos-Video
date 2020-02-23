@@ -14,12 +14,13 @@
 
 package com.archos.mediacenter.video.leanback;
 
-import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import androidx.leanback.app.BackgroundManager;
 import android.util.DisplayMetrics;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.leanback.app.BackgroundManager;
 
 import com.archos.mediacenter.video.browser.adapters.object.Base;
 import com.archos.mediascraper.BaseTags;
@@ -34,12 +35,12 @@ import java.io.File;
 * Created by vapillon on 15/04/15.
 */
 public class BackdropTask extends AsyncTask<Object, Integer, File> {
-    private final Activity mContext;
+    private final AppCompatActivity mContext;
     private final Target mBackgroundTarget;
     private final DisplayMetrics mMetrics;
     private final Drawable mDefaultBackground;
 
-    public BackdropTask(Activity activity, int backgroundDefaultColor) {
+    public BackdropTask(AppCompatActivity activity, int backgroundDefaultColor) {
         super();
         mContext = activity;
         mMetrics = new DisplayMetrics();

@@ -17,16 +17,18 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
+import androidx.preference.PreferenceManager;
 
 import com.archos.filecorelibrary.FileExtendedInfo;
 import com.archos.mediacenter.utils.trakt.Trakt;
@@ -186,7 +188,7 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
         if (mBrowserAdapter != null && (!mBrowserAdapter.isEmpty()||mHideWatched)) {
             if (Trakt.isTraktV2Enabled(mContext, PreferenceManager.getDefaultSharedPreferences(mContext))) {
                 MenuItem hideMarkedSeen = menu.add(MENU_HIDE_WATCHED_GROUP, MENU_VIEW_HIDE_SEEN, Menu.NONE, mHideWatched ? R.string.hide_seen : R.string.show_all);
-                hideMarkedSeen.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                MenuItemCompat.setShowAsAction(hideMarkedSeen, MenuItem.SHOW_AS_ACTION_IF_ROOM);
             }
         }
     }

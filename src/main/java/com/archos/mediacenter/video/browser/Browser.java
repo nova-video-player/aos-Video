@@ -17,8 +17,6 @@ package com.archos.mediacenter.video.browser;
 
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -36,14 +34,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Parcelable;
-
-import androidx.core.content.ContextCompat;
-import androidx.core.widget.TextViewCompat;
-import androidx.fragment.app.FragmentActivity;
-import androidx.preference.PreferenceManager;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -66,6 +56,16 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
+import androidx.core.widget.TextViewCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.preference.PreferenceManager;
 
 import com.archos.filecorelibrary.FileExtendedInfo;
 import com.archos.mediacenter.utils.ActionBarSubmenu;
@@ -1035,7 +1035,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             // Add the "view mode" item
             MenuItem viewModeMenuItem = menu.add(MENU_VIEW_MODE_GROUP, MENU_VIEW_MODE, Menu.NONE, R.string.view_mode);
             viewModeMenuItem.setIcon(R.drawable.ic_menu_view_mode);
-            viewModeMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            MenuItemCompat.setShowAsAction(viewModeMenuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
             mDisplayModeSubmenu.attachMenuItem(viewModeMenuItem);
 
             mDisplayModeSubmenu.clear();

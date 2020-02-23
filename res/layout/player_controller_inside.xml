@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:scrollbars="horizontal"
-        android:layout_marginTop="?android:attr/actionBarSize"
+        android:layout_marginTop="?attr/actionBarSize"
         android:layout_above="@+id/control_bar"
         android:layout_gravity="center"
         android:visibility="invisible">
@@ -116,7 +116,7 @@
                 android:paddingBottom="10dip"
                 android:paddingLeft="5dip"
                 android:paddingRight="5dip"
-                android:src="@drawable/video_play_selector" />
+                ads:srcCompat="@drawable/video_play_selector" />
 
             <ImageButton
                 android:id="@+id/backward"
@@ -126,7 +126,7 @@
                 android:paddingBottom="10dip"
                 android:paddingLeft="5dip"
                 android:paddingRight="5dip"
-                android:src="@drawable/video_backward_selector" />
+                ads:srcCompat="@drawable/video_backward_selector" />
 
             <ImageButton
                 android:id="@+id/forward"
@@ -135,7 +135,7 @@
                 android:paddingBottom="10dip"
                 android:paddingLeft="5dip"
                 android:paddingRight="5dip"
-                android:src="@drawable/video_forward_selector" />
+                ads:srcCompat="@drawable/video_forward_selector" />
 
             <ImageButton
                 android:id="@+id/format"
@@ -145,7 +145,7 @@
                 android:paddingBottom="10dip"
                 android:paddingLeft="10dip"
                 android:paddingRight="0dip"
-                android:src="@drawable/video_format_original_selector" />
+                ads:srcCompat="@drawable/video_format_original_selector" />
         </RelativeLayout>
     </LinearLayout>
 

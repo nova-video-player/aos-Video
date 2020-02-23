@@ -14,13 +14,14 @@
 
 package com.archos.mediacenter.video.player;
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.SensorManager;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -194,7 +195,7 @@ public class StereoDiveEffect extends VideoEffect {
     }
 
     private static WindowManager getWindowManager(Context context) {
-        return context instanceof  Activity?((Activity)context).getWindowManager():(WindowManager)context.getSystemService(context.WINDOW_SERVICE);
+        return context instanceof AppCompatActivity ?((AppCompatActivity)context).getWindowManager():(WindowManager)context.getSystemService(context.WINDOW_SERVICE);
     }
 
     private void updateCurrentRotation() {

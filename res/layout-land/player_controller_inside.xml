@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:scrollbars="horizontal"
-        android:layout_marginTop="?android:attr/actionBarSize"
+        android:layout_marginTop="?attr/actionBarSize"
         android:layout_toRightOf="@+id/volume_bar"
         android:layout_above="@+id/control_bar"
         android:layout_gravity="center"
@@ -57,7 +57,7 @@
             style="@style/PlayerControlButton"
             android:paddingLeft="@dimen/player_button_padding_full"
             android:paddingRight="@dimen/player_button_padding_full"
-            android:src="@drawable/video_play_selector" />
+            ads:srcCompat="@drawable/video_play_selector" />
 
         <ImageButton
             android:id="@+id/backward"
@@ -65,7 +65,7 @@
             android:layout_marginLeft="-12dip"
             android:paddingLeft="0dip"
             android:paddingRight="@dimen/player_button_padding_half"
-            android:src="@drawable/video_backward_selector" />
+            ads:srcCompat="@drawable/video_backward_selector" />
 
         <RelativeLayout
             android:layout_width="0dip"
@@ -122,7 +122,7 @@
             style="@style/PlayerControlButton"
             android:paddingLeft="@dimen/player_button_padding_half"
             android:paddingRight="@dimen/player_button_padding_small"
-            android:src="@drawable/video_forward_selector" />
+            ads:srcCompat="@drawable/video_forward_selector" />
 
         <ImageButton
             android:id="@+id/format"
@@ -131,7 +131,7 @@
             android:layout_marginRight="10dip"
             android:paddingLeft="@dimen/player_button_padding_full"
             android:paddingRight="@dimen/player_button_padding_full"
-            android:src="@drawable/video_format_original_selector" />
+            ads:srcCompat="@drawable/video_format_original_selector" />
     </LinearLayout>
 
     <include

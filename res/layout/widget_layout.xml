@@ -15,6 +15,7 @@
      limitations under the License.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -37,7 +38,7 @@
         android:id="@+id/app_icon"
         android:layout_width="28dip"
         android:layout_height="28dip"
-        android:src="@mipmap/video2" />
+        app:srcCompat="@mipmap/video2" />
 
     <GridView
         android:id="@+id/gridview"

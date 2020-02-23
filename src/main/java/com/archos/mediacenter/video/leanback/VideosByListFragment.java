@@ -1,19 +1,20 @@
 package com.archos.mediacenter.video.leanback;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-
-import androidx.core.content.ContextCompat;
-import androidx.leanback.widget.SearchOrbView;
-import androidx.leanback.widget.Row;
-import androidx.loader.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.leanback.widget.Row;
+import androidx.leanback.widget.SearchOrbView;
+import androidx.loader.content.Loader;
+
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.loader.VideosByListLoader;
 import com.archos.mediacenter.video.browser.loader.VideoLoader;
+import com.archos.mediacenter.video.browser.loader.VideosByListLoader;
 import com.archos.mediacenter.video.browser.loader.VideosSelectionLoader;
 import com.archos.mediaprovider.video.VideoStore;
 

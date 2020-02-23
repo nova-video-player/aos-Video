@@ -15,15 +15,9 @@
 
 package com.archos.mediacenter.video.browser;
 
-import android.app.Activity;
-
-import androidx.core.content.ContextCompat;
-import androidx.loader.app.LoaderManager;
 import android.content.ComponentName;
 import android.content.Context;
-import androidx.loader.content.CursorLoader;
 import android.content.Intent;
-import androidx.loader.content.Loader;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
@@ -34,8 +28,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import androidx.preference.PreferenceManager;
-import androidx.core.view.ActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -46,6 +38,14 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ActionProvider;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+import androidx.preference.PreferenceManager;
 
 import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.utils.HelpOverlayActivity;
@@ -100,7 +100,7 @@ public class NewVideosActionProvider extends ActionProvider implements
 
         mHelpOverlayHandler = new HelpOverlayHandler();
 
-        mPreferences = mContext.getSharedPreferences(MediaUtils.SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
+        mPreferences = mContext.getSharedPreferences(MediaUtils.SHARED_PREFERENCES_NAME, AppCompatActivity.MODE_PRIVATE);
     }
 
     private MenuItem mItem;

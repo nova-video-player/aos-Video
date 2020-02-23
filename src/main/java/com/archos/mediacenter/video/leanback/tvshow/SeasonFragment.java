@@ -15,14 +15,15 @@
 package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.BrowseSupportFragment;
 import androidx.leanback.widget.ArrayObjectAdapter;
@@ -33,22 +34,21 @@ import androidx.leanback.widget.OnItemViewClickedListener;
 import androidx.leanback.widget.Presenter;
 import androidx.leanback.widget.Row;
 import androidx.leanback.widget.RowPresenter;
-
-import android.view.View;
-import android.widget.Toast;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.adapters.mappers.SeasonCursorMapper;
 import com.archos.mediacenter.video.browser.Delete;
-import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
-import com.archos.mediacenter.video.leanback.adapter.PlaceholderCursorObjectAdapter;
-import com.archos.mediacenter.video.utils.DbUtils;
-import com.archos.mediacenter.video.utils.VideoUtils;
+import com.archos.mediacenter.video.browser.adapters.mappers.SeasonCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Season;
 import com.archos.mediacenter.video.browser.loader.SeasonsLoader;
+import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
+import com.archos.mediacenter.video.leanback.adapter.PlaceholderCursorObjectAdapter;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.SeasonPresenter;
+import com.archos.mediacenter.video.utils.DbUtils;
+import com.archos.mediacenter.video.utils.VideoUtils;
 
 import java.util.ArrayList;
 

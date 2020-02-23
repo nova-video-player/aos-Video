@@ -32,15 +32,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import com.archos.filecorelibrary.MetaFile2;
+import androidx.core.view.MenuItemCompat;
+
 import com.archos.filecorelibrary.FileUtils;
+import com.archos.filecorelibrary.MetaFile2;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.utils.HelpOverlayActivity;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.filebrowsing.ListingAdapter;
-import com.archos.mediacenter.video.browser.filebrowsing.BrowserByFolder;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
+import com.archos.mediacenter.video.browser.filebrowsing.BrowserByFolder;
+import com.archos.mediacenter.video.browser.filebrowsing.ListingAdapter;
 import com.archos.mediaprovider.NetworkScanner;
 
 import java.util.List;
@@ -305,12 +307,11 @@ public class BrowserByNetwork extends BrowserByFolder {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         MenuItem IndexFolderMenuItem = menu.add(0, R.string.add_to_indexed_folders, Menu.NONE, R.string.add_to_indexed_folders);
-        IndexFolderMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        IndexFolderMenuItem.setActionView(mIndexFolderActionView);
+        MenuItemCompat.setShowAsAction(IndexFolderMenuItem, MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        MenuItemCompat.setActionView(IndexFolderMenuItem, mIndexFolderActionView);
 
-        menu.add(0, R.string.remove_from_indexed_folders, Menu.NONE, R.string.remove_from_indexed_folders)
-                .setIcon(R.drawable.ic_menu_video_unindex)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        MenuItemCompat.setShowAsAction(menu.add(0, R.string.remove_from_indexed_folders, Menu.NONE, R.string.remove_from_indexed_folders)
+                .setIcon(R.drawable.ic_menu_video_unindex), MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.add(0, R.string.rescan, Menu.NONE, R.string.rescan);
     }
 

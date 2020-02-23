@@ -17,7 +17,6 @@ package com.archos.mediacenter.video.player;
 
 import android.content.Context;
 import android.graphics.Rect;
-import androidx.appcompat.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,9 +27,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListPopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.ListPopupWindow;
+import androidx.core.view.MenuItemCompat;
 
 import com.archos.mediacenter.video.R;
 
@@ -266,7 +268,7 @@ public class TrackInfoController implements OnMenuItemClickListener, OnItemClick
 
     public void attachMenu(Menu menu, int resId) {
         mMenuItem = menu.add(null);
-        mMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        MenuItemCompat.setShowAsAction(mMenuItem, MenuItem.SHOW_AS_ACTION_ALWAYS);
         mMenuItem.setIcon(resId);
         mMenuItem.setOnMenuItemClickListener(this);
         setVisible();

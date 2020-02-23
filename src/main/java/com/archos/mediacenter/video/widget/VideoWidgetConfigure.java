@@ -29,9 +29,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.archos.mediacenter.video.R;
 
-public class VideoWidgetConfigure extends Activity {
+public class VideoWidgetConfigure extends AppCompatActivity {
     private static final String TAG = "VideoWidgetConfigure";
 
     int mAppWidgetId = -1;

@@ -16,6 +16,7 @@
 -->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -67,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_toRightOf="@+id/rating"
             android:layout_height="wrap_content"
-            android:src="@drawable/trakt_watched" />
+            app:srcCompat="@drawable/trakt_watched" />
 
         <LinearLayout
             android:id="@+id/badges"
@@ -82,21 +83,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dip"
-                android:src="@drawable/badge_3d"
+                app:srcCompat="@drawable/badge_3d"
                 android:visibility="gone"/>
             <ImageView
                 android:id="@+id/badge_resolution"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dip"
-                android:src="@drawable/badge_1080"
+                app:srcCompat="@drawable/badge_1080"
                 android:visibility="gone"/>
             <ImageView
                 android:id="@+id/badge_audio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dip"
-                android:src="@drawable/badge_5_1"
+                app:srcCompat="@drawable/badge_5_1"
                 android:visibility="gone"/>
 
         </LinearLayout>

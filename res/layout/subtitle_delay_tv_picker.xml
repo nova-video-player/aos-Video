@@ -26,6 +26,7 @@
      on the date format selected by the user.
 -->
 <com.archos.mediacenter.video.player.tvmenu.SubtitleDelayTVPicker xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/subtitleDelayPicker"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -49,7 +50,7 @@
             android:layout_marginRight="16dip"
             android:layout_gravity="center_vertical"
             android:padding="4dip"
-            android:src="@drawable/arrow_left" />
+            app:srcCompat="@drawable/arrow_left" />
 
         <TextView
             android:id="@+id/text_delay"
@@ -72,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:padding="4dip"
-            android:src="@drawable/arrow_right" />
+            app:srcCompat="@drawable/arrow_right" />
     </LinearLayout>
 
 </com.archos.mediacenter.video.player.tvmenu.SubtitleDelayTVPicker>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@android:style/Holo.ButtonBar.AlertDialog"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -24,12 +25,12 @@
                 android:id="@+id/icon1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/category_video_movie" />
+                app:srcCompat="@drawable/category_video_movie" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/category_video_tvshow" />
+                app:srcCompat="@drawable/category_video_tvshow" />
         </LinearLayout>
 
         <TextView

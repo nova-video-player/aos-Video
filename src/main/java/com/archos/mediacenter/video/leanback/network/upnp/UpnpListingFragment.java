@@ -14,9 +14,10 @@
 
 package com.archos.mediacenter.video.leanback.network.upnp;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.archos.mediacenter.filecoreextension.upnp2.UpnpServiceManager;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;

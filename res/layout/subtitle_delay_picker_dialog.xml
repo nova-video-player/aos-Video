@@ -18,6 +18,7 @@
 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -35,7 +36,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:scaleType="fitXY"
-        android:src="?android:attr/listDivider" />
+        app:srcCompat="?android:attr/listDivider" />
     <TextView
         android:text="@string/subtitle_delay_speed"
         android:layout_width="wrap_content"

@@ -16,6 +16,7 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="@dimen/box_width"
     android:layout_height="@dimen/box_height"
@@ -33,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="center"
-            android:src="@drawable/filetype_video" />
+            app:srcCompat="@drawable/filetype_video" />
     </FrameLayout>
 
     <TextView

@@ -14,16 +14,17 @@
 
 package com.archos.mediacenter.video;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import androidx.preference.PreferenceManager;
 import android.util.DisplayMetrics;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 /**
  * Created by vapillon on 01/07/15.
@@ -42,11 +43,11 @@ public class DensityTweak {
 
     final static private String USER_DEFINED_DENSITY_KEY = "user_defined_density";
     final static private String USER_DEFINED_DENSITY_CONFIRMED_KEY = "user_defined_density_confirmed";
-    final private Activity mActivity;
+    final private AppCompatActivity mActivity;
     final private SharedPreferences mPrefs;
     final private boolean mIsActualLeanbackDevice;
 
-    public DensityTweak(Activity activity) {
+    public DensityTweak(AppCompatActivity activity) {
         mActivity = activity;
         mPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
         mIsActualLeanbackDevice = mActivity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK);

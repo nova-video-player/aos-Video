@@ -18,6 +18,6 @@
     android:layout_gravity="center"
     android:layout_centerVertical="true"
     android:text=""
-    android:textAppearance="@android:style/TextAppearance.Material.Medium"
+    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
     android:layout_marginLeft="10dip" />
 </LinearLayout>

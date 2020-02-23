@@ -2,7 +2,6 @@ package com.archos.mediacenter.video.player;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -36,13 +35,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import androidx.appcompat.app.ActionBar;
-import androidx.preference.PreferenceManager;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
-import androidx.annotation.NonNull;
-import androidx.loader.app.LoaderManager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
@@ -65,14 +59,22 @@ import android.widget.Checkable;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
+import androidx.loader.app.LoaderManager;
+import androidx.preference.PreferenceManager;
+
 import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosIntents;
+import com.archos.environment.ArchosUtils;
 import com.archos.environment.SystemPropertiesProxy;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
@@ -110,17 +112,15 @@ import com.archos.medialib.Subtitle;
 import com.archos.mediaprovider.NetworkState;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.ScrapeDetailResult;
-import com.archos.environment.ArchosUtils;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.Override;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Collections;
 
 
 public class PlayerActivity extends AppCompatActivity implements PlayerController.Settings,
@@ -1828,7 +1828,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 cv.addOtherView(tvm2);
             }
 
-            final Activity mActivity = this;
+            final AppCompatActivity mActivity = this;
             tcv = tma.createAndAddView(null, getResources().getDrawable(R.drawable.tv_settings),
                                        getResources().getString(R.string.preferences));
             tcv.setOnSwitchClickListener(new View.OnClickListener() {
@@ -1895,14 +1895,12 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             //------------------------------------------------------------------
             mInfoMenuItem = menu.add(MENU_FILE_ACTIONS_GROUP, MENU_INFO_ID, Menu.NONE, R.string.menu_info);
             if (mInfoMenuItem != null) {
-                mInfoMenuItem.setIcon(R.drawable.ic_menu_info)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                MenuItemCompat.setShowAsAction(mInfoMenuItem.setIcon(R.drawable.ic_menu_info), MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
 
             mBookmarkMenuItem = menu.add(MENU_FILE_ACTIONS_GROUP, MENU_BOOKMARK_ID, Menu.NONE, R.string.menu_bookmark);
             if (mBookmarkMenuItem != null) {
-                mBookmarkMenuItem.setIcon(R.drawable.ic_menu_bookmark)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                MenuItemCompat.setShowAsAction(mBookmarkMenuItem.setIcon(R.drawable.ic_menu_bookmark), MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
             mAudioInfoController.attachMenu(menu, R.drawable.ic_menu_languages);
             mSubtitleInfoController.attachMenu(menu, R.drawable.ic_menu_subtitles);
@@ -1915,16 +1913,13 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
                 mBrightnessMenuItem = menu.add(MENU_GLOBAL_ACTIONS_GROUP, MENU_BRIGHTNESS_ID, Menu.NONE, R.string.menu_brightness_settings);
                 if (mBrightnessMenuItem != null) {
-                    mBrightnessMenuItem.setIcon(R.drawable.ic_menu_brightness)
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    MenuItemCompat.setShowAsAction(mBrightnessMenuItem.setIcon(R.drawable.ic_menu_brightness), MenuItem.SHOW_AS_ACTION_ALWAYS);
                 }
                 if (mPlayer!=null&&mPlayer.getEffectType()==VideoEffect.EFFECT_NONE) {
                     menuItem = menu.add(MENU_GLOBAL_ACTIONS_GROUP, MENU_LOCK_ROTATION_ID,
                             Menu.NONE,R.string.rotation_unlock);
                     if (menuItem != null) {
-                        menuItem.setIcon(mLockRotation ? R.drawable.ic_menu_locked : R.drawable.ic_menu_unlocked)
-                        //.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                        MenuItemCompat.setShowAsAction(menuItem.setIcon(mLockRotation ? R.drawable.ic_menu_locked : R.drawable.ic_menu_unlocked), MenuItem.SHOW_AS_ACTION_NEVER);
                         menuItem.setCheckable(true);
                         menuItem.setChecked(!mLockRotation);
                     }
@@ -1935,7 +1930,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     Menu.NONE, R.string.notification_mode);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_notifications);
-                menuItem.setShowAsAction(!isPluggedOnTv()?MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
+                MenuItemCompat.setShowAsAction(menuItem, !isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
             //------------------------------------------------------------------
             // Finally add the other items (which will be available in the menu)
@@ -1943,24 +1938,24 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_PLAYMODE_ID, Menu.NONE, R.string.pref_play_mode_title);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_playmode);
-                menuItem.setShowAsAction(!isPluggedOnTv()?MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
+                MenuItemCompat.setShowAsAction(menuItem, !isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
             if (isAudioFilterEnabled()) {
                 menuItem = menu.add(MENU_OTHER_GROUP, MENU_AUDIO_FILTER_ID, Menu.NONE, R.string.pref_audio_parameters_title);
                 if (menuItem != null) {
                     menuItem.setIcon(R.drawable.ic_menu_audioboost);
-                    menuItem.setShowAsAction(!isPluggedOnTv()?MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    MenuItemCompat.setShowAsAction(menuItem, !isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
                 }
             }
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_AUDIO_DELAY_ID, Menu.NONE, R.string.player_pref_audio_delay_title);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_delay);
-                menuItem.setShowAsAction(!isPluggedOnTv() ? MenuItem.SHOW_AS_ACTION_NEVER : MenuItem.SHOW_AS_ACTION_ALWAYS);
+                MenuItemCompat.setShowAsAction(menuItem, !isPluggedOnTv() ? MenuItem.SHOW_AS_ACTION_NEVER : MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_S3D_ID, Menu.NONE, R.string.pref_s3d_mode_title);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_3d);
-                menuItem.setShowAsAction(!isPluggedOnTv()?MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
+                MenuItemCompat.setShowAsAction(menuItem, !isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
             // Check if the brightness item can be enabled
             /*if (mBrightnessMenuItem != null) {
@@ -1976,9 +1971,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             }*/
             menu.add(MENU_OTHER_GROUP, MENU_WINDOW_MODE, Menu.NONE, R.string.player_window_mode);
             // Always add a link to the general application preferences
-            menu.add(MENU_OTHER_GROUP, MENU_PREFERENCES, Menu.NONE, R.string.preferences)
-            .setIcon(R.drawable.ic_menu_settings)
-            .setShowAsAction(!isPluggedOnTv()?MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
+            MenuItemCompat.setShowAsAction(menu.add(MENU_OTHER_GROUP, MENU_PREFERENCES, Menu.NONE, R.string.preferences)
+            .setIcon(R.drawable.ic_menu_settings), !isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
         return true;
     }

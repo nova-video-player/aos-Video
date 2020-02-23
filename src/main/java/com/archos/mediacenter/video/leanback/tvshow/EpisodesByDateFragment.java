@@ -14,7 +14,6 @@
 
 package com.archos.mediacenter.video.leanback.tvshow;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -22,6 +21,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.leanback.widget.SearchOrbView;
 import androidx.loader.app.LoaderManager;

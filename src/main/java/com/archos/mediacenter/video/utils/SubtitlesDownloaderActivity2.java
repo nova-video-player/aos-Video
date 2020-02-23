@@ -15,8 +15,6 @@
 package com.archos.mediacenter.video.utils;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -32,7 +30,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
-import androidx.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -44,10 +41,15 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog.Builder;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+
 import com.archos.environment.ArchosUtils;
-import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.FileEditor;
 import com.archos.filecorelibrary.FileEditorFactory;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.MetaFile2Factory;
 import com.archos.mediacenter.filecoreextension.UriUtils;
@@ -61,13 +63,9 @@ import com.archos.mediaprovider.video.VideoStore;
 import com.github.wtekiela.opensub4j.api.OpenSubtitlesClient;
 import com.github.wtekiela.opensub4j.impl.OpenSubtitlesClientImpl;
 import com.github.wtekiela.opensub4j.response.Response;
-import com.github.wtekiela.opensub4j.response.SubtitleInfo;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-
-import de.timroes.axmlrpc.XMLRPCClient;
-import de.timroes.axmlrpc.XMLRPCException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -86,7 +84,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
-public class SubtitlesDownloaderActivity2 extends Activity{
+import de.timroes.axmlrpc.XMLRPCClient;
+
+public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
     public static final String FILE_URLS = "fileUrls";
     public static final String FILE_URL = "fileUrl";
     public static final String FILE_NAMES = "fileNames"; //friendly name for Upnp
@@ -623,7 +623,7 @@ public class SubtitlesDownloaderActivity2 extends Activity{
                     showSumup(buildSumup(success, fails, false));
                 }
                 if (!success.isEmpty()) {
-                    setResult(Activity.RESULT_OK);
+                    setResult(AppCompatActivity.RESULT_OK);
                 }
             }
             logOut();

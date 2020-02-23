@@ -26,6 +26,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.core.view.MenuItemCompat;
+
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.FileEditorFactory;
 import com.archos.filecorelibrary.samba.SambaDiscovery;
@@ -77,8 +79,7 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, R.string.refresh_servers_list, Menu.NONE, R.string.refresh_servers_list)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        MenuItemCompat.setShowAsAction(menu.add(0, R.string.refresh_servers_list, Menu.NONE, R.string.refresh_servers_list), MenuItem.SHOW_AS_ACTION_NEVER);
 
     }
     @Override

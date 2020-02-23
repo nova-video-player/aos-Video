@@ -14,18 +14,19 @@
 
 package com.archos.mediacenter.video.leanback;
 
-import android.app.Activity;
-import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.fragment.app.Fragment;
 import androidx.leanback.widget.BaseCardView;
 import androidx.leanback.widget.ImageCardView;
 import androidx.leanback.widget.OnItemViewClickedListener;
 import androidx.leanback.widget.Presenter;
 import androidx.leanback.widget.Row;
 import androidx.leanback.widget.RowPresenter;
-import androidx.core.app.ActivityOptionsCompat;
-import android.view.View;
 
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
@@ -40,9 +41,9 @@ import com.archos.mediacenter.video.leanback.tvshow.TvshowFragment;
  */
 public class VideoViewClickedListener implements OnItemViewClickedListener {
 
-    final private Activity mActivity;
+    final private AppCompatActivity mActivity;
 
-    public VideoViewClickedListener(Activity activity) {
+    public VideoViewClickedListener(AppCompatActivity activity) {
         mActivity = activity;
     }
 
@@ -59,11 +60,11 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
         }
     }
 
-    public static void showVideoDetails(Activity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean forceSelection, long listId) {
+    public static void showVideoDetails(AppCompatActivity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean forceSelection, long listId) {
         showVideoDetails(activity,video, itemViewHolder, true, forceSelection, true, listId, null, -1);
     }
 
-    public static void showVideoDetails(Activity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean animate, boolean forceSelection, boolean shouldLoadBackdrop, long listId, Fragment fragment, int requestCode) {
+    public static void showVideoDetails(AppCompatActivity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean animate, boolean forceSelection, boolean shouldLoadBackdrop, long listId, Fragment fragment, int requestCode) {
         Intent intent = new Intent(activity, VideoDetailsActivity.class);
         intent.putExtra(VideoDetailsFragment.EXTRA_VIDEO, video);
         intent.putExtra(VideoDetailsFragment.EXTRA_LIST_ID, listId);
@@ -94,7 +95,7 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
         }
     }
 
-    public static void showTvshowDetails(Activity activity, Tvshow tvshow, Presenter.ViewHolder itemViewHolder) {
+    public static void showTvshowDetails(AppCompatActivity activity, Tvshow tvshow, Presenter.ViewHolder itemViewHolder) {
         Intent intent = new Intent(activity, TvshowActivity.class);
         intent.putExtra(TvshowFragment.EXTRA_TVSHOW, tvshow);
         View sourceView = null;

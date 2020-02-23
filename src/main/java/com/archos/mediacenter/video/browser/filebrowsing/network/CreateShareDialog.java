@@ -15,17 +15,18 @@
 package com.archos.mediacenter.video.browser.filebrowsing.network;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;

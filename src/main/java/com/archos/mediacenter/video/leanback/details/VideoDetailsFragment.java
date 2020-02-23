@@ -16,19 +16,13 @@ package com.archos.mediacenter.video.leanback.details;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import androidx.leanback.widget.FullWidthDetailsOverviewSharedElementHelper;
-import androidx.fragment.app.DialogFragment;
-import androidx.loader.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
-import androidx.loader.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import androidx.loader.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -39,13 +33,28 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.preference.PreferenceManager;
+import android.text.SpannableString;
+import android.transition.Slide;
+import android.util.Log;
+import android.util.Pair;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.DetailsFragmentWithLessTopOffset;
+import androidx.leanback.transition.TransitionHelper;
+import androidx.leanback.transition.TransitionListener;
 import androidx.leanback.widget.Action;
 import androidx.leanback.widget.ArrayObjectAdapter;
 import androidx.leanback.widget.ClassPresenterSelector;
 import androidx.leanback.widget.DetailsOverviewRow;
+import androidx.leanback.widget.FullWidthDetailsOverviewSharedElementHelper;
 import androidx.leanback.widget.HeaderItem;
 import androidx.leanback.widget.ListRow;
 import androidx.leanback.widget.ListRowPresenter;
@@ -54,19 +63,11 @@ import androidx.leanback.widget.OnItemViewClickedListener;
 import androidx.leanback.widget.Presenter;
 import androidx.leanback.widget.Row;
 import androidx.leanback.widget.RowPresenter;
-import androidx.core.content.ContextCompat;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 import androidx.palette.graphics.Palette;
-import android.text.SpannableString;
-import android.transition.Slide;
-import androidx.transition.Transition;
-import androidx.leanback.transition.TransitionHelper;
-import androidx.leanback.transition.TransitionListener;
-import android.util.Log;
-import android.util.Pair;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.Toast;
+import androidx.preference.PreferenceManager;
 
 import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosUtils;
@@ -131,7 +132,6 @@ import com.archos.mediascraper.MovieTags;
 import com.archos.mediascraper.ScraperImage;
 import com.archos.mediascraper.ScraperTrailer;
 import com.archos.mediascraper.ShowTags;
-
 import com.archos.mediascraper.VideoTags;
 import com.archos.mediascraper.xml.MovieScraper3;
 import com.squareup.picasso.Picasso;
@@ -1306,16 +1306,16 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     }
 
     private class FullScraperTagsTask extends AsyncTask<Video, Void, BaseTags> {
-        private final Activity mActivity;
+        private final AppCompatActivity mActivity;
         List<ScraperImage> mPosters;
         List<ScraperImage> mBackdrops;
         private List<ScraperTrailer> mTrailers;
 
 
-        public FullScraperTagsTask(Activity activity){
+        public FullScraperTagsTask(AppCompatActivity activity){
             mActivity = activity;
         }
-        private Activity getActivity(){
+        private AppCompatActivity getActivity(){
             return mActivity;
         }
         @Override
@@ -1457,13 +1457,13 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     private class SubtitleFilesListerTask extends AsyncTask<Video, Void, List<SubtitleManager.SubtitleFile>> {
 
-        private final Activity mActivity;
+        private final AppCompatActivity mActivity;
 
-        public SubtitleFilesListerTask(Activity activity){
+        public SubtitleFilesListerTask(AppCompatActivity activity){
             mActivity = activity;
         }
 
-        private Activity getActivity(){
+        private AppCompatActivity getActivity(){
             return mActivity;
         }
 
@@ -1564,14 +1564,14 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     /** Saves a Poster as default poster for a video and update the current poster */
     private class PosterSaverTask extends AsyncTask<ScraperImage, Void, Bitmap> {
         private final int mSeason;
-        private final Activity mActivity;
+        private final AppCompatActivity mActivity;
 
-        public PosterSaverTask(Activity activity,int season){
+        public PosterSaverTask(AppCompatActivity activity, int season){
             mActivity = activity;
             mSeason = season;
         }
 
-        private Activity getActivity(){
+        private AppCompatActivity getActivity(){
             return mActivity;
         }
 
@@ -1647,13 +1647,13 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     /** Saves a Backdrop as default for a video and update the current backdrop */
     private class BackdropSaverTask extends AsyncTask<ScraperImage, Void, Void> {
 
-        private final Activity mActivity;
+        private final AppCompatActivity mActivity;
 
-        public BackdropSaverTask(Activity activity){
+        public BackdropSaverTask(AppCompatActivity activity){
             mActivity = activity;
         }
 
-        private Activity getActivity(){
+        private AppCompatActivity getActivity(){
             return mActivity;
         }
 

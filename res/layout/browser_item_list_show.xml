@@ -6,6 +6,7 @@ for informations (duration for files, number of files for directories).
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="@dimen/video_list_item_height"
     android:background="@drawable/list_item_background"
@@ -36,7 +37,7 @@ for informations (duration for files, number of files for directories).
             android:layout_alignRight="@id/thumbnail"
             android:layout_marginBottom="@dimen/video_3d_label_margin_grid"
             android:layout_marginRight="@dimen/video_3d_label_margin_grid"
-            android:src="@drawable/label_3d"
+            app:srcCompat="@drawable/label_3d"
             android:visibility="gone" />
 
         <ImageView
@@ -46,7 +47,7 @@ for informations (duration for files, number of files for directories).
             android:layout_alignLeft="@id/number"
             android:layout_alignTop="@id/number"
             android:layout_marginLeft="@dimen/video_list_show_trakt_library_margin_left"
-            android:src="@drawable/label_trakt_library_small"
+            app:srcCompat="@drawable/label_trakt_library_small"
             android:visibility="gone" />
     </RelativeLayout>
 
@@ -58,7 +59,7 @@ for informations (duration for files, number of files for directories).
         android:layout_marginRight="-2px"
         android:layout_marginTop="-2px"
         android:layout_alignParentTop="true"
-        android:src="@drawable/watched_icon_corner"
+        app:srcCompat="@drawable/watched_icon_corner"
         android:visibility="gone" />
 
     <include layout="@layout/browser_item_list_common" />
