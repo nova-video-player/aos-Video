@@ -290,8 +290,8 @@ abstract public class BrowserCategory extends ListFragment {
                 updateListSelection(v, item);
                 setFragment(item.path);
                 if(item.id!=ITEM_ID_PROVIDER) { //don't save when provider to avoid restarting with android browser view
-                    PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putInt(PREFERENCE_LAST_FRAGMENT, mSelectedItemId).commit();
-                    PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString(PREFERENCE_LAST_PATH, item.path).commit();
+                    PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putInt(PREFERENCE_LAST_FRAGMENT, mSelectedItemId).apply();
+                    PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString(PREFERENCE_LAST_PATH, item.path).apply();
                 }
                 if (getActivity() instanceof MainActivity)
                     ((MainActivity) getActivity()).closeDrawer();

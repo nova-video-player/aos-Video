@@ -86,7 +86,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 		// Save the sort mode
 		mPreferences.edit()
 		.putString(getSortOrderParamKey(), mSortOrder)
-		.commit();
+		.apply();
 
         super.onDestroy();
         if (mCursor != null && ! mCursor.isClosed()) {
