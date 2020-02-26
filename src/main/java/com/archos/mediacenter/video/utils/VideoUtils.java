@@ -31,8 +31,6 @@ public class VideoUtils {
     private final static String TAG = "VideoUtils";
     private final static boolean DBG = false;
 
-    protected static final String CAMERA_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getPath() + "/Camera";
-
     // Available view modes (values must be powers of 2)
     public static final int VIEW_MODE_LIST    = 1;
     public static final int VIEW_MODE_GRID    = 1 << 1;
