@@ -102,9 +102,10 @@ public class BrowserByExtStorage extends BrowserByLocalFolder {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
                     intent.addCategory(Intent.CATEGORY_DEFAULT);
-                    //startActivityForResult(Intent.createChooser(intent, "Choose directory"), READ_REQUEST_CODE);
-                    startActivityForResult(intent, READ_REQUEST_CODE);
-
+                    intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
+                    intent.putExtra("android.content.extra.FANCY", true);
+                    intent.putExtra("android.content.extra.SHOW_FILESIZE", true);
+                    startActivityForResult(Intent.createChooser(intent, "Choose directory"), READ_REQUEST_CODE);
                 }
             }).setNegativeButton(android.R.string.cancel, null).show();
             displayFailPage();
