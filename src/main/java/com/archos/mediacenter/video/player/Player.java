@@ -674,7 +674,8 @@ public class Player implements IPlayerControl,
             mPlayerListener.onPause();
         }
         /* on pause, Don't suspend when video is non local or can't seek */
-        if (!isTorrent() && isLocalVideo() && canSeekBackward() && canSeekForward()) {
+        //if (!isTorrent() && isLocalVideo() && canSeekBackward() && canSeekForward()) {
+        if (!isTorrent() && canSeekBackward() && canSeekForward()) {
             stayAwake(false);
         }
     }
