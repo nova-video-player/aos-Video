@@ -47,7 +47,6 @@ import com.archos.mediaprovider.video.VideoStore;
 public class BrowserBySeason extends BrowserWithShowHeader  {
 
 
-    static final private String BROWSER_SHOW = BrowserByShow.class.getName();
     public static final String EXTRA_SHOW_ITEM = "show_item";
     private final static int SUBMENU_ITEM_LIST_INDEX = 0;
     private final static int SUBMENU_ITEM_GRID_INDEX = 1;
@@ -167,7 +166,8 @@ public class BrowserBySeason extends BrowserWithShowHeader  {
                 season.getSeasonNumber());
 
         args.putString(SUBCATEGORY_NAME, season.getName());
-        Fragment f = Fragment.instantiate(mContext, BROWSER_SHOW, args);
+        Fragment f = new BrowserByShow();
+        f.setArguments(args);
         BrowserCategory category = (BrowserCategory) getFragmentManager().findFragmentById(
                 R.id.category);
         category.startContent(f);

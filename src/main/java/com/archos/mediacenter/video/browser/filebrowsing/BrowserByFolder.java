@@ -766,10 +766,15 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         args.putParcelable(CURRENT_DIRECTORY, metaFile2.getUri());
         args.putString(TITLE, metaFile2.getName());
         args.putBoolean(SHORTCUT_SELECTED, mShortcutSelected);
-        Fragment f = Fragment.instantiate(mContext, getClass().getCanonicalName(), args);
-
-        BrowserCategory category = (BrowserCategory) getFragmentManager().findFragmentById(R.id.category);
-        category.startContent(f);
+        Fragment f;
+        try {
+            f = getClass().getConstructor().newInstance();
+            f.setArguments(args);
+            BrowserCategory category = (BrowserCategory) getFragmentManager().findFragmentById(R.id.category);
+            category.startContent(f);
+        } catch (Exception e) {
+            Log.w(TAG, "enterDirectory: caught exception", e);
+        }
     }
     @Override
     public boolean shouldDownloadRemoteSubtitle(int position){

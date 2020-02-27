@@ -341,12 +341,14 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 				tvshow.getTvshowId());
 
         Fragment f = null;
-		if(tvshow.getSeasonCount()>1)
-			f = Fragment.instantiate(mContext, BrowserListOfSeasons.class.getName(), args);
-		else
-			f = Fragment.instantiate(mContext, BrowserListOfEpisodes.class.getName(), args);
-        BrowserCategory category = (BrowserCategory) getFragmentManager().findFragmentById(
-                R.id.category);
+		if(tvshow.getSeasonCount()>1) {
+			f = new BrowserListOfSeasons();
+			f.setArguments(args);
+		} else {
+			f = new BrowserListOfEpisodes();
+			f.setArguments(args);
+		}
+        BrowserCategory category = (BrowserCategory) getFragmentManager().findFragmentById(R.id.category);
         category.startContent(f);
 
         mSelectedPosition=position;

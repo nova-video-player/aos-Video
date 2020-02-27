@@ -346,7 +346,8 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                     Bundle args = new Bundle(2);
                     args.putLong(VideoColumns.SCRAPER_SHOW_ID, showId);
                     args.putString(CursorBrowserByVideo.SUBCATEGORY_NAME, ""); // should better have the show title, but...
-                    Fragment f = Fragment.instantiate(this,BrowserListOfSeasons.class.getName(), args);
+                    Fragment f = new BrowserListOfSeasons();
+                    f.setArguments(args);
                     BrowserCategory category = (BrowserCategory) getSupportFragmentManager().findFragmentById(R.id.category);
                     category.clearCheckedItem(); // a category may have be selected previously
                     category.startContent(f);
@@ -968,7 +969,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     public void reloadBrowserByVideoFolder() {
         BrowserCategory category = (BrowserCategory) getSupportFragmentManager().findFragmentById(R.id.category);
-        Fragment f = Fragment.instantiate(getApplicationContext(), BrowserByVideoFolder.class.getName());
+        Fragment f = new BrowserByVideoFolder();
         category.loadFragmentAfterStackReset(f);
     }
 

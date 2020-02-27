@@ -36,6 +36,7 @@ import android.view.View;
 import com.archos.mediacenter.cover.Cover;
 import com.archos.mediacenter.cover.CoverRoll3D;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserListOfSeasons;
 import com.archos.mediacenter.video.browser.dialogs.Paste;
 
 
@@ -148,9 +149,10 @@ abstract public class BrowserActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Cover.LAUNCH_CONTENT_BROWSER_INTENT)) {
-                Fragment f = Fragment.instantiate(BrowserActivity.this,
-                        intent.getStringExtra(FRAGMENT_NAME), intent.getBundleExtra(FRAGMENT_ARGS));
-
+                // Replaces this but only used in TvShowCover with BrowserListOfSeasons
+                // Fragment f = Fragment.instantiate(BrowserActivity.this, intent.getStringExtra(FRAGMENT_NAME), intent.getBundleExtra(FRAGMENT_ARGS));
+                Fragment f = new BrowserListOfSeasons();
+                f.setArguments(intent.getBundleExtra(FRAGMENT_ARGS));
                 BrowserCategory category = (BrowserCategory) getSupportFragmentManager().findFragmentById(
                         R.id.category);
                 category.startContent(f);

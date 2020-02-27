@@ -73,11 +73,15 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
 
         Fragment f;
         if (uri.getScheme().equals("smb")) {
-            f = Fragment.instantiate(getActivity(), BrowserBySmb.class.getCanonicalName(), args);
+            f = new BrowserBySmb();
+            f.setArguments(args);
+
         } else if (uri.getScheme().equals("upnp")) {
-            f = Fragment.instantiate(getActivity(), BrowserByUpnp.class.getCanonicalName(), args);
+            f = new BrowserByUpnp();
+            f.setArguments(args);
         } else {
-            f = Fragment.instantiate(getActivity(), BrowserBySFTP.class.getCanonicalName(), args);
+            f = new BrowserBySFTP();
+            f.setArguments(args);
         }
         BrowserCategory category = (BrowserCategory) getActivity().getSupportFragmentManager().findFragmentById(R.id.category);
         category.startContent(f);

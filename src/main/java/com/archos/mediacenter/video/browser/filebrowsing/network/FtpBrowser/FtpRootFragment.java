@@ -128,7 +128,8 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
                 public void onConnectClick(String username, Uri uri, String password) {
                     Bundle args = new Bundle();
                     args.putParcelable(BrowserBySFTP.CURRENT_DIRECTORY, uri);
-                    Fragment f = Fragment.instantiate(getActivity(), BrowserBySFTP.class.getCanonicalName(), args);
+                    Fragment f = new BrowserBySFTP();
+                    f.setArguments(args);
                     BrowserCategory category = (BrowserCategory) getActivity().getSupportFragmentManager().findFragmentById(R.id.category);
                     category.startContent(f);
                 }

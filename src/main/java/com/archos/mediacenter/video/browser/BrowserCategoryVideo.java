@@ -55,10 +55,11 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
             R.string.movies_by_year,
             R.string.movies_by_genre,
     };
-    static final String MOVIE_CATEGORIES_CLASSES[] = {
-            BrowserAllMovies.class.getName(),
-            BrowserMoviesByYear.class.getName(),
-            BrowserMoviesByGenre2.class.getName(),
+
+    static final Class<? extends Fragment> MOVIE_CATEGORIES_CLASSES[] = new Class[]{
+            BrowserAllMovies.class,
+            BrowserMoviesByYear.class,
+            BrowserMoviesByGenre2.class,
     };
 
 
@@ -169,7 +170,7 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("video/*");
-            startActivityForResult(intent, FILE_CHOOSER_ACTIVITY_REQUEST_CODE);
+            startActivityForResult(intent.createChooser(intent, "Choose file"), FILE_CHOOSER_ACTIVITY_REQUEST_CODE);
             //restore browser
             mSelectedItemId = mOldSelectedItemId;
             return ;
@@ -220,8 +221,12 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
             return true;
         }
         BrowserCategory category = (BrowserCategory) getFragmentManager().findFragmentById(R.id.category);
-        Fragment f = Fragment.instantiate(getActivity(),MOVIE_CATEGORIES_CLASSES[itemPosition]);
-        category.loadFragmentAfterStackReset(f);
+        try {
+            Fragment f = MOVIE_CATEGORIES_CLASSES[itemPosition].getConstructor().newInstance();
+            category.loadFragmentAfterStackReset(f);
+        } catch (Exception e) {
+            Log.w(TAG, "onNavigationItemSelected: caught exception", e);
+        }
         // Save the current position to the preferences
         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
         .putInt(KEY_ACTIONBAR_NAVIGATION_POSITION, itemPosition)
@@ -233,62 +238,66 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
     @Override
     public FragmentTitleStruc getContentFragmentAndTitle(int id) {
         FragmentTitleStruc struc = new FragmentTitleStruc();
-        String fragmentName = null;
+        Class<? extends Fragment> fragmentClass = null;
         switch (id) {
             case ITEM_ID_VIDEO_FOLDER:
-                fragmentName = BrowserByVideoFolder.class.getName();
+                fragmentClass = BrowserByVideoFolder.class;
                 struc.title = R.string.video_folder;
                 break;
             case ITEM_ID_SMB:
-                fragmentName = SmbRootFragment.class.getName();
+                fragmentClass = SmbRootFragment.class;
                 struc.title = R.string.network_shared_folders;
                 break;
             case ITEM_ID_FTP:
-                fragmentName = FtpRootFragment.class.getName();
+                fragmentClass = FtpRootFragment.class;
                 struc.title = R.string.sftp_folders;
                 break;
             case ITEM_ID_UPNP:
-                fragmentName = UpnpRootFragment.class.getName();
+                fragmentClass = UpnpRootFragment.class;
                 struc.title = R.string.network_media_servers;
                 break;
             case ITEM_ID_RECENTLY_ADDED:
-                fragmentName = BrowserLastAdded.class.getName();
+                fragmentClass = BrowserLastAdded.class;
                 struc.title = R.string.recently_added_videos;
                 break;
             case ITEM_ID_RECENTLY_PLAYED:
-                fragmentName = BrowserLastPlayed.class.getName();
+                fragmentClass = BrowserLastPlayed.class;
                 struc.title = R.string.recently_played_videos;
                 break;
             case ITEM_ID_LISTS:
-                fragmentName = BrowserPlaylists.class.getName();
+                fragmentClass = BrowserPlaylists.class;
                 struc.title = R.string.video_lists;
                 break;
             case R.string.not_played_yet_videos:
-                fragmentName = BrowserNeverPlayed.class.getName();
+                fragmentClass = BrowserNeverPlayed.class;
                 struc.title = R.string.not_played_yet_videos;
                 break;
             case ITEM_ID_MOVIES:
-                fragmentName = BrowserAllMovies.class.getName();
+                fragmentClass = BrowserAllMovies.class;
                 struc.title = R.string.movies;
                 break;
             case ITEM_ID_TV_SHOWS:
-                fragmentName = BrowserAllTvShows.class.getName();
+                fragmentClass = BrowserAllTvShows.class;
                 struc.title = R.string.all_tv_shows;
                 break;
             case ITEM_ID_ALL_VIDEOS:
-                fragmentName = BrowserAllVideos.class.getName();
+                fragmentClass = BrowserAllVideos.class;
                 struc.title = R.string.all_videos;
                 break;
             case ITEM_ID_BROWSER:
-                fragmentName = BrowserByExtStorage.class.getName();
+                fragmentClass = BrowserByExtStorage.class;
                 struc.title = R.string.other_storage; // will be replaced by fragment
                 break;
             default:
-                fragmentName = BrowserLastPlayed.class.getName();
+                fragmentClass = BrowserLastPlayed.class;
                 struc.title = R.string.video_folder;
                 break;
         }
-        struc.fragment = Fragment.instantiate(getActivity().getApplicationContext(), fragmentName);
+        try {
+            struc.fragment = fragmentClass.getConstructor().newInstance();
+        } catch (Exception e) {
+            Log.w(TAG, "onNavigationItemSelected: caught exception", e);
+        }
         return struc;
     }
 
