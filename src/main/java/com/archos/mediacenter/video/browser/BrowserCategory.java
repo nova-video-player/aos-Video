@@ -204,7 +204,7 @@ abstract public class BrowserCategory extends ListFragment {
             setFragment(lastPath);
 
         if(getActivity() instanceof BrowserActivity)
-            ((MainActivity)getActivity()).updateHomeIcon(getFragmentManager().getBackStackEntryCount()>1);
+            ((MainActivity)getActivity()).updateHomeIcon(getParentFragmentManager().getBackStackEntryCount()>1);
 
     }
 
@@ -308,7 +308,7 @@ abstract public class BrowserCategory extends ListFragment {
     }
 
     public void loadFragmentAfterStackReset(Fragment f) {
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getParentFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             // Clear the back stack as a new category is started.
             fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -340,9 +340,9 @@ abstract public class BrowserCategory extends ListFragment {
 
     private void updateCategoryContent(Fragment fragment, String tag) {
         // Update the content of the fragment corresponding to the current category
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getParentFragmentManager();
         if (fm != null) {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            FragmentTransaction ft = getParentFragmentManager().beginTransaction();
             if(ArchosUtils.shouldAnimate())
                 ft.setCustomAnimations(R.anim.browser_content_enter,
                     R.anim.browser_content_exit, R.anim.browser_content_pop_enter,
@@ -351,7 +351,7 @@ abstract public class BrowserCategory extends ListFragment {
             ft.addToBackStack(null);
             ft.commitAllowingStateLoss();
             if(getActivity() instanceof BrowserActivity)
-                ((MainActivity)getActivity()).updateHomeIcon(getFragmentManager().getBackStackEntryCount()>0);
+                ((MainActivity)getActivity()).updateHomeIcon(getParentFragmentManager().getBackStackEntryCount()>0);
         }
     }
 

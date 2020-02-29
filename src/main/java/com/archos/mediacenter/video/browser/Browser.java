@@ -775,7 +775,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
 
     public void showSubsRetrievingDialog(SubtitleManager engine){
         mDialogRetrieveSubtitles = new DialogRetrieveSubtitles();
-        mDialogRetrieveSubtitles.show(getFragmentManager(), null);
+        mDialogRetrieveSubtitles.show(getParentFragmentManager(), null);
         mDialogRetrieveSubtitles.setDownloader(engine);
 
     }
@@ -1123,7 +1123,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             args.putSerializable(SubtitlesDownloaderActivity.FILE_URLS, allVideoPaths);
             mDialogForceDlSubtitles.setArguments(args);
             mDialogForceDlSubtitles.setTargetFragment(this, 0);
-            mDialogForceDlSubtitles.show(getFragmentManager(), "dialog_force_dl_subtitles");
+            mDialogForceDlSubtitles.show(getParentFragmentManager(), "dialog_force_dl_subtitles");
         }else {
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.setClass(mContext, SubtitlesDownloaderActivity.class);
@@ -1184,7 +1184,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     public void startDeletingDialog(List<Uri> uriToDelete){
         mArchosGridView.getCheckedItemPosition();
         mDialogDeleting = new DeleteDialog();
-        mDialogDeleting.show(getFragmentManager(), null);
+        mDialogDeleting.show(getParentFragmentManager(), null);
         final Delete delete = new Delete(this,getActivity());
         if(uriToDelete.size()>1) {
             delete.startMultipleDeleteProcess(uriToDelete);

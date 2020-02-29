@@ -220,7 +220,7 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
             mNavigationItemListenerActive = true; // regular state is active, to get user feedback
             return true;
         }
-        BrowserCategory category = (BrowserCategory) getFragmentManager().findFragmentById(R.id.category);
+        BrowserCategory category = (BrowserCategory) getParentFragmentManager().findFragmentById(R.id.category);
         try {
             Fragment f = MOVIE_CATEGORIES_CLASSES[itemPosition].getConstructor().newInstance();
             category.loadFragmentAfterStackReset(f);

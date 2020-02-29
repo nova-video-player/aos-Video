@@ -175,7 +175,7 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
         else if(item.getItemId() == R.string.manually_create_share){
             CreateShareDialog shareDialog = new CreateShareDialog();
             shareDialog.setRetainInstance(true); // the dialog is dismissed at screen rotation, that's better than a crash...
-            shareDialog.show(getFragmentManager(), "CreateShareDialog");
+            shareDialog.show(getParentFragmentManager(), "CreateShareDialog");
             shareDialog.setOnShortcutCreatedListener(new CreateShareDialog.OnShortcutCreatedListener() {
                 @Override
                 public void onShortcutCreated(String path) {

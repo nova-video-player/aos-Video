@@ -1113,7 +1113,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     public void showSubtitleDialog(SubtitleManager downloader){
         mDialogRetrieveSubtitles = new DialogRetrieveSubtitles();
-        mDialogRetrieveSubtitles.show(getFragmentManager(), null);
+        mDialogRetrieveSubtitles.show(getParentFragmentManager(), null);
         mDialogRetrieveSubtitles.setDownloader(downloader);
     }
 

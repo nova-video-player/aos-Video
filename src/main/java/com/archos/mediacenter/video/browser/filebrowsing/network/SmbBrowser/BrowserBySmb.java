@@ -72,7 +72,7 @@ public class BrowserBySmb extends BrowserByNetwork {
 
     private void askForCredentials() {
         String tag = SMBServerCredentialsDialog.class.getCanonicalName();
-        SMBServerCredentialsDialog dialog = (SMBServerCredentialsDialog)getFragmentManager().findFragmentByTag(tag);
+        SMBServerCredentialsDialog dialog = (SMBServerCredentialsDialog)getParentFragmentManager().findFragmentByTag(tag);
         if (dialog == null) {
             dialog = new SMBServerCredentialsDialog();
             Bundle args = new Bundle();
@@ -85,7 +85,7 @@ public class BrowserBySmb extends BrowserByNetwork {
                 args.putParcelable(SMBServerCredentialsDialog.URI, mCurrentDirectory);
                 dialog.setArguments(args);
             }
-            dialog.show(getFragmentManager(), tag);
+            dialog.show(getParentFragmentManager(), tag);
         }
 
         dialog.setOnConnectClickListener(new SMBServerCredentialsDialog.onConnectClickListener() {

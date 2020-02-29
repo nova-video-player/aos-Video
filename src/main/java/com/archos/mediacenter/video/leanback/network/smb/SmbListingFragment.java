@@ -118,7 +118,7 @@ public class SmbListingFragment extends NetworkListingFragment {
 
 
     private void askForCredentials() {
-        if (getFragmentManager().findFragmentByTag(SmbServerCredentialsDialog.class.getCanonicalName()) == null) {
+        if (getParentFragmentManager().findFragmentByTag(SmbServerCredentialsDialog.class.getCanonicalName()) == null) {
             SmbServerCredentialsDialog dialog = new SmbServerCredentialsDialog();
             Bundle args = new Bundle();
             if (mUri != null) {
@@ -138,7 +138,7 @@ public class SmbListingFragment extends NetworkListingFragment {
                     startListing(mUri);
                 }
             });
-            dialog.show(getFragmentManager(), SmbServerCredentialsDialog.class.getCanonicalName());
+            dialog.show(getParentFragmentManager(), SmbServerCredentialsDialog.class.getCanonicalName());
         }
     }
 

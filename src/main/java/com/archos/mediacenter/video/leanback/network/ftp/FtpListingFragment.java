@@ -176,7 +176,7 @@ public class FtpListingFragment extends ListingFragment {
     }
 
     private void askForCredentials() {
-        if(getFragmentManager().findFragmentByTag(FtpServerCredentialsDialog.class.getCanonicalName())==null) {
+        if(getParentFragmentManager().findFragmentByTag(FtpServerCredentialsDialog.class.getCanonicalName())==null) {
             FtpServerCredentialsDialog dialog = new FtpServerCredentialsDialog();
             Bundle args = new Bundle();
             if (mUri != null) {
@@ -230,7 +230,7 @@ public class FtpListingFragment extends ListingFragment {
                 public void onClick(View view) {
                 }
             });
-            dialog.show(getFragmentManager(), FtpServerCredentialsDialog.class.getCanonicalName());
+            dialog.show(getParentFragmentManager(), FtpServerCredentialsDialog.class.getCanonicalName());
         }
     }
 

@@ -234,7 +234,7 @@ public class BrowserByNetwork extends BrowserByFolder {
             case R.string.manually_create_share:
                 CreateShareDialog shareDialog = new CreateShareDialog();
                 shareDialog.setRetainInstance(true); // the dialog is dismissed at screen rotation, that's better than a crash...
-                shareDialog.show(getFragmentManager(), "CreateShareDialog");
+                shareDialog.show(getParentFragmentManager(), "CreateShareDialog");
             case R.string.rescan:
                 NetworkScanner.scanVideos(mContext, mCurrentDirectory);
                 return true;

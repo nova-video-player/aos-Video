@@ -79,6 +79,6 @@ public class RescanWhenOpeningApplication extends GuidedStepSupportFragment {
             sGeneralSwitch =false;
         }
         NetworkAutoRefresh.setAutoRescanAtStart(getActivity(),sGeneralSwitch);
-        getFragmentManager().popBackStack();
+        getParentFragmentManager().popBackStack();
     }
 }

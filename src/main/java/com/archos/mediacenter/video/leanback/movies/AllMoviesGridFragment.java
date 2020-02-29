@@ -221,7 +221,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
                 // Save the new setting
                 mPrefs.edit().putInt(PREF_ALL_MOVIES_DISPLAY_MODE, mDisplayMode.ordinal()).commit();
                 // Reload a brand new fragment
-                getFragmentManager().beginTransaction()
+                getParentFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new AllMoviesGridFragment())
                         .commit();
             }

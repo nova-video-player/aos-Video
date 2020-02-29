@@ -348,7 +348,7 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 			f = new BrowserListOfEpisodes();
 			f.setArguments(args);
 		}
-        BrowserCategory category = (BrowserCategory) getFragmentManager().findFragmentById(R.id.category);
+        BrowserCategory category = (BrowserCategory) getParentFragmentManager().findFragmentById(R.id.category);
         category.startContent(f);
 
         mSelectedPosition=position;

@@ -146,10 +146,10 @@ public class RescanFragment extends GuidedStepSupportFragment implements Network
             builder.create().show();
         }
         else if (action.getId()==SCHEDULED_RESCAN_PERIOD_ID) {
-            add(getFragmentManager(), new ScheduledRescanPeriod());
+            add(getParentFragmentManager(), new ScheduledRescanPeriod());
         }
         else if (action.getId()==RESCAN_WHEN_OPENING_ID) {
-            add(getFragmentManager(), new RescanWhenOpeningApplication());
+            add(getParentFragmentManager(), new RescanWhenOpeningApplication());
         }
     }
 

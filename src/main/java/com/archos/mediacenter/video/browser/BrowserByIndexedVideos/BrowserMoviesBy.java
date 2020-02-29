@@ -252,7 +252,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
         args.putString(CursorBrowserByVideo.SUBCATEGORY_NAME, ((GroupOfMovieAdapter)mBrowserAdapter).getName(position));
 		completeNewFragmentBundle(args, position);
         //Load fragment
-        BrowserCategory category = (BrowserCategory) getFragmentManager().findFragmentById(R.id.category);
+        BrowserCategory category = (BrowserCategory) getParentFragmentManager().findFragmentById(R.id.category);
         Fragment newfragment = new BrowserAllMovies();
         newfragment.setArguments(args);
         category.startContent(newfragment);

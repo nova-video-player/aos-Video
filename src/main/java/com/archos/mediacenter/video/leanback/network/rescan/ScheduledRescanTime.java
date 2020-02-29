@@ -121,7 +121,7 @@ public class ScheduledRescanTime extends GuidedStepSupportFragment {
         Intent intent = action.getIntent();
         sTime = intent.getIntExtra("START",-1); //just set sTime, alarm will be set in onResume on ScheduledRescanPeriod
         // go back two levels: > ScheduledRescanPeriod > RescanFragment
-        getFragmentManager().popBackStack();
-        getFragmentManager().popBackStack();
+        getParentFragmentManager().popBackStack();
+        getParentFragmentManager().popBackStack();
     }
 }

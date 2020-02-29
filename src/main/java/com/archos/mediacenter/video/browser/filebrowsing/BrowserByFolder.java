@@ -110,7 +110,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             // The video browser activity may have been paused since the request
             // for showing the dialog was sent (for instance when the device is beeing rotated)
             // => show the dialog only if the activity is still in the foreground 
-            if (msg.what == DIALOG_LISTING && mIsActive && getFragmentManager() != null) {
+            if (msg.what == DIALOG_LISTING && mIsActive && getParentFragmentManager() != null) {
                 loading();
             }
         }
@@ -770,7 +770,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         try {
             f = getClass().getConstructor().newInstance();
             f.setArguments(args);
-            BrowserCategory category = (BrowserCategory) getFragmentManager().findFragmentById(R.id.category);
+            BrowserCategory category = (BrowserCategory) getParentFragmentManager().findFragmentById(R.id.category);
             category.startContent(f);
         } catch (Exception e) {
             Log.w(TAG, "enterDirectory: caught exception", e);

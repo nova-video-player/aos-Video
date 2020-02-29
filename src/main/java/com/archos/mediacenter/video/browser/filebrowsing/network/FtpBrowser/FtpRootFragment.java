@@ -121,7 +121,7 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        if(getFragmentManager().findFragmentByTag(FTPServerCredentialsDialog.class.getCanonicalName())==null){
+        if(getParentFragmentManager().findFragmentByTag(FTPServerCredentialsDialog.class.getCanonicalName())==null){
             FTPServerCredentialsDialog dialog = new FTPServerCredentialsDialog();
             dialog.setOnConnectClickListener( new FTPServerCredentialsDialog.onConnectClickListener() {
                 @Override
@@ -139,7 +139,7 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
                 public void onClick(View view) {
                 }
             });
-            dialog.show(getFragmentManager(),FTPServerCredentialsDialog.class.getCanonicalName());
+            dialog.show(getParentFragmentManager(),FTPServerCredentialsDialog.class.getCanonicalName());
         }
     }
     public void addToIndexed(Uri uri, String name){

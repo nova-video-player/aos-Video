@@ -196,8 +196,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         return mPreferencesFragment.getContext();
     }
 
-    private FragmentManager getFragmentManager() {
-        return mPreferencesFragment.getFragmentManager();
+    private FragmentManager getParentFragmentManager() {
+        return mPreferencesFragment.getParentFragmentManager();
     }
 
     private Resources getResources() {
@@ -596,7 +596,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         new DebugDbExportDialogFragment()
-                                                .show(getFragmentManager(), "DebugDbExportDialogFragment");
+                                                .show(getParentFragmentManager(), "DebugDbExportDialogFragment");
                                     }
                                 })
                                 .setNegativeButton(android.R.string.cancel, null)

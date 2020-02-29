@@ -168,7 +168,7 @@ public class BrowserBySeason extends BrowserWithShowHeader  {
         args.putString(SUBCATEGORY_NAME, season.getName());
         Fragment f = new BrowserByShow();
         f.setArguments(args);
-        BrowserCategory category = (BrowserCategory) getFragmentManager().findFragmentById(
+        BrowserCategory category = (BrowserCategory) getParentFragmentManager().findFragmentById(
                 R.id.category);
         category.startContent(f);
 

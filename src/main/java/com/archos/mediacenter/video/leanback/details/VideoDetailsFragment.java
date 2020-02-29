@@ -657,7 +657,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 bundle.putSerializable(ListDialog.EXTRA_VIDEO, mVideo);
                 ListDialog dialog = new ListDialog();
                 dialog.setArguments(bundle);
-                dialog.show(getFragmentManager(), "list_dialog");
+                dialog.show(getParentFragmentManager(), "list_dialog");
             }
             else if (action.getId() == VideoActionAdapter.ACTION_REMOVE_FROM_LIST) {
                 BaseTags metadata = mVideo.getFullScraperTags(getActivity());
@@ -1713,7 +1713,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     public void showSubtitleDialog(SubtitleManager downloader){
         mDialogRetrieveSubtitles = new DialogRetrieveSubtitles();
-        mDialogRetrieveSubtitles.show(getFragmentManager(), null);
+        mDialogRetrieveSubtitles.show(getParentFragmentManager(), null);
         mDialogRetrieveSubtitles.setDownloader(downloader);
     }
 

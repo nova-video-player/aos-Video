@@ -176,7 +176,7 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
                 // Save the new setting
                 mPrefs.edit().putInt(PREF_NON_SCRAPED_VIDEOS_DISPLAY_MODE, mDisplayMode.ordinal()).commit();
                 // Reload a brand new fragment
-                getFragmentManager().beginTransaction()
+                getParentFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new NonScrapedVideosFragment())
                         .commit();
             }

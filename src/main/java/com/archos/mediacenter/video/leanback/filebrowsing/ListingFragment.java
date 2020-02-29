@@ -423,9 +423,9 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         ListingFragment newFragment = instantiateNewFragment();
         newFragment.setArguments(args);
 
-        getFragmentManager().beginTransaction()
+        getParentFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_container, newFragment,"fragment_" + getFragmentManager().getBackStackEntryCount())
+                .replace(R.id.fragment_container, newFragment,"fragment_" + getParentFragmentManager().getBackStackEntryCount())
                 .addToBackStack(directory.getUri().toString())
                 .commit();
     }

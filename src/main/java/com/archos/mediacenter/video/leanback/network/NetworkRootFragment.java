@@ -260,7 +260,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                 startActivityForResult(intent, REQUEST_CODE_DETAILS, bundle);
             }
             else if (item instanceof FtpBrowse) {
-                if (getFragmentManager().findFragmentByTag(FtpServerCredentialsDialog.class.getCanonicalName()) == null) {
+                if (getParentFragmentManager().findFragmentByTag(FtpServerCredentialsDialog.class.getCanonicalName()) == null) {
                     FtpServerCredentialsDialog dialog = new FtpServerCredentialsDialog();
                     dialog.setOnConnectClickListener(new FtpServerCredentialsDialog.onConnectClickListener() {
                         @Override
@@ -296,7 +296,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                         public void onClick(View view) {
                         }
                     });
-                    dialog.show(getFragmentManager(), FtpServerCredentialsDialog.class.getCanonicalName());
+                    dialog.show(getParentFragmentManager(), FtpServerCredentialsDialog.class.getCanonicalName());
                 }
             }
             else if (item instanceof NetworkShortcut) {

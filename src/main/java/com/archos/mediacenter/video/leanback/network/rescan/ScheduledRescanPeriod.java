@@ -169,9 +169,9 @@ public class ScheduledRescanPeriod extends GuidedStepSupportFragment {
 
         if (goBack) {
             NetworkAutoRefresh.scheduleNewRescan(getActivity(),0, getPeriod()* 60 *60* 1000,true);
-            getFragmentManager().popBackStack();
+            getParentFragmentManager().popBackStack();
         } else {
-            add(getFragmentManager(), new ScheduledRescanTime());
+            add(getParentFragmentManager(), new ScheduledRescanTime());
         }
     }
 }

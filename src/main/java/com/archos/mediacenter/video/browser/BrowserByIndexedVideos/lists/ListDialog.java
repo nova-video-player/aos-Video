@@ -90,7 +90,7 @@ public class ListDialog extends DialogFragment {
                     //add new list
                     NewListDialog listDialog = new NewListDialog();
                     listDialog.setArguments(getArguments());
-                    listDialog.show(getFragmentManager(), "");
+                    listDialog.show(getParentFragmentManager(), "");
                 }
                 else{
                     int id = mAdapter.getCursor().getInt(mAdapter.getCursor().getColumnIndex(VideoStore.List.Columns.ID));

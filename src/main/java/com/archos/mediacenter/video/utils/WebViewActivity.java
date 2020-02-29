@@ -42,14 +42,14 @@ public class WebViewActivity extends Activity {
         mUri = getIntent().getData();
         setContentView(R.layout.webview_activity);
 
-        WebViewFragment wvf = (WebViewFragment)getFragmentManager().findFragmentById(R.id.webview_fragment);
+        WebViewFragment wvf = (WebViewFragment)getParentFragmentManager().findFragmentById(R.id.webview_fragment);
         mWebView = wvf.getWebView();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //WebViewFragment wvf = (WebViewFragment)getFragmentManager().findFragmentById(R.id.webview_fragment);
+        //WebViewFragment wvf = (WebViewFragment)getParentFragmentManager().findFragmentById(R.id.webview_fragment);
         initWebView(mWebView, mUri);
 
         mWebView.requestFocus();
