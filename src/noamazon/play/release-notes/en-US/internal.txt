@@ -1,13 +1,14 @@
+
+- New app icon
+- tmdb-java movie scraper
 - Switch to Audiotrack audio interface for video fluidity
 - Fix TV show Trakt progress sync
-- tmdb-java movie scraper
-- Adaptive refresh rate via API23 mode switch (fix FireTV4k)
+- Fix FireTV4k qdaptive refresh rate
 - Fix grey bar on Sony for HDR content
-- Fix green bar with swdec on Nvidia
 - Fix audio night/boost mode
 - Fix HEVC 10b on Rockchip
-- Better MediaCodec extradata management
-- Turkish/Simplified Chinese translations completed
-- New app icon
+- Turkish/Simplified Chinese/Russian translations completed
 - App bundles to reduce apk size
 - Limit SMB discovery on local networks
+- 10ms audio/video delay tuning
+- Fix cloud storage (file picker) and folder picker on phones
