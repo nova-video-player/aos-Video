@@ -676,7 +676,10 @@ public class Player implements IPlayerControl,
         /* on pause, Don't suspend when video is non local or can't seek */
         //if (!isTorrent() && isLocalVideo() && canSeekBackward() && canSeekForward()) {
         if (!isTorrent() && canSeekBackward() && canSeekForward()) {
+            if (DBG) Log.d(TAG, "onPause: I am on pause, allow to go to sleep");
             stayAwake(false);
+        } else {
+            if (DBG) Log.d(TAG, "onPause: I am on pause, nah do not sleep");
         }
     }
     
