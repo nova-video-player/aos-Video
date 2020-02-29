@@ -43,7 +43,6 @@ import androidx.core.app.NotificationCompat;
 import android.util.Log;
 
 import com.archos.environment.ArchosFeatures;
-import com.archos.environment.SystemPropertiesProxy;
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.StreamUriFinder;
@@ -1519,22 +1518,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
     }
 
-    public static boolean isAudioFilterEnabled() {
-        // Only add audio filtering in debug builds or when persist.archos.audiofilter=true
-        // (always enabled for now)
-        if (true ||
-                SystemPropertiesProxy.get("ro.build.type").equals("eng") ||
-                SystemPropertiesProxy.get("persist.archos.audiofilter").equals("true")
-                ) {
-            return true;
-        }
-        return false;
-    }
-
     public void setAudioFilt() {
-        if (isAudioFilterEnabled()) {
-            mPlayer.setAudioFilter(mAudioFilt, mNightModeOn);
-        }
+        mPlayer.setAudioFilter(mAudioFilt, mNightModeOn);
     }
 
 }
