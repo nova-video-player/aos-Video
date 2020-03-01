@@ -61,7 +61,7 @@ abstract public class BaseVideoCover extends Cover {
     public Runnable getOpenAction(final Context context, final int resume) {
     	return new Runnable() {
     		public void run() {
-                VideoInfoActivity.startInstance(context, null, getUri(), new Long(-1));
+                VideoInfoActivity.startInstance(context, null, FileUtils.getRealUriFromVideoURI(context, getUri()), new Long(-1));
                // PlayUtils.startVideo(context, getUri(), FileUtils.getRealUriFromVideoURI(context, getUri()), null, null, resume, false, null, true);
     		}
     	};
