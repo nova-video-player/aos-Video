@@ -26,6 +26,8 @@ import android.text.TextUtils.TruncateAt;
 import android.util.Log;
 import android.widget.TextView;
 
+import androidx.core.text.HtmlCompat;
+
 import com.archos.mediacenter.video.R;
 import com.archos.mediaprovider.video.ScraperStore;
 import com.archos.mediaprovider.video.VideoStore;
@@ -152,10 +154,8 @@ public class EpisodeInfo extends BaseInfo {
                 String episodeNameFormat = context.getString(R.string.quotation_format);
                 String episodeName = String.format(episodeNameFormat, mEpisodeTitle);
                 CharSequence formattedTitle;
-                if (Build.VERSION.SDK_INT >= 24)
-                    formattedTitle = Html.fromHtml(ret + " <i>" + episodeName + "</i>", Html.FROM_HTML_MODE_LEGACY);
-                else
-                    formattedTitle = Html.fromHtml(ret + " <i>" + episodeName + "</i>");
+                formattedTitle = HtmlCompat.fromHtml(ret + " <i>" + episodeName + "</i>",
+                        HtmlCompat.FROM_HTML_MODE_LEGACY);
                 return formattedTitle;
             }
         }
