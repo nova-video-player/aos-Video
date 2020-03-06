@@ -343,10 +343,9 @@ abstract public class BrowserCategory extends ListFragment {
         FragmentManager fm = getParentFragmentManager();
         if (fm != null) {
             FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-            if(ArchosUtils.shouldAnimate())
-                ft.setCustomAnimations(R.anim.browser_content_enter,
-                    R.anim.browser_content_exit, R.anim.browser_content_pop_enter,
-                    R.anim.browser_content_pop_exit);
+            ft.setCustomAnimations(R.anim.browser_content_enter,
+                R.anim.browser_content_exit, R.anim.browser_content_pop_enter,
+                R.anim.browser_content_pop_exit);
             ft.replace(R.id.content, fragment, tag);
             ft.addToBackStack(null);
             ft.commitAllowingStateLoss();
