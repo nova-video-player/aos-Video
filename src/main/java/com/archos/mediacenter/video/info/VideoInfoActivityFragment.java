@@ -302,9 +302,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private final BroadcastReceiver mNetworkStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (DBG) Log.d(TAG, "mNetworkStateReceiver: intent " + intent);
             NetworkState networkState = NetworkState.instance(context);
             networkState.updateFrom(context);
-            if (mCurrentVideo!=null&&(!networkState.isConnected()||!networkState.hasLocalConnection()&&!FileUtils.isSlowRemote(mCurrentVideo.getFileUri()))&&!FileUtils.isLocal(mCurrentVideo.getFileUri())&&isAdded()&&!isDetached()) {
+            // close activity if
+            //   not localfile (i.e. remote)
+            //   && (not connected || (no local connection && not ftp (i.e. smb/upnp))
+            //   && fragment is added
+            //   && not fragment detached
+            if (mCurrentVideo!=null&&
+                    !FileUtils.isLocal(mCurrentVideo.getFileUri())&&
+                    (!networkState.isConnected()||
+                            !networkState.hasLocalConnection()&&!FileUtils.isSlowRemote(mCurrentVideo.getFileUri()))&&
+                    isAdded()&&
+                    !isDetached()) {
                 getActivity().finish();
             }
         }
