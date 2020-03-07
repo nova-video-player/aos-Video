@@ -29,7 +29,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.hardware.display.DisplayManager;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -3227,9 +3226,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             if (errorCode == IMediaPlayer.MEDIA_ERROR_VE_FILE_ERROR
                     && !mPlayer.isLocalVideo()
                     && !mNetworkFailed) {
-                ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo ni = cm != null ? cm.getActiveNetworkInfo() : null;
-                if (ni != null && ni.getState() == NetworkInfo.State.CONNECTED && mVideoInfo != null) {
+                if (ArchosUtils.isNetworkConnected(mContext) && mVideoInfo != null) {
                     /* If we get a corrupted file error, if the file is from the network,
                      * and if we are still connected, try to reopen the video one time.
                      */
