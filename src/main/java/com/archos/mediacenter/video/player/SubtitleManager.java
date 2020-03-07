@@ -39,6 +39,7 @@ import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 
 import java.util.regex.Matcher;
@@ -141,7 +142,7 @@ public class SubtitleManager {
                     float shadowRadius = mRes.getDimension(R.dimen.subtitles_shadow_radius);
                     float shadowDx = mRes.getDimension(R.dimen.subtitles_shadow_dx);
                     float shadowDy = mRes.getDimension(R.dimen.subtitles_shadow_dy);
-                    int shadowColor = mRes.getColor(R.color.subtitles_shadow_color);
+                    int shadowColor = ContextCompat.getColor(mContext, R.color.subtitles_shadow_color);
                     mTextShadowSpan = new TextShadowSpan(shadowRadius, shadowDx, shadowDy, shadowColor);
                 }
                 mSpannableStringBuilder.clear();

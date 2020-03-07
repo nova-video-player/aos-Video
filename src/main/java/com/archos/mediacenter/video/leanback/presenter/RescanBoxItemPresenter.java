@@ -14,10 +14,13 @@
 
 package com.archos.mediacenter.video.leanback.presenter;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.core.content.ContextCompat;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.leanback.adapter.object.Box;
@@ -62,8 +65,7 @@ public class RescanBoxItemPresenter extends BoxItemPresenter implements NetworkS
         final Resources res = vh.mRoot.getResources();
 
         vh.mRoot.getLayoutParams().height = res.getDimensionPixelSize(R.dimen.smbshortcut_height);
-        vh.mImageViewContainer.setBackgroundColor(res.getColor(R.color.green700));
-
+        vh.mImageViewContainer.setBackgroundColor(ContextCompat.getColor(vh.mImageViewContainer.getContext(), R.color.green700));
         // For some reason the onViewAttachedToWindow/onViewDetachedFromWindow callbacks from the Presenter interface
         // do not work in all cases (when the view goes out of screen without being recycled)
         // ==> With the listener below it works fine
