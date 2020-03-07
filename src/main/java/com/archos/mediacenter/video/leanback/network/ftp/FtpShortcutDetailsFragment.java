@@ -17,6 +17,8 @@ package com.archos.mediacenter.video.leanback.network.ftp;
 import androidx.core.content.ContextCompat;
 import androidx.leanback.widget.Action;
 import androidx.leanback.widget.DetailsOverviewRow;
+import androidx.leanback.widget.SparseArrayObjectAdapter;
+
 import android.widget.Toast;
 
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
@@ -38,13 +40,22 @@ public class FtpShortcutDetailsFragment extends NetworkShortcutDetailsFragment {
     
     @Override
     public void addActions(DetailsOverviewRow detailRow){
-        detailRow.addAction(new Action(ACTION_OPEN, getResources().getString(R.string.open_indexed_folder)));
-        if(ShortcutDbAdapter.VIDEO.isShortcut(getActivity(), mShortcut.getUri().toString())<0) {
-            detailRow.addAction(new Action(ACTION_ADD_INDEX, getResources().getString(R.string.add_to_indexed_folders)));
-        }
-        else
-            detailRow.addAction(new Action(ACTION_REINDEX, getResources().getString(R.string.network_reindex)));
-        detailRow.addAction(new Action(ACTION_REMOVE, getResources().getString(R.string.remove_from_shortcuts)));
+        detailRow.setActionsAdapter(new SparseArrayObjectAdapter() {
+            @Override
+            public int size() { return 3; }
+            @Override
+            public Object get(int position) {
+                switch(position) {
+                    case 0: return new Action(ACTION_OPEN, getResources().getString(R.string.open_indexed_folder));
+                    case 1:
+                        if(ShortcutDbAdapter.VIDEO.isShortcut(getActivity(), mShortcut.getUri().toString())<0)
+                            return new Action(ACTION_ADD_INDEX, getResources().getString(R.string.add_to_indexed_folders));
+                        else return new Action(ACTION_REINDEX, getResources().getString(R.string.network_reindex));
+                    case 2: return new Action(ACTION_REMOVE, getResources().getString(R.string.remove_from_shortcuts));
+                    default: return null;
+                }
+            }
+        });
         detailRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_server));
     }
 

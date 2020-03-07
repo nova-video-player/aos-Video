@@ -27,6 +27,8 @@ import androidx.leanback.widget.ArrayObjectAdapter;
 import androidx.leanback.widget.DetailsOverviewRow;
 import androidx.leanback.widget.OnActionClickedListener;
 import androidx.leanback.widget.RowPresenter;
+import androidx.leanback.widget.SparseArrayObjectAdapter;
+
 import android.view.View;
 import android.widget.Toast;
 
@@ -122,9 +124,19 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
     }
 
     public void addActions(DetailsOverviewRow detailRow){
-        detailRow.addAction(new Action(ACTION_OPEN, getResources().getString(R.string.open_indexed_folder)));
-        detailRow.addAction(new Action(ACTION_REINDEX, getResources().getString(R.string.network_reindex)));
-        detailRow.addAction(new Action(ACTION_REMOVE, getResources().getString(R.string.remove_from_indexed_folders)));
+        detailRow.setActionsAdapter(new SparseArrayObjectAdapter() {
+            @Override
+            public int size() { return 3; }
+            @Override
+            public Object get(int position) {
+                switch(position) {
+                    case 0: return new Action(ACTION_OPEN, getResources().getString(R.string.open_indexed_folder));
+                    case 1: return new Action(ACTION_REINDEX, getResources().getString(R.string.network_reindex));
+                    case 2: return new Action(ACTION_REMOVE, getResources().getString(R.string.remove_from_indexed_folders));
+                    default: return null;
+                }
+            }
+        });
         detailRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_folder_indexed));
     }
     @Override
