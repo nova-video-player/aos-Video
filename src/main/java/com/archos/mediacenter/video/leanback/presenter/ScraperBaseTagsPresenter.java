@@ -21,6 +21,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.leanback.widget.ImageCardView;
 import androidx.leanback.widget.Presenter;
 import android.view.ViewGroup;
@@ -146,7 +147,7 @@ public class ScraperBaseTagsPresenter extends Presenter {
         }
         if(!foundImage) {
             vh.getImageCardView().setMainImageScaleType(ImageView.ScaleType.CENTER);
-            vh.getImageCardView().setMainImage(mContext.getResources().getDrawable(R.drawable.filetype_new_video), true);
+            vh.getImageCardView().setMainImage(ResourcesCompat.getDrawable(mContext.getResources(), R.drawable.filetype_new_video, null), true);
         }
     }
 
