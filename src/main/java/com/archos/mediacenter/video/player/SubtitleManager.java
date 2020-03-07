@@ -39,6 +39,8 @@ import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
 
+import androidx.core.text.HtmlCompat;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -143,12 +145,9 @@ public class SubtitleManager {
                     mTextShadowSpan = new TextShadowSpan(shadowRadius, shadowDx, shadowDy, shadowColor);
                 }
                 mSpannableStringBuilder.clear();
-                if (Build.VERSION.SDK_INT >= 24)
-                    mSpannableStringBuilder.append(Html.fromHtml(cleanText(subtitle.getText()), Html.FROM_HTML_MODE_LEGACY));
-                else
-                    mSpannableStringBuilder.append(Html.fromHtml(cleanText(subtitle.getText())));
+                mSpannableStringBuilder.append(HtmlCompat.fromHtml(cleanText(subtitle.getText()), HtmlCompat.FROM_HTML_MODE_LEGACY));
                 if (mSpannableStringBuilder.length() > 0) {
-                    // Html.fromHtml override shadow style, so add a shadowSpan for whole text.
+                    // HtmlCompat.fromHtml override shadow style, so add a shadowSpan for whole text.
                     mSpannableStringBuilder.setSpan(mTextShadowSpan, 0, mSpannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                 }
                 mSubtitleTxtView.setText(mSpannableStringBuilder);
