@@ -30,6 +30,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.ListFragment;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +57,7 @@ abstract public class BrowserCategory extends ListFragment {
     private static final String SELECTED_TOP = "selectedTop";
     public static final String MOUNT_POINT = "mount_point";
     private static final String TAG = "BrowserCategory";
+    private static final boolean DBG = false;
 
     private static final int[] mExternalIDs = {
             R.string.sd_card_storage, R.string.usb_host_storage, R.string.other_storage, R.string.network_shared_folders,R.string.sftp_folders,
@@ -119,14 +122,10 @@ abstract public class BrowserCategory extends ListFragment {
      */
     private final BroadcastReceiver mExternalStorageReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
+            if (DBG) Log.d(TAG, "mExternalStorageReceiver: intent " + intent);
             String action = intent.getAction();
             if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-                ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-                if (activeNetwork != null
-                        && (activeNetwork.getState() == State.DISCONNECTED || activeNetwork.getState() == State.CONNECTED)) {
-                    updateExternalStorage();
-                }
+                updateExternalStorage();
             } else if (action.equals(ExtStorageReceiver.ACTION_MEDIA_MOUNTED)){
                 String path = null;
                 if(intent.getDataString().startsWith("file"))
