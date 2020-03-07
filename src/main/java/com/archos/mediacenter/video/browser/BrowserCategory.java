@@ -460,13 +460,15 @@ abstract public class BrowserCategory extends ListFragment {
                 mCategoryList.add(itemData);
             }
         }
+        // one could argue that "cloud" should be made available only if connected
+        // but offline capability is present in drive and provider is more generic
+        // than cloud in reality. Perhaps think of better name
         ItemData itemData = new ItemData();
         itemData.icon = R.drawable.category_common_network;
         itemData.text = R.string.provider_folders;
         itemData.id = ITEM_ID_PROVIDER;
         mCategoryList.add(itemData);
         addLastItems();
-
         mCategoryAdapter.notifyDataSetChanged();
         // Set the selection when rotating.
         if (mSelectedItemId != 0) {
