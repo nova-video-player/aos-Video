@@ -314,4 +314,9 @@
         <item name="android:maxLines">3</item>
     </style>
     <item name="browser_items" type="id" />
+
+    <!-- Force same size for ToolbarTitle in portrait/landscape. -->
+    <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">20sp</item>
+    </style>
 </resources>

@@ -21,6 +21,7 @@ category, and contents.
         android:layout_width="match_parent"
         android:background="@color/leanback_background"
         android:minHeight="?attr/actionBarSize"
+        app:titleTextAppearance="@style/ToolbarTitle"
         />
 
     <RelativeLayout
