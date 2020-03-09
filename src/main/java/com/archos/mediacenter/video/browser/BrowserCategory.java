@@ -37,7 +37,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.ExtStorageManager;
 import com.archos.filecorelibrary.ExtStorageReceiver;
 import com.archos.mediacenter.upnp.UpnpAvailability;
@@ -45,6 +44,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.utils.WebUtils;
+import com.archos.environment.NetworkState;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -405,7 +405,7 @@ abstract public class BrowserCategory extends ListFragment {
         ExtStorageManager storageManager = ExtStorageManager.getExtStorageManager();
         final boolean hasExternal = storageManager.hasExtStorage();
         final boolean isConnected = isConnected();
-        if (hasExternal|| isConnected || ArchosUtils.isNetworkConnected(getActivity())) {
+        if (hasExternal|| isConnected || NetworkState.isNetworkConnected(getActivity())) {
             mCategoryList.add(getText(R.string.external_storage));
 
             if (hasExternal) {
@@ -450,7 +450,7 @@ abstract public class BrowserCategory extends ListFragment {
                 itemData.id = ITEM_ID_UPNP;
                 mCategoryList.add(itemData);
             }
-            if ( ArchosUtils.isNetworkConnected(getActivity())){
+            if ( NetworkState.isNetworkConnected(getActivity())){
                 ItemData itemData = new ItemData();
                 itemData.icon = R.drawable.category_common_network;
                 itemData.text = R.string.sftp_folders;
@@ -509,9 +509,9 @@ abstract public class BrowserCategory extends ListFragment {
 
     private boolean isConnected(){
         if (mPreferences.getBoolean(getString(R.string.preferences_network_mobile_vpn_key), false))
-            return ArchosUtils.isNetworkConnected(getActivity());
+            return NetworkState.isNetworkConnected(getActivity());
         else
-            return ArchosUtils.isLocalNetworkConnected(getActivity());
+            return NetworkState.isLocalNetworkConnected(getActivity());
     }
 
     /**

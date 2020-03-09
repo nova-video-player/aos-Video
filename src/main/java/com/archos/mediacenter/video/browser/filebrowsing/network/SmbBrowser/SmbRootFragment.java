@@ -26,7 +26,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.FileEditorFactory;
 import com.archos.filecorelibrary.samba.SambaDiscovery;
 import com.archos.filecorelibrary.samba.Workgroup;
@@ -35,6 +34,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.filebrowsing.network.UpnpSmbCommonRootFragment;
 import com.archos.mediacenter.video.browser.filebrowsing.network.WorkgroupShortcutAndServerAdapter;
 import com.archos.mediaprovider.NetworkScanner;
+import com.archos.environment.NetworkState;
 
 import java.util.List;
 
@@ -85,7 +85,7 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     public boolean onOptionsItemSelected(MenuItem item){
         if (item.getItemId() == R.string.refresh_servers_list) {
             // restart the discovery (if there is connectivity and not already discovering)
-            if (ArchosUtils.isNetworkConnected(getActivity())&&!mSambaDiscovery.isRunning()) {
+            if (NetworkState.isNetworkConnected(getActivity())&&!mSambaDiscovery.isRunning()) {
                 mSambaDiscovery.start();
                 checkShortcutAvailability();
             }
@@ -105,7 +105,7 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
         }
         else {
             // First initialization, start the discovery (if there is connectivity)
-            if (ArchosUtils.isNetworkConnected(getActivity())) {
+            if (NetworkState.isNetworkConnected(getActivity())) {
                 mSambaDiscovery.start();
             }
         }

@@ -35,11 +35,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.archos.environment.ArchosSettings;
-import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.utils.ScraperResultsAdapter;
+import com.archos.environment.NetworkState;
 import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.EpisodeTags;
 import com.archos.mediascraper.MovieTags;
@@ -323,7 +323,7 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
     private void search() {
     	// Make sure we are connected to a network
     	Context context = getActivity();
-    	if (!ArchosSettings.isDemoModeActive(context) && !ArchosUtils.isNetworkConnected(context)) {
+    	if (!ArchosSettings.isDemoModeActive(context) && !NetworkState.isNetworkConnected(context)) {
     		// No connection => show an error dialog
     		String message = context.getResources().getString(R.string.scrap_no_network);
     		message += " " + context.getResources().getString(R.string.scrap_enable_network_first);
@@ -402,7 +402,7 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
             //---------------------------------------------------------------
             // No match found for this file
             //---------------------------------------------------------------
-            if (ArchosUtils.isNetworkConnected(getActivity())) {
+            if (NetworkState.isNetworkConnected(getActivity())) {
                 // The network connection is still active
             	mMessage.setText(R.string.scrap_failed);
             } else {

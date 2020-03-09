@@ -59,6 +59,7 @@ import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
 import com.archos.mediaprovider.ArchosMediaIntent;
+import com.archos.environment.NetworkState;
 import com.archos.mediaprovider.video.VideoStore;
 import com.github.wtekiela.opensub4j.api.OpenSubtitlesClient;
 import com.github.wtekiela.opensub4j.impl.OpenSubtitlesClientImpl;
@@ -165,7 +166,7 @@ public class SubtitlesDownloaderActivity2 extends Activity{
         }
         else {
             // Normal start of the activity
-            if(ArchosUtils.isNetworkConnected(this)){
+            if(NetworkState.isNetworkConnected(this)){
                 sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
                 final Intent intent = getIntent();
                 ArrayList<String> fileUrls = null;

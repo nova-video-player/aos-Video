@@ -101,7 +101,7 @@ import com.archos.mediacenter.video.utils.TrailerServiceIconFactory;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoUtils;
 //import com.archos.mediacenter.video.utils.WebUtils;
-import com.archos.mediaprovider.NetworkState;
+import com.archos.environment.NetworkState;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
 import com.archos.mediascraper.BaseTags;

@@ -47,11 +47,11 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.utils.HelpOverlayActivity;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.autoscraper.AutoScraperActivity;
+import com.archos.environment.NetworkState;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.AutoScrapeService;
 
@@ -138,7 +138,7 @@ public class NewVideosActionProvider extends ActionProvider implements
     private void updateCount(int count) {
         mCount = count;
         if (mItem != null) {
-            if (count > 0 && mEnabled&& !(AutoScrapeService.isEnable(getContext())&& ArchosUtils.isNetworkConnected(getContext()))) {
+            if (count > 0 && mEnabled&& !(AutoScrapeService.isEnable(getContext())&& NetworkState.isNetworkConnected(getContext()))) {
                 mItem.setVisible(true);
                 mItem.setEnabled(true);
 

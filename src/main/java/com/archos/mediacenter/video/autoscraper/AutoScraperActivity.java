@@ -65,9 +65,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.archos.environment.ArchosSettings;
-import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.MetaFile2;
-import com.archos.filecorelibrary.MetaFile2Factory;
 import com.archos.filecorelibrary.localstorage.JavaFile2;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.imageview.ChainProcessor;
@@ -80,6 +78,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
+import com.archos.environment.NetworkState;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStore.MediaColumns;
 import com.archos.mediaprovider.video.VideoStore.Video.VideoColumns;
@@ -808,7 +807,7 @@ public class AutoScraperActivity extends Activity implements AbsListView.OnScrol
     private void startScraperTask() {
         if (mFileCount > 0) {
             // Make sure we are connected to a network
-            if (!ArchosSettings.isDemoModeActive(this) && !ArchosUtils.isNetworkConnected(this)) {
+            if (!ArchosSettings.isDemoModeActive(this) && !NetworkState.isNetworkConnected(this)) {
                 // No connection => show an error dialog
                 String message = getResources().getString(com.archos.mediacenter.video.R.string.scrap_no_network);
                 message += " " + getResources().getString(com.archos.mediacenter.video.R.string.scrap_enable_network_first);

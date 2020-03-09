@@ -63,7 +63,6 @@ import androidx.leanback.transition.TransitionHelper;
 import androidx.leanback.transition.TransitionListener;
 import androidx.loader.content.CursorLoader;
 
-import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
@@ -85,6 +84,7 @@ import com.archos.mediacenter.video.leanback.scrapping.ManualShowScrappingActivi
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.PlayUtils;
+import com.archos.environment.NetworkState;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.ShowTags;
 import com.squareup.picasso.Picasso;
@@ -215,7 +215,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                     startActivity(intent);
                 }
                 else if (action.getId() == TvshowActionAdapter.ACTION_CHANGE_INFO) {
-                    if (!ArchosUtils.isNetworkConnected(getActivity())) {
+                    if (!NetworkState.isNetworkConnected(getActivity())) {
                         Toast.makeText(getActivity(), R.string.scrap_no_network, Toast.LENGTH_SHORT).show();
                     } else {
                         Intent intent = new Intent(getActivity(), ManualShowScrappingActivity.class);

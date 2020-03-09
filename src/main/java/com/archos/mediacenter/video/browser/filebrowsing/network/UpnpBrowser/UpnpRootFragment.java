@@ -14,7 +14,6 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network.UpnpBrowser;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -22,12 +21,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.UpnpServiceManager;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.browser.filebrowsing.network.UpnpSmbCommonRootFragment;
 import com.archos.mediacenter.video.browser.filebrowsing.network.WorkgroupShortcutAndServerAdapter;
 import com.archos.mediaprovider.NetworkScanner;
+import com.archos.environment.NetworkState;
 
 import org.fourthline.cling.model.meta.Device;
 
@@ -48,7 +47,7 @@ public class UpnpRootFragment extends UpnpSmbCommonRootFragment implements UpnpS
     public void onViewCreated (View v, Bundle saved){
 
         // First initialization, start the discovery (if there is connectivity)
-        if (ArchosUtils.isNetworkConnected(getActivity())) {
+        if (NetworkState.isNetworkConnected(getActivity())) {
             startDiscovery();
         }
     }

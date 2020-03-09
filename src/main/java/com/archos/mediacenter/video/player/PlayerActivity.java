@@ -105,7 +105,7 @@ import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.medialib.IMediaPlayer;
 import com.archos.medialib.LibAvos;
 import com.archos.medialib.Subtitle;
-import com.archos.mediaprovider.NetworkState;
+import com.archos.environment.NetworkState;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.ScrapeDetailResult;
 import com.archos.environment.ArchosUtils;
@@ -3226,7 +3226,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             if (errorCode == IMediaPlayer.MEDIA_ERROR_VE_FILE_ERROR
                     && !mPlayer.isLocalVideo()
                     && !mNetworkFailed) {
-                if (ArchosUtils.isNetworkConnected(mContext) && mVideoInfo != null) {
+                if (NetworkState.isNetworkConnected(mContext) && mVideoInfo != null) {
                     /* If we get a corrupted file error, if the file is from the network,
                      * and if we are still connected, try to reopen the video one time.
                      */

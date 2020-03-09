@@ -122,6 +122,7 @@ import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.WebUtils;
+import com.archos.environment.NetworkState;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
 import com.archos.mediaprovider.video.VideoStoreInternal;
@@ -639,7 +640,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 deleteFile_async(mVideo);
             }
             else if (action.getId() == VideoActionAdapter.ACTION_SCRAP) {
-                if (!ArchosUtils.isNetworkConnected(getActivity())) {
+                if (!NetworkState.isNetworkConnected(getActivity())) {
                     Toast.makeText(getActivity(), R.string.scrap_no_network, Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(getActivity(), ManualVideoScrappingActivity.class);
