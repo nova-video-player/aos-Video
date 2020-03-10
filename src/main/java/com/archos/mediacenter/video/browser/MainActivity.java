@@ -1028,11 +1028,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         }
         sUiChoiceCheckDone = true;
 
-        // No need to check more if this APK does not integrate the leanback UI (this is decided at build time)
-        if (!EntryActivity.isLeanbackUiAvailable()) {
-            return;
-        }
-
         boolean probablyTv = false;
 
         switch (event.getSource()) {

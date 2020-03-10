@@ -32,13 +32,6 @@ public class EntryActivity extends Activity {
     private static final String TAG = "EntryActivity";
     private static boolean DBG = false;
 
-    /**
-     * @return true if this APK build integrate the leanback UI
-     */
-    public static boolean isLeanbackUiAvailable() {
-        return true;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

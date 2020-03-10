@@ -617,32 +617,27 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             }
             // Not a leanback device, but if the APK integrates leanback the user can choose to use it
             else {
-                if (EntryActivity.isLeanbackUiAvailable()) {
-                    userInterfaceCategory.removePreference(findPreference("uimode")); // remove the old uimode settings
-                    findPreference("uimode_leanback").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                        public boolean onPreferenceChange(Preference preference, Object o) {
-                            getActivity().setResult(ACTIVITY_RESULT_UI_MODE_CHANGED); // way to tell the MainActivity that an important preference has been changed
-                            getActivity().finish(); // close the preference activity right away
-                            return true;
-                        }
-                    });
-                    Preference uiZoomPref = findPreference("ui_zoom");
-                    uiZoomPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-                        @Override
-                        public boolean onPreferenceClick(Preference preference) {
-                            getActivity().setResult(ACTIVITY_RESULT_UI_ZOOM_CHANGED); // way to tell the MainActivity that an important preference has been changed
-                            getActivity().finish(); // close the preference activity right away
-                            return true;
-                        }
-                    });
-                    // Do not show the zoom preference if user is not in TV more UI
-                    String currentUiMode = getPreferenceManager().getSharedPreferences().getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
-                    if (!currentUiMode.equals(UiChoiceDialog.UI_CHOICE_LEANBACK_TV_VALUE)) {
-                        userInterfaceCategory.removePreference(uiZoomPref);
+                userInterfaceCategory.removePreference(findPreference("uimode")); // remove the old uimode settings
+                findPreference("uimode_leanback").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    public boolean onPreferenceChange(Preference preference, Object o) {
+                        getActivity().setResult(ACTIVITY_RESULT_UI_MODE_CHANGED); // way to tell the MainActivity that an important preference has been changed
+                        getActivity().finish(); // close the preference activity right away
+                        return true;
                     }
-                } else {
-                    userInterfaceCategory.removePreference(findPreference("uimode_leanback")); // remove the new leanback settings (keep the old one)
-                    userInterfaceCategory.removePreference(findPreference("ui_zoom")); // remove the zoom settings
+                });
+                Preference uiZoomPref = findPreference("ui_zoom");
+                uiZoomPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        getActivity().setResult(ACTIVITY_RESULT_UI_ZOOM_CHANGED); // way to tell the MainActivity that an important preference has been changed
+                        getActivity().finish(); // close the preference activity right away
+                        return true;
+                    }
+                });
+                // Do not show the zoom preference if user is not in TV more UI
+                String currentUiMode = getPreferenceManager().getSharedPreferences().getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
+                if (!currentUiMode.equals(UiChoiceDialog.UI_CHOICE_LEANBACK_TV_VALUE)) {
+                    userInterfaceCategory.removePreference(uiZoomPref);
                 }
             }
         }
