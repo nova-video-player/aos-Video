@@ -16,15 +16,15 @@ package com.archos.mediacenter.video;
 
 
 import android.app.ActivityManager;
+import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
 
-import androidx.multidex.MultiDexApplication;
-
 import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosUtils;
+import com.archos.environment.NetworkState;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.mediacenter.utils.AppState;
 import com.archos.mediacenter.utils.MediaUtils;
@@ -57,7 +57,7 @@ import org.acra.sender.HttpSender;
         httpMethod = HttpSender.Method.POST)
  */
 
-public class CustomApplication extends MultiDexApplication {
+public class CustomApplication extends Application {
 
     @Override
     protected void attachBaseContext(Context base) {
