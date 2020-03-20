@@ -15,7 +15,6 @@
 package com.archos.mediacenter.video.utils;
 
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
-import org.apache.oltu.oauth2.client.response.OAuthAccessTokenResponse;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 import com.archos.mediacenter.utils.trakt.Trakt;
@@ -24,7 +23,6 @@ import com.archos.mediacenter.video.utils.oauth.*;
 import com.archos.mediacenter.video.R;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -67,11 +65,14 @@ public class TraktSigninDialogPreference extends Preference {
                 public void onFinished(final OAuthData data) {
                     // TODO Auto-generated method stub
                     if(data.code!=null){
-                        final ProgressDialog mProgress = new ProgressDialog(getContext());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setCancelable(false);
+                        builder.setView(R.layout.progressbar_dialog);
+                        final AlertDialog mProgressBarAlertDialog = builder.create();
                         AsyncTask t = new AsyncTask(){
                             @Override
                             protected void onPreExecute() {
-                                mProgress.show();
+                                mProgressBarAlertDialog.show();
                             }
                             @Override
                             protected Object doInBackground(Object... params) {
@@ -80,7 +81,7 @@ public class TraktSigninDialogPreference extends Preference {
                             }
                             @Override
                             protected void onPostExecute(Object result) {
-                                mProgress.dismiss();
+                                mProgressBarAlertDialog.dismiss();
                                 if (result!=null&&result instanceof Trakt.accessToken){
                                     Trakt.accessToken res = (Trakt.accessToken) result;
                                     if(res.access_token!=null){
