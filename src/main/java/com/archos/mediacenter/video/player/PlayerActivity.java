@@ -28,7 +28,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.display.DisplayManager;
 import android.media.AudioManager;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -64,7 +63,6 @@ import android.widget.Checkable;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -110,6 +108,8 @@ import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.ScrapeDetailResult;
 import com.archos.environment.ArchosUtils;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.Override;
@@ -235,6 +235,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     public static boolean hasCutout = false;
     public static boolean seekBarOverlapWithCutout = true;
+
+    private NetworkState networkState = null;
+    private PropertyChangeListener propertyChangeListener = null;
 
     public void setCutoutMetrics() {
         // create list of 4 elements {L,T,R,B}
@@ -397,7 +400,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private VideoDbInfo mVideoInfo;
     private IndexHelper mIndexHelper = null;
 
-    private boolean mNetworkStateReceiverRegistered = false;
+    private boolean mNetworkStateListenerAdded = false;
     private boolean mCling = false;
 
     private TVMenu mSubtitleTVMenu;
@@ -689,6 +692,22 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             DisplayManager displayManager = (DisplayManager) mContext.getSystemService(Context.DISPLAY_SERVICE);
             displayManager.registerDisplayListener(mDisplayListener, mHandler);
 
+            networkState = NetworkState.instance(getApplicationContext());
+            if (propertyChangeListener == null)
+                propertyChangeListener = new PropertyChangeListener() {
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        if (evt.getOldValue() != evt.getNewValue()) {
+                            if (DBG) Log.d(TAG, "NetworkState for " + evt.getPropertyName() + " changed:" + evt.getOldValue() + " -> " + evt.getNewValue());
+                            networkState.updateFrom();
+                            if (!networkState.hasLocalConnection()) {
+                                if (DBG) Log.d(TAG, "lost network: finish");
+                                finish();
+                            }
+                        }
+                    }
+                };
+
         }
     }
 
@@ -741,32 +760,22 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         }
     }
 
-    private final BroadcastReceiver mNetworkStateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            NetworkState ns = NetworkState.instance(context);
-            ns.updateFrom(context);
-            if (!ns.hasLocalConnection()) {
-                if (DBG) Log.d(TAG, "lost network: finish");
-                finish();
-            }
-        }
-    };
 
-
-    private void registerNetworkReceiver() {
-        if (!mNetworkStateReceiverRegistered) {
-            if (DBG) Log.d(TAG, "registerNetworkReceiver");
-            registerReceiver(mNetworkStateReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-            mNetworkStateReceiverRegistered = true;
+    private void addNetworkListener() {
+        // TODO MARC
+        if (!mNetworkStateListenerAdded) {
+            if (DBG) Log.d(TAG, "addNetworkListener: networkState.addPropertyChangeListener");
+            networkState.addPropertyChangeListener(propertyChangeListener);
+            mNetworkStateListenerAdded = true;
         }
     }
 
-    private void unregisterNetworkReceiver() {
-        if (mNetworkStateReceiverRegistered) {
-            if (DBG) Log.d(TAG, "unregisterNetworkReceiver");
-            unregisterReceiver(mNetworkStateReceiver);
-            mNetworkStateReceiverRegistered = false;
+    private void removeNetworkListener() {
+        // TODO MARC
+        if (mNetworkStateListenerAdded) {
+            if (DBG) Log.d(TAG, "removeListener: networkState.removePropertyChangeListener");
+            networkState.removePropertyChangeListener(propertyChangeListener);
+            mNetworkStateListenerAdded = false;
         }
     }
 
@@ -776,7 +785,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         if (DBG) Log.d(TAG, "onStart()");
         mStopped = false;
 
-        unregisterNetworkReceiver();
+        removeNetworkListener();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_SHUTDOWN);
         intentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
@@ -943,7 +952,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
          * network state is changed since a resume is not possible anymore.
          */
         if (!mPlayer.isLocalVideo())
-            registerNetworkReceiver();
+            addNetworkListener();
 
         if (mShowingDialogId != DIALOG_NO) {
             removeDialog(mShowingDialogId);
@@ -974,7 +983,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     protected void onDestroy() {
 
         if (DBG) Log.d(TAG, "onDestroy");
-        unregisterNetworkReceiver();
+        removeNetworkListener();
 
         VideoEffect.resetForcedMode();
         setEffect(VideoEffect.getDefaultMode());

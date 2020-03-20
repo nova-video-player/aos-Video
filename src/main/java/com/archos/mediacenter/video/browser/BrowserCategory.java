@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import androidx.preference.PreferenceManager;
 import androidx.fragment.app.Fragment;
@@ -46,6 +45,7 @@ import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.utils.WebUtils;
 import com.archos.environment.NetworkState;
 
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -80,6 +80,9 @@ abstract public class BrowserCategory extends ListFragment {
     private LayoutCallback mLayoutCallback;
     protected SharedPreferences mPreferences;
     protected int mOldSelectedItemId;
+
+    private NetworkState networkState = null;
+    private PropertyChangeListener propertyChangeListener = null;
 
     /**
      * This object is used to store basic info for the category list item.
@@ -122,9 +125,7 @@ abstract public class BrowserCategory extends ListFragment {
         public void onReceive(Context context, Intent intent) {
             if (DBG) Log.d(TAG, "mExternalStorageReceiver: intent " + intent);
             String action = intent.getAction();
-            if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-                updateExternalStorage();
-            } else if (action.equals(ExtStorageReceiver.ACTION_MEDIA_MOUNTED)){
+            if (action.equals(ExtStorageReceiver.ACTION_MEDIA_MOUNTED)){
                 String path = null;
                 if(intent.getDataString().startsWith("file"))
                     path = intent.getDataString().substring("file".length());
@@ -156,8 +157,6 @@ abstract public class BrowserCategory extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ListView categoryView = (ListView) inflater.inflate(R.layout.browser_category, container, false);
         categoryView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-
         return categoryView;
     }
 
@@ -203,32 +202,50 @@ abstract public class BrowserCategory extends ListFragment {
         if(getActivity() instanceof BrowserActivity)
             ((MainActivity)getActivity()).updateHomeIcon(getParentFragmentManager().getBackStackEntryCount()>1);
 
+        // handles NetworkState changes
+        networkState = NetworkState.instance(getContext());
+        if (propertyChangeListener == null)
+            propertyChangeListener = evt -> {
+                if (evt.getOldValue() != evt.getNewValue()) {
+                    if (DBG) Log.d(TAG, "onActivityCreated: NetworkState for " + evt.getPropertyName() + " changed:" + evt.getOldValue() + " -> " + evt.getNewValue());
+                    updateUI();
+                }
+            };
+        //if (DBG) Log.d(TAG, "onActivityCreated: networkState.addPropertyChangeListener");
+        //networkState.addPropertyChangeListener(propertyChangeListener);
     }
 
     protected abstract int getDefaultId();
 
     protected boolean checkAvailability(int selectedItemId, String lastPath){
-
         if(lastPath!=null&&(selectedItemId == ITEM_ID_BROWSER)){
             return new File(lastPath).exists();
         }
         return true;
     }
 
-    public void onResume() {
-        super.onResume();
+    private void updateUI() {
+        if (getActivity() != null)
+            getActivity().runOnUiThread(() -> {
+                // run this on UI thread
+                updateExternalStorage();
+            });
+    }
 
+    public void onResume() {
+        if (DBG) Log.d(TAG, "onResume");
+        super.onResume();
         // Listen (un)mount sdcard/usb host/samba/upnp events.
-        IntentFilter networkIntent = new IntentFilter();
-        networkIntent.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        getActivity().registerReceiver(mExternalStorageReceiver, networkIntent);
         IntentFilter intentFilter = new IntentFilter(ExtStorageReceiver.ACTION_MEDIA_MOUNTED);
         intentFilter.addAction(ExtStorageReceiver.ACTION_MEDIA_UNMOUNTED);
         intentFilter.addAction(ExtStorageReceiver.ACTION_MEDIA_CHANGED);
         intentFilter.addDataScheme(ExtStorageReceiver.ARCHOS_FILE_SCHEME);//new android nougat send UriExposureException when scheme = file
         intentFilter.addDataScheme("file");
         getActivity().registerReceiver(mExternalStorageReceiver, intentFilter);
-
+        if (propertyChangeListener != null) {
+            if (DBG) Log.d(TAG, "onResume: networkState.addPropertyChangeListener");
+            networkState.addPropertyChangeListener(propertyChangeListener);
+        }
         // Remove non constant category items.
         for (int index = mCategoryList.size() - 1; index >= mLibrarySize; index--) {
             mCategoryList.remove(index);
@@ -237,12 +254,12 @@ abstract public class BrowserCategory extends ListFragment {
     }
 
     public void onPause() {
+        if (DBG) Log.d(TAG, "onPause");
         getActivity().unregisterReceiver(mExternalStorageReceiver);
-
+        if (DBG) Log.d(TAG, "onPause: networkState.removePropertyChangeListener");
+        networkState.removePropertyChangeListener(propertyChangeListener);
         super.onPause();
     }
-
-
 
     public void setFragment(String path){
         FragmentTitleStruc struc = getContentFragmentAndTitle(mSelectedItemId);
@@ -375,6 +392,7 @@ abstract public class BrowserCategory extends ListFragment {
      * Update the view for network, sd card and usb host.
      */
     private void updateExternalStorage() {
+        if (DBG) Log.d(TAG, "updateExternalStorage");
         // First, remove old external items.
        boolean oneAgain = true;
         // Remove non constant category items.
@@ -401,7 +419,7 @@ abstract public class BrowserCategory extends ListFragment {
                     oneAgain = false;
             }
         }
-*/
+        */
         ExtStorageManager storageManager = ExtStorageManager.getExtStorageManager();
         final boolean hasExternal = storageManager.hasExtStorage();
         final boolean isConnected = isConnected();

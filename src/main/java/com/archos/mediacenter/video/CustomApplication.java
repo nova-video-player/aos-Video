@@ -141,6 +141,10 @@ public class CustomApplication extends Application {
         // Class that keeps track of activities so we can tell is we are foreground
         registerActivityLifecycleCallbacks(AppState.sCallbackHandler);
 
+        // Keep track of network state
+        NetworkState networkState = NetworkState.instance(getApplicationContext());
+        networkState.registerNetworkCallback();
+
         // init HttpImageManager manager.
         mHttpImageManager = new HttpImageManager(HttpImageManager.createDefaultMemoryCache(), 
                 new FileSystemPersistence(BASEDIR));

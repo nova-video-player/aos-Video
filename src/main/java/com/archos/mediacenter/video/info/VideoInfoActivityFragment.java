@@ -17,12 +17,10 @@ package com.archos.mediacenter.video.info;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
@@ -30,7 +28,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -117,6 +114,7 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCal
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.squareup.picasso.Picasso;
 
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -148,7 +146,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     public static final int REQUEST_BACKDROP_ACTIVITY      = 988;
     private static final int PLAY_ACTIVITY_REQUEST_CODE = 989;
 
-    protected static final IntentFilter INTENT_FILTER = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
     private static final int DELETE_GROUP = 1;
     private View mRoot;
 
@@ -162,9 +159,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private AsyncTask<Video, Void, BaseTags> mFullScraperTagsTask;
 
     private boolean mIsLeavingPlayerActivity = false;
-
-
-
 
     private int mColor; //dark background color for cardview
 
@@ -275,6 +269,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     private static boolean isFileManagerServiceBound = false;
 
+    private NetworkState networkState = null;
+    private PropertyChangeListener propertyChangeListener = null;
 
     private Paste mPasteDialog;    //download dialog
     private Uri mLastIndexed;   //keep last index uri to avoid asking it twice (for example when leaving fragment and coming back while video hasn't yet been indexed)
@@ -299,30 +295,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     public VideoInfoActivityFragment() {
     }
 
-    private final BroadcastReceiver mNetworkStateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (DBG) Log.d(TAG, "mNetworkStateReceiver: intent " + intent);
-            NetworkState networkState = NetworkState.instance(context);
-            networkState.updateFrom(context);
-            // close activity if
-            //   not localfile (i.e. remote)
-            //   && (not connected || (no local connection && not ftp (i.e. smb/upnp))
-            //   && fragment is added
-            //   && not fragment detached
-            if (mCurrentVideo!=null&&
-                    !FileUtils.isLocal(mCurrentVideo.getFileUri())&&
-                    (!networkState.isConnected()||
-                            !networkState.hasLocalConnection()&&!FileUtils.isSlowRemote(mCurrentVideo.getFileUri()))&&
-                    isAdded()&&
-                    !isDetached()) {
-                getActivity().finish();
-            }
-        }
-    };
-
-
-
     public void onCreate(Bundle save){
         if (DBG) Log.d(TAG,"onCreate");
         super.onCreate(save);
@@ -335,7 +307,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mBackgroundSetter = new ImageViewSetter(getActivity(), config);
         mSubtitleListCache = new HashMap<>();
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -575,7 +546,32 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     public void onAttach(Context context){
         if (DBG) Log.d(TAG,"onAttach");
         super.onAttach(context);
-        context.registerReceiver(mNetworkStateReceiver, INTENT_FILTER);
+        // handles NetworkState changes
+        networkState = NetworkState.instance(getContext());
+        if (propertyChangeListener == null)
+            propertyChangeListener = evt -> {
+                if (evt.getOldValue() != evt.getNewValue()) {
+                    if (DBG) Log.d(TAG, "NetworkState for " + evt.getPropertyName() + " changed:" + evt.getOldValue() + " -> " + evt.getNewValue());
+                    if (getActivity() != null)
+                        getActivity().runOnUiThread(() -> {
+                            // run this on UI thread
+                            networkState.updateFrom();
+                            // close activity if
+                            //   not localfile (i.e. remote)
+                            //   && (not connected || (no local connection && not ftp (i.e. smb/upnp))
+                            //   && fragment is added
+                            //   && not fragment detached
+                            if (mCurrentVideo!=null&&
+                                    !FileUtils.isLocal(mCurrentVideo.getFileUri())&&
+                                    (!networkState.isConnected()||
+                                            !networkState.hasLocalConnection()&&!FileUtils.isSlowRemote(mCurrentVideo.getFileUri()))&&
+                                    isAdded()&&
+                                    !isDetached()) {
+                                getActivity().finish();
+                            }
+                        });
+                }
+            };
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1309,8 +1305,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         }
     }
 
-
-
     @Override
     public void onAnimationEnd(Animation animation) {
         ViewCompat.setElevation(mToolbarContainer, 5);
@@ -1408,10 +1402,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
             updateSubtitleInfo(mCurrentVideo.getMetadata(), subtitleFiles);
         }
-
-
     }
-
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
@@ -1433,8 +1424,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             mSubtitleFilesListerTask.cancel(true);
         if(mFullScraperTagsTask!=null)
             mFullScraperTagsTask.cancel(true);
-        getActivity().unregisterReceiver(mNetworkStateReceiver);
-
+        if (DBG) Log.d(TAG, "onDetach: networkState.removePropertyChangeListener");
+        networkState.removePropertyChangeListener(propertyChangeListener);
     }
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
@@ -1869,6 +1860,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             StoreRatingDialogBuilder.displayStoreRatingDialogIfNeeded(getContext());
         mIsLeavingPlayerActivity = false;
         super.onResume();
+        if (DBG) Log.d(TAG, "onResume: networkState.addPropertyChangeListener");
+        networkState.addPropertyChangeListener(propertyChangeListener);
         if (mCurrentVideo != null) {
             if (DBG) Log.d(TAG, "onResume: mCurrentVideo.getName()=" + mCurrentVideo.getName());
         } else {
@@ -1880,6 +1873,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     public void onPause() {
         if (DBG) Log.d(TAG, "onPause");
         super.onPause();
+        if (DBG) Log.d(TAG, "onPause: networkState.removePropertyChangeListener");
+        networkState.removePropertyChangeListener(propertyChangeListener);
     }
 
 }
