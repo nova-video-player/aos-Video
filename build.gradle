@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-    id "com.github.triplet.play" version "2.3.0"
+    id "com.github.triplet.play" version "2.7.2"
 }
 
 import com.android.build.OutputFile
