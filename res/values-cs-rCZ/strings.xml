@@ -522,7 +522,6 @@
     <string name="format_fullscreen">Celá obrazovka</string>
     <string name="format_optimized">Optimalizováno</string>
     <string name="format_original">Originální</string>
-    <string name="format_stretched">Roztáhnuté</string>
     <string name="stereo_dive_enable">Efekt \"Stereo dive\"</string>
     <string name="stereo_dive_disable">Vypnout efekt \"Stereo dive\"</string>
     <string name="rotation_unlock">Zapnout automatickou rotaci obrazovky</string>

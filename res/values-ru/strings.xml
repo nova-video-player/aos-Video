@@ -335,6 +335,7 @@
     <string name="s_turkish">Турецкий</string>
     <string name="s_chinese">Китайский</string>
     <string name="s_vietnamese">Вьетнамский</string>
+    <string name="s_lithuanian">Литовский</string>
     <string name="s_none">Нет</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Воспроизведение видео невозможно</string>
@@ -542,7 +543,6 @@
     <string name="format_fullscreen">На весь экран</string>
     <string name="format_optimized">Оптимизировано</string>
     <string name="format_original">Оригинал</string>
-    <string name="format_stretched">Растянутый</string>
     <string name="stereo_dive_enable">Эффект стерео</string>
     <string name="stereo_dive_disable">Отключить эффект стерео</string>
     <string name="rotation_unlock">Включить автоповорот экрана</string>
@@ -832,4 +832,5 @@
     <string name="loading">Загрузка…</string>
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
+    <string name="refreshrate_failed">Не удалось задать желаемую частоту обновления</string>
 </resources>

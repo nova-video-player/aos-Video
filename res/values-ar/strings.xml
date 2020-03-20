@@ -427,7 +427,6 @@
     <string name="format_fullscreen">الشاشة كاملة</string>
     <string name="format_optimized">مُحسّن</string>
     <string name="format_original">الأصلي</string>
-    <string name="format_stretched">تمديد</string>
     <string name="stereo_dive_enable">تفعبي تأثيرات ستيريو</string>
     <string name="stereo_dive_disable">إلغاء تأثيرات ستيريو</string>
     <!-- Help overlay -->

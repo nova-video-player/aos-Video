@@ -530,7 +530,6 @@
     <string name="format_fullscreen">全屏</string>
     <string name="format_optimized">优化</string>
     <string name="format_original">原始比例</string>
-    <string name="format_stretched">拉伸</string>
     <string name="stereo_dive_enable">立体声潜水效果</string>
     <string name="stereo_dive_disable">禁用立体声潜水效果</string>
     <string name="rotation_unlock">启用屏幕自动旋转</string>
