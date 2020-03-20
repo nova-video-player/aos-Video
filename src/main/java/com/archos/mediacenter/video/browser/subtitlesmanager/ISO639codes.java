@@ -123,6 +123,9 @@ public class ISO639codes {
         sMap.put("chi", R.string.s_chinese);
 
         sMap.put("vie", R.string.s_vietnamese);
+
+        sMap.put("lt", R.string.s_lithuanian);
+        sMap.put("lit", R.string.s_lithuanian);
     }
 
     /**

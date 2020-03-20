@@ -361,6 +361,7 @@
     <string name="s_turkish">Turkish</string>
     <string name="s_chinese">Chinese</string>
     <string name="s_vietnamese">Vietnamese</string>
+    <string name="s_lithuanian">Lithuanian</string>
     <string name="s_none">None</string>
 
     <!-- Player errors -->

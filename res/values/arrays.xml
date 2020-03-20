@@ -104,6 +104,7 @@
         <item>@string/s_chinese</item>
         <item>@string/Croatian</item>
         <item>@string/s_vietnamese</item>
+        <item>@string/s_lithuanian</item>
     </string-array>
     <string-array name="entryvalues_list_preference">
         <item>system</item>
@@ -137,6 +138,7 @@
         <item>@string/zho</item>
         <item>@string/hrv</item>
         <item>@string/vie</item>
+        <item>@string/lit</item>
     </string-array>
 
     <string-array name="dec_choice_entries">
