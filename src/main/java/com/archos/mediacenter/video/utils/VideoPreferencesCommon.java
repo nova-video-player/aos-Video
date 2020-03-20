@@ -777,7 +777,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mTraktLiveScrobblingPreference.setEnabled(enabled);
         mTraktSyncCollectionPreference.setEnabled(enabled);
         mTraktSyncProgressPreference.setEnabled(mTraktLiveScrobblingPreference.isChecked() && mTraktLiveScrobblingPreference.isEnabled());
-
+        mTraktSigninPreference.setEnabled(!enabled);
     }
 
     public void onSaveInstanceState(Bundle outState) {
