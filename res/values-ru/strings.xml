@@ -102,8 +102,8 @@
     <string name="all_tvshows_format">Все сериалы -  %d</string>
     <string name="not_watched_tvshows_format">Не просмотрено -  %d</string>
     <string name="all_seasons">Все сезоны</string>
-    <string name="tvshows_by_alpha">Серии по алфавиту</string>
-    <string name="tvshows_by_genre">Серии по жанру</string>
+    <string name="tvshows_by_alpha">Сериалы по алфавиту</string>
+    <string name="tvshows_by_genre">Сериалы по жанру</string>
     <string name="tvshows_by_rating">ТВ-шоу по рейтингу</string>
     <string name="episodes_by_date">Серии по дате</string>
     <string name="date_view_week">Неделя</string>
@@ -187,7 +187,7 @@
     <string name="scrap_enable_network_first">"Включите соединение к сети для запуска данного приложения."</string>
     <string name="scrap_failed">Фильм не найден в сетевой базе данных.</string>
     <string name="start_auto_scraper_activity">Поиск информации в сети</string>
-    <string name="scraper_settigns">Информация о постерах &amp;</string>
+    <string name="scraper_settigns">Постеры и информация</string>
     <string name="scrap_status_initial">В очереди</string>
     <string name="scrap_status_busy">Поиск…</string>
     <string name="scrap_status_success">Обновлено</string>
@@ -488,7 +488,7 @@
     <string name="preferences_force_audio_passthrough_summary">Сквозная передача звука для HDMI и S/PDIF подключений. ⚠ Может вызвать рассинхронизацию аудио и видео</string>
     <string name="preferences_disable_downmix_title">Запретить даунмикс звука в стерео</string>
     <string name="preferences_disable_downmix_summary">Всегда декодировать все каналы, микширование производится средствами ОС в зависимости от характеристик аудиовыхода (может привести к потери голосовых каналов)</string>
-    <string name="preferences_allow_3rd_party_player">Разрешить использование другого видео-плеера</string>
+    <string name="preferences_allow_3rd_party_player">Разрешить использование другого видеоплеера</string>
     <string name="preferences_allow_3rd_party_player_summary">При запуске воспроизведения будет предложен выбор других проигрывателей. Некоторые функции при этом могут не работать (продолжить воспроизведение, закладки и др.)</string>
     <string name="preference_tv_3d_automatic_switch">Автоматическое переключение 3D TV</string>
     <string name="preference_tv_3d_automatic_switch_summary">Используйте эту функцию только если ваш 3D TV поддерживает ее</string>
@@ -498,7 +498,7 @@
     <string name="preference_cutout_short_edges_summary">Разрешить полноэкранное видео на дисплее с вырезами</string>
     <string name="category_languages">Субтитры</string>
     <string name="subtitles_hide_default">Скрыть субтитры по умолчанию</string>
-    <string name="subtitles_hide_default_summary">Отметьте, если желаете скрывать субтиты по умолчанию</string>
+    <string name="subtitles_hide_default_summary">Отметьте, если желаете скрывать субтитры по умолчанию</string>
     <string name="preferences_languages">Язык загружаемых субтитров</string>
     <string name="summary_list_preference_primary">Выберите язык для загружаемых субтитров</string>
     <string name="favSubLang_title">Язык субтитров по-умолчанию</string>
@@ -511,7 +511,7 @@
     <string name="preferences_video_tvdb_text">Информация о ТВ-шоу предоставлена</string>
     <string name="preferences_video_trakt_text">Видео скробблер предоставлен</string>
     <string name="preferences_video_licenses">Лицензии</string>
-    <string name="preferences_network_mobile_vpn_summary">Используйте только с VPN и не забывайте об передаче мобильных данных.</string>
+    <string name="preferences_network_mobile_vpn_summary">Используйте только с VPN и не забывайте о передаче мобильных данных</string>
     <string name="preferences_network_mobile_vpn_title">Включить сетевые ресурсы при мобильном подключении</string>
     <string name="preferences_video_advanced">Расширенный</string>
     <string name="preferences_video_advanced_quit_title">Основные настройки</string>
@@ -573,7 +573,7 @@
     <string name="auto_brightness_message">Яркость не может быть изменена, так как включен автоматический режим яркости.</string>
     <!--  Nfo File parsing -->
     <string name="network_nfo_parse">Обработать \'.nfo\' файлы</string>
-    <string name="network_nfo_parse_summary">Считывать.nfo файлы Kodi во время сканирования для получения дополнительной информации.</string>
+    <string name="network_nfo_parse_summary">Считывать .nfo файлы Kodi во время сканирования для получения дополнительной информации</string>
     <string name="ask_to_mail_media_DB">Вы хотите отправить базу данных видео разработчикам Nova, чтобы помочь им проверить ошибку?\n\nВидеофайлы не будут отправлены, будет составлен только полный список имен файлов.</string>
     <string name="no_email_installed">Приложение электронной почты не найдено</string>
     <string name="zipping_library_before_mailing">Архивирование копии библиотеки перед отправкой…</string>
@@ -628,12 +628,12 @@
     <string name="reset_last_played_row_in_progress">Очистить ряд с недавно просмотренным видео</string>
     <string name="preferences_show_all_movies_row_summary">Отметьте, чтобы показать ряд со всеми фильмами без разделения по категориям</string>
     <string name="preferences_show_all_movies_row">Показывать ряд «Все фильмы»</string>
-    <string name="preferences_movie_sort_order_summary">Выберите порядок сортировки ряда \"Все фильмы\"</string>
-    <string name="preferences_movie_sort_order_title">Порядок сортировки ряда \"Все фильмы\"</string>
+    <string name="preferences_movie_sort_order_summary">Выберите порядок сортировки ряда «Все фильмы»</string>
+    <string name="preferences_movie_sort_order_title">Порядок сортировки ряда «Все фильмы»</string>
     <string name="preferences_show_all_tv_shows_row_summary">Отметьте, чтобы показать ряд со всеми сериалами без разделения по категориям</string>
     <string name="preferences_show_all_tv_shows_row">Показывать ряд «Все сериалы»</string>
-    <string name="preferences_tv_show_sort_order_summary">Выберите порядок сортировки ряда \"Все сериалы\"</string>
-    <string name="preferences_tv_show_sort_order_title">Порядок сортировки ряда \"Все сериалы\"</string>
+    <string name="preferences_tv_show_sort_order_summary">Выберите порядок сортировки ряда «Все сериалы»</string>
+    <string name="preferences_tv_show_sort_order_title">Порядок сортировки ряда «Все сериалы»</string>
     <string name="codepage_title">Кодировка субтитров</string>
     <string name="codepage_summary">Установить кодировку субтитров</string>
     <string name="codepage_default">Язык устройства %s</string>
