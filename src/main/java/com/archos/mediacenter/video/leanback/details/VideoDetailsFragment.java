@@ -147,7 +147,7 @@ import java.util.List;
 public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor>, PlayUtils.SubtitleDownloadListener, SubtitleInterface, Delete.DeleteListener, XmlDb.ResumeChangeListener, ExternalPlayerWithResultStarter {
 
     private static final String TAG = "VideoDetailsFragment";
-    private static boolean DBG = true;
+    private static boolean DBG = false;
 
     /** A serialized com.archos.mediacenter.video.leanback.adapter.object.Video */
     public static final String EXTRA_VIDEO = "VIDEO";
