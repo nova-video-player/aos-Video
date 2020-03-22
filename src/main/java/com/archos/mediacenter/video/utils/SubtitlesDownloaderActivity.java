@@ -336,7 +336,8 @@ public class SubtitlesDownloaderActivity extends Activity{
         public boolean logIn() {
             try {
                 URL url = new URL(OpenSubtitlesAPIUrl);
-                client = new XMLRPCClient(url);
+                if (DBG) client = new XMLRPCClient(url, XMLRPCClient.FLAGS_DEBUG);
+                else client = new XMLRPCClient(url);
             } catch (MalformedURLException e) {
                 Log.e(TAG, "logIn: caught MalformedURLException");
             }
