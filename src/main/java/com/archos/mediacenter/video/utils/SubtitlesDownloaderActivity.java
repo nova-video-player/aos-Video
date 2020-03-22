@@ -35,6 +35,8 @@ import android.os.Handler;
 
 import androidx.core.text.HtmlCompat;
 import androidx.preference.PreferenceManager;
+
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -89,8 +91,10 @@ public class SubtitlesDownloaderActivity extends Activity{
     public static final String FILE_NAMES = "fileNames"; //friendly name for Upnp
     public static final String FILE_SIZES = "fileSizes";
 
+    private static final String LIMIT = "20";
+
     private static final String TAG = SubtitlesDownloaderActivity.class.getSimpleName();
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
 
     //to distinguished program dismiss and users
     private boolean mDoNotFinish;
@@ -112,19 +116,18 @@ public class SubtitlesDownloaderActivity extends Activity{
     //database URI : VideoStore.Video.Media.EXTERNAL_CONTENT_URI
     private static final String[] mProjection = {
             VideoStore.Video.VideoColumns._ID,
-            //VideoStore.Video.VideoColumns.SCRAPER_TITLE,
-            //VideoStore.Video.VideoColumns.SCRAPER_M_NAME,
-            //VideoStore.Video.VideoColumns.SCRAPER_S_NAME,
             VideoStore.Video.VideoColumns.SCRAPER_M_IMDB_ID,
-            //VideoStore.Video.VideoColumns.SCRAPER_E_IMDB_ID,
-            //VideoStore.Video.VideoColumns.SCRAPER_E_SEASON,
-            //VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE
     };
 
     private static final String WHERE = VideoStore.Video.VideoColumns.DATA + "=?";
-    private static final int FIRST_PASS = 0;
-    private static final int SECOND_PASS = 1;
-    private static final int THIRD_PASS = 2;
+    private static final int FIRST_PASS = 0; // moviehash+moviebytesize based (provides only one result)
+    private static final int SECOND_PASS = 1; // tag (full filename) based (provides only one result) but does not work if file is renamed...
+    private static final int THIRD_PASS = 2; // query (friendly name from filename) based (provides multiple choices)
+    private static final int FOURTH_PASS = 3; // scraped information based (imdbid for movie or query=showtitle season episode number) (provide multiple choices)
+    private static boolean firstPassEnabled = true;
+    private static boolean secondPassEnabled = true;
+    private static boolean thirdPassEnabled = false;
+    private static boolean fourthPassEnabled = true;
 
     private static class NonConfigurationInstance {
         public ProgressDialog progressDialog;
@@ -422,76 +425,72 @@ public class SubtitlesDownloaderActivity extends Activity{
             HashMap<String, String> index = new HashMap<String, String>();
             final HashMap<String, ArrayList<String>> success = new HashMap<String, ArrayList<String>>();
             HashMap<String, ArrayList<String>> fails = new HashMap<String, ArrayList<String>>();
-            List<HashMap<String, String>> videoSearchList;
-            // TODO MARC composition of the list here
+            List<HashMap<String, Object>> videoSearchList;
+            // first pass: moviehash+moviebytesize based
             videoSearchList = prepareRequestList(fileUrls, languages, index, FIRST_PASS);
             Object[] subtitleMaps = null;
-            try {
-                // TODO MARC search happens here
-                map = (HashMap<String, Object>) client.call("SearchSubtitles", token, videoSearchList);
-            } catch (Throwable e) { //for various service outages
-                Log.e(TAG, "getSubtitles: caught Throwable", e);
-                stop = true;
-                displayToast(getString(R.string.toast_subloader_service_unreachable));
-                return;
-            }
-            if(!isCancelled() && map.get("data") instanceof Object[]){
-                subtitleMaps = ((Object[]) map.get("data"));
-                int progress = 0;
-                publishProgress(new Integer[] {progress, fileUrls.size()});
-                String lastProcessedFile = "";
-                if (subtitleMaps.length > 0){
-                    String srtFormat, movieHash, fileUrl, fileName, subLanguageID, subDownloadLink;
-                    for (int i = 0 ; i < subtitleMaps.length ; i++){
-                        if (isCancelled())
-                            break;
-                        srtFormat = ((HashMap<String, String>) subtitleMaps[i]).get("SubFormat");
-                        movieHash = ((HashMap<String, String>) subtitleMaps[i]).get("MovieHash");
-                        subLanguageID = ((HashMap<String, String>) subtitleMaps[i]).get("SubLanguageID");
-                        subDownloadLink = ((HashMap<String, String>) subtitleMaps[i]).get("SubDownloadLink");
-                        fileUrl = index.get(movieHash);
-                        if(fileUrl==null) {
-                            publishProgress(new Integer[] {++progress, fileUrls.size()});
-                            continue;
-                        }
-                        fileName = getFriendlyFilename(fileUrl);
-                        if (success.containsKey(fileName) && success.get(fileName).contains(subLanguageID)){
-                            continue;
-                        } else {
-                            if (success.containsKey(fileName))
-                                success.get(fileName).add(subLanguageID);
-                            else {
-                                ArrayList<String> newLanguage = new ArrayList<String>();
-                                newLanguage.add(subLanguageID);
-                                success.put(fileName, newLanguage);
+            if (firstPassEnabled) {
+                try { // launch the search for first pass
+                    map = (HashMap<String, Object>) client.call("SearchSubtitles", token, videoSearchList);
+                } catch (Throwable e) { //for various service outages
+                    Log.e(TAG, "getSubtitles: 1st pass caught Throwable", e);
+                    stop = true;
+                    displayToast(getString(R.string.toast_subloader_service_unreachable));
+                    return;
+                }
+                if (!isCancelled() && map.get("data") instanceof Object[]) { // process the search results if any
+                    subtitleMaps = ((Object[]) map.get("data"));
+                    int progress = 0;
+                    publishProgress(new Integer[]{progress, fileUrls.size()});
+                    String lastProcessedFile = "";
+                    if (subtitleMaps.length > 0) {
+                        String srtFormat, movieHash, fileUrl, fileName, subLanguageID, subDownloadLink;
+                        for (int i = 0; i < subtitleMaps.length; i++) {
+                            if (isCancelled()) break;
+                            srtFormat = ((HashMap<String, String>) subtitleMaps[i]).get("SubFormat");
+                            movieHash = ((HashMap<String, String>) subtitleMaps[i]).get("MovieHash");
+                            subLanguageID = ((HashMap<String, String>) subtitleMaps[i]).get("SubLanguageID");
+                            subDownloadLink = ((HashMap<String, String>) subtitleMaps[i]).get("SubDownloadLink");
+                            fileUrl = index.get(movieHash);
+                            if (fileUrl == null) {
+                                publishProgress(new Integer[]{++progress, fileUrls.size()});
+                                continue;
                             }
-                        }
-                        downloadSubtitles(subDownloadLink, fileUrl, fileName, srtFormat, subLanguageID);
-                        if (!single && !lastProcessedFile.equals(fileName)){
-                            lastProcessedFile = fileName;
-                            publishProgress(new Integer[] {++progress, fileUrls.size()});
+                            fileName = getFriendlyFilename(fileUrl);
+                            if (success.containsKey(fileName) && success.get(fileName).contains(subLanguageID))
+                                continue;
+                            else {
+                                if (success.containsKey(fileName))
+                                    success.get(fileName).add(subLanguageID);
+                                else {
+                                    ArrayList<String> newLanguage = new ArrayList<String>();
+                                    newLanguage.add(subLanguageID);
+                                    success.put(fileName, newLanguage);
+                                }
+                            }
+                            downloadSubtitles(subDownloadLink, fileUrl, fileName, srtFormat, subLanguageID);
+                            if (!single && !lastProcessedFile.equals(fileName)) {
+                                lastProcessedFile = fileName;
+                                publishProgress(new Integer[]{++progress, fileUrls.size()});
+                            }
                         }
                     }
                 }
             }
-            if (videoSearchList != null)
-                videoSearchList.clear();
+            if (videoSearchList != null) videoSearchList.clear();
             index.clear();
             subtitleMaps = null;
-            //Second pass
+            // Second pass tag (full filename) based
             for (String fileUrl : fileUrls){
                 String fileName = getFriendlyFilename(fileUrl);
-                if (!success.containsKey(fileName)){
-                    notFoundFiles.add(fileUrl);
-                }
+                if (!success.containsKey(fileName)) notFoundFiles.add(fileUrl);
             }
-            if (!isCancelled() && !notFoundFiles.isEmpty() && 
+            if (secondPassEnabled && !isCancelled() && !notFoundFiles.isEmpty() &&
                     !(videoSearchList = prepareRequestList(notFoundFiles, languages, index, SECOND_PASS)).isEmpty()) {
-                try {
-                    map = (HashMap<String, Object>) client.call("SearchSubtitles", token,
-                            videoSearchList);
+                try { // perform second pass search
+                    map = (HashMap<String, Object>) client.call("SearchSubtitles", token, videoSearchList);
                 } catch (Throwable e) { //for various service outages
-                    Log.e(TAG, "getSubtitles: caught Throwable", e);
+                    Log.e(TAG, "getSubtitles: 2nd pass caught Throwable", e);
                     stop = true;
                     displayToast(getString(R.string.toast_subloader_service_unreachable));
                     return;
@@ -535,7 +534,6 @@ public class SubtitlesDownloaderActivity extends Activity{
                             if (!single && !lastProcessedFile.equals(fileName)){
                                 lastProcessedFile = fileName;
                                 publishProgress(new Integer[] {++progress, fileUrls.size()});
-
                             }
                         }
                     }
@@ -543,7 +541,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                     if (DBG) Log.d(TAG, "FAIL " + map.get("data"));
             }
             boolean doNotFinish = false;
-            //Second pass
+            // Third pass query (friendly name from filename) based
             notFoundFiles.clear();
             for (String fileUrl : fileUrls){
                 String fileName = getFriendlyFilename(fileUrl);
@@ -551,13 +549,12 @@ public class SubtitlesDownloaderActivity extends Activity{
                     notFoundFiles.add(fileUrl);
                 }
             }
-            if (!isCancelled() &&single&& !notFoundFiles.isEmpty() &&
+            if (thirdPassEnabled && !isCancelled() && single && !notFoundFiles.isEmpty() &&
                     !(videoSearchList = prepareRequestList(notFoundFiles, languages, index, THIRD_PASS)).isEmpty()) {
-                try {
-                    map = (HashMap<String, Object>) client.call("SearchSubtitles", token,
-                            videoSearchList);
+                try { // perform third pass search
+                    map = (HashMap<String, Object>) client.call("SearchSubtitles", token, videoSearchList);
                 } catch (Throwable e) { //for various service outages
-                    Log.e("subs", "errrr", e);
+                    Log.e(TAG, "getSubtitles: 3rd pass caught Throwable", e);
                     stop = true;
                     displayToast(getString(R.string.toast_subloader_service_unreachable));
                     return;
@@ -566,7 +563,6 @@ public class SubtitlesDownloaderActivity extends Activity{
                     subtitleMaps = ((Object[]) map.get("data"));
                     if (subtitleMaps.length > 0) {
                         doNotFinish = true;
-
                         final Object[] finalSubtitleMaps = subtitleMaps;
                         mHandler.post(new Runnable() {
                             @Override
@@ -578,10 +574,41 @@ public class SubtitlesDownloaderActivity extends Activity{
                 } else
                 if (DBG) Log.d(TAG, "FAIL " + map.get("data"));
             }
-
-            if(doNotFinish)
-                return;
-            //fill fails list
+            // Fourth pass scraped information based (imdbid for movie or query=showtitle season episode number)
+            notFoundFiles.clear();
+            for (String fileUrl : fileUrls){
+                String fileName = getFriendlyFilename(fileUrl);
+                if (!success.containsKey(fileName)){
+                    notFoundFiles.add(fileUrl);
+                }
+            }
+            if (fourthPassEnabled && !isCancelled() && single && !notFoundFiles.isEmpty() &&
+                    !(videoSearchList = prepareRequestList(notFoundFiles, languages, index, FOURTH_PASS)).isEmpty()) {
+                try { // perform fourth pass search
+                    map = (HashMap<String, Object>) client.call("SearchSubtitles", token, videoSearchList);
+                } catch (Throwable e) { //for various service outages
+                    Log.e(TAG, "getSubtitles: 4th pass caught Throwable", e);
+                    stop = true;
+                    displayToast(getString(R.string.toast_subloader_service_unreachable));
+                    return;
+                }
+                if (map.get("data") instanceof Object[]) {
+                    subtitleMaps = ((Object[]) map.get("data"));
+                    if (subtitleMaps.length > 0) {
+                        doNotFinish = true;
+                        final Object[] finalSubtitleMaps = subtitleMaps;
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                askSubChoice(fileUrls.get(0),finalSubtitleMaps,languages.size()>1, !success.isEmpty());
+                            }
+                        });
+                    }
+                } else
+                if (DBG) Log.d(TAG, "FAIL " + map.get("data"));
+            }
+            if(doNotFinish) return;
+            // fill fails list
             for (String fileUrl : fileUrls){
                 String fileName = getFriendlyFilename(fileUrl);
                 if (!success.containsKey(fileName)){
@@ -618,42 +645,35 @@ public class SubtitlesDownloaderActivity extends Activity{
             return;
         }
 
-        private List<HashMap<String, String>> prepareRequestList(final ArrayList<String> fileUrls,
+        private List<HashMap<String, Object>> prepareRequestList(final ArrayList<String> fileUrls,
                 ArrayList<String> languages, HashMap<String, String> index, int pass) {
-            List<HashMap<String, String>> videoSearchList;
-            videoSearchList = new ArrayList<HashMap<String, String>>();
+            List<HashMap<String, Object>> videoSearchList;
+            videoSearchList = new ArrayList<HashMap<String, Object>>();
             for (String fileUrl : fileUrls){
-                if (stop)
-                    break;
+                if (stop) break;
                 String hash = null, tag = null;
                 long fileLength = 0;
-
-                // TODO MARC: do db based search
-                //ContentResolver resolver = getContentResolver();
-                //VideoDbInfo videoDbInfo = VideoDbInfo.fromUri(resolver, Uri.parse(indexableUri));
-
                 if (pass == FIRST_PASS) { //first pass, search by index
                     fileLength = 0;
                     MetaFile2 mf2=null;
-                    if(!fileUrl.startsWith("http://")) { // if not http, we will need metafile2 even for upnp (file length + streaming uri)
+                    if (!fileUrl.startsWith("http://")) { // if not http, we will need metafile2 even for upnp (file length + streaming uri)
                         try {
                             mf2 = MetaFileFactoryWithUpnp.getMetaFileForUrl(Uri.parse(fileUrl));
                         } catch (Exception e) {
                             Log.e(TAG, "prepareRequestList: caught Exception", e);
                         }
-                        if(mf2==null)
-                            continue;
+                        if (mf2 == null) continue;
                     }
                     if (fileUrl.startsWith("upnp://")) { //request streaming uri
                         // TODO need also length
-                            Uri newUri = mf2.getStreamingUri();
-                            if(newUri != null){
-                                String oldFileUrl = fileUrl;
-                                fileUrl = newUri.toString();
-                                if (DBG) Log.d(TAG, "prepareRequestList: add mFriendlyFileNames <- (" + fileUrl + "," + Uri.parse(oldFileUrl).getLastPathSegment() + "), size=" + mf2.length());
-                                mFriendlyFileNames.put(fileUrl, Uri.parse(oldFileUrl).getLastPathSegment());
-                                mFileSizes.put(fileUrl,  mf2.length());
-                            }
+                        Uri newUri = mf2.getStreamingUri();
+                        if (newUri != null) {
+                            String oldFileUrl = fileUrl;
+                            fileUrl = newUri.toString();
+                            if (DBG) Log.d(TAG, "prepareRequestList: add mFriendlyFileNames <- (" + fileUrl + "," + Uri.parse(oldFileUrl).getLastPathSegment() + "), size=" + mf2.length());
+                            mFriendlyFileNames.put(fileUrl, Uri.parse(oldFileUrl).getLastPathSegment());
+                            mFileSizes.put(fileUrl,  mf2.length());
+                        }
                     }
                     if (fileUrl.startsWith("http://")) {
                         if (mFileSizes != null) {
@@ -662,8 +682,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                                 fileLength = fileLengthLong.longValue();
                             }
                         }
-                        else
-                            continue;
+                        else continue;
                         URL url = null;
                         HttpURLConnection urlConnection = null;
                         try {
@@ -684,7 +703,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                             if (urlConnection != null)
                                 urlConnection.disconnect();
                         }
-                    }else{
+                    } else {
                         try {
                             fileLength = mf2.length();
                             hash = OpenSubtitlesHasher.computeHash(Uri.parse(fileUrl), fileLength);
@@ -693,41 +712,69 @@ public class SubtitlesDownloaderActivity extends Activity{
                             break;
                         }
                     }
-                    if (hash == null)
-                        continue;
+                    if (hash == null) continue;
                 } else { //Second pass, search by TAG (filename)
                     tag = getFriendlyFilename(fileUrl);
                 }
-                HashMap<String, String> video;
-                for (String item : languages){
-                    if (stop)
-                        break;
-                    String languageID = getCompliantLanguageID(item);
-                    video = new HashMap<String, String>();
-                    video.put("sublanguageid", languageID);
-                    if (pass == FIRST_PASS){
-                        index.put(hash, fileUrl);
-                        if (DBG) Log.d(TAG, "prepareRequestList: first pass add index (hash,url) <- (" + hash + "," + fileUrl + ")");
-                        video.put("moviehash", hash);
-                        video.put("moviebytesize", String.valueOf(fileLength));
-                        if (DBG) Log.d(TAG, "prepareRequestList: first pass add video (hash,length) <- (" + hash + "," + fileLength + ")");
-                    } else {
-                        if(pass==SECOND_PASS)
-                            video.put("tag", tag);
-                        else
-                            video.put("query", tag);
-                        int dotPos = tag.lastIndexOf('.');
-                        if (dotPos > -1){
-                            index.put(tag.substring(0, dotPos), fileUrl);
-                        }else {
-                            index.put(tag, fileUrl);
+
+                HashMap<String, Object> video = new HashMap<String, Object>();
+                // sublanguageid contains concatenated comma separated list of languages
+                ArrayList<String> subLanguageId = new ArrayList<String>();
+                for (String item : languages) subLanguageId.add(getCompliantLanguageID(item));
+                video.put("sublanguageid", TextUtils.join(",",  subLanguageId));
+                if (DBG) Log.d(TAG, "prepareRequestList: search for sublanguageid " + TextUtils.join(",",  subLanguageId));
+                if (stop) break;
+
+                if (pass == FIRST_PASS) {  // FIRST_PASS is moviehash+moviebytesize for search
+                    index.put(hash, fileUrl);
+                    if (DBG) Log.d(TAG, "prepareRequestList: first pass add index (hash,url) <- (" + hash + "," + fileUrl + ")");
+                    video.put("moviehash", hash);
+                    video.put("moviebytesize", String.valueOf(fileLength));
+                    if (DBG) Log.d(TAG, "prepareRequestList: first pass add video (hash,length) <- (" + hash + "," + fileLength + ")");
+                } else {
+                    if (pass == SECOND_PASS) // SECOND_PASS is tag (filename) for search
+                        video.put("tag", tag);
+                    else if (pass == THIRD_PASS)
+                        video.put("query", tag); // THIRD_PASS is query (filename as search name but not clean) for search
+                    else if (pass == FOURTH_PASS) { // FOURTH_PASS is scraped info based
+                        // try to get the video info if scraped
+                        ContentResolver resolver = getContentResolver();
+                        VideoDbInfo videoDbInfo = VideoDbInfo.fromUri(resolver, Uri.parse(fileUrl));
+                        if (videoDbInfo != null) {
+                            // index is used to find back fileUrl, to allow search on query or imdbid do not put the moviebytesize otherwise it is the only search criteria
+                            if (DBG) Log.d(TAG, "prepareRequestList: index (hash,url) <- (" + hash + "," + fileUrl + ")");
+                            if (videoDbInfo.isShow) { // this is a show
+                                // remove date from scraperTitle \([0-9]*\) because match does not work with e.g. The Flash (2015) or Doctor Who (2005)
+                                if (DBG) Log.d(TAG, "prepareRequestList: replacing " + videoDbInfo.scraperTitle + ", by " +
+                                        videoDbInfo.scraperTitle.replaceAll(" *\\(\\d*?\\)", ""));
+                                video.put("query", videoDbInfo.scraperTitle.replaceAll(" *\\(\\d*?\\)", ""));
+                                video.put("season", videoDbInfo.scraperSeasonNr);
+                                video.put("episode", videoDbInfo.scraperEpisodeNr);
+                                if (DBG) Log.d(TAG, "prepareRequestList: show query=" + videoDbInfo.scraperTitle + ", season=" + videoDbInfo.scraperSeasonNr + ", episode=" + videoDbInfo.scraperEpisodeNr);
+                            } else { // this is a movie
+                                String imdbId = getIMDBID(fileUrl);
+                                // remove all non numeric characters from imdbID (often starts with tt)
+                                // if (imdbID.startsWith("tt")) imdbID = imdbID.substring(2);
+                                imdbId = imdbId.replaceAll("[^\\d]", "");
+                                video.put("imdbid", imdbId);
+                                if (DBG) Log.d(TAG, "prepareRequestList: movie imdbid=" + imdbId);
+                            }
                         }
-                        if (DBG) Log.d(TAG, "prepareRequestList: other pass add index (friendly,url) <- (" + getFriendlyFilename(fileUrl) + "," + fileUrl + ")");
-                        index.put(getFriendlyFilename(fileUrl), fileUrl);
                     }
-                    if (DBG) Log.d(TAG, "prepareRequestList: add video to videoSearchList " + video.toString());
-                    videoSearchList.add(video);
+                    // since SECOND or THIRD or FOURTH pass not based on hash, put in index the tag
+                    int dotPos = tag.lastIndexOf('.');
+                    if (dotPos > -1) {
+                        if (DBG) Log.d(TAG, "prepareRequestList: other pass add index (tag without ext,url) <- (" + tag.substring(0, dotPos) + "," + fileUrl + ")");
+                        index.put(tag.substring(0, dotPos), fileUrl);
+                    } else {
+                        if (DBG) Log.d(TAG, "prepareRequestList: other pass add index (tag,url) <- (" + tag + "," + fileUrl + ")");
+                        index.put(tag, fileUrl);
+                    }
+                    if (DBG) Log.d(TAG, "prepareRequestList: other pass add index (friendly,url) <- (" + getFriendlyFilename(fileUrl) + "," + fileUrl + ")");
+                    index.put(getFriendlyFilename(fileUrl), fileUrl);
                 }
+                if (DBG) Log.d(TAG, "prepareRequestList: add video to videoSearchList " + video.toString());
+                videoSearchList.add(video);
             }
             return videoSearchList;
         }
@@ -848,7 +895,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                     canWrite = false;
                 }
             }
-            if(name==null||name.isEmpty())
+            if (name == null || name.isEmpty())
                 name = FileUtils.getFileNameWithoutExtension(Uri.parse(path));
             localSb = new StringBuilder();
             localSb.append(subsDir.getPath()).append('/').append(name).append('.').append(language).append('.').append(subFormat);
