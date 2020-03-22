@@ -95,7 +95,7 @@ public class SubtitlesDownloaderActivity extends Activity{
     //to distinguished program dismiss and users
     private boolean mDoNotFinish;
     private final String OpenSubtitlesAPIUrl = "https://api.opensubtitles.org/xml-rpc";
-    private final String USER_AGENT = "novavideoplayer";
+    private final String USER_AGENT = "novavideoplayer v1";
     private SharedPreferences sharedPreferences;
     private File subsDir;
     Handler mHandler;
