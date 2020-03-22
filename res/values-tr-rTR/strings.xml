@@ -338,6 +338,7 @@ izlenen bölümler %d</item>
     <string name="s_turkish">Türkçe</string>
     <string name="s_chinese">Çince</string>
     <string name="s_vietnamese">Vietnamca</string>
+    <string name="s_lithuanian">Litvanyalı</string>
     <string name="s_none">Boş</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Video oynatılamıyor</string>
@@ -835,4 +836,5 @@ desteklenmiyor.</string>
     <string name="loading">Yükleniyor…</string>
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
+    <string name="refreshrate_failed">İstenen yenileme hızı ayarlanamadı</string>
 </resources>

@@ -327,6 +327,7 @@
     <string name="s_turkish">Turco</string>
     <string name="s_chinese">Chinês</string>
     <string name="s_vietnamese">Vietnamita</string>
+    <string name="s_lithuanian">Lituano</string>
     <string name="s_none">Nenhum</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Não é possível reproduzir vídeo</string>
@@ -823,4 +824,5 @@
     <string name="loading">Carregando…</string>
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
+    <string name="refreshrate_failed">Falha ao definir a taxa de atualização desejada</string>
 </resources>

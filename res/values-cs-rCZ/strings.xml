@@ -315,6 +315,7 @@
     <string name="s_turkish">Turečtina</string>
     <string name="s_chinese">Čínština</string>
     <string name="s_vietnamese">Vietnamština</string>
+    <string name="s_lithuanian">Litevština</string>
     <string name="s_none">Žádný</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Video nelze přehrát</string>
@@ -331,7 +332,7 @@
     <string name="player_err_isnotsupported">není podporováno.</string>
     <string name="player_err_fileNoLicense">V souboru nebyla nalezena žádná licence.</string>
     <string name="player_err_fileerror">Soubor je poškozený nebo nekompletní.</string>
-    <string name="player_err_connection_failed">Připojení selhalo.</string>
+    <string name="player_err_connection_failed">Připojení se nezdařilo.</string>
     <string name="player_err_video_decoder_error">Chyba dekódování videa:</string>
     <string name="player_err_qpel_and_gmc">\"Quarter Pixel\" a \"GMC\"</string>
     <string name="player_err_profile_and_level">\"Profil\" a \"Úroveň\"</string>
@@ -811,4 +812,5 @@
     <string name="loading">Načítání…</string>
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
+    <string name="refreshrate_failed">Nepodařilo se nastavit požadovanou obnovovací frekvenci</string>
 </resources>

@@ -21,9 +21,9 @@
     <string name="goto_start">媒体库</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
     <!-- Menu item to refresh servers list -->
-    <string name="refresh_servers_list">刷新列表</string>
+    <string name="refresh_servers_list">刷新服务器列表</string>
     <!-- Menu item to enable network shares -->
-    <string name="enable_network_shares">Włącz udostępnianie sieciowe</string>
+    <string name="enable_network_shares">启用网络共享</string>
     <string name="initial_scan">初始化扫描</string>
     <!-- Library screen, menu item -->
     <string name="search_title">搜索</string>
@@ -323,6 +323,7 @@
     <string name="s_turkish">土耳其语</string>
     <string name="s_chinese">中文</string>
     <string name="s_vietnamese">越南语</string>
+    <string name="s_lithuanian">立陶宛语</string>
     <string name="s_none">无</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">无法播放视频</string>
@@ -819,4 +820,5 @@
     <string name="loading">正在加载……</string>
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
+    <string name="refreshrate_failed">设置所需刷新率失败</string>
 </resources>

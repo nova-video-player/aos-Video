@@ -90,12 +90,24 @@
     <string name="video_folder">Mappák</string>
     <string name="movies">Filmek</string>
     <string name="all_movies">Összes film</string>
+    <string name="all_movies_format">Összes film - %d</string>
+    <string name="not_watched_movies_format">Nem látott - %d</string>
+    <string name="movies_by_alpha">Filmek cím szerint</string>
     <string name="movies_by_genre">Filmek műfaj szerint</string>
+    <string name="movies_by_rating">Filmek értékelés szerint</string>
     <string name="movies_by_year">Filmek év szerint</string>
     <string name="all_tv_shows">Sorozatok</string>
     <string name="all_tvshows">Minden sorozat</string>
+    <string name="all_tvshows_format">Összes sorozat - %d</string>
+    <string name="not_watched_tvshows_format">Nem látott - %d</string>
+    <string name="all_seasons">Összes évad</string>
     <string name="tvshows_by_alpha">Sorozatok ABC sorrendben</string>
     <string name="tvshows_by_genre">Sorozatok műfaj szerint</string>
+    <string name="tvshows_by_rating">Sorozatok értékelés szerint</string>
+    <string name="episodes_by_date">Epizódok értékelés szerint</string>
+    <string name="date_view_week">Hét</string>
+    <string name="date_view_month">Hónap</string>
+    <string name="date_view_year">Év</string>
     <string name="all_movies_and_tv_shows">Filmek és Sorozatok</string>
     <string name="non_scraped_videos">Feldolgozatlan videók</string>
     <string name="no_server">Nem található médiakiszolgáló</string>
@@ -126,6 +138,7 @@
     <string name="scrap_change_title">Minden epizód változtatása</string>
     <string name="scrap_change_initializing">Inicializálás…</string>
     <string name="scrap_change_finalizing">Véglegesítés…</string>
+    <string name="scrap_get_title">Infó lekérése</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Rendező</string>
     <string name="scrap_director_format">Rendező: %s</string>
@@ -140,6 +153,7 @@
     <string name="scrap_cast_format">Szereplők: %s</string>
     <string name="scrap_genre">Műfaj</string>
     <string name="scrap_genre_format">Műfajok: %s</string>
+    <string name="scrap_genre_title">Műfajok</string>
     <string name="scrap_aired">Sugározva</string>
     <string name="scrap_aired_format">Sugározva: %s</string>
     <string name="scrap_guests">Vendégszereplők</string>
@@ -294,6 +308,7 @@
     <string name="s_turkish">Török</string>
     <string name="s_chinese">Kínai</string>
     <string name="s_vietnamese">Vietnámi</string>
+    <string name="s_lithuanian">Litván</string>
     <string name="s_none">Egyik sem</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Nem lehet lejátszani a videót</string>
@@ -333,6 +348,7 @@
     <string name="dialog_subloader_copying">Feliratok másolása…</string>
     <string name="dialog_subloader_downloading">Feliratok letöltése…</string>
     <string name="dialog_subloader_sumup">Letöltés befejeződött</string>
+    <string name="dialog_subloader_success">Elérhető feliratok:</string>
     <string name="sub_force_all_title">Feliratletöltés kényszerítése</string>
     <string name="dialog_subloader_nonetwork_title">Nincs internetkapcsolat</string>
     <string name="dialog_subloader_nonetwork_message">Internetkapcsolat szükséges a feliratok letöltéséhez</string>
@@ -488,4 +504,5 @@
     <string name="db_export_manual_title">Média adatbázís exportálása</string>
     <string name="db_export_in_progress">Adatbázís exportálása folyamatban</string>
     <string name="cast_info">Infó</string>
+    <string name="refreshrate_failed">Hiba a kívánt frissítési érték beállítása közben</string>
 </resources>

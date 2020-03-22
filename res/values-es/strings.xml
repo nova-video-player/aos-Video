@@ -110,7 +110,7 @@
     <string name="date_view_month">Mes</string>
     <string name="date_view_year">Año</string>
     <string name="all_movies_and_tv_shows">Películas y programas de TV</string>
-    <string name="non_scraped_videos">Videos sin analizar</string>
+    <string name="non_scraped_videos">Vídeos sin analizar</string>
     <string name="no_server">No se encontró ningún servidor multimedia</string>
     <string name="cannot_open_video">No se puede abrir este vídeo</string>
     <string name="confirm_delete">¿Realmente quieres eliminarlo?</string>
@@ -143,8 +143,8 @@
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Director</string>
     <string name="scrap_director_format">Director: %s</string>
-    <string name="scrap_rating">Calificación</string>
-    <string name="scrap_rating_format">Calificación: %s</string>
+    <string name="scrap_rating">Valoración</string>
+    <string name="scrap_rating_format">Valoración: %s</string>
     <string name="scrap_year">Año</string>
     <string name="scrap_year_format">Año: %d</string>
     <string name="scrap_studio">Estudio</string>
@@ -327,6 +327,7 @@
     <string name="s_turkish">Turco</string>
     <string name="s_chinese">Chino</string>
     <string name="s_vietnamese">Vietnamita</string>
+    <string name="s_lithuanian">Lituano</string>
     <string name="s_none">Ninguno</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">No se puede reproducir el vídeo</string>
@@ -600,6 +601,11 @@
     <string name="dec_unknown">Descodificación desconocida</string>
     <string name="dec_any">Por defecto</string>
     <string name="dec_android">MediaPlayer Android</string>
+    <string name="audio_interface_choice_title">Seleccionar interfaz de audio</string>
+    <string name="audio_interface_choice_summary">Preferencias avanzadas, pueden romper la decodificación de audio.</string>
+    <string name="audio_interface_opensles">Forzar OpenSL ES</string>
+    <string name="audio_interface_audiotrack">Forzar audio</string>
+    <string name="audio_interface_any">Lógica por defecto</string>
     <string name="preferences_user_interface">Interfaz de Usuario</string>
     <string name="preferences_display_resume_box_summary">Mostrar u ocultar el botón reanudar el último vídeo en la pantalla principal</string>
     <string name="preferences_display_resume_box">Mostrar cuadro de reanudación</string>
@@ -765,10 +771,10 @@
     <string name="nfo_export_manual_prefkey">export_manual_prefkey</string>
     <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="nfo_export_in_progress">Exportación NFO en progreso</string>
-    <string name="rescrap_in_progress">Re-scrapeando biblioteca entera</string>
+    <string name="rescrap_in_progress">Recuperando toda la biblioteca</string>
     <string name="acquire_external_usb_permission">Nova Video necesita permiso especial para acceder al almacenamiento externo. Por favor, seleccione su almacenamiento en la siguiente pantalla</string>
     <string name="rescrap_not_found">Rescrapear videos sin descripción</string>
-    <string name="rescrap_all_title">Rescrapear todos</string>
+    <string name="rescrap_all_title">Re-analizar todo</string>
     <string name="nfo_export_manual_title">Exportar vídeos ya raspados</string>
     <string name="nfo_export_manual_summary">Exportar archivos .nfo de todos los videos ya analizados</string>
     <string name="db_export_manual_prefkey">db_export_manual_prefkey</string>
@@ -818,4 +824,5 @@
     <string name="loading">Cargando…</string>
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
+    <string name="refreshrate_failed">Error al establecer la tasa de actualización deseada</string>
 </resources>
