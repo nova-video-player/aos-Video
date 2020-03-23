@@ -1041,6 +1041,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                     mDialog.setOnCancelListener(new OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialog) {
+                            dialog.cancel();
                             stop();
                             finish();
                         }
