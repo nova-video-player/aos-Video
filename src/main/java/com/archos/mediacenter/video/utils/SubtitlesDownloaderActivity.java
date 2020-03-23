@@ -25,7 +25,6 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
-import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -38,7 +37,6 @@ import androidx.preference.PreferenceManager;
 
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +73,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -94,7 +91,7 @@ public class SubtitlesDownloaderActivity extends Activity{
     private static final String LIMIT = "20";
 
     private static final String TAG = SubtitlesDownloaderActivity.class.getSimpleName();
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
 
     //to distinguished program dismiss and users
     private boolean mDoNotFinish;
@@ -308,17 +305,16 @@ public class SubtitlesDownloaderActivity extends Activity{
                     mDoNotFinish = true;
                     mDialog.dismiss();
                 }
-                mDialog = new ProgressDialog(SubtitlesDownloaderActivity.this);
-                mDialog.setCancelable(false);
-                mDialog.setOnKeyListener(new OnKeyListener() {
-                    // Called when pressing the BACK button
-                    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                mDialog = new ProgressDialog(SubtitlesDownloaderActivity.this) {
+                    @Override
+                    public void onBackPressed() {
                         stop();
                         mDialog.dismiss();
                         finish();
-                        return false;
                     }
-                });
+                };
+                mDialog.setCancelable(false);
+                mDialog.setCanceledOnTouchOutside(false);
                 mDialog.setMessage(getString(R.string.dialog_subloader_downloading));
                 if (filesNumber > 1){
                     mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
