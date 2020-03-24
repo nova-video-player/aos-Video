@@ -1728,7 +1728,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setCancelable(false);
             View dialogView = inflater.inflate(R.layout.dialog_signin, null);
-            builder.setView(R.layout.progressbar_dialog);
+            builder.setView(R.layout.spinner_dialog);
             final AlertDialog mProgressBarAlertDialog = builder.create();
              */
 

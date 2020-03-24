@@ -731,7 +731,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setView(R.layout.progressbar_dialog);
+            builder.setView(R.layout.spinner_dialog);
             builder.setTitle(mCurrentDirectory.getLastPathSegment());
             builder.setIcon(R.drawable.filetype_video_folder);
             builder.setCancelable(true);
@@ -739,7 +739,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             mProgressBarAlertDialog.show();
             TextView textView = mProgressBarAlertDialog.findViewById(R.id.textView);
             textView.setText(R.string.loading);
-            ProgressBar progressBar = mProgressBarAlertDialog.findViewById(R.id.progressBar);
+            ProgressBar progressBar = mProgressBarAlertDialog.findViewById(R.id.spinner);
             progressBar.setIndeterminate(true);
             progressBar.setVisibility(View.VISIBLE);
 

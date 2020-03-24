@@ -192,7 +192,7 @@ public class TorrentLoaderActivity extends Activity implements TorrentThreadObse
         mOriginalTorrentUri = mTorrentURL; //keep original uri, mTorrentUrl will be replaced after torrent file download
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(R.layout.progressbar_dialog);
+        builder.setView(R.layout.spinner_dialog);
         builder.setNegativeButton(getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -214,7 +214,7 @@ public class TorrentLoaderActivity extends Activity implements TorrentThreadObse
         // this can only be after the show otherwise null
         TextView textView = mProgressBarAlertDialog.findViewById(R.id.textView);
         textView.setText(R.string.loading_torrent);
-        ProgressBar progressBar = mProgressBarAlertDialog.findViewById(R.id.progressBar);
+        ProgressBar progressBar = mProgressBarAlertDialog.findViewById(R.id.spinner);
         progressBar.setIndeterminate(true);
         progressBar.setVisibility(View.VISIBLE);
 

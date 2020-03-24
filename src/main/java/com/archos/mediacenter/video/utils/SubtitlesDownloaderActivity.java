@@ -19,7 +19,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -42,6 +41,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.BadTokenException;
 import android.widget.BaseAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,7 +91,8 @@ public class SubtitlesDownloaderActivity extends Activity{
     private static final String LIMIT = "20";
 
     private static final String TAG = SubtitlesDownloaderActivity.class.getSimpleName();
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
+    private static final boolean DBG_NET = false;
 
     //to distinguished program dismiss and users
     private boolean mDoNotFinish;
@@ -104,8 +105,9 @@ public class SubtitlesDownloaderActivity extends Activity{
     HashMap<String, String> mFriendlyFileNames = null; // they need to have an extension
     HashMap<String, String> mIndexableUri = null;
     boolean stop = false;
-    private ProgressDialog mDialog;
-    private Dialog mProgressBarDialog;
+    private AlertDialog mDialog;
+    private ProgressBar mProgressBar;
+
     private AlertDialog mSumUpDialog;
     private OpenSubtitlesTask mOpenSubtitlesTask = null;
 
@@ -127,7 +129,7 @@ public class SubtitlesDownloaderActivity extends Activity{
     private static boolean fourthPassEnabled = true;
 
     private static class NonConfigurationInstance {
-        public ProgressDialog progressDialog;
+        public AlertDialog alertDialog;
         public AlertDialog sumUpDialog;
     };
 
@@ -142,7 +144,7 @@ public class SubtitlesDownloaderActivity extends Activity{
         if (nci != null) {
             // The activity is created again after a rotation => just restore the state of the dialogs
             // as the OpenSubtitlesTask is still running in the background
-            mDialog = nci.progressDialog;
+            mDialog = nci.alertDialog;
             mSumUpDialog = nci.sumUpDialog;
         }
         else {
@@ -242,7 +244,7 @@ public class SubtitlesDownloaderActivity extends Activity{
     public Object onRetainNonConfigurationInstance() {
         // The activity is going to be destroyed after a rotation => save the state of the dialogs
         NonConfigurationInstance nci = new NonConfigurationInstance();
-        nci.progressDialog = mDialog;
+        nci.alertDialog = mDialog;
         nci.sumUpDialog = mSumUpDialog;
         return nci;
     }
@@ -305,26 +307,33 @@ public class SubtitlesDownloaderActivity extends Activity{
                     mDoNotFinish = true;
                     mDialog.dismiss();
                 }
-                mDialog = new ProgressDialog(SubtitlesDownloaderActivity.this) {
-                    @Override
-                    public void onBackPressed() {
-                        stop();
-                        mDialog.dismiss();
-                        finish();
-                    }
-                };
+                AlertDialog.Builder builder = new AlertDialog.Builder(SubtitlesDownloaderActivity.this);
+                builder.setOnCancelListener(dialog -> {
+                    dialog.cancel();
+                    stop();
+                    finish();
+                });
+                if (filesNumber > 1) {
+                    builder.setView(R.layout.progressbar_dialog);
+                    mDialog = builder.create();
+                    mDialog.show();
+                    mProgressBar = mDialog.findViewById(R.id.progressBar);
+                    // TODO MARC it should not be filesNumber but number of subs found to download...
+                    mProgressBar.setMax(filesNumber);
+                    mProgressBar.setProgress(progress);
+                } else {
+                    builder.setView(R.layout.spinner_dialog);
+                    mDialog = builder.create();
+                    mDialog.show();
+                    mProgressBar = mDialog.findViewById(R.id.spinner);
+                }
+                TextView mTextView = mDialog.findViewById(R.id.textView);
+                mTextView.setText(getString(R.string.dialog_subloader_downloading));
                 mDialog.setCancelable(false);
                 mDialog.setCanceledOnTouchOutside(false);
-                mDialog.setMessage(getString(R.string.dialog_subloader_downloading));
-                if (filesNumber > 1){
-                    mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    mDialog.setProgress(progress);
-                    mDialog.setMax(filesNumber);
-                }
-                mDialog.show();
             } else {
-                mDialog.setProgress(progress);
-                mDialog.setMax(filesNumber);
+                mProgressBar.setMax(filesNumber);
+                mProgressBar.setProgress(progress);
             }
         }
 
@@ -335,7 +344,7 @@ public class SubtitlesDownloaderActivity extends Activity{
         public boolean logIn() {
             try {
                 URL url = new URL(OpenSubtitlesAPIUrl);
-                if (DBG) client = new XMLRPCClient(url, XMLRPCClient.FLAGS_DEBUG);
+                if (DBG_NET) client = new XMLRPCClient(url, XMLRPCClient.FLAGS_DEBUG);
                 else client = new XMLRPCClient(url);
             } catch (MalformedURLException e) {
                 Log.e(TAG, "logIn: caught MalformedURLException");
@@ -1036,8 +1045,14 @@ public class SubtitlesDownloaderActivity extends Activity{
         private void setInitDialog(){
             mHandler.post(new Runnable(){
                 public void run() {
-                    mDialog = new ProgressDialog(SubtitlesDownloaderActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SubtitlesDownloaderActivity.this);
+                    builder.setView(R.layout.spinner_dialog);
+                    mDialog = builder.create();
                     mDialog.setCancelable(true);
+                    mDialog.setCanceledOnTouchOutside(false);
+                    mDialog.show();
+                    TextView mTextView = (TextView) mDialog.findViewById(R.id.textView);
+                    mTextView.setText(getString(R.string.dialog_subloader_downloading));
                     mDialog.setOnCancelListener(new OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialog) {
@@ -1053,7 +1068,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                             mDoNotFinish = false;
                         }
                     });
-                    mDialog.setMessage(getString(R.string.dialog_subloader_connecting));
+                    mTextView.setText(getString(R.string.dialog_subloader_connecting));
                     mDialog.show();
                 }
             });

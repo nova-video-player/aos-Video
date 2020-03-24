@@ -93,7 +93,7 @@ public class TorrentBlocklistDialogPreference extends Preference {
 
         mProgressBarDialog = new Dialog(getContext());
         mProgressBarDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mProgressBarDialog.setContentView(R.layout.progressbar_dialog);
+        mProgressBarDialog.setContentView(R.layout.spinner_dialog);
         mProgressBarDialog.setCanceledOnTouchOutside(true);
         mProgressBarDialog.setCancelable(false);
 
@@ -183,7 +183,7 @@ public class TorrentBlocklistDialogPreference extends Preference {
                 // this can only be after the show otherwise null
                 TextView textView = mProgressBarDialog.findViewById(R.id.textView);
                 textView.setText(R.string.blocklist_downloading);
-                ProgressBar progressBar = mProgressBarDialog.findViewById(R.id.progressBar);
+                ProgressBar progressBar = mProgressBarDialog.findViewById(R.id.spinner);
                 progressBar.setIndeterminate(true);
                 progressBar.setVisibility(View.VISIBLE);
             }

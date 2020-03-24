@@ -67,7 +67,7 @@ public class TraktSigninDialogPreference extends Preference {
                     if(data.code!=null){
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setCancelable(false);
-                        builder.setView(R.layout.progressbar_dialog);
+                        builder.setView(R.layout.spinner_dialog);
                         final AlertDialog mProgressBarAlertDialog = builder.create();
                         AsyncTask t = new AsyncTask(){
                             @Override
