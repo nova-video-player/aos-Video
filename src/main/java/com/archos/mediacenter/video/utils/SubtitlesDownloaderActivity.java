@@ -1006,80 +1006,58 @@ public class SubtitlesDownloaderActivity extends Activity{
         }
 
         private void showSumup(final String displayText) {
-            mHandler.post(new Runnable(){
-                public void run() {
-                    mSumUpDialog = new AlertDialog.Builder(SubtitlesDownloaderActivity.this).setTitle(R.string.dialog_subloader_sumup)
-                            .setMessage(displayText)
-                            .setCancelable(true)
-                            .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                public void onCancel(DialogInterface dialog) {
-                                    finish();
-                                }
-                            })
-                            .setPositiveButton(android.R.string.yes, new OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    mDoNotFinish = true;
-                                    dialog.dismiss();
-                                    finish();
-                                }
-                            }).create();
-                    mSumUpDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        public void onDismiss(DialogInterface dialog) {
-                            if (!mDoNotFinish)
-                                finish();
-                            mDoNotFinish = false;
-                        }
-                    });
-                    //We catch these exceptions because context might disappear while loading/showing the dialog, no matter if we wipe it in onPause()
-                    try{
-                        mSumUpDialog.show();
-                    } catch (IllegalArgumentException e){
-                        Log.e(TAG, "showSumup: caught IllegalArgumentException", e);
-                    } catch (BadTokenException e){
-                        Log.e(TAG, "showSumup: caught BadTokenException", e);
-                    }
+            mHandler.post(() -> {
+                mSumUpDialog = new Builder(SubtitlesDownloaderActivity.this).setTitle(R.string.dialog_subloader_sumup)
+                        .setMessage(displayText)
+                        .setCancelable(true)
+                        .setOnCancelListener(dialog -> finish())
+                        .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                            mDoNotFinish = true;
+                            dialog.dismiss();
+                            finish();
+                        }).create();
+                mSumUpDialog.setOnDismissListener(dialog -> {
+                    if (!mDoNotFinish) finish();
+                    mDoNotFinish = false;
+                });
+                //We catch these exceptions because context might disappear while loading/showing the dialog, no matter if we wipe it in onPause()
+                try{
+                    mSumUpDialog.show();
+                } catch (IllegalArgumentException e){
+                    Log.e(TAG, "showSumup: caught IllegalArgumentException", e);
+                } catch (BadTokenException e){
+                    Log.e(TAG, "showSumup: caught BadTokenException", e);
                 }
             });
         }
 
         private void setInitDialog(){
-            mHandler.post(new Runnable(){
-                public void run() {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(SubtitlesDownloaderActivity.this);
-                    builder.setView(R.layout.spinner_dialog);
-                    mDialog = builder.create();
-                    mDialog.setCancelable(true);
-                    mDialog.setCanceledOnTouchOutside(false);
-                    mDialog.show();
-                    TextView mTextView = (TextView) mDialog.findViewById(R.id.textView);
-                    mTextView.setText(getString(R.string.dialog_subloader_downloading));
-                    mDialog.setOnCancelListener(new OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            dialog.cancel();
-                            stop();
-                            finish();
-                        }
-                    });
-                    mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        public void onDismiss(DialogInterface dialog) {
-                            if(!mDoNotFinish)
-                                finish();
-                            mDoNotFinish = false;
-                        }
-                    });
-                    mTextView.setText(getString(R.string.dialog_subloader_connecting));
-                    mDialog.show();
-                }
+            mHandler.post(() -> {
+                Builder builder = new Builder(SubtitlesDownloaderActivity.this);
+                builder.setView(R.layout.spinner_dialog);
+                builder.setOnCancelListener(dialog -> {
+                    dialog.cancel();
+                    stop();
+                    finish();
+                });
+                builder.setOnDismissListener(dialog -> {
+                    if(!mDoNotFinish)
+                        finish();
+                    mDoNotFinish = false;
+                });
+                builder.setCancelable(true);
+                mDialog = builder.create();
+                mDialog.show();
+                TextView mTextView = mDialog.findViewById(R.id.textView);
+                // TODO MARC
+                //mTextView.setText(getString(R.string.dialog_subloader_downloading));
+                mTextView.setText(getString(R.string.dialog_subloader_connecting));
+                mDialog.setCanceledOnTouchOutside(false);
             });
         }
 
         private void displayToast(final String message){
-            mHandler.post(new Runnable() {
-                public void run() {
-                    Toast.makeText(SubtitlesDownloaderActivity.this, message, Toast.LENGTH_SHORT).show();
-                }
-            });
+            mHandler.post(() -> Toast.makeText(SubtitlesDownloaderActivity.this, message, Toast.LENGTH_SHORT).show());
         }
 
         private String getIMDBID(String path){
@@ -1091,9 +1069,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                     selection,                     // Selection
                     null);                        // The sort order for the returned rows
             if (mCursor == null || mCursor.getCount() < 1){
-                if (mCursor != null) {
-                    mCursor.close();
-                }
+                if (mCursor != null) mCursor.close();
                 return null;
             } else {
                 mCursor.moveToFirst();

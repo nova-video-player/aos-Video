@@ -99,7 +99,7 @@ public class TraktSigninDialogPreference extends Preference {
                     	.setNegativeButton(android.R.string.ok, null)
                     	.setMessage(R.string.dialog_subloader_nonetwork_title)
                         .setIcon(android.R.drawable.ic_dialog_alert)
-                         .show();
+                        .show();
                     }
                     	
                 }
