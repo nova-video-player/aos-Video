@@ -122,10 +122,10 @@ public class SubtitlesDownloaderActivity extends Activity{
     private static final int SECOND_PASS = 1; // tag (full filename) based (provides only one result) but does not work if file is renamed...
     private static final int THIRD_PASS = 2; // query (friendly name from filename) based (provides multiple choices)
     private static final int FOURTH_PASS = 3; // scraped information based (imdbid for movie or query=showtitle season episode number) (provide multiple choices)
-    private static boolean firstPassEnabled = true;
-    private static boolean secondPassEnabled = true;
-    private static boolean thirdPassEnabled = false;
-    private static boolean fourthPassEnabled = true;
+    private static final boolean firstPassEnabled = true;
+    private static final boolean secondPassEnabled = true;
+    private static final boolean thirdPassEnabled = false; // NOTE: cannot select both 3rd and 4th since multiple choices
+    private static final boolean fourthPassEnabled = true; // NOTE: cannot select both 3rd and 4th since multiple choices
 
     private static class NonConfigurationInstance {
         public AlertDialog alertDialog;
@@ -154,7 +154,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                 ArrayList<String> fileUrls = null;
                 if (intent.hasExtra(FILE_URL)){
                     fileUrls = new ArrayList<String>(){{add(intent.getStringExtra(FILE_URL));}};
-                } else if (intent.hasExtra(FILE_URLS)){
+                } else if (intent.hasExtra(FILE_URLS)) {
                     fileUrls = intent.getStringArrayListExtra(FILE_URLS);
                 } else {
                     finish();
@@ -164,9 +164,8 @@ public class SubtitlesDownloaderActivity extends Activity{
                     mFileSizes = (HashMap<String, Long>)intent.getSerializableExtra(FILE_SIZES);
                 else
                     mFileSizes = new HashMap<>();
-                if (intent.hasExtra(FILE_NAMES)) {
+                if (intent.hasExtra(FILE_NAMES))
                     mFriendlyFileNames = (HashMap<String, String>) intent.getSerializableExtra(FILE_NAMES);
-                }
                 else
                     mFriendlyFileNames = new HashMap<>();
                 mOpenSubtitlesTask = new OpenSubtitlesTask();
@@ -178,20 +177,16 @@ public class SubtitlesDownloaderActivity extends Activity{
                 Builder dialogNoNetwork;
                 dialogNoNetwork = new AlertDialog.Builder(this);
                 dialogNoNetwork.setCancelable(true);
-                dialogNoNetwork.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    public void onCancel(DialogInterface dialog) {
-                        finish();
-                    }
-                });
+                dialogNoNetwork.setOnCancelListener(dialog ->
+                        finish()
+                );
                 dialogNoNetwork.setTitle(R.string.dialog_subloader_nonetwork_title);
                 dialogNoNetwork.setMessage(getString(R.string.dialog_subloader_nonetwork_message));
                 Dialog d = dialogNoNetwork.create();
-                d.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    public void onDismiss(DialogInterface dialog) {
-                        if (!mDoNotFinish)
-                            finish();
-                        mDoNotFinish = false;
-                    }
+                d.setOnDismissListener(dialog -> {
+                    if (!mDoNotFinish)
+                        finish();
+                    mDoNotFinish = false;
                 });
                 d.show();
             }
@@ -212,7 +207,6 @@ public class SubtitlesDownloaderActivity extends Activity{
 
     public void onResume(){
         super.onResume();
-
         // Check if there are some dialogs to restore after a device rotation
         // or after the backlight was turned off and on
         if (mSumUpDialog != null) {
@@ -232,7 +226,6 @@ public class SubtitlesDownloaderActivity extends Activity{
             mDoNotFinish = true;
             mDialog.dismiss();
         }
-
         if (mSumUpDialog != null) {
             mDoNotFinish = true;
             mSumUpDialog.dismiss();
@@ -263,12 +256,10 @@ public class SubtitlesDownloaderActivity extends Activity{
         HashMap<String, Object> map = null;
         XMLRPCClient client = null;
         private String token = null;
-
         @Override
         protected void onPreExecute() {
             setInitDialog();
         }
-
         @Override
         protected Void doInBackground(ArrayList<String>... params) {
             ArrayList<String> filesList =  params[0];
@@ -279,7 +270,6 @@ public class SubtitlesDownloaderActivity extends Activity{
             }
             return null;
         }
-
         @Override
         protected void onPostExecute(Void result) {
             // Close the progress dialog
@@ -287,11 +277,9 @@ public class SubtitlesDownloaderActivity extends Activity{
                 mDoNotFinish = true;
                 mDialog.dismiss();
             }
-
             // Exit the activity if processing is done/aborted and the SumUp dialog is not visible
-            if (stop && (mSumUpDialog == null || !mSumUpDialog.isShowing())) {
+            if (stop && (mSumUpDialog == null || !mSumUpDialog.isShowing()))
                 finish();
-            }
         }
 
         @Override
@@ -312,12 +300,19 @@ public class SubtitlesDownloaderActivity extends Activity{
                     stop();
                     finish();
                 });
+                builder.setOnDismissListener(dialog -> {
+                    if(!mDoNotFinish) {
+                        dialog.cancel();
+                        stop();
+                        finish();
+                    }
+                    mDoNotFinish = false;
+                });
                 if (filesNumber > 1) {
                     builder.setView(R.layout.progressbar_dialog);
                     mDialog = builder.create();
                     mDialog.show();
                     mProgressBar = mDialog.findViewById(R.id.progressBar);
-                    // TODO MARC it should not be filesNumber but number of subs found to download...
                     mProgressBar.setMax(filesNumber);
                     mProgressBar.setProgress(progress);
                 } else {
@@ -328,7 +323,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                 }
                 TextView mTextView = mDialog.findViewById(R.id.textView);
                 mTextView.setText(getString(R.string.dialog_subloader_downloading));
-                mDialog.setCancelable(false);
+                mDialog.setCancelable(true);
                 mDialog.setCanceledOnTouchOutside(false);
             } else {
                 mProgressBar.setMax(filesNumber);
@@ -433,6 +428,7 @@ public class SubtitlesDownloaderActivity extends Activity{
             // first pass: moviehash+moviebytesize based
             videoSearchList = prepareRequestList(fileUrls, languages, index, FIRST_PASS);
             Object[] subtitleMaps = null;
+            int progress = 0;
             if (firstPassEnabled) {
                 try { // launch the search for first pass
                     map = (HashMap<String, Object>) client.call("SearchSubtitles", token, videoSearchList);
@@ -444,8 +440,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                 }
                 if (!isCancelled() && map.get("data") instanceof Object[]) { // process the search results if any
                     subtitleMaps = ((Object[]) map.get("data"));
-                    int progress = 0;
-                    publishProgress(new Integer[]{progress, fileUrls.size()});
+                    //publishProgress(new Integer[]{progress, fileUrls.size()});
                     String lastProcessedFile = "";
                     if (subtitleMaps.length > 0) {
                         String srtFormat, movieHash, fileUrl, fileName, subLanguageID, subDownloadLink;
@@ -457,13 +452,15 @@ public class SubtitlesDownloaderActivity extends Activity{
                             subDownloadLink = ((HashMap<String, String>) subtitleMaps[i]).get("SubDownloadLink");
                             fileUrl = index.get(movieHash);
                             if (fileUrl == null) {
-                                publishProgress(new Integer[]{++progress, fileUrls.size()});
+                                //publishProgress(new Integer[]{++progress, fileUrls.size()});
+                                publishProgress(i, subtitleMaps.length);
                                 continue;
                             }
                             fileName = getFriendlyFilename(fileUrl);
-                            if (success.containsKey(fileName) && success.get(fileName).contains(subLanguageID))
+                            if (success.containsKey(fileName) && success.get(fileName).contains(subLanguageID)) {
+                                publishProgress(i, subtitleMaps.length);
                                 continue;
-                            else {
+                            } else {
                                 if (success.containsKey(fileName))
                                     success.get(fileName).add(subLanguageID);
                                 else {
@@ -475,7 +472,8 @@ public class SubtitlesDownloaderActivity extends Activity{
                             downloadSubtitles(subDownloadLink, fileUrl, fileName, srtFormat, subLanguageID);
                             if (!single && !lastProcessedFile.equals(fileName)) {
                                 lastProcessedFile = fileName;
-                                publishProgress(new Integer[]{++progress, fileUrls.size()});
+                                //publishProgress(new Integer[]{++progress, fileUrls.size()});
+                                publishProgress(i, subtitleMaps.length);
                             }
                         }
                     }
@@ -487,7 +485,8 @@ public class SubtitlesDownloaderActivity extends Activity{
             // Second pass tag (full filename) based
             for (String fileUrl : fileUrls){
                 String fileName = getFriendlyFilename(fileUrl);
-                if (!success.containsKey(fileName)) notFoundFiles.add(fileUrl);
+                if (!success.containsKey(fileName))
+                    notFoundFiles.add(fileUrl);
             }
             if (secondPassEnabled && !isCancelled() && !notFoundFiles.isEmpty() &&
                     !(videoSearchList = prepareRequestList(notFoundFiles, languages, index, SECOND_PASS)).isEmpty()) {
@@ -501,8 +500,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                 }
                 if (map.get("data") instanceof Object[]) {
                     subtitleMaps = ((Object[]) map.get("data"));
-                    int progress = 0;
-                    publishProgress(new Integer[] {progress, fileUrls.size()});
+                    //publishProgress(new Integer[] {progress, fileUrls.size()});
                     String lastProcessedFile = "";
                     if (subtitleMaps.length > 0) {
                         String srtFormat, tag, fileUrl, fileName, subLanguageID, subDownloadLink, movieReleaseName;
@@ -520,10 +518,12 @@ public class SubtitlesDownloaderActivity extends Activity{
                                     .get("MovieReleaseName");
                             fileUrl = index.get(movieReleaseName);
                             if (fileUrl == null){ //we keep only result for exact matching name
+                                publishProgress(i, subtitleMaps.length);
                                 continue;
                             }
                             fileName = getFriendlyFilename(fileUrl);
                             if (success.containsKey(fileName) && success.get(fileName).contains(subLanguageID)){
+                                publishProgress(i, subtitleMaps.length);
                                 continue;
                             } else {
                                 if (success.containsKey(fileName))
@@ -537,7 +537,8 @@ public class SubtitlesDownloaderActivity extends Activity{
                             downloadSubtitles(subDownloadLink, fileUrl, fileName, srtFormat, subLanguageID);
                             if (!single && !lastProcessedFile.equals(fileName)){
                                 lastProcessedFile = fileName;
-                                publishProgress(new Integer[] {++progress, fileUrls.size()});
+                                //publishProgress(new Integer[] {++progress, fileUrls.size()});
+                                publishProgress(i, subtitleMaps.length);
                             }
                         }
                     }
@@ -840,8 +841,8 @@ public class SubtitlesDownloaderActivity extends Activity{
                         public void onClick(DialogInterface dialogInterface, final int i) {
                             new Thread() {
                                 public void run() {
-                                    publishProgress(new Integer[]{0, 1});
-                                    for (HashMap<String, String> item : items.get(keys.get(i))) {
+                                    publishProgress(0, 1);
+                                    for (HashMap<String, String> item : Objects.requireNonNull(items.get(keys.get(i)))) {
                                         downloadSubtitles(item
                                                 .get("SubDownloadLink"), videoFilePath, getFriendlyFilename(videoFilePath), item
                                                 .get("SubFormat"), item
@@ -854,11 +855,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                         }
                     })
                     .setCancelable(true)
-                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        public void onCancel(DialogInterface dialog) {
-                            finish();
-                        }
-                    })
+                    .setOnCancelListener(dialog -> finish())
                     .show().getListView().setDividerHeight(10);
         }
 
@@ -1040,8 +1037,11 @@ public class SubtitlesDownloaderActivity extends Activity{
                     finish();
                 });
                 builder.setOnDismissListener(dialog -> {
-                    if(!mDoNotFinish)
+                    if(!mDoNotFinish) {
+                        dialog.cancel();
+                        stop();
                         finish();
+                    }
                     mDoNotFinish = false;
                 });
                 builder.setCancelable(true);

@@ -68,7 +68,7 @@ public class TraktSigninDialogPreference extends Preference {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setCancelable(false);
                         builder.setView(R.layout.spinner_dialog);
-                        final AlertDialog mProgressBarAlertDialog = builder.create();
+                        AlertDialog mProgressBarAlertDialog = builder.create();
                         mProgressBarAlertDialog.show();
                         // TODO alertdialog takes all width
                         AsyncTask t = new AsyncTask(){
