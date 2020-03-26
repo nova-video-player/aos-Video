@@ -22,7 +22,6 @@ import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -1049,8 +1048,6 @@ public class SubtitlesDownloaderActivity extends Activity{
                 mDialog = builder.create();
                 mDialog.show();
                 TextView mTextView = mDialog.findViewById(R.id.textView);
-                // TODO MARC
-                //mTextView.setText(getString(R.string.dialog_subloader_downloading));
                 mTextView.setText(getString(R.string.dialog_subloader_connecting));
                 mDialog.setCanceledOnTouchOutside(false);
             });

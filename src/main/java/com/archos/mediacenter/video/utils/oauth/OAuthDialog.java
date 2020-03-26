@@ -17,7 +17,6 @@
  */
 package com.archos.mediacenter.video.utils.oauth;
 
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
@@ -103,6 +102,7 @@ public class OAuthDialog extends Dialog {
         mProgressBarDialog.setContentView(R.layout.spinner_dialog);
 		mProgressBarDialog.setCanceledOnTouchOutside(true);
 		mProgressBarDialog.setCancelable(true);
+		mProgressBarDialog.show();
         TextView textView = mProgressBarDialog.findViewById(R.id.textView);
 		textView.setText(R.string.loading);
 		ProgressBar progressBar = mProgressBarDialog.findViewById(R.id.spinner);
