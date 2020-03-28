@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="@dimen/video_details_item_height"
     android:background="@drawable/transparent_ripple"
@@ -35,7 +36,7 @@
         android:layout_alignRight="@id/thumbnail"
         android:layout_marginBottom="@dimen/video_3d_label_margin_grid"
         android:layout_marginRight="@dimen/video_3d_label_margin_grid"
-        android:src="@drawable/label_3d"
+        app:srcCompat="@drawable/label_3d"
         android:visibility="gone" />
 
     <ImageView
@@ -44,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@id/thumbnail"
         android:layout_alignTop="@id/thumbnail"
-        android:src="@drawable/watched_icon_corner"
+        app:srcCompat="@drawable/watched_icon_corner"
         android:visibility="gone" />
 
     <ImageView
@@ -55,7 +56,7 @@
         android:layout_alignTop="@id/thumbnail"
         android:layout_marginLeft="@dimen/video_trakt_library_margin_left"
         android:scaleType="fitStart"
-        android:src="@drawable/label_trakt_library"
+        app:srcCompat="@drawable/label_trakt_library"
         android:visibility="gone" />
 
     <!-- TV show title -->

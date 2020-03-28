@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -36,7 +37,7 @@
                 android:layout_width="@dimen/ui_choice_dialog_image_width"
                 android:adjustViewBounds="true"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ui_choice_leanback"/>
+                app:srcCompat="@drawable/ui_choice_leanback"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -63,7 +64,7 @@
                 android:layout_width="@dimen/ui_choice_dialog_image_width"
                 android:adjustViewBounds="true"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ui_choice_tablet"/>
+                app:srcCompat="@drawable/ui_choice_tablet"/>
 
             <TextView
                 android:layout_width="match_parent"

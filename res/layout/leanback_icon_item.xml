@@ -14,7 +14,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<merge xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- NOTE: Using this RelativeLayout shell to avoid weird layout behavior of the BaseCardView shell -->
 
@@ -31,7 +32,7 @@
             android:layout_height="100dip"
             android:layout_centerHorizontal="true"
             android:scaleType="center"
-            android:src="@drawable/leanback_icon_item_selection_circle" />
+            app:srcCompat="@drawable/leanback_icon_item_selection_circle" />
 
         <ImageView
             android:id="@+id/image"

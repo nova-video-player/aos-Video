@@ -16,12 +16,14 @@ package com.archos.mediacenter.video.browser;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -64,7 +66,7 @@ public class PermissionChecker {
         }
     }
 
-    public boolean hasExternalPermission(Activity activity){
+    public boolean hasExternalPermission(AppCompatActivity activity){
         mActivity = activity;
         if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M)
             return true;

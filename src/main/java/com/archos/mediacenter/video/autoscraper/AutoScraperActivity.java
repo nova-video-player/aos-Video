@@ -14,12 +14,9 @@
 
 package com.archos.mediacenter.video.autoscraper;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import androidx.core.app.NotificationCompat;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
@@ -38,7 +35,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.BaseColumns;
-import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -64,7 +60,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+
 import com.archos.environment.ArchosSettings;
+import com.archos.environment.NetworkState;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.localstorage.JavaFile2;
 import com.archos.mediacenter.utils.MediaUtils;
@@ -78,7 +80,6 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
-import com.archos.environment.NetworkState;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStore.MediaColumns;
 import com.archos.mediaprovider.video.VideoStore.Video.VideoColumns;
@@ -101,7 +102,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class AutoScraperActivity extends Activity implements AbsListView.OnScrollListener,
+public class AutoScraperActivity extends AppCompatActivity implements AbsListView.OnScrollListener,
                                                              View.OnKeyListener, View.OnClickListener {
     private final static String TAG = "AutoScraperActivity";
     private final static boolean DBG = false;

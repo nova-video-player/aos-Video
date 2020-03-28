@@ -15,9 +15,6 @@
 package com.archos.mediacenter.video.leanback;
 
 import android.app.Activity;
-
-import androidx.core.content.ContextCompat;
-import androidx.loader.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +25,10 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
+import android.util.Log;
+import android.view.View;
+
+import androidx.core.content.ContextCompat;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.BrowseSupportFragment;
 import androidx.leanback.widget.ArrayObjectAdapter;
@@ -43,9 +43,9 @@ import androidx.leanback.widget.Presenter;
 import androidx.leanback.widget.Row;
 import androidx.leanback.widget.RowHeaderPresenter;
 import androidx.leanback.widget.RowPresenter;
+import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
-import android.util.Log;
-import android.view.View;
+import androidx.preference.PreferenceManager;
 
 import com.archos.filecorelibrary.ExtStorageManager;
 import com.archos.filecorelibrary.ExtStorageReceiver;
@@ -55,11 +55,10 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
-import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.LastAddedLoader;
 import com.archos.mediacenter.video.browser.loader.LastPlayedLoader;
-import com.archos.mediacenter.video.browser.loader.WatchingUpNextLoader;
+import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.browser.loader.NonScrapedVideosCountLoader;
 import com.archos.mediacenter.video.leanback.adapter.object.Box;
 import com.archos.mediacenter.video.leanback.adapter.object.EmptyView;
@@ -93,8 +92,6 @@ import com.archos.mediaprovider.ArchosMediaIntent;
 import com.archos.mediaprovider.ImportState;
 import com.archos.mediaprovider.video.NetworkScannerReceiver;
 import com.archos.mediascraper.AutoScrapeService;
-
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 
 public class MainFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 

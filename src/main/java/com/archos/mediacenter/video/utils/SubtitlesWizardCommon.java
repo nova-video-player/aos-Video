@@ -14,6 +14,15 @@
 
 package com.archos.mediacenter.video.utils;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.StrictMode;
+import android.text.format.Formatter;
+import android.util.Log;
+
+import androidx.fragment.app.FragmentActivity;
+
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.FileEditor;
 import com.archos.filecorelibrary.FileEditorFactory;
@@ -23,14 +32,6 @@ import com.archos.filecorelibrary.MetaFile2Factory;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.StrictMode;
-import androidx.fragment.app.FragmentActivity;
-import android.text.format.Formatter;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;

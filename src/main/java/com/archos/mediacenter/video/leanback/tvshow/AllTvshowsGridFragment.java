@@ -14,18 +14,18 @@
 
 package com.archos.mediacenter.video.leanback.tvshow;
 
-import android.app.AlertDialog;
-
-import androidx.core.content.ContextCompat;
-import androidx.loader.app.LoaderManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
+import android.util.SparseArray;
+import android.view.KeyEvent;
+import android.view.View;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.widget.CursorObjectAdapter;
 import androidx.leanback.widget.FocusHighlight;
@@ -34,10 +34,9 @@ import androidx.leanback.widget.Presenter;
 import androidx.leanback.widget.Row;
 import androidx.leanback.widget.RowPresenter;
 import androidx.leanback.widget.VerticalGridPresenter;
+import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
-import android.util.SparseArray;
-import android.view.KeyEvent;
-import android.view.View;
+import androidx.preference.PreferenceManager;
 
 import com.archos.customizedleanback.app.MyVerticalGridFragment;
 import com.archos.mediacenter.video.R;
@@ -46,8 +45,8 @@ import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.DisplayMode;
-import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
+import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.leanback.presenter.VideoListPresenter;
 import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;

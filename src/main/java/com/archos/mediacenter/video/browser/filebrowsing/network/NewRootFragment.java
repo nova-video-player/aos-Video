@@ -17,10 +17,6 @@ package com.archos.mediacenter.video.browser.filebrowsing.network;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -32,11 +28,17 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuItemCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.archos.mediacenter.utils.ActionItem;
-import com.archos.mediacenter.video.browser.BrowserCategory;
 import com.archos.mediacenter.utils.QuickAction;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.BrowserCategory;
 import com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser.BrowserBySFTP;
 import com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser.BrowserBySmb;
 import com.archos.mediacenter.video.browser.filebrowsing.network.UpnpBrowser.BrowserByUpnp;
@@ -161,10 +163,8 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, R.string.rescan_indexed_folders, Menu.NONE, R.string.rescan_indexed_folders)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(0,  R.string.manually_create_share, Menu.NONE, R.string.manually_create_share)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        MenuItemCompat.setShowAsAction(menu.add(0, R.string.rescan_indexed_folders, Menu.NONE, R.string.rescan_indexed_folders), MenuItem.SHOW_AS_ACTION_NEVER);
+        MenuItemCompat.setShowAsAction(menu.add(0,  R.string.manually_create_share, Menu.NONE, R.string.manually_create_share), MenuItem.SHOW_AS_ACTION_NEVER);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){

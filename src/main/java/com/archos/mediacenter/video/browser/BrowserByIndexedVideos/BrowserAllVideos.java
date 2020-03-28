@@ -18,13 +18,15 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import androidx.core.view.MenuItemCompat;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import com.archos.mediacenter.utils.ActionBarSubmenu;
 import com.archos.mediacenter.video.R;
@@ -96,7 +98,7 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 			// Add the "sort mode" item
 			MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
 			sortMenuItem.setIcon(R.drawable.ic_menu_sort);
-			sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			MenuItemCompat.setShowAsAction(sortMenuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
 			mSortModeSubmenu.attachMenuItem(sortMenuItem);
 
 			mSortModeSubmenu.clear();
@@ -122,7 +124,7 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 				}
 				mSortModeSubmenu.selectSubmenuItem(position);
 			}
-			menu.add(0,R.string.rescrap_not_found,0, R.string.rescrap_not_found).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+			MenuItemCompat.setShowAsAction(menu.add(0,R.string.rescrap_not_found,0, R.string.rescrap_not_found), MenuItem.SHOW_AS_ACTION_NEVER);
 		}
 	}
 

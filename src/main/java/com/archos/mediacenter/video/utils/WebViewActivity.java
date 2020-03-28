@@ -14,7 +14,6 @@
 
 package com.archos.mediacenter.video.utils;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,9 +24,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebViewFragment;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.archos.mediacenter.video.R;
 
-public class WebViewActivity extends Activity {
+public class WebViewActivity extends AppCompatActivity {
 
     private static final String TAG = "WebViewActivity";
     private static final boolean DBG = false;
@@ -42,7 +43,7 @@ public class WebViewActivity extends Activity {
         mUri = getIntent().getData();
         setContentView(R.layout.webview_activity);
 
-        WebViewFragment wvf = (WebViewFragment)getFragmentManager().findFragmentById(R.id.webview_fragment);
+        WebViewFragment wvf = (WebViewFragment) getFragmentManager().findFragmentById(R.id.webview_fragment);
         mWebView = wvf.getWebView();
     }
 

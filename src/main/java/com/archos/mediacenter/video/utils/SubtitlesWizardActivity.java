@@ -22,14 +22,9 @@
 
 package com.archos.mediacenter.video.utils;
 
-import com.archos.mediacenter.video.R;
-
-import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -45,6 +40,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.archos.mediacenter.video.R;
 
 public class SubtitlesWizardActivity extends AppCompatActivity implements OnItemClickListener, View.OnCreateContextMenuListener {
     private final static String TAG = "SubtitlesWizardActivity";
@@ -252,7 +251,7 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
             if (fileRenamed) {
                 // Update the activity screen
                 mListView.invalidateViews();
-                setResult(Activity.RESULT_OK);
+                setResult(AppCompatActivity.RESULT_OK);
             }
         }
     }
@@ -271,7 +270,7 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
 
                 // Update the activity screen
                 mListView.invalidateViews();
-                setResult(Activity.RESULT_OK);
+                setResult(AppCompatActivity.RESULT_OK);
             }
         }
     }

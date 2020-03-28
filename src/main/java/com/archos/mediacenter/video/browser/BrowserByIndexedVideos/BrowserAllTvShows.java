@@ -18,9 +18,6 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -28,6 +25,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+
+import androidx.core.view.MenuItemCompat;
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.ActionBarSubmenu;
@@ -120,7 +122,7 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 			// Add the "sort mode" item
 			MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
 			sortMenuItem.setIcon(R.drawable.ic_menu_sort);
-			sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			MenuItemCompat.setShowAsAction(sortMenuItem, MenuItem.SHOW_AS_ACTION_ALWAYS);
 			mSortModeSubmenu.attachMenuItem(sortMenuItem);
 
 			mSortModeSubmenu.clear();

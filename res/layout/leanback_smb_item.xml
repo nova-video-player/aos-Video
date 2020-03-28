@@ -16,6 +16,7 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/smbshortcut_width"
     android:layout_height="@dimen/smbshortcut_height"
     android:background="@color/lb_basic_card_info_bg_color">
@@ -27,7 +28,7 @@
         android:layout_above="@+id/textviews"
         android:background="@color/lightblue900"
         android:scaleType="center"
-        android:src="@drawable/filetype_video_server" />
+        app:srcCompat="@drawable/filetype_video_server" />
 
     <LinearLayout
         android:id="@+id/textviews"

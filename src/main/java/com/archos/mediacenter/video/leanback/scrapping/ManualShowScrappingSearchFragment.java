@@ -15,7 +15,6 @@
 package com.archos.mediacenter.video.leanback.scrapping;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
@@ -31,6 +30,8 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.R;

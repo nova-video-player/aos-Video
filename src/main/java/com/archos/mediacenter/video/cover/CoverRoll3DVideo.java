@@ -15,13 +15,11 @@
 package com.archos.mediacenter.video.cover;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import androidx.fragment.app.FragmentActivity;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -29,6 +27,9 @@ import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.SurfaceHolder;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
 
 import com.archos.environment.ArchosIntents;
 import com.archos.environment.ArchosSettings;

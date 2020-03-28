@@ -23,8 +23,6 @@ import android.database.ContentObserver;
 import android.os.Handler;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.SwitchCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -32,6 +30,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 
 import com.archos.mediacenter.video.R;
 
@@ -185,7 +187,7 @@ public class BrightnessDialog extends AlertDialog implements SeekBar.OnSeekBarCh
     }
 
     private void setBrightness(int brightness) {
-        PlayerBrightnessManager.getInstance().setBrightness((Activity) mContext, brightness);
+        PlayerBrightnessManager.getInstance().setBrightness((AppCompatActivity) mContext, brightness);
     }
 
     @Override

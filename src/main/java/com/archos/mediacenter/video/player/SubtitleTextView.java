@@ -22,11 +22,11 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Surface;
-import android.widget.TextView;
 
-public class SubtitleTextView extends TextView {
+import androidx.appcompat.widget.AppCompatTextView;
+
+public class SubtitleTextView extends AppCompatTextView {
 
     private static final String TAG = "SubtitleTextView";
    

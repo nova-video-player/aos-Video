@@ -16,8 +16,6 @@
 package com.archos.mediacenter.video.utils;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -29,10 +27,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
-
-import androidx.core.text.HtmlCompat;
-import androidx.preference.PreferenceManager;
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,10 +38,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog.Builder;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.text.HtmlCompat;
+import androidx.preference.PreferenceManager;
+
 import com.archos.environment.ArchosUtils;
-import com.archos.filecorelibrary.FileUtils;
+import com.archos.environment.NetworkState;
 import com.archos.filecorelibrary.FileEditor;
 import com.archos.filecorelibrary.FileEditorFactory;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.MetaFile2Factory;
 import com.archos.mediacenter.filecoreextension.UriUtils;
@@ -57,11 +58,7 @@ import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
 import com.archos.mediaprovider.ArchosMediaIntent;
-import com.archos.environment.NetworkState;
 import com.archos.mediaprovider.video.VideoStore;
-
-import de.timroes.axmlrpc.XMLRPCClient;
-import de.timroes.axmlrpc.XMLRPCException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -81,7 +78,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
-public class SubtitlesDownloaderActivity extends Activity{
+import de.timroes.axmlrpc.XMLRPCClient;
+import de.timroes.axmlrpc.XMLRPCException;
+
+public class SubtitlesDownloaderActivity extends AppCompatActivity {
     public static final String FILE_URLS = "fileUrls";
     public static final String FILE_URL = "fileUrl";
     public static final String FILE_NAMES = "fileNames"; //friendly name for Upnp
@@ -233,6 +233,8 @@ public class SubtitlesDownloaderActivity extends Activity{
         TorrentObserverService.paused(this);
     }
 
+    //TODO MARC
+    /*
     public Object onRetainNonConfigurationInstance() {
         // The activity is going to be destroyed after a rotation => save the state of the dialogs
         NonConfigurationInstance nci = new NonConfigurationInstance();
@@ -240,6 +242,7 @@ public class SubtitlesDownloaderActivity extends Activity{
         nci.sumUpDialog = mSumUpDialog;
         return nci;
     }
+     */
 
     private ArrayList<String> getSubLangValue() {
         // always add default system language in the list of languages
@@ -643,7 +646,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                     showSumup(buildSumup(success, fails, false));
                 }
                 if (!success.isEmpty()) {
-                    setResult(Activity.RESULT_OK);
+                    setResult(AppCompatActivity.RESULT_OK);
                 }
             }
             logOut();

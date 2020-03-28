@@ -5,6 +5,7 @@ access to last video played. -->
 
 <com.archos.mediacenter.utils.GlobalResumeView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/global_resume"
     android:layout_width="match_parent"
     android:layout_height="@dimen/global_resume_video_height"
@@ -21,7 +22,7 @@ access to last video played. -->
         android:layout_marginLeft="@dimen/global_resume_icon_padding_left"
         android:layout_marginRight="@dimen/global_resume_icon_padding_right"
         android:background="@drawable/nowplaying_btn_background"
-        android:src="@drawable/nowplaying_play"
+        app:srcCompat="@drawable/nowplaying_play"
         />
 
     <TextView

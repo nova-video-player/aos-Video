@@ -31,6 +31,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+import androidx.core.view.MenuItemCompat;
+
 import com.archos.environment.ArchosIntents;
 import com.archos.environment.ArchosSettings;
 import com.archos.filecorelibrary.FileUtils;
@@ -271,7 +273,7 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
         super.onCreateOptionsMenu(menu, inflater);
         if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty()) {
             // Add the "load subtitles" item
-            menu.add(MENU_SUBLOADER_GROUP, MENU_SUBLOADER_ALL_FOLDER, Menu.NONE, R.string.menu_subloader_allfolder).setIcon(R.drawable.ic_menu_subtitles).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+            MenuItemCompat.setShowAsAction(menu.add(MENU_SUBLOADER_GROUP, MENU_SUBLOADER_ALL_FOLDER, Menu.NONE, R.string.menu_subloader_allfolder).setIcon(R.drawable.ic_menu_subtitles), MenuItem.SHOW_AS_ACTION_NEVER);
         }
     }
 

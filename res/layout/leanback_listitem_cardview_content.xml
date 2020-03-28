@@ -15,6 +15,7 @@
   limitations under the License.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="600dip"
     android:id="@+id/myroot"
     android:layout_height="wrap_content">
@@ -32,14 +33,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/image"
-        android:src="@drawable/watched_icon_corner"/>
+        app:srcCompat="@drawable/watched_icon_corner"/>
 
     <ImageView
         android:id="@+id/pinned_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/image"
-        android:src="@drawable/pinned_icon_corner"/>
+        app:srcCompat="@drawable/pinned_icon_corner"/>
 
     <View android:id="@+id/resume_bar"
         android:layout_width="66dip"

@@ -18,8 +18,9 @@ import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import androidx.leanback.app.BackgroundManager;
 import android.util.DisplayMetrics;
+
+import androidx.leanback.app.BackgroundManager;
 
 import com.archos.mediacenter.video.browser.adapters.object.Base;
 import com.archos.mediascraper.BaseTags;

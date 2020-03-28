@@ -17,7 +17,6 @@ package com.archos.mediacenter.video.browser;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
@@ -46,21 +45,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.core.content.ContextCompat;
-import androidx.core.text.HtmlCompat;
-import androidx.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.loader.app.LoaderManager;
-import androidx.core.view.GravityCompat;
-import androidx.core.view.MenuItemCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.widget.SearchView;
-import android.text.Html;
 import android.util.Log;
 import android.view.DisplayCutout;
 import android.view.InputDevice;
@@ -77,6 +63,18 @@ import android.view.WindowInsets;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.text.HtmlCompat;
+import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.utils.GlobalResumeView;
 import com.archos.mediacenter.utils.trakt.Trakt;
@@ -540,23 +538,23 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         /// /setHomeButtonsetHomeButton();
         MenuItem item = menu.add(MENU_SEARCH_GROUP, MENU_SEARCH_ITEM, Menu.NONE, R.string.search_title);
         item.setIcon(R.drawable.android29_ic_menu_search_mtrl_alpha);
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        MenuItemCompat.setShowAsAction(item, MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         mSearchView = new SearchView(this);
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        item.setActionView(mSearchView);
+        MenuItemCompat.setActionView(item, mSearchView);
         mSearchItem = item;
         MenuItem menuItem = menu.add(MENU_SCRAPER_GROUP, MENU_START_AUTO_SCRAPER_ACTIVITY, Menu.NONE,
                 R.string.start_auto_scraper_activity);
-        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_ALWAYS);
         // below line removed to avoid warning W/ActionProvider(support): setVisibilityListener: Setting a new ActionProvider.VisibilityListener when one is already set. Are you reusing this NewVideosActionProvider instance while it is still in use somewhere else?
         //MenuItemCompat.setActionProvider(menuItem, mNewVideosActionProvider);
         mNewVideosActionProvider.manageVisibility(menuItem);
 
         menuItem = menu.add(MENU_PRIVATE_MODE_GROUP, MENU_PRIVATE_MODE_ITEM, Menu.CATEGORY_SECONDARY, R.string.activate_private_mode);
         menuItem.setIcon(R.drawable.ic_menu_private_mode);
-        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_NEVER);
 
         return ret;
     }

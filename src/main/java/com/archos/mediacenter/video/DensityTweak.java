@@ -15,30 +15,31 @@
 package com.archos.mediacenter.video;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import androidx.preference.PreferenceManager;
 import android.util.DisplayMetrics;
+
+//import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
+import androidx.preference.PreferenceManager;
 
 /**
  * Created by vapillon on 01/07/15.
  */
 public class DensityTweak {
 
-    final static public int USER_DEFINED_DENSITY_UNSET = -1;
-    final static int DensityChoiceIds[] = new int[] {
+    private final static int USER_DEFINED_DENSITY_UNSET = -1;
+    private final static int[] DensityChoiceIds = new int[] {
             R.string.interface_size_very_small,
             R.string.interface_size_small,
             R.string.interface_size_standard,
             R.string.interface_size_large,
     };
 
-    final CharSequence DensityChoices[];
+    private final CharSequence[] DensityChoices;
 
     final static private String USER_DEFINED_DENSITY_KEY = "user_defined_density";
     final static private String USER_DEFINED_DENSITY_CONFIRMED_KEY = "user_defined_density_confirmed";
@@ -110,7 +111,7 @@ public class DensityTweak {
      * Reset the flag telling that the user choose a custom density
      */
     public void forceDensityDialogAtNextStart() {
-        mPrefs.edit().putBoolean(USER_DEFINED_DENSITY_CONFIRMED_KEY, false).commit();
+        mPrefs.edit().putBoolean(USER_DEFINED_DENSITY_CONFIRMED_KEY, false).apply();
     }
 
     private int getTargetDensity() {
@@ -136,7 +137,7 @@ public class DensityTweak {
         }
 
         if (getUserDefinedDensity() == USER_DEFINED_DENSITY_UNSET ||
-                mPrefs.getBoolean(USER_DEFINED_DENSITY_CONFIRMED_KEY, false) == false) {
+                !mPrefs.getBoolean(USER_DEFINED_DENSITY_CONFIRMED_KEY, false)) {
             return true;
         }
         return false;
@@ -147,27 +148,19 @@ public class DensityTweak {
         new AlertDialog.Builder(mActivity)
                 .setTitle(R.string.interface_size)
                         //.setMessage("This TV interface was originally made for Android TV devices.\nYou may want to change the scale of the application on your device.")
-                .setSingleChoiceItems(DensityChoices, currentSelection, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        int density = getDensityFromSelectedItem(which);
-                        // Change user density
-                        PreferenceManager.getDefaultSharedPreferences(mActivity).edit()
-                                .putInt(USER_DEFINED_DENSITY_KEY, density)
-                                .commit();
-                        // Quit and restart the calling activity
-                        mActivity.finish();
-                        mActivity.startActivity(new Intent(mActivity, mActivity.getClass()));
-                    }
+                .setSingleChoiceItems(DensityChoices, currentSelection, (dialog, which) -> {
+                    int density = getDensityFromSelectedItem(which);
+                    // Change user density
+                    PreferenceManager.getDefaultSharedPreferences(mActivity).edit()
+                            .putInt(USER_DEFINED_DENSITY_KEY, density)
+                            .apply();
+                    // Quit and restart the calling activity
+                    mActivity.finish();
+                    mActivity.startActivity(new Intent(mActivity, mActivity.getClass()));
                 })
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                PreferenceManager.getDefaultSharedPreferences(mActivity).edit()
-                                        .putBoolean(USER_DEFINED_DENSITY_CONFIRMED_KEY, true)
-                                        .commit();
-                            }
-                        }
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> PreferenceManager.getDefaultSharedPreferences(mActivity).edit()
+                        .putBoolean(USER_DEFINED_DENSITY_CONFIRMED_KEY, true)
+                        .apply()
                 )
                 .setCancelable(false) // user is forced to use the OK button to validate the choice
                 .show();

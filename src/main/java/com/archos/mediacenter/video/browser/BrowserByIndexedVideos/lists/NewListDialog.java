@@ -1,14 +1,15 @@
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos.lists;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import androidx.fragment.app.DialogFragment;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.utils.trakt.TraktService;

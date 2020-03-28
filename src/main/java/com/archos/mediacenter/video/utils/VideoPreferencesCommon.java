@@ -14,23 +14,26 @@
 package com.archos.mediacenter.video.utils;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.CheckBoxPreference;
@@ -42,15 +45,11 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
-import android.provider.MediaStore;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.archos.environment.ArchosFeatures;
 import com.archos.filecorelibrary.ExtStorageManager;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
-import com.archos.mediacenter.video.EntryActivity;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.UiChoiceDialog;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
@@ -71,6 +70,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+
 import static com.archos.filecorelibrary.FileUtils.backupDatabase;
 
 public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener {
@@ -820,7 +820,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE){
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == AppCompatActivity.RESULT_OK) {
                 String newPath = data.getStringExtra(FolderPicker.EXTRA_SELECTED_FOLDER);
                 if (newPath!=null) {
                     File f = new File(newPath);

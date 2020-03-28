@@ -12,7 +12,7 @@
             android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLargePopupMenu"
+            android:textAppearance="?attr/textAppearanceLargePopupMenu"
             android:ellipsize="end"
             android:fadingEdge="horizontal" />
     <RadioButton android:id="@+id/radio"

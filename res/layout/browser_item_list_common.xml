@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" >
     <!--
          (i) symbol.
 	     NOTE: Active area larger than the icon itself due to different left and right padding
@@ -23,7 +24,7 @@
         android:paddingLeft="30dip"
         android:paddingRight="@dimen/list_expanded_padding"
         android:background="@drawable/list_selector_holo_dark"
-        android:src="@drawable/label_infoarrow" />
+        app:srcCompat="@drawable/label_infoarrow" />
 
     <!--
          Bottom area = progressbar + info icons 

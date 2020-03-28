@@ -14,16 +14,12 @@
 
 package com.archos.mediacenter.video.utils;
 
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.net.Uri;
 import android.os.AsyncTask;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.Window;
@@ -32,9 +28,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog.Builder;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceViewHolder;
+
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
-
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -1,8 +1,6 @@
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos.lists;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import androidx.fragment.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -12,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.utils.trakt.TraktService;

@@ -3,12 +3,14 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import androidx.core.view.MenuItemCompat;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import com.archos.mediacenter.utils.ActionBarSubmenu;
 import com.archos.mediacenter.video.R;
@@ -106,7 +108,7 @@ public class BrowserByVideoSelection extends CursorBrowserByVideo {
 			// Add the "sort mode" item
 			MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
 			sortMenuItem.setIcon(R.drawable.ic_menu_sort);
-			sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			MenuItemCompat.setShowAsAction(sortMenuItem, MenuItem.SHOW_AS_ACTION_ALWAYS);
 			mSortModeSubmenu.attachMenuItem(sortMenuItem);
 
 			mSortModeSubmenu.clear();

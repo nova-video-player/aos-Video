@@ -17,7 +17,7 @@
             android:layout_toRightOf="@id/icon"
             android:layout_marginLeft="8dip"
             android:layout_centerVertical="true"
-            android:textAppearance="?android:attr/textAppearanceLargePopupMenu"
+            android:textAppearance="?attr/textAppearanceLargePopupMenu"
             android:ellipsize="end"
             android:fadingEdge="horizontal" />
 </RelativeLayout>

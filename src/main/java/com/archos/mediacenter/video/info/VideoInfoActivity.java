@@ -14,23 +14,22 @@
 
 package com.archos.mediacenter.video.info;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
@@ -154,8 +153,8 @@ public class VideoInfoActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_CURRENT_POSITION, currentPosition);
         if(fragment!=null) {
             fragment.startActivityForResult(intent, 0);
-        }else if(context instanceof Activity)
-            ((Activity) context).startActivityForResult(intent, 0);
+        }else if(context instanceof AppCompatActivity)
+            ((AppCompatActivity) context).startActivityForResult(intent, 0);
         else {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             context.startActivity(intent);

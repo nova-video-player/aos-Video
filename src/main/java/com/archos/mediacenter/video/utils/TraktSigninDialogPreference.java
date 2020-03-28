@@ -14,22 +14,24 @@
 
 package com.archos.mediacenter.video.utils;
 
-import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
-import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
-
-import com.archos.mediacenter.utils.trakt.Trakt;
-import com.archos.mediacenter.video.utils.oauth.*;
-
-import com.archos.mediacenter.video.R;
-
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.AttributeSet;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
-import android.util.AttributeSet;
+
+import com.archos.mediacenter.utils.trakt.Trakt;
+import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.utils.oauth.OAuthCallback;
+import com.archos.mediacenter.video.utils.oauth.OAuthData;
+import com.archos.mediacenter.video.utils.oauth.OAuthDialog;
+
+import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 public class TraktSigninDialogPreference extends Preference {
 	OAuthDialog od=null;

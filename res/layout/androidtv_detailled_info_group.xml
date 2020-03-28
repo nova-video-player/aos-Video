@@ -15,6 +15,7 @@
   limitations under the License.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -47,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dip"
             android:layout_marginTop="0dip"
-            android:src="@drawable/leanback_info_file"/>
+            app:srcCompat="@drawable/leanback_info_file"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -104,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dip"
             android:layout_marginTop="0dip"
-            android:src="@drawable/leanback_info_video"/>
+            app:srcCompat="@drawable/leanback_info_video"/>
 
         <LinearLayout android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -136,7 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dip"
             android:layout_marginTop="0dip"
-            android:src="@drawable/leanback_info_audio"/>
+            app:srcCompat="@drawable/leanback_info_audio"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -162,7 +163,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dip"
             android:layout_marginTop="0dip"
-            android:src="@drawable/leanback_info_subtitles"/>
+            app:srcCompat="@drawable/leanback_info_subtitles"/>
 
         <LinearLayout
             android:layout_width="0dip"

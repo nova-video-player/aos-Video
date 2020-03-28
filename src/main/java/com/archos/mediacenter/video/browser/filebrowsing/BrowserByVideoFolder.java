@@ -21,15 +21,17 @@ import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.archos.mediacenter.video.utils.FolderPicker;
+import androidx.core.view.MenuItemCompat;
+import androidx.preference.PreferenceManager;
+
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.MainActivity;
+import com.archos.mediacenter.video.utils.FolderPicker;
 import com.archos.mediacenter.video.utils.VideoPreferencesActivity;
 
 import java.io.File;
@@ -55,9 +57,8 @@ public class BrowserByVideoFolder extends BrowserByLocalFolder {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.add(0, MainActivity.MENU_CHANGE_FOLDER, Menu.NONE, R.string.menu_change_folder)
-                .setIcon(R.drawable.ic_menu_folder)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        MenuItemCompat.setShowAsAction(menu.add(0, MainActivity.MENU_CHANGE_FOLDER, Menu.NONE, R.string.menu_change_folder)
+                .setIcon(R.drawable.ic_menu_folder), MenuItem.SHOW_AS_ACTION_IF_ROOM);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

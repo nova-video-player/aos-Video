@@ -17,24 +17,15 @@ package com.archos.mediacenter.video.browser.filebrowsing;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-
-import androidx.core.widget.TextViewCompat;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -46,10 +37,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.TextViewCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
+
 import com.archos.filecorelibrary.FileExtendedInfo;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.ListingEngine;
 import com.archos.filecorelibrary.MetaFile2;
-import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.ListingEngineFactoryWithUpnp;
 import com.archos.mediacenter.filecoreextension.upnp2.UpnpFile2;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;

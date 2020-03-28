@@ -15,12 +15,10 @@
 
 package com.archos.mediacenter.video.info;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +28,9 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.archos.mediacenter.utils.imageview.ImageProcessor;
 import com.archos.mediacenter.utils.imageview.ImageViewSetter;
@@ -185,9 +186,9 @@ public class VideoInfoBackdropChooserFragment extends Fragment implements
 
         mAdapter.cleanup();
         if(hasBackdropChanged)
-            getActivity().setResult(Activity.RESULT_OK);
+            getActivity().setResult(AppCompatActivity.RESULT_OK);
         else
-            getActivity().setResult(Activity.RESULT_CANCELED);
+            getActivity().setResult(AppCompatActivity.RESULT_CANCELED);
         getActivity().finish();
     }
 
