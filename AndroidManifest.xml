@@ -823,7 +823,7 @@
         <activity
             android:name="com.archos.mediacenter.video.utils.WebViewActivity"
             android:label="@string/leanback_archos_video_webview"
-            android:theme="@style/MyLeanbackTheme"
+            android:theme="@style/ArchosThemeBlue"
             android:excludeFromRecents="true"/>
 
         <activity
