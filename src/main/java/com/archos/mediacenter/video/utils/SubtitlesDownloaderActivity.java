@@ -233,7 +233,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
         TorrentObserverService.paused(this);
     }
 
-    //TODO MARC
+    //TODO MARC final on AppCompat but seems to work
     /*
     public Object onRetainNonConfigurationInstance() {
         // The activity is going to be destroyed after a rotation => save the state of the dialogs

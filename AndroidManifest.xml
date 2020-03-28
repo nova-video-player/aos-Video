@@ -100,7 +100,7 @@
             android:label="@string/video"
             android:launchMode="singleTask"
             android:taskAffinity="archos.task.video"
-            android:theme="@style/ArchosThemeBlueCompatNoActionBar"
+            android:theme="@style/ArchosThemeBlueNoActionBar"
             android:windowSoftInputMode="adjustPan" >
             <!-- Points to searchable meta data. -->
             <meta-data
@@ -142,7 +142,7 @@
             android:name=".browser.QueryBrowserActivityVideo"
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round"
-            android:theme="@style/ArchosThemeBlueCompat" >
+            android:theme="@style/ArchosThemeBlue" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <action android:name="android.intent.action.MEDIA_SEARCH" />
@@ -182,7 +182,7 @@
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/video"
-            android:theme="@style/ArchosThemeBlueCompatOverlay" >
+            android:theme="@style/ArchosThemeBlueOverlay" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -300,7 +300,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/get_subtitles_on_drive"
             android:launchMode="singleTask"
-            android:theme="@style/ArchosThemeBlueCompatTransparent" >
+            android:theme="@style/ArchosThemeBlueTransparent" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -312,7 +312,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/samba_settings_title"
             android:launchMode="singleTask"
-            android:theme="@style/ArchosThemeBlueCompat" >
+            android:theme="@style/ArchosThemeBlue" >
         </activity>
         <activity
             android:name=".utils.VideoPreferencesActivity"
@@ -322,7 +322,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/preferences"
             android:launchMode="singleTop"
-            android:theme="@style/ArchosThemeBlueCompat" >
+            android:theme="@style/ArchosThemeBlue" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -335,7 +335,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/preferences_video_licenses"
             android:launchMode="singleTop"
-            android:theme="@style/ArchosThemeBlueCompat" >
+            android:theme="@style/ArchosThemeBlue" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
