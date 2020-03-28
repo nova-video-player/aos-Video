@@ -24,8 +24,9 @@ public class VideoSettingsActivity extends LeanbackActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(getSupportFragmentManager().findFragmentById(R.id.settingsFragment)!=null){
-            ((VideoSettingsFragment)getSupportFragmentManager().findFragmentById(R.id.settingsFragment)).onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+        if (getSupportFragmentManager().findFragmentById(R.id.settingsFragment) != null) {
+            ((VideoSettingsFragment) getSupportFragmentManager().findFragmentById(R.id.settingsFragment)).onActivityResult(requestCode, resultCode, data);
         }
     }
 }
