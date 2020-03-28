@@ -539,7 +539,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         boolean ret = super.onCreateOptionsMenu(menu);
         /// /setHomeButtonsetHomeButton();
         MenuItem item = menu.add(MENU_SEARCH_GROUP, MENU_SEARCH_ITEM, Menu.NONE, R.string.search_title);
-        item.setIcon(android.R.drawable.ic_menu_search);
+        item.setIcon(R.drawable.android29_ic_menu_search_mtrl_alpha);
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
