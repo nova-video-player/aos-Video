@@ -45,6 +45,7 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
+        <item name="alertDialogTheme">@style/Theme.AlertDialog</item>
     </style>
 
     <style name="MyLeanbackPreferenceTheme" parent="PreferenceThemeOverlayLeanback">
