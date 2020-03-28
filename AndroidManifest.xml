@@ -129,14 +129,6 @@
             android:label="@string/video"
             android:targetActivity=".browser.MainActivity" >
 
-            <!--
-              <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-          </intent-filter>
-            -->
-
-
             <!-- Points to searchable meta data. -->
             <meta-data
                 android:name="android.app.default_searchable"
@@ -145,7 +137,6 @@
                 android:name="stereo_mode"
                 android:value="true" />
         </activity-alias>
-
 
         <activity
             android:name=".browser.QueryBrowserActivityVideo"
@@ -194,20 +185,16 @@
             android:theme="@style/ArchosThemeBlueCompatOverlay" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="mms" />
                 <data android:scheme="mmsh" />
                 <data android:scheme="rtsp" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:mimeType="video/*" />
                 <data android:scheme="mms" />
                 <data android:scheme="mmsh" />
@@ -215,19 +202,14 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="video/*" />
                 <data android:mimeType="application/x-shockwave-flash" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="" />
                 <data android:scheme="file" />
                 <data android:scheme="http" />
                 <data android:scheme="smb" />
@@ -236,11 +218,8 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="" />
                 <data android:scheme="file" />
                 <data android:scheme="ftp" />
                 <data android:scheme="content" />
@@ -296,18 +275,10 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="archos.intent.action.RESUME_VIDEOPLAYER" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="video/*" />
                 <data android:mimeType="application/x-shockwave-flash" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".utils.VideoInfoActivity2"
-            android:excludeFromRecents="true"
-            android:hardwareAccelerated="true"
-            android:theme="@style/Theme.Transparent" >
         </activity>
         <activity
             android:name=".autoscraper.AutoScraperActivity"
@@ -342,7 +313,6 @@
             android:label="@string/samba_settings_title"
             android:launchMode="singleTask"
             android:theme="@style/ArchosThemeBlueCompat" >
-
         </activity>
         <activity
             android:name=".utils.VideoPreferencesActivity"
@@ -370,23 +340,17 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <service
-            android:name=".player.cast.CastService"
-         />
         <activity
             android:name=".browser.VideoPicker"
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/video_picker_title"
             android:theme="@style/ArchosThemeBlue" >
-
             <!-- Someone asks to get content of any of the video types we support. -->
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.OPENABLE" />
-
                 <data android:mimeType="video/*" />
             </intent-filter>
         </activity>
@@ -408,16 +372,13 @@
             android:theme="@style/Theme.HelpOverlay" >
         </activity>
 
-
         <service android:name="org.fourthline.cling.android.AndroidUpnpServiceImpl" />
         <service android:name=".browser.TorrentObserverService" />
-
-        <service android:name=".player.cast.CastPlayerService" android:exported="false"/>
         <service android:name=".player.FloatingPlayerService" android:exported="false"/>
         <service android:name=".player.PlayerService" />
-
         <service android:name="com.archos.mediascraper.AutoScrapeService" />
         <service android:name="com.archos.mediacenter.video.browser.FileManagerService" />
+
         <receiver android:name="com.archos.mediacenter.LibAvosReceiver" >
             <intent-filter>
                 <action android:name="com.archos.mediacenter.NEW_PLUGINS" />
@@ -427,7 +388,6 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="com.archos.mediacenter.DEBUG_SCAN" />
-
                 <data android:scheme="file" />
             </intent-filter>
             <intent-filter>
@@ -450,7 +410,6 @@
             </intent-filter>
         </receiver>
 
-
         <!-- ArchosMediaProvider & related, all running in a separate process -->
         <!-- ContentProvider for media -->
         <provider
@@ -469,7 +428,6 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_SCANNER_FINISHED" />
-
                 <data android:scheme="file" />
             </intent-filter>
             <!-- Android broadcast that stops importing -->
@@ -484,14 +442,12 @@
                 <data android:scheme="smb" />
                 <data android:scheme="http" />
                 <data android:scheme="https" />
-
                 <data android:scheme="sftp" />
                 <data android:scheme="ftp" />
                 <data android:scheme="ftps" />
                 <data android:scheme="upnp" />
                 <data android:scheme="ftps" />
                 <data android:scheme="content" />
-
             </intent-filter>
             <!-- Starts incremental local storage import -->
             <intent-filter>
@@ -519,7 +475,6 @@
                 <data android:scheme="smb" />
                 <data android:scheme="upnp" />
                 <data android:scheme="content" />
-
             </intent-filter>
         </receiver>
 
