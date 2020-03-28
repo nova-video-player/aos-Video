@@ -512,7 +512,7 @@ abstract public class BrowserCategory extends ListFragment {
         itemData.text = R.string.preferences;
         mCategoryList.add(itemData);
         itemData = new ItemData();
-        itemData.icon = R.drawable.android9_ic_menu_help;
+        itemData.icon = R.drawable.android29_ic_menu_help;
         itemData.text = R.string.help_faq;
         mCategoryList.add(itemData);
     }
