@@ -131,7 +131,7 @@
             android:id="@+id/scrap_link_tmdb"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            app:srcCompat="@drawable/tmdb_logo" />
+            app:srcCompat="@drawable/tmdb_banner" />
 
         <ImageButton
             android:id="@+id/scrap_link_imdb"

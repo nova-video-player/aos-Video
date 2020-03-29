@@ -71,7 +71,7 @@
                     android:padding="5dip"
                     android:layout_height="fill_parent"
                     android:background="@drawable/transparent_ripple"
-                    card_view:srcCompat="@drawable/tmdb_logo" />
+                    card_view:srcCompat="@drawable/tmdb_banner" />
 
                 <ImageButton
                     android:id="@+id/scrap_link_imdb"
