@@ -1692,8 +1692,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                     if(((EpisodeTags) tags).getShowTags()!=null)
                         studio = ((EpisodeTags) tags).getShowTags().getStudiosFormatted();
-                    mTVDBIcon.setVisibility(tags.getOnlineId()>=0?View.VISIBLE:View.GONE);
-                    // get imdbid of the episode (removing the starting tt letters or any non numeric characters
+                    //TODO disabled for now since getOnlineId is not tvdb id
+                    //mTVDBIcon.setVisibility(tags.getOnlineId()>=0?View.VISIBLE:View.GONE);
+                    mTVDBIcon.setVisibility(View.GONE);
                     mTVDBId = tags.getOnlineId();
                 }
                 else if(tags instanceof MovieTags){
