@@ -51,5 +51,7 @@
     <style name="MyLeanbackPreferenceTheme" parent="PreferenceThemeOverlayLeanback">
         <item name="android:windowBackground">@color/leanback_background</item>
         <item name="colorPrimary">@color/lightblue900</item>
+        <!-- required for preferenceFragment title background not to be gray -->
+        <item name="android:colorPrimary">@color/lightblue900</item>
     </style>
 </resources>
