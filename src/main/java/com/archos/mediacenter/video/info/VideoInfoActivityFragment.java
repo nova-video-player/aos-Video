@@ -180,6 +180,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mScrapDirectorTitle;
     private View mIMDBIcon;
     private View mTMDBIcon;
+    private View mTVDBIcon;
     private LinearLayout mScrapTrailers;
     private LinearLayout mSourceLayout;
     private VideoBadgePresenter mVideoBadgePresenter;
@@ -257,6 +258,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     private String mIMDBId;
     private long mTMDBId;
+    private long mTVDBId;
     private Bitmap mBitmap;
     private String mPath ;
     private boolean mIsLaunchFromPlayer;
@@ -398,6 +400,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mIMDBIcon.setOnClickListener(this);
         mTMDBIcon = mRoot.findViewById(R.id.scrap_link_tmdb);
         mTMDBIcon.setOnClickListener(this);
+        mTVDBIcon = mRoot.findViewById(R.id.scrap_link_tvdb);
+        mTVDBIcon.setOnClickListener(this);
         mScraperPlotContainer = (CardView)mRoot.findViewById(R.id.scraper_plot_container);
         mPlotTextView = (TextView) mRoot.findViewById(R.id.scrap_plot);
         mGenreTextView = (TextView) mRoot.findViewById(R.id.scrap_genre);
@@ -1069,6 +1073,15 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(tmdbUrl));
             startActivity(it);
             //WebUtils.openWebLink(getActivity(), tmdbUrl);
+        }else if(view == mTVDBIcon){
+
+            // Format TVDB URL with movie ID and preferred language
+            final String language = MovieScraper3.getLanguage(getActivity());
+            final String tvdbUrl = String.format(getResources().getString(R.string.tvdb_title_url), mTVDBId, language);
+            // Breaks AndroidTV acceptance
+            Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(tvdbUrl));
+            startActivity(it);
+            //WebUtils.openWebLink(getActivity(), tvdbUrl);
         }
         else if(view == mIMDBIcon){
             final String imdbUrl = getResources().getString(R.string.imdb_title_url) + mIMDBId;
@@ -1679,9 +1692,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                     if(((EpisodeTags) tags).getShowTags()!=null)
                         studio = ((EpisodeTags) tags).getShowTags().getStudiosFormatted();
-
+                    mTVDBIcon.setVisibility(tags.getOnlineId()>=0?View.VISIBLE:View.GONE);
+                    // get imdbid of the episode (removing the starting tt letters or any non numeric characters
+                    mTVDBId = tags.getOnlineId();
                 }
                 else if(tags instanceof MovieTags){
+                    mTVDBIcon.setVisibility(View.GONE);
                     mTMDBIcon.setVisibility(tags.getOnlineId()>=0?View.VISIBLE:View.GONE);
                     mTMDBId = tags.getOnlineId();
                     date = ((MovieTags) tags).getYear()+"";
