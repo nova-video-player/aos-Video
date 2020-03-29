@@ -63,7 +63,7 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
     private static final String TAG = VideoInfoScraperSearchFragment.class.getSimpleName();
     private static final boolean DBG = false;
     
-    public static final int SELECTION_DIALOG_MAX_ITEMS = 20;
+    public static final int SELECTION_DIALOG_MAX_ITEMS = 10;
     
     // Actions to perform when the selection thread is interrupted (powers of 2)
     private static final int ACTION_NONE = 0;
