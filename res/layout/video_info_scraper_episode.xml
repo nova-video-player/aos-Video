@@ -107,10 +107,22 @@
 		android:id="@+id/episode_guests"
 		style="@style/VideoInfoFileInfo"/>
 
-    <ImageButton
-        android:id="@+id/scrap_link_imdb"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="10dip"
-        app:srcCompat="@drawable/imdb_logo" />
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dip"
+		android:orientation="horizontal" >
+
+		<ImageButton
+			android:id="@+id/scrap_link_tvdb"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+			app:srcCompat="@drawable/tvdb_logo" />
+
+		<ImageButton
+			android:id="@+id/scrap_link_imdb"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+			app:srcCompat="@drawable/imdb_logo" />
+	</LinearLayout>
 </LinearLayout>
