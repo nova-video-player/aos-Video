@@ -327,6 +327,7 @@
     <string name="s_turkish">Türkisch</string>
     <string name="s_chinese">Chinesisch</string>
     <string name="s_vietnamese">Vietnamesisch</string>
+    <string name="s_lithuanian">Litauisch</string>
     <string name="s_none">Kein</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Video nicht abspielbar</string>
@@ -823,4 +824,5 @@
     <string name="loading">Lade…</string>
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
+    <string name="refreshrate_failed">Fehler beim Festlegen der gewünschten Aktualisierungsrate</string>
 </resources>

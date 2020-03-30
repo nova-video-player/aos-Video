@@ -501,7 +501,7 @@
     <string name="preferences_video_about">A propos</string>
     <string name="preferences_video_os_text">Sous-titres fournis par</string>
     <string name="preferences_video_tmdb_text">Description des films fournies par</string>
-    <string name="preferences_video_tvdb_text">Description des Séries fournies par</string>
+    <string name="preferences_video_tvdb_text">Description des séries fournies par</string>
     <string name="preferences_video_trakt_text">Scrobbler vidéo fourni par</string>
     <string name="preferences_video_licenses">Licences</string>
     <string name="preferences_network_mobile_vpn_summary">N\'activez cette option que pour les connexions VPN. Attention à la consommation de données.</string>
