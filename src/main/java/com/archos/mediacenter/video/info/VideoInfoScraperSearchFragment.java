@@ -235,28 +235,33 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
                         // => the infos for this item are already available so we only
                         // need to stop the thread and the scraper service
                         mSelectionThread.interrupt(ACTION_STOP_SERVICE);
-
+                        if(DBG) Log.d(TAG, "onClick : user selected an item already processed");
                         // Validate the selected item
                         BaseTags itemTags = mSelectionTags.get(position);
                         mHandler.obtainMessage(MESSAGE_WRITE_TAGS_TO_DB, itemTags).sendToTarget();
-                    }
-                    else if (position > mSelectionItemsProcessed) {
+                    } else {
+                    //else if (position >= mSelectionItemsProcessed) {
                         // The user selected an item which has not been processed yet
                         // => stop the processing thread but keep connected to the scraper service
                         // because we must still get the infos for the selected item
                         mSelectionThread.interrupt(ACTION_NONE);
-
+                        if(DBG) Log.d(TAG, "onClick : user selected an item not already processed: stop processing thread but keep connected to scraper and reask the details for item");
                         // Start the thread which will retrieve the infos for the selected item
                         mResIndex = position;
                         new ScraperDetailsThread().start();
                     }
+                    /*
                     else {
+                        // TODO: for some reason it does not work and results in incomplete info
+                        // TODO: to reproduce: launch manual scraping on phone and select first item before it is fully scraped (no icon), then the scrape info is incomplete
                         // The user selected the item which is currently processed
                         // => stop the processing thread which will finish after
                         // processing the current item so we just need to wait until
                         // it finishes to retrieve the item data
                         mSelectionThread.interrupt(ACTION_STOP_SERVICE | ACTION_VALIDATE_LAST_ITEM);
+                        if(DBG) Log.d(TAG, "onClick : user selected the item being processed, stop processing thread that will finish the current item");
                     }
+                     */
                 }
                 else {
                     //----------------------------------------------------------------
