@@ -31,6 +31,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.archos.filecorelibrary.zip.ZipUtils;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.ui.NovaProgressDialog;
 import com.archos.mediaprovider.video.VideoOpenHelper;
 
 import java.io.File;
@@ -43,13 +44,13 @@ public class DebugDbExportDialogFragment extends DialogFragment {
     private final static boolean DBG = false;
     private final static String TAG = "DebugDbExport";
 
-    ProgressDialog mDialog = null;
+    NovaProgressDialog mDialog = null;
     AsyncTask mExportTask = null;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (DBG) Log.d(TAG, "onCreateDialog");
-        mDialog = new ProgressDialog(getActivity());
+        mDialog = new NovaProgressDialog(getActivity());
         mDialog.setIndeterminate(true);
         mDialog.setCancelable(false);
         mDialog.setMessage(getString(R.string.zipping_library_before_mailing));

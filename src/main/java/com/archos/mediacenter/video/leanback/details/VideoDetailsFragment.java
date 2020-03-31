@@ -17,7 +17,6 @@ package com.archos.mediacenter.video.leanback.details;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -114,6 +113,7 @@ import com.archos.mediacenter.video.leanback.wizard.SubtitlesWizardActivity;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
+import com.archos.mediacenter.video.ui.NovaProgressDialog;
 import com.archos.mediacenter.video.utils.DbUtils;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
@@ -1732,7 +1732,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
 
 
-            ProgressDialog pd = new ProgressDialog(getActivity());
+            NovaProgressDialog pd = new NovaProgressDialog(getActivity());
             pd.setMessage(getString(R.string.dialog_subloader_copying));
             pd.setIndeterminate(true);
             pd.setCancelable(true);

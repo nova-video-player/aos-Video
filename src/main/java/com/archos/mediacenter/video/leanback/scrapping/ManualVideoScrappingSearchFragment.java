@@ -14,7 +14,6 @@
 
 package com.archos.mediacenter.video.leanback.scrapping;
 
-import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +21,7 @@ import android.util.Log;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
+import com.archos.mediacenter.video.ui.NovaProgressDialog;
 import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.EpisodeTags;
 import com.archos.mediascraper.MovieTags;
@@ -128,10 +128,10 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
      */
     @Override
     protected void saveTagsAndFinish(final BaseTags fTags) {
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        final NovaProgressDialog progressDialog = new NovaProgressDialog(getActivity());
         progressDialog.setTitle(R.string.scrap_get_title);
         progressDialog.setMessage(getString(R.string.scrap_change_initializing));
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setProgressStyle(NovaProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
         progressDialog.setMax(1);

@@ -15,7 +15,6 @@
 package com.archos.mediacenter.video.leanback.scrapping;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -35,6 +34,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.ui.NovaProgressDialog;
 import com.archos.mediaprovider.video.ScraperStore;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.BaseTags;
@@ -182,7 +182,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
         final int PROGRESS_ID_FINALIZING = -2;
 
         final Context mContext;
-        ProgressDialog mProgressDialog;
+        NovaProgressDialog mProgressDialog;
 
         public EpSaveTask() {
             mContext = getActivity();
@@ -190,11 +190,12 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
 
         @Override
         protected void onPreExecute() {
+            // TODO MARC avec progressBar https://stackoverflow.com/questions/56627616/how-to-show-a-progressbar-example-with-percentage-in-android
             super.onPreExecute();
-            mProgressDialog = new ProgressDialog(mContext);
+            mProgressDialog = new NovaProgressDialog(mContext);
             mProgressDialog.setTitle(R.string.scrap_change_title);
             mProgressDialog.setMessage(getString(R.string.scrap_change_initializing));
-            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            mProgressDialog.setProgressStyle(NovaProgressDialog.STYLE_HORIZONTAL);
             mProgressDialog.setIndeterminate(false);
             mProgressDialog.setCancelable(false);
             mProgressDialog.show();

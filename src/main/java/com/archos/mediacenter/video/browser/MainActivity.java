@@ -18,7 +18,6 @@ package com.archos.mediacenter.video.browser;
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -93,6 +92,7 @@ import com.archos.mediacenter.video.browser.filebrowsing.BrowserByVideoFolder;
 import com.archos.mediacenter.video.info.SingleVideoLoader;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
+import com.archos.mediacenter.video.ui.NovaProgressDialog;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.MiscUtils;
@@ -716,7 +716,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             });
             return dialog;
         } else if (id == DIALOG_DELETING) {
-            ProgressDialog dialog = new ProgressDialog(this);
+            NovaProgressDialog dialog = new NovaProgressDialog(this);
             dialog.setIndeterminate(true);
             dialog.setMessage(getText(R.string.deleting));
             dialog.setTitle(file.getName());
