@@ -1012,7 +1012,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
     @Override
     public void onDestroy(){
-        // MARC DO SOMETHING ON SAVE BMRK?
         super.onDestroy();
         if(mIndexHelper!=null)
             mIndexHelper.abort();

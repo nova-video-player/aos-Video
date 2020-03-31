@@ -161,6 +161,7 @@ public class VideoUtils {
      * @return
      */
     public static Uri getFileUriFromMediaLibPath(String path) {
+        if (path == null) return null;
         if (path.startsWith("/")) {
             // local file, need to add the scheme (file scheme not stored in MediaDb)
             return Uri.parse("file://"+path);
