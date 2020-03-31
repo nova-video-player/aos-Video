@@ -763,7 +763,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
 
     private void addNetworkListener() {
-        // TODO MARC
+        if (networkState == null) networkState = NetworkState.instance(getApplicationContext());
         if (!mNetworkStateListenerAdded) {
             if (DBG) Log.d(TAG, "addNetworkListener: networkState.addPropertyChangeListener");
             networkState.addPropertyChangeListener(propertyChangeListener);
@@ -772,7 +772,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     }
 
     private void removeNetworkListener() {
-        // TODO MARC
+        if (networkState == null) networkState = NetworkState.instance(getApplicationContext());
         if (mNetworkStateListenerAdded) {
             if (DBG) Log.d(TAG, "removeListener: networkState.removePropertyChangeListener");
             networkState.removePropertyChangeListener(propertyChangeListener);
