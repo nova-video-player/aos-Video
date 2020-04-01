@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
- * customized 2020 by Courville Software to avoid deprecation
+ * modified 2020 by Courville Software to avoid deprecation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -196,11 +196,6 @@ public class NovaProgressDialog extends AlertDialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        /*
-        TypedArray a = mContext.obtainStyledAttributes(null,
-                com.android.internal.R.styleable.AlertDialog,
-                com.android.internal.R.attr.alertDialogStyle, 0);
-         */
         if (mProgressStyle == STYLE_HORIZONTAL) {
             
             /* Use a separate handler to update the text views as they
@@ -232,11 +227,6 @@ public class NovaProgressDialog extends AlertDialog {
                 }
             };
             View view = inflater.inflate(R.layout.alert_dialog_progress, null, false);
-            /*
-            View view = inflater.inflate(a.getResourceId(
-                    com.android.internal.R.styleable.AlertDialog_horizontalProgressLayout,
-                    R.layout.alert_dialog_progress), null);
-             */
             mProgress = (ProgressBar) view.findViewById(R.id.progress);
             mProgressNumber = (TextView) view.findViewById(R.id.progress_number);
             mProgressPercent = (TextView) view.findViewById(R.id.progress_percent);
