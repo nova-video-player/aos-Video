@@ -57,6 +57,7 @@ import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
+import com.archos.mediacenter.video.ui.NovaProgressDialog;
 import com.archos.mediaprovider.ArchosMediaIntent;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -104,7 +105,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
     HashMap<String, String> mFriendlyFileNames = null; // they need to have an extension
     HashMap<String, String> mIndexableUri = null;
     boolean stop = false;
-    private AlertDialog mDialog;
+    private NovaProgressDialog mDialog;
     private ProgressBar mProgressBar;
 
     private AlertDialog mSumUpDialog;
@@ -128,7 +129,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
     private static final boolean fourthPassEnabled = true; // NOTE: cannot select both 3rd and 4th since multiple choices
 
     private static class NonConfigurationInstance {
-        public AlertDialog alertDialog;
+        public NovaProgressDialog progressDialog;
         public AlertDialog sumUpDialog;
     };
 
@@ -136,14 +137,14 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
+        if (DBG) Log.d(TAG, "onStart");
         mHandler = new Handler(getMainLooper());
         mIndexableUri = new HashMap<>();
         final NonConfigurationInstance nci = (NonConfigurationInstance) getLastNonConfigurationInstance();
         if (nci != null) {
             // The activity is created again after a rotation => just restore the state of the dialogs
             // as the OpenSubtitlesTask is still running in the background
-            mDialog = nci.alertDialog;
+            mDialog = nci.progressDialog;
             mSumUpDialog = nci.sumUpDialog;
         }
         else {
@@ -174,6 +175,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 mOpenSubtitlesTask.execute(fileUrls, getSubLangValue());
                 subsDir = MediaUtils.getSubsDir(this);
             } else {
+                if (DBG) Log.d(TAG, "onStart: no network");
                 Builder dialogNoNetwork;
                 dialogNoNetwork = new AlertDialog.Builder(this);
                 dialogNoNetwork.setCancelable(true);
@@ -238,7 +240,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
     public Object onRetainNonConfigurationInstance() {
         // The activity is going to be destroyed after a rotation => save the state of the dialogs
         NonConfigurationInstance nci = new NonConfigurationInstance();
-        nci.alertDialog = mDialog;
+        nci.progressDialog = mDialog;
         nci.sumUpDialog = mSumUpDialog;
         return nci;
     }
@@ -261,6 +263,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
         private String token = null;
         @Override
         protected void onPreExecute() {
+            if (DBG) Log.d(TAG, "OpenSubtitlesTask: onPreExecute");
             setInitDialog();
         }
         @Override
@@ -284,26 +287,29 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
             if (stop && (mSumUpDialog == null || !mSumUpDialog.isShowing()))
                 finish();
         }
-
         @Override
         protected void onProgressUpdate(Integer... values) {
-            if (values == null || values.length != 2 || isCancelled()) {
-                return;
-            }
+            if (DBG) Log.d(TAG, "onProgressUpdate");
+            if (values == null || values.length != 2 || isCancelled()) return;
             int progress = values[0];
             int filesNumber = values[1];
             if (progress == 0) {
+                if (DBG) Log.d(TAG, "onProgressUpdate: progress=" + progress);
                 if (mDialog != null && mDialog.isShowing()) {
+                    if (DBG) Log.d(TAG, "onProgressUpdate: progress=0 and mDialog.isShowing() dismissing dialog!!!");
                     mDoNotFinish = true;
                     mDialog.dismiss();
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(SubtitlesDownloaderActivity.this);
-                builder.setOnCancelListener(dialog -> {
+                mDialog = new NovaProgressDialog(SubtitlesDownloaderActivity.this);
+                mDialog.setMessage(getString(R.string.dialog_subloader_downloading));
+                mDialog.setCancelable(true);
+                mDialog.setCanceledOnTouchOutside(false);
+                mDialog.setOnCancelListener(dialog -> {
                     dialog.cancel();
                     stop();
                     finish();
                 });
-                builder.setOnDismissListener(dialog -> {
+                mDialog.setOnDismissListener(dialog -> {
                     if(!mDoNotFinish) {
                         dialog.cancel();
                         stop();
@@ -311,26 +317,28 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                     }
                     mDoNotFinish = false;
                 });
-                if (filesNumber > 1) {
-                    builder.setView(R.layout.progressbar_dialog);
-                    mDialog = builder.create();
-                    mDialog.show();
-                    mProgressBar = mDialog.findViewById(R.id.progressBar);
-                    mProgressBar.setMax(filesNumber);
-                    mProgressBar.setProgress(progress);
+                if (DBG) Log.d(TAG, "onProgressUpdate: setMessage " + getString(R.string.dialog_subloader_downloading));
+                if (filesNumber > 1){
+                    if (DBG) Log.d(TAG, "onProgressUpdate: progressbar filesNumber=" + filesNumber);
+                    mDialog.setProgressStyle(NovaProgressDialog.STYLE_HORIZONTAL);
+                    mDialog.setProgress(progress);
+                    mDialog.setMax(filesNumber);
                 } else {
-                    builder.setView(R.layout.spinner_dialog);
-                    mDialog = builder.create();
-                    mDialog.show();
-                    mProgressBar = mDialog.findViewById(R.id.spinner);
+                    if (DBG) Log.d(TAG, "onProgressUpdate: spinner filesNumber=" + filesNumber);
+                    mDialog.setProgressStyle(NovaProgressDialog.STYLE_SPINNER);
+                    mDialog.setIndeterminate(true);
+                    //mDialog.setProgress(progress);
+                    //mDialog.setMax(filesNumber);
                 }
-                TextView mTextView = mDialog.findViewById(R.id.textView);
-                mTextView.setText(getString(R.string.dialog_subloader_downloading));
-                mDialog.setCancelable(true);
-                mDialog.setCanceledOnTouchOutside(false);
+                mDialog.show();
             } else {
-                mProgressBar.setMax(filesNumber);
-                mProgressBar.setProgress(progress);
+                if (mDialog != null) {
+                    if (DBG) Log.d(TAG, "onProgressUpdate: mDialog not null");
+                    mDialog.setProgress(progress);
+                    mDialog.setMax(filesNumber);
+                } else {
+                    if (DBG) Log.w(TAG, "onProgressUpdate: mDialog is null!!!");
+                }
             }
         }
 
@@ -1031,15 +1039,20 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
         }
 
         private void setInitDialog(){
+            if (DBG) Log.d(TAG, "OpenSubtitlesTask: setInitDialog");
+
             mHandler.post(() -> {
-                Builder builder = new Builder(SubtitlesDownloaderActivity.this);
-                builder.setView(R.layout.spinner_dialog);
-                builder.setOnCancelListener(dialog -> {
+                //mDialog = new NovaProgressDialog(new ContextThemeWrapper(SubtitlesDownloaderActivity.this, R.style.Theme_AlertDialog));
+                mDialog = new NovaProgressDialog(SubtitlesDownloaderActivity.this);
+                mDialog.setMessage(getString(R.string.dialog_subloader_connecting));
+                mDialog.setCancelable(true); // to be able to exit via back
+                mDialog.setCanceledOnTouchOutside(false); // to not cancel when tapping the screen out of dialog zone
+                mDialog.setOnCancelListener(dialog -> {
                     dialog.cancel();
                     stop();
                     finish();
                 });
-                builder.setOnDismissListener(dialog -> {
+                mDialog.setOnDismissListener(dialog -> {
                     if(!mDoNotFinish) {
                         dialog.cancel();
                         stop();
@@ -1047,12 +1060,8 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                     }
                     mDoNotFinish = false;
                 });
-                builder.setCancelable(true);
-                mDialog = builder.create();
+                if (DBG) Log.d(TAG, "OpenSubtitlesTask: setInitDialog setMessage " + getString(R.string.dialog_subloader_connecting));
                 mDialog.show();
-                TextView mTextView = mDialog.findViewById(R.id.textView);
-                mTextView.setText(getString(R.string.dialog_subloader_connecting));
-                mDialog.setCanceledOnTouchOutside(false);
             });
         }
 
