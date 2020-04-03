@@ -20,7 +20,6 @@ package com.archos.mediacenter.video.ui;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -196,8 +195,10 @@ public class NovaProgressDialog extends AlertDialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
+        TypedArray a = mContext.obtainStyledAttributes(null,
+                R.styleable.AlertDialog,
+                R.attr.alertDialogStyle, 0);
         if (mProgressStyle == STYLE_HORIZONTAL) {
-            
             /* Use a separate handler to update the text views as they
              * must be updated on the same thread that created them.
              */
@@ -226,23 +227,22 @@ public class NovaProgressDialog extends AlertDialog {
                     }
                 }
             };
-            View view = inflater.inflate(R.layout.alert_dialog_progress, null, false);
+            View view = inflater.inflate(a.getResourceId(
+                    R.styleable.AlertDialog_horizontalProgressLayout,
+                    R.layout.alert_dialog_progress), null);
             mProgress = (ProgressBar) view.findViewById(R.id.progress);
             mProgressNumber = (TextView) view.findViewById(R.id.progress_number);
             mProgressPercent = (TextView) view.findViewById(R.id.progress_percent);
             setView(view);
         } else {
-            View view = inflater.inflate(R.layout.progress_dialog, null, false);
-            /*
             View view = inflater.inflate(a.getResourceId(
-                    com.android.internal.R.styleable.AlertDialog_progressLayout,
+                    R.styleable.AlertDialog_progressLayout,
                     R.layout.progress_dialog), null);
-             */
             mProgress = (ProgressBar) view.findViewById(R.id.progress);
             mMessageView = (TextView) view.findViewById(R.id.message);
             setView(view);
         }
-        //a.recycle();
+        a.recycle();
         if (mMax > 0) {
             setMax(mMax);
         }

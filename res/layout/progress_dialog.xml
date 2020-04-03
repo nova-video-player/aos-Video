@@ -32,7 +32,7 @@
         android:paddingEnd="8dip"
         android:paddingBottom="10dip">
 
-        <ProgressBar android:id="@android:id/progress"
+        <ProgressBar android:id="@id/progress"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,6 +42,7 @@
         <TextView android:id="@+id/message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
+            android:layout_gravity="center_vertical"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
     </LinearLayout>
 </FrameLayout>

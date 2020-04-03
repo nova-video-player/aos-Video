@@ -319,4 +319,10 @@
     <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">20sp</item>
     </style>
+
+    <style name="AlertDialog">
+        <item name="progressLayout">@layout/progress_dialog</item>
+        <item name="horizontalProgressLayout">@layout/alert_dialog_progress</item>
+    </style>
+
 </resources>
