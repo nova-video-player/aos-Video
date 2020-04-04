@@ -22,7 +22,7 @@ import android.view.KeyEvent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.webkit.WebViewFragment;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -35,24 +35,21 @@ public class WebViewActivity extends AppCompatActivity {
 
     private Uri mUri;
     private WebView mWebView;
+    private LinearLayout mLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mUri = getIntent().getData();
         setContentView(R.layout.webview_activity);
-
-        WebViewFragment wvf = (WebViewFragment) getFragmentManager().findFragmentById(R.id.webview_fragment);
-        mWebView = wvf.getWebView();
+        mWebView = findViewById(R.id.webview_activity);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //WebViewFragment wvf = (WebViewFragment)getParentFragmentManager().findFragmentById(R.id.webview_fragment);
+        mWebView.onResume();
         initWebView(mWebView, mUri);
-
         mWebView.requestFocus();
         mWebView.loadUrl(mUri.toString());
     }
@@ -98,4 +95,20 @@ public class WebViewActivity extends AppCompatActivity {
             super.onBackPressed();;
         }
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mWebView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mWebView != null) {
+            mWebView.destroy();
+            mWebView = null;
+        }
+        super.onDestroy();
+    }
+
 }
