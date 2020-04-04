@@ -15,7 +15,6 @@
 package com.archos.mediacenter.video.utils;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
