@@ -188,7 +188,7 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
         if (mBrowserAdapter != null && (!mBrowserAdapter.isEmpty()||mHideWatched)) {
             if (Trakt.isTraktV2Enabled(mContext, PreferenceManager.getDefaultSharedPreferences(mContext))) {
                 MenuItem hideMarkedSeen = menu.add(MENU_HIDE_WATCHED_GROUP, MENU_VIEW_HIDE_SEEN, Menu.NONE, mHideWatched ? R.string.hide_seen : R.string.show_all);
-                MenuItemCompat.setShowAsAction(hideMarkedSeen, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                hideMarkedSeen.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             }
         }
     }

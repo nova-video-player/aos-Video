@@ -98,7 +98,7 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 			// Add the "sort mode" item
 			MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
 			sortMenuItem.setIcon(R.drawable.ic_menu_sort);
-			MenuItemCompat.setShowAsAction(sortMenuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 			mSortModeSubmenu.attachMenuItem(sortMenuItem);
 
 			mSortModeSubmenu.clear();
@@ -124,7 +124,7 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 				}
 				mSortModeSubmenu.selectSubmenuItem(position);
 			}
-			MenuItemCompat.setShowAsAction(menu.add(0,R.string.rescrap_not_found,0, R.string.rescrap_not_found), MenuItem.SHOW_AS_ACTION_NEVER);
+			menu.add(0,R.string.rescrap_not_found,0, R.string.rescrap_not_found).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		}
 	}
 

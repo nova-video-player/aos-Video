@@ -307,11 +307,11 @@ public class BrowserByNetwork extends BrowserByFolder {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         MenuItem IndexFolderMenuItem = menu.add(0, R.string.add_to_indexed_folders, Menu.NONE, R.string.add_to_indexed_folders);
-        MenuItemCompat.setShowAsAction(IndexFolderMenuItem, MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        MenuItemCompat.setActionView(IndexFolderMenuItem, mIndexFolderActionView);
+        IndexFolderMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        IndexFolderMenuItem.setActionView(mIndexFolderActionView);
 
-        MenuItemCompat.setShowAsAction(menu.add(0, R.string.remove_from_indexed_folders, Menu.NONE, R.string.remove_from_indexed_folders)
-                .setIcon(R.drawable.ic_menu_video_unindex), MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(0, R.string.remove_from_indexed_folders, Menu.NONE, R.string.remove_from_indexed_folders).setIcon(R.drawable.ic_menu_video_unindex).setShowAsAction(
+                MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.add(0, R.string.rescan, Menu.NONE, R.string.rescan);
     }
 

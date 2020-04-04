@@ -57,8 +57,7 @@ public class BrowserByVideoFolder extends BrowserByLocalFolder {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        MenuItemCompat.setShowAsAction(menu.add(0, MainActivity.MENU_CHANGE_FOLDER, Menu.NONE, R.string.menu_change_folder)
-                .setIcon(R.drawable.ic_menu_folder), MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(0, MainActivity.MENU_CHANGE_FOLDER, Menu.NONE, R.string.menu_change_folder).setIcon(R.drawable.ic_menu_folder).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

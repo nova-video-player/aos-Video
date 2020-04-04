@@ -108,7 +108,7 @@ public class BrowserByVideoSelection extends CursorBrowserByVideo {
 			// Add the "sort mode" item
 			MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
 			sortMenuItem.setIcon(R.drawable.ic_menu_sort);
-			MenuItemCompat.setShowAsAction(sortMenuItem, MenuItem.SHOW_AS_ACTION_ALWAYS);
+			sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 			mSortModeSubmenu.attachMenuItem(sortMenuItem);
 
 			mSortModeSubmenu.clear();

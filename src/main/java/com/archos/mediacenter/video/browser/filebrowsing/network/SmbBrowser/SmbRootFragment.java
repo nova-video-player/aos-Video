@@ -79,7 +79,7 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu, inflater);
-        MenuItemCompat.setShowAsAction(menu.add(0, R.string.refresh_servers_list, Menu.NONE, R.string.refresh_servers_list), MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, R.string.refresh_servers_list, Menu.NONE, R.string.refresh_servers_list).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
     }
     @Override

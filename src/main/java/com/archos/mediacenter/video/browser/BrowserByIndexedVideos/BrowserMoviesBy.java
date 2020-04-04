@@ -122,7 +122,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
             // Add the "view mode" item
             MenuItem viewModeMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.view_mode);
             viewModeMenuItem.setIcon(R.drawable.ic_menu_view_mode);
-            MenuItemCompat.setShowAsAction(viewModeMenuItem, MenuItem.SHOW_AS_ACTION_ALWAYS);
+			viewModeMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             mDisplayModeSubmenu.attachMenuItem(viewModeMenuItem);
 
             mDisplayModeSubmenu.clear();
@@ -134,7 +134,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 			// Add the "sort mode" item
 			MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
 			sortMenuItem.setIcon(R.drawable.ic_menu_sort);
-			MenuItemCompat.setShowAsAction(sortMenuItem, MenuItem.SHOW_AS_ACTION_ALWAYS);
+			sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 			mSortModeSubmenu.attachMenuItem(sortMenuItem);
 
 			

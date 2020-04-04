@@ -273,7 +273,7 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
         super.onCreateOptionsMenu(menu, inflater);
         if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty()) {
             // Add the "load subtitles" item
-            MenuItemCompat.setShowAsAction(menu.add(MENU_SUBLOADER_GROUP, MENU_SUBLOADER_ALL_FOLDER, Menu.NONE, R.string.menu_subloader_allfolder).setIcon(R.drawable.ic_menu_subtitles), MenuItem.SHOW_AS_ACTION_NEVER);
+            menu.add(MENU_SUBLOADER_GROUP, MENU_SUBLOADER_ALL_FOLDER, Menu.NONE, R.string.menu_subloader_allfolder).setIcon(R.drawable.ic_menu_subtitles).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         }
     }
 

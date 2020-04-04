@@ -163,8 +163,8 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu, inflater);
-        MenuItemCompat.setShowAsAction(menu.add(0, R.string.rescan_indexed_folders, Menu.NONE, R.string.rescan_indexed_folders), MenuItem.SHOW_AS_ACTION_NEVER);
-        MenuItemCompat.setShowAsAction(menu.add(0,  R.string.manually_create_share, Menu.NONE, R.string.manually_create_share), MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, R.string.rescan_indexed_folders, Menu.NONE, R.string.rescan_indexed_folders).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0,  R.string.manually_create_share, Menu.NONE, R.string.manually_create_share).setShowAsAction( MenuItem.SHOW_AS_ACTION_NEVER);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){

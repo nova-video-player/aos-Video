@@ -268,7 +268,7 @@ public class TrackInfoController implements OnMenuItemClickListener, OnItemClick
 
     public void attachMenu(Menu menu, int resId) {
         mMenuItem = menu.add(null);
-        MenuItemCompat.setShowAsAction(mMenuItem, MenuItem.SHOW_AS_ACTION_ALWAYS);
+        mMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         mMenuItem.setIcon(resId);
         mMenuItem.setOnMenuItemClickListener(this);
         setVisible();

@@ -145,7 +145,7 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
                 mi= menu.add(0,R.string.add_ssh_shortcut, 0,R.string.add_ssh_shortcut);
             else
                 mi= menu.add(0,R.string.remove_from_shortcuts, 0,R.string.remove_from_shortcuts);
-           MenuItemCompat.setShowAsAction(mi, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
         if(getActivity() instanceof MainActivity) {
             mSearchView = ((MainActivity) getActivity()).getSearchView();
