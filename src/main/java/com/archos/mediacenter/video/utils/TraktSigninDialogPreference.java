@@ -1,4 +1,5 @@
 // Copyright 2017 Archos SA
+// Copyright 2020 Courville Software
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,6 +27,7 @@ import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.ui.NovaProgressDialog;
 import com.archos.mediacenter.video.utils.oauth.OAuthCallback;
 import com.archos.mediacenter.video.utils.oauth.OAuthData;
 import com.archos.mediacenter.video.utils.oauth.OAuthDialog;
@@ -67,16 +69,12 @@ public class TraktSigninDialogPreference extends Preference {
                 public void onFinished(final OAuthData data) {
                     // TODO Auto-generated method stub
                     if(data.code!=null){
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setCancelable(false);
-                        builder.setView(R.layout.spinner_dialog);
-                        AlertDialog mProgressBarAlertDialog = builder.create();
-                        mProgressBarAlertDialog.show();
-                        // TODO alertdialog takes all width
+                        // TODO progressDialog takes whole width
+                        NovaProgressDialog mProgress = NovaProgressDialog.show(getContext(), "", "", true, true);
                         AsyncTask t = new AsyncTask(){
                             @Override
                             protected void onPreExecute() {
-                                mProgressBarAlertDialog.show();
+                                mProgress.show();
                             }
                             @Override
                             protected Object doInBackground(Object... params) {
@@ -85,7 +83,7 @@ public class TraktSigninDialogPreference extends Preference {
                             }
                             @Override
                             protected void onPostExecute(Object result) {
-                                mProgressBarAlertDialog.dismiss();
+                                mProgress.dismiss();
                                 if (result!=null&&result instanceof Trakt.accessToken){
                                     Trakt.accessToken res = (Trakt.accessToken) result;
                                     if(res.access_token!=null){
@@ -105,7 +103,6 @@ public class TraktSigninDialogPreference extends Preference {
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
                     }
-                    	
                 }
             };
 

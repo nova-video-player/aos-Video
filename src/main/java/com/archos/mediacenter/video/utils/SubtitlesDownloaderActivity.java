@@ -1042,7 +1042,6 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
             if (DBG) Log.d(TAG, "OpenSubtitlesTask: setInitDialog");
 
             mHandler.post(() -> {
-                //mDialog = new NovaProgressDialog(new ContextThemeWrapper(SubtitlesDownloaderActivity.this, R.style.Theme_AlertDialog));
                 mDialog = new NovaProgressDialog(SubtitlesDownloaderActivity.this);
                 mDialog.setMessage(getString(R.string.dialog_subloader_connecting));
                 mDialog.setCancelable(true); // to be able to exit via back

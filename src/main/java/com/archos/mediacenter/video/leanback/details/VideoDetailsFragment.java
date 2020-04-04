@@ -1,4 +1,5 @@
 // Copyright 2017 Archos SA
+// Copyright 2020 Courville Software
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -1721,7 +1722,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-
+            super.onCreate(savedInstanceState);
             /*
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setCancelable(false);
@@ -1729,14 +1730,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             builder.setView(R.layout.spinner_dialog);
             final AlertDialog mProgressBarAlertDialog = builder.create();
              */
-
-
-
-            NovaProgressDialog pd = new NovaProgressDialog(getActivity());
-            pd.setMessage(getString(R.string.dialog_subloader_copying));
-            pd.setIndeterminate(true);
-            pd.setCancelable(true);
-            return pd;
+            NovaProgressDialog npd = new NovaProgressDialog(getActivity());
+            npd.setMessage(getString(R.string.dialog_subloader_copying));
+            npd.setIndeterminate(true);
+            npd.setCancelable(true);
+            npd.setCanceledOnTouchOutside(false);
+            return npd;
         }
 
         @Override

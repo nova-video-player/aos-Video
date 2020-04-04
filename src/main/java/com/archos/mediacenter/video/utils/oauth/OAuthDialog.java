@@ -1,4 +1,5 @@
 // Copyright 2017 Archos SA
+// Copyright 2020 Courville Software
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -46,6 +47,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.ui.NovaProgressDialog;
 
 /**
  * A full screen OAuth dialog which contains a webview. This takes an authorize url
@@ -56,7 +58,7 @@ public class OAuthDialog extends Dialog {
     private final static boolean DBG = false;
     private final static String TAG = "OAuthDialog";
 
-	private Dialog mProgressBarDialog;
+	private NovaProgressDialog mProgress;
 	private LinearLayout mLayout;
 	private WebView mWebView;
 	private OAuthCallback mListener;
@@ -94,21 +96,11 @@ public class OAuthDialog extends Dialog {
 	 */
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-		mProgressBarDialog = new Dialog(getContext());
-        mProgressBarDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mProgressBarDialog.setContentView(R.layout.spinner_dialog);
-		mProgressBarDialog.setCanceledOnTouchOutside(true);
-		mProgressBarDialog.setCancelable(true);
-		mProgressBarDialog.show();
-        TextView textView = mProgressBarDialog.findViewById(R.id.textView);
-		textView.setText(R.string.loading);
-		ProgressBar progressBar = mProgressBarDialog.findViewById(R.id.spinner);
-		progressBar.setIndeterminate(true);
-		progressBar.setVisibility(View.VISIBLE);
-		
+		mProgress = NovaProgressDialog.show(getContext(), "", getContext().getResources().getString(R.string.loading), true);
+		mProgress.setCancelable(true);
+		mProgress.setCanceledOnTouchOutside(false);
+
 		mLayout = new LinearLayout(getContext());
 		mLayout.setOrientation(LinearLayout.VERTICAL);
 
@@ -154,47 +146,45 @@ public class OAuthDialog extends Dialog {
 		// this one is for Android API 21-23
         @SuppressWarnings("deprecation")
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url)
-        {
-            if (DBG) Log.d(TAG, url);
-           	String urldecode = null;
-        	try {
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			if (DBG) Log.d(TAG, url);
+			String urldecode = null;
+			try {
 				urldecode = URLDecoder.decode(url, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
-
+				Log.w(TAG, "OAuthWebViewClient:shouldOverrideUrlLoading: caught UnsupportedEncodingException");
 			}
-			Uri uri=Uri.parse(urldecode);
-			if (!"localhost".equals(uri.getHost())||! urldecode.contains("code="))
-        		return false;
-        	mdata.code=uri.getQueryParameter("code");
+			Uri uri = Uri.parse(urldecode);
+			if (!"localhost".equals(uri.getHost()) || !urldecode.contains("code="))
+				return false;
+			mdata.code = uri.getQueryParameter("code");
 			OAuthDialog.this.dismiss();
-	     	mListener.onFinished(mdata);
+			mListener.onFinished(mdata);
 
-	     	return true;
-        }
+			return true;
+		}
 
         // this one is for Android API 24+
         @RequiresApi(Build.VERSION_CODES.N)
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request)
-        {
-            String url = request.getUrl().toString();
-            if (DBG) Log.d(TAG, url);
-            String urldecode = null;
-            try {
-                urldecode = URLDecoder.decode(url, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
+		public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+			String url = request.getUrl().toString();
+			if (DBG) Log.d(TAG, url);
+			String urldecode = null;
+			try {
+				urldecode = URLDecoder.decode(url, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				Log.w(TAG, "OAuthWebViewClient:shouldOverrideUrlLoading: caught UnsupportedEncodingException");
+			}
+			Uri uri = Uri.parse(urldecode);
+			if (!"localhost".equals(uri.getHost()) || !urldecode.contains("code="))
+				return false;
+			mdata.code = uri.getQueryParameter("code");
+			OAuthDialog.this.dismiss();
+			mListener.onFinished(mdata);
 
-            }
-            Uri uri=Uri.parse(urldecode);
-            if (!"localhost".equals(uri.getHost())||! urldecode.contains("code="))
-                return false;
-            mdata.code=uri.getQueryParameter("code");
-            OAuthDialog.this.dismiss();
-            mListener.onFinished(mdata);
-
-            return true;
-        }
+			return true;
+		}
 
 
         /*
@@ -232,7 +222,7 @@ public class OAuthDialog extends Dialog {
         public void onPageStarted(WebView view, String url, Bitmap favicon)
         {
         	super.onPageStarted(view, url, favicon);
-            mProgressBarDialog.show();
+            mProgress.show();
         }
 
 
@@ -244,7 +234,7 @@ public class OAuthDialog extends Dialog {
 		public void onPageFinished(WebView view, String url)
 		{
 			super.onPageFinished(view, url);
-            mProgressBarDialog.dismiss();
+            mProgress.dismiss();
             injectCSS();
 		}
 	}
@@ -257,11 +247,11 @@ public class OAuthDialog extends Dialog {
 					"var parent = document.getElementsByTagName('head').item(0);" +
 					"var style = document.createElement('style');" +
 					"style.type = 'text/css';" +
-					"style.innerHTML=\"" +css+"\";"+
+					"style.innerHTML=\"" + css + "\";" +
 					"parent.appendChild(style);" +
 					"})()");
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.w(TAG, "injectCSS: caught Exception", e);
 		}
 	}
 

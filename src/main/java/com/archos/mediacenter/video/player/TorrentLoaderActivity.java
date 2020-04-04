@@ -1,4 +1,5 @@
 // Copyright 2017 Archos SA
+// Copyright 2020 Courville Software
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,9 +27,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,6 +42,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
 import com.archos.mediacenter.video.browser.TorrentObserverService.TorrentServiceBinder;
 import com.archos.mediacenter.video.browser.TorrentObserverService.TorrentThreadObserver;
+import com.archos.mediacenter.video.ui.NovaProgressDialog;
 import com.archos.mediacenter.video.utils.TorrentPathDialogPreference;
 
 import java.io.File;
@@ -63,7 +62,7 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
     private static int ERROR_DIALOG =1;
     private static int TORRENT_DAEMON_PORT = 19992;
     private int mPort;
-    private AlertDialog mProgressBarAlertDialog;
+    private NovaProgressDialog mProgress;
     private boolean hasLaunchedPlayer = false;
     private String mTorrentURL = "";
     private boolean isDialogDisplayed = false;
@@ -97,7 +96,7 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
         public void handleMessage(Message msg) {                    
             if(msg.what == LOADING_FINISHED){
                 if(mFiles!=null&& !mFiles.isEmpty()&&!isDialogDisplayed)   {
-                    mProgressBarAlertDialog.dismiss();
+                    mProgress.dismiss();
                     if(mFiles.size()>1){
                         isDialogDisplayed = true;
                         new AlertDialog.Builder(TorrentLoaderActivity.this).setTitle(R.string.torrent_file_to_play)
@@ -131,12 +130,12 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
                     }
                 }
                 else if(mFiles!=null&&mFiles.isEmpty()){
-                    mProgressBarAlertDialog.dismiss();
+                    mProgress.dismiss();
                     showErrorDialog(getString(R.string.error_no_video_file));
                 }
             }
             else if(msg.what == ERROR_DIALOG){
-                mProgressBarAlertDialog.dismiss();
+                mProgress.dismiss();
                 if(!isClosingService)
                     showErrorDialog(getString(R.string.error_loading_torrent));
             }
@@ -191,36 +190,8 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
         if(mTorrentURL.toLowerCase().startsWith("file://"))
             mTorrentURL= intent.getData().getPath();
         mOriginalTorrentUri = mTorrentURL; //keep original uri, mTorrentUrl will be replaced after torrent file download
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(R.layout.spinner_dialog);
-        builder.setNegativeButton(getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                TorrentLoaderActivity.this.finish();
-            }
-        });
-        mProgressBarAlertDialog = builder.create();
-
-
-        mProgressBarAlertDialog.setOnCancelListener(new OnCancelListener() {
-
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                TorrentLoaderActivity.this.finish();
-            }
-        });
-        mProgressBarAlertDialog.show();
-
-        // this can only be after the show otherwise null
-        TextView textView = mProgressBarAlertDialog.findViewById(R.id.textView);
-        textView.setText(R.string.loading_torrent);
-        ProgressBar progressBar = mProgressBarAlertDialog.findViewById(R.id.spinner);
-        progressBar.setIndeterminate(true);
-        progressBar.setVisibility(View.VISIBLE);
-
+        mProgress = NovaProgressDialog.show(this, "", getString(R.string.loading_torrent), true, true, dialog -> TorrentLoaderActivity.this.finish());
         preloadTorrent();
-
     }
     private void preloadTorrent(){
 
@@ -238,43 +209,30 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
             CopyCutEngine engine = new CopyCutEngine(getBaseContext());
             engine.setListener(new OperationEngineListener() {
                 @Override
-                public void onStart() {
-                }
-
+                public void onStart() { }
                 @Override
-                public void onProgress(int currentFile, long currentFileProgress,int currentRootFile, long currentRootFileProgress, long totalProgress, double currentSpeed) {
-
-                }
-
+                public void onProgress(int currentFile, long currentFileProgress,int currentRootFile, long currentRootFileProgress, long totalProgress, double currentSpeed) { }
                 @Override
-                public void onSuccess(Uri file) {
-
-                }
-
+                public void onSuccess(Uri file) { }
                 @Override
-                public void onFilesListUpdate(List<MetaFile2> copyingMetaFiles,List<MetaFile2> rootFiles) {
-
-                }
-
+                public void onFilesListUpdate(List<MetaFile2> copyingMetaFiles,List<MetaFile2> rootFiles) { }
                 @Override
                 public void onEnd() {
                     mTorrentURL = mTorrentToLaunch.toString();
                     loadTorrent();
                 }
-
                 @Override
                 public void onFatalError(Exception e) {
                     showErrorDialog(getString(R.string.error_loading_torrent));
-                    mProgressBarAlertDialog.dismiss();
+                    mProgress.dismiss();
                 }
-
                 @Override
                 public void onCanceled() {
-                    mProgressBarAlertDialog.dismiss();
+                    mProgress.dismiss();
                 }
             });
             engine.copyUri(source, target, true);
-            mProgressBarAlertDialog.show();
+            mProgress.show();
 
         }
         else {

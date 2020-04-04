@@ -1,4 +1,5 @@
 // Copyright 2017 Archos SA
+// Copyright 2020 Courville Software
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,10 +23,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -35,6 +33,7 @@ import androidx.preference.PreferenceViewHolder;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
+import com.archos.mediacenter.video.ui.NovaProgressDialog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -54,7 +53,7 @@ public class TorrentBlocklistDialogPreference extends Preference {
     AlertDialog od = null;
 
     protected File mCurrentDirectory;
-    Dialog mProgressBarDialog;
+    NovaProgressDialog mProgress;
     private View mView;
     private String defaultBlocklist = "https://list.iblocklist.com/?list=bt_level1&fileformat=p2p&archiveformat=gz";
 
@@ -62,7 +61,6 @@ public class TorrentBlocklistDialogPreference extends Preference {
 
     public TorrentBlocklistDialogPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-
     }
 
     @Override
@@ -72,8 +70,7 @@ public class TorrentBlocklistDialogPreference extends Preference {
         setup();
     }
 
-    public TorrentBlocklistDialogPreference(Context context, AttributeSet attrs,
-                                            int defStyle) {
+    public TorrentBlocklistDialogPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
@@ -91,11 +88,10 @@ public class TorrentBlocklistDialogPreference extends Preference {
 
     private void setup() {
 
-        mProgressBarDialog = new Dialog(getContext());
-        mProgressBarDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mProgressBarDialog.setContentView(R.layout.spinner_dialog);
-        mProgressBarDialog.setCanceledOnTouchOutside(true);
-        mProgressBarDialog.setCancelable(false);
+        mProgress = new NovaProgressDialog(getContext());
+        mProgress.setIndeterminate(true);
+        mProgress.setCancelable(true);
+        mProgress.setCanceledOnTouchOutside(false);
 
         if ((mCurrentBlockList = getSharedPreferences().getString(getKey(), defaultBlocklist)) != null) {
             File file = getContext().getFileStreamPath(TorrentObserverService.BLOCKLIST);
@@ -179,13 +175,7 @@ public class TorrentBlocklistDialogPreference extends Preference {
         new AsyncTask<Void, Void, Integer>() {
             @Override
             protected void onPreExecute() {
-                mProgressBarDialog.show();
-                // this can only be after the show otherwise null
-                TextView textView = mProgressBarDialog.findViewById(R.id.textView);
-                textView.setText(R.string.blocklist_downloading);
-                ProgressBar progressBar = mProgressBarDialog.findViewById(R.id.spinner);
-                progressBar.setIndeterminate(true);
-                progressBar.setVisibility(View.VISIBLE);
+                mProgress.show();
             }
 
             @Override
@@ -270,7 +260,7 @@ public class TorrentBlocklistDialogPreference extends Preference {
 
             @Override
             protected void onPostExecute(Integer success) {
-                mProgressBarDialog.dismiss();
+                mProgress.dismiss();
                 if (200 <= success && 300 > success) {
                     //saving url
                     setSummary(url);
@@ -297,8 +287,6 @@ public class TorrentBlocklistDialogPreference extends Preference {
                 return getContext().getString(R.string.blocklist_invalid);
             case -3:
                 return getContext().getString(R.string.blocklist_empty);
-
-
             default:
                 return getContext().getString(R.string.blocklist_unknown_error);
         }
@@ -308,9 +296,7 @@ public class TorrentBlocklistDialogPreference extends Preference {
         new AlertDialog.Builder(getContext())
                 .setTitle(R.string.error_listing)
                 .setMessage(message)
-
                 .create().show();
     }
-
 
 }

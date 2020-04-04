@@ -1,4 +1,5 @@
 // Copyright 2017 Archos SA
+// Copyright 2020 Courville Software
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,17 +18,14 @@ package com.archos.mediacenter.video.browser.dialogs;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
+import com.archos.mediacenter.video.ui.NovaProgressDialog;
 
 /**
  * Created by alexandre on 17/06/15.
@@ -39,41 +37,27 @@ public class DialogRetrieveSubtitles extends DialogFragment {
     private final static boolean DBG = false;
     private final static String TAG = "DialogRetrieveSubtitles";
 
+    @NonNull
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.spinner_dialog, container, false);
-        Dialog dialog = getDialog();
-        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(true);
-        setCancelable(true);
-        TextView textView = view.findViewById(R.id.textView);
-        textView.setText(R.string.dialog_subloader_copying);
-        ProgressBar progressBar = view.findViewById(R.id.spinner);
-        progressBar.setIndeterminate(true);
-        progressBar.setVisibility(View.VISIBLE);
+        NovaProgressDialog npd = new NovaProgressDialog(getContext());
+        npd.setMessage(getString(R.string.dialog_subloader_copying));
+        npd.setIcon(R.drawable.filetype_video);
+        npd.setIndeterminate(true);
+        npd.setCancelable(true);
+        npd.setCanceledOnTouchOutside(false);
         isShowing = true;
-
         if (DBG) Log.d(TAG,"dialog created");
-
-        return view;
+        return npd;
     }
 
-    public void setDownloader(SubtitleManager engine){
-        mEngine = engine;
-    }
-
-    public boolean isShowing(){
-        return isShowing;
-    }
+    public void setDownloader(SubtitleManager engine) { mEngine = engine; }
+    public boolean isShowing() { return isShowing; }
 
     @Override
-    public void onCancel(DialogInterface dialog) {
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
         if(mEngine!=null)
             mEngine.abort();
         dialog.cancel();
@@ -81,12 +65,11 @@ public class DialogRetrieveSubtitles extends DialogFragment {
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (mEngine != null)
             mEngine.abort();
         dialog.cancel();
         isShowing = false;
     }
-
 }

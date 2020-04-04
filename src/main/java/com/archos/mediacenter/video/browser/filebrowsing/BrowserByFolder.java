@@ -1,4 +1,5 @@
 // Copyright 2017 Archos SA
+// Copyright 2020 Courville Software
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -67,6 +68,7 @@ import com.archos.mediacenter.video.browser.presenter.CommonPresenter;
 import com.archos.mediacenter.video.browser.presenter.Metafile2GridPresenter;
 import com.archos.mediacenter.video.browser.presenter.Metafile2ListPresenter;
 import com.archos.mediacenter.video.browser.presenter.VideoPresenter;
+import com.archos.mediacenter.video.ui.NovaProgressDialog;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
@@ -728,21 +730,15 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setView(R.layout.spinner_dialog);
-            builder.setTitle(mCurrentDirectory.getLastPathSegment());
-            builder.setIcon(R.drawable.filetype_video_folder);
-            builder.setCancelable(true);
-            AlertDialog mProgressBarAlertDialog = builder.create();
-            mProgressBarAlertDialog.show();
-            TextView textView = mProgressBarAlertDialog.findViewById(R.id.textView);
-            textView.setText(R.string.loading);
-            ProgressBar progressBar = mProgressBarAlertDialog.findViewById(R.id.spinner);
-            progressBar.setIndeterminate(true);
-            progressBar.setVisibility(View.VISIBLE);
-
-            return mProgressBarAlertDialog;
+            NovaProgressDialog npd = new NovaProgressDialog(getContext());
+            npd.setTitle(mCurrentDirectory.getLastPathSegment());
+            npd.setMessage(getString(R.string.loading));
+            npd.setIcon(R.drawable.filetype_video_folder);
+            npd.setIndeterminate(true);
+            npd.setCancelable(true);
+            npd.setCanceledOnTouchOutside(false);
+            npd.show();
+            return npd;
         }
 
         @Override
