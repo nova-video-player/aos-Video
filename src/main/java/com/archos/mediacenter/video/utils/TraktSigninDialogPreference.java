@@ -64,49 +64,47 @@ public class TraktSigninDialogPreference extends Preference {
         try {
             OAuthClientRequest t = Trakt.getAuthorizationRequest(getSharedPreferences());
             final OAuthData oa = new OAuthData();
-            OAuthCallback codeCallBack = new OAuthCallback() {
-                @Override
-                public void onFinished(final OAuthData data) {
-                    // TODO Auto-generated method stub
-                    if(data.code!=null){
-                        // TODO progressDialog takes whole width
-                        NovaProgressDialog mProgress = NovaProgressDialog.show(getContext(), "", "", true, true);
-                        AsyncTask t = new AsyncTask(){
-                            @Override
-                            protected void onPreExecute() {
-                                mProgress.show();
+            OAuthCallback codeCallBack = data -> {
+                // TODO Auto-generated method stub
+                if (data.code != null) {
+                    // TODO progressDialog takes whole width
+                    NovaProgressDialog mProgress = NovaProgressDialog.show(getContext(), "", "", true, true);
+                    AsyncTask t1 = new AsyncTask() {
+                        @Override
+                        protected void onPreExecute() {
+                            mProgress.show();
+                        }
+
+                        @Override
+                        protected Object doInBackground(Object... params) {
+                            final Trakt.accessToken res = Trakt.getAccessToken(oa.code);
+                            return res;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Object result) {
+                            mProgress.dismiss();
+                            if (result != null && result instanceof Trakt.accessToken) {
+                                Trakt.accessToken res = (Trakt.accessToken) result;
+                                if (res.access_token != null) {
+                                    Trakt.setAccessToken(getSharedPreferences(), res.access_token);
+                                    Trakt.setRefreshToken(getSharedPreferences(), res.refresh_token);
+                                    TraktSigninDialogPreference.this.notifyChanged();
+                                }
                             }
-                            @Override
-                            protected Object doInBackground(Object... params) {
-                                final Trakt.accessToken res = Trakt.getAccessToken(oa.code);
-                                return res;
-                            }
-                            @Override
-                            protected void onPostExecute(Object result) {
-                                mProgress.dismiss();
-                                if (result!=null&&result instanceof Trakt.accessToken){
-                                    Trakt.accessToken res = (Trakt.accessToken) result;
-                                    if(res.access_token!=null){
-                                        Trakt.setAccessToken(getSharedPreferences(), res.access_token);
-                                        Trakt.setRefreshToken(getSharedPreferences(), res.refresh_token);
-                                        TraktSigninDialogPreference.this.notifyChanged();
-                                    }
-                                }   
-                            }
-                        };
-                        t.execute();
-                    }
-                    else{
-                    	new AlertDialog.Builder(getContext())
-                    	.setNegativeButton(android.R.string.ok, null)
-                    	.setMessage(R.string.dialog_subloader_nonetwork_title)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-                    }
+                        }
+                    };
+                    t1.execute();
+                } else {
+                    new AlertDialog.Builder(getContext())
+                            .setNegativeButton(android.R.string.ok, null)
+                            .setMessage(R.string.dialog_subloader_nonetwork_title)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
             };
 
-            od= new OAuthDialog(getContext(),codeCallBack, oa, t);
+            od = new OAuthDialog(getContext(), codeCallBack, oa, t);
             od.show();
             od.setOnDismissListener(mOnDismissListener);
             od.setOnCancelListener(new DialogInterface.OnCancelListener() {
