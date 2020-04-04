@@ -1,3 +1,4 @@
+- Fix DTSHD decoding crashes
 - Subtitle manual download improvement via scraped information search
 - Better TV show scrape result through multi-language Levenshtein metric computation
 - Refactored TmDb and TheTVDb scrapers
