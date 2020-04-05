@@ -1,12 +1,2 @@
-- New app icon
-- Switch to Audiotrack audio interface for video fluidity
-- Fix TV show Trakt progress sync
-- Fix FireTV4k qdaptive refresh rate
-- Fix grey bar on Sony for HDR content
-- Fix audio night/boost mode
-- Fix HEVC 10b on Rockchip
-- Turkish/Simplified Chinese/Russian translations completed
-- App bundles to reduce apk size
-- Limit SMB discovery on local networks
-- 10ms audio/video delay tuning
-- Fix cloud storage (file picker) and folder picker on phones
+- Fix opensubtitles change requiring credentials to use API
+- Fix DTSHD playback crashing sometimes

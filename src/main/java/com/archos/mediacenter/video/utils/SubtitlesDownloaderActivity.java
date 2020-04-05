@@ -89,7 +89,7 @@ public class SubtitlesDownloaderActivity extends Activity{
     //to distinguished program dismiss and users
     private boolean mDoNotFinish;
     private final String OpenSubtitlesAPIUrl = "https://api.opensubtitles.org/xml-rpc";
-    private final String USER_AGENT = "ArchosMediaCenter";
+    private final String USER_AGENT = "novavideoplayer v1";
     private SharedPreferences sharedPreferences;
     private File subsDir;
     Handler mHandler;
@@ -338,7 +338,7 @@ public class SubtitlesDownloaderActivity extends Activity{
                 Log.e(TAG, "logIn: caught MalformedURLException");
             }
             try {
-                map = ((HashMap<String, Object>) client.call("LogIn","","","fre",USER_AGENT));
+                map = ((HashMap<String, Object>) client.call("LogIn","novavideoplayer","oa7eCooh","fre",USER_AGENT));
                 token = (String) map.get("token");
             } catch (XMLRPCException e) {
                 displayToast(getString(R.string.toast_subloader_service_unreachable));
