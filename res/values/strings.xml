@@ -910,6 +910,7 @@
     <string name="list_title">List title</string>
 
     <string name="loading">Loading…</string>
+    <string name="connecting">Connecting…</string>
 
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
