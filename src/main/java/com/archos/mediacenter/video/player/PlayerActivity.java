@@ -702,10 +702,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                         if (evt.getOldValue() != evt.getNewValue()) {
                             if (DBG) Log.d(TAG, "NetworkState for " + evt.getPropertyName() + " changed:" + evt.getOldValue() + " -> " + evt.getNewValue());
                             networkState.updateFrom();
-                            /* TODO MARC:
-E AndroidRuntime: 	at com.archos.environment.NetworkState.updateFrom(SourceFile:99)
-E AndroidRuntime: 	at com.archos.mediacenter.video.player.PlayerActivity$8.propertyChange(SourceFile:703)
-                             */
                             if (!networkState.hasLocalConnection()) {
                                 if (DBG) Log.d(TAG, "lost network: finish");
                                 finish();
@@ -890,7 +886,6 @@ E AndroidRuntime: 	at com.archos.mediacenter.video.player.PlayerActivity$8.prope
             }
             mHasAskedFloatingPermission = false;
             TorrentObserverService.resumed(PlayerActivity.this);
-            // TODO MARC
             addNetworkListener();
             if (mPaused) {
                 mPaused = false;
