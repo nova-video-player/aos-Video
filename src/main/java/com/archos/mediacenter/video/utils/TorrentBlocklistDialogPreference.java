@@ -22,6 +22,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -89,6 +90,7 @@ public class TorrentBlocklistDialogPreference extends Preference {
     private void setup() {
 
         mProgress = new NovaProgressDialog(getContext());
+        mProgress.setMessage(getContext().getResources().getString(R.string.loading));
         mProgress.setIndeterminate(true);
         mProgress.setCancelable(true);
         mProgress.setCanceledOnTouchOutside(false);

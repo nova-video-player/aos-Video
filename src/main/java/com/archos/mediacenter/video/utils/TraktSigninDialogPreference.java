@@ -67,8 +67,7 @@ public class TraktSigninDialogPreference extends Preference {
             OAuthCallback codeCallBack = data -> {
                 // TODO Auto-generated method stub
                 if (data.code != null) {
-                    // TODO progressDialog takes whole width
-                    NovaProgressDialog mProgress = NovaProgressDialog.show(getContext(), "", "", true, true);
+                    NovaProgressDialog mProgress = NovaProgressDialog.show(getContext(), "", getContext().getResources().getString(R.string.connecting), true, true);
                     AsyncTask t1 = new AsyncTask() {
                         @Override
                         protected void onPreExecute() {
