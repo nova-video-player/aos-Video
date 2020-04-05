@@ -131,7 +131,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         Toolbar.OnMenuItemClickListener, Delete.DeleteListener, ObservableScrollViewCallbacks, Animation.AnimationListener, ExternalPlayerWithResultStarter {
 
     private static final String TAG = "VideoInfoActivityFrag";
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
     private static final boolean DBG_LISTENER = true;
 
     /** A serialized com.archos.mediacenter.video.leanback.adapter.object.Video */
