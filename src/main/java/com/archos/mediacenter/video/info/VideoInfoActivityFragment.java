@@ -131,7 +131,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         Toolbar.OnMenuItemClickListener, Delete.DeleteListener, ObservableScrollViewCallbacks, Animation.AnimationListener, ExternalPlayerWithResultStarter {
 
     private static final String TAG = "VideoInfoActivityFrag";
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
+    private static final boolean DBG_LISTENER = true;
 
     /** A serialized com.archos.mediacenter.video.leanback.adapter.object.Video */
     public static final String EXTRA_VIDEO = "VIDEO";
@@ -274,6 +275,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     private NetworkState networkState = null;
     private PropertyChangeListener propertyChangeListener = null;
+    private boolean mNetworkStateListenerAdded = false;
 
     private Paste mPasteDialog;    //download dialog
     private Uri mLastIndexed;   //keep last index uri to avoid asking it twice (for example when leaving fragment and coming back while video hasn't yet been indexed)
@@ -1438,8 +1440,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             mSubtitleFilesListerTask.cancel(true);
         if(mFullScraperTagsTask!=null)
             mFullScraperTagsTask.cancel(true);
-        if (DBG) Log.d(TAG, "onDetach: networkState.removePropertyChangeListener");
-        networkState.removePropertyChangeListener(propertyChangeListener);
+        removeNetworkListener();
     }
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
@@ -1765,40 +1766,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //not used implementations
     public void onDownMotionEvent() {   }
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {  }
     public void onAnimationStart(Animation animation) {    }
     public void onAnimationRepeat(Animation animation) {   }
-
-
-
-
-
-
-
-
-
 
     /*delete */
     private void deleteFile_async(Video video) {
@@ -1877,8 +1849,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             StoreRatingDialogBuilder.displayStoreRatingDialogIfNeeded(getContext());
         mIsLeavingPlayerActivity = false;
         super.onResume();
-        if (DBG) Log.d(TAG, "onResume: networkState.addPropertyChangeListener");
-        networkState.addPropertyChangeListener(propertyChangeListener);
+        addNetworkListener();
         if (mCurrentVideo != null) {
             if (DBG) Log.d(TAG, "onResume: mCurrentVideo.getName()=" + mCurrentVideo.getName());
         } else {
@@ -1889,9 +1860,33 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     @Override
     public void onPause() {
         if (DBG) Log.d(TAG, "onPause");
+        removeNetworkListener();
         super.onPause();
-        if (DBG) Log.d(TAG, "onPause: networkState.removePropertyChangeListener");
-        networkState.removePropertyChangeListener(propertyChangeListener);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (DBG) Log.d(TAG, "onDestroy");
+        removeNetworkListener();
+        super.onDestroy();
+    }
+
+    private void addNetworkListener() {
+        if (networkState == null) networkState = NetworkState.instance(getContext());
+        if (!mNetworkStateListenerAdded && propertyChangeListener != null) {
+            if (DBG_LISTENER) Log.d(TAG, "addNetworkListener: networkState.addPropertyChangeListener");
+            networkState.addPropertyChangeListener(propertyChangeListener);
+            mNetworkStateListenerAdded = true;
+        }
+    }
+
+    private void removeNetworkListener() {
+        if (networkState == null) networkState = NetworkState.instance(getContext());
+        if (mNetworkStateListenerAdded && propertyChangeListener != null) {
+            if (DBG_LISTENER) Log.d(TAG, "removeListener: networkState.removePropertyChangeListener");
+            networkState.removePropertyChangeListener(propertyChangeListener);
+            mNetworkStateListenerAdded = false;
+        }
     }
 
 }

@@ -128,6 +128,7 @@ DialogInterface.OnDismissListener, TrackInfoListener,
 IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     private static final boolean DBG = false;
+    private static final boolean DBG_LISTENER = true;
     private static final String TAG = "PlayerActivity";
 
     public static final int RESUME_NO = 0;
@@ -701,6 +702,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                         if (evt.getOldValue() != evt.getNewValue()) {
                             if (DBG) Log.d(TAG, "NetworkState for " + evt.getPropertyName() + " changed:" + evt.getOldValue() + " -> " + evt.getNewValue());
                             networkState.updateFrom();
+                            /* TODO MARC:
+E AndroidRuntime: 	at com.archos.environment.NetworkState.updateFrom(SourceFile:99)
+E AndroidRuntime: 	at com.archos.mediacenter.video.player.PlayerActivity$8.propertyChange(SourceFile:703)
+                             */
                             if (!networkState.hasLocalConnection()) {
                                 if (DBG) Log.d(TAG, "lost network: finish");
                                 finish();
@@ -763,18 +768,18 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
 
     private void addNetworkListener() {
-        if (networkState == null) networkState = NetworkState.instance(getApplicationContext());
-        if (!mNetworkStateListenerAdded) {
-            if (DBG) Log.d(TAG, "addNetworkListener: networkState.addPropertyChangeListener");
+        if (networkState == null) networkState = NetworkState.instance(mContext);
+        if (!mNetworkStateListenerAdded && propertyChangeListener != null) {
+            if (DBG_LISTENER) Log.d(TAG, "addNetworkListener: networkState.addPropertyChangeListener");
             networkState.addPropertyChangeListener(propertyChangeListener);
             mNetworkStateListenerAdded = true;
         }
     }
 
     private void removeNetworkListener() {
-        if (networkState == null) networkState = NetworkState.instance(getApplicationContext());
-        if (mNetworkStateListenerAdded) {
-            if (DBG) Log.d(TAG, "removeListener: networkState.removePropertyChangeListener");
+        if (networkState == null) networkState = NetworkState.instance(mContext);
+        if (mNetworkStateListenerAdded && propertyChangeListener != null) {
+            if (DBG_LISTENER) Log.d(TAG, "removeListener: networkState.removePropertyChangeListener");
             networkState.removePropertyChangeListener(propertyChangeListener);
             mNetworkStateListenerAdded = false;
         }
@@ -885,12 +890,12 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             }
             mHasAskedFloatingPermission = false;
             TorrentObserverService.resumed(PlayerActivity.this);
+            // TODO MARC
+            addNetworkListener();
             if (mPaused) {
                 mPaused = false;
                 mPlayer.checkSubtitles();
             }
-
-            
             mIsInfoActivityDisplayed = false;
         }
 
@@ -916,17 +921,18 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 if (!requestVisibleBehind(true)&&!mLaunchFloatingPlayer) {
                     // Try to play behind launcher, but if it fails, so paused.
                     TorrentObserverService.paused(this);
+                    removeNetworkListener();
                 }
             } else {
                 requestVisibleBehind(false);
                 TorrentObserverService.paused(this);
+                removeNetworkListener();
             }
         } else {
             TorrentObserverService.paused(this);
+            removeNetworkListener();
         }
         mPaused = true;
-
-        
     }
 
     @Override
@@ -978,24 +984,19 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         editor.apply();
         unregisterReceiver(mReceiver);
         unbindService(mPlayerServiceConnection);
+        removeNetworkListener();
     }
 
     @Override
     protected void onDestroy() {
-
         if (DBG) Log.d(TAG, "onDestroy");
         removeNetworkListener();
-
         VideoEffect.resetForcedMode();
         setEffect(VideoEffect.getDefaultMode());
-
-        
-
         // Clock
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK)) {
             unregisterReceiver(mClockReceiver);
         }
-
         super.onDestroy();
     }
 
@@ -1063,11 +1064,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             size = (int) ((layoutWidth / (float)(displayHeight<displayWidth?displayWidth:displayHeight)) * size);
             vpos = (int) ((layoutHeight / (float)(displayHeight<displayWidth?displayHeight:displayWidth)) * vpos);
         }
-
         mSubtitleManager.setSize(size);
         mSubtitleManager.setVerticalPosition(vpos);
-
-
     }
 
     @Override

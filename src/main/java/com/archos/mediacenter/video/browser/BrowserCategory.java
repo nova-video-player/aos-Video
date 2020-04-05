@@ -55,7 +55,8 @@ abstract public class BrowserCategory extends ListFragment {
     private static final String SELECTED_TOP = "selectedTop";
     public static final String MOUNT_POINT = "mount_point";
     private static final String TAG = "BrowserCategory";
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
+    private static final boolean DBG_LISTENER = true;
 
     private static final int[] mExternalIDs = {
             R.string.sd_card_storage, R.string.usb_host_storage, R.string.other_storage, R.string.network_shared_folders,R.string.sftp_folders,
@@ -83,6 +84,7 @@ abstract public class BrowserCategory extends ListFragment {
 
     private NetworkState networkState = null;
     private PropertyChangeListener propertyChangeListener = null;
+    private boolean mNetworkStateListenerAdded = false;
 
     /**
      * This object is used to store basic info for the category list item.
@@ -112,7 +114,6 @@ abstract public class BrowserCategory extends ListFragment {
                 fragment = null;
             }
         }
-
         public void onGoHome() {
             ((BrowserActivity) getActivity()).goHome();
         }
@@ -211,8 +212,24 @@ abstract public class BrowserCategory extends ListFragment {
                     updateUI();
                 }
             };
-        //if (DBG) Log.d(TAG, "onActivityCreated: networkState.addPropertyChangeListener");
-        //networkState.addPropertyChangeListener(propertyChangeListener);
+    }
+
+    private void addNetworkListener() {
+        if (networkState == null) networkState = NetworkState.instance(getContext());
+        if (!mNetworkStateListenerAdded && propertyChangeListener != null) {
+            if (DBG_LISTENER) Log.d(TAG, "addNetworkListener: networkState.addPropertyChangeListener");
+            networkState.addPropertyChangeListener(propertyChangeListener);
+            mNetworkStateListenerAdded = true;
+        }
+    }
+
+    private void removeNetworkListener() {
+        if (networkState == null) networkState = NetworkState.instance(getContext());
+        if (mNetworkStateListenerAdded && propertyChangeListener != null) {
+            if (DBG_LISTENER) Log.d(TAG, "removeListener: networkState.removePropertyChangeListener");
+            networkState.removePropertyChangeListener(propertyChangeListener);
+            mNetworkStateListenerAdded = false;
+        }
     }
 
     protected abstract int getDefaultId();
@@ -242,22 +259,17 @@ abstract public class BrowserCategory extends ListFragment {
         intentFilter.addDataScheme(ExtStorageReceiver.ARCHOS_FILE_SCHEME);//new android nougat send UriExposureException when scheme = file
         intentFilter.addDataScheme("file");
         getActivity().registerReceiver(mExternalStorageReceiver, intentFilter);
-        if (propertyChangeListener != null) {
-            if (DBG) Log.d(TAG, "onResume: networkState.addPropertyChangeListener");
-            networkState.addPropertyChangeListener(propertyChangeListener);
-        }
+        addNetworkListener();
         // Remove non constant category items.
-        for (int index = mCategoryList.size() - 1; index >= mLibrarySize; index--) {
+        for (int index = mCategoryList.size() - 1; index >= mLibrarySize; index--)
             mCategoryList.remove(index);
-        }
         updateExternalStorage();
     }
 
     public void onPause() {
         if (DBG) Log.d(TAG, "onPause");
         getActivity().unregisterReceiver(mExternalStorageReceiver);
-        if (DBG) Log.d(TAG, "onPause: networkState.removePropertyChangeListener");
-        networkState.removePropertyChangeListener(propertyChangeListener);
+        removeNetworkListener();
         super.onPause();
     }
 
