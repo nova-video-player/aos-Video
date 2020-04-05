@@ -270,7 +270,6 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
         protected Void doInBackground(ArrayList<String>... params) {
             ArrayList<String> filesList =  params[0];
             ArrayList<String> languages = params[1];
-
             if (logIn()){
                 getSubtitles(filesList, languages);
             }
@@ -1040,17 +1039,14 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
 
         private void setInitDialog(){
             if (DBG) Log.d(TAG, "OpenSubtitlesTask: setInitDialog");
-
             mHandler.post(() -> {
-                mDialog = new NovaProgressDialog(SubtitlesDownloaderActivity.this);
-                mDialog.setMessage(getString(R.string.dialog_subloader_connecting));
-                mDialog.setCancelable(true); // to be able to exit via back
-                mDialog.setCanceledOnTouchOutside(false); // to not cancel when tapping the screen out of dialog zone
-                mDialog.setOnCancelListener(dialog -> {
+                mDialog = NovaProgressDialog.show(SubtitlesDownloaderActivity.this, "", getString(R.string.dialog_subloader_connecting), true, true);
+                    mDialog = NovaProgressDialog.show(SubtitlesDownloaderActivity.this, "", getString(R.string.dialog_subloader_connecting), true, true, dialog -> {
                     dialog.cancel();
                     stop();
                     finish();
                 });
+                mDialog.setCanceledOnTouchOutside(false); // to not cancel when tapping the screen out of dialog zone
                 mDialog.setOnDismissListener(dialog -> {
                     if(!mDoNotFinish) {
                         dialog.cancel();
@@ -1060,7 +1056,6 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                     mDoNotFinish = false;
                 });
                 if (DBG) Log.d(TAG, "OpenSubtitlesTask: setInitDialog setMessage " + getString(R.string.dialog_subloader_connecting));
-                mDialog.show();
             });
         }
 
