@@ -830,6 +830,7 @@
     <string name="warning_swdec">Įspėjimas: aparatinis dekodavimas išjungtas!</string>
     <string name="list_title">Sąrašo pavadinimas</string>
     <string name="loading">Įkeliama…</string>
+    <string name="connecting">Jungiamasi…</string>
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Nepavyko nustatyti reikiamo kadrų dažnio</string>

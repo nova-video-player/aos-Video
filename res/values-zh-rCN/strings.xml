@@ -818,6 +818,7 @@
     <string name="warning_swdec">警告: 硬件解码已禁用 ！</string>
     <string name="list_title">列出标题</string>
     <string name="loading">正在加载……</string>
+    <string name="connecting">正在连接...</string>
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">设置所需刷新率失败</string>

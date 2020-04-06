@@ -834,6 +834,7 @@ desteklenmiyor.</string>
     <string name="warning_swdec">Uyarı: donanım kodu çözme devre dışı!</string>
     <string name="list_title">Liste başlığı</string>
     <string name="loading">Yükleniyor…</string>
+    <string name="connecting">Bağlanıyor…</string>
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">İstenen yenileme hızı ayarlanamadı</string>

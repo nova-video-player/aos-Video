@@ -810,6 +810,7 @@
     <string name="warning_swdec">Varování: hardwarové dekódování vypnuto!</string>
     <string name="list_title">Název</string>
     <string name="loading">Načítání…</string>
+    <string name="connecting">Připojování…</string>
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Nepodařilo se nastavit požadovanou obnovovací frekvenci</string>

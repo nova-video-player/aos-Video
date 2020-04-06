@@ -328,6 +328,7 @@ Copertina (rotolo di copertina)</string>
     <string name="s_turkish">Turco</string>
     <string name="s_chinese">Cinese</string>
     <string name="s_vietnamese">Vietnamita</string>
+    <string name="s_lithuanian">Lituano</string>
     <string name="s_none">Nessuna</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Impossibile riprodurre il video</string>
@@ -478,6 +479,7 @@ Copertina (rotolo di copertina)</string>
     <string name="preferences_force_audio_passthrough_disabled">Preferenze_forza_audio_passthrough_disabilitato</string>
     <string name="preferences_force_audio_passthrough_enable">Preferenze_forza_audio_passthrough_abilitato</string>
     <string name="preferences_force_audio_passthrough_enable2">Mode 2</string>
+    <string name="preferences_force_audio_passthrough_summary">per connessioni HDMI e S/PDIF, trasmettere audio compresso. ⚠ Sperimentale può causare perdita di sincronizzazione A/V</string>
     <string name="preferences_disable_downmix_title">Disattiva il downmix audio stereo</string>
     <string name="preferences_disable_downmix_summary">Decodifica sempre tutti i canali e permetti il downmix di Android a seconda della capacità di uscita audio (si potrebbe avere interruzione dei canali vocali)</string>
     <string name="preferences_allow_3rd_party_player">Consenti l\'utilizzo di un altro lettore video</string>
@@ -610,11 +612,19 @@ Copertina (rotolo di copertina)</string>
     <string name="preferences_display_resume_box">Mostra l\'area di ripresa</string>
     <string name="preferences_leanback_user_interface">Interfaccia Utente TV</string>
     <string name="preferences_show_watching_up_next_row_summary">Seleziona per mostrare una riga con i tuoi video che stai guardando e i prossimi</string>
+    <string name="preferences_show_watching_up_next_row">Visualizza la riga riproduzione/prossima</string>
     <string name="preferences_show_last_added_row_summary">Seleziona per mostrare una riga con i tuoi ultimi media aggiunti</string>
     <string name="preferences_show_last_added_row">Mostra l\'ultima riga aggiunta</string>
     <string name="preferences_show_last_played_row_summary">Seleziona per mostrare una riga con i tuoi ultimi media riprodotti</string>
     <string name="preferences_show_last_played_row">Mostra l\'ultima riga riprodotta</string>
     <string name="preferences_reset_last_played_row">Resetta l\'ultima riga riprodotta</string>
+    <string name="reset_last_played_row_in_progress">Resetta la riga dell\'ultima riproduzione</string>
+    <string name="preferences_show_all_movies_row_summary">Spunta la casella per visualizzare una riga con tutti i tuoi film al posto della riga delle categorie dei film</string>
+    <string name="preferences_show_all_movies_row">Mostra la riga di tutti i film</string>
+    <string name="preferences_movie_sort_order_summary">Seleziona l\'ordine di ordinamento della riga di tutti i film</string>
+    <string name="preferences_movie_sort_order_title">Ordinamento della righa di tutti i film</string>
+    <string name="preferences_show_all_tv_shows_row_summary">Spunta la casella per mostrare una riga con tutte le serie TV invece della riga delle categorie delle Serie TV</string>
+    <string name="preferences_show_all_tv_shows_row">Mostra la riga di tutte le serie TV</string>
     <string name="preferences_tv_show_sort_order_summary">Seleziona l\'ordine per le tue serie TV</string>
     <string name="preferences_tv_show_sort_order_title">Ordine delle serie TV</string>
     <string name="codepage_title">Codifica dei sottotitoli</string>
@@ -813,6 +823,8 @@ Copertina (rotolo di copertina)</string>
     <string name="warning_swdec">Attenzione: decodifica hardware disabilitata! </string>
     <string name="list_title">Titolo della lista</string>
     <string name="loading">Caricamento…</string>
+    <string name="connecting">Connessione in corso…</string>
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
+    <string name="refreshrate_failed">Impossibile impostare la frequenza di aggiornamento desiderata</string>
 </resources>

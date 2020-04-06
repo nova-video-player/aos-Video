@@ -830,6 +830,7 @@
     <string name="warning_swdec">Аппаратное декодирование отключено</string>
     <string name="list_title">Заголовок списка</string>
     <string name="loading">Загрузка…</string>
+    <string name="connecting">Подключение…</string>
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Не удалось задать желаемую частоту обновления</string>
