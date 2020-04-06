@@ -19,8 +19,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.archos.mediacenter.video"
     android:installLocation="auto"
-    android:sharedUserId="archos.openmediacenter" >
-    
+    android:sharedUserId="archos.openmediacenter"
+    xmlns:dist="http://schemas.android.com/apk/distribution">
+
+    <dist:module dist:instant="true" />
     <supports-screens android:largeScreens="true" />
 
     <original-package android:name="${applicationId}" />
