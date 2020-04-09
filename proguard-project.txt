@@ -90,8 +90,6 @@
 -dontwarn com.google.gson.**
 -dontnote com.google.gson.**
 -dontwarn rx.*
--keep class com.archos.mediacenter.utils.trakt.** { *; }
--keep interface com.archos.mediacenter.utils.trakt.** { *; }
 -keep class com.google.gson.** { *; }
 -keep class com.google.inject.** { *; }
 -keep class org.apache.http.** { *; }
@@ -118,9 +116,16 @@
 
 -dontwarn com.squareup.picasso.OkHttpDownloader
 
-#trakt
--keep class com.uwetrottmann.trakt.v2.** {*;}
--keepclassmembers class com.uwetrottmann.trakt.v2.** {*;}
+## trakt-java
+-keep class com.uwetrottmann.trakt5.entities.** { *; }
+-keep class com.uwetrottmann.trakt5.enums.** { *; }
+
+## tmdb-java
+-keep class com.uwetrottmann.tmdb2.entities.** { *; }
+-keep class com.uwetrottmann.tmdb2.enumerations.** { *; }
+
+## thetvdb-java
+-keep class com.uwetrottmann.thetvdb.entities.** { *; }
 
 #joda time
 -dontwarn org.joda.convert.**
@@ -158,7 +163,7 @@
 -dontwarn java.lang.annotation.Annotation
 
 
-# retrofit2 rules https://github.com/square/retrofit/blob/master/retrofit/src/main/resources/META-INF/proguard/retrofit2.pro
+## retrofit2 rules https://github.com/square/retrofit/blob/master/retrofit/src/main/resources/META-INF/proguard/retrofit2.pro
 
 # Retrofit does reflection on generic parameters. InnerClasses is required to use Signature and
 # EnclosingMethod is required to use InnerClasses.
@@ -189,5 +194,4 @@
 # and replaces all potential values with null. Explicitly keeping the interfaces prevents this.
 -if interface * { @retrofit2.http.* <methods>; }
 -keep,allowobfuscation interface <1>
-
 
