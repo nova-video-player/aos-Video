@@ -332,6 +332,7 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
             case R.string.delete_resume:
                 updateDbXml(info.position, UpdateDbXmlType.RESUME, -1);
                 if(Trakt.isTraktV2Enabled(getActivity(), mPreferences)){
+                    // TODO: not sure it is the right call
                     new TraktService.Client(mContext, null, false).watchingStop(video.getId(), 0);
                 }
                 break;
