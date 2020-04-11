@@ -392,8 +392,9 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 tvshow.setShowTags(mTvshow.getShowTags());
                 mTvshow = tvshow;
             }
-
-            mDetailsOverviewRow.setItem(mTvshow);
+            // sometimes mTvshow is null (tracepot)
+            if (mTvshow != null)
+                mDetailsOverviewRow.setItem(mTvshow);
         }
         if ((requestCode == REQUEST_CODE_MORE_DETAILS || requestCode == REQUEST_CODE_VIDEO) && resultCode == Activity.RESULT_OK) {
             Log.d(TAG, "Get RESULT_OK from TvshowMoreDetailsFragment/VideoDetailsFragment");
