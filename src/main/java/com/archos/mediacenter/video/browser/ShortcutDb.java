@@ -101,8 +101,9 @@ public enum ShortcutDb {
      * @return
      */
     public Cursor getCursorAllShortcuts(Context context) {
-        SQLiteDatabase db = getDb(context);
+        if (context == null) return null;
         try {
+            SQLiteDatabase db = getDb(context);
             return db.query(TABLE_NAME,
                     SHORTCUT_COLS,
                     null,
