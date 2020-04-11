@@ -822,6 +822,7 @@
     <string name="warning_swdec">Aviso: decodificação de hardware desativada!</string>
     <string name="list_title">Título da lista</string>
     <string name="loading">Carregando…</string>
+    <string name="connecting">Conectando…</string>
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Falha ao definir a taxa de atualização desejada</string>

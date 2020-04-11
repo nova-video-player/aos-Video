@@ -822,6 +822,7 @@
     <string name="warning_swdec">Warnung: Hardware decoding abgeschaltet!</string>
     <string name="list_title">Listenname</string>
     <string name="loading">Lade…</string>
+    <string name="connecting">Verbinde…</string>
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Fehler beim Festlegen der gewünschten Aktualisierungsrate</string>
