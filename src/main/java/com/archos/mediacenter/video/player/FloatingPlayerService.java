@@ -149,10 +149,10 @@ public class FloatingPlayerService extends Service implements AppState.OnForeGro
 
                 }
                 else if(PlayerService.PLAY_INTENT.equals(intent.getAction())){
-                    Player.sPlayer.start();
+                    Player.sPlayer.start(PlayerController.STATE_NORMAL);
                 }
                 else if(PlayerService.PAUSE_INTENT.equals(intent.getAction())){
-                    Player.sPlayer.pause();
+                    Player.sPlayer.pause(PlayerController.STATE_NORMAL);
                 }
                 else if(PlayerService.EXIT_INTENT.equals(intent.getAction())){
                     removeFloatingView(false);
@@ -368,9 +368,9 @@ public class FloatingPlayerService extends Service implements AppState.OnForeGro
 
                                         if (mPlayerController.getVisibility() == View.VISIBLE) {
                                             if (Player.sPlayer.isPlaying())
-                                                Player.sPlayer.pause();
+                                                Player.sPlayer.pause(PlayerController.STATE_NORMAL);
                                             else
-                                                Player.sPlayer.start();
+                                                Player.sPlayer.start(PlayerController.STATE_NORMAL);
                                             updatePlayPauseButton();
                                         }
                                         mPlayerController.setVisibility(View.VISIBLE);
@@ -659,7 +659,7 @@ public class FloatingPlayerService extends Service implements AppState.OnForeGro
     }
 
     @Override
-    public void onPlay() {
+    public void onPlay(int state) {
         if (mSubtitleManager != null)
             mSubtitleManager.onPlay();
         setProgress();
@@ -667,7 +667,7 @@ public class FloatingPlayerService extends Service implements AppState.OnForeGro
     }
 
     @Override
-    public void onPause() {
+    public void onPause(int state) {
         if (mSubtitleManager != null)
             mSubtitleManager.onPause();
         PlayerService.sPlayerService.startStatusbarNotification(isDiscrete());
@@ -736,7 +736,7 @@ public class FloatingPlayerService extends Service implements AppState.OnForeGro
             // this ensures that there will be exactly one message queued up.
             if (Player.sPlayer.isPlaying()) {
                 mSeekWasPlaying = true;
-                Player.sPlayer.pause();
+                Player.sPlayer.pause(PlayerController.STATE_SEEK);
             }
             else
                 mSeekWasPlaying=false;
@@ -786,12 +786,9 @@ public class FloatingPlayerService extends Service implements AppState.OnForeGro
             }
             mLastSeek = -1;
             if(mSeekWasPlaying)
-                Player.sPlayer.start();
-
+                Player.sPlayer.start(PlayerController.STATE_SEEK);
         }
     };
-
-
 
     private void setProgress() {
         int position = mNextSeek == -1 ? Player.sPlayer.getCurrentPosition() : mNextSeek;

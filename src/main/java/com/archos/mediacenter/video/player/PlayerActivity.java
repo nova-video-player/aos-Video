@@ -127,7 +127,7 @@ SubtitleDelayPickerDialog.OnDelayChangeListener, AudioDelayPickerDialog.OnAudioD
 DialogInterface.OnDismissListener, TrackInfoListener,
 IndexHelper.Listener, PermissionChecker.PermissionListener {
 
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
     private static final boolean DBG_LISTENER = true;
     private static final String TAG = "PlayerActivity";
 
@@ -2725,11 +2725,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     }
 
     private void stop() {
-
         if (DBG) Log.d(TAG, "stop");
 
-
-        mPlayer.pause();
+        mPlayer.pause(PlayerController.STATE_OTHER);
 
         mHandler.removeMessages(MSG_PROGRESS_VISIBLE);
         mProgressView.setVisibility(View.GONE);
@@ -2741,9 +2739,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         Intent intent = new Intent(STOPPED_VIDEO_INTENT);
         intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
         sendBroadcast(intent);
-
     }
-
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults){
@@ -2971,8 +2967,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     public void onAudioDelayChange(AudioDelayPickerAbstract delayPicker, int delay) {
        PlayerService.sPlayerService.setAudioDelay(delay,false);
     }
-
-
 
     private void sendVideoStateChanged() {
 
@@ -3275,7 +3269,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 mPlayerController.onAllSeekComplete();
         }
 
-        public void onPlay() {
+        public void onPlay(int state) {
             if (mSubtitleManager != null)
                 mSubtitleManager.onPlay();
             sendVideoStateChanged();
@@ -3285,7 +3279,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         public void onFirstPlay() {
             mPlayerController.hide();
         }
-        public void onPause() {
+        public void onPause(int state) {
 
             if (mSubtitleManager != null)
                 mSubtitleManager.onPause();
@@ -3528,8 +3522,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         }
 
     };
-
-
 
     private SurfaceController.Listener mSurfaceListener = new SurfaceController.Listener() {
         public void onSwitchVideoFormat(int fmt, int autoFmt) {

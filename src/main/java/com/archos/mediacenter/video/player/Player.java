@@ -70,7 +70,7 @@ public class Player implements IPlayerControl,
                                SurfaceHolder.Callback,
                                TextureView.SurfaceTextureListener{
     private static String TAG = "Player";
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
     public static Player sPlayer;
     // settable by the client
     private Uri         mUri;
@@ -341,11 +341,12 @@ public class Player implements IPlayerControl,
         }
     }
     private void setGLSupportEnabled(boolean enable) {
+        if(DBG) Log.d(TAG, "setGLSupportEnabled " + enable);
         saveUri();
-        pause();
+        pause(PlayerController.STATE_OTHER);
         mSurfaceController.setGLSupportEnabled(enable);
         restoreUri(mSurfaceController.supportOpenGLVideoEffect());
-        start();
+        start(PlayerController.STATE_OTHER);
     }
     
     public int getEffectType() {
@@ -403,6 +404,7 @@ public class Player implements IPlayerControl,
     }
 
     synchronized public void stopPlayback() {
+        if (DBG) Log.d(TAG, "stopPlayback");
         mHandler.removeCallbacks(mPreparedAsync);
         stayAwake(false);
         if (mEffectRenderer != null) {
@@ -435,14 +437,14 @@ public class Player implements IPlayerControl,
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
                 // Pause playback
                 mIsStoppedByFocusLost = isPlaying()|| mIsStoppedByFocusLost;
-                pause();
+                pause(PlayerController.STATE_OTHER);
             } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
                 // Resume playback
                 if (!isPlaying()&& mIsStoppedByFocusLost)
-                    start();
+                    start(PlayerController.STATE_OTHER);
             } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
                 mIsStoppedByFocusLost = isPlaying()|| mIsStoppedByFocusLost;
-                pause();
+                pause(PlayerController.STATE_OTHER);
             }
         }
     };
@@ -642,7 +644,9 @@ public class Player implements IPlayerControl,
         if (restartVideo) openVideo();
     }
     
-    public void start() {
+    public void start(int state) {
+        if (DBG) Log.d(TAG, "start");
+
         mIsStoppedByFocusLost = false;
         stayAwake(true);
 
@@ -655,14 +659,15 @@ public class Player implements IPlayerControl,
         }
         mTargetState = STATE_PLAYING;
         if (mPlayerListener != null) {
-            mPlayerListener.onPlay();
+            mPlayerListener.onPlay(state);
         }
         if (mEffectRenderer != null) {
             mEffectRenderer.onPlay();
         }
     }
 
-    public void pause() {
+    public void pause(int state) {
+        if (DBG) Log.d(TAG, "pause");
         if (isInPlaybackState()) {
             if (mMediaPlayer.isPlaying()) {
                 mMediaPlayer.pause();
@@ -671,18 +676,18 @@ public class Player implements IPlayerControl,
         }
         mTargetState = STATE_PAUSED;
         if (mPlayerListener != null) {
-            mPlayerListener.onPause();
+            mPlayerListener.onPause(state);
         }
         /* on pause, Don't suspend when video is non local or can't seek */
         //if (!isTorrent() && isLocalVideo() && canSeekBackward() && canSeekForward()) {
         if (!isTorrent() && canSeekBackward() && canSeekForward()) {
-            if (DBG) Log.d(TAG, "onPause: I am on pause, allow to go to sleep");
+            if (DBG) Log.d(TAG, "pause: allow to go to sleep");
             stayAwake(false);
         } else {
-            if (DBG) Log.d(TAG, "onPause: I am on pause, nah do not sleep");
+            if (DBG) Log.d(TAG, "pause: do not sleep");
         }
     }
-    
+
     // cache duration as mDuration for faster access
     public int getDuration() {
         if (isInPlaybackState()) {
@@ -709,6 +714,7 @@ public class Player implements IPlayerControl,
     }
     
     public void seekTo(int msec) {
+        if (DBG) Log.d(TAG, "seekTo");
         if (isInPlaybackState()) {
             if (mPlayerListener != null) {
                 mPlayerListener.onSeekStart(msec);
@@ -1052,6 +1058,7 @@ public class Player implements IPlayerControl,
     }
 
     public void onSeekComplete(IMediaPlayer mp) {
+        if (DBG) Log.d(TAG, "onSeekComplete");
         if (mPlayerListener != null) {
             mPlayerListener.onSeekComplete();
         }
@@ -1130,8 +1137,8 @@ public class Player implements IPlayerControl,
         void onSeekStart(int pos);
         void onSeekComplete();
         void onAllSeekComplete();
-        void onPlay();
-        void onPause();
+        void onPlay(int state);
+        void onPause(int state);
         void onOSDUpdate();
         void onVideoMetadataUpdated(VideoMetadata vMetadata);
         void onAudioMetadataUpdated(VideoMetadata vMetadata, int currentAudio);

@@ -115,6 +115,10 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private static final int MSG_HIDE_SYSTEM_BAR = 6;
     private static final int MSG_OVERLAY_FADE_OUT = 7;
 
+    // introducing states to inform listeners/player that it is in some specific state
+    public static final int STATE_NORMAL = 0;
+    public static final int STATE_SEEK = 1;
+    public static final int STATE_OTHER = 42;
 
     public static final int SEEK_LONG_INIT_DELAY = 200;
     public static final int SEEK_LONG_DELAY = 50;
@@ -1059,9 +1063,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             int pos;
             switch (msg.what) {
                 case MSG_FADE_OUT:
+                    if (DBG) Log.d(TAG, "Handle: MSG_FADE_OUT");
                     hide();
                     break;
                 case MSG_SHOW_PROGRESS:
+                    if (DBG) Log.d(TAG, "Handle: MSG_SHOW_PROGRESS");
                     pos = setProgress();
                     if (!mDragging && mControlBarShowing && Player.sPlayer.isPlaying()) {
                         msg = obtainMessage(MSG_SHOW_PROGRESS);
@@ -1069,6 +1075,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     }
                     break;
                 case MSG_SEEK:
+                    if (DBG) Log.d(TAG, "Handle: MSG_SEEK");
                     if (mNextSeek >= 0) {
                         boolean stop = false;
 
@@ -1145,7 +1152,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     break;
                 case MSG_SEEK_RESUME:
                     if (mSeekWasPlaying) {
-                        Player.sPlayer.start();
+                        if (DBG) Log.d(TAG, "Handle: MSG_SEEK_RESUME");
+                        Player.sPlayer.start(PlayerController.STATE_SEEK);
                         mSeekWasPlaying = false;
                     }
                     updatePausePlay();
@@ -1153,16 +1161,18 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     show(FLAG_SIDE_CONTROL_BAR, SHOW_TIMEOUT);
                     break;
                 case MSG_SWITCH_VIDEO_FORMAT:
+                    if (DBG) Log.d(TAG, "Handle: MSG_SWITCH_VIDEO_FORMAT");
                     mSurfaceController.switchVideoFormat();
                     updateFormat();
                     break;
                 case MSG_HIDE_SYSTEM_BAR:
+                    if (DBG) Log.d(TAG, "Handle: MSG_HIDE_SYSTEM_BAR");
                     mSystemUiVisibility |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
                     mPlayerView.setSystemUiVisibility(mSystemUiVisibility);
                     manualVisibilityChange=true;
                     break;
-
                 case MSG_OVERLAY_FADE_OUT:
+                    if (DBG) Log.d(TAG, "Handle: MSG_OVERLAY_FADE_OUT");
                     final View overlay1 = mControllerViewLeft.findViewById(R.id.help_overlay);
                     if(overlay1!=null){
                         overlay1.animate().alpha(0).setListener(new AnimatorListener() {
@@ -1320,9 +1330,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         } else {
             if (Player.sPlayer.isPlaying()) {
                 show(FLAG_SIDE_CONTROL_BAR, 0);
-                Player.sPlayer.pause();
+                Player.sPlayer.pause(PlayerController.STATE_NORMAL);
             } else {
-                Player.sPlayer.start();
+                Player.sPlayer.start(PlayerController.STATE_NORMAL);
                 show(FLAG_SIDE_CONTROL_BAR, SHOW_TIMEOUT);
             }
            // setVisibility(mAdView, !Player.sPlayer.isPlaying(), true);
@@ -1442,7 +1452,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             }
         } else {
             if (playOnResume) {
-                Player.sPlayer.start();
+                Player.sPlayer.start(PlayerController.STATE_SEEK);
                 updatePausePlay();
                 hide();
             } else {
@@ -1474,17 +1484,16 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     private void onSeek(int way, boolean longPress) {
+        if (DBG) Log.d(TAG, "onSeek");
         cancelFadeOut();
         mHandler.removeMessages(MSG_SHOW_PROGRESS);
         mHandler.removeMessages(MSG_SEEK_RESUME);
         mHandler.removeMessages(MSG_SEEK);
 
-
-
         if (!mSeekWasPlaying) {
             if (Player.sPlayer.isPlaying()) {
                 mSeekWasPlaying = true;
-                Player.sPlayer.pause();
+                Player.sPlayer.pause(PlayerController.STATE_SEEK);
             }
         }
 
@@ -1515,6 +1524,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     // we will simply apply the updated position without suspending regular updates.
     private SeekBar.OnSeekBarChangeListener mProgressListener = new SeekBar.OnSeekBarChangeListener() {
         public void onStartTrackingTouch(SeekBar bar) {
+            if (DBG) Log.d(TAG, "onStartTrackingTouch");
             if (mIsStopped)
                 return;
             show(FLAG_SIDE_CONTROL_BAR, 0);
@@ -1532,7 +1542,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             if (!mSeekWasPlaying) {
                 if (Player.sPlayer.isPlaying()) {
                     mSeekWasPlaying = true;
-                    Player.sPlayer.pause();
+                    Player.sPlayer.pause(PlayerController.STATE_SEEK);
                 }
             }
         }
@@ -1918,12 +1928,12 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                             return true;
                         case KeyEvent.KEYCODE_DPAD_DOWN:
                             showControlBar();
-                            if (DBG) Log.d(TAG, "onKey, dpad down");
+                            if (DBG) Log.d(TAG, "onKey: dpad down");
                             return true;
                         case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
                         case KeyEvent.KEYCODE_DPAD_RIGHT:
                         case KeyEvent.KEYCODE_MEDIA_NEXT:
-                            if (DBG) Log.d(TAG, "onKey, sending");
+                            if (DBG) Log.d(TAG, "onKey: next");
                             if (Player.sPlayer.canSeekForward() && mSeekKeyDirection != 1) {
                                 show(FLAG_SIDE_CONTROL_BAR|FLAG_SIDE_ACTION_BAR|FLAG_SIDE_SYSTEM_BAR, 0);
                                 mSeekKeyDirection = 1;
@@ -1933,6 +1943,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         case KeyEvent.KEYCODE_MEDIA_REWIND:
                         case KeyEvent.KEYCODE_DPAD_LEFT:
                         case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                            if (DBG) Log.d(TAG, "onKey: previous");
                             if (Player.sPlayer.canSeekBackward() && mSeekKeyDirection != -1) {
                                 show(FLAG_SIDE_CONTROL_BAR|FLAG_SIDE_ACTION_BAR|FLAG_SIDE_SYSTEM_BAR, 0);
                                 mSeekKeyDirection = -1;
@@ -1968,15 +1979,17 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                             }
                             break;
                         case KeyEvent.KEYCODE_MEDIA_PLAY:
+                            if (DBG) Log.d(TAG, "onKey: play");
                             if (!Player.sPlayer.isPlaying()) {
-                                Player.sPlayer.start();
+                                Player.sPlayer.start(PlayerController.STATE_NORMAL);
                                 updatePausePlay();
                                 show();
                             }
                             return true;
                         case KeyEvent.KEYCODE_MEDIA_PAUSE:
                             if (Player.sPlayer.isPlaying()) {
-                                Player.sPlayer.pause();
+                                if (DBG) Log.d(TAG, "onKey: pause");
+                                Player.sPlayer.pause(PlayerController.STATE_NORMAL);
                                 updatePausePlay();
                                 show();
                             }
@@ -1988,18 +2001,21 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         case KeyEvent.KEYCODE_P:
                         case KeyEvent.KEYCODE_SPACE:
                             if (Player.sPlayer.isPlaying()) {
-                                Player.sPlayer.pause();
+                                if (DBG) Log.d(TAG, "onKey: play/pause: pause");
+                                Player.sPlayer.pause(PlayerController.STATE_NORMAL);
                                 updatePausePlay();
                                 show(FLAG_SIDE_CONTROL_BAR|FLAG_SIDE_ACTION_BAR|FLAG_SIDE_SYSTEM_BAR, 0);
                             } else {
-                                Player.sPlayer.start();
+                                if (DBG) Log.d(TAG, "onKey: play/pause: play");
+                                Player.sPlayer.start(PlayerController.STATE_NORMAL);
                                 updatePausePlay();
                                 hide();
                             }
                             return true;
                         case KeyEvent.KEYCODE_MEDIA_STOP:
                             if (Player.sPlayer.isPlaying()) {
-                                Player.sPlayer.pause();
+                                if (DBG) Log.d(TAG, "onKey: stop, thus pause");
+                                Player.sPlayer.pause(PlayerController.STATE_NORMAL);
                                 updatePausePlay();
                                 show();
                             }

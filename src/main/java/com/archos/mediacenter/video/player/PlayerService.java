@@ -73,11 +73,7 @@ import java.util.concurrent.ExecutionException;
  * Created by alexandre on 28/08/15.
  */
 public class PlayerService extends Service implements Player.Listener, IndexHelper.Listener {
-
-
-
     /*
-
         some explanations
 
         start playeractivity with specific Uri
@@ -99,28 +95,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         PlayerService starts itself with last intent
         onPrepared is called
         seeks to last position
-
-
-
      */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public static final String PLAYER_SERVICE_STARTED = "PLAYER_SERVICE_STARTED";
 
@@ -214,6 +189,16 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private static final String notifChannelName = "PlayerService";
     private static final String notifChannelDescr = "PlayerService";
 
+    private boolean isSeeking = false;
+
+    public boolean isSeeking() {
+        return isSeeking;
+    }
+
+    public void setSeeking(boolean seek) {
+        isSeeking = seek;
+    }
+
     /* Torrent */
 
 
@@ -281,14 +266,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
     };
 
-
-
-
-
     /* Everything to update playmode */
 
     private static final String KEY_PLAY_MODE = "pref_play_mode_int_key"; // used to be "pref_play_mode_key", containing a string
-
 
     /**
      * Updates mNextUri and mNextVideoId based on the media db or by scanning the directory
@@ -297,7 +277,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      *              <li><b>false</b> ends after last in folder
      *              </ul>
      */
-    private void updateNextVideo (boolean repeatFolder, boolean sync) {
+    private void updateNextVideo(boolean repeatFolder, boolean sync) {
 
         // reset to nothing
         mNextUri = null;
@@ -372,7 +352,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     /*
-
         TO TEST
 
         Indexing
@@ -380,7 +359,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         Trakt
 
         do not save on network when network resume disabled
-
      */
     @Override
     public void onCreate() {
@@ -415,7 +393,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if mVideoInfo isn't null + uri of video info equals to intent uri : start video with videoinfo and current resume
 
      */
-
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (DBG) Log.d(TAG, "onStartCommand");
@@ -649,11 +626,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         mPlayer = Player.sPlayer;
     }
 
-
-
-
-
-
     /*
         Player
      */
@@ -679,7 +651,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         // mHandler.sendMessage(mHandler.obtainMessage(MSG_TORRENT_STARTED));
     }
 
-
     public void removePlayerFrontend(PlayerFrontend playerFrontend, boolean prepareForSurfaceSwitch) {
         if(mPlayerFrontend!=playerFrontend)
             return;
@@ -694,9 +665,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mVideoInfo = null;
             stopSelf();
         }
-
-
-
     }
 
     /**
@@ -727,7 +695,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     mVideoInfo.lastTimePlayed = Long.valueOf(System.currentTimeMillis() / 1000L);
                     Log.d(TAG, "saveVideoStateIfReady: save bookmark at " + mVideoInfo.lastTimePlayed);
                     mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
-                    startTrakt(); //this writes mVideoInfo.traktResume
+                    // disable periodic trakt save this should be done with pauseTrakt() anyway
+                    //stopTrakt(); //this writes mVideoInfo.traktResume
                     // BootupRecommendationService is for before Android O otherwise TV channels are used
                     if (ArchosFeatures.isAndroidTV(this))
                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -746,8 +715,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if(mIndexHelper!=null) {
             mIndexHelper.abort(); //too late : do not retrieve db info
             saveVideoStateIfReady();
-            if ((mPlayerState != PlayerState.INIT && mPlayerState != PlayerState.PREPARING))
+            if ((mPlayerState != PlayerState.INIT && mPlayerState != PlayerState.PREPARING)) {
+                if (DBG) Log.d(TAG, "stopAndSaveVideoState: stopTrakt");
                 stopTrakt();
+            }
             if (mUpdateNextTask != null) {
                 mUpdateNextTask.cancel(false);
                 mUpdateNextTask.setListener(null);
@@ -755,7 +726,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             }
             if (PERIODIC_BOOKMARK_SAVE)
                 mHandler.removeCallbacks(mAutoSaveTask);
-            mPlayer.pause();
+            mPlayer.pause(PlayerController.STATE_OTHER);
             mPlayer.stopPlayback();
             mPlayerState = PlayerState.STOPPED;
             TorrentObserverService.staticExitProcess();
@@ -788,11 +759,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             playerFrontend.setVideoInfo(mVideoInfo);
 
         mIsChangingSurface = false;
-
-
-
     }
-
 
     /**
      *
@@ -817,7 +784,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
 
     /*
-
         Trakt
      */
 
@@ -832,7 +798,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     };
 
     private void startTrakt() {
-        if (DBG) Log.d(TAG, "Trakt: startTrakt");
+        if (DBG) Log.d(TAG, "startTrakt");
         if (mTraktClient != null) {
             mTraktError = false;
             mTraktLiveScrobblingEnabled = Trakt.isLiveScrobblingEnabled(mPreferences);
@@ -840,6 +806,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                  int progress = getPlayerProgress();
                 mVideoInfo.traktResume = -progress;
                 mVideoInfo.duration = Player.sPlayer.getDuration();
+                if (DBG) Log.d(TAG, "startTrakt: trakt watching progress=" + progress);
                 mTraktClient.watching(mVideoInfo, progress);
                 mHandler.postDelayed(mTraktWatchingRunnable, Trakt.WATCHING_DELAY_MS);
                 mTraktWatching = true;
@@ -848,23 +815,29 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     private void stopTrakt() {
+        if (DBG) Log.d(TAG, "stopTrakt");
         if (mTraktClient != null) {
+            if (DBG) Log.d(TAG, "stopTrakt: mTraktClient != null, mTraktWatching=" + mTraktWatching);
             if (mTraktWatching) {
-                if (DBG) Log.d(TAG, "Trakt: stopTrakt");
                 mHandler.removeCallbacks(mTraktWatchingRunnable);
                 int progress = getPlayerProgress();
                 if (progress >= 0){
                     mVideoInfo.traktResume = - progress;
+                    if (DBG) Log.d(TAG, "stopTrakt: watchingStop progress=" + progress);
                     mTraktClient.watchingStop(mVideoInfo, progress);
-
                 }
+                if (DBG) Log.d(TAG, "stopTrakt: progress negative not doing anything, progress=" + progress);
                 mTraktWatching = false;
             } else if (!mTraktError && Trakt.shouldMarkAsSeen(getPlayerProgress())) {
+                if (DBG) Log.d(TAG, "stopTrakt: Trakt.ACTION_SEEN");
                 mTraktClient.markAs(mVideoInfo, Trakt.ACTION_SEEN);
+            } else {
+                if (DBG) Log.d(TAG, "stopTrakt: mTraktWatching=false and should not mark as seend, doing nothing!!!");
             }
         }
         // We now use the DB flag ARCHOS_TRAKT_SEEN even if there is no sync with trakt
         else {
+            if (DBG) Log.d(TAG, "stopTrakt: mTraktClient == null, not sending watchStop");
             if (mVideoId>=0 && Trakt.shouldMarkAsSeen(getPlayerProgress()) && !PrivateMode.isActive()) {
                 final ContentValues cv = new ContentValues(1);
                 cv.put(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN, Trakt.TRAKT_DB_MARKED);
@@ -876,14 +849,17 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     private void pauseTrakt() {
+        if (DBG) Log.d(TAG, "pauseTrakt");
         if (mTraktClient != null) {
             if (mTraktWatching) {
                 int progress = getPlayerProgress();
                 if (progress > 0) {
                     mVideoInfo.traktResume = - progress;
-                    mTraktClient.watchingStop(mVideoInfo, progress);
+                    if (DBG) Log.d(TAG, "pauseTrakt: watchingPause progress=" + progress);
+                    mTraktClient.watchingPause(mVideoInfo, progress);
                 }
-                mTraktWatching = false;
+                // consider that in pause we are still watching it is only on stop that it is the end
+                //mTraktWatching = false;
             }
         }
     }
@@ -899,12 +875,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
     };
 
-
     /*
-
         Indexing
-
-
      */
     private VideoObserver mVideoObserver;
     private boolean mHasRequestedIndexing;
@@ -915,7 +887,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private boolean mTraktLiveScrobblingEnabled = false;
     private boolean mTraktWatching = false;
     private boolean mTraktError = false;
-
 
     /**
      * if new uri, retrieve its database info
@@ -1045,6 +1016,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     private void postPreparedAndVideoDb() {
+        if (DBG) Log.d(TAG, "postPreparedAndVideoDb");
         if(mVideoInfo!=null&&mPlayerState==PlayerState.PREPARED) {
             if (mLastPosition == mPlayer.getDuration())
                 mLastPosition = 0;
@@ -1053,7 +1025,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             setAudioDelay(mAudioDelay, true);
             if(mPlayOnResume) {
                 mPlayerFrontend.onFirstPlay();
-                Player.sPlayer.start();
+                if (DBG) Log.d(TAG, "postPreparedAndVideoDb: player start PlayerController.STATE_NORMAL");
+                Player.sPlayer.start(PlayerController.STATE_NORMAL);
                 PlayerService.sPlayerService.mPlayerState = PlayerService.PlayerState.PLAYING;
             }
             if(mAudioSubtitleNeedUpdate){ // when we have info about subs or audio track BEFORE mVideoInfo is set
@@ -1095,9 +1068,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         return new Binder();
     }
 
-
-
-
     @Override
     public void onPrepared() {
         if (DBG) Log.d(TAG, "onPrepared()");
@@ -1106,7 +1076,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mPlayerFrontend.onPrepared();
         }
         postPreparedAndVideoDb();
-
     }
 
     /**
@@ -1114,6 +1083,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      */
     @Override
     public void onCompletion() {
+        if (DBG) Log.d(TAG, "onCompletion");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 && ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
@@ -1146,6 +1116,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     @Override
     public boolean onError(int errorCode, int errorQualCode, String msg) {
+        if (DBG) Log.d(TAG, "onError");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 && ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             updateNowPlayingState();
@@ -1178,31 +1149,38 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     @Override
-    public void onPlay() {
+    public void onPlay(int state) {
         if (DBG) Log.d(TAG, "onPlay");
-        startTrakt();
+        if (state == PlayerController.STATE_NORMAL) {
+            if (DBG) Log.d(TAG, "onPlay: PlayerController.STATE_NORMAL -> startTrakt()");
+            startTrakt();
+        } else {
+            if (DBG) Log.d(TAG, "onPlay: !PlayerController.STATE_NORMAL -> not startTrakt()!");
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 && ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             updateNowPlayingState();
-
         }
         if(mPlayerFrontend!=null) {
-            mPlayerFrontend.onPlay();
+            mPlayerFrontend.onPlay(state);
         }
     }
 
     @Override
-    public void onPause() {
+    public void onPause(int state) {
         if (DBG) Log.d(TAG, "onPause");
-        pauseTrakt();
-        saveVideoStateIfReady();
+        if (state == PlayerController.STATE_NORMAL) {
+            if (DBG) Log.d(TAG, "onPause: normal state thus pauseTrakt()!");
+            pauseTrakt();
+        } else {
+            if (DBG) Log.d(TAG, "onPause: other/seek state thus not doing pauseTrakt()!");
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 && ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             updateNowPlayingState();
         }
         if(mPlayerFrontend!=null){
-            // save bookmark when paused
-            mPlayerFrontend.onPause();
+            mPlayerFrontend.onPause(state);
         }
     }
 
@@ -1222,10 +1200,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     @Override
     public void onAudioMetadataUpdated(VideoMetadata vMetadata, int newAudioTrack) {
-
          /*
-             * if current audio track is invalid or not supported, choose the first supported one
-             */
+         * if current audio track is invalid or not supported, choose the first supported one
+         */
         if (mVideoInfo == null) {
             mNewAudioTrack = newAudioTrack;
             mAudioSubtitleNeedUpdate = true;
@@ -1293,7 +1270,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 }
             }
 
-
             if (mVideoInfo.subtitleTrack >= 0 && mVideoInfo.subtitleTrack < nbTrack+1) {
                 if (newSubtitleTrack != mVideoInfo.subtitleTrack &&
                         !mPlayer.setSubtitleTrack(mVideoInfo.subtitleTrack))
@@ -1305,7 +1281,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
                 }
             }
-
 
             firstTimeCalled=false;
         }
@@ -1328,19 +1303,12 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void onSubtitle(Subtitle subtitle) {
         if(mPlayerFrontend!=null) {
             mPlayerFrontend.onSubtitle(subtitle);
-
         }
     }
 
     public VideoDbInfo getVideoInfo() {
         return mVideoInfo;
     }
-
-
-
-
-
-
 
     /**
      * displays now playing card on android TV
@@ -1362,8 +1330,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 @Override
                 public void onPlay() {
                     super.onPlay();
+                    if (DBG) Log.d(TAG, "setNowPlayingCards.onPlay PlayerController.STATE_OTHER");
                     if (Player.sPlayer != null) {
-                        Player.sPlayer.start();
+                        Player.sPlayer.start(PlayerController.STATE_OTHER);
                         updateNowPlayingState();
                     }
                 }
@@ -1371,8 +1340,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 @Override
                 public void onPause() {
                     super.onPause();
+                    if (DBG) Log.d(TAG, "setNowPlayingCards.onPause PlayerController.STATE_OTHER");
                     if (Player.sPlayer != null) {
-                        Player.sPlayer.pause();
+                        Player.sPlayer.pause(PlayerController.STATE_OTHER);
                         updateNowPlayingState();
                     }
                 }
@@ -1415,10 +1385,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             stopNowPlayingCard();
         }
     }
-
-
-
-
 
     /**
      * set now playing card to stop
@@ -1471,16 +1437,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         return availableActions;
     }
 
-
-
-
-
-
-
-
-
-
-
     public void setAudioDelay(int delay, boolean force) {
         boolean delayChanged = delay != mAudioDelay||force;
         if (delayChanged) {
@@ -1488,7 +1444,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mPlayer.setAvDelay(mAudioDelay * -1); // change sign because we want an audio delay
         }
     }
-
 
     public int getAudioDelay() {
         return mAudioDelay;

@@ -15,8 +15,8 @@
 package com.archos.mediacenter.video.player;
 
 public interface IPlayerControl {
-    void    start();
-    void    pause();
+    void    start(int state);
+    void    pause(int state);
 
     int     getDuration();
     int     getCurrentPosition();
