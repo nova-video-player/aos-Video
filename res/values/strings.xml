@@ -433,6 +433,11 @@
     <string name="dialog_subloader_nonetwork_message">An internet connection is required to download subtitles</string>
     <string name="dialog_subloader_connecting">Connecting to www.opensubtitles.org…</string>
 
+    <string name="dialog_subloader_credentials">Opensubtitles credentials</string>
+    <string name="dialog_subloader_credentials_empty">You must specify a valid username and password!</string>
+    <string name="toast_subloader_credentials_empty">Provide your opensubtitles credentials in settings to be able to download subtitles</string>
+    <string name="toast_subloader_login_failed">Incorrect opensubtitles credentials or service not available</string>
+
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Subtitle Settings</string>
     <string name="subtitle_sample_text">\"sample\"</string>
@@ -537,6 +542,10 @@
     <string name="category_languages">Subtitles</string>
     <string name="subtitles_hide_default">Hide subtitles by default</string>
     <string name="subtitles_hide_default_summary">Check if you want to hide subtitles by default</string>
+
+    <string name="subtitles_credentials_title">OpenSubtitles credentials</string>
+    <string name="subtitles_credentials_summary">Provide your opensubtitles credentials to be able to download subtitles</string>
+
     <string name="preferences_languages">Subtitles download languages</string>
     <string name="summary_list_preference_primary">Select your languages for downloading subtitles</string>
     <string name="favSubLang_title">Subtitles reading language</string> 

@@ -35,6 +35,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.ListPreference;
@@ -48,10 +49,12 @@ import androidx.preference.PreferenceScreen;
 
 import com.archos.environment.ArchosFeatures;
 import com.archos.filecorelibrary.ExtStorageManager;
+import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.UiChoiceDialog;
+import com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser.SMBServerCredentialsDialog;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridFragment;
 import com.archos.mediacenter.video.leanback.movies.MoviesSortOrderEntry;
@@ -87,6 +90,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_TORRENT_BLOCKLIST = "preferences_torrent_blocklist";
     public static final String KEY_TORRENT_PATH = "preferences_torrent_path";
     public static final String KEY_SHARED_FOLDERS= "share_folders";
+    public static final String KEY_SUBTITILES_CREDENTIALS= "subtitles_credentials";
     public static final String KEY_FORCE_SW = "force_software_decoding";
     public static final String KEY_FORCE_AUDIO_PASSTHROUGH = "force_audio_passthrough";
     public static final String KEY_ACTIVATE_REFRESHRATE_SWITCH = "enable_tv_refreshrate_switch";
@@ -485,6 +489,20 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         });
 
         switchAdvancedPreferences();
+
+        Preference subtitlesCredentialsButton = findPreference(KEY_SUBTITILES_CREDENTIALS);
+        subtitlesCredentialsButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                String tag = OpenSubtitlesCredentialsDialog.class.getCanonicalName();
+                OpenSubtitlesCredentialsDialog dialog = (OpenSubtitlesCredentialsDialog)getParentFragmentManager().findFragmentByTag(tag);
+                if (dialog == null) {
+                    dialog = new OpenSubtitlesCredentialsDialog();
+                    dialog.show(getParentFragmentManager(), tag);
+                }
+                return true;
+            }
+        });
 
         CheckBoxPreference cbp = (CheckBoxPreference)findPreference(KEY_SUBTITLES_HIDE);
         cbp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {

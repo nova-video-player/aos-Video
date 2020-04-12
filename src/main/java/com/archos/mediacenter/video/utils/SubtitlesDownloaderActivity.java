@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -91,7 +92,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
     private static final String LIMIT = "20";
 
     private static final String TAG = SubtitlesDownloaderActivity.class.getSimpleName();
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
     private static final boolean DBG_NET = false;
 
     //to distinguished program dismiss and users
@@ -346,6 +347,11 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
          *************************************************/
         @SuppressWarnings("unchecked")
         public boolean logIn() {
+            SharedPreferences mPreferences = getApplicationContext().getSharedPreferences("opensubtitles_credentials", Context.MODE_PRIVATE);
+            String mUsername = mPreferences.getString(OpenSubtitlesCredentialsDialog.OPENSUBTITLES_USERNAME, "");
+            String mPassword = mPreferences.getString(OpenSubtitlesCredentialsDialog.OPENSUBTITLES_PASSWORD, "");
+            //if (mUsername.isEmpty() || mPassword.isEmpty())
+            //    displayToast(getString(R.string.toast_subloader_credentials_empty));
             try {
                 URL url = new URL(OpenSubtitlesAPIUrl);
                 if (DBG_NET) client = new XMLRPCClient(url, XMLRPCClient.FLAGS_DEBUG);
@@ -354,10 +360,18 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 Log.e(TAG, "logIn: caught MalformedURLException");
             }
             try {
-                map = ((HashMap<String, Object>) client.call("LogIn","","","fre",USER_AGENT));
+                if (!mUsername.isEmpty() && !mPassword.isEmpty())
+                    map = ((HashMap<String, Object>) client.call("LogIn",mUsername, mPassword, "fre", USER_AGENT));
+                else
+                    map = ((HashMap<String, Object>) client.call("LogIn","","","fre",USER_AGENT));
                 token = (String) map.get("token");
             } catch (XMLRPCException e) {
-                displayToast(getString(R.string.toast_subloader_service_unreachable));
+                // TODO parse error message
+                // 401 Unauthorized
+                // 414 Unknown User Agent
+                // 415 Disabled user agent
+                Log.w(TAG, "logIn error message: " + e.getMessage() + "; localizedMessage:" + e.getLocalizedMessage() + ", cause: " + e.getCause());
+                displayToast(getString(R.string.toast_subloader_login_failed));
                 if (mDialog != null) {
                     mDoNotFinish = true;
                     mDialog.dismiss();
