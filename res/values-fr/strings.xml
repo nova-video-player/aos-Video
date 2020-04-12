@@ -394,6 +394,10 @@
     <string name="dialog_subloader_nonetwork_title">Aucune connection à Internet</string>
     <string name="dialog_subloader_nonetwork_message">Une connection Internet est requise pour le téléchargement de sous-titres</string>
     <string name="dialog_subloader_connecting">Connexion au site www.opensubtitles.org…</string>
+    <string name="dialog_subloader_credentials">Identifiants Opensubtitles</string>
+    <string name="dialog_subloader_credentials_empty">Vous devrez entrer un mot de passe et un nom d\'utilisateur valide!</string>
+    <string name="toast_subloader_credentials_empty">Fournissez vos identifiants opensubtitles dans les paramètres pour pouvoir télécharger les sous-titres</string>
+    <string name="toast_subloader_login_failed">Identifiants opensubtitles incorrects ou service non disponible</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Réglages des sous-titres</string>
     <string name="subtitle_sample_text">\"exemple\"</string>
@@ -492,6 +496,8 @@
     <string name="category_languages">Sous-titres</string>
     <string name="subtitles_hide_default">Ne pas afficher les sous-titres par défaut</string>
     <string name="subtitles_hide_default_summary">Cochez afin de ne pas afficher les sous-titres par défaut</string>
+    <string name="subtitles_credentials_title">Identifiants Opensubtitles</string>
+    <string name="subtitles_credentials_summary">Entrez vos identifiants opensubtitles afin de télécharger des sous-titres</string>
     <string name="preferences_languages">Langues de téléchargement des sous-titres</string>
     <string name="summary_list_preference_primary">Sélectionnez les langues pour lesquelles télécharger des sous-titres</string>
     <string name="favSubLang_title">Langue de lecture des sous-titres</string>
