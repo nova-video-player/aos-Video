@@ -1040,8 +1040,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
         private void setInitDialog(){
             if (DBG) Log.d(TAG, "OpenSubtitlesTask: setInitDialog");
             mHandler.post(() -> {
-                mDialog = NovaProgressDialog.show(SubtitlesDownloaderActivity.this, "", getString(R.string.dialog_subloader_connecting), true, true);
-                    mDialog = NovaProgressDialog.show(SubtitlesDownloaderActivity.this, "", getString(R.string.dialog_subloader_connecting), true, true, dialog -> {
+                mDialog = NovaProgressDialog.show(SubtitlesDownloaderActivity.this, "", getString(R.string.dialog_subloader_connecting), true, true, dialog -> {
                     dialog.cancel();
                     stop();
                     finish();
