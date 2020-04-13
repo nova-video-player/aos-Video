@@ -36,13 +36,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
-import androidx.preference.Preference.OnPreferenceClickListener;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
@@ -50,12 +48,10 @@ import androidx.preference.PreferenceScreen;
 
 import com.archos.environment.ArchosFeatures;
 import com.archos.filecorelibrary.ExtStorageManager;
-import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.UiChoiceDialog;
-import com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser.SMBServerCredentialsDialog;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridFragment;
 import com.archos.mediacenter.video.leanback.movies.MoviesSortOrderEntry;
@@ -68,6 +64,7 @@ import com.archos.mediacenter.video.utils.credentialsmanager.CredentialsManagerP
 import com.archos.medialib.MediaFactory;
 import com.archos.mediaprovider.video.VideoProvider;
 import com.archos.mediascraper.AutoScrapeService;
+import com.archos.mediascraper.settings.ScraperPreferences;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -303,44 +300,29 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
         final Preference pref = (Preference) findPreference(KEY_VIDEO_OS);
         pref.setEnabled(true);
-        pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                videoPreferenceOsClick();
-                return false;
-            }
+        pref.setOnPreferenceClickListener(preference -> {
+            videoPreferenceOsClick();
+            return false;
         });
 
-        findPreference(KEY_TMDB).setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                videoPreferenceTmdbClick();
-                return false;
-            }
+        findPreference(KEY_TMDB).setOnPreferenceClickListener(preference -> {
+            videoPreferenceTmdbClick();
+            return false;
         });
-        findPreference(KEY_TVDB).setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                videoPreferenceTvdbClick();
-                return false;
-            }
+        findPreference(KEY_TVDB).setOnPreferenceClickListener(preference -> {
+            videoPreferenceTvdbClick();
+            return false;
         });
-        findPreference(KEY_TRAKT).setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                videoPreferenceTraktClick();
-                return false;
-            }
+        findPreference(KEY_TRAKT).setOnPreferenceClickListener(preference -> {
+            videoPreferenceTraktClick();
+            return false;
         });
-        findPreference(KEY_LICENCES).setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                if (!UiChoiceDialog.applicationIsInLeanbackMode(getActivity()))
-                    startActivity(new Intent(getActivity(), VideoPreferencesLicencesActivity.class));
-                else
-                    startActivity(new Intent(getActivity(), VideoSettingsLicencesActivity.class));
-                return false;
-            }
+        findPreference(KEY_LICENCES).setOnPreferenceClickListener(preference -> {
+            if (!UiChoiceDialog.applicationIsInLeanbackMode(getActivity()))
+                startActivity(new Intent(getActivity(), VideoPreferencesLicencesActivity.class));
+            else
+                startActivity(new Intent(getActivity(), VideoSettingsLicencesActivity.class));
+            return false;
         });
 
         mDecChoicePreferences = (ListPreference) findPreference(KEY_DEC_CHOICE);
@@ -356,162 +338,125 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         mScraperCategory = (PreferenceCategory) findPreference(KEY_SCRAPER_CATEGORY);
         mExportManualPreference = findPreference(getString(R.string.nfo_export_manual_prefkey));
-        mExportManualPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(AutoScrapeService.EXPORT_EVERYTHING, null, getActivity(),AutoScrapeService.class);
-                ContextCompat.startForegroundService(getActivity(), intent);
-                Toast.makeText(getActivity(), R.string.nfo_export_in_progress, Toast.LENGTH_SHORT).show();
-                return true;
-            }
+        mExportManualPreference.setOnPreferenceClickListener(preference -> {
+            Intent intent = new Intent(AutoScrapeService.EXPORT_EVERYTHING, null, getActivity(),AutoScrapeService.class);
+            ContextCompat.startForegroundService(getActivity(), intent);
+            Toast.makeText(getActivity(), R.string.nfo_export_in_progress, Toast.LENGTH_SHORT).show();
+            return true;
         });
 
-        findPreference(getString(R.string.rescrap_all_prefkey)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(getActivity(),AutoScrapeService.class);
-                intent.putExtra(AutoScrapeService.RESCAN_EVERYTHING, true);
-                ContextCompat.startForegroundService(getActivity(), intent);
-                Toast.makeText(getActivity(), R.string.rescrap_in_progress, Toast.LENGTH_SHORT).show();
-                return true;
-            }
+        findPreference(getString(R.string.rescrap_all_prefkey)).setOnPreferenceClickListener(preference -> {
+            Intent intent = new Intent(getActivity(),AutoScrapeService.class);
+            intent.putExtra(AutoScrapeService.RESCAN_EVERYTHING, true);
+            ContextCompat.startForegroundService(getActivity(), intent);
+            Toast.makeText(getActivity(), R.string.rescrap_in_progress, Toast.LENGTH_SHORT).show();
+            return true;
         });
 
         mDbExportManualPreference = findPreference(getString(R.string.db_export_manual_prefkey));
-        mDbExportManualPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                backupDatabase(getContext(),"media.db");
-                Toast.makeText(getActivity(), R.string.db_export_in_progress, Toast.LENGTH_SHORT).show();
-                return true;
-            }
+        mDbExportManualPreference.setOnPreferenceClickListener(preference -> {
+            backupDatabase(getContext(),"media.db");
+            Toast.makeText(getActivity(), R.string.db_export_in_progress, Toast.LENGTH_SHORT).show();
+            return true;
         });
 
-        findPreference(KEY_RESCAN_STORAGE).setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                rescanPath(Environment.getExternalStorageDirectory().getAbsolutePath());
-                ExtStorageManager storageManager = ExtStorageManager.getExtStorageManager();
-                final boolean hasExternal = storageManager.hasExtStorage();
-                if (hasExternal) {
-                    for(String s : storageManager.getExtSdcards()) {
-                        rescanPath(s);
-                    }
-
-
-                    for(String s : storageManager.getExtUsbStorages()) {
-                        rescanPath(s);
-                    }
-                    for(String s : storageManager.getExtOtherStorages()) {
-                        rescanPath(s);
-                    }
+        findPreference(KEY_RESCAN_STORAGE).setOnPreferenceClickListener(preference -> {
+            rescanPath(Environment.getExternalStorageDirectory().getAbsolutePath());
+            ExtStorageManager storageManager = ExtStorageManager.getExtStorageManager();
+            final boolean hasExternal = storageManager.hasExtStorage();
+            if (hasExternal) {
+                for(String s : storageManager.getExtSdcards()) {
+                    rescanPath(s);
                 }
-                Toast.makeText(getActivity(), R.string.rescanning,Toast.LENGTH_SHORT).show();
-                return true;
+
+
+                for(String s : storageManager.getExtUsbStorages()) {
+                    rescanPath(s);
+                }
+                for(String s : storageManager.getExtOtherStorages()) {
+                    rescanPath(s);
+                }
             }
+            Toast.makeText(getActivity(), R.string.rescanning,Toast.LENGTH_SHORT).show();
+            return true;
         });
         mAutoScrapPreference = (CheckBoxPreference) findPreference(AutoScrapeService.KEY_ENABLE_AUTO_SCRAP);
 
         //manage change manually to set pref before starting service
-        mAutoScrapPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference,
-                                             final Object newValue) {
-                boolean oldValue = getPreferenceManager().getSharedPreferences().getBoolean(AutoScrapeService.KEY_ENABLE_AUTO_SCRAP, true);
-                getPreferenceManager().getSharedPreferences().edit().putBoolean(AutoScrapeService.KEY_ENABLE_AUTO_SCRAP, !oldValue).apply();
+        mAutoScrapPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            boolean oldValue = getPreferenceManager().getSharedPreferences().getBoolean(AutoScrapeService.KEY_ENABLE_AUTO_SCRAP, true);
+            getPreferenceManager().getSharedPreferences().edit().putBoolean(AutoScrapeService.KEY_ENABLE_AUTO_SCRAP, !oldValue).apply();
 
-                mAutoScrapPreference.setChecked(!oldValue);
-                if (!oldValue)
-                    AutoScrapeService.startService(getActivity());
-                return false;
-            }
+            mAutoScrapPreference.setChecked(!oldValue);
+            if (!oldValue)
+                AutoScrapeService.startService(getActivity());
+            return false;
         });
 
         mTraktFull = findPreference(KEY_TRAKT_GETFULL);
         mCompleteCategory = (PreferenceCategory) findPreference(KEY_VIDEO_AD_FREE_CATEGORY);
-        findPreference(KEY_SHARED_FOLDERS).setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(getActivity(), CredentialsManagerPreferenceActivity.class));
-                return false;
-            }
+        findPreference(KEY_SHARED_FOLDERS).setOnPreferenceClickListener(preference -> {
+            startActivity(new Intent(getActivity(), CredentialsManagerPreferenceActivity.class));
+            return false;
         });
-        findPreference("tv_shows").setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(getActivity(), com.archos.mediascraper.settings.ScraperPreferences.class);
-                intent.putExtra("media",12);
-                startActivity(intent);
-                return false;
-            }
+        findPreference("tv_shows").setOnPreferenceClickListener(preference -> {
+            Intent intent = new Intent(getActivity(), ScraperPreferences.class);
+            intent.putExtra("media",12);
+            startActivity(intent);
+            return false;
         });
-        findPreference("movies").setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(getActivity(), com.archos.mediascraper.settings.ScraperPreferences.class);
-                intent.putExtra("media",11);
-                startActivity(intent);
-                return false;
-            }
+        findPreference("movies").setOnPreferenceClickListener(preference -> {
+            Intent intent = new Intent(getActivity(), ScraperPreferences.class);
+            intent.putExtra("media",11);
+            startActivity(intent);
+            return false;
         });
-        mForceSwDecPreferences.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                long currentTime = System.currentTimeMillis();
-                if (currentTime - mAdvancedPrefsClickLastTime > 1000)
-                    mAdvancedPrefsClickCount = 1;
+        mForceSwDecPreferences.setOnPreferenceClickListener(preference -> {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - mAdvancedPrefsClickLastTime > 1000)
+                mAdvancedPrefsClickCount = 1;
 
-                mAdvancedPrefsClickCount++;
+            mAdvancedPrefsClickCount++;
 
-                mAdvancedPrefsClickLastTime = currentTime;
+            mAdvancedPrefsClickLastTime = currentTime;
 
-                if (mAdvancedPrefsClickCount > 8) {
-                    Editor editor = mSharedPreferences.edit();
-                    editor.putBoolean(KEY_ADVANCED_VIDEO_ENABLED, true);
-                    editor.apply();
-                    switchAdvancedPreferences();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        Preference p = findPreference(KEY_ADVANCED_VIDEO_QUIT);
-        p.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
+            if (mAdvancedPrefsClickCount > 8) {
                 Editor editor = mSharedPreferences.edit();
-                editor.putBoolean(KEY_ADVANCED_VIDEO_ENABLED, false);
+                editor.putBoolean(KEY_ADVANCED_VIDEO_ENABLED, true);
                 editor.apply();
                 switchAdvancedPreferences();
                 return true;
             }
+            return false;
+        });
+
+        Preference p = findPreference(KEY_ADVANCED_VIDEO_QUIT);
+        p.setOnPreferenceClickListener(preference -> {
+            Editor editor = mSharedPreferences.edit();
+            editor.putBoolean(KEY_ADVANCED_VIDEO_ENABLED, false);
+            editor.apply();
+            switchAdvancedPreferences();
+            return true;
         });
 
         switchAdvancedPreferences();
 
         Preference subtitlesCredentialsButton = findPreference(KEY_SUBTITILES_CREDENTIALS);
-        subtitlesCredentialsButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                String tag = OpenSubtitlesCredentialsDialog.class.getCanonicalName();
-                OpenSubtitlesCredentialsDialog dialog = (OpenSubtitlesCredentialsDialog)getParentFragmentManager().findFragmentByTag(tag);
-                if (dialog == null) {
-                    dialog = new OpenSubtitlesCredentialsDialog();
-                    dialog.show(getParentFragmentManager(), tag);
-                }
-                return true;
+        subtitlesCredentialsButton.setOnPreferenceClickListener(preference -> {
+            String tag = OpenSubtitlesCredentialsDialog.class.getCanonicalName();
+            OpenSubtitlesCredentialsDialog dialog = (OpenSubtitlesCredentialsDialog)getParentFragmentManager().findFragmentByTag(tag);
+            if (dialog == null) {
+                dialog = new OpenSubtitlesCredentialsDialog();
+                dialog.show(getParentFragmentManager(), tag);
             }
+            return true;
         });
 
         CheckBoxPreference cbp = (CheckBoxPreference)findPreference(KEY_SUBTITLES_HIDE);
-        cbp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                boolean doHide = ((Boolean) newValue);
-                mSubtitlesFavLangPreferences.setEnabled(!doHide);
-                return true;
-            }
+        cbp.setOnPreferenceChangeListener((preference, newValue) -> {
+            boolean doHide = ((Boolean) newValue);
+            mSubtitlesFavLangPreferences.setEnabled(!doHide);
+            return true;
         });
         boolean doHide = mSharedPreferences.getBoolean(KEY_SUBTITLES_HIDE, false);
 
@@ -593,38 +538,35 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         CheckBoxPreference nfoExportAutoPreferences = (CheckBoxPreference) findPreference("nfo_export_auto");
         if (nfoExportAutoPreferences != null) {
-            nfoExportAutoPreferences.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    if (!ACTIVATE_EMAIL_MEDIA_DB) {
-                        return false;
-                    }
-                    // Check click speed
-                    long currentTime = System.currentTimeMillis();
-                    if (currentTime - mEmailMediaDBPrefsClickLastTime < 1000) {
-                        mEmailMediaDBPrefsClickCount++;
-                    } else {
-                        mEmailMediaDBPrefsClickCount = 0;
-                    }
-                    mEmailMediaDBPrefsClickLastTime = currentTime;
-
-                    if (mEmailMediaDBPrefsClickCount > 4) {
-                        new AlertDialog.Builder(getActivity())
-                                .setMessage(R.string.ask_to_mail_media_DB)
-                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        new DebugDbExportDialogFragment()
-                                                .show(getParentFragmentManager(), "DebugDbExportDialogFragment");
-                                    }
-                                })
-                                .setNegativeButton(android.R.string.cancel, null)
-                                .create().show();
-                        mEmailMediaDBPrefsClickCount = 0; // reset to not have several dialogs displayed if user continue to click very quickly
-                        return true;
-                    }
+            nfoExportAutoPreferences.setOnPreferenceClickListener(preference -> {
+                if (!ACTIVATE_EMAIL_MEDIA_DB) {
                     return false;
                 }
+                // Check click speed
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - mEmailMediaDBPrefsClickLastTime < 1000) {
+                    mEmailMediaDBPrefsClickCount++;
+                } else {
+                    mEmailMediaDBPrefsClickCount = 0;
+                }
+                mEmailMediaDBPrefsClickLastTime = currentTime;
+
+                if (mEmailMediaDBPrefsClickCount > 4) {
+                    new AlertDialog.Builder(getActivity())
+                            .setMessage(R.string.ask_to_mail_media_DB)
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    new DebugDbExportDialogFragment()
+                                            .show(getParentFragmentManager(), "DebugDbExportDialogFragment");
+                                }
+                            })
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .create().show();
+                    mEmailMediaDBPrefsClickCount = 0; // reset to not have several dialogs displayed if user continue to click very quickly
+                    return true;
+                }
+                return false;
             });
         }
 
@@ -645,13 +587,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                     }
                 });
                 Preference uiZoomPref = findPreference("ui_zoom");
-                uiZoomPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        getActivity().setResult(ACTIVITY_RESULT_UI_ZOOM_CHANGED); // way to tell the MainActivity that an important preference has been changed
-                        getActivity().finish(); // close the preference activity right away
-                        return true;
-                    }
+                uiZoomPref.setOnPreferenceClickListener(preference -> {
+                    getActivity().setResult(ACTIVITY_RESULT_UI_ZOOM_CHANGED); // way to tell the MainActivity that an important preference has been changed
+                    getActivity().finish(); // close the preference activity right away
+                    return true;
                 });
                 // Do not show the zoom preference if user is not in TV more UI
                 String currentUiMode = getPreferenceManager().getSharedPreferences().getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
@@ -668,14 +607,11 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 getPreferenceScreen().removePreference(leanbackUserInterfaceCategory);
             }
             else {
-                findPreference("reset_last_played_row").setOnPreferenceClickListener(new OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        DbUtils.markAsNotRead(getActivity());
-                        Toast.makeText(getActivity(), R.string.reset_last_played_row_in_progress, Toast.LENGTH_SHORT).show();
+                findPreference("reset_last_played_row").setOnPreferenceClickListener(preference -> {
+                    DbUtils.markAsNotRead(getActivity());
+                    Toast.makeText(getActivity(), R.string.reset_last_played_row_in_progress, Toast.LENGTH_SHORT).show();
 
-                        return true;
-                    }
+                    return true;
                 });
 
                 ListPreference movieSortOrderPref = (ListPreference)findPreference(KEY_MOVIE_SORT_ORDER);
@@ -694,25 +630,22 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 if (tvshowSortOrderPref.getValue() == null)
                     tvshowSortOrderPref.setValue(TvshowSortOrderEntries.DEFAULT_SORT);
 
-                findPreference(KEY_SHOW_ALL_TV_SHOWS_ROW).setOnPreferenceClickListener(new OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        // Check click speed
-                        long currentTime = System.currentTimeMillis();
-                        if (currentTime - mMoreLeanbackPrefsClickLastTime < 1000) {
-                            mMoreLeanbackPrefsClickCount++;
-                        } else {
-                            mMoreLeanbackPrefsClickCount = 0;
-                        }
-                        mMoreLeanbackPrefsClickLastTime = currentTime;
-
-                        if (mMoreLeanbackPrefsClickCount > 4) {
-                            if (UiChoiceDialog.applicationIsInLeanbackMode(getActivity()))
-                                startActivity(new Intent(getActivity(), VideoSettingsMoreLeanbackActivity.class));
-                            mMoreLeanbackPrefsClickCount = 0; // reset
-                        }
-                        return false;
+                findPreference(KEY_SHOW_ALL_TV_SHOWS_ROW).setOnPreferenceClickListener(preference -> {
+                    // Check click speed
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime - mMoreLeanbackPrefsClickLastTime < 1000) {
+                        mMoreLeanbackPrefsClickCount++;
+                    } else {
+                        mMoreLeanbackPrefsClickCount = 0;
                     }
+                    mMoreLeanbackPrefsClickLastTime = currentTime;
+
+                    if (mMoreLeanbackPrefsClickCount > 4) {
+                        if (UiChoiceDialog.applicationIsInLeanbackMode(getActivity()))
+                            startActivity(new Intent(getActivity(), VideoSettingsMoreLeanbackActivity.class));
+                        mMoreLeanbackPrefsClickCount = 0; // reset
+                    }
+                    return false;
                 });
             }
         }
