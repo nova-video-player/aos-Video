@@ -20,6 +20,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
@@ -36,22 +37,25 @@ import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 public class TraktSigninDialogPreference extends Preference {
+
+    private final static boolean DBG = false;
+    private static final String TAG = TraktSigninDialogPreference.class.getSimpleName();
+
 	OAuthDialog od=null;
     private DialogInterface.OnDismissListener mOnDismissListener;
 
     public TraktSigninDialogPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        
     }
-    public TraktSigninDialogPreference(Context context, AttributeSet attrs,
-            int defStyle) {
+
+    public TraktSigninDialogPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle); 
         this.setKey(Trakt.KEY_TRAKT_USER);
     }
+
     public boolean isDialogShowing(){
     	return od!=null&&od.isShowing();
     }
-
 
     public SharedPreferences getSharedPreferences(){
         if(super.getSharedPreferences()==null)
@@ -59,6 +63,7 @@ public class TraktSigninDialogPreference extends Preference {
         else
             return super.getSharedPreferences();
     }
+
     @Override
     public void onClick() {
         try {
@@ -67,21 +72,25 @@ public class TraktSigninDialogPreference extends Preference {
             OAuthCallback codeCallBack = data -> {
                 // TODO Auto-generated method stub
                 if (data.code != null) {
+                    if (DBG) Log.d(TAG,"onClick: data.code is not null");
                     NovaProgressDialog mProgress = NovaProgressDialog.show(getContext(), "", getContext().getResources().getString(R.string.connecting), true, true);
                     AsyncTask t1 = new AsyncTask() {
                         @Override
                         protected void onPreExecute() {
+                            if (DBG) Log.d(TAG,"OAuthCallback.onPreExecute: show dialog");
                             mProgress.show();
                         }
 
                         @Override
                         protected Object doInBackground(Object... params) {
+                            if (DBG) Log.d(TAG,"OAuthCallback.doInBackground: get trakt accessToken");
                             final Trakt.accessToken res = Trakt.getAccessToken(oa.code);
                             return res;
                         }
 
                         @Override
                         protected void onPostExecute(Object result) {
+                            if (DBG) Log.d(TAG,"OAuthCallback.onPostExecute: store trakt accessToken and notify change");
                             mProgress.dismiss();
                             if (result != null && result instanceof Trakt.accessToken) {
                                 Trakt.accessToken res = (Trakt.accessToken) result;
@@ -95,6 +104,7 @@ public class TraktSigninDialogPreference extends Preference {
                     };
                     t1.execute();
                 } else {
+                    if (DBG) Log.d(TAG,"onClick: data.code null!");
                     new AlertDialog.Builder(getContext())
                             .setNegativeButton(android.R.string.ok, null)
                             .setMessage(R.string.dialog_subloader_nonetwork_title)
@@ -104,24 +114,26 @@ public class TraktSigninDialogPreference extends Preference {
             };
 
             od = new OAuthDialog(getContext(), codeCallBack, oa, t);
+            od.setCancelable(true);
+            od.setCanceledOnTouchOutside(false);
             od.show();
-            od.setOnDismissListener(mOnDismissListener);
-            od.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialogInterface) {
-                    if (mOnDismissListener != null) {
-                        mOnDismissListener.onDismiss(dialogInterface);
-                    }
-                }
-            });
+            if (mOnDismissListener != null) {
+                od.setOnDismissListener(mOnDismissListener);
+                od.setOnCancelListener(dialogInterface -> {
+                    mOnDismissListener.onDismiss(dialogInterface);
+                });
+            } else {
+                od.setOnCancelListener(DialogInterface::cancel);
+                od.setOnDismissListener(DialogInterface::dismiss);
+            }
         } catch (OAuthSystemException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.e(TAG, "onClick: caught OAuthSystemException", e);
         }
         
     }
 	public void dismissDialog() {
-		if(od!=null)
+		if(od != null)
 			od.dismiss();
 	}
 
@@ -131,10 +143,13 @@ public class TraktSigninDialogPreference extends Preference {
 
 	public void showDialog(boolean boolean1) {
 		// TODO Auto-generated method stub
-		if(boolean1)
-			this.onClick();
-		else
-			dismissDialog();
+		if(boolean1) {
+            if (DBG) Log.d(TAG, "showDialog: trigger onClick");
+            this.onClick();
+        } else {
+            if (DBG) Log.d(TAG, "showDialog: dismiss dialog");
+            dismissDialog();
+        }
 	}
 
 }

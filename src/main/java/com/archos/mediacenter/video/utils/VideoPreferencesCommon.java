@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -77,8 +78,7 @@ import java.util.Locale;
 import static com.archos.filecorelibrary.FileUtils.backupDatabase;
 
 public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener {
-
-    private static String TAG = "VideoPreferencesCommon";
+    private static final String TAG = VideoPreferencesCommon.class.getSimpleName();
     private static boolean DBG = false;
 
     public static final String KEY_VIDEO_AD_FREE = "video_ad_free";
@@ -569,6 +569,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mHanlder = new Handler();
         mTraktSigninPreference = (TraktSigninDialogPreference) findPreference(KEY_TRAKT_SIGNIN);
         if(mTraktSigninPreference!= null && savedInstanceState!=null) {
+            if (DBG) Log.d(TAG, "onCreatePreferences: closing mTraktSigninPreference dialog to prevent leaked window");
             // close dialog to prevent leaked window
             mTraktSigninPreference.showDialog(savedInstanceState.getBoolean(LOGIN_DIALOG, false));
         }

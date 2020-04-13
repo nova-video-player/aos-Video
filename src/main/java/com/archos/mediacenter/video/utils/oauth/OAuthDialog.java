@@ -46,6 +46,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.ui.NovaProgressDialog;
 
@@ -56,7 +58,7 @@ import com.archos.mediacenter.video.ui.NovaProgressDialog;
 public class OAuthDialog extends Dialog {
 
     private final static boolean DBG = false;
-    private final static String TAG = "OAuthDialog";
+	private static final String TAG = OAuthDialog.class.getSimpleName();
 
 	private NovaProgressDialog mProgress;
 	private LinearLayout mLayout;
@@ -75,7 +77,8 @@ public class OAuthDialog extends Dialog {
 	 */
 	public OAuthDialog(Context context, OAuthCallback o,OAuthData oa, OAuthClientRequest req) {
 		super(context);
-		mdata = oa;
+        if (DBG) Log.d(TAG, "OAuthDialog");
+        mdata = oa;
 		mReq = req;
 		mListener=o;
 	}
@@ -85,6 +88,7 @@ public class OAuthDialog extends Dialog {
 	 * @return The used OAuthData
 	 */
 	public OAuthData getData() {
+		if (DBG) Log.d(TAG, "getData");
 		return mdata;
 	}
 	
@@ -96,8 +100,9 @@ public class OAuthDialog extends Dialog {
 	 */
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        if (DBG) Log.d(TAG, "onCreate");
 
-		mProgress = NovaProgressDialog.show(getContext(), "", getContext().getResources().getString(R.string.loading), true);
+        mProgress = NovaProgressDialog.show(getContext(), "", getContext().getResources().getString(R.string.loading), true);
 		mProgress.setCancelable(true);
 		mProgress.setCanceledOnTouchOutside(false);
 
@@ -124,6 +129,7 @@ public class OAuthDialog extends Dialog {
 	}
 
 	public WebView getWebView(){
+		if (DBG) Log.d(TAG, "getWebView");
 		return mWebView;
 	}
 	
@@ -147,7 +153,7 @@ public class OAuthDialog extends Dialog {
         @SuppressWarnings("deprecation")
         @Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			if (DBG) Log.d(TAG, url);
+			if (DBG) Log.d(TAG, "shouldOverrideUrlLoading API21-23 for url " + url);
 			String urldecode = null;
 			try {
 				urldecode = URLDecoder.decode(url, "UTF-8");
@@ -155,8 +161,10 @@ public class OAuthDialog extends Dialog {
 				Log.w(TAG, "OAuthWebViewClient:shouldOverrideUrlLoading: caught UnsupportedEncodingException");
 			}
 			Uri uri = Uri.parse(urldecode);
-			if (!"localhost".equals(uri.getHost()) || !urldecode.contains("code="))
+			if (!"localhost".equals(uri.getHost()) || !urldecode.contains("code=")) {
+				if (DBG) Log.d(TAG, "shouldOverrideUrlLoading: shouldOverrideUrlLoading false");
 				return false;
+			}
 			mdata.code = uri.getQueryParameter("code");
 			OAuthDialog.this.dismiss();
 			mListener.onFinished(mdata);
@@ -165,11 +173,11 @@ public class OAuthDialog extends Dialog {
 		}
 
         // this one is for Android API 24+
-        @RequiresApi(Build.VERSION_CODES.N)
+        @RequiresApi(Build.VERSION_CODES.M)
         @Override
 		public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 			String url = request.getUrl().toString();
-			if (DBG) Log.d(TAG, url);
+			if (DBG) Log.d(TAG, "shouldOverrideUrlLoading API24+ for url " + url);
 			String urldecode = null;
 			try {
 				urldecode = URLDecoder.decode(url, "UTF-8");
@@ -177,8 +185,10 @@ public class OAuthDialog extends Dialog {
 				Log.w(TAG, "OAuthWebViewClient:shouldOverrideUrlLoading: caught UnsupportedEncodingException");
 			}
 			Uri uri = Uri.parse(urldecode);
-			if (!"localhost".equals(uri.getHost()) || !urldecode.contains("code="))
+			if (!"localhost".equals(uri.getHost()) || !urldecode.contains("code=")) {
+				if (DBG) Log.d(TAG, "shouldOverrideUrlLoading: shouldOverrideUrlLoading false");
 				return false;
+			}
 			mdata.code = uri.getQueryParameter("code");
 			OAuthDialog.this.dismiss();
 			mListener.onFinished(mdata);
@@ -196,22 +206,28 @@ public class OAuthDialog extends Dialog {
         @Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
         {
-        	super.onReceivedError(view, errorCode, description, failingUrl);
+            super.onReceivedError(view, errorCode, description, failingUrl);
+            if (DBG) Log.d(TAG, "onReceivedError API21,22 for url " + failingUrl);
         	if(mListener!=null)
         		mListener.onFinished(mdata);
             OAuthDialog.this.dismiss();
-        }
+			Log.w(TAG, "onReceivedError: error code=" + errorCode + ", meaning " + description);
+			Toast.makeText(getContext(), "No Internet or " + description , Toast.LENGTH_LONG).show();
+		}
 
         // for Android 23+
         @RequiresApi(Build.VERSION_CODES.M)
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request,  WebResourceError error)
         {
-            super.onReceivedError(view, request, error);
+			if (DBG) Log.d(TAG, "onReceivedError API23+");
+			super.onReceivedError(view, request, error);
             if(mListener!=null)
                 mListener.onFinished(mdata);
             OAuthDialog.this.dismiss();
-        }
+            Log.w(TAG, "onReceivedError: error is " + error);
+			Toast.makeText(getContext(), "No Internet or " + error , Toast.LENGTH_LONG).show();
+		}
 
 
         /*
@@ -221,10 +237,10 @@ public class OAuthDialog extends Dialog {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon)
         {
-        	super.onPageStarted(view, url, favicon);
+			if (DBG) Log.d(TAG, "onPageStarted");
+			super.onPageStarted(view, url, favicon);
             mProgress.show();
         }
-
 
 		/*
 		**  Remove the dialog when the page finish loading
@@ -233,6 +249,7 @@ public class OAuthDialog extends Dialog {
 		@Override
 		public void onPageFinished(WebView view, String url)
 		{
+			if (DBG) Log.d(TAG, "onPageFinished");
 			super.onPageFinished(view, url);
             mProgress.dismiss();
             injectCSS();
@@ -241,6 +258,7 @@ public class OAuthDialog extends Dialog {
 
 	//workaround to be accepted on amazon store
 	private void injectCSS() {
+		if (DBG) Log.d(TAG, "injectCSS");
 		try {
 			String css = ".col-xs-4 a:focus .btn{ background-color:blue !important; }";
 			getWebView().loadUrl("javascript:(function() {" +
