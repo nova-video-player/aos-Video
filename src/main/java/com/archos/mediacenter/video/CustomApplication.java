@@ -63,7 +63,7 @@ public class CustomApplication extends Application {
 
     private NetworkState networkState = null;
     private static boolean isNetworkStateRegistered = false;
-    private static boolean isAppStateListenerAdded = true;
+    private static boolean isAppStateListenerAdded = false;
 
 
     @Override
@@ -186,17 +186,19 @@ public class CustomApplication extends Application {
     };
 
     protected void handleForeGround(boolean foreground) {
-        if (DBG) Log.d(TAG, "handleForeGround: NetworkState.registerNetworkCallback");
+        if (DBG) Log.d(TAG, "handleForeGround: is app foreground " + foreground);
         if (networkState == null ) networkState = NetworkState.instance(getApplicationContext());
         if (foreground) {
             if (!isNetworkStateRegistered) {
                 if (DBG) Log.d(TAG, "handleForeGround: app now in ForeGround NetworkState.registerNetworkCallback");
                 networkState.registerNetworkCallback();
+                isNetworkStateRegistered = true;
             }
         } else {
             if (isNetworkStateRegistered) {
                 if (DBG) Log.d(TAG, "handleForeGround: app now in BackGround NetworkState.unRegisterNetworkCallback");
                 networkState.unRegisterNetworkCallback();
+                isNetworkStateRegistered = false;
             }
         }
     }
