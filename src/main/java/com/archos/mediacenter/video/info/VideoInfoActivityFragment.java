@@ -562,7 +562,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     if (getActivity() != null)
                         getActivity().runOnUiThread(() -> {
                             // run this on UI thread
-                            networkState.updateFrom();
                             // close activity if
                             //   not localfile (i.e. remote)
                             //   && (not connected || (no local connection && not ftp (i.e. smb/upnp))

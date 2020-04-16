@@ -701,7 +701,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     public void propertyChange(PropertyChangeEvent evt) {
                         if (evt.getOldValue() != evt.getNewValue()) {
                             if (DBG) Log.d(TAG, "NetworkState for " + evt.getPropertyName() + " changed:" + evt.getOldValue() + " -> " + evt.getNewValue());
-                            networkState.updateFrom();
                             if (!networkState.hasLocalConnection()) {
                                 if (DBG) Log.d(TAG, "lost network: finish");
                                 finish();
