@@ -21,6 +21,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.util.Log;
 
 import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosUtils;
@@ -56,6 +57,14 @@ import org.acra.sender.HttpSender;
         httpMethod = HttpSender.Method.POST)
 
 public class CustomApplication extends Application {
+
+    private static final String TAG = "CustomApplication";
+    private static final boolean DBG = false;
+
+    private NetworkState networkState = null;
+    private static boolean isNetworkStateRegistered = false;
+    private static boolean isAppStateListenerAdded = true;
+
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -137,18 +146,23 @@ public class CustomApplication extends Application {
         BASEDIR = Environment.getExternalStorageDirectory().getPath()+"Android/data/"+getPackageName();
 
         // Class that keeps track of activities so we can tell is we are foreground
+        if (DBG) Log.d(TAG, "onCreate: registerActivityLifecycleCallbacks AppState");
         registerActivityLifecycleCallbacks(AppState.sCallbackHandler);
 
-        // Keep track of network state
-        NetworkState networkState = NetworkState.instance(getApplicationContext());
-        networkState.registerNetworkCallback();
+        // NetworkState.(un)registerNetworkCallback following AppState
+        if (!isAppStateListenerAdded) {
+            if (DBG) Log.d(TAG, "addListener: AppState.addOnForeGroundListener");
+            AppState.addOnForeGroundListener(sForeGroundListener);
+            isAppStateListenerAdded = true;
+        }
+        handleForeGround(AppState.isForeGround());
 
         // init HttpImageManager manager.
         mHttpImageManager = new HttpImageManager(HttpImageManager.createDefaultMemoryCache(), 
                 new FileSystemPersistence(BASEDIR));
 
         // Note: we do not init UPnP here, we wait for the user to enter the network view
-
+        if (DBG) Log.d(TAG, "onCreate: TraktService.init");
         TraktService.init();
 
         NetworkAutoRefresh.init();
@@ -163,6 +177,27 @@ public class CustomApplication extends Application {
             //if main process
             MediaUtils.clearOldSubDir(this);
             Debug.startLogcatRecording();
+        }
+    }
+
+    // link networkState register/unregister networkCallback linked to app foreground/background lifecycle
+    private final AppState.OnForeGroundListener sForeGroundListener = (applicationContext, foreground) -> {
+        handleForeGround(foreground);
+    };
+
+    protected void handleForeGround(boolean foreground) {
+        if (DBG) Log.d(TAG, "handleForeGround: NetworkState.registerNetworkCallback");
+        if (networkState == null ) networkState = NetworkState.instance(getApplicationContext());
+        if (foreground) {
+            if (!isNetworkStateRegistered) {
+                if (DBG) Log.d(TAG, "handleForeGround: app now in ForeGround NetworkState.registerNetworkCallback");
+                networkState.registerNetworkCallback();
+            }
+        } else {
+            if (isNetworkStateRegistered) {
+                if (DBG) Log.d(TAG, "handleForeGround: app now in BackGround NetworkState.unRegisterNetworkCallback");
+                networkState.unRegisterNetworkCallback();
+            }
         }
     }
 
