@@ -395,6 +395,10 @@ Copertina (rotolo di copertina)</string>
     <string name="dialog_subloader_nonetwork_title">Nessuna connessione a internet</string>
     <string name="dialog_subloader_nonetwork_message">È necessaria una connessione a internet per scaricare i sottotitoli</string>
     <string name="dialog_subloader_connecting">Connessione a www.opensubtitles.org...</string>
+    <string name="dialog_subloader_credentials">Credenziali dei sottotitoli</string>
+    <string name="dialog_subloader_credentials_empty">Devi specificare un nome utente e una password validi!</string>
+    <string name="toast_subloader_credentials_empty">Fornisci le tue credenziali opensubtitles nelle impostazioni per poter scaricare i sottotitoli</string>
+    <string name="toast_subloader_login_failed">Credenziali opensubtitles errate o servizio non disponibile</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Impostazioni per i sottotitoli</string>
     <string name="subtitle_sample_text">\"sample\"</string>
@@ -493,6 +497,8 @@ Copertina (rotolo di copertina)</string>
     <string name="category_languages">Sottotitoli</string>
     <string name="subtitles_hide_default">Nascondi sempre i sottotitoli</string>
     <string name="subtitles_hide_default_summary">Chiedi sempre se vuoi nascondere i sottotitoli</string>
+    <string name="subtitles_credentials_title">Credenziali dei sottotitoli</string>
+    <string name="subtitles_credentials_summary">Fornisci le tue credenziali opensubtitles nelle impostazioni per poter scaricare i sottotitoli</string>
     <string name="preferences_languages">Lingua dei sottotitoli da scaricare</string>
     <string name="summary_list_preference_primary">Seleziona la tua lingua per i sottotitoli da scaricare</string>
     <string name="favSubLang_title">Lingua di lettura dei sottotitoli</string>

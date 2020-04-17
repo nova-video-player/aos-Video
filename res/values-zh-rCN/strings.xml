@@ -390,6 +390,10 @@
     <string name="dialog_subloader_nonetwork_title">没有网络连接</string>
     <string name="dialog_subloader_nonetwork_message">下载字幕需要互联网连接</string>
     <string name="dialog_subloader_connecting">正在连接到 www.opensubtitles.org…</string>
+    <string name="dialog_subloader_credentials">Opensubtitles 用户凭据</string>
+    <string name="dialog_subloader_credentials_empty">你必须指定一个有效的用户名和密码！</string>
+    <string name="toast_subloader_credentials_empty">在设置中提供你的 opensubtitles 用户凭据以下载字幕</string>
+    <string name="toast_subloader_login_failed">Opensubtitles 用户凭据不正确或服务不可用</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">字幕设置</string>
     <string name="subtitle_sample_text">“示例”</string>
@@ -488,6 +492,8 @@
     <string name="category_languages">字幕</string>
     <string name="subtitles_hide_default">默认隐藏字幕</string>
     <string name="subtitles_hide_default_summary">如果您想要默认隐藏字幕，请勾选此项。</string>
+    <string name="subtitles_credentials_title">OpenSubtitles 用户凭据</string>
+    <string name="subtitles_credentials_summary">提供你的 opensubtitles 用户凭据以下载字幕</string>
     <string name="preferences_languages">字幕下载语言</string>
     <string name="summary_list_preference_primary">选择下载字幕的语言</string>
     <string name="favSubLang_title">字幕阅读语言</string>

@@ -382,6 +382,10 @@
     <string name="dialog_subloader_nonetwork_title">Připojení k internetu není k dispozici</string>
     <string name="dialog_subloader_nonetwork_message">Ke stažení titulků je vyžadováno připojení k internetu</string>
     <string name="dialog_subloader_connecting">Připojování na www.opensubtitles.org…</string>
+    <string name="dialog_subloader_credentials">Přihlašovací údaje k OpenSubtitles</string>
+    <string name="dialog_subloader_credentials_empty">Musíte zadat platné uživatelské jméno a heslo!</string>
+    <string name="toast_subloader_credentials_empty">Zadejte vaše uživatelské jméno a heslo pro OpenSubtitles v nastavení pro možnost stahování titulků</string>
+    <string name="toast_subloader_login_failed">Nesprávné uživatelské jméno a heslo k OpenSubtitles nebo služba není dostupná</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Nastavení titulků</string>
     <string name="subtitle_sample_text">\"příklad\"</string>
@@ -480,6 +484,8 @@
     <string name="category_languages">Titulky</string>
     <string name="subtitles_hide_default">Ve výchozím stavu skrýt titulky</string>
     <string name="subtitles_hide_default_summary">Zvolte, zda chcete ve výchozím stavu skrýt titulky</string>
+    <string name="subtitles_credentials_title">Přihlašovací údaje k OpenSubtitles</string>
+    <string name="subtitles_credentials_summary">Zadejte vaše uživatelské jméno a heslo pro OpenSubtitles pro možnost stahování titulků</string>
     <string name="preferences_languages">Jazyky pro stahované titulky</string>
     <string name="summary_list_preference_primary">Vyberte jazyky pro stahování titulků</string>
     <string name="favSubLang_title">Jazyk pro zobrazované titulky</string>

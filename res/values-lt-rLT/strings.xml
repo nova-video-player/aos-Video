@@ -402,6 +402,10 @@
     <string name="dialog_subloader_nonetwork_title">Nėra interneto</string>
     <string name="dialog_subloader_nonetwork_message">Reikalingas interneto ryšys norint atsisiųsti subtitrus</string>
     <string name="dialog_subloader_connecting">Prisijungiama prie www.opensubtitles.org…</string>
+    <string name="dialog_subloader_credentials">Opensubtitles paskyra</string>
+    <string name="dialog_subloader_credentials_empty">Turite nurodyti tinkamą naudotojo vardą ir slaptažodį!</string>
+    <string name="toast_subloader_credentials_empty">Norėdami atsiųsti titrus, nustatymuose įveskite savo opensubtitles paskyrą</string>
+    <string name="toast_subloader_login_failed">Neteisingi opensubtitles prisijungimo duomenys arba paslauga nepasiekiama</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Subtitrų nustatymai</string>
     <string name="subtitle_sample_text">\"pavyzdys\"</string>
@@ -500,6 +504,8 @@
     <string name="category_languages">Subtitrai</string>
     <string name="subtitles_hide_default">Pagal nutylėjimą slėpti subtitrus</string>
     <string name="subtitles_hide_default_summary">Pažymėkite, jei norite slėpti subtitrus</string>
+    <string name="subtitles_credentials_title">Opensubtitles paskyra</string>
+    <string name="subtitles_credentials_summary">Norėdami atsiųsti titrus, nustatymuose įveskite savo opensubtitles paskyrą</string>
     <string name="preferences_languages">Subtitrų kalbos</string>
     <string name="summary_list_preference_primary">Pasirinkite kalbas, kuriomis norite matyti subtitrus</string>
     <string name="favSubLang_title">Numatyta subtitrų kalba</string>

@@ -402,6 +402,10 @@
     <string name="dialog_subloader_nonetwork_title">Нет подключения к Интернету</string>
     <string name="dialog_subloader_nonetwork_message">Для загрузки субтитров требуется подключение к Интернету</string>
     <string name="dialog_subloader_connecting">Подключение к www.opensubtitles.org…</string>
+    <string name="dialog_subloader_credentials">Учётные данные Opensubtitles</string>
+    <string name="dialog_subloader_credentials_empty">Вы должны указать правильное имя пользователя и пароль!</string>
+    <string name="toast_subloader_credentials_empty">Предоставьте учетные данные Opensubtitles в настройках, чтобы иметь возможность загружать субтитры</string>
+    <string name="toast_subloader_login_failed">Неверные учетные данные Opensubtitles или служба недоступна</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Параметры субтитры</string>
     <string name="subtitle_sample_text">«образец»</string>
@@ -500,6 +504,8 @@
     <string name="category_languages">Субтитры</string>
     <string name="subtitles_hide_default">Скрыть субтитры по умолчанию</string>
     <string name="subtitles_hide_default_summary">Отметьте, если желаете скрывать субтитры по умолчанию</string>
+    <string name="subtitles_credentials_title">Учётные данные Opensubtitles</string>
+    <string name="subtitles_credentials_summary">Предоставьте учетные данные Opensubtitles в настройках, чтобы иметь возможность загружать субтитры</string>
     <string name="preferences_languages">Язык загружаемых субтитров</string>
     <string name="summary_list_preference_primary">Выберите язык для загружаемых субтитров</string>
     <string name="favSubLang_title">Язык субтитров по-умолчанию</string>

@@ -394,6 +394,10 @@
     <string name="dialog_subloader_nonetwork_title">Sem conexão com a Internet</string>
     <string name="dialog_subloader_nonetwork_message">Uma conexão com a internet é necessária para baixar legendas</string>
     <string name="dialog_subloader_connecting">Conectando-se a www.opensubtitle.org…</string>
+    <string name="dialog_subloader_credentials">Credenciais do Opensubtitles</string>
+    <string name="dialog_subloader_credentials_empty">Você deve especificar um nome de usuário e senha válidos!</string>
+    <string name="toast_subloader_credentials_empty">Forneça suas credenciais do opensubtitles nas configurações para poder baixar legendas</string>
+    <string name="toast_subloader_login_failed">Credênciais do opensubtitles são invalidas ou o serviço não está disponível</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Configurações de legenda</string>
     <string name="subtitle_sample_text">\"exemplo\"</string>
@@ -492,6 +496,8 @@
     <string name="category_languages">Legendas</string>
     <string name="subtitles_hide_default">Ocultar legendas por padrão</string>
     <string name="subtitles_hide_default_summary">Marque se você deseja ocultar legendas por padrão</string>
+    <string name="subtitles_credentials_title">Credenciais do Opensubtitles</string>
+    <string name="subtitles_credentials_summary">Forneça suas credenciais do opensubtitles para poder baixar legendas</string>
     <string name="preferences_languages">Idiomas de download de legendas</string>
     <string name="summary_list_preference_primary">Selecione seus idiomas para baixar legendas</string>
     <string name="favSubLang_title">Idiomas de leitura de legendas</string>
