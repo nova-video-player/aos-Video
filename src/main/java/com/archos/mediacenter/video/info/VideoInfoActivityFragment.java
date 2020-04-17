@@ -130,7 +130,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     private static final String TAG = "VideoInfoActivityFrag";
     private static final boolean DBG = false;
-    private static final boolean DBG_LISTENER = true;
+    private static final boolean DBG_LISTENER = false;
 
     /** A serialized com.archos.mediacenter.video.leanback.adapter.object.Video */
     public static final String EXTRA_VIDEO = "VIDEO";

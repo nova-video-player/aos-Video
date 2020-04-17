@@ -55,8 +55,8 @@ abstract public class BrowserCategory extends ListFragment {
     private static final String SELECTED_TOP = "selectedTop";
     public static final String MOUNT_POINT = "mount_point";
     private static final String TAG = "BrowserCategory";
-    private static final boolean DBG = true;
-    private static final boolean DBG_LISTENER = true;
+    private static final boolean DBG = false;
+    private static final boolean DBG_LISTENER = false;
 
     private static final int[] mExternalIDs = {
             R.string.sd_card_storage, R.string.usb_host_storage, R.string.other_storage, R.string.network_shared_folders,R.string.sftp_folders,

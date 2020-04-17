@@ -92,7 +92,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
     private static final String LIMIT = "20";
 
     private static final String TAG = SubtitlesDownloaderActivity.class.getSimpleName();
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
     private static final boolean DBG_NET = false;
 
     //to distinguished program dismiss and users
