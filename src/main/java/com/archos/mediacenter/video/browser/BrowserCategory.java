@@ -55,7 +55,7 @@ abstract public class BrowserCategory extends ListFragment {
     private static final String SELECTED_TOP = "selectedTop";
     public static final String MOUNT_POINT = "mount_point";
     private static final String TAG = "BrowserCategory";
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
     private static final boolean DBG_LISTENER = true;
 
     private static final int[] mExternalIDs = {
@@ -208,10 +208,11 @@ abstract public class BrowserCategory extends ListFragment {
         if (propertyChangeListener == null)
             propertyChangeListener = evt -> {
                 if (evt.getOldValue() != evt.getNewValue()) {
-                    if (DBG) Log.d(TAG, "onActivityCreated: NetworkState for " + evt.getPropertyName() + " changed:" + evt.getOldValue() + " -> " + evt.getNewValue());
+                    if (DBG) Log.d(TAG, "onActivityCreated: updateUI NetworkState for " + evt.getPropertyName() + " changed:" + evt.getOldValue() + " -> " + evt.getNewValue());
                     updateUI();
                 }
             };
+        updateUI(); // get initialization right
     }
 
     private void addNetworkListener() {
@@ -244,6 +245,7 @@ abstract public class BrowserCategory extends ListFragment {
     private void updateUI() {
         if (getActivity() != null)
             getActivity().runOnUiThread(() -> {
+                if (DBG) Log.d(TAG, "updateUI");
                 // run this on UI thread
                 updateExternalStorage();
             });
@@ -283,7 +285,6 @@ abstract public class BrowserCategory extends ListFragment {
         }
         loadFragmentAfterStackReset(f);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(struc.title);
-
     }
 
     /**
@@ -356,7 +357,6 @@ abstract public class BrowserCategory extends ListFragment {
 
     public void startContent(Fragment fragment, String tag) {
          updateCategoryContent(fragment, tag);
-
     }
 
     private void showCategoryContent(Fragment fragment) {
@@ -516,7 +516,6 @@ abstract public class BrowserCategory extends ListFragment {
     }
 
     private void addLastItems() {
-
         mCategoryList.add("");
         ItemData itemData = new ItemData();
         itemData.icon = R.drawable.android29_ic_settings;
@@ -549,17 +548,16 @@ abstract public class BrowserCategory extends ListFragment {
      * Adapter class for displaying category items.
      */
     protected class CategoryAdapter extends BaseAdapter {
-
         static final private int ITEM_VIEW_TYPE_CATEGORY = 0;
         static final private int ITEM_VIEW_TYPE_SEPARATOR = 1;
         static final private int ITEM_VIEW_TYPE_COUNT = 2;
-
         private final LayoutInflater inflater;
 
         public CategoryAdapter(Context context) {
             super();
             inflater = LayoutInflater.from(context);
         }
+
         public boolean areAllItemsEnabled() {
             return false;
         }
@@ -588,7 +586,6 @@ abstract public class BrowserCategory extends ListFragment {
             else {
                 type = ITEM_VIEW_TYPE_CATEGORY;
             }
-
             return type;
         }
 
