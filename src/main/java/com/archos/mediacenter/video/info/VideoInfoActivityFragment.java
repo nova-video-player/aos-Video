@@ -121,8 +121,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-//import com.archos.mediacenter.video.utils.WebUtils;
-
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -549,6 +547,28 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         }
 
     }
+
+    private void updateUI() {
+        if (getActivity() != null)
+            getActivity().runOnUiThread(() -> {
+                if (DBG) Log.d(TAG, "updateUI");
+                // run this on UI thread
+                // close activity if
+                //   not localfile (i.e. remote)
+                //   && (not connected || (no local connection && not ftp (i.e. smb/upnp))
+                //   && fragment is added
+                //   && not fragment detached
+                if (mCurrentVideo!=null&&
+                        !FileUtils.isLocal(mCurrentVideo.getFileUri())&&
+                        (!networkState.isConnected()||
+                                !networkState.hasLocalConnection()&&!FileUtils.isSlowRemote(mCurrentVideo.getFileUri()))&&
+                        isAdded()&&
+                        !isDetached()) {
+                    getActivity().finish();
+                }
+            });
+    }
+
     @Override
     public void onAttach(Context context){
         if (DBG) Log.d(TAG,"onAttach");
@@ -559,26 +579,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             propertyChangeListener = evt -> {
                 if (evt.getOldValue() != evt.getNewValue()) {
                     if (DBG) Log.d(TAG, "NetworkState for " + evt.getPropertyName() + " changed:" + evt.getOldValue() + " -> " + evt.getNewValue());
-                    if (getActivity() != null)
-                        getActivity().runOnUiThread(() -> {
-                            // run this on UI thread
-                            // close activity if
-                            //   not localfile (i.e. remote)
-                            //   && (not connected || (no local connection && not ftp (i.e. smb/upnp))
-                            //   && fragment is added
-                            //   && not fragment detached
-                            if (mCurrentVideo!=null&&
-                                    !FileUtils.isLocal(mCurrentVideo.getFileUri())&&
-                                    (!networkState.isConnected()||
-                                            !networkState.hasLocalConnection()&&!FileUtils.isSlowRemote(mCurrentVideo.getFileUri()))&&
-                                    isAdded()&&
-                                    !isDetached()) {
-                                getActivity().finish();
-                            }
-                        });
+                    updateUI();
                 }
             };
+        updateUI(); // be sure to be on right state
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (DBG) Log.d(TAG,"onActivityResult");
@@ -603,6 +609,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         }
         else super.onActivityResult(requestCode,resultCode, data);
     }
+
     private void updateActionButtons(){
         if (DBG) Log.d(TAG,"updateActionButtons: RemoteResumeMs=" + mCurrentVideo.getRemoteResumeMs() + ", getResumeMs=" + mCurrentVideo.getResumeMs());
         if(mCurrentVideo.getRemoteResumeMs()>0&&mCurrentVideo.getResumeMs()!=mCurrentVideo.getRemoteResumeMs()) {
@@ -632,7 +639,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private void setBackdropToApplicationBackground() {
         mApplicationBackdrop = (ImageView) mRoot.findViewById(R.id.backdrop);
     }
-
 
     private void setBackground() {
         mButtonsContainer.setCardBackgroundColor(mColor);
@@ -679,7 +685,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
                 if(mSecondaryEpisodeSeasonView!=null)
                     setTextOrHideContainer(mSecondaryEpisodeSeasonView, getContext().getString(R.string.leanback_episode_SXEX_code, episode.getSeasonNumber(), episode.getEpisodeNumber()), mSecondaryEpisodeSeasonView);
-
             }
             else{
                 if(video.getName()!=null)
@@ -691,7 +696,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 if(mSecondaryEpisodeTitleView!=null)
                     mSecondaryEpisodeTitleView.setVisibility(View.GONE);
             }
-
 
             if(name!=null) {
                 if (name.length() > 30) {
@@ -710,11 +714,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mSecondaryTitleTextView.setText(name);
             }
 
-
             //fill usual info
 
             mFilePathTextView.setText(video.getFilePath());
-
 
             updateActionButtons();
 
@@ -811,7 +813,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
         }
         if (imageUri!=null) {
-
             try {
                 mBitmap = Picasso.get()
                         .load(imageUri)
@@ -852,7 +853,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         return mBitmap;
     }
 
-
     private boolean shouldChangeVideo(Video v1, Video v2) {
         if (DBG) Log.d(TAG, "shouldChangeVideo: called on videos " + ((v1 == null) ? "null" : v1.getFilePath()) + " and " + ((v2 == null) ? "null" : v2.getFilePath()));
         if (v1==null || v2==null) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate null"); return true;}
@@ -880,7 +880,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mScraperContainer.setVisibility(View.GONE);
         mScrapButton.setVisibility(View.GONE);
         mScraperPlotContainer.setVisibility(View.GONE);
-
     }
 
     private void goToIndexed() {
@@ -914,7 +913,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }.start();
                 }
             }
-
         }
     }
     private void goToNotScraped() {
@@ -937,10 +935,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         addMenu(0, R.string.info_menu_poster_select, 0, R.string.info_menu_poster_select);
         addMenu(0, R.string.nfo_export_button, 0, R.string.nfo_export_button);
         addMenu(0, R.string.scrap_remove, DELETE_GROUP, R.string.scrap_remove);
-
-
     }
-
 
     private void  setFileInfo(VideoMetadata videoMetadata){
         if (DBG) Log.d(TAG,"setFileInfo");
@@ -969,7 +964,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             String audiotrack = VideoInfoCommonClass.getAudioTrackString(videoMetadata, getResources(), getActivity());
             setTextOrHideContainer(mAudioTrackTextView, audiotrack, mRoot.findViewById(R.id.audio_row));
         }
-
     }
 
     private void updateSubtitleInfo(VideoMetadata videoMetadata, List<SubtitleManager.SubtitleFile> externalSubs){
@@ -1097,7 +1091,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             selectNewPoster();
 
         }
-
     }
 
     private void selectNewPoster() {
@@ -1106,7 +1099,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_BACKDROP, false);
         startActivity(intent);
     }
-
 
     /**
      * Implements PlayUtils.SubtitleDownloadListener
@@ -1849,6 +1841,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mIsLeavingPlayerActivity = false;
         super.onResume();
         addNetworkListener();
+        updateUI(); // be sure to be on right state
         if (mCurrentVideo != null) {
             if (DBG) Log.d(TAG, "onResume: mCurrentVideo.getName()=" + mCurrentVideo.getName());
         } else {

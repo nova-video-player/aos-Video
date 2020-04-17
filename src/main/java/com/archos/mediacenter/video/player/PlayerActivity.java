@@ -630,7 +630,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mSubtitleOutlineDefault = false;
         mSurfaceController = new SurfaceController(mRootView);
 
-
         mSurfaceController.setListener(mSurfaceListener);
 
         View menuAnchor = mRootView.findViewById(R.id.menu_anchor);
@@ -653,9 +652,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         Intent intent = getIntent();
         mContext = this;
 
-
-
-        
         mPlayer = new Player(this, getWindow(), mSurfaceController, false);
         // Clock (for leanback devices only)
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK)) {
@@ -708,7 +704,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                         }
                     }
                 };
-
         }
     }
 
@@ -761,7 +756,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         }
     }
 
-
     private void addNetworkListener() {
         if (networkState == null) networkState = NetworkState.instance(mContext);
         if (!mNetworkStateListenerAdded && propertyChangeListener != null) {
@@ -785,7 +779,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         super.onStart();
         if (DBG) Log.d(TAG, "onStart()");
         mStopped = false;
-
         removeNetworkListener();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_SHUTDOWN);
@@ -830,7 +823,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         else
             mIsReadytoStart = true;
         getIntent().putExtra(LAUNCH_FROM_FLOATING_PLAYER, false);
-
     }
 
     private void postOnPlayerServiceBind() {
@@ -881,7 +873,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             mPermissionChecker.checkAndRequestPermission(this);
             if(mHasAskedFloatingPermission&&Settings.canDrawOverlays(this)){ //permission has been granted
                 startService(new Intent(this, FloatingPlayerService.class));
-
             }
             mHasAskedFloatingPermission = false;
             TorrentObserverService.resumed(PlayerActivity.this);
