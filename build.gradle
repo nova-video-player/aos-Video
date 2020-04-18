@@ -59,6 +59,42 @@ play {
     releaseStatus = "completed"
 }
 
+tasks.register("incPatch") {
+    doLast {
+        println("old version: " + version)
+        def (major, minor, patch) = version.tokenize('.')
+        patch = String.valueOf(patch.toInteger() + 1)
+        String new_version = major + '.' + minor + '.' + patch
+        String s = buildFile.getText().replaceFirst("version = '$version'", "version = '" + new_version + "'")
+        buildFile.setText(s)
+        println("new version: " + new_version)
+    }
+}
+
+tasks.register("incMinor") {
+    doLast {
+        println("old version: " + version)
+        def (major, minor, patch) = version.tokenize('.')
+        minor = String.valueOf(minor.toInteger() + 1)
+        String new_version = major + '.' + minor + '.' + patch
+        String s = buildFile.getText().replaceFirst("version = '$version'", "version = '" + new_version + "'")
+        buildFile.setText(s)
+        println("new version: " + new_version)
+    }
+}
+
+tasks.register("incMajor") {
+    doLast {
+        println("old version: " + version)
+        def (major, minor, patch) = version.tokenize('.')
+        major = String.valueOf(major.toInteger() + 1)
+        String new_version = major + '.' + minor + '.' + patch
+        String s = buildFile.getText().replaceFirst("version = '$version'", "version = '" + new_version + "'")
+        buildFile.setText(s)
+        println("new version: " + new_version)
+    }
+}
+
 ext.abiCodes = ['universal':0, 'armeabi-v7a':1, 'arm64-v8a':2, 'x86':3, 'x86_64':4]
 
 android {
@@ -94,7 +130,19 @@ android {
         targetSdkVersion 29
         multiDexEnabled true
         versionCode getDate()
-        versionName '1.0-' + getFormattedDate()
+        version = '4.47.1'
+        // increment patch version at each build: disabled for now
+        /*
+        println("old version: " + version)
+        def (major, minor, patch) = version.tokenize('.')
+        patch = String.valueOf(patch.toInteger() + 1)
+        String new_version = major + '.' + minor + '.' + patch
+        String s = buildFile.getText().replaceFirst("version = '$version'", "version = '" + new_version + "'")
+        buildFile.setText(s)
+        println("new version: " + new_version)
+        versionName new_version + '-' + getFormattedDate()
+        */
+        versionName version + '-' + getFormattedDate()
         if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
         applicationId "org.courville.nova"
     }
@@ -187,8 +235,8 @@ android {
 	    output.versionCodeOverride =
 		    2108380 + 5 * variant.versionCode
             if (baseAbiVersionCode != null) {
-	    // 2000000 is there because before there was a distinction between noleanback 1000000 and leanback 2000000 with different API levels
-	    // 2108380 was the value at apk splits introduction
+            // 2000000 is there because before there was a distinction between noleanback 1000000 and leanback 2000000 with different API levels
+            // 2108380 was the value at apk splits introduction
                 output.versionCodeOverride =
                         output.versionCodeOverride + baseAbiVersionCode
             }
@@ -203,7 +251,7 @@ android {
                     .replace("-debug.apk", "-API_${api}+-debug.apk")
             variant.getAssembleProvider().configure() {
                 it.doLast {
-                    println outputFileName
+                    println ("generated: " + outputFileName + " (" + versionName + ", " + output.versionCodeOverride + ")");
                 }
             }
         }
