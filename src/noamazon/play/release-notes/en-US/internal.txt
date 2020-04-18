@@ -1,5 +1,4 @@
-- Add SMBv2/3 support via jcifs-ng
-- Fix samba file listing truncation with SMBv1 servers
+- Fix scraper issue in french
 - Add opensubtitles credentials support in preferences
 - Fix trakt resume point sync issues
 - Fix DTSHD decoding crashes
