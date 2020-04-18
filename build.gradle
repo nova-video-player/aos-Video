@@ -76,6 +76,7 @@ tasks.register("incMinor") {
         println("old version: " + version)
         def (major, minor, patch) = version.tokenize('.')
         minor = String.valueOf(minor.toInteger() + 1)
+        patch = 0
         String new_version = major + '.' + minor + '.' + patch
         String s = buildFile.getText().replaceFirst("version = '$version'", "version = '" + new_version + "'")
         buildFile.setText(s)
@@ -88,6 +89,8 @@ tasks.register("incMajor") {
         println("old version: " + version)
         def (major, minor, patch) = version.tokenize('.')
         major = String.valueOf(major.toInteger() + 1)
+        minor = 0
+        patch = 0
         String new_version = major + '.' + minor + '.' + patch
         String s = buildFile.getText().replaceFirst("version = '$version'", "version = '" + new_version + "'")
         buildFile.setText(s)
