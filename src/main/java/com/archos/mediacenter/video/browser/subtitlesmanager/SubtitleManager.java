@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.NetworkOnMainThreadException;
+import android.util.Log;
 
 import com.archos.filecorelibrary.CopyCutEngine;
 import com.archos.filecorelibrary.FileEditorFactory;
@@ -54,8 +55,10 @@ import java.util.Locale;
  */
 public class SubtitleManager {
 
+    private static final String TAG = SubtitleManager.class.getSimpleName();
+    private static final boolean DBG = false;
+
     private static final int MAX_SUB_SIZE = 61644800; //not more than 50mo (subs can be really large)
-    private static final String TAG = "SubtitleManager";
     private CopyCutEngine engine;
 
     public void abort() {
@@ -328,6 +331,7 @@ public class SubtitleManager {
         ArrayList<MetaFile2> subs = new ArrayList<>();
         List<MetaFile2> metaFile2List = null;
         try {
+            if (DBG) Log.d(TAG, "recursiveSubListing: " + parentUri.toString());
             metaFile2List = RawListerFactoryWithUpnp.getRawListerForUrl(parentUri).getFileList();
             List<String> subtitlesExtensions = VideoUtils.getSubtitleExtensions();
             String name;
