@@ -89,8 +89,6 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
     public static final String FILE_NAMES = "fileNames"; //friendly name for Upnp
     public static final String FILE_SIZES = "fileSizes";
 
-    private static final String LIMIT = "20";
-
     private static final String TAG = SubtitlesDownloaderActivity.class.getSimpleName();
     private static final boolean DBG = false;
     private static final boolean DBG_NET = false;
@@ -511,6 +509,11 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 String fileName = getFriendlyFilename(fileUrl);
                 if (!success.containsKey(fileName))
                     notFoundFiles.add(fileUrl);
+                else {
+                    // add it too if not all languages are present
+                    if (success.get(fileName).size() != languages.size())
+                        notFoundFiles.add(fileUrl);
+                }
             }
             if (secondPassEnabled && !isCancelled() && !notFoundFiles.isEmpty() &&
                     !(videoSearchList = prepareRequestList(notFoundFiles, languages, index, SECOND_PASS)).isEmpty()) {
@@ -574,8 +577,12 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
             notFoundFiles.clear();
             for (String fileUrl : fileUrls){
                 String fileName = getFriendlyFilename(fileUrl);
-                if (!success.containsKey(fileName)){
+                if (!success.containsKey(fileName))
                     notFoundFiles.add(fileUrl);
+                else {
+                    // add it too if not all languages are present (but it will make multiple download of same language
+                    if (success.get(fileName).size() != languages.size())
+                        notFoundFiles.add(fileUrl);
                 }
             }
             if (thirdPassEnabled && !isCancelled() && single && !notFoundFiles.isEmpty() &&
@@ -607,8 +614,12 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
             notFoundFiles.clear();
             for (String fileUrl : fileUrls){
                 String fileName = getFriendlyFilename(fileUrl);
-                if (!success.containsKey(fileName)){
+                if (!success.containsKey(fileName))
                     notFoundFiles.add(fileUrl);
+                else {
+                    // add it too if not all languages are present (but it will make multiple download of same language
+                    if (success.get(fileName).size() != languages.size())
+                        notFoundFiles.add(fileUrl);
                 }
             }
             if (fourthPassEnabled && !isCancelled() && single && !notFoundFiles.isEmpty() &&
