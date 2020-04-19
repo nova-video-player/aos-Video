@@ -72,7 +72,8 @@
         android:label="@string/video"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:targetApi="q">
         <meta-data
             android:name="to.dualscreen"
             android:value="true" />
