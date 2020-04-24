@@ -5,7 +5,7 @@ buildscript {
 	maven { url 'https://mvnrepository.com/artifact/' } // for play-publisher
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.2'
+        classpath 'com.android.tools.build:gradle:3.6.3'
     }
 }
 
@@ -133,7 +133,7 @@ android {
         targetSdkVersion 29
         multiDexEnabled true
         versionCode getDate()
-        version = '4.48.0'
+        version = '4.48.1'
         // increment patch version at each build: disabled for now
         /*
         println("old version: " + version)
