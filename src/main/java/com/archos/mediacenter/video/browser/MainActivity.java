@@ -651,6 +651,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         mCurrentUiModeLeanback = PreferenceManager.getDefaultSharedPreferences(this).getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
     }
 
+    /*
     @Override
     protected Dialog onCreateDialog(int id, Bundle args) {
         final File file = (File) args.getSerializable("file");
@@ -717,6 +718,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         }
         return super.onCreateDialog(id, args);
     }
+     */
 
     /**
      * For DEMO purpose only: Reset scraper info for all movies
