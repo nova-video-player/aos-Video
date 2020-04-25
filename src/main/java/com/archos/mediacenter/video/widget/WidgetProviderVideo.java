@@ -259,7 +259,7 @@ public class WidgetProviderVideo extends AppWidgetProvider {
                     // When intents are compared, the extras are ignored, so we need to embed the extras
                     // into the data so that the extras will not be ignored.
                     intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-                    rv.setRemoteAdapter(appWidgetIds[i], R.id.gridview, intent);
+                    rv.setRemoteAdapter(R.id.gridview, intent);
                 }
 
                 // The empty view is displayed when the collection has no items. It should be a sibling
