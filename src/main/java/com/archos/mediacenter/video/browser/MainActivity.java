@@ -331,6 +331,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     @Override
     protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         handleIntent(intent);
     }
 
@@ -459,11 +460,8 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     @Override
     public void onBackPressed() {
-
-
         int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
         if(backStackCount<=1) {
-
             if(mDrawerLayout==null||mDrawerLayout.isDrawerOpen(GravityCompat.START))
                 supportFinishAfterTransition();
             else{
@@ -473,7 +471,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         else
             getSupportFragmentManager().popBackStackImmediate();
         updateHomeIcon(getSupportFragmentManager().getBackStackEntryCount() > 1);
-
     }
 
     @Override
@@ -507,7 +504,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     protected void launchGlobalResume() {
         if (mGlobalResumeId != -1) {
-
             Video video = getVideoFromId(mGlobalResumeId);
             PlayUtils.startVideo(this, video, PlayerActivity.RESUME_FROM_LAST_POS, true,-1, this, -1);
         }
@@ -528,8 +524,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     public SearchView getSearchView() { //useful for sftp activity filter
         return mSearchView;
-
-
     }
 
     @Override
@@ -558,7 +552,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
         return ret;
     }
-
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
