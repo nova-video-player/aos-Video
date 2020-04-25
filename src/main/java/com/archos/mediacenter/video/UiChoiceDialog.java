@@ -61,14 +61,14 @@ public class UiChoiceDialog extends DialogFragment implements View.OnClickListen
             PreferenceManager.getDefaultSharedPreferences(getActivity())
                     .edit()
                     .putString(UI_CHOICE_LEANBACK_KEY, UI_CHOICE_LEANBACK_TV_VALUE) // string definitions in preference_video.xml and in @array/ui_mode_leanback_entryvalues
-                    .commit();
+                    .apply();
 
         }
         else if (view.getId() == R.id.choice_tablet) {
             PreferenceManager.getDefaultSharedPreferences(getActivity())
                     .edit()
                     .putString(UI_CHOICE_LEANBACK_KEY, UI_CHOICE_LEANBACK_TABLET_VALUE) // string definitions in preference_video.xml and in @array/ui_mode_leanback_entryvalues
-                    .commit();
+                    .apply();
         }
         dismiss();
 
