@@ -66,6 +66,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.preference.PreferenceManager;
@@ -304,10 +305,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     start();
                     break;
                 case MSG_ERROR_UPNP:
-                    showDialog(DIALOG_ERROR);
+                    myShowDialog(DIALOG_ERROR);
                     break;
                 case MSG_TORRENT_NOT_ENOUGH_SPACE:
-                    showDialog(DIALOG_NOT_ENOUGHT_SPACE);
+                    myShowDialog(DIALOG_NOT_ENOUGHT_SPACE);
                     break;
                 case MSG_TORRENT_UPDATE :
                     try {
@@ -363,6 +364,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private int                 mErrorQualCode = 0;
     private String              mErrorMsg = null;
     private int                 mShowingDialogId;
+    private Dialog              mDialog; // assume there is only one dialog shown
     private boolean             mNetworkFailed = false;
     private boolean             mPaused;
     private Resources           mResources;
@@ -799,7 +801,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 Integer.parseInt(mPreferences.getString(KEY_PLAYER_AUTO_FORMAT, "-1")));
         if (LibAvos.isAvailable()) {
             VideoPreferencesCommon.resetPassthroughPref(mPreferences);
-            LibAvos.setPassthrough(Integer.valueOf(mPreferences.getString("force_audio_passthrough_multiple","0")));
+            LibAvos.setPassthrough(Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")));
             mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mPreferences.getBoolean("disable_downmix", false)) // Android is recent enough not to require downmix on phones/tablets
                 LibAvos.setDownmix(0);
@@ -871,6 +873,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         PlayerBrightnessManager.getInstance().restoreBrightness(this);
         if(!mWasInPictureInPicture){
             mPermissionChecker.checkAndRequestPermission(this);
+            // TODO MARC API 23 required!
             if(mHasAskedFloatingPermission&&Settings.canDrawOverlays(this)){ //permission has been granted
                 startService(new Intent(this, FloatingPlayerService.class));
             }
@@ -946,10 +949,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         if (!mPlayer.isLocalVideo())
             addNetworkListener();
 
-        if (mShowingDialogId != DIALOG_NO) {
-            removeDialog(mShowingDialogId);
-            mShowingDialogId = DIALOG_NO;
-        }
+        stopDialog();
 
         mPlayerController.hide();
 
@@ -975,6 +975,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     @Override
     protected void onDestroy() {
         if (DBG) Log.d(TAG, "onDestroy");
+        stopDialog();
         removeNetworkListener();
         VideoEffect.resetForcedMode();
         setEffect(VideoEffect.getDefaultMode());
@@ -1111,7 +1112,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             if (PlayerService.sPlayerService != null) {
                 PlayerService.sPlayerService.stopAndSaveVideoState();
                 postOnPlayerServiceBind();
-
             }
         }
     }
@@ -1610,8 +1610,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             TVMenuAdapter tma = mPlayerController.getTVMenuAdapter();
 
             //[subtitles]
-            mSubtitleTVCardView = tma.createAndAddView(null, getResources().getDrawable(R.drawable.tv_subtitles),
-                                                       getResources().getString(R.string.menu_subtitles));
+            mSubtitleTVCardView = tma.createAndAddView(null, ResourcesCompat.getDrawable(getResources(), R.drawable.tv_subtitles, null),
+                    getResources().getString(R.string.menu_subtitles));
             mSubtitleTVMenu = tma.createTVMenu();
             mSubtitleTVMenu.setOnItemClickListener(new View.OnClickListener() {
                 @Override
@@ -1633,8 +1633,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             //[/subtitles]
 
             //[audiotrack]
-            mAudioTracksTVCardView = tma.createAndAddView(null, getResources().getDrawable(R.drawable.tv_languages),
-                                                          getResources().getString(R.string.menu_audio));
+            mAudioTracksTVCardView = tma.createAndAddView(null, ResourcesCompat.getDrawable(getResources(), R.drawable.tv_languages, null),
+                    getResources().getString(R.string.menu_audio));
             mAudioTracksTVMenu = tma.createTVMenu();
             mAudioTracksTVMenu.setOnItemClickListener(new View.OnClickListener() {
                 @Override
@@ -1656,8 +1656,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             //[/audiotrack]
 
             if (isStereoEffectOn()) {
-                TVCardView cv = tma.createAndAddView(getResources().getDrawable(R.drawable.tv_3d), null,
-                                                      getResources().getString(R.string.pref_s3d_mode_title));
+                TVCardView cv = tma.createAndAddView(ResourcesCompat.getDrawable(getResources(), R.drawable.tv_3d, null), null,
+                        getResources().getString(R.string.pref_s3d_mode_title));
                 final TVMenu tvm3d = tma.createTVMenu();
                 int dialogInitItem = (mPlayer.getEffectMode() != 0) ? Integer.numberOfTrailingZeros(mPlayer.getEffectMode()) : 0;
                 tvm3d.setItems(R.array.pref_s3d_mode_entries_tv, dialogInitItem, true);
@@ -1835,8 +1835,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         }
     }
 
-
-
     private void setNewNotificationMode(int newNotificationMode){
         if (newNotificationMode != mNotificationMode) {
             // The user selected a new mode
@@ -1857,8 +1855,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             mPlayerController.updateBookmarkToast(mPlayer.getCurrentPosition());
         }
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -1957,14 +1953,12 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         if (mPlayer==null||mPlayer.isBusy()) {
             return false;
         }
-
         // The first time onPrepareOptionsMenu() is called, Video info can be
         // not available. However this does not matter because this item will
         // be updated anyway after loading the video
         if (mInfoMenuItem != null) {
             mInfoMenuItem.setVisible(mStreamingUri != null);
         }
-
         // The first time onPrepareOptionsMenu() is called we don't know yet if
         // the "set bookmark" item can be enabled or not. However this does not
         // matter because this item will be updated anyway after loading the video
@@ -1979,17 +1973,14 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case MENU_LOCK_ID:
                 mPlayerController.lock();
                 return true;
             case MENU_WINDOW_MODE:
                 mLaunchFloatingPlayer = true;
-
-                if(Build.VERSION.SDK_INT>=  Build.VERSION_CODES.M&&!Settings.canDrawOverlays(this)){
+                if(Build.VERSION.SDK_INT>=  Build.VERSION_CODES.M&&!Settings.canDrawOverlays(this))
                     displayFloatingWindowPermissionDialog();
-                }
                 else
                     startService(new Intent(this, FloatingPlayerService.class));
                 //finish();
@@ -2005,7 +1996,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 }
                 return true;
             case MENU_BRIGHTNESS_ID:
-                showDialog(DIALOG_BRIGHTNESS);
+                myShowDialog(DIALOG_BRIGHTNESS);
                 return true;
             case MENU_LOCK_ROTATION_ID:
                 mLockRotation = !mLockRotation;
@@ -2093,7 +2084,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 return true;
             }
             case MENU_AUDIO_DELAY_ID: {
-                showDialog(DIALOG_AUDIO_DELAY);
+                myShowDialog(DIALOG_AUDIO_DELAY);
                 return true;
             }
             case MENU_S3D_ID: {
@@ -2192,8 +2183,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     }
 
     private void displayFloatingWindowPermissionDialog() {
-
-
         new AlertDialog.Builder(this).setTitle(R.string.error).setMessage(R.string.error_permission_display_over_apps).setPositiveButton(R.string.allow, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -2209,10 +2198,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             public void onDismiss(DialogInterface dialogInterface) {
                 mHasAskedFloatingPermission = false;
             }
-        })
-                .setNegativeButton(android.R.string.cancel, null).show();
-
-
+        }).setNegativeButton(android.R.string.cancel, null).show();
     }
 
     private void showVideoInfos() {
@@ -2275,42 +2261,70 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         }
     }
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        Dialog dialog = null;
+    protected void stopDialog() {
+        if (mShowingDialogId != DIALOG_NO) {
+            // assume only one dialog (before there was a call to removeDialog(mShowingDialogId);
+            mDialog.dismiss();
+            mShowingDialogId = DIALOG_NO;
+            mDialog = null;
+        }
+    }
+
+    // assume there is only one dialog which is by design the case
+    protected void myShowDialog(int id) {
+        if (mDialog != null) {
+            mDialog.dismiss();
+            mShowingDialogId = DIALOG_NO;
+            mDialog = null;
+        }
         switch(id) {
             case DIALOG_SUBTITLE_DELAY:
                 SubtitleTrack track = mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack);
                 if (track == null)
-                    return null;
+                    return;
                 boolean hasRatio = track.isExternal;
-                dialog = new SubtitleDelayPickerDialog(this, this, mVideoInfo.subtitleDelay, mVideoInfo.subtitleRatio, hasRatio);
+                mDialog = new SubtitleDelayPickerDialog(this, this, mVideoInfo.subtitleDelay, mVideoInfo.subtitleRatio, hasRatio);
+                mPlayerController.hide();
+                SubtitleDelayPickerDialog subtitleDelayPickerDialog = (SubtitleDelayPickerDialog) mDialog;
+                subtitleDelayPickerDialog.updateDelay(mVideoInfo.subtitleDelay);
                 break;
             case DIALOG_SUBTITLE_SETTINGS:
-                dialog = new SubtitleSettingsDialog(this, mSubtitleManager);
+                mDialog = new SubtitleSettingsDialog(this, mSubtitleManager);
+                mPlayerController.hide();
                 break;
             case DIALOG_AUDIO_DELAY:
                 if(PlayerService.sPlayerService!=null)
-                    dialog = new AudioDelayPickerDialog(this, this, PlayerService.sPlayerService.getAudioDelay());
+                    mDialog = new AudioDelayPickerDialog(this, this, PlayerService.sPlayerService.getAudioDelay());
                 else
-                    dialog = new AudioDelayPickerDialog(this, this, mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0));
+                    mDialog = new AudioDelayPickerDialog(this, this, mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0));
+                AudioDelayPickerDialog audioPickerDialog = (AudioDelayPickerDialog) mDialog;
+                audioPickerDialog.setStep(20);
+                if (mPlayer.getDuration() > 0) {
+                    audioPickerDialog.setMax(mPlayer.getDuration());
+                    audioPickerDialog.setMin(-mPlayer.getDuration());
+                }
+                if(PlayerService.sPlayerService!=null)
+                    audioPickerDialog.updateDelay(PlayerService.sPlayerService.getAudioDelay());
+                else
+                    audioPickerDialog.updateDelay(mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0));
+                mPlayerController.hide();
                 break;
             case DIALOG_NOT_ENOUGHT_SPACE:
-                dialog= new AlertDialog.Builder(this)
-                    .setTitle(R.string.player_err_cantplayvideo)
-                    .setMessage(R.string.error_downloading_not_enough_space)
-                    .setPositiveButton(android.R.string.ok,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    finish();
-                                }
-                            })
-                    .setCancelable(false)
-                    .create();
+                mDialog = new AlertDialog.Builder(this)
+                        .setTitle(R.string.player_err_cantplayvideo)
+                        .setMessage(R.string.error_downloading_not_enough_space)
+                        .setPositiveButton(android.R.string.ok,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        finish();
+                                    }
+                                })
+                        .setCancelable(false)
+                        .create();
                 break;
             case DIALOG_ERROR:
                 if (mErrorCode == IMediaPlayer.MEDIA_ERROR_VE_VIDEO_NOT_ALLOWED) {
-                    dialog = new AlertDialog.Builder(this)
+                    mDialog = new AlertDialog.Builder(this)
                             .setTitle(R.string.player_err_cantplayvideo)
                             .setMessage(buildErrorMessage(mErrorCode, mErrorQualCode, 0, mErrorMsg))
                             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -2323,7 +2337,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 }
                 break;
             case DIALOG_BRIGHTNESS:
-                dialog = new BrightnessDialog(this);
+                mDialog = new BrightnessDialog(this);
+                mPlayerController.hide();
                 break;
             case DIALOG_CODEC_NOT_SUPPORTED:
                 String msg;
@@ -2331,12 +2346,12 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 int notSupportedId;
 
                 // First check if there are already codecs needing an update
-                dialog = getPluginNeedUpdateDialog();
+                mDialog = getPluginNeedUpdateDialog();
                 // If no update needed display the regular codec upselling dialog
-                if (dialog == null) {
+                if (mDialog == null) {
                     notSupportedId = mErrorCode == IMediaPlayer.MEDIA_ERROR_VE_VIDEO_NOT_SUPPORTED ?
                             R.string.videocodec_not_supported :
-                                R.string.audiocodec_not_supported;
+                            R.string.audiocodec_not_supported;
 
                     msg = mResources.getString(notSupportedId, mErrorMsg) + "\n";
                     msg += mResources.getString(R.string.player_plugin_purchase_google_play_msg);
@@ -2358,9 +2373,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                             } catch (ActivityNotFoundException e) {}
                         }
                     };
-                    dialog = new AlertDialog.Builder(this)
-                    .setTitle(mErrorCode == IMediaPlayer.MEDIA_ERROR_VE_VIDEO_NOT_SUPPORTED ?
-                            R.string.player_err_cantplayvideo : R.string.player_err_cantplaysound)
+                    mDialog = new AlertDialog.Builder(this)
+                            .setTitle(mErrorCode == IMediaPlayer.MEDIA_ERROR_VE_VIDEO_NOT_SUPPORTED ?
+                                    R.string.player_err_cantplayvideo : R.string.player_err_cantplaysound)
                             .setMessage(msg)
                             .setNegativeButton(android.R.string.cancel, onCancelButtonClick)
                             .setPositiveButton(storeStringId, onPositiveButtonClick)
@@ -2372,7 +2387,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                                             .setMessage(R.string.learn_more_about_codecs)
                                             .setNegativeButton(android.R.string.cancel, onCancelButtonClick)
                                             .setPositiveButton(storeStringIdFinal, onPositiveButtonClick)
-                                    .show();
+                                            .show();
 
                                 }
                             })
@@ -2381,26 +2396,28 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 }
                 break;
             case DIALOG_WRONG_DEVICE_KINDLE:
-                dialog = new AlertDialog.Builder(this)
-                .setTitle("Incompatible device")
-                .setMessage("This application runs only on Amazon Kindle")
-                .setPositiveButton(android.R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        finish();
-                    }
-                })
-                .setCancelable(false)
-                .create();
+                mDialog = new AlertDialog.Builder(this)
+                        .setTitle("Incompatible device")
+                        .setMessage("This application runs only on Amazon Kindle")
+                        .setPositiveButton(android.R.string.ok,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        finish();
+                                    }
+                                })
+                        .setCancelable(false)
+                        .create();
                 break;
             default:
-                dialog = null;
+                mDialog = null;
                 break;
         }
-        if (dialog != null) {
-            dialog.setOnDismissListener(this);
+        if (mDialog != null) {
+            mDialog.setOnDismissListener(this);
         }
-        return dialog;
+
+        mShowingDialogId = id;
+        mDialog.show();
     }
 
     /**
@@ -2434,37 +2451,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     }
 
     @Override
-    protected void onPrepareDialog(int id, Dialog masterDialog) {
-        mShowingDialogId = id;
-        switch (id) {
-            case DIALOG_SUBTITLE_DELAY:
-                mPlayerController.hide();
-                ((SubtitleDelayPickerDialog)masterDialog).updateDelay(mVideoInfo.subtitleDelay);
-                break;
-            case DIALOG_SUBTITLE_SETTINGS:
-                mPlayerController.hide();
-                break;
-            case DIALOG_AUDIO_DELAY:
-                mPlayerController.hide();
-                AudioDelayPickerDialog dialog = (AudioDelayPickerDialog)masterDialog;
-                dialog.setStep(20);
-                if (mPlayer.getDuration() > 0) {
-                    dialog.setMax(mPlayer.getDuration());
-                    dialog.setMin(-mPlayer.getDuration());
-                }
-                if(PlayerService.sPlayerService!=null)
-                    dialog.updateDelay(PlayerService.sPlayerService.getAudioDelay());
-                else
-                    dialog.updateDelay(mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0));
-
-                break;
-            case DIALOG_BRIGHTNESS:
-                mPlayerController.hide();
-                break;
-        }
-    }
-
-    @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         mPlayerController.onWindowFocusChanged(hasFocus);
         // this is called when systembar gets implicitly visible
@@ -2476,9 +2462,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     public boolean onSearchRequested() {
         return false;
     }
-
-    
-
 
     @Override
     public void onPermissionGranted() {
@@ -2577,7 +2560,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         if (getPackageName().equals("com.archos.mediacenter"+"."+"video"+"ki")) {
             Log.d(TAG, "amazon?");
             if (Build.BRAND == null || !Build.BRAND.equalsIgnoreCase("a"+"m"+"a"+"z"+"o"+"n")) {
-                showDialog(DIALOG_WRONG_DEVICE_KINDLE);
+                myShowDialog(DIALOG_WRONG_DEVICE_KINDLE);
                 return;
             }
         }
@@ -2617,10 +2600,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             }
                 mPlayerListener.onAudioMetadataUpdated(mPlayer.getVideoMetadata(), mNewAudioTrack);
                 mPlayerListener.onSubtitleMetadataUpdated(mPlayer.getVideoMetadata(), mNewSubtitleTrack);
-
-
         }
-
     }
 
     private boolean isStereoEffectOn() {
@@ -2629,7 +2609,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     @Override
     public void onVideoDb(final VideoDbInfo localVideoInfo, final VideoDbInfo remoteVideoInfo) {
-
     }
 
     public void showTraktResumeDialog(final int localTraktPosition, VideoDbInfo localVideoInfo) {
@@ -2688,7 +2667,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_PROGRESS_VISIBLE), PROGRESS_VISIBLE_DELAY);
 
         if (mUri == null) {
-            showDialog(DIALOG_ERROR);
+            myShowDialog(DIALOG_ERROR);
             return;
         }
 
@@ -3086,7 +3065,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     mVideoInfo.audioTrack = position;
             } else if (!at.supported){
                 mErrorMsg = at.format;
-                showDialog(DIALOG_CODEC_NOT_SUPPORTED);
+                myShowDialog(DIALOG_CODEC_NOT_SUPPORTED);
             }
         } else if (trackInfoController == mSubtitleInfoController) {
             if (position != mVideoInfo.subtitleTrack) {
@@ -3111,10 +3090,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         if (trackInfoController == mSubtitleInfoController) {
             switch (key) {
                 case SUBTITLE_MENU_DELAY:
-                    showDialog(DIALOG_SUBTITLE_DELAY);
+                    myShowDialog(DIALOG_SUBTITLE_DELAY);
                     break;
                 case SUBTITLE_MENU_SETTINGS:
-                    showDialog(DIALOG_SUBTITLE_SETTINGS);
+                    myShowDialog(DIALOG_SUBTITLE_SETTINGS);
                     break;
                 case SUBTITLE_MENU_DOWNLOAD:
                     downloadSubtitles();
@@ -3228,17 +3207,13 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             mErrorQualCode = errorQualCode;
             mErrorMsg = msg;
 
-            if (mShowingDialogId != DIALOG_NO) {
-                removeDialog(mShowingDialogId);
-                mShowingDialogId = DIALOG_NO;
-            }
-
+            stopDialog();
             if (mErrorCode == IMediaPlayer.MEDIA_ERROR_VE_VIDEO_NOT_SUPPORTED) {
                 VideoTrack vt = mPlayer.getVideoMetadata().getVideoTrack();
                 mErrorMsg = vt != null ? vt.format : "unknown";
-                showDialog(DIALOG_CODEC_NOT_SUPPORTED);
+                myShowDialog(DIALOG_CODEC_NOT_SUPPORTED);
             } else {
-                showDialog(DIALOG_ERROR);
+                myShowDialog(DIALOG_ERROR);
             }
 
             return true;
@@ -3401,7 +3376,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         public void onAudioError(boolean isNotSupported,String msg) {
             mErrorMsg = msg;
             if(isNotSupported)
-                showDialog(DIALOG_CODEC_NOT_SUPPORTED);
+                myShowDialog(DIALOG_CODEC_NOT_SUPPORTED);
         }
 
         @Override
@@ -3495,9 +3470,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         @Override
         public void onTorrentUpdate(String daemonString) {
-
             mHandler.sendMessage(mHandler.obtainMessage(MSG_TORRENT_UPDATE , daemonString));
-
         }
 
         @Override
@@ -3521,7 +3494,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             editor.apply(); // commit is blocking .. avoid
         }
     };
-
 
     public void switchMode(boolean tv) {
         // TODO Auto-generated method stub
