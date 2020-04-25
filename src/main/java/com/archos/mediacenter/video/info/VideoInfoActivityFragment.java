@@ -1553,7 +1553,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 newVideo = mVideoList.get(0);
         }
         // Keep the video decoder metadata if we already have it (we don't want to compute it again, it can be long)
-        VideoMetadata alreadyComputedVideoMetadata = mVideoMetadateCache.get(newVideo.getFileUri().toString());
+        VideoMetadata alreadyComputedVideoMetadata = null;
+        if (newVideo != null && newVideo.getFileUri() != null)
+            alreadyComputedVideoMetadata = mVideoMetadateCache.get(newVideo.getFileUri().toString());         
         // Keep the video decoder metadata if we already have it
         newVideo.setMetadata(alreadyComputedVideoMetadata); // may be null (fyi)
         if (DBG) Log.d(TAG,"onLoadFinished: setCurrentVideo " + ((newVideo == null) ? "null" : newVideo.getFilePath()) );
