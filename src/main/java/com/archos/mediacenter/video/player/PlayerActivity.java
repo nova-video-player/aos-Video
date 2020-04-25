@@ -1678,8 +1678,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             }
 
             //[infomenu]
-            TVCardView tcv = tma.createAndAddView(null, getResources().getDrawable(R.drawable.tv_info),
-                                                  getResources().getString(R.string.menu_info));
+            TVCardView tcv = tma.createAndAddView(null, ResourcesCompat.getDrawable(getResources(),R.drawable.tv_info, null),
+                    getResources().getString(R.string.menu_info));
             String decoder = VideoInfoCommonClass.getShortDecoder(mPlayer.getVideoMetadata(), getResources(), mPlayer.getType());
             
             if (decoder != null)
@@ -1704,7 +1704,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             //[/infomenu]
 
             // Scale (format) type
-            tcv = tma.createAndAddView(getResources().getDrawable(R.drawable.tv_format), null,
+            tcv = tma.createAndAddView(ResourcesCompat.getDrawable(getResources(), R.drawable.tv_format, null), null,
                                        getResources().getString( R.string.pref_format_mode_title));
             final TVMenu tvmFormat = tma.createTVMenu();
 
@@ -1752,7 +1752,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             tcv.addOtherView(tvmFormat);
 
             //[playmode]
-            tcv = tma.createAndAddView(null, getResources().getDrawable(R.drawable.tv_playmode),
+            tcv = tma.createAndAddView(null, ResourcesCompat.getDrawable(getResources(), R.drawable.tv_playmode, null),
                                        getResources().getString(R.string.pref_play_mode_title));
             final TVMenu tvmPlayMode = tma.createTVMenu();
             tvmPlayMode.setOnItemClickListener(new View.OnClickListener() {
@@ -1774,7 +1774,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             //[/playmode]
             /*
             //[sleep timer]
-            TVCardView timerTVCardView = tma.createAndAddView(null, getResources().getDrawable(R.drawable.ic_menu_delay),
+            TVCardView timerTVCardView = tma.createAndAddView(null, ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_delay, null),
                     getResources().getString(R.string.sleep_timer_title));
             timerTVCardView.setOnSwitchClickListener(new View.OnClickListener() {
                 @Override
@@ -1787,7 +1787,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
             // Do not display notification menu on Android TV devices because they have no actual "notifications"
             if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK)) {
-                TVCardView cv = tma.createAndAddView(null, getResources().getDrawable(R.drawable.tv_notifications),
+                TVCardView cv = tma.createAndAddView(null, ResourcesCompat.getDrawable(getResources(), R.drawable.tv_notifications, null),
                                                      getResources().getString(R.string.notification_mode));
                 final TVMenu tvm2 = tma.createTVMenu();
                 tvm2.setOnItemClickListener(new View.OnClickListener() {
@@ -1806,7 +1806,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             }
 
             final AppCompatActivity mActivity = this;
-            tcv = tma.createAndAddView(null, getResources().getDrawable(R.drawable.tv_settings),
+            tcv = tma.createAndAddView(null, ResourcesCompat.getDrawable(getResources(), R.drawable.tv_settings, null),
                                        getResources().getString(R.string.preferences));
             tcv.setOnSwitchClickListener(new View.OnClickListener() {
                 @Override
@@ -1868,12 +1868,12 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             //------------------------------------------------------------------
             mInfoMenuItem = menu.add(MENU_FILE_ACTIONS_GROUP, MENU_INFO_ID, Menu.NONE, R.string.menu_info);
             if (mInfoMenuItem != null) {
-                MenuItemCompat.setShowAsAction(mInfoMenuItem.setIcon(R.drawable.ic_menu_info), MenuItem.SHOW_AS_ACTION_ALWAYS);
+                mInfoMenuItem.setIcon(R.drawable.ic_menu_info).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
 
             mBookmarkMenuItem = menu.add(MENU_FILE_ACTIONS_GROUP, MENU_BOOKMARK_ID, Menu.NONE, R.string.menu_bookmark);
             if (mBookmarkMenuItem != null) {
-                MenuItemCompat.setShowAsAction(mBookmarkMenuItem.setIcon(R.drawable.ic_menu_bookmark), MenuItem.SHOW_AS_ACTION_ALWAYS);
+                mBookmarkMenuItem.setIcon(R.drawable.ic_menu_bookmark).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
             mAudioInfoController.attachMenu(menu, R.drawable.ic_menu_languages);
             mSubtitleInfoController.attachMenu(menu, R.drawable.ic_menu_subtitles);
@@ -1886,13 +1886,13 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
                 mBrightnessMenuItem = menu.add(MENU_GLOBAL_ACTIONS_GROUP, MENU_BRIGHTNESS_ID, Menu.NONE, R.string.menu_brightness_settings);
                 if (mBrightnessMenuItem != null) {
-                    MenuItemCompat.setShowAsAction(mBrightnessMenuItem.setIcon(R.drawable.ic_menu_brightness), MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    mBrightnessMenuItem.setIcon(R.drawable.ic_menu_brightness).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                 }
                 if (mPlayer!=null&&mPlayer.getEffectType()==VideoEffect.EFFECT_NONE) {
                     menuItem = menu.add(MENU_GLOBAL_ACTIONS_GROUP, MENU_LOCK_ROTATION_ID,
                             Menu.NONE,R.string.rotation_unlock);
                     if (menuItem != null) {
-                        MenuItemCompat.setShowAsAction(menuItem.setIcon(mLockRotation ? R.drawable.ic_menu_locked : R.drawable.ic_menu_unlocked), MenuItem.SHOW_AS_ACTION_NEVER);
+                        menuItem.setIcon(mLockRotation ? R.drawable.ic_menu_locked : R.drawable.ic_menu_unlocked).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                         menuItem.setCheckable(true);
                         menuItem.setChecked(!mLockRotation);
                     }
@@ -1903,7 +1903,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     Menu.NONE, R.string.notification_mode);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_notifications);
-                MenuItemCompat.setShowAsAction(menuItem, !isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
+                menuItem.setShowAsAction(!isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
             //------------------------------------------------------------------
             // Finally add the other items (which will be available in the menu)
@@ -1911,22 +1911,22 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_PLAYMODE_ID, Menu.NONE, R.string.pref_play_mode_title);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_playmode);
-                MenuItemCompat.setShowAsAction(menuItem, !isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
+                menuItem.setShowAsAction(!isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_AUDIO_FILTER_ID, Menu.NONE, R.string.pref_audio_parameters_title);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_audioboost);
-                MenuItemCompat.setShowAsAction(menuItem, !isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
+                menuItem.setShowAsAction(!isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_AUDIO_DELAY_ID, Menu.NONE, R.string.player_pref_audio_delay_title);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_delay);
-                MenuItemCompat.setShowAsAction(menuItem, !isPluggedOnTv() ? MenuItem.SHOW_AS_ACTION_NEVER : MenuItem.SHOW_AS_ACTION_ALWAYS);
+                menuItem.setShowAsAction(!isPluggedOnTv() ? MenuItem.SHOW_AS_ACTION_NEVER : MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_S3D_ID, Menu.NONE, R.string.pref_s3d_mode_title);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_3d);
-                MenuItemCompat.setShowAsAction(menuItem, !isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
+                menuItem.setShowAsAction(!isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
             // Check if the brightness item can be enabled
             /*if (mBrightnessMenuItem != null) {
@@ -1942,8 +1942,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             }*/
             menu.add(MENU_OTHER_GROUP, MENU_WINDOW_MODE, Menu.NONE, R.string.player_window_mode);
             // Always add a link to the general application preferences
-            MenuItemCompat.setShowAsAction(menu.add(MENU_OTHER_GROUP, MENU_PREFERENCES, Menu.NONE, R.string.preferences)
-            .setIcon(R.drawable.ic_menu_settings), !isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
+            menu.add(MENU_OTHER_GROUP, MENU_PREFERENCES, Menu.NONE, R.string.preferences)
+                    .setIcon(R.drawable.ic_menu_settings).setShowAsAction(!isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
         return true;
     }
