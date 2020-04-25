@@ -370,7 +370,7 @@ public class SubtitleManager {
         mWindow = window;
         mRes = context.getResources();
         mForbidWindow = forbidWindow;
-        mSubtitlePosHintDrawable = mRes.getDrawable(com.archos.mediacenter.video.R.drawable.subtitle_baseline);
+        mSubtitlePosHintDrawable = ContextCompat.getDrawable(context, com.archos.mediacenter.video.R.drawable.subtitle_baseline);
     }
 
     public void setScreenSize(int displayWidth, int displayHeight) {
