@@ -101,7 +101,8 @@ public class WebPageLinkPresenter extends Presenter {
             mWebView.setInitialScale(80);
             mWebView.getSettings().setJavaScriptEnabled(true);
             mWebView.setWebViewClient(new WebViewClient() {
-                @SuppressWarnings("deprecation")
+                // this one is for Android API 24+
+                @TargetApi(Build.VERSION_CODES.N)
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                     final String url = request.getUrl().toString();
@@ -109,8 +110,8 @@ public class WebPageLinkPresenter extends Presenter {
                     //view.loadUrl(url);
                     return false;
                 }
-
-                @TargetApi(Build.VERSION_CODES.N)
+                // this one is for Android API 21-23
+                @SuppressWarnings("deprecation")
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     if(DBG) Log.d(TAG, "shouldOverrideUrlLoading " + url);
