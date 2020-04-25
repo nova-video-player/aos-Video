@@ -20,6 +20,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import androidx.fragment.app.FragmentActivity;
+import androidx.loader.app.LoaderManager;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,7 +32,7 @@ public class FloatingPlayerActivity extends FragmentActivity {
     private ServiceConnection mPlayerServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            PlayerService.sPlayerService.setIndexHelper(new IndexHelper(FloatingPlayerActivity.this, getSupportLoaderManager(),0));
+            PlayerService.sPlayerService.setIndexHelper(new IndexHelper(FloatingPlayerActivity.this, LoaderManager.getInstance(FloatingPlayerActivity.this),0));
             Intent intent = new Intent(FloatingPlayerActivity.this, FloatingPlayerService.class);
             intent.setData(getIntent().getData());
             intent.putExtras(getIntent());
