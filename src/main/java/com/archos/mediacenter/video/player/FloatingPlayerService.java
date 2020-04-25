@@ -167,10 +167,8 @@ public class FloatingPlayerService extends Service implements AppState.OnForeGro
     }
     @Override
     public int onStartCommand(Intent intent,int flags, int startID){
-
         if(intent != null && !"DISPLAY_FLOATING_PLAYER".equals(intent.getAction()))
             addFloatingView();
-
         return super.onStartCommand(intent,flags, startID);
     }
     public void onDestroy(){
@@ -178,10 +176,6 @@ public class FloatingPlayerService extends Service implements AppState.OnForeGro
         sFloatingPlayerService = null;
         unbindService(mPlayerServiceConnection);
         unregisterReceiver(mReceiver);
-    }
-    @Override
-    public void onStart(Intent intent, int startID){
-        super.onStart(intent, startID);
     }
 
     private View.OnClickListener mVolumeUpListener = new View.OnClickListener() {
