@@ -16,14 +16,17 @@ package com.archos.mediacenter.video.utils;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.archos.mediacenter.video.R;
@@ -59,9 +62,19 @@ public class WebViewActivity extends AppCompatActivity {
         webview.setInitialScale(0); // imdb does not look good in fullscreen with anything but this
         webview.getSettings().setJavaScriptEnabled(true);
         webview.setWebViewClient(new WebViewClient() {
+            // this one is for Android API 21-23
+            @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (DBG) Log.d(TAG, "shouldOverrideUrlLoading " + url);
+                return false;
+            }
+            // this one is for Android API 24+
+            @RequiresApi(Build.VERSION_CODES.M)
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                String url = request.getUrl().toString();
+                if (DBG) Log.d(TAG, "shouldOverrideUrlLoading API24+ for url " + url);
                 return false;
             }
         });
