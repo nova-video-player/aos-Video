@@ -17,20 +17,10 @@ package com.archos.mediacenter.video.player;
 
 import android.content.Context;
 import android.graphics.*;
-import android.graphics.SurfaceTexture.OnFrameAvailableListener;
-import android.opengl.GLES11Ext;
-import android.opengl.GLES20;
-import android.opengl.GLUtils;
 import android.util.Log;
 import android.view.Surface;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.nio.ShortBuffer;
-
 import 	java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class VideoEffectRenderer extends TextureSurfaceRenderer implements SurfaceTexture.OnFrameAvailableListener
@@ -53,7 +43,7 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
     
     private SurfaceTexture mUIOverlay;
 
-    ArrayBlockingQueue mSourceFrameAvailable = new ArrayBlockingQueue<Boolean>(1);
+    ArrayBlockingQueue<Boolean> mSourceFrameAvailable = new ArrayBlockingQueue<Boolean>(1);
     
     private Object texSync = new Object();
     private Object initDone = new Object();
@@ -165,7 +155,7 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
     {
         boolean needUpdate = false;
         try {
-            needUpdate = ((Boolean)mSourceFrameAvailable.take()).booleanValue();
+            needUpdate = (mSourceFrameAvailable.take()).booleanValue();
         } catch (InterruptedException ie) {}
         if (needUpdate) {
             int offset = 0;
