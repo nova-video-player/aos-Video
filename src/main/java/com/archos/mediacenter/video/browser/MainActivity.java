@@ -92,7 +92,6 @@ import com.archos.mediacenter.video.browser.filebrowsing.BrowserByVideoFolder;
 import com.archos.mediacenter.video.info.SingleVideoLoader;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
-import com.archos.mediacenter.video.ui.NovaProgressDialog;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.MiscUtils;
@@ -100,14 +99,12 @@ import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.TraktSigninDialogPreference;
 import com.archos.mediacenter.video.utils.VideoPreferencesActivity;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
-import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.ScraperStore;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStore.Video.VideoColumns;
 import com.archos.mediascraper.AutoScrapeService;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -213,7 +210,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         requestWindowFeature(Window.FEATURE_OPTIONS_PANEL);
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         super.onCreate(savedInstanceState);
@@ -651,75 +647,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         mCurrentUiModeLeanback = PreferenceManager.getDefaultSharedPreferences(this).getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
     }
 
-    /*
-    @Override
-    protected Dialog onCreateDialog(int id, Bundle args) {
-        final File file = (File) args.getSerializable("file");
-        // Dialog called from the Video CoverRoll must be implemented at
-        // Activity level
-        if (id == DIALOG_DELETE) {
-            final Context context = this;
-            Dialog dialog = new AlertDialog.Builder(this).setTitle(file.getName())
-                    .setMessage(R.string.confirm_delete)
-                    .setNegativeButton(android.R.string.no, null)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            new AsyncTask<File, Void, Void>() {
-                                @Override
-                                protected void onPreExecute() {
-                                    final Bundle bundle = new Bundle();
-                                    bundle.putSerializable("file", file);
-                                    showDialog(DIALOG_DELETING, bundle);
-                                    super.onPreExecute();
-                                }
-
-                                @Override
-                                protected Void doInBackground(File... params) {
-                                    if (DBG) Log.d(TAG,
-                                            "DIALOG_DELETE:doInBackground deleting "
-                                                    + params[0].getPath());
-                                    ContentResolver cr = context.getContentResolver();
-                                    Uri uri = MediaStore.Files.getContentUri("external");
-                                    String where = MediaColumns.DATA + "=?";
-                                    String[] selectionArgs = { params[0].getPath() };
-                                    cr.delete(uri, where, selectionArgs);
-                                    // Remove the subtitle files that may be
-                                    // associated to this video file
-                                    if (DBG) Log.d(TAG,
-                                            "DIALOG_DELETE:doInBackground deleteAssociatedSubtitles");
-                                    VideoUtils.deleteAssociatedSubtitles(params[0]);
-                                    return null;
-                                }
-
-                                @Override
-                                protected void onPostExecute(Void result) {
-                                    removeDialog(DIALOG_DELETING);
-                                    removeDialog(DIALOG_DELETE);
-                                    Toast.makeText(getApplicationContext(), R.string.file_deleted,
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            }.execute(file);
-                        }
-                    }).create();
-            // Remove the dialog to be sure onCreateDialog will be called the
-            // next time (as we set the file to delete in this method)
-            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                public void onDismiss(DialogInterface dialog) {
-                    removeDialog(DIALOG_DELETE);
-                }
-            });
-            return dialog;
-        } else if (id == DIALOG_DELETING) {
-            NovaProgressDialog dialog = new NovaProgressDialog(this);
-            dialog.setIndeterminate(true);
-            dialog.setMessage(getText(R.string.deleting));
-            dialog.setTitle(file.getName());
-            return dialog;
-        }
-        return super.onCreateDialog(id, args);
-    }
-     */
-
     /**
      * For DEMO purpose only: Reset scraper info for all movies
      */
@@ -860,7 +787,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 result = new HashMap<>(3);
                 result.put("name", name);
                 result.put("thumbnail", thumbnail);
-                result.put("setListener", Boolean.valueOf(firstGlobalResume));
+                result.put("setListener", firstGlobalResume);
             } else {
                 result = new HashMap<>(0);
             }
@@ -893,7 +820,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                     tint.setVisibility(View.GONE);
                 }
 
-                if (((Boolean) result.get("setListener")).booleanValue()) {
+                if ((Boolean) result.get("setListener")) {
                     final GlobalResumeView f_grv = grv;
 
                     // Handle clicks on the "resume global" area

@@ -87,8 +87,6 @@ public class VideoPicker extends ListActivity implements AdapterView.OnItemClick
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Log.d(TAG, "onCreate : intent=" + getIntent());
-        
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         if (icicle != null) {
             // Restore former activity state
