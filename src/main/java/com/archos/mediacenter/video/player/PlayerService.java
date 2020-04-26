@@ -29,7 +29,8 @@ import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadata;
-import android.media.session.MediaSession;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Binder;
@@ -40,6 +41,8 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 import androidx.core.app.NotificationCompat;
+
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
 import com.archos.environment.ArchosFeatures;
@@ -129,7 +132,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private boolean mPlayOnResume;
     private long mVideoId;
     public PlayerState  mPlayerState = PlayerState.INIT;
-    private MediaSession mSession;
+    private MediaSessionCompat mSession;
     private UpdateNextTask mUpdateNextTask;
     private Uri mNextUri;
     private long mNextVideoId;
@@ -353,11 +356,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     /*
         TO TEST
-
         Indexing
         Scraping
         Trakt
-
         do not save on network when network resume disabled
      */
     @Override
@@ -472,8 +473,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         else if(mVideoInfo!=null){
             mPlayerFrontend.onVideoDb(mVideoInfo, null);
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-                && ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             setNowPlayingCard();
         }
     }
@@ -731,8 +731,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mPlayerState = PlayerState.STOPPED;
             TorrentObserverService.staticExitProcess();
             TorrentObserverService.killProcess();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-                    && ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+            if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
                 stopNowPlayingCard();
             }
         }
@@ -930,8 +929,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                         mIndexHelper.writeVideoInfo(mVideoInfo, true);
                     }
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-                            && ArchosFeatures.isAndroidTV(PlayerService.this) && !PrivateMode.isActive())
+                    if (ArchosFeatures.isAndroidTV(PlayerService.this) && !PrivateMode.isActive())
                     updateNowPlayingMetadata();
                     // check if it has been scraped
                 }
@@ -950,8 +948,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 }
                 else
                     mScraperTag = result.tag; // save it, it will be retrieved when index has worked
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-                        && ArchosFeatures.isAndroidTV(PlayerService.this) && !PrivateMode.isActive())
+                if (ArchosFeatures.isAndroidTV(PlayerService.this) && !PrivateMode.isActive())
                 updateNowPlayingMetadata();
             }*/
         }
@@ -972,8 +969,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
         mUri = mVideoInfo.uri;
         mIntent.setData(mUri);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-                && ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             updateNowPlayingMetadata();
         }
         if(mCallOnDataUriOKWhenVideoInfoIsSet)
@@ -1011,9 +1007,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     @Override
-    public void onScraped(ScrapeDetailResult result) {
-
-    }
+    public void onScraped(ScrapeDetailResult result) {}
 
     private void postPreparedAndVideoDb() {
         if (DBG) Log.d(TAG, "postPreparedAndVideoDb");
@@ -1057,10 +1051,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     }.start();
                 }
             }
-
         }
     }
-
 
     @Nullable
     @Override
@@ -1085,8 +1077,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void onCompletion() {
         if (DBG) Log.d(TAG, "onCompletion");
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-                && ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             updateNowPlayingState();
         }
         mLastPosition = LAST_POSITION_END;
@@ -1117,8 +1108,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     @Override
     public boolean onError(int errorCode, int errorQualCode, String msg) {
         if (DBG) Log.d(TAG, "onError");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-                && ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             updateNowPlayingState();
         }
         if(mPlayerFrontend!=null) {
@@ -1157,8 +1147,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         } else {
             if (DBG) Log.d(TAG, "onPlay: !PlayerController.STATE_NORMAL -> not startTrakt()!");
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-                && ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             updateNowPlayingState();
         }
         if(mPlayerFrontend!=null) {
@@ -1175,8 +1164,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         } else {
             if (DBG) Log.d(TAG, "onPause: other/seek state thus not doing pauseTrakt()!");
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-                && ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             updateNowPlayingState();
         }
         if(mPlayerFrontend!=null){
@@ -1313,7 +1301,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     /**
      * displays now playing card on android TV
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setNowPlayingCard() {
         /**
          * in case our activity has been stopped, relaunch the video
@@ -1325,8 +1312,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 99, intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
         if (mSession == null) {
-            mSession = new MediaSession(this, "PlayerActivity");
-            MediaSession.Callback mediaSessionCallback = new  MediaSession.Callback() {
+            mSession = new MediaSessionCompat(this, "PlayerActivity");
+            MediaSessionCompat.Callback mediaSessionCallback = new  MediaSessionCompat.Callback() {
                 @Override
                 public void onPlay() {
                     super.onPlay();
@@ -1348,8 +1335,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 }
             };
             mSession.setCallback(mediaSessionCallback);
-            mSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS |
-                    MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
+            // deprecated and always true
+            //mSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
             mSession.setActive(true);
         }
 
@@ -1359,7 +1346,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     /**
      * update state of now playing card to play / buffering / stop
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void updateNowPlayingState() {
         if(mSession==null)
             return;
@@ -1367,51 +1353,47 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if (!mSession.isActive()) {
                 mSession.setActive(true);
             }
-            PlaybackState.Builder stateBuilder = new PlaybackState.Builder()
+            PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
                     .setActions(getAvailableActions());
-            stateBuilder.setState(PlaybackState.STATE_PLAYING, PlaybackState.PLAYBACK_POSITION_UNKNOWN, 1.0f);
+            stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f);
             mSession.setPlaybackState(stateBuilder.build());
         }
         else if (mPlayerState==PlayerState.PREPARING) {
             if (!mSession.isActive()) {
                 mSession.setActive(true);
             }
-            PlaybackState.Builder stateBuilder = new PlaybackState.Builder()
+            PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
                     .setActions(getAvailableActions());
-            stateBuilder.setState(PlaybackState.STATE_BUFFERING, PlaybackState.PLAYBACK_POSITION_UNKNOWN, 1.0f);
+            stateBuilder.setState(PlaybackStateCompat.STATE_BUFFERING, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f);
             mSession.setPlaybackState(stateBuilder.build());
         }
-        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            stopNowPlayingCard();
-        }
+        else stopNowPlayingCard();
     }
 
     /**
      * set now playing card to stop
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void stopNowPlayingCard() {
         if(mSession==null)
             return;
         if (DBG) Log.d(TAG, "stopNowPlayingCard");
 
-        PlaybackState.Builder stateBuilder = new PlaybackState.Builder()
+        PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
                 .setActions(getAvailableActions());
-        stateBuilder.setState(PlaybackState.STATE_STOPPED, PlaybackState.PLAYBACK_POSITION_UNKNOWN, 1.0f);
+        stateBuilder.setState(PlaybackStateCompat.STATE_STOPPED, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f);
         mSession.setPlaybackState(stateBuilder.build());
     }
 
     /**
      * Update title and pic on now playing card
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void updateNowPlayingMetadata() {
-        MediaMetadata.Builder metadataBuilder = new MediaMetadata.Builder();
+        MediaMetadataCompat.Builder metadataBuilder = new MediaMetadataCompat.Builder();
         String title = mVideoInfo.scraperTitle!=null?mVideoInfo.scraperTitle:mVideoInfo.title!=null?mVideoInfo.title:FileUtils.getFileNameWithoutExtension(mUri);
-        metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE,
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE,
                 title);
-        metadataBuilder.putString(MediaMetadata.METADATA_KEY_TITLE,title);
-        metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI,
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE,title);
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON_URI,
                 mVideoInfo.scraperCover);
         Bitmap bitmap = BitmapFactory.decodeFile(mVideoInfo.scraperCover);
         if (bitmap == null&&mVideoInfo.id >= 0) { //if no scrapped poster, try to get a thumbnail
@@ -1422,17 +1404,15 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (bitmap == null) {
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.widget_default_video);
         }
-        metadataBuilder.putBitmap(MediaMetadata.METADATA_KEY_ART, bitmap);
+        metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ART, bitmap);
         mSession.setMetadata(metadataBuilder.build());
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public long getAvailableActions() {
         long availableActions = PlaybackState.ACTION_PLAY;
         if(mPlayer!=null){
             if(mPlayer.isPlaying())
                 availableActions =PlaybackState.ACTION_PAUSE | PlaybackState.ACTION_STOP;
-
         }
         return availableActions;
     }
