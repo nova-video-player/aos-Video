@@ -747,7 +747,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     public void hideSeachView() {
         if(mSearchItem!=null)
-            MenuItemCompat.collapseActionView(mSearchItem);
+            mSearchItem.collapseActionView();
     }
 
     //delegating to activity because getNavigationMode on support action bar doesn't work anymore
