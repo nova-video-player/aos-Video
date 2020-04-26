@@ -36,6 +36,7 @@
 
     <!-- Used to monitor the usb storage plug/unplug -->
     <uses-feature android:required="false" android:name="android.hardware.usb.host" />
+    <uses-feature android:name="android.software.leanback" android:required="false" />
     <uses-permission android:name="android.permission.USB_PERMISSION" />
 
     <!-- Used to for scanning and trakt -->
@@ -202,9 +203,11 @@
                 <data android:scheme="mmsh" />
                 <data android:scheme="rtsp" />
             </intent-filter>
-            <intent-filter>
+            <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
                 <data android:mimeType="video/*" />
                 <data android:mimeType="application/x-shockwave-flash" />
             </intent-filter>
@@ -214,6 +217,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="file" />
                 <data android:scheme="http" />
+                <data android:scheme="https" />
                 <data android:scheme="smb" />
                 <data android:mimeType="video/*" />
                 <data android:mimeType="application/x-shockwave-flash" />
