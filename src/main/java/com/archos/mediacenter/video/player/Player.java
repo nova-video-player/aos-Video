@@ -19,6 +19,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.hardware.display.DisplayManager;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -128,6 +130,7 @@ public class Player implements IPlayerControl,
     private int         wantedModeId;
     private Window      mWindow;
     private AudioManager mAudioManager;
+    private AudioFocusRequest mAudioFocusRequest = null;
  
     private VideoEffectRenderer mEffectRenderer;
 
@@ -425,7 +428,15 @@ public class Player implements IPlayerControl,
             mUri = null;
             mCurrentState = STATE_IDLE;
             mTargetState  = STATE_IDLE;
-            mAudioManager.abandonAudioFocus(afChangeListener);
+
+            // Abandone the audio focus
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (mAudioFocusRequest != null) mAudioManager.abandonAudioFocusRequest(mAudioFocusRequest);
+                mAudioFocusRequest = null;
+            } else {
+                mAudioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+            }
+
         }
         mResumeCtx.reset();
     }
@@ -651,7 +662,20 @@ public class Player implements IPlayerControl,
         stayAwake(true);
 
         // Request the audio focus so that other apps can pause playback.
-        mAudioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mAudioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                    .setAudioAttributes(
+                            new AudioAttributes.Builder()
+                                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                                    .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
+                                    .build()
+                    )
+                    .setAcceptsDelayedFocusGain(false)
+                    .setOnAudioFocusChangeListener(afChangeListener).build();
+            mAudioManager.requestAudioFocus(mAudioFocusRequest);
+        } else {
+            mAudioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        }
 
         if (isInPlaybackState()) {
             mMediaPlayer.start();
