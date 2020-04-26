@@ -1233,7 +1233,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     public void startAsyncTasks() {
         if (DBG) Log.d(TAG,"startAsyncTasks with " + mCurrentVideo.getFilePath());
         //do not execute file info task when torrent file
-        if(!mCurrentVideo.getFileUri().getLastPathSegment().endsWith("torrent")||mIsLaunchFromPlayer) {
+        if((mCurrentVideo.getFileUri() != null && !mCurrentVideo.getFileUri().getLastPathSegment().endsWith("torrent")) || mIsLaunchFromPlayer) {
             if (DBG) Log.d(TAG,"startAsyncTasks not a torrent or mIsLaunchFromPlayer starting VideoInfoTask for " + mCurrentVideo.getFilePath());
             if (mVideoInfoTask != null)
                 mVideoInfoTask.cancel(true);
@@ -1248,7 +1248,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         if (mSubtitleFilesListerTask != null)
             mSubtitleFilesListerTask.cancel(true);
         mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mCurrentVideo);
-        
     }
 
     @Override
@@ -1554,8 +1553,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         }
         // Keep the video decoder metadata if we already have it (we don't want to compute it again, it can be long)
         VideoMetadata alreadyComputedVideoMetadata = null;
-        if (newVideo != null && newVideo.getFileUri() != null)
-            alreadyComputedVideoMetadata = mVideoMetadateCache.get(newVideo.getFileUri().toString());         
+        if (newVideo.getFileUri() != null)
+            alreadyComputedVideoMetadata = mVideoMetadateCache.get(newVideo.getFileUri().toString());
         // Keep the video decoder metadata if we already have it
         newVideo.setMetadata(alreadyComputedVideoMetadata); // may be null (fyi)
         if (DBG) Log.d(TAG,"onLoadFinished: setCurrentVideo " + ((newVideo == null) ? "null" : newVideo.getFilePath()) );
