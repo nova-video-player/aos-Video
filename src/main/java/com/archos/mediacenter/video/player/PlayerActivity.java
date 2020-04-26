@@ -3,6 +3,7 @@ package com.archos.mediacenter.video.player;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.PictureInPictureParams;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -1732,7 +1733,11 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 public void onClick(View v) {
                     // TODO Auto-generated method stub
                     if(v == vPicInPic){
-                        enterPictureInPictureMode();
+                        if (Build.VERSION.SDK_INT>=26)
+                            enterPictureInPictureMode(new PictureInPictureParams.Builder().build());
+                        else
+                            if (Build.VERSION.SDK_INT>=24)
+                                enterPictureInPictureMode();
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
