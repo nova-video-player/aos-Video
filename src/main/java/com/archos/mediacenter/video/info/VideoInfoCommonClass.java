@@ -139,6 +139,7 @@ public class VideoInfoCommonClass {
                 case LibAvos.MP_DECODER_HW_OMXPLUS:    videoDecoderStringResId = R.string.dec_hw_omxplus; break;
                 case LibAvos.MP_DECODER_HW_OMXCODEC:   videoDecoderStringResId = R.string.dec_hw_omxcodec; break;
                 case LibAvos.MP_DECODER_HW_MEDIACODEC: videoDecoderStringResId = R.string.dec_hw_mediacodec; break;
+                case LibAvos.MP_DECODER_EXOPLAYER:     videoDecoderStringResId = R.string.dec_exoplayer; break;
                 default: break;
             }
         }
