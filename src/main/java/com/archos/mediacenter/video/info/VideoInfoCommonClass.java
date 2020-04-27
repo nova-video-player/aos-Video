@@ -197,7 +197,7 @@ public class VideoInfoCommonClass {
         }
         sb.append(videoMetadata.getVideoWidth()).append('x').append(videoMetadata.getVideoHeight()).append(SEP);
 
-        if (video.bitRate != 0)
+        if (! (video.bitRate == 0 || video.bitRate == -1))
             sb.append(video.bitRate).append("kb/s").append(SEP);
         if (video.fpsRate > 0 && video.fpsScale >0) {
             NumberFormat format = new DecimalFormat("#0.###");
