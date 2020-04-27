@@ -691,6 +691,7 @@
    <string name="dec_hw_omxplus">Hardware decoding (IOMX w/ hwbuf)</string>
    <string name="dec_hw_omxcodec">Hardware decoding (OMXCodec)</string>
    <string name="dec_hw_mediacodec">Hardware decoding (MediaCodec)</string>
+   <string name="dec_exoplayer">Decoded via ExoPlayer</string>
    <string name="dec_sw">Software decoding</string>
    <string name="dec_hw">Hardware decoding</string>
    <string name="dec_unknown">Unknown decoding</string>
