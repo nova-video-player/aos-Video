@@ -195,3 +195,11 @@
 -if interface * { @retrofit2.http.* <methods>; }
 -keep,allowobfuscation interface <1>
 
+# JSCH
+-keep class com.jcraft.jsch.jce.*
+-keep class * extends com.jcraft.jsch.KeyExchange
+-keep class com.jcraft.jsch.**
+-keep class com.jcraft.jzlib.ZStream
+-keep class com.jcraft.jsch.Compression
+-keep class org.ietf.jgss.*
+-dontwarn org.ietf.jgss.**
