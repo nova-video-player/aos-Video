@@ -38,7 +38,6 @@ import android.widget.TextView;
 
 import com.archos.filecorelibrary.ExtStorageManager;
 import com.archos.filecorelibrary.ExtStorageReceiver;
-import com.archos.mediacenter.upnp.UpnpAvailability;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
@@ -473,7 +472,7 @@ abstract public class BrowserCategory extends ListFragment {
                 mCategoryList.add(itemData);
             }
 
-            if (isConnected && UpnpAvailability.isUpnpAvaialbe()){
+            if (isConnected){
                 ItemData itemData = new ItemData();
                 itemData.icon = R.drawable.category_common_network;
                 itemData.text = R.string.network_media_servers;

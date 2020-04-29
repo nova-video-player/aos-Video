@@ -43,7 +43,6 @@ import com.archos.filecorelibrary.samba.SambaDiscovery;
 import com.archos.filecorelibrary.samba.Share;
 import com.archos.filecorelibrary.samba.Workgroup;
 import com.archos.mediacenter.filecoreextension.upnp2.UpnpServiceManager;
-import com.archos.mediacenter.upnp.UpnpAvailability;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.ShortcutDb;
@@ -177,10 +176,9 @@ public class NetworkRootFragment extends BrowseSupportFragment {
         mDiscoveryRepeatHandler.post(mSmbDiscoveryRepeat);
 
         // Start UPnP
-        if(UpnpAvailability.isUpnpAvaialbe())
-            UpnpServiceManager
-                .startServiceIfNeeded(getActivity())
-                .addListener(mUpnpListener);
+        UpnpServiceManager
+            .startServiceIfNeeded(getActivity())
+            .addListener(mUpnpListener);
     }
 
     @Override
@@ -216,13 +214,11 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                 new HeaderItem(getString(R.string.network_shared_folders)),
                 mSmbDiscoveryAdapter));
         mRowsAdapter.notifyArrayItemRangeChanged(0, mRowsAdapter.size());
-        if(UpnpAvailability.isUpnpAvaialbe()) {
-            mUpnpDiscoveryAdapter = new ArrayObjectAdapter(new SmbSharePresenter());
-            mRowsAdapter.add(new ListRow(
-                    new HeaderItem(getString(R.string.network_media_servers)),
-                    mUpnpDiscoveryAdapter));
-                mRowsAdapter.notifyArrayItemRangeChanged(0, mRowsAdapter.size());
-        }
+        mUpnpDiscoveryAdapter = new ArrayObjectAdapter(new SmbSharePresenter());
+        mRowsAdapter.add(new ListRow(
+                new HeaderItem(getString(R.string.network_media_servers)),
+                mUpnpDiscoveryAdapter));
+            mRowsAdapter.notifyArrayItemRangeChanged(0, mRowsAdapter.size());
 
         mFtpShortcutsAdapter = new ArrayObjectAdapter(new NetworkShortcutPresenter());
         mRowsAdapter.add(new ListRow(
@@ -499,8 +495,6 @@ public class NetworkRootFragment extends BrowseSupportFragment {
 
         @Override
         public void onDeviceListUpdate(List<Device> devices) {
-            if(!UpnpAvailability.isUpnpAvaialbe())
-                return;
             if(DBG_UPNP) Log.d(TAG, "UpnpDiscovery onDiscoveryUpdate");
 
             // NOTE: for UPnP, onDiscoveryUpdate() is called each time a server is added or removed
