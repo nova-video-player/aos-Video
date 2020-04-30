@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.browser.presenter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -35,24 +36,21 @@ import httpimage.HttpImageManager;
  */
 public class VideoPresenter extends CommonPresenter{
 
+    private static final String TAG = VideoPresenter.class.getSimpleName();
+    private static final boolean DBG = false;
 
     private final HttpImageManager mImageManager;
 
     public VideoPresenter(Context context, AdapterDefaultValues defaultValues, ExtendedClickListener onExtendedClick, HttpImageManager imageManager) {
         super(context, defaultValues,onExtendedClick);
         mImageManager = imageManager;
-
     }
-
 
     @Override
     public View bindView(View view, final Object object, ThumbnailEngine.Result thumbnailResult, int positionInAdapter) {
         super.bindView(view, object, thumbnailResult, positionInAdapter);
         ViewHolder holder = (ViewHolder) view.getTag();
         final Video video = (Video) object;
-
-
-
 
         // ------------------------------------------------
         // File-based item => fill the ViewHolder fields depending
@@ -63,11 +61,9 @@ public class VideoPresenter extends CommonPresenter{
             holder.secondLine.setVisibility(View.VISIBLE);
         // Set name.
 
-
         // Set duration.
         //if(holder.info!=null)
         //    holder.info.setText(video.getInfo());
-
 
         // Set thumbnail.
         if(holder.thumbnail!=null) {
@@ -76,8 +72,10 @@ public class VideoPresenter extends CommonPresenter{
                 //holder.thumbnail.setColorFilter(mDefaultIconsColor);
                 holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER); // thumbnail may be smaller, must not be over scaled
                 if ("upnp".equals(video.getFileUri().getScheme())&&mImageManager!=null) {
+                    if (DBG) Log.d(TAG, "bindView: " + video.getFileUri() + "requesting HttpImageManager.LoadRequest");
                     Uri uri = video.getPosterUri();
                     if(uri != null){
+                        // TODO MARC only perform request if scheme is http(s) no?
                         Bitmap bitmap = mImageManager.loadImage(new HttpImageManager.LoadRequest(uri, holder.thumbnail));
                         if (bitmap != null) {
                             holder.thumbnail.setImageBitmap(bitmap);
@@ -108,7 +106,6 @@ public class VideoPresenter extends CommonPresenter{
             else
                 holder.info.setVisibility(View.INVISIBLE);
         }
-
                 /* //06/2015: no more bookmark feature
                 if(holder.bookmark!=null){
                     holder.bookmark.setVisibility(View.VISIBLE);
@@ -121,18 +118,15 @@ public class VideoPresenter extends CommonPresenter{
 
         // Network notification
         if(holder.network!=null){
-
             holder.network.setEnabled(!FileUtils.isLocal(video.getFileUri()));
             holder.network.setVisibility(View.VISIBLE);
         }
         if(holder.expanded!=null)
             holder.expanded.setVisibility(View.GONE);
-
         if (holder.traktWatched != null)
             holder.traktWatched.setVisibility(video.isWatched() ? View.VISIBLE : View.GONE);
         if (holder.traktLibrary != null)
             holder.traktLibrary.setVisibility(video.isTraktLibrary() ? View.VISIBLE : View.GONE);
-
         if (holder.video3D != null)
             holder.video3D.setVisibility(video.is3D() ? View.VISIBLE : View.GONE);
         if(holder.count!=null){

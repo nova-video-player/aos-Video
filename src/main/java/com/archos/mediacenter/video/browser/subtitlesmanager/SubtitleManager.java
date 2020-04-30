@@ -363,13 +363,13 @@ public class SubtitleManager {
                     }
                 }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "recursiveSubListing: caught IOException", e);
         } catch (AuthenticationException e) {
-            e.printStackTrace();
+            Log.e(TAG, "recursiveSubListing: caught AuthenticationException", e);
         } catch (SftpException e) {
-            e.printStackTrace();
+            Log.e(TAG, "recursiveSubListing: caught SftpException", e);
         } catch (JSchException e) {
-            e.printStackTrace();
+            Log.e(TAG, "recursiveSubListing: caught JSchException", e);
         }
 
         return subs;
@@ -392,15 +392,16 @@ public class SubtitleManager {
         // List files next to the video files
         if(UriUtils.isImplementedByFileCore(video)) try {
             allFiles.addAll(getSubtitleList(video, addAllSubs));
-        } catch (SftpException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        } catch (JSchException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "listLocalAndRemotesSubtitles: caught IOException", e);
+        } catch (AuthenticationException e) {
+            Log.e(TAG, "listLocalAndRemotesSubtitles: caught AuthenticationException", e);
+        } catch (SftpException e) {
+            Log.e(TAG, "listLocalAndRemotesSubtitles: caught SftpException", e);
+        } catch (JSchException e) {
+            Log.e(TAG, "listLocalAndRemotesSubtitles: caught JSchException", e);
         }
+
         // List files in the local temporary folder
         String filenameWithoutExtension = stripExtension(video);
         Uri localSubsDirUri = Uri.fromFile(MediaUtils.getSubsDir(mContext));
@@ -411,13 +412,8 @@ public class SubtitleManager {
                     if (file.getName().startsWith(filenameWithoutExtension) || addAllSubs)
                         allFiles.add(file);
                 }
-            }
-            catch (Exception e) {
-            }
+            } catch (Exception e) { }
         }
-
-
-
 
         final List<String> SubtitleExtensions = VideoUtils.getSubtitleExtensions();
 

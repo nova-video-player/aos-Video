@@ -34,11 +34,9 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.DialogFragment;
@@ -78,8 +76,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observer;
-
-import httpimage.HttpImageManager;
 
 abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         Observer, LoaderManager.LoaderCallbacks<Cursor>, ListingEngine.Listener, VideoPresenter.ExtendedClickListener {
@@ -457,7 +453,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
 
         BrowserByVideoObjects.setPresenters(activity, listener, adapterInterface, viewMode);
         CustomApplication application = (CustomApplication) activity.getApplication();
-        HttpImageManager imageManager = application.getHttpImageManager();
         if(viewMode==VideoUtils.VIEW_MODE_LIST) {
             adapterInterface.setPresenter(MetaFile2.class, new Metafile2ListPresenter(activity));
         }
