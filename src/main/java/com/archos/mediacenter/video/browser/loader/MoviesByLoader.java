@@ -15,6 +15,8 @@
 package com.archos.mediacenter.video.browser.loader;
 
 import android.content.Context;
+import android.database.Cursor;
+
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
@@ -66,9 +68,9 @@ public abstract class MoviesByLoader extends CursorLoader implements CompatAndSD
         return sb.toString();
     }
 
-    public Loader getV4CursorLoader(boolean detailed, boolean hideWatchedVideos){
+    public Loader<Cursor> getV4CursorLoader(boolean detailed, boolean hideWatchedVideos){
         mForceHideVideos = hideWatchedVideos;
-        return  new CursorLoader(getContext(),
+        return new CursorLoader(getContext(),
                 getUri(), getProjection(), getSelection(), getSelectionArgs(),
                 getSortOrder());
     }

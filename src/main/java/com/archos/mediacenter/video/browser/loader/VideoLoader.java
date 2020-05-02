@@ -15,12 +15,14 @@
 package com.archos.mediacenter.video.browser.loader;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
 
 import androidx.loader.content.AsyncTaskLoader;
 import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
@@ -207,7 +209,7 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
         return sb.toString();
     }
 
-    public CursorLoader getV4CursorLoader(boolean detailed, boolean hideWatchedVideos){
+    public Loader<Cursor> getV4CursorLoader(boolean detailed, boolean hideWatchedVideos){
         mIsDetailed = detailed;
         mForceHideVideos = hideWatchedVideos;
         return  new CursorLoader(getContext(),

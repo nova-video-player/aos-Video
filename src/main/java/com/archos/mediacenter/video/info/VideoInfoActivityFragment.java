@@ -1433,7 +1433,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         removeNetworkListener();
     }
     @Override
-    public Loader onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (DBG) Log.d(TAG,"onCreateLoader for id=" + id);
 
         // If we don't have the video object
