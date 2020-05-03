@@ -225,8 +225,8 @@ public class OAuthDialog extends Dialog {
             if(mListener!=null)
                 mListener.onFinished(mdata);
             OAuthDialog.this.dismiss();
-            Log.w(TAG, "onReceivedError: error is " + error);
-			Toast.makeText(getContext(), "No Internet or " + error , Toast.LENGTH_LONG).show();
+            Log.w(TAG, "onReceivedError: error code is " + error.getErrorCode() + ", description " + error.getDescription());
+			Toast.makeText(getContext(), "No Internet or code " + + error.getErrorCode() + ", description " + error.getDescription() , Toast.LENGTH_LONG).show();
 		}
 
 
