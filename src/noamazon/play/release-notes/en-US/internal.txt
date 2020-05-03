@@ -1,5 +1,7 @@
-- Fix scraper issue in french
 - Add opensubtitles credentials support in preferences
+- Fix scraper issues
+- UI navbar correct color on Samsung
+- jsch update for sftp
 - Fix trakt resume point sync issues
 - Fix DTSHD decoding crashes
 - Subtitle manual download improvement via scraped information search
