@@ -348,8 +348,8 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
             SharedPreferences mPreferences = getApplicationContext().getSharedPreferences("opensubtitles_credentials", Context.MODE_PRIVATE);
             String mUsername = mPreferences.getString(OpenSubtitlesCredentialsDialog.OPENSUBTITLES_USERNAME, "");
             String mPassword = mPreferences.getString(OpenSubtitlesCredentialsDialog.OPENSUBTITLES_PASSWORD, "");
-            //if (mUsername.isEmpty() || mPassword.isEmpty())
-            //    displayToast(getString(R.string.toast_subloader_credentials_empty));
+            if (mUsername.isEmpty() || mPassword.isEmpty())
+                displayToast(getString(R.string.toast_subloader_credentials_empty));
             try {
                 URL url = new URL(OpenSubtitlesAPIUrl);
                 if (DBG_NET) client = new XMLRPCClient(url, XMLRPCClient.FLAGS_DEBUG);
