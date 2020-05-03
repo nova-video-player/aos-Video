@@ -26,6 +26,7 @@ import android.util.Log;
 import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosUtils;
 import com.archos.environment.NetworkState;
+import com.archos.filecorelibrary.jcifs.JcifsUtils;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.mediacenter.utils.AppState;
 import com.archos.mediacenter.utils.MediaUtils;
@@ -67,6 +68,13 @@ public class CustomApplication extends Application {
     private static boolean isNetworkStateRegistered = false;
     private static boolean isAppStateListenerAdded = false;
 
+    private JcifsUtils jcifsUtils = null;
+
+    private static Context mContext = null;
+
+    public static Context getAppContext() {
+        return CustomApplication.mContext;
+    }
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -81,7 +89,6 @@ public class CustomApplication extends Application {
 
     public CustomApplication() {
         super();
-
         mAutoScraperActive = false;
     }
 
@@ -124,6 +131,8 @@ public class CustomApplication extends Application {
         }
 
         super.onCreate();
+        // init application context to make it available to all static methods
+        CustomApplication.mContext = getApplicationContext();
         Trakt.initApiKeys(this);
         new Thread() {
             public void run() {
@@ -180,6 +189,12 @@ public class CustomApplication extends Application {
             MediaUtils.clearOldSubDir(this);
             Debug.startLogcatRecording();
         }
+
+        new Thread(() -> {
+            // create instance of jcifsUtils in order to pass context and initial preference
+            if (jcifsUtils == null) jcifsUtils = JcifsUtils.getInstance(getApplicationContext());
+        }).start();
+
     }
 
     // link networkState register/unregister networkCallback linked to app foreground/background lifecycle
