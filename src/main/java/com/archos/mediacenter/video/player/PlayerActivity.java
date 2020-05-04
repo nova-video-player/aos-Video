@@ -2419,10 +2419,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         }
         if (mDialog != null) {
             mDialog.setOnDismissListener(this);
+            mShowingDialogId = id;
+            mDialog.show();
         }
-
-        mShowingDialogId = id;
-        mDialog.show();
     }
 
     /**
