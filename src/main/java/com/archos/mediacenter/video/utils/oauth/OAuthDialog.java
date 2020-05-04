@@ -57,7 +57,7 @@ import com.archos.mediacenter.video.ui.NovaProgressDialog;
  */
 public class OAuthDialog extends Dialog {
 
-    private final static boolean DBG = false;
+    private final static boolean DBG = true;
 	private static final String TAG = OAuthDialog.class.getSimpleName();
 
 	private NovaProgressDialog mProgress;
@@ -162,7 +162,7 @@ public class OAuthDialog extends Dialog {
 			}
 			Uri uri = Uri.parse(urldecode);
 			if (!"localhost".equals(uri.getHost()) || !urldecode.contains("code=")) {
-				if (DBG) Log.d(TAG, "shouldOverrideUrlLoading: shouldOverrideUrlLoading false");
+				if (DBG) Log.d(TAG, "shouldOverrideUrlLoading: shouldOverrideUrlLoading false for host " + uri.getHost() + " and urldecode is " + urldecode);
 				return false;
 			}
 			mdata.code = uri.getQueryParameter("code");
@@ -186,7 +186,7 @@ public class OAuthDialog extends Dialog {
 			}
 			Uri uri = Uri.parse(urldecode);
 			if (!"localhost".equals(uri.getHost()) || !urldecode.contains("code=")) {
-				if (DBG) Log.d(TAG, "shouldOverrideUrlLoading: shouldOverrideUrlLoading false");
+				if (DBG) Log.d(TAG, "shouldOverrideUrlLoading: shouldOverrideUrlLoading false for host " + uri.getHost() + " and urldecode is " + urldecode);
 				return false;
 			}
 			mdata.code = uri.getQueryParameter("code");
@@ -237,7 +237,7 @@ public class OAuthDialog extends Dialog {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon)
         {
-			if (DBG) Log.d(TAG, "onPageStarted");
+			if (DBG) Log.d(TAG, "onPageStarted for url " + url);
 			super.onPageStarted(view, url, favicon);
             mProgress.show();
         }
@@ -249,7 +249,7 @@ public class OAuthDialog extends Dialog {
 		@Override
 		public void onPageFinished(WebView view, String url)
 		{
-			if (DBG) Log.d(TAG, "onPageFinished");
+			if (DBG) Log.d(TAG, "onPageFinished for url " + url);
 			super.onPageFinished(view, url);
             mProgress.dismiss();
             injectCSS();
