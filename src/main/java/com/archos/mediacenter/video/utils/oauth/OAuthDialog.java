@@ -33,9 +33,7 @@ import android.os.Bundle;
 import androidx.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Display;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -44,8 +42,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.archos.mediacenter.video.R;
@@ -228,7 +224,6 @@ public class OAuthDialog extends Dialog {
             Log.w(TAG, "onReceivedError: error code is " + error.getErrorCode() + ", description " + error.getDescription());
 			Toast.makeText(getContext(), "No Internet or code " + + error.getErrorCode() + ", description " + error.getDescription() , Toast.LENGTH_LONG).show();
 		}
-
 
         /*
         **  Display a dialog when the page start
