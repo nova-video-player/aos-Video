@@ -29,6 +29,11 @@ allprojects {
         tasks.withType(JavaCompile) {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
         }
+        // check tasks to add via ./gradlew tasks --all | grep DuplicateClasses
+        checkNoamazonReleaseDuplicateClasses.dependsOn(preBuild)
+        checkNoamazonDebugDuplicateClasses.dependsOn(preBuild)
+        checkAmazonDebugDuplicateClasses.dependsOn(preBuild)
+        checkAmazonReleaseDuplicateClasses.dependsOn(preBuild)
     }
 }
 
