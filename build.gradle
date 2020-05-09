@@ -119,7 +119,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    compileSdkVersion 29
+    compileSdkVersion 'android-R'
     buildToolsVersion '29.0.3'
     sourceSets {
         main {
@@ -134,7 +134,7 @@ android {
     defaultConfig {
         generatedDensities = []
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 'R'
         multiDexEnabled true
         versionCode getDate()
         version = '5.14.4'
