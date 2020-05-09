@@ -1001,7 +1001,6 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 in = null;
                 map = null;
             }
-            return;
         }
 
         private String buildSumup(HashMap<String, ArrayList<String>> success, HashMap<String, ArrayList<String>> fails, boolean single) {
