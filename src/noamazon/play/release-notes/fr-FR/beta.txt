@@ -1,4 +1,1 @@
-- Fix hevc 10 bit support on rk devices
-- Prefer ffmpeg over c2.android or omx.google software codecs to avoid multimedia issues on pixel3xl phone
-- Better extradata management for AVC and HEVC for MediaCodec
-- Stability enhancements
+../en-US/beta.txt

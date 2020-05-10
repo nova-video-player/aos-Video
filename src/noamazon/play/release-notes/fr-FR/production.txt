@@ -1,3 +1,1 @@
-Mise à jour de ffmpeg en 4.2.2
-Mise à jour de dav1d en 0.5.2
-Amélioration de la stabilité
+../en-US/production.txt
