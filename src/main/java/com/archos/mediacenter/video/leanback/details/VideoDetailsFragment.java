@@ -863,7 +863,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     public void requestIndexAndScrap(){
 
         if (!PrivateMode.isActive()) {
-            if (mVideo != null && mVideo.getId() == -1 && !mVideo.getFileUri().equals(mLastIndexed)) {
+            if (mVideo.getId() == -1 && mVideo.getFileUri() != null && !mVideo.getFileUri().equals(mLastIndexed)) {
                 mLastIndexed = mVideo.getFileUri();
                 if(UriUtils.isIndexable(mVideo.getFileUri())) {
                     final Uri uri = mVideo.getFileUri();
