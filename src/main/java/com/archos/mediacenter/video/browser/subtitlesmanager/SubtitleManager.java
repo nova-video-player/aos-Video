@@ -133,24 +133,26 @@ public class SubtitleManager {
                     Uri destinationDir = Uri.fromFile(subsDir);
                     String nameSource = FileUtils.getFileNameWithoutExtension(upnpNiceUri);
                     String nameDest = FileUtils.getFileNameWithoutExtension(fileUri);
-                    for (File file : subsDir.listFiles()) {
-                        Uri fileUri = Uri.fromFile(file);
-                        String nameWithoutExtension = FileUtils.getFileNameWithoutExtension(fileUri);
-                        String extension = MimeUtils.getExtension(FileUtils.getName(fileUri));
-                        String lang = MimeUtils.getExtension(nameWithoutExtension);
-                        if (nameWithoutExtension.startsWith(nameSource)) {
-                            try {
-                                Uri destFile = Uri.withAppendedPath(destinationDir,
-                                        nameDest + (lang != null && !lang.isEmpty() ? ("." + lang) : "") + "." + extension
-                                );
+                    if (subsDir != null) {
+                        for (File file : subsDir.listFiles()) {
+                            Uri fileUri = Uri.fromFile(file);
+                            String nameWithoutExtension = FileUtils.getFileNameWithoutExtension(fileUri);
+                            String extension = MimeUtils.getExtension(FileUtils.getName(fileUri));
+                            String lang = MimeUtils.getExtension(nameWithoutExtension);
+                            if (nameWithoutExtension.startsWith(nameSource)) {
                                 try {
-                                    FileEditorFactory.getFileEditorForUrl(destFile, mContext).delete();
+                                    Uri destFile = Uri.withAppendedPath(destinationDir,
+                                            nameDest + (lang != null && !lang.isEmpty() ? ("." + lang) : "") + "." + extension
+                                    );
+                                    try {
+                                        FileEditorFactory.getFileEditorForUrl(destFile, mContext).delete();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    FileEditorFactory.getFileEditorForUrl(Uri.fromFile(file), mContext).copyFileTo(destFile, mContext);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                FileEditorFactory.getFileEditorForUrl(Uri.fromFile(file), mContext).copyFileTo(destFile, mContext);
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
                         }
                     }
