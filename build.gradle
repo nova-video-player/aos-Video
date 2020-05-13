@@ -1,8 +1,8 @@
 buildscript {
     repositories {
         google()
+        mavenCentral()
         jcenter()
-	maven { url 'https://mvnrepository.com/artifact/' } // for play-publisher
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.3'
@@ -24,12 +24,18 @@ allprojects {
         jcenter()
         mavenCentral()
         mavenLocal()
-        maven { url 'http://4thline.org/m2' } // for cling
     }
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
         }
+        // check tasks to add via ./gradlew tasks --all | grep DuplicateClasses
+        checkNoamazonReleaseDuplicateClasses.dependsOn(preBuild)
+        checkNoamazonDebugDuplicateClasses.dependsOn(preBuild)
+        checkAmazonDebugDuplicateClasses.dependsOn(preBuild)
+        checkAmazonReleaseDuplicateClasses.dependsOn(preBuild)
+        checkAmazonDebugAndroidTestDuplicateClasses.dependsOn(preBuild)
+        checkNoamazonDebugAndroidTestDuplicateClasses.dependsOn(preBuild)
     }
 }
 
