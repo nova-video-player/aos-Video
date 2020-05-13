@@ -1,4 +1,5 @@
 Upgrade jsch for sftp support
+upgrade cling for UPnP support
 New TV show categories for quicker browsing through large collection
 Countless TV UI improvements (roles, trailers, badges, global del/deindex, subs picker)
 AV1 soft decoding
