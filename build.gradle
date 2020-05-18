@@ -139,7 +139,7 @@ android {
         targetSdkVersion 29
         multiDexEnabled true
         versionCode getDate()
-        version = '4.48.6'
+        version = '4.48.7'
         // increment patch version at each build: disabled for now
         /*
         println("old version: " + version)
