@@ -623,6 +623,8 @@
    <string name="network_thumbnails">Create remote thumbnails</string>
     <string name="network_thumbnails_summary">Create thumbnails from remote videos when no poster available</string>
    <string name="network_bookmarks_summary">Save and check for resume point and position bookmarks on network when possible</string>
+    <string name="share_folders_smbv2">Enable SMBv2 support</string>
+    <string name="share_folders_smbv2_summary">Enable network share SMB version 2 protocol support. ⚠ Experimental, may result in video playback not being able to start</string>
     <string name="connection_abnormally_long">Connection seems abnormally long. Would you like to reset it ?</string>
     <string name="connection_reset">Reset</string>
 
