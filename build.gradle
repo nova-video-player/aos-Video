@@ -60,7 +60,7 @@ apply {
 play {
     serviceAccountCredentials = file("nova.json")
     //jsonFile = file('nova.json')
-    track = 'alpha' // rollout, beta, alpha, release, internal
+    track = 'internal' // rollout, beta, alpha, release, internal
     userFraction = 1.0 // rollout rate in %/100
     releaseStatus = "completed"
 }
@@ -139,7 +139,7 @@ android {
         targetSdkVersion 29
         multiDexEnabled true
         versionCode getDate()
-        version = '4.48.7'
+        version = '4.48.8'
         // increment patch version at each build: disabled for now
         /*
         println("old version: " + version)
