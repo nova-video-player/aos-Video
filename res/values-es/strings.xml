@@ -394,6 +394,9 @@
     <string name="dialog_subloader_nonetwork_title">Sin conexión a Internet</string>
     <string name="dialog_subloader_nonetwork_message">Hace falta una conexión a Internet para descargar subtítulos</string>
     <string name="dialog_subloader_connecting">Conectando a www.opensubtitles.org…</string>
+    <string name="dialog_subloader_credentials">Credenciales de Opensubtitles</string>
+    <string name="dialog_subloader_credentials_empty">Debe introducir un nombre de usuario y contraseña válidos!</string>
+    <string name="toast_subloader_credentials_empty">Proporcione sus credenciales de opensubtitles en la configuración para poder descargar subtitulos</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Ajustes de subtítulos</string>
     <string name="subtitle_sample_text">\"muestra\"</string>
@@ -492,6 +495,7 @@
     <string name="category_languages">Subtítulos</string>
     <string name="subtitles_hide_default">Ocultar subtítulos por defecto</string>
     <string name="subtitles_hide_default_summary">Marcar si desea ocultar los subtítulos por defecto</string>
+    <string name="subtitles_credentials_title">Credenciales de Opensubtitles</string>
     <string name="preferences_languages">Idiomas de descarga de subtítulos</string>
     <string name="summary_list_preference_primary">Seleccione el idioma de la descarga de subtítulos</string>
     <string name="favSubLang_title">Idioma de lectura de subtítulos</string>
@@ -554,6 +558,8 @@
     <string name="network_thumbnails">Crear miniaturas remotas</string>
     <string name="network_thumbnails_summary">Crea miniaturas de vídeos remotos cuando no hay carteles disponibles</string>
     <string name="network_bookmarks_summary">Guarda y comprueba si es posible el punto de reanudación y posición de los marcadores en la red</string>
+    <string name="share_folders_smbv2">Habilitar soporte para SMBv2</string>
+    <string name="share_folders_smbv2_summary">Habilita el soporte para protocolo de red SMB versión 2. ⚠ Experimental, puede resultar que la reproducción de vídeo no se pueda iniciar</string>
     <string name="connection_abnormally_long">La conexión parece anormalmente larga. ¿Quieres restablecerla?</string>
     <string name="connection_reset">Restablecer</string>
     <!-- Info dialog, not indexed file -->

@@ -548,6 +548,8 @@
     <string name="network_thumbnails">Vytvořit náhledy pro vzdálená videa</string>
     <string name="network_thumbnails_summary">Vytvořit náhledy pro vzdálená videa v případě, kdy není k dispozici plakát</string>
     <string name="network_bookmarks_summary">Uložit a zkontrolovat pozice obnovení a záložky na síťových připojeních pokud je to možné</string>
+    <string name="share_folders_smbv2">Aktivovat podporu pro SMBv2</string>
+    <string name="share_folders_smbv2_summary">Aktivovat sdílení síťových disků pomocí protokolu SMB verze 2. ⚠ Experimentální nastavení, může způsob, že video nepůjde přehrávat</string>
     <string name="connection_abnormally_long">Připojování trvá neobvykle dlouho. Chcete ho zresetovat?</string>
     <string name="connection_reset">Resetovat</string>
     <!-- Info dialog, not indexed file -->

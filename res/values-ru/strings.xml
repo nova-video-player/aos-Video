@@ -568,6 +568,8 @@
     <string name="network_thumbnails">Эскизы видео на сетевых источниках</string>
     <string name="network_thumbnails_summary">Cоздавать эскизы для видео на сетевых источниках, когда недоступен постер</string>
     <string name="network_bookmarks_summary">Сохранять точки возобновления просмотра и позиции закладок по сети, когда доступно</string>
+    <string name="share_folders_smbv2">Включить поддержку SMBv2</string>
+    <string name="share_folders_smbv2_summary">Включить поддержку SMB версии 2. ⚠ Экспериментально, может привести к невозможности  запуска воспроизведения.</string>
     <string name="connection_abnormally_long">Соединение слишком долгое. Хотите прервать его?</string>
     <string name="connection_reset">Сброс</string>
     <!-- Info dialog, not indexed file -->

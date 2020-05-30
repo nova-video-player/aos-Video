@@ -568,6 +568,8 @@
     <string name="network_thumbnails">Kurti nuotolines piktogramas</string>
     <string name="network_thumbnails_summary">Kurti piktogramas nuotoliniams failams be viršelių</string>
     <string name="network_bookmarks_summary">Kai įmanoma išsaugoti ir tikrinti tęsimo vietų žymes tinkle</string>
+    <string name="share_folders_smbv2">Įjungti SMBv2 palaikymą</string>
+    <string name="share_folders_smbv2_summary">Įjungti tinklo dalinimosi SMB antros versijos protokolo palaikymą. ⚠ Eksperimentinis, gali būti įvairūs video atkūrimo sutrikimai</string>
     <string name="connection_abnormally_long">Susijungimas neįprastai ilgas. Nutraukti?</string>
     <string name="connection_reset">Nutraukti</string>
     <!-- Info dialog, not indexed file -->

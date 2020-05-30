@@ -133,6 +133,7 @@
     <string name="scrap_remove">حذف المعلومات</string>
     <string name="scrap_remove_short">حذف</string>
     <!-- for small screens -->
+    <string name="scrap_change">Change info of all episodes</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">مخرج</string>
     <string name="scrap_director_format">مخرج: %s</string>

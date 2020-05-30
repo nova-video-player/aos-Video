@@ -556,6 +556,8 @@
     <string name="network_thumbnails">创建远程缩略图</string>
     <string name="network_thumbnails_summary">在没有海报可用时从远程视频创建缩略图</string>
     <string name="network_bookmarks_summary">尽可能在网络上保存并检查播放进度和位置书签</string>
+    <string name="share_folders_smbv2">启用 SMBv2 支持</string>
+    <string name="share_folders_smbv2_summary">启用网络共享 SMB 版本 2 协议支持。警告：实验性功能，可能导致视频无法播放</string>
     <string name="connection_abnormally_long">连接似乎花了太长时间。要重置吗？</string>
     <string name="connection_reset">重置</string>
     <!-- Info dialog, not indexed file -->
