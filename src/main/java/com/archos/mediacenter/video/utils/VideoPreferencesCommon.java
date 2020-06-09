@@ -76,7 +76,10 @@ import static com.archos.filecorelibrary.FileUtils.backupDatabase;
 
 public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener {
     private static final String TAG = VideoPreferencesCommon.class.getSimpleName();
-    private static boolean DBG = false;
+    private static final boolean DBG = false;
+
+    // should we provide adaptive refresh rate for all (not only on TV)
+    private static final boolean REFRESHRATE_FORALL = true;
 
     public static final String KEY_VIDEO_AD_FREE = "video_ad_free";
     public static final String KEY_VIDEO_AD_FREE_CATEGORY = "preferences_category_complete";
@@ -237,7 +240,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         PreferenceCategory prefCategory = (PreferenceCategory) findPreference("preferences_category_video");
         if (!ArchosFeatures.isTV(getActivity())) { // not a TV
             prefCategory.removePreference(mActivate3DTVSwitch);
-            prefCategory.removePreference(mActivateRefreshrateTVSwitch);
+            if (REFRESHRATE_FORALL) prefCategory.addPreference(mActivateRefreshrateTVSwitch);
+            else prefCategory.removePreference(mActivateRefreshrateTVSwitch);
+            prefCategory.addPreference(mActivateRefreshrateTVSwitch);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N)
                 prefCategory.removePreference(mDisableDownmix); // on old Android downmix is forced: do not show the option
             else
