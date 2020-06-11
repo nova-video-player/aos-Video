@@ -1,11 +1,6 @@
-- Fix use of nova as external video player
-- Add opensubtitles credentials support in preferences
-- Fix scraper issues
-- UI navbar correct color on Samsung
-- Fix trakt resume point sync issues
-- Fix DTSHD decoding crashes
-- Subtitle manual download improvement via scraped information search
-- Better TV show scrape result through multi-language Levenshtein metric computation
-- Refactored TmDb and TheTVDb scrapers
-- UI polishing on phones/tablets and partners logo refresh
-- AppCompat migration
+- Fix missing poster on some movies
+- Allow adaptive refresh rate on phones
+- Improve A/V sync for some videos (PTS instead of sample based sync)
+- ffmpeg version 4.2.3 and dav1d version 0.7.0 upstep
+- Scraping improvements
+- Stability enhancement
