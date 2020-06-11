@@ -72,7 +72,7 @@ public class Player implements IPlayerControl,
                                SurfaceHolder.Callback,
                                TextureView.SurfaceTextureListener{
     private static String TAG = "Player";
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
     public static Player sPlayer;
     // settable by the client
     private Uri         mUri;
@@ -126,6 +126,7 @@ public class Player implements IPlayerControl,
     private final int   NUMBER_RETRIES = 5;
     private int         numberRetries = NUMBER_RETRIES;
     private static final float REFRESH_RATE_EPSILON = 0.01f;
+    private static final float EPSILON = 0.00001f;
     private float       mRefreshRate;
     private int         wantedModeId;
     private Window      mWindow;
@@ -1004,14 +1005,19 @@ public class Player implements IPlayerControl,
                     float wantedRefreshRate = 0;
                     // find corresponding wantedModeId for wantedFps
                     Mode sM;
+                    float min = 1000; // init with large number easy to beat
+                    float target = 0;
                     for (int i = 0; i < supportedModes.length; i++) {
                         sM = supportedModes[i];
-                        //if (sM.matches(currentMode.getPhysicalWidth(), currentMode.getPhysicalHeight(), wantedFps)) {
+                        //  minimize judder by minimizing metric=min(refresh%fps,|refresh%fps-fps|)/refresh
+                        target = Math.min(sM.getRefreshRate() % wantedFps, Math.abs(sM.getRefreshRate() % wantedFps - wantedFps)) / sM.getRefreshRate();
+                        if (DBG) Log.d(TAG, "evaluating " + supportedModes[i].getPhysicalWidth() + "x" + supportedModes[i].getPhysicalHeight() + "(" + supportedModes[i].getRefreshRate() + "Hz) metric = " + target);
                         if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth()  &&
                                 sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
-                                (Math.abs(sM.getRefreshRate() % wantedFps) < REFRESH_RATE_EPSILON || Math.abs((sM.getRefreshRate() % wantedFps) - wantedFps) < REFRESH_RATE_EPSILON)) {
-                            if (sM.getRefreshRate() > wantedRefreshRate) wantedModeId = sM.getModeId();
-                            if (DBG) Log.d(TAG, "currently chosen modeId is " + wantedModeId + " for " + sM.getRefreshRate() + " refreshrate and wanted fps was " + wantedFps);
+                                (target <= min || Math.abs(target - min) <= EPSILON) && (sM.getRefreshRate() >= wantedRefreshRate)) { // lower or close enough and higher rate
+                            min = target;
+                            wantedModeId = sM.getModeId();
+                            if (DBG) Log.d(TAG, "currently chosen modeId is " + wantedModeId + " for " + sM.getRefreshRate() + " refreshrate and wanted fps was " + wantedFps + " (metric = " + min + ")");
                         }
                     }
                     if (wantedModeId != 0 && wantedModeId != currentModeId) {
@@ -1026,16 +1032,18 @@ public class Player implements IPlayerControl,
                     float currentRefreshRate = d.getRefreshRate();
                     Arrays.sort(supportedRates);
                     if (DBG)
-                        for (float r : supportedRates)
-                            Log.d(TAG, "Display supported refresh rate " + r);
+                        for (float r : supportedRates) Log.d(TAG, "Display supported refresh rate " + r);
                     mRefreshRate = 0f;
-                    // octave style v=23.976; r=[23.976 24 25 29.97 30 50 59.94 60]; [abs(t%v)]
+                    float min = 1000; // init with large number easy to beat
+                    float target = 0;
                     for (float rate : supportedRates) {
                         if (DBG) Log.d(TAG, "supported rate is " + rate);
-                        if (Math.abs(rate % wantedFps) < REFRESH_RATE_EPSILON || Math.abs((rate % wantedFps) - wantedFps) < REFRESH_RATE_EPSILON) { // is rate a multiple of wantedFps?
-                            if (rate > mRefreshRate) mRefreshRate = rate;
-                            if (DBG)
-                                Log.d(TAG, "currently chosen refresh rate is " + mRefreshRate + " wanted fps was " + wantedFps);
+                        //  minimize judder by minimizing metric=min(refresh%fps,|refresh%fps-fps|)/refresh
+                        target = Math.min(rate % wantedFps, Math.abs(rate % wantedFps - wantedFps)) / rate;
+                        if ((target <= min || Math.abs(target - min) <= EPSILON) && (rate >= mRefreshRate)) { // lower or close enough and higher rate
+                            min = target;
+                            mRefreshRate = rate;
+                            if (DBG) Log.d(TAG, "currently chosen refresh rate is " + mRefreshRate + " wanted fps was " + wantedFps + " (metric = " + min + ")");
                         }
                         if (Math.abs(mRefreshRate) > 0 && Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
                             // apply new refresh rate
