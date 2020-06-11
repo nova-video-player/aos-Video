@@ -490,8 +490,8 @@ Copertina (rotolo di copertina)</string>
     <string name="preferences_allow_3rd_party_player_summary">Altri lettori video verranno proposti da Android durante la riproduzione di un filmato. Alcune funzioni potrebbero non funzionare (riprendi, segnalibri, etc.)</string>
     <string name="preference_tv_3d_automatic_switch">Abilita lo switch 3D automatico</string>
     <string name="preference_tv_3d_automatic_switch_summary">Usa questa funzione solo se la tua TV 3D la supporta</string>
-    <string name="preference_tv_refreshrate_switch">Abilita lo switch refresh rate automatico</string>
-    <string name="preference_tv_refreshrate_switch_summary">Rimuovi l\'effetto judder adattando il refresh rate (potrebbe cambiare a seconda della TV utilizzata)</string>
+    <string name="preference_tv_refreshrate_switch">Enable automatic refresh rate switch</string>
+    <string name="preference_tv_refreshrate_switch_summary">Remove judder effect by adapting best screen refresh rate to video frame rate (device support may vary)</string>
     <string name="preference_cutout_short_edges">Video a schermo intero con i ritagli</string>
     <string name="preference_cutout_short_edges_summary">Consenti video a schermo intero in modalità schermo intero con ritagli</string>
     <string name="category_languages">Sottotitoli</string>
@@ -816,10 +816,12 @@ Copertina (rotolo di copertina)</string>
     <string name="cast_select_for_full_control">Espandi i controlli</string>
     <string name="cast_audio_background">Il suono non funzionerà mettendo Nova Video Player in background</string>
     <string name="help_faq">Aiuto/FAQ</string>
+    <string name="amazon_ad"></string>
     <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Cloud</string>
     <string name="learn_more">Informazioni</string>
     <string name="learn_more_about_codecs">Nova Video Player riproduce solo i video supportati dal tuo dispositivo. A causa di problemi di licenze, alcuni formati non possono essere inclusi legalmente, ma altri possono essere acquistati sul Google Play Store</string>
+    <string name="base64_encoded_publicKey"></string>
     <string name="rate_us">Se ti piace questa app, supportaci mettendo cinque stelle</string>
     <string name="rate_us_title">☆ Supportaci</string>
     <string name="create_new_list">Crea una nuova lista</string>

@@ -485,8 +485,8 @@
     <string name="preferences_allow_3rd_party_player_summary">在启动视频播放时安卓系统将提示其他兼容的视频播放器。 请注意，某些功能将无法工作 (恢复播放、书签等)</string>
     <string name="preference_tv_3d_automatic_switch">启用自动 3D 电视开关</string>
     <string name="preference_tv_3d_automatic_switch_summary">仅在您的 3D 电视支持的情况下使用此功能</string>
-    <string name="preference_tv_refreshrate_switch">启用电视自动刷新率切换</string>
-    <string name="preference_tv_refreshrate_switch_summary">通过调整刷新率来去除抖动效果 (受电视支持限制)</string>
+    <string name="preference_tv_refreshrate_switch">Enable automatic refresh rate switch</string>
+    <string name="preference_tv_refreshrate_switch_summary">Remove judder effect by adapting best screen refresh rate to video frame rate (device support may vary)</string>
     <string name="preference_cutout_short_edges">异形屏视频全屏</string>
     <string name="preference_cutout_short_edges_summary">允许在异形屏上进行视频横屏全屏播放</string>
     <string name="category_languages">字幕</string>
@@ -811,10 +811,12 @@
     <string name="cast_select_for_full_control">触摸以展开控制器</string>
     <string name="cast_audio_background">当 Nova 视频播放器处于后台时声音将无法工作</string>
     <string name="help_faq">帮助 / 常见问题</string>
+    <string name="amazon_ad"></string>
     <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">云端</string>
     <string name="learn_more">了解更多</string>
     <string name="learn_more_about_codecs">Nova 视频播放器只能播放您设备支持的视频。 由于许可问题，无法合法包含对某些格式的支持，其他一些格式可以在 Google Play 商店购买。</string>
+    <string name="base64_encoded_publicKey"></string>
     <string name="rate_us">如果您喜欢这个应用，请给我们5星评级来支持我们</string>
     <string name="rate_us_title">☆ 支持我们</string>
     <string name="create_new_list">创建新的列表</string>

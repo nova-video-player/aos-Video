@@ -490,7 +490,7 @@
     <string name="preference_tv_3d_automatic_switch">Activer automatiquement la commutation 3D\"</string>
     <string name="preference_tv_3d_automatic_switch_summary">Utiliser cette option si votre télé 3D supporte cette fonctionnalité\"</string>
     <string name="preference_tv_refreshrate_switch">Ajuster automatiquement le taux de rafraîchissement</string>
-    <string name="preference_tv_refreshrate_switch_summary">Supprime les saccades à l\'affichage (dépend des capacités de la TV)</string>
+    <string name="preference_tv_refreshrate_switch_summary">Supprime les saccades d\'affichage en adaptant la fréquence de rafraîchissement écran au fps vidéo (la prise en charge dépend de l\'appareil)</string>
     <string name="preference_cutout_short_edges">Vidéo plein écran même en présence d\'encoche</string>
     <string name="preference_cutout_short_edges_summary">Permet la vidéo plein écran en orientation paysage avec des écrans à encoches</string>
     <string name="category_languages">Sous-titres</string>
@@ -815,10 +815,12 @@
     <string name="cast_select_for_full_control">Touchez pour étendre votre contrôleur</string>
     <string name="cast_audio_background">Le son ne fonctionnera pas lorsque Nova Video Player est en arrière-plan</string>
     <string name="help_faq">Aide/FAQ</string>
+    <string name="amazon_ad"></string>
     <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Cloud</string>
     <string name="learn_more">En savoir plus</string>
     <string name="learn_more_about_codecs">Nova Video Player ne peut lire que les vidéos supportées par votre appareil. Certains codecs ne peuvent être distribués légalement, d\'autres peuvent être achetés sur le Play Store.</string>
+    <string name="base64_encoded_publicKey"></string>
     <string name="rate_us">Si vous aimez cette application, pensez à nous soutenir en nous donnant 5 étoiles</string>
     <string name="rate_us_title">☆ Soutenez-nous</string>
     <string name="create_new_list">Créer une nouvelle liste</string>

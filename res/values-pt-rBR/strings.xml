@@ -489,8 +489,8 @@
     <string name="preferences_allow_3rd_party_player_summary">Outros aplicativos compatíveis para o reprodutor de vídeo serão propostos pelo Android ao iniciar uma reprodução de vídeo. Esteja ciente de que alguns recursos não funcionarão (continuar, favoritos, etc.)</string>
     <string name="preference_tv_3d_automatic_switch">Ativar TV 3D automático</string>
     <string name="preference_tv_3d_automatic_switch_summary">Use este recurso apenas se sua TV 3D o suporta</string>
-    <string name="preference_tv_refreshrate_switch">Ativar a mudança automática de taxa de atualização da TV</string>
-    <string name="preference_tv_refreshrate_switch_summary">Remover efeito judder adaptando a taxa de atualização (o suporte à TV pode variar)</string>
+    <string name="preference_tv_refreshrate_switch">Enable automatic refresh rate switch</string>
+    <string name="preference_tv_refreshrate_switch_summary">Remove judder effect by adapting best screen refresh rate to video frame rate (device support may vary)</string>
     <string name="preference_cutout_short_edges">Vídeo em tela cheia com cortamentos de tela</string>
     <string name="preference_cutout_short_edges_summary">Permitir vídeo em tela cheia em modo paisagem com cortes de tela</string>
     <string name="category_languages">Legendas</string>
@@ -560,6 +560,8 @@
     <string name="network_thumbnails">Criar miniaturas remotas</string>
     <string name="network_thumbnails_summary">Criar miniaturas de vídeos remotos quando um cartaz não estiver disponível</string>
     <string name="network_bookmarks_summary">Salvar e verificar o ponto de retorno e posicionar favoritos na rede quando possível</string>
+    <string name="share_folders_smbv2">Enable SMBv2 support</string>
+    <string name="share_folders_smbv2_summary">Enable network share SMB version 2 protocol support. ⚠ Experimental, may result in video playback not being able to start</string>
     <string name="connection_abnormally_long">A conexão parece anormalmente longa. Gostaria de redefini-la?</string>
     <string name="connection_reset">Redefinir</string>
     <!-- Info dialog, not indexed file -->
@@ -813,10 +815,12 @@
     <string name="cast_select_for_full_control">Toque para expandir o controlador</string>
     <string name="cast_audio_background">O som não funcionará enquanto o Nova Video Player está em segundo plano</string>
     <string name="help_faq">Ajuda / FAQ</string>
+    <string name="amazon_ad"></string>
     <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Nuvem</string>
     <string name="learn_more">Saiba mais</string>
     <string name="learn_more_about_codecs">O Nova Video Player só pode reproduzir vídeos suportados pelo seu dispositivo. Devido a problemas de licença, alguns formatos não podem ser incluídos legalmente, alguns outros podem ser comprados na Google Play Store.</string>
+    <string name="base64_encoded_publicKey"></string>
     <string name="rate_us">Se você gosta deste app, por favor, nos apoie avaliando 5 estrelas</string>
     <string name="rate_us_title">• Apoie-nos</string>
     <string name="create_new_list">Criar nova lista</string>

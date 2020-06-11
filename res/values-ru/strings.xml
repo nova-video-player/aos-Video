@@ -497,8 +497,8 @@
     <string name="preferences_allow_3rd_party_player_summary">При запуске воспроизведения будет предложен выбор других проигрывателей. Некоторые функции при этом могут не работать (продолжить воспроизведение, закладки и др.)</string>
     <string name="preference_tv_3d_automatic_switch">Автоматическое переключение 3D TV</string>
     <string name="preference_tv_3d_automatic_switch_summary">Используйте эту функцию только если ваш 3D TV поддерживает ее</string>
-    <string name="preference_tv_refreshrate_switch">Включить переключение частоты обновления ТВ</string>
-    <string name="preference_tv_refreshrate_switch_summary">Изменять частоту обновления экрана ТВ для устранения подергиваний</string>
+    <string name="preference_tv_refreshrate_switch">Включить автоматическое переключение частоты обновления</string>
+    <string name="preference_tv_refreshrate_switch_summary">Устранение \"джаддер\" - эффекта с помощью синхронизации частоты кадров экрана с частотой кадров видео файла (зависит от поддержки устройством)</string>
     <string name="preference_cutout_short_edges">Полноэкранное видео на дисплее с вырезами</string>
     <string name="preference_cutout_short_edges_summary">Разрешить полноэкранное видео на дисплее с вырезами</string>
     <string name="category_languages">Субтитры</string>
@@ -823,10 +823,12 @@
     <string name="cast_select_for_full_control">Нажмите, чтобы расширить контроллер</string>
     <string name="cast_audio_background">Звук не будет работать, когда Nova Video Player находится в фоновом режиме</string>
     <string name="help_faq">Справка/FAQ</string>
+    <string name="amazon_ad"></string>
     <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Облако</string>
     <string name="learn_more">Подробнее</string>
     <string name="learn_more_about_codecs">Nova Video Player может воспроизводить только видео, поддерживаемые Вашим устройством. Из-за лицензионных ограничений некоторые форматы не могут быть включены, некоторые другие могут быть приобретены в Google Play.</string>
+    <string name="base64_encoded_publicKey"></string>
     <string name="rate_us">Если Вам нравится это приложение, пожалуйста, поддержите нас, оценив на 5 звезд</string>
     <string name="rate_us_title">☆ Поддержите нас</string>
     <string name="create_new_list">Создать новый список</string>

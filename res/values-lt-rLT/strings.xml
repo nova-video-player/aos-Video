@@ -498,7 +498,7 @@
     <string name="preference_tv_3d_automatic_switch">Įjungti automatinį 3D TV perjungimą</string>
     <string name="preference_tv_3d_automatic_switch_summary">Naudokite šią funkciją tik jei jūsų 3D TV palaiko ją</string>
     <string name="preference_tv_refreshrate_switch">Įjungti automatinį TV kadrų dažnio perjungimą</string>
-    <string name="preference_tv_refreshrate_switch_summary">Pašalina vaizdo trukčiojimus pritaikant TV kadrų dažnį (TV turi tai palaikyti)</string>
+    <string name="preference_tv_refreshrate_switch_summary">Pašalinkite trukčiojimo efektą pritaikydami TV dažnį prie video dažnio (jei palaiko įrenginiai)</string>
     <string name="preference_cutout_short_edges">Vaizdas visame ekrane įrenginiuose su iškirpimais ekrane</string>
     <string name="preference_cutout_short_edges_summary">Rodyti vaizda visame ekrane įrenginiuose su iškirpimais ekrane</string>
     <string name="category_languages">Subtitrai</string>
@@ -823,10 +823,12 @@
     <string name="cast_select_for_full_control">Palieskite valdiklio išplėtimui</string>
     <string name="cast_audio_background">Garso nebus kai Nova Video grotuvas bus fone</string>
     <string name="help_faq">Pagalba / DUK</string>
+    <string name="amazon_ad"></string>
     <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Debesis</string>
     <string name="learn_more">Sužinoti daugiau</string>
     <string name="learn_more_about_codecs">Nova Video grotuvas gali atkurti tik tuos video, kuriuos palaiko jūsų įrenginys. Dėl licencijų, kai vieni formatai negali būti pridėti, kitus galite įsigyti Google Play.</string>
+    <string name="base64_encoded_publicKey"></string>
     <string name="rate_us">Jei patinka ši programa, įvertinkite 5 žvaigždutėmis</string>
     <string name="rate_us_title">☆ Palaikykite mus</string>
     <string name="create_new_list">Sukurti naują sąrašą</string>

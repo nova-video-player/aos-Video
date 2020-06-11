@@ -407,6 +407,10 @@ desteklenmiyor.</string>
     <string name="dialog_subloader_nonetwork_title">İnternet bağlantısı yok</string>
     <string name="dialog_subloader_nonetwork_message">Altyazıları indirmek için internet bağlantısı gereklidir</string>
     <string name="dialog_subloader_connecting">Www.opensubtitles.org sitesine bağlanıyor…</string>
+    <string name="dialog_subloader_credentials">Opensubtitles credentials</string>
+    <string name="dialog_subloader_credentials_empty">You must specify a valid username and password!</string>
+    <string name="toast_subloader_credentials_empty">Provide your opensubtitles credentials in settings to be able to download subtitles</string>
+    <string name="toast_subloader_login_failed">Incorrect opensubtitles credentials or service not available</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Altyazı Ayarları</string>
     <string name="subtitle_sample_text">\"örnekleme\"</string>
@@ -498,13 +502,15 @@ desteklenmiyor.</string>
     <string name="preferences_allow_3rd_party_player_summary">Video oynatımı başlatılırken Android tarafından diğer uyumlu video oynatıcı uygulamaları önerilecektir. Bazı özelliklerin çalışmadığını unutmayın (özgeçmiş, yer imleri vb.)</string>
     <string name="preference_tv_3d_automatic_switch">Otomatik 3D TV anahtarını etkinleştir</string>
     <string name="preference_tv_3d_automatic_switch_summary">Bu özelliği yalnızca 3D TV\'niz destekliyorsa kullanın</string>
-    <string name="preference_tv_refreshrate_switch">Otomatik TV yenileme hızı anahtarını etkinleştir</string>
-    <string name="preference_tv_refreshrate_switch_summary">Yenileme hızını ayarlayarak titreme efektini kaldırın (TV desteği değişebilir)</string>
+    <string name="preference_tv_refreshrate_switch">Enable automatic refresh rate switch</string>
+    <string name="preference_tv_refreshrate_switch_summary">Remove judder effect by adapting best screen refresh rate to video frame rate (device support may vary)</string>
     <string name="preference_cutout_short_edges">Ekran kesimli tam ekran video</string>
     <string name="preference_cutout_short_edges_summary">Kesikli yatay tam ekran videoya izin ver</string>
     <string name="category_languages">Altyazı</string>
     <string name="subtitles_hide_default">Varsayılan olarak altyazıları gizle</string>
     <string name="subtitles_hide_default_summary">Varsayılan olarak altyazıları gizlemek isteyip istemediğinizi kontrol edin</string>
+    <string name="subtitles_credentials_title">OpenSubtitles credentials</string>
+    <string name="subtitles_credentials_summary">Provide your opensubtitles credentials to be able to download subtitles</string>
     <string name="preferences_languages">Altyazı indirme dilleri</string>
     <string name="summary_list_preference_primary">Altyazıları indirmek için dillerinizi seçin</string>
     <string name="favSubLang_title">Altyazı okuma dili</string>
@@ -567,6 +573,8 @@ desteklenmiyor.</string>
     <string name="network_thumbnails">Küçük resimler oluştur</string>
     <string name="network_thumbnails_summary">Poster yokken uzak videolardan küçük resimler oluşturun</string>
     <string name="network_bookmarks_summary">Mümkün olduğunda ağdaki devam noktası ve konum yer işaretlerini kaydedin ve kontrol edin</string>
+    <string name="share_folders_smbv2">Enable SMBv2 support</string>
+    <string name="share_folders_smbv2_summary">Enable network share SMB version 2 protocol support. ⚠ Experimental, may result in video playback not being able to start</string>
     <string name="connection_abnormally_long">Bağlantı anormal derecede uzun görünüyor. Sıfırlamak ister misiniz?</string>
     <string name="connection_reset">Sıfırla</string>
     <!-- Info dialog, not indexed file -->
@@ -819,10 +827,12 @@ desteklenmiyor.</string>
     <string name="cast_select_for_full_control">Denetleyiciyi genişletmek için dokunun</string>
     <string name="cast_audio_background">Nova Video Player arka plandayken ses çalışmaz</string>
     <string name="help_faq">Yardım / SSS</string>
+    <string name="amazon_ad"></string>
     <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Bulut</string>
     <string name="learn_more">Daha fazla bilgi edin</string>
     <string name="learn_more_about_codecs">Nova Video Player yalnızca cihazınız tarafından desteklenen videoları oynatabilir. Lisans sorunları nedeniyle, bazı biçimler yasal olarak dahil edilemez, bazıları ise Google Play Store\'dan satın alınabilir.</string>
+    <string name="base64_encoded_publicKey"></string>
     <string name="rate_us">Bu uygulamayı beğendiyseniz, lütfen bize 5 yıldız derecelendirerek bizi destekleyin</string>
     <string name="rate_us_title">☆ Bizi destekle</string>
     <string name="create_new_list">Yeni liste oluştur</string>
