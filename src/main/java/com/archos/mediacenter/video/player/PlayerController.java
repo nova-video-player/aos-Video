@@ -1315,6 +1315,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             case SurfaceController.VideoFormat.FULLSCREEN:
                 mFormatButton.setImageResource(R.drawable.video_format_fullscreen_selector);
                 break;
+            case SurfaceController.VideoFormat.STRETCHED:
+                mFormatButton.setImageResource(R.drawable.video_format_stretched_selector);
+                break;
             case SurfaceController.VideoFormat.AUTO:
                 mFormatButton.setImageResource(R.drawable.video_format_auto_selector);
                 break;
