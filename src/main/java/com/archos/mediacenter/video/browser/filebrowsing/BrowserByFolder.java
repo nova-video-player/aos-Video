@@ -159,7 +159,8 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             listFiles(false);
         } else {
             bindAdapter();
-            hideSubMenu(mMenu);
+            if (mMenu != null) // mMenu does not need to be populated here.
+                hideSubMenu(mMenu);
             listFiles(true);
         }
     }
