@@ -1100,9 +1100,6 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
             } else {
                 mCursor.moveToFirst();
                 String ID = mCursor.getString(1);
-                if (ID == null){
-                    ID = mCursor.getString(2);
-                }
                 mCursor.close();
                 return ID;
             }
