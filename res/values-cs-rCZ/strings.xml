@@ -176,12 +176,6 @@
     <string name="delete_show">Odstranit všechny epizody</string>
     <string name="no_episode_watched">Žádná epizoda nebyla zhlédnuta</string>
     <string name="all_episodes_watched">Všechny epizody byly zhlédnuty</string>
-    <plurals name="n_episodes_watched">
-        <item quantity="one">%d epizoda zhlédnuta</item>
-        <item quantity="few">%d episodes watched</item>
-        <item quantity="many">%d epizod zhlédnuto</item>
-        <item quantity="other">%d epizod zhlédnuto</item>
-    </plurals>
     <string name="scrap_processing">Získávám metadata…</string>
     <string name="scrap_no_network">Není připojeno k síti.</string>
     <string name="scrap_enable_network_first">"Prosím připojte se k síti, aby bylo možné spustit tuto aplikaci."</string>
@@ -235,20 +229,6 @@
     <string name="you_have_no_movies">Žádné filmy</string>
     <string name="you_have_no_tv_shows">Žádné seriály</string>
     <string name="you_have_no_non_scraped_videos">Nejsou žádná videa bez získaných informací</string>
-    <plurals name="Nmovies">
-        <item quantity="one">1 film</item>
-        <item quantity="few"><xliff:g id="count">%d</xliff:g> movies</item>
-        <item quantity="many"><xliff:g id="count">%d</xliff:g> filmů</item>
-        <item quantity="other"><xliff:g id="count">%d</xliff:g> filmů</item>
-    </plurals>
-    <plurals name="Nepisodes">
-        <!-- number of episodes is one -->
-        <item quantity="one">1 epizoda</item>
-        <item quantity="few"><xliff:g id="count">%d</xliff:g> epizody</item>
-        <item quantity="many"><xliff:g id="count">%d</xliff:g> episodes</item>
-        <!-- number of episodes is not equal to one -->
-        <item quantity="other"><xliff:g id="count">%d</xliff:g> epizod</item>
-    </plurals>
     <plurals name="Nseasons">
         <item quantity="one">1 sezóna</item>
         <item quantity="few"><xliff:g id="count">%d</xliff:g> sezóny</item>
@@ -497,8 +477,8 @@
     <string name="preferences_allow_3rd_party_player_summary">Pokud zvolíte přehrávání videa, budou vám systémem nabídnuty další kompatibilní aplikace pro přehrávání. Vezměte na vědomí, že některé funkce nebudou dostupné (obnovení přehrávání, záložky apod.)</string>
     <string name="preference_tv_3d_automatic_switch">Zapnout automatické přepínání TV do 3D\"</string>
     <string name="preference_tv_3d_automatic_switch_summary">Použijte tuto funkci pouze pokud vaše TV podporuje 3D\"</string>
-    <string name="preference_tv_refreshrate_switch">Enable automatic refresh rate switch</string>
-    <string name="preference_tv_refreshrate_switch_summary">Remove judder effect by adapting best screen refresh rate to video frame rate (device support may vary)</string>
+    <string name="preference_tv_refreshrate_switch">Aktivovat automatické přepínání obnovovací frekvence</string>
+    <string name="preference_tv_refreshrate_switch_summary">Odstranění efektu \"judder\" přizpůsobením obnovovací frekvence vůči snímkové frekvenci videa (podpora pro jednotlivá zařízení se může lišit)</string>
     <string name="preference_cutout_short_edges">Celá obrazovka s výřezy displeje</string>
     <string name="preference_cutout_short_edges_summary">Povolit horizontální video na plnou obrazovku na displeji s výřezy</string>
     <string name="category_languages">Titulky</string>
@@ -823,12 +803,10 @@
     <string name="cast_select_for_full_control">Stiskněte pro zobrazení plného ovládání</string>
     <string name="cast_audio_background">Zvuk nebude fungovat dokud je Nova Video Player spuštěn na pozadí</string>
     <string name="help_faq">Nápověda / FAQ</string>
-    <string name="amazon_ad"></string>
     <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Cloud</string>
     <string name="learn_more">Dozvědět se více</string>
     <string name="learn_more_about_codecs">Nova Video Player může přehrávat pouze videa podporovaná vaším zařízením. Některé formáty nemohou být zahrnuty z licenčních důvodů, podpora pro jiné může být zakoupena v obchodě Google Play.</string>
-    <string name="base64_encoded_publicKey"></string>
     <string name="rate_us">Pokud se vám tato aplikace líbí, prosím podpořte nás a ohodnoťte jí 5 hvězdičkami</string>
     <string name="rate_us_title">☆ Podpořte nás</string>
     <string name="create_new_list">Vytvořit nový playlist</string>

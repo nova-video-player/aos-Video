@@ -397,7 +397,6 @@
     <string name="dialog_subloader_credentials">Credenciales de Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">Debe introducir un nombre de usuario y contraseña válidos!</string>
     <string name="toast_subloader_credentials_empty">Proporcione sus credenciales de opensubtitles en la configuración para poder descargar subtitulos</string>
-    <string name="toast_subloader_login_failed">Incorrect opensubtitles credentials or service not available</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Ajustes de subtítulos</string>
     <string name="subtitle_sample_text">\"muestra\"</string>
@@ -489,15 +488,12 @@
     <string name="preferences_allow_3rd_party_player_summary">Otras aplicaciones compatibles de reproductor de vídeo serán propuestas por Android al lanzar una reproducción de vídeo. Tenga en cuenta que algunas características no funcionarán (reanudar, marcadores, etc.)</string>
     <string name="preference_tv_3d_automatic_switch">Activar el conmutador automático de TV 3D</string>
     <string name="preference_tv_3d_automatic_switch_summary">Utilice esta función sólo si su TV es compatible con la función 3D</string>
-    <string name="preference_tv_refreshrate_switch">Enable automatic refresh rate switch</string>
-    <string name="preference_tv_refreshrate_switch_summary">Remove judder effect by adapting best screen refresh rate to video frame rate (device support may vary)</string>
     <string name="preference_cutout_short_edges">Pantalla completa con recortes de pantalla</string>
     <string name="preference_cutout_short_edges_summary">Permitir vídeo en pantalla completa en pantalla panorámica con recortes</string>
     <string name="category_languages">Subtítulos</string>
     <string name="subtitles_hide_default">Ocultar subtítulos por defecto</string>
     <string name="subtitles_hide_default_summary">Marcar si desea ocultar los subtítulos por defecto</string>
     <string name="subtitles_credentials_title">Credenciales de Opensubtitles</string>
-    <string name="subtitles_credentials_summary">Provide your opensubtitles credentials to be able to download subtitles</string>
     <string name="preferences_languages">Idiomas de descarga de subtítulos</string>
     <string name="summary_list_preference_primary">Seleccione el idioma de la descarga de subtítulos</string>
     <string name="favSubLang_title">Idioma de lectura de subtítulos</string>
@@ -815,12 +811,10 @@
     <string name="cast_select_for_full_control">Toca para expandir controles</string>
     <string name="cast_audio_background">El sonido no funcionará mientras Nova Video Player esté en segundo plano</string>
     <string name="help_faq">Ayuda / FAQ</string>
-    <string name="amazon_ad"></string>
     <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">En la Nube</string>
     <string name="learn_more">Aprende más</string>
     <string name="learn_more_about_codecs">Nova Video Player sólo puede reproducir videos soportados por su dispositivo. Debido a problemas de licencia, algunos formatos no pueden ser incluidos legalmente, algunos otros pueden ser comprados en Google Play Store.</string>
-    <string name="base64_encoded_publicKey"></string>
     <string name="rate_us">Si te gusta esta aplicación, ayúdanos valorándola con 5 estrellas</string>
     <string name="rate_us_title">☆ Apóyenos</string>
     <string name="create_new_list">Crear nueva lista</string>
