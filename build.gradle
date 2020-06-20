@@ -79,7 +79,7 @@ tasks.register("incPatch") {
         s = buildFile.getText().replaceFirst("vName = '$vName'", "vName = '$newVersionName'")
         buildFile.setText(s)
         String newCodeMajor = String.format("%02d", major.toInteger())
-        String newCodeMinor = String.format("%02d", minor.toInteger())
+        String newCodeMinor = String.format("%03d", minor.toInteger())
         String newCodePatch = String.format("%02d", patch.toInteger())
         Integer newVersionCode = (newCodeMajor + newCodeMinor + newCodePatch).toInteger();
         s = buildFile.getText().replaceFirst("versionCode = $vCode", "versionCode = $newVersionCode")
@@ -104,7 +104,7 @@ tasks.register("incMinor") {
         s = buildFile.getText().replaceFirst("vName = '$vName'", "vName = '$newVersionName'")
         buildFile.setText(s)
         String newCodeMajor = String.format("%02d", major.toInteger())
-        String newCodeMinor = String.format("%02d", minor.toInteger())
+        String newCodeMinor = String.format("%03d", minor.toInteger())
         String newCodePatch = String.format("%02d", patch.toInteger())
         Integer newVersionCode = (newCodeMajor + newCodeMinor + newCodePatch).toInteger();
         s = buildFile.getText().replaceFirst("versionCode = $vCode", "versionCode = $newVersionCode")
@@ -130,7 +130,7 @@ tasks.register("incMajor") {
         s = buildFile.getText().replaceFirst("vName = '$vName'", "vName = '$newVersionName'")
         buildFile.setText(s)
         String newCodeMajor = String.format("%02d", major.toInteger())
-        String newCodeMinor = String.format("%02d", minor.toInteger())
+        String newCodeMinor = String.format("%03d", minor.toInteger())
         String newCodePatch = String.format("%02d", patch.toInteger())
         Integer newVersionCode = (newCodeMajor + newCodeMinor + newCodePatch).toInteger();
         s = buildFile.getText().replaceFirst("versionCode = $vCode", "versionCode = $newVersionCode")
@@ -179,7 +179,7 @@ android {
         // this is overridden when using split apk and normal split apk generation or oneapk amazon generation
         // amazon apk is generated with ./gradlew -Poneapk
         versionName = '4.48.11'
-        versionCode = 44811
+        versionCode = 404811
         if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
         applicationId "org.courville.nova"
     }
