@@ -11,6 +11,7 @@ buildscript {
 
 plugins {
     id "com.github.triplet.play" version "2.7.5"
+    id "app.brant.amazonappstorepublisher" version "0.1.0"
 }
 
 import com.android.build.OutputFile
@@ -60,10 +61,16 @@ apply {
 
 play {
     serviceAccountCredentials = file("nova.json")
-    //jsonFile = file('nova.json')
     track = 'internal' // rollout, beta, alpha, release, internal
     userFraction = 1.0 // rollout rate in %/100
     releaseStatus = "completed"
+}
+
+amazon {
+    securityProfile = file("nova-amazon.json")
+    applicationId = "amzn1.devportal.mobileapp.c59461247b6a4806b4f30cd80076133e"
+    pathToApks = [ file("build/outputs/apk/amazon/release/Video-amazon-universal-API_21+-release.apk") ]
+    replaceEdit = true
 }
 
 tasks.register("incPatch") {
