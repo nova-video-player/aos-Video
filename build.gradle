@@ -14,6 +14,7 @@ plugins {
 }
 
 import com.android.build.OutputFile
+
 def keystorePropertiesFile = rootProject.file("keystore.properties");
 def keystoreProperties = new Properties()
 if (keystorePropertiesFile.exists()) keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
@@ -67,57 +68,93 @@ play {
 
 tasks.register("incPatch") {
     doLast {
-        println("old version: " + version)
-        def (major, minor, patch) = version.tokenize('.')
+        def vName = android.defaultConfig.versionName
+        def vCode = android.defaultConfig.versionCode
+        println("old versionName: " + vName + ", versionCode: " + vCode)
+        def (major, minor, patch) = vName.tokenize('.')
         patch = String.valueOf(patch.toInteger() + 1)
-        String new_version = major + '.' + minor + '.' + patch
-        String s = buildFile.getText().replaceFirst("version = '$version'", "version = '" + new_version + "'")
+        String newVersionName = major + '.' + minor + '.' + patch
+        String s = buildFile.getText().replaceFirst("versionName = '$vName'", "versionName = '$newVersionName'")
         buildFile.setText(s)
-        println("new version: " + new_version)
+        s = buildFile.getText().replaceFirst("vName = '$vName'", "vName = '$newVersionName'")
+        buildFile.setText(s)
+        String newCodeMajor = String.format("%02d", major.toInteger())
+        String newCodeMinor = String.format("%02d", minor.toInteger())
+        String newCodePatch = String.format("%02d", patch.toInteger())
+        Integer newVersionCode = (newCodeMajor + newCodeMinor + newCodePatch).toInteger();
+        s = buildFile.getText().replaceFirst("versionCode = $vCode", "versionCode = $newVersionCode")
+        buildFile.setText(s)
+        s = buildFile.getText().replaceFirst("vCode = $vCode", "vCode = $newVersionCode")
+        buildFile.setText(s)
+        println("new versionName: " + newVersionName + ", new versionCode: " + newVersionCode)
     }
 }
 
 tasks.register("incMinor") {
     doLast {
-        println("old version: " + version)
-        def (major, minor, patch) = version.tokenize('.')
+        def vName = android.defaultConfig.versionName
+        def vCode = android.defaultConfig.versionCode
+        println("old versionName: " + vName + ", versionCode: " + vCode)
+        def (major, minor, patch) = vName.tokenize('.')
         minor = String.valueOf(minor.toInteger() + 1)
         patch = 0
-        String new_version = major + '.' + minor + '.' + patch
-        String s = buildFile.getText().replaceFirst("version = '$version'", "version = '" + new_version + "'")
+        String newVersionName = major + '.' + minor + '.' + patch
+        String s = buildFile.getText().replaceFirst("versionName = '$vName'", "versionName = '$newVersionName'")
         buildFile.setText(s)
-        println("new version: " + new_version)
+        s = buildFile.getText().replaceFirst("vName = '$vName'", "vName = '$newVersionName'")
+        buildFile.setText(s)
+        String newCodeMajor = String.format("%02d", major.toInteger())
+        String newCodeMinor = String.format("%02d", minor.toInteger())
+        String newCodePatch = String.format("%02d", patch.toInteger())
+        Integer newVersionCode = (newCodeMajor + newCodeMinor + newCodePatch).toInteger();
+        s = buildFile.getText().replaceFirst("versionCode = $vCode", "versionCode = $newVersionCode")
+        buildFile.setText(s)
+        s = buildFile.getText().replaceFirst("vCode = $vCode", "vCode = $newVersionCode")
+        buildFile.setText(s)
+        println("new versionName: " + newVersionName + ", new versionCode: " + newVersionCode)
     }
 }
 
 tasks.register("incMajor") {
     doLast {
-        println("old version: " + version)
-        def (major, minor, patch) = version.tokenize('.')
+        def vName = android.defaultConfig.versionName
+        def vCode = android.defaultConfig.versionCode
+        println("old versionName: " + vName + ", versionCode: " + vCode)
+        def (major, minor, patch) = vName.tokenize('.')
         major = String.valueOf(major.toInteger() + 1)
         minor = 0
         patch = 0
-        String new_version = major + '.' + minor + '.' + patch
-        String s = buildFile.getText().replaceFirst("version = '$version'", "version = '" + new_version + "'")
+        String newVersionName = major + '.' + minor + '.' + patch
+        String s = buildFile.getText().replaceFirst("versionName = '$vName'", "versionName = '$newVersionName'")
         buildFile.setText(s)
-        println("new version: " + new_version)
+        s = buildFile.getText().replaceFirst("vName = '$vName'", "vName = '$newVersionName'")
+        buildFile.setText(s)
+        String newCodeMajor = String.format("%02d", major.toInteger())
+        String newCodeMinor = String.format("%02d", minor.toInteger())
+        String newCodePatch = String.format("%02d", patch.toInteger())
+        Integer newVersionCode = (newCodeMajor + newCodeMinor + newCodePatch).toInteger();
+        s = buildFile.getText().replaceFirst("versionCode = $vCode", "versionCode = $newVersionCode")
+        buildFile.setText(s)
+        s = buildFile.getText().replaceFirst("vCode = $vCode", "vCode = $newVersionCode")
+        buildFile.setText(s)
+        println("new versionName: " + newVersionName + ", new versionCode: " + newVersionCode)
     }
 }
 
-ext.abiCodes = ['universal':0, 'armeabi-v7a':1, 'arm64-v8a':2, 'x86':3, 'x86_64':4]
+ext.abiCodes = ['universal': 0, 'armeabi-v7a': 1, 'arm64-v8a': 2, 'x86': 3, 'x86_64': 4]
 
 android {
     signingConfigs {
         release {
             if (keystorePropertiesFile.exists()) {
-		storeFile file(keystoreProperties['storeFile'])
-		storePassword keystoreProperties['storePassword']
-		keyAlias keystoreProperties['keyAlias']
-		keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
             }
-	}
+        }
     }
-   compileOptions {
+    compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -138,29 +175,26 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
         multiDexEnabled true
-        versionCode getDate()
-        version = '4.48.10'
-        // increment patch version at each build: disabled for now
-        /*
-        println("old version: " + version)
-        def (major, minor, patch) = version.tokenize('.')
-        patch = String.valueOf(patch.toInteger() + 1)
-        String new_version = major + '.' + minor + '.' + patch
-        String s = buildFile.getText().replaceFirst("version = '$version'", "version = '" + new_version + "'")
-        buildFile.setText(s)
-        println("new version: " + new_version)
-        versionName new_version + '-' + getFormattedDate()
-        */
-        versionName version + '-' + getFormattedDate()
+        // below version tracks the one from F-Droid or universal package when generated with ./gradlew -Puniversal
+        // this is overridden when using split apk and normal split apk generation or oneapk amazon generation
+        // amazon apk is generated with ./gradlew -Poneapk
+        versionName = '4.48.10'
+        versionCode = 44810
         if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
         applicationId "org.courville.nova"
     }
     splits {
         abi {
-            enable true
             if (project.hasProperty("universal")) {
+                // universal if for fdroid now with specific version(Name|Code) and oneapk for amazon
+                enable false
                 universalApk true
-            } else {
+            } else if (project.hasProperty("oneapk")) {
+                // universal if for fdroid now with specific version(Name|Code) and oneapk for amazon
+                enable true
+                universalApk true
+            }else {
+                enable true
                 universalApk false
             }
         }
@@ -180,7 +214,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-	    shrinkResources true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-project.txt'
         }
     }
@@ -241,13 +275,16 @@ android {
         variant.outputs.each { output ->
             def baseAbiVersionCode =
                     project.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
-	    output.versionCodeOverride =
-		    2108380 + 5 * variant.versionCode
-            if (baseAbiVersionCode != null) {
-            // 2000000 is there because before there was a distinction between noleanback 1000000 and leanback 2000000 with different API levels
-            // 2108380 was the value at apk splits introduction
-                output.versionCodeOverride =
-                        output.versionCodeOverride + baseAbiVersionCode
+            if (!project.hasProperty("universal")) {
+                // override versionName and versionCode to get it dependent on the date
+                output.versionNameOverride = variant.versionName + '-' + getFormattedDate()
+                // getDate() was original versionCode
+                output.versionCodeOverride = 2108380 + 5 * getDate()
+                if (baseAbiVersionCode != null) {
+                    // 2000000 is there because before there was a distinction between noleanback 1000000 and leanback 2000000 with different API levels
+                    // 2108380 was the value at apk splits introduction
+                    output.versionCodeOverride = output.versionCodeOverride + baseAbiVersionCode
+                }
             }
         }
     }
@@ -255,12 +292,15 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
             def api = defaultConfig.minSdkVersion.apiLevel
+            if (project.hasProperty("universal")) { // only one apk
+                outputFileName = outputFileName.replace("-release", "-universal-release")
+            }
             outputFileName = outputFileName.replace("-noamazon-", "-")
                     .replace("-release.apk", "-API_${api}+-release.apk")
                     .replace("-debug.apk", "-API_${api}+-debug.apk")
             variant.getAssembleProvider().configure() {
                 it.doLast {
-                    println ("generated: " + outputFileName + " (" + versionName + ", " + output.versionCodeOverride + ")");
+                    println("generated: " + outputFileName + " (" + output.versionNameOverride + ", " + output.versionCodeOverride + ")");
                 }
             }
         }
