@@ -795,9 +795,11 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                                 String imdbId = getIMDBID(fileUrl);
                                 // remove all non numeric characters from imdbID (often starts with tt)
                                 // if (imdbID.startsWith("tt")) imdbID = imdbID.substring(2);
-                                imdbId = imdbId.replaceAll("[^\\d]", "");
-                                video.put("imdbid", imdbId);
-                                if (DBG) Log.d(TAG, "prepareRequestList: movie imdbid=" + imdbId);
+                                if (imdbId != null) {
+                                    imdbId = imdbId.replaceAll("[^\\d]", "");
+                                    video.put("imdbid", imdbId);
+                                    if (DBG) Log.d(TAG, "prepareRequestList: movie imdbid=" + imdbId);
+                                }
                             }
                         }
                     }
