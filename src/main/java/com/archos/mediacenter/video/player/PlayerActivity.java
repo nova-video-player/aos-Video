@@ -656,10 +656,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mContext = this;
 
         mPlayer = new Player(this, getWindow(), mSurfaceController, false);
-        // Clock (for leanback devices only)
-        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK)) {
-            registerReceiver(mClockReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
-        }
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N_MR1){ //detect any kind of rotation, even from 270 to 90°
             DisplayManager.DisplayListener mDisplayListener = new DisplayManager.DisplayListener() {
@@ -871,6 +867,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     protected void onResume() {
         super.onResume();
         if (DBG) Log.d(TAG, "onResume");
+        // Clock (for leanback devices only)
+        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK)) {
+            registerReceiver(mClockReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
+        }
         PlayerBrightnessManager.getInstance().restoreBrightness(this);
         if(!mWasInPictureInPicture){
             mPermissionChecker.checkAndRequestPermission(this);
@@ -902,9 +902,11 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     @Override
     protected void onPause() {
         super.onPause();
-
         if (DBG) Log.d(TAG, "onPause");
-
+        // Clock (for leanback devices only)
+        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK)) {
+            unregisterReceiver(mClockReceiver);
+        }
         if (ArchosFeatures.isAndroidTV(this)) {
             if (mPlayer.isPlaying()) {
                 if (!requestVisibleBehind(true)&&!mLaunchFloatingPlayer) {

@@ -56,8 +56,6 @@ public class Clock {
         if (!mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK)) {
             mClockTextView.setVisibility(View.GONE);
         }
-
-        mContext.registerReceiver(mReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
     }
 
     public void destroy() {
@@ -65,12 +63,13 @@ public class Clock {
     }
 
     public void resume() {
+        mContext.registerReceiver(mReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
         updateClock();
     }
 
     public void pause() {
-        // nothing to do here
         // We do not change the visibility of the clock here to have a smooth transition between fragments with clock
+        mContext.unregisterReceiver(mReceiver);
     }
 
     final BroadcastReceiver mReceiver = new BroadcastReceiver() {
