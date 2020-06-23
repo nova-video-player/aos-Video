@@ -174,12 +174,6 @@ public class CustomApplication extends Application {
         // only launch BootupRecommandation if on AndroidTV and before Android O otherwise target TV channels
         if(ArchosFeatures.isAndroidTV(this) && Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
             BootupRecommandationService.init();
-
-        if (getMyProcessName(this).equals(getPackageName())) {
-            //if main process
-            MediaUtils.clearOldSubDir(this);
-            Debug.startLogcatRecording();
-        }
     }
 
     // link networkState register/unregister networkCallback linked to app foreground/background lifecycle
@@ -203,21 +197,6 @@ public class CustomApplication extends Application {
                 isNetworkStateRegistered = false;
             }
         }
-    }
-
-    private static String getMyProcessName(Context ct) {
-        int id = android.os.Process.myPid();
-        String myProcessName = ct.getPackageName();
-
-        ActivityManager actvityManager = (ActivityManager) ct.getSystemService(ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> procInfos = actvityManager.getRunningAppProcesses();
-
-        for (ActivityManager.RunningAppProcessInfo procInfo : procInfos) {
-            if (id == procInfo.pid) {
-                myProcessName = procInfo.processName;
-            }
-        }
-        return myProcessName;
     }
 
     public HttpImageManager getHttpImageManager() {
