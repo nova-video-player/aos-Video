@@ -40,15 +40,11 @@ public class Debug {
                 public void run() {
                     try {
                         Process process = Runtime.getRuntime().exec("logcat -f " + getFilePath());
-
-
                     } catch (IOException e) {
                     }
                 }
             }.start();
         }
-
-
     }
 
     private static boolean isDebuggable()
