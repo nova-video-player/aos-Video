@@ -59,7 +59,6 @@ public class Clock {
     }
 
     public void destroy() {
-        mContext.unregisterReceiver(mReceiver);
     }
 
     public void resume() {
