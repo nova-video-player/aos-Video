@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-    id "com.github.triplet.play" version "2.7.5"
+    id "com.github.triplet.play" version "2.8.0"
     id "app.brant.amazonappstorepublisher" version "0.1.0"
 }
 
