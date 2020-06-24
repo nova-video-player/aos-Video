@@ -1011,7 +1011,7 @@ public class Player implements IPlayerControl,
                         sM = supportedModes[i];
                         //  minimize judder by minimizing metric=min(refresh%fps,|refresh%fps-fps|)/refresh
                         target = Math.min(sM.getRefreshRate() % wantedFps, Math.abs(sM.getRefreshRate() % wantedFps - wantedFps)) / sM.getRefreshRate();
-                        if (DBG) Log.d(TAG, "evaluating " + supportedModes[i].getPhysicalWidth() + "x" + supportedModes[i].getPhysicalHeight() + "(" + supportedModes[i].getRefreshRate() + "Hz) metric = " + target);
+                        if (DBG) Log.d(TAG, "evaluating " + sM.getPhysicalWidth() + "x" + sM.getPhysicalHeight() + "(" + sM.getRefreshRate() + "Hz) metric = " + target);
                         if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth()  &&
                                 sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
                                 (target <= min || Math.abs(target - min) <= EPSILON) && (sM.getRefreshRate() >= wantedRefreshRate)) { // lower or close enough and higher rate
