@@ -982,10 +982,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         removeNetworkListener();
         VideoEffect.resetForcedMode();
         setEffect(VideoEffect.getDefaultMode());
-        // Clock
-        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK)) {
-            unregisterReceiver(mClockReceiver);
-        }
         super.onDestroy();
     }
 
