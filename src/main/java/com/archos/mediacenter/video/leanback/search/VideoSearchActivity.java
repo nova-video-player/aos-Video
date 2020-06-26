@@ -20,6 +20,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import androidx.leanback.app.SearchSupportFragment;
 import androidx.fragment.app.FragmentActivity;
+
+import android.util.Log;
 import android.view.KeyEvent;
 
 import com.archos.mediacenter.video.R;
@@ -37,6 +39,7 @@ public class VideoSearchActivity extends FragmentActivity {
     public static final int SEARCH_MODE_MOVIE = 1;
     public static final int SEARCH_MODE_EPISODE = 3;
     public static final int SEARCH_MODE_NON_SCRAPED = 2;
+    private final static String TAG = "VideoSearchActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,5 +100,16 @@ public class VideoSearchActivity extends FragmentActivity {
             }
         }
         return super.onKeyDown(keyCode, event); // default
+    }
+    @Override
+    protected void onPause() {
+        // to avoid ACRA report on AFM (amazon)
+        // RuntimeException: Unable to pause activity {VideoSearchActivity}:
+        // IllegalArgumentException: Service not registered: android.speech.SpeechRecognizer
+        try {
+            super.onPause();
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "onPause caught IllegalArgumentException", e);
+        }
     }
 }
