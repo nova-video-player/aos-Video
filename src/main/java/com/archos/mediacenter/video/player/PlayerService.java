@@ -29,6 +29,7 @@ import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadata;
+import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.media.session.PlaybackState;
@@ -865,8 +866,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     private final TraktService.Client.Listener mTraktListener = new TraktService.Client.Listener() {
         @Override
-        public void onResult(Trakt.Result result) {
-            if (result.status == Trakt.Status.ERROR) {
+        public void onResult(Bundle bundle) {
+            Trakt.Status status = (Trakt.Status) bundle.get("status");
+            if (status == Trakt.Status.ERROR) {
                 mTraktWatching = false;
                 mTraktError = true;
                 mHandler.removeCallbacks(mTraktWatchingRunnable);

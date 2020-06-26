@@ -19,6 +19,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 
 import androidx.preference.PreferenceManager;
@@ -45,9 +46,7 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
     private TraktService.Client mTraktClient;
     private final TraktService.Client.Listener mTraktListener = new TraktService.Client.Listener() {
         @Override
-        public void onResult(Trakt.Result result) {
-
-        }
+        public void onResult(Bundle bundle) { }
     };
     private Uri mContentUri;
     private Uri mPlayerUri;
