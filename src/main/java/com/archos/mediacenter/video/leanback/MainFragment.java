@@ -965,12 +965,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                         WebUtils.openWebLink(mActivity,getString(R.string.faq_url));
                         break;
                     case SPONSOR:
-                        //WebUtils.openWebLink(mActivity,getString(R.string.github_url) + "/" +
-                        //        getString(R.string.github_sponsors) + "/" +
-                        //        getString(R.string.github_account));
-                        WebUtils.openWebLink(getActivity(),getString(R.string.liberapay_url) + "/" +
-                                getString(R.string.liberapay_account) + "/" +
-                                getString(R.string.liberapay_donate));
+                        WebUtils.openWebLink(getActivity(),getString(R.string.sponsor_url));
                         break;
                 }
             }

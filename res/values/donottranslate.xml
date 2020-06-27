@@ -41,13 +41,7 @@
 
     <string name="player_plugin_store_url">https://www.archos.com/misc/result.html?ptype=10&amp;ts=pl</string>
 
-    <string name="github_url">https://github.com</string>
-    <string name="github_sponsors">sponsors</string>
-    <string name="github_account">courville</string>
-
-    <string name="liberapay_url">https://liberapay.com</string>
-    <string name="liberapay_account">NovaVideoPlayer</string>
-    <string name="liberapay_donate">donate</string>
+    <string name="sponsor_url">https://home.courville.org/sponsor</string>
 
     <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
 

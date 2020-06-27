@@ -300,14 +300,8 @@ abstract public class BrowserCategory extends ListFragment {
                 setSelection(mSelectedItemId); //restore selection
             } else if (item.text == R.string.help_faq){
                 WebUtils.openWebLink(getActivity(),getString(R.string.faq_url));
-            //} else if (item.text == R.string.sponsor){
-            //    WebUtils.openWebLink(getActivity(),getString(R.string.github_url) + "/" +
-            //            getString(R.string.github_sponsors) + "/" +
-            //            getString(R.string.github_account));
             } else if (item.text == R.string.sponsor){
-                WebUtils.openWebLink(getActivity(),getString(R.string.liberapay_url) + "/" +
-                        getString(R.string.liberapay_account) + "/" +
-                        getString(R.string.liberapay_donate));
+                WebUtils.openWebLink(getActivity(),getString(R.string.sponsor_url));
             } else if(item.text  == R.string.activate_private_mode || item.text  == R.string.deactivate_private_mode){
                 if (!PrivateMode.isActive() && PrivateMode.canShowDialog(getActivity())) {
                     PrivateMode.showDialog(getActivity());
