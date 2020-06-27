@@ -833,4 +833,5 @@
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Impossible de définir le taux de rafraîchissement désiré</string>
+    <string name="sponsor">Sponsoriser Nova</string>
 </resources>
