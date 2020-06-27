@@ -23,7 +23,8 @@ public class Icon {
         PREFERENCES,
         PRIVATE_MODE,
         LEGACY_UI,
-        HELP_FAQ
+        HELP_FAQ,
+        SPONSOR
     }
 
     final private ID mId;

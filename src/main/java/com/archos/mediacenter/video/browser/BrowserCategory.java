@@ -298,11 +298,17 @@ abstract public class BrowserCategory extends ListFragment {
                 if(getActivity() instanceof MainActivity)
                     ((MainActivity) getActivity()).startPreference();
                 setSelection(mSelectedItemId); //restore selection
-            }
-            else if (item.text == R.string.help_faq){
-                WebUtils.openWebLink(getActivity(),"https://home.courville.org/nova_video_player-faq/index.html");
-            }
-            else if(item.text  == R.string.activate_private_mode || item.text  == R.string.deactivate_private_mode){
+            } else if (item.text == R.string.help_faq){
+                WebUtils.openWebLink(getActivity(),getString(R.string.faq_url));
+            //} else if (item.text == R.string.sponsor){
+            //    WebUtils.openWebLink(getActivity(),getString(R.string.github_url) + "/" +
+            //            getString(R.string.github_sponsors) + "/" +
+            //            getString(R.string.github_account));
+            } else if (item.text == R.string.sponsor){
+                WebUtils.openWebLink(getActivity(),getString(R.string.liberapay_url) + "/" +
+                        getString(R.string.liberapay_account) + "/" +
+                        getString(R.string.liberapay_donate));
+            } else if(item.text  == R.string.activate_private_mode || item.text  == R.string.deactivate_private_mode){
                 if (!PrivateMode.isActive() && PrivateMode.canShowDialog(getActivity())) {
                     PrivateMode.showDialog(getActivity());
                 }
@@ -310,8 +316,7 @@ abstract public class BrowserCategory extends ListFragment {
                 setSelection(mSelectedItemId); //restore selection
                 ((MainActivity) getActivity()).setBackground();
                 updateExternalStorage();
-            }
-            else {
+            } else {
 
                 updateListSelection(v, item);
                 setFragment(item.path);
@@ -518,12 +523,15 @@ abstract public class BrowserCategory extends ListFragment {
         mCategoryList.add("");
         ItemData itemData = new ItemData();
         itemData.icon = R.drawable.android29_ic_settings;
-
         itemData.text = R.string.preferences;
         mCategoryList.add(itemData);
         itemData = new ItemData();
         itemData.icon = R.drawable.android29_ic_menu_help;
         itemData.text = R.string.help_faq;
+        mCategoryList.add(itemData);
+        itemData = new ItemData();
+        itemData.icon = R.drawable.piggy_bank;
+        itemData.text = R.string.sponsor;
         mCategoryList.add(itemData);
     }
 

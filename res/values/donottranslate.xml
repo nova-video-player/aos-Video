@@ -41,10 +41,15 @@
 
     <string name="player_plugin_store_url">https://www.archos.com/misc/result.html?ptype=10&amp;ts=pl</string>
 
-    <string name="ad_unit_id"></string>
-    <string name="interstitiel_ad_unit_id"></string>
-    <string name="ad_anticrash_freebox_unit_id"></string>
-    <string name="interstitiel_ad_anticrash_freebox_unit_id"></string>
+    <string name="github_url">https://github.com</string>
+    <string name="github_sponsors">sponsors</string>
+    <string name="github_account">courville</string>
+
+    <string name="liberapay_url">https://liberapay.com</string>
+    <string name="liberapay_account">NovaVideoPlayer</string>
+    <string name="liberapay_donate">donate</string>
+
+    <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
 
     <string name="tmdb_title_url">https://www.themoviedb.org/movie/%1$s?language=%2$s</string>
     <string name="tvdb_title_url">http://www.thetvdb.com/?tab=series&amp;id=%1$s&amp;language=%2$s</string>
@@ -57,6 +62,7 @@
     <string name="av_delay_key">av_delay_key</string>
     <string name="save_delay_setting_pref_key">save_setting_pref_key</string>
     <string name="preferences_network_mobile_vpn_key">vpn_mobile</string>
+
 
 
 </resources>
