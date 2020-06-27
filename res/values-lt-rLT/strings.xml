@@ -823,7 +823,6 @@
     <string name="cast_select_for_full_control">Palieskite valdiklio išplėtimui</string>
     <string name="cast_audio_background">Garso nebus kai Nova Video grotuvas bus fone</string>
     <string name="help_faq">Pagalba / DUK</string>
-    <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Debesis</string>
     <string name="learn_more">Sužinoti daugiau</string>
     <string name="learn_more_about_codecs">Nova Video grotuvas gali atkurti tik tuos video, kuriuos palaiko jūsų įrenginys. Dėl licencijų, kai vieni formatai negali būti pridėti, kitus galite įsigyti Google Play.</string>

@@ -817,7 +817,6 @@ desteklenmiyor.</string>
     <string name="cast_select_for_full_control">Denetleyiciyi genişletmek için dokunun</string>
     <string name="cast_audio_background">Nova Video Player arka plandayken ses çalışmaz</string>
     <string name="help_faq">Yardım / SSS</string>
-    <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Bulut</string>
     <string name="learn_more">Daha fazla bilgi edin</string>
     <string name="learn_more_about_codecs">Nova Video Player yalnızca cihazınız tarafından desteklenen videoları oynatabilir. Lisans sorunları nedeniyle, bazı biçimler yasal olarak dahil edilemez, bazıları ise Google Play Store\'dan satın alınabilir.</string>

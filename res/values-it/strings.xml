@@ -814,7 +814,6 @@ Copertina (rotolo di copertina)</string>
     <string name="cast_select_for_full_control">Espandi i controlli</string>
     <string name="cast_audio_background">Il suono non funzionerà mettendo Nova Video Player in background</string>
     <string name="help_faq">Aiuto/FAQ</string>
-    <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Cloud</string>
     <string name="learn_more">Informazioni</string>
     <string name="learn_more_about_codecs">Nova Video Player riproduce solo i video supportati dal tuo dispositivo. A causa di problemi di licenze, alcuni formati non possono essere inclusi legalmente, ma altri possono essere acquistati sul Google Play Store</string>

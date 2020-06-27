@@ -811,7 +811,6 @@
     <string name="cast_select_for_full_control">触摸以展开控制器</string>
     <string name="cast_audio_background">当 Nova 视频播放器处于后台时声音将无法工作</string>
     <string name="help_faq">帮助 / 常见问题</string>
-    <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">云端</string>
     <string name="learn_more">了解更多</string>
     <string name="learn_more_about_codecs">Nova 视频播放器只能播放您设备支持的视频。 由于许可问题，无法合法包含对某些格式的支持，其他一些格式可以在 Google Play 商店购买。</string>

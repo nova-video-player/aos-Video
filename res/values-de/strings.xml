@@ -813,7 +813,6 @@
     <string name="cast_select_for_full_control">Berühren um die Bedienung zu erweitern</string>
     <string name="cast_audio_background">Der Ton funktioniert nicht, während Nova Video Player im Hintergrund ist</string>
     <string name="help_faq">Hilfe / FAQ</string>
-    <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Cloud</string>
     <string name="learn_more">Mehr erfahren</string>
     <string name="learn_more_about_codecs">Nova Video Player kann nur Videos abspielen, die von Ihrem Gerät unterstützt werden. Aufgrund von Lizenzproblemen können einige Formate aus rechtlichen Gründen nicht unterstützt werden, einige andere können im Google Play-Store gekauft werden.</string>

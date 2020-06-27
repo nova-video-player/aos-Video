@@ -815,7 +815,6 @@
     <string name="cast_select_for_full_control">Touchez pour étendre votre contrôleur</string>
     <string name="cast_audio_background">Le son ne fonctionnera pas lorsque Nova Video Player est en arrière-plan</string>
     <string name="help_faq">Aide/FAQ</string>
-    <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Cloud</string>
     <string name="learn_more">En savoir plus</string>
     <string name="learn_more_about_codecs">Nova Video Player ne peut lire que les vidéos supportées par votre appareil. Certains codecs ne peuvent être distribués légalement, d\'autres peuvent être achetés sur le Play Store.</string>

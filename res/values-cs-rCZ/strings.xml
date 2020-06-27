@@ -803,7 +803,6 @@
     <string name="cast_select_for_full_control">Stiskněte pro zobrazení plného ovládání</string>
     <string name="cast_audio_background">Zvuk nebude fungovat dokud je Nova Video Player spuštěn na pozadí</string>
     <string name="help_faq">Nápověda / FAQ</string>
-    <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Cloud</string>
     <string name="learn_more">Dozvědět se více</string>
     <string name="learn_more_about_codecs">Nova Video Player může přehrávat pouze videa podporovaná vaším zařízením. Některé formáty nemohou být zahrnuty z licenčních důvodů, podpora pro jiné může být zakoupena v obchodě Google Play.</string>

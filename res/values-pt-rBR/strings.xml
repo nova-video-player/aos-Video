@@ -815,7 +815,6 @@
     <string name="cast_select_for_full_control">Toque para expandir o controlador</string>
     <string name="cast_audio_background">O som não funcionará enquanto o Nova Video Player está em segundo plano</string>
     <string name="help_faq">Ajuda / FAQ</string>
-    <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Nuvem</string>
     <string name="learn_more">Saiba mais</string>
     <string name="learn_more_about_codecs">O Nova Video Player só pode reproduzir vídeos suportados pelo seu dispositivo. Devido a problemas de licença, alguns formatos não podem ser incluídos legalmente, alguns outros podem ser comprados na Google Play Store.</string>

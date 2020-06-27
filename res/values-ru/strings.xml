@@ -823,7 +823,6 @@
     <string name="cast_select_for_full_control">Нажмите, чтобы расширить контроллер</string>
     <string name="cast_audio_background">Звук не будет работать, когда Nova Video Player находится в фоновом режиме</string>
     <string name="help_faq">Справка/FAQ</string>
-    <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Облако</string>
     <string name="learn_more">Подробнее</string>
     <string name="learn_more_about_codecs">Nova Video Player может воспроизводить только видео, поддерживаемые Вашим устройством. Из-за лицензионных ограничений некоторые форматы не могут быть включены, некоторые другие могут быть приобретены в Google Play.</string>
