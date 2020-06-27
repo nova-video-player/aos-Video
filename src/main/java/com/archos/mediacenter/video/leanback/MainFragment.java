@@ -433,6 +433,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                                             R.drawable.private_mode,  R.drawable.private_mode_off, PrivateMode.isActive()));
         mPreferencesRowAdapter.add(new Icon(Icon.ID.LEGACY_UI, getString(R.string.leanback_legacy_ui), R.drawable.legacy_ui_icon));
         mPreferencesRowAdapter.add(new Icon(Icon.ID.HELP_FAQ, getString(R.string.help_faq), R.drawable.lollipop_help));
+        mPreferencesRowAdapter.add(new Icon(Icon.ID.SPONSOR, getString(R.string.sponsor), R.drawable.piggy_bank_leanback_256));
 
         // Must use an IconListRow to have the dedicated presenter used (see ClassPresenterSelector above)
         mRowsAdapter.add(new IconListRow(ROW_ID_PREFERENCES,
@@ -741,10 +742,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private boolean isVideosListModified(Cursor oldCursor, Cursor newCursor) {
         if ((oldCursor == null && newCursor != null) || (oldCursor != null && newCursor == null))
             return true;
-        if (oldCursor.getCount() != newCursor.getCount())
-            return true;
+        return oldCursor.getCount() != newCursor.getCount();
         // estimate
-        return false;
     }
 
     private enum InitFocus {
@@ -964,6 +963,14 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                         break;
                     case HELP_FAQ:
                         WebUtils.openWebLink(mActivity,getString(R.string.faq_url));
+                        break;
+                    case SPONSOR:
+                        //WebUtils.openWebLink(mActivity,getString(R.string.github_url) + "/" +
+                        //        getString(R.string.github_sponsors) + "/" +
+                        //        getString(R.string.github_account));
+                        WebUtils.openWebLink(getActivity(),getString(R.string.liberapay_url) + "/" +
+                                getString(R.string.liberapay_account) + "/" +
+                                getString(R.string.liberapay_donate));
                         break;
                 }
             }

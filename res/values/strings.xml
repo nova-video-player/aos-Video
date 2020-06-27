@@ -903,8 +903,6 @@
     <string name="cast_select_for_full_control">Touch to expand controller</string>
     <string name="cast_audio_background">Sound won\'t work while Nova Video Player is in background</string>
     <string name="help_faq">Help / FAQ</string>
-    <string name="amazon_ad"></string>
-    <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
     <string name="provider_folders">Cloud</string>
     <string name="learn_more">Learn more</string>
     <string name="learn_more_about_codecs">Nova Video Player can only play videos supported by your device. Due to license issues, some formats cannot be legally included, some other can be purchased on Google Play Store.</string>
@@ -928,5 +926,6 @@
     <string name="app_id_surface">C44FB232</string>
 
     <string name="refreshrate_failed">Failed to set desired refresh rate</string>
+    <string name="sponsor">Sponsor Nova</string>
 
 </resources>
