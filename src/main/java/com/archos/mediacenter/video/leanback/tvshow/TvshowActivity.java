@@ -14,7 +14,6 @@
 
 package com.archos.mediacenter.video.leanback.tvshow;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.view.Gravity;
@@ -33,17 +32,12 @@ public class TvshowActivity extends LeanbackActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Lollipop only :-(
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Set the enter animation only when asked
-            if (getIntent().getBooleanExtra(SLIDE_TRANSITION_EXTRA, false)) {
-                int direction = getIntent().getIntExtra(SLIDE_DIRECTION_EXTRA, Gravity.RIGHT);
-                getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
-                getWindow().setEnterTransition(new Slide(direction));
-            }
+        // Set the enter animation only when asked
+        if (getIntent().getBooleanExtra(SLIDE_TRANSITION_EXTRA, false)) {
+            int direction = getIntent().getIntExtra(SLIDE_DIRECTION_EXTRA, Gravity.RIGHT);
+            getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
+            getWindow().setEnterTransition(new Slide(direction));
         }
-
         setContentView(R.layout.androidtv_tvshow_activity);
     }
 
@@ -64,7 +58,6 @@ public class TvshowActivity extends LeanbackActivity {
                 }
                 break;
         }
-
         return super.onKeyDown(keyCode, event);
     }
 }
