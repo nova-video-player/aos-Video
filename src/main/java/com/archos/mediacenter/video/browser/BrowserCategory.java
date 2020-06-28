@@ -36,6 +36,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.ExtStorageManager;
 import com.archos.filecorelibrary.ExtStorageReceiver;
 import com.archos.mediacenter.video.R;
@@ -98,7 +99,6 @@ abstract public class BrowserCategory extends ListFragment {
     public static class FragmentTitleStruc{
         public Fragment fragment;
         public int title;
-
     }
 
     private class LayoutCallback implements BrowserLayout.Callback {
@@ -523,10 +523,13 @@ abstract public class BrowserCategory extends ListFragment {
         itemData.icon = R.drawable.android29_ic_menu_help;
         itemData.text = R.string.help_faq;
         mCategoryList.add(itemData);
-        itemData = new ItemData();
-        itemData.icon = R.drawable.piggy_bank;
-        itemData.text = R.string.sponsor;
-        mCategoryList.add(itemData);
+        // Google Play is allergic to piggies... no donation button
+        if (! ArchosUtils.isInstalledfromPlayStore(getActivity().getApplicationContext())) {
+            itemData = new ItemData();
+            itemData.icon = R.drawable.piggy_bank;
+            itemData.text = R.string.sponsor;
+            mCategoryList.add(itemData);
+        }
     }
 
     public void clearCheckedItem() {

@@ -47,6 +47,7 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.preference.PreferenceManager;
 
+import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.ExtStorageManager;
 import com.archos.filecorelibrary.ExtStorageReceiver;
 import com.archos.mediacenter.filecoreextension.UriUtils;
@@ -433,8 +434,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                                             R.drawable.private_mode,  R.drawable.private_mode_off, PrivateMode.isActive()));
         mPreferencesRowAdapter.add(new Icon(Icon.ID.LEGACY_UI, getString(R.string.leanback_legacy_ui), R.drawable.legacy_ui_icon));
         mPreferencesRowAdapter.add(new Icon(Icon.ID.HELP_FAQ, getString(R.string.help_faq), R.drawable.lollipop_help));
-        mPreferencesRowAdapter.add(new Icon(Icon.ID.SPONSOR, getString(R.string.sponsor), R.drawable.piggy_bank_leanback_256));
-
+        if (! ArchosUtils.isInstalledfromPlayStore(getActivity().getApplicationContext())) {
+            mPreferencesRowAdapter.add(new Icon(Icon.ID.SPONSOR, getString(R.string.sponsor), R.drawable.piggy_bank_leanback_256));
+        }
         // Must use an IconListRow to have the dedicated presenter used (see ClassPresenterSelector above)
         mRowsAdapter.add(new IconListRow(ROW_ID_PREFERENCES,
                 new HeaderItem(getString(R.string.preferences)),
