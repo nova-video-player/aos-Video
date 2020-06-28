@@ -149,6 +149,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private boolean mShowMoviesRow;
     private String mMovieSortOrder;
     private boolean mShowTvshowsRow;
+    private boolean mEnableSponsor;
     private String mTvShowSortOrder;
 
     private Box mNonScrapedVideosItem;
@@ -434,7 +435,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                                             R.drawable.private_mode,  R.drawable.private_mode_off, PrivateMode.isActive()));
         mPreferencesRowAdapter.add(new Icon(Icon.ID.LEGACY_UI, getString(R.string.leanback_legacy_ui), R.drawable.legacy_ui_icon));
         mPreferencesRowAdapter.add(new Icon(Icon.ID.HELP_FAQ, getString(R.string.help_faq), R.drawable.lollipop_help));
-        if (! ArchosUtils.isInstalledfromPlayStore(getActivity().getApplicationContext())) {
+
+        mEnableSponsor = mPrefs.getBoolean(VideoPreferencesCommon.KEY_ENABLE_SPONSOR, VideoPreferencesCommon.ENABLE_SPONSOR_DEFAULT);
+        if ((! ArchosUtils.isInstalledfromPlayStore(getActivity().getApplicationContext())) || mEnableSponsor) {
             mPreferencesRowAdapter.add(new Icon(Icon.ID.SPONSOR, getString(R.string.sponsor), R.drawable.piggy_bank_leanback_256));
         }
         // Must use an IconListRow to have the dedicated presenter used (see ClassPresenterSelector above)

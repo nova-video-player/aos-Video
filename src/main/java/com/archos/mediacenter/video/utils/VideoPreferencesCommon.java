@@ -47,6 +47,7 @@ import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
 
 import com.archos.environment.ArchosFeatures;
+import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.ExtStorageManager;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
@@ -127,6 +128,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_TRAKT_SYNC_COLLECTION = "trakt_sync_collection";
     public static final String KEY_HIDE_WATCHED = "hide_watched";
     public static final String KEY_CREATE_REMOTE_THUMBS = VideoProvider.PREFERENCE_CREATE_REMOTE_THUMBS;
+    public static final String KEY_ENABLE_SPONSOR = "enable_sponsor";
 
     // TODO: disabled until issue #186 is fixed
     public static final boolean SHOW_WATCHING_UP_NEXT_ROW_DEFAULT = false;
@@ -141,6 +143,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     public static final boolean TRAKT_SYNC_COLLECTION_DEFAULT = false;
     public static final boolean TRAKT_LIVE_SCROBBLING_DEFAULT = true;
+    public static final boolean ENABLE_SPONSOR_DEFAULT = false;
+
     public static final String LOGIN_DIALOG = "login_dialog";
 
     private static final boolean ACTIVATE_EMAIL_MEDIA_DB = true;
@@ -167,6 +171,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private PreferenceCategory mScraperCategory = null;
     private ListPreference mSubtitlesFavLangPreferences = null;
     private MultiSelectListPreference mSubtitlesDownloadLanguagePreferences = null;
+    private CheckBoxPreference mEnableSponsor = null;
 
     private String mLastTraktUser = null;
     private Trakt.Status mTraktStatus = Trakt.Status.SUCCESS;
@@ -238,6 +243,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     private void switchAdvancedPreferences() {
         PreferenceCategory prefCategory = (PreferenceCategory) findPreference("preferences_category_video");
+        PreferenceCategory uiCategory = (PreferenceCategory) findPreference("category_user_interface");
         if (!ArchosFeatures.isTV(getActivity())) { // not a TV
             prefCategory.removePreference(mActivate3DTVSwitch);
             if (REFRESHRATE_FORALL) prefCategory.addPreference(mActivateRefreshrateTVSwitch);
@@ -263,10 +269,14 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         PreferenceCategory prefScraperCategory = (PreferenceCategory) findPreference(KEY_SCRAPER_CATEGORY);
         if (mSharedPreferences.getBoolean(KEY_ADVANCED_VIDEO_ENABLED, false)) {
             // advanced preferences
-            //Editor editor = mForceSwDecPreferences.getEditor();
             Editor editor = mSharedPreferences.edit();
             editor.remove(KEY_FORCE_SW);
             editor.apply();
+            // no need of the enable sponsor link if not installed from ggplay
+            if (! ArchosUtils.isInstalledfromPlayStore(getContext()))
+                uiCategory.removePreference(mEnableSponsor);
+            else
+                uiCategory.addPreference(mEnableSponsor);
             prefCategory.removePreference(mForceSwDecPreferences);
             prefCategory.addPreference(mDecChoicePreferences);
             prefCategory.addPreference(mAudioInterfaceChoicePreferences);
@@ -279,6 +289,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             editor.remove(KEY_DEC_CHOICE);
             editor.remove(KEY_AUDIO_INTERFACE_CHOICE);
             editor.apply();
+            uiCategory.removePreference(mEnableSponsor);
             prefCategory.removePreference(mDecChoicePreferences);
             prefCategory.removePreference(mAudioInterfaceChoicePreferences);
             prefCategory.addPreference(mForceSwDecPreferences);
@@ -333,6 +344,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mDecChoicePreferences = (ListPreference) findPreference(KEY_DEC_CHOICE);
         mAudioInterfaceChoicePreferences = (ListPreference) findPreference(KEY_AUDIO_INTERFACE_CHOICE);
         mForceSwDecPreferences = (CheckBoxPreference) findPreference(KEY_FORCE_SW);
+        mEnableSponsor = (CheckBoxPreference) findPreference(KEY_ENABLE_SPONSOR);
         mForceAudioPassthrough = (CheckBoxPreference) findPreference(KEY_FORCE_AUDIO_PASSTHROUGH);
         mDisableDownmix = (CheckBoxPreference) findPreference("disable_downmix");
         mActivate3DTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_3D_SWITCH);

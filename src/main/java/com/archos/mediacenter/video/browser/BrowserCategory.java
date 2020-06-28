@@ -42,6 +42,7 @@ import com.archos.filecorelibrary.ExtStorageReceiver;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.WebUtils;
 import com.archos.environment.NetworkState;
 
@@ -85,6 +86,7 @@ abstract public class BrowserCategory extends ListFragment {
     private NetworkState networkState = null;
     private PropertyChangeListener propertyChangeListener = null;
     private boolean mNetworkStateListenerAdded = false;
+    private boolean mEnableSponsor;
 
     /**
      * This object is used to store basic info for the category list item.
@@ -524,7 +526,8 @@ abstract public class BrowserCategory extends ListFragment {
         itemData.text = R.string.help_faq;
         mCategoryList.add(itemData);
         // Google Play is allergic to piggies... no donation button
-        if (! ArchosUtils.isInstalledfromPlayStore(getActivity().getApplicationContext())) {
+        mEnableSponsor = mPreferences.getBoolean(VideoPreferencesCommon.KEY_ENABLE_SPONSOR, VideoPreferencesCommon.ENABLE_SPONSOR_DEFAULT);
+        if ((! ArchosUtils.isInstalledfromPlayStore(getActivity().getApplicationContext())) || mEnableSponsor) {
             itemData = new ItemData();
             itemData.icon = R.drawable.piggy_bank;
             itemData.text = R.string.sponsor;

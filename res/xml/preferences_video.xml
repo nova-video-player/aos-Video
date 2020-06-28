@@ -125,6 +125,13 @@
             android:summary="@string/preferences_display_resume_box_summary"
             android:title="@string/preferences_display_resume_box"
             app:iconSpaceReserved="false"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="enable_sponsor"
+            android:persistent="true"
+            android:summary="@string/enable_sponsor_summary"
+            android:title="@string/enable_sponsor_title"
+            app:iconSpaceReserved="false"/>
 
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/preferences_leanback_user_interface" android:key="category_leanback_user_interface"

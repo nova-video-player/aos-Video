@@ -927,5 +927,7 @@
 
     <string name="refreshrate_failed">Failed to set desired refresh rate</string>
     <string name="sponsor">Sponsor Nova</string>
+    <string name="enable_sponsor_title">Enable Nova sponsor link</string>
+    <string name="enable_sponsor_summary">Enable sponsor link for donations: every contribution helps.</string>
 
 </resources>
