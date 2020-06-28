@@ -539,6 +539,7 @@
     <string name="format_fullscreen">Vollbild</string>
     <string name="format_optimized">Optimiert</string>
     <string name="format_original">Original</string>
+    <string name="format_stretched">Gestreckt</string>
     <string name="stereo_dive_enable">Stereo-Dive-Effekt</string>
     <string name="stereo_dive_disable">Stereo-Dive-Effekt deaktivieren</string>
     <string name="rotation_unlock">Automatische Displaydrehung aktivieren</string>
@@ -831,4 +832,5 @@
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Fehler beim Festlegen der gewünschten Aktualisierungsrate</string>
+    <string name="sponsor">Unterstütze Nova</string>
 </resources>

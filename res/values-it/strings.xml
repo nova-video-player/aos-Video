@@ -540,6 +540,7 @@ Copertina (rotolo di copertina)</string>
     <string name="format_fullscreen">Schermo intero</string>
     <string name="format_optimized">Otimizzato</string>
     <string name="format_original">Originale</string>
+    <string name="format_stretched">Allungato</string>
     <string name="stereo_dive_enable">Effetto stereo dive</string>
     <string name="stereo_dive_disable">Disattiva l\'effetto stereo dive</string>
     <string name="rotation_unlock">Attiva la rotazione automatica dello schermo</string>
@@ -832,4 +833,5 @@ Copertina (rotolo di copertina)</string>
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Impossibile impostare la frequenza di aggiornamento desiderata</string>
+    <string name="sponsor">Supporta Nova</string>
 </resources>
