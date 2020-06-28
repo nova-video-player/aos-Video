@@ -86,6 +86,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_VIDEO_AD_FREE_CATEGORY = "preferences_category_complete";
     public static final String KEY_ADVANCED_VIDEO_ENABLED = "preferences_advanced_video_enabled";
     public static final String KEY_ADVANCED_VIDEO_CATEGORY = "preferences_category_advanced_video";
+    public static final String KEY_ABOUT_CATEGORY = "about_category";
     public static final String KEY_ADVANCED_3D_TV_SWITCH_SUPPORTED = "preferences_tv_switch_supported";
     public static final String KEY_ADVANCED_VIDEO_QUIT = "preferences_video_advanced_quit";
     public static final String KEY_TORRENT_BLOCKLIST = "preferences_torrent_blocklist";
@@ -243,7 +244,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     private void switchAdvancedPreferences() {
         PreferenceCategory prefCategory = (PreferenceCategory) findPreference("preferences_category_video");
-        PreferenceCategory uiCategory = (PreferenceCategory) findPreference("category_user_interface");
+        PreferenceCategory aboutCategory = (PreferenceCategory) findPreference(KEY_ABOUT_CATEGORY);
         if (!ArchosFeatures.isTV(getActivity())) { // not a TV
             prefCategory.removePreference(mActivate3DTVSwitch);
             if (REFRESHRATE_FORALL) prefCategory.addPreference(mActivateRefreshrateTVSwitch);
@@ -274,9 +275,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             editor.apply();
             // no need of the enable sponsor link if not installed from ggplay
             if (! ArchosUtils.isInstalledfromPlayStore(getContext()))
-                uiCategory.removePreference(mEnableSponsor);
+                aboutCategory.removePreference(mEnableSponsor);
             else
-                uiCategory.addPreference(mEnableSponsor);
+                aboutCategory.addPreference(mEnableSponsor);
             prefCategory.removePreference(mForceSwDecPreferences);
             prefCategory.addPreference(mDecChoicePreferences);
             prefCategory.addPreference(mAudioInterfaceChoicePreferences);
@@ -289,7 +290,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             editor.remove(KEY_DEC_CHOICE);
             editor.remove(KEY_AUDIO_INTERFACE_CHOICE);
             editor.apply();
-            uiCategory.removePreference(mEnableSponsor);
+            aboutCategory.removePreference(mEnableSponsor);
             prefCategory.removePreference(mDecChoicePreferences);
             prefCategory.removePreference(mAudioInterfaceChoicePreferences);
             prefCategory.addPreference(mForceSwDecPreferences);
