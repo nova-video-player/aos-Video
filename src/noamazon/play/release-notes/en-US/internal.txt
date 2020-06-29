@@ -1,3 +1,5 @@
+- Add sponsor link
+- Fix number of audio tracks limited to 6
 - Fix missing poster on some movies
 - Fix playback not smooth regression on Sony and Philips AndroidTV
 - Stretch mode is back
