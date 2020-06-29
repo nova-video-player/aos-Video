@@ -5,6 +5,6 @@
 - Stretch mode is back
 - Allow adaptive refresh rate on phones
 - Improve A/V sync for some videos (PTS instead of sample based sync)
-- ffmpeg version 4.2.3 and dav1d version 0.7.0 upstep
+- ffmpeg version 4.3.0 and dav1d version 0.7.1 upstep
 - Scraping improvements
 - Stability enhancement
