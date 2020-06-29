@@ -661,4 +661,6 @@
     <string name="create_new_list">Utwórz nową listę</string>
     <string name="add_to_list">Dodaj do listy</string>
     <string name="remove_from_list">Usuń z listy</string>
+    <string name="enable_sponsor_title">Włącz link sponsora Nova</string>
+    <string name="enable_sponsor_summary">Włącz link sponsora dla darowizn: każda pomoc jest ważna.</string>
 </resources>

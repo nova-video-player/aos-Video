@@ -843,4 +843,6 @@
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Не удалось задать желаемую частоту обновления</string>
     <string name="sponsor">Поддержать Nova</string>
+    <string name="enable_sponsor_title">Ссылка для поддержки Nova</string>
+    <string name="enable_sponsor_summary">Перейти по ссылке для пожертвований: важна любая помощь проекту.</string>
 </resources>

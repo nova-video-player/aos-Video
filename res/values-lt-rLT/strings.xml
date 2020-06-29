@@ -549,6 +549,7 @@
     <string name="format_fullscreen">Visas ekranas</string>
     <string name="format_optimized">Optimizuoti</string>
     <string name="format_original">Originalas</string>
+    <string name="format_stretched">Ištempta</string>
     <string name="stereo_dive_enable">Stereo efektas</string>
     <string name="stereo_dive_disable">Išjungti stereo efektą</string>
     <string name="rotation_unlock">Įjungti automatinį ekrano pasukimą</string>
@@ -841,4 +842,7 @@
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Nepavyko nustatyti reikiamo kadrų dažnio</string>
+    <string name="sponsor">Nova rėmėjas</string>
+    <string name="enable_sponsor_title">Įjungti Nova rėmėjo nuorodą</string>
+    <string name="enable_sponsor_summary">Įjungti rėmėjo nuorodą: kiekvienas įnašas padeda.</string>
 </resources>

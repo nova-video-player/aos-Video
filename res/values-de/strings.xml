@@ -833,4 +833,6 @@
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Fehler beim Festlegen der gewünschten Aktualisierungsrate</string>
     <string name="sponsor">Unterstütze Nova</string>
+    <string name="enable_sponsor_title">Nova Sponsor-Link aktivieren</string>
+    <string name="enable_sponsor_summary">Aktiviere den Sponsor-Link für Spenden: jeder Spendenbeitrag hilft.</string>
 </resources>

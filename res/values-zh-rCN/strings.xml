@@ -831,4 +831,6 @@
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">设置所需刷新率失败</string>
     <string name="sponsor">赞助 Nova</string>
+    <string name="enable_sponsor_title">启用 Nova 赞助链接</string>
+    <string name="enable_sponsor_summary">启用捐赠赞助链接：每个捐赠都有帮助。</string>
 </resources>
