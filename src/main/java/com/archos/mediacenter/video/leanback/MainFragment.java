@@ -68,6 +68,7 @@ import com.archos.mediacenter.video.leanback.filebrowsing.ExtStorageListingActiv
 import com.archos.mediacenter.video.leanback.filebrowsing.LocalListingActivity;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridActivity;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesIconBuilder;
+import com.archos.mediacenter.video.leanback.collections.CollectionsGridActivity;
 import com.archos.mediacenter.video.leanback.movies.MoviesByAlphaActivity;
 import com.archos.mediacenter.video.leanback.movies.MoviesByGenreActivity;
 import com.archos.mediacenter.video.leanback.movies.MoviesByRatingActivity;
@@ -391,6 +392,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         ArrayObjectAdapter movieRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         movieRowAdapter.add(buildAllMoviesBox());
         //movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_ALPHA, getString(R.string.movies_by_alpha), R.drawable.alpha_banner));
+        movieRowAdapter.add(buildCollectionsBox());
         movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_GENRE, getString(R.string.movies_by_genre), R.drawable.genres_banner));
 
         if (showByRating)
@@ -458,6 +460,17 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         else {
             // fallback to regular default icon
             return new Box(Box.ID.ALL_MOVIES, getString(R.string.all_movies), R.drawable.movies_banner);
+        }
+    }
+
+    private Box buildCollectionsBox() {
+        Bitmap iconBitmap = new AllMoviesIconBuilder(getActivity()).buildNewBitmap();
+        if (iconBitmap!=null) {
+            return new Box(Box.ID.COLLECTIONS, getString(R.string.movie_collections), iconBitmap);
+        }
+        else {
+            // fallback to regular default icon
+            return new Box(Box.ID.COLLECTIONS, getString(R.string.movie_collections), R.drawable.movies_banner);
         }
     }
 
@@ -954,6 +967,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     case EPISODES_BY_DATE:
                         mActivity.startActivity(new Intent(mActivity, EpisodesByDateActivity.class));
                         break;
+                    case COLLECTIONS:
+                        mActivity.startActivity(new Intent(mActivity, CollectionsGridActivity.class));
+                        break;
 
                 }
             }
@@ -964,7 +980,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                         if (mActivity instanceof MainActivityLeanback)
                             ((MainActivityLeanback)mActivity).startPreferencesActivity(); // I know this is ugly (and i'm ashamed...)
                         else
-                            throw new IllegalStateException("Sorry developper, this ugly code can work with a MainActivityLeanback only for now!");
+                            throw new IllegalStateException("Sorry developer, this ugly code can work with a MainActivityLeanback only for now!");
                         break;
                     case PRIVATE_MODE:
                         if (!PrivateMode.isActive() && PrivateMode.canShowDialog(getActivity()))

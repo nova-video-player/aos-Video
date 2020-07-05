@@ -111,6 +111,7 @@
     <string name="movies_by_alpha">Movies alphabetical</string>
     <string name="movies_by_genre">Movies by genre</string>
     <string name="movies_by_rating">Movies by rating</string>
+    <string name="movie_collections">Collections</string>
     <string name="movies_by_year">Movies by year</string>
     <string name="all_tv_shows">TV shows</string>
     <string name="all_tvshows">All TV shows</string>
@@ -254,6 +255,7 @@
     <string name="you_have_no_video">No videos</string>
     <string name="you_have_no_video_yet">Searching for videos&#8230;</string>
     <string name="you_have_no_movies">No movies</string>
+    <string name="you_have_no_movie_collections">No collections</string>
     <string name="you_have_no_tv_shows">No TV shows</string>
     <string name="you_have_no_non_scraped_videos">No non scraped videos</string>
 

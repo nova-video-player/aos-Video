@@ -40,7 +40,8 @@ public class Box {
         TVSHOWS_BY_ALPHA,
         TVSHOWS_BY_RATING,
         TVSHOWS_BY_GENRE,
-        EPISODES_BY_DATE
+        EPISODES_BY_DATE,
+        COLLECTIONS
     }
 
     final private ID mBoxId;
