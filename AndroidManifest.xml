@@ -1304,14 +1304,14 @@
                 <action android:name="android.intent.action.MEDIA_BAD_REMOVAL" />
                 <data android:scheme="file" />
             </intent-filter>
-            <intent-filter>
+            <!-- intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
                 <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
             </intent-filter>
             <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/usb_device_filter" />
             <meta-data android:name="android.hardware.usb.action.USB_DEVICE_DETACHED"
-                android:resource="@xml/usb_device_filter" />
+                android:resource="@xml/usb_device_filter" /-->
         </receiver>
 
         <!-- small service that can be told to export a bunch of nfo files -->
