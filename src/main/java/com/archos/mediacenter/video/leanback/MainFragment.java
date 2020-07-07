@@ -181,7 +181,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             @Override
             public void onReceive(Context context, Intent intent) {
                 if(intent!=null&& ArchosMediaIntent.ACTION_VIDEO_SCANNER_SCAN_FINISHED.equals(intent.getAction())) {
-                    // prepare first row to be displayed and lock on
+                    // in case of usb hdd update also last played row
+                    LoaderManager.getInstance(MainFragment.this).restartLoader(LOADER_ID_LAST_PLAYED, null, MainFragment.this);
+                    // prepare first row to be displayed and lock on if new context after scan
                     LoaderManager.getInstance(MainFragment.this).restartLoader(LOADER_ID_LAST_ADDED, null, MainFragment.this);
                     if (DBG) Log.d(TAG, "manual reload");
                 }
