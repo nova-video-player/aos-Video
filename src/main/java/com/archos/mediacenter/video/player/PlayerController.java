@@ -220,7 +220,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private int                 mSeekAccelStepCount = SEEK_ACCEL_STEPS.length;
 
     private AudioManager        mAudioManager;
-    private Toast               mToast;
+    private Toast               mToast = null;
     private int                 mNextSeek;
     private int                 mSeekDir;
     private int                 mLongSeekTime;
@@ -1018,7 +1018,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         if (mToast == null) {
             mToast = Toast.makeText(mContext, resId, Toast.LENGTH_SHORT);
         } else {
-            mToast.setText(resId);
+            mToast.cancel();
+            mToast = Toast.makeText(mContext, resId, Toast.LENGTH_SHORT);
         }
         mToast.show();
 
@@ -1029,7 +1030,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             if (mToast == null) {
                 mToast = Toast.makeText(mContext, text, Toast.LENGTH_SHORT);
             } else {
-                mToast.setText(text);
+                mToast.cancel();
+                mToast = Toast.makeText(mContext, text, Toast.LENGTH_SHORT);
             }
             mToast.show();
         }
@@ -1037,6 +1039,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     public void cancelToast() {
         if (mToast != null) {
+            if (DBG) Log.d(TAG, "cancelToast: canceling toast");
             mToast.cancel();
         }
     }
