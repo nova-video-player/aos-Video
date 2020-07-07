@@ -15,9 +15,10 @@
 package com.archos.mediacenter.video;
 
 
-import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
@@ -28,19 +29,17 @@ import com.archos.environment.ArchosUtils;
 import com.archos.environment.NetworkState;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.mediacenter.utils.AppState;
-import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.browser.BootupRecommandationService;
-import com.archos.mediacenter.video.debug.Debug;
 import com.archos.mediacenter.video.picasso.SmbRequestHandler;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
 import com.archos.medialib.LibAvos;
 import com.archos.mediaprovider.video.NetworkAutoRefresh;
+import com.archos.mediaprovider.video.VideoStoreImportReceiver;
 import com.archos.mediascraper.ScraperImage;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
 
 import httpimage.FileSystemPersistence;
 import httpimage.HttpImageManager;
@@ -64,7 +63,10 @@ public class CustomApplication extends Application {
     private NetworkState networkState = null;
     private static boolean isNetworkStateRegistered = false;
     private static boolean isAppStateListenerAdded = false;
+    private static boolean isVideStoreImportReceiverRegistered = false;
 
+    private static VideoStoreImportReceiver videoStoreImportReceiver = new VideoStoreImportReceiver();
+    final static IntentFilter intentFilter = new IntentFilter();
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -145,6 +147,10 @@ public class CustomApplication extends Application {
 
         BASEDIR = Environment.getExternalStorageDirectory().getPath()+"Android/data/"+getPackageName();
 
+        // programmatically register android scanner finished, lifecycle is handled in handleForeGround
+        intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
+        intentFilter.addDataScheme("file");
+
         // Class that keeps track of activities so we can tell is we are foreground
         if (DBG) Log.d(TAG, "onCreate: registerActivityLifecycleCallbacks AppState");
         registerActivityLifecycleCallbacks(AppState.sCallbackHandler);
@@ -183,12 +189,20 @@ public class CustomApplication extends Application {
         if (DBG) Log.d(TAG, "handleForeGround: is app foreground " + foreground);
         if (networkState == null ) networkState = NetworkState.instance(getApplicationContext());
         if (foreground) {
+            if (!isVideStoreImportReceiverRegistered) {
+                if (DBG) Log.d(TAG, "handleForeGround: app now in ForeGround registerReceiver for videoStoreImportReceiver");
+                registerReceiver(videoStoreImportReceiver, intentFilter);
+            }
             if (!isNetworkStateRegistered) {
                 if (DBG) Log.d(TAG, "handleForeGround: app now in ForeGround NetworkState.registerNetworkCallback");
                 networkState.registerNetworkCallback();
                 isNetworkStateRegistered = true;
             }
         } else {
+            if (isVideStoreImportReceiverRegistered) {
+                if (DBG) Log.d(TAG, "handleForeGround: app now in ForeGround registerReceiver for videoStoreImportReceiver");
+                unregisterReceiver(videoStoreImportReceiver);
+            }
             if (isNetworkStateRegistered) {
                 if (DBG) Log.d(TAG, "handleForeGround: app now in BackGround NetworkState.unRegisterNetworkCallback");
                 networkState.unRegisterNetworkCallback();

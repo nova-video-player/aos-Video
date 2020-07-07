@@ -1061,18 +1061,6 @@
             android:exported="true" />
         <!-- BroadcastReceiver to trigger database import -->
         <receiver android:name="com.archos.mediaprovider.video.VideoStoreImportReceiver" >
-
-            <!-- Android broadcasts that start / stop importing -->
-            <!-- TODO: these should be removed too -->
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_SCANNER_STARTED" />
-
-                <data android:scheme="file" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_SCANNER_FINISHED" />
-                <data android:scheme="file" />
-            </intent-filter>
             <!-- Android broadcast that stops importing -->
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />

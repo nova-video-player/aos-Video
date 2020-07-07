@@ -803,6 +803,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(ExtStorageReceiver.ACTION_MEDIA_MOUNTED)){
+                if (DBG) Log.d(TAG, "mExternalStorageReceiver: ACTION_MEDIA_MOUNTED");
                 // Remove "file://"
                 String path = null;
                 if(intent.getDataString().startsWith("file"))
@@ -818,6 +819,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 updateUsbAndSdcardVisibility();
             }
             else if (action.equals(ExtStorageReceiver.ACTION_MEDIA_UNMOUNTED)){
+                if (DBG) Log.d(TAG, "mExternalStorageReceiver: ACTION_MEDIA_UNMOUNTED");
                 final String path = intent.getDataString();
                 if (path == null || path.isEmpty()) {
                     return;
@@ -828,6 +830,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     };
 
     private void updateUsbAndSdcardVisibility() {
+        if (DBG) Log.d(TAG, "updateUsbAndSdcardVisibility");
         ExtStorageManager storageManager = ExtStorageManager.getExtStorageManager();
         final boolean hasExternal = storageManager.hasExtStorage();
 
@@ -850,7 +853,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 mFileBrowsingRowAdapter.add(item);
             }
         }
-
         mFileBrowsingRowAdapter.add(new Box(Box.ID.VIDEOS_BY_LISTS, getString(R.string.video_lists), R.drawable.filetype_new_playlist));
     }
 
