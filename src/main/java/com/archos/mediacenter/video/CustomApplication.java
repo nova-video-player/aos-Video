@@ -50,13 +50,11 @@ import org.acra.annotation.*;
 import org.acra.data.StringFormat;
 import org.acra.sender.HttpSender;
 
-/*
-@AcraCore(buildConfigClass = BuildConfig.class,
-        reportFormat = StringFormat.JSON)
-
-@AcraHttpSender(uri = "https://collector.tracepot.com/a5806dc0",
+@AcraCore(reportFormat = StringFormat.JSON)
+@AcraHttpSender(uri = "https://home.courville.org/acrarium/report",
+        basicAuthLogin = "VAwdfjf9p9IhfYAl",
+        basicAuthPassword = "Dr65wv2sy94hAaGH",
         httpMethod = HttpSender.Method.POST)
- */
 
 public class CustomApplication extends Application {
 
