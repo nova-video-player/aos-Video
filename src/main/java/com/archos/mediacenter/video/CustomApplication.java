@@ -27,6 +27,7 @@ import android.util.Log;
 import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosUtils;
 import com.archos.environment.NetworkState;
+import com.archos.filecorelibrary.jcifs.JcifsUtils;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.mediacenter.utils.AppState;
 import com.archos.mediacenter.utils.trakt.Trakt;
@@ -70,6 +71,14 @@ public class CustomApplication extends Application {
     private static VideoStoreImportReceiver videoStoreImportReceiver = new VideoStoreImportReceiver();
     final static IntentFilter intentFilter = new IntentFilter();
 
+    private JcifsUtils jcifsUtils = null;
+
+    private static Context mContext = null;
+
+    public static Context getAppContext() {
+        return CustomApplication.mContext;
+    }
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -83,7 +92,6 @@ public class CustomApplication extends Application {
 
     public CustomApplication() {
         super();
-
         mAutoScraperActive = false;
     }
 
@@ -126,6 +134,8 @@ public class CustomApplication extends Application {
         }
 
         super.onCreate();
+        // init application context to make it available to all static methods
+        CustomApplication.mContext = getApplicationContext();
         Trakt.initApiKeys(this);
         new Thread() {
             public void run() {
@@ -180,6 +190,12 @@ public class CustomApplication extends Application {
         // only launch BootupRecommandation if on AndroidTV and before Android O otherwise target TV channels
         if(ArchosFeatures.isAndroidTV(this) && Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
             BootupRecommandationService.init();
+
+        new Thread(() -> {
+            // create instance of jcifsUtils in order to pass context and initial preference
+            if (jcifsUtils == null) jcifsUtils = JcifsUtils.getInstance(getApplicationContext());
+        }).start();
+
     }
 
     // link networkState register/unregister networkCallback linked to app foreground/background lifecycle

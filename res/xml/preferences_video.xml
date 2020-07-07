@@ -275,13 +275,19 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/network_shared_folders"
         app:iconSpaceReserved="false" >
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_smbv2"
+            android:title="@string/share_folders_smbv2"
+            android:summary="@string/share_folders_smbv2_summary"
+            app:iconSpaceReserved="false"/>
+
         <PreferenceScreen
             android:summary="@string/samba_settings_summary"
             android:title="@string/samba_settings_title"
             android:key="share_folders"
-            app:iconSpaceReserved="false"
-            >
-
+            app:iconSpaceReserved="false">
         </PreferenceScreen>
 
         <CheckBoxPreference
