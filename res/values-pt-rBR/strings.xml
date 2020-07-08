@@ -511,7 +511,7 @@
     <string name="preferences_video_trakt_text">Video scrobbler fornecido por</string>
     <string name="preferences_video_licenses">Licenças</string>
     <string name="preferences_network_mobile_vpn_summary">Use-o apenas com a configuração VPN e cuidado com o seu uso de dados.</string>
-    <string name="preferences_network_mobile_vpn_title">Ativar compartilhamento de rede na conexão móvel</string>
+    <string name="preferences_network_mobile_vpn_title">Habilitar compartilhamento de rede na conexão móvel</string>
     <string name="preferences_video_advanced">Avançado</string>
     <string name="preferences_video_advanced_quit_title">Preferências normais</string>
     <string name="preferences_video_advanced_quit_summary">Voltar para preferências normais</string>
@@ -541,9 +541,10 @@
     <string name="format_fullscreen">Tela cheia</string>
     <string name="format_optimized">Otimizado</string>
     <string name="format_original">Original</string>
+    <string name="format_stretched">Esticado</string>
     <string name="stereo_dive_enable">Stereo dive effect</string>
     <string name="stereo_dive_disable">Desativar efeito de mergulhar estéreo</string>
-    <string name="rotation_unlock">Ativar rotação automática de tela</string>
+    <string name="rotation_unlock">Habilitar rotação automática de tela</string>
     <string name="rotation_locked">Rotação automática de tela desativada</string>
     <string name="rotation_unlocked">Rotação automática da tela ativada</string>
     <string name="network_reindex">Verificar conteúdo novamente</string>
@@ -833,4 +834,7 @@
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Falha ao definir a taxa de atualização desejada</string>
+    <string name="sponsor">Patrocinar Nova</string>
+    <string name="enable_sponsor_title">Habilitar link de patrocinador Nova</string>
+    <string name="enable_sponsor_summary">Habilitar link de patrocinador Nova: cada contribuição ajuda.</string>
 </resources>
