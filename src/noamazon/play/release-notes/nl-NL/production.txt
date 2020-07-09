@@ -1,1 +1,1 @@
-../en-US/production.txt
+internal.txt

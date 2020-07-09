@@ -1,1 +1,1 @@
-../en-US/beta.txt
+internal.txt
