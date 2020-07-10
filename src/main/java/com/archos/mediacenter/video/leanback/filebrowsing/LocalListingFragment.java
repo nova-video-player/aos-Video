@@ -24,6 +24,7 @@ import com.archos.customizedleanback.widget.MyTitleView;
 import com.archos.mediacenter.utils.BlacklistedDbAdapter;
 import com.archos.mediacenter.video.R;
 import com.archos.mediaprovider.ArchosMediaIntent;
+import com.archos.mediaprovider.video.Blacklist;
 import com.archos.mediaprovider.video.VideoStoreImportService;
 
 /**
@@ -44,7 +45,6 @@ public class LocalListingFragment extends ListingFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         updateBlacklistedState();
     }
 
@@ -140,6 +140,8 @@ public class LocalListingFragment extends ListingFragment {
         else {
             Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
         }
+        // update internal static blacklist
+        Blacklist.updateBlacklisteds();
         updateBlacklistedState();
     }
 
@@ -160,6 +162,8 @@ public class LocalListingFragment extends ListingFragment {
         else {
             Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
         }
+        // update internal static blacklist
+        Blacklist.updateBlacklisteds();
         updateBlacklistedState();
     }
 }
