@@ -38,7 +38,7 @@ import java.util.List;
  * Build a bitmap composed of 8 movie posters to be used in the main leanback activity
  * Created by vapillon on 24/06/15.
  */
-public class MovieCollectionIconBuilder {
+public class CollectionsIconBuilder {
 
     final static String[] PROJECTION = {
             VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER,

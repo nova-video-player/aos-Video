@@ -273,14 +273,8 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
             }
         });
 
+        // TODO MARC: check that we can remove
         // Set fifth orb action
-        getTitleView().setOnOrb5ClickedListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), MoviesByAlphaActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override

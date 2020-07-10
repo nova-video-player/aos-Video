@@ -53,23 +53,16 @@ public class CollectionsLoader extends VideoLoader {
 
     @Override
     public String[] getProjection() {
+        // TODO MARC
         return new String[] {
                 VideoStore.MediaColumns.DATA,
-                VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " AS " + BaseColumns._ID,
-                VideoStore.Video.VideoColumns.SCRAPER_TITLE,
-                VideoStore.Video.VideoColumns.SCRAPER_S_ONLINE_ID,
-                VideoStore.Video.VideoColumns.SCRAPER_S_COVER,
-                VideoStore.Video.VideoColumns.SCRAPER_S_POSTER_ID,
-                VideoStore.Video.VideoColumns.SCRAPER_E_SEASON,
-                VideoStore.Video.VideoColumns.SCRAPER_S_PREMIERED,
-                VideoStore.Video.VideoColumns.SCRAPER_S_STUDIOS,
-                VideoStore.Video.VideoColumns.SCRAPER_S_PLOT,
-                VideoStore.Video.VideoColumns.SCRAPER_E_ACTORS,
-                VideoStore.Video.VideoColumns.SCRAPER_S_RATING,
-                "max(" + VideoStore.Video.VideoColumns.DATE_ADDED + ") AS " + SORT_COUMN_LAST_ADDED,
-                "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + ") AS " + COLUMN_SEASON_COUNT,
-                "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + " || ',' || " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE + ") AS " + COLUMN_EPISODE_COUNT,
-                "COUNT(CASE "+VideoStore.Video.VideoColumns.BOOKMARK+" WHEN "+PlayerActivity.LAST_POSITION_END+" THEN 1 ELSE NULL END) AS " + COLUMN_EPISODE_WATCHED_COUNT,
+                VideoStore.Video.VideoColumns.SCRAPER_C_ID + " AS " + BaseColumns._ID,
+                VideoStore.Video.VideoColumns.SCRAPER_C_NAME,
+                VideoStore.Video.VideoColumns.SCRAPER_C_DESCRIPTION,
+                VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE,
+                VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_THUMB_FILE,
+                VideoStore.Video.VideoColumns.SCRAPER_C_BACKDROP_LARGE_FILE,
+                VideoStore.Video.VideoColumns.SCRAPER_C_BACKDROP_THUMB_FILE,
                 getTraktProjection(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN),
                 getTraktProjection(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_LIBRARY),
                 VideoStore.Video.VideoColumns.NOVA_PINNED
@@ -87,13 +80,13 @@ public class CollectionsLoader extends VideoLoader {
         sb.append(super.getSelection()); // get common selection from the parent
 
         if (sb.length()>0) { sb.append(" AND "); }
-        sb.append( VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " > '0'");
+        sb.append( VideoStore.Video.VideoColumns.SCRAPER_C_ID + " > '0'");
         if (!mShowWatched) {
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);
         }
         sb.append(") GROUP BY (");
-        sb.append(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID);
+        sb.append(VideoStore.Video.VideoColumns.SCRAPER_C_ID);
         return sb.toString();
     }
 
