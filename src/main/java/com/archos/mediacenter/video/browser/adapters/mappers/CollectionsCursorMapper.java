@@ -18,6 +18,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediaprovider.video.VideoStore;
@@ -47,7 +48,7 @@ public class CollectionsCursorMapper implements CompatibleCursorMapper {
         mIdColumn = cursor.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_C_ID);
         mNameColumn = cursor.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_C_NAME);
         mPosterPathColumn = cursor.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE);
-        mSeasonCountColumn = cursor.getColumnIndexOrThrow(AllTvshowsLoader.COLUMN_SEASON_COUNT);
+        //mSeasonCountColumn = cursor.getColumnIndexOrThrow(AllTvshowsLoader.COLUMN_SEASON_COUNT);
         //mEpisodeCountColumn = cursor.getColumnIndexOrThrow(AllTvshowsLoader.COLUMN_EPISODE_COUNT);
         //mEpisodeWatchedCountColumn = cursor.getColumnIndex(AllTvshowsLoader.COLUMN_EPISODE_WATCHED_COUNT);
         mTraktSeenColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN);
@@ -62,7 +63,7 @@ public class CollectionsCursorMapper implements CompatibleCursorMapper {
 
 
     public Object bind(Cursor cursor) {
-        return new Tvshow(
+        return new Collection(
                 cursor.getLong(mIdColumn),
                 cursor.getString(mNameColumn),
                 getPosterUri(cursor),

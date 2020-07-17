@@ -53,7 +53,6 @@ public class CollectionsLoader extends VideoLoader {
 
     @Override
     public String[] getProjection() {
-        // TODO MARC
         return new String[] {
                 VideoStore.MediaColumns.DATA,
                 VideoStore.Video.VideoColumns.SCRAPER_C_ID + " AS " + BaseColumns._ID,
@@ -68,12 +67,7 @@ public class CollectionsLoader extends VideoLoader {
                 VideoStore.Video.VideoColumns.NOVA_PINNED
         };
     }
-    protected static String getTraktProjection(String traktType) {
-        return "CASE WHEN "
-                + "TOTAL(" + traktType + ") >= "
-                + "COUNT(" + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE + ") "
-                + "THEN 1 ELSE 0 END AS " + traktType;
-    }
+
     @Override
     public String getSelection() {
         StringBuilder sb = new StringBuilder();

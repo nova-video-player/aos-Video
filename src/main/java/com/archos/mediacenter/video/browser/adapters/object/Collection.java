@@ -26,114 +26,78 @@ import java.io.Serializable;
 
 public class Collection extends Base implements Serializable {
 
-
-
     private final boolean mIsTraktSeen;
     private final boolean mIsTraktLibrary;
-    private final float mRating;
-
-    public int getYear() {
-        return mYear;
-    }
 
     public String getPlot() {
-        return mPlot;
+        return mCollDescription;
     }
 
-    public String getActors() {
-        return mActors;
-    }
-
-    public String getStudio() {
-        return mStudio;
-    }
-
-    private final int mYear;
-    private final String mStudio;
-    private final String mActors;
-    private final String mPlot;
-    private long mTvshowId;
-    private int mSeasonCount;
-    private int mEpisodeCount;
-    private int mEpisodeWatchedCount;
+    private final String mCollDescription;
+    private long mCollId;
+    private int mCollMovieCount;
+    private int mCollMovieWatchedCount;
 
     private long mPinned;
 
+    // TODO MARC: stored in movietags but perhaps collectiontags?
     /**
      * Not computed by this class but only a place to store it.
      * Need to be set with setShowTags()
      */
     private ShowTags mShowTags;
 
-    public Collection(long tvshowId, String name, Uri posterUri, int seasonCount, int episodeCount, int episodeWatchedCount) {
-        this(tvshowId,name, posterUri, seasonCount, episodeCount, episodeWatchedCount, false, false, null, null,null, -1,-1, 0);
+    public Collection(long collId, String collName, Uri posterUri, int collMovieCount, int collMovieWatchedCount) {
+        this(collId, collName, posterUri, collMovieCount, collMovieWatchedCount, false, false, null, 0);
     }
 
-
-    public Collection(long tvshowId,
-                  String name,
+    public Collection(long collId,
+                  String collName,
                   Uri posterUri,
-                  int seasonCount,
-                  int episodeCount,
-                  int episodeWatchedCount,
+                  int collMovieCount,
+                  int collMovieWatchedCount,
                   boolean traktSeen,
                   boolean traktLibrary,
-                  String plot,
-                  String studio,
-                  String actors,
-                  int year,
-                  float rating,
+                  String collDescription,
                   long pinned) {
-        super(name, posterUri);
-        mTvshowId = tvshowId;
-        mSeasonCount = seasonCount;
+        super(collName, posterUri);
+        mCollId = collId;
+        mCollMovieCount = collMovieCount;
+        mCollMovieWatchedCount = collMovieWatchedCount;
         mIsTraktSeen = traktSeen;
         mIsTraktLibrary = traktLibrary;
-        mEpisodeCount = episodeCount;
-        mEpisodeWatchedCount = episodeWatchedCount;
-        mStudio = studio;
-        mPlot = plot;
-        mActors = actors;
-        mYear = year;
-        mRating = rating;
+        mCollDescription = collDescription;
         mPinned = pinned;
     }
 
     public String getCountString(Context context) {
-        if (mSeasonCount > 1) {
-            return String.format(context.getResources().getQuantityText(R.plurals.Nseasons, mSeasonCount).toString(), mSeasonCount);
-        } else {
-            return String.format(context.getResources().getQuantityText(R.plurals.Nepisodes, mEpisodeCount).toString(), mEpisodeCount);
-        }
+        return String.format(context.getResources().getQuantityText(R.plurals.Nseasons, mCollMovieCount).toString(), mCollMovieCount);
     }
 
-    public int getSeasonCount() {
-        return mSeasonCount;
+    public int getCollectionMovieCount() {
+        return mCollMovieCount;
     }
 
-    public int getEpisodeCount() {
-        return mEpisodeCount;
-    }
-
-    public int getEpisodeWatchedCount() {
-        return mEpisodeWatchedCount;
+    public int getCollectionMovieWatchedCount() {
+        return mCollMovieWatchedCount;
     }
 
     public boolean isWatched() {
-        return mEpisodeWatchedCount>=mEpisodeCount;
+        return mCollMovieWatchedCount>=mCollMovieCount;
     }
 
     public boolean isPinned() {
         return mPinned > 0;
     }
 
-    public long getTvshowId() {
-        return mTvshowId;
+    public long getCollectionId() {
+        return mCollId;
     }
 
+    // TODO MARC: buildCollectionTags and rework scraping
     @Override
     public BaseTags getFullScraperTags(Context context) {
-        return TagsFactory.buildShowTags(context, mTvshowId);
+        return TagsFactory.buildShowTags(context, mCollId);
     }
 
     public void setShowTags(ShowTags showTags) {
@@ -156,7 +120,4 @@ public class Collection extends Base implements Serializable {
         return mIsTraktLibrary;
     }
 
-    public float getRating() {
-        return mRating;
-    }
 }
