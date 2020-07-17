@@ -43,6 +43,7 @@ import androidx.preference.PreferenceManager;
 import com.archos.customizedleanback.app.MyVerticalGridFragment;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
+import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.loader.CollectionsLoader;
@@ -60,7 +61,6 @@ import com.archos.mediacenter.video.utils.DbUtils;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.SortOrder;
 import com.archos.mediaprovider.video.VideoStore;
-
 
 public class CollectionsGridFragment extends MyVerticalGridFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -89,10 +89,6 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
     public static SparseArray<CollectionsSortOrderEntry> sortOrderIndexer = new SparseArray<CollectionsSortOrderEntry>();
     static {
         sortOrderIndexer.put(0, new CollectionsSortOrderEntry(R.string.sort_by_name_asc,        "name COLLATE NOCASE ASC"));
-        sortOrderIndexer.put(1, new CollectionsSortOrderEntry(R.string.sort_by_date_added_desc, VideoStore.MediaColumns.DATE_ADDED + " DESC"));
-        sortOrderIndexer.put(2, new CollectionsSortOrderEntry(R.string.sort_by_year_desc,       VideoStore.Video.VideoColumns.SCRAPER_M_YEAR + " DESC"));
-        sortOrderIndexer.put(3, new CollectionsSortOrderEntry(R.string.sort_by_duration_asc,    SortOrder.DURATION.getAsc()));
-        sortOrderIndexer.put(4, new CollectionsSortOrderEntry(R.string.sort_by_rating_asc,      SortOrder.SCRAPER_M_RATING.getDesc()));
     }
 
 
@@ -109,7 +105,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
         } else {
             mDisplayMode = DisplayMode.values()[displayModeIndex];
         }
-        mSortOrder = mPrefs.getString(SORT_PARAM_KEY, MoviesLoader.DEFAULT_SORT);
+        mSortOrder = mPrefs.getString(SORT_PARAM_KEY, CollectionsLoader.DEFAULT_SORT);
         mSortOrderEntries = CollectionsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
 
         mShowWatched = mPrefs.getBoolean(SHOW_WATCHED_KEY, true);
@@ -131,12 +127,12 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
             @Override
             public boolean onLongClick(View v) {
                 if (mMoviesAdapter != null) {
-                    Movie movie = (Movie)mMoviesAdapter.get(getSelectedPosition());
-                    if (movie != null) {
-                        if (!movie.isPinned())
-                            DbUtils.markAsPinned(getActivity(), movie);
+                    Collection collection = (Collection)mMoviesAdapter.get(getSelectedPosition());
+                    if (collection != null) {
+                        if (!collection.isPinned())
+                            DbUtils.markAsPinned(getActivity(), collection);
                         else
-                            DbUtils.markAsNotPinned(getActivity(), movie);
+                            DbUtils.markAsNotPinned(getActivity(), collection);
                         Bundle args = new Bundle();
                         args.putString("sort", mSortOrder);
                         args.putBoolean("showWatched", mShowWatched);
@@ -273,8 +269,6 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
             }
         });
 
-        // TODO MARC: check that we can remove
-        // Set fifth orb action
     }
 
     @Override
@@ -300,9 +294,9 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (id == 0) {
             if (args == null) {
-                return new CollectionsLoader(getActivity(), true);
+                return new CollectionsLoader(getActivity());
             } else {
-                return new CollectionsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"), true);
+                return new CollectionsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"));
             }
         }
         else return null;
@@ -316,7 +310,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
             setEmptyViewVisiblity(cursor.getCount()<1);
 
             if (mShowWatched)
-                setTitle(getString(R.string.all_movies_format, cursor.getCount()));
+                setTitle(getString(R.string.all_collections_format, cursor.getCount()));
             else
                 setTitle(getString(R.string.not_watched_movies_format, cursor.getCount()));
         }

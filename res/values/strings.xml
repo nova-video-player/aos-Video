@@ -107,6 +107,7 @@
     <string name="movies">Movies</string>
     <string name="all_movies">All movies</string>
     <string name="all_movies_format">All movies  -  %d</string>
+    <string name="all_collections_format">All collections  -  %d</string>
     <string name="not_watched_movies_format">Not watched  -  %d</string>
     <string name="movies_by_alpha">Movies alphabetical</string>
     <string name="movies_by_genre">Movies by genre</string>
