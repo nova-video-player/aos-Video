@@ -74,7 +74,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/video"
         android:largeHeap="true"
-        android:requestLegacyExternalStorage="true">
+        android:requestLegacyExternalStorage="true"
+        android:usesCleartextTraffic="true">
         <meta-data
             android:name="to.dualscreen"
             android:value="true" />
