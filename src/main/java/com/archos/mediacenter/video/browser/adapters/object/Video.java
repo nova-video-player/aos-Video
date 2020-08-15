@@ -273,7 +273,9 @@ public class Video extends Base implements Serializable {
      * @return
      */
     public boolean locationSupportsDelete() {
-        if ("upnp".equals(getFileUri().getScheme())) {
+        Uri fileUri = getFileUri();
+        if (fileUri == null) return false;
+        if ("upnp".equals(fileUri.getScheme())) {
             return false;
         }
         return true;
@@ -288,7 +290,9 @@ public class Video extends Base implements Serializable {
      * @return
      */
     public boolean filenameMayBeCryptic() {
-        if ("upnp".equals(getFileUri().getScheme()) || "http".equals(getFileUri().getScheme())) {
+        Uri fileUri = getFileUri();
+        if (fileUri == null) return false;
+        if ("upnp".equals(fileUri.getScheme()) || "http".equals(fileUri.getScheme())) {
             return true;
         }
         return false;
