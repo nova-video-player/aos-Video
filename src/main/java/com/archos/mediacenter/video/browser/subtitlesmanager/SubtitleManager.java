@@ -404,6 +404,8 @@ public class SubtitleManager {
             Log.e(TAG, "listLocalAndRemotesSubtitles: caught JSchException", e);
         }
 
+        // for now do not list files in /sdcard/Android/data/org.courville.nova/cache/subtitles cache online sub download since in theory they should already be associated to a video automatically
+        /*
         // List files in the local temporary folder
         String filenameWithoutExtension = stripExtension(video);
         Uri localSubsDirUri = Uri.fromFile(MediaUtils.getSubsDir(mContext));
@@ -416,6 +418,7 @@ public class SubtitleManager {
                 }
             } catch (Exception e) { }
         }
+         */
 
         final List<String> SubtitleExtensions = VideoUtils.getSubtitleExtensions();
 
