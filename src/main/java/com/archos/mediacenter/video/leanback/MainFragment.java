@@ -822,10 +822,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             }
             else if (action.equals(ExtStorageReceiver.ACTION_MEDIA_UNMOUNTED)){
                 if (DBG) Log.d(TAG, "mExternalStorageReceiver: ACTION_MEDIA_UNMOUNTED");
-                final String path = intent.getDataString();
-                if (path == null || path.isEmpty()) {
-                    return;
-                }
                 updateUsbAndSdcardVisibility();
             }
         }
