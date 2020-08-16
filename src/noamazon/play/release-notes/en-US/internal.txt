@@ -1,11 +1,2 @@
-- Fix video stopping often on arm64 due to latest ffmpeg upstep
-- Better USB disk management on AndroidTV
-- Add sponsor link
-- Fix number of audio tracks limited to 6
-- Fix missing poster on some movies
-- Fix playback not smooth regression on Sony and Philips AndroidTV
-- Stretch mode is back
-- Allow adaptive refresh rate on phones
-- Improve A/V sync for some videos (PTS instead of sample based sync)
-- Scraping improvements
+- Display external storage label/descrition on AndroidTV
 - Stability enhancement

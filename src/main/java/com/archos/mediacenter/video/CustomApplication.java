@@ -72,7 +72,7 @@ public class CustomApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         // The following line triggers the initialization of ACRA
-        //ACRA.init(this);
+        ACRA.init(this);
     }
 
     public static String BASEDIR;

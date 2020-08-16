@@ -130,10 +130,8 @@ public class MainActivityLeanback extends LeanbackActivity {
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             startPreferencesActivity();
-
             return true;
         }
-        
         return super.onKeyLongPress(keyCode, event);
     }
 }
