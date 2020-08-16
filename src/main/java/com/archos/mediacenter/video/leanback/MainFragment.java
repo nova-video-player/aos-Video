@@ -839,19 +839,31 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         if (hasExternal) {
             for(String s : storageManager.getExtSdcards()) {
-                Box item = new Box(Box.ID.SDCARD, getString(R.string.sd_card_storage), R.drawable.filetype_new_sdcard, s);
+                Box item = new Box(Box.ID.SDCARD, getString(R.string.sd_card_storage) + getVolumeDescription(s), R.drawable.filetype_new_sdcard, s);
                 mFileBrowsingRowAdapter.add(item);
             }
             for(String s : storageManager.getExtUsbStorages()) {
-                Box item = new Box(Box.ID.USB, getString(R.string.usb_host_storage), R.drawable.filetype_new_usb, s);
+                Box item = new Box(Box.ID.USB, getString(R.string.usb_host_storage) + getVolumeDescription(s), R.drawable.filetype_new_usb, s);
                 mFileBrowsingRowAdapter.add(item);
             }
             for(String s : storageManager.getExtOtherStorages()) {
-                Box item = new Box(Box.ID.OTHER, getString(R.string.other_storage), R.drawable.filetype_new_folder, s);
+                Box item = new Box(Box.ID.OTHER, getString(R.string.other_storage) + getVolumeDescription(s), R.drawable.filetype_new_folder, s);
                 mFileBrowsingRowAdapter.add(item);
             }
         }
         mFileBrowsingRowAdapter.add(new Box(Box.ID.VIDEOS_BY_LISTS, getString(R.string.video_lists), R.drawable.filetype_new_playlist));
+    }
+
+    private String getVolumeDescription(String s) {
+        ExtStorageManager storageManager = ExtStorageManager.getExtStorageManager();
+        String volLabel = storageManager.getVolumeLabel(s);
+        String volDescr = storageManager.getVolumeDesc(s);
+        String descr = "";
+        if (volDescr != null && ! volDescr.isEmpty()) descr = volDescr;
+        if (volLabel != null && ! volLabel.isEmpty())
+            descr = (descr.isEmpty()) ? volLabel : volLabel + " (" + descr + ")"; // volume label is the primary if it exists otherwise volume description is the one
+        if (! descr.isEmpty()) descr = ": " + descr;
+        return descr;
     }
 
     private void updatePrivateMode(Icon icon) {
