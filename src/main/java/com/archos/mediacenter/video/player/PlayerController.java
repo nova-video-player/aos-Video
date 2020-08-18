@@ -2207,9 +2207,13 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     public int getNavigationBarHeight() {
         int navigationBarHeight = 0;
-        int resourceId = mContext.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-        if (resourceId > 0)
-            navigationBarHeight = mContext.getResources().getDimensionPixelSize(resourceId);
+        Resources resources = mContext.getResources();
+        int resourceIdNavBarHeight = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        int resourceIdNavBarShown = resources.getIdentifier("config_showNavigationBar", "bool", "android");
+        Boolean isNavigationBarShown = resourceIdNavBarShown > 0 && resources.getBoolean(resourceIdNavBarShown);
+        // check if navigation bar is displayed because chromeos reports a navigation_bar_height of 84 but there is none displayed
+        if (resourceIdNavBarHeight > 0 && isNavigationBarShown)
+            navigationBarHeight = resources.getDimensionPixelSize(resourceIdNavBarHeight);
         return navigationBarHeight;
     }
 
