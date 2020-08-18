@@ -28,6 +28,7 @@ public class ISO639codes {
     static private HashMap<String, Integer> sMap = new HashMap<>();
     static {
         sMap.put("ar",  R.string.s_arabic);
+        sMap.put("ara",  R.string.s_arabic);
 
         sMap.put("bg",  R.string.s_bulgarian);
         sMap.put("bul", R.string.s_bulgarian);
@@ -126,6 +127,8 @@ public class ISO639codes {
 
         sMap.put("lt", R.string.s_lithuanian);
         sMap.put("lit", R.string.s_lithuanian);
+
+        sMap.put("ind", R.string.s_indonesian);
     }
 
     /**
