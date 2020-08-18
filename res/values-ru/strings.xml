@@ -104,7 +104,7 @@
     <string name="all_seasons">Все сезоны</string>
     <string name="tvshows_by_alpha">Сериалы по алфавиту</string>
     <string name="tvshows_by_genre">Сериалы по жанру</string>
-    <string name="tvshows_by_rating">ТВ-шоу по рейтингу</string>
+    <string name="tvshows_by_rating">Сериалы по рейтингу</string>
     <string name="episodes_by_date">Серии по дате</string>
     <string name="date_view_week">Неделя</string>
     <string name="date_view_month">Месяц</string>
@@ -208,7 +208,7 @@
     <string name="scraper_no_movie_text">В настоящее время у вас нет постера и описания для ваших фильмов</string>
     <string name="scraper_no_movie_button_label">Поиск информации о фильме</string>
     <string name="scraper_no_tv_show_text">В настоящее время у вас нет постера и описания для ваших сериалов</string>
-    <string name="scraper_no_tv_show_button_label">Поиск информации о ТВ-шоу онлайн</string>
+    <string name="scraper_no_tv_show_button_label">Поиск информации о сериалах онлайн</string>
     <string name="imdb_title_url">https://www.imdb.com/title/</string>
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="storage">Хранилище</string>
@@ -515,7 +515,7 @@
     <string name="preferences_video_about">О программе</string>
     <string name="preferences_video_os_text">Субтитры предоставлены</string>
     <string name="preferences_video_tmdb_text">Информация о фильме предоставлена</string>
-    <string name="preferences_video_tvdb_text">Информация о ТВ-шоу предоставлена</string>
+    <string name="preferences_video_tvdb_text">Информация о сериалах предоставлена</string>
     <string name="preferences_video_trakt_text">Видео скробблер предоставлен</string>
     <string name="preferences_video_licenses">Лицензии</string>
     <string name="preferences_network_mobile_vpn_summary">Используйте только с VPN и не забывайте о передаче мобильных данных</string>
