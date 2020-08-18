@@ -447,7 +447,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
         View volumeBar = v.findViewById(R.id.volume_bar);
         if(ArchosFeatures.isChromeOS(mContext)) {
-            volumeBar.setVisibility(View.GONE);
+            if (volumeBar != null) volumeBar.setVisibility(View.GONE);
             mControlBar.setPadding(0,0,0,0);
             volumeBar = null;
         }
