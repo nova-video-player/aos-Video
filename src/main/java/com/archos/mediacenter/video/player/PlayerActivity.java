@@ -37,6 +37,7 @@ import android.os.Message;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.DisplayCutout;
@@ -996,6 +997,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         displayWidth = point.x;
         displayHeight = point.y;
         display.getSize(point);
+        // note on chromeos pixelbook layoutHeight != displayHeight (2400x1400 instead of 2400x1600)
         layoutWidth = point.x;
         layoutHeight = point.y;
         if (DBG) Log.d(TAG, "updateSizes layoutWidth=" + layoutWidth +
@@ -1003,13 +1005,37 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 ", displayWidth=" + displayWidth +
                 ", displayHeight=" + displayHeight );
         boolean isChromebook = getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
+        // pixelbook returns 0x0 which is obviously wrong: disable for now
+        /*
         if(isChromebook){
             View content = findViewById(android.R.id.content);
             displayWidth = content.getWidth();
             displayHeight = content.getHeight();
 
         }
-        if (DBG) Log.d(TAG, "updateSizes isInMultiWindowMode() :");
+         */
+        // hack to fix chromeos pixelbook and firestick layout size resulting in too high seekbar (2400x1400 instead of 2400x1600)
+        if ((layoutWidth == displayWidth)&&(layoutHeight != displayHeight)) layoutHeight = displayHeight;
+
+        if (DBG) Log.d(TAG, "updateSizes isInMultiWindowMode(): " + isInMultiWindowMode);
+        if (DBG) Log.d(TAG, "updateSizes isInPictureInPictureMode(): " + isInPictureInPictureMode);
+
+        /*
+        // recommended way to get the screen size on chromebook but returns 2600x1400 still...
+        int windowWidthDp = this.getResources().getConfiguration().screenWidthDp;
+        int windowHeightDp = this.getResources().getConfiguration().screenHeightDp;
+
+        // convert into px
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        float logicalDensity = metrics.density;
+        int windowWidthPx = (int) Math.ceil(windowWidthDp * logicalDensity);
+        int windowHeightPx = (int) Math.ceil(windowHeightDp * logicalDensity);
+
+        if (DBG) Log.d(TAG, "updateSizes windowWidthDp=" + windowWidthDp + ", windowHeightDp=" + windowHeightDp +
+                ", windowWidthPx=" + windowWidthPx + ", windowHeightPx=" + windowHeightPx +
+                ", logicaldensity=" + logicalDensity);
+         */
 
         if (!isInPictureInPictureMode&&!isInMultiWindowMode) {
             width = displayWidth;
