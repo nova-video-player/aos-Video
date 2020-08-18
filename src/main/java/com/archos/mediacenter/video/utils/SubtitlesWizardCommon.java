@@ -136,7 +136,7 @@ public class SubtitlesWizardCommon {
 
         try {
             Uri videoUri = Uri.parse(videoPath);
-            List<SubtitleManager.SubtitleFile> list = lister.listLocalAndRemotesSubtitles(videoUri, false, true);
+            List<SubtitleManager.SubtitleFile> list = lister.listLocalAndRemotesSubtitles(videoUri, false, true, false);
 
             // Retrieve the path of each file found and add it to the available subtitles list
             for(SubtitleManager.SubtitleFile sub : list) {
@@ -161,7 +161,7 @@ public class SubtitlesWizardCommon {
 
         try {
             Uri videoUri = Uri.parse(videoPath);
-            List<SubtitleManager.SubtitleFile> list = lister.listLocalAndRemotesSubtitles(videoUri, true, true);
+            List<SubtitleManager.SubtitleFile> list = lister.listLocalAndRemotesSubtitles(videoUri, true, true, false);
 
             // Retrieve the path of each file found and add it to the available subtitles list
             // if it is not already associated to the selected video

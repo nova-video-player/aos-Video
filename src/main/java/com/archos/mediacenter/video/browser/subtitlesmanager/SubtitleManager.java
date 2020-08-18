@@ -383,11 +383,11 @@ public class SubtitleManager {
      * @param video
      * @return
      */
-    public List<SubtitleFile> listLocalAndRemotesSubtitles(Uri video) {
-        return listLocalAndRemotesSubtitles(video, false, false);
+    public List<SubtitleFile> listLocalAndRemotesSubtitles(Uri video, boolean addCache) {
+        return listLocalAndRemotesSubtitles(video, false, false, addCache);
     }
 
-    public List<SubtitleFile> listLocalAndRemotesSubtitles(Uri video, boolean addAllSubs, boolean includeIdx) {
+    public List<SubtitleFile> listLocalAndRemotesSubtitles(Uri video, boolean addAllSubs, boolean includeIdx, boolean addCache) {
         List<MetaFile2> allFiles = new ArrayList<MetaFile2>();
         List<SubtitleFile> subList = new LinkedList<SubtitleFile>();
 
@@ -404,21 +404,23 @@ public class SubtitleManager {
             Log.e(TAG, "listLocalAndRemotesSubtitles: caught JSchException", e);
         }
 
-        // for now do not list files in /sdcard/Android/data/org.courville.nova/cache/subtitles cache online sub download since in theory they should already be associated to a video automatically
-        /*
-        // List files in the local temporary folder
-        String filenameWithoutExtension = stripExtension(video);
-        Uri localSubsDirUri = Uri.fromFile(MediaUtils.getSubsDir(mContext));
-        if (localSubsDirUri!=null) {
-            try {
-                List<MetaFile2> files = RawListerFactoryWithUpnp.getRawListerForUrl(localSubsDirUri).getFileList();
-                for (MetaFile2 file : files) {
-                    if (file.getName().startsWith(filenameWithoutExtension) || addAllSubs)
-                        allFiles.add(file);
+        // addCache controls whether subs in /sdcard/Android/data/org.courville.nova/cache/subtitles (cache online sub download dir) are taken into account
+        // this is for not clogging SubtitlesWizard listing since in theory all these files should already be associated to a video automatically
+        if (addCache) {
+            // List files in the local temporary folder
+            String filenameWithoutExtension = stripExtension(video);
+            Uri localSubsDirUri = Uri.fromFile(MediaUtils.getSubsDir(mContext));
+            if (localSubsDirUri != null) {
+                try {
+                    List<MetaFile2> files = RawListerFactoryWithUpnp.getRawListerForUrl(localSubsDirUri).getFileList();
+                    for (MetaFile2 file : files) {
+                        if (file.getName().startsWith(filenameWithoutExtension) || addAllSubs)
+                            allFiles.add(file);
+                    }
+                } catch (Exception e) {
                 }
-            } catch (Exception e) { }
+            }
         }
-         */
 
         final List<String> SubtitleExtensions = VideoUtils.getSubtitleExtensions();
 

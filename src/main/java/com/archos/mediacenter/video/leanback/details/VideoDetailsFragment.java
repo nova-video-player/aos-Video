@@ -1470,7 +1470,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         protected List<SubtitleManager.SubtitleFile> doInBackground(Video... videos) {
             Video video = videos[0];
             SubtitleManager lister = new SubtitleManager(getActivity(),null );
-            List<SubtitleManager.SubtitleFile> list = lister.listLocalAndRemotesSubtitles(video.getFileUri());
+            List<SubtitleManager.SubtitleFile> list = lister.listLocalAndRemotesSubtitles(video.getFileUri(), true);
             mSubtitleListCache.put(video.getFileUri(), list);
             return list;
         }
