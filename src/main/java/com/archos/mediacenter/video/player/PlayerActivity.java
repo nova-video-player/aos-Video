@@ -804,7 +804,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mPreferences.getBoolean("disable_downmix", false)) // Android is recent enough not to require downmix on phones/tablets
                 LibAvos.setDownmix(0);
             else
-                if(ArchosFeatures.isAndroidTV(this)&&!"AFTM".equals(Build.MODEL))  // no downmix on AndroidTV except if on the firestick
+                if(ArchosFeatures.isAndroidTV(this))  // no downmix on AndroidTV
                     LibAvos.setDownmix(0);
                 else
                     LibAvos.setDownmix(1);
