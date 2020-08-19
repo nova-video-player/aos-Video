@@ -234,7 +234,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private boolean mIsReadytoStart;
     private PermissionChecker mPermissionChecker;
 
-    // safeInset = { safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom};
     public static ArrayList<Integer> safeInset = new ArrayList<Integer>();
     public static int safeInsetRotation;
 
@@ -537,13 +536,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         super.onCreate(icicle);
         mIndexHelper = new IndexHelper(this, LoaderManager.getInstance(this), LOADER_INDEX);
 
-        /*
-        if (android.os.Build.VERSION.SDK_INT > 18){
-            startActivity(new Intent(this, SDKNotSupportedDialogActivity.class));
-            finish();
-            return;
-        }
-         */
         mPermissionChecker = new PermissionChecker();
         mPermissionChecker.setListener(this);
         VideoEffect.resetForcedMode();
@@ -669,8 +661,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 public void onDisplayChanged(int displayId) {
                     orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
                     if(safeInsetRotation != orientation) {
-                        //&& (orientation==Surface.ROTATION_270 && mOldOrientation == Surface.ROTATION_90
-                        //        || orientation==Surface.ROTATION_90 && mOldOrientation == Surface.ROTATION_270))
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -1749,7 +1739,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             final View vPicInPic;
             if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N&& ArchosFeatures.isAndroidTV(this)) {
                 tvmFormat.createAndAddSeparator();
-                 vPicInPic = tvmFormat.createAndAddTVMenuItem(getString(R.string.picture_in_picture), false, false);
+                vPicInPic = tvmFormat.createAndAddTVMenuItem(getString(R.string.picture_in_picture), false, false);
             }
             else vPicInPic = null;
             tvmFormat.setOnItemClickListener(new View.OnClickListener() {
