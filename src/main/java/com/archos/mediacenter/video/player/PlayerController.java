@@ -557,11 +557,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             lock();
     }
 
-    public void setSizes(int layoutWidth, int layoutHeight, int displayWidth, int displayHeight) {
-        if (DBG) Log.d(TAG, "setSizes layout: " + layoutWidth + "x" + layoutHeight + " / display: " + displayWidth + "x" + displayHeight);
-        mSystemBarHeight = displayHeight - layoutHeight;
-        mLayoutWidth = layoutWidth;
-        mLayoutHeight = layoutHeight;
+    public void setSizes(int displayWidth, int displayHeight) {
+        mLayoutWidth = ViewGroup.LayoutParams.MATCH_PARENT;
+        mLayoutHeight = ViewGroup.LayoutParams.MATCH_PARENT;
+        mSystemBarHeight = displayHeight - mLayoutHeight;
+        if (DBG) Log.d(TAG, "setSizes layout: " + mLayoutWidth + "x" + mLayoutHeight + " / display: " + displayWidth + "x" + displayHeight);
         if (mControllerView != null) {
             if (DBG) Log.d(TAG, "setSizes, mControllerView != null, recreate whole layout");
             // size changed and maybe orientation too, recreate the whole layout

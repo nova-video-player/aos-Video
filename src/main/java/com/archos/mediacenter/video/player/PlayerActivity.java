@@ -987,7 +987,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         displayWidth = point.x;
         displayHeight = point.y;
         display.getSize(point);
-        // note on chromeos pixelbook layoutHeight != displayHeight (2400x1400 instead of 2400x1600)
+        // note on chromeos pixelbook point.y when fullscreen only reports a wrong layoutHeight (2400x1400 instead of 2400x1600)
         layoutWidth = point.x;
         layoutHeight = point.y;
         if (DBG) Log.d(TAG, "updateSizes layoutWidth=" + layoutWidth +
@@ -995,37 +995,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 ", displayWidth=" + displayWidth +
                 ", displayHeight=" + displayHeight );
         boolean isChromebook = getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
-        // pixelbook returns 0x0 which is obviously wrong: disable for now
-        /*
-        if(isChromebook){
-            View content = findViewById(android.R.id.content);
-            displayWidth = content.getWidth();
-            displayHeight = content.getHeight();
-
-        }
-         */
-        // hack to fix chromeos pixelbook and firestick layout size resulting in too high seekbar (2400x1400 instead of 2400x1600)
-        if ((layoutWidth == displayWidth)&&(layoutHeight != displayHeight)) layoutHeight = displayHeight;
 
         if (DBG) Log.d(TAG, "updateSizes isInMultiWindowMode(): " + isInMultiWindowMode);
         if (DBG) Log.d(TAG, "updateSizes isInPictureInPictureMode(): " + isInPictureInPictureMode);
-
-        /*
-        // recommended way to get the screen size on chromebook but returns 2600x1400 still...
-        int windowWidthDp = this.getResources().getConfiguration().screenWidthDp;
-        int windowHeightDp = this.getResources().getConfiguration().screenHeightDp;
-
-        // convert into px
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        float logicalDensity = metrics.density;
-        int windowWidthPx = (int) Math.ceil(windowWidthDp * logicalDensity);
-        int windowHeightPx = (int) Math.ceil(windowHeightDp * logicalDensity);
-
-        if (DBG) Log.d(TAG, "updateSizes windowWidthDp=" + windowWidthDp + ", windowHeightDp=" + windowHeightDp +
-                ", windowWidthPx=" + windowWidthPx + ", windowHeightPx=" + windowHeightPx +
-                ", logicaldensity=" + logicalDensity);
-         */
 
         if (!isInPictureInPictureMode&&!isInMultiWindowMode) {
             width = displayWidth;
@@ -1046,23 +1018,17 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mSubtitleManager.setScreenSize(width, height);
         if(!isInPictureInPictureMode) {
             if (DBG) Log.d(TAG, "updateSizes mPlayerController.setSizes layoutWidth=" + layoutWidth +", layoutHeight=" + layoutHeight + ", displayWidth=" + displayWidth + ", displayHeight=" + displayHeight );
-            int orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-            if(orientation == Surface.ROTATION_270) {
-                // TODO: in this case stretch the layoutWidth to go over the safeInsetRight (cutout) only if there is no overlap. For this iterate through all the cutout Rects.
-                //ImageButton switchFormat = (ImageButton) findViewById(R.id.format);
-                //mPlayerController.setSizes(layoutWidth + safeInsetRight, layoutHeight, displayWidth, displayHeight);
-                mPlayerController.setSizes(layoutWidth, layoutHeight, displayWidth, displayHeight);
-            } else {
-                mPlayerController.setSizes(layoutWidth, layoutHeight, displayWidth, displayHeight);
-            }
+            mPlayerController.setSizes(displayWidth, displayHeight);
             // Close the menus if needed
             mAudioInfoController.resetPopup();
             mSubtitleInfoController.resetPopup();
         }
+        // TODO MARC if windowMode then make buttons visible even on android tv or do not shift up seekbar
         int size = mPreferences.getInt(KEY_SUBTITLE_SIZE, mSubtitleSizeDefault);
         int vpos = mPreferences.getInt(KEY_SUBTITLE_VPOS, mSubtitleVPosDefault);
-        if(isInPictureInPictureMode) { //proportional size
+        if(isInPictureInPictureMode||isInMultiWindowMode) { //proportional size
             size = (int) ((layoutWidth / (float)(displayHeight<displayWidth?displayWidth:displayHeight)) * size);
+            // note that in multiwindow mode chromeos returns correct height but not in full screen thus it works here
             vpos = (int) ((layoutHeight / (float)(displayHeight<displayWidth?displayHeight:displayWidth)) * vpos);
         }
         mSubtitleManager.setSize(size);
