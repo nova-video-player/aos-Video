@@ -124,6 +124,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.archos.environment.ArchosFeatures.isChromeOS;
+
 
 public class PlayerActivity extends AppCompatActivity implements PlayerController.Settings,
 SubtitleDelayPickerDialog.OnDelayChangeListener, AudioDelayPickerDialog.OnAudioDelayChangeListener,
@@ -976,25 +978,33 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         super.onDestroy();
     }
 
-    @SuppressLint("NewApi") // XXX
     private void updateSizes() {
         boolean isInPictureInPictureMode = Build.VERSION.SDK_INT>=Build.VERSION_CODES.N&&isInPictureInPictureMode();
         boolean isInMultiWindowMode = Build.VERSION.SDK_INT>=Build.VERSION_CODES.N&&isInMultiWindowMode();
         Display display = getWindowManager().getDefaultDisplay();
         int width, height, layoutWidth, layoutHeight, displayWidth, displayHeight;
         Point point = new Point();
+        // returns the real screen dimension
         display.getRealSize(point);
         displayWidth = point.x;
         displayHeight = point.y;
+        // returns the available dimension (real screen size minus decors): this is needed on phones, cannot only matchParent
         display.getSize(point);
-        // note on chromeos pixelbook point.y when fullscreen only reports a wrong layoutHeight (2400x1400 instead of 2400x1600)
+        // note on chromeos pixelbook point.y when fullscreen only reports a wrong layoutHeight (2400x1400 instead of 2400x1600) as if there are hidden decors
+        // status bar | action bar | navigation bar, system bar = status bar + navigation bar
         layoutWidth = point.x;
         layoutHeight = point.y;
+
+        // hack to fix fullscreen height on chromeos pixelbook (and more?) since it reports 2400x1440 insteqd of 2400x1600 but ok in multiWindow
+        if(isChromeOS(mContext)&&(layoutWidth == displayWidth)&&(layoutHeight != displayHeight)) {
+            Log.w(TAG, "updateSizes: correcting on chromeOS layoutHeight from " + layoutHeight + " to " + displayHeight);
+            layoutHeight = displayHeight;
+        }
+
         if (DBG) Log.d(TAG, "updateSizes layoutWidth=" + layoutWidth +
-                ", layoutHeight=" + layoutHeight +
-                ", displayWidth=" + displayWidth +
-                ", displayHeight=" + displayHeight );
-        boolean isChromebook = getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
+            ", layoutHeight=" + layoutHeight +
+            ", displayWidth=" + displayWidth +
+            ", displayHeight=" + displayHeight );
 
         if (DBG) Log.d(TAG, "updateSizes isInMultiWindowMode(): " + isInMultiWindowMode);
         if (DBG) Log.d(TAG, "updateSizes isInPictureInPictureMode(): " + isInPictureInPictureMode);
@@ -1008,7 +1018,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         }
 
         if (DBG) Log.d(TAG, "updateSizes trueFullscreen true size: " + width+"x"+height);
-        if(!isChromebook) { //keeping things as it was on other devices
+        if(!isChromeOS(mContext)) { //keeping things as it was on other devices
             ViewGroup.LayoutParams lp = mRootView.getLayoutParams();
             lp.width = width;
             lp.height = height;
@@ -1018,12 +1028,11 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mSubtitleManager.setScreenSize(width, height);
         if(!isInPictureInPictureMode) {
             if (DBG) Log.d(TAG, "updateSizes mPlayerController.setSizes layoutWidth=" + layoutWidth +", layoutHeight=" + layoutHeight + ", displayWidth=" + displayWidth + ", displayHeight=" + displayHeight );
-            mPlayerController.setSizes(displayWidth, displayHeight);
+            mPlayerController.setSizes(displayWidth, displayHeight, layoutWidth, layoutHeight);
             // Close the menus if needed
             mAudioInfoController.resetPopup();
             mSubtitleInfoController.resetPopup();
         }
-        // TODO MARC if windowMode then make buttons visible even on android tv or do not shift up seekbar
         int size = mPreferences.getInt(KEY_SUBTITLE_SIZE, mSubtitleSizeDefault);
         int vpos = mPreferences.getInt(KEY_SUBTITLE_VPOS, mSubtitleVPosDefault);
         if(isInPictureInPictureMode||isInMultiWindowMode) { //proportional size

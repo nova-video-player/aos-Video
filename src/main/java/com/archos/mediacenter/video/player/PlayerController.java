@@ -557,11 +557,13 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             lock();
     }
 
-    public void setSizes(int displayWidth, int displayHeight) {
-        mLayoutWidth = ViewGroup.LayoutParams.MATCH_PARENT;
-        mLayoutHeight = ViewGroup.LayoutParams.MATCH_PARENT;
+    public void setSizes(int displayWidth, int displayHeight, int layoutWidth, int layoutHeight) {
+        // to debug nvplog | grep Player | grep -i -E 'size|height|width'
+        // on phones layoutWidth is smaller than MATCH_PARENT by navigationBarHeight thus cannot use ViewGroup.LayoutParams.MATCH_PARENT=-1
+        mLayoutWidth = layoutWidth;
+        mLayoutHeight = layoutHeight;
         mSystemBarHeight = displayHeight - mLayoutHeight;
-        if (DBG) Log.d(TAG, "setSizes layout: " + mLayoutWidth + "x" + mLayoutHeight + " / display: " + displayWidth + "x" + displayHeight);
+        if (DBG) Log.d(TAG, "setSizes layout: " + mLayoutWidth + "x" + mLayoutHeight + " / display: " + displayWidth + "x" + displayHeight + ", systemBarHeight: " + mSystemBarHeight);
         if (mControllerView != null) {
             if (DBG) Log.d(TAG, "setSizes, mControllerView != null, recreate whole layout");
             // size changed and maybe orientation too, recreate the whole layout
@@ -570,6 +572,17 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         } else {
             if (DBG) Log.d(TAG, "setSizes, mControllerView == null, doing nothing");
         }
+    }
+
+    public int getNavigationBarHeight() {
+        int navigationBarHeight = 0;
+        Resources resources = mContext.getResources();
+        int resourceIdNavBarHeight = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        // check if navigation bar is displayed because chromeos reports a navigation_bar_height of 84 but there is none displayed
+        if (resourceIdNavBarHeight > 0 && hasNavigationBar(resources))
+            navigationBarHeight = resources.getDimensionPixelSize(resourceIdNavBarHeight);
+        if (DBG) Log.d(TAG, "getNavigationBarHeight: navigationBarHeight=" + navigationBarHeight);
+        return navigationBarHeight;
     }
 
     private void attachWindow() {
@@ -616,6 +629,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         playerControllersContainer = (FrameLayout)mControllerView.findViewById(R.id.playerControllersContainer);
         playerControllersContainer.addView(mControllerViewLeft);
 
+        if (DBG) Log.d(TAG, "attachWindow: layout WxH " + mLayoutHeight + "x" + mLayoutWidth);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mLayoutWidth, mLayoutHeight);
         mPlayerView.addView(mControllerView, params);
         if (DBG) Log.d(TAG, "attachWindow, updateOrientation();");
@@ -2205,23 +2219,17 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         return result;
     }
 
-    public int getNavigationBarHeight() {
-        int navigationBarHeight = 0;
-        Resources resources = mContext.getResources();
-        int resourceIdNavBarHeight = resources.getIdentifier("navigation_bar_height", "dimen", "android");
-        int resourceIdNavBarShown = resources.getIdentifier("config_showNavigationBar", "bool", "android");
-        Boolean isNavigationBarShown = resourceIdNavBarShown > 0 && resources.getBoolean(resourceIdNavBarShown);
-        // check if navigation bar is displayed because chromeos reports a navigation_bar_height of 84 but there is none displayed
-        if (resourceIdNavBarHeight > 0 && isNavigationBarShown)
-            navigationBarHeight = resources.getDimensionPixelSize(resourceIdNavBarHeight);
-        return navigationBarHeight;
+    private static boolean hasNavigationBar(Resources resources) {
+        int navBarId = resources.getIdentifier("config_showNavigationBar", "bool", "android");
+        if (DBG) Log.d(TAG, "hasNavigationBar: navBarId=" + navBarId + ", hasNavBar=" + resources.getBoolean(navBarId));
+        return navBarId > 0 && resources.getBoolean(navBarId);
     }
 
     public boolean isNavBarAtBottom() {
         // detect navigation bar orientation https://stackoverflow.com/questions/21057035/detect-android-navigation-bar-orientation
         final boolean isNavAtBottom = (mContext.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE)
                 || (mContext.getResources().getConfiguration().smallestScreenWidthDp >= 600);
-        if (DBG) Log.d(TAG, "setSizes: NavBarAtBottom=" + isNavAtBottom);
+        if (DBG) Log.d(TAG, "isNavBarAtBottom: NavBarAtBottom=" + isNavAtBottom);
         return isNavAtBottom;
     }
 
