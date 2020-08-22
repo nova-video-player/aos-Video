@@ -245,7 +245,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private void switchAdvancedPreferences() {
         PreferenceCategory prefCategory = (PreferenceCategory) findPreference("preferences_category_video");
         PreferenceCategory aboutCategory = (PreferenceCategory) findPreference(KEY_ABOUT_CATEGORY);
-        if (!ArchosFeatures.isTV(getActivity())) { // not a TV
+        if (!ArchosFeatures.isAndroidTV(getActivity())) { // not a TV
             prefCategory.removePreference(mActivate3DTVSwitch);
             if (REFRESHRATE_FORALL) prefCategory.addPreference(mActivateRefreshrateTVSwitch);
             else prefCategory.removePreference(mActivateRefreshrateTVSwitch);
