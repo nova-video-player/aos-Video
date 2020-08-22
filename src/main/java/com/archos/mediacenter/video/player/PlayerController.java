@@ -71,6 +71,7 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.Locale;
 
+import static com.archos.environment.ArchosFeatures.isChromeOS;
 
 /**
  * A view containing controls for a MediaPlayer. Typically contains the
@@ -446,7 +447,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }
 
         View volumeBar = v.findViewById(R.id.volume_bar);
-        if(ArchosFeatures.isChromeOS(mContext)) {
+        if(isChromeOS(mContext)) {
             if (volumeBar != null) volumeBar.setVisibility(View.GONE);
             mControlBar.setPadding(0,0,0,0);
             volumeBar = null;
@@ -517,7 +518,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             mSeekState = v.findViewById(R.id.seek_state);
             mCurrentTime = (TextView) v.findViewById(R.id.time_current);
             // The clock is only for actual leanback devices
-            if (mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK)) {
+            if (mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK) || isChromeOS(mContext)) {
+                if (DBG) Log.d(TAG, "initControllerView: FEATURE_LEANBACK");
                 mClock = (TextView) v.findViewById(R.id.clock);
                 if(mClock!=null) {
                     // in the player we change the typeface and add shadow to improve visibility over the video plane
@@ -531,7 +533,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     }
                     updateClock();
                 }
-            }
+            } else if (DBG) Log.d(TAG, "initControllerView: no FEATURE_LEANBACK");
         }
         else{
             this.mUnlockInstructions2 = unlockInstructions;

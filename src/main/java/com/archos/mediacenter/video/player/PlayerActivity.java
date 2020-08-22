@@ -861,7 +861,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         super.onResume();
         if (DBG) Log.d(TAG, "onResume");
         // Clock (for leanback devices only)
-        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK)) {
+        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK) || isChromeOS(mContext)) {
             registerReceiver(mClockReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
         }
         PlayerBrightnessManager.getInstance().restoreBrightness(this);
@@ -897,7 +897,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         super.onPause();
         if (DBG) Log.d(TAG, "onPause");
         // Clock (for leanback devices only)
-        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK)) {
+        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK) || isChromeOS(mContext)) {
             unregisterReceiver(mClockReceiver);
         }
         if (ArchosFeatures.isAndroidTV(this)) {
@@ -997,7 +997,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         // hack to fix fullscreen height on chromeos pixelbook (and more?) since it reports 2400x1440 insteqd of 2400x1600 but ok in multiWindow
         if(isChromeOS(mContext)&&(layoutWidth == displayWidth)&&(layoutHeight != displayHeight)) {
-            Log.w(TAG, "updateSizes: correcting on chromeOS layoutHeight from " + layoutHeight + " to " + displayHeight);
+            Log.w(TAG, "updateSizes: hack correcting on chromeOS layoutHeight from " + layoutHeight + " to " + displayHeight);
             layoutHeight = displayHeight;
         }
 
@@ -1712,7 +1712,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     ((TVMenu)tvmFormat.getSlaveView()).getItem(1).setVisibility(View.GONE);
             }
             final View vPicInPic;
-            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N&& ArchosFeatures.isAndroidTV(this)) {
+            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N && ArchosFeatures.isAndroidTV(this)) {
                 tvmFormat.createAndAddSeparator();
                 vPicInPic = tvmFormat.createAndAddTVMenuItem(getString(R.string.picture_in_picture), false, false);
             }
@@ -2202,7 +2202,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         try {
             // When on an actual leanback device (Android TV, etc.) we give no choice -> Leanback!
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK)) {
+            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK) || isChromeOS(mContext)) {
                 infoActivity = getClassLoader().loadClass("com.archos.mediacenter.video.leanback.details.VideoDetailsOverlayActivity");
             }
             else {
