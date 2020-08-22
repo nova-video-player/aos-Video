@@ -41,6 +41,7 @@ public class TVUtils {
             return false;
         if (mode.equals("2"))
             return true;
-        return ArchosFeatures.isTV(ct);
+        // make chromeOS considered as being TV
+        return (ArchosFeatures.isAndroidTV(ct) || ArchosFeatures.isChromeOS(ct));
     }
 }
