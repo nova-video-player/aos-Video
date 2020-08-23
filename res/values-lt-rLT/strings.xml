@@ -336,6 +336,7 @@
     <string name="s_chinese">Kinų</string>
     <string name="s_vietnamese">Vietnamiečių</string>
     <string name="s_lithuanian">Lietuvių</string>
+    <string name="s_indonesian">Indoneziečių</string>
     <string name="s_none">Nėra</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Negalima leisti video</string>

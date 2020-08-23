@@ -316,6 +316,7 @@
     <string name="s_chinese">Čínština</string>
     <string name="s_vietnamese">Vietnamština</string>
     <string name="s_lithuanian">Litevština</string>
+    <string name="s_indonesian">Indonéština</string>
     <string name="s_none">Žádný</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Video nelze přehrát</string>

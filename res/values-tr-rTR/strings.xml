@@ -339,6 +339,7 @@ izlenen bölümler %d</item>
     <string name="s_chinese">Çince</string>
     <string name="s_vietnamese">Vietnamca</string>
     <string name="s_lithuanian">Litvanyalı</string>
+    <string name="s_indonesian">Indonesian</string>
     <string name="s_none">Boş</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Video oynatılamıyor</string>
@@ -407,6 +408,10 @@ desteklenmiyor.</string>
     <string name="dialog_subloader_nonetwork_title">İnternet bağlantısı yok</string>
     <string name="dialog_subloader_nonetwork_message">Altyazıları indirmek için internet bağlantısı gereklidir</string>
     <string name="dialog_subloader_connecting">Www.opensubtitles.org sitesine bağlanıyor…</string>
+    <string name="dialog_subloader_credentials">Altyazı kimlik bilgilerini açar</string>
+    <string name="dialog_subloader_credentials_empty">Geçerli bir kullanıcı adı ve şifre belirlemelisiniz!</string>
+    <string name="toast_subloader_credentials_empty">Altyazıları indirebilmek için ayarlarda açılan altyazı kimlik bilgilerinizi sağlayın</string>
+    <string name="toast_subloader_login_failed">Yanlış açık altyazı kimlik bilgileri veya hizmet mevcut değil</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Altyazı Ayarları</string>
     <string name="subtitle_sample_text">\"örnekleme\"</string>
@@ -498,11 +503,15 @@ desteklenmiyor.</string>
     <string name="preferences_allow_3rd_party_player_summary">Video oynatımı başlatılırken Android tarafından diğer uyumlu video oynatıcı uygulamaları önerilecektir. Bazı özelliklerin çalışmadığını unutmayın (özgeçmiş, yer imleri vb.)</string>
     <string name="preference_tv_3d_automatic_switch">Otomatik 3D TV anahtarını etkinleştir</string>
     <string name="preference_tv_3d_automatic_switch_summary">Bu özelliği yalnızca 3D TV\'niz destekliyorsa kullanın</string>
+    <string name="preference_tv_refreshrate_switch">Otomatik yenileme hızı anahtarını etkinleştirin</string>
+    <string name="preference_tv_refreshrate_switch_summary">En iyi ekran yenileme hızını video kare hızına uyarlayarak titreme efektini kaldırın (cihaz desteği değişiklik gösterebilir)</string>
     <string name="preference_cutout_short_edges">Ekran kesimli tam ekran video</string>
     <string name="preference_cutout_short_edges_summary">Kesikli yatay tam ekran videoya izin ver</string>
     <string name="category_languages">Altyazı</string>
     <string name="subtitles_hide_default">Varsayılan olarak altyazıları gizle</string>
     <string name="subtitles_hide_default_summary">Varsayılan olarak altyazıları gizlemek isteyip istemediğinizi kontrol edin</string>
+    <string name="subtitles_credentials_title">Altyazı kimlik bilgilerini aç</string>
+    <string name="subtitles_credentials_summary">Altyazıları indirebilmek için açık altyazı kimlik bilgilerinizi sağlayın</string>
     <string name="preferences_languages">Altyazı indirme dilleri</string>
     <string name="summary_list_preference_primary">Altyazıları indirmek için dillerinizi seçin</string>
     <string name="favSubLang_title">Altyazı okuma dili</string>
@@ -546,6 +555,7 @@ desteklenmiyor.</string>
     <string name="format_fullscreen">Tam Ekran</string>
     <string name="format_optimized">Optimize edildi</string>
     <string name="format_original">Orjinal</string>
+    <string name="format_stretched">Gergin</string>
     <string name="stereo_dive_enable">Stereo dalış efekti</string>
     <string name="stereo_dive_disable">Stereo dalış efektini devre dışı bırak</string>
     <string name="rotation_unlock">Otomatik ekran döndürmeyi etkinleştir</string>
@@ -565,6 +575,8 @@ desteklenmiyor.</string>
     <string name="network_thumbnails">Küçük resimler oluştur</string>
     <string name="network_thumbnails_summary">Poster yokken uzak videolardan küçük resimler oluşturun</string>
     <string name="network_bookmarks_summary">Mümkün olduğunda ağdaki devam noktası ve konum yer işaretlerini kaydedin ve kontrol edin</string>
+    <string name="share_folders_smbv2">SMBv2 desteğini etkinleştir</string>
+    <string name="share_folders_smbv2_summary">Ağ paylaşımı SMB sürüm 2 protokol desteğini etkinleştirin. ⚠ Deneysel, video oynatmanın başlatılamamasına neden olabilir</string>
     <string name="connection_abnormally_long">Bağlantı anormal derecede uzun görünüyor. Sıfırlamak ister misiniz?</string>
     <string name="connection_reset">Sıfırla</string>
     <!-- Info dialog, not indexed file -->
@@ -835,4 +847,7 @@ desteklenmiyor.</string>
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">İstenen yenileme hızı ayarlanamadı</string>
+    <string name="sponsor">Nova Sponsoru</string>
+    <string name="enable_sponsor_title">Nova sponsor bağlantısını etkinleştir</string>
+    <string name="enable_sponsor_summary">Bağışlar için sponsor bağlantısını etkinleştirin: her katkı yardımcı olur.</string>
 </resources>

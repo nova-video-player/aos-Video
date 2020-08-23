@@ -328,6 +328,7 @@
     <string name="s_chinese">Chinês</string>
     <string name="s_vietnamese">Vietnamita</string>
     <string name="s_lithuanian">Lituano</string>
+    <string name="s_indonesian">Indonésio</string>
     <string name="s_none">Nenhum</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Não é possível reproduzir vídeo</string>

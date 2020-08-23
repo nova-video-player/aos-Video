@@ -329,6 +329,7 @@ Copertina (rotolo di copertina)</string>
     <string name="s_chinese">Cinese</string>
     <string name="s_vietnamese">Vietnamita</string>
     <string name="s_lithuanian">Lituano</string>
+    <string name="s_indonesian">Indonesiano</string>
     <string name="s_none">Nessuna</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Impossibile riprodurre il video</string>
@@ -490,6 +491,8 @@ Copertina (rotolo di copertina)</string>
     <string name="preferences_allow_3rd_party_player_summary">Altri lettori video verranno proposti da Android durante la riproduzione di un filmato. Alcune funzioni potrebbero non funzionare (riprendi, segnalibri, etc.)</string>
     <string name="preference_tv_3d_automatic_switch">Abilita lo switch 3D automatico</string>
     <string name="preference_tv_3d_automatic_switch_summary">Usa questa funzione solo se la tua TV 3D la supporta</string>
+    <string name="preference_tv_refreshrate_switch">Abilita lo switch refresh rate automatico</string>
+    <string name="preference_tv_refreshrate_switch_summary">Rimuovere l\'effetto judder adattando la migliore frequenza di aggiornamento dello schermo alla frequenza del video (supporto dispositivo può variare)</string>
     <string name="preference_cutout_short_edges">Video a schermo intero con i ritagli</string>
     <string name="preference_cutout_short_edges_summary">Consenti video a schermo intero in modalità schermo intero con ritagli</string>
     <string name="category_languages">Sottotitoli</string>
@@ -834,4 +837,6 @@ Copertina (rotolo di copertina)</string>
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Impossibile impostare la frequenza di aggiornamento desiderata</string>
     <string name="sponsor">Supporta Nova</string>
+    <string name="enable_sponsor_title">Abilita il sponsor link di Nova</string>
+    <string name="enable_sponsor_summary">Abilita il sponsor link per le donazioni: ogni contributo aiuta.</string>
 </resources>
