@@ -251,6 +251,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
         langDefault.add("system");
         Set<String> languages = sharedPreferences.getStringSet("languages_list", langDefault);
         final ArrayList<String> languageDefault = new ArrayList<String>(languages);
+        if (DBG) Log.d(TAG, "getSubLangValue: langDefault=" + languageDefault.toString());
         langDefault = null;
         languages = null;
         return languageDefault;
@@ -473,6 +474,9 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                             subLanguageID = ((HashMap<String, String>) subtitleMaps[i]).get("SubLanguageID");
                             subDownloadLink = ((HashMap<String, String>) subtitleMaps[i]).get("SubDownloadLink");
                             fileUrl = index.get(movieHash);
+                            if (DBG) Log.d(TAG, "getSubtitles: 1st pass, fileURL=" + fileUrl +
+                                    ", subDownloadLink=" + subDownloadLink +
+                                    ", subLanguageID=" + subLanguageID);
                             if (fileUrl == null) {
                                 //publishProgress(new Integer[]{++progress, fileUrls.size()});
                                 publishProgress(i, subtitleMaps.length);
@@ -498,6 +502,8 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                                 publishProgress(i, subtitleMaps.length);
                             }
                         }
+                    } else {
+                        if (DBG) Log.d(TAG, "getSubtitles: no result for 1st pass");
                     }
                 }
             }
@@ -544,6 +550,9 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                             movieReleaseName = ((HashMap<String, String>) subtitleMaps[i])
                                     .get("MovieReleaseName");
                             fileUrl = index.get(movieReleaseName);
+                            if (DBG) Log.d(TAG, "getSubtitles: 2nd pass, fileURL=" + fileUrl +
+                                    ", subDownloadLink=" + subDownloadLink +
+                                    ", subLanguageID=" + subLanguageID);
                             if (fileUrl == null){ //we keep only result for exact matching name
                                 publishProgress(i, subtitleMaps.length);
                                 continue;
@@ -568,6 +577,8 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                                 publishProgress(i, subtitleMaps.length);
                             }
                         }
+                    } else {
+                        if (DBG) Log.d(TAG, "getSubtitles: no result for 2nd pass");
                     }
                 } else
                     if (DBG) Log.d(TAG, "FAIL " + map.get("data"));
@@ -606,6 +617,8 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                                 askSubChoice(fileUrls.get(0),finalSubtitleMaps,languages.size()>1, !success.isEmpty());
                             }
                         });
+                    } else {
+                        if (DBG) Log.d(TAG, "getSubtitles: no result for 3rd pass");
                     }
                 } else
                 if (DBG) Log.d(TAG, "FAIL " + map.get("data"));
@@ -643,6 +656,8 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                                 askSubChoice(fileUrls.get(0),finalSubtitleMaps,languages.size()>1, !success.isEmpty());
                             }
                         });
+                    } else {
+                        if (DBG) Log.d(TAG, "getSubtitles: no result for 4th pass");
                     }
                 } else
                 if (DBG) Log.d(TAG, "FAIL " + map.get("data"));
