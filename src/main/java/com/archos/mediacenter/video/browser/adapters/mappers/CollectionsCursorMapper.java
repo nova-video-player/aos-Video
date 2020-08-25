@@ -16,11 +16,9 @@ package com.archos.mediacenter.video.browser.adapters.mappers;
 
 import android.database.Cursor;
 import android.net.Uri;
-import android.provider.BaseColumns;
 
 import com.archos.mediacenter.video.browser.adapters.object.Collection;
-import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
-import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
+import com.archos.mediacenter.video.browser.loader.CollectionsLoader;
 import com.archos.mediaprovider.video.VideoStore;
 
 public class CollectionsCursorMapper implements CompatibleCursorMapper {
@@ -28,59 +26,38 @@ public class CollectionsCursorMapper implements CompatibleCursorMapper {
     int mIdColumn;
     int mNameColumn;
     int mPosterPathColumn;
-    int mSeasonCountColumn;
-    int mEpisodeCountColumn;
-    int mEpisodeWatchedCountColumn;
+    int mCollectionCountColumn;
     int mTraktSeenColumn;
     int mTraktLibraryColumn;
-    int mActorsColumn;
-    int mYearColumn;
     int mPlotColumn;
-    int mStudioColumn;
-    int mRatingColumn;
     int mPinnedColumn;
 
     public CollectionsCursorMapper() {
     }
 
-
     public void bindColumns(Cursor cursor) {
         mIdColumn = cursor.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_C_ID);
         mNameColumn = cursor.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_C_NAME);
         mPosterPathColumn = cursor.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE);
-        //mSeasonCountColumn = cursor.getColumnIndexOrThrow(AllTvshowsLoader.COLUMN_SEASON_COUNT);
-        //mEpisodeCountColumn = cursor.getColumnIndexOrThrow(AllTvshowsLoader.COLUMN_EPISODE_COUNT);
-        //mEpisodeWatchedCountColumn = cursor.getColumnIndex(AllTvshowsLoader.COLUMN_EPISODE_WATCHED_COUNT);
+        mCollectionCountColumn = cursor.getColumnIndexOrThrow(CollectionsLoader.COLUMN_COLLECTION_COUNT);
         mTraktSeenColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN);
         mTraktLibraryColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.ARCHOS_TRAKT_LIBRARY);
-        //mYearColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_S_PREMIERED);
-        //mStudioColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_S_STUDIOS);
         mPlotColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_C_DESCRIPTION);
-        //mActorsColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_E_ACTORS);
-        //mRatingColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_S_RATING);
         mPinnedColumn = cursor.getColumnIndex(VideoStore.Video.VideoColumns.NOVA_PINNED);
     }
-
 
     public Object bind(Cursor cursor) {
         return new Collection(
                 cursor.getLong(mIdColumn),
                 cursor.getString(mNameColumn),
                 getPosterUri(cursor),
-                cursor.getInt(mSeasonCountColumn),
-                cursor.getInt(mEpisodeCountColumn),
-                mEpisodeWatchedCountColumn != -1 ? cursor.getInt(mEpisodeWatchedCountColumn) : -1,
+                cursor.getInt(mCollectionCountColumn),
                 VideoCursorMapper.isTraktSeenOrLibrary(cursor, mTraktSeenColumn),
                 VideoCursorMapper.isTraktSeenOrLibrary(cursor, mTraktLibraryColumn),
                 cursor.getString(mPlotColumn),
-                cursor.getString(mStudioColumn),
-                cursor.getString(mActorsColumn),
-                cursor.getInt(mYearColumn),
-                cursor.getFloat(mRatingColumn),
                 mPinnedColumn != -1 ? cursor.getLong(mPinnedColumn) : -1
         );
     }
-
 
     private Uri getPosterUri(Cursor c) {
         String path = c.getString(mPosterPathColumn);

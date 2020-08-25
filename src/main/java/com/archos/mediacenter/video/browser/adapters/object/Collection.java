@@ -36,26 +36,23 @@ public class Collection extends Base implements Serializable {
     private final String mCollDescription;
     private long mCollId;
     private int mCollMovieCount;
-    private int mCollMovieWatchedCount;
 
     private long mPinned;
 
-    // TODO MARC: stored in movietags but perhaps collectiontags?
     /**
      * Not computed by this class but only a place to store it.
      * Need to be set with setShowTags()
      */
     private ShowTags mShowTags;
 
-    public Collection(long collId, String collName, Uri posterUri, int collMovieCount, int collMovieWatchedCount) {
-        this(collId, collName, posterUri, collMovieCount, collMovieWatchedCount, false, false, null, 0);
+    public Collection(long collId, String collName, Uri posterUri, int collMovieCount) {
+        this(collId, collName, posterUri, collMovieCount, false, false, null, 0);
     }
 
     public Collection(long collId,
                   String collName,
                   Uri posterUri,
                   int collMovieCount,
-                  int collMovieWatchedCount,
                   boolean traktSeen,
                   boolean traktLibrary,
                   String collDescription,
@@ -63,7 +60,6 @@ public class Collection extends Base implements Serializable {
         super(collName, posterUri);
         mCollId = collId;
         mCollMovieCount = collMovieCount;
-        mCollMovieWatchedCount = collMovieWatchedCount;
         mIsTraktSeen = traktSeen;
         mIsTraktLibrary = traktLibrary;
         mCollDescription = collDescription;
@@ -78,14 +74,6 @@ public class Collection extends Base implements Serializable {
         return mCollMovieCount;
     }
 
-    public int getCollectionMovieWatchedCount() {
-        return mCollMovieWatchedCount;
-    }
-
-    public boolean isWatched() {
-        return mCollMovieWatchedCount>=mCollMovieCount;
-    }
-
     public boolean isPinned() {
         return mPinned > 0;
     }
@@ -94,7 +82,8 @@ public class Collection extends Base implements Serializable {
         return mCollId;
     }
 
-    // TODO MARC: buildCollectionTags and rework scraping
+    // TODO MARC: choice not creating tags since in movie already --> remove this since should not be used
+    /*
     @Override
     public BaseTags getFullScraperTags(Context context) {
         return TagsFactory.buildShowTags(context, mCollId);
@@ -103,14 +92,17 @@ public class Collection extends Base implements Serializable {
     public void setShowTags(ShowTags showTags) {
         mShowTags = showTags;
     }
+     */
 
     /**
      *
      * @return null if you did not set the show tags with @link:setShowTags before
      */
+    /*
     public ShowTags getShowTags() {
         return mShowTags;
     }
+     */
 
     public boolean isTraktSeen() {
         return mIsTraktSeen;

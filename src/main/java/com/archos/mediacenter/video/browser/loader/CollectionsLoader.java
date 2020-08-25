@@ -58,6 +58,7 @@ public class CollectionsLoader extends VideoLoader {
                 VideoStore.Video.VideoColumns.SCRAPER_C_ID + " AS " + BaseColumns._ID,
                 VideoStore.Video.VideoColumns.SCRAPER_C_NAME,
                 VideoStore.Video.VideoColumns.SCRAPER_C_DESCRIPTION,
+                "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_C_ID + ") AS " + COLUMN_COLLECTION_COUNT,
                 VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE,
                 VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_THUMB_FILE,
                 VideoStore.Video.VideoColumns.SCRAPER_C_BACKDROP_LARGE_FILE,

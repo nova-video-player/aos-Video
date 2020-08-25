@@ -55,6 +55,11 @@
     <dimen name="all_tvshows_icon_poster_width">50dip</dimen> <!-- equals all_tvshows_icon_width/4 (icon width contains 4 posters) -->
     <dimen name="all_tvshows_icon_poster_height">75dip</dimen> <!-- equals all_tvshows_icon_height/2 (icon height contains 2 posters) -->
 
+    <dimen name="all_collections_icon_width">200dip</dimen> <!-- equals box_width -->
+    <dimen name="all_collections_icon_height">150dip</dimen> <!-- equals all_collections_icon_width/4 * 2 * 1.5 (icon is composed of 2 lines of 4 posters that have 3/2 ratio) -->
+    <dimen name="all_collections_icon_poster_width">50dip</dimen> <!-- equals all_collections_icon_width/4 (icon width contains 4 posters) -->
+    <dimen name="all_collections_icon_poster_height">75dip</dimen> <!-- equals all_collections_icon_height/2 (icon height contains 2 posters) -->
+
     <dimen name="smbshortcut_width">210dip</dimen>
     <dimen name="smbshortcut_height">120dip</dimen>
 

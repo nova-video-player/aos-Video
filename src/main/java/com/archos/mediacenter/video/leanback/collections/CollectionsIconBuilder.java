@@ -58,8 +58,8 @@ public class CollectionsIconBuilder {
 
     public CollectionsIconBuilder(Context context) {
         mContext = context;
-        mWidth  = context.getResources ().getDimensionPixelSize(R.dimen.all_movies_icon_width);
-        mHeight  = context.getResources ().getDimensionPixelSize(R.dimen.all_movies_icon_height);
+        mWidth  = context.getResources ().getDimensionPixelSize(R.dimen.all_collections_icon_width);
+        mHeight  = context.getResources ().getDimensionPixelSize(R.dimen.all_collections_icon_height);
     }
 
     public Bitmap buildNewBitmap() {
@@ -116,7 +116,7 @@ public class CollectionsIconBuilder {
 
     private Bitmap composeBitmap(List<String> posters) {
 
-        View compositionView  = LayoutInflater.from(mContext).inflate(R.layout.all_movies_icon, null);
+        View compositionView  = LayoutInflater.from(mContext).inflate(R.layout.all_collections_icon, null);
 
         // Get the 8 ImagesViews from the layout
         ArrayList<ImageView> imageViews = new ArrayList<>(8);

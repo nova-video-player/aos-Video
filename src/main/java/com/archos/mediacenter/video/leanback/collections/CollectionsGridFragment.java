@@ -70,9 +70,9 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
 
     public static final String SORT_PARAM_KEY = CollectionsGridFragment.class.getName() + "_SORT";
 
-    public static final String SHOW_WATCHED_KEY = CollectionsGridFragment.class.getName() + "_SHOW_WATCHED";
+    public static final String COLLECTION_WATCHED_KEY = CollectionsGridFragment.class.getName() + "_COLLECTION_WATCHED";
 
-    private CursorObjectAdapter mMoviesAdapter;
+    private CursorObjectAdapter mCollectionsAdapter;
     private DisplayMode mDisplayMode;
     private SharedPreferences mPrefs;
     private Overlay mOverlay;
@@ -82,7 +82,9 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
     private CharSequence[] mSortOrderEntries;
     private BackgroundManager bgMngr = null;
 
-    private boolean mShowWatched;
+    // TODO MARC: remove watched not watched?
+
+    private boolean mCollectionWatched;
 
     private static Context mContext;
 
@@ -108,7 +110,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
         mSortOrder = mPrefs.getString(SORT_PARAM_KEY, CollectionsLoader.DEFAULT_SORT);
         mSortOrderEntries = CollectionsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
 
-        mShowWatched = mPrefs.getBoolean(SHOW_WATCHED_KEY, true);
+        mCollectionWatched = mPrefs.getBoolean(COLLECTION_WATCHED_KEY, true);
 
         updateBackground();
 
@@ -126,8 +128,8 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
         View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (mMoviesAdapter != null) {
-                    Collection collection = (Collection)mMoviesAdapter.get(getSelectedPosition());
+                if (mCollectionsAdapter != null) {
+                    Collection collection = (Collection)mCollectionsAdapter.get(getSelectedPosition());
                     if (collection != null) {
                         if (!collection.isPinned())
                             DbUtils.markAsPinned(getActivity(), collection);
@@ -135,7 +137,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
                             DbUtils.markAsNotPinned(getActivity(), collection);
                         Bundle args = new Bundle();
                         args.putString("sort", mSortOrder);
-                        args.putBoolean("showWatched", mShowWatched);
+                        args.putBoolean("collectionWatched", mCollectionWatched);
                         LoaderManager.getInstance(CollectionsGridFragment.this).restartLoader(0, args, CollectionsGridFragment.this);
                     }
                 }
@@ -157,14 +159,14 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
                 break;
         }
 
-        mMoviesAdapter = new CursorObjectAdapter(filePresenter);
-        mMoviesAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
-        setAdapter(mMoviesAdapter);
+        mCollectionsAdapter = new CursorObjectAdapter(filePresenter);
+        mCollectionsAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
+        setAdapter(mCollectionsAdapter);
 
         setGridPresenter(vgp);
         Bundle args = new Bundle();
         args.putString("sort", mSortOrder);
-        args.putBoolean("showWatched", mShowWatched);
+        args.putBoolean("collectionWatched", mCollectionWatched);
         LoaderManager.getInstance(this).restartLoader(0, args, CollectionsGridFragment.this);
     }
 
@@ -182,7 +184,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
 
         getTitleView().setOrb3IconResId(R.drawable.orb_sort);
 
-        if (mShowWatched)
+        if (mCollectionWatched)
             getTitleView().setOrb4IconResId(R.drawable.orb_hide);
         else
             getTitleView().setOrb4IconResId(R.drawable.orb_show);
@@ -238,7 +240,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
                                     mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).commit();
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
-                                    args.putBoolean("showWatched", mShowWatched);
+                                    args.putBoolean("collectionWatched", mCollectionWatched);
                                     LoaderManager.getInstance(CollectionsGridFragment.this).restartLoader(0, args, CollectionsGridFragment.this);
                                 }
                                 dialog.dismiss();
@@ -252,11 +254,11 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
         getTitleView().setOnOrb4ClickedListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mShowWatched = !mShowWatched;
+                mCollectionWatched = !mCollectionWatched;
                 // Save the new setting
-                mPrefs.edit().putBoolean(SHOW_WATCHED_KEY, mShowWatched).commit();
+                mPrefs.edit().putBoolean(COLLECTION_WATCHED_KEY, mCollectionWatched).commit();
 
-                if (mShowWatched)
+                if (mCollectionWatched)
                     getTitleView().setOrb4IconResId(R.drawable.orb_hide);
                 else
                     getTitleView().setOrb4IconResId(R.drawable.orb_show);
@@ -264,7 +266,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
                 // Reload
                 Bundle args = new Bundle();
                 args.putString("sort", mSortOrder);
-                args.putBoolean("showWatched", mShowWatched);
+                args.putBoolean("collectionWatched", mCollectionWatched);
                 LoaderManager.getInstance(CollectionsGridFragment.this).restartLoader(0, args, CollectionsGridFragment.this);
             }
         });
@@ -296,7 +298,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
             if (args == null) {
                 return new CollectionsLoader(getActivity());
             } else {
-                return new CollectionsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"));
+                return new CollectionsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("mCollectionWatched"));
             }
         }
         else return null;
@@ -306,19 +308,15 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         if (getActivity() == null) return;
         if (cursorLoader.getId()==0) {
-            mMoviesAdapter.swapCursor(cursor);
+            mCollectionsAdapter.swapCursor(cursor);
             setEmptyViewVisiblity(cursor.getCount()<1);
-
-            if (mShowWatched)
-                setTitle(getString(R.string.all_collections_format, cursor.getCount()));
-            else
-                setTitle(getString(R.string.not_watched_movies_format, cursor.getCount()));
+            setTitle(getString(R.string.all_collections_format, cursor.getCount()));
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        mMoviesAdapter.swapCursor(null);
+        mCollectionsAdapter.swapCursor(null);
     }
 
     private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
@@ -350,30 +348,30 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
     public void onKeyDown(int keyCode) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_MENU:
-                if (!getTitleView().isShown() && mMoviesAdapter != null && mMoviesAdapter.size() > 0)
+                if (!getTitleView().isShown() && mCollectionsAdapter != null && mCollectionsAdapter.size() > 0)
                     setSelectedPosition(0);
                 if (!getTitleView().isFocused())
                     getTitleView().requestFocus();
                 break;
             case KeyEvent.KEYCODE_MEDIA_PLAY:
             case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                if (mMoviesAdapter != null) {
-                    Video video = (Video)mMoviesAdapter.get(getSelectedPosition());
+                if (mCollectionsAdapter != null) {
+                    Video video = (Video)mCollectionsAdapter.get(getSelectedPosition());
                     if (video != null)
                         PlayUtils.startVideo(getActivity(), video, PlayerActivity.RESUME_FROM_LAST_POS, false, -1, null, -1);
                 }
                 break;
             case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
             case KeyEvent.KEYCODE_MEDIA_NEXT:
-                if (mMoviesAdapter != null && mMoviesAdapter.size() > 0) {
-                    setSelectedPosition(mMoviesAdapter.size() - 1);
+                if (mCollectionsAdapter != null && mCollectionsAdapter.size() > 0) {
+                    setSelectedPosition(mCollectionsAdapter.size() - 1);
                     if (!getView().isFocused())
                         getView().requestFocus();
                 }
                 break;
             case KeyEvent.KEYCODE_MEDIA_REWIND:
             case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                if (mMoviesAdapter != null && mMoviesAdapter.size() > 0) {
+                if (mCollectionsAdapter != null && mCollectionsAdapter.size() > 0) {
                     setSelectedPosition(0);
                     if (!getView().isFocused())
                         getView().requestFocus();
