@@ -392,7 +392,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         ArrayObjectAdapter movieRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         movieRowAdapter.add(buildAllMoviesBox());
         //movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_ALPHA, getString(R.string.movies_by_alpha), R.drawable.alpha_banner));
-        movieRowAdapter.add(buildCollectionsBox());
         movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_GENRE, getString(R.string.movies_by_genre), R.drawable.genres_banner));
 
         if (showByRating)
@@ -400,6 +399,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_YEAR, getString(R.string.movies_by_year), R.drawable.years_banner_2020));
         mMovieRow = new ListRow(ROW_ID_MOVIES, new HeaderItem(getString(R.string.movies)), movieRowAdapter);
+
+        movieRowAdapter.add(buildCollectionsBox());
 
         ArrayObjectAdapter tvshowRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         tvshowRowAdapter.add(buildAllTvshowsBox());

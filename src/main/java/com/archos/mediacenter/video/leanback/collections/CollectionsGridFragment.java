@@ -217,7 +217,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
                         break;
                 }
                 // Save the new setting
-                mPrefs.edit().putInt(PREF_MOVIE_COLLECTION_DISPLAY_MODE, mDisplayMode.ordinal()).commit();
+                mPrefs.edit().putInt(PREF_MOVIE_COLLECTION_DISPLAY_MODE, mDisplayMode.ordinal()).apply();
                 // Reload a brand new fragment
                 getParentFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new CollectionsGridFragment())
@@ -237,7 +237,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
                                     mSortOrderItem = which;
                                     mSortOrder = CollectionsSortOrderEntry.item2SortOrder(mSortOrderItem, sortOrderIndexer);
                                     // Save the sort mode
-                                    mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).commit();
+                                    mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).apply();
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
                                     args.putBoolean("collectionWatched", mCollectionWatched);
@@ -256,7 +256,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
             public void onClick(View view) {
                 mCollectionWatched = !mCollectionWatched;
                 // Save the new setting
-                mPrefs.edit().putBoolean(COLLECTION_WATCHED_KEY, mCollectionWatched).commit();
+                mPrefs.edit().putBoolean(COLLECTION_WATCHED_KEY, mCollectionWatched).apply();
 
                 if (mCollectionWatched)
                     getTitleView().setOrb4IconResId(R.drawable.orb_hide);
