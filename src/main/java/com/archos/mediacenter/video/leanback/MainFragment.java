@@ -64,6 +64,7 @@ import com.archos.mediacenter.video.browser.loader.NonScrapedVideosCountLoader;
 import com.archos.mediacenter.video.leanback.adapter.object.Box;
 import com.archos.mediacenter.video.leanback.adapter.object.EmptyView;
 import com.archos.mediacenter.video.leanback.adapter.object.Icon;
+import com.archos.mediacenter.video.leanback.collections.CollectionsIconBuilder;
 import com.archos.mediacenter.video.leanback.filebrowsing.ExtStorageListingActivity;
 import com.archos.mediacenter.video.leanback.filebrowsing.LocalListingActivity;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridActivity;
@@ -465,7 +466,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     }
 
     private Box buildCollectionsBox() {
-        Bitmap iconBitmap = new AllMoviesIconBuilder(getActivity()).buildNewBitmap();
+        Bitmap iconBitmap = new CollectionsIconBuilder(getActivity()).buildNewBitmap();
         if (iconBitmap!=null) {
             return new Box(Box.ID.COLLECTIONS, getString(R.string.movie_collections), iconBitmap);
         }

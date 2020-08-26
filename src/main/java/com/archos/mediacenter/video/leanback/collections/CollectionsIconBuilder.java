@@ -27,7 +27,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.archos.mediacenter.video.R;
-import com.archos.mediaprovider.video.VideoStore;
+import com.archos.mediaprovider.video.ScraperStore;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,20 +35,18 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Build a bitmap composed of 8 movie posters to be used in the main leanback activity
+ * Build a bitmap composed of 8 movie collection posters to be used in the main leanback activity
  */
 public class CollectionsIconBuilder {
 
     final static String[] PROJECTION = {
-            VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER,
-            VideoStore.Video.VideoColumns._ID,
-            VideoStore.Video.VideoColumns.SCRAPER_COVER
+            ScraperStore.MovieCollections.COLLECTION_ID,
+            ScraperStore.MovieCollections.COLLECTION_POSTER_LARGE_FILE,
     };
 
     final static String SELECTION =
-            VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER + "=0 AND " +
-            VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL AND " +
-            VideoStore.Video.VideoColumns.SCRAPER_COVER + " IS NOT NULL";
+            ScraperStore.MovieCollections.COLLECTION_ID + " IS NOT NULL AND " +
+            ScraperStore.MovieCollections.COLLECTION_POSTER_LARGE_FILE + " IS NOT NULL";
 
     private static final String TAG = "CollectionsIconBuilder";
     private static final Boolean DBG = false;
@@ -84,7 +82,7 @@ public class CollectionsIconBuilder {
         List<String> posters = getPostersList(cr);
 
         if (posters.size() == 0) {
-            if (DBG) Log.d(TAG, "not enough movies with poster to build the icon");
+            if (DBG) Log.d(TAG, "not enough collections with poster to build the icon");
             return null;
         }
 
@@ -92,7 +90,7 @@ public class CollectionsIconBuilder {
     }
 
     private List<String> getPostersList(ContentResolver cr) {
-        Cursor c = cr.query(VideoStore.Video.Media.EXTERNAL_CONTENT_URI,
+        Cursor c = cr.query(ScraperStore.MovieCollections.URI.BASE,
                 PROJECTION, SELECTION, null,
                 "RANDOM() LIMIT 12"); // get 12 random movies (8 + 4 in case some posters are invalid for any reason)
 
@@ -101,7 +99,7 @@ public class CollectionsIconBuilder {
             return Collections.emptyList();
         }
 
-        final int coverIndex = c.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_COVER);
+        final int coverIndex = c.getColumnIndexOrThrow(ScraperStore.MovieCollections.COLLECTION_POSTER_LARGE_FILE);
         c.moveToFirst();
 
         ArrayList<String> list = new ArrayList<>(c.getCount());

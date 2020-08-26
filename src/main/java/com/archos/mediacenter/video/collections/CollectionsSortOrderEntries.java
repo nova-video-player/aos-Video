@@ -39,7 +39,7 @@ public class CollectionsSortOrderEntries {
 
     static private SparseArray<sortOrderEntry> sortOrderIndexer = new SparseArray<sortOrderEntry>();
     static {
-        sortOrderIndexer.put(0, new sortOrderEntry(R.string.sort_by_name_asc,                    VideoStore.Video.VideoColumns.SCRAPER_C_NAME + " ASC"));
+        sortOrderIndexer.put(0, new sortOrderEntry(R.string.sort_by_name_asc,VideoStore.Video.VideoColumns.SCRAPER_C_NAME + " ASC"));
     }
 
     static public CharSequence[] getSortOrderEntries(Context context) {
