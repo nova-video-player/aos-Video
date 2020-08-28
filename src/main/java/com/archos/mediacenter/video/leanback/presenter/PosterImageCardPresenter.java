@@ -52,7 +52,7 @@ import com.squareup.picasso.Target;
 import java.util.ArrayList;
 
 /**
- * Display a video, a movie, an episode (Poster or Thumbnail) or a TvShow (Poster)
+ * Display a video, a movie, an episode (Poster or Thumbnail), a TvShow (Poster), or a Movie Collection (Poster)
  * using a regular ImageCardView
  * Created by vapillon on 10/04/15.
  */

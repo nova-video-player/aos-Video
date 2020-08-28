@@ -26,6 +26,7 @@ public class CollectionsLoader extends VideoLoader {
     private static final String TAG = "CollectionsLoader";
 
     public final static String COLUMN_COLLECTION_COUNT = "collection_count";
+    public static final String COLUMN_NAME = "name";
     private String mSortOrder;
 
     private boolean mShowWatched;
@@ -55,7 +56,7 @@ public class CollectionsLoader extends VideoLoader {
         return new String[] {
                 VideoStore.MediaColumns.DATA,
                 VideoStore.Video.VideoColumns.SCRAPER_C_ID + " AS " + BaseColumns._ID,
-                VideoStore.Video.VideoColumns.SCRAPER_C_NAME,
+                VideoStore.Video.VideoColumns.SCRAPER_C_NAME + " AS " + COLUMN_NAME,
                 VideoStore.Video.VideoColumns.SCRAPER_C_DESCRIPTION,
                 "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_C_ID + ") AS " + COLUMN_COLLECTION_COUNT,
                 VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE,

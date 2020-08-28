@@ -65,6 +65,7 @@ import com.archos.mediaprovider.video.VideoStore;
 public class CollectionsGridFragment extends MyVerticalGridFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "CollectionsGridFragment";
+    private static final boolean DBG = true;
 
     private static final String PREF_MOVIE_COLLECTION_DISPLAY_MODE = "PREF_MOVIE_COLLECTION_DISPLAY_MODE";
 
