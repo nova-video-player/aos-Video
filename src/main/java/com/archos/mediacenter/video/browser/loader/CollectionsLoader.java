@@ -18,6 +18,7 @@ import android.content.Context;
 import android.provider.BaseColumns;
 
 import com.archos.mediacenter.video.collections.CollectionsSortOrderEntries;
+import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -26,7 +27,8 @@ public class CollectionsLoader extends VideoLoader {
     private static final String TAG = "CollectionsLoader";
 
     public final static String COLUMN_COLLECTION_COUNT = "collection_count";
-    public static final String COLUMN_NAME = "name";
+    public final static String COLUMN_COLLECTION_MOVIE_COUNT = "collection_movie_count";
+    public final static String COLUMN_COLLECTION_MOVIE_WATCHED_COUNT = "collection_movie_watched_count";
     private String mSortOrder;
 
     private boolean mShowWatched;
@@ -59,6 +61,9 @@ public class CollectionsLoader extends VideoLoader {
                 VideoStore.Video.VideoColumns.SCRAPER_C_NAME + " AS " + COLUMN_NAME,
                 VideoStore.Video.VideoColumns.SCRAPER_C_DESCRIPTION,
                 "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_C_ID + ") AS " + COLUMN_COLLECTION_COUNT,
+                // TODO MARC check this one... supposed to be the number of movies in all collections or per cid... ???
+                "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_C_ID + " || ',' || " + VideoStore.Video.VideoColumns.SCRAPER_M_IMDB_ID + ") AS " + COLUMN_COLLECTION_MOVIE_COUNT,
+                "COUNT(CASE "+VideoStore.Video.VideoColumns.BOOKMARK+" WHEN "+ PlayerActivity.LAST_POSITION_END+" THEN 1 ELSE NULL END) AS " + COLUMN_COLLECTION_MOVIE_WATCHED_COUNT,
                 VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE,
                 VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_THUMB_FILE,
                 VideoStore.Video.VideoColumns.SCRAPER_C_BACKDROP_LARGE_FILE,

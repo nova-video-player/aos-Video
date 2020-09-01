@@ -35,7 +35,9 @@ public class Collection extends Base implements Serializable {
 
     private final String mCollDescription;
     private long mCollId;
+    private int mCollCount;
     private int mCollMovieCount;
+    private int mCollMovieWatchedCount;
 
     private long mPinned;
 
@@ -43,23 +45,27 @@ public class Collection extends Base implements Serializable {
      * Not computed by this class but only a place to store it.
      * Need to be set with setShowTags()
      */
-    private ShowTags mShowTags;
+    //private ShowTags mShowTags;
 
-    public Collection(long collId, String collName, Uri posterUri, int collMovieCount) {
-        this(collId, collName, posterUri, collMovieCount, false, false, null, 0);
+    public Collection(long collId, String collName, Uri posterUri, int collCount, int collMovieCount, int collMovieWatchedCount) {
+        this(collId, collName, posterUri, collCount, collMovieCount, collMovieWatchedCount, false, false, null, 0);
     }
 
     public Collection(long collId,
                   String collName,
                   Uri posterUri,
+                  int collCount,
                   int collMovieCount,
+                  int collMovieWatchedCount,
                   boolean traktSeen,
                   boolean traktLibrary,
                   String collDescription,
                   long pinned) {
         super(collName, posterUri);
         mCollId = collId;
+        mCollCount = collCount;
         mCollMovieCount = collMovieCount;
+        mCollMovieWatchedCount = collMovieWatchedCount;
         mIsTraktSeen = traktSeen;
         mIsTraktLibrary = traktLibrary;
         mCollDescription = collDescription;
@@ -67,11 +73,11 @@ public class Collection extends Base implements Serializable {
     }
 
     public String getCountString(Context context) {
-        return String.format(context.getResources().getQuantityText(R.plurals.Nseasons, mCollMovieCount).toString(), mCollMovieCount);
+        return String.format(context.getResources().getQuantityText(R.plurals.Nmovies, mCollMovieCount).toString(), mCollMovieCount);
     }
 
-    public int getCollectionMovieCount() {
-        return mCollMovieCount;
+    public int getCollectionCount() {
+        return mCollCount;
     }
 
     public boolean isPinned() {
@@ -79,6 +85,10 @@ public class Collection extends Base implements Serializable {
     }
 
     public long getCollectionId() {
+        return mCollId;
+    }
+
+    public long getTitle() {
         return mCollId;
     }
 
@@ -103,6 +113,10 @@ public class Collection extends Base implements Serializable {
         return mShowTags;
     }
      */
+
+    public boolean isWatched() {
+        return mCollMovieWatchedCount>=mCollMovieCount;
+    }
 
     public boolean isTraktSeen() {
         return mIsTraktSeen;

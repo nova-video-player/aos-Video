@@ -465,6 +465,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         }
     }
 
+    // TODO MARC missing auto refresh... when done
     private Box buildCollectionsBox() {
         Bitmap iconBitmap = new CollectionsIconBuilder(getActivity()).buildNewBitmap();
         if (iconBitmap!=null) {

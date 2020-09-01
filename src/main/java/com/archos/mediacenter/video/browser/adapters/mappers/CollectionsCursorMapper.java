@@ -15,7 +15,10 @@
 package com.archos.mediacenter.video.browser.adapters.mappers;
 
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
+import android.provider.BaseColumns;
+import android.util.Log;
 
 import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.loader.CollectionsLoader;
@@ -23,10 +26,15 @@ import com.archos.mediaprovider.video.VideoStore;
 
 public class CollectionsCursorMapper implements CompatibleCursorMapper {
 
+    private static final String TAG = "CollectionsCursorMapper";
+    private static final boolean DBG = true;
+
     int mIdColumn;
     int mNameColumn;
     int mPosterPathColumn;
     int mCollectionCountColumn;
+    int mCollectionMovieCountColumn;
+    int mCollectionMovieWatchedCountColumn;
     int mTraktSeenColumn;
     int mTraktLibraryColumn;
     int mPlotColumn;
@@ -36,10 +44,12 @@ public class CollectionsCursorMapper implements CompatibleCursorMapper {
     }
 
     public void bindColumns(Cursor cursor) {
-        mIdColumn = cursor.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_C_ID);
-        mNameColumn = cursor.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_C_NAME);
+        mIdColumn = cursor.getColumnIndexOrThrow(BaseColumns._ID);
+        mNameColumn = cursor.getColumnIndexOrThrow(CollectionsLoader.COLUMN_NAME);
         mPosterPathColumn = cursor.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE);
         mCollectionCountColumn = cursor.getColumnIndexOrThrow(CollectionsLoader.COLUMN_COLLECTION_COUNT);
+        mCollectionMovieCountColumn = cursor.getColumnIndexOrThrow(CollectionsLoader.COLUMN_COLLECTION_MOVIE_COUNT);
+        mCollectionMovieWatchedCountColumn = cursor.getColumnIndex(CollectionsLoader.COLUMN_COLLECTION_MOVIE_WATCHED_COUNT);
         mTraktSeenColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN);
         mTraktLibraryColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.ARCHOS_TRAKT_LIBRARY);
         mPlotColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_C_DESCRIPTION);
@@ -52,6 +62,8 @@ public class CollectionsCursorMapper implements CompatibleCursorMapper {
                 cursor.getString(mNameColumn),
                 getPosterUri(cursor),
                 cursor.getInt(mCollectionCountColumn),
+                cursor.getInt(mCollectionMovieCountColumn),
+                cursor.getInt(mCollectionMovieWatchedCountColumn),
                 VideoCursorMapper.isTraktSeenOrLibrary(cursor, mTraktSeenColumn),
                 VideoCursorMapper.isTraktSeenOrLibrary(cursor, mTraktLibraryColumn),
                 cursor.getString(mPlotColumn),

@@ -20,8 +20,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.View;
@@ -42,12 +44,9 @@ import androidx.preference.PreferenceManager;
 
 import com.archos.customizedleanback.app.MyVerticalGridFragment;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
+import com.archos.mediacenter.video.browser.adapters.mappers.CollectionsCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Collection;
-import com.archos.mediacenter.video.browser.adapters.object.Movie;
-import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.loader.CollectionsLoader;
-import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.DisplayMode;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
@@ -55,10 +54,8 @@ import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.leanback.presenter.VideoListPresenter;
 import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
-import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.utils.DbUtils;
-import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.SortOrder;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -97,6 +94,8 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        if (DBG) Log.d(TAG, "onCreate");
+
         super.onCreate(savedInstanceState);
 
         mContext = this.getContext();
@@ -124,6 +123,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
     }
 
     private void initGridOrList() {
+        if (DBG) Log.d(TAG, "initGridOrList");
         VerticalGridPresenter vgp = null;
         Presenter filePresenter = null;
         View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
@@ -161,7 +161,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
         }
 
         mCollectionsAdapter = new CursorObjectAdapter(filePresenter);
-        mCollectionsAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
+        mCollectionsAdapter.setMapper(new CompatibleCursorMapperConverter(new CollectionsCursorMapper()));
         setAdapter(mCollectionsAdapter);
 
         setGridPresenter(vgp);
@@ -173,6 +173,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        if (DBG) Log.d(TAG, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
 
         mOverlay = new Overlay(this);
@@ -295,6 +296,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        if (DBG) Log.d(TAG, "onCreateLoader");
         if (id == 0) {
             if (args == null) {
                 return new CollectionsLoader(getActivity());
@@ -307,12 +309,14 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        if (DBG) Log.d(TAG, "onLoadFinished");
         if (getActivity() == null) return;
         if (cursorLoader.getId()==0) {
             mCollectionsAdapter.swapCursor(cursor);
             setEmptyViewVisiblity(cursor.getCount()<1);
             setTitle(getString(R.string.all_collections_format, cursor.getCount()));
         }
+        if (DBG) Log.d(TAG, "onLoadFinished: " + DatabaseUtils.dumpCursorToString(cursor));
     }
 
     @Override
@@ -356,11 +360,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
                 break;
             case KeyEvent.KEYCODE_MEDIA_PLAY:
             case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                if (mCollectionsAdapter != null) {
-                    Video video = (Video)mCollectionsAdapter.get(getSelectedPosition());
-                    if (video != null)
-                        PlayUtils.startVideo(getActivity(), video, PlayerActivity.RESUME_FROM_LAST_POS, false, -1, null, -1);
-                }
+                // TODO
                 break;
             case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
             case KeyEvent.KEYCODE_MEDIA_NEXT:

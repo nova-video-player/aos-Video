@@ -28,8 +28,10 @@ import androidx.leanback.widget.Presenter;
 import androidx.leanback.widget.Row;
 import androidx.leanback.widget.RowPresenter;
 
+import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
+import com.archos.mediacenter.video.leanback.collections.CollectionFragment;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsActivity;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsFragment;
 import com.archos.mediacenter.video.leanback.presenter.ListPresenter;
@@ -57,6 +59,9 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
         }
         else if (item instanceof Tvshow) {
             showTvshowDetails(mActivity, (Tvshow) item, itemViewHolder);
+        }
+        else if (item instanceof Collection) {
+            showCollectionDetails(mActivity, (Collection) item, itemViewHolder);
         }
     }
 
@@ -106,6 +111,24 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
                     activity,
                     sourceView,
                     TvshowFragment.SHARED_ELEMENT_NAME).toBundle();
+            activity.startActivity(intent, bundle);
+        }
+        else if (itemViewHolder.view instanceof BaseCardView) {
+            activity.startActivity(intent);
+        }
+    }
+
+    public static void showCollectionDetails(Activity activity, Collection collection, Presenter.ViewHolder itemViewHolder) {
+        Intent intent = new Intent(activity, TvshowActivity.class);
+        intent.putExtra(CollectionFragment.EXTRA_COLLECTION, collection);
+        View sourceView = null;
+        Bundle bundle = null;
+        if (itemViewHolder.view instanceof ImageCardView) {
+            sourceView = ((ImageCardView) itemViewHolder.view).getMainImageView();
+            bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    activity,
+                    sourceView,
+                    CollectionFragment.SHARED_ELEMENT_NAME).toBundle();
             activity.startActivity(intent, bundle);
         }
         else if (itemViewHolder.view instanceof BaseCardView) {
