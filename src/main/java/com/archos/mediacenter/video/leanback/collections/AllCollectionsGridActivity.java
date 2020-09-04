@@ -20,10 +20,10 @@ import androidx.fragment.app.Fragment;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.leanback.SingleFragmentActivity;
 
-public class CollectionsGridActivity extends SingleFragmentActivity {
+public class AllCollectionsGridActivity extends SingleFragmentActivity {
     @Override
     public Fragment getFragmentInstance() {
-        return new CollectionsGridFragment();
+        return new AllCollectionsGridFragment();
     }
 
     @Override
@@ -37,8 +37,8 @@ public class CollectionsGridActivity extends SingleFragmentActivity {
             case KeyEvent.KEYCODE_MEDIA_REWIND:
             case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
                 Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                if (fragment instanceof CollectionsGridFragment) {
-                    ((CollectionsGridFragment)fragment).onKeyDown(keyCode);
+                if (fragment instanceof AllCollectionsGridFragment) {
+                    ((AllCollectionsGridFragment)fragment).onKeyDown(keyCode);
                     return true;
                 }
                 break;

@@ -22,27 +22,29 @@ import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
-public class CollectionsLoader extends VideoLoader {
+public class CollectionLoader extends VideoLoader {
 
-    private static final String TAG = "CollectionsLoader";
+    private static final String TAG = "CollectionLoader";
 
     public final static String COLUMN_COLLECTION_COUNT = "collection_count";
     public final static String COLUMN_COLLECTION_MOVIE_COUNT = "collection_movie_count";
     public final static String COLUMN_COLLECTION_MOVIE_WATCHED_COUNT = "collection_movie_watched_count";
     private String mSortOrder;
+    private long mCollectionId;
 
     private boolean mShowWatched;
 
     /**
-     * List all movie collections
+     * List all movie in one collection
      * @param context
      */
-    public CollectionsLoader(Context context) {
-        this(context, CollectionsSortOrderEntries.DEFAULT_SORT, true);
+    public CollectionLoader(Context context, long collectionId) {
+        this(context, collectionId, CollectionsSortOrderEntries.DEFAULT_SORT, true);
     }
 
-    public CollectionsLoader(Context context, String SortOrder, boolean showWatched) {
+    public CollectionLoader(Context context, long collectionId, String SortOrder, boolean showWatched) {
         super(context);
+        mCollectionId = collectionId;
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
         init();
@@ -74,24 +76,21 @@ public class CollectionsLoader extends VideoLoader {
         };
     }
 
+    // TODO MARC this should be a movie loader in reality... because we list all movies belonging to a SCRAPER_C_ID to be displayed...
+    // TODO MARC import more movieLoader
+
     @Override
     public String getSelection() {
         StringBuilder sb = new StringBuilder();
         sb.append(super.getSelection()); // get common selection from the parent
 
         if (sb.length()>0) { sb.append(" AND "); }
-        sb.append( VideoStore.Video.VideoColumns.SCRAPER_C_ID + " > '0'");
-        if (!mShowWatched) {
-            sb.append(" AND ");
-            sb.append(LoaderUtils.HIDE_WATCHED_FILTER);
-        }
-        sb.append(") GROUP BY (");
-        sb.append(VideoStore.Video.VideoColumns.SCRAPER_C_ID);
+        sb.append(VideoStore.Video.VideoColumns.SCRAPER_C_ID + " = ?");
         return sb.toString();
     }
 
     @Override
     public String[] getSelectionArgs() {
-        return null;
+        return new String[]{Long.toString(mCollectionId)};
     }
 }

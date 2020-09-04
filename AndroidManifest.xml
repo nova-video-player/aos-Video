@@ -1330,7 +1330,7 @@
             android:theme="@style/MyLeanbackTheme"/>
 
         <activity
-            android:name="com.archos.mediacenter.video.leanback.collections.CollectionsGridActivity"
+            android:name="com.archos.mediacenter.video.leanback.collections.AllCollectionsGridActivity"
             android:theme="@style/MyLeanbackTheme"/>
 
         <activity

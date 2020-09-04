@@ -31,6 +31,7 @@ import androidx.leanback.widget.RowPresenter;
 import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
+import com.archos.mediacenter.video.leanback.collections.CollectionActivity;
 import com.archos.mediacenter.video.leanback.collections.CollectionFragment;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsActivity;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsFragment;
@@ -119,7 +120,7 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
     }
 
     public static void showCollectionDetails(Activity activity, Collection collection, Presenter.ViewHolder itemViewHolder) {
-        Intent intent = new Intent(activity, TvshowActivity.class);
+        Intent intent = new Intent(activity, CollectionActivity.class);
         intent.putExtra(CollectionFragment.EXTRA_COLLECTION, collection);
         View sourceView = null;
         Bundle bundle = null;

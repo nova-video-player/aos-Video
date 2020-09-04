@@ -44,9 +44,9 @@ import androidx.preference.PreferenceManager;
 
 import com.archos.customizedleanback.app.MyVerticalGridFragment;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.adapters.mappers.CollectionsCursorMapper;
+import com.archos.mediacenter.video.browser.adapters.mappers.AllCollectionsCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Collection;
-import com.archos.mediacenter.video.browser.loader.CollectionsLoader;
+import com.archos.mediacenter.video.browser.loader.AllCollectionsLoader;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.DisplayMode;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
@@ -59,16 +59,16 @@ import com.archos.mediacenter.video.utils.DbUtils;
 import com.archos.mediacenter.video.utils.SortOrder;
 import com.archos.mediaprovider.video.VideoStore;
 
-public class CollectionsGridFragment extends MyVerticalGridFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class AllCollectionsGridFragment extends MyVerticalGridFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String TAG = "CollectionsGridFragment";
+    private static final String TAG = "AllCollectionsGridFragment";
     private static final boolean DBG = true;
 
     private static final String PREF_MOVIE_COLLECTION_DISPLAY_MODE = "PREF_MOVIE_COLLECTION_DISPLAY_MODE";
 
-    public static final String SORT_PARAM_KEY = CollectionsGridFragment.class.getName() + "_SORT";
+    public static final String SORT_PARAM_KEY = AllCollectionsGridFragment.class.getName() + "_SORT";
 
-    public static final String COLLECTION_WATCHED_KEY = CollectionsGridFragment.class.getName() + "_COLLECTION_WATCHED";
+    public static final String COLLECTION_WATCHED_KEY = AllCollectionsGridFragment.class.getName() + "_COLLECTION_WATCHED";
 
     private CursorObjectAdapter mCollectionsAdapter;
     private DisplayMode mDisplayMode;
@@ -107,7 +107,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
         } else {
             mDisplayMode = DisplayMode.values()[displayModeIndex];
         }
-        mSortOrder = mPrefs.getString(SORT_PARAM_KEY, CollectionsLoader.DEFAULT_SORT);
+        mSortOrder = mPrefs.getString(SORT_PARAM_KEY, AllCollectionsLoader.DEFAULT_SORT);
         mSortOrderEntries = CollectionsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
 
         mCollectionWatched = mPrefs.getBoolean(COLLECTION_WATCHED_KEY, true);
@@ -139,7 +139,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
                         Bundle args = new Bundle();
                         args.putString("sort", mSortOrder);
                         args.putBoolean("collectionWatched", mCollectionWatched);
-                        LoaderManager.getInstance(CollectionsGridFragment.this).restartLoader(0, args, CollectionsGridFragment.this);
+                        LoaderManager.getInstance(AllCollectionsGridFragment.this).restartLoader(0, args, AllCollectionsGridFragment.this);
                     }
                 }
 
@@ -168,7 +168,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
         Bundle args = new Bundle();
         args.putString("sort", mSortOrder);
         args.putBoolean("collectionWatched", mCollectionWatched);
-        LoaderManager.getInstance(this).restartLoader(0, args, CollectionsGridFragment.this);
+        LoaderManager.getInstance(this).restartLoader(0, args, AllCollectionsGridFragment.this);
     }
 
     @Override
@@ -222,7 +222,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
                 mPrefs.edit().putInt(PREF_MOVIE_COLLECTION_DISPLAY_MODE, mDisplayMode.ordinal()).apply();
                 // Reload a brand new fragment
                 getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new CollectionsGridFragment())
+                        .replace(R.id.fragment_container, new AllCollectionsGridFragment())
                         .commit();
             }
         });
@@ -243,7 +243,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
                                     args.putBoolean("collectionWatched", mCollectionWatched);
-                                    LoaderManager.getInstance(CollectionsGridFragment.this).restartLoader(0, args, CollectionsGridFragment.this);
+                                    LoaderManager.getInstance(AllCollectionsGridFragment.this).restartLoader(0, args, AllCollectionsGridFragment.this);
                                 }
                                 dialog.dismiss();
                             }
@@ -269,7 +269,7 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
                 Bundle args = new Bundle();
                 args.putString("sort", mSortOrder);
                 args.putBoolean("collectionWatched", mCollectionWatched);
-                LoaderManager.getInstance(CollectionsGridFragment.this).restartLoader(0, args, CollectionsGridFragment.this);
+                LoaderManager.getInstance(AllCollectionsGridFragment.this).restartLoader(0, args, AllCollectionsGridFragment.this);
             }
         });
 
@@ -299,9 +299,9 @@ public class CollectionsGridFragment extends MyVerticalGridFragment implements L
         if (DBG) Log.d(TAG, "onCreateLoader");
         if (id == 0) {
             if (args == null) {
-                return new CollectionsLoader(getActivity());
+                return new AllCollectionsLoader(getActivity());
             } else {
-                return new CollectionsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("mCollectionWatched"));
+                return new AllCollectionsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("mCollectionWatched"));
             }
         }
         else return null;

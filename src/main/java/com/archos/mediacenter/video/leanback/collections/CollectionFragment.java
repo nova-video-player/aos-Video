@@ -64,7 +64,7 @@ import androidx.leanback.transition.TransitionListener;
 import androidx.loader.content.CursorLoader;
 
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.adapters.mappers.CollectionsCursorMapper;
+import com.archos.mediacenter.video.browser.adapters.mappers.CollectionCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Collection;
@@ -72,7 +72,7 @@ import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
-import com.archos.mediacenter.video.browser.loader.CollectionsLoader;
+import com.archos.mediacenter.video.browser.loader.CollectionLoader;
 import com.archos.mediacenter.video.browser.loader.EpisodesLoader;
 import com.archos.mediacenter.video.browser.loader.SeasonsLoader;
 import com.archos.mediacenter.video.browser.loader.TvshowLoader;
@@ -164,11 +164,11 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
             if (collectonId != -1) {
                 // CollectionLoader is a CursorLoader
-                CollectionsLoader collectionsLoader = new CollectionsLoader(getActivity(), collectonId);
-                Cursor cursor = collectionsLoader.loadInBackground();
+                CollectionLoader collectionLoader = new CollectionLoader(getActivity(), collectonId);
+                Cursor cursor = collectionLoader.loadInBackground();
                 if(cursor != null && cursor.getCount()>0) {
                     cursor.moveToFirst();
-                    CollectionsCursorMapper collectionCursorMapper = new CollectionsCursorMapper();
+                    CollectionCursorMapper collectionCursorMapper = new CollectionsCursorMapper();
                     collectionCursorMapper.bindColumns(cursor);
                     mCollection = (Collection) collectionCursorMapper.bind(cursor);
                 }
