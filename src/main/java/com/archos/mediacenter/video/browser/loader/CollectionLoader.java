@@ -58,7 +58,16 @@ public class CollectionLoader extends VideoLoader {
     @Override
     public String[] getProjection() {
         return new String[] {
-                VideoStore.MediaColumns.DATA,
+                VideoStore.Video.VideoColumns._ID,
+                // Columns for all video files
+                VideoStore.Video.VideoColumns.DATA,
+                COALESCE + VideoStore.Video.VideoColumns.SCRAPER_TITLE + "," + VideoStore.MediaColumns.TITLE + ") AS " + COLUMN_NAME,
+                VideoStore.Video.VideoColumns.NOVA_PINNED,
+                // Movie specific values
+                VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID,
+                VideoStore.Video.VideoColumns.SCRAPER_TITLE,
+                VideoStore.Video.VideoColumns.SCRAPER_BACKDROP_LARGE_URL,
+                VideoStore.Video.VideoColumns.SCRAPER_BACKDROP_LARGE_FILE,
                 VideoStore.Video.VideoColumns.SCRAPER_C_ID + " AS " + BaseColumns._ID,
                 VideoStore.Video.VideoColumns.SCRAPER_C_NAME + " AS " + COLUMN_NAME,
                 VideoStore.Video.VideoColumns.SCRAPER_C_DESCRIPTION,
@@ -72,7 +81,6 @@ public class CollectionLoader extends VideoLoader {
                 VideoStore.Video.VideoColumns.SCRAPER_C_BACKDROP_THUMB_FILE,
                 getTraktProjection(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN),
                 getTraktProjection(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_LIBRARY),
-                VideoStore.Video.VideoColumns.NOVA_PINNED
         };
     }
 
@@ -83,8 +91,9 @@ public class CollectionLoader extends VideoLoader {
     public String getSelection() {
         StringBuilder sb = new StringBuilder();
         sb.append(super.getSelection()); // get common selection from the parent
-
         if (sb.length()>0) { sb.append(" AND "); }
+        sb.append(VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL");
+        sb.append(" AND ");
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_C_ID + " = ?");
         return sb.toString();
     }
