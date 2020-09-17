@@ -167,6 +167,9 @@
     <string name="next_episode">Következő epizód</string>
     <string name="list_episodes">Epizódok mutatása</string>
     <string name="how_to_mark_season_watched">Kattintson egy évadra a benne lévő epizódok megnézettként vagy nem látottként jelőléshez</string>
+    <string name="how_to_unindex_season">Kattints egy évadra, az összes epizód eltávolításához</string>
+    <string name="how_to_delete_season">Kattints egy évadra, az összes epizód törléséhez</string>
+    <string name="mark_show_watched">Az összes epizód megjelölése látottnak vagy nem látottnak</string>
     <string name="unindex_show">Összes epizód eltávolítása a könyvtárból</string>
     <string name="delete_show">Összes epizód törlése</string>
     <string name="no_episode_watched">Nincs megnézett epizód</string>
@@ -177,6 +180,7 @@
     </plurals>
     <string name="scrap_processing">Metaadatok lekérése…</string>
     <string name="scrap_no_network">Nem kapcsolódik hálózathoz.</string>
+    <string name="scrap_enable_network_first">"Kérlek, csatlakozz egy hálózathoz az alkalmazás használatához."</string>
     <string name="scrap_failed">Film nem található az online adatbázísban.</string>
     <string name="start_auto_scraper_activity">Infó keresése online</string>
     <string name="scraper_settigns">Poszterek és leírások</string>
@@ -211,6 +215,7 @@
     <string name="info_subtitle">Felirat</string>
     <string name="info_resume">Folytatási pozíció</string>
     <string name="info_file">Fájlinfó</string>
+    <string name="use_remote_resume">Hálózati folytatás használata?</string>
     <!-- VIDEO COVER ROLL -->
     <string name="you_have_no_recently_added_video">Nincs mostanábanj hozzáadott videó</string>
     <string name="you_have_no_recently_played_video">Nincs mostanában lejátszott videó</string>
@@ -309,6 +314,7 @@
     <string name="s_chinese">Kínai</string>
     <string name="s_vietnamese">Vietnámi</string>
     <string name="s_lithuanian">Litván</string>
+    <string name="s_indonesian">Indonéz</string>
     <string name="s_none">Egyik sem</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Nem lehet lejátszani a videót</string>
@@ -340,6 +346,7 @@
     <string name="subtitles_wizard_available_files">Elérhető felirat fájlok:</string>
     <string name="subtitles_wizard_delete">Fájl törlése</string>
     <string name="subtitles_wizard_empty_list">Nem található fájl</string>
+    <string name="subtitles_wizard_cache">Gyorsítótár</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Feliratok lekérése online</string>
     <string name="toast_subloader_sub_found">Feliratsáv elérhető ehhez a nyelvhez</string>
@@ -349,6 +356,7 @@
     <string name="dialog_subloader_downloading">Feliratok letöltése…</string>
     <string name="dialog_subloader_sumup">Letöltés befejeződött</string>
     <string name="dialog_subloader_success">Elérhető feliratok:</string>
+    <string name="dialog_subloader_fails">Felirat nem található ehhez:</string>
     <string name="sub_force_all_title">Feliratletöltés kényszerítése</string>
     <string name="dialog_subloader_nonetwork_title">Nincs internetkapcsolat</string>
     <string name="dialog_subloader_nonetwork_message">Internetkapcsolat szükséges a feliratok letöltéséhez</string>
@@ -426,6 +434,7 @@
     <string name="preferences_category_video">Videó</string>
     <string name="preferences_force_software_decoding">Szoftveres dekódolás kényszerítése</string>
     <string name="preferences_force_audio_passthrough">Hangtovábbítás</string>
+    <string name="preferences_force_audio_passthrough_disabled">Letiltva (ajánlott)</string>
     <string name="preferences_force_audio_passthrough_enable2">Mód 2</string>
     <string name="category_languages">Feliratok</string>
     <string name="subtitles_hide_default">Feliratok elrejtése alapértelmezetten</string>
@@ -497,6 +506,20 @@
     <string name="reset_last_played_row_in_progress">Utoljára játszott törlés alatt</string>
     <string name="preferences_tv_show_sort_order_summary">Válassza ki a sorozatok rendezési sorrendjét</string>
     <string name="preferences_tv_show_sort_order_title">Sorozatok rendezése</string>
+    <string name="codepage_extra_932">(Shift-JIS, EUC-JP)</string>
+    <string name="codepage_extra_936">(CP936, GB231)</string>
+    <string name="codepage_extra_949">(CP949, EUC-KR)</string>
+    <string name="codepage_extra_950">(Big5)</string>
+    <string name="codepage_extra_1250">(CP1250)</string>
+    <string name="codepage_extra_1251">(CP1251)</string>
+    <string name="codepage_extra_1252">(CP1252)</string>
+    <string name="codepage_extra_1253">(CP1253)</string>
+    <string name="codepage_extra_1254">(CP1254)</string>
+    <string name="codepage_extra_1255">(CP1255)</string>
+    <string name="codepage_extra_1256">(CP1256)</string>
+    <string name="codepage_extra_1257">(CP1257)</string>
+    <string name="codepage_extra_1258">(CP1258)</string>
+    <string name="torrent_category">Torrent</string>
     <string name="leanback_season_posters_header">Évad poszterek</string>
     <string name="leanback_tvshow_backdrops_header">Sorozat háttérképe</string>
     <string name="nfo_export_manual_title">Már feldolgozott videók exportálása</string>
