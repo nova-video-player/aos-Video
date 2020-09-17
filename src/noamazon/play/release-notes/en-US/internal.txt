@@ -1,6 +1,6 @@
-- Display external storage label/descrition on AndroidTV
+- Display external storage label/description on AndroidTV
 - Do not pollute subtitle manual picker with cached online retrieved subs
 - Allow http video streaming
-- chomeOS/Amazon UI fixes
+- chromeOS/Amazon UI fixes
 - Add missing subtitles ISO639 code strings
 - Stability enhancement
