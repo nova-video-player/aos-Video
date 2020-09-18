@@ -144,7 +144,7 @@ public class  UpdateRecommendationsService extends IntentService {
 				try {
 					RecommendationBuilder builder = new RecommendationBuilder()
 							.setContext(getApplicationContext())
-							.setSmallIcon(R.mipmap.video2);
+							.setSmallIcon(R.mipmap.nova);
 					final String scraperCover = c.getString(c.getColumnIndexOrThrow(Columns.COVER_PATH));
 					Bitmap bitmap = BitmapFactory.decodeFile(scraperCover);
 					if (bitmap == null&&c.getLong(mIDColumns) >= 0) {

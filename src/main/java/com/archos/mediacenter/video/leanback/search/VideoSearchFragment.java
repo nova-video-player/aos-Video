@@ -81,7 +81,7 @@ public class VideoSearchFragment extends SearchSupportFragment implements Search
 
         setSearchResultProvider(this);
         setOnItemViewClickedListener(new VideoViewClickedListener(getActivity()));
-        setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.video2));
+        setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.video2_full));
         mDelayedLoad = new SearchRunnable();
 
         int searchMode = getArguments() != null ? getArguments().getInt(VideoSearchActivity.EXTRA_SEARCH_MODE, VideoSearchActivity.SEARCH_MODE_ALL) : VideoSearchActivity.SEARCH_MODE_ALL;

@@ -202,7 +202,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     private void setHomeButton() {
 
-        int iconResId = PrivateMode.isActive() ? R.mipmap.video2_private : R.mipmap.video2;
+        int iconResId = PrivateMode.isActive() ? R.mipmap.nova_private : R.mipmap.nova;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
 

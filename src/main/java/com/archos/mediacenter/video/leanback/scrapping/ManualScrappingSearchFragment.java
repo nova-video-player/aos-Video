@@ -119,7 +119,7 @@ public abstract class ManualScrappingSearchFragment extends SearchSupportFragmen
         rowsPresenterSelector.addClassPresenter(ShadowLessListRow.class, new ShadowLessRowPresenter());
         mRowsAdapter = new ArrayObjectAdapter(rowsPresenterSelector);
 
-        setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.video2));
+        setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.nova));
         setSearchResultProvider(this);
         setOnItemViewClickedListener(new OnItemViewClickedListener() {
             @Override
