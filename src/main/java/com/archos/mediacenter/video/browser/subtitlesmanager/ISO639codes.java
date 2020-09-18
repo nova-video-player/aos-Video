@@ -87,6 +87,10 @@ public class ISO639codes {
 
         sMap.put("no",  R.string.s_norwegian);
         sMap.put("nor", R.string.s_norwegian);
+        sMap.put("nob", R.string.s_norwegian);
+
+        sMap.put("may", R.string.s_malay);
+        sMap.put("msa", R.string.s_malay);
 
         sMap.put("pl",  R.string.s_polish);
         sMap.put("pol", R.string.s_polish);

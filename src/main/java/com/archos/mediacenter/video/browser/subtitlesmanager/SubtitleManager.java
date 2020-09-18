@@ -440,6 +440,9 @@ public class SubtitleManager {
                         final String subFilenameWithoutExtension = subFilename.substring(0, subFilename.length() - (fileExtension.length() + 1));
                         final String languageExtension = getLanguage(subFilenameWithoutExtension);
                         if (languageExtension != null) {
+                            // note: does not work for fra but ok for fr or fre
+                            //final Locale locale = new Locale.Builder().setLanguage(languageExtension).build();
+                            //subtitleName = locale.getDisplayLanguage();
                             subtitleName = ISO639codes.getLanguageNameForCode(mContext, languageExtension);
                         }
                         // In case we don't have the subtitle language we put the full file name
