@@ -329,6 +329,7 @@
     <string name="s_vietnamese">Vietnamesisch</string>
     <string name="s_lithuanian">Litauisch</string>
     <string name="s_indonesian">Indonesisch</string>
+    <string name="s_malay">Malaiisch</string>
     <string name="s_none">Kein</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Video nicht abspielbar</string>

@@ -337,6 +337,7 @@
     <string name="s_vietnamese">Вьетнамский</string>
     <string name="s_lithuanian">Литовский</string>
     <string name="s_indonesian">Индонезийский</string>
+    <string name="s_malay">Малайский</string>
     <string name="s_none">Нет</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Воспроизведение видео невозможно</string>
