@@ -689,7 +689,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     public void propertyChange(PropertyChangeEvent evt) {
                         if (evt.getOldValue() != evt.getNewValue()) {
                             if (DBG) Log.d(TAG, "NetworkState for " + evt.getPropertyName() + " changed:" + evt.getOldValue() + " -> " + evt.getNewValue());
-                            if (!networkState.hasLocalConnection()) {
+                            if (!networkState.hasLocalConnection() && !mPlayer.isLocalVideo()) { // should not finish if playing local file
                                 if (DBG) Log.d(TAG, "lost network: finish");
                                 finish();
                             }
