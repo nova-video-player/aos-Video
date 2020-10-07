@@ -1,6 +1,3 @@
-- Display external storage label/description on AndroidTV
-- Do not pollute subtitle manual picker with cached online retrieved subs
-- Allow http video streaming
-- chromeOS/Amazon UI fixes
-- Add missing subtitles ISO639 code strings
-- Stability enhancement
+_ Do not stop local video playback on network connectivity change
+- Use new nova icon for search bar
+- Fix search crash on old Amazon firesticks
