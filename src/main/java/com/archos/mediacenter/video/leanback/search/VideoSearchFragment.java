@@ -47,6 +47,8 @@ import com.archos.mediacenter.video.browser.loader.VideoLoader;
 import com.archos.mediacenter.video.leanback.presenter.EmptyViewPresenter;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import androidx.leanback.widget.ShadowLessRowPresenter;
+import androidx.leanback.widget.SpeechRecognitionCallback;
+
 
 public class VideoSearchFragment extends SearchSupportFragment implements SearchSupportFragment.SearchResultProvider {
     public static final int ROW_ID = 2000;
@@ -56,6 +58,7 @@ public class VideoSearchFragment extends SearchSupportFragment implements Search
     private Handler mHandler = new Handler();
     private SearchRunnable mDelayedLoad;
     private VideoLoader mSearchLoader;
+    private SpeechRecognitionCallback mSpeechRecognitionCallback;
     private String mLastQuery;
     private static final int SEARCH_REQUEST_CODE = 1;
 
@@ -78,6 +81,21 @@ public class VideoSearchFragment extends SearchSupportFragment implements Search
         rowsPresenterSelector.addClassPresenter(ListRow.class, new ListRowPresenter());
         rowsPresenterSelector.addClassPresenter(ShadowLessListRow.class, new ShadowLessRowPresenter());
         mRowsAdapter = new ArrayObjectAdapter(rowsPresenterSelector);
+
+        mSpeechRecognitionCallback = new SpeechRecognitionCallback() {
+
+            @Override
+            public void recognizeSpeech() {
+
+                // ACTION_RECOGNIZE_SPEECH
+                try {
+                    startActivityForResult(getRecognizerIntent(), SEARCH_REQUEST_CODE);
+                }catch (android.content.ActivityNotFoundException e){
+                    //no google device
+                }
+            }
+        };
+        setSpeechRecognitionCallback(mSpeechRecognitionCallback);
 
         setSearchResultProvider(this);
         setOnItemViewClickedListener(new VideoViewClickedListener(getActivity()));
@@ -109,6 +127,7 @@ public class VideoSearchFragment extends SearchSupportFragment implements Search
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         Resources r = getResources();
         BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
         bgMngr.attach(getActivity().getWindow());
