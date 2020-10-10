@@ -574,6 +574,10 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             attachWindow();
         } else {
             if (DBG_CONFIG) Log.d(TAG, "setSizes, mControllerView == null, doing nothing");
+            // TODO MARC doing nothin on replay
+            detachWindow();
+            attachWindow();
+
         }
     }
 
@@ -632,7 +636,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         playerControllersContainer = (FrameLayout)mControllerView.findViewById(R.id.playerControllersContainer);
         playerControllersContainer.addView(mControllerViewLeft);
 
-        if (DBG_CONFIG) Log.d(TAG, "attachWindow: layout WxH " + mLayoutHeight + "x" + mLayoutWidth);
+        if (DBG_CONFIG) Log.d(TAG, "attachWindow: layout WxH " + mLayoutWidth + "x" + mLayoutHeight);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mLayoutWidth, mLayoutHeight);
         mPlayerView.addView(mControllerView, params);
         if (DBG_CONFIG) Log.d(TAG, "attachWindow, updateOrientation();");
@@ -664,42 +668,42 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     public void updateOrientation() {
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N_MR1) {
-            int orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+            int rotation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+            if (DBG_CONFIG) Log.d(TAG,"updateOrientation, orientation is " + PlayerActivity.getHumanReadableRotation(rotation) + "(" + rotation + "), isRotationLocked " + PlayerActivity.isRotationLocked());
 
-            if (DBG) Log.d(TAG,"updateOrientation, orientation is " + orientation);
-            if (PlayerActivity.isRotationLocked()) {
-                orientation = PlayerActivity.getLockedRotation();
-                if (DBG) Log.d(TAG, "updateOrientation: due to rotationLocked setting overriding orientation with " + orientation + "(" + PlayerActivity.getHumanReadableRotation(orientation) + "°)");
+            if (PlayerActivity.isRotationLocked()) { // if rotation is locked pick forced orientation rotation
+                if (DBG_CONFIG) Log.d(TAG, "updateSizes RotationLocked overriding rotation from " + rotation + " to " + PlayerActivity.getLockedRotation());
+                rotation = PlayerActivity.getLockedRotation();
             }
 
             SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
             RelativeLayout.LayoutParams relativeParams = ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams());
             int shiftUp = 0;
             int shiftLeft = 0;
-            switch (orientation) {
+            switch (rotation) {
                 case Surface.ROTATION_270:
-                    if (DBG) Log.d(TAG,"updateOrientation, rotation is 270 shifting right from getNavigationBarHeight=" + getNavigationBarHeight());
+                    if (DBG_CONFIG) Log.d(TAG,"updateOrientation, rotation is 270 shifting right from getNavigationBarHeight=" + getNavigationBarHeight());
                     ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                     if (isSystemBarOnBottom(mContext)) {
-                        if (DBG) Log.d(TAG,"updateOrientation, SystemBarOnBottom shifting up by getNavigationBarHeight=" + getNavigationBarHeight());
+                        if (DBG_CONFIG) Log.d(TAG,"updateOrientation, SystemBarOnBottom shifting up by getNavigationBarHeight=" + getNavigationBarHeight());
                         shiftUp += getNavigationBarHeight();
                     } else {
-                        if (DBG) Log.d(TAG,"updateOrientation, ! SystemBarOnBottom shifting left/right by getNavigationBarHeight=" + getNavigationBarHeight());
+                        if (DBG_CONFIG) Log.d(TAG,"updateOrientation, ! SystemBarOnBottom shifting left/right by getNavigationBarHeight=" + getNavigationBarHeight());
                         shiftLeft += getNavigationBarHeight();
                     }
                     relativeParams.setMargins(shiftLeft, 0, 0, shiftUp);
                     break;
                 case Surface.ROTATION_90:
-                    if (DBG) Log.d(TAG,"updateOrientation, rotation is 90");
+                    if (DBG_CONFIG) Log.d(TAG,"updateOrientation, rotation is 90");
                     // FIXME: ALIGN_PARENT_RIGHT should have been simpler but results in shifted layout by safeInsetRight+safeInsetLeft+navigationBarHeight
                     ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                     if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false)) {
-                        if (DBG) Log.d(TAG,"updateOrientation, shifting right PlayerActivity.safeInsetLeft=" + PlayerActivity.safeInset.get(0));
+                        if (DBG_CONFIG) Log.d(TAG,"updateOrientation, shifting right PlayerActivity.safeInsetLeft=" + PlayerActivity.safeInset.get(0));
                         relativeParams.setMargins(PlayerActivity.safeInset.get(0), 0, 0, 0); // safeInset.get(0) is safeInsetLeft
                     }
                     break;
                 case Surface.ROTATION_0:
-                    if (DBG) Log.d(TAG,"updateOrientation, rotation is 0 shifting up from getNavigationBarHeight=" + getNavigationBarHeight());
+                    if (DBG_CONFIG) Log.d(TAG,"updateOrientation, rotation is 0 shifting up from getNavigationBarHeight=" + getNavigationBarHeight());
                     // FIXME: this is the only way found to get in portrait the seekbar on top of navigationBar
                     if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false))
                         ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -708,14 +712,14 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     relativeParams.setMargins(0, 0, 0, getNavigationBarHeight());
                     break;
                 case Surface.ROTATION_180:
-                    if (DBG) Log.d(TAG,"updateOrientation, rotation is 180");
+                    if (DBG_CONFIG) Log.d(TAG,"updateOrientation, rotation is 180");
                     ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                     if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false)) {
-                        if (DBG) Log.d(TAG,"updateOrientation, shifting right PlayerActivity.safeInsetTop=" + PlayerActivity.safeInset.get(1));
+                        if (DBG_CONFIG) Log.d(TAG,"updateOrientation, shifting right PlayerActivity.safeInsetTop=" + PlayerActivity.safeInset.get(1));
                         shiftUp += PlayerActivity.safeInset.get(1); // safeInset.get(1) is safeInsetTop
                     }
                     if (isSystemBarOnBottom(mContext)) {
-                        if (DBG) Log.d(TAG,"updateOrientation, SystemBarOnBottom shifting up by getNavigationBarHeight=" + getNavigationBarHeight());
+                        if (DBG_CONFIG) Log.d(TAG,"updateOrientation, SystemBarOnBottom shifting up by getNavigationBarHeight=" + getNavigationBarHeight());
                         shiftUp += getNavigationBarHeight();
                     }
                     if (shiftUp>0)

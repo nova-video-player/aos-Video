@@ -133,7 +133,7 @@ DialogInterface.OnDismissListener, TrackInfoListener,
 IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     private static final boolean DBG = false;
-    private static final boolean DBG_CONFIG = true;
+    private static final boolean DBG_CONFIG = false;
     private static final boolean DBG_LISTENER = false;
     private static final String TAG = "PlayerActivity";
 
@@ -286,16 +286,20 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     }
 
     private void updateInsetsOnRotation() {
-        int orientation = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+        int rotation = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+        if (isRotationLocked()) { // if rotation is locked pick forced orientation rotation
+            if (DBG_CONFIG) Log.d(TAG, "updateSizes RotationLocked overriding rotation from " + rotation + " to " + mLockedRotation);
+            rotation = mLockedRotation;
+        }
         if (DBG_CONFIG) Log.d(TAG, "updateInsetsOnRotation: " +
                 "safeInsetRotation=" + safeInsetRotation + " (" + getHumanReadableRotation(safeInsetRotation) + ")" +
-                ", orientation=" + orientation + " (" + getHumanReadableRotation(orientation) + ")");
-        if (orientation != safeInsetRotation) {
+                ", orientation=" + rotation + " (" + getHumanReadableRotation(rotation) + ")");
+        if (rotation != safeInsetRotation) {
             //ROTATION_0 = 0; ROTATION_90 = 1; ROTATION_180 = 2; ROTATION_270 = 3;
-            if (DBG_CONFIG) Log.d(TAG, "updateInsetsOnRotation, before rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
-            Collections.rotate(safeInset, safeInsetRotation - orientation);
-            safeInsetRotation = orientation;
-            if (DBG_CONFIG) Log.d(TAG, "updateInsetsOnRotation, after rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
+            if (DBG_CONFIG) Log.d(TAG, "updateInsetsOnRotation: before rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
+            Collections.rotate(safeInset, safeInsetRotation - rotation);
+            safeInsetRotation = rotation;
+            if (DBG_CONFIG) Log.d(TAG, "updateInsetsOnRotation: after rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
         }
     }
 
@@ -612,6 +616,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                         @Override
                         public void run() {
                             if (DBG_CONFIG) Log.d(TAG, "addOnLayoutChangeListener, do updateSizes()");
+                            // without this video is stretched fullscreen
                             updateSizes();
                         }
                     });
@@ -680,6 +685,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                                 if (DBG_CONFIG)
                                     Log.d(TAG, "onDisplayChanged do updateInsetsOnRotation()+updateSizes() and safeInsetRotation=" + safeInsetRotation + ", orientation=" + orientation);
                                 updateInsetsOnRotation();
+                                // needed to update dimensions when unchecking autorot
                                 updateSizes();
                             }
                         });
@@ -997,17 +1003,22 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         boolean isInMultiWindowMode = Build.VERSION.SDK_INT>=Build.VERSION_CODES.N&&isInMultiWindowMode();
         Display display = getWindowManager().getDefaultDisplay();
         int width, height, layoutWidth, layoutHeight, displayWidth, displayHeight;
-        Point point = new Point();
+        Point realPoint = new Point();
         // returns the real screen dimension
-        display.getRealSize(point);
-        displayWidth = point.x;
-        displayHeight = point.y;
+        display.getRealSize(realPoint);
+        displayWidth = realPoint.x;
+        displayHeight = realPoint.y;
         // returns the available dimension (real screen size minus decors): this is needed on phones, cannot only matchParent
+        Point point = new Point();
         display.getSize(point);
         // note on chromeos pixelbook point.y when fullscreen only reports a wrong layoutHeight (2400x1400 instead of 2400x1600) as if there are hidden decors
         // status bar | action bar | navigation bar, system bar = status bar + navigation bar
         layoutWidth = point.x;
         layoutHeight = point.y;
+
+        boolean isPortrait = ((1.0f*layoutHeight/layoutWidth)>1.0);
+        boolean isSeenPortrait = ((1.0f*displayHeight/displayWidth)>1.0);
+        if (DBG_CONFIG) Log.d(TAG, "updateSizes: isPortrait " + isPortrait + ", isSeenPortrait " + isSeenPortrait);
 
         // hack to fix fullscreen height on chromeos pixelbook (and more?) since it reports 2400x1440 insteqd of 2400x1600 but ok in multiWindow
         if(isChromeOS(mContext)&&(layoutWidth == displayWidth)&&(layoutHeight != displayHeight)) {
@@ -1015,13 +1026,17 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             layoutHeight = displayHeight;
         }
 
-        if (DBG_CONFIG) Log.d(TAG, "updateSizes layoutWidth=" + layoutWidth +
-            ", layoutHeight=" + layoutHeight +
-            ", displayWidth=" + displayWidth +
-            ", displayHeight=" + displayHeight );
+        if (DBG_CONFIG) Log.d(TAG, "updateSizes layout WxH=" + layoutWidth + "x" + layoutHeight +
+                ", display WxH=" + displayWidth + "x" + displayHeight);
 
-        if (DBG_CONFIG) Log.d(TAG, "updateSizes isInMultiWindowMode(): " + isInMultiWindowMode);
-        if (DBG_CONFIG) Log.d(TAG, "updateSizes isInPictureInPictureMode(): " + isInPictureInPictureMode);
+        // if rotation is locked reverse w/h but only if we have a difference of portrait/landscape perception between layout and screen dimension
+        if (isRotationLocked()&&(isPortrait != isSeenPortrait)) {
+            displayWidth = realPoint.y;
+            displayHeight = realPoint.x;
+            if (DBG_CONFIG) Log.d(TAG, "updateSizes RotationLocked overriding display WxH=" + displayWidth + "x" + displayHeight);
+        }
+
+        if (DBG_CONFIG) Log.d(TAG, "updateSizes isInMultiWindowMode(): " + isInMultiWindowMode + ", isInPictureInPictureMode(): " + isInPictureInPictureMode);
 
         if (!isInPictureInPictureMode&&!isInMultiWindowMode) {
             width = displayWidth;
@@ -1031,7 +1046,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             height = layoutHeight;
         }
 
-        if (DBG_CONFIG) Log.d(TAG, "updateSizes trueFullscreen true size: " + width+"x"+height);
+        if (DBG_CONFIG) Log.d(TAG, "updateSizes: trueFullscreen size WxH=" + width+"x"+height);
         if(!isChromeOS(mContext)) { //keeping things as it was on other devices
             ViewGroup.LayoutParams lp = mRootView.getLayoutParams();
             lp.width = width;
@@ -1041,7 +1056,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mSurfaceController.setScreenSize(width, height);
         mSubtitleManager.setScreenSize(width, height);
         if(!isInPictureInPictureMode) {
-            if (DBG_CONFIG) Log.d(TAG, "updateSizes mPlayerController.setSizes layoutWidth=" + layoutWidth +", layoutHeight=" + layoutHeight + ", displayWidth=" + displayWidth + ", displayHeight=" + displayHeight );
+            if (DBG_CONFIG) Log.d(TAG, "updateSizes: mPlayerController.setSizes layout WxH=" + layoutWidth + "x" + layoutHeight + ", display WxH=" + displayWidth + "x" + displayHeight );
             mPlayerController.setSizes(displayWidth, displayHeight, layoutWidth, layoutHeight);
             // Close the menus if needed
             mAudioInfoController.resetPopup();
@@ -1064,9 +1079,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (DBG_CONFIG) Log.d(TAG, "onConfigurationChanged, do updateSizes()");
-                // updateSize only if rotation is not locked otherwise it creates a glitch https://github.com/nova-video-player/aos-AVP/issues/369
-                if (!mIsRotationLocked) updateSizes();
+                if (DBG_CONFIG) Log.d(TAG, "onConfigurationChanged: do updateSizes()");
+                updateSizes();
             }
         });
 
@@ -1138,12 +1152,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         } catch (SettingNotFoundException e) {
             systemLock = false;
         }
-
+        mIsRotationLocked = (avpLock || systemLock);
         if (DBG_CONFIG) Log.d(TAG, "avpLock: " + avpLock + " systemLock: " + systemLock);
-        if (avpLock || systemLock) {
-
-            mIsRotationLocked = true;
-
+        if (mIsRotationLocked) {
             int tmpOrientation = getResources().getConfiguration().orientation;
             if (DBG_CONFIG) Log.d(TAG, "setLockRotation: current orientation is " + getHumanReadableOrientation(tmpOrientation));
             int wantedOrientation;
