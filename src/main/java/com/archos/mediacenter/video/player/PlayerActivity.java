@@ -785,8 +785,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mSubsFavoriteLanguage = mPreferences.getString(KEY_SUBTITLES_FAVORITE_LANGUAGE, Locale.getDefault().getISO3Language());
         mForceSWDecoding = mPreferences.getBoolean(KEY_FORCE_SW, false);
         setLockRotation(mLockRotation);
-        if (DBG) Log.d(TAG, "onStart, do updateSizes()");
-        updateSizes();
         mSurfaceController.setVideoFormat(Integer.parseInt(mPreferences.getString(KEY_PLAYER_FORMAT, "-1")),
                 Integer.parseInt(mPreferences.getString(KEY_PLAYER_AUTO_FORMAT, "-1")));
         if (LibAvos.isAvailable()) {
