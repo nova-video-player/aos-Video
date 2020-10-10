@@ -666,6 +666,10 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
             int orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
             if (DBG) Log.d(TAG,"updateOrientation, orientation is " + orientation);
+            if (PlayerActivity.isRotationLocked()) {
+                orientation = PlayerActivity.getLockedRotation();
+                if (DBG) Log.d(TAG, "updateOrientation: due to rotationLocked setting overriding orientation with " + orientation + "(" + PlayerActivity.getHumanReadableRotation(orientation) + "°)");
+            }
 
             SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
             RelativeLayout.LayoutParams relativeParams = ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams());
