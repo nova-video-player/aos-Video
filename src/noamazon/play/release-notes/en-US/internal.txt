@@ -1,3 +1,4 @@
 _ Do not stop local video playback on network connectivity change
 - Use new nova icon for search bar
 - Fix search crash on old Amazon firesticks
+- Fix wrong player layout when screen rotation is locked and video started in portrait
