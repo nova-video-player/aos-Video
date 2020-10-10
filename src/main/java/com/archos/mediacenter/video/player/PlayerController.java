@@ -106,6 +106,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 {
     private static final String TAG = "PlayerController";
     private static final boolean DBG = false;
+    private static final boolean DBG_CONFIG = false;
     private static final boolean DBG_ALWAYS_SHOW = false;
 
     private static final int MSG_FADE_OUT = 1;
@@ -565,14 +566,14 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mLayoutWidth = layoutWidth;
         mLayoutHeight = layoutHeight;
         mSystemBarHeight = displayHeight - mLayoutHeight;
-        if (DBG) Log.d(TAG, "setSizes layout: " + mLayoutWidth + "x" + mLayoutHeight + " / display: " + displayWidth + "x" + displayHeight + ", systemBarHeight: " + mSystemBarHeight);
+        if (DBG_CONFIG) Log.d(TAG, "setSizes layout: " + mLayoutWidth + "x" + mLayoutHeight + " / display: " + displayWidth + "x" + displayHeight + ", systemBarHeight: " + mSystemBarHeight);
         if (mControllerView != null) {
-            if (DBG) Log.d(TAG, "setSizes, mControllerView != null, recreate whole layout");
+            if (DBG_CONFIG) Log.d(TAG, "setSizes, mControllerView != null, recreate whole layout");
             // size changed and maybe orientation too, recreate the whole layout
             detachWindow();
             attachWindow();
         } else {
-            if (DBG) Log.d(TAG, "setSizes, mControllerView == null, doing nothing");
+            if (DBG_CONFIG) Log.d(TAG, "setSizes, mControllerView == null, doing nothing");
         }
     }
 
@@ -589,7 +590,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     private void attachWindow() {
 
-        if (DBG) Log.d(TAG,"attachWindow getStatusBarHeight=" + getStatusBarHeight() +
+        if (DBG_CONFIG) Log.d(TAG,"attachWindow getStatusBarHeight=" + getStatusBarHeight() +
                 ", getNavigationBarHeight=" + getNavigationBarHeight() +
                 ", getActionBarHeight=" + getActionBarHeight() +
                 ", ");
@@ -631,12 +632,12 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         playerControllersContainer = (FrameLayout)mControllerView.findViewById(R.id.playerControllersContainer);
         playerControllersContainer.addView(mControllerViewLeft);
 
-        if (DBG) Log.d(TAG, "attachWindow: layout WxH " + mLayoutHeight + "x" + mLayoutWidth);
+        if (DBG_CONFIG) Log.d(TAG, "attachWindow: layout WxH " + mLayoutHeight + "x" + mLayoutWidth);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mLayoutWidth, mLayoutHeight);
         mPlayerView.addView(mControllerView, params);
-        if (DBG) Log.d(TAG, "attachWindow, updateOrientation();");
+        if (DBG_CONFIG) Log.d(TAG, "attachWindow, updateOrientation();");
         updateOrientation();
-        if (DBG) Log.d(TAG, "attachWindow, mPlayerView.addView");
+        if (DBG_CONFIG) Log.d(TAG, "attachWindow, mPlayerView.addView");
 
         initMenuAdapter(mControllerViewLeft);
         switchMode(TVUtils.isTV(mContext));
@@ -663,8 +664,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     public void updateOrientation() {
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N_MR1) {
-
             int orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+
             if (DBG) Log.d(TAG,"updateOrientation, orientation is " + orientation);
             if (PlayerActivity.isRotationLocked()) {
                 orientation = PlayerActivity.getLockedRotation();
@@ -1418,15 +1419,10 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             /* volume can be changed by an other application: update it */
             if (hasFocus) {
                 updateVolumeBar();
-
-                if (mActionBarShowing) {
-                    show(FLAG_SIDE_ACTION_BAR, SHOW_TIMEOUT);
-                }
+                if (mActionBarShowing) show(FLAG_SIDE_ACTION_BAR, SHOW_TIMEOUT);
             } else {
                 /* notification panel is showing, don't hide the status bar */
-                if (mActionBarShowing) {
-                    show(FLAG_SIDE_ACTION_BAR, 0);
-                }
+                if (mActionBarShowing) show(FLAG_SIDE_ACTION_BAR, 0);
             }
         }
     }

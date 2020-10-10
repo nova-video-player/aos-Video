@@ -249,7 +249,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     public void setCutoutMetrics() {
         // create list of 4 elements {L,T,R,B}
         if (safeInset.size() != 4) {
-            if (DBG) Log.d(TAG, "setCutoutMetrics safeInset list is of size " + safeInset.size() + ", resetting the list to zero elements");
+            if (DBG_CONFIG) Log.d(TAG, "setCutoutMetrics safeInset list is of size " + safeInset.size() + ", resetting the list to zero elements");
             safeInset.clear();
             for (int i = 0; i < 4; i++)
                 safeInset.add(0);
@@ -258,18 +258,18 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
                 if (cutout == null) {
-                    if (DBG) Log.d(TAG, "device without cutout");
+                    if (DBG_CONFIG) Log.d(TAG, "device without cutout");
                 } else {
                     hasCutout = true;
                     List<Rect> rects = cutout.getBoundingRects();
                     if (rects.size() == 1) {
-                        if (DBG) Log.d(TAG, "one cutout");
+                        if (DBG_CONFIG) Log.d(TAG, "one cutout");
                         Rect rect = rects.get(0);
-                        if (DBG) Log.d(TAG, "cutout bounding rect " + rect);
+                        if (DBG_CONFIG) Log.d(TAG, "cutout bounding rect " + rect);
                     } else {
-                        if (DBG) Log.d(TAG, "cutout: more than one cutout");
+                        if (DBG_CONFIG) Log.d(TAG, "cutout: more than one cutout");
                         for (Rect rect : rects) {
-                            if (DBG) Log.d(TAG, "cutout: cutout bounding rect " + rect);
+                            if (DBG_CONFIG) Log.d(TAG, "cutout: cutout bounding rect " + rect);
                         }
                     }
                     safeInset.set(0, cutout.getSafeInsetLeft());
@@ -277,7 +277,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     safeInset.set(2, cutout.getSafeInsetRight());
                     safeInset.set(3, cutout.getSafeInsetBottom());
                     safeInsetRotation = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-                    if (DBG) Log.d(TAG, "setCutoutMetrics safeInset=" + safeInset);
+                    if (DBG_CONFIG) Log.d(TAG, "setCutoutMetrics safeInset=" + safeInset);
                 }
             }
         } catch (Exception e) {
@@ -287,13 +287,15 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     private void updateInsetsOnRotation() {
         int orientation = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-        if (DBG) Log.d(TAG, "updateInsetsOnRotation, safeInsetRotation=" + safeInsetRotation + ", orientation=" + orientation);
+        if (DBG_CONFIG) Log.d(TAG, "updateInsetsOnRotation: " +
+                "safeInsetRotation=" + safeInsetRotation + " (" + getHumanReadableRotation(safeInsetRotation) + ")" +
+                ", orientation=" + orientation + " (" + getHumanReadableRotation(orientation) + ")");
         if (orientation != safeInsetRotation) {
             //ROTATION_0 = 0; ROTATION_90 = 1; ROTATION_180 = 2; ROTATION_270 = 3;
-            if (DBG) Log.d(TAG, "updateInsetsOnRotation, before rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
+            if (DBG_CONFIG) Log.d(TAG, "updateInsetsOnRotation, before rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
             Collections.rotate(safeInset, safeInsetRotation - orientation);
             safeInsetRotation = orientation;
-            if (DBG) Log.d(TAG, "updateInsetsOnRotation, after rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
+            if (DBG_CONFIG) Log.d(TAG, "updateInsetsOnRotation, after rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
         }
     }
 
@@ -609,7 +611,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (DBG) Log.d(TAG, "addOnLayoutChangeListener, do updateSizes()");
+                            if (DBG_CONFIG) Log.d(TAG, "addOnLayoutChangeListener, do updateSizes()");
                             updateSizes();
                         }
                     });
@@ -675,7 +677,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (DBG)
+                                if (DBG_CONFIG)
                                     Log.d(TAG, "onDisplayChanged do updateInsetsOnRotation()+updateSizes() and safeInsetRotation=" + safeInsetRotation + ", orientation=" + orientation);
                                 updateInsetsOnRotation();
                                 updateSizes();
@@ -985,6 +987,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         stopDialog();
         removeNetworkListener();
         VideoEffect.resetForcedMode();
+        if (DBG) Log.d(TAG, "onDestroy: setEffect");
         setEffect(VideoEffect.getDefaultMode());
         super.onDestroy();
     }
@@ -1012,13 +1015,13 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             layoutHeight = displayHeight;
         }
 
-        if (DBG) Log.d(TAG, "updateSizes layoutWidth=" + layoutWidth +
+        if (DBG_CONFIG) Log.d(TAG, "updateSizes layoutWidth=" + layoutWidth +
             ", layoutHeight=" + layoutHeight +
             ", displayWidth=" + displayWidth +
             ", displayHeight=" + displayHeight );
 
-        if (DBG) Log.d(TAG, "updateSizes isInMultiWindowMode(): " + isInMultiWindowMode);
-        if (DBG) Log.d(TAG, "updateSizes isInPictureInPictureMode(): " + isInPictureInPictureMode);
+        if (DBG_CONFIG) Log.d(TAG, "updateSizes isInMultiWindowMode(): " + isInMultiWindowMode);
+        if (DBG_CONFIG) Log.d(TAG, "updateSizes isInPictureInPictureMode(): " + isInPictureInPictureMode);
 
         if (!isInPictureInPictureMode&&!isInMultiWindowMode) {
             width = displayWidth;
@@ -1028,7 +1031,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             height = layoutHeight;
         }
 
-        if (DBG) Log.d(TAG, "updateSizes trueFullscreen true size: " + width+"x"+height);
+        if (DBG_CONFIG) Log.d(TAG, "updateSizes trueFullscreen true size: " + width+"x"+height);
         if(!isChromeOS(mContext)) { //keeping things as it was on other devices
             ViewGroup.LayoutParams lp = mRootView.getLayoutParams();
             lp.width = width;
@@ -1038,7 +1041,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mSurfaceController.setScreenSize(width, height);
         mSubtitleManager.setScreenSize(width, height);
         if(!isInPictureInPictureMode) {
-            if (DBG) Log.d(TAG, "updateSizes mPlayerController.setSizes layoutWidth=" + layoutWidth +", layoutHeight=" + layoutHeight + ", displayWidth=" + displayWidth + ", displayHeight=" + displayHeight );
+            if (DBG_CONFIG) Log.d(TAG, "updateSizes mPlayerController.setSizes layoutWidth=" + layoutWidth +", layoutHeight=" + layoutHeight + ", displayWidth=" + displayWidth + ", displayHeight=" + displayHeight );
             mPlayerController.setSizes(displayWidth, displayHeight, layoutWidth, layoutHeight);
             // Close the menus if needed
             mAudioInfoController.resetPopup();
@@ -1904,6 +1907,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 default:
                     break;
             }
+            if (DBG) Log.d(TAG, "set3DMode: setEffect");
             setEffectForced(mode);
         }
     }
@@ -2073,6 +2077,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 return true;
             case MENU_LOCK_ROTATION_ID:
                 mLockRotation = !mLockRotation;
+                if(DBG) Log.d(TAG, "onStart: setLockRotation " + mLockRotation);
                 setLockRotation(mLockRotation);
                 mPreferences.edit().putBoolean(KEY_LOCK_ROTATION, mLockRotation).apply();
                 //item.setTitle(mLockRotation ? R.string.rotation_unlock : R.string.rotation_lock);
@@ -2228,12 +2233,14 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         // TODO Auto-generated method stub
                         if (isChecked) {
+                            if (DBG) Log.d(TAG, "onOptionsItemSelected: setEffect");
                             setEffectForced(mSavedMode);
                             ad.getListView().setEnabled(true);
                             for(RadioButton rb : rbs)
                                 rb.setEnabled(true);
                         }
                         else {
+                            if (DBG) Log.d(TAG, "onOptionsItemSelected: setEffect");
                             setEffectForced(VideoEffect.NORMAL_2D_MODE, false);
                             ad.getListView().setEnabled(false);
                             for (RadioButton rb : rbs)
@@ -2567,7 +2574,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             mUri = mVideoInfo.uri;
             if (DBG) Log.d(TAG, "setVideoInfo mVideoId: " + mVideoId);
 
-
             // get resume position only if video was played
             mLastPosition = getLastPosition(mVideoInfo, mResume);
             if (!mCling) {
@@ -2622,6 +2628,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         if (viewMode == VideoEffect.NORMAL_2D_MODE)
             viewType = VideoEffect.EFFECT_NONE;
 
+        if (DBG) Log.d(TAG, "setVideoInfo: setEffect");
         setEffect(viewType, viewMode);
 
         /*
@@ -3331,7 +3338,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         public void onVideoMetadataUpdated(VideoMetadata vMetadata) {
             if (isStereoEffectOn()) {
                 int mode = vMetadata.getVideoTrack().s3dMode;
-                if (mode != 0) setEffect (mode);
+                if (mode != 0) {
+                    if (DBG) Log.d(TAG, "onVideoMetadataUpdated: setEffect");
+                    setEffect (mode);
+                }
             }
         }
 
