@@ -133,6 +133,7 @@ DialogInterface.OnDismissListener, TrackInfoListener,
 IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     private static final boolean DBG = false;
+    private static final boolean DBG_CONFIG = true;
     private static final boolean DBG_LISTENER = false;
     private static final String TAG = "PlayerActivity";
 
@@ -381,7 +382,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private int mRemotePosition =-1;
     private int mLastPosition;
     private int mForceAudioTrack = -1;
-    private boolean mLockRotation;
+    private static boolean mLockRotation;
+    private static boolean mIsRotationLocked;
+    private static int mLockedRotation;
     private boolean mForceSWDecoding;
     private boolean mHideSubtitles = false;
     private String mSubsFavoriteLanguage;
@@ -435,6 +438,12 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         }
     };
 
+    public static Boolean isRotationLocked() {
+        return mIsRotationLocked;
+    }
+    public static int getLockedRotation() {
+        return mLockedRotation;
+    }
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -735,15 +744,18 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     }
 
     private void setEffect(int type, int mode, boolean needSave) {
+        if (DBG) Log.d(TAG, "setEffectForced: type " + type + ", mode " + mode + ", needSave " +needSave);
         if (needSave) mSavedMode=mode;
         mPlayer.setEffect(type, mode);
         mPlayerController.setUIMode(mPlayer.getUIMode());
         if(mSubtitleManager!=null)
             mSubtitleManager.setUIMode(mPlayer.getUIMode());
         if(type!=VideoEffect.EFFECT_NONE){
+            if(DBG) Log.d(TAG, "setEffect: setLockRotation true");
             setLockRotation(true);
         }
         else{
+            if(DBG) Log.d(TAG, "setEffect: setLockRotation " + mLockRotation);
             setLockRotation(mLockRotation);
         }
     }
@@ -784,6 +796,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mNetworkBookmarksEnabled = mPreferences.getBoolean(KEY_NETWORK_BOOKMARKS, true);
         mSubsFavoriteLanguage = mPreferences.getString(KEY_SUBTITLES_FAVORITE_LANGUAGE, Locale.getDefault().getISO3Language());
         mForceSWDecoding = mPreferences.getBoolean(KEY_FORCE_SW, false);
+        if(DBG) Log.d(TAG, "onStart: setLockRotation " + mLockRotation);
         setLockRotation(mLockRotation);
         mSurfaceController.setVideoFormat(Integer.parseInt(mPreferences.getString(KEY_PLAYER_FORMAT, "-1")),
                 Integer.parseInt(mPreferences.getString(KEY_PLAYER_AUTO_FORMAT, "-1")));
@@ -1048,18 +1061,73 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (DBG) Log.d(TAG, "onConfigurationChanged, do updateSizes()");
-                updateSizes();
+                if (DBG_CONFIG) Log.d(TAG, "onConfigurationChanged, do updateSizes()");
+                // updateSize only if rotation is not locked otherwise it creates a glitch https://github.com/nova-video-player/aos-AVP/issues/369
+                if (!mIsRotationLocked) updateSizes();
             }
         });
 
         invalidateOptionsMenu();
     }
 
+    public static String getHumanReadableRotation(int rotation) {
+        String sRotation = "";
+        switch(rotation) {
+            case Surface.ROTATION_0:
+                sRotation ="0°";
+                break;
+            case Surface.ROTATION_90:
+                sRotation ="90°";
+                break;
+            case Surface.ROTATION_180:
+                sRotation ="180°";
+                break;
+            case Surface.ROTATION_270:
+                sRotation ="270°";
+                break;
+        }
+        return sRotation;
+    }
+
+    private static String getHumanReadableOrientation(int orientation) {
+        String sOrientation = "";
+        switch(orientation) {
+            case Configuration.ORIENTATION_LANDSCAPE:
+                sOrientation ="landscape";
+                break;
+            case Configuration.ORIENTATION_PORTRAIT:
+                sOrientation ="portrait";
+                break;
+            case Configuration.ORIENTATION_UNDEFINED:
+                sOrientation ="undefined";
+                break;
+        }
+        return sOrientation;
+    }
+
+    private static String getHumanReadableActivityOrientation(int orientation) {
+        String sOrientation = "";
+        switch(orientation) {
+            case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
+                sOrientation ="landscape";
+                break;
+            case ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE:
+                sOrientation ="reverse landscape";
+                break;
+            case ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT:
+                sOrientation ="portrait";
+                break;
+            case ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED:
+                sOrientation ="unspecified";
+                break;
+        }
+        return sOrientation;
+    }
+
     private void setLockRotation(boolean avpLock) {
         Display display = getWindowManager().getDefaultDisplay();
         int rotation = display.getRotation();
-        if (DBG) Log.d(TAG, "setLockRotation, rotation status: " + rotation);
+        if (DBG) Log.d(TAG, "setLockRotation, rotation status: " + rotation + ", i.e. " + getHumanReadableRotation(rotation));
 
         boolean systemLock;
         try {
@@ -1068,26 +1136,39 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             systemLock = false;
         }
 
-        if (DBG) Log.d(TAG, "avpLock: " + avpLock + " systemLock: " + systemLock);
+        if (DBG_CONFIG) Log.d(TAG, "avpLock: " + avpLock + " systemLock: " + systemLock);
         if (avpLock || systemLock) {
+
+            mIsRotationLocked = true;
+
             int tmpOrientation = getResources().getConfiguration().orientation;
-            int wantedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+            if (DBG_CONFIG) Log.d(TAG, "setLockRotation: current orientation is " + getHumanReadableOrientation(tmpOrientation));
+            int wantedOrientation;
 
             if (tmpOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_90)
+                if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_90) {
                     wantedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-                else
+                    mLockedRotation = Surface.ROTATION_90;
+                } else {
                     wantedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+                    mLockedRotation = Surface.ROTATION_270;
+                }
+                if (DBG_CONFIG) Log.d(TAG, "setLockRotation: wanted orientation is " + getHumanReadableActivityOrientation(wantedOrientation));
                 setRequestedOrientation(wantedOrientation);
             }
             else if (tmpOrientation == Configuration.ORIENTATION_PORTRAIT || tmpOrientation == Configuration.ORIENTATION_UNDEFINED) {
-                if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_90)
+                if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_90) {
                     wantedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-                else
+                    mLockedRotation = Surface.ROTATION_90;
+                } else {
                     wantedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+                    mLockedRotation = Surface.ROTATION_270;
+                }
+                if (DBG_CONFIG) Log.d(TAG, "setLockRotation: wanted orientation is " + getHumanReadableActivityOrientation(wantedOrientation));
                 setRequestedOrientation(wantedOrientation);
             }
         } else {
+            if (DBG_CONFIG) Log.d(TAG, "setLockRotation: wanted orientation is unspecified");
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
     }
