@@ -133,7 +133,7 @@ DialogInterface.OnDismissListener, TrackInfoListener,
 IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     private static final boolean DBG = false;
-    private static final boolean DBG_CONFIG = false;
+    private static final boolean DBG_CONFIG = true;
     private static final boolean DBG_LISTENER = false;
     private static final String TAG = "PlayerActivity";
 

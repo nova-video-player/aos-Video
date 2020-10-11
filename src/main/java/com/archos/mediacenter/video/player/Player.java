@@ -73,7 +73,7 @@ public class Player implements IPlayerControl,
                                TextureView.SurfaceTextureListener{
     private static String TAG = "Player";
     private static final boolean DBG = false;
-    private static final boolean DBG_CONFIG = false;
+    private static final boolean DBG_CONFIG = true;
     public static Player sPlayer;
     // settable by the client
     private Uri         mUri;

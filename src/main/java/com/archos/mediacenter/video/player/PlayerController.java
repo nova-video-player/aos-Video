@@ -106,7 +106,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 {
     private static final String TAG = "PlayerController";
     private static final boolean DBG = false;
-    private static final boolean DBG_CONFIG = false;
+    private static final boolean DBG_CONFIG = true;
     private static final boolean DBG_ALWAYS_SHOW = false;
 
     private static final int MSG_FADE_OUT = 1;
