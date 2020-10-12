@@ -47,6 +47,7 @@
     <string name="multiple_selection">Multiple selection</string>
     <!-- Context menu item -->
     <string name="play_from_beginning">Play from beginning</string>
+    <string name="play_to_secondary">Play to secondary screen</string>
     <!-- Dialog box button -->
 
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
