@@ -574,10 +574,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             attachWindow();
         } else {
             if (DBG_CONFIG) Log.d(TAG, "setSizes, mControllerView == null, doing nothing");
-            // TODO MARC doing nothin on replay
-            detachWindow();
-            attachWindow();
-
         }
     }
 
