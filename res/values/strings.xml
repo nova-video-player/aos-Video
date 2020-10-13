@@ -99,7 +99,7 @@
     <string name="cannot_list">Cannot list content</string>
 
     <!-- VIDEO -->
-    <string name="video">Nova Video</string>
+    <string name="video">Nova Video Player</string>
     <string name="videos">Videos</string>
     <string name="all_videos">All videos</string>
     <string name="not_played_yet_videos">Not played yet</string>
