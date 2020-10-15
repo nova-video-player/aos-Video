@@ -238,6 +238,7 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
                 int episode = cursor1.getInt(episodeColumn);
                 int season = cursor1.getInt(seasonColumn);
                 long show = cursor1.getLong(showColumn);
+                if (cursor1 != null) cursor1.close();
                 if (show > 0 && season >= 0 && episode >= 0) {
                     if (DBG) Log.d(TAG, "current episode : " + episode + " " + mUri);
                     Result result = findEpisode(episode + 1, season, show);
@@ -256,6 +257,7 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
 
                 }
             }
+            if (cursor1 != null) cursor1.close();
 
             int bucketId = FileUtils.getBucketId(mUri);
             if (DBG) Log.d(TAG, "UpdateNextTask.Result: trying to find for bucketId " + bucketId);
