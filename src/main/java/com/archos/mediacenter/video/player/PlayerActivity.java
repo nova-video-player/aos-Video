@@ -125,6 +125,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static com.archos.environment.ArchosFeatures.isChromeOS;
+import static com.archos.mediacenter.video.utils.MiscUtils.isEmulator;
 
 
 public class PlayerActivity extends AppCompatActivity implements PlayerController.Settings,
@@ -587,7 +588,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
          * (hide black bars on TVOUT)
          */
         // needed on Bravia for HDR content to avoid grey bars cf. issue #270
-        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        getWindow().setBackgroundDrawable(new ColorDrawable(0xFF000000));
+        if (isEmulator()) // avoid emulator UI glitch
+            getWindow().setBackgroundDrawable(new ColorDrawable(0xFF000000));
+        else getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         setContentView(R.layout.player);
         mRootView = findViewById(R.id.root);
@@ -602,7 +606,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     setCutoutMetrics();
                     getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
                     // needed on Bravia for HDR content to avoid grey bars cf. issue #270
-                    getWindow().getDecorView().setBackgroundColor(Color.TRANSPARENT);
+                    // avoid emulator UI glitch
+                    if (!isEmulator()) getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     return view.onApplyWindowInsets(insets);
                 }
             });
