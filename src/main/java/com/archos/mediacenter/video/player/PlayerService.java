@@ -282,7 +282,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      *              </ul>
      */
     private void updateNextVideo(boolean repeatFolder, boolean sync) {
-
+        if (DBG) Log.d(TAG, "updateNextVideo: repeatfolder " + repeatFolder + ", sync " + sync);
         // reset to nothing
         mNextUri = null;
         mNextVideoId = -1;
@@ -295,7 +295,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mUpdateNextTask.setListener(new UpdateNextTask.Listener() {
                 @Override
                 public void onResult(Uri uri, long id) {
-                    if (DBG) Log.d(TAG, "onResult: " + uri + ", id: "+id);
+                    if (DBG) Log.d(TAG, "updateNextVideo: UpdateNextTask onResult: next video and id " + uri + ", id: "+id);
                     mNextUri = uri;
                     mNextVideoId = id;
                     mUpdateNextTask = null;
@@ -333,7 +333,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     public void setPlayMode(int newPlaymode, boolean wait) {
         mPlayMode = newPlaymode;
-        if (DBG) Log.d(TAG, "new Playmode: " + newPlaymode);
+        if (DBG) Log.d(TAG, "setPlaymode: new Playmode " + newPlaymode);
         if (PLAYMODE_REPEAT_SINGLE == newPlaymode || mForceSingleRepeatMode) {
             mPlayer.setLooping(true);
             // just in Case we drop out to OnCompletion
@@ -1084,6 +1084,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
         mLastPosition = LAST_POSITION_END;
         if (mNextUri != null) {
+            if (DBG) Log.d(TAG, "onCompletion: we have a new video " + mNextUri);
             stopAndSaveVideoState();
             if(mPlayerFrontend!=null) {
                 mPlayerFrontend.onCompletion();
@@ -1098,13 +1099,12 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mNextVideoId = -1;
             mLastPosition = 0;
             onStart(mIntent);
-
         } else {
+            if (DBG) Log.d(TAG, "onCompletion: we have no new video");
             if(mPlayerFrontend!=null) {
                 mPlayerFrontend.onEnd();
             }
         }
-
     }
 
     @Override

@@ -79,6 +79,7 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
     }
 
     public UpdateNextTask(ContentResolver resolver, Video video, Uri uri, ArrayList<String> remoteUrlsList, int remotePosition, long playlistId) {
+        if (DBG) Log.d(TAG, "UpdateNextTask: what is the next video after " + uri);
         mResolver = resolver;
         mUri = uri;
         mRemoteUrlsList = remoteUrlsList;
@@ -86,10 +87,10 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
         mListener = null;
         mPlaylistId = playlistId;
         mVideo = video;
-        Log.d(TAG, "UpdateNextTask");
     }
 
     public void setListener(Listener listener) {
+        if (DBG) Log.d(TAG, "setListener");
         mListener = listener;
     }
 
@@ -106,6 +107,7 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
     private final static String QUERY_ORDER_BY_DATA_LIMIT1 = VideoStore.MediaColumns.DATA + " LIMIT 1";
 
     private static Cursor getNextInBucket(ContentResolver cr, int bucketId, String fullPathOfVideo) {
+        if(DBG) Log.d(TAG, "getNextInBucket: bucketId " + bucketId + " for video " + fullPathOfVideo);
         return cr.query(
                 QUERY_VIDEO_TABLE,
                 QUERY_COLUMNS_ID_DATA,
@@ -114,6 +116,7 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
                 QUERY_ORDER_BY_DATA_LIMIT1);
     }
     private static Cursor getFirstInBucket(ContentResolver cr, int bucketId) {
+        if(DBG) Log.d(TAG, "getFirstInBucket: " + bucketId);
         return cr.query(
                 QUERY_VIDEO_TABLE,
                 QUERY_COLUMNS_ID_DATA,
@@ -122,7 +125,7 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
                 QUERY_ORDER_BY_DATA_LIMIT1);
     }
     private Result findEpisode(int episode, int season, long show){
-        Log.d(TAG, "look for episode : "+episode);
+        if(DBG) Log.d(TAG, "findEpisode: look for episode " + episode);
         String [] projection2 = new String[]{VideoStore.MediaColumns.DATA,VideoStore.Files.FileColumns._ID,VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE};
         String []  args2;
         if(episode>=0)
@@ -136,107 +139,109 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
                 cursor2.moveToFirst();
                 int id = cursor2.getColumnIndex(VideoStore.Files.FileColumns._ID);
                 int uri = cursor2.getColumnIndex(VideoStore.MediaColumns.DATA);
-                Log.d(TAG, "found new episode : " + (cursor2.getInt(cursor2.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE))) + " " + cursor2.getString(uri));
+                if(DBG) Log.d(TAG, "findEpisode: found new episode " + (cursor2.getInt(cursor2.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE))) + " " + cursor2.getString(uri));
                 return new Result(Uri.parse(cursor2.getString(uri)), cursor2.getLong(id));
             }
             cursor2.close();
         }
-
-
-
         return null;
     }
+
     public UpdateNextTask.Result run(boolean repeatFolder) {
+        if (DBG) Log.d(TAG, "UpdateNextTask.Result: repeatFolder " + repeatFolder);
         // reset to nothing
         Uri nextUri = null;
         long nextId = -1;
 
         if (mRemoteUrlsList != null) {
+            if (DBG) Log.d(TAG, "UpdateNextTask.Result: mRemoteUrlsList not null");
             int nextPos = mRemotePosition + 1;
             if ((nextPos == mRemoteUrlsList.size()) && !repeatFolder) {
-                if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - using remote list, no next since last in list.");
+                if (DBG) Log.d(TAG, "UpdateNextTask.Result: updateNextVideo(" + repeatFolder + ") - using remote list, no next since last in list.");
                 return null;
             }
             nextUri = Uri.parse(mRemoteUrlsList.get(nextPos % mRemoteUrlsList.size()));
-            if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - using remote list, next is " + nextUri);
+            if (DBG) Log.d(TAG, "UpdateNextTask.Result: updateNextVideo(" + repeatFolder + ") - using remote list, next is " + nextUri);
             return new Result(nextUri, nextId);
-        }
-
-        else if(mPlaylistId != -1 && mVideo!=null){ //next in playlist
-            BaseTags tags = mVideo.getFullScraperTags(ArchosUtils.getGlobalContext());
-            long currentEpisodeId = tags instanceof EpisodeTags ? tags.getOnlineId():-1;
-            long currentMovieId = tags instanceof MovieTags ? tags.getOnlineId():-1;
-            boolean useNextVideo = false;
-            String selection = "Select \n" +
-                    "   v._id as _id,\n" +
-                    "   v."+ VideoStore.MediaColumns.DATA+" as "+VideoStore.MediaColumns.DATA+", \n" +
-                    "   vl."+VideoStore.VideoList.Columns.M_ONLINE_ID+" as "+VideoStore.VideoList.Columns.M_ONLINE_ID+", \n" +
-                    "   vl."+VideoStore.VideoList.Columns.E_ONLINE_ID+" as "+VideoStore.VideoList.Columns.E_ONLINE_ID+
-                    "   from \n" +
-                    "   video v,\n" +
-                    "   "+ ListTables.VIDEO_LIST_TABLE+" vl \n" +
-                    "WHERE\n" +
-                    "        (" +
-                    "(" +
-                    "v."+ VideoStore.Video.VideoColumns.SCRAPER_M_ONLINE_ID+" = vl."+VideoStore.VideoList.Columns.M_ONLINE_ID+" " +
-                    " AND v."+ VideoStore.Video.VideoColumns.SCRAPER_M_ONLINE_ID+" NOT NULL" +
-                    " OR v."+ VideoStore.Video.VideoColumns.SCRAPER_E_ONLINE_ID+" = vl."+VideoStore.VideoList.Columns.E_ONLINE_ID+" " +
-                    " AND v."+ VideoStore.Video.VideoColumns.SCRAPER_E_ONLINE_ID+" NOT NULL) " +
-                    " AND "+ LoaderUtils.HIDE_USER_HIDDEN_FILTER +
-                    " AND vl."+ VideoStore.List.Columns.SYNC_STATUS +" != "+VideoStore.List.SyncStatus.STATUS_DELETED+
-                    " AND vl."+VideoStore.VideoList.Columns.LIST_ID+" = ?)";
-            Cursor cursor = mResolver.query(VideoStore.RAW_QUERY,null, selection, new String[]{mPlaylistId+""}, null);
-            if(cursor != null && cursor.getCount() >0){
-                int movieIdColumn = cursor.getColumnIndex(VideoStore.VideoList.Columns.M_ONLINE_ID);
-                int episodeIdColumn = cursor.getColumnIndex(VideoStore.VideoList.Columns.E_ONLINE_ID);
-                while(cursor.moveToNext()){
-                    long episodeId = cursor.getLong(episodeIdColumn);
-                    long movieId = cursor.getLong(movieIdColumn);
-                    if(currentEpisodeId != -1 && currentEpisodeId == episodeId){
-                        useNextVideo = true;
+        } else {
+            if(DBG) Log.d(TAG, "UpdateNextTask.Result: mRemoteUrlsList null, mPlaylistId " + mPlaylistId + ", mVideo " + ((mVideo == null) ? "null" : mVideo.getFilePath()));
+            if (mPlaylistId != -1 && mVideo != null) { //next in playlist
+                BaseTags tags = mVideo.getFullScraperTags(ArchosUtils.getGlobalContext());
+                long currentEpisodeId = tags instanceof EpisodeTags ? tags.getOnlineId() : -1;
+                long currentMovieId = tags instanceof MovieTags ? tags.getOnlineId() : -1;
+                boolean useNextVideo = false;
+                String selection = "Select \n" +
+                        "   v._id as _id,\n" +
+                        "   v." + VideoStore.MediaColumns.DATA + " as " + VideoStore.MediaColumns.DATA + ", \n" +
+                        "   vl." + VideoStore.VideoList.Columns.M_ONLINE_ID + " as " + VideoStore.VideoList.Columns.M_ONLINE_ID + ", \n" +
+                        "   vl." + VideoStore.VideoList.Columns.E_ONLINE_ID + " as " + VideoStore.VideoList.Columns.E_ONLINE_ID +
+                        "   from \n" +
+                        "   video v,\n" +
+                        "   " + ListTables.VIDEO_LIST_TABLE + " vl \n" +
+                        "WHERE\n" +
+                        "        (" +
+                        "(" +
+                        "v." + VideoStore.Video.VideoColumns.SCRAPER_M_ONLINE_ID + " = vl." + VideoStore.VideoList.Columns.M_ONLINE_ID + " " +
+                        " AND v." + VideoStore.Video.VideoColumns.SCRAPER_M_ONLINE_ID + " NOT NULL" +
+                        " OR v." + VideoStore.Video.VideoColumns.SCRAPER_E_ONLINE_ID + " = vl." + VideoStore.VideoList.Columns.E_ONLINE_ID + " " +
+                        " AND v." + VideoStore.Video.VideoColumns.SCRAPER_E_ONLINE_ID + " NOT NULL) " +
+                        " AND " + LoaderUtils.HIDE_USER_HIDDEN_FILTER +
+                        " AND vl." + VideoStore.List.Columns.SYNC_STATUS + " != " + VideoStore.List.SyncStatus.STATUS_DELETED +
+                        " AND vl." + VideoStore.VideoList.Columns.LIST_ID + " = ?)";
+                Cursor cursor = mResolver.query(VideoStore.RAW_QUERY, null, selection, new String[]{mPlaylistId + ""}, null);
+                if (cursor != null && cursor.getCount() > 0) {
+                    if (DBG) Log.d(TAG, "UpdateNextTask.Result: cursor not null");
+                    int movieIdColumn = cursor.getColumnIndex(VideoStore.VideoList.Columns.M_ONLINE_ID);
+                    int episodeIdColumn = cursor.getColumnIndex(VideoStore.VideoList.Columns.E_ONLINE_ID);
+                    while (cursor.moveToNext()) {
+                        long episodeId = cursor.getLong(episodeIdColumn);
+                        long movieId = cursor.getLong(movieIdColumn);
+                        if (DBG) Log.d(TAG, "UpdateNextTask.Result: episodeId " + episodeId + ", movieId " + movieId);
+                        if (currentEpisodeId != -1 && currentEpisodeId == episodeId) {
+                            useNextVideo = true;
+                        } else if (currentMovieId != -1 && currentMovieId == movieId) {
+                            useNextVideo = true;
+                        } else if (useNextVideo) { //previous was our video, this one is different, use Uri
+                            nextUri = Uri.parse(cursor.getString(cursor.getColumnIndex(VideoStore.MediaColumns.DATA)));
+                            return new Result(nextUri, nextId);
+                        }
                     }
-                    else if( currentMovieId != -1 && currentMovieId == movieId){
-                        useNextVideo = true;
-                    } else if(useNextVideo){ //previous was our video, this one is different, use Uri
-                        nextUri = Uri.parse(cursor.getString(cursor.getColumnIndex(VideoStore.MediaColumns.DATA)));
-                        return new Result(nextUri, nextId);
-                    }
+                } else {
+                    if (DBG) Log.d(TAG, "UpdateNextTask.Result: cursor null");
                 }
-
+                if (DBG) Log.d(TAG, "UpdateNextTask.Result: found nothing");
+                return null;
             }
+        }
+        if (!UriUtils.isImplementedByFileCore(mUri)) {// when we can't list folder
+            if (DBG) Log.d(TAG, "UpdateNextTask.Result: scheme for " + mUri + " not supported -> cannot list folder thus no next...");
             return null;
         }
-        if(!UriUtils.isImplementedByFileCore(mUri)) // when we can't list folder
-            return null;
-
-            /*
-                If we don't have a list of files set by arguments, we need to create one
-             */
-            /*
-
-
-             */
-
+        /*
+            If we don't have a list of files set by arguments, we need to create one
+         */
         if (mUri != null) {
-
-            String [] projection1 = new String[]{VideoStore.MediaColumns.DATA,VideoStore.Files.FileColumns._ID,VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE,VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID,VideoStore.Video.VideoColumns.SCRAPER_E_SEASON};
-            String []  args1= new String[]{mUri.toString()};
+            if (DBG) Log.d(TAG, "UpdateNextTask.Result: trying to find next for mUri " + mUri);
+            String[] projection1 = new String[]{VideoStore.MediaColumns.DATA, VideoStore.Files.FileColumns._ID, VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE, VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID, VideoStore.Video.VideoColumns.SCRAPER_E_SEASON};
+            String[] args1 = new String[]{mUri.toString()};
             String selection1 = VideoStore.MediaColumns.DATA + "=?";
             //retrieve episode number
             Cursor cursor1 = mResolver.query(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, projection1, selection1, args1, VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE);
-            if(cursor1!=null && cursor1.getCount()>0){
+            if (cursor1 != null && cursor1.getCount() > 0) {
+                if (DBG) Log.d(TAG, "UpdateNextTask.Result: found next episodes");
+
                 int episodeColumn = cursor1.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE);
                 int seasonColumn = cursor1.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON);
                 int showColumn = cursor1.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID);
 
                 cursor1.moveToFirst();
-                int episode =cursor1.getInt(episodeColumn);
+                int episode = cursor1.getInt(episodeColumn);
                 int season = cursor1.getInt(seasonColumn);
                 long show = cursor1.getLong(showColumn);
-                if(show>0&&season>=0&&episode>=0){
-                    Log.d(TAG, "current episode : "+episode+" "+mUri);
-                    Result result = findEpisode(episode+1, season, show);
-                    if(result!=null)
+                if (show > 0 && season >= 0 && episode >= 0) {
+                    if (DBG) Log.d(TAG, "current episode : " + episode + " " + mUri);
+                    Result result = findEpisode(episode + 1, season, show);
+                    if (result != null)
                         return result;
                     else {
                         result = findEpisode(-1, season + 1, show);
@@ -250,17 +255,10 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
                     }
 
                 }
-
-
             }
 
-
-
-
-
-
-
             int bucketId = FileUtils.getBucketId(mUri);
+            if (DBG) Log.d(TAG, "UpdateNextTask.Result: trying to find for bucketId " + bucketId);
             Cursor cursor;
             // 1. Try to find the next video in the database
             cursor = getNextInBucket(mResolver, bucketId, mUri.toString());
@@ -294,8 +292,8 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
                 } else if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - getFirstInBucket null cursor!?");
             }
             // 3. try to find the next file within the filesystem
-            if(mUri.getScheme()==null)
-                mUri = Uri.parse("file://"+mUri.toString());
+            if (mUri.getScheme() == null)
+                mUri = Uri.parse("file://" + mUri.toString());
             Uri parentUri = FileUtils.getParentUrl(mUri);
             if (parentUri != null) {
                 RawLister lister = RawListerFactoryWithUpnp.getRawListerForUrl(parentUri);
@@ -313,7 +311,7 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
                             }
                         }
                         final Comparator<? super MetaFile2> comparator = new FileComparator().selectFileComparator(ListingEngine.SortOrder.SORT_BY_NAME_ASC);
-                        Collections.sort(filteredList,comparator);
+                        Collections.sort(filteredList, comparator);
                         int total = filteredList.size();
                         int current = -1;
                         // try to find the current video in the list
@@ -340,13 +338,13 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
                         } else if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - could not find video in list:" + mUri);
                     } else if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - could not list files / empty dir:" + mUri);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "UpdateNextTask.Result: caught IOException ", e);
                 } catch (AuthenticationException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "UpdateNextTask.Result: caught AuthenticationException ", e);
                 } catch (SftpException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "UpdateNextTask.Result: caught SftpException ", e);
                 } catch (JSchException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "UpdateNextTask.Result: caught JSchException ", e);
                 }
             } else if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - no parent file:" + mUri);
         } else if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - not a local file:" + mUri);
