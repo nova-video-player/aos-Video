@@ -83,6 +83,8 @@ import java.util.zip.GZIPInputStream;
 import de.timroes.axmlrpc.XMLRPCClient;
 import de.timroes.axmlrpc.XMLRPCException;
 
+import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
+
 public class SubtitlesDownloaderActivity extends AppCompatActivity {
     public static final String FILE_URLS = "fileUrls";
     public static final String FILE_URL = "fileUrl";
@@ -704,7 +706,8 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 ArrayList<String> languages, HashMap<String, String> index, int pass) {
             List<HashMap<String, Object>> videoSearchList;
             videoSearchList = new ArrayList<HashMap<String, Object>>();
-            for (String fileUrl : fileUrls){
+            for (String mFileUrl : fileUrls){
+                String fileUrl = removeFileSlashSlash(mFileUrl);
                 if (stop) break;
                 String hash = null, tag = null;
                 long fileLength = 0;
