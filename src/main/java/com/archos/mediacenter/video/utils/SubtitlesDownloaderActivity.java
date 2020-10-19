@@ -706,8 +706,8 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 ArrayList<String> languages, HashMap<String, String> index, int pass) {
             List<HashMap<String, Object>> videoSearchList;
             videoSearchList = new ArrayList<HashMap<String, Object>>();
-            for (String mFileUrl : fileUrls){
-                String fileUrl = removeFileSlashSlash(mFileUrl);
+            for (String fileUrl : fileUrls){
+                fileUrl = removeFileSlashSlash(fileUrl);
                 if (stop) break;
                 String hash = null, tag = null;
                 long fileLength = 0;
