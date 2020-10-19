@@ -39,6 +39,8 @@ import com.archos.mediacenter.video.browser.BrowserCategory;
 
 import java.io.File;
 
+import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
+
 public class BrowserByExtStorage extends BrowserByLocalFolder {
 
     private static final int READ_REQUEST_CODE = 42;
@@ -47,7 +49,8 @@ public class BrowserByExtStorage extends BrowserByLocalFolder {
     private final BroadcastReceiver mSdCardReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             // Remove "file://"
-            final String path = intent.getDataString().substring(7);
+            final String path = removeFileSlashSlash(intent.getDataString());
+
             if (currentMountPoint.equals(path)) {
                 // Sdcard has been ejected. Get out from the sdcard view.
                 ((BrowserActivity) getActivity()).goHome();

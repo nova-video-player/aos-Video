@@ -33,6 +33,8 @@ import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.ScrapeDetailResult;
 
+import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
+
 /**
  * Created by alexandre on 19/09/16.
  */
@@ -77,9 +79,7 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
         mContentUri = contentUri;
         mPlayerUri = playerUri;
         if (DBG) Log.d(TAG, "init: playerUri=" + playerUri + ", contentUri=" + contentUri);
-        if(mContentUri.toString().startsWith("file://")) {
-            mContentUri = Uri.parse(mContentUri.toString().substring("file://".length())); // we need to remove "file://"
-        }
+        mContentUri = Uri.parse(removeFileSlashSlash(mContentUri.toString())); // we need to remove "file://"
         if (!PrivateMode.isActive() && Trakt.isTraktV2Enabled(mContext, PreferenceManager.getDefaultSharedPreferences(mContext)))
             mTraktClient = new TraktService.Client(mContext, mTraktListener, false);
         else

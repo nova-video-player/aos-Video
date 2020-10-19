@@ -73,6 +73,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
+import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
+
 /**
  * Created by alexandre on 28/08/15.
  */
@@ -424,9 +426,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if(mIntent.hasExtra(KEY_ORIGINAL_TORRENT_URL)){
             mUri = Uri.parse(mIntent.getStringExtra(KEY_ORIGINAL_TORRENT_URL));
         }
-        if(mUri.toString().startsWith("file://")) {
-            mUri = Uri.parse(mUri.toString().substring("file://".length())); // we need to remove "file://"
-        }
+        mUri = Uri.parse(removeFileSlashSlash(mUri.toString())); // we need to remove "file://"
         if (DBG) Log.d(TAG, "onStart() "+mUri);
         mStreamingUri = intent.getParcelableExtra(KEY_STREAMING_URI);
         if(mPlayerFrontend!=null)
