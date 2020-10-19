@@ -790,17 +790,20 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                     video.put("moviebytesize", String.valueOf(fileLength));
                     if (DBG) Log.d(TAG, "prepareRequestList: first pass add video (hash,length) <- (" + hash + "," + fileLength + ")");
                 } else {
-                    if (pass == SECOND_PASS) // SECOND_PASS is tag (filename) for search
+                    if (pass == SECOND_PASS) { // SECOND_PASS is tag (filename) for search
+                        if (DBG) Log.d(TAG, "prepareRequestList: second pass add tag " + tag);
                         video.put("tag", tag);
-                    else if (pass == THIRD_PASS)
+                    } else if (pass == THIRD_PASS) {
+                        if (DBG) Log.d(TAG, "prepareRequestList: third pass add query " + tag);
                         video.put("query", tag); // THIRD_PASS is query (filename as search name but not clean) for search
-                    else if (pass == FOURTH_PASS) { // FOURTH_PASS is scraped info based
+                    } else if (pass == FOURTH_PASS) { // FOURTH_PASS is scraped info based
                         // try to get the video info if scraped
                         ContentResolver resolver = getContentResolver();
-                        VideoDbInfo videoDbInfo = VideoDbInfo.fromUri(resolver, Uri.parse(fileUrl));
+                        if (DBG) Log.d(TAG, "prepareRequestList: fourth pass trying to get VideoDbInfo for " + Uri.parse(fileUrl));
+                        VideoDbInfo videoDbInfo = VideoDbInfo.fromUri(resolver, Uri.parse(removeFileSlashSlash(fileUrl)));
                         if (videoDbInfo != null) {
                             // index is used to find back fileUrl, to allow search on query or imdbid do not put the moviebytesize otherwise it is the only search criteria
-                            if (DBG) Log.d(TAG, "prepareRequestList: index (hash,url) <- (" + hash + "," + fileUrl + ")");
+                            if (DBG) Log.d(TAG, "prepareRequestList: fourth pass index (hash,url) <- (" + hash + "," + fileUrl + ")");
                             if (videoDbInfo.isShow) { // this is a show
                                 // remove date from scraperTitle \([0-9]*\) because match does not work with e.g. The Flash (2015) or Doctor Who (2005)
                                 if (DBG) Log.d(TAG, "prepareRequestList: replacing " + videoDbInfo.scraperTitle + ", by " +
@@ -808,7 +811,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                                 video.put("query", videoDbInfo.scraperTitle.replaceAll(" *\\(\\d*?\\)", ""));
                                 video.put("season", videoDbInfo.scraperSeasonNr);
                                 video.put("episode", videoDbInfo.scraperEpisodeNr);
-                                if (DBG) Log.d(TAG, "prepareRequestList: show query=" + videoDbInfo.scraperTitle + ", season=" + videoDbInfo.scraperSeasonNr + ", episode=" + videoDbInfo.scraperEpisodeNr);
+                                if (DBG) Log.d(TAG, "prepareRequestList: fourth pass show query=" + videoDbInfo.scraperTitle + ", season=" + videoDbInfo.scraperSeasonNr + ", episode=" + videoDbInfo.scraperEpisodeNr);
                             } else { // this is a movie
                                 String imdbId = getIMDBID(fileUrl);
                                 // remove all non numeric characters from imdbID (often starts with tt)
@@ -816,9 +819,11 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                                 if (imdbId != null) {
                                     imdbId = imdbId.replaceAll("[^\\d]", "");
                                     video.put("imdbid", imdbId);
-                                    if (DBG) Log.d(TAG, "prepareRequestList: movie imdbid=" + imdbId);
+                                    if (DBG) Log.d(TAG, "prepareRequestList: fourth pass movie imdbid=" + imdbId);
                                 }
                             }
+                        } else {
+                            if (DBG) Log.d(TAG, "prepareRequestList: fourth pass uh videoDbInfo = null!!");
                         }
                     }
                     // since SECOND or THIRD or FOURTH pass not based on hash, put in index the tag
