@@ -1188,7 +1188,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         }
         //do not execute file info task when torrent file
-        if(!video.getFileUri().getLastPathSegment().endsWith("torrent")||mLaunchedFromPlayer)
+        if(video.getFileUri() == null || mLaunchedFromPlayer) // avoid NPE on .getLastPathSegment()
+            mVideoInfoTask = new VideoInfoTask().execute(video);
+        else if(!video.getFileUri().getLastPathSegment().endsWith("torrent"))
             mVideoInfoTask = new VideoInfoTask().execute(video);
 
         if (poster == null) {
