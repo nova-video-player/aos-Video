@@ -277,7 +277,7 @@
         app:iconSpaceReserved="false" >
 
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="pref_smbv2"
             android:title="@string/share_folders_smbv2"
             android:summary="@string/share_folders_smbv2_summary"
