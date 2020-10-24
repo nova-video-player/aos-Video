@@ -588,11 +588,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
          * (hide black bars on TVOUT)
          */
         // needed on Bravia for HDR content to avoid grey bars cf. issue #270
-        getWindow().setBackgroundDrawable(new ColorDrawable(0xFF000000));
         if (isEmulator()) // avoid emulator UI glitch
             getWindow().setBackgroundDrawable(new ColorDrawable(0xFF000000));
         else getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
         setContentView(R.layout.player);
         mRootView = findViewById(R.id.root);
 
