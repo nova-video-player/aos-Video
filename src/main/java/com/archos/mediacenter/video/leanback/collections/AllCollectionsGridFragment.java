@@ -44,7 +44,7 @@ import androidx.preference.PreferenceManager;
 
 import com.archos.customizedleanback.app.MyVerticalGridFragment;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.adapters.mappers.AllCollectionsCursorMapper;
+import com.archos.mediacenter.video.browser.adapters.mappers.CollectionCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.loader.AllCollectionsLoader;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
@@ -161,7 +161,7 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
         }
 
         mCollectionsAdapter = new CursorObjectAdapter(filePresenter);
-        mCollectionsAdapter.setMapper(new CompatibleCursorMapperConverter(new CollectionsCursorMapper()));
+        mCollectionsAdapter.setMapper(new CompatibleCursorMapperConverter(new CollectionCursorMapper()));
         setAdapter(mCollectionsAdapter);
 
         setGridPresenter(vgp);

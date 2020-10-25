@@ -18,15 +18,15 @@ package com.archos.mediacenter.video.browser.adapters;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.archos.mediacenter.video.browser.adapters.mappers.CollectionsCursorMapper;
+import com.archos.mediacenter.video.browser.adapters.mappers.CollectionCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediaprovider.video.VideoStore;
 
 public class CollectionsAdapter extends PresenterAdapterByCursor  implements AdapterByVideoObjectsInterface{
-    private final CollectionsCursorMapper mCollectionsCursorMapper;
+    private final CollectionCursorMapper mCollectionsCursorMapper;
     public CollectionsAdapter(Context context, Cursor c) {
         super(context, c);
-        mCollectionsCursorMapper = new CollectionsCursorMapper();
+        mCollectionsCursorMapper = new CollectionCursorMapper();
         mCollectionsCursorMapper.bindColumns(c);
     }
 

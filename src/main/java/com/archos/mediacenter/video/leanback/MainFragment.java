@@ -64,12 +64,12 @@ import com.archos.mediacenter.video.browser.loader.NonScrapedVideosCountLoader;
 import com.archos.mediacenter.video.leanback.adapter.object.Box;
 import com.archos.mediacenter.video.leanback.adapter.object.EmptyView;
 import com.archos.mediacenter.video.leanback.adapter.object.Icon;
+import com.archos.mediacenter.video.leanback.collections.AllCollectionsGridActivity;
 import com.archos.mediacenter.video.leanback.collections.CollectionsIconBuilder;
 import com.archos.mediacenter.video.leanback.filebrowsing.ExtStorageListingActivity;
 import com.archos.mediacenter.video.leanback.filebrowsing.LocalListingActivity;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridActivity;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesIconBuilder;
-import com.archos.mediacenter.video.leanback.collections.CollectionsGridActivity;
 import com.archos.mediacenter.video.leanback.movies.MoviesByAlphaActivity;
 import com.archos.mediacenter.video.leanback.movies.MoviesByGenreActivity;
 import com.archos.mediacenter.video.leanback.movies.MoviesByRatingActivity;
@@ -971,7 +971,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                         mActivity.startActivity(new Intent(mActivity, EpisodesByDateActivity.class));
                         break;
                     case COLLECTIONS:
-                        mActivity.startActivity(new Intent(mActivity, CollectionsGridActivity.class));
+                        mActivity.startActivity(new Intent(mActivity, AllCollectionsGridActivity.class));
                         break;
 
                 }
