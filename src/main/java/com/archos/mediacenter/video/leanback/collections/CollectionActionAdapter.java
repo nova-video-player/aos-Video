@@ -52,8 +52,6 @@ public class CollectionActionAdapter extends ObjectAdapter{
         
         mActions.add(new Action(ACTION_UNINDEX, context.getString(R.string.video_browser_unindex_file)));
 
-        mActions.add(new Action(ACTION_CHANGE_INFO, context.getString(R.string.scrap_change)));
-        
         mActions.add(new Action(ACTION_DELETE, context.getString(R.string.delete)));
     }
 

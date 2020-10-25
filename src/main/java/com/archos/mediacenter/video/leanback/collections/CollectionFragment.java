@@ -168,7 +168,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                 Cursor cursor = collectionLoader.loadInBackground();
                 if(cursor != null && cursor.getCount()>0) {
                     cursor.moveToFirst();
-                    CollectionCursorMapper collectionCursorMapper = new CollectionsCursorMapper();
+                    CollectionCursorMapper collectionCursorMapper = new CollectionCursorMapper();
                     collectionCursorMapper.bindColumns(cursor);
                     mCollection = (Collection) collectionCursorMapper.bind(cursor);
                 }
@@ -192,38 +192,29 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     // TODO MARC NOPE
                     playEpisode();
                 }
+                // TODO MARC HERE TO CONTINUE MODIFYING!!!
                 else if (action.getId() == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_WATCHED) {
-                    Intent intent = new Intent(getActivity(), SeasonActivity.class);
-                    intent.putExtra(SeasonFragment.EXTRA_ACTION_ID, action.getId());
-                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_ID, mCollection.getTvshowId());
-                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_NAME, mCollection.getName());
-                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_POSTER, mCollection.getPosterUri() != null ? mTvshow.getPosterUri().toString() : null);
+                    Intent intent = new Intent(getActivity(), MovieCollectionActivity.class);
+                    intent.putExtra(MovieCollectionFragment.EXTRA_ACTION_ID, action.getId());
+                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_ID, mCollection.getCollectionId());
+                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_NAME, mCollection.getName());
+                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_POSTER, mCollection.getPosterUri() != null ? mCollection.getPosterUri().toString() : null);
                     startActivityForResult(intent, REQUEST_CODE_MARK_WATCHED);
                 }
                 else if (action.getId() == CollectionActionAdapter.ACTION_UNINDEX) {
-                    Intent intent = new Intent(getActivity(), SeasonActivity.class);
-                    intent.putExtra(SeasonFragment.EXTRA_ACTION_ID, action.getId());
-                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_ID, mCollection.getTvshowId());
-                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_NAME, mCollection.getName());
-                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_POSTER, mCollection.getPosterUri() != null ? mCollection.getPosterUri().toString() : null);
+                    Intent intent = new Intent(getActivity(), MovieCollectionActivity.class);
+                    intent.putExtra(MovieCollectionFragment.EXTRA_ACTION_ID, action.getId());
+                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_ID, mCollection.getCollectionId());
+                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_NAME, mCollection.getName());
+                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_POSTER, mCollection.getPosterUri() != null ? mCollection.getPosterUri().toString() : null);
                     startActivity(intent);
                 }
-                else if (action.getId() == CollectionActionAdapter.ACTION_CHANGE_INFO) {
-                    if (!NetworkState.isNetworkConnected(getActivity())) {
-                        Toast.makeText(getActivity(), R.string.scrap_no_network, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Intent intent = new Intent(getActivity(), ManualShowScrappingActivity.class);
-                        intent.putExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_NAME, mCollection.getName());
-                        intent.putExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_ID, mCollection.getTvshowId());
-                        startActivityForResult(intent, REQUEST_CODE_CHANGE_TVSHOW);
-                    }
-                }
                 else if (action.getId() == CollectionActionAdapter.ACTION_DELETE) {
-                    Intent intent = new Intent(getActivity(), SeasonActivity.class);
-                    intent.putExtra(SeasonFragment.EXTRA_ACTION_ID, action.getId());
-                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_ID, mCollection.getTvshowId());
-                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_NAME, mCollection.getName());
-                    intent.putExtra(SeasonFragment.EXTRA_TVSHOW_POSTER, mCollection.getPosterUri() != null ? mCollection.getPosterUri().toString() : null);
+                    Intent intent = new Intent(getActivity(), MovieCollectionActivity.class);
+                    intent.putExtra(MovieCollectionFragment.EXTRA_ACTION_ID, action.getId());
+                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_ID, mCollection.getCollectionId());
+                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_NAME, mCollection.getName());
+                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_POSTER, mCollection.getPosterUri() != null ? mCollection.getPosterUri().toString() : null);
                     startActivity(intent);
                 }
             }
