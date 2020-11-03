@@ -84,7 +84,6 @@
     <string name="root_storage">Dahili depolama</string>
     <string name="cannot_list">İçerik listelenemiyor</string>
     <!-- VIDEO -->
-    <string name="video">Nova Video</string>
     <string name="videos">Videolar</string>
     <string name="all_videos">Tüm videolar</string>
     <string name="not_played_yet_videos">Henüz oynatılmadı</string>
@@ -576,7 +575,6 @@ desteklenmiyor.</string>
     <string name="network_thumbnails_summary">Poster yokken uzak videolardan küçük resimler oluşturun</string>
     <string name="network_bookmarks_summary">Mümkün olduğunda ağdaki devam noktası ve konum yer işaretlerini kaydedin ve kontrol edin</string>
     <string name="share_folders_smbv2">SMBv2 desteğini etkinleştir</string>
-    <string name="share_folders_smbv2_summary">Ağ paylaşımı SMB sürüm 2 protokol desteğini etkinleştirin. ⚠ Deneysel, video oynatmanın başlatılamamasına neden olabilir</string>
     <string name="connection_abnormally_long">Bağlantı anormal derecede uzun görünüyor. Sıfırlamak ister misiniz?</string>
     <string name="connection_reset">Sıfırla</string>
     <!-- Info dialog, not indexed file -->

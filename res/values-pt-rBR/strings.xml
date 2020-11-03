@@ -84,7 +84,7 @@
     <string name="root_storage">Armazenamento interno</string>
     <string name="cannot_list">Não é possível listar o conteúdo</string>
     <!-- VIDEO -->
-    <string name="video">Nova Video</string>
+    <string name="video">Nova Video Player</string>
     <string name="videos">Vídeos</string>
     <string name="all_videos">Todos os vídeos</string>
     <string name="not_played_yet_videos">Não reproduzido</string>
@@ -564,7 +564,7 @@
     <string name="network_thumbnails_summary">Criar miniaturas de vídeos remotos quando um cartaz não estiver disponível</string>
     <string name="network_bookmarks_summary">Salvar e verificar o ponto de retorno e posicionar favoritos na rede quando possível</string>
     <string name="share_folders_smbv2">Habilitar suporte a SMBv2</string>
-    <string name="share_folders_smbv2_summary">Habilitar suporte ao protocolo de compartilhamento de rede SMB versão 2. ⚠ Experimental, pode resultar na impossibilidade de iniciar a reprodução do vídeo</string>
+    <string name="share_folders_smbv2_summary">Habilitar protocolo SMB versão 2 para compartilhamentos de rede. ⚠ Experimental</string>
     <string name="connection_abnormally_long">A conexão parece anormalmente longa. Gostaria de redefini-la?</string>
     <string name="connection_reset">Redefinir</string>
     <!-- Info dialog, not indexed file -->

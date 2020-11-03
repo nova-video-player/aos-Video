@@ -84,7 +84,6 @@
     <string name="root_storage">Pamięć wewnętrzna</string>
     <string name="cannot_list">Nie można wyświetlić zawartości</string>
     <!-- VIDEO -->
-    <string name="video">Nova wideo</string>
     <string name="videos">Filmy</string>
     <string name="all_videos">Wszystkie filmy</string>
     <string name="not_played_yet_videos">Nieodtwarzane</string>

@@ -84,7 +84,7 @@
     <string name="root_storage">Stockage interne</string>
     <string name="cannot_list">Erreur à la lecture du contenu</string>
     <!-- VIDEO -->
-    <string name="video">Nova Vidéo</string>
+    <string name="video">Nova Video Player</string>
     <string name="videos">Vidéos</string>
     <string name="all_videos">Toutes les vidéos</string>
     <string name="not_played_yet_videos">Pas encore joué</string>
@@ -564,7 +564,7 @@
     <string name="network_thumbnails_summary">Créer les miniatures des stockages distants</string>
     <string name="network_bookmarks_summary">Sauvegarde et lit les points de reprise et marque-pages sur le réseau lorsque cela est possible</string>
     <string name="share_folders_smbv2">Activer le support SMBv2</string>
-    <string name="share_folders_smbv2_summary">Activer la prise en charge du protocole de partage réseau SMB version 2. ⚠ Expérimental, peut empêcher la lecture des vidéos</string>
+    <string name="share_folders_smbv2_summary">Activer la prise en charge du protocole SMB version 2. ⚠ Expérimental</string>
     <string name="connection_abnormally_long">La connexion semble anormalement longue. Souhaitez-vous la réinitialiser ?</string>
     <string name="connection_reset">Réinitialiser</string>
     <!-- Info dialog, not indexed file -->

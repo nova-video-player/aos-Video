@@ -42,6 +42,7 @@
     <!-- The string used in file/folder infos dialog. -->
     <string name="info_duration">재생시간:</string>
     <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">영화</string>
     <!-- COVER ROLL -->
     <string name="recently_added">최근 추가된 항목</string>
     <string name="recently_added_videos">최근 추가된 항목</string>

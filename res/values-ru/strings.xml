@@ -84,7 +84,7 @@
     <string name="root_storage">Встроенная память</string>
     <string name="cannot_list">Невозможно отобразить содержимое</string>
     <!-- VIDEO -->
-    <string name="video">Nova Видео</string>
+    <string name="video">Nova Video Player</string>
     <string name="videos">Видео</string>
     <string name="all_videos">Все видео</string>
     <string name="not_played_yet_videos">Еще не вопроизв.</string>
@@ -572,7 +572,7 @@
     <string name="network_thumbnails_summary">Cоздавать эскизы для видео на сетевых источниках, когда недоступен постер</string>
     <string name="network_bookmarks_summary">Сохранять точки возобновления просмотра и позиции закладок по сети, когда доступно</string>
     <string name="share_folders_smbv2">Включить поддержку SMBv2</string>
-    <string name="share_folders_smbv2_summary">Включить поддержку SMB версии 2. ⚠ Экспериментально, может привести к невозможности  запуска воспроизведения.</string>
+    <string name="share_folders_smbv2_summary">Включить поддержку протокола SMB2. ⚠ Экспериментально</string>
     <string name="connection_abnormally_long">Соединение слишком долгое. Хотите прервать его?</string>
     <string name="connection_reset">Сброс</string>
     <!-- Info dialog, not indexed file -->

@@ -84,7 +84,7 @@
     <string name="root_storage">Memoria interna</string>
     <string name="cannot_list">No se puede listar el contenido</string>
     <!-- VIDEO -->
-    <string name="video">Nova Video</string>
+    <string name="video">Nova Video Player</string>
     <string name="videos">Vídeos</string>
     <string name="all_videos">Todos los vídeos</string>
     <string name="not_played_yet_videos">No reproducidos</string>
@@ -329,6 +329,7 @@
     <string name="s_vietnamese">Vietnamita</string>
     <string name="s_lithuanian">Lituano</string>
     <string name="s_indonesian">Indonesio</string>
+    <string name="s_malay">Malayo</string>
     <string name="s_none">Ninguno</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">No se puede reproducir el vídeo</string>
@@ -398,6 +399,7 @@
     <string name="dialog_subloader_credentials">Credenciales de Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">Debe introducir un nombre de usuario y contraseña válidos!</string>
     <string name="toast_subloader_credentials_empty">Proporcione sus credenciales de opensubtitles en la configuración para poder descargar subtitulos</string>
+    <string name="toast_subloader_login_failed">Credenciales incorrectas de opensubtitles o servicio no disponible</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Ajustes de subtítulos</string>
     <string name="subtitle_sample_text">\"muestra\"</string>
@@ -489,12 +491,15 @@
     <string name="preferences_allow_3rd_party_player_summary">Otras aplicaciones compatibles de reproductor de vídeo serán propuestas por Android al lanzar una reproducción de vídeo. Tenga en cuenta que algunas características no funcionarán (reanudar, marcadores, etc.)</string>
     <string name="preference_tv_3d_automatic_switch">Activar el conmutador automático de TV 3D</string>
     <string name="preference_tv_3d_automatic_switch_summary">Utilice esta función sólo si su TV es compatible con la función 3D</string>
+    <string name="preference_tv_refreshrate_switch">Activar el cambio de tasa de refresco automático</string>
+    <string name="preference_tv_refreshrate_switch_summary">Eliminar el efecto juddler adaptando la tasa de refresco de pantalla a la tasa de fotogramas de video (el soporte de esta característica puede variar según el dispositivo)</string>
     <string name="preference_cutout_short_edges">Pantalla completa con recortes de pantalla</string>
     <string name="preference_cutout_short_edges_summary">Permitir vídeo en pantalla completa en pantalla panorámica con recortes</string>
     <string name="category_languages">Subtítulos</string>
     <string name="subtitles_hide_default">Ocultar subtítulos por defecto</string>
     <string name="subtitles_hide_default_summary">Marcar si desea ocultar los subtítulos por defecto</string>
     <string name="subtitles_credentials_title">Credenciales de Opensubtitles</string>
+    <string name="subtitles_credentials_summary">Proporcione sus credenciales de opensubtitles para poder descargar subtitulos</string>
     <string name="preferences_languages">Idiomas de descarga de subtítulos</string>
     <string name="summary_list_preference_primary">Seleccione el idioma de la descarga de subtítulos</string>
     <string name="favSubLang_title">Idioma de lectura de subtítulos</string>
@@ -538,6 +543,7 @@
     <string name="format_fullscreen">Pantalla completa</string>
     <string name="format_optimized">Optimizado</string>
     <string name="format_original">Original</string>
+    <string name="format_stretched">Extendido</string>
     <string name="stereo_dive_enable">Efecto de inmersión estéreo</string>
     <string name="stereo_dive_disable">Desactivar efecto de inmersión estéreo</string>
     <string name="rotation_unlock">Activar rotación automática de pantalla</string>
@@ -558,7 +564,7 @@
     <string name="network_thumbnails_summary">Crea miniaturas de vídeos remotos cuando no hay carteles disponibles</string>
     <string name="network_bookmarks_summary">Guarda y comprueba si es posible el punto de reanudación y posición de los marcadores en la red</string>
     <string name="share_folders_smbv2">Habilitar soporte para SMBv2</string>
-    <string name="share_folders_smbv2_summary">Habilita el soporte para protocolo de red SMB versión 2. ⚠ Experimental, puede resultar que la reproducción de vídeo no se pueda iniciar</string>
+    <string name="share_folders_smbv2_summary">Habilitar el soporte para compartición por SMB versión 2. ⚠ Experimental</string>
     <string name="connection_abnormally_long">La conexión parece anormalmente larga. ¿Quieres restablecerla?</string>
     <string name="connection_reset">Restablecer</string>
     <!-- Info dialog, not indexed file -->
@@ -830,4 +836,7 @@
     <string name="app_id">08FEA4DD</string>
     <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Error al establecer la tasa de refresco deseada</string>
+    <string name="sponsor">Patrocinar Nova</string>
+    <string name="enable_sponsor_title">Habilitar el enlace de patrocinador de Nova</string>
+    <string name="enable_sponsor_summary">Activar enlace de patrocinador para donaciones: cada contribución ayuda.</string>
 </resources>

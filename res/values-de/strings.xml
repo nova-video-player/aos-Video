@@ -84,7 +84,7 @@
     <string name="root_storage">Interner Speicher</string>
     <string name="cannot_list">Der Inhalt kann nicht aufgelistet werden</string>
     <!-- VIDEO -->
-    <string name="video">Nova Video</string>
+    <string name="video">Nova Video Player</string>
     <string name="videos">Videos</string>
     <string name="all_videos">Alle Videos</string>
     <string name="not_played_yet_videos">Noch nicht angesehen</string>
@@ -564,7 +564,7 @@
     <string name="network_thumbnails_summary">Erstellen Sie Thumbnails von Remote-Videos, wenn kein Poster zur Verfügung steht</string>
     <string name="network_bookmarks_summary">Wenn möglich Fortsetzungspunkte und Lesezeichen auf Netzwerkfreigaben speichern</string>
     <string name="share_folders_smbv2">SMBv2 Unterstützung aktivieren</string>
-    <string name="share_folders_smbv2_summary">Aktiviere Netzwerk-Freigaben SMB Version 2-Protokoll-Unterstützung. ⚠ Experimentell, kann dazu führen, dass die Videowiedergabe nicht gestartet werden kann</string>
+    <string name="share_folders_smbv2_summary">Netzwerk-Sharing SMB Version 2 Protokollunterstützung aktivieren. ⚠ Experimentell</string>
     <string name="connection_abnormally_long">Die Verbindung dauert ungewöhnlich lange. Möchtest Du sie zurücksetzen?</string>
     <string name="connection_reset">Zurücksetzen</string>
     <!-- Info dialog, not indexed file -->

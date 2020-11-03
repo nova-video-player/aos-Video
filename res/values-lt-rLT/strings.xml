@@ -84,7 +84,7 @@
     <string name="root_storage">Vidinė saugykla</string>
     <string name="cannot_list">Neįmanoma parodyti turinio</string>
     <!-- VIDEO -->
-    <string name="video">Nova Video</string>
+    <string name="video">Nova Video grotuvas</string>
     <string name="videos">Vaizdo įrašai</string>
     <string name="all_videos">Visi vaizdo įrašai</string>
     <string name="not_played_yet_videos">Nežiūrėti</string>
@@ -572,7 +572,7 @@
     <string name="network_thumbnails_summary">Kurti piktogramas nuotoliniams failams be viršelių</string>
     <string name="network_bookmarks_summary">Kai įmanoma išsaugoti ir tikrinti tęsimo vietų žymes tinkle</string>
     <string name="share_folders_smbv2">Įjungti SMBv2 palaikymą</string>
-    <string name="share_folders_smbv2_summary">Įjungti tinklo dalinimosi SMB antros versijos protokolo palaikymą. ⚠ Eksperimentinis, gali būti įvairūs video atkūrimo sutrikimai</string>
+    <string name="share_folders_smbv2_summary">Įjungti tinklo dalinimosi SMB ver. 2 protokolo palaikymą. ⚠ Eksperimentinė funkcija</string>
     <string name="connection_abnormally_long">Susijungimas neįprastai ilgas. Nutraukti?</string>
     <string name="connection_reset">Nutraukti</string>
     <!-- Info dialog, not indexed file -->

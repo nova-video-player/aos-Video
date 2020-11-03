@@ -85,7 +85,6 @@ Copertina (rotolo di copertina)</string>
     <string name="root_storage">Archiviazione interna</string>
     <string name="cannot_list">Impossibile elencare il contenuto</string>
     <!-- VIDEO -->
-    <string name="video">Nova Video</string>
     <string name="videos">Video</string>
     <string name="all_videos">Tutti i video</string>
     <string name="not_played_yet_videos">Non ancora visti</string>
@@ -565,7 +564,6 @@ Copertina (rotolo di copertina)</string>
     <string name="network_thumbnails_summary">Crea un\'anteprima da un video remoto quando non ci sono poster disponibili</string>
     <string name="network_bookmarks_summary">Salva e controlla per il punto di ripresa e per la posizione dei segnalibri sulla rete qualora sia possibile</string>
     <string name="share_folders_smbv2">Abilita il supporto SMBv2</string>
-    <string name="share_folders_smbv2_summary">Abilita il supporto protocollo di condivisione di rete SMB versione 2. ⚠ Sperimentale, potrebbe impedire la riproduzione di video</string>
     <string name="connection_abnormally_long">La connessione sta richiedendo più tempo del previsto. Vuoi resettarla?</string>
     <string name="connection_reset">Resetta</string>
     <!-- Info dialog, not indexed file -->
