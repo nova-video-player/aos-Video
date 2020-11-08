@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.browser.loader;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.util.Log;
 
@@ -110,6 +111,8 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
 
             // Movie specific values
             VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID,
+            VideoStore.Video.VideoColumns.SCRAPER_C_ID,
+            VideoStore.Video.VideoColumns.SCRAPER_C_NAME, // TODO MARC is this one needed?
 
             // Episode specific values
             VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID,
