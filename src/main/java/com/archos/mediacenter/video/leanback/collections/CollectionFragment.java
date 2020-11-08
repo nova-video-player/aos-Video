@@ -192,29 +192,28 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     // TODO MARC NOPE
                     playEpisode();
                 }
-                // TODO MARC HERE TO CONTINUE MODIFYING!!!
                 else if (action.getId() == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_WATCHED) {
                     Intent intent = new Intent(getActivity(), MovieCollectionActivity.class);
                     intent.putExtra(MovieCollectionFragment.EXTRA_ACTION_ID, action.getId());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_ID, mCollection.getCollectionId());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_NAME, mCollection.getName());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_POSTER, mCollection.getPosterUri() != null ? mCollection.getPosterUri().toString() : null);
+                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_ID, mCollection.getCollectionId());
+                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_NAME, mCollection.getName());
+                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_POSTER, mCollection.getPosterUri() != null ? mCollection.getPosterUri().toString() : null);
                     startActivityForResult(intent, REQUEST_CODE_MARK_WATCHED);
                 }
                 else if (action.getId() == CollectionActionAdapter.ACTION_UNINDEX) {
                     Intent intent = new Intent(getActivity(), MovieCollectionActivity.class);
                     intent.putExtra(MovieCollectionFragment.EXTRA_ACTION_ID, action.getId());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_ID, mCollection.getCollectionId());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_NAME, mCollection.getName());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_POSTER, mCollection.getPosterUri() != null ? mCollection.getPosterUri().toString() : null);
+                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_ID, mCollection.getCollectionId());
+                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_NAME, mCollection.getName());
+                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_POSTER, mCollection.getPosterUri() != null ? mCollection.getPosterUri().toString() : null);
                     startActivity(intent);
                 }
                 else if (action.getId() == CollectionActionAdapter.ACTION_DELETE) {
                     Intent intent = new Intent(getActivity(), MovieCollectionActivity.class);
                     intent.putExtra(MovieCollectionFragment.EXTRA_ACTION_ID, action.getId());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_ID, mCollection.getCollectionId());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_NAME, mCollection.getName());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_TVSHOW_POSTER, mCollection.getPosterUri() != null ? mCollection.getPosterUri().toString() : null);
+                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_ID, mCollection.getCollectionId());
+                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_NAME, mCollection.getName());
+                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_POSTER, mCollection.getPosterUri() != null ? mCollection.getPosterUri().toString() : null);
                     startActivity(intent);
                 }
             }
@@ -232,6 +231,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         // --> This instance of BackdropTask() will not be used but it must be created here!
         mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
 
+        // TODO MARC HERE TO CONTINUE MODIFYING!!!
         setOnItemViewClickedListener(new OnItemViewClickedListener() {
             @Override
             public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {

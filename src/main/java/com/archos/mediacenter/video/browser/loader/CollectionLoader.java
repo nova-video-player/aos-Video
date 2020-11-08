@@ -32,7 +32,7 @@ public class CollectionLoader extends VideoLoader {
     private String mSortOrder;
     private long mCollectionId;
 
-    private boolean mShowWatched;
+    private boolean mCollectionWatched;
 
     /**
      * List all movie in one collection
@@ -42,11 +42,11 @@ public class CollectionLoader extends VideoLoader {
         this(context, collectionId, CollectionsSortOrderEntries.DEFAULT_SORT, true);
     }
 
-    public CollectionLoader(Context context, long collectionId, String SortOrder, boolean showWatched) {
+    public CollectionLoader(Context context, long collectionId, String SortOrder, boolean collectionWatched) {
         super(context);
         mCollectionId = collectionId;
         mSortOrder = SortOrder;
-        mShowWatched = showWatched;
+        mCollectionWatched = collectionWatched;
         init();
     }
 
@@ -55,6 +55,8 @@ public class CollectionLoader extends VideoLoader {
         return mSortOrder;
     }
 
+    // TODO MARC this should be collection only no movies and not on VideoStore but only on MOVIE db
+    // TODO MARC remove all not needed
     @Override
     public String[] getProjection() {
         return new String[] {
@@ -97,6 +99,8 @@ public class CollectionLoader extends VideoLoader {
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_C_ID + " = ?");
         return sb.toString();
     }
+
+    // TODO MARC: why do we need mCollectionId since we want AllCollectionLoader!!!!!
 
     @Override
     public String[] getSelectionArgs() {

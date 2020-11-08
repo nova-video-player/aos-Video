@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -39,14 +40,17 @@ import androidx.loader.content.Loader;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.Delete;
-import com.archos.mediacenter.video.browser.adapters.mappers.SeasonCursorMapper;
-import com.archos.mediacenter.video.browser.adapters.object.Season;
-import com.archos.mediacenter.video.browser.loader.SeasonsLoader;
+import com.archos.mediacenter.video.browser.adapters.mappers.CollectionCursorMapper;
+import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
+import com.archos.mediacenter.video.browser.adapters.object.Collection;
+import com.archos.mediacenter.video.browser.adapters.object.Movie;
+import com.archos.mediacenter.video.browser.loader.CollectionLoader;
+import com.archos.mediacenter.video.browser.loader.MovieCollectionLoader;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.adapter.PlaceholderCursorObjectAdapter;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
-import com.archos.mediacenter.video.leanback.presenter.SeasonPresenter;
+import com.archos.mediacenter.video.leanback.presenter.MovieCollectionPresenter;
 import com.archos.mediacenter.video.utils.DbUtils;
 import com.archos.mediacenter.video.utils.VideoUtils;
 
@@ -55,6 +59,7 @@ import java.util.ArrayList;
 public class MovieCollectionFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor>, Delete.DeleteListener {
 
     private static final String TAG = "MovieCollectionFragment";
+    private static final boolean DBG = true;
 
     public static final String EXTRA_ACTION_ID = "ACTION_ID";
     public static final String EXTRA_COLLECTION_ID = "COLLECTION_ID";
@@ -67,10 +72,12 @@ public class MovieCollectionFragment extends BrowseSupportFragment implements Lo
     private String mCollectionName;
     private Uri mCollectionPosterUri;
 
+    Collection mCollection;
+
     private ArrayObjectAdapter mRowsAdapter;
-    private SeasonPresenter mSeasonPresenter;
-    private PlaceholderCursorObjectAdapter mSeasonsAdapter;
-    private ListRow mSeasonsListRow;
+    private MovieCollectionPresenter mMovieCollectionPresenter;
+    private PlaceholderCursorObjectAdapter mMovieCollectionAdapter;
+    private ListRow mMovieCollectionListRow;
 
     private Overlay mOverlay;
 
@@ -79,16 +86,27 @@ public class MovieCollectionFragment extends BrowseSupportFragment implements Lo
         super.onCreate(savedInstanceState);
 
         mActionId = getActivity().getIntent().getLongExtra(EXTRA_ACTION_ID, -1);
-        mTvshowId = getActivity().getIntent().getLongExtra(EXTRA_TVSHOW_ID, -1);
-        mTvshowName = getActivity().getIntent().getStringExtra(EXTRA_TVSHOW_NAME);
-        String tvshowPoster = getActivity().getIntent().getStringExtra(EXTRA_TVSHOW_POSTER);
-        mTvshowPosterUri = tvshowPoster != null ? Uri.parse(tvshowPoster) : null;
+        mCollectionId = getActivity().getIntent().getLongExtra(EXTRA_COLLECTION_ID, -1);
+        mCollectionName = getActivity().getIntent().getStringExtra(EXTRA_COLLECTION_NAME);
+        String collectionPoster = getActivity().getIntent().getStringExtra(EXTRA_COLLECTION_POSTER);
+        mCollectionPosterUri = collectionPoster != null ? Uri.parse(collectionPoster) : null;
+
+        // TODO MARC could be passed from CollectionFragment in the intent!!!!! since collection already there --> TODO
+        // find back the collection from mCollectionId
+        CollectionLoader collectionLoader = new CollectionLoader(getActivity(), mCollectionId);
+        Cursor cursor = collectionLoader.loadInBackground();
+        if(cursor != null && cursor.getCount()>0) {
+            cursor.moveToFirst();
+            CollectionCursorMapper collectionCursorMapper = new CollectionCursorMapper();
+            collectionCursorMapper.bindColumns(cursor);
+            mCollection = (Collection) collectionCursorMapper.bind(cursor);
+        }
 
         // Just need to attach the background manager to keep the background of the parent activity
         BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
         bgMngr.attach(getActivity().getWindow());
 
-        setTitle(mTvshowName);
+        setTitle(mCollectionName);
         setHeadersState(HEADERS_DISABLED);
         setHeadersTransitionOnBackEnabled(false);
 
@@ -97,107 +115,123 @@ public class MovieCollectionFragment extends BrowseSupportFragment implements Lo
         mOnItemViewClickedListener = new OnItemViewClickedListener() {
             @Override
             public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
+
+                // TODO MARC: warning if in background the loading might be null!!!
+                if (mCollection == null) {
+                    if (DBG) Log.d(TAG, "onCreate: mCollection null!!!)");
+                    return;
+                }
+
                 if (item == null) {
-                    if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED) {
-                        boolean allEpisodesWatched = true;
-    
-                        for (int i = 1; i < mSeasonsAdapter.size(); i++) {
-                            Season season = (Season)mSeasonsAdapter.get(i);
-        
-                            if (!season.allEpisodesWatched()) {
-                                allEpisodesWatched = false;
-    
+                    /*
+                    if (mActionId == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_WATCHED) {
+                        boolean collectionWatched = true;
+                        for (int i = 1; i < mMovieCollectionAdapter.size(); i++) {
+                            Movie movie = (Movie)mMovieCollectionAdapter.get(i);
+                            if (!movie.isWatched()) {
+                                collectionWatched = false;
                                 break;
                             }
                         }
-    
-                        if (allEpisodesWatched) {
-                            for (int i = 1; i < mSeasonsAdapter.size(); i++) {
-                                Season season = (Season)mSeasonsAdapter.get(i);
-            
-                                DbUtils.markAsNotRead(getActivity(), season);
+                        if (collectionWatched) {
+                            for (int i = 1; i < mMovieCollectionAdapter.size(); i++) {
+                                Movie movie = (Movie)mMovieCollectionAdapter.get(i);
+                                DbUtils.markAsNotRead(getActivity(), movie);
+                            }
+                        } else {
+                            for (int i = 1; i < mMovieCollectionAdapter.size(); i++) {
+                                Movie movie = (Movie)mMovieCollectionAdapter.get(i);
+                                DbUtils.markAsRead(getActivity(), movie);
                             }
                         }
-                        else {
-                            for (int i = 1; i < mSeasonsAdapter.size(); i++) {
-                                Season season = (Season)mSeasonsAdapter.get(i);
-            
-                                DbUtils.markAsRead(getActivity(), season);
-                            }
-                        }
-    
                         getActivity().setResult(Activity.RESULT_OK);
                     }
-                    else if (mActionId == TvshowActionAdapter.ACTION_UNINDEX) {
-                        for (int i = 1; i < mSeasonsAdapter.size(); i++) {
-                            Season season = (Season)mSeasonsAdapter.get(i);
-        
-                            DbUtils.markAsHiddenByUser(getActivity(), season);
+                    else if (mActionId == CollectionActionAdapter.ACTION_UNINDEX) {
+                        for (int i = 1; i < mMovieCollectionAdapter.size(); i++) {
+                            Movie movie = (Movie)mMovieCollectionAdapter.get(i);
+                            DbUtils.markAsHiddenByUser(getActivity(), movie);
                         }
-                    }
-                    else if (mActionId == TvshowActionAdapter.ACTION_DELETE) {
-                        SeasonPresenter.VideoViewHolder vh = (SeasonPresenter.VideoViewHolder)itemViewHolder;
-
+                    } else if (mActionId == CollectionActionAdapter.ACTION_DELETE) {
+                        MovieCollectionPresenter.VideoViewHolder vh = (MovieCollectionPresenter.VideoViewHolder) itemViewHolder;
                         if (!vh.getConfirmDelete()) {
                             vh.enableConfirmDelete();
-                        }
-                        else {
+                        } else {
                             ArrayList<Uri> uris = new ArrayList<Uri>();
-    
-                            for (int i = 1; i < mSeasonsAdapter.size(); i++) {
-                                Season season = (Season)mSeasonsAdapter.get(i);
-            
-                                for(String filePath : DbUtils.getFilePaths(getActivity(), season)) {
-                                    Uri uri = VideoUtils.getFileUriFromMediaLibPath(filePath);
-                                    
-                                    uris.add(uri);
-                                }
+                            for (int i = 1; i < mMovieCollectionAdapter.size(); i++) {
+                                Movie movie = (Movie) mMovieCollectionAdapter.get(i);
+                                uris.add(VideoUtils.getFileUriFromMediaLibPath(movie.getFilePath()));
                             }
-    
                             Delete delete = new Delete(MovieCollectionFragment.this, getActivity());
-    
                             if (uris.size() == 1)
                                 delete.startDeleteProcess(uris.get(0));
                             else if (uris.size() > 1)
                                 delete.startMultipleDeleteProcess(uris);
                         }
                     }
+                     */
 
+                    // TODO MARC: warning if in background the loading might be null!!!
+                    if (mCollection == null) {
+                        Log.w(TAG, "onCreate: mCollection null!!!)");
+                        return;
+                    }
+
+                    if (mActionId == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_WATCHED) {
+                        boolean collectionWatched = true;
+                        if (!mCollection.isWatched()) {
+                            collectionWatched = false;
+                            break;
+                        }
+                        if (collectionWatched) DbUtils.markAsNotRead(getActivity(), mCollection);
+                        else DbUtils.markAsRead(getActivity(), mCollection);
+                        getActivity().setResult(Activity.RESULT_OK);
+                    } else if (mActionId == CollectionActionAdapter.ACTION_UNINDEX) {
+                        DbUtils.markAsHiddenByUser(getActivity(), mCollection);
+                    } else if (mActionId == CollectionActionAdapter.ACTION_DELETE) {
+                        MovieCollectionPresenter.VideoViewHolder vh = (MovieCollectionPresenter.VideoViewHolder)itemViewHolder;
+                        if (!vh.getConfirmDelete()) {
+                            vh.enableConfirmDelete();
+                        } else {
+                            ArrayList<Uri> uris = new ArrayList<Uri>();
+                            for(String filePath : DbUtils.getFilePaths(getActivity(), mCollection)) {
+                                Uri uri = VideoUtils.getFileUriFromMediaLibPath(filePath);
+                                uris.add(uri);
+                            }
+                            Delete delete = new Delete(MovieCollectionFragment.this, getActivity());
+                            if (uris.size() == 1)
+                                delete.startDeleteProcess(uris.get(0));
+                            else if (uris.size() > 1)
+                                delete.startMultipleDeleteProcess(uris);
+                        }
+                    }
                     return;
                 }
 
-                Season season = (Season)item;
+                Movie movie = (Movie)item;
                 
-                if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED) {
-                    if (season.allEpisodesWatched()) {
-                        DbUtils.markAsNotRead(getActivity(), season);
+                if (mActionId == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_WATCHED) {
+                    if (movie.isWatched()) {
+                        DbUtils.markAsNotRead(getActivity(), movie);
                     }
                     else {
-                        DbUtils.markAsRead(getActivity(), season);
+                        DbUtils.markAsRead(getActivity(), movie);
                     }
 
                     getActivity().setResult(Activity.RESULT_OK);
                 }
-                else if (mActionId == TvshowActionAdapter.ACTION_UNINDEX) {
-                    DbUtils.markAsHiddenByUser(getActivity(), season);
+                else if (mActionId == CollectionActionAdapter.ACTION_UNINDEX) {
+                    DbUtils.markAsHiddenByUser(getActivity(), movie);
                 }
-                else if (mActionId == TvshowActionAdapter.ACTION_DELETE) {
-                    SeasonPresenter.VideoViewHolder vh = (SeasonPresenter.VideoViewHolder)itemViewHolder;
+                else if (mActionId == CollectionActionAdapter.ACTION_DELETE) {
+                    MovieCollectionPresenter.VideoViewHolder vh = (MovieCollectionPresenter.VideoViewHolder)itemViewHolder;
 
                     if (!vh.getConfirmDelete()) {
                         vh.enableConfirmDelete();
                     }
                     else {
                         ArrayList<Uri> uris = new ArrayList<Uri>();
-
-                        for(String filePath : DbUtils.getFilePaths(getActivity(), season)) {
-                            Uri uri = VideoUtils.getFileUriFromMediaLibPath(filePath);
-                            
-                            uris.add(uri);
-                        }
-
+                        uris.add(VideoUtils.getFileUriFromMediaLibPath(movie.getFilePath()));
                         Delete delete = new Delete(MovieCollectionFragment.this, getActivity());
-
                         if (uris.size() == 1)
                             delete.startDeleteProcess(uris.get(0));
                         else if (uris.size() > 1)
@@ -240,18 +274,19 @@ public class MovieCollectionFragment extends BrowseSupportFragment implements Lo
     private void loadRows() {
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
 
-        mSeasonPresenter = new SeasonPresenter(getActivity(), mActionId);
-        mSeasonsAdapter = new PlaceholderCursorObjectAdapter(mSeasonPresenter);
-        mSeasonsAdapter.setMapper(new CompatibleCursorMapperConverter(new SeasonCursorMapper()));
+        mMovieCollectionPresenter = new MovieCollectionPresenter(getActivity(), mActionId);
+        mMovieCollectionAdapter = new PlaceholderCursorObjectAdapter(mMovieCollectionPresenter);
+        mMovieCollectionAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
         String desc = "";
-        if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED)
-            desc = getString(R.string.how_to_mark_season_watched);
-        else if (mActionId == TvshowActionAdapter.ACTION_UNINDEX)
-            desc = getString(R.string.how_to_unindex_season);
-        else if (mActionId == TvshowActionAdapter.ACTION_DELETE)
-            desc = getString(R.string.how_to_delete_season);
-        mSeasonsListRow = new ListRow(new HeaderItem(desc), mSeasonsAdapter);
-        mRowsAdapter.add(mSeasonsListRow);
+        // TODO MARC collection has no multiple seasons!!! rework this part and delete strings
+        if (mActionId == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_WATCHED)
+            desc = getString(R.string.how_to_mark_collection_watched);
+        else if (mActionId == CollectionActionAdapter.ACTION_UNINDEX)
+            desc = getString(R.string.how_to_unindex_collection);
+        else if (mActionId == CollectionActionAdapter.ACTION_DELETE)
+            desc = getString(R.string.how_to_delete_collection);
+        mMovieCollectionListRow = new ListRow(new HeaderItem(desc), mMovieCollectionAdapter);
+        mRowsAdapter.add(mMovieCollectionListRow);
 
         setAdapter(mRowsAdapter);
     }
@@ -260,28 +295,32 @@ public class MovieCollectionFragment extends BrowseSupportFragment implements Lo
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-        return new SeasonsLoader(getActivity(), mTvshowId);
+        return new MovieCollectionLoader(getActivity(), mCollectionId);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        mSeasonPresenter.setAllSeasons(null);
-        mSeasonsAdapter.changeCursor(cursor);
+        mMovieCollectionPresenter.setCollection(null);
+        mMovieCollectionAdapter.changeCursor(cursor);
 
-        int episodeTotalCount = 0;
-        int episodeWatchedCount = 0;
-    
-        for (int i = 1; i < mSeasonsAdapter.size(); i++) {
-            Season season = (Season)mSeasonsAdapter.get(i);
+        int movieCollectionTotalCount = mCollection.getMovieCollectionCount();
+        int movieCollectionWatchedCount = mCollection.getMovieCollectionWatchedCount();
 
-            episodeTotalCount += season.getEpisodeTotalCount();
-            episodeWatchedCount += season.getEpisodeWatchedCount();
+        /*
+        int movieCollectionTotalCount = 0;
+        int movieCollectionWatchedCount = 0;
+        for (int i = 1; i < mMovieCollectionAdapter.size(); i++) {
+            Movie movie = (Movie)mMovieCollectionAdapter.get(i);
+            movieCollectionTotalCount += 1;
+            if (movie.isWatched()) movieCollectionWatchedCount += 1;
         }
+         */
 
-        Season allSeasons = new Season(mTvshowId, mTvshowName, mTvshowPosterUri, -1, episodeTotalCount, episodeWatchedCount);
+        // TODO MARC: check that this is ok
+        //Season allSeasons = new Season(mCollectionId, mCollectionName, mCollectionPosterUri, -1, episodeTotalCount, episodeWatchedCount);
 
-        mSeasonPresenter.setAllSeasons(allSeasons);
-        mSeasonsAdapter.onCursorChanged();
+        mMovieCollectionPresenter.setCollection(mCollection);
+        mMovieCollectionAdapter.onCursorChanged();
     }
 
     @Override

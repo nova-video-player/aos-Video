@@ -34,7 +34,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.adapters.object.Season;
+import com.archos.mediacenter.video.leanback.collections.CollectionActionAdapter;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowActionAdapter;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -44,7 +46,7 @@ public class MovieCollectionPresenter extends Presenter {
     final Drawable mErrorDrawable;
     
     private long mActionId;
-    private Season mAllSeasons;
+    private Collection mCollection;
 
     private Context mContext;
 
@@ -139,60 +141,59 @@ public class MovieCollectionPresenter extends Presenter {
         mActionId = actionId;
     }
 
-    public void setAllSeasons(Season allSeasons) {
-        mAllSeasons = allSeasons;
+    public void setCollection(Collection collection) {
+        mCollection = collection;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
         mContext = parent.getContext();
-        VideoViewHolder vh = new VideoViewHolder(parent.getContext(), mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED);
+        VideoViewHolder vh = new VideoViewHolder(parent.getContext(), mActionId == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_WATCHED);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Object item) {
-        if (mAllSeasons == null)
+        if (mCollection == null)
             return;
         
         if (item == null)
-            item = mAllSeasons;
+            item = mCollection;
 
         VideoViewHolder vh = (VideoViewHolder)viewHolder;
-        Season season = (Season) item;
+        Collection collection = (Collection) item;
 
         // setup the watched flag BEFORE the poster because it is handled in a strange way in the ImageCardViewTarget
         // We show the top-right corner icon like for the individual videos, for consistency
-        vh.mImageCardViewTarget.setWatchedFlag(mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED && season.allEpisodesWatched());
+        vh.mImageCardViewTarget.setWatchedFlag(mActionId == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_WATCHED && collection.isWatched());
 
-        if (season.getPosterUri() != null)
-            vh.updateCardView(season.getPosterUri());
+        if (collection.getPosterUri() != null)
+            vh.updateCardView(collection.getPosterUri());
         else
             vh.updateCardView(mErrorDrawable);
 
         final ImageCardView card = vh.getImageCardView();
 
-        if (season.getSeasonNumber() == -1)
-            card.setTitleText(mContext.getString(R.string.all_seasons));
-        else
-            card.setTitleText(mContext.getString(R.string.season_identification, season.getSeasonNumber()));
+        // TODO MARC is it ok?
+        //card.setTitleText(mContext.getString(R.string.all_seasons));
+        card.setTitleText(mCollection.getName());
 
-        card.setContentText(mContext.getResources().getQuantityString(R.plurals.Nepisodes, season.getEpisodeTotalCount(), season.getEpisodeTotalCount()));
+        card.setContentText(mContext.getResources().getQuantityString(R.plurals.Nmovies, collection.getMovieCollectionCount()));
 
-        if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED) {
+        if (mActionId == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_WATCHED) {
             final Resources r = mContext.getResources();
             String desc;
             int color;
-            if (season.allEpisodesWatched()) {
-                desc = r.getString(R.string.all_episodes_watched);
+            if (collection.isWatched()) {
+                desc = r.getString(R.string.all_collection_watched);
                 color = ContextCompat.getColor(mContext, R.color.leanback_all_episodes_watched);
             }
-            else if (season.allEpisodesNotWatched()) {
-                desc = r.getString(R.string.no_episode_watched);
+            else if (collection.allCollectionWatched()) {
+                desc = r.getString(R.string.all_collection_unwatched);
                 color = ContextCompat.getColor(mContext, R.color.leanback_no_episode_watched);
             }
             else {
-                desc = r.getQuantityString(R.plurals.n_episodes_watched, season.getEpisodeWatchedCount(), season.getEpisodeWatchedCount());
+                desc = r.getQuantityString(R.plurals.n_movies_watched, collection.getMovieCollectionWatchedCount(), collection.getMovieCollectionCount());
                 color = ContextCompat.getColor(mContext, R.color.leanback_n_episodes_watched);
             }
             vh.setInfoMessage(desc);
