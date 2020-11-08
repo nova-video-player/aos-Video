@@ -64,11 +64,13 @@ import androidx.leanback.transition.TransitionListener;
 import androidx.loader.content.CursorLoader;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.adapters.MovieCollectionAdapter;
 import com.archos.mediacenter.video.browser.adapters.mappers.CollectionCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
+import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
@@ -119,7 +121,8 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
     private DetailsOverviewRow mDetailsOverviewRow;
     private ArrayObjectAdapter mRowsAdapter;
-    private SparseArray<CursorObjectAdapter> mSeasonAdapters;
+    private SparseArray<CursorObjectAdapter> mMovieCollectionAdapters;
+    private MovieCollectionAdapter mMovieCollectionAdapter;
 
     private AsyncTask mBackdropTask;
     private AsyncTask mFullScraperTagsTask;
@@ -189,8 +192,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
             @Override
             public void onActionClicked(Action action) {
                 if (action.getId() == CollectionActionAdapter.ACTION_PLAY) {
-                    // TODO MARC NOPE
-                    playEpisode();
+                    playMovie();
                 }
                 else if (action.getId() == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_WATCHED) {
                     Intent intent = new Intent(getActivity(), MovieCollectionActivity.class);
@@ -237,44 +239,34 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
             public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
                 if (item instanceof Video) {
                     //animate only if episode picture isn't displayed
-                    boolean animate =!((item instanceof Episode)&&((Episode)item).getPictureUri()!=null);
-                    VideoViewClickedListener.showVideoDetails(getActivity(), (Video) item, itemViewHolder, animate, false, false, -1, TvshowFragment.this, REQUEST_CODE_VIDEO);
+                    boolean animate =!((item instanceof Video)&&((Video)item).getPosterUri()!=null);
+                    VideoViewClickedListener.showVideoDetails(getActivity(), (Video) item, itemViewHolder, animate, false, false, -1, CollectionFragment.this, REQUEST_CODE_VIDEO);
 }
             }
         });
     }
 
-    private void playEpisode() {
-        if (mSeasonAdapters != null) {
-            Episode resumeEpisode = null;
-            Episode firstEpisode = null;
+    // TODO MARC mSeasonAdapters -> mMovieCollectionAdapters NOPE mMovieCollectionAdapter and there is only one!, TvshowFragement -> CollectionFragment
+
+
+    private void playMovie() {
+        if (mMovieCollectionAdapter != null) {
+            Movie resumeMovie = null;
+            Movie firstMovie = null;
             int i = 0;
-
-            while(i < mSeasonAdapters.size() && (resumeEpisode == null || resumeEpisode != null && resumeEpisode.getSeasonNumber() == 0)) {
-                CursorObjectAdapter seasonAdapter = mSeasonAdapters.valueAt(i);
-                int j = 0;
-
-                while (j < seasonAdapter.size() && (resumeEpisode == null || resumeEpisode != null && resumeEpisode.getSeasonNumber() == 0)) {
-                    Episode episode = (Episode)seasonAdapter.get(j);
-
-                    if (episode.getResumeMs() != PlayerActivity.LAST_POSITION_END
-                            && (resumeEpisode == null || resumeEpisode != null && episode.getEpisodeDate() < resumeEpisode.getEpisodeDate())) {
-                        resumeEpisode = episode;
-                    }
-
-                    if (firstEpisode == null || (firstEpisode != null && firstEpisode.getSeasonNumber() == 0 && episode.getEpisodeDate() < firstEpisode.getEpisodeDate()))
-                        firstEpisode = episode;
-
-                    j++;
+            while(i < mMovieCollectionAdapter.getCount() && resumeMovie == null) {
+                Movie movie = (Movie)mMovieCollectionAdapter.getItem(i);
+                if (movie.getResumeMs() != PlayerActivity.LAST_POSITION_END && resumeMovie == null) {
+                    resumeMovie = movie;
                 }
-
+                if (firstMovie == null)
+                    firstMovie = movie;
                 i++;
             }
-
-            if (resumeEpisode != null)
-                PlayUtils.startVideo(getActivity(), (Video)resumeEpisode, PlayerActivity.RESUME_FROM_LAST_POS, false, -1, null, -1);
-            else if (firstEpisode != null)
-                PlayUtils.startVideo(getActivity(), (Video)firstEpisode, PlayerActivity.RESUME_FROM_LAST_POS, false, -1, null, -1);
+            if (resumeMovie != null)
+                PlayUtils.startVideo(getActivity(), (Video)resumeMovie, PlayerActivity.RESUME_FROM_LAST_POS, false, -1, null, -1);
+            else if (firstMovie != null)
+                PlayUtils.startVideo(getActivity(), (Video)firstMovie, PlayerActivity.RESUME_FROM_LAST_POS, false, -1, null, -1);
         }
     }
 

@@ -38,6 +38,7 @@ public class Collection extends Base implements Serializable {
     private int mCollCount;
     private int mCollMovieCount;
     private int mCollMovieWatchedCount;
+    private Uri mPosterUri;
 
     private long mPinned;
 
@@ -70,6 +71,7 @@ public class Collection extends Base implements Serializable {
         mIsTraktLibrary = traktLibrary;
         mCollDescription = collDescription;
         mPinned = pinned;
+        mPosterUri = posterUri;
     }
 
     public String getCountString(Context context) {
@@ -102,6 +104,13 @@ public class Collection extends Base implements Serializable {
 
     public long getTitle() {
         return mCollId;
+    }
+
+    public Uri getPosterUri() {
+        if(mPosterUri!=null)
+            return Uri.parse(mPosterUri);
+        else
+            return null;
     }
 
     // TODO MARC: choice not creating tags since in movie already --> remove this since should not be used
