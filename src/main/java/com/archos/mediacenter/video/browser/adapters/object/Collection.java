@@ -80,6 +80,18 @@ public class Collection extends Base implements Serializable {
         return mCollCount;
     }
 
+    public int getMovieCollectionCount() {
+        return mCollMovieCount;
+    }
+
+    public int getMovieCollectionWatchedCount() {
+        return mCollMovieWatchedCount;
+    }
+
+    public boolean allCollectionWatched() {
+        return mCollMovieWatchedCount>=mCollMovieCount;
+    }
+
     public boolean isPinned() {
         return mPinned > 0;
     }
