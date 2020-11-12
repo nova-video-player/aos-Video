@@ -26,6 +26,8 @@ import java.io.Serializable;
 
 public class Collection extends Base implements Serializable {
 
+    // TODO MARC implement backdrop here!!!
+
     private final boolean mIsTraktSeen;
     private final boolean mIsTraktLibrary;
 
@@ -46,6 +48,7 @@ public class Collection extends Base implements Serializable {
      * Not computed by this class but only a place to store it.
      * Need to be set with setShowTags()
      */
+    // TODO MARC remove tags
     //private ShowTags mShowTags;
 
     public Collection(long collId, String collName, Uri posterUri, int collCount, int collMovieCount, int collMovieWatchedCount) {
@@ -108,7 +111,7 @@ public class Collection extends Base implements Serializable {
 
     public Uri getPosterUri() {
         if(mPosterUri!=null)
-            return Uri.parse(mPosterUri);
+            return mPosterUri;
         else
             return null;
     }

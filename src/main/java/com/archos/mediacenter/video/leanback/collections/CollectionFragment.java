@@ -73,11 +73,14 @@ import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
+import com.archos.mediacenter.video.browser.loader.AllCollectionsLoader;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.CollectionLoader;
 import com.archos.mediacenter.video.browser.loader.EpisodesLoader;
+import com.archos.mediacenter.video.browser.loader.MovieCollectionLoader;
 import com.archos.mediacenter.video.browser.loader.SeasonsLoader;
 import com.archos.mediacenter.video.browser.loader.TvshowLoader;
+import com.archos.mediacenter.video.collections.CollectionsSortOrderEntries;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
@@ -106,7 +109,8 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     public static final String EXTRA_COLLECTION_ID = "collection_id";
     public static final String SHARED_ELEMENT_NAME = "hero";
 
-    public static final int COLLECTION_LOADER_ID = -42;
+    // TODO MARC give another number for distinction
+    public static final int COLLECTION_LOADER_ID = -43;
 
     public static final int REQUEST_CODE_MORE_DETAILS = 8574; // some random integer may be useful for grep/debug...
     public static final int REQUEST_CODE_CHANGE_TVSHOW = 8575; // some random integer may be useful for grep/debug...
@@ -233,7 +237,6 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         // --> This instance of BackdropTask() will not be used but it must be created here!
         mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
 
-        // TODO MARC HERE TO CONTINUE MODIFYING!!!
         setOnItemViewClickedListener(new OnItemViewClickedListener() {
             @Override
             public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
@@ -333,14 +336,17 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         super.onResume();
         mOverlay.resume();
         // Start loading the detailed info about the show if needed
+        // TODO MARC no showtags issue with backdroptask again...
+        /*
         if (mTvshow.getShowTags()==null) {
             mFullScraperTagsTask = new FullScraperTagsTask().execute(mTvshow);
         }
+         */
         if (mBackdropTask!=null) {
             mBackdropTask.cancel(true);
         }
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mTvshow.getShowTags());
-
+        //mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mTvshow.getShowTags());
+        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mCollection);
     }
 
     @Override
@@ -348,6 +354,8 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         super.onPause();
         mOverlay.pause();
     }
+
+    // TODO MARC HERE TO CONTINUE MODIFYING!!!
 
     /**
      * Getting RESULT_OK from REQUEST_CODE_MORE_DETAILS means that the poster and/or the backdrop has been changed
@@ -358,23 +366,27 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if ((requestCode == REQUEST_CODE_MARK_WATCHED || requestCode == REQUEST_CODE_VIDEO) && resultCode == Activity.RESULT_OK) {
-            // TvshowLoader is a CursorLoader
-            TvshowLoader tvshowLoader = new TvshowLoader(getActivity(), mTvshow.getTvshowId());
-            Cursor cursor = tvshowLoader.loadInBackground();
+            // CollectionLoader is a CursorLoader
+            CollectionLoader collectionLoader = new CollectionLoader(getActivity(), mCollection.getCollectionId());
+            Cursor cursor = collectionLoader.loadInBackground();
             if(cursor != null && cursor.getCount()>0) {
                 cursor.moveToFirst();
-                TvshowCursorMapper tvshowCursorMapper = new TvshowCursorMapper();
-                tvshowCursorMapper.bindColumns(cursor);
-                Tvshow tvshow = (Tvshow) tvshowCursorMapper.bind(cursor);
-                tvshow.setShowTags(mTvshow.getShowTags());
-                mTvshow = tvshow;
+                CollectionCursorMapper collectionCursorMapper = new CollectionCursorMapper();
+                collectionCursorMapper.bindColumns(cursor);
+                Collection collection = (Collection) collectionCursorMapper.bind(cursor);
+                // TODO MARC should do something (change tag watched on video?)
+                //collection.setShowTags(mCollection.getShowTags());
+                mCollection = collection;
             }
             // sometimes mTvshow is null (tracepot)
-            if (mTvshow != null)
-                mDetailsOverviewRow.setItem(mTvshow);
+            if (mCollection != null)
+                mDetailsOverviewRow.setItem(mCollection);
         }
+
+        // TODO MARC: there is no CollectionMoreDetailsFragment there is no rescrap --> remove this logic everywhere and simplify
+        /*
         if ((requestCode == REQUEST_CODE_MORE_DETAILS || requestCode == REQUEST_CODE_VIDEO) && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Get RESULT_OK from TvshowMoreDetailsFragment/VideoDetailsFragment");
+            if (DBG) Log.d(TAG, "Get RESULT_OK from TvshowMoreDetailsFragment/VideoDetailsFragment");
 
             // Only Poster and/or backdrop has been changed.
             // But the ShowTags must be recomputed as well.
@@ -393,7 +405,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
             mFullScraperTagsTask = new FullScraperTagsTask().execute(mTvshow);
         }
         else if (requestCode == REQUEST_CODE_CHANGE_TVSHOW && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Get RESULT_OK from ManualShowScrappingActivity");
+            if (DBG) Log.d(TAG, "Get RESULT_OK from ManualShowScrappingActivity");
             // Whole show has been changed, need to reload everything
             // First update the TvShow instance we have here with the data returned by ManualShowScrappingActivity
             String newName = data.getStringExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_NAME);
@@ -412,6 +424,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
             mSeasonAdapters = null;
             mHasDetailRow = false;
         }
+         */
     }
 
     private void slightlyDelayedFinish() {
@@ -424,33 +437,41 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     }
 
     /** Fill the ShowTags in the given TvShow instance */
-    private class FullScraperTagsTask extends AsyncTask<Tvshow, Void, Tvshow> {
+    private class FullScraperTagsTask extends AsyncTask<Collection, Void, Collection> {
+        // TODO MARC HERE
 
         @Override
-        protected Tvshow doInBackground(Tvshow... tvshows) {
-            mTvshow.setShowTags( (ShowTags)tvshows[0].getFullScraperTags(getActivity()));
-            return mTvshow;
+        protected Collection doInBackground(Collection... collections) {
+            // TODO MARC!!!
+            //mCollection.setShowTags( (ShowTags)collections[0].getFullScraperTags(getActivity()));
+            return mCollection;
         }
 
-        protected void onPostExecute(Tvshow tvshow) {
+        protected void onPostExecute(Collection collection) {
+            // TODO MARC remove
+            /*
             if (tvshow.getShowTags()==null) {
                 Log.e(TAG, "FullScraperTagsTask failed to get ShowTags for "+mTvshow);
                 return;
             }
+             */
             // Load the details view
             if (mDetailRowBuilderTask != null) {
                 mDetailRowBuilderTask.cancel(true);
             }
-            mDetailRowBuilderTask = new DetailRowBuilderTask().execute(tvshow);
+            mDetailRowBuilderTask = new DetailRowBuilderTask().execute(collection);
 
             // Launch backdrop task in BaseTags-as-arguments mode
             if (mBackdropTask!=null) {
                 mBackdropTask.cancel(true);
             }
-            mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(tvshow.getShowTags());
+            // TODO MARC WARNING issue with tags!!!
+            // what we need here is the backdrop i.e. the image generated
+            //mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(tvshow.getShowTags());
+            mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(collection);
 
             // Start loading the list of seasons
-            LoaderManager.getInstance(TvshowFragment.this).restartLoader(SEASONS_LOADER_ID, null, TvshowFragment.this);
+            LoaderManager.getInstance(CollectionFragment.this).restartLoader(COLLECTION_LOADER_ID, null, CollectionFragment.this);
         }
     }
 
@@ -458,19 +479,14 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-        if (id==SEASONS_LOADER_ID) {
-            return new SeasonsLoader(getActivity(), mTvshow.getTvshowId());
-        }
-        else {
-            // The season number is put in the id argument
-            return new EpisodesLoader(getActivity(), mTvshow.getTvshowId(), id, true);
-        }
+        return new MovieCollectionLoader(getActivity(), mCollection.getCollectionId());
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         if (getActivity() == null) return;
-        if (cursorLoader.getId()==SEASONS_LOADER_ID) {
+        /*
+        if (cursorLoader.getId()==COLLECTION_LOADER_ID) {
             final int seasonNumberColumn = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON);
 
             SparseArray<CursorObjectAdapter> seasonAdapters = new SparseArray<CursorObjectAdapter>();
@@ -526,16 +542,23 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
             }  
         }
         else {
-            // We got the list of episode for one season, load it
-            if (mSeasonAdapters != null) {
-                CursorObjectAdapter seasonAdapter = mSeasonAdapters.get(cursorLoader.getId());
+         */
+        /*
+            // We got the list of movies for one collection, load it
+            if (mMovieCollectionAdapter != null) {
+                MovieCollectionAdapter collectionAdapter = mMovieCollectionAdapter;
+                // TODO MARC remove this should be not an array but just one
+                //CursorObjectAdapter seasonAdapter = mSeasonAdapters.get(cursorLoader.getId());
 
-                if (seasonAdapter != null)
-                    seasonAdapter.changeCursor(cursor);
+                if (collectionAdapter != null)
+                    collectionAdapter.changeCursor(cursor);
                 else
                     LoaderManager.getInstance(this).destroyLoader(cursorLoader.getId());
             }
-        }
+         */
+        if (mMovieCollectionAdapter != null) mMovieCollectionAdapter.changeCursor(cursor);
+        else LoaderManager.getInstance(this).destroyLoader(cursorLoader.getId());
+        //}
     }
 
     @Override
@@ -544,27 +567,24 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
     //--------------------------------------------
 
-    private class DetailRowBuilderTask extends AsyncTask<Tvshow, Void, Pair<Tvshow, Bitmap>> {
+    private class DetailRowBuilderTask extends AsyncTask<Collection, Void, Pair<Collection, Bitmap>> {
 
         @Override
-        protected Pair<Tvshow, Bitmap> doInBackground(Tvshow... shows) {
-            Tvshow tvshow = shows[0];
+        protected Pair<Collection, Bitmap> doInBackground(Collection... collections) {
+            Collection collection = collections[0];
 
             Bitmap bitmap = null;
             try {
+                // TODO MARC WARNING remove this comment!!!
                 // Poster: we must take the poster from the showTags because they are updated (in case they have
                 // been changed in TvshowMoreDetailsFragment) while the Tvshow instance has not been updated.
-                Uri posterUri;
-                if (tvshow.getShowTags()!=null && tvshow.getShowTags().getDefaultPoster() != null) {
-                    posterUri = Uri.parse("file://"+tvshow.getShowTags().getDefaultPoster().getLargeFile());
-                } else {
-                    posterUri = tvshow.getPosterUri(); // fallback
-                }
+                Uri posterUri = collection.getPosterUri(); // fallback
 
                 if (posterUri != null) {
                     bitmap = Picasso.get()
                             .load(posterUri)
                             .noFade() // no fade since we are using activity transition anyway
+                            // TODO MARC no resize?
                             .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
                             .centerCrop()
                             .get();
@@ -589,21 +609,21 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                 }
             }
 
-            return new Pair<>(tvshow, bitmap);
+            return new Pair<>(collection, bitmap);
         }
 
         @Override
-        protected void onPostExecute(Pair<Tvshow, Bitmap> result) {
-            Tvshow tvshow = result.first;
+        protected void onPostExecute(Pair<Collection, Bitmap> result) {
+            Collection collection = result.first;
             Bitmap bitmap = result.second;
 
             // Buttons
             if (mDetailsOverviewRow == null) {
-                mDetailsOverviewRow = new DetailsOverviewRow(tvshow);
-                mDetailsOverviewRow.setActionsAdapter(new TvshowActionAdapter(getActivity(), tvshow));
+                mDetailsOverviewRow = new DetailsOverviewRow(collection);
+                mDetailsOverviewRow.setActionsAdapter(new CollectionActionAdapter(getActivity(), collection));
             }
             else {
-                mDetailsOverviewRow.setItem(tvshow);
+                mDetailsOverviewRow.setItem(collection);
             }
 
             if (bitmap!=null) {
@@ -637,7 +657,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                 break;
             case KeyEvent.KEYCODE_MEDIA_PLAY:
             case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                playEpisode();
+                playMovie();
                 break;
             case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
             case KeyEvent.KEYCODE_MEDIA_NEXT:
@@ -651,21 +671,21 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
         if (direction != -1) {
             CursorLoader loader = null;
-            if (mTvshow != null) {
+            if (mCollection != null) {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                String sortOrder = prefs.getString(AllTvshowsGridFragment.SORT_PARAM_KEY, TvshowSortOrderEntries.DEFAULT_SORT);
-                boolean showWatched = prefs.getBoolean(AllTvshowsGridFragment.SHOW_WATCHED_KEY, true);
-                loader = new AllTvshowsLoader(getActivity(), sortOrder, showWatched);
+                String sortOrder = prefs.getString(AllCollectionsGridFragment.SORT_PARAM_KEY, CollectionsSortOrderEntries.DEFAULT_SORT);
+                boolean showWatched = prefs.getBoolean(AllCollectionsGridFragment.COLLECTION_WATCHED_KEY, true);
+                loader = new AllCollectionsLoader(getActivity(), sortOrder, showWatched);
             }
             if (loader != null) {
                 // Using a CursorLoader but outside of the LoaderManager : need to make sure the Looper is ready
                 if (Looper.myLooper()==null) Looper.prepare();
                 Cursor c = loader.loadInBackground();
-                Tvshow tvshow = null;
+                Collection collection = null;
                 for (int i = 0; i < c.getCount(); i++) {
                     c.moveToPosition(i);
-                    Tvshow t = (Tvshow)new CompatibleCursorMapperConverter(new TvshowCursorMapper()).convert(c);
-                    if (t.getTvshowId() == mTvshow.getTvshowId()) {
+                    Collection mc = (Collection)new CompatibleCursorMapperConverter(new CollectionCursorMapper()).convert(c);
+                    if (mc.getCollectionId() == mCollection.getCollectionId()) {
                         if (direction == Gravity.LEFT) {
                             if (i - 1 >= 0)
                                 c.moveToPosition(i - 1);
@@ -678,22 +698,22 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                             else
                                 c.moveToPosition(0);
                         }
-                        Tvshow nt = (Tvshow)new CompatibleCursorMapperConverter(new TvshowCursorMapper()).convert(c);
-                        if (nt.getTvshowId() != t.getTvshowId())
-                            tvshow = nt;
+                        Collection nc = (Collection)new CompatibleCursorMapperConverter(new CollectionCursorMapper()).convert(c);
+                        if (nc.getCollectionId() != mc.getCollectionId())
+                            collection = nc;
                         break;
                     }
                 }
                 c.close();
-                if (tvshow != null) {
+                if (collection != null) {
                     if (direction == Gravity.LEFT)
                         getActivity().getWindow().setExitTransition(new Slide(Gravity.RIGHT));
                     else if (direction == Gravity.RIGHT)
                         getActivity().getWindow().setExitTransition(new Slide(Gravity.LEFT));
-                    final Intent intent = new Intent(getActivity(), TvshowActivity.class);
-                    intent.putExtra(TvshowFragment.EXTRA_TVSHOW, tvshow);
-                    intent.putExtra(TvshowActivity.SLIDE_TRANSITION_EXTRA, true);
-                    intent.putExtra(TvshowActivity.SLIDE_DIRECTION_EXTRA, direction);
+                    final Intent intent = new Intent(getActivity(), CollectionActivity.class);
+                    intent.putExtra(CollectionFragment.EXTRA_COLLECTION, collection);
+                    intent.putExtra(CollectionActivity.SLIDE_TRANSITION_EXTRA, true);
+                    intent.putExtra(CollectionActivity.SLIDE_DIRECTION_EXTRA, direction);
                     // Launch next activity with slide animation
                     // Starting from lollipop we need to give an empty "SceneTransitionAnimation" for this to work
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

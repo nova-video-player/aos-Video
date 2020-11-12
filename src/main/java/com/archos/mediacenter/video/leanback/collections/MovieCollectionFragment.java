@@ -178,10 +178,8 @@ public class MovieCollectionFragment extends BrowseSupportFragment implements Lo
 
                     if (mActionId == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_WATCHED) {
                         boolean collectionWatched = true;
-                        if (!mCollection.isWatched()) {
+                        if (!mCollection.isWatched())
                             collectionWatched = false;
-                            break;
-                        }
                         if (collectionWatched) DbUtils.markAsNotRead(getActivity(), mCollection);
                         else DbUtils.markAsRead(getActivity(), mCollection);
                         getActivity().setResult(Activity.RESULT_OK);
