@@ -40,7 +40,7 @@ public class Collection extends Base implements Serializable {
     private int mCollCount;
     private int mCollMovieCount;
     private int mCollMovieWatchedCount;
-    private Uri mPosterUri;
+    private String mPosterUri;
 
     private long mPinned;
 
@@ -74,7 +74,7 @@ public class Collection extends Base implements Serializable {
         mIsTraktLibrary = traktLibrary;
         mCollDescription = collDescription;
         mPinned = pinned;
-        mPosterUri = posterUri;
+        mPosterUri = posterUri.toString();
     }
 
     public String getCountString(Context context) {
@@ -111,7 +111,7 @@ public class Collection extends Base implements Serializable {
 
     public Uri getPosterUri() {
         if(mPosterUri!=null)
-            return mPosterUri;
+            return Uri.parse(mPosterUri);
         else
             return null;
     }

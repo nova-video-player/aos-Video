@@ -16,6 +16,8 @@ package com.archos.mediacenter.video.leanback.collections;
 
 import android.graphics.Paint;
 import androidx.leanback.widget.Presenter;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,7 @@ import java.util.Date;
 public class CollectionDetailsDescriptionPresenter extends Presenter {
 
     private static final String TAG = "CollectionDetailsDescriptionPresenter";
+    private static final boolean DBG = true;
 
     /**
      * The ViewHolder for the {@link CollectionDetailsDescriptionPresenter}.
@@ -47,6 +50,7 @@ public class CollectionDetailsDescriptionPresenter extends Presenter {
 
         public ViewHolder(final View view) {
             super(view);
+            if (DBG) Log.d(TAG, "ViewHolder");
             mTitle = (TextView) view.findViewById(androidx.leanback.R.id.lb_details_description_title);
             mDate = (TextView) view.findViewById(R.id.date);
             mRating = (TextView) view.findViewById(R.id.rating);
@@ -100,12 +104,14 @@ public class CollectionDetailsDescriptionPresenter extends Presenter {
 
     @Override
     public final ViewHolder onCreateViewHolder(ViewGroup parent) {
+        if (DBG) Log.d(TAG, "onCreateViewHolder");
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.leanback_collection_details_description, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
     public final void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
+        if (DBG) Log.d(TAG, "onBindViewHolder");
         ViewHolder vh = (ViewHolder) viewHolder;
         Collection collection = (Collection) item;
 

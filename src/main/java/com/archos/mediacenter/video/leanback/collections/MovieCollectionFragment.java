@@ -18,6 +18,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -83,6 +84,7 @@ public class MovieCollectionFragment extends BrowseSupportFragment implements Lo
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        if (DBG) Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
 
         mActionId = getActivity().getIntent().getLongExtra(EXTRA_ACTION_ID, -1);
@@ -101,6 +103,8 @@ public class MovieCollectionFragment extends BrowseSupportFragment implements Lo
             collectionCursorMapper.bindColumns(cursor);
             mCollection = (Collection) collectionCursorMapper.bind(cursor);
         }
+
+        if (DBG) Log.d(TAG, "onCreate: " + mCollection.getCollectionId());
 
         // Just need to attach the background manager to keep the background of the parent activity
         BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
@@ -270,6 +274,8 @@ public class MovieCollectionFragment extends BrowseSupportFragment implements Lo
     }
 
     private void loadRows() {
+        if (DBG) Log.d(TAG, "loadRows");
+
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
 
         mMovieCollectionPresenter = new MovieCollectionPresenter(getActivity(), mActionId);
@@ -293,11 +299,22 @@ public class MovieCollectionFragment extends BrowseSupportFragment implements Lo
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+        if (DBG) {
+            Log.d(TAG, "onCreateLoader: dump bundle");
+            // TODO MARC DEBUG
+            if (bundle != null) {
+                for (String key : bundle.keySet()) {
+                    Log.e(TAG, key + " : " + (bundle.get(key) != null ? bundle.get(key) : "NULL"));
+                }
+            }
+        }
         return new MovieCollectionLoader(getActivity(), mCollectionId);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        if (DBG) Log.d(TAG, "onLoadFinished" + DatabaseUtils.dumpCursorToString(cursor));
+
         mMovieCollectionPresenter.setCollection(null);
         mMovieCollectionAdapter.changeCursor(cursor);
 

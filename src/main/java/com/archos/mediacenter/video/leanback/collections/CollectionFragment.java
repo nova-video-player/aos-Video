@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import androidx.loader.content.Loader;
 
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -102,7 +103,7 @@ import java.io.IOException;
 
 public class CollectionFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
     private static final String TAG = "CollectionFragment";
 
     public static final String EXTRA_COLLECTION = "COLLECTION";
@@ -144,6 +145,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        if (DBG) Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
 
         Object transition = TransitionHelper.getEnterTransition(getActivity().getWindow());
@@ -174,6 +176,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                 CollectionLoader collectionLoader = new CollectionLoader(getActivity(), collectonId);
                 Cursor cursor = collectionLoader.loadInBackground();
                 if(cursor != null && cursor.getCount()>0) {
+                    if (DBG) Log.d(TAG, "onCreate" + DatabaseUtils.dumpCursorToString(cursor));
                     cursor.moveToFirst();
                     CollectionCursorMapper collectionCursorMapper = new CollectionCursorMapper();
                     collectionCursorMapper.bindColumns(cursor);
@@ -181,6 +184,13 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                 }
             }
         }
+
+        if (DBG) Log.d(TAG, "onCreate: " + mCollection.getCollectionId());
+
+        // TODO MARC WARNING before always called FullScraperTagsTask -->> not the case
+        // TODO MARC THIS HAS BEEN ADDED to load all movies related to the collection
+        //LoaderManager.getInstance(CollectionFragment.this).restartLoader(COLLECTION_LOADER_ID, null, CollectionFragment.this);
+
 
         mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
         mHandler = new Handler();
@@ -251,7 +261,6 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
     // TODO MARC mSeasonAdapters -> mMovieCollectionAdapters NOPE mMovieCollectionAdapter and there is only one!, TvshowFragement -> CollectionFragment
 
-
     private void playMovie() {
         if (mMovieCollectionAdapter != null) {
             Movie resumeMovie = null;
@@ -309,18 +318,21 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        if (DBG) Log.d(TAG, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
         mOverlay = new Overlay(this);
     }
 
     @Override
     public void onDestroyView() {
+        if (DBG) Log.d(TAG, "onDestroyView");
         mOverlay.destroy();
         super.onDestroyView();
     }
 
     @Override
     public void onStop() {
+        if (DBG) Log.d(TAG, "onStop");
         mBackdropTask.cancel(true);
         if (mFullScraperTagsTask!=null) {
             mFullScraperTagsTask.cancel(true);
@@ -333,6 +345,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
     @Override
     public void onResume() {
+        if (DBG) Log.d(TAG, "onResume");
         super.onResume();
         mOverlay.resume();
         // Start loading the detailed info about the show if needed
@@ -342,6 +355,25 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
             mFullScraperTagsTask = new FullScraperTagsTask().execute(mTvshow);
         }
          */
+
+        // Load the details view
+        if (mDetailRowBuilderTask != null) {
+            mDetailRowBuilderTask.cancel(true);
+        }
+        mDetailRowBuilderTask = new DetailRowBuilderTask().execute(mCollection);
+
+        // Launch backdrop task in BaseTags-as-arguments mode
+        if (mBackdropTask!=null) {
+            mBackdropTask.cancel(true);
+        }
+        // TODO MARC WARNING issue with tags!!!
+        // what we need here is the backdrop i.e. the image generated
+        //mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(tvshow.getShowTags());
+        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mCollection);
+
+        // Start loading the list of seasons
+        LoaderManager.getInstance(CollectionFragment.this).restartLoader(COLLECTION_LOADER_ID, null, CollectionFragment.this);
+
         if (mBackdropTask!=null) {
             mBackdropTask.cancel(true);
         }
@@ -351,6 +383,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
     @Override
     public void onPause() {
+        if (DBG) Log.d(TAG, "onPause");
         super.onPause();
         mOverlay.pause();
     }
@@ -365,7 +398,9 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (DBG) Log.d(TAG, "onActivityResult requestCode " + requestCode);
         if ((requestCode == REQUEST_CODE_MARK_WATCHED || requestCode == REQUEST_CODE_VIDEO) && resultCode == Activity.RESULT_OK) {
+            if (DBG) Log.d(TAG, "onActivityResult processing requestCode");
             // CollectionLoader is a CursorLoader
             CollectionLoader collectionLoader = new CollectionLoader(getActivity(), mCollection.getCollectionId());
             Cursor cursor = collectionLoader.loadInBackground();
@@ -381,6 +416,8 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
             // sometimes mTvshow is null (tracepot)
             if (mCollection != null)
                 mDetailsOverviewRow.setItem(mCollection);
+        } else {
+            if (DBG) Log.d(TAG, "onActivityResult NOT processing requestCode");
         }
 
         // TODO MARC: there is no CollectionMoreDetailsFragment there is no rescrap --> remove this logic everywhere and simplify
@@ -438,7 +475,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
     /** Fill the ShowTags in the given TvShow instance */
     private class FullScraperTagsTask extends AsyncTask<Collection, Void, Collection> {
-        // TODO MARC HERE
+        // TODO MARC HERE CAN BE REMOVED BECAUSE ALREADY HAVE TAGS
 
         @Override
         protected Collection doInBackground(Collection... collections) {
@@ -471,7 +508,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
             mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(collection);
 
             // Start loading the list of seasons
-            LoaderManager.getInstance(CollectionFragment.this).restartLoader(COLLECTION_LOADER_ID, null, CollectionFragment.this);
+            //LoaderManager.getInstance(CollectionFragment.this).restartLoader(COLLECTION_LOADER_ID, null, CollectionFragment.this);
         }
     }
 
@@ -479,11 +516,22 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+        if (DBG) {
+            Log.d(TAG, "onCreateLoader: dump bundle");
+            // TODO MARC DEBUG
+            if (bundle != null) {
+                for (String key : bundle.keySet()) {
+                    Log.e(TAG, key + " : " + (bundle.get(key) != null ? bundle.get(key) : "NULL"));
+                }
+            }
+        }
         return new MovieCollectionLoader(getActivity(), mCollection.getCollectionId());
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        // TODO MARC DEBUG
+        if (DBG) Log.d(TAG, "onLoadFinished" + DatabaseUtils.dumpCursorToString(cursor));
         if (getActivity() == null) return;
         /*
         if (cursorLoader.getId()==COLLECTION_LOADER_ID) {
@@ -556,9 +604,31 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     LoaderManager.getInstance(this).destroyLoader(cursorLoader.getId());
             }
          */
-        if (mMovieCollectionAdapter != null) mMovieCollectionAdapter.changeCursor(cursor);
-        else LoaderManager.getInstance(this).destroyLoader(cursorLoader.getId());
-        //}
+
+        CursorObjectAdapter movieCollectionAdapter;
+        movieCollectionAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity(), PosterImageCardPresenter.EpisodeDisplayMode.FOR_SEASON_LIST));
+        movieCollectionAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
+
+        ListRow row = new ListRow(0,
+                new HeaderItem(0, getString(R.string.movies)),
+                movieCollectionAdapter);
+        mRowsAdapter.add(row);
+
+        //TODO WARNING MARC: todo???
+        //LoaderManager.getInstance(this).restartLoader(COLLECTION_LOADER_ID, null, this);
+
+        movieCollectionAdapter.changeCursor(cursor);
+
+        /*
+        if (mMovieCollectionAdapter != null) {
+            if (DBG) Log.d(TAG, "onLoadFinished changing mMovieCollectionAdapter to cursor");
+            mMovieCollectionAdapter.changeCursor(cursor);
+        } else {
+            if (DBG) Log.d(TAG, "onLoadFinished destroyLoader!!!");
+            LoaderManager.getInstance(this).destroyLoader(cursorLoader.getId());
+        }
+         */
+
     }
 
     @Override
