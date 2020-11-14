@@ -22,7 +22,6 @@ import android.content.SharedPreferences;
 import androidx.loader.content.Loader;
 
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -49,17 +48,14 @@ import androidx.leanback.widget.OnItemViewClickedListener;
 import androidx.leanback.widget.Presenter;
 import androidx.leanback.widget.Row;
 import androidx.leanback.widget.RowPresenter;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import android.transition.Slide;
 import android.util.Log;
 import android.util.Pair;
-import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Toast;
 import androidx.leanback.transition.TransitionHelper;
 import androidx.leanback.transition.TransitionListener;
 import androidx.loader.content.CursorLoader;
@@ -67,20 +63,13 @@ import androidx.loader.content.CursorLoader;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.MovieCollectionAdapter;
 import com.archos.mediacenter.video.browser.adapters.mappers.CollectionCursorMapper;
-import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Collection;
-import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
-import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.loader.AllCollectionsLoader;
-import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.CollectionLoader;
-import com.archos.mediacenter.video.browser.loader.EpisodesLoader;
 import com.archos.mediacenter.video.browser.loader.MovieCollectionLoader;
-import com.archos.mediacenter.video.browser.loader.SeasonsLoader;
-import com.archos.mediacenter.video.browser.loader.TvshowLoader;
 import com.archos.mediacenter.video.collections.CollectionsSortOrderEntries;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.leanback.BackdropTask;
@@ -89,13 +78,8 @@ import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
 import com.archos.mediacenter.video.leanback.details.ArchosDetailsOverviewRowPresenter;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
-import com.archos.mediacenter.video.leanback.scrapping.ManualShowScrappingActivity;
 import com.archos.mediacenter.video.player.PlayerActivity;
-import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.PlayUtils;
-import com.archos.environment.NetworkState;
-import com.archos.mediaprovider.video.VideoStore;
-import com.archos.mediascraper.ShowTags;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -110,7 +94,6 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     public static final String EXTRA_COLLECTION_ID = "collection_id";
     public static final String SHARED_ELEMENT_NAME = "hero";
 
-    // TODO MARC give another number for distinction
     public static final int COLLECTION_LOADER_ID = -43;
 
     public static final int REQUEST_CODE_MORE_DETAILS = 8574; // some random integer may be useful for grep/debug...
@@ -253,6 +236,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     }
 
     private void playMovie() {
+        if (DBG) Log.d(TAG, "playMovie");
         if (mMovieCollectionAdapter != null) {
             Movie resumeMovie = null;
             Movie firstMovie = null;
@@ -336,13 +320,6 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         if (DBG) Log.d(TAG, "onResume");
         super.onResume();
         mOverlay.resume();
-        // Start loading the detailed info about the show if needed
-        // TODO MARC no showtags issue with backdroptask again... -> this loads the cursor -> move back here and not onCreate...
-        /*
-        if (mTvshow.getShowTags()==null) {
-            mFullScraperTagsTask = new FullScraperTagsTask().execute(mTvshow);
-        }
-         */
 
         // Load the details view
         if (mDetailRowBuilderTask != null) {
@@ -350,13 +327,11 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         }
         mDetailRowBuilderTask = new DetailRowBuilderTask().execute(mCollection);
 
-        // TODO MARC fix backdrop
         // Launch backdrop task in BaseTags-as-arguments mode
         if (mBackdropTask!=null) {
             mBackdropTask.cancel(true);
         }
         // what we need here is the backdrop i.e. the image generated
-        //mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(tvshow.getShowTags());
         mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mCollection);
 
         // Start loading the list of seasons
@@ -390,8 +365,6 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                 CollectionCursorMapper collectionCursorMapper = new CollectionCursorMapper();
                 collectionCursorMapper.bindColumns(cursor);
                 Collection collection = (Collection) collectionCursorMapper.bind(cursor);
-                // TODO MARC should do something (change tag watched on video?)
-                //collection.setShowTags(mCollection.getShowTags());
                 mCollection = collection;
             }
             // sometimes mTvshow is null (tracepot)
@@ -402,35 +375,15 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         }
     }
 
-    private void slightlyDelayedFinish() {
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getActivity().finish();
-            }
-        }, 200);
-    }
-
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-        if (DBG) {
-            Log.d(TAG, "onCreateLoader: dump bundle");
-            // TODO MARC DEBUG
-            if (bundle != null) {
-                for (String key : bundle.keySet()) {
-                    Log.e(TAG, key + " : " + (bundle.get(key) != null ? bundle.get(key) : "NULL"));
-                }
-            }
-        }
+        if (DBG) Log.d(TAG, "onCreateLoader");
         return new MovieCollectionLoader(getActivity(), mCollection.getCollectionId());
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        // TODO MARC DEBUG
-        if (DBG) Log.d(TAG, "onLoadFinished" + "DatabaseUtils.dumpCursorToString(cursor)");
         if (getActivity() == null) return;
-
         if (DBG) Log.d(TAG, "onLoadFinished: mRowsAdapter size " + mRowsAdapter.size());
 
         CursorObjectAdapter movieCollectionAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity(), PosterImageCardPresenter.EpisodeDisplayMode.FOR_SEASON_LIST));
@@ -445,6 +398,8 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         else mRowsAdapter.replace(1, row);
 
         if (movieCollectionAdapter != null) movieCollectionAdapter.changeCursor(cursor);
+
+        mMovieCollectionAdapter = new MovieCollectionAdapter(getContext(), cursor);
     }
 
     @Override
@@ -470,7 +425,6 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     bitmap = Picasso.get()
                             .load(posterUri)
                             .noFade() // no fade since we are using activity transition anyway
-                            // TODO MARC no resize?
                             .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
                             .centerCrop()
                             .get();
