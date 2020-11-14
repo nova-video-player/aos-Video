@@ -45,13 +45,9 @@ public class CollectionActionAdapter extends ObjectAdapter{
         
         mActions.add(new Action(ACTION_PLAY, context.getString(R.string.play_selection)));
 
-        mActions.add(new Action(ACTION_MORE_DETAILS, context.getString(R.string.leanback_action_more_details)));
-
         // Limitation/Keep it simple: For Collection we always display "Mark watched", even if all movies are watched already
         mActions.add(new Action(ACTION_MARK_COLLECTION_AS_WATCHED, context.getString(R.string.mark_as_watched)));
         
-        mActions.add(new Action(ACTION_UNINDEX, context.getString(R.string.video_browser_unindex_file)));
-
         mActions.add(new Action(ACTION_DELETE, context.getString(R.string.delete)));
     }
 
