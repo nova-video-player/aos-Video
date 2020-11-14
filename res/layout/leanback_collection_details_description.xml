@@ -39,36 +39,9 @@
         android:layout_marginTop="12dip"
         android:gravity="center_vertical">
 
-        <!-- TODO MARC REMOVE date and rating -->
-
-        <TextView
-            android:id="@+id/date"
-            style="?attr/detailsDescriptionSubtitleStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="32dip"
-            android:maxLines="2"
-            android:singleLine="false"
-            android:text="2072"
-            />
-
-        <TextView
-            android:id="@+id/rating"
-            style="?attr/detailsDescriptionSubtitleStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/date"
-            android:layout_marginRight="64dip"
-            android:drawableLeft="@drawable/little_star"
-            android:drawablePadding="4dip"
-            android:text="7,3"
-            />
-
-
         <ImageView
             android:id="@+id/trakt_watched"
             android:layout_width="wrap_content"
-            android:layout_toRightOf="@+id/rating"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/trakt_watched" />
 
