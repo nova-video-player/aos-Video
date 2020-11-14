@@ -439,7 +439,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         ListRow row = new ListRow(1,
                 new HeaderItem(1, getString(R.string.movies)),
                 movieCollectionAdapter);
-        
+
         // replace row if exists
         if (mRowsAdapter.size() <2 ) mRowsAdapter.add(row);
         else mRowsAdapter.replace(1, row);

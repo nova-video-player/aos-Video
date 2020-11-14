@@ -23,7 +23,8 @@ public class MovieCollectionLoader extends VideoLoader {
 
     private static final String TAG = "MovieCollectionLoader";
 
-    static public String DEFAULT_SORT = "name COLLATE NOCASE ASC";
+    // sort by year
+    static public String DEFAULT_SORT = VideoStore.Video.VideoColumns.SCRAPER_M_YEAR + " ASC";
 
     public final static String COLUMN_MOVIE_COLLECTION_COUNT = "movie_collection_count";
     public final static String COLUMN_MOVIE_COLLECTION_WATCHED_COUNT = "movie_collection_watched_count";
@@ -36,8 +37,9 @@ public class MovieCollectionLoader extends VideoLoader {
      * List all movie in one collection
      * @param context
      */
+
     public MovieCollectionLoader(Context context, long collectionId) {
-        this(context, collectionId, CollectionsSortOrderEntries.DEFAULT_SORT, true);
+        this(context, collectionId, DEFAULT_SORT, true);
     }
 
     public MovieCollectionLoader(Context context, long collectionId, String SortOrder, boolean movieCollectionWatched) {
@@ -52,6 +54,9 @@ public class MovieCollectionLoader extends VideoLoader {
     public String getSortOrder() {
         return mSortOrder;
     }
+
+    // TODO MARC check counts for watched
+    // TODO UNIQUE
 
     @Override
     public String getSelection() {
