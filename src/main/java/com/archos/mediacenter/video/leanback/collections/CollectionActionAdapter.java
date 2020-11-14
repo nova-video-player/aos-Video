@@ -47,7 +47,7 @@ public class CollectionActionAdapter extends ObjectAdapter{
 
         // Limitation/Keep it simple: For Collection we always display "Mark watched", even if all movies are watched already
         mActions.add(new Action(ACTION_MARK_COLLECTION_AS_WATCHED, context.getString(R.string.mark_as_watched)));
-        
+
         mActions.add(new Action(ACTION_DELETE, context.getString(R.string.delete)));
     }
 

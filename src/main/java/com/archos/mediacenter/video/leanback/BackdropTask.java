@@ -24,6 +24,7 @@ import android.util.Log;
 import androidx.leanback.app.BackgroundManager;
 
 import com.archos.mediacenter.video.browser.adapters.object.Base;
+import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediascraper.BaseTags;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -69,7 +70,12 @@ public class BackdropTask extends AsyncTask<Object, Integer, File> {
 
         BaseTags tags = null;
 
-        if (objects[0] instanceof BaseTags) {
+        if (objects[0] instanceof Collection) {
+            // when dealing with collection, it has already been scraped and backdrop downloaded
+            Collection collection = (Collection) objects[0];
+            return new File(collection.getBackdropUri().getPath());
+        }
+        else if (objects[0] instanceof BaseTags) {
             tags = (BaseTags)objects[0];
         }
         else if (objects[0] instanceof Base) {

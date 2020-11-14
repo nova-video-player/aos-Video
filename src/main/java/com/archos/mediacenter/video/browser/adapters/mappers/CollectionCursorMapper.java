@@ -32,6 +32,7 @@ public class CollectionCursorMapper implements CompatibleCursorMapper {
     int mIdColumn;
     int mNameColumn;
     int mPosterPathColumn;
+    int mBackdropPathColumn;
     int mCollectionCountColumn;
     int mCollectionMovieCountColumn;
     int mCollectionMovieWatchedCountColumn;
@@ -47,6 +48,7 @@ public class CollectionCursorMapper implements CompatibleCursorMapper {
         mIdColumn = cursor.getColumnIndexOrThrow(BaseColumns._ID);
         mNameColumn = cursor.getColumnIndexOrThrow(CollectionLoader.COLUMN_NAME);
         mPosterPathColumn = cursor.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE);
+        mBackdropPathColumn = cursor.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_C_BACKDROP_LARGE_FILE);
         mCollectionCountColumn = cursor.getColumnIndexOrThrow(CollectionLoader.COLUMN_COLLECTION_COUNT);
         mCollectionMovieCountColumn = cursor.getColumnIndexOrThrow(CollectionLoader.COLUMN_COLLECTION_MOVIE_COUNT);
         mCollectionMovieWatchedCountColumn = cursor.getColumnIndex(CollectionLoader.COLUMN_COLLECTION_MOVIE_WATCHED_COUNT);
@@ -61,6 +63,7 @@ public class CollectionCursorMapper implements CompatibleCursorMapper {
                 cursor.getLong(mIdColumn),
                 cursor.getString(mNameColumn),
                 getPosterUri(cursor),
+                getBackdropUri(cursor),
                 cursor.getInt(mCollectionCountColumn),
                 cursor.getInt(mCollectionMovieCountColumn),
                 cursor.getInt(mCollectionMovieWatchedCountColumn),
@@ -73,6 +76,15 @@ public class CollectionCursorMapper implements CompatibleCursorMapper {
 
     private Uri getPosterUri(Cursor c) {
         String path = c.getString(mPosterPathColumn);
+        if (path!=null && !path.isEmpty()) {
+            return Uri.parse("file://"+path);
+        } else {
+            return null;
+        }
+    }
+
+    private Uri getBackdropUri(Cursor c) {
+        String path = c.getString(mBackdropPathColumn);
         if (path!=null && !path.isEmpty()) {
             return Uri.parse("file://"+path);
         } else {

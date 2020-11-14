@@ -41,6 +41,7 @@ public class Collection extends Base implements Serializable {
     private int mCollMovieCount;
     private int mCollMovieWatchedCount;
     private String mPosterUri;
+    private String mBackdropUri;
 
     private long mPinned;
 
@@ -51,13 +52,14 @@ public class Collection extends Base implements Serializable {
     // TODO MARC remove tags
     //private ShowTags mShowTags;
 
-    public Collection(long collId, String collName, Uri posterUri, int collCount, int collMovieCount, int collMovieWatchedCount) {
-        this(collId, collName, posterUri, collCount, collMovieCount, collMovieWatchedCount, false, false, null, 0);
+    public Collection(long collId, String collName, Uri posterUri, Uri backdropUri, int collCount, int collMovieCount, int collMovieWatchedCount) {
+        this(collId, collName, posterUri, backdropUri, collCount, collMovieCount, collMovieWatchedCount, false, false, null, 0);
     }
 
     public Collection(long collId,
                   String collName,
                   Uri posterUri,
+                  Uri backdropUri,
                   int collCount,
                   int collMovieCount,
                   int collMovieWatchedCount,
@@ -75,6 +77,7 @@ public class Collection extends Base implements Serializable {
         mCollDescription = collDescription;
         mPinned = pinned;
         mPosterUri = posterUri.toString();
+        mBackdropUri = backdropUri.toString();
     }
 
     public String getCountString(Context context) {
@@ -112,6 +115,13 @@ public class Collection extends Base implements Serializable {
     public Uri getPosterUri() {
         if(mPosterUri!=null)
             return Uri.parse(mPosterUri);
+        else
+            return null;
+    }
+
+    public Uri getBackdropUri() {
+        if(mBackdropUri!=null)
+            return Uri.parse(mBackdropUri);
         else
             return null;
     }

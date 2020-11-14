@@ -56,7 +56,6 @@ public class MovieCollectionLoader extends VideoLoader {
     }
 
     // TODO MARC check counts for watched
-    // TODO UNIQUE
 
     @Override
     public String getSelection() {
