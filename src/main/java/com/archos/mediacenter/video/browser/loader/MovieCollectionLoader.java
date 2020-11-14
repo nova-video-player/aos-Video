@@ -66,6 +66,8 @@ public class MovieCollectionLoader extends VideoLoader {
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL");
         sb.append(" AND ");
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_C_ID + " = ?");
+        sb.append(") GROUP BY (");
+        sb.append(VideoStore.Video.VideoColumns.SCRAPER_M_IMDB_ID);
         return sb.toString();
     }
 
