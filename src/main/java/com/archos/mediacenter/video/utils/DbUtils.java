@@ -244,8 +244,7 @@ public class DbUtils {
             values.put(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN, Trakt.TRAKT_DB_MARKED);
         }
 
-        // TODO MARC not correct
-        final String where = "_id IN (SELECT _id FROM movie WHERE m_coll_id=?)";
+        final String where = "_id IN (SELECT video_id FROM movie m WHERE m.m_coll_id=?)";
         final String[] selectionArgs = new String[]{Long.toString(collection.getCollectionId())};
 
         cr.update(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, values, where, selectionArgs);
@@ -273,8 +272,7 @@ public class DbUtils {
         values.put(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN, Trakt.TRAKT_DB_UNMARK);
         values.put(VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED, 0);
 
-        // TODO MARC not correct
-        final String where = "_id IN (SELECT _id FROM movie WHERE m_coll_id=?)";
+        final String where = "_id IN (SELECT video_id FROM movie m WHERE m.m_coll_id=?)";
 
         final String[] selectionArgs = new String[]{Long.toString(collection.getCollectionId())};
 

@@ -205,14 +205,17 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                         collectionWatched = false;
                     if (collectionWatched) DbUtils.markAsNotRead(getActivity(), mCollection);
                     else DbUtils.markAsRead(getActivity(), mCollection);
+                    // TODO MARC is this working setresult?
                     getActivity().setResult(Activity.RESULT_OK);
+                }
+                else if (action.getId() == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_NOT_WATCHED) {
+                    // TODO MARC fix
                 }
                 else if (action.getId() == CollectionActionAdapter.ACTION_DELETE) {
                     mShouldDisplayConfirmDelete = true;
                     ((CollectionActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mShouldDisplayConfirmDelete);
                 }
                 else if (action.getId() == CollectionActionAdapter.ACTION_CONFIRM_DELETE) {
-                    // TODO MARC implement confirm delete like in VideoDetailsFragment and VideoActionAdapter that gets modified
                     ArrayList<Uri> uris = new ArrayList<Uri>();
                     for(String filePath : DbUtils.getFilePaths(getActivity(), mCollection)) {
                         Uri uri = VideoUtils.getFileUriFromMediaLibPath(filePath);
@@ -225,6 +228,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                         delete.startMultipleDeleteProcess(uris);
                     // TODO MARC should remove all if ok
                     getActivity().setResult(Activity.RESULT_OK);
+                    // TODO MARC WARNING if setresult works exit activity if mCollection size is null with cursor update reloaded
                     mShouldDisplayConfirmDelete = false;
                     ((CollectionActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mShouldDisplayConfirmDelete);
                 }
