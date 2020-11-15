@@ -16,7 +16,11 @@ package com.archos.mediacenter.video.leanback.collections;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.loader.app.LoaderManager;
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import androidx.loader.content.Loader;
@@ -56,11 +60,14 @@ import android.util.Pair;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Toast;
+
 import androidx.leanback.transition.TransitionHelper;
 import androidx.leanback.transition.TransitionListener;
 import androidx.loader.content.CursorLoader;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.Delete;
 import com.archos.mediacenter.video.browser.adapters.MovieCollectionAdapter;
 import com.archos.mediacenter.video.browser.adapters.mappers.CollectionCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
@@ -76,16 +83,21 @@ import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
 import com.archos.mediacenter.video.leanback.details.ArchosDetailsOverviewRowPresenter;
+import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
+import com.archos.mediacenter.video.leanback.presenter.MovieCollectionPresenter;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.player.PlayerActivity;
+import com.archos.mediacenter.video.utils.DbUtils;
 import com.archos.mediacenter.video.utils.PlayUtils;
+import com.archos.mediacenter.video.utils.VideoUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
-public class CollectionFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor> {
+public class CollectionFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor>, Delete.DeleteListener {
 
     private static final boolean DBG = true;
     private static final String TAG = "CollectionFragment";
@@ -185,28 +197,46 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     playMovie();
                 }
                 else if (action.getId() == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_WATCHED) {
+                    // TODO MARC remove MovieCollectionFragment
+                    /*
                     Intent intent = new Intent(getActivity(), MovieCollectionActivity.class);
                     intent.putExtra(MovieCollectionFragment.EXTRA_ACTION_ID, action.getId());
                     intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_ID, mCollection.getCollectionId());
                     intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_NAME, mCollection.getName());
                     intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_POSTER, mCollection.getPosterUri() != null ? mCollection.getPosterUri().toString() : null);
                     startActivityForResult(intent, REQUEST_CODE_MARK_WATCHED);
-                }
-                else if (action.getId() == CollectionActionAdapter.ACTION_UNINDEX) {
-                    Intent intent = new Intent(getActivity(), MovieCollectionActivity.class);
-                    intent.putExtra(MovieCollectionFragment.EXTRA_ACTION_ID, action.getId());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_ID, mCollection.getCollectionId());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_NAME, mCollection.getName());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_POSTER, mCollection.getPosterUri() != null ? mCollection.getPosterUri().toString() : null);
-                    startActivity(intent);
+                     */
+
+                    boolean collectionWatched = true;
+                    if (!mCollection.isWatched())
+                        collectionWatched = false;
+                    if (collectionWatched) DbUtils.markAsNotRead(getActivity(), mCollection);
+                    else DbUtils.markAsRead(getActivity(), mCollection);
+                    getActivity().setResult(Activity.RESULT_OK);
+
                 }
                 else if (action.getId() == CollectionActionAdapter.ACTION_DELETE) {
+                    /*
                     Intent intent = new Intent(getActivity(), MovieCollectionActivity.class);
                     intent.putExtra(MovieCollectionFragment.EXTRA_ACTION_ID, action.getId());
                     intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_ID, mCollection.getCollectionId());
                     intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_NAME, mCollection.getName());
                     intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_POSTER, mCollection.getPosterUri() != null ? mCollection.getPosterUri().toString() : null);
                     startActivity(intent);
+                     */
+
+                    // TODO MARC implement confirm delete like in VideoDetailsFragment and VideoActionAdapter that gets modified
+                    ArrayList<Uri> uris = new ArrayList<Uri>();
+                    for(String filePath : DbUtils.getFilePaths(getActivity(), mCollection)) {
+                        Uri uri = VideoUtils.getFileUriFromMediaLibPath(filePath);
+                        uris.add(uri);
+                    }
+                    Delete delete = new Delete(CollectionFragment.this, getActivity());
+                    if (uris.size() == 1)
+                        delete.startDeleteProcess(uris.get(0));
+                    else if (uris.size() > 1)
+                        delete.startMultipleDeleteProcess(uris);
+                    getActivity().setResult(Activity.RESULT_OK);
                 }
             }
         });
@@ -233,6 +263,61 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 }
             }
         });
+    }
+
+    @Override
+    public void onVideoFileRemoved(final Uri videoFile,boolean askForFolderRemoval, final Uri folder) {
+        Toast.makeText(getActivity(),R.string.delete_done, Toast.LENGTH_SHORT).show();
+        if(askForFolderRemoval) {
+            AlertDialog.Builder b = new AlertDialog.Builder(getActivity()).setTitle("");
+            b.setIcon(R.drawable.filetype_new_folder);
+            b.setMessage(R.string.confirm_delete_parent_folder);
+            b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    sendDeleteResult(videoFile);
+                }
+            })
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Delete delete = new Delete(CollectionFragment.this, getActivity());
+                            delete.deleteFolder(folder);
+                        }
+                    });
+            b.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    sendDeleteResult(videoFile);
+                }
+            });
+            b.create().show();
+        }
+        else {
+            sendDeleteResult(videoFile);
+        }
+
+    }
+
+    private void sendDeleteResult(Uri file){
+        Intent intent = new Intent();
+        intent.setData(file);
+        getActivity().setResult(ListingActivity.RESULT_FILE_DELETED, intent);
+    }
+
+    @Override
+    public void onDeleteVideoFailed(Uri videoFile) {
+        Toast.makeText(getActivity(),R.string.delete_error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFolderRemoved(Uri folder) {
+        Toast.makeText(getActivity(), R.string.delete_done, Toast.LENGTH_SHORT).show();
+        sendDeleteResult(folder);
+    }
+
+    @Override
+    public void onDeleteSuccess() {
     }
 
     private void playMovie() {
