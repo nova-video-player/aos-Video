@@ -16,8 +16,10 @@ package com.archos.mediacenter.video.browser.adapters.object;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.TagsFactory;
@@ -26,7 +28,8 @@ import java.io.Serializable;
 
 public class Collection extends Base implements Serializable {
 
-    // TODO MARC implement backdrop here!!!
+    private static final String TAG = "Collection";
+    private static final boolean DBG = true;
 
     private final boolean mIsTraktSeen;
     private final boolean mIsTraktLibrary;
@@ -44,13 +47,6 @@ public class Collection extends Base implements Serializable {
     private String mBackdropUri;
 
     private long mPinned;
-
-    /**
-     * Not computed by this class but only a place to store it.
-     * Need to be set with setShowTags()
-     */
-    // TODO MARC remove tags
-    //private ShowTags mShowTags;
 
     public Collection(long collId, String collName, Uri posterUri, Uri backdropUri, int collCount, int collMovieCount, int collMovieWatchedCount) {
         this(collId, collName, posterUri, backdropUri, collCount, collMovieCount, collMovieWatchedCount, false, false, null, 0);
@@ -78,6 +74,7 @@ public class Collection extends Base implements Serializable {
         mPinned = pinned;
         mPosterUri = posterUri.toString();
         mBackdropUri = backdropUri.toString();
+        if (DBG) Log.d(TAG, collId + " " + collName + " count " + collCount + "/" + collMovieCount + "/" + collMovieWatchedCount);
     }
 
     public String getCountString(Context context) {
@@ -125,28 +122,6 @@ public class Collection extends Base implements Serializable {
         else
             return null;
     }
-
-    // TODO MARC: choice not creating tags since in movie already --> remove this since should not be used
-    /*
-    @Override
-    public BaseTags getFullScraperTags(Context context) {
-        return TagsFactory.buildShowTags(context, mCollId);
-    }
-
-    public void setShowTags(ShowTags showTags) {
-        mShowTags = showTags;
-    }
-     */
-
-    /**
-     *
-     * @return null if you did not set the show tags with @link:setShowTags before
-     */
-    /*
-    public ShowTags getShowTags() {
-        return mShowTags;
-    }
-     */
 
     public boolean isWatched() {
         return mCollMovieWatchedCount>=mCollMovieCount;

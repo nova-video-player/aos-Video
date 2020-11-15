@@ -91,7 +91,6 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
         sortOrderIndexer.put(0, new CollectionsSortOrderEntry(R.string.sort_by_name_asc,        "name COLLATE NOCASE ASC"));
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (DBG) Log.d(TAG, "onCreate");
@@ -316,7 +315,7 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
             setEmptyViewVisiblity(cursor.getCount()<1);
             setTitle(getString(R.string.all_collections_format, cursor.getCount()));
         }
-        if (DBG) Log.d(TAG, "onLoadFinished: " + DatabaseUtils.dumpCursorToString(cursor));
+        if (DBG) Log.d(TAG, "onLoadFinished: DatabaseUtils.dumpCursorToString(cursor)");
     }
 
     @Override

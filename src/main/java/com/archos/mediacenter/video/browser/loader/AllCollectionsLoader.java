@@ -56,18 +56,14 @@ public class AllCollectionsLoader extends VideoLoader {
     @Override
     public String[] getProjection() {
         return new String[] {
-                VideoStore.MediaColumns.DATA,
                 VideoStore.Video.VideoColumns.SCRAPER_C_ID + " AS " + BaseColumns._ID,
                 VideoStore.Video.VideoColumns.SCRAPER_C_NAME + " AS " + COLUMN_NAME,
                 VideoStore.Video.VideoColumns.SCRAPER_C_DESCRIPTION,
                 "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_C_ID + ") AS " + COLUMN_COLLECTION_COUNT,
-                // TODO MARC check this one... supposed to be the number of movies in all collections or per cid... ???
                 "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_C_ID + " || ',' || " + VideoStore.Video.VideoColumns.SCRAPER_M_IMDB_ID + ") AS " + COLUMN_COLLECTION_MOVIE_COUNT,
                 "COUNT(CASE "+VideoStore.Video.VideoColumns.BOOKMARK+" WHEN "+ PlayerActivity.LAST_POSITION_END+" THEN 1 ELSE NULL END) AS " + COLUMN_COLLECTION_MOVIE_WATCHED_COUNT,
                 VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE,
-                VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_THUMB_FILE,
                 VideoStore.Video.VideoColumns.SCRAPER_C_BACKDROP_LARGE_FILE,
-                VideoStore.Video.VideoColumns.SCRAPER_C_BACKDROP_THUMB_FILE,
                 getTraktProjection(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN),
                 getTraktProjection(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_LIBRARY),
                 VideoStore.Video.VideoColumns.NOVA_PINNED

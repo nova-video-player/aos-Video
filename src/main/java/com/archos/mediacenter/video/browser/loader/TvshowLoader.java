@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.browser.loader;
 
 import android.content.Context;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediaprovider.video.VideoStore;
@@ -44,9 +45,6 @@ public class TvshowLoader extends VideoLoader {
         init();
     }
 
-
-
-
     @Override
     public String[] getProjection() {
         return new String[] {
@@ -68,6 +66,7 @@ public class TvshowLoader extends VideoLoader {
                 getTraktProjection(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_LIBRARY),
         };
     }
+
     protected static String getTraktProjection(String traktType) {
         return "CASE WHEN "
                 + "TOTAL(" + traktType + ") >= "
@@ -78,10 +77,8 @@ public class TvshowLoader extends VideoLoader {
     public String getSelection() {
         StringBuilder sb = new StringBuilder();
         sb.append(super.getSelection()); // get common selection from the parent
-
         if (sb.length()>0) { sb.append(" AND "); }
         sb.append( VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " = ?");
-
         return sb.toString();
     }
 

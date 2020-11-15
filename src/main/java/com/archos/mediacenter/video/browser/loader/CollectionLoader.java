@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.browser.loader;
 
 import android.content.Context;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import com.archos.mediacenter.video.collections.CollectionsSortOrderEntries;
 import com.archos.mediacenter.video.player.PlayerActivity;
@@ -25,6 +26,7 @@ import com.archos.mediaprovider.video.VideoStore;
 public class CollectionLoader extends VideoLoader {
 
     private static final String TAG = "CollectionLoader";
+    private static final boolean DBG = true;
 
     public final static String COLUMN_COLLECTION_COUNT = "collection_count";
     public final static String COLUMN_COLLECTION_MOVIE_COUNT = "collection_movie_count";
@@ -39,7 +41,7 @@ public class CollectionLoader extends VideoLoader {
      * @param context
      */
     public CollectionLoader(Context context, long collectionId) {
-        this(context, collectionId, CollectionsSortOrderEntries.DEFAULT_SORT, true);
+        this(context, collectionId, CollectionsSortOrderEntries.DEFAULT_SORT, false);
     }
 
     public CollectionLoader(Context context, long collectionId, String SortOrder, boolean collectionWatched) {
@@ -48,6 +50,7 @@ public class CollectionLoader extends VideoLoader {
         mSortOrder = SortOrder;
         mCollectionWatched = collectionWatched;
         init();
+        if (DBG) Log.d(TAG, "getProjection " + getProjection().toString() + ", getSelection " + getSelection());
     }
 
     @Override
@@ -55,39 +58,21 @@ public class CollectionLoader extends VideoLoader {
         return mSortOrder;
     }
 
-    // TODO MARC this should be collection only no movies and not on VideoStore but only on MOVIE db
-    // TODO MARC remove all not needed
     @Override
     public String[] getProjection() {
         return new String[] {
-                VideoStore.Video.VideoColumns._ID,
-                // Columns for all video files
-                VideoStore.Video.VideoColumns.DATA,
-                COALESCE + VideoStore.Video.VideoColumns.SCRAPER_TITLE + "," + VideoStore.MediaColumns.TITLE + ") AS " + COLUMN_NAME,
-                VideoStore.Video.VideoColumns.NOVA_PINNED,
-                // Movie specific values
-                VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID,
-                VideoStore.Video.VideoColumns.SCRAPER_TITLE,
-                VideoStore.Video.VideoColumns.SCRAPER_BACKDROP_LARGE_URL,
-                VideoStore.Video.VideoColumns.SCRAPER_BACKDROP_LARGE_FILE,
                 VideoStore.Video.VideoColumns.SCRAPER_C_ID + " AS " + BaseColumns._ID,
                 VideoStore.Video.VideoColumns.SCRAPER_C_NAME + " AS " + COLUMN_NAME,
                 VideoStore.Video.VideoColumns.SCRAPER_C_DESCRIPTION,
-                "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_C_ID + ") AS " + COLUMN_COLLECTION_COUNT,
-                // TODO MARC check this one... supposed to be the number of movies in all collections or per cid... ???
-                "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_C_ID + " || ',' || " + VideoStore.Video.VideoColumns.SCRAPER_M_IMDB_ID + ") AS " + COLUMN_COLLECTION_MOVIE_COUNT,
-                "COUNT(CASE "+VideoStore.Video.VideoColumns.BOOKMARK+" WHEN "+ PlayerActivity.LAST_POSITION_END+" THEN 1 ELSE NULL END) AS " + COLUMN_COLLECTION_MOVIE_WATCHED_COUNT,
                 VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE,
-                VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_THUMB_FILE,
                 VideoStore.Video.VideoColumns.SCRAPER_C_BACKDROP_LARGE_FILE,
-                VideoStore.Video.VideoColumns.SCRAPER_C_BACKDROP_THUMB_FILE,
+                "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_C_ID + ") AS " + COLUMN_COLLECTION_COUNT,
+                "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_C_ID + " || ',' || " + VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + ") AS " + COLUMN_COLLECTION_MOVIE_COUNT,
+                "COUNT(CASE "+VideoStore.Video.VideoColumns.BOOKMARK+" WHEN "+ PlayerActivity.LAST_POSITION_END+" THEN 1 ELSE NULL END) AS " + COLUMN_COLLECTION_MOVIE_WATCHED_COUNT,
                 getTraktProjection(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN),
                 getTraktProjection(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_LIBRARY),
         };
     }
-
-    // TODO MARC this should be a movie loader in reality... because we list all movies belonging to a SCRAPER_C_ID to be displayed...
-    // TODO MARC import more movieLoader
 
     @Override
     public String getSelection() {
@@ -99,8 +84,6 @@ public class CollectionLoader extends VideoLoader {
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_C_ID + " = ?");
         return sb.toString();
     }
-
-    // TODO MARC: why do we need mCollectionId since we want AllCollectionLoader!!!!!
 
     @Override
     public String[] getSelectionArgs() {

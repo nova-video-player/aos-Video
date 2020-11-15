@@ -24,7 +24,7 @@ import java.io.Serializable;
 /**
  * Created by vapillon on 10/04/15.
  */
-public class Base  implements Serializable {
+public class Base implements Serializable {
 
     final private String mName;
 
