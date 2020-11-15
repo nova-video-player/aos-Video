@@ -42,8 +42,6 @@ public class CollectionDetailsDescriptionPresenter extends Presenter {
      */
     public static class ViewHolder extends Presenter.ViewHolder {
         final TextView mTitle;
-        final TextView mDate;
-        final TextView mRating;
         final TextView mBody;
         final ImageView mTraktWatched;
         private ViewTreeObserver.OnPreDrawListener mPreDrawListener;
@@ -52,8 +50,6 @@ public class CollectionDetailsDescriptionPresenter extends Presenter {
             super(view);
             if (DBG) Log.d(TAG, "ViewHolder");
             mTitle = (TextView) view.findViewById(androidx.leanback.R.id.lb_details_description_title);
-            mDate = (TextView) view.findViewById(R.id.date);
-            mRating = (TextView) view.findViewById(R.id.rating);
             mBody = (TextView) view.findViewById(androidx.leanback.R.id.lb_details_description_body);
             mTraktWatched = (ImageView) view.findViewById(R.id.trakt_watched);
 
@@ -117,9 +113,6 @@ public class CollectionDetailsDescriptionPresenter extends Presenter {
 
         vh.mTitle.setText(collection.getName());
         vh.mBody.setText(collection.getPlot());
-        // TODO MARC REMOVE
-        //setTextOrSetGoneIfEmpty(vh.mDate, getYearFormatted(tags.getPremiered()));
-        //setTextOrSetGoneIfZero(vh.mRating, tags.getRating());
 
         vh.mTraktWatched.setVisibility(collection.isWatched() ? View.VISIBLE : View.GONE);
     }
@@ -145,9 +138,6 @@ public class CollectionDetailsDescriptionPresenter extends Presenter {
     @Override
     public void onUnbindViewHolder(Presenter.ViewHolder viewHolder) {
         ViewHolder vh = (ViewHolder) viewHolder;
-        // reset visibilities so that onBind() does not have to care about it
-        vh.mDate.setVisibility(View.VISIBLE);
-        vh.mRating.setVisibility(View.VISIBLE);
     }
 
     @Override

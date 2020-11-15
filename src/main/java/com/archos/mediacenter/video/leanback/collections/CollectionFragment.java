@@ -367,7 +367,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                 Collection collection = (Collection) collectionCursorMapper.bind(cursor);
                 mCollection = collection;
             }
-            // sometimes mTvshow is null (tracepot)
+            // sometimes mCollection is null (tracepot)
             if (mCollection != null)
                 mDetailsOverviewRow.setItem(mCollection);
         } else {
