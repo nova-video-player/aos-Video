@@ -136,6 +136,8 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     private int oldSelectedSubPosition = 0;
     private boolean mHasDetailRow;
 
+    private boolean mShouldDisplayConfirmDelete = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (DBG) Log.d(TAG, "onCreate");
@@ -197,34 +199,19 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     playMovie();
                 }
                 else if (action.getId() == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_WATCHED) {
-                    // TODO MARC remove MovieCollectionFragment
-                    /*
-                    Intent intent = new Intent(getActivity(), MovieCollectionActivity.class);
-                    intent.putExtra(MovieCollectionFragment.EXTRA_ACTION_ID, action.getId());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_ID, mCollection.getCollectionId());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_NAME, mCollection.getName());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_POSTER, mCollection.getPosterUri() != null ? mCollection.getPosterUri().toString() : null);
-                    startActivityForResult(intent, REQUEST_CODE_MARK_WATCHED);
-                     */
-
+                    // TODO MARC fix
                     boolean collectionWatched = true;
                     if (!mCollection.isWatched())
                         collectionWatched = false;
                     if (collectionWatched) DbUtils.markAsNotRead(getActivity(), mCollection);
                     else DbUtils.markAsRead(getActivity(), mCollection);
                     getActivity().setResult(Activity.RESULT_OK);
-
                 }
                 else if (action.getId() == CollectionActionAdapter.ACTION_DELETE) {
-                    /*
-                    Intent intent = new Intent(getActivity(), MovieCollectionActivity.class);
-                    intent.putExtra(MovieCollectionFragment.EXTRA_ACTION_ID, action.getId());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_ID, mCollection.getCollectionId());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_NAME, mCollection.getName());
-                    intent.putExtra(MovieCollectionFragment.EXTRA_COLLECTION_POSTER, mCollection.getPosterUri() != null ? mCollection.getPosterUri().toString() : null);
-                    startActivity(intent);
-                     */
-
+                    mShouldDisplayConfirmDelete = true;
+                    ((CollectionActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mShouldDisplayConfirmDelete);
+                }
+                else if (action.getId() == CollectionActionAdapter.ACTION_CONFIRM_DELETE) {
                     // TODO MARC implement confirm delete like in VideoDetailsFragment and VideoActionAdapter that gets modified
                     ArrayList<Uri> uris = new ArrayList<Uri>();
                     for(String filePath : DbUtils.getFilePaths(getActivity(), mCollection)) {
@@ -236,7 +223,10 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                         delete.startDeleteProcess(uris.get(0));
                     else if (uris.size() > 1)
                         delete.startMultipleDeleteProcess(uris);
+                    // TODO MARC should remove all if ok
                     getActivity().setResult(Activity.RESULT_OK);
+                    mShouldDisplayConfirmDelete = false;
+                    ((CollectionActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mShouldDisplayConfirmDelete);
                 }
             }
         });
@@ -260,7 +250,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     //animate only if episode picture isn't displayed
                     boolean animate =!((item instanceof Video)&&((Video)item).getPosterUri()!=null);
                     VideoViewClickedListener.showVideoDetails(getActivity(), (Video) item, itemViewHolder, animate, false, false, -1, CollectionFragment.this, REQUEST_CODE_VIDEO);
-}
+                }
             }
         });
     }
@@ -546,7 +536,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
             // Buttons
             if (mDetailsOverviewRow == null) {
                 mDetailsOverviewRow = new DetailsOverviewRow(collection);
-                mDetailsOverviewRow.setActionsAdapter(new CollectionActionAdapter(getActivity(), collection));
+                mDetailsOverviewRow.setActionsAdapter(new CollectionActionAdapter(getActivity(), collection, mShouldDisplayConfirmDelete));
             }
             else {
                 mDetailsOverviewRow.setItem(collection);
