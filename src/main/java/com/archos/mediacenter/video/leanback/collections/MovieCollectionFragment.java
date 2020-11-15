@@ -102,6 +102,7 @@ public class MovieCollectionFragment extends BrowseSupportFragment implements Lo
             CollectionCursorMapper collectionCursorMapper = new CollectionCursorMapper();
             collectionCursorMapper.bindColumns(cursor);
             mCollection = (Collection) collectionCursorMapper.bind(cursor);
+            cursor.close();
         }
 
         if (DBG) Log.d(TAG, "onCreate: " + mCollection.getCollectionId());
@@ -313,7 +314,7 @@ public class MovieCollectionFragment extends BrowseSupportFragment implements Lo
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        if (DBG) Log.d(TAG, "onLoadFinished" + DatabaseUtils.dumpCursorToString(cursor));
+        if (DBG) Log.d(TAG, "onLoadFinished DatabaseUtils.dumpCursorToString(cursor)");
 
         mMovieCollectionPresenter.setCollection(null);
         mMovieCollectionAdapter.changeCursor(cursor);
