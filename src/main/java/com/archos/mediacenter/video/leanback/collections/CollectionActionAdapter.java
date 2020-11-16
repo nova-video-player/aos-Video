@@ -42,21 +42,23 @@ public class CollectionActionAdapter extends SparseArrayObjectAdapter {
     public CollectionActionAdapter(Context context, Collection collection, Boolean displayConfirmDelete) {
         mContext = context;
         set(ACTION_PLAY, new Action(ACTION_PLAY, context.getString(R.string.play_selection)));
-        if (collection.isWatched())
-            set(ACTION_MARK_COLLECTION_AS_NOT_WATCHED, new Action(ACTION_MARK_COLLECTION_AS_NOT_WATCHED, context.getString(R.string.mark_as_not_watched)));
-        else
-            set(ACTION_MARK_COLLECTION_AS_WATCHED, new Action(ACTION_MARK_COLLECTION_AS_WATCHED, context.getString(R.string.mark_as_watched)));
-        set(ACTION_MARK_COLLECTION_AS_WATCHED, new Action(ACTION_MARK_COLLECTION_AS_WATCHED, context.getString(R.string.mark_as_watched)));
-        update(displayConfirmDelete);
+        update(collection, displayConfirmDelete);
     }
 
-    public void update(boolean displayConfirmDelete) {
+    public void update(Collection collection, boolean displayConfirmDelete) {
         if (!displayConfirmDelete) {
             clear(ACTION_CONFIRM_DELETE);
             set(ACTION_DELETE, new Action(ACTION_DELETE, mContext.getString(R.string.delete)));
         } else {
             clear(ACTION_DELETE);
             set(ACTION_CONFIRM_DELETE, new Action(ACTION_CONFIRM_DELETE, mContext.getString(R.string.confirm_delete_short)));
+        }
+        if (collection.isWatched()) {
+            clear(ACTION_MARK_COLLECTION_AS_WATCHED);
+            set(ACTION_MARK_COLLECTION_AS_NOT_WATCHED, new Action(ACTION_MARK_COLLECTION_AS_NOT_WATCHED, mContext.getString(R.string.mark_as_not_watched)));
+        } else {
+            clear(ACTION_MARK_COLLECTION_AS_NOT_WATCHED);
+            set(ACTION_MARK_COLLECTION_AS_WATCHED, new Action(ACTION_MARK_COLLECTION_AS_WATCHED, mContext.getString(R.string.mark_as_watched)));
         }
         notifyChanged();
     }

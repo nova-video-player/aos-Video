@@ -118,6 +118,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
     /** The collection we're displaying */
     private Collection mCollection;
+    private long mCollectionId;
 
     private DetailsOverviewRow mDetailsOverviewRow;
     private ArrayObjectAdapter mRowsAdapter;
@@ -137,6 +138,23 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     private boolean mHasDetailRow;
 
     private boolean mShouldDisplayConfirmDelete = false;
+    private boolean mShouldDisplayUnwatch = false;
+
+    private void refreshCollection() {
+        if (mCollectionId != -1) {
+            // CollectionLoader is a CursorLoader
+            CollectionLoader collectionLoader = new CollectionLoader(getActivity(), mCollectionId);
+            Cursor cursor = collectionLoader.loadInBackground();
+            if(cursor != null && cursor.getCount()>0) {
+                if (DBG) Log.d(TAG, "refreshCollection DatabaseUtils.dumpCursorToString(cursor)");
+                cursor.moveToFirst();
+                CollectionCursorMapper collectionCursorMapper = new CollectionCursorMapper();
+                collectionCursorMapper.bindColumns(cursor);
+                mCollection = (Collection) collectionCursorMapper.bind(cursor);
+                cursor.close();
+            }
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -162,25 +180,14 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
         Intent intent = getActivity().getIntent();
         mCollection = (Collection) intent.getSerializableExtra(EXTRA_COLLECTION);
+        if (mCollection != null) mCollectionId = mCollection.getCollectionId();
+        else mCollectionId = intent.getLongExtra(EXTRA_COLLECTION_ID, -1);
 
-        if (mCollection == null) {
-            long collectonId = intent.getLongExtra(EXTRA_COLLECTION_ID, -1);
+        refreshCollection();
 
-            if (collectonId != -1) {
-                // CollectionLoader is a CursorLoader
-                CollectionLoader collectionLoader = new CollectionLoader(getActivity(), collectonId);
-                Cursor cursor = collectionLoader.loadInBackground();
-                if(cursor != null && cursor.getCount()>0) {
-                    if (DBG) Log.d(TAG, "onCreate" + "DatabaseUtils.dumpCursorToString(cursor)");
-                    cursor.moveToFirst();
-                    CollectionCursorMapper collectionCursorMapper = new CollectionCursorMapper();
-                    collectionCursorMapper.bindColumns(cursor);
-                    mCollection = (Collection) collectionCursorMapper.bind(cursor);
-                }
-            }
-        }
+        mShouldDisplayUnwatch = mCollection.isWatched();
 
-        if (DBG) Log.d(TAG, "onCreate: " + mCollection.getCollectionId());
+        if (DBG) Log.d(TAG, "onCreate: " + mCollection.getName());
 
         mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
         mHandler = new Handler();
@@ -199,21 +206,28 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     playMovie();
                 }
                 else if (action.getId() == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_WATCHED) {
-                    // TODO MARC fix
-                    boolean collectionWatched = true;
-                    if (!mCollection.isWatched())
-                        collectionWatched = false;
-                    if (collectionWatched) DbUtils.markAsNotRead(getActivity(), mCollection);
-                    else DbUtils.markAsRead(getActivity(), mCollection);
-                    // TODO MARC is this working setresult?
-                    getActivity().setResult(Activity.RESULT_OK);
+                    // TODO MARC fix: reload cursor and setresult
+                    if (DBG) Log.d(TAG, "mOverviewRowPresenter.setOnActionClickedListener: action watched, collection watched ? " + mCollection.isWatched());
+                    if (!mCollection.isWatched()) {
+                        DbUtils.markAsRead(getActivity(), mCollection);
+                        refreshCollection();
+                        ((CollectionActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mCollection, mShouldDisplayConfirmDelete);
+                        getActivity().setResult(Activity.RESULT_OK);
+                    }
                 }
                 else if (action.getId() == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_NOT_WATCHED) {
-                    // TODO MARC fix
+                    if (DBG) Log.d(TAG, "mOverviewRowPresenter.setOnActionClickedListener: action not watched, collection watched ? " + mCollection.isWatched());
+                    // TODO MARC fix: reload cursor and setresult
+                    if (mCollection.isWatched()) {
+                        DbUtils.markAsNotRead(getActivity(), mCollection);
+                        refreshCollection();
+                        ((CollectionActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mCollection, mShouldDisplayConfirmDelete);
+                        getActivity().setResult(Activity.RESULT_OK);
+                    }
                 }
                 else if (action.getId() == CollectionActionAdapter.ACTION_DELETE) {
                     mShouldDisplayConfirmDelete = true;
-                    ((CollectionActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mShouldDisplayConfirmDelete);
+                    ((CollectionActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mCollection, mShouldDisplayConfirmDelete);
                 }
                 else if (action.getId() == CollectionActionAdapter.ACTION_CONFIRM_DELETE) {
                     ArrayList<Uri> uris = new ArrayList<Uri>();
@@ -230,7 +244,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     getActivity().setResult(Activity.RESULT_OK);
                     // TODO MARC WARNING if setresult works exit activity if mCollection size is null with cursor update reloaded
                     mShouldDisplayConfirmDelete = false;
-                    ((CollectionActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mShouldDisplayConfirmDelete);
+                    ((CollectionActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mCollection, mShouldDisplayConfirmDelete);
                 }
             }
         });
