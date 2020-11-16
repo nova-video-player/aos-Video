@@ -108,13 +108,10 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
     public static final int COLLECTION_LOADER_ID = -43;
 
-    public static final int REQUEST_CODE_MORE_DETAILS = 8574; // some random integer may be useful for grep/debug...
-    public static final int REQUEST_CODE_CHANGE_TVSHOW = 8575; // some random integer may be useful for grep/debug...
     public static final int REQUEST_CODE_VIDEO = 8576;
     public static final int REQUEST_CODE_MARK_WATCHED = 8577;
 
     private static final int INDEX_DETAILS = 0;
-    private static final int INDEX_FIRST_SEASON = 1;
 
     /** The collection we're displaying */
     private Collection mCollection;
@@ -138,7 +135,6 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     private boolean mHasDetailRow;
 
     private boolean mShouldDisplayConfirmDelete = false;
-    private boolean mShouldDisplayUnwatch = false;
 
     private void refreshCollection() {
         if (mCollectionId != -1) {
@@ -152,7 +148,20 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                 collectionCursorMapper.bindColumns(cursor);
                 mCollection = (Collection) collectionCursorMapper.bind(cursor);
                 cursor.close();
+            } else {
+                mCollection = null;
             }
+        }
+    }
+
+    private void refreshActivity() {
+        if (mCollection != null) {
+            if (DBG) Log.d(TAG, "refreshActivity: collection is not empty " + mCollection.getMovieCollectionCount());
+            ((CollectionActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mCollection, mShouldDisplayConfirmDelete);
+            mDetailsOverviewRow.setItem(mCollection);
+        } else {
+            if (DBG) Log.d(TAG, "refreshActivity: collection is null exit!");
+            getActivity().finish();
         }
     }
 
@@ -185,8 +194,6 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
         refreshCollection();
 
-        mShouldDisplayUnwatch = mCollection.isWatched();
-
         if (DBG) Log.d(TAG, "onCreate: " + mCollection.getName());
 
         mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
@@ -206,23 +213,19 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     playMovie();
                 }
                 else if (action.getId() == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_WATCHED) {
-                    // TODO MARC fix: reload cursor and setresult
                     if (DBG) Log.d(TAG, "mOverviewRowPresenter.setOnActionClickedListener: action watched, collection watched ? " + mCollection.isWatched());
                     if (!mCollection.isWatched()) {
                         DbUtils.markAsRead(getActivity(), mCollection);
                         refreshCollection();
-                        ((CollectionActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mCollection, mShouldDisplayConfirmDelete);
-                        getActivity().setResult(Activity.RESULT_OK);
+                        refreshActivity();
                     }
                 }
                 else if (action.getId() == CollectionActionAdapter.ACTION_MARK_COLLECTION_AS_NOT_WATCHED) {
                     if (DBG) Log.d(TAG, "mOverviewRowPresenter.setOnActionClickedListener: action not watched, collection watched ? " + mCollection.isWatched());
-                    // TODO MARC fix: reload cursor and setresult
                     if (mCollection.isWatched()) {
                         DbUtils.markAsNotRead(getActivity(), mCollection);
                         refreshCollection();
-                        ((CollectionActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mCollection, mShouldDisplayConfirmDelete);
-                        getActivity().setResult(Activity.RESULT_OK);
+                        refreshActivity();
                     }
                 }
                 else if (action.getId() == CollectionActionAdapter.ACTION_DELETE) {
@@ -240,11 +243,8 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                         delete.startDeleteProcess(uris.get(0));
                     else if (uris.size() > 1)
                         delete.startMultipleDeleteProcess(uris);
-                    // TODO MARC should remove all if ok
-                    getActivity().setResult(Activity.RESULT_OK);
-                    // TODO MARC WARNING if setresult works exit activity if mCollection size is null with cursor update reloaded
                     mShouldDisplayConfirmDelete = false;
-                    ((CollectionActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mCollection, mShouldDisplayConfirmDelete);
+                    refreshActivity();
                 }
             }
         });
@@ -449,21 +449,9 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (DBG) Log.d(TAG, "onActivityResult requestCode " + requestCode);
         if ((requestCode == REQUEST_CODE_MARK_WATCHED || requestCode == REQUEST_CODE_VIDEO) && resultCode == Activity.RESULT_OK) {
-            if (DBG) Log.d(TAG, "onActivityResult processing requestCode");
-            // CollectionLoader is a CursorLoader
-            CollectionLoader collectionLoader = new CollectionLoader(getActivity(), mCollection.getCollectionId());
-            Cursor cursor = collectionLoader.loadInBackground();
-            if(cursor != null && cursor.getCount()>0) {
-                cursor.moveToFirst();
-                CollectionCursorMapper collectionCursorMapper = new CollectionCursorMapper();
-                collectionCursorMapper.bindColumns(cursor);
-                Collection collection = (Collection) collectionCursorMapper.bind(cursor);
-                mCollection = collection;
-                cursor.close();
-            }
-            // sometimes mCollection is null (tracepot)
-            if (mCollection != null)
-                mDetailsOverviewRow.setItem(mCollection);
+            if (DBG) Log.d(TAG, "onActivityResult processing requestCode, first refreshCollection");
+            refreshCollection();
+            refreshActivity();
         } else {
             if (DBG) Log.d(TAG, "onActivityResult NOT processing requestCode");
         }
@@ -494,6 +482,9 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         if (movieCollectionAdapter != null) movieCollectionAdapter.changeCursor(cursor);
 
         mMovieCollectionAdapter = new MovieCollectionAdapter(getContext(), cursor);
+        if (DBG) Log.d(TAG, "onLoadFinished: movie collection cursor size " + cursor.getCount());
+        if (cursor.getCount() == 0) // no more movies in collection
+            getActivity().finish();
     }
 
     @Override
