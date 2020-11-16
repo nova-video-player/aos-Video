@@ -56,12 +56,11 @@ import com.archos.mediacenter.video.leanback.presenter.VideoListPresenter;
 import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.utils.DbUtils;
-import com.archos.mediacenter.video.utils.SortOrder;
 import com.archos.mediaprovider.video.VideoStore;
 
 public class AllCollectionsGridFragment extends MyVerticalGridFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String TAG = "AllCollectionsGridFragment";
+    private static final String TAG = AllCollectionsGridFragment.class.getSimpleName();
     private static final boolean DBG = true;
 
     private static final String PREF_MOVIE_COLLECTION_DISPLAY_MODE = "PREF_MOVIE_COLLECTION_DISPLAY_MODE";
@@ -80,15 +79,13 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
     private CharSequence[] mSortOrderEntries;
     private BackgroundManager bgMngr = null;
 
-    // TODO MARC: remove watched not watched?
-
     private boolean mCollectionWatched;
 
     private static Context mContext;
 
     public static SparseArray<CollectionsSortOrderEntry> sortOrderIndexer = new SparseArray<CollectionsSortOrderEntry>();
     static {
-        sortOrderIndexer.put(0, new CollectionsSortOrderEntry(R.string.sort_by_name_asc,        "name COLLATE NOCASE ASC"));
+        sortOrderIndexer.put(0, new CollectionsSortOrderEntry(R.string.sort_by_name_asc,"name COLLATE NOCASE ASC"));
     }
 
     @Override
@@ -131,6 +128,7 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
                 if (mCollectionsAdapter != null) {
                     Collection collection = (Collection)mCollectionsAdapter.get(getSelectedPosition());
                     if (collection != null) {
+                        // TODO MARC mark as pinned not done for collection...
                         if (!collection.isPinned())
                             DbUtils.markAsPinned(getActivity(), collection);
                         else

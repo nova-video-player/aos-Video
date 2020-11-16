@@ -19,10 +19,6 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
-import com.archos.mediascraper.BaseTags;
-import com.archos.mediascraper.ShowTags;
-import com.archos.mediascraper.TagsFactory;
 
 import java.io.Serializable;
 

@@ -20,7 +20,6 @@ import android.util.Log;
 
 import com.archos.mediacenter.video.collections.CollectionsSortOrderEntries;
 import com.archos.mediacenter.video.player.PlayerActivity;
-import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
 public class CollectionLoader extends VideoLoader {

@@ -85,7 +85,6 @@ import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
 import com.archos.mediacenter.video.leanback.details.ArchosDetailsOverviewRowPresenter;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
-import com.archos.mediacenter.video.leanback.presenter.MovieCollectionPresenter;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.utils.DbUtils;
@@ -293,12 +292,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                             delete.deleteFolder(folder);
                         }
                     });
-            b.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialogInterface) {
-                    sendDeleteResult(videoFile);
-                }
-            });
+            b.setOnCancelListener(dialogInterface -> sendDeleteResult(videoFile));
             b.create().show();
         }
         else {

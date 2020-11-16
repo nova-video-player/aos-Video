@@ -16,7 +16,6 @@ package com.archos.mediacenter.video.browser.loader;
 
 import android.content.Context;
 
-import com.archos.mediacenter.video.collections.CollectionsSortOrderEntries;
 import com.archos.mediaprovider.video.VideoStore;
 
 public class MovieCollectionLoader extends VideoLoader {
@@ -26,15 +25,10 @@ public class MovieCollectionLoader extends VideoLoader {
     // sort by year
     static public String DEFAULT_SORT = VideoStore.Video.VideoColumns.SCRAPER_M_YEAR + " ASC";
 
-    public final static String COLUMN_MOVIE_COLLECTION_COUNT = "movie_collection_count";
-    public final static String COLUMN_MOVIE_COLLECTION_WATCHED_COUNT = "movie_collection_watched_count";
     private String mSortOrder;
     private long mCollectionId;
-
-    private boolean mMovieCollectionWatched;
-
     /**
-     * List all movie in one collection
+     * List all videos in one movie collection
      * @param context
      */
 
@@ -54,8 +48,6 @@ public class MovieCollectionLoader extends VideoLoader {
     public String getSortOrder() {
         return mSortOrder;
     }
-
-    // TODO MARC check counts for watched
 
     @Override
     public String getSelection() {
