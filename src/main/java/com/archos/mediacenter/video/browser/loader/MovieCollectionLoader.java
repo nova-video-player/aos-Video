@@ -33,14 +33,13 @@ public class MovieCollectionLoader extends VideoLoader {
      */
 
     public MovieCollectionLoader(Context context, long collectionId) {
-        this(context, collectionId, DEFAULT_SORT, true);
+        this(context, collectionId, DEFAULT_SORT);
     }
 
-    public MovieCollectionLoader(Context context, long collectionId, String SortOrder, boolean movieCollectionWatched) {
+    public MovieCollectionLoader(Context context, long collectionId, String SortOrder) {
         super(context);
         mCollectionId = collectionId;
         mSortOrder = SortOrder;
-        mMovieCollectionWatched = movieCollectionWatched;
         init();
     }
 
