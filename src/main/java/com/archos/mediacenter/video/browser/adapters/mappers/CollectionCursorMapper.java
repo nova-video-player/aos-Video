@@ -26,7 +26,7 @@ import com.archos.mediaprovider.video.VideoStore;
 public class CollectionCursorMapper implements CompatibleCursorMapper {
 
     private static final String TAG = "CollectionCursorMapper";
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
 
     int mIdColumn;
     int mNameColumn;
@@ -55,8 +55,6 @@ public class CollectionCursorMapper implements CompatibleCursorMapper {
         mTraktLibraryColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.ARCHOS_TRAKT_LIBRARY);
         mPlotColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_C_DESCRIPTION);
         mPinnedColumn = cursor.getColumnIndex(VideoStore.Video.VideoColumns.NOVA_PINNED);
-        if (DBG) Log.d(TAG, "bindColumns: " + mIdColumn + " " + mNameColumn + " count " + mCollectionCountColumn + "/" + mCollectionMovieCountColumn + "/" + mCollectionMovieWatchedCountColumn);
-        if (DBG) Log.d(TAG, "bindColumns: " + cursor.getInt(mIdColumn) + " " + cursor.getString(mNameColumn) + " count " + cursor.getInt(mCollectionCountColumn) + "/" + cursor.getInt(mCollectionMovieCountColumn) + "/" + cursor.getInt(mCollectionMovieWatchedCountColumn));
     }
 
     public Object bind(Cursor cursor) {

@@ -27,6 +27,9 @@ public class CollectionLoader extends VideoLoader {
     private static final String TAG = "CollectionLoader";
     private static final boolean DBG = true;
 
+    public static final String DEFAULT_SORT = COLUMN_NAME + ", "
+            + VideoStore.Video.VideoColumns.SCRAPER_C_ID;
+
     public final static String COLUMN_COLLECTION_COUNT = "collection_count";
     public final static String COLUMN_COLLECTION_MOVIE_COUNT = "collection_movie_count";
     public final static String COLUMN_COLLECTION_MOVIE_WATCHED_COUNT = "collection_movie_watched_count";

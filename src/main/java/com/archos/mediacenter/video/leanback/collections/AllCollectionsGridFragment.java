@@ -63,6 +63,8 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
     private static final String TAG = AllCollectionsGridFragment.class.getSimpleName();
     private static final boolean DBG = true;
 
+    public static final int ALL_COLLECTIONS_LOADER_ID = -44;
+
     private static final String PREF_MOVIE_COLLECTION_DISPLAY_MODE = "PREF_MOVIE_COLLECTION_DISPLAY_MODE";
 
     public static final String SORT_PARAM_KEY = AllCollectionsGridFragment.class.getName() + "_SORT";
@@ -136,10 +138,9 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
                         Bundle args = new Bundle();
                         args.putString("sort", mSortOrder);
                         args.putBoolean("collectionWatched", mCollectionWatched);
-                        LoaderManager.getInstance(AllCollectionsGridFragment.this).restartLoader(0, args, AllCollectionsGridFragment.this);
+                        LoaderManager.getInstance(AllCollectionsGridFragment.this).restartLoader(ALL_COLLECTIONS_LOADER_ID, args, AllCollectionsGridFragment.this);
                     }
                 }
-
                 return true;
             }
         };
@@ -165,7 +166,7 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
         Bundle args = new Bundle();
         args.putString("sort", mSortOrder);
         args.putBoolean("collectionWatched", mCollectionWatched);
-        LoaderManager.getInstance(this).restartLoader(0, args, AllCollectionsGridFragment.this);
+        LoaderManager.getInstance(this).restartLoader(ALL_COLLECTIONS_LOADER_ID, args, AllCollectionsGridFragment.this);
     }
 
     @Override
@@ -240,7 +241,7 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
                                     args.putBoolean("collectionWatched", mCollectionWatched);
-                                    LoaderManager.getInstance(AllCollectionsGridFragment.this).restartLoader(0, args, AllCollectionsGridFragment.this);
+                                    LoaderManager.getInstance(AllCollectionsGridFragment.this).restartLoader(ALL_COLLECTIONS_LOADER_ID, args, AllCollectionsGridFragment.this);
                                 }
                                 dialog.dismiss();
                             }
@@ -266,7 +267,7 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
                 Bundle args = new Bundle();
                 args.putString("sort", mSortOrder);
                 args.putBoolean("collectionWatched", mCollectionWatched);
-                LoaderManager.getInstance(AllCollectionsGridFragment.this).restartLoader(0, args, AllCollectionsGridFragment.this);
+                LoaderManager.getInstance(AllCollectionsGridFragment.this).restartLoader(ALL_COLLECTIONS_LOADER_ID, args, AllCollectionsGridFragment.this);
             }
         });
 
@@ -294,12 +295,9 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (DBG) Log.d(TAG, "onCreateLoader");
-        if (id == 0) {
-            if (args == null) {
-                return new AllCollectionsLoader(getActivity());
-            } else {
-                return new AllCollectionsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("mCollectionWatched"));
-            }
+        if (id == ALL_COLLECTIONS_LOADER_ID) {
+            if (args == null) return new AllCollectionsLoader(getActivity());
+            else return new AllCollectionsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("collectionWatched"));
         }
         else return null;
     }
@@ -308,7 +306,7 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         if (DBG) Log.d(TAG, "onLoadFinished");
         if (getActivity() == null) return;
-        if (cursorLoader.getId()==0) {
+        if (cursorLoader.getId() == ALL_COLLECTIONS_LOADER_ID) {
             mCollectionsAdapter.swapCursor(cursor);
             setEmptyViewVisiblity(cursor.getCount()<1);
             setTitle(getString(R.string.all_collections_format, cursor.getCount()));

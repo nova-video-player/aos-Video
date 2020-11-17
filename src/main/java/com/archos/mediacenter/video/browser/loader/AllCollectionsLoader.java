@@ -16,22 +16,30 @@ package com.archos.mediacenter.video.browser.loader;
 
 import android.content.Context;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import com.archos.mediacenter.video.collections.CollectionsSortOrderEntries;
+import com.archos.mediacenter.video.leanback.collections.AllCollectionsGridFragment;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
+import java.util.Arrays;
+
 public class AllCollectionsLoader extends VideoLoader {
 
-    private static final String TAG = "AllCollectionsLoader";
+    private static final String TAG = AllCollectionsLoader.class.getSimpleName();
+    private static final boolean DBG = false;
+
+    public static final String DEFAULT_SORT = COLUMN_NAME + ", "
+            + VideoStore.Video.VideoColumns.SCRAPER_C_ID;
 
     public final static String COLUMN_COLLECTION_COUNT = "collection_count";
     public final static String COLUMN_COLLECTION_MOVIE_COUNT = "collection_movie_count";
     public final static String COLUMN_COLLECTION_MOVIE_WATCHED_COUNT = "collection_movie_watched_count";
     private String mSortOrder;
 
-    private boolean mShowWatched;
+    private boolean mCollectionWatched;
 
     /**
      * List all movie collections
@@ -41,10 +49,15 @@ public class AllCollectionsLoader extends VideoLoader {
         this(context, CollectionsSortOrderEntries.DEFAULT_SORT, true);
     }
 
-    public AllCollectionsLoader(Context context, String SortOrder, boolean showWatched) {
+    public AllCollectionsLoader(Context context, String SortOrder, boolean collectionWatched) {
         super(context);
         mSortOrder = SortOrder;
-        mShowWatched = showWatched;
+        mCollectionWatched = collectionWatched;
+        if (DBG) {
+            Log.d(TAG, "getProjection " + Arrays.toString(getProjection()));
+            Log.d(TAG, "getSelection " + getSelection());
+            Log.d(TAG, "getSortOrder " + getSortOrder());
+        }
         init();
     }
 
@@ -77,7 +90,7 @@ public class AllCollectionsLoader extends VideoLoader {
 
         if (sb.length()>0) { sb.append(" AND "); }
         sb.append( VideoStore.Video.VideoColumns.SCRAPER_C_ID + " > '0'");
-        if (!mShowWatched) {
+        if (!mCollectionWatched) {
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);
         }
