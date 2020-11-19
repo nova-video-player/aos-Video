@@ -48,7 +48,7 @@ public class Box {
     final private String mName;
     final private int mIconResId;
     final private String mPath;
-    final private Bitmap mBitmap;
+    private Bitmap mBitmap;
 
     public Box(ID boxId, String name, int iconResId, String path) {
         mBoxId = boxId;
@@ -95,4 +95,6 @@ public class Box {
     public Bitmap getBitmap() {
         return mBitmap;
     }
+
+    public void setBitmap(Bitmap bitmap) { mBitmap = bitmap; }
 }

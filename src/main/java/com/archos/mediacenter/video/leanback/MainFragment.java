@@ -24,6 +24,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -56,6 +57,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
+import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.LastAddedLoader;
 import com.archos.mediacenter.video.browser.loader.LastPlayedLoader;
@@ -65,6 +67,7 @@ import com.archos.mediacenter.video.leanback.adapter.object.Box;
 import com.archos.mediacenter.video.leanback.adapter.object.EmptyView;
 import com.archos.mediacenter.video.leanback.adapter.object.Icon;
 import com.archos.mediacenter.video.leanback.collections.AllCollectionsGridActivity;
+import com.archos.mediacenter.video.leanback.collections.CollectionFragment;
 import com.archos.mediacenter.video.leanback.collections.CollectionsIconBuilder;
 import com.archos.mediacenter.video.leanback.filebrowsing.ExtStorageListingActivity;
 import com.archos.mediacenter.video.leanback.filebrowsing.LocalListingActivity;
@@ -119,6 +122,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     final static int ROW_ID_FILES = 1005;
     final static int ROW_ID_PREFERENCES = 1006;
 
+    final static int COL_ID_ALL_MOVIES = 0;
+    final static int COL_ID_MOVIES_BY_ALPHA = 1;
+    final static int COL_ID_MOVIES_BY_GENRE = 2;
+    final static int COL_ID_MOVIES_BY_RATING = 3;
+
     // Need these row indexes to update the full ListRow object
     final static int ROW_INDEX_UNSET = -1;
     int rowIndexLastAdded = ROW_INDEX_UNSET;
@@ -126,6 +134,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     int rowIndexTvShows = ROW_INDEX_UNSET;
 
     private ArrayObjectAdapter mRowsAdapter;
+    private ArrayObjectAdapter mMoviesRowsAdapter;
     private CursorObjectAdapter mMoviesAdapter;
     private CursorObjectAdapter mTvshowsAdapter;
     // TODO: disabled until issue #186 is fixed
@@ -139,10 +148,14 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     //private ListRow mWatchingUpNextRow;
     private ListRow mLastAddedRow;
     private ListRow mLastPlayedRow;
-    private ListRow mMoviesRow;
-    private ListRow mTvshowsRow;
-    private ListRow mMovieRow;
+    private static ListRow mMoviesRow;
+    private static ListRow mTvshowsRow;
+    private static ListRow mMovieRow;
     private ListRow mTvshowRow;
+
+    private static Box mAllMoviesBox;
+    private static Box mAllTvshowsBox;
+    private static Box mAllCollectionsBox;
 
     // TODO: disabled until issue #186 is fixed
     //private boolean mShowWatchingUpNextRow;
@@ -163,18 +176,26 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     private BackgroundManager bgMngr;
 
+    private AsyncTask mBuildAllMoviesBoxTask;
+    private AsyncTask mBuildAllTvshowsBoxTask;
+    private AsyncTask mBuildAllCollectionsBoxTask;
+
+    private static Activity mActivity;
+
     private boolean mNeedBuildAllMoviesBox = false;
     private boolean mNeedBuildAllTvshowsBox = false;
+    private boolean mNeedBuildAllCollectionsBox = false;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mActivity = getActivity();
         IntentFilter intentFilter = new IntentFilter(ExtStorageReceiver.ACTION_MEDIA_MOUNTED);
         intentFilter.addAction(ExtStorageReceiver.ACTION_MEDIA_UNMOUNTED);
         intentFilter.addAction(ExtStorageReceiver.ACTION_MEDIA_CHANGED);
         intentFilter.addDataScheme("file");
         intentFilter.addDataScheme(ExtStorageReceiver.ARCHOS_FILE_SCHEME);//new android nougat send UriExposureException when scheme = file
-        getActivity().registerReceiver(mExternalStorageReceiver, intentFilter);
+        mActivity.registerReceiver(mExternalStorageReceiver, intentFilter);
     }
 
     public void onCreate(Bundle bundle){
@@ -202,14 +223,13 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     @Override
     public void onDetach() {
         super.onDetach();
-        getActivity().unregisterReceiver(mExternalStorageReceiver);
+        mActivity.unregisterReceiver(mExternalStorageReceiver);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
         // TODO: disabled until issue #186 is fixed
         //mShowWatchingUpNextRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_WATCHING_UP_NEXT_ROW, VideoPreferencesCommon.SHOW_WATCHING_UP_NEXT_ROW_DEFAULT);
         mShowLastAddedRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_ADDED_ROW, VideoPreferencesCommon.SHOW_LAST_ADDED_ROW_DEFAULT);
@@ -227,15 +247,15 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         updateBackground();
 
         Resources r = getResources();
-        setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.leanback_title));
+        setBadgeDrawable(ContextCompat.getDrawable(mActivity, R.drawable.leanback_title));
         setHeadersState(HEADERS_ENABLED);
         setHeadersTransitionOnBackEnabled(true);
 
         // set fastLane (or headers) background color
-        setBrandColor(ContextCompat.getColor(getActivity(), R.color.leanback_side));
+        setBrandColor(ContextCompat.getColor(mActivity, R.color.leanback_side));
 
         // set search icon color
-        setSearchAffordanceColor(ContextCompat.getColor(getActivity(), R.color.lightblueA200));
+        setSearchAffordanceColor(ContextCompat.getColor(mActivity, R.color.lightblueA200));
 
         setupEventListeners();
 
@@ -274,7 +294,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         super.onResume();
         mOverlay.resume();
         updateBackground();
-        getActivity().registerReceiver(mUpdateReceiver, mUpdateFilter);
+        mActivity.registerReceiver(mUpdateReceiver, mUpdateFilter);
         // TODO: disabled until issue #186 is fixed
         /*
         boolean newShowWatchingUpNextRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_WATCHING_UP_NEXT_ROW, VideoPreferencesCommon.SHOW_WATCHING_UP_NEXT_ROW_DEFAULT);
@@ -325,34 +345,34 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     public void onPause() {
         super.onPause();
         mOverlay.pause();
-        getActivity().unregisterReceiver(mUpdateReceiver);
+        mActivity.unregisterReceiver(mUpdateReceiver);
     }
 
     private void updateBackground() {
         Resources r = getResources();
 
-        bgMngr = BackgroundManager.getInstance(getActivity());
+        bgMngr = BackgroundManager.getInstance(mActivity);
         if(!bgMngr.isAttached())
-            bgMngr.attach(getActivity().getWindow());
+            bgMngr.attach(mActivity.getWindow());
 
         if (PrivateMode.isActive()) {
-            bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.private_mode));
-            bgMngr.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.private_background));
+            bgMngr.setColor(ContextCompat.getColor(mActivity, R.color.private_mode));
+            bgMngr.setDrawable(ContextCompat.getDrawable(mActivity, R.drawable.private_background));
         } else {
-            bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.leanback_background));
-            bgMngr.setDrawable(new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.leanback_background)));
+            bgMngr.setColor(ContextCompat.getColor(mActivity, R.color.leanback_background));
+            bgMngr.setDrawable(new ColorDrawable(ContextCompat.getColor(mActivity, R.color.leanback_background)));
         }
     }
 
     private void setupEventListeners() {
         setOnSearchClickedListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), VideoSearchActivity.class);
+                Intent intent = new Intent(mActivity, VideoSearchActivity.class);
                 intent.putExtra(VideoSearchActivity.EXTRA_SEARCH_MODE, VideoSearchActivity.SEARCH_MODE_ALL);
                 startActivity(intent);
             }
         });
-        setOnItemViewClickedListener(new MainViewClickedListener(getActivity()));
+        setOnItemViewClickedListener(new MainViewClickedListener(mActivity));
     }
 
     private void loadRows() {
@@ -375,36 +395,38 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         // TODO: disabled until issue #186 is fixed
         /*
-        mWatchingUpNextAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
+        mWatchingUpNextAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
         mWatchingUpNextAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
         mWatchingUpNextRow = new ListRow(ROW_ID_WATCHING_UP_NEXT, new HeaderItem(getString(R.string.watching_up_next)), mWatchingUpNextAdapter);
          */
 
-        mLastAddedAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
+        mLastAddedAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
         mLastAddedAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
         mLastAddedRow = new ListRow(ROW_ID_LAST_ADDED, new HeaderItem(getString(R.string.recently_added)), mLastAddedAdapter);
 
-        mLastPlayedAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
+        mLastPlayedAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
         mLastPlayedAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
         mLastPlayedRow = new ListRow(ROW_ID_LAST_PLAYED, new HeaderItem(getString(R.string.recently_played)), mLastPlayedAdapter);
 
         boolean showByRating = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_BY_RATING, VideoPreferencesCommon.SHOW_BY_RATING_DEFAULT);
 
-        ArrayObjectAdapter movieRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
-        movieRowAdapter.add(buildAllMoviesBox());
-        //movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_ALPHA, getString(R.string.movies_by_alpha), R.drawable.alpha_banner));
-        movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_GENRE, getString(R.string.movies_by_genre), R.drawable.genres_banner));
+        mMoviesRowsAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
+        buildAllMoviesBox();
+        mMoviesRowsAdapter.add(mAllMoviesBox);
+        //mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_ALPHA, getString(R.string.movies_by_alpha), R.drawable.alpha_banner));
+        mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_GENRE, getString(R.string.movies_by_genre), R.drawable.genres_banner));
 
         if (showByRating)
-            movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_RATING, getString(R.string.movies_by_rating), R.drawable.ratings_banner));
+            mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_RATING, getString(R.string.movies_by_rating), R.drawable.ratings_banner));
 
-        movieRowAdapter.add(new Box(Box.ID.MOVIES_BY_YEAR, getString(R.string.movies_by_year), R.drawable.years_banner_2020));
-        mMovieRow = new ListRow(ROW_ID_MOVIES, new HeaderItem(getString(R.string.movies)), movieRowAdapter);
-
-        movieRowAdapter.add(buildCollectionsBox());
+        mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_YEAR, getString(R.string.movies_by_year), R.drawable.years_banner_2020));
+        mMovieRow = new ListRow(ROW_ID_MOVIES, new HeaderItem(getString(R.string.movies)), mMoviesRowsAdapter);
+        buildAllCollectionsBox();
+        mMoviesRowsAdapter.add(mAllCollectionsBox);
 
         ArrayObjectAdapter tvshowRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
-        tvshowRowAdapter.add(buildAllTvshowsBox());
+        buildAllTvshowsBox();
+        tvshowRowAdapter.add(mAllTvshowsBox);
         //tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_ALPHA, getString(R.string.tvshows_by_alpha), R.drawable.alpha_banner));
         tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_GENRE, getString(R.string.tvshows_by_genre), R.drawable.genres_banner));
 
@@ -414,11 +436,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         tvshowRowAdapter.add(new Box(Box.ID.EPISODES_BY_DATE, getString(R.string.episodes_by_date), R.drawable.years_banner_2020));
         mTvshowRow = new ListRow(ROW_ID_TVSHOW2, new HeaderItem(getString(R.string.all_tv_shows)), tvshowRowAdapter);
         
-        mMoviesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
+        mMoviesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
         mMoviesAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
         mMoviesRow = new ListRow(ROW_ID_ALL_MOVIES, new HeaderItem(getString(R.string.all_movies)), mMoviesAdapter);
 
-        mTvshowsAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
+        mTvshowsAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
         mTvshowsAdapter.setMapper(new CompatibleCursorMapperConverter(new TvshowCursorMapper()));
         mTvshowsRow = new ListRow(ROW_ID_TVSHOWS, new HeaderItem(getString(R.string.all_tvshows)), mTvshowsAdapter);
 
@@ -443,7 +465,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         mPreferencesRowAdapter.add(new Icon(Icon.ID.HELP_FAQ, getString(R.string.help_faq), R.drawable.lollipop_help));
 
         mEnableSponsor = mPrefs.getBoolean(VideoPreferencesCommon.KEY_ENABLE_SPONSOR, VideoPreferencesCommon.ENABLE_SPONSOR_DEFAULT);
-        if ((! ArchosUtils.isInstalledfromPlayStore(getActivity().getApplicationContext())) || mEnableSponsor) {
+        if ((! ArchosUtils.isInstalledfromPlayStore(mActivity.getApplicationContext())) || mEnableSponsor) {
             mPreferencesRowAdapter.add(new Icon(Icon.ID.SPONSOR, getString(R.string.sponsor), R.drawable.piggy_bank_leanback_256));
         }
         // Must use an IconListRow to have the dedicated presenter used (see ClassPresenterSelector above)
@@ -454,39 +476,69 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         setAdapter(mRowsAdapter);
     }
 
-    private Box buildAllMoviesBox() {
-        Bitmap iconBitmap = new AllMoviesIconBuilder(getActivity()).buildNewBitmap();
-        if (iconBitmap!=null) {
-            return new Box(Box.ID.ALL_MOVIES, getString(R.string.all_movies), iconBitmap);
+    private void buildAllMoviesBox() {
+        mAllMoviesBox = new Box(Box.ID.ALL_MOVIES, getString(R.string.all_movies), R.drawable.movies_banner);
+        if (mBuildAllMoviesBoxTask != null) mBuildAllMoviesBoxTask.cancel(true);
+        mBuildAllMoviesBoxTask = new buildAllMoviesBoxTask().execute();
+    }
+
+    private static class buildAllMoviesBoxTask extends AsyncTask<Void, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            Bitmap iconBitmap = new AllMoviesIconBuilder(mActivity).buildNewBitmap();
+            return iconBitmap;
         }
-        else {
-            // fallback to regular default icon
-            return new Box(Box.ID.ALL_MOVIES, getString(R.string.all_movies), R.drawable.movies_banner);
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap != null && mAllMoviesBox != null && mMovieRow != null) {
+                mAllMoviesBox.setBitmap(bitmap);
+                ((ArrayObjectAdapter)mMovieRow.getAdapter()).replace(0, mAllMoviesBox);
+            }
         }
     }
 
-    // TODO MARC missing auto refresh... when done
-    private Box buildCollectionsBox() {
-        Bitmap iconBitmap = new CollectionsIconBuilder(getActivity()).buildNewBitmap();
-        if (iconBitmap!=null) {
-            return new Box(Box.ID.COLLECTIONS, getString(R.string.movie_collections), iconBitmap);
+    private void buildAllCollectionsBox() {
+        mAllCollectionsBox = new Box(Box.ID.COLLECTIONS, getString(R.string.movie_collections), R.drawable.movies_banner);
+        if (mBuildAllCollectionsBoxTask != null) mBuildAllCollectionsBoxTask.cancel(true);
+        mBuildAllCollectionsBoxTask = new buildAllCollectionsBoxTask().execute();
+    }
+
+    private static class buildAllCollectionsBoxTask extends AsyncTask<Void, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            Bitmap iconBitmap = new CollectionsIconBuilder(mActivity).buildNewBitmap();
+            return iconBitmap;
         }
-        else {
-            // fallback to regular default icon
-            return new Box(Box.ID.COLLECTIONS, getString(R.string.movie_collections), R.drawable.movies_banner);
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap != null && mAllCollectionsBox != null && mMovieRow != null) {
+                mAllCollectionsBox.setBitmap(bitmap);
+                ((ArrayObjectAdapter)mMovieRow.getAdapter()).replace(3, mAllCollectionsBox);
+            }
         }
     }
 
-    private Box buildAllTvshowsBox() {
-        Bitmap iconBitmap = new AllTvshowsIconBuilder(getActivity()).buildNewBitmap();
-        if (iconBitmap!=null) {
-            return new Box(Box.ID.ALL_TVSHOWS, getString(R.string.all_tvshows), iconBitmap);
+    private void buildAllTvshowsBox() {
+        mAllTvshowsBox = new Box(Box.ID.ALL_TVSHOWS, getString(R.string.all_tvshows), R.drawable.movies_banner);
+        if (mBuildAllTvshowsBoxTask != null) mBuildAllTvshowsBoxTask.cancel(true);
+        mBuildAllTvshowsBoxTask = new buildAllTvshowsBoxTask().execute();
+    }
+
+    private static class buildAllTvshowsBoxTask extends AsyncTask<Void, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            Bitmap iconBitmap = new AllTvshowsIconBuilder(mActivity).buildNewBitmap();
+            return iconBitmap;
         }
-        else {
-            // fallback to regular default icon
-            return new Box(Box.ID.ALL_TVSHOWS, getString(R.string.all_tvshows), R.drawable.movies_banner);
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap != null && mAllTvshowsBox != null && mMovieRow != null) {
+                mAllTvshowsBox.setBitmap(bitmap);
+                ((ArrayObjectAdapter)mTvshowsRow.getAdapter()).replace(0, mAllTvshowsBox);
+            }
         }
     }
+
 
     // TODO: disabled until issue #186 is fixed
     /*
@@ -686,19 +738,19 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         switch (id) {
             // TODO: disabled until issue #186 is fixed
             //case LOADER_ID_WATCHING_UP_NEXT:
-            //    return new WatchingUpNextLoader(getActivity());
+            //    return new WatchingUpNextLoader(mActivity);
             case LOADER_ID_LAST_ADDED:
-                return new LastAddedLoader(getActivity());
+                return new LastAddedLoader(mActivity);
             case LOADER_ID_LAST_PLAYED:
-                return new LastPlayedLoader(getActivity());
+                return new LastPlayedLoader(mActivity);
             case LOADER_ID_ALL_MOVIES:
-                if (args == null) return new MoviesLoader(getActivity(), true);
-                else return new MoviesLoader(getActivity(), args.getString("sort"), true, true);
+                if (args == null) return new MoviesLoader(mActivity, true);
+                else return new MoviesLoader(mActivity, args.getString("sort"), true, true);
             case LOADER_ID_ALL_TV_SHOWS:
-                if (args == null) return new AllTvshowsLoader(getActivity());
-                else return new AllTvshowsLoader(getActivity(), args.getString("sort"), true);
+                if (args == null) return new AllTvshowsLoader(mActivity);
+                else return new AllTvshowsLoader(mActivity, args.getString("sort"), true);
             case LOADER_ID_NON_SCRAPED_VIDEOS_COUNT:
-                return new NonScrapedVideosCountLoader(getActivity());
+                return new NonScrapedVideosCountLoader(mActivity);
             default:
                 return null;
         }
@@ -707,7 +759,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         if (DBG) Log.d(TAG,"onLoadFinished: cursor id=" + cursorLoader.getId());
-        if (getActivity() == null) return;
+        if (mActivity == null) return;
         boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking() || AutoScrapeService.isScraping() || ImportState.VIDEO.isInitialImport();
         switch (cursorLoader.getId()) {
             // TODO: disabled until issue #186 is fixed
@@ -735,7 +787,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 if (!mNeedBuildAllMoviesBox && isVideosListModified(mMoviesAdapter.getCursor(), cursor))
                     mNeedBuildAllMoviesBox = true;
                 if (mNeedBuildAllMoviesBox && !scanningOnGoing) {
-                    ((ArrayObjectAdapter)mMovieRow.getAdapter()).replace(0, buildAllMoviesBox());
+                    buildAllMoviesBox();
+                    buildAllCollectionsBox();
                     mNeedBuildAllMoviesBox = false;
                 }
                 if (DBG) Log.d(TAG,"onLoadFinished: AllMovies cursor ready with " + cursor.getCount() + " entries, updating row/box");
@@ -745,7 +798,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 if (!mNeedBuildAllTvshowsBox && isVideosListModified(mTvshowsAdapter.getCursor(), cursor))
                     mNeedBuildAllTvshowsBox = true;
                 if (mNeedBuildAllTvshowsBox && !scanningOnGoing) {
-                    ((ArrayObjectAdapter) mTvshowRow.getAdapter()).replace(0, buildAllTvshowsBox());
+                    buildAllTvshowsBox();
                     mNeedBuildAllTvshowsBox = false;
                 }
                 if (DBG) Log.d(TAG,"onLoadFinished: AllTvShows cursor ready with " + cursor.getCount() + "entries, updating row/box");
@@ -848,7 +901,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         ExtStorageManager storageManager = ExtStorageManager.getExtStorageManager();
         final boolean hasExternal = storageManager.hasExtStorage();
 
-        //TODO make it beautifull
+        //TODO make it beautiful
         mFileBrowsingRowAdapter.clear();
         mFileBrowsingRowAdapter.add(new Box(Box.ID.NETWORK, getString(R.string.network_storage), R.drawable.filetype_new_server));
         mFileBrowsingRowAdapter.add(new Box(Box.ID.FOLDERS, getString(R.string.internal_storage), R.drawable.filetype_new_folder));
@@ -986,14 +1039,14 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                             throw new IllegalStateException("Sorry developer, this ugly code can work with a MainActivityLeanback only for now!");
                         break;
                     case PRIVATE_MODE:
-                        if (!PrivateMode.isActive() && PrivateMode.canShowDialog(getActivity()))
-                            PrivateMode.showDialog(getActivity());
+                        if (!PrivateMode.isActive() && PrivateMode.canShowDialog(mActivity))
+                            PrivateMode.showDialog(mActivity);
                         PrivateMode.toggle();
-                        mPrefs.edit().putBoolean(PREF_PRIVATE_MODE, PrivateMode.isActive()).commit();
+                        mPrefs.edit().putBoolean(PREF_PRIVATE_MODE, PrivateMode.isActive()).apply();
                         updatePrivateMode(icon);
                         break;
                     case LEGACY_UI:
-                        new DensityTweak(getActivity())
+                        new DensityTweak(mActivity)
                                 .temporaryRestoreDefaultDensity();
                         mActivity.startActivity(new Intent(mActivity, MainActivity.class));
                         break;
@@ -1001,7 +1054,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                         WebUtils.openWebLink(mActivity,getString(R.string.faq_url));
                         break;
                     case SPONSOR:
-                        WebUtils.openWebLink(getActivity(),getString(R.string.sponsor_url));
+                        WebUtils.openWebLink(mActivity,getString(R.string.sponsor_url));
                         break;
                 }
             }
