@@ -20,6 +20,7 @@ import android.app.ActivityOptions;
 import androidx.appcompat.app.AlertDialog;
 import androidx.loader.app.LoaderManager;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -86,6 +87,7 @@ import com.archos.mediacenter.video.leanback.details.ArchosDetailsOverviewRowPre
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
+import com.archos.mediacenter.video.leanback.presenter.PresenterUtils;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.utils.DbUtils;
 import com.archos.mediacenter.video.utils.PlayUtils;
@@ -122,6 +124,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
     private AsyncTask mBackdropTask;
     private AsyncTask mDetailRowBuilderTask;
+    private AsyncTask mRefreshCollectionBitmapTask;
 
     private ArchosDetailsOverviewRowPresenter mOverviewRowPresenter;
     private CollectionDetailsDescriptionPresenter mDescriptionPresenter;
@@ -134,35 +137,6 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     private boolean mHasDetailRow;
 
     private boolean mShouldDisplayConfirmDelete = false;
-
-    private void refreshCollection() {
-        if (mCollectionId != -1) {
-            // CollectionLoader is a CursorLoader
-            CollectionLoader collectionLoader = new CollectionLoader(getActivity(), mCollectionId);
-            Cursor cursor = collectionLoader.loadInBackground();
-            if(cursor != null && cursor.getCount()>0) {
-                if (DBG) Log.d(TAG, "refreshCollection DatabaseUtils.dumpCursorToString(cursor)");
-                cursor.moveToFirst();
-                CollectionCursorMapper collectionCursorMapper = new CollectionCursorMapper();
-                collectionCursorMapper.bindColumns(cursor);
-                mCollection = (Collection) collectionCursorMapper.bind(cursor);
-                cursor.close();
-            } else {
-                mCollection = null;
-            }
-        }
-    }
-
-    private void refreshActivity() {
-        if (mCollection != null) {
-            if (DBG) Log.d(TAG, "refreshActivity: collection is not empty " + mCollection.getMovieCollectionCount());
-            ((CollectionActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mCollection, mShouldDisplayConfirmDelete);
-            mDetailsOverviewRow.setItem(mCollection);
-        } else {
-            if (DBG) Log.d(TAG, "refreshActivity: collection is null exit!");
-            getActivity().finish();
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -216,6 +190,8 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     if (!mCollection.isWatched()) {
                         DbUtils.markAsRead(getActivity(), mCollection);
                         refreshCollection();
+                        if (mRefreshCollectionBitmapTask != null) mRefreshCollectionBitmapTask.cancel(true);
+                        mRefreshCollectionBitmapTask = new RefreshCollectionBitmapTask().execute(mCollection);
                         refreshActivity();
                     }
                 }
@@ -224,6 +200,8 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     if (mCollection.isWatched()) {
                         DbUtils.markAsNotRead(getActivity(), mCollection);
                         refreshCollection();
+                        if (mRefreshCollectionBitmapTask != null) mRefreshCollectionBitmapTask.cancel(true);
+                        mRefreshCollectionBitmapTask = new RefreshCollectionBitmapTask().execute(mCollection);
                         refreshActivity();
                     }
                 }
@@ -423,7 +401,6 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
         // Start loading the list of seasons
         LoaderManager.getInstance(CollectionFragment.this).restartLoader(COLLECTION_LOADER_ID, null, CollectionFragment.this);
-
     }
 
     @Override
@@ -489,45 +466,10 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
         @Override
         protected Pair<Collection, Bitmap> doInBackground(Collection... collections) {
-
             if (DBG) Log.d(TAG, "DetailRowBuilderTask.doInBackground collectionS length " + collections.length);
-
             Collection collection = collections[0];
-
             if (DBG) Log.d(TAG, "DetailRowBuilderTask.doInBackground collection " + collection.getName());
-
-            Bitmap bitmap = null;
-            try {
-                Uri posterUri = collection.getPosterUri();
-
-                if (posterUri != null) {
-                    bitmap = Picasso.get()
-                            .load(posterUri)
-                            .noFade() // no fade since we are using activity transition anyway
-                            .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
-                            .centerCrop()
-                            .get();
-                    if (DBG) Log.d(TAG, "------ "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
-                }
-            }
-            catch (IOException e) {
-                Log.d(TAG, "DetailsOverviewRow Picasso load exception", e);
-            }
-            catch (NullPointerException e) { // getDefaultPoster() may return null (seen once at least)
-                Log.d(TAG, "DetailsOverviewRow doInBackground exception", e);
-            }
-            finally {
-                if (bitmap!=null) {
-                    Palette palette = Palette.from(bitmap).generate();
-                    if (palette.getDarkVibrantSwatch() != null)
-                        mColor = palette.getDarkVibrantSwatch().getRgb();
-                    else if (palette.getDarkMutedSwatch() != null)
-                        mColor = palette.getDarkMutedSwatch().getRgb();
-                    else
-                        mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
-                }
-            }
-
+            Bitmap bitmap = generateCollectionBitmap(collection.getPosterUri(), collection.isWatched());
             return new Pair<>(collection, bitmap);
         }
 
@@ -563,6 +505,9 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                 mRowsAdapter.add(INDEX_DETAILS, mDetailsOverviewRow);
                 setAdapter(mRowsAdapter);
                 mHasDetailRow = true;
+            } else {
+                mRowsAdapter.replace(INDEX_DETAILS, mDetailsOverviewRow);
+                setAdapter(mRowsAdapter);
             }
         }
     }
@@ -648,6 +593,91 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                                 getActivity().finish();
                         }
                     }, 1000);
+                }
+            }
+        }
+    }
+
+    private void refreshCollection() {
+        if (mCollectionId != -1) {
+            // CollectionLoader is a CursorLoader
+            CollectionLoader collectionLoader = new CollectionLoader(getActivity(), mCollectionId);
+            Cursor cursor = collectionLoader.loadInBackground();
+            if(cursor != null && cursor.getCount()>0) {
+                if (DBG) Log.d(TAG, "refreshCollection DatabaseUtils.dumpCursorToString(cursor)");
+                cursor.moveToFirst();
+                CollectionCursorMapper collectionCursorMapper = new CollectionCursorMapper();
+                collectionCursorMapper.bindColumns(cursor);
+                mCollection = (Collection) collectionCursorMapper.bind(cursor);
+                cursor.close();
+            } else {
+                mCollection = null;
+            }
+        }
+    }
+
+    private void refreshActivity() {
+        if (mCollection != null) {
+            if (DBG) Log.d(TAG, "refreshActivity: collection is not empty " + mCollection.getMovieCollectionCount());
+            ((CollectionActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mCollection, mShouldDisplayConfirmDelete);
+            mDetailsOverviewRow.setItem(mCollection);
+        } else {
+            if (DBG) Log.d(TAG, "refreshActivity: collection is null exit!");
+            getActivity().finish();
+        }
+    }
+
+    private Bitmap generateCollectionBitmap(Uri posterUri, boolean isWatched) {
+        Bitmap bitmap = null;
+            try {
+                if (posterUri != null) {
+                    bitmap = Picasso.get()
+                            .load(posterUri)
+                            .noFade() // no fade since we are using activity transition anyway
+                            .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
+                            .centerCrop()
+                            .get();
+                    if (DBG) Log.d(TAG, "------ "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
+                    Log.d(TAG, "iswatched " + isWatched);
+                    if (isWatched)
+                        bitmap = PresenterUtils.addWatchedMark(bitmap, getContext());
+                }
+            } catch (IOException e) {
+                Log.d(TAG, "DetailsOverviewRow Picasso load exception", e);
+            } catch (NullPointerException e) { // getDefaultPoster() may return null (seen once at least)
+                Log.d(TAG, "DetailsOverviewRow doInBackground exception", e);
+            } finally {
+                if (bitmap!=null) {
+                    Palette palette = Palette.from(bitmap).generate();
+                    if (palette.getDarkVibrantSwatch() != null)
+                        mColor = palette.getDarkVibrantSwatch().getRgb();
+                    else if (palette.getDarkMutedSwatch() != null)
+                        mColor = palette.getDarkMutedSwatch().getRgb();
+                    else
+                        mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
+                }
+            }
+        return bitmap;
+    }
+
+    private class RefreshCollectionBitmapTask extends AsyncTask<Collection, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(Collection... collections) {
+            Collection collection = collections[0];
+            if (DBG) Log.d(TAG, "RefreshCollectionBitmapTask.doInBackground collection " + collection.getName());
+            Bitmap bitmap = generateCollectionBitmap(collection.getPosterUri(), collection.isWatched());
+            return bitmap;
+        }
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap!=null) {
+                mOverviewRowPresenter.updateBackgroundColor(mColor);
+                mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
+                mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
+                mDetailsOverviewRow.setImageScaleUpAllowed(true);
+                if (mHasDetailRow) {
+                    mRowsAdapter.replace(INDEX_DETAILS, mDetailsOverviewRow);
+                    setAdapter(mRowsAdapter);
                 }
             }
         }
