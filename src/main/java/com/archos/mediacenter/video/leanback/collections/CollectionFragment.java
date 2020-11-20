@@ -20,7 +20,6 @@ import android.app.ActivityOptions;
 import androidx.appcompat.app.AlertDialog;
 import androidx.loader.app.LoaderManager;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -638,9 +637,6 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                             .centerCrop()
                             .get();
                     if (DBG) Log.d(TAG, "------ "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
-                    Log.d(TAG, "iswatched " + isWatched);
-                    if (isWatched)
-                        bitmap = PresenterUtils.addWatchedMark(bitmap, getContext());
                 }
             } catch (IOException e) {
                 Log.d(TAG, "generateCollectionBitmap Picasso load exception", e);
@@ -655,6 +651,8 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                         mColor = palette.getDarkMutedSwatch().getRgb();
                     else
                         mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
+                    if (isWatched)
+                        bitmap = PresenterUtils.addWatchedMark(bitmap, getContext());
                 }
             }
         return bitmap;

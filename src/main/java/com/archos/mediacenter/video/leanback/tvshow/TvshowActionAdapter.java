@@ -17,8 +17,10 @@ package com.archos.mediacenter.video.leanback.tvshow;
 import android.content.Context;
 import androidx.leanback.widget.Action;
 import androidx.leanback.widget.ObjectAdapter;
+import androidx.leanback.widget.SparseArrayObjectAdapter;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ import java.util.ArrayList;
 /**
  * Created by vapillon on 20/05/15.
  */
-public class TvshowActionAdapter extends ObjectAdapter{
+public class TvshowActionAdapter extends SparseArrayObjectAdapter {
 
     public static final int ACTION_PLAY = 4;
     public static final int ACTION_MORE_DETAILS = 0;
@@ -36,36 +38,37 @@ public class TvshowActionAdapter extends ObjectAdapter{
     public static final int ACTION_CHANGE_INFO = 3;
     public static final int ACTION_DELETE = 6;
 
-    final ArrayList<Action> mActions;
+    final Context mContext;
 
     /**
      * @param context
      * @param tvshow
      */
     public TvshowActionAdapter(Context context, Tvshow tvshow) {
-        mActions = new ArrayList<>(6);
-        
-        mActions.add(new Action(ACTION_PLAY, context.getString(R.string.play_selection)));
-
-        mActions.add(new Action(ACTION_MORE_DETAILS, context.getString(R.string.leanback_action_more_details)));
-
-        // Limitation/Keep it simple: For TvShow we always display "Mark watched", even if all episodes are watched already
-        mActions.add(new Action(ACTION_MARK_SHOW_AS_WATCHED, context.getString(R.string.mark_as_watched)));
-        
-        mActions.add(new Action(ACTION_UNINDEX, context.getString(R.string.video_browser_unindex_file)));
-
-        mActions.add(new Action(ACTION_CHANGE_INFO, context.getString(R.string.scrap_change)));
-        
-        mActions.add(new Action(ACTION_DELETE, context.getString(R.string.delete)));
+        mContext = context;
+        set(ACTION_PLAY, new Action(ACTION_PLAY, context.getString(R.string.play_selection)));
+        set(ACTION_MORE_DETAILS, new Action(ACTION_MORE_DETAILS, context.getString(R.string.leanback_action_more_details)));
+        if (tvshow.isWatched()) {
+            clear(ACTION_MARK_SHOW_AS_WATCHED);
+            set(ACTION_MARK_SHOW_AS_NOT_WATCHED, new Action(ACTION_MARK_SHOW_AS_WATCHED, mContext.getString(R.string.mark_as_not_watched)));
+        } else {
+            clear(ACTION_MARK_SHOW_AS_NOT_WATCHED);
+            set(ACTION_MARK_SHOW_AS_WATCHED, new Action(ACTION_MARK_SHOW_AS_WATCHED, mContext.getString(R.string.mark_as_watched)));
+        }
+        set(ACTION_UNINDEX, new Action(ACTION_UNINDEX, context.getString(R.string.video_browser_unindex_file)));
+        set(ACTION_CHANGE_INFO, new Action(ACTION_CHANGE_INFO, context.getString(R.string.scrap_change)));
+        set(ACTION_DELETE, new Action(ACTION_DELETE, context.getString(R.string.delete)));
+        update(tvshow);
     }
 
-    @Override
-    public int size() {
-        return mActions.size();
-    }
-
-    @Override
-    public Object get(int position) {
-        return mActions.get(position);
+    public void update(Tvshow tvshow) {
+        if (tvshow.isWatched()) {
+            clear(ACTION_MARK_SHOW_AS_WATCHED);
+            set(ACTION_MARK_SHOW_AS_NOT_WATCHED, new Action(ACTION_MARK_SHOW_AS_WATCHED, mContext.getString(R.string.mark_as_not_watched)));
+        } else {
+            clear(ACTION_MARK_SHOW_AS_NOT_WATCHED);
+            set(ACTION_MARK_SHOW_AS_WATCHED, new Action(ACTION_MARK_SHOW_AS_WATCHED, mContext.getString(R.string.mark_as_watched)));
+        }
+        notifyChanged();
     }
 }

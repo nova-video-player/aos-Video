@@ -101,7 +101,7 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
             @Override
             public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
                 if (item == null) {
-                    if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED) {
+                    if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED || mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_NOT_WATCHED) {
                         boolean allEpisodesWatched = true;
     
                         for (int i = 1; i < mSeasonsAdapter.size(); i++) {
@@ -171,7 +171,7 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
 
                 Season season = (Season)item;
                 
-                if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED) {
+                if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED || mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_NOT_WATCHED) {
                     if (season.allEpisodesWatched()) {
                         DbUtils.markAsNotRead(getActivity(), season);
                     }
@@ -247,7 +247,7 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
         mSeasonsAdapter = new PlaceholderCursorObjectAdapter(mSeasonPresenter);
         mSeasonsAdapter.setMapper(new CompatibleCursorMapperConverter(new SeasonCursorMapper()));
         String desc = "";
-        if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED)
+        if (mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED || mActionId == TvshowActionAdapter.ACTION_MARK_SHOW_AS_NOT_WATCHED)
             desc = getString(R.string.how_to_mark_season_watched);
         else if (mActionId == TvshowActionAdapter.ACTION_UNINDEX)
             desc = getString(R.string.how_to_unindex_season);
