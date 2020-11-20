@@ -82,6 +82,7 @@ import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.lists.ListDia
 import com.archos.mediacenter.video.browser.Delete;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
+import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.NonIndexedVideo;
@@ -103,6 +104,7 @@ import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridFragment;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
+import com.archos.mediacenter.video.leanback.presenter.PresenterUtils;
 import com.archos.mediacenter.video.leanback.presenter.ScraperImageBackdropPresenter;
 import com.archos.mediacenter.video.leanback.presenter.ScraperImagePosterPresenter;
 import com.archos.mediacenter.video.leanback.presenter.TrailerPresenter;
@@ -1234,8 +1236,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 } catch (IOException e) {
                 }
             }
-
-
             return null;
         }
 
@@ -1255,6 +1255,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
                 mOverviewRowPresenter.updateBackgroundColor(mColor);
                 mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
+                if (mVideo.isWatched())
+                    result = PresenterUtils.addWatchedMark(result, getContext());
             }
             fullyReloadVideo(mVideo,result);
         }
@@ -1612,6 +1614,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 return;
             if (result != null) {
                 mPoster = result;
+
                 mDetailsOverviewRow.setImageBitmap(getActivity(), result);
                 mDetailsOverviewRow.setImageScaleUpAllowed(true);
 
