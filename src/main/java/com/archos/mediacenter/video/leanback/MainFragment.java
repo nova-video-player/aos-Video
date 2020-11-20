@@ -135,8 +135,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     private ArrayObjectAdapter mRowsAdapter;
     private ArrayObjectAdapter mMoviesRowsAdapter;
+    private ArrayObjectAdapter mTvshowRowAdapter;
     private CursorObjectAdapter mMoviesAdapter;
-    private CursorObjectAdapter mTvshowsAdapter;
+    private static CursorObjectAdapter mTvshowsAdapter;
     // TODO: disabled until issue #186 is fixed
     //private CursorObjectAdapter mWatchingUpNextAdapter;
     private CursorObjectAdapter mLastAddedAdapter;
@@ -151,7 +152,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private static ListRow mMoviesRow;
     private static ListRow mTvshowsRow;
     private static ListRow mMovieRow;
-    private ListRow mTvshowRow;
+    private static ListRow mTvshowRow;
 
     private static Box mAllMoviesBox;
     private static Box mAllTvshowsBox;
@@ -424,17 +425,17 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         buildAllCollectionsBox();
         mMoviesRowsAdapter.add(mAllCollectionsBox);
 
-        ArrayObjectAdapter tvshowRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
+        mTvshowRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         buildAllTvshowsBox();
-        tvshowRowAdapter.add(mAllTvshowsBox);
+        mTvshowRowAdapter.add(mAllTvshowsBox);
         //tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_ALPHA, getString(R.string.tvshows_by_alpha), R.drawable.alpha_banner));
-        tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_GENRE, getString(R.string.tvshows_by_genre), R.drawable.genres_banner));
+        mTvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_GENRE, getString(R.string.tvshows_by_genre), R.drawable.genres_banner));
 
         if (showByRating)
-            tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_RATING, getString(R.string.tvshows_by_rating), R.drawable.ratings_banner));
-        
-        tvshowRowAdapter.add(new Box(Box.ID.EPISODES_BY_DATE, getString(R.string.episodes_by_date), R.drawable.years_banner_2020));
-        mTvshowRow = new ListRow(ROW_ID_TVSHOW2, new HeaderItem(getString(R.string.all_tv_shows)), tvshowRowAdapter);
+            mTvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_RATING, getString(R.string.tvshows_by_rating), R.drawable.ratings_banner));
+
+        mTvshowRowAdapter.add(new Box(Box.ID.EPISODES_BY_DATE, getString(R.string.episodes_by_date), R.drawable.years_banner_2020));
+        mTvshowRow = new ListRow(ROW_ID_TVSHOW2, new HeaderItem(getString(R.string.all_tv_shows)), mTvshowRowAdapter);
         
         mMoviesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
         mMoviesAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
@@ -534,7 +535,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null && mAllTvshowsBox != null && mMovieRow != null) {
                 mAllTvshowsBox.setBitmap(bitmap);
-                ((ArrayObjectAdapter)mTvshowsRow.getAdapter()).replace(0, mAllTvshowsBox);
+                ((ArrayObjectAdapter)mTvshowRow.getAdapter()).replace(0, mAllTvshowsBox);
             }
         }
     }
