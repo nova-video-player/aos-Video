@@ -643,9 +643,9 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                         bitmap = PresenterUtils.addWatchedMark(bitmap, getContext());
                 }
             } catch (IOException e) {
-                Log.d(TAG, "DetailsOverviewRow Picasso load exception", e);
+                Log.d(TAG, "generateCollectionBitmap Picasso load exception", e);
             } catch (NullPointerException e) { // getDefaultPoster() may return null (seen once at least)
-                Log.d(TAG, "DetailsOverviewRow doInBackground exception", e);
+                Log.d(TAG, "generateCollectionBitmap doInBackground exception", e);
             } finally {
                 if (bitmap!=null) {
                     Palette palette = Palette.from(bitmap).generate();
