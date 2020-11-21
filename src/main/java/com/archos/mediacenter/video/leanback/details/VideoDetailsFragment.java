@@ -1047,13 +1047,16 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 if(isCancelled())
                     return;
                 if(mVideo.getPosterUri()==null||mVideo.getPosterUri().equals(result.second.getPosterUri())) {
+                    Bitmap bitmap = result.first;
                     if (result.first != null) {
+                        if (mVideo.isWatched())
+                            bitmap = PresenterUtils.addWatchedMark(bitmap, getContext());
                         if(!mAnimationIsRunning) {
-                            mDetailsOverviewRow.setImageBitmap(getActivity(), result.first);
+                            mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
                             mDetailsOverviewRow.setImageScaleUpAllowed(true);
                         }
                         else
-                            mThumbnail = result.first;
+                            mThumbnail = bitmap;
                     } else {
                         mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
                         mDetailsOverviewRow.setImageScaleUpAllowed(false);
@@ -1615,12 +1618,14 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             if (result != null) {
                 mPoster = result;
 
+                Palette palette = Palette.from(result).generate();
+                int color;
+
+                if (mVideo.isWatched())
+                    result = PresenterUtils.addWatchedMark(result, getContext());
                 mDetailsOverviewRow.setImageBitmap(getActivity(), result);
                 mDetailsOverviewRow.setImageScaleUpAllowed(true);
 
-                Palette palette = Palette.from(result).generate();
-                int color;
-                
                 if (palette.getDarkVibrantSwatch() != null)
                     color = palette.getDarkVibrantSwatch().getRgb();
                 else if (palette.getDarkMutedSwatch() != null)

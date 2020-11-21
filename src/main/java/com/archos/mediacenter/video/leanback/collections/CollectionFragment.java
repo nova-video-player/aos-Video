@@ -440,7 +440,6 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
         CursorObjectAdapter movieCollectionAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity(), PosterImageCardPresenter.EpisodeDisplayMode.FOR_SEASON_LIST));
         movieCollectionAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
-
         ListRow row = new ListRow(1,
                 new HeaderItem(1, getString(R.string.movies)),
                 movieCollectionAdapter);
@@ -636,7 +635,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                             .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
                             .centerCrop()
                             .get();
-                    if (DBG) Log.d(TAG, "------ "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
+                    if (DBG) Log.d(TAG, "generateCollectionBitmap: "+bitmap.getWidth()+"x"+bitmap.getHeight()+" "+posterUri);
                 }
             } catch (IOException e) {
                 Log.d(TAG, "generateCollectionBitmap Picasso load exception", e);
