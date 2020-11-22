@@ -46,7 +46,7 @@ import java.util.ArrayList;
  */
 public class DbUtils {
     private static final String TAG = "DbUtils";
-    private static final Boolean DBG = true;
+    private static final Boolean DBG = false;
 
     private static final String KEY_NETWORK_BOOKMARKS = "network_bookmarks";
 

@@ -99,7 +99,7 @@ import java.util.ArrayList;
 
 public class CollectionFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor>, Delete.DeleteListener {
 
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
     private static final String TAG = "CollectionFragment";
 
     public static final String EXTRA_COLLECTION = "COLLECTION";

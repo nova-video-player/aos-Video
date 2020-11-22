@@ -60,7 +60,7 @@ import java.util.ArrayList;
 public class PosterImageCardPresenter extends Presenter {
 
     private static final String TAG = "PosterImageCardPresenter";
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
 
     public enum EpisodeDisplayMode {
         FOR_GENERAL_LIST,

@@ -38,7 +38,7 @@ import java.io.File;
 */
 public class BackdropTask extends AsyncTask<Object, Integer, File> {
 
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
     private static final String TAG = "BackdropTask";
 
     private final Activity mContext;

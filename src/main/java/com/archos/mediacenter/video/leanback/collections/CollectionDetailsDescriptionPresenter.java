@@ -35,7 +35,7 @@ import java.util.Date;
 public class CollectionDetailsDescriptionPresenter extends Presenter {
 
     private static final String TAG = "CollectionDetailsDescriptionPresenter";
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
 
     /**
      * The ViewHolder for the {@link CollectionDetailsDescriptionPresenter}.

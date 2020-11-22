@@ -25,7 +25,7 @@ import com.archos.mediaprovider.video.VideoStore;
 public class CollectionLoader extends VideoLoader {
 
     private static final String TAG = "CollectionLoader";
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
 
     public static final String DEFAULT_SORT = COLUMN_NAME + ", "
             + VideoStore.Video.VideoColumns.SCRAPER_C_ID;

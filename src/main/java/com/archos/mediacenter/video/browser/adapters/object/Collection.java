@@ -25,7 +25,7 @@ import java.io.Serializable;
 public class Collection extends Base implements Serializable {
 
     private static final String TAG = "Collection";
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
 
     private final boolean mIsTraktSeen;
     private final boolean mIsTraktLibrary;

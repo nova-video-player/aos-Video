@@ -61,7 +61,7 @@ import com.archos.mediaprovider.video.VideoStore;
 public class AllCollectionsGridFragment extends MyVerticalGridFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = AllCollectionsGridFragment.class.getSimpleName();
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
 
     public static final int ALL_COLLECTIONS_LOADER_ID = -44;
 
