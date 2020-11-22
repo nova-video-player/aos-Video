@@ -399,6 +399,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 if (mRefreshTvshowBitmapTask != null) mRefreshTvshowBitmapTask.cancel(true);
                 mRefreshTvshowBitmapTask = new RefreshTvshowBitmapTask().execute(mTvshow);
                 refreshActivity();
+                cursor.close();
             }
             // sometimes mTvshow is null (tracepot)
             if (mTvshow != null)
