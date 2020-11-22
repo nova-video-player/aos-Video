@@ -120,9 +120,15 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
                 if (video.isWatched() || (video.getResumeMs() == PlayerActivity.LAST_POSITION_END)) {
                     clear(ACTION_MARK_AS_WATCHED);
                     set(ACTION_MARK_AS_NOT_WATCHED, new Action(ACTION_MARK_AS_NOT_WATCHED, mContext.getString(R.string.mark_as_not_watched)));
+                    // keep marked watched state in sync with the buttons
+                    if (DBG) Log.d(TAG, "update: tell VideoDetailsFragment watch state is true");
+                    VideoDetailsFragment.setWatchState(true);
                 } else {
                     clear(ACTION_MARK_AS_NOT_WATCHED);
                     set(ACTION_MARK_AS_WATCHED, new Action(ACTION_MARK_AS_WATCHED, mContext.getString(R.string.mark_as_watched)));
+                    // keep marked watched state in sync with the buttons
+                    if (DBG) Log.d(TAG, "update: tell VideoDetailsFragment watch state is false");
+                    VideoDetailsFragment.setWatchState(false);
                 }
             }
             if (video.locationSupportsDelete()) {
