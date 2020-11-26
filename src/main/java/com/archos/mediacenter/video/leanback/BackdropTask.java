@@ -73,6 +73,7 @@ public class BackdropTask extends AsyncTask<Object, Integer, File> {
         if (objects[0] instanceof Collection) {
             // when dealing with collection, it has already been scraped and backdrop downloaded
             Collection collection = (Collection) objects[0];
+            if (collection.getBackdropUri() == null) return null;
             return new File(collection.getBackdropUri().getPath());
         }
         else if (objects[0] instanceof BaseTags) {

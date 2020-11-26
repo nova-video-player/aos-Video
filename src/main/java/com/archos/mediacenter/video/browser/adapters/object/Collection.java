@@ -68,8 +68,14 @@ public class Collection extends Base implements Serializable {
         mIsTraktLibrary = traktLibrary;
         mCollDescription = collDescription;
         mPinned = pinned;
-        mPosterUri = posterUri.toString();
-        mBackdropUri = backdropUri.toString();
+        if (posterUri != null)
+            mPosterUri = posterUri.toString();
+        else
+            mPosterUri = null;
+        if (backdropUri != null)
+            mBackdropUri = backdropUri.toString();
+        else
+            mBackdropUri = null;
         if (DBG) Log.d(TAG, collId + " " + collName + " count " + collCount + "/" + collMovieCount + "/" + collMovieWatchedCount);
     }
 
