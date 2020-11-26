@@ -885,8 +885,6 @@
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">View more</string>
-    <string name="nfo_export_manual_prefkey">export_manual_prefkey</string>
-    <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="nfo_export_in_progress">NFO export in progress</string>
     <string name="rescrap_in_progress">Rescraping whole library</string>
     <string name="acquire_external_usb_permission">Nova Video needs special permission to access external storage. Please select your storage on next screen</string>
@@ -895,7 +893,6 @@
     <string name="rescrap_all_title">Rescrape all</string>
     <string name="nfo_export_manual_title">Export already scraped videos</string>
     <string name="nfo_export_manual_summary">Export .nfo files of every already scraped videos</string>
-    <string name="db_export_manual_prefkey">db_export_manual_prefkey</string>
     <string name="db_export_manual_title">Export media database</string>
     <string name="db_export_manual_summary">Export media.db file to /sdcard for debug purposes</string>
     <string name="db_export_in_progress">Database export in progress</string>
