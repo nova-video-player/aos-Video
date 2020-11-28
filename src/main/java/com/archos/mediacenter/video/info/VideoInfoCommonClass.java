@@ -69,7 +69,7 @@ public class VideoInfoCommonClass {
     public static VideoMetadata retrieveMetadata(Video video, Context context){
         String startingPath= video.getFilePath();
         String streamingPath = startingPath;
-//first, look for upnp streaming uri
+        //first, look for upnp streaming uri
         if(streamingPath.startsWith("upnp")&&video!=null){
             StreamUriFinder streamUriFinder = new StreamUriFinder(video.getFileUri(),context);
             Uri uri= streamUriFinder.start_blocking();

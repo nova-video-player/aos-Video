@@ -21,6 +21,7 @@ import android.view.View;
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
@@ -29,7 +30,7 @@ import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediaprovider.video.VideoProvider;
 
 /**
- * ListPresenter for Video objects including Video, Episodes, Tvshow (though not technically a Video)
+ * ListPresenter for Video objects including Video, Episodes, Tvshow (though not technically a Video), Movie Collections (though again not technically a Video)
  * Created by vapillon on 10/04/15.
  */
 public class VideoListPresenter extends ListPresenter {
@@ -108,6 +109,22 @@ public class VideoListPresenter extends ListPresenter {
             vh.setContentText(tvshow.getCountString(ArchosUtils.getGlobalContext()));
             vh.setContentTextVisibility(View.VISIBLE);
             vh.setWatched(tvshow.isWatched());
+        }else if (item instanceof Collection) {
+            Collection collection = (Collection) item;
+            final Uri posterUri = collection.getPosterUri();
+            if (posterUri != null) {
+                vh.updateImageViewPoster(posterUri, collection.getCollectionId());
+            } else {
+                vh.updateImageViewThumbnail(collection.getCollectionId());
+            }
+            vh.setTitleText(collection.getName());
+            if (mLongClickListener != null) {
+                vh.view.setOnLongClickListener(mLongClickListener);
+                vh.setPinned(collection.isPinned());
+            }
+            vh.setContentText(collection.getCountString(ArchosUtils.getGlobalContext()));
+            vh.setContentTextVisibility(View.VISIBLE);
+            vh.setWatched(collection.isWatched());
         }
     }
 }

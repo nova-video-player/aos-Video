@@ -107,10 +107,23 @@
     <string name="movies">Movies</string>
     <string name="all_movies">All movies</string>
     <string name="all_movies_format">All movies  -  %d</string>
+    <string name="all_collections">All collections</string>
+    <string name="all_collections_format">All collections  -  %d</string>
+    <string name="all_collection_watched">All collection watched</string>
+    <string name="all_collection_unwatched">Collection not watched</string>
+    <plurals name="n_movies_watched">
+        <item quantity="one">%d movie watched</item>
+        <item quantity="other">%d movies watched</item>
+    </plurals>
     <string name="not_watched_movies_format">Not watched  -  %d</string>
+
+    <string name="no_movie_watched">No movie watched</string>
+    <string name="all_movies_watched">All movies watched</string>
+
     <string name="movies_by_alpha">Movies alphabetical</string>
     <string name="movies_by_genre">Movies by genre</string>
     <string name="movies_by_rating">Movies by rating</string>
+    <string name="movie_collections">Collections</string>
     <string name="movies_by_year">Movies by year</string>
     <string name="all_tv_shows">TV shows</string>
     <string name="all_tvshows">All TV shows</string>
@@ -254,6 +267,7 @@
     <string name="you_have_no_video">No videos</string>
     <string name="you_have_no_video_yet">Searching for videos&#8230;</string>
     <string name="you_have_no_movies">No movies</string>
+    <string name="you_have_no_movie_collections">No collections</string>
     <string name="you_have_no_tv_shows">No TV shows</string>
     <string name="you_have_no_non_scraped_videos">No non scraped videos</string>
 
@@ -864,17 +878,16 @@
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">View more</string>
-    <string name="nfo_export_manual_prefkey">export_manual_prefkey</string>
-    <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="nfo_export_in_progress">NFO export in progress</string>
     <string name="rescrap_in_progress">Rescraping whole library</string>
+    <string name="rescrap_movies_in_progress">Rescraping all movies</string>
     <string name="acquire_external_usb_permission">Nova Video needs special permission to access external storage. Please select your storage on next screen</string>
 
     <string name="rescrap_not_found">Rescrape videos without description</string>
     <string name="rescrap_all_title">Rescrape all</string>
+    <string name="rescrap_all_movies_title">Rescrape all movies</string>
     <string name="nfo_export_manual_title">Export already scraped videos</string>
     <string name="nfo_export_manual_summary">Export .nfo files of every already scraped videos</string>
-    <string name="db_export_manual_prefkey">db_export_manual_prefkey</string>
     <string name="db_export_manual_title">Export media database</string>
     <string name="db_export_manual_summary">Export media.db file to /sdcard for debug purposes</string>
     <string name="db_export_in_progress">Database export in progress</string>

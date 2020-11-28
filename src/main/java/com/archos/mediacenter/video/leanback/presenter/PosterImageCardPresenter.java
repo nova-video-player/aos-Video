@@ -38,6 +38,7 @@ import android.widget.TextView;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
@@ -52,11 +53,14 @@ import com.squareup.picasso.Target;
 import java.util.ArrayList;
 
 /**
- * Display a video, a movie, an episode (Poster or Thumbnail) or a TvShow (Poster)
+ * Display a video, a movie, an episode (Poster or Thumbnail), a TvShow (Poster), or a Movie Collection (Poster)
  * using a regular ImageCardView
  * Created by vapillon on 10/04/15.
  */
 public class PosterImageCardPresenter extends Presenter {
+
+    private static final String TAG = "PosterImageCardPresenter";
+    private static final boolean DBG = false;
 
     public enum EpisodeDisplayMode {
         FOR_GENERAL_LIST,
@@ -216,6 +220,9 @@ public class PosterImageCardPresenter extends Presenter {
         else if (item instanceof Tvshow) {
             bindTvshow(vh, (Tvshow) item);
         }
+        else if (item instanceof Collection) {
+            bindCollection(vh, (Collection) item);
+        }
         else if (item instanceof MetaFile2) {
             bindMetaFile(vh, (MetaFile2)item);
         }
@@ -297,7 +304,7 @@ public class PosterImageCardPresenter extends Presenter {
 
     /**
      * Use to bind a Tv Show (i.e. not an actual video file!)
-     * CAUTION: this is not about an episode, but about about a whole show item
+     * CAUTION: this is not about an episode, but about a whole show item
      * @param vh
      * @param tvshow
      */
@@ -321,6 +328,35 @@ public class PosterImageCardPresenter extends Presenter {
         else
             vh.updateCardView(mErrorDrawable);
         
+        vh.setOccurencies(0);
+    }
+
+    /**
+     * Use to bind a Movie Collection (i.e. not an actual video file!)
+     * CAUTION: this is not about an movie, but about a whole movie collection item
+     * @param vh
+     * @param collection
+     */
+    private void bindCollection(VideoViewHolder vh, Collection collection) {
+        final ImageCardView card = vh.getImageCardView();
+
+        // setup the watched flag BEFORE the poster because it is handled in a strange way in the ImageCardViewTarget
+        vh.mImageCardViewTarget.setWatchedFlag(collection.isWatched());
+
+        card.setTitleText(collection.getName());
+
+        card.setContentText(collection.getCountString(card.getContext()));
+
+        if (mLongClickListener != null) {
+            vh.view.setOnLongClickListener(mLongClickListener);
+            vh.mImageCardViewTarget.setPinnedFlag(collection.isPinned());
+        }
+
+        if (collection.getPosterUri() != null)
+            vh.updateCardView(collection.getPosterUri(), -1, false);
+        else
+            vh.updateCardView(mErrorDrawable);
+
         vh.setOccurencies(0);
     }
 

@@ -103,6 +103,7 @@ import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridFragment;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
+import com.archos.mediacenter.video.leanback.presenter.PresenterUtils;
 import com.archos.mediacenter.video.leanback.presenter.ScraperImageBackdropPresenter;
 import com.archos.mediacenter.video.leanback.presenter.ScraperImagePosterPresenter;
 import com.archos.mediacenter.video.leanback.presenter.TrailerPresenter;
@@ -178,6 +179,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     /** The video for which we are displaying the details. This object is updated each time we have a DB update */
     private Video mVideo;
+    private static boolean mIsVideoWatched = false; // TOFIX: adding internal state since trakt sync can occur much later
 
     /** DB id of the video to display (in case we do not get the video object directly)*/
     private long mVideoIdFromPlayer;
@@ -224,6 +226,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private AsyncTask mSubtitleFilesListerTask;
     private AsyncTask mPosterSaverTask;
     private AsyncTask mBackdropSaverTask;
+    private AsyncTask mRefreshVideoBitmapTask;
     private DialogRetrieveSubtitles mDialogRetrieveSubtitles;
     private boolean mDownloadingSubs;
 
@@ -265,6 +268,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (DBG) Log.d(TAG, "onCreate");
 
         mSubtitleListCache = new HashMap<>();
         mVideoMetadateCache = new HashMap<>();
@@ -343,6 +347,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             if (mVideoIdFromPlayer == -1) {
                 mVideoPathFromPlayer = intent.getData().toString();
             }
+        } else { // initialization of watched state
+            mIsVideoWatched = mVideo.isWatched();
+            if (DBG) Log.d(TAG, "onCreate: init mIsVideoWatched=" + mIsVideoWatched);
         }
 
         mLaunchedFromPlayer = intent.getBooleanExtra(EXTRA_LAUNCHED_FROM_PLAYER, false);
@@ -486,6 +493,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onResume() {
         super.onResume();
+        if (DBG) Log.d(TAG, "onResume");
         mShouldUpdateRemoteResume = true;
         mOverlay.resume();
         if(mResumeFromPlayer && ArchosUtils.isAmazonApk()) {
@@ -533,6 +541,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onPause() {
         super.onPause();
+        if (DBG) Log.d(TAG, "onPause");
         mOverlay.pause();
     }
 
@@ -819,8 +828,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             if(mVideo == null)
                 mVideo = mVideoList.get(0);
             if(mVideoList.size()>1){
-
-
                 int i = 0;
                 for(Video video : mVideoList) {
                     if(mFileListAdapter.size()>i)
@@ -832,7 +839,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 if(i<mFileListAdapter.size()){
                     mFileListAdapter.removeItems(i,mFileListAdapter.size() -i);
                 }
-
             }
 
 
@@ -1045,13 +1051,16 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 if(isCancelled())
                     return;
                 if(mVideo.getPosterUri()==null||mVideo.getPosterUri().equals(result.second.getPosterUri())) {
+                    Bitmap bitmap = result.first;
                     if (result.first != null) {
+                        if (mVideo.isWatched() || mIsVideoWatched)
+                            bitmap = PresenterUtils.addWatchedMark(bitmap, getContext());
                         if(!mAnimationIsRunning) {
-                            mDetailsOverviewRow.setImageBitmap(getActivity(), result.first);
+                            mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
                             mDetailsOverviewRow.setImageScaleUpAllowed(true);
                         }
                         else
-                            mThumbnail = result.first;
+                            mThumbnail = bitmap;
                     } else {
                         mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
                         mDetailsOverviewRow.setImageScaleUpAllowed(false);
@@ -1070,7 +1079,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
      */
 
     private void fullyReloadVideo(Video video, Bitmap poster) {
-        if (DBG) Log.d(TAG, "fullyReloadVideo");
         if (DBG) Log.d(TAG, "fullyReloadVideo: mShouldLoadBackdrop=" + mShouldLoadBackdrop);
         if(mShouldLoadBackdrop)
             BackgroundManager.getInstance(getActivity()).setDrawable(new ColorDrawable(VideoInfoCommonClass.getDarkerColor(mColor)));
@@ -1194,16 +1202,20 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             mVideoInfoTask = new VideoInfoTask().execute(video);
 
         if (poster == null) {
+            if (DBG) Log.d(TAG, "fullyReloadVideo: no poster, generate it");
+
             mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
             mDetailsOverviewRow.setImageScaleUpAllowed(false);
             mThumbnailAsyncTask = new ThumbnailAsyncTask().execute(mVideo);
         }else{
+            if (DBG) Log.d(TAG, "fullyReloadVideo: should put watched mark on poster " + (mVideo.isWatched() || mIsVideoWatched));
+            if (mVideo.isWatched() || mIsVideoWatched)
+                poster = PresenterUtils.addWatchedMark(poster, getContext());
             mDetailsOverviewRow.setImageBitmap(getActivity(), poster);
             mDetailsOverviewRow.setImageScaleUpAllowed(true);
         }
 
     }
-
 
     //--------- ------------------------------------------
     private class DetailRowBuilderTask extends AsyncTask<Video, Integer, Bitmap> {
@@ -1234,8 +1246,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 } catch (IOException e) {
                 }
             }
-
-
             return null;
         }
 
@@ -1612,12 +1622,15 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 return;
             if (result != null) {
                 mPoster = result;
-                mDetailsOverviewRow.setImageBitmap(getActivity(), result);
-                mDetailsOverviewRow.setImageScaleUpAllowed(true);
 
                 Palette palette = Palette.from(result).generate();
                 int color;
-                
+
+                if (mVideo.isWatched() || mIsVideoWatched)
+                    result = PresenterUtils.addWatchedMark(result, getContext());
+                mDetailsOverviewRow.setImageBitmap(getActivity(), result);
+                mDetailsOverviewRow.setImageScaleUpAllowed(true);
+
                 if (palette.getDarkVibrantSwatch() != null)
                     color = palette.getDarkVibrantSwatch().getRgb();
                 else if (palette.getDarkMutedSwatch() != null)
@@ -1981,5 +1994,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 }
             }
         }
+    }
+
+    public static void setWatchState(Boolean isVideoWatched) {
+        if (DBG) Log.d(TAG, "setWatchState to " + isVideoWatched);
+        mIsVideoWatched = isVideoWatched;
     }
 }

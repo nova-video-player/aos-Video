@@ -15,9 +15,11 @@
 package com.archos.mediacenter.video.browser.adapters.mappers;
 
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
@@ -38,6 +40,8 @@ public class VideoCursorMapper implements CompatibleCursorMapper {
     int mIdColumn, mScraperTypeColumn, mPathColumn, mNameColumn, mPosterPathColumn, mDateColumn, mRatingColumn, mPlotColumn;
     int mDurationColumn, mResumeColumn, mBookmarkColumn, m3dColumn, mGuessedDefinitionColumn;
     int mMovieIdColumn;
+    int mCollectionIdColumn;
+    int mCollectionNameColumn;
     int mSizeColumn;
     int mBackdropUrlColumn, mBackdropFileColumn;
     int mEpisodeIdColumn, mEpisodeSeasonColumn, mEpisodeNumberColumn, mEpisodeNameColumn, mShowNameColumn;
@@ -76,6 +80,7 @@ public class VideoCursorMapper implements CompatibleCursorMapper {
 
         // Movies stuff
         mMovieIdColumn =  c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID);
+        mCollectionIdColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_C_ID);
 
         // Movies/Episodes common stuff
         mBackdropUrlColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_BACKDROP_LARGE_URL);

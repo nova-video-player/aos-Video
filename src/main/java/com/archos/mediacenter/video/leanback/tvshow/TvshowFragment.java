@@ -66,6 +66,7 @@ import androidx.loader.content.CursorLoader;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
+import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
@@ -77,9 +78,12 @@ import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
+import com.archos.mediacenter.video.leanback.collections.CollectionActionAdapter;
+import com.archos.mediacenter.video.leanback.collections.CollectionFragment;
 import com.archos.mediacenter.video.leanback.details.ArchosDetailsOverviewRowPresenter;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
+import com.archos.mediacenter.video.leanback.presenter.PresenterUtils;
 import com.archos.mediacenter.video.leanback.scrapping.ManualShowScrappingActivity;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
@@ -90,7 +94,7 @@ import com.archos.mediascraper.ShowTags;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-
+import java.nio.channels.AsynchronousChannel;
 
 public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -121,6 +125,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     private AsyncTask mBackdropTask;
     private AsyncTask mFullScraperTagsTask;
     private AsyncTask mDetailRowBuilderTask;
+    private AsyncTask mRefreshTvshowBitmapTask;
 
     private ArchosDetailsOverviewRowPresenter mOverviewRowPresenter;
     private TvshowDetailsDescriptionPresenter mDescriptionPresenter;
@@ -254,7 +259,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                     //animate only if episode picture isn't displayed
                     boolean animate =!((item instanceof Episode)&&((Episode)item).getPictureUri()!=null);
                     VideoViewClickedListener.showVideoDetails(getActivity(), (Video) item, itemViewHolder, animate, false, false, -1, TvshowFragment.this, REQUEST_CODE_VIDEO);
-}
+                }
             }
         });
     }
@@ -391,6 +396,10 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 Tvshow tvshow = (Tvshow) tvshowCursorMapper.bind(cursor);
                 tvshow.setShowTags(mTvshow.getShowTags());
                 mTvshow = tvshow;
+                if (mRefreshTvshowBitmapTask != null) mRefreshTvshowBitmapTask.cancel(true);
+                mRefreshTvshowBitmapTask = new RefreshTvshowBitmapTask().execute(mTvshow);
+                refreshActivity();
+                cursor.close();
             }
             // sometimes mTvshow is null (tracepot)
             if (mTvshow != null)
@@ -572,46 +581,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         @Override
         protected Pair<Tvshow, Bitmap> doInBackground(Tvshow... shows) {
             Tvshow tvshow = shows[0];
-
-            Bitmap bitmap = null;
-            try {
-                // Poster: we must take the poster from the showTags because they are updated (in case they have
-                // been changed in TvshowMoreDetailsFragment) while the Tvshow instance has not been updated.
-                Uri posterUri;
-                if (tvshow.getShowTags()!=null && tvshow.getShowTags().getDefaultPoster() != null) {
-                    posterUri = Uri.parse("file://"+tvshow.getShowTags().getDefaultPoster().getLargeFile());
-                } else {
-                    posterUri = tvshow.getPosterUri(); // fallback
-                }
-
-                if (posterUri != null) {
-                    bitmap = Picasso.get()
-                            .load(posterUri)
-                            .noFade() // no fade since we are using activity transition anyway
-                            .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
-                            .centerCrop()
-                            .get();
-                    if (DBG) Log.d("XXX", "------ "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
-                }
-            }
-            catch (IOException e) {
-                Log.d(TAG, "DetailsOverviewRow Picasso load exception", e);
-            }
-            catch (NullPointerException e) { // getDefaultPoster() may return null (seen once at least)
-                Log.d(TAG, "DetailsOverviewRow doInBackground exception", e);
-            }
-            finally {
-                if (bitmap!=null) {
-                    Palette palette = Palette.from(bitmap).generate();
-                    if (palette.getDarkVibrantSwatch() != null)
-                        mColor = palette.getDarkVibrantSwatch().getRgb();
-                    else if (palette.getDarkMutedSwatch() != null)
-                        mColor = palette.getDarkMutedSwatch().getRgb();
-                    else
-                        mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
-                }
-            }
-
+            Bitmap bitmap = generateTvshowBitmap(tvshow.getPosterUri(), tvshow.isWatched());
             return new Pair<>(tvshow, bitmap);
         }
 
@@ -732,6 +702,72 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                                 getActivity().finish();
                         }
                     }, 1000);
+                }
+            }
+        }
+    }
+
+    private void refreshActivity() {
+        if (mTvshow != null) {
+            if (DBG) Log.d(TAG, "refreshActivity: collection is not empty " + mTvshow.getName());
+            ((TvshowActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mTvshow);
+            mDetailsOverviewRow.setItem(mTvshow);
+        } else {
+            if (DBG) Log.d(TAG, "refreshActivity: collection is null exit!");
+            getActivity().finish();
+        }
+    }
+
+    private Bitmap generateTvshowBitmap(Uri posterUri, boolean isWatched) {
+        Bitmap bitmap = null;
+        try {
+            if (posterUri != null) {
+                bitmap = Picasso.get()
+                        .load(posterUri)
+                        .noFade() // no fade since we are using activity transition anyway
+                        .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
+                        .centerCrop()
+                        .get();
+                if (DBG) Log.d(TAG, "------ "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
+            }
+        } catch (IOException e) {
+            Log.d(TAG, "generateTvshowBitmap Picasso load exception", e);
+        } catch (NullPointerException e) { // getDefaultPoster() may return null (seen once at least)
+            Log.d(TAG, "generateTvshowBitmap doInBackground exception", e);
+        } finally {
+            if (bitmap!=null) {
+                Palette palette = Palette.from(bitmap).generate();
+                if (palette.getDarkVibrantSwatch() != null)
+                    mColor = palette.getDarkVibrantSwatch().getRgb();
+                else if (palette.getDarkMutedSwatch() != null)
+                    mColor = palette.getDarkMutedSwatch().getRgb();
+                else
+                    mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
+                if (isWatched)
+                    bitmap = PresenterUtils.addWatchedMark(bitmap, getContext());
+            }
+        }
+        return bitmap;
+    }
+
+    private class RefreshTvshowBitmapTask extends AsyncTask<Tvshow, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(Tvshow... tvshows) {
+            Tvshow tvshow = tvshows[0];
+            if (DBG) Log.d(TAG, "RefreshTvshowBitmapTask.doInBackground tvshow " + tvshow.getName());
+            Bitmap bitmap = generateTvshowBitmap(tvshow.getPosterUri(), tvshow.isWatched());
+            return bitmap;
+        }
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap!=null) {
+                mOverviewRowPresenter.updateBackgroundColor(mColor);
+                mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
+                mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
+                mDetailsOverviewRow.setImageScaleUpAllowed(true);
+                if (mHasDetailRow) {
+                    mRowsAdapter.replace(INDEX_DETAILS, mDetailsOverviewRow);
+                    setAdapter(mRowsAdapter);
                 }
             }
         }

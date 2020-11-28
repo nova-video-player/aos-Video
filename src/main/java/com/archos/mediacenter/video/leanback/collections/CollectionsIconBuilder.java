@@ -1,4 +1,4 @@
-// Copyright 2017 Archos SA
+// Copyright 2020 Courville Software
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.archos.mediacenter.video.leanback.movies;
+package com.archos.mediacenter.video.leanback.collections;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -27,41 +27,37 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.archos.mediacenter.video.R;
-import com.archos.mediaprovider.video.VideoStore;
+import com.archos.mediaprovider.video.ScraperStore;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * Build a bitmap composed of 8 movie posters to be used in the main leanback activity
- * Created by vapillon on 24/06/15.
+ * Build a bitmap composed of 8 movie collection posters to be used in the main leanback activity
  */
-public class AllMoviesIconBuilder {
+public class CollectionsIconBuilder {
 
     final static String[] PROJECTION = {
-            VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER,
-            VideoStore.Video.VideoColumns._ID,
-            VideoStore.Video.VideoColumns.SCRAPER_COVER
+            ScraperStore.MovieCollections.COLLECTION_ID,
+            ScraperStore.MovieCollections.COLLECTION_POSTER_LARGE_FILE,
     };
 
     final static String SELECTION =
-            VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER + "=0 AND " +
-            VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL AND " +
-            VideoStore.Video.VideoColumns.SCRAPER_COVER + " IS NOT NULL";
+            ScraperStore.MovieCollections.COLLECTION_ID + " IS NOT NULL AND " +
+            ScraperStore.MovieCollections.COLLECTION_POSTER_LARGE_FILE + " IS NOT NULL";
 
-    private static final String TAG = "AllMoviesIconManager";
+    private static final String TAG = "CollectionsIconBuilder";
     private static final Boolean DBG = false;
     final Context mContext;
     final int mWidth;
     final int mHeight;
 
-    public AllMoviesIconBuilder(Context context) {
+    public CollectionsIconBuilder(Context context) {
         mContext = context;
-        mWidth  = context.getResources ().getDimensionPixelSize(R.dimen.all_movies_icon_width);
-        mHeight  = context.getResources ().getDimensionPixelSize(R.dimen.all_movies_icon_height);
+        mWidth  = context.getResources ().getDimensionPixelSize(R.dimen.all_collections_icon_width);
+        mHeight  = context.getResources ().getDimensionPixelSize(R.dimen.all_collections_icon_height);
     }
 
     public Bitmap buildNewBitmap() {
@@ -86,7 +82,7 @@ public class AllMoviesIconBuilder {
         List<String> posters = getPostersList(cr);
 
         if (posters.size() == 0) {
-            if (DBG) Log.d(TAG, "not enough movies with poster to build the icon");
+            if (DBG) Log.d(TAG, "not enough collections with poster to build the icon");
             return null;
         }
 
@@ -94,7 +90,7 @@ public class AllMoviesIconBuilder {
     }
 
     private List<String> getPostersList(ContentResolver cr) {
-        Cursor c = cr.query(VideoStore.Video.Media.EXTERNAL_CONTENT_URI,
+        Cursor c = cr.query(ScraperStore.MovieCollections.URI.BASE,
                 PROJECTION, SELECTION, null,
                 "RANDOM() LIMIT 12"); // get 12 random movies (8 + 4 in case some posters are invalid for any reason)
 
@@ -103,7 +99,7 @@ public class AllMoviesIconBuilder {
             return Collections.emptyList();
         }
 
-        final int coverIndex = c.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_COVER);
+        final int coverIndex = c.getColumnIndexOrThrow(ScraperStore.MovieCollections.COLLECTION_POSTER_LARGE_FILE);
         c.moveToFirst();
 
         ArrayList<String> list = new ArrayList<>(c.getCount());
@@ -118,7 +114,7 @@ public class AllMoviesIconBuilder {
 
     private Bitmap composeBitmap(List<String> posters) {
 
-        View compositionView  = LayoutInflater.from(mContext).inflate(R.layout.all_movies_icon, null);
+        View compositionView  = LayoutInflater.from(mContext).inflate(R.layout.all_collections_icon, null);
 
         // Get the 8 ImagesViews from the layout
         ArrayList<ImageView> imageViews = new ArrayList<>(8);
@@ -138,12 +134,7 @@ public class AllMoviesIconBuilder {
             
             // try next posters in case the first one fails to decode
             while (poster.hasNext()) {
-                Bitmap b;
-                try {
-                    b = BitmapFactory.decodeFile(poster.next(), options);
-                } catch(Exception e) {
-                    b = null;
-                }
+                Bitmap b = BitmapFactory.decodeFile(poster.next(), options);
                 if (b!=null) {
                     iv.setImageBitmap(b);
                     break;
