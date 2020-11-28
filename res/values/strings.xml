@@ -117,13 +117,6 @@
     </plurals>
     <string name="not_watched_movies_format">Not watched  -  %d</string>
 
-    <!-- TODO MARC REMOVE NOT RELEVANT -->
-    <string name="how_to_mark_collection_watched">Click on a collection to mark all its movies watched or unwatched</string>
-    <string name="how_to_unindex_collection">Click on a collection to remove all its movies from library</string>
-    <string name="how_to_delete_collection">Click on a collection to delete all its movies</string>
-    <string name="mark_collection_watched">Mark collection watched or unwatched</string>
-    <string name="unindex_collection">Remove all movies from library</string>
-    <string name="delete_collection">Delete all movies</string>
     <string name="no_movie_watched">No movie watched</string>
     <string name="all_movies_watched">All movies watched</string>
 
