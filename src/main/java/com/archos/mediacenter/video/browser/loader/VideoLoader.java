@@ -112,7 +112,6 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
             // Movie specific values
             VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID,
             VideoStore.Video.VideoColumns.SCRAPER_C_ID,
-            VideoStore.Video.VideoColumns.SCRAPER_C_NAME, // TODO MARC is this one needed?
 
             // Episode specific values
             VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID,
