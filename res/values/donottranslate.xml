@@ -59,6 +59,7 @@
 
     <string name="nfo_export_manual_prefkey">export_manual_prefkey</string>
     <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
+    <string name="rescrap_all_movies_prefkey">rescrap_all_movies_prefkey</string>
     <string name="db_export_manual_prefkey">db_export_manual_prefkey</string>
 
 </resources>

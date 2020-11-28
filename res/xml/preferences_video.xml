@@ -339,6 +339,10 @@
             android:title="@string/rescrap_all_title"
             app:iconSpaceReserved="false"/>
         <Preference
+            android:key="@string/rescrap_all_movies_prefkey"
+            android:title="@string/rescrap_all_movies_title"
+            app:iconSpaceReserved="false"/>
+        <Preference
             android:key="@string/nfo_export_manual_prefkey"
             android:summary="@string/nfo_export_manual_summary"
             android:title="@string/nfo_export_manual_title"
