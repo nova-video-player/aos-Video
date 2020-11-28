@@ -81,7 +81,6 @@ public class VideoCursorMapper implements CompatibleCursorMapper {
         // Movies stuff
         mMovieIdColumn =  c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID);
         mCollectionIdColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_C_ID);
-        mCollectionNameColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_C_NAME); // TODO MARC: is this one needed?
 
         // Movies/Episodes common stuff
         mBackdropUrlColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_BACKDROP_LARGE_URL);
