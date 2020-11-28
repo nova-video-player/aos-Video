@@ -1,6 +1,5 @@
-- Fix folder play mode
-- Correct subtitles download failing while playing video on local storage
-- Do not stop local video playback on network connectivity change
-- Use new nova icon for search bar
-- Fix search crash on old Amazon firesticks
-- Fix wrong player layout when screen rotation is locked and video started in portrait
+- SMBv2/3 support via jcifs-ng
+- Fix anime playback using opus track using libopus instead of platform one
+- Update trakt/tmdb/thetvdb-java libraries to 6.8.5/2.2.0/2.4.0
+- Restrict nova webview to nova usage
+- Stability enhancements
