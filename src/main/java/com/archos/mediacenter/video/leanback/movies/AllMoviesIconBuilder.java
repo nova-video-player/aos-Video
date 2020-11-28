@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import com.archos.mediacenter.video.R;
 import com.archos.mediaprovider.video.VideoStore;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -137,7 +138,12 @@ public class AllMoviesIconBuilder {
             
             // try next posters in case the first one fails to decode
             while (poster.hasNext()) {
-                Bitmap b = BitmapFactory.decodeFile(poster.next(), options);
+                Bitmap b;
+                try {
+                    b = BitmapFactory.decodeFile(poster.next(), options);
+                } catch(Exception e) {
+                    b = null;
+                }
                 if (b!=null) {
                     iv.setImageBitmap(b);
                     break;
