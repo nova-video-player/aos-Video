@@ -92,7 +92,12 @@
     <string name="movies">Фильмы</string>
     <string name="all_movies">Все фильмы</string>
     <string name="all_movies_format">Все фильмы - %d</string>
+    <string name="all_collections">Все коллекции</string>
+    <string name="all_collections_format">Все коллекции -  %d</string>
+    <string name="all_collection_watched">Все коллекции просмотрены</string>
+    <string name="all_collection_unwatched">Коллекция не просмотрена</string>
     <string name="not_watched_movies_format">Не просмотрено -  %d</string>
+    <string name="no_movie_watched">Нет просмотренных фильмов</string>
     <string name="movies_by_alpha">Фильмы по алфавиту</string>
     <string name="movies_by_genre">Фильмы по жанру</string>
     <string name="movies_by_rating">Фильмы по рейтингу</string>
@@ -787,8 +792,6 @@
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Подробнее</string>
-    <string name="nfo_export_manual_prefkey">export_manual_prefkey</string>
-    <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="nfo_export_in_progress">Выполняется экспорт NFO</string>
     <string name="rescrap_in_progress">Распознавание во всей библиотеке</string>
     <string name="acquire_external_usb_permission">Для доступа к внешнему хранилищу требуется специальное разрешение. Пожалуйста, далее выберите Ваше хранилище</string>
@@ -796,7 +799,6 @@
     <string name="rescrap_all_title">Распознать всё</string>
     <string name="nfo_export_manual_title">Экспорт распознанных видео</string>
     <string name="nfo_export_manual_summary">Экспортировать .nfo файлы для всех распознанных видео</string>
-    <string name="db_export_manual_prefkey">db_export_manual_prefkey</string>
     <string name="db_export_manual_title">Экспорт базы данных медиа</string>
     <string name="db_export_manual_summary">Экспортировать файл media.db в /sdcard для отладки</string>
     <string name="db_export_in_progress">Выполняется экспорт базы данных</string>

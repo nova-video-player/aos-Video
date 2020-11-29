@@ -778,8 +778,6 @@ Copertina (rotolo di copertina)</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Vedi altro</string>
-    <string name="nfo_export_manual_prefkey">esporta_manual_prefkey</string>
-    <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="nfo_export_in_progress">Esportazione dei NFO in corso</string>
     <string name="rescrap_in_progress">Analisi dell\'intera libreria</string>
     <string name="acquire_external_usb_permission">Nova Video necessita di permessi speciali per accedere all\'archivio esterno. Seleziona il tuo archivio nella prossima schermata</string>
@@ -787,7 +785,6 @@ Copertina (rotolo di copertina)</string>
     <string name="rescrap_all_title">Analizza tutto</string>
     <string name="nfo_export_manual_title">Esporta i video già analizzati</string>
     <string name="nfo_export_manual_summary">Esporta i file .nfo di ogni video già analizzato</string>
-    <string name="db_export_manual_prefkey">db_esporta_manual_prefkey</string>
     <string name="db_export_manual_title">Esporta database dei media</string>
     <string name="db_export_manual_summary">Esporta file media.db in /sdcard per scopi di debug</string>
     <string name="db_export_in_progress">Esportazione database in corso</string>

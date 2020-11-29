@@ -779,8 +779,6 @@
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Ver mais</string>
-    <string name="nfo_export_manual_prefkey">export_manual_prefkey</string>
-    <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="nfo_export_in_progress">Exportação NFO em andamento</string>
     <string name="rescrap_in_progress">Pesquisando novamente toda a biblioteca</string>
     <string name="acquire_external_usb_permission">O Nova Vídeo precisa de permissão especial para acessar o armazenamento externo. Por favor, selecione seu armazenamento na próxima tela</string>
@@ -788,7 +786,6 @@
     <string name="rescrap_all_title">Pesquisar tudo novamente</string>
     <string name="nfo_export_manual_title">Exportar vídeos já pesquisados</string>
     <string name="nfo_export_manual_summary">Exportar arquivos .nfo de cada vídeo já pesquisado</string>
-    <string name="db_export_manual_prefkey">db_export_manual_prefkey</string>
     <string name="db_export_manual_title">Exportar base de dados de mídia</string>
     <string name="db_export_manual_summary">Exportar arquivo media.db para /sdcard para fins de diagnóstico</string>
     <string name="db_export_in_progress">Exportação da base de dados em andamento</string>

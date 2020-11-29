@@ -788,8 +788,6 @@ desteklenmiyor.</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Daha fazla göster</string>
-    <string name="nfo_export_manual_prefkey">export_manual_prefkey</string>
-    <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="nfo_export_in_progress">NFO dışa aktarımı devam ediyor</string>
     <string name="rescrap_in_progress">Tüm kütüphaneyi yeniden kesme</string>
     <string name="acquire_external_usb_permission">Nova Video\'nun harici depolama alanına erişmek için özel izne ihtiyacı var. Lütfen bir sonraki ekranda depolama alanınızı seçin</string>
@@ -797,7 +795,6 @@ desteklenmiyor.</string>
     <string name="rescrap_all_title">Tümünü yeniden kopyala</string>
     <string name="nfo_export_manual_title">Zaten kazınmış videoları dışa aktar</string>
     <string name="nfo_export_manual_summary">Zaten kopyalanan her videonun .nfo dosyalarını dışa aktar</string>
-    <string name="db_export_manual_prefkey">db_export_manual_prefkey</string>
     <string name="db_export_manual_title">Medya veritabanını dışa aktarma</string>
     <string name="db_export_manual_summary">Medya.db dosyasını hata ayıklama amacıyla /sd karta aktarma</string>
     <string name="db_export_in_progress">Veritabanı dışa aktarımı devam ediyor</string>

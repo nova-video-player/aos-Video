@@ -779,8 +779,6 @@
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Mehr ansehen</string>
-    <string name="nfo_export_manual_prefkey">export_manual_prefkey</string>
-    <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="nfo_export_in_progress">.nfo-Export wird durchgeführt</string>
     <string name="rescrap_in_progress">Rescraping der ganzen Bibliothek</string>
     <string name="acquire_external_usb_permission">Der Datei-Manager benötigt eine spezielle Zugriffs-Berechtigung auf den externen Speicher. Bitte wählen Sie den Speicherplatz auf dem nächsten Bildschirm aus</string>
@@ -788,7 +786,6 @@
     <string name="rescrap_all_title">Re-scrap alles</string>
     <string name="nfo_export_manual_title">Bereits gescrapte Videos exportieren</string>
     <string name="nfo_export_manual_summary">.nfo-Dateien von jedem bereits gescraptem Video exportieren</string>
-    <string name="db_export_manual_prefkey">db_export_manual_prefkey</string>
     <string name="db_export_manual_title">Media-Datenbank exportieren</string>
     <string name="db_export_manual_summary">media.db-Datei zu /sdcard für Debug-Zwecke exportieren</string>
     <string name="db_export_in_progress">Datenbank Export läuft</string>

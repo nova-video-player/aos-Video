@@ -645,7 +645,6 @@
     <string name="scheduled_rescan_period_every_hour">Co godzinę</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Zobacz więcej</string>
-    <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="system">System</string>
     <string name="keep_setting">Zapamiętaj to ustawienie</string>
     <string name="cast_remote_display_mode">Zdalny ekran</string>

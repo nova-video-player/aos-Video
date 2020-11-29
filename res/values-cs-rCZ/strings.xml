@@ -767,8 +767,6 @@
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Zobrazit více</string>
-    <string name="nfo_export_manual_prefkey">export_manual_prefkey</string>
-    <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="nfo_export_in_progress">Probíhá export NFO</string>
     <string name="rescrap_in_progress">Opětovné získání informací pro celou knihovnu</string>
     <string name="acquire_external_usb_permission">Nova Video vyžaduje speciální oprávnění pro přístup k externímu úložišti. Prosím vyberte vaše úložiště na další obrazovce</string>
@@ -776,7 +774,6 @@
     <string name="rescrap_all_title">Opětovné získání informací pro všechny položky</string>
     <string name="nfo_export_manual_title">Exportovat videa se získanými informacemi</string>
     <string name="nfo_export_manual_summary">Exportovat .nfo soubory pro všechna videa se získanými informacemi</string>
-    <string name="db_export_manual_prefkey">db_export_manual_prefkey</string>
     <string name="db_export_manual_title">Exportovat databázi médií</string>
     <string name="db_export_manual_summary">Exportovat soubor media.db na SD kartu pro účely debugování</string>
     <string name="db_export_in_progress">Probíhá export databáze</string>
