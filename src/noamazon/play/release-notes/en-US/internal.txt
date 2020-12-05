@@ -1,1 +1,2 @@
 - Add support for movie collections/sagas
+- Visual watched mark feedback on poster for movie/show/collection in video information view
