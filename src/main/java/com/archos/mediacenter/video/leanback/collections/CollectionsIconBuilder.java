@@ -40,13 +40,13 @@ import java.util.List;
 public class CollectionsIconBuilder {
 
     final static String[] PROJECTION = {
-            ScraperStore.MovieCollections.COLLECTION_ID,
-            ScraperStore.MovieCollections.COLLECTION_POSTER_LARGE_FILE,
+            ScraperStore.MovieCollections.ID,
+            ScraperStore.MovieCollections.POSTER_LARGE_FILE,
     };
 
     final static String SELECTION =
-            ScraperStore.MovieCollections.COLLECTION_ID + " IS NOT NULL AND " +
-            ScraperStore.MovieCollections.COLLECTION_POSTER_LARGE_FILE + " IS NOT NULL";
+            ScraperStore.MovieCollections.ID + " IS NOT NULL AND " +
+            ScraperStore.MovieCollections.POSTER_LARGE_FILE + " IS NOT NULL";
 
     private static final String TAG = "CollectionsIconBuilder";
     private static final Boolean DBG = false;
@@ -99,7 +99,7 @@ public class CollectionsIconBuilder {
             return Collections.emptyList();
         }
 
-        final int coverIndex = c.getColumnIndexOrThrow(ScraperStore.MovieCollections.COLLECTION_POSTER_LARGE_FILE);
+        final int coverIndex = c.getColumnIndexOrThrow(ScraperStore.MovieCollections.POSTER_LARGE_FILE);
         c.moveToFirst();
 
         ArrayList<String> list = new ArrayList<>(c.getCount());
