@@ -1,3 +1,4 @@
+- SMB1 support only rollback release aligned with v5.15.14 without jcifs-ng support to address SMB issue seen in the field
 - Fix anime playback using opus track using libopus instead of platform one
 - Update trakt/tmdb/thetvdb-java libraries to 6.8.5/2.2.0/2.4.0
 - Restrict nova webview to nova usage
