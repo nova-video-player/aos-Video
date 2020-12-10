@@ -80,7 +80,6 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, R.string.refresh_servers_list, Menu.NONE, R.string.refresh_servers_list).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -92,7 +91,6 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
             }
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -120,16 +118,11 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         Activity activity = getActivity();
-
+        if (DBG) Log.d(TAG, "onAttach mSambaDiscovery");
         // Instantiate the SMB discovery as soon as we get the activity context
         mSambaDiscovery = new SambaDiscovery(activity);
         mSambaDiscovery.setMinimumUpdatePeriodInMs(100);
-
-        if (DBG) Log.d(TAG, "onAttach this=" + this);
-        if (DBG) Log.d(TAG, "onAttach mSambaDiscovery=" + mSambaDiscovery);
-
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -176,7 +169,6 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     @Override
     public void onDiscoveryEnd() {
         ((WorkgroupShortcutAndServerAdapter)mAdapter).setIsLoadingWorkgroups(false);
-
     }
 
     // SambaDiscovery.Listener implementation
@@ -193,47 +185,48 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
         ((WorkgroupShortcutAndServerAdapter)mAdapter).setIsLoadingWorkgroups(false);
     }
 
-
     private void checkShortcutAvailability(){
-
         if(mCheckShortcutAvailabilityTask!=null)
             mCheckShortcutAvailabilityTask.cancel(true);
         mCheckShortcutAvailabilityTask = new AsyncTask<Void, Void, Void>() {
-
             @Override
             protected Void doInBackground(Void... arg0) {
                 List<ShortcutDbAdapter.Shortcut> shortcuts = mAdapter.getShortcuts();
                 List<String> shares = mAdapter.getAvailableShares();
                 List<String> forcedShortcuts = mAdapter.getForcedEnabledShortcuts();
-                if(shortcuts==null)
-                    return null;
+                if(shortcuts == null) return null;
+                // FIXME: manage display/remove of shortcuts not only adding
+                // below code does not do anything in terms of forcing display shortcut since it is anyway displayed and creates an issue with jcifs-ng #377
+                // it is anyway displayed and creates an issue with jcifs-ng #377 : disable it for now
+                /*
                 for (ShortcutDbAdapter.Shortcut shortcut : shortcuts) {
                     Uri uri = Uri.parse(shortcut.getUri());
-                    if ((shares == null || !shares.contains(uri.getHost().toLowerCase()))
-                            &&!forcedShortcuts.contains(shortcut.getUri())
-                            && FileEditorFactory.getFileEditorForUrl(uri, getActivity()).exists()) {
+                    if (DBG) Log.d(TAG, "checkShortcutAvailability.doInBackground: checking " + shortcut.getUri());
+                    if ((shares == null || !shares.contains(uri.getHost().toLowerCase())) // share not listed yet...
+                            &&!forcedShortcuts.contains(shortcut.getUri()) // it is not a forced shortcut
+                            && FileEditorFactory.getFileEditorForUrl(uri, getActivity()).exists()) { // shortcut exists
+                        if (DBG) Log.d(TAG, "checkShortcutAvailability.doInBackground: shortcut " + shortcut.getUri() + " is available, display it!");
                         mAdapter.forceShortcutDisplay(shortcut.getUri());
+                    } else {
+                        if (DBG) Log.d(TAG, "checkShortcutAvailability.doInBackground: it is there, no need to check " + shortcut.getUri());
                     }
-
                 }
+                 */
+                if (DBG) Log.d(TAG, "checkShortcutAvailability.doInBackground: check finished");
                 return null;
             }
-
             @Override
             protected void onPostExecute(Void result) {
                 mAdapter.notifyDataSetChanged();
             }
         }.execute();
-
     }
 
     @Override
     protected void loadIndexedShortcuts() {
         Cursor cursor = ShortcutDbAdapter.VIDEO.getAllShortcuts(getActivity(), ShortcutDbAdapter.KEY_PATH+" LIKE ?",new String[]{"smb%"});
         mAdapter.updateIndexedShortcuts(cursor);
-        if (cursor != null) {
-            cursor.close();
-        }
+        if (cursor != null) cursor.close();
         mAdapter.notifyDataSetChanged();
         checkShortcutAvailability();
     }
