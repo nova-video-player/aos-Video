@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration debug="true">
+  <property name="LOG_DIR" value="/sdcard" />
+
+  <appender name="logcat" class="ch.qos.logback.classic.android.LogcatAppender">
+    <tagEncoder>
+      <pattern>%logger{200}</pattern>
+    </tagEncoder>
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- active log file -->
+    <file>${LOG_DIR}/log.txt</file>
+    <encoder>
+      <pattern>%logger{35} - %msg%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- daily rollover period -->
+      <fileNamePattern>${LOG_DIR}/log.%d.txt</fileNamePattern>
+      <!-- keep 7 days' worth of history -->
+      <maxHistory>7</maxHistory>
+    </rollingPolicy>
+  </appender>
+
+  <logger name="jcifs" level="DEBUG"/>
+
+  <logger name="jcifs.netbios.UdpDiscovery" level="DEBUG"/>
+
+  <logger name="jcifs.netbios.NameServiceClientImpl" level="DEBUG">
+    <appender-ref ref="logcat" />
+  </logger>
+
+  <logger name="jcifs.smb.SmbTransportImpl" level="DEBUG">
+    <appender-ref ref="logcat" />
+  </logger>
+
+  <root level="DEBUG">
+    <appender-ref ref="logcat" />
+  </root>
+
+</configuration>

@@ -203,3 +203,8 @@
 -keep class com.jcraft.jsch.Compression
 -keep class org.ietf.jgss.*
 -dontwarn org.ietf.jgss.**
+
+# logback
+-keep class ch.qos.** { *; }
+-keep class org.slf4j.** { *; }
+-keepattributes *Annotation*
