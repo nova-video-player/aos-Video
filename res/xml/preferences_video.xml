@@ -283,6 +283,13 @@
             android:summary="@string/share_folders_smbv2_summary"
             app:iconSpaceReserved="false"/>
 
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_smb_resolv"
+            android:title="@string/share_folders_smb_resolv"
+            android:summary="@string/share_folders_smb_resolv_summary"
+            app:iconSpaceReserved="false"/>
+
         <PreferenceScreen
             android:summary="@string/samba_settings_summary"
             android:title="@string/samba_settings_title"
