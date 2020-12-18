@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration debug="true">
-  <property name="LOG_DIR" value="/sdcard" />
+  <property name="LOG_DIR" value="${EXT_DIR:-/sdcard}/Android/data/${PACKAGE_NAME}/files/logs/"/>
 
   <appender name="logcat" class="ch.qos.logback.classic.android.LogcatAppender">
     <tagEncoder>
@@ -10,44 +10,71 @@
     <encoder>
       <pattern>[%thread] %-5level %logger{36} - %msg%n</pattern>
     </encoder>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <!-- exclude trace from logcat-->
+      <level>DEBUG</level>
+    </filter>
   </appender>
 
-  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <!-- active log file -->
-    <file>${LOG_DIR}/log.txt</file>
+  <appender name="SMB_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/nova-smb.log</file>
     <encoder>
       <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
     </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <!-- daily rollover period -->
-      <fileNamePattern>${LOG_DIR}/log.%d.txt</fileNamePattern>
-      <!-- keep 7 days' worth of history -->
+      <fileNamePattern>${LOG_DIR}/nova-log-smb.%d.txt</fileNamePattern>
       <maxHistory>7</maxHistory>
+      <totalSizeCap>50MB</totalSizeCap>
+    </rollingPolicy>
+  </appender>
+
+  <appender name="LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/nova.log</file>
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <!-- exclude trace from logcat-->
+      <level>DEBUG</level>
+    </filter>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_DIR}/nova-%d.log</fileNamePattern>
+      <maxHistory>7</maxHistory>
+      <totalSizeCap>50MB</totalSizeCap>
     </rollingPolicy>
   </appender>
 
   <logger name="com.archos.filecorelibrary.jcifs" level="DEBUG">
-    <appender-ref ref="FILE" />
-    <appender-ref ref="logcat" />
+    <appender-ref ref="SMB_FILE"/>
+    <appender-ref ref="logcat"/>
   </logger>
 
   <logger name="com.archos.filecorelibrary.samba" level="DEBUG">
-    <appender-ref ref="FILE" />
-    <appender-ref ref="logcat" />
+    <appender-ref ref="SMB_FILE"/>
+    <appender-ref ref="logcat"/>
   </logger>
 
-  <logger name="jcifs.netbios.UdpDiscovery" level="DEBUG"/>
+  <logger name="jcifs.netbios.UdpDiscovery" level="DEBUG">
+    <appender-ref ref="SMB_FILE"/>
+    <appender-ref ref="logcat"/>
+  </logger>
 
   <logger name="jcifs.netbios.NameServiceClientImpl" level="TRACE">
-    <appender-ref ref="FILE" />
+    <appender-ref ref="SMB_FILE"/>
   </logger>
 
+  <logger name="jcifs.smb.SmbSessionImpl" level="TRACE">
+    <appender-ref ref="SMB_FILE"/>
+  </logger>
+
+
   <logger name="jcifs.smb.SmbTransportImpl" level="TRACE">
-    <appender-ref ref="FILE" />
+    <appender-ref ref="SMB_FILE"/>
   </logger>
 
   <root level="INFO">
-    <appender-ref ref="logcat" />
+    <appender-ref ref="LOG_FILE"/>
+    <appender-ref ref="logcat"/>
   </root>
 
 </configuration>
