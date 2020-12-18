@@ -105,6 +105,9 @@ import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStore.Video.VideoColumns;
 import com.archos.mediascraper.AutoScrapeService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -114,8 +117,7 @@ import java.util.Map;
  */
 public class MainActivity extends BrowserActivity implements ExternalPlayerWithResultStarter {
 
-    private static final boolean DBG = false;
-    private static final String TAG = "MainActivity";
+    private static final Logger log = LoggerFactory.getLogger(MainActivity.class);
 
     public final static int DIALOG_DELETE = 1;
     public final static int DIALOG_DELETING = 2;
@@ -187,9 +189,9 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 mStereoForced = bundle.getBoolean("stereo_mode");
             }
         } catch (NameNotFoundException e) {
-            Log.e(TAG, "Failed to load meta-data, NameNotFound: " + e.getMessage());
+            log.error("Failed to load meta-data, NameNotFound: " + e.getMessage());
         } catch (NullPointerException e) {
-            Log.e(TAG, "Failed to load meta-data, NullPointer: " + e.getMessage());         
+            log.error("Failed to load meta-data, NullPointer: " + e.getMessage());
         }        
     }
 
@@ -236,10 +238,10 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
                         if (cutout != null) {
-                            if (DBG) Log.d(TAG, "device with cutout");
+                            log.debug("device with cutout");
                             MiscUtils.hasCutout = true;
                         } else
-                        if (DBG) Log.d(TAG, "device without cutout");
+                            log.debug("device without cutout");
                     }
                     getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
                     return view.onApplyWindowInsets(insets);
@@ -958,7 +960,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             case InputDevice.SOURCE_GAMEPAD:
             case InputDevice.SOURCE_JOYSTICK:
             case InputDevice.SOURCE_HDMI:
-                if (DBG) Log.d(TAG, "event source = "+event.getSource()+" -> probably TV");
+                log.debug("event source = "+event.getSource()+" -> probably TV");
                 probablyTv = true;
                 break;
             case InputDevice.SOURCE_STYLUS:
@@ -966,7 +968,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             case InputDevice.SOURCE_TRACKBALL:
             case InputDevice.SOURCE_MOUSE:
             default:
-                if (DBG) Log.d(TAG, "event source = "+event.getSource()+" -> probably not TV");
+                log.debug("event source = "+event.getSource()+" -> probably not TV");
                 probablyTv = false;
                 break;
         }
