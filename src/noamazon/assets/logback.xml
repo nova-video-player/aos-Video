@@ -37,7 +37,6 @@
   </includes>
 
   <root level="INFO">
-    <appender-ref ref="LOG_FILE"/>
     <appender-ref ref="logcat"/>
   </root>
 
