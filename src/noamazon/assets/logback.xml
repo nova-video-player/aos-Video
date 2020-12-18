@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<configuration debug="true">
-  <property name="LOG_DIR" value="${EXT_DIR:-/sdcard}/Android/data/${PACKAGE_NAME}/files/logs/"/>
+<configuration scan="true" scanPeriod="5 seconds" debug="true">
+  <property name="LOG_DIR" value="${EXT_DIR:-/sdcard}/Download/${PACKAGE_NAME}/"/>
 
   <appender name="logcat" class="ch.qos.logback.classic.android.LogcatAppender">
     <tagEncoder>
@@ -14,18 +14,6 @@
       <!-- exclude trace from logcat-->
       <level>DEBUG</level>
     </filter>
-  </appender>
-
-  <appender name="SMB_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${LOG_DIR}/nova-smb.log</file>
-    <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-    </encoder>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>${LOG_DIR}/nova-log-smb.%d.txt</fileNamePattern>
-      <maxHistory>7</maxHistory>
-      <totalSizeCap>50MB</totalSizeCap>
-    </rollingPolicy>
   </appender>
 
   <appender name="LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -44,33 +32,9 @@
     </rollingPolicy>
   </appender>
 
-  <logger name="com.archos.filecorelibrary.jcifs" level="DEBUG">
-    <appender-ref ref="SMB_FILE"/>
-    <appender-ref ref="logcat"/>
-  </logger>
-
-  <logger name="com.archos.filecorelibrary.samba" level="DEBUG">
-    <appender-ref ref="SMB_FILE"/>
-    <appender-ref ref="logcat"/>
-  </logger>
-
-  <logger name="jcifs.netbios.UdpDiscovery" level="DEBUG">
-    <appender-ref ref="SMB_FILE"/>
-    <appender-ref ref="logcat"/>
-  </logger>
-
-  <logger name="jcifs.netbios.NameServiceClientImpl" level="TRACE">
-    <appender-ref ref="SMB_FILE"/>
-  </logger>
-
-  <logger name="jcifs.smb.SmbSessionImpl" level="TRACE">
-    <appender-ref ref="SMB_FILE"/>
-  </logger>
-
-
-  <logger name="jcifs.smb.SmbTransportImpl" level="TRACE">
-    <appender-ref ref="SMB_FILE"/>
-  </logger>
+  <includes>
+    <include file="${EXT_DIR:-/sdcard}/Download/${PACKAGE_NAME}/logback.xml" optional="true" />
+  </includes>
 
   <root level="INFO">
     <appender-ref ref="LOG_FILE"/>
