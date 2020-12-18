@@ -46,8 +46,8 @@
     <appender-ref ref="FILE" />
   </logger>
 
-  <!--root level="DEBUG">
+  <root level="INFO">
     <appender-ref ref="logcat" />
-  </root-->
+  </root>
 
 </configuration>
