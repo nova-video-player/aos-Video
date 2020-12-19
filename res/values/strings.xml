@@ -881,11 +881,13 @@
     <string name="nfo_export_in_progress">NFO export in progress</string>
     <string name="rescrap_in_progress">Rescraping whole library</string>
     <string name="rescrap_movies_in_progress">Rescraping all movies</string>
+    <string name="rescrap_collections_in_progress">Rescraping all collections</string>
     <string name="acquire_external_usb_permission">Nova Video needs special permission to access external storage. Please select your storage on next screen</string>
 
     <string name="rescrap_not_found">Rescrape videos without description</string>
     <string name="rescrap_all_title">Rescrape all</string>
     <string name="rescrap_all_movies_title">Rescrape all movies</string>
+    <string name="rescrap_all_collections_title">Rescrape all collections</string>
     <string name="nfo_export_manual_title">Export already scraped videos</string>
     <string name="nfo_export_manual_summary">Export .nfo files of every already scraped videos</string>
     <string name="db_export_manual_title">Export media database</string>

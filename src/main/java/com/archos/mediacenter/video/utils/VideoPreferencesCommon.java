@@ -266,7 +266,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             prefCategory.addPreference(mActivateRefreshrateTVSwitch);
             prefCategory.removePreference(mEnableCutoutModeShortEdge);
         }
-
         PreferenceCategory prefScraperCategory = (PreferenceCategory) findPreference(KEY_SCRAPER_CATEGORY);
         if (mSharedPreferences.getBoolean(KEY_ADVANCED_VIDEO_ENABLED, false)) {
             // advanced preferences
@@ -378,6 +377,15 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             Toast.makeText(getActivity(), R.string.rescrap_movies_in_progress, Toast.LENGTH_SHORT).show();
             return true;
         });
+
+        findPreference(getString(R.string.rescrap_all_collections_prefkey)).setOnPreferenceClickListener(preference -> {
+            Intent intent = new Intent(AutoScrapeService.RESCAN_COLLECTIONS, null, getActivity(),AutoScrapeService.class);
+            intent.putExtra(AutoScrapeService.RESCAN_ONLY_DESC_NOT_FOUND, false);
+            ContextCompat.startForegroundService(getActivity(), intent);
+            Toast.makeText(getActivity(), R.string.rescrap_collections_in_progress, Toast.LENGTH_SHORT).show();
+            return true;
+        });
+
 
         mDbExportManualPreference = findPreference(getString(R.string.db_export_manual_prefkey));
         mDbExportManualPreference.setOnPreferenceClickListener(preference -> {
