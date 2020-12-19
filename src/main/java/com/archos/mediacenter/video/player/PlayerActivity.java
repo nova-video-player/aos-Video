@@ -250,7 +250,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     public void setCutoutMetrics() {
         // create list of 4 elements {L,T,R,B}
         if (safeInset.size() != 4) {
-            log.debug("setCutoutMetrics safeInset list is of size " + safeInset.size() + ", resetting the list to zero elements");
+            log.debug("CONFIG setCutoutMetrics safeInset list is of size " + safeInset.size() + ", resetting the list to zero elements");
             safeInset.clear();
             for (int i = 0; i < 4; i++)
                 safeInset.add(0);
@@ -259,18 +259,18 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
                 if (cutout == null) {
-                    log.debug("device without cutout");
+                    log.debug("CONFIG device without cutout");
                 } else {
                     hasCutout = true;
                     List<Rect> rects = cutout.getBoundingRects();
                     if (rects.size() == 1) {
                         log.debug("one cutout");
                         Rect rect = rects.get(0);
-                        log.debug("cutout bounding rect " + rect);
+                        log.debug("CONFIG cutout bounding rect " + rect);
                     } else {
-                        log.debug("cutout: more than one cutout");
+                        log.debug("CONFIG cutout: more than one cutout");
                         for (Rect rect : rects) {
-                            log.debug("cutout: cutout bounding rect " + rect);
+                            log.debug("CONFIG cutout: cutout bounding rect " + rect);
                         }
                     }
                     safeInset.set(0, cutout.getSafeInsetLeft());
@@ -278,29 +278,29 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     safeInset.set(2, cutout.getSafeInsetRight());
                     safeInset.set(3, cutout.getSafeInsetBottom());
                     safeInsetRotation = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-                    log.debug("setCutoutMetrics safeInset=" + safeInset);
+                    log.debug("CONFIG setCutoutMetrics safeInset=" + safeInset);
                 }
             }
         } catch (Exception e) {
-            log.warn("cutout evaluation exception, perhaps view not attached yet!!!");
+            log.warn("CONFIG cutout evaluation exception, perhaps view not attached yet!!!");
         }
     }
 
     private void updateInsetsOnRotation() {
         int rotation = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
         if (isRotationLocked()) { // if rotation is locked pick forced orientation rotation
-            log.debug("updateSizes RotationLocked overriding rotation from " + rotation + " to " + mLockedRotation);
+            log.debug("CONFIG updateSizes RotationLocked overriding rotation from " + rotation + " to " + mLockedRotation);
             rotation = mLockedRotation;
         }
-        log.debug("updateInsetsOnRotation: " +
+        log.debug("CONFIG updateInsetsOnRotation: " +
                 "safeInsetRotation=" + safeInsetRotation + " (" + getHumanReadableRotation(safeInsetRotation) + ")" +
                 ", orientation=" + rotation + " (" + getHumanReadableRotation(rotation) + ")");
         if (rotation != safeInsetRotation) {
             //ROTATION_0 = 0; ROTATION_90 = 1; ROTATION_180 = 2; ROTATION_270 = 3;
-            log.debug("updateInsetsOnRotation: before rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
+            log.debug("CONFIG updateInsetsOnRotation: before rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
             Collections.rotate(safeInset, safeInsetRotation - rotation);
             safeInsetRotation = rotation;
-            log.debug("updateInsetsOnRotation: after rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
+            log.debug("CONFIG updateInsetsOnRotation: after rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
         }
     }
 
@@ -618,7 +618,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            log.debug("addOnLayoutChangeListener, do updateSizes()");
+                            log.debug("CONFIG addOnLayoutChangeListener, do updateSizes()");
                             // without this video is stretched fullscreen
                             updateSizes();
                         }
@@ -685,7 +685,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                log.debug("onDisplayChanged do updateInsetsOnRotation()+updateSizes() and safeInsetRotation=" + safeInsetRotation + ", orientation=" + orientation);
+                                log.debug("CONFIG onDisplayChanged do updateInsetsOnRotation()+updateSizes() and safeInsetRotation=" + safeInsetRotation + ", orientation=" + orientation);
                                 updateInsetsOnRotation();
                                 // needed to update dimensions when unchecking autorot
                                 updateSizes();
@@ -1018,25 +1018,25 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         boolean isPortrait = ((1.0f*layoutHeight/layoutWidth)>1.0);
         boolean isSeenPortrait = ((1.0f*displayHeight/displayWidth)>1.0);
-        log.debug("updateSizes: isPortrait " + isPortrait + ", isSeenPortrait " + isSeenPortrait);
+        log.debug("CONFIG updateSizes: isPortrait " + isPortrait + ", isSeenPortrait " + isSeenPortrait);
 
         // hack to fix fullscreen height on chromeos pixelbook (and more?) since it reports 2400x1440 insteqd of 2400x1600 but ok in multiWindow
         if(isChromeOS(mContext)&&(layoutWidth == displayWidth)&&(layoutHeight != displayHeight)) {
-            log.warn("updateSizes: hack correcting on chromeOS layoutHeight from " + layoutHeight + " to " + displayHeight);
+            log.warn("CONFIG updateSizes: hack correcting on chromeOS layoutHeight from " + layoutHeight + " to " + displayHeight);
             layoutHeight = displayHeight;
         }
 
-        log.debug("updateSizes layout WxH=" + layoutWidth + "x" + layoutHeight +
+        log.debug("CONFIG updateSizes layout WxH=" + layoutWidth + "x" + layoutHeight +
                 ", display WxH=" + displayWidth + "x" + displayHeight);
 
         // if rotation is locked reverse w/h but only if we have a difference of portrait/landscape perception between layout and screen dimension
         if (isRotationLocked()&&(isPortrait != isSeenPortrait)) {
             displayWidth = realPoint.y;
             displayHeight = realPoint.x;
-            log.debug("updateSizes RotationLocked overriding display WxH=" + displayWidth + "x" + displayHeight);
+            log.debug("CONFIG updateSizes RotationLocked overriding display WxH=" + displayWidth + "x" + displayHeight);
         }
 
-        log.debug("updateSizes isInMultiWindowMode(): " + isInMultiWindowMode + ", isInPictureInPictureMode(): " + isInPictureInPictureMode);
+        log.debug("CONFIG updateSizes isInMultiWindowMode(): " + isInMultiWindowMode + ", isInPictureInPictureMode(): " + isInPictureInPictureMode);
 
         if (!isInPictureInPictureMode&&!isInMultiWindowMode) {
             width = displayWidth;
@@ -1056,7 +1056,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mSurfaceController.setScreenSize(width, height);
         mSubtitleManager.setScreenSize(width, height);
         if(!isInPictureInPictureMode) {
-            log.debug("updateSizes: mPlayerController.setSizes layout WxH=" + layoutWidth + "x" + layoutHeight + ", display WxH=" + displayWidth + "x" + displayHeight );
+            log.debug("CONFIG updateSizes: mPlayerController.setSizes layout WxH=" + layoutWidth + "x" + layoutHeight + ", display WxH=" + displayWidth + "x" + displayHeight );
             mPlayerController.setSizes(displayWidth, displayHeight, layoutWidth, layoutHeight);
             // Close the menus if needed
             mAudioInfoController.resetPopup();
@@ -1079,7 +1079,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                log.debug("onConfigurationChanged: do updateSizes()");
+                log.debug("CONFIG onConfigurationChanged: do updateSizes()");
                 updateSizes();
             }
         });
@@ -1144,7 +1144,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private void setLockRotation(boolean avpLock) {
         Display display = getWindowManager().getDefaultDisplay();
         int rotation = display.getRotation();
-        log.debug("setLockRotation, rotation status: " + rotation + ", i.e. " + getHumanReadableRotation(rotation));
+        log.debug("CONFIG setLockRotation, rotation status: " + rotation + ", i.e. " + getHumanReadableRotation(rotation));
 
         boolean systemLock;
         try {
@@ -1156,7 +1156,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         log.debug("avpLock: " + avpLock + " systemLock: " + systemLock);
         if (mIsRotationLocked) {
             int tmpOrientation = getResources().getConfiguration().orientation;
-            log.debug("setLockRotation: current orientation is " + getHumanReadableOrientation(tmpOrientation));
+            log.debug("CONFIG setLockRotation: current orientation is " + getHumanReadableOrientation(tmpOrientation));
             int wantedOrientation;
 
             if (tmpOrientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -1167,7 +1167,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     wantedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
                     mLockedRotation = Surface.ROTATION_270;
                 }
-                log.debug("setLockRotation: wanted orientation is " + getHumanReadableActivityOrientation(wantedOrientation));
+                log.debug("CONFIG setLockRotation: wanted orientation is " + getHumanReadableActivityOrientation(wantedOrientation));
                 setRequestedOrientation(wantedOrientation);
             }
             else if (tmpOrientation == Configuration.ORIENTATION_PORTRAIT || tmpOrientation == Configuration.ORIENTATION_UNDEFINED) {
@@ -1178,11 +1178,11 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     wantedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
                     mLockedRotation = Surface.ROTATION_270;
                 }
-                log.debug("setLockRotation: wanted orientation is " + getHumanReadableActivityOrientation(wantedOrientation));
+                log.debug("CONFIG setLockRotation: wanted orientation is " + getHumanReadableActivityOrientation(wantedOrientation));
                 setRequestedOrientation(wantedOrientation);
             }
         } else {
-            log.debug("setLockRotation: wanted orientation is unspecified");
+            log.debug("CONFIG setLockRotation: wanted orientation is unspecified");
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
     }

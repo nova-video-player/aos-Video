@@ -26,7 +26,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import androidx.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -173,28 +172,28 @@ public class Player implements IPlayerControl,
                         int currentModeId = d.getMode().getModeId();
                         if (numberRetries > 0) { // only try NUMBER_RETRIES
                             if (currentModeId != wantedModeId) {
-                                log.debug("current modeId rate is " + currentModeId + " trying to switch to " + wantedModeId + ", number of retries=" + numberRetries);
+                                log.debug("CONFIG current modeId rate is " + currentModeId + " trying to switch to " + wantedModeId + ", number of retries=" + numberRetries);
                                 numberRetries--;
                                 mHandler.postDelayed(mRefreshRateCheckerAsync, 200);
                                 return;
                             }
-                            log.debug("modeId before video start is " + currentModeId);
+                            log.debug("CONFIG modeId before video start is " + currentModeId);
                         } else {
-                            log.warn("Failed to set modeId to " + wantedModeId + " it is still " + currentModeId);
+                            log.warn("CONFIG failed to set modeId to " + wantedModeId + " it is still " + currentModeId);
                             Toast.makeText(mContext, R.string.refreshrate_failed, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         float currentRefreshRate = d.getRefreshRate();
                         if (numberRetries > 0) { // only try NUMBER_RETRIES
                             if (Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
-                                log.debug("current refresh rate is " + currentRefreshRate + " trying to switch to " + mRefreshRate + ", number of retries=" + numberRetries);
+                                log.debug("CONFIG current refresh rate is " + currentRefreshRate + " trying to switch to " + mRefreshRate + ", number of retries=" + numberRetries);
                                 numberRetries--;
                                 mHandler.postDelayed(mRefreshRateCheckerAsync, 200);
                                 return;
                             }
-                            log.debug("refresh rate before video start is " + currentRefreshRate);
+                            log.debug("CONFIG refresh rate before video start is " + currentRefreshRate);
                         } else {
-                            log.warn("Failed to set refreshRate to " + mRefreshRate + " it is still " + currentRefreshRate);
+                            log.warn("CONFIG failed to set refreshRate to " + mRefreshRate + " it is still " + currentRefreshRate);
                             Toast.makeText(mContext, R.string.refreshrate_failed, Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -550,11 +549,11 @@ public class Player implements IPlayerControl,
     }
     /* TextureView.SurfaceTextureListener */
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-        log.debug("onSurfaceTextureUpdated");
+        log.debug("CONFIG onSurfaceTextureUpdated");
     }
 
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-        log.debug("onSurfaceTextureSizeChanged: " + width + "x" + height);
+        log.debug("CONFIG onSurfaceTextureSizeChanged: " + width + "x" + height);
         mSurfaceWidth = width;
         mSurfaceHeight = height;
         if (mEffectRenderer != null) mEffectRenderer.setSurfaceSize(width, height);
@@ -575,7 +574,7 @@ public class Player implements IPlayerControl,
     }
 
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        log.debug("onSurfaceTextureAvailable: " + width + "x" + height);
+        log.debug("CONFIG onSurfaceTextureAvailable: " + width + "x" + height);
         if(mEffectRenderer==null)
             mEffectRenderer = new VideoEffectRenderer(mContext, VideoEffect.getDefaultType());
 
@@ -596,7 +595,7 @@ public class Player implements IPlayerControl,
     public void surfaceChanged(SurfaceHolder holder, int format,
                                 int w, int h)
     {
-        log.debug("surfaceChanged: " + w + "x" + h);
+        log.debug("CONFIG surfaceChanged: " + w + "x" + h);
         mSurfaceWidth = w;
         mSurfaceHeight = h;
         boolean isValidState = (mCurrentState == STATE_PREPARED);
@@ -609,7 +608,7 @@ public class Player implements IPlayerControl,
 
     public void surfaceCreated(SurfaceHolder holder)
     {
-        log.debug("surfaceCreated");
+        log.debug("CONFIG surfaceCreated");
         mSurfaceHolder = holder;
         openVideo();
     }
@@ -969,33 +968,35 @@ public class Player implements IPlayerControl,
             LayoutParams lp = mWindow.getAttributes();
             mWaitForNewRate = false;
             if (lp != null && video != null && video.fpsRate > 0 && video.fpsScale > 0) {
-                log.info("video.fpsRate=" + video.fpsRate + ", video.fpsScale=" + video.fpsScale);
+                log.debug("CONFIG video.fpsRate=" + video.fpsRate + ", video.fpsScale=" + video.fpsScale);
                 float wantedFps = (float) ((double) video.fpsRate / (double) video.fpsScale);
-                log.info("wantedFps=" + wantedFps);
+                log.debug("CONFIG wantedFps=" + wantedFps);
                 if (Build.VERSION.SDK_INT >= 23) { // select display mode of highest refresh rate matching 0 modulo fps
                     Display.Mode[] supportedModes = d.getSupportedModes();
                     Display.Mode currentMode = d.getMode();
                     int currentModeId = currentMode.getModeId();
-                    log.info("Current display mode is " + currentMode);
-                    for (Mode mode : supportedModes)
-                        log.info("Display supported mode " + mode);
-                    if (Build.VERSION.SDK_INT >= 24) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("CONFIG current display mode is " + currentMode);
+                        for (Mode mode : supportedModes)
+                            log.debug("CONFIG display supported mode " + mode);
+                    }
+                    if (log.isDebugEnabled() && Build.VERSION.SDK_INT >= 24) {
                         if (Build.VERSION.SDK_INT >= 26)
-                            if (d.isHdr()) log.info("HDR display detected");
+                            if (d.isHdr()) log.debug("CONFIG HDR display detected");
                         int[] hdrSupportedTypes = d.getHdrCapabilities().getSupportedHdrTypes();
                         for (int i =0; i < hdrSupportedTypes.length; i++) {
                             switch (hdrSupportedTypes[i]) {
                                 case Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION:
-                                    log.info("HDR dolby vision supported");
+                                    log.debug("CONFIG HDR dolby vision supported");
                                     break;
                                 case Display.HdrCapabilities.HDR_TYPE_HDR10:
-                                    log.info("HDR10 supported");
+                                    log.debug("CONFIG HDR10 supported");
                                     break;
                                 case Display.HdrCapabilities.HDR_TYPE_HLG:
-                                    log.info("HDR HLG supported");
+                                    log.debug("CONFIG HDR HLG supported");
                                     break;
                                 case Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS:
-                                    log.info("HDR10+ supported");
+                                    log.debug("CONFIG HDR10+ supported");
                                     break;
                             }
                         }
@@ -1010,13 +1011,13 @@ public class Player implements IPlayerControl,
                         sM = supportedModes[i];
                         //  minimize judder by minimizing metric=min(refresh%fps,|refresh%fps-fps|)/refresh
                         target = Math.min(sM.getRefreshRate() % wantedFps, Math.abs(sM.getRefreshRate() % wantedFps - wantedFps)) / sM.getRefreshRate();
-                        log.info("evaluating " + sM.getPhysicalWidth() + "x" + sM.getPhysicalHeight() + "(" + sM.getRefreshRate() + "Hz) metric = " + target);
+                        log.debug("CONFIG evaluating " + sM.getPhysicalWidth() + "x" + sM.getPhysicalHeight() + "(" + sM.getRefreshRate() + "Hz) metric = " + target);
                         if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth()  &&
                                 sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
                                 (target <= min || Math.abs(target - min) <= EPSILON) && (sM.getRefreshRate() >= wantedRefreshRate)) { // lower or close enough and higher rate
                             min = target;
                             wantedModeId = sM.getModeId();
-                            log.info( "currently chosen modeId is " + wantedModeId + " for " + sM.getRefreshRate() + " refreshrate and wanted fps was " + wantedFps + " (metric = " + min + ")");
+                            log.debug( "CONFIG currently chosen modeId is " + wantedModeId + " for " + sM.getRefreshRate() + " refreshrate and wanted fps was " + wantedFps + " (metric = " + min + ")");
                         }
                     }
                     if (wantedModeId != 0 && wantedModeId != currentModeId) {
@@ -1030,18 +1031,20 @@ public class Player implements IPlayerControl,
                     float[] supportedRates = d.getSupportedRefreshRates();
                     float currentRefreshRate = d.getRefreshRate();
                     Arrays.sort(supportedRates);
-                    for (float r : supportedRates) log.info("Display supported refresh rate " + r);
+                    if (log.isDebugEnabled())
+                        for (float r : supportedRates)
+                            log.debug("CONFIG Display supported refresh rate " + r);
                     mRefreshRate = 0f;
                     float min = 1000; // init with large number easy to beat
                     float target = 0;
                     for (float rate : supportedRates) {
-                        log.info("supported rate is " + rate);
+                        log.debug("CONFIG supported rate is " + rate);
                         //  minimize judder by minimizing metric=min(refresh%fps,|refresh%fps-fps|)/refresh
                         target = Math.min(rate % wantedFps, Math.abs(rate % wantedFps - wantedFps)) / rate;
                         if ((target <= min || Math.abs(target - min) <= EPSILON) && (rate >= mRefreshRate)) { // lower or close enough and higher rate
                             min = target;
                             mRefreshRate = rate;
-                            log.info("currently chosen refresh rate is " + mRefreshRate + " wanted fps was " + wantedFps + " (metric = " + min + ")");
+                            log.debug("CONFIG currently chosen refresh rate is " + mRefreshRate + " wanted fps was " + wantedFps + " (metric = " + min + ")");
                         }
                         if (Math.abs(mRefreshRate) > 0 && Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
                             // apply new refresh rate
@@ -1073,7 +1076,7 @@ public class Player implements IPlayerControl,
     public void onVideoSizeChanged(IMediaPlayer mp, int width, int height) {
         mVideoWidth = width;
         mVideoHeight = height;
-        log.debug("OnVideoSizeChanged: "+mVideoWidth+"x"+mVideoHeight);
+        log.debug("CONFIG OnVideoSizeChanged: "+mVideoWidth+"x"+mVideoHeight);
         mSurfaceController.setVideoSize(mVideoWidth, mVideoHeight, mVideoAspect);
         if (mEffectRenderer != null)
                 mEffectRenderer.setVideoSize(mVideoWidth, mVideoHeight, mVideoAspect);
@@ -1081,7 +1084,7 @@ public class Player implements IPlayerControl,
 
     public void onVideoAspectChanged(IMediaPlayer mp, double aspect) {
         mVideoAspect = aspect;
-        log.debug("OnVideoAspectChangedL: "+mVideoAspect);
+        log.debug("CONFIG OnVideoAspectChanged: "+mVideoAspect);
         mSurfaceController.setVideoSize(mVideoWidth, mVideoHeight, mVideoAspect);
         if (mEffectRenderer != null)
                 mEffectRenderer.setVideoSize(mVideoWidth, mVideoHeight, mVideoAspect);
