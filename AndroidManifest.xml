@@ -1018,6 +1018,7 @@
         <service android:name=".player.FloatingPlayerService" android:exported="false"/>
         <service android:name=".player.PlayerService" />
         <service android:name="com.archos.mediascraper.AutoScrapeService" />
+        <service android:name="com.archos.mediascraper.AllCollectionScrapeService" />
         <service android:name="com.archos.mediacenter.video.browser.FileManagerService" />
 
         <receiver android:name="com.archos.mediacenter.LibAvosReceiver" >
