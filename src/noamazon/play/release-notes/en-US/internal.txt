@@ -1,6 +1,3 @@
 - SMBv2/3 support via jcifs-ng
-- Attempt to fix SMB on WD Mycloud with guest login
-- Fix anime playback using opus track using libopus instead of platform one
-- Update trakt/tmdb/thetvdb-java libraries to 6.8.5/2.2.0/2.4.0
-- Restrict nova webview to nova usage
-- Stability enhancements
+- Fix non systematic wrong IP selected when browsing SMB shares
+- New debug infrastructure based on slf4j/logback
