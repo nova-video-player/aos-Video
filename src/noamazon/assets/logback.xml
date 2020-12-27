@@ -40,9 +40,11 @@
   <!--logger name="com.archos.mediascraper.AutoScrapeService" level="DEBUG"/-->
   <!--logger name="com.archos.mediascraper.xml.MovieScraper3" level="DEBUG"/-->
   <!--logger name="com.archos.mediascraper.xml.ShowScraper3" level="DEBUG"/-->
+  <!--logger name="com.archos.mediascraper.AllCollectionScrapeService" level="DEBUG"/-->
 
   <!--logger name="com.archos.mediascraper.thetvdb.MyTheTVdb" level="TRACE"/-->
   <!--logger name="com.archos.mediascraper.themoviedb3.MyTmdb" level="TRACE"/-->
+
 
   <!--logger name="com.archos.environment.NetworkState" level="DEBUG"/-->
   <!--logger name="com.archos.mediaprovider.video.RemoteStateService" level="DEBUG"/-->
