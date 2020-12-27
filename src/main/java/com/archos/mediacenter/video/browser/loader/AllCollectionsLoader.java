@@ -89,7 +89,7 @@ public class AllCollectionsLoader extends VideoLoader {
         sb.append(super.getSelection()); // get common selection from the parent
 
         if (sb.length()>0) { sb.append(" AND "); }
-        sb.append( VideoStore.Video.VideoColumns.SCRAPER_C_ID + " > '0'");
+        sb.append( VideoStore.Video.VideoColumns.SCRAPER_C_ID + " > '0' AND " + VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE + " IS NOT NULL");
         if (!mCollectionWatched) {
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);
