@@ -53,7 +53,7 @@ import com.archos.mediacenter.video.ui.NovaProgressDialog;
  */
 public class OAuthDialog extends Dialog {
 
-    private final static boolean DBG = true;
+    private final static boolean DBG = false;
 	private static final String TAG = OAuthDialog.class.getSimpleName();
 
 	private NovaProgressDialog mProgress;
