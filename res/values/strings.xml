@@ -642,9 +642,10 @@
    <string name="network_bookmarks_summary">Save and check for resume point and position bookmarks on network when possible</string>
     <string name="share_folders_smbv2">Enable SMBv2 support</string>
     <string name="share_folders_smbv2_summary">Enable network share SMB version 2 protocol support. ⚠ Experimental</string>
+    <string name="share_folders_smb_resolv">SMB resolver order</string>
+    <string name="share_folders_smb_resolv_summary">Enable BCAST, DNS (otherwise DNS, BCAST)</string>
     <string name="connection_abnormally_long">Connection seems abnormally long. Would you like to reset it ?</string>
     <string name="connection_reset">Reset</string>
-
 
     <!-- Info dialog, not indexed file -->
     <string name="video_info_unindexed_message">This file is currently not indexed in your video library.\nSearching for posters and information is only available for indexed files.\nDo you want to index it now?</string>

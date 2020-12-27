@@ -26,7 +26,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import androidx.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -52,6 +51,9 @@ import java.util.Map;
 import android.view.Display.Mode;
 import android.widget.Toast;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Displays a video file.  The PlayerView class
  * can load images from various sources (such as resources or content
@@ -71,9 +73,7 @@ public class Player implements IPlayerControl,
                                IMediaPlayer.OnSubtitleListener,
                                SurfaceHolder.Callback,
                                TextureView.SurfaceTextureListener{
-    private static String TAG = "Player";
-    private static final boolean DBG = false;
-    private static final boolean DBG_CONFIG = false;
+    private static final Logger log = LoggerFactory.getLogger(Player.class);
     public static Player sPlayer;
     // settable by the client
     private Uri         mUri;
@@ -163,7 +163,7 @@ public class Player implements IPlayerControl,
 
     private Runnable mRefreshRateCheckerAsync =  new Runnable() {
         public void run() {
-            if (DBG) Log.d(TAG, "mRefreshRateCheckerAsync");
+            log.debug("mRefreshRateCheckerAsync");
             if (mCurrentState == STATE_PREPARED) {
                 if (mWaitForNewRate) {
                     View v = mWindow.getDecorView();
@@ -172,29 +172,28 @@ public class Player implements IPlayerControl,
                         int currentModeId = d.getMode().getModeId();
                         if (numberRetries > 0) { // only try NUMBER_RETRIES
                             if (currentModeId != wantedModeId) {
-                                if (DBG) Log.d(TAG, "current modeId rate is " + currentModeId + " trying to switch to " + wantedModeId + ", number of retries=" + numberRetries);
+                                log.debug("CONFIG current modeId rate is " + currentModeId + " trying to switch to " + wantedModeId + ", number of retries=" + numberRetries);
                                 numberRetries--;
                                 mHandler.postDelayed(mRefreshRateCheckerAsync, 200);
                                 return;
                             }
-                            if (DBG) Log.d(TAG, "modeId before video start is " + currentModeId);
+                            log.debug("CONFIG modeId before video start is " + currentModeId);
                         } else {
-                            Log.w(TAG, "Failed to set modeId to " + wantedModeId + " it is still " + currentModeId);
+                            log.warn("CONFIG failed to set modeId to " + wantedModeId + " it is still " + currentModeId);
                             Toast.makeText(mContext, R.string.refreshrate_failed, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         float currentRefreshRate = d.getRefreshRate();
                         if (numberRetries > 0) { // only try NUMBER_RETRIES
                             if (Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
-                                if (DBG) Log.d(TAG, "current refresh rate is " + currentRefreshRate + " trying to switch to " + mRefreshRate + ", number of retries=" + numberRetries);
+                                log.debug("CONFIG current refresh rate is " + currentRefreshRate + " trying to switch to " + mRefreshRate + ", number of retries=" + numberRetries);
                                 numberRetries--;
                                 mHandler.postDelayed(mRefreshRateCheckerAsync, 200);
                                 return;
                             }
-                            if (DBG)
-                                Log.d(TAG, "refresh rate before video start is " + currentRefreshRate);
+                            log.debug("CONFIG refresh rate before video start is " + currentRefreshRate);
                         } else {
-                            Log.w(TAG, "Failed to set refreshRate to " + mRefreshRate + " it is still " + currentRefreshRate);
+                            log.warn("CONFIG failed to set refreshRate to " + mRefreshRate + " it is still " + currentRefreshRate);
                             Toast.makeText(mContext, R.string.refreshrate_failed, Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -313,7 +312,7 @@ public class Player implements IPlayerControl,
 
     public Player(Context context, Window window, SurfaceController surfaceController, boolean forceSoftwareDecoding) { //force software decoding is specific for floating player
         sPlayer =this;
-        if (DBG) Log.d(TAG, "Player");
+        log.debug("Player");
         reset();
         mSurfaceHolder = null;
         mVideoTexture = null;
@@ -346,7 +345,7 @@ public class Player implements IPlayerControl,
         }
     }
     private void setGLSupportEnabled(boolean enable) {
-        if(DBG) Log.d(TAG, "setGLSupportEnabled " + enable);
+        log.debug("setGLSupportEnabled " + enable);
         saveUri();
         pause(PlayerController.STATE_OTHER);
         mSurfaceController.setGLSupportEnabled(enable);
@@ -404,12 +403,12 @@ public class Player implements IPlayerControl,
             // fixing this the quick way will break all sort of things
             mVideoMetadata.setFile(uri.getPath());
         }
-        if (DBG) Log.d(TAG, "setVideoURI: " + uri);
+        log.debug("setVideoURI: " + uri);
         openVideo();
     }
 
     synchronized public void stopPlayback() {
-        if (DBG) Log.d(TAG, "stopPlayback");
+        log.debug("stopPlayback");
         mHandler.removeCallbacks(mPreparedAsync);
         stayAwake(false);
         if (mEffectRenderer != null) {
@@ -470,7 +469,7 @@ public class Player implements IPlayerControl,
 
         // we shouldn't clear the target state, because somebody might have
         // called start() previously
-        Log.d(TAG, "openVideo: " + mUri);
+        log.info("openVideo: " + mUri);
         release(false);
         if (mStopPosition != -1) {
             mResumeCtx.setSeek(mStopPosition);
@@ -550,11 +549,11 @@ public class Player implements IPlayerControl,
     }
     /* TextureView.SurfaceTextureListener */
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-        if (DBG_CONFIG) Log.d(TAG, "onSurfaceTextureUpdated");
+        log.debug("CONFIG onSurfaceTextureUpdated");
     }
 
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-        if (DBG_CONFIG) Log.d(TAG, "onSurfaceTextureSizeChanged: " + width + "x" + height);
+        log.debug("CONFIG onSurfaceTextureSizeChanged: " + width + "x" + height);
         mSurfaceWidth = width;
         mSurfaceHeight = height;
         if (mEffectRenderer != null) mEffectRenderer.setSurfaceSize(width, height);
@@ -575,7 +574,7 @@ public class Player implements IPlayerControl,
     }
 
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        if (DBG_CONFIG) Log.d(TAG, "onSurfaceTextureAvailable: " + width + "x" + height);
+        log.debug("CONFIG onSurfaceTextureAvailable: " + width + "x" + height);
         if(mEffectRenderer==null)
             mEffectRenderer = new VideoEffectRenderer(mContext, VideoEffect.getDefaultType());
 
@@ -596,7 +595,7 @@ public class Player implements IPlayerControl,
     public void surfaceChanged(SurfaceHolder holder, int format,
                                 int w, int h)
     {
-        if (DBG_CONFIG) Log.d(TAG, "surfaceChanged: " + w + "x" + h);
+        log.debug("CONFIG surfaceChanged: " + w + "x" + h);
         mSurfaceWidth = w;
         mSurfaceHeight = h;
         boolean isValidState = (mCurrentState == STATE_PREPARED);
@@ -609,7 +608,7 @@ public class Player implements IPlayerControl,
 
     public void surfaceCreated(SurfaceHolder holder)
     {
-        if (DBG_CONFIG) Log.d(TAG, "surfaceCreated");
+        log.debug("CONFIG surfaceCreated");
         mSurfaceHolder = holder;
         openVideo();
     }
@@ -658,7 +657,7 @@ public class Player implements IPlayerControl,
     }
     
     public void start(int state) {
-        if (DBG) Log.d(TAG, "start");
+        log.debug("start");
 
         mIsStoppedByFocusLost = false;
         stayAwake(true);
@@ -693,7 +692,7 @@ public class Player implements IPlayerControl,
     }
 
     public void pause(int state) {
-        if (DBG) Log.d(TAG, "pause");
+        log.debug("pause");
         if (isInPlaybackState()) {
             if (mMediaPlayer.isPlaying()) {
                 mMediaPlayer.pause();
@@ -707,10 +706,10 @@ public class Player implements IPlayerControl,
         /* on pause, Don't suspend when video is non local or can't seek */
         //if (!isTorrent() && isLocalVideo() && canSeekBackward() && canSeekForward()) {
         if (!isTorrent() && canSeekBackward() && canSeekForward()) {
-            if (DBG) Log.d(TAG, "pause: allow to go to sleep");
+            log.debug("pause: allow to go to sleep");
             stayAwake(false);
         } else {
-            if (DBG) Log.d(TAG, "pause: do not sleep");
+            log.debug("pause: do not sleep");
         }
     }
 
@@ -740,7 +739,7 @@ public class Player implements IPlayerControl,
     }
     
     public void seekTo(int msec) {
-        if (DBG) Log.d(TAG, "seekTo");
+        log.debug("seekTo");
         if (isInPlaybackState()) {
             if (mPlayerListener != null) {
                 mPlayerListener.onSeekStart(msec);
@@ -869,7 +868,7 @@ public class Player implements IPlayerControl,
             try {
                 mMediaPlayer.setSubtitleRatio(n, d);
             } catch (IllegalStateException e) {
-                Log.e(TAG, "setSubtitleRatio fail", e);
+                log.error("setSubtitleRatio fail", e);
             }
         } else {
             mResumeCtx.setSubtitleRatio(n, d);
@@ -905,7 +904,7 @@ public class Player implements IPlayerControl,
     }
 
     private void handleMetadata(IMediaPlayer mp) {
-        if (DBG) Log.i(TAG, "handleMetadata");
+        log.debug("handleMetadata");
         MediaMetadata data = mp.getMediaMetadata(IMediaPlayer.METADATA_ALL,
                                        IMediaPlayer.BYPASS_METADATA_FILTER);
         if (data != null) {
@@ -949,7 +948,7 @@ public class Player implements IPlayerControl,
 
     /* IMediaPlayer.Listener */
     public void onPrepared(IMediaPlayer mp) {
-        if (DBG) Log.d(TAG, "onPrepared");
+        log.debug("onPrepared");
         mCurrentState = STATE_PREPARED;
         if (mSurfaceController != null)
             mSurfaceController.setMediaPlayer(mMediaPlayer);
@@ -969,35 +968,35 @@ public class Player implements IPlayerControl,
             LayoutParams lp = mWindow.getAttributes();
             mWaitForNewRate = false;
             if (lp != null && video != null && video.fpsRate > 0 && video.fpsScale > 0) {
-                if (DBG_CONFIG) Log.d(TAG, "video.fpsRate=" + video.fpsRate + ", video.fpsScale=" + video.fpsScale);
+                log.debug("CONFIG video.fpsRate=" + video.fpsRate + ", video.fpsScale=" + video.fpsScale);
                 float wantedFps = (float) ((double) video.fpsRate / (double) video.fpsScale);
-                if (DBG_CONFIG) Log.d(TAG, "wantedFps=" + wantedFps);
+                log.debug("CONFIG wantedFps=" + wantedFps);
                 if (Build.VERSION.SDK_INT >= 23) { // select display mode of highest refresh rate matching 0 modulo fps
                     Display.Mode[] supportedModes = d.getSupportedModes();
                     Display.Mode currentMode = d.getMode();
                     int currentModeId = currentMode.getModeId();
-                    if (DBG_CONFIG) {
-                        Log.d(TAG, "Current display mode is " + currentMode);
+                    if (log.isDebugEnabled()) {
+                        log.debug("CONFIG current display mode is " + currentMode);
                         for (Mode mode : supportedModes)
-                            Log.d(TAG, "Display supported mode " + mode);
+                            log.debug("CONFIG display supported mode " + mode);
                     }
-                    if (DBG_CONFIG && Build.VERSION.SDK_INT >= 24) {
+                    if (log.isDebugEnabled() && Build.VERSION.SDK_INT >= 24) {
                         if (Build.VERSION.SDK_INT >= 26)
-                            if (d.isHdr()) Log.d(TAG, "HDR display detected");
+                            if (d.isHdr()) log.debug("CONFIG HDR display detected");
                         int[] hdrSupportedTypes = d.getHdrCapabilities().getSupportedHdrTypes();
                         for (int i =0; i < hdrSupportedTypes.length; i++) {
                             switch (hdrSupportedTypes[i]) {
                                 case Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION:
-                                    Log.d(TAG, "HDR dolby vision supported");
+                                    log.debug("CONFIG HDR dolby vision supported");
                                     break;
                                 case Display.HdrCapabilities.HDR_TYPE_HDR10:
-                                    Log.d(TAG, "HDR10 supported");
+                                    log.debug("CONFIG HDR10 supported");
                                     break;
                                 case Display.HdrCapabilities.HDR_TYPE_HLG:
-                                    Log.d(TAG, "HDR HLG supported");
+                                    log.debug("CONFIG HDR HLG supported");
                                     break;
                                 case Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS:
-                                    Log.d(TAG, "HDR10+ supported");
+                                    log.debug("CONFIG HDR10+ supported");
                                     break;
                             }
                         }
@@ -1012,13 +1011,13 @@ public class Player implements IPlayerControl,
                         sM = supportedModes[i];
                         //  minimize judder by minimizing metric=min(refresh%fps,|refresh%fps-fps|)/refresh
                         target = Math.min(sM.getRefreshRate() % wantedFps, Math.abs(sM.getRefreshRate() % wantedFps - wantedFps)) / sM.getRefreshRate();
-                        if (DBG_CONFIG) Log.d(TAG, "evaluating " + sM.getPhysicalWidth() + "x" + sM.getPhysicalHeight() + "(" + sM.getRefreshRate() + "Hz) metric = " + target);
+                        log.debug("CONFIG evaluating " + sM.getPhysicalWidth() + "x" + sM.getPhysicalHeight() + "(" + sM.getRefreshRate() + "Hz) metric = " + target);
                         if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth()  &&
                                 sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
                                 (target <= min || Math.abs(target - min) <= EPSILON) && (sM.getRefreshRate() >= wantedRefreshRate)) { // lower or close enough and higher rate
                             min = target;
                             wantedModeId = sM.getModeId();
-                            if (DBG_CONFIG) Log.d(TAG, "currently chosen modeId is " + wantedModeId + " for " + sM.getRefreshRate() + " refreshrate and wanted fps was " + wantedFps + " (metric = " + min + ")");
+                            log.debug( "CONFIG currently chosen modeId is " + wantedModeId + " for " + sM.getRefreshRate() + " refreshrate and wanted fps was " + wantedFps + " (metric = " + min + ")");
                         }
                     }
                     if (wantedModeId != 0 && wantedModeId != currentModeId) {
@@ -1032,19 +1031,20 @@ public class Player implements IPlayerControl,
                     float[] supportedRates = d.getSupportedRefreshRates();
                     float currentRefreshRate = d.getRefreshRate();
                     Arrays.sort(supportedRates);
-                    if (DBG_CONFIG)
-                        for (float r : supportedRates) Log.d(TAG, "Display supported refresh rate " + r);
+                    if (log.isDebugEnabled())
+                        for (float r : supportedRates)
+                            log.debug("CONFIG Display supported refresh rate " + r);
                     mRefreshRate = 0f;
                     float min = 1000; // init with large number easy to beat
                     float target = 0;
                     for (float rate : supportedRates) {
-                        if (DBG_CONFIG) Log.d(TAG, "supported rate is " + rate);
+                        log.debug("CONFIG supported rate is " + rate);
                         //  minimize judder by minimizing metric=min(refresh%fps,|refresh%fps-fps|)/refresh
                         target = Math.min(rate % wantedFps, Math.abs(rate % wantedFps - wantedFps)) / rate;
                         if ((target <= min || Math.abs(target - min) <= EPSILON) && (rate >= mRefreshRate)) { // lower or close enough and higher rate
                             min = target;
                             mRefreshRate = rate;
-                            if (DBG_CONFIG) Log.d(TAG, "currently chosen refresh rate is " + mRefreshRate + " wanted fps was " + wantedFps + " (metric = " + min + ")");
+                            log.debug("CONFIG currently chosen refresh rate is " + mRefreshRate + " wanted fps was " + wantedFps + " (metric = " + min + ")");
                         }
                         if (Math.abs(mRefreshRate) > 0 && Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
                             // apply new refresh rate
@@ -1076,7 +1076,7 @@ public class Player implements IPlayerControl,
     public void onVideoSizeChanged(IMediaPlayer mp, int width, int height) {
         mVideoWidth = width;
         mVideoHeight = height;
-        if (DBG_CONFIG) Log.d(TAG, "OnVideoSizeChanged: "+mVideoWidth+"x"+mVideoHeight);
+        log.debug("CONFIG OnVideoSizeChanged: "+mVideoWidth+"x"+mVideoHeight);
         mSurfaceController.setVideoSize(mVideoWidth, mVideoHeight, mVideoAspect);
         if (mEffectRenderer != null)
                 mEffectRenderer.setVideoSize(mVideoWidth, mVideoHeight, mVideoAspect);
@@ -1084,14 +1084,14 @@ public class Player implements IPlayerControl,
 
     public void onVideoAspectChanged(IMediaPlayer mp, double aspect) {
         mVideoAspect = aspect;
-        if (DBG_CONFIG) Log.d(TAG, "OnVideoAspectChangedL: "+mVideoAspect);
+        log.debug("CONFIG OnVideoAspectChanged: "+mVideoAspect);
         mSurfaceController.setVideoSize(mVideoWidth, mVideoHeight, mVideoAspect);
         if (mEffectRenderer != null)
                 mEffectRenderer.setVideoSize(mVideoWidth, mVideoHeight, mVideoAspect);
     }
 
     public void onSeekComplete(IMediaPlayer mp) {
-        if (DBG) Log.d(TAG, "onSeekComplete");
+        log.debug("onSeekComplete");
         if (mPlayerListener != null) {
             mPlayerListener.onSeekComplete();
         }
@@ -1113,7 +1113,7 @@ public class Player implements IPlayerControl,
     }
 
     public boolean onInfo(IMediaPlayer mp, int what, int extra) {
-        if (DBG) Log.i(TAG, "MediaPlayer.onInfo: "+what+" "+extra);
+        log.debug("MediaPlayer.onInfo: "+what+" "+extra);
         switch(what) {
         case IMediaPlayer.MEDIA_INFO_METADATA_UPDATE:
             if (mIsBusy) {
@@ -1128,7 +1128,7 @@ public class Player implements IPlayerControl,
     }
 
     public boolean onError(IMediaPlayer mp, int errorCode, int errorQualCode, String msg) {
-        Log.d(TAG, "Error: " + errorCode + "," + errorQualCode);
+        log.warn("Error: " + errorCode + "," + errorQualCode);
         mCurrentState = STATE_ERROR;
         mTargetState = STATE_ERROR;
 

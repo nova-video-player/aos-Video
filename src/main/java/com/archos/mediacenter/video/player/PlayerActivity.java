@@ -113,6 +113,9 @@ import com.archos.medialib.Subtitle;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.ScrapeDetailResult;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.FileReader;
@@ -133,10 +136,7 @@ SubtitleDelayPickerDialog.OnDelayChangeListener, AudioDelayPickerDialog.OnAudioD
 DialogInterface.OnDismissListener, TrackInfoListener,
 IndexHelper.Listener, PermissionChecker.PermissionListener {
 
-    private static final boolean DBG = false;
-    private static final boolean DBG_CONFIG = false;
-    private static final boolean DBG_LISTENER = false;
-    private static final String TAG = "PlayerActivity";
+    private static final Logger log = LoggerFactory.getLogger(PlayerActivity.class);
 
     public static final int RESUME_NO = 0;
     public static final int RESUME_FROM_LAST_POS = 1;
@@ -250,7 +250,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     public void setCutoutMetrics() {
         // create list of 4 elements {L,T,R,B}
         if (safeInset.size() != 4) {
-            if (DBG_CONFIG) Log.d(TAG, "setCutoutMetrics safeInset list is of size " + safeInset.size() + ", resetting the list to zero elements");
+            log.debug("CONFIG setCutoutMetrics safeInset list is of size " + safeInset.size() + ", resetting the list to zero elements");
             safeInset.clear();
             for (int i = 0; i < 4; i++)
                 safeInset.add(0);
@@ -259,18 +259,18 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
                 if (cutout == null) {
-                    if (DBG_CONFIG) Log.d(TAG, "device without cutout");
+                    log.debug("CONFIG device without cutout");
                 } else {
                     hasCutout = true;
                     List<Rect> rects = cutout.getBoundingRects();
                     if (rects.size() == 1) {
-                        if (DBG_CONFIG) Log.d(TAG, "one cutout");
+                        log.debug("one cutout");
                         Rect rect = rects.get(0);
-                        if (DBG_CONFIG) Log.d(TAG, "cutout bounding rect " + rect);
+                        log.debug("CONFIG cutout bounding rect " + rect);
                     } else {
-                        if (DBG_CONFIG) Log.d(TAG, "cutout: more than one cutout");
+                        log.debug("CONFIG cutout: more than one cutout");
                         for (Rect rect : rects) {
-                            if (DBG_CONFIG) Log.d(TAG, "cutout: cutout bounding rect " + rect);
+                            log.debug("CONFIG cutout: cutout bounding rect " + rect);
                         }
                     }
                     safeInset.set(0, cutout.getSafeInsetLeft());
@@ -278,29 +278,29 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     safeInset.set(2, cutout.getSafeInsetRight());
                     safeInset.set(3, cutout.getSafeInsetBottom());
                     safeInsetRotation = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-                    if (DBG_CONFIG) Log.d(TAG, "setCutoutMetrics safeInset=" + safeInset);
+                    log.debug("CONFIG setCutoutMetrics safeInset=" + safeInset);
                 }
             }
         } catch (Exception e) {
-            Log.w(TAG,"cutout evaluation exception, perhaps view not attached yet!!!");
+            log.warn("CONFIG cutout evaluation exception, perhaps view not attached yet!!!");
         }
     }
 
     private void updateInsetsOnRotation() {
         int rotation = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
         if (isRotationLocked()) { // if rotation is locked pick forced orientation rotation
-            if (DBG_CONFIG) Log.d(TAG, "updateSizes RotationLocked overriding rotation from " + rotation + " to " + mLockedRotation);
+            log.debug("CONFIG updateSizes RotationLocked overriding rotation from " + rotation + " to " + mLockedRotation);
             rotation = mLockedRotation;
         }
-        if (DBG_CONFIG) Log.d(TAG, "updateInsetsOnRotation: " +
+        log.debug("CONFIG updateInsetsOnRotation: " +
                 "safeInsetRotation=" + safeInsetRotation + " (" + getHumanReadableRotation(safeInsetRotation) + ")" +
                 ", orientation=" + rotation + " (" + getHumanReadableRotation(rotation) + ")");
         if (rotation != safeInsetRotation) {
             //ROTATION_0 = 0; ROTATION_90 = 1; ROTATION_180 = 2; ROTATION_270 = 3;
-            if (DBG_CONFIG) Log.d(TAG, "updateInsetsOnRotation: before rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
+            log.debug("CONFIG updateInsetsOnRotation: before rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
             Collections.rotate(safeInset, safeInsetRotation - rotation);
             safeInsetRotation = rotation;
-            if (DBG_CONFIG) Log.d(TAG, "updateInsetsOnRotation: after rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
+            log.debug("CONFIG updateInsetsOnRotation: after rotation safeInset=" + safeInset + " and safeInsetRotation=" + safeInsetRotation);
         }
     }
 
@@ -434,7 +434,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private ServiceConnection mPlayerServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            if (DBG) Log.d(TAG, "Service connected");
+            log.debug("Service connected");
             if(mIsReadytoStart)
                 postOnPlayerServiceBind();
         }
@@ -455,7 +455,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (DBG) Log.d(TAG, "onReceive: " + intent);
+            log.debug("onReceive: " + intent);
             String action = intent.getAction();
             if (isFinishing())
                 return;
@@ -471,7 +471,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     if (size != null) {
                         w = size[0];
                         h = size[1];
-                        if (DBG) Log.d(TAG,"intent received ludo hdmi");
+                        log.debug("intent received ludo hdmi");
                         mSurfaceController.setHdmiPlugged(plugged, w, h);
                         mLudoHmdiPlugged = plugged;
                     }
@@ -528,10 +528,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 return null;
             }
         } catch (IOException ex) {
-            Log.w(TAG, "readHdmiSize: couldn't read hdmi state from " + filename + ": " + ex);
+            log.warn("readHdmiSize: couldn't read hdmi state from " + filename + ": " + ex);
             return null;
         } catch (NumberFormatException ex) {
-            Log.w(TAG, "readHdmiSize: couldn't read hdmi state from " + filename + ": " + ex);
+            log.warn("readHdmiSize: couldn't read hdmi state from " + filename + ": " + ex);
             return null;
         } finally {
             if (reader != null) {
@@ -549,7 +549,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     @Override
     protected void onCreate(Bundle icicle) {
-        if (DBG) Log.d(TAG, "onCreate");
+        log.debug("onCreate");
 
         super.onCreate(icicle);
         mIndexHelper = new IndexHelper(this, LoaderManager.getInstance(this), LOADER_INDEX);
@@ -571,11 +571,11 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         // cutout mode: display below cutout
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false)) {
-                if (DBG) Log.d(TAG,"onCreate applying LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES");
+                log.debug("onCreate applying LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES");
                 attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
             }
             else {
-                if (DBG) Log.d(TAG,"onCreate applying LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER");
+                log.debug("onCreate applying LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER");
                 attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER;
             }
         }
@@ -600,7 +600,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             @SuppressLint("NewApi")
                 @Override
                 public WindowInsets onApplyWindowInsets(View view, WindowInsets insets) {
-                    if (DBG) Log.d(TAG, "setOnApplyWindowInsetsListener");
+                    log.debug("setOnApplyWindowInsetsListener");
                     setCutoutMetrics();
                     getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
                     // needed on Bravia for HDR content to avoid grey bars cf. issue #270
@@ -618,7 +618,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (DBG_CONFIG) Log.d(TAG, "addOnLayoutChangeListener, do updateSizes()");
+                            log.debug("CONFIG addOnLayoutChangeListener, do updateSizes()");
                             // without this video is stretched fullscreen
                             updateSizes();
                         }
@@ -685,8 +685,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (DBG_CONFIG)
-                                    Log.d(TAG, "onDisplayChanged do updateInsetsOnRotation()+updateSizes() and safeInsetRotation=" + safeInsetRotation + ", orientation=" + orientation);
+                                log.debug("CONFIG onDisplayChanged do updateInsetsOnRotation()+updateSizes() and safeInsetRotation=" + safeInsetRotation + ", orientation=" + orientation);
                                 updateInsetsOnRotation();
                                 // needed to update dimensions when unchecking autorot
                                 updateSizes();
@@ -708,9 +707,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     @Override
                     public void propertyChange(PropertyChangeEvent evt) {
                         if (evt.getOldValue() != evt.getNewValue()) {
-                            if (DBG) Log.d(TAG, "NetworkState for " + evt.getPropertyName() + " changed:" + evt.getOldValue() + " -> " + evt.getNewValue());
+                            log.debug("NetworkState for " + evt.getPropertyName() + " changed:" + evt.getOldValue() + " -> " + evt.getNewValue());
                             if (!networkState.hasLocalConnection() && !mPlayer.isLocalVideo()) { // should not finish if playing local file
-                                if (DBG) Log.d(TAG, "lost network: finish");
+                                log.debug("lost network: finish");
                                 finish();
                             }
                         }
@@ -755,18 +754,18 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     }
 
     private void setEffect(int type, int mode, boolean needSave) {
-        if (DBG) Log.d(TAG, "setEffectForced: type " + type + ", mode " + mode + ", needSave " +needSave);
+        log.debug("setEffectForced: type " + type + ", mode " + mode + ", needSave " +needSave);
         if (needSave) mSavedMode=mode;
         mPlayer.setEffect(type, mode);
         mPlayerController.setUIMode(mPlayer.getUIMode());
         if(mSubtitleManager!=null)
             mSubtitleManager.setUIMode(mPlayer.getUIMode());
         if(type!=VideoEffect.EFFECT_NONE){
-            if(DBG) Log.d(TAG, "setEffect: setLockRotation true");
+            log.debug("setEffect: setLockRotation true");
             setLockRotation(true);
         }
         else{
-            if(DBG) Log.d(TAG, "setEffect: setLockRotation " + mLockRotation);
+            log.debug("setEffect: setLockRotation " + mLockRotation);
             setLockRotation(mLockRotation);
         }
     }
@@ -774,7 +773,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private void addNetworkListener() {
         if (networkState == null) networkState = NetworkState.instance(mContext);
         if (!mNetworkStateListenerAdded && propertyChangeListener != null) {
-            if (DBG_LISTENER) Log.d(TAG, "addNetworkListener: networkState.addPropertyChangeListener");
+            log.debug("addNetworkListener: networkState.addPropertyChangeListener");
             networkState.addPropertyChangeListener(propertyChangeListener);
             mNetworkStateListenerAdded = true;
         }
@@ -783,7 +782,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private void removeNetworkListener() {
         if (networkState == null) networkState = NetworkState.instance(mContext);
         if (mNetworkStateListenerAdded && propertyChangeListener != null) {
-            if (DBG_LISTENER) Log.d(TAG, "removeListener: networkState.removePropertyChangeListener");
+            log.debug("removeListener: networkState.removePropertyChangeListener");
             networkState.removePropertyChangeListener(propertyChangeListener);
             mNetworkStateListenerAdded = false;
         }
@@ -792,7 +791,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     @Override
     protected void onStart() {
         super.onStart();
-        if (DBG) Log.d(TAG, "onStart()");
+        log.debug("onStart()");
         mStopped = false;
         removeNetworkListener();
         IntentFilter intentFilter = new IntentFilter();
@@ -807,7 +806,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mNetworkBookmarksEnabled = mPreferences.getBoolean(KEY_NETWORK_BOOKMARKS, true);
         mSubsFavoriteLanguage = mPreferences.getString(KEY_SUBTITLES_FAVORITE_LANGUAGE, Locale.getDefault().getISO3Language());
         mForceSWDecoding = mPreferences.getBoolean(KEY_FORCE_SW, false);
-        if(DBG) Log.d(TAG, "onStart: setLockRotation " + mLockRotation);
+        log.debug("onStart: setLockRotation " + mLockRotation);
         setLockRotation(mLockRotation);
         mSurfaceController.setVideoFormat(Integer.parseInt(mPreferences.getString(KEY_PLAYER_FORMAT, "-1")),
                 Integer.parseInt(mPreferences.getString(KEY_PLAYER_AUTO_FORMAT, "-1")));
@@ -855,7 +854,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         }
 
         mIsReadytoStart = false;
-        if (DBG) Log.d(TAG, "postOnPlayerServiceBind() ");
+        log.debug("postOnPlayerServiceBind() ");
         Intent intent = new Intent();
         intent.putExtras(getIntent());
         intent.setData(getIntent().getData());
@@ -864,7 +863,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         Player.sPlayer = mPlayer;
         PlayerService.sPlayerService.setPlayer();
         if(mPermissionChecker.hasExternalPermission(this)) {
-            if (DBG) Log.d(TAG, "hasExternalPermission ");
+            log.debug("hasExternalPermission ");
             PlayerService.sPlayerService.onStart(intent);
             PlayerService.sPlayerService.setIndexHelper(mIndexHelper);
             start();
@@ -881,7 +880,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     @Override
     protected void onResume() {
         super.onResume();
-        if (DBG) Log.d(TAG, "onResume");
+        log.debug("onResume");
         // Clock (for leanback devices only)
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK) || isChromeOS(mContext)) {
             registerReceiver(mClockReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
@@ -917,7 +916,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     @Override
     protected void onPause() {
         super.onPause();
-        if (DBG) Log.d(TAG, "onPause");
+        log.debug("onPause");
         // Clock (for leanback devices only)
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK) || isChromeOS(mContext)) {
             unregisterReceiver(mClockReceiver);
@@ -951,13 +950,11 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     @Override
     protected void onStop() {
         super.onStop();
-
-        if (DBG) Log.d(TAG, "onStop");
+        log.debug("onStop");
         if (mStopped)
             return;
         if(mTorrent!=null){
-
-            if (DBG) Log.d(TAG, "onStop, unbinding torrentObserver");
+            log.debug("onStop, unbinding torrentObserver");
         }
 
         /*
@@ -992,11 +989,11 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     @Override
     protected void onDestroy() {
-        if (DBG) Log.d(TAG, "onDestroy");
+        log.debug("onDestroy");
         stopDialog();
         removeNetworkListener();
         VideoEffect.resetForcedMode();
-        if (DBG) Log.d(TAG, "onDestroy: setEffect");
+        log.debug("onDestroy: setEffect");
         setEffect(VideoEffect.getDefaultMode());
         super.onDestroy();
     }
@@ -1021,25 +1018,25 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         boolean isPortrait = ((1.0f*layoutHeight/layoutWidth)>1.0);
         boolean isSeenPortrait = ((1.0f*displayHeight/displayWidth)>1.0);
-        if (DBG_CONFIG) Log.d(TAG, "updateSizes: isPortrait " + isPortrait + ", isSeenPortrait " + isSeenPortrait);
+        log.debug("CONFIG updateSizes: isPortrait " + isPortrait + ", isSeenPortrait " + isSeenPortrait);
 
         // hack to fix fullscreen height on chromeos pixelbook (and more?) since it reports 2400x1440 insteqd of 2400x1600 but ok in multiWindow
         if(isChromeOS(mContext)&&(layoutWidth == displayWidth)&&(layoutHeight != displayHeight)) {
-            Log.w(TAG, "updateSizes: hack correcting on chromeOS layoutHeight from " + layoutHeight + " to " + displayHeight);
+            log.warn("CONFIG updateSizes: hack correcting on chromeOS layoutHeight from " + layoutHeight + " to " + displayHeight);
             layoutHeight = displayHeight;
         }
 
-        if (DBG_CONFIG) Log.d(TAG, "updateSizes layout WxH=" + layoutWidth + "x" + layoutHeight +
+        log.debug("CONFIG updateSizes layout WxH=" + layoutWidth + "x" + layoutHeight +
                 ", display WxH=" + displayWidth + "x" + displayHeight);
 
         // if rotation is locked reverse w/h but only if we have a difference of portrait/landscape perception between layout and screen dimension
         if (isRotationLocked()&&(isPortrait != isSeenPortrait)) {
             displayWidth = realPoint.y;
             displayHeight = realPoint.x;
-            if (DBG_CONFIG) Log.d(TAG, "updateSizes RotationLocked overriding display WxH=" + displayWidth + "x" + displayHeight);
+            log.debug("CONFIG updateSizes RotationLocked overriding display WxH=" + displayWidth + "x" + displayHeight);
         }
 
-        if (DBG_CONFIG) Log.d(TAG, "updateSizes isInMultiWindowMode(): " + isInMultiWindowMode + ", isInPictureInPictureMode(): " + isInPictureInPictureMode);
+        log.debug("CONFIG updateSizes isInMultiWindowMode(): " + isInMultiWindowMode + ", isInPictureInPictureMode(): " + isInPictureInPictureMode);
 
         if (!isInPictureInPictureMode&&!isInMultiWindowMode) {
             width = displayWidth;
@@ -1049,7 +1046,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             height = layoutHeight;
         }
 
-        if (DBG_CONFIG) Log.d(TAG, "updateSizes: trueFullscreen size WxH=" + width+"x"+height);
+        log.debug("updateSizes: trueFullscreen size WxH=" + width+"x"+height);
         if(!isChromeOS(mContext)) { //keeping things as it was on other devices
             ViewGroup.LayoutParams lp = mRootView.getLayoutParams();
             lp.width = width;
@@ -1059,7 +1056,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mSurfaceController.setScreenSize(width, height);
         mSubtitleManager.setScreenSize(width, height);
         if(!isInPictureInPictureMode) {
-            if (DBG_CONFIG) Log.d(TAG, "updateSizes: mPlayerController.setSizes layout WxH=" + layoutWidth + "x" + layoutHeight + ", display WxH=" + displayWidth + "x" + displayHeight );
+            log.debug("CONFIG updateSizes: mPlayerController.setSizes layout WxH=" + layoutWidth + "x" + layoutHeight + ", display WxH=" + displayWidth + "x" + displayHeight );
             mPlayerController.setSizes(displayWidth, displayHeight, layoutWidth, layoutHeight);
             // Close the menus if needed
             mAudioInfoController.resetPopup();
@@ -1082,7 +1079,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (DBG_CONFIG) Log.d(TAG, "onConfigurationChanged: do updateSizes()");
+                log.debug("CONFIG onConfigurationChanged: do updateSizes()");
                 updateSizes();
             }
         });
@@ -1147,7 +1144,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private void setLockRotation(boolean avpLock) {
         Display display = getWindowManager().getDefaultDisplay();
         int rotation = display.getRotation();
-        if (DBG) Log.d(TAG, "setLockRotation, rotation status: " + rotation + ", i.e. " + getHumanReadableRotation(rotation));
+        log.debug("CONFIG setLockRotation, rotation status: " + rotation + ", i.e. " + getHumanReadableRotation(rotation));
 
         boolean systemLock;
         try {
@@ -1156,10 +1153,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             systemLock = false;
         }
         mIsRotationLocked = (avpLock || systemLock);
-        if (DBG_CONFIG) Log.d(TAG, "avpLock: " + avpLock + " systemLock: " + systemLock);
+        log.debug("avpLock: " + avpLock + " systemLock: " + systemLock);
         if (mIsRotationLocked) {
             int tmpOrientation = getResources().getConfiguration().orientation;
-            if (DBG_CONFIG) Log.d(TAG, "setLockRotation: current orientation is " + getHumanReadableOrientation(tmpOrientation));
+            log.debug("CONFIG setLockRotation: current orientation is " + getHumanReadableOrientation(tmpOrientation));
             int wantedOrientation;
 
             if (tmpOrientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -1170,7 +1167,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     wantedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
                     mLockedRotation = Surface.ROTATION_270;
                 }
-                if (DBG_CONFIG) Log.d(TAG, "setLockRotation: wanted orientation is " + getHumanReadableActivityOrientation(wantedOrientation));
+                log.debug("CONFIG setLockRotation: wanted orientation is " + getHumanReadableActivityOrientation(wantedOrientation));
                 setRequestedOrientation(wantedOrientation);
             }
             else if (tmpOrientation == Configuration.ORIENTATION_PORTRAIT || tmpOrientation == Configuration.ORIENTATION_UNDEFINED) {
@@ -1181,18 +1178,18 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     wantedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
                     mLockedRotation = Surface.ROTATION_270;
                 }
-                if (DBG_CONFIG) Log.d(TAG, "setLockRotation: wanted orientation is " + getHumanReadableActivityOrientation(wantedOrientation));
+                log.debug("CONFIG setLockRotation: wanted orientation is " + getHumanReadableActivityOrientation(wantedOrientation));
                 setRequestedOrientation(wantedOrientation);
             }
         } else {
-            if (DBG_CONFIG) Log.d(TAG, "setLockRotation: wanted orientation is unspecified");
+            log.debug("CONFIG setLockRotation: wanted orientation is unspecified");
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if (DBG) Log.d(TAG, "onNewIntent: " + intent);
+        log.debug("onNewIntent: " + intent);
         setIntent(intent);
         if(mWasInPictureInPicture) {
             if (PlayerService.sPlayerService != null) {
@@ -1308,7 +1305,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         if(mPlayerController!=null && !mPlayerController.isTVMenuDisplayed())
             if (event.getAction() == MotionEvent.ACTION_MOVE) {
                 int joystickZone = MediaUtils.getJoystickZone(event);
-                if (DBG) Log.d(TAG, "onGenericMotionEvent : event=ACTION_MOVE");
+                log.debug("onGenericMotionEvent : event=ACTION_MOVE");
 
                 if (!mSeekingWithJoystickStarted && joystickZone != MediaUtils.JOYSTICK_ZONE_CENTER) {
                     // Starting to seek => make the control bar visible
@@ -1921,7 +1918,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 default:
                     break;
             }
-            if (DBG) Log.d(TAG, "set3DMode: setEffect");
+            log.debug("set3DMode: setEffect");
             setEffectForced(mode);
         }
     }
@@ -2091,7 +2088,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 return true;
             case MENU_LOCK_ROTATION_ID:
                 mLockRotation = !mLockRotation;
-                if(DBG) Log.d(TAG, "onStart: setLockRotation " + mLockRotation);
+                log.debug("onStart: setLockRotation " + mLockRotation);
                 setLockRotation(mLockRotation);
                 mPreferences.edit().putBoolean(KEY_LOCK_ROTATION, mLockRotation).apply();
                 //item.setTitle(mLockRotation ? R.string.rotation_unlock : R.string.rotation_lock);
@@ -2247,14 +2244,14 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         // TODO Auto-generated method stub
                         if (isChecked) {
-                            if (DBG) Log.d(TAG, "onOptionsItemSelected: setEffect");
+                            log.debug("onOptionsItemSelected: setEffect");
                             setEffectForced(mSavedMode);
                             ad.getListView().setEnabled(true);
                             for(RadioButton rb : rbs)
                                 rb.setEnabled(true);
                         }
                         else {
-                            if (DBG) Log.d(TAG, "onOptionsItemSelected: setEffect");
+                            log.debug("onOptionsItemSelected: setEffect");
                             setEffectForced(VideoEffect.NORMAL_2D_MODE, false);
                             ad.getListView().setEnabled(false);
                             for (RadioButton rb : rbs)
@@ -2518,7 +2515,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
      */
     private Dialog getPluginNeedUpdateDialog() {
         if (LibAvos.pluginNeedUpdate(this)) {
-            Log.d(TAG, "pluginNeedUpdate returns true");
+            log.info("pluginNeedUpdate returns true");
             return new AlertDialog.Builder(this)
             .setTitle(R.string.plugin_update_required_title)
             .setMessage(R.string.plugin_update_required_message)
@@ -2586,7 +2583,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
             mVideoId = mVideoInfo.id;
             mUri = mVideoInfo.uri;
-            if (DBG) Log.d(TAG, "setVideoInfo mVideoId: " + mVideoId);
+            log.debug("setVideoInfo mVideoId: " + mVideoId);
 
             // get resume position only if video was played
             mLastPosition = getLastPosition(mVideoInfo, mResume);
@@ -2642,7 +2639,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         if (viewMode == VideoEffect.NORMAL_2D_MODE)
             viewType = VideoEffect.EFFECT_NONE;
 
-        if (DBG) Log.d(TAG, "setVideoInfo: setEffect");
+        log.debug("setVideoInfo: setEffect");
         setEffect(viewType, viewMode);
 
         /*
@@ -2651,7 +2648,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
          * the mighty sed that s/com.archos.mediacenter.video/com.archos.mediacenter.videoki/
          */
         if (getPackageName().equals("com.archos.mediacenter"+"."+"video"+"ki")) {
-            Log.d(TAG, "amazon?");
+            log.info("amazon?");
             if (Build.BRAND == null || !Build.BRAND.equalsIgnoreCase("a"+"m"+"a"+"z"+"o"+"n")) {
                 myShowDialog(DIALOG_WRONG_DEVICE_KINDLE);
                 return;
@@ -2667,13 +2664,13 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
      * set start state = removing progress + enabling controllers
      */
     private void  postVideoInfoAndPrepared() {
-        if (DBG) Log.d(TAG, "postVideoInfoAndPrepared "+String.valueOf((PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PREPARED||PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PLAYING) && mVideoInfo != null));
-        if (DBG) Log.d(TAG, "postVideoInfoAndPrepared "+String.valueOf((PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PREPARED||PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PLAYING)));
-        if (DBG) Log.d(TAG, "postVideoInfoAndPrepared "+String.valueOf( mVideoInfo != null));
+        log.debug("postVideoInfoAndPrepared "+String.valueOf((PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PREPARED||PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PLAYING) && mVideoInfo != null));
+        log.debug("postVideoInfoAndPrepared "+String.valueOf((PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PREPARED||PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PLAYING)));
+        log.debug("postVideoInfoAndPrepared "+String.valueOf( mVideoInfo != null));
 
         // ex onStreamingUriOK
         if ((PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PREPARED||PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PLAYING) && mVideoInfo != null) {
-            if (DBG) Log.d(TAG, "postVideoInfoAndPrepared");
+            log.debug("postVideoInfoAndPrepared");
             if (mThumbnail != null) {
                 mThumbnail.recycle();
                 mThumbnail = null;
@@ -2711,10 +2708,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             PlayerService.sPlayerService.requestIndexAndScrap();
         }
     	// if we want to display a dialog for trakt resume, uncomment this
-    	/* Log.d(TAG, "onVideoDb: trakt: into dialog");
+    	/* log.debug("onVideoDb: trakt: into dialog");
     	if(localTraktPosition>0&&
         		(localTraktPosition<localVideoInfo.resume-60000||localTraktPosition>localVideoInfo.resume+60000)){
-    		Log.d(TAG, "onVideoDb: trakt: showing dialog");
+    		log.debug("onVideoDb: trakt: showing dialog");
         	AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.use_trakt_resume)
             .setCancelable(false)
@@ -2752,7 +2749,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         Intent intent = getIntent();
         mPlayer.setSurfaceController(mSurfaceController);
         mPlayer.setWindow(getWindow());
-        if (DBG) Log.d(TAG, "start: " + intent);
+        log.debug("start: " + intent);
         if (mBufferView != null)
             mBufferView.setText("");
         mHandler.removeMessages(MSG_PROGRESS_VISIBLE);
@@ -2787,7 +2784,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     }
 
     private void stop() {
-        if (DBG) Log.d(TAG, "stop");
+        log.debug("stop");
 
         mPlayer.pause(PlayerController.STATE_OTHER);
 
@@ -3034,7 +3031,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         // mThumbnailDone is the state of the thread: 0: not started yet, 1: started, 2: done
         if (mThumbnailDone == 0) {
-            if (DBG) Log.d("XXT", "starting new Thread");
+            log.debug("XXT", "starting new Thread");
             mThumbnailDone = 1;
             final ContentResolver cr = getContentResolver();
             final String posterPath = mPosterPath;
@@ -3120,7 +3117,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                         mSubtitleInfoController.getTrackNameAt(mVideoInfo.subtitleTrack));
             }
         }
-        Log.d(TAG, "switchSubtitleTrack: " + mVideoInfo.subtitleTrack);
+        log.info("switchSubtitleTrack: " + mVideoInfo.subtitleTrack);
     }
 
     public void switchAudioTrack() {
@@ -3149,7 +3146,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         boolean ret = false;
         if (mPlayer.isBusy())
             return false;
-        Log.d(TAG, "onTrackSelected(" + position + "): " + name);
+        log.info("onTrackSelected(" + position + "): " + name);
         if (trackInfoController == mAudioInfoController) {
             AudioTrack at = mPlayer.getVideoMetadata().getAudioTrack(position);
             if (at.supported) {
@@ -3177,7 +3174,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     }
 
     public boolean onSettingsSelected(TrackInfoController trackInfoController, int key, CharSequence name) {
-        Log.d(TAG, "onSettingsSelected: " + key);
+        log.info("onSettingsSelected: " + key);
         if (mPlayer.isBusy())
             return false;
         if (trackInfoController == mSubtitleInfoController) {
@@ -3216,7 +3213,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == SUBTITLE_REQUEST && resultCode == Activity.RESULT_OK){
-            if (DBG) Log.d(TAG, "Get result from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
+            log.debug("Get result from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
             mPlayer.checkSubtitles();
         }
     }
@@ -3259,14 +3256,14 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     public class PlayerListener implements PlayerService.PlayerFrontend {
 
         public void onPrepared() {
-            if (DBG) Log.d(TAG, "onPrepared");
+            log.debug("onPrepared");
             mNetworkFailed = false;
 
             postVideoInfoAndPrepared();
         }
 
         public void onCompletion() {
-            if (DBG) Log.d(TAG,  "onCompletion");
+            log.debug("onCompletion");
 
             PlayerService.sPlayerService.setAudioFilt();
         }
@@ -3274,7 +3271,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         public boolean onError(int errorCode, int errorQualCode, String msg) {
             if (isFinishing())
                 return true;
-            Log.w(TAG, "onError: " + errorCode + ", " + errorQualCode);
+            log.warn("onError: " + errorCode + ", " + errorQualCode);
 
             if (errorCode == IMediaPlayer.MEDIA_ERROR_VE_FILE_ERROR
                     && !mPlayer.isLocalVideo()
@@ -3353,7 +3350,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             if (isStereoEffectOn()) {
                 int mode = vMetadata.getVideoTrack().s3dMode;
                 if (mode != 0) {
-                    if (DBG) Log.d(TAG, "onVideoMetadataUpdated: setEffect");
+                    log.debug("onVideoMetadataUpdated: setEffect");
                     setEffect (mode);
                 }
             }
@@ -3369,7 +3366,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             boolean firstTimeUpdated = mAudioInfoController.getTrackCount() == 0;
             int nbTrack = vMetadata.getAudioTrackNb();
 
-            Log.d(TAG, "onAudioMetadataUpdated: newAudio: " + newAudioTrack
+            log.info("onAudioMetadataUpdated: newAudio: " + newAudioTrack
                     + "  mVideoInfo.audioTrack: " + mVideoInfo.audioTrack
                     + "  firstTimeUpdated: " + firstTimeUpdated
                     + "  nbTrack: " + nbTrack);
@@ -3396,7 +3393,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
             final boolean firstTimeCalled = mSubtitleInfoController.getTrackCount() == 0;
 
-            Log.d(TAG, "onSubtitleMetadataUpdated: newSubtitle: " + newSubtitleTrack + ", mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack + ", firstTimeCalled: " + firstTimeCalled);
+            log.debug("onSubtitleMetadataUpdated: newSubtitle: " + newSubtitleTrack + ", mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack + ", firstTimeCalled: " + firstTimeCalled);
 
             mSubtitleInfoController.clear();
             int noneTrack = nbTrack+1;
@@ -3477,21 +3474,21 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         @Override
         public void onVideoDb(final VideoDbInfo localVideoInfo, final VideoDbInfo remoteVideoInfo) {
-            if (DBG) Log.d(TAG, "onVideoDb: videoInfo: " + localVideoInfo);
-            if (DBG) Log.d(TAG, "onVideoDb: trakt: " + localVideoInfo.traktResume+ " local "+ localVideoInfo.resume);
+            log.debug("onVideoDb: videoInfo: " + localVideoInfo);
+            log.debug("onVideoDb: trakt: " + localVideoInfo.traktResume+ " local "+ localVideoInfo.resume);
             if (localVideoInfo != null) {
                 final int localTraktPosition = Math.abs(localVideoInfo.duration>0 ? (int)(localVideoInfo.traktResume * (double) localVideoInfo.duration / 100) : 0);
-                Log.d(TAG, "onVideoDb: trakt calc: "+ localTraktPosition+ " local "+ localVideoInfo.resume);
+                log.info("onVideoDb: trakt calc: "+ localTraktPosition+ " local "+ localVideoInfo.resume);
 
                 if (localVideoInfo != null && remoteVideoInfo != null && mResume != RESUME_NO&& mResume !=  RESUME_FROM_LOCAL_POS) {
-                    if (DBG) Log.d(TAG, "hasRemoteVideoInfo");
+                    log.debug("hasRemoteVideoInfo");
                     int localLastPosition = getLastPosition(localVideoInfo, mResume);
                     int remoteLastPosition = getLastPosition(remoteVideoInfo, mResume);
 
                     if (localLastPosition != remoteLastPosition && remoteLastPosition > 0) {
                         //do not display dialog if remote position is the only available
                         if (localLastPosition <= 0) {
-                            if (DBG) Log.d(TAG, "use remoteVideoInfo");
+                            log.debug("use remoteVideoInfo");
                             showTraktResumeDialog(localTraktPosition,remoteVideoInfo);
 
                         } else {
@@ -3555,7 +3552,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         @Override
         public void setVideoInfo(VideoDbInfo mVideoInfo) {
-            if (DBG) Log.d(TAG, "setVideoInfo " + String.valueOf(mVideoInfo != null));
+            log.debug("setVideoInfo " + String.valueOf(mVideoInfo != null));
             PlayerActivity.this.setVideoInfo(mVideoInfo);
         }
 
