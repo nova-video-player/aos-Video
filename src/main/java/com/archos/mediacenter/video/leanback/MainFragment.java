@@ -420,7 +420,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         if (showByRating)
             mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_RATING, getString(R.string.movies_by_rating), R.drawable.ratings_banner));
 
-        mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_YEAR, getString(R.string.movies_by_year), R.drawable.years_banner_2020));
+        mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_YEAR, getString(R.string.movies_by_year), R.drawable.years_banner_2021));
         mMovieRow = new ListRow(ROW_ID_MOVIES, new HeaderItem(getString(R.string.movies)), mMoviesRowsAdapter);
         buildAllCollectionsBox();
         mMoviesRowsAdapter.add(mAllCollectionsBox);
@@ -434,7 +434,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         if (showByRating)
             mTvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_RATING, getString(R.string.tvshows_by_rating), R.drawable.ratings_banner));
 
-        mTvshowRowAdapter.add(new Box(Box.ID.EPISODES_BY_DATE, getString(R.string.episodes_by_date), R.drawable.years_banner_2020));
+        mTvshowRowAdapter.add(new Box(Box.ID.EPISODES_BY_DATE, getString(R.string.episodes_by_date), R.drawable.years_banner_2021));
         mTvshowRow = new ListRow(ROW_ID_TVSHOW2, new HeaderItem(getString(R.string.all_tv_shows)), mTvshowRowAdapter);
         
         mMoviesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
