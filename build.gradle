@@ -261,4 +261,7 @@ dependencies {
     implementation 'androidx.leanback:leanback-preference:1.1.0-beta01'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
     implementation 'fr.turri:aXMLRPC:1.12.0'
+
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'com.github.tony19:logback-android:2.0.0'
 }
