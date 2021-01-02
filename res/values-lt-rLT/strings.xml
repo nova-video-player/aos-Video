@@ -92,10 +92,23 @@
     <string name="movies">Filmai</string>
     <string name="all_movies">Visi filmai</string>
     <string name="all_movies_format">Visi filmai - %d</string>
+    <string name="all_collections">Visos kolekcijos</string>
+    <string name="all_collections_format">Visos kolekcijos  -  %d</string>
+    <string name="all_collection_watched">Visos kolekcijos žiūrėtos</string>
+    <string name="all_collection_unwatched">Nežiūrėtos kolekcijos</string>
+    <plurals name="n_movies_watched">
+        <item quantity="one">%d filmas žiūrėtas</item>
+        <item quantity="few">%d filmai žiūrėti</item>
+        <item quantity="many">%d filmų žiūrėta</item>
+        <item quantity="other">%d filmų žiūrėta</item>
+    </plurals>
     <string name="not_watched_movies_format">Nežiūrėta - %d</string>
+    <string name="no_movie_watched">Nėra žiūrėtų filmų</string>
+    <string name="all_movies_watched">Visi filmai žiūrėti</string>
     <string name="movies_by_alpha">Filmai pagal abėcėlę</string>
     <string name="movies_by_genre">Filmai pagal žanrą</string>
     <string name="movies_by_rating">Filmai pagal reitingą</string>
+    <string name="movie_collections">Kolekcijos</string>
     <string name="movies_by_year">Filmai pagal metus</string>
     <string name="all_tv_shows">Serialai</string>
     <string name="all_tvshows">Visi serialai</string>
@@ -233,6 +246,7 @@
     <string name="you_have_no_video">Nėra video</string>
     <string name="you_have_no_video_yet">Ieškoma video&#8230;</string>
     <string name="you_have_no_movies">Nėra filmų</string>
+    <string name="you_have_no_movie_collections">Nėra kolekcijų</string>
     <string name="you_have_no_tv_shows">Nėra serialų</string>
     <string name="you_have_no_non_scraped_videos">Visi video atpažinti</string>
     <plurals name="Nmovies">
@@ -789,9 +803,11 @@
     <string name="view_more">Daugiau</string>
     <string name="nfo_export_in_progress">Vykdomas NFO eksportas</string>
     <string name="rescrap_in_progress">Visos mediatekos atpažinimas</string>
+    <string name="rescrap_movies_in_progress">Nuskaitomi visi filmai</string>
     <string name="acquire_external_usb_permission">Nova Video grotuvui reikia priėjimo prie išorinės saugyklos. Kitame lange pasirinkite saugyklą</string>
     <string name="rescrap_not_found">Atpažinti video be aprašymų</string>
     <string name="rescrap_all_title">Atpažinti visus</string>
+    <string name="rescrap_all_movies_title">Nuskaityti visus filmus</string>
     <string name="nfo_export_manual_title">Eksportuoti atpažintus video</string>
     <string name="nfo_export_manual_summary">Eksportuoti atpažintų video .nfo failus</string>
     <string name="db_export_manual_title">Eksportuoti media duomenų bazę</string>

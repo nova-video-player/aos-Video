@@ -92,10 +92,21 @@
     <string name="movies">Filme</string>
     <string name="all_movies">Alle Filme</string>
     <string name="all_movies_format">Alle Filme  -  %d</string>
+    <string name="all_collections">Alle Sammlungen</string>
+    <string name="all_collections_format">Alle Sammlungen -  %d</string>
+    <string name="all_collection_watched">Alle angesehenen Sammlungen</string>
+    <string name="all_collection_unwatched">Alle nicht angesehenen Sammlungen</string>
+    <plurals name="n_movies_watched">
+        <item quantity="one">%d Film angesehen</item>
+        <item quantity="other">%d Filme angesehen</item>
+    </plurals>
     <string name="not_watched_movies_format">Nicht angesehen  -  %d</string>
+    <string name="no_movie_watched">Kein Film angesehen</string>
+    <string name="all_movies_watched">Alle Filme angesehen</string>
     <string name="movies_by_alpha">Filme alphabetisch</string>
     <string name="movies_by_genre">Filme nach Genre</string>
     <string name="movies_by_rating">Filme nach Bewertung</string>
+    <string name="movie_collections">Sammlungen</string>
     <string name="movies_by_year">Filme nach Jahr</string>
     <string name="all_tv_shows">Serien</string>
     <string name="all_tvshows">Alle Serien</string>
@@ -231,6 +242,7 @@
     <string name="you_have_no_video">Keine Videos</string>
     <string name="you_have_no_video_yet">Videos werden gesucht&#8230;</string>
     <string name="you_have_no_movies">Keine Filme</string>
+    <string name="you_have_no_movie_collections">Keine Sammlungen</string>
     <string name="you_have_no_tv_shows">Keine Serien</string>
     <string name="you_have_no_non_scraped_videos">Nicht gescrapte Videos</string>
     <plurals name="Nmovies">
@@ -396,10 +408,10 @@
     <string name="dialog_subloader_nonetwork_title">Keine Internetverbindung</string>
     <string name="dialog_subloader_nonetwork_message">Eine Internetverbindung ist für das Herunterladen von Untertiteln notwendig</string>
     <string name="dialog_subloader_connecting">Verbinde mit opensubtitles.org…</string>
-    <string name="dialog_subloader_credentials">Öffnet Untertitel-Anmeldeinformationen</string>
+    <string name="dialog_subloader_credentials">Anmeldeinformationen für opensubtitles.org</string>
     <string name="dialog_subloader_credentials_empty">Sie müssen einen gültigen Benutzernamen und Passwort angeben!</string>
-    <string name="toast_subloader_credentials_empty">Geben Sie Ihre Zugangsdaten für offene Untertitel in den Einstellungen an, um Untertitel herunterladen zu können</string>
-    <string name="toast_subloader_login_failed">Falsche Anmeldedaten für offene Untertitel oder Dienst nicht verfügbar</string>
+    <string name="toast_subloader_credentials_empty">Geben Sie Ihre Zugangsdaten für opensubtitles.org in den Einstellungen an, um Untertitel herunterladen zu können</string>
+    <string name="toast_subloader_login_failed">Falsche Anmeldedaten für opensubtitles.org oder Dienst nicht verfügbar</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Untertitel Einstellungen</string>
     <string name="subtitle_sample_text">\"Beispiel\"</string>
@@ -498,8 +510,8 @@
     <string name="category_languages">Untertitel</string>
     <string name="subtitles_hide_default">Untertitel standardmäßig ausblenden</string>
     <string name="subtitles_hide_default_summary">Überprüfen Sie, ob Sie Untertitel standardmäßig ausblenden möchten</string>
-    <string name="subtitles_credentials_title">Anmeldeinformationen für offene Untertitel</string>
-    <string name="subtitles_credentials_summary">Geben Sie Ihre Zugangsdaten für offene Untertitel in den Einstellungen an, um Untertitel herunterladen zu können</string>
+    <string name="subtitles_credentials_title">Anmeldeinformationen für opensubtitles.org</string>
+    <string name="subtitles_credentials_summary">Geben Sie Ihre Zugangsdaten für opensubtitles.org in den Einstellungen an, um Untertitel herunterladen zu können</string>
     <string name="preferences_languages">Untertitel Sprachen</string>
     <string name="summary_list_preference_primary">Wählen Sie die Sprachen aus in denen Untertitel gesucht werden sollen</string>
     <string name="favSubLang_title">Bevorzugte Sprache</string>
@@ -781,9 +793,11 @@
     <string name="view_more">Mehr ansehen</string>
     <string name="nfo_export_in_progress">.nfo-Export wird durchgeführt</string>
     <string name="rescrap_in_progress">Rescraping der ganzen Bibliothek</string>
+    <string name="rescrap_movies_in_progress">Rescraping alle Filme</string>
     <string name="acquire_external_usb_permission">Der Datei-Manager benötigt eine spezielle Zugriffs-Berechtigung auf den externen Speicher. Bitte wählen Sie den Speicherplatz auf dem nächsten Bildschirm aus</string>
     <string name="rescrap_not_found">Videos ohne Beschreibung re-scrapen</string>
     <string name="rescrap_all_title">Re-scrap alles</string>
+    <string name="rescrap_all_movies_title">Rescrape alle Filme</string>
     <string name="nfo_export_manual_title">Bereits gescrapte Videos exportieren</string>
     <string name="nfo_export_manual_summary">.nfo-Dateien von jedem bereits gescraptem Video exportieren</string>
     <string name="db_export_manual_title">Media-Datenbank exportieren</string>

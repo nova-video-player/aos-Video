@@ -92,10 +92,20 @@
     <string name="movies">电影</string>
     <string name="all_movies">所有电影</string>
     <string name="all_movies_format">所有电影 -  %d</string>
+    <string name="all_collections">所有收藏</string>
+    <string name="all_collections_format">所有收藏 -  %d</string>
+    <string name="all_collection_watched">已观看所有收藏</string>
+    <string name="all_collection_unwatched">未观看的收藏</string>
+    <plurals name="n_movies_watched">
+        <item quantity="other">已观看电影 %d</item>
+    </plurals>
     <string name="not_watched_movies_format">未观看-  %d</string>
+    <string name="no_movie_watched">没有已观看电影</string>
+    <string name="all_movies_watched">已观看所有电影</string>
     <string name="movies_by_alpha">电影：按名称字母排序</string>
     <string name="movies_by_genre">电影：按分类排序</string>
     <string name="movies_by_rating">电影：按评分排序</string>
+    <string name="movie_collections">收藏</string>
     <string name="movies_by_year">电影：按年份排序</string>
     <string name="all_tv_shows">电视节目</string>
     <string name="all_tvshows">所有电视节目</string>
@@ -230,6 +240,7 @@
     <string name="you_have_no_video">没有视频</string>
     <string name="you_have_no_video_yet">搜索视频&#8230;</string>
     <string name="you_have_no_movies">没有电影</string>
+    <string name="you_have_no_movie_collections">暂无收藏</string>
     <string name="you_have_no_tv_shows">没有电视节目</string>
     <string name="you_have_no_non_scraped_videos">没有未扫描的视频</string>
     <plurals name="Nmovies">
@@ -778,9 +789,11 @@
     <string name="view_more">查看更多</string>
     <string name="nfo_export_in_progress">正在导出 NFO</string>
     <string name="rescrap_in_progress">重新扫描整个媒体库</string>
+    <string name="rescrap_movies_in_progress">正在重新获取所有电影资料</string>
     <string name="acquire_external_usb_permission">Nova 视频需要特殊权限才能访问外部存储。请在下一个屏幕上选择您的存储</string>
     <string name="rescrap_not_found">重新扫描没有说明的视频</string>
     <string name="rescrap_all_title">重新扫描所有文件</string>
+    <string name="rescrap_all_movies_title">重新获取所有电影资料</string>
     <string name="nfo_export_manual_title">导出已扫描的视频</string>
     <string name="nfo_export_manual_summary">导出已经扫描过的每个视频的 .nfo 文件</string>
     <string name="db_export_manual_title">导出媒体数据库</string>

@@ -56,7 +56,7 @@
     <string name="info_tab_poster_chooser">Selector de carátula</string>
     <string name="info_tab_share">Compartir</string>
     <string name="info_menu_backdrop_select">Imagen de fondo</string>
-    <string name="info_menu_series_backdrop_select">Imagen de fondo para series</string>
+    <string name="info_menu_series_backdrop_select">Imagen de fondo de la serie</string>
     <string name="info_menu_poster_select">Seleccione otro poster</string>
     <string name="info_menu_series_poster_select">Seleccionar otro poster</string>
     <!-- COVER ROLL -->
@@ -92,10 +92,21 @@
     <string name="movies">Películas</string>
     <string name="all_movies">Todas las películas</string>
     <string name="all_movies_format">Todas las películas -  %d</string>
+    <string name="all_collections">Todas las colecciones</string>
+    <string name="all_collections_format">Todas las colecciones -  %d</string>
+    <string name="all_collection_watched">Todas las colecciones vistas</string>
+    <string name="all_collection_unwatched">Colección no vista</string>
+    <plurals name="n_movies_watched">
+        <item quantity="one">%d película vista</item>
+        <item quantity="other">%d películas vistas</item>
+    </plurals>
     <string name="not_watched_movies_format">No visto  %d</string>
+    <string name="no_movie_watched">Ninguna película vista</string>
+    <string name="all_movies_watched">Todas las películas vistas</string>
     <string name="movies_by_alpha">Películas en orden alfabético</string>
     <string name="movies_by_genre">Películas por género</string>
     <string name="movies_by_rating">Películas por valoración</string>
+    <string name="movie_collections">Colecciones</string>
     <string name="movies_by_year">Películas por año</string>
     <string name="all_tv_shows">Programas de TV</string>
     <string name="all_tvshows">Todos los programas de TV</string>
@@ -231,6 +242,7 @@
     <string name="you_have_no_video">No hay vídeos</string>
     <string name="you_have_no_video_yet">Buscando videos&#8230;</string>
     <string name="you_have_no_movies">No hay películas</string>
+    <string name="you_have_no_movie_collections">Sin colecciones</string>
     <string name="you_have_no_tv_shows">No hay programas de televisión</string>
     <string name="you_have_no_non_scraped_videos">Vídeos sin analizar</string>
     <plurals name="Nmovies">
@@ -781,9 +793,11 @@
     <string name="view_more">Leer más</string>
     <string name="nfo_export_in_progress">Exportación NFO en progreso</string>
     <string name="rescrap_in_progress">Recuperando toda la biblioteca</string>
+    <string name="rescrap_movies_in_progress">Restaurando datos de todas las películas</string>
     <string name="acquire_external_usb_permission">Nova Video necesita permiso especial para acceder al almacenamiento externo. Por favor, seleccione su almacenamiento en la siguiente pantalla</string>
     <string name="rescrap_not_found">Rescrapear videos sin descripción</string>
     <string name="rescrap_all_title">Re-analizar todo</string>
+    <string name="rescrap_all_movies_title">Restaurar datos de todas las películas</string>
     <string name="nfo_export_manual_title">Exportar vídeos ya raspados</string>
     <string name="nfo_export_manual_summary">Exportar archivos .nfo de todos los vídeos ya analizados</string>
     <string name="db_export_manual_title">Exportar base de datos</string>

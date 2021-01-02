@@ -577,6 +577,8 @@
     <string name="network_bookmarks_summary">Sauvegarde et lit les points de reprise et marque-pages sur le réseau lorsque cela est possible</string>
     <string name="share_folders_smbv2">Activer le support SMBv2</string>
     <string name="share_folders_smbv2_summary">Activer la prise en charge du protocole SMB version 2. ⚠ Expérimental</string>
+    <string name="share_folders_smb_resolv">Ordre de résolution SMB</string>
+    <string name="share_folders_smb_resolv_summary">Sélectionne BCAS, DNS (sinon DNS, BCAST)</string>
     <string name="connection_abnormally_long">La connexion semble anormalement longue. Souhaitez-vous la réinitialiser ?</string>
     <string name="connection_reset">Réinitialiser</string>
     <!-- Info dialog, not indexed file -->
@@ -794,10 +796,12 @@
     <string name="nfo_export_in_progress">Export de NFO en cours</string>
     <string name="rescrap_in_progress">Actualisation des descriptions en cours</string>
     <string name="rescrap_movies_in_progress">Actualisation des descriptions des films en cours</string>
+    <string name="rescrap_collections_in_progress">Actualisation des descriptions des saga</string>
     <string name="acquire_external_usb_permission">Nova Vidéo requiert une permission spéciale pour accéder au stockage externe. Sélectionnez votre stockage sur l\'écran suivant</string>
     <string name="rescrap_not_found">Rechercher les descriptions manquantes des vidéos</string>
     <string name="rescrap_all_title">Actualiser les descriptions</string>
     <string name="rescrap_all_movies_title">Actualiser les descriptions des films</string>
+    <string name="rescrap_all_collections_title">Actualiser les descriptions des sagas</string>
     <string name="nfo_export_manual_title">Exporter toutes les descriptions</string>
     <string name="nfo_export_manual_summary">Export des fichiers .nfo pour chaque vidéo</string>
     <string name="db_export_manual_title">Export de la base de donnée media</string>

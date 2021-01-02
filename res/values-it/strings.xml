@@ -85,6 +85,7 @@ Copertina (rotolo di copertina)</string>
     <string name="root_storage">Archiviazione interna</string>
     <string name="cannot_list">Impossibile elencare il contenuto</string>
     <!-- VIDEO -->
+    <string name="video">Nova Video Player</string>
     <string name="videos">Video</string>
     <string name="all_videos">Tutti i video</string>
     <string name="not_played_yet_videos">Non ancora visti</string>
@@ -92,10 +93,17 @@ Copertina (rotolo di copertina)</string>
     <string name="movies">Film</string>
     <string name="all_movies">Tutti i film</string>
     <string name="all_movies_format">Tutti i film -  %d</string>
+    <string name="all_collections">Tutte le raccolte</string>
+    <string name="all_collections_format">Tutte le raccolte -  %d</string>
+    <string name="all_collection_watched">Hai guardato tutte le raccolte</string>
+    <string name="all_collection_unwatched">Collezione non ancora vista</string>
     <string name="not_watched_movies_format">Non visto -  %d</string>
+    <string name="no_movie_watched">Non hai ancora visto nessun film</string>
+    <string name="all_movies_watched">Hai guardato tutti i film</string>
     <string name="movies_by_alpha">Film in ordine alfabetico</string>
     <string name="movies_by_genre">Film per genere</string>
     <string name="movies_by_rating">Film per valutazione</string>
+    <string name="movie_collections">Raccolte</string>
     <string name="movies_by_year">Film per anno</string>
     <string name="all_tv_shows">Serie TV</string>
     <string name="all_tvshows">Tutte le serie TV</string>
@@ -231,6 +239,7 @@ Copertina (rotolo di copertina)</string>
     <string name="you_have_no_video">Nessun video</string>
     <string name="you_have_no_video_yet">Ricerca dei video&#8230;</string>
     <string name="you_have_no_movies">Nessun film</string>
+    <string name="you_have_no_movie_collections">Ancora nessuna raccolta</string>
     <string name="you_have_no_tv_shows">Nessuna serie TV</string>
     <string name="you_have_no_non_scraped_videos">Tutti i video sono stati analizzati</string>
     <plurals name="Nmovies">
@@ -564,6 +573,7 @@ Copertina (rotolo di copertina)</string>
     <string name="network_thumbnails_summary">Crea un\'anteprima da un video remoto quando non ci sono poster disponibili</string>
     <string name="network_bookmarks_summary">Salva e controlla per il punto di ripresa e per la posizione dei segnalibri sulla rete qualora sia possibile</string>
     <string name="share_folders_smbv2">Abilita il supporto SMBv2</string>
+    <string name="share_folders_smbv2_summary">Abilita supporto al protocollo di condivisione di rete SMB ver. 2. ⚠ Sperimentale</string>
     <string name="connection_abnormally_long">La connessione sta richiedendo più tempo del previsto. Vuoi resettarla?</string>
     <string name="connection_reset">Resetta</string>
     <!-- Info dialog, not indexed file -->
@@ -780,9 +790,11 @@ Copertina (rotolo di copertina)</string>
     <string name="view_more">Vedi altro</string>
     <string name="nfo_export_in_progress">Esportazione dei NFO in corso</string>
     <string name="rescrap_in_progress">Analisi dell\'intera libreria</string>
+    <string name="rescrap_movies_in_progress">Sto controllando la libreria dei film</string>
     <string name="acquire_external_usb_permission">Nova Video necessita di permessi speciali per accedere all\'archivio esterno. Seleziona il tuo archivio nella prossima schermata</string>
     <string name="rescrap_not_found">Analizza nuovamente i video senza una descrizione</string>
     <string name="rescrap_all_title">Analizza tutto</string>
+    <string name="rescrap_all_movies_title">Controlla tutti i film</string>
     <string name="nfo_export_manual_title">Esporta i video già analizzati</string>
     <string name="nfo_export_manual_summary">Esporta i file .nfo di ogni video già analizzato</string>
     <string name="db_export_manual_title">Esporta database dei media</string>

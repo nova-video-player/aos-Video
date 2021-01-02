@@ -92,10 +92,21 @@
     <string name="movies">Filmes</string>
     <string name="all_movies">Todos os filmes</string>
     <string name="all_movies_format">Todos os filmes  -  %d</string>
+    <string name="all_collections">Todas coleções</string>
+    <string name="all_collections_format">Todas coleções -  %d</string>
+    <string name="all_collection_watched">Todas coleções assistidas</string>
+    <string name="all_collection_unwatched">Coleção não assistida</string>
+    <plurals name="n_movies_watched">
+        <item quantity="one">%d filme assistido</item>
+        <item quantity="other">Filmes assistidos</item>
+    </plurals>
     <string name="not_watched_movies_format">Não assistido  -  %d</string>
+    <string name="no_movie_watched">Nenhum filme assistido</string>
+    <string name="all_movies_watched">Todos filmes assistidos</string>
     <string name="movies_by_alpha">Filmes em ordem alfabética</string>
     <string name="movies_by_genre">Filmes por gênero</string>
     <string name="movies_by_rating">Filmes mais avaliados</string>
+    <string name="movie_collections">Nenhuma coleção</string>
     <string name="movies_by_year">Filmes por ano</string>
     <string name="all_tv_shows">Séries de TV</string>
     <string name="all_tvshows">Todas as séries de TV</string>
@@ -110,7 +121,7 @@
     <string name="date_view_month">Mês</string>
     <string name="date_view_year">Ano</string>
     <string name="all_movies_and_tv_shows">Filmes e séries de TV</string>
-    <string name="non_scraped_videos">Vídeos não pesquisados</string>
+    <string name="non_scraped_videos">Vídeos não identificados</string>
     <string name="no_server">Nenhum servidor de mídia encontrado</string>
     <string name="cannot_open_video">Não é possível abrir este vídeo</string>
     <string name="confirm_delete">Deseja realmente excluir?</string>
@@ -231,8 +242,9 @@
     <string name="you_have_no_video">Nenhum vídeo</string>
     <string name="you_have_no_video_yet">Procurando por vídeos&#8230;</string>
     <string name="you_have_no_movies">Sem filmes</string>
+    <string name="you_have_no_movie_collections">Sem coleções</string>
     <string name="you_have_no_tv_shows">Sem séries de TV</string>
-    <string name="you_have_no_non_scraped_videos">Nenhum vídeo não pesquisado</string>
+    <string name="you_have_no_non_scraped_videos">Nenhum vídeo não identificado</string>
     <plurals name="Nmovies">
         <item quantity="one">1 filme</item>
         <item quantity="other"><xliff:g id="count">%d</xliff:g> filmes</item>
@@ -314,7 +326,7 @@
     <string name="s_dutch">Holandês</string>
     <string name="s_norwegian">Norueguês</string>
     <string name="s_polish">Polonês</string>
-    <string name="s_brazilian">Português-BR</string>
+    <string name="s_brazilian">Português Brasileiro</string>
     <string name="s_portuguese">Português</string>
     <string name="s_russian">Russo</string>
     <string name="Romanian">Romeno</string>
@@ -350,7 +362,7 @@
     <string name="player_err_video_decoder_error">Erro no decodificador de vídeo:</string>
     <string name="player_err_qpel_and_gmc">\"Quarter Pixel\" e \"GMC\"</string>
     <string name="player_err_profile_and_level">\"Perfil\" e \"Nível\"</string>
-    <string name="player_err_interlaced">Interlacado</string>
+    <string name="player_err_interlaced">Interlaçado</string>
     <!-- Player plug-in -->
     <string name="player_plugin_cinema_title">Plugin do cinema</string>
     <string name="player_plugin_cinema">Cinema plug-in (DVD, MPEG-2, AC3)</string>
@@ -780,12 +792,14 @@
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Ver mais</string>
     <string name="nfo_export_in_progress">Exportação NFO em andamento</string>
-    <string name="rescrap_in_progress">Pesquisando novamente toda a biblioteca</string>
+    <string name="rescrap_in_progress">Refazendo scrape de toda a biblioteca</string>
+    <string name="rescrap_movies_in_progress">Refazendo scrape de todos filmes</string>
     <string name="acquire_external_usb_permission">O Nova Vídeo precisa de permissão especial para acessar o armazenamento externo. Por favor, selecione seu armazenamento na próxima tela</string>
-    <string name="rescrap_not_found">Pesquisar novamente vídeos sem descrição</string>
-    <string name="rescrap_all_title">Pesquisar tudo novamente</string>
-    <string name="nfo_export_manual_title">Exportar vídeos já pesquisados</string>
-    <string name="nfo_export_manual_summary">Exportar arquivos .nfo de cada vídeo já pesquisado</string>
+    <string name="rescrap_not_found">Refazer scrape de vídeos sem descrição</string>
+    <string name="rescrap_all_title">Refazer scrape de tudo</string>
+    <string name="rescrap_all_movies_title">Refazer scrape de todos os filmes</string>
+    <string name="nfo_export_manual_title">Exportar vídeos já identificados</string>
+    <string name="nfo_export_manual_summary">Exportar arquivos .nfo de todos vídeos já identificado</string>
     <string name="db_export_manual_title">Exportar base de dados de mídia</string>
     <string name="db_export_manual_summary">Exportar arquivo media.db para /sdcard para fins de diagnóstico</string>
     <string name="db_export_in_progress">Exportação da base de dados em andamento</string>

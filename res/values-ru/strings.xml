@@ -96,11 +96,19 @@
     <string name="all_collections_format">Все коллекции -  %d</string>
     <string name="all_collection_watched">Все коллекции просмотрены</string>
     <string name="all_collection_unwatched">Коллекция не просмотрена</string>
+    <plurals name="n_movies_watched">
+        <item quantity="one">%d фильм просмотрен</item>
+        <item quantity="few">%d фильма просмотрено</item>
+        <item quantity="many">%d фильмов просмотрено</item>
+        <item quantity="other">%d фильмов просмотрено</item>
+    </plurals>
     <string name="not_watched_movies_format">Не просмотрено -  %d</string>
     <string name="no_movie_watched">Нет просмотренных фильмов</string>
+    <string name="all_movies_watched">Все фильмы просмотрены</string>
     <string name="movies_by_alpha">Фильмы по алфавиту</string>
     <string name="movies_by_genre">Фильмы по жанру</string>
     <string name="movies_by_rating">Фильмы по рейтингу</string>
+    <string name="movie_collections">Коллекции</string>
     <string name="movies_by_year">Фильмы по году</string>
     <string name="all_tv_shows">Сериалы</string>
     <string name="all_tvshows">Все сериалы</string>
@@ -238,6 +246,7 @@
     <string name="you_have_no_video">Нет видео</string>
     <string name="you_have_no_video_yet">Поиск видео&#8230;</string>
     <string name="you_have_no_movies">Нет фильмов</string>
+    <string name="you_have_no_movie_collections">Нет коллекций</string>
     <string name="you_have_no_tv_shows">Нет ТВ-программ</string>
     <string name="you_have_no_non_scraped_videos">Нет нераспознанных видео</string>
     <plurals name="Nmovies">
@@ -794,9 +803,11 @@
     <string name="view_more">Подробнее</string>
     <string name="nfo_export_in_progress">Выполняется экспорт NFO</string>
     <string name="rescrap_in_progress">Распознавание во всей библиотеке</string>
+    <string name="rescrap_movies_in_progress">Распознавание всех фильмов</string>
     <string name="acquire_external_usb_permission">Для доступа к внешнему хранилищу требуется специальное разрешение. Пожалуйста, далее выберите Ваше хранилище</string>
     <string name="rescrap_not_found">Распознать видео без описания</string>
     <string name="rescrap_all_title">Распознать всё</string>
+    <string name="rescrap_all_movies_title">Распознать все фильмы</string>
     <string name="nfo_export_manual_title">Экспорт распознанных видео</string>
     <string name="nfo_export_manual_summary">Экспортировать .nfo файлы для всех распознанных видео</string>
     <string name="db_export_manual_title">Экспорт базы данных медиа</string>
