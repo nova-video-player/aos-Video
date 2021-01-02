@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true" scanPeriod="5 seconds" debug="true">
+  <property name="LOG_DIR" value="${EXT_DIR:-/sdcard}/Download/${PACKAGE_NAME}/"/>
+
+  <appender name="logcat" class="ch.qos.logback.classic.android.LogcatAppender">
+    <tagEncoder>
+      <pattern>%logger{200}</pattern>
+    </tagEncoder>
+    <encoder>
+      <pattern>[%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <!-- exclude trace from logcat-->
+      <level>DEBUG</level>
+    </filter>
+  </appender>
+
+  <appender name="LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/nova.log</file>
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <!-- exclude trace from logcat-->
+      <level>DEBUG</level>
+    </filter>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_DIR}/nova-%d.log</fileNamePattern>
+      <maxHistory>7</maxHistory>
+      <totalSizeCap>50MB</totalSizeCap>
+    </rollingPolicy>
+  </appender>
+
+  <!--logger name="com.archos.mediacenter.video.browser.MainActivity" level="DEBUG"/-->
+
+  <!--logger name="com.archos.mediacenter.video.player.Player" level="DEBUG"/-->
+  <!--logger name="com.archos.mediacenter.video.player.PlayerActivity" level="DEBUG"/-->
+
+  <!--logger name="com.archos.mediascraper.AutoScrapeService" level="DEBUG"/-->
+  <!--logger name="com.archos.mediascraper.xml.MovieScraper3" level="DEBUG"/-->
+  <!--logger name="com.archos.mediascraper.xml.ShowScraper3" level="DEBUG"/-->
+  <!--logger name="com.archos.mediascraper.AllCollectionScrapeService" level="DEBUG"/-->
+
+  <!--logger name="com.archos.mediascraper.ShowTags" level="DEBUG"/-->
+  <!--logger name="com.archos.mediascraper.MovieTags" level="DEBUG"/-->
+  <!--logger name="com.archos.mediascraper.CollectionTags" level="DEBUG"/-->
+
+  <!--logger name="com.archos.mediascraper.thetvdb.MyTheTVdb" level="TRACE"/-->
+  <!--logger name="com.archos.mediascraper.themoviedb3.MyTmdb" level="TRACE"/-->
+
+  <!--logger name="com.archos.environment.NetworkState" level="DEBUG"/-->
+  <!--logger name="com.archos.mediaprovider.video.RemoteStateService" level="DEBUG"/-->
+
+  <!--logger name="com.archos.filecorelibrary.ftp" level="TRACE"/-->
+
+  <includes>
+    <include file="${EXT_DIR:-/sdcard}/Download/${PACKAGE_NAME}/logback.xml" optional="true" />
+  </includes>
+
+  <root level="INFO">
+    <appender-ref ref="logcat"/>
+  </root>
+
+</configuration>
