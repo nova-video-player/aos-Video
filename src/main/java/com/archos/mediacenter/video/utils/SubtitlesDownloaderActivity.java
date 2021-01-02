@@ -29,7 +29,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +61,9 @@ import com.archos.mediacenter.video.ui.NovaProgressDialog;
 import com.archos.mediaprovider.ArchosMediaIntent;
 import com.archos.mediaprovider.video.VideoStore;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -86,15 +88,14 @@ import de.timroes.axmlrpc.XMLRPCException;
 import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
 
 public class SubtitlesDownloaderActivity extends AppCompatActivity {
+
+    private static final Logger log = LoggerFactory.getLogger(SubtitlesDownloaderActivity.class);
+
     public static final String FILE_URLS = "fileUrls";
     public static final String FILE_URL = "fileUrl";
     public static final String FILE_NAMES = "fileNames"; //friendly name for Upnp
     public static final String FILE_SIZES = "fileSizes";
-
-    private static final String TAG = SubtitlesDownloaderActivity.class.getSimpleName();
-    private static final boolean DBG = false;
-    private static final boolean DBG_NET = false;
-
+    
     //to distinguished program dismiss and users
     private boolean mDoNotFinish;
     private final String OpenSubtitlesAPIUrl = "https://api.opensubtitles.org/xml-rpc";
@@ -138,7 +139,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        if (DBG) Log.d(TAG, "onStart");
+        log.debug("onStart");
         mHandler = new Handler(getMainLooper());
         mIndexableUri = new HashMap<>();
         final NonConfigurationInstance nci = (NonConfigurationInstance) getLastNonConfigurationInstance();
@@ -176,7 +177,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 mOpenSubtitlesTask.execute(fileUrls, getSubLangValue());
                 subsDir = MediaUtils.getSubsDir(this);
             } else {
-                if (DBG) Log.d(TAG, "onStart: no network");
+                log.debug("onStart: no network");
                 Builder dialogNoNetwork;
                 dialogNoNetwork = new AlertDialog.Builder(this);
                 dialogNoNetwork.setCancelable(true);
@@ -198,9 +199,9 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
-        if (DBG) Log.d(TAG, "onStop");
+        log.debug("onStop");
         if (mOpenSubtitlesTask != null) {
-            if (DBG) Log.d(TAG, "mOpenSubtitlesTask.cancel");
+            log.debug("mOpenSubtitlesTask.cancel");
             mOpenSubtitlesTask.cancel(false);
             mOpenSubtitlesTask = null;
         }
@@ -253,7 +254,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
         langDefault.add("system");
         Set<String> languages = sharedPreferences.getStringSet("languages_list", langDefault);
         final ArrayList<String> languageDefault = new ArrayList<String>(languages);
-        if (DBG) Log.d(TAG, "getSubLangValue: langDefault=" + languageDefault.toString());
+        log.debug("getSubLangValue: langDefault=" + languageDefault.toString());
         langDefault = null;
         languages = null;
         return languageDefault;
@@ -265,7 +266,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
         private String token = null;
         @Override
         protected void onPreExecute() {
-            if (DBG) Log.d(TAG, "OpenSubtitlesTask: onPreExecute");
+            log.debug("OpenSubtitlesTask: onPreExecute");
             setInitDialog();
         }
         @Override
@@ -290,14 +291,14 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
         }
         @Override
         protected void onProgressUpdate(Integer... values) {
-            if (DBG) Log.d(TAG, "onProgressUpdate");
+            log.debug("onProgressUpdate");
             if (values == null || values.length != 2 || isCancelled()) return;
             int progress = values[0];
             int filesNumber = values[1];
             if (progress == 0) {
-                if (DBG) Log.d(TAG, "onProgressUpdate: progress=" + progress);
+                log.debug("onProgressUpdate: progress=" + progress);
                 if (mDialog != null && mDialog.isShowing()) {
-                    if (DBG) Log.d(TAG, "onProgressUpdate: progress=0 and mDialog.isShowing() dismissing dialog!!!");
+                    log.debug("onProgressUpdate: progress=0 and mDialog.isShowing() dismissing dialog!!!");
                     mDoNotFinish = true;
                     mDialog.dismiss();
                 }
@@ -318,14 +319,14 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                     }
                     mDoNotFinish = false;
                 });
-                if (DBG) Log.d(TAG, "onProgressUpdate: setMessage " + getString(R.string.dialog_subloader_downloading));
+                log.debug("onProgressUpdate: setMessage " + getString(R.string.dialog_subloader_downloading));
                 if (filesNumber > 1){
-                    if (DBG) Log.d(TAG, "onProgressUpdate: progressbar filesNumber=" + filesNumber);
+                    log.debug("onProgressUpdate: progressbar filesNumber=" + filesNumber);
                     mDialog.setProgressStyle(NovaProgressDialog.STYLE_HORIZONTAL);
                     mDialog.setProgress(progress);
                     mDialog.setMax(filesNumber);
                 } else {
-                    if (DBG) Log.d(TAG, "onProgressUpdate: spinner filesNumber=" + filesNumber);
+                    log.debug("onProgressUpdate: spinner filesNumber=" + filesNumber);
                     mDialog.setProgressStyle(NovaProgressDialog.STYLE_SPINNER);
                     mDialog.setIndeterminate(true);
                     //mDialog.setProgress(progress);
@@ -334,11 +335,11 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 mDialog.show();
             } else {
                 if (mDialog != null) {
-                    if (DBG) Log.d(TAG, "onProgressUpdate: mDialog not null");
+                    log.debug("onProgressUpdate: mDialog not null");
                     mDialog.setProgress(progress);
                     mDialog.setMax(filesNumber);
                 } else {
-                    if (DBG) Log.w(TAG, "onProgressUpdate: mDialog is null!!!");
+                    log.warn("onProgressUpdate: mDialog is null!!!");
                 }
             }
         }
@@ -355,10 +356,10 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 displayToast(getString(R.string.toast_subloader_credentials_empty));
             try {
                 URL url = new URL(OpenSubtitlesAPIUrl);
-                if (DBG_NET) client = new XMLRPCClient(url, XMLRPCClient.FLAGS_DEBUG);
+                if (log.isTraceEnabled()) client = new XMLRPCClient(url, XMLRPCClient.FLAGS_DEBUG);
                 else client = new XMLRPCClient(url);
             } catch (MalformedURLException e) {
-                Log.e(TAG, "logIn: caught MalformedURLException");
+                log.error("logIn: caught MalformedURLException");
             }
             try {
                 if (!mUsername.isEmpty() && !mPassword.isEmpty())
@@ -371,7 +372,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 // 401 Unauthorized
                 // 414 Unknown User Agent
                 // 415 Disabled user agent
-                Log.w(TAG, "logIn error message: " + e.getMessage() + "; localizedMessage:" + e.getLocalizedMessage() + ", cause: " + e.getCause());
+                log.warn("logIn error message: " + e.getMessage() + "; localizedMessage:" + e.getLocalizedMessage() + ", cause: " + e.getCause());
                 displayToast(getString(R.string.toast_subloader_login_failed));
                 if (mDialog != null) {
                     mDoNotFinish = true;
@@ -380,7 +381,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 stop = true;
                 return false;
             } catch (Throwable e) { //for various service outages
-                Log.e(TAG, "logIn: caught exception",e);
+                log.error("logIn: caught exception",e);
                 displayToast(getString(R.string.toast_subloader_service_unreachable));
                 if (mDialog != null) {
                     mDoNotFinish = true;
@@ -400,10 +401,9 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
             try {
                 map = ((HashMap<String, Object>)  client.call("LogOut", token));
             } catch (XMLRPCException e1) {
-               Log.e(TAG, "logOut: caught XMLRPCException", e1);
-                Log.w("subtitles", "XMLRPCException");
+                log.error("logOut: caught XMLRPCException", e1);
             } catch (Throwable e){ //for various service outages
-                Log.e(TAG, "logOut: caught Exception", e);
+                log.error("logOut: caught Exception", e);
             }
             token = null;
             map = null;
@@ -418,9 +418,9 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
             try {
                 map = ((HashMap<String, Object>) client.call("NoOperation", token));
             } catch (XMLRPCException e1) {
-                Log.e(TAG, "keepAlive: caught XMLRPCException", e1);
+                log.error("keepAlive: caught XMLRPCException", e1);
             } catch (Throwable e){ //for various service outages
-                Log.e(TAG, "keepAlive: caught Throwable", e);
+                log.error("keepAlive: caught Throwable", e);
             }
             return;
         }
@@ -458,7 +458,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 try { // launch the search for first pass
                     map = (HashMap<String, Object>) client.call("SearchSubtitles", token, videoSearchList);
                 } catch (Throwable e) { //for various service outages
-                    Log.e(TAG, "getSubtitles: 1st pass caught Throwable", e);
+                    log.error("getSubtitles: 1st pass caught Throwable", e);
                     stop = true;
                     displayToast(getString(R.string.toast_subloader_service_unreachable));
                     return;
@@ -476,7 +476,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                             subLanguageID = ((HashMap<String, String>) subtitleMaps[i]).get("SubLanguageID");
                             subDownloadLink = ((HashMap<String, String>) subtitleMaps[i]).get("SubDownloadLink");
                             fileUrl = index.get(movieHash);
-                            if (DBG) Log.d(TAG, "getSubtitles: 1st pass, fileURL=" + fileUrl +
+                            log.debug("getSubtitles: 1st pass, fileURL=" + fileUrl +
                                     ", subDownloadLink=" + subDownloadLink +
                                     ", subLanguageID=" + subLanguageID);
                             if (fileUrl == null) {
@@ -505,7 +505,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                             }
                         }
                     } else {
-                        if (DBG) Log.d(TAG, "getSubtitles: no result for 1st pass");
+                        log.debug("getSubtitles: no result for 1st pass");
                     }
                 }
             }
@@ -528,7 +528,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 try { // perform second pass search
                     map = (HashMap<String, Object>) client.call("SearchSubtitles", token, videoSearchList);
                 } catch (Throwable e) { //for various service outages
-                    Log.e(TAG, "getSubtitles: 2nd pass caught Throwable", e);
+                    log.error("getSubtitles: 2nd pass caught Throwable", e);
                     stop = true;
                     displayToast(getString(R.string.toast_subloader_service_unreachable));
                     return;
@@ -552,7 +552,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                             movieReleaseName = ((HashMap<String, String>) subtitleMaps[i])
                                     .get("MovieReleaseName");
                             fileUrl = index.get(movieReleaseName);
-                            if (DBG) Log.d(TAG, "getSubtitles: 2nd pass, fileURL=" + fileUrl +
+                            log.debug("getSubtitles: 2nd pass, fileURL=" + fileUrl +
                                     ", subDownloadLink=" + subDownloadLink +
                                     ", subLanguageID=" + subLanguageID);
                             if (fileUrl == null){ //we keep only result for exact matching name
@@ -580,10 +580,10 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                             }
                         }
                     } else {
-                        if (DBG) Log.d(TAG, "getSubtitles: no result for 2nd pass");
+                        log.debug("getSubtitles: no result for 2nd pass");
                     }
                 } else
-                    if (DBG) Log.d(TAG, "FAIL " + map.get("data"));
+                    log.debug("FAIL " + map.get("data"));
             }
             boolean doNotFinish = false;
             // Third pass query (friendly name from filename) based
@@ -603,7 +603,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 try { // perform third pass search
                     map = (HashMap<String, Object>) client.call("SearchSubtitles", token, videoSearchList);
                 } catch (Throwable e) { //for various service outages
-                    Log.e(TAG, "getSubtitles: 3rd pass caught Throwable", e);
+                    log.error("getSubtitles: 3rd pass caught Throwable ", e);
                     stop = true;
                     displayToast(getString(R.string.toast_subloader_service_unreachable));
                     return;
@@ -620,10 +620,10 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        if (DBG) Log.d(TAG, "getSubtitles: no result for 3rd pass");
+                        log.debug("getSubtitles: no result for 3rd pass");
                     }
                 } else
-                if (DBG) Log.d(TAG, "FAIL " + map.get("data"));
+                    log.debug("FAIL " + map.get("data"));
             }
             // Fourth pass scraped information based (imdbid for movie or query=showtitle season episode number)
             notFoundFiles.clear();
@@ -642,7 +642,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 try { // perform fourth pass search
                     map = (HashMap<String, Object>) client.call("SearchSubtitles", token, videoSearchList);
                 } catch (Throwable e) { //for various service outages
-                    Log.e(TAG, "getSubtitles: 4th pass caught Throwable", e);
+                    log.error("getSubtitles: 4th pass caught Throwable", e);
                     stop = true;
                     displayToast(getString(R.string.toast_subloader_service_unreachable));
                     return;
@@ -659,10 +659,10 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        if (DBG) Log.d(TAG, "getSubtitles: no result for 4th pass");
+                        log.debug("getSubtitles: no result for 4th pass");
                     }
                 } else
-                if (DBG) Log.d(TAG, "FAIL " + map.get("data"));
+                    log.debug("FAIL " + map.get("data"));
             }
             if(doNotFinish) return;
             // fill fails list
@@ -718,7 +718,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                         try {
                             mf2 = MetaFileFactoryWithUpnp.getMetaFileForUrl(Uri.parse(fileUrl));
                         } catch (Exception e) {
-                            Log.e(TAG, "prepareRequestList: caught Exception", e);
+                            log.error("prepareRequestList: caught Exception", e);
                         }
                         if (mf2 == null) continue;
                     }
@@ -728,7 +728,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                         if (newUri != null) {
                             String oldFileUrl = fileUrl;
                             fileUrl = newUri.toString();
-                            if (DBG) Log.d(TAG, "prepareRequestList: add mFriendlyFileNames <- (" + fileUrl + "," + Uri.parse(oldFileUrl).getLastPathSegment() + "), size=" + mf2.length());
+                            log.debug("prepareRequestList: add mFriendlyFileNames <- (" + fileUrl + "," + Uri.parse(oldFileUrl).getLastPathSegment() + "), size=" + mf2.length());
                             mFriendlyFileNames.put(fileUrl, Uri.parse(oldFileUrl).getLastPathSegment());
                             mFileSizes.put(fileUrl,  mf2.length());
                         }
@@ -752,10 +752,10 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                                 continue;
                             hash = OpenSubtitlesHasher.computeHash(urlConnection, fileLength);
                         } catch (MalformedURLException e) {
-                            Log.e(TAG, "prepareRequestList: caught MalformedURLException", e);
+                            log.error("prepareRequestList: caught MalformedURLException", e);
                             continue;
                         } catch (IOException e) {
-                            Log.e(TAG, "prepareRequestList: caught IOException", e);
+                            log.error("prepareRequestList: caught IOException", e);
                             continue;
                         } finally {
                             if (urlConnection != null)
@@ -766,7 +766,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                             fileLength = mf2.length();
                             hash = OpenSubtitlesHasher.computeHash(Uri.parse(fileUrl), fileLength);
                         } catch (Exception e) { // failure for this file
-                            Log.e(TAG, "prepareRequestList: caught Exception", e);
+                            log.error("prepareRequestList: caught Exception", e);
                             break;
                         }
                     }
@@ -780,38 +780,38 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 ArrayList<String> subLanguageId = new ArrayList<String>();
                 for (String item : languages) subLanguageId.add(getCompliantLanguageID(item));
                 video.put("sublanguageid", TextUtils.join(",",  subLanguageId));
-                if (DBG) Log.d(TAG, "prepareRequestList: search for sublanguageid " + TextUtils.join(",",  subLanguageId));
+                log.debug("prepareRequestList: search for sublanguageid " + TextUtils.join(",",  subLanguageId));
                 if (stop) break;
 
                 if (pass == FIRST_PASS) {  // FIRST_PASS is moviehash+moviebytesize for search
                     index.put(hash, fileUrl);
-                    if (DBG) Log.d(TAG, "prepareRequestList: first pass add index (hash,url) <- (" + hash + "," + fileUrl + ")");
+                    log.debug("prepareRequestList: first pass add index (hash,url) <- (" + hash + "," + fileUrl + ")");
                     video.put("moviehash", hash);
                     video.put("moviebytesize", String.valueOf(fileLength));
-                    if (DBG) Log.d(TAG, "prepareRequestList: first pass add video (hash,length) <- (" + hash + "," + fileLength + ")");
+                    log.debug("prepareRequestList: first pass add video (hash,length) <- (" + hash + "," + fileLength + ")");
                 } else {
                     if (pass == SECOND_PASS) { // SECOND_PASS is tag (filename) for search
-                        if (DBG) Log.d(TAG, "prepareRequestList: second pass add tag " + tag);
+                        log.debug("prepareRequestList: second pass add tag " + tag);
                         video.put("tag", tag);
                     } else if (pass == THIRD_PASS) {
-                        if (DBG) Log.d(TAG, "prepareRequestList: third pass add query " + tag);
+                        log.debug("prepareRequestList: third pass add query " + tag);
                         video.put("query", tag); // THIRD_PASS is query (filename as search name but not clean) for search
                     } else if (pass == FOURTH_PASS) { // FOURTH_PASS is scraped info based
                         // try to get the video info if scraped
                         ContentResolver resolver = getContentResolver();
-                        if (DBG) Log.d(TAG, "prepareRequestList: fourth pass trying to get VideoDbInfo for " + Uri.parse(fileUrl));
+                        log.debug("prepareRequestList: fourth pass trying to get VideoDbInfo for " + Uri.parse(fileUrl));
                         VideoDbInfo videoDbInfo = VideoDbInfo.fromUri(resolver, Uri.parse(removeFileSlashSlash(fileUrl)));
                         if (videoDbInfo != null) {
                             // index is used to find back fileUrl, to allow search on query or imdbid do not put the moviebytesize otherwise it is the only search criteria
-                            if (DBG) Log.d(TAG, "prepareRequestList: fourth pass index (hash,url) <- (" + hash + "," + fileUrl + ")");
+                            log.debug("prepareRequestList: fourth pass index (hash,url) <- (" + hash + "," + fileUrl + ")");
                             if (videoDbInfo.isShow) { // this is a show
                                 // remove date from scraperTitle \([0-9]*\) because match does not work with e.g. The Flash (2015) or Doctor Who (2005)
-                                if (DBG) Log.d(TAG, "prepareRequestList: replacing " + videoDbInfo.scraperTitle + ", by " +
+                                log.debug("prepareRequestList: replacing " + videoDbInfo.scraperTitle + ", by " +
                                         videoDbInfo.scraperTitle.replaceAll(" *\\(\\d*?\\)", ""));
                                 video.put("query", videoDbInfo.scraperTitle.replaceAll(" *\\(\\d*?\\)", ""));
                                 video.put("season", videoDbInfo.scraperSeasonNr);
                                 video.put("episode", videoDbInfo.scraperEpisodeNr);
-                                if (DBG) Log.d(TAG, "prepareRequestList: fourth pass show query=" + videoDbInfo.scraperTitle + ", season=" + videoDbInfo.scraperSeasonNr + ", episode=" + videoDbInfo.scraperEpisodeNr);
+                                log.debug("prepareRequestList: fourth pass show query=" + videoDbInfo.scraperTitle + ", season=" + videoDbInfo.scraperSeasonNr + ", episode=" + videoDbInfo.scraperEpisodeNr);
                             } else { // this is a movie
                                 String imdbId = getIMDBID(fileUrl);
                                 // remove all non numeric characters from imdbID (often starts with tt)
@@ -819,26 +819,26 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                                 if (imdbId != null) {
                                     imdbId = imdbId.replaceAll("[^\\d]", "");
                                     video.put("imdbid", imdbId);
-                                    if (DBG) Log.d(TAG, "prepareRequestList: fourth pass movie imdbid=" + imdbId);
+                                    log.debug("prepareRequestList: fourth pass movie imdbid=" + imdbId);
                                 }
                             }
                         } else {
-                            if (DBG) Log.d(TAG, "prepareRequestList: fourth pass uh videoDbInfo = null!!");
+                            log.debug("prepareRequestList: fourth pass uh videoDbInfo = null!!");
                         }
                     }
                     // since SECOND or THIRD or FOURTH pass not based on hash, put in index the tag
                     int dotPos = tag.lastIndexOf('.');
                     if (dotPos > -1) {
-                        if (DBG) Log.d(TAG, "prepareRequestList: other pass add index (tag without ext,url) <- (" + tag.substring(0, dotPos) + "," + fileUrl + ")");
+                        log.debug("prepareRequestList: other pass add index (tag without ext,url) <- (" + tag.substring(0, dotPos) + "," + fileUrl + ")");
                         index.put(tag.substring(0, dotPos), fileUrl);
                     } else {
-                        if (DBG) Log.d(TAG, "prepareRequestList: other pass add index (tag,url) <- (" + tag + "," + fileUrl + ")");
+                        log.debug("prepareRequestList: other pass add index (tag,url) <- (" + tag + "," + fileUrl + ")");
                         index.put(tag, fileUrl);
                     }
-                    if (DBG) Log.d(TAG, "prepareRequestList: other pass add index (friendly,url) <- (" + getFriendlyFilename(fileUrl) + "," + fileUrl + ")");
+                    log.debug("prepareRequestList: other pass add index (friendly,url) <- (" + getFriendlyFilename(fileUrl) + "," + fileUrl + ")");
                     index.put(getFriendlyFilename(fileUrl), fileUrl);
                 }
-                if (DBG) Log.d(TAG, "prepareRequestList: add video to videoSearchList " + video.toString());
+                log.debug("prepareRequestList: add video to videoSearchList " + video.toString());
                 videoSearchList.add(video);
             }
             return videoSearchList;
@@ -932,7 +932,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                         MetaFile2 metaFile2 = MetaFile2Factory.getMetaFileForUrl(parentUri);
                         canWrite = metaFile2.canWrite();
                     } catch (Exception e) {
-                        Log.e(TAG, "downloadSubtitles: caught Exception", e);
+                        log.error("downloadSubtitles: caught Exception", e);
                     }
                 }
             }
@@ -1012,11 +1012,11 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                     }
                 }
             } catch (FileNotFoundException e) {
-                Log.e(TAG, "downloadSubtitles: caught FileNotFoundException", e);
+                log.error("downloadSubtitles: caught FileNotFoundException", e);
             } catch (IOException e) {
-                Log.e(TAG, "downloadSubtitles: caught IOException", e);
+                log.error("downloadSubtitles: caught IOException", e);
             } catch (Throwable e){ //for various service outages
-                Log.e(TAG, "downloadSubtitles: caught Throwable", e);
+                log.error("downloadSubtitles: caught Throwable", e);
             }finally{
                 MediaUtils.closeSilently(f);
                 MediaUtils.closeSilently(in);
@@ -1079,15 +1079,15 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 try{
                     mSumUpDialog.show();
                 } catch (IllegalArgumentException e){
-                    Log.e(TAG, "showSumup: caught IllegalArgumentException", e);
+                    log.error("showSumup: caught IllegalArgumentException", e);
                 } catch (BadTokenException e){
-                    Log.e(TAG, "showSumup: caught BadTokenException", e);
+                    log.error("showSumup: caught BadTokenException", e);
                 }
             });
         }
 
         private void setInitDialog(){
-            if (DBG) Log.d(TAG, "OpenSubtitlesTask: setInitDialog");
+            log.debug("OpenSubtitlesTask: setInitDialog");
             mHandler.post(() -> {
                 mDialog = NovaProgressDialog.show(SubtitlesDownloaderActivity.this, "", getString(R.string.dialog_subloader_connecting), true, true, dialog -> {
                     dialog.cancel();
@@ -1103,7 +1103,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                     }
                     mDoNotFinish = false;
                 });
-                if (DBG) Log.d(TAG, "OpenSubtitlesTask: setInitDialog setMessage " + getString(R.string.dialog_subloader_connecting));
+                log.debug("OpenSubtitlesTask: setInitDialog setMessage " + getString(R.string.dialog_subloader_connecting));
             });
         }
 

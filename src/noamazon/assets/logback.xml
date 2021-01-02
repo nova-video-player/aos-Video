@@ -52,7 +52,11 @@
   <!--logger name="com.archos.environment.NetworkState" level="DEBUG"/-->
   <!--logger name="com.archos.mediaprovider.video.RemoteStateService" level="DEBUG"/-->
 
-  <logger name="com.archos.filecorelibrary.ftp" level="TRACE"/>
+  <!-- SubtitlesDownloaderActivity: TRACE for client debug or DEBUG -->
+  <logger name="com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity" level="DEBUG"/>
+
+  <!-- ftp: TRACE for verbose or DEBUG -->
+  <logger name="com.archos.filecorelibrary.ftp" level="DEBUG"/>
 
   <includes>
     <include file="${EXT_DIR:-/sdcard}/Download/${PACKAGE_NAME}/logback.xml" optional="true" />
