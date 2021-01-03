@@ -1,3 +1,4 @@
 - SMBv2/3 support via jcifs-ng
 - Fix non systematic wrong IP selected when browsing SMB shares
 - New debug infrastructure based on slf4j/logback
+- New 2021 banner icons for AndroidTV
