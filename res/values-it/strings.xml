@@ -97,6 +97,10 @@ Copertina (rotolo di copertina)</string>
     <string name="all_collections_format">Tutte le raccolte -  %d</string>
     <string name="all_collection_watched">Hai guardato tutte le raccolte</string>
     <string name="all_collection_unwatched">Collezione non ancora vista</string>
+    <plurals name="n_movies_watched">
+        <item quantity="one">%d film già visti</item>
+        <item quantity="other">%d film già visti</item>
+    </plurals>
     <string name="not_watched_movies_format">Non visto -  %d</string>
     <string name="no_movie_watched">Non hai ancora visto nessun film</string>
     <string name="all_movies_watched">Hai guardato tutti i film</string>
@@ -574,6 +578,8 @@ Copertina (rotolo di copertina)</string>
     <string name="network_bookmarks_summary">Salva e controlla per il punto di ripresa e per la posizione dei segnalibri sulla rete qualora sia possibile</string>
     <string name="share_folders_smbv2">Abilita il supporto SMBv2</string>
     <string name="share_folders_smbv2_summary">Abilita supporto al protocollo di condivisione di rete SMB ver. 2. ⚠ Sperimentale</string>
+    <string name="share_folders_smb_resolv">Ordine risolutore SMB</string>
+    <string name="share_folders_smb_resolv_summary">Abilita BCAST, DNS (altrimenti DNS, BCAST)</string>
     <string name="connection_abnormally_long">La connessione sta richiedendo più tempo del previsto. Vuoi resettarla?</string>
     <string name="connection_reset">Resetta</string>
     <!-- Info dialog, not indexed file -->
@@ -791,10 +797,12 @@ Copertina (rotolo di copertina)</string>
     <string name="nfo_export_in_progress">Esportazione dei NFO in corso</string>
     <string name="rescrap_in_progress">Analisi dell\'intera libreria</string>
     <string name="rescrap_movies_in_progress">Sto controllando la libreria dei film</string>
+    <string name="rescrap_collections_in_progress">Sto ricontrollando tutte le collezioni</string>
     <string name="acquire_external_usb_permission">Nova Video necessita di permessi speciali per accedere all\'archivio esterno. Seleziona il tuo archivio nella prossima schermata</string>
     <string name="rescrap_not_found">Analizza nuovamente i video senza una descrizione</string>
     <string name="rescrap_all_title">Analizza tutto</string>
     <string name="rescrap_all_movies_title">Controlla tutti i film</string>
+    <string name="rescrap_all_collections_title">Ricontrolla tutte le collezioni</string>
     <string name="nfo_export_manual_title">Esporta i video già analizzati</string>
     <string name="nfo_export_manual_summary">Esporta i file .nfo di ogni video già analizzato</string>
     <string name="db_export_manual_title">Esporta database dei media</string>

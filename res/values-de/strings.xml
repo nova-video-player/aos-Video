@@ -577,6 +577,8 @@
     <string name="network_bookmarks_summary">Wenn möglich Fortsetzungspunkte und Lesezeichen auf Netzwerkfreigaben speichern</string>
     <string name="share_folders_smbv2">SMBv2 Unterstützung aktivieren</string>
     <string name="share_folders_smbv2_summary">Netzwerk-Sharing SMB Version 2 Protokollunterstützung aktivieren. ⚠ Experimentell</string>
+    <string name="share_folders_smb_resolv">>SMB Reihenfolge Namensauflösung</string>
+    <string name="share_folders_smb_resolv_summary">Aktiviere BCAST, DNS (andernfalls DNS, BCAST)</string>
     <string name="connection_abnormally_long">Die Verbindung dauert ungewöhnlich lange. Möchtest Du sie zurücksetzen?</string>
     <string name="connection_reset">Zurücksetzen</string>
     <!-- Info dialog, not indexed file -->
@@ -794,10 +796,12 @@
     <string name="nfo_export_in_progress">.nfo-Export wird durchgeführt</string>
     <string name="rescrap_in_progress">Rescraping der ganzen Bibliothek</string>
     <string name="rescrap_movies_in_progress">Rescraping alle Filme</string>
+    <string name="rescrap_collections_in_progress">Rescrapen aller Sammlungen</string>
     <string name="acquire_external_usb_permission">Der Datei-Manager benötigt eine spezielle Zugriffs-Berechtigung auf den externen Speicher. Bitte wählen Sie den Speicherplatz auf dem nächsten Bildschirm aus</string>
     <string name="rescrap_not_found">Videos ohne Beschreibung re-scrapen</string>
     <string name="rescrap_all_title">Re-scrap alles</string>
     <string name="rescrap_all_movies_title">Rescrape alle Filme</string>
+    <string name="rescrap_all_collections_title">Rescrape alle Sammlungen</string>
     <string name="nfo_export_manual_title">Bereits gescrapte Videos exportieren</string>
     <string name="nfo_export_manual_summary">.nfo-Dateien von jedem bereits gescraptem Video exportieren</string>
     <string name="db_export_manual_title">Media-Datenbank exportieren</string>

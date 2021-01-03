@@ -587,6 +587,7 @@
     <string name="network_bookmarks_summary">Kai įmanoma išsaugoti ir tikrinti tęsimo vietų žymes tinkle</string>
     <string name="share_folders_smbv2">Įjungti SMBv2 palaikymą</string>
     <string name="share_folders_smbv2_summary">Įjungti tinklo dalinimosi SMB ver. 2 protokolo palaikymą. ⚠ Eksperimentinė funkcija</string>
+    <string name="share_folders_smb_resolv_summary">Įjungti BCAST, DNS (kitu atveju DNS, BCAST)</string>
     <string name="connection_abnormally_long">Susijungimas neįprastai ilgas. Nutraukti?</string>
     <string name="connection_reset">Nutraukti</string>
     <!-- Info dialog, not indexed file -->
@@ -804,10 +805,12 @@
     <string name="nfo_export_in_progress">Vykdomas NFO eksportas</string>
     <string name="rescrap_in_progress">Visos mediatekos atpažinimas</string>
     <string name="rescrap_movies_in_progress">Nuskaitomi visi filmai</string>
+    <string name="rescrap_collections_in_progress">Iš naujo nuskaitomos visos kolekcijos</string>
     <string name="acquire_external_usb_permission">Nova Video grotuvui reikia priėjimo prie išorinės saugyklos. Kitame lange pasirinkite saugyklą</string>
     <string name="rescrap_not_found">Atpažinti video be aprašymų</string>
     <string name="rescrap_all_title">Atpažinti visus</string>
     <string name="rescrap_all_movies_title">Nuskaityti visus filmus</string>
+    <string name="rescrap_all_collections_title">Nuskaityti visas kolekcijas</string>
     <string name="nfo_export_manual_title">Eksportuoti atpažintus video</string>
     <string name="nfo_export_manual_summary">Eksportuoti atpažintų video .nfo failus</string>
     <string name="db_export_manual_title">Eksportuoti media duomenų bazę</string>

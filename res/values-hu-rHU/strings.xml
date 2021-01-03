@@ -570,6 +570,7 @@
     <string name="network_thumbnails">Távoli miniatűrök létrehozása</string>
     <string name="share_folders_smbv2">SMBv2 támogatás engedélyezése</string>
     <string name="share_folders_smbv2_summary">Az SMB hálózati megosztás 2. verziójának engedélyezése. ⚠ Kísérleti</string>
+    <string name="share_folders_smb_resolv_summary">BCAST, DNS engedélyezése (különben DNS, BCAST)</string>
     <string name="connection_reset">Visszaállítás</string>
     <!-- Info dialog, not indexed file -->
     <string name="video_browser_index_file">Hozzáadás a könyvtárhoz</string>
@@ -775,9 +776,11 @@
     <string name="nfo_export_in_progress">NFO exportálás folyamatban</string>
     <string name="rescrap_in_progress">A teljes könyvtár újrafeldolgozása folyamatban</string>
     <string name="rescrap_movies_in_progress">Összes film újrafeldolgozása folyamatban</string>
+    <string name="rescrap_collections_in_progress">Összes gyűjtemény újrafeldolgozása folyamatban</string>
     <string name="rescrap_not_found">Leírás nélküli videók újrafeldolgozása</string>
     <string name="rescrap_all_title">Minden újrafeldolgozása</string>
     <string name="rescrap_all_movies_title">Összes film újrafeldolgozása</string>
+    <string name="rescrap_all_collections_title">Összes gyűjtemény újrafeldolgozása</string>
     <string name="nfo_export_manual_title">Már feldolgozott videók exportálása</string>
     <string name="nfo_export_manual_summary">.nfo fájlok exportálása minden feldolgozott videóhoz</string>
     <string name="db_export_manual_title">Média adatbázís exportálása</string>

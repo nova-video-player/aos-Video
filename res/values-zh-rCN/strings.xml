@@ -573,6 +573,8 @@
     <string name="share_folders_smbv2">启用 SMBv2 支持</string>
     <string name="share_folders_smbv2_summary">启用网络共享 SMB 版本 2 协议支持。⚠
 实验性的</string>
+    <string name="share_folders_smb_resolv">SMB 解析器顺序</string>
+    <string name="share_folders_smb_resolv_summary">启用 BCAST、DNS (否则DNS,、BCAST)</string>
     <string name="connection_abnormally_long">连接似乎花了太长时间。要重置吗？</string>
     <string name="connection_reset">重置</string>
     <!-- Info dialog, not indexed file -->
@@ -789,11 +791,13 @@
     <string name="view_more">查看更多</string>
     <string name="nfo_export_in_progress">正在导出 NFO</string>
     <string name="rescrap_in_progress">重新扫描整个媒体库</string>
-    <string name="rescrap_movies_in_progress">正在重新获取所有电影资料</string>
+    <string name="rescrap_movies_in_progress">正在重新整理所有电影</string>
+    <string name="rescrap_collections_in_progress">正在重新整理所有收藏</string>
     <string name="acquire_external_usb_permission">Nova 视频需要特殊权限才能访问外部存储。请在下一个屏幕上选择您的存储</string>
     <string name="rescrap_not_found">重新扫描没有说明的视频</string>
     <string name="rescrap_all_title">重新扫描所有文件</string>
-    <string name="rescrap_all_movies_title">重新获取所有电影资料</string>
+    <string name="rescrap_all_movies_title">重新整理所有电影</string>
+    <string name="rescrap_all_collections_title">重新整理所有收藏</string>
     <string name="nfo_export_manual_title">导出已扫描的视频</string>
     <string name="nfo_export_manual_summary">导出已经扫描过的每个视频的 .nfo 文件</string>
     <string name="db_export_manual_title">导出媒体数据库</string>
