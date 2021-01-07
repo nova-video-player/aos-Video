@@ -38,7 +38,9 @@
   <!--logger name="com.archos.mediacenter.video.player.PlayerActivity" level="DEBUG"/-->
 
   <!--logger name="com.archos.mediascraper.AutoScrapeService" level="DEBUG"/-->
+  <!-- MovieScraper3: TRACE for http client debug or DEBUG -->
   <!--logger name="com.archos.mediascraper.xml.MovieScraper3" level="DEBUG"/-->
+  <!-- ShowScraper3: TRACE for http client debug or DEBUG -->
   <!--logger name="com.archos.mediascraper.xml.ShowScraper3" level="DEBUG"/-->
   <!--logger name="com.archos.mediascraper.AllCollectionScrapeService" level="DEBUG"/-->
 
@@ -53,7 +55,7 @@
   <!--logger name="com.archos.mediaprovider.video.RemoteStateService" level="DEBUG"/-->
 
   <!-- SubtitlesDownloaderActivity: TRACE for client debug or DEBUG -->
-  <logger name="com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity" level="DEBUG"/>
+  <!--logger name="com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity" level="DEBUG"/-->
 
   <!-- ftp: TRACE for verbose or DEBUG -->
   <logger name="com.archos.filecorelibrary.ftp" level="DEBUG"/>
