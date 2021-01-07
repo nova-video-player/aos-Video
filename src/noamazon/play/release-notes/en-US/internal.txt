@@ -3,3 +3,4 @@
 - Visual watched mark feedback on poster for movie/show/collection in video information view
 - Fix non systematic wrong IP selected when browsing SMB shares
 - New debug infrastructure based on slf4j/logback
+- dav1d update to 0.8.1
