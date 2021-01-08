@@ -198,7 +198,7 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
                 // FIXME: manage display/remove of shortcuts not only adding
                 // below code does not do anything in terms of forcing display shortcut since it is anyway displayed and creates an issue with jcifs-ng #377
                 // it is anyway displayed and creates an issue with jcifs-ng #377 : disable it for now
-                /*
+                // re-enable since otherwise stunnel smb://127.0.0.1:xxxx links are marked non available
                 for (ShortcutDbAdapter.Shortcut shortcut : shortcuts) {
                     Uri uri = Uri.parse(shortcut.getUri());
                     if (DBG) Log.d(TAG, "checkShortcutAvailability.doInBackground: checking " + shortcut.getUri());
@@ -211,7 +211,6 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
                         if (DBG) Log.d(TAG, "checkShortcutAvailability.doInBackground: it is there, no need to check " + shortcut.getUri());
                     }
                 }
-                 */
                 if (DBG) Log.d(TAG, "checkShortcutAvailability.doInBackground: check finished");
                 return null;
             }
