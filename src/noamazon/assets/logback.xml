@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<configuration scan="true" scanPeriod="30 seconds" debug="true">
+<configuration scan="true" scanPeriod="60 seconds" debug="true">
   <property name="LOG_DIR" value="${EXT_DIR:-/sdcard}/Download/${PACKAGE_NAME}/"/>
 
   <appender name="logcat" class="ch.qos.logback.classic.android.LogcatAppender">
