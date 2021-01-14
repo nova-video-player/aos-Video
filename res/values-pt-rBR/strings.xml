@@ -577,6 +577,8 @@
     <string name="network_bookmarks_summary">Salvar e verificar o ponto de retorno e posicionar favoritos na rede quando possível</string>
     <string name="share_folders_smbv2">Habilitar suporte a SMBv2</string>
     <string name="share_folders_smbv2_summary">Habilitar protocolo SMB versão 2 para compartilhamentos de rede. ⚠ Experimental</string>
+    <string name="share_folders_smb_resolv">Ordem de resolução SMB</string>
+    <string name="share_folders_smb_resolv_summary">Habilitar BCAST, DNS (Caso contrário DNS, BCAST)</string>
     <string name="connection_abnormally_long">A conexão parece anormalmente longa. Gostaria de redefini-la?</string>
     <string name="connection_reset">Redefinir</string>
     <!-- Info dialog, not indexed file -->
@@ -794,10 +796,12 @@
     <string name="nfo_export_in_progress">Exportação NFO em andamento</string>
     <string name="rescrap_in_progress">Refazendo scrape de toda a biblioteca</string>
     <string name="rescrap_movies_in_progress">Refazendo scrape de todos filmes</string>
+    <string name="rescrap_collections_in_progress">Obtendo informações de todas coleções</string>
     <string name="acquire_external_usb_permission">O Nova Vídeo precisa de permissão especial para acessar o armazenamento externo. Por favor, selecione seu armazenamento na próxima tela</string>
     <string name="rescrap_not_found">Refazer scrape de vídeos sem descrição</string>
     <string name="rescrap_all_title">Refazer scrape de tudo</string>
     <string name="rescrap_all_movies_title">Refazer scrape de todos os filmes</string>
+    <string name="rescrap_all_collections_title">Atualizar informações de todas coleções</string>
     <string name="nfo_export_manual_title">Exportar vídeos já identificados</string>
     <string name="nfo_export_manual_summary">Exportar arquivos .nfo de todos vídeos já identificado</string>
     <string name="db_export_manual_title">Exportar base de dados de mídia</string>

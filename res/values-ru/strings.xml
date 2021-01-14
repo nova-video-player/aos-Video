@@ -587,6 +587,8 @@
     <string name="network_bookmarks_summary">Сохранять точки возобновления просмотра и позиции закладок по сети, когда доступно</string>
     <string name="share_folders_smbv2">Включить поддержку SMBv2</string>
     <string name="share_folders_smbv2_summary">Включить поддержку протокола SMB2. ⚠ Экспериментально</string>
+    <string name="share_folders_smb_resolv">Порядок использования сервисов имен</string>
+    <string name="share_folders_smb_resolv_summary">Включить BCAST, DNS (иначе DNS, BCAST)</string>
     <string name="connection_abnormally_long">Соединение слишком долгое. Хотите прервать его?</string>
     <string name="connection_reset">Сброс</string>
     <!-- Info dialog, not indexed file -->
@@ -804,10 +806,12 @@
     <string name="nfo_export_in_progress">Выполняется экспорт NFO</string>
     <string name="rescrap_in_progress">Распознавание во всей библиотеке</string>
     <string name="rescrap_movies_in_progress">Распознавание всех фильмов</string>
+    <string name="rescrap_collections_in_progress">Распознавание всех коллекций</string>
     <string name="acquire_external_usb_permission">Для доступа к внешнему хранилищу требуется специальное разрешение. Пожалуйста, далее выберите Ваше хранилище</string>
     <string name="rescrap_not_found">Распознать видео без описания</string>
     <string name="rescrap_all_title">Распознать всё</string>
     <string name="rescrap_all_movies_title">Распознать все фильмы</string>
+    <string name="rescrap_all_collections_title">Распознать все коллекции</string>
     <string name="nfo_export_manual_title">Экспорт распознанных видео</string>
     <string name="nfo_export_manual_summary">Экспортировать .nfo файлы для всех распознанных видео</string>
     <string name="db_export_manual_title">Экспорт базы данных медиа</string>

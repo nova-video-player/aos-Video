@@ -561,6 +561,8 @@
     <string name="network_bookmarks_summary">Uložit a zkontrolovat pozice obnovení a záložky na síťových připojeních pokud je to možné</string>
     <string name="share_folders_smbv2">Aktivovat podporu pro SMBv2</string>
     <string name="share_folders_smbv2_summary">Aktivovat sdílené síťové složky s podporou protokolu SMB verze 2. ⚠ Experimentální</string>
+    <string name="share_folders_smb_resolv">Pořadí resolvingu SMB</string>
+    <string name="share_folders_smb_resolv_summary">Použít BCAST, DNS (jinak se použije DNS, BCAST)</string>
     <string name="connection_abnormally_long">Připojování trvá neobvykle dlouho. Chcete ho zresetovat?</string>
     <string name="connection_reset">Resetovat</string>
     <!-- Info dialog, not indexed file -->
@@ -778,10 +780,12 @@
     <string name="nfo_export_in_progress">Probíhá export NFO</string>
     <string name="rescrap_in_progress">Probíhá opětovné získání informací pro celou knihovnu</string>
     <string name="rescrap_movies_in_progress">Probíhá opětovné získávání informací pro všechny filmy</string>
+    <string name="rescrap_collections_in_progress">Probíhá opětovné získání informací pro všechny kolekce</string>
     <string name="acquire_external_usb_permission">Nova Video vyžaduje speciální oprávnění pro přístup k externímu úložišti. Prosím vyberte vaše úložiště na další obrazovce</string>
     <string name="rescrap_not_found">Získání informací pro videa bez dostupného popisu</string>
     <string name="rescrap_all_title">Opětovné získání informací pro všechny položky</string>
     <string name="rescrap_all_movies_title">Opětovně získat informace pro všechny filmy</string>
+    <string name="rescrap_all_collections_title">Získání informací pro všechny kolekce</string>
     <string name="nfo_export_manual_title">Exportovat videa se získanými informacemi</string>
     <string name="nfo_export_manual_summary">Exportovat .nfo soubory pro všechna videa se získanými informacemi</string>
     <string name="db_export_manual_title">Exportovat databázi médií</string>
