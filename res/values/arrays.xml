@@ -145,6 +145,7 @@
         <item>@string/dec_any</item>
         <item>@string/dec_hw_mediacodec</item>
         <item>@string/dec_sw</item>
+        <item>@string/dec_exoplayer</item>
         <item>@string/dec_android</item>
     </string-array>
 
@@ -152,6 +153,7 @@
         <item>0</item>
         <item>4</item>
         <item>1</item>
+        <item>5</item>
         <item>-1</item>
     </string-array>
 
