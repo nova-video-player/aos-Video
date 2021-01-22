@@ -61,7 +61,7 @@ apply {
 
 play {
     serviceAccountCredentials = file("nova.json")
-    track = 'internal' // rollout, beta, alpha, release, internal
+    track = 'beta' // rollout, beta, alpha, release, internal
     userFraction = 1.0 // rollout rate in %/100
     releaseStatus = "completed"
 }
@@ -110,8 +110,8 @@ android {
         // below version tracks the one from F-Droid or universal package when generated with ./gradlew -Puniversal
         // this is overridden when using split apk and normal split apk generation or oneapk amazon generation
         // amazon apk is generated with ./gradlew -Poneapk
-        versionName = '5.15.17'
-        versionCode = 501517
+        versionName = '5.15.18'
+        versionCode = 501518
         if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
         applicationId "org.courville.nova"
     }
