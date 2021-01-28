@@ -41,7 +41,6 @@ import org.slf4j.LoggerFactory;
 
 public class TorrentObserverService extends Service{
 
-    private static final boolean DBG = false;
     private static final Logger log = LoggerFactory.getLogger(TorrentObserverService.class);
 
     private static final String DEFAULT_TORRENT_PATH = "/sdcard/";
@@ -53,7 +52,6 @@ public class TorrentObserverService extends Service{
     private boolean isDaemonRunning;
     private static Process sProcess;
     private IBinder binder ;
-    private final static boolean DBG = false;
     private Thread mTorrentThread;
     private boolean hasToStop=false;
     private Integer mPort;
