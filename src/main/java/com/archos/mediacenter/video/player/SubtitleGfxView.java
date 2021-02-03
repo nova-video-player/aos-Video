@@ -50,7 +50,7 @@ public class SubtitleGfxView extends View {
 
     // Used to ajust the size of the subtitles depending on the screen dpi
     // (the multiplication factor will be of 1.0 for the provided density)
-    private static final int SCREEN_REFERENCE_DPI = 220;    // experimental value
+    private static final int SCREEN_REFERENCE_DPI = 320;    // experimental value
 
     public SubtitleGfxView(Context context, AttributeSet attrs) {
         super(context, attrs);
