@@ -2052,20 +2052,24 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                             if (DBG) Log.d(TAG, "onKey, button up");
                             return true;
                         case KeyEvent.KEYCODE_O:
+                        case KeyEvent.KEYCODE_PROG_RED:
                             if (isShowing())
                                 hide();
                             else
                                 show(FLAG_SIDE_ALL_EXCEPT_UNLOCK_INSTRUCTIONS, 0);
                             return true;
                         case KeyEvent.KEYCODE_F:
+                        case KeyEvent.KEYCODE_PROG_GREEN:
                             mSurfaceController.switchVideoFormat();
                             return true;
                         case KeyEvent.KEYCODE_J:
                         case KeyEvent.KEYCODE_S:
+                        case KeyEvent.KEYCODE_PROG_YELLOW:
                             mSettings.switchSubtitleTrack();
                             return true;
                         case KeyEvent.KEYCODE_POUND:
                         case KeyEvent.KEYCODE_A:
+                        case KeyEvent.KEYCODE_PROG_BLUE:
                             mSettings.switchAudioTrack();
                             return true;
                     }
