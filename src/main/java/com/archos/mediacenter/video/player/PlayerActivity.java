@@ -1805,7 +1805,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     ((TVMenu)tvmFormat.getSlaveView()).getItem(1).setVisibility(View.GONE);
             }
             final View vPicInPic;
-            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N && ArchosFeatures.isAndroidTV(this)) {
+            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N && TVUtils.isTV(this)) {
                 tvmFormat.createAndAddSeparator();
                 vPicInPic = tvmFormat.createAndAddTVMenuItem(getString(R.string.picture_in_picture), false, false);
             }
