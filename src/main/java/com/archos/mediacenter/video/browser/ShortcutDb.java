@@ -152,6 +152,7 @@ public enum ShortcutDb {
      */
     public boolean insertShortcut(Context context, Uri uri, String name) {
         if (DBG) Log.d(TAG, "insertShortcut "+uri+" "+name);
+        if (name == null) name = uri.toString();
         ContentValues initialValues = new ContentValues(2);
         initialValues.put(KEY_URI, uri.toString());
         initialValues.put(KEY_SHORTCUT_NAME, name);
