@@ -1,4 +1,5 @@
-- Add support for movie collections/sagas on Android TV
-- Separate section for animation movies and series on Android TV
-- Faster TV shows media information retrieval
-- Perform tvshow opensubtitles query based on imdbId to get better matches
+- SMBv2/3 support via jcifs-ng
+- Add support for movie collections/sagas
+- Use DNS,BCAST default SMB resolver order to avoid slow SMB share responses in some network configurations
+- Allow AV1 hardware decoding
+- ExoPlayer with ffmpeg video alternate player (hidden for now)
