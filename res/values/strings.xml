@@ -105,8 +105,10 @@
     <string name="not_played_yet_videos">Not played yet</string>
     <string name="video_folder">Folders</string>
     <string name="movies">Movies</string>
+    <string name="animes">Animes</string>
     <string name="all_movies">All movies</string>
     <string name="all_movies_format">All movies  -  %d</string>
+    <string name="all_animes_format">All animes  -  %d</string>
     <string name="all_collections">All collections</string>
     <string name="all_collections_format">All collections  -  %d</string>
     <string name="all_collection_watched">All collection watched</string>
@@ -116,6 +118,7 @@
         <item quantity="other">%d movies watched</item>
     </plurals>
     <string name="not_watched_movies_format">Not watched  -  %d</string>
+    <string name="not_watched_animes_format">Not watched  -  %d</string>
 
     <string name="no_movie_watched">No movie watched</string>
     <string name="all_movies_watched">All movies watched</string>
@@ -127,6 +130,10 @@
     <string name="movies_by_year">Movies by year</string>
     <string name="all_tv_shows">TV shows</string>
     <string name="all_tvshows">All TV shows</string>
+    <string name="all_animes">All animes</string>
+    <string name="animes_by_alpha">Animes alphabetical</string>
+    <string name="animes_by_genre">Animes by genre</string>
+    <string name="animes_by_rating">Animes by rating</string>
     <string name="all_tvshows_format">All TV shows  -  %d</string>
     <string name="not_watched_tvshows_format">Not watched  -  %d</string>
     <string name="all_seasons">All seasons</string>
@@ -267,6 +274,7 @@
     <string name="you_have_no_video">No videos</string>
     <string name="you_have_no_video_yet">Searching for videos&#8230;</string>
     <string name="you_have_no_movies">No movies</string>
+    <string name="you_have_no_animes">No animes</string>
     <string name="you_have_no_movie_collections">No collections</string>
     <string name="you_have_no_tv_shows">No TV shows</string>
     <string name="you_have_no_non_scraped_videos">No non scraped videos</string>

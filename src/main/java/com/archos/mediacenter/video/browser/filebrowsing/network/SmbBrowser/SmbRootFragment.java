@@ -135,8 +135,10 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
         super.onDestroy();
         log.debug("onDestroy");
         mSambaDiscovery.removeListener(this);
-        if(mCheckShortcutAvailabilityTask!=null)
+        if(mCheckShortcutAvailabilityTask!=null) {
+            log.debug("onDestroy: cancel mCheckShortcutAvailabilityTask");
             mCheckShortcutAvailabilityTask.cancel(true);
+        }
     }
     @Override
     public void onDestroyView() {
@@ -185,8 +187,10 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     }
 
     private void checkShortcutAvailability(){
-        if(mCheckShortcutAvailabilityTask!=null)
+        if(mCheckShortcutAvailabilityTask!=null) {
+            log.debug("checkShortcutAvailability: cancel non null mCheckShortcutAvailabilityTask before launching one");
             mCheckShortcutAvailabilityTask.cancel(true);
+        }
         mCheckShortcutAvailabilityTask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... arg0) {

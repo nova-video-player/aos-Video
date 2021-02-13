@@ -66,6 +66,7 @@ import com.archos.mediacenter.video.browser.loader.NonScrapedVideosCountLoader;
 import com.archos.mediacenter.video.leanback.adapter.object.Box;
 import com.archos.mediacenter.video.leanback.adapter.object.EmptyView;
 import com.archos.mediacenter.video.leanback.adapter.object.Icon;
+import com.archos.mediacenter.video.leanback.animes.AllAnimesIconBuilder;
 import com.archos.mediacenter.video.leanback.collections.AllCollectionsGridActivity;
 import com.archos.mediacenter.video.leanback.collections.CollectionFragment;
 import com.archos.mediacenter.video.leanback.collections.CollectionsIconBuilder;
@@ -109,6 +110,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     final static int LOADER_ID_LAST_ADDED = 42;
     final static int LOADER_ID_LAST_PLAYED = 43;
     final static int LOADER_ID_ALL_MOVIES = 46;
+    final static int LOADER_ID_ALL_ANIMES = 48;
     final static int LOADER_ID_ALL_TV_SHOWS = 44;
     final static int LOADER_ID_NON_SCRAPED_VIDEOS_COUNT = 45;
 
@@ -118,14 +120,18 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     final static int ROW_ID_MOVIES = 1002;
     final static int ROW_ID_TVSHOW2 = 1003;
     final static int ROW_ID_ALL_MOVIES = 1007;
+    final static int ROW_ID_ALL_ANIMES = 1010;
     final static int ROW_ID_TVSHOWS = 1004;
     final static int ROW_ID_FILES = 1005;
     final static int ROW_ID_PREFERENCES = 1006;
+    final static int ROW_ID_ANIMES = 1009;
 
     final static int COL_ID_ALL_MOVIES = 0;
     final static int COL_ID_MOVIES_BY_ALPHA = 1;
     final static int COL_ID_MOVIES_BY_GENRE = 2;
     final static int COL_ID_MOVIES_BY_RATING = 3;
+
+    final static int COL_ID_ALL_ANIMES = 0;
 
     // Need these row indexes to update the full ListRow object
     final static int ROW_INDEX_UNSET = -1;
@@ -135,8 +141,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     private ArrayObjectAdapter mRowsAdapter;
     private ArrayObjectAdapter mMoviesRowsAdapter;
+    private ArrayObjectAdapter mAnimesRowsAdapter;
     private ArrayObjectAdapter mTvshowRowAdapter;
     private CursorObjectAdapter mMoviesAdapter;
+    private CursorObjectAdapter mAnimeAdapter;
     private static CursorObjectAdapter mTvshowsAdapter;
     // TODO: disabled until issue #186 is fixed
     //private CursorObjectAdapter mWatchingUpNextAdapter;
@@ -150,11 +158,13 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private ListRow mLastAddedRow;
     private ListRow mLastPlayedRow;
     private static ListRow mMoviesRow;
+    private static ListRow mAnimesRow;
     private static ListRow mTvshowsRow;
     private static ListRow mMovieRow;
     private static ListRow mTvshowRow;
 
     private static Box mAllMoviesBox;
+    private static Box mAllAnimesBox;
     private static Box mAllTvshowsBox;
     private static Box mAllCollectionsBox;
 
@@ -178,12 +188,14 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private BackgroundManager bgMngr;
 
     private AsyncTask mBuildAllMoviesBoxTask;
+    private AsyncTask mBuildAllAnimesBoxTask;
     private AsyncTask mBuildAllTvshowsBoxTask;
     private AsyncTask mBuildAllCollectionsBoxTask;
 
     private static Activity mActivity;
 
     private boolean mNeedBuildAllMoviesBox = false;
+    private boolean mNeedBuildAllAnimesBox = false;
     private boolean mNeedBuildAllTvshowsBox = false;
     private boolean mNeedBuildAllCollectionsBox = false;
 
@@ -425,6 +437,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         buildAllCollectionsBox();
         mMoviesRowsAdapter.add(mAllCollectionsBox);
 
+        mAnimesRowsAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
+        buildAllAnimesBox();
+        mAnimesRowsAdapter.add(mAllAnimesBox);
+        mAnimesRow = new ListRow(ROW_ID_ANIMES, new HeaderItem(getString(R.string.animes)), mAnimesRowsAdapter);
+
         mTvshowRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         buildAllTvshowsBox();
         mTvshowRowAdapter.add(mAllTvshowsBox);
@@ -515,6 +532,27 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             if (bitmap != null && mAllCollectionsBox != null && mMovieRow != null) {
                 mAllCollectionsBox.setBitmap(bitmap);
                 ((ArrayObjectAdapter)mMovieRow.getAdapter()).replace(3, mAllCollectionsBox);
+            }
+        }
+    }
+
+    private void buildAllAnimesBox() {
+        mAllAnimesBox = new Box(Box.ID.ALL_ANIMES, getString(R.string.all_animes), R.drawable.movies_banner);
+        if (mBuildAllAnimesBoxTask != null) mBuildAllAnimesBoxTask.cancel(true);
+        mBuildAllMoviesBoxTask = new buildAllMoviesBoxTask().execute();
+    }
+
+    private static class buildAllAnimesBoxTask extends AsyncTask<Void, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            Bitmap iconBitmap = new AllAnimesIconBuilder(mActivity).buildNewBitmap();
+            return iconBitmap;
+        }
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap != null && mAllAnimesBox != null && mAnimesRow != null) {
+                mAllAnimesBox.setBitmap(bitmap);
+                ((ArrayObjectAdapter)mAnimesRow.getAdapter()).replace(0, mAllAnimesBox);
             }
         }
     }

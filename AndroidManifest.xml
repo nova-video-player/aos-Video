@@ -1327,6 +1327,10 @@
             android:theme="@style/MyLeanbackTheme"/>
 
         <activity
+            android:name="com.archos.mediacenter.video.leanback.animes.AllAnimesGridActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
             android:name="com.archos.mediacenter.video.leanback.tvshow.AllTvshowsGridActivity"
             android:theme="@style/MyLeanbackTheme"/>
 
@@ -1366,6 +1370,22 @@
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.movies.MoviesByYearActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.animes.AnimesByAlphaActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.animes.AnimesByGenreActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.animes.AnimesByRatingActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.animes.AnimesByYearActivity"
             android:theme="@style/MyLeanbackTheme"/>
 
         <activity
