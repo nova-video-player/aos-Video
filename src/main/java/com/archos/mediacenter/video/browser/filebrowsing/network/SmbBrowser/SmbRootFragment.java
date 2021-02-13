@@ -20,13 +20,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-
-import androidx.core.view.MenuItemCompat;
 
 import com.archos.environment.NetworkState;
 import com.archos.filecorelibrary.FileEditorFactory;
@@ -38,15 +35,17 @@ import com.archos.mediacenter.video.browser.filebrowsing.network.UpnpSmbCommonRo
 import com.archos.mediacenter.video.browser.filebrowsing.network.WorkgroupShortcutAndServerAdapter;
 import com.archos.mediaprovider.NetworkScanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 /**
  * Created by alexandre on 28/05/15.
  */
 public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaDiscovery.Listener {
+    private static final Logger log = LoggerFactory.getLogger(SmbRootFragment.class);
     private SambaDiscovery mSambaDiscovery;
-    private static final String TAG = "SmbRootFragment";
-    private static boolean DBG = false;
 
     private AsyncTask<Void, Void, Void> mCheckShortcutAvailabilityTask;
 
@@ -119,7 +118,7 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     public void onAttach(Context context) {
         super.onAttach(context);
         Activity activity = getActivity();
-        if (DBG) Log.d(TAG, "onAttach mSambaDiscovery");
+        log.debug("onAttach mSambaDiscovery");
         // Instantiate the SMB discovery as soon as we get the activity context
         mSambaDiscovery = new SambaDiscovery(activity);
         mSambaDiscovery.setMinimumUpdatePeriodInMs(100);
@@ -134,7 +133,7 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (DBG) Log.d(TAG, "onDestroy");
+        log.debug("onDestroy");
         mSambaDiscovery.removeListener(this);
         if(mCheckShortcutAvailabilityTask!=null)
             mCheckShortcutAvailabilityTask.cancel(true);
@@ -142,13 +141,13 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (DBG) Log.d(TAG, "onDestroyView");
+        log.debug("onDestroyView");
         mSambaDiscovery.abort();
     }
     @Override
     public void onDetach() {
         super.onDetach();
-        if (DBG) Log.d(TAG, "onDetach");
+        log.debug("onDetach");
         mSambaDiscovery.abort();
     }
     /**
@@ -181,7 +180,7 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     // SambaDiscovery.Listener implementation
     @Override
     public void onDiscoveryFatalError() {
-        if (DBG) Log.d(TAG, "onDiscoveryFatalError");
+        log.debug("onDiscoveryFatalError");
         ((WorkgroupShortcutAndServerAdapter)mAdapter).setIsLoadingWorkgroups(false);
     }
 
@@ -201,17 +200,17 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
                 // re-enable since otherwise stunnel smb://127.0.0.1:xxxx links are marked non available
                 for (ShortcutDbAdapter.Shortcut shortcut : shortcuts) {
                     Uri uri = Uri.parse(shortcut.getUri());
-                    if (DBG) Log.d(TAG, "checkShortcutAvailability.doInBackground: checking " + shortcut.getUri());
+                    log.debug("checkShortcutAvailability.doInBackground: checking " + shortcut.getUri());
                     if ((shares == null || !shares.contains(uri.getHost().toLowerCase())) // share not listed yet...
                             &&!forcedShortcuts.contains(shortcut.getUri()) // it is not a forced shortcut
                             && FileEditorFactory.getFileEditorForUrl(uri, getActivity()).exists()) { // shortcut exists
-                        if (DBG) Log.d(TAG, "checkShortcutAvailability.doInBackground: shortcut " + shortcut.getUri() + " is available, display it!");
+                        log.debug("checkShortcutAvailability.doInBackground: shortcut " + shortcut.getUri() + " is available, display it!");
                         mAdapter.forceShortcutDisplay(shortcut.getUri());
                     } else {
-                        if (DBG) Log.d(TAG, "checkShortcutAvailability.doInBackground: it is there, no need to check " + shortcut.getUri());
+                        log.debug("checkShortcutAvailability.doInBackground: it is there, no need to check " + shortcut.getUri());
                     }
                 }
-                if (DBG) Log.d(TAG, "checkShortcutAvailability.doInBackground: check finished");
+                log.debug("checkShortcutAvailability.doInBackground: check finished");
                 return null;
             }
             @Override
