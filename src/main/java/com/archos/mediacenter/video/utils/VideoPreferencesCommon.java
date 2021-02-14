@@ -106,6 +106,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_MOVIE_SORT_ORDER ="preferences_movie_sort_order";
     public static final String KEY_SHOW_ALL_TV_SHOWS_ROW = "show_all_tv_shows_row";
     public static final String KEY_TV_SHOW_SORT_ORDER ="preferences_tv_show_sort_order";
+    public static final String KEY_SHOW_ALL_ANIMES_ROW = "show_all_animes_row";
+    public static final String KEY_ANIMES_SORT_ORDER ="preferences_animes_sort_order";
 
     public static final String KEY_MAKE_TIME_NEGATIVE = "make_time_negative";
     public static final String KEY_HIDE_TRAILER_ROW = "hide_trailer_row";
@@ -138,6 +140,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final boolean SHOW_LAST_PLAYED_ROW_DEFAULT = true;
     public static final boolean SHOW_ALL_MOVIES_ROW_DEFAULT = false;
     public static final boolean SHOW_ALL_TV_SHOWS_ROW_DEFAULT = false;
+    public static final boolean SHOW_ALL_ANIMES_ROW_DEFAULT = false;
 
     public static final boolean MAKE_TIME_NEGATIVE_DEFAULT = false;
     public static final boolean HIDE_TRAILER_ROW_DEFAULT = false;
