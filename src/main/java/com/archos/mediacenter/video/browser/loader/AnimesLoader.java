@@ -72,6 +72,8 @@ public class AnimesLoader extends VideoLoader {
         sb.append(super.getSelection()); // get common selection from the parent
         sb.append(" AND ");
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL");
+        sb.append(" AND ");
+        sb.append(VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " LIKE '%Animation%'");
         if (!mShowWatched) {
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);
