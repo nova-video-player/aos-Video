@@ -18,17 +18,17 @@ import android.content.Context;
 
 import com.archos.mediacenter.video.R;
 
-public class AnimesByAlphaLoader extends AnimesByLoader {
+public class FilmsByAlphaLoader extends FilmsByLoader {
 
     private static final String DEFAULT_SORT = COLUMN_SUBSET_NAME+" COLLATE NOCASE ASC";
 
-    public AnimesByAlphaLoader(Context context) {
+    public FilmsByAlphaLoader(Context context) {
         super(context);
         mSortOrder = DEFAULT_SORT;
         setSelection(getSelection(context));
     }
 
-    public AnimesByAlphaLoader(Context context, String sortOrder) {
+    public FilmsByAlphaLoader(Context context, String sortOrder) {
         super(context);
         mSortOrder = sortOrder;
         setSelection(getSelection(context));

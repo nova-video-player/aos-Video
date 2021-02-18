@@ -23,7 +23,7 @@ import androidx.loader.content.Loader;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
-public abstract class AnimesByLoader extends CursorLoader implements CompatAndSDKCursorLoaderFactory {
+public abstract class FilmsByLoader extends CursorLoader implements CompatAndSDKCursorLoaderFactory {
 
     public static final String COLUMN_COUNT = "count";
     public static final String COLUMN_SUBSET_ID = "_id";
@@ -36,7 +36,7 @@ public abstract class AnimesByLoader extends CursorLoader implements CompatAndSD
     protected String mSortOrder;
     private boolean mForceHideVideos;
 
-    public AnimesByLoader(Context context) {
+    public FilmsByLoader(Context context) {
         super(context);
         setUri(VideoStore.RAW_QUERY.buildUpon().appendQueryParameter("group",
                 "CASE\n"+
@@ -63,7 +63,7 @@ public abstract class AnimesByLoader extends CursorLoader implements CompatAndSD
         }
 
         sb.append(" AND ");
-        sb.append (VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " LIKE '%Animation%'");
+        sb.append (VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " NOT LIKE '%Animation%'");
 
         return sb.toString();
     }
