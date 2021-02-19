@@ -15,20 +15,23 @@
 package com.archos.mediacenter.video.player;
 
 import android.annotation.TargetApi;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaMetadata;
+import android.media.MediaSession2;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -62,6 +65,7 @@ import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoUtils;
+import com.archos.medialib.MediaMetadata;
 import com.archos.medialib.Subtitle;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
@@ -136,6 +140,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private long mVideoId;
     public PlayerState  mPlayerState = PlayerState.INIT;
     private MediaSessionCompat mSession;
+    private MediaMetadataCompat mSessionMetadata = null;
     private UpdateNextTask mUpdateNextTask;
     private Uri mNextUri;
     private long mNextVideoId;
@@ -389,6 +394,23 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         Intent intent = new Intent(PLAYER_SERVICE_STARTED);
         intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
         sendBroadcast(intent);
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("DISPLAY_FLOATING_PLAYER");
+        filter.addAction(PLAY_INTENT);
+        filter.addAction(PAUSE_INTENT);
+        filter.addAction(EXIT_INTENT);
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(PAUSE_INTENT.equals(intent.getAction())) {
+                    Log.d("PHH", "Pausing from notification");
+                    mPlayer.pause(PlayerController.STATE_NORMAL);
+                } else if(PLAY_INTENT.equals(intent.getAction())) {
+                    mPlayer.start(PlayerController.STATE_NORMAL);
+                }
+            }
+        }, filter);
     }
 
     /* init variables from intent
@@ -474,7 +496,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         else if(mVideoInfo!=null){
             mPlayerFrontend.onVideoDb(mVideoInfo, null);
         }
-        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (!PrivateMode.isActive()) {
             setNowPlayingCard();
         }
     }
@@ -732,7 +754,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mPlayerState = PlayerState.STOPPED;
             TorrentObserverService.staticExitProcess();
             TorrentObserverService.killProcess();
-            if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+            if (!PrivateMode.isActive()) {
                 stopNowPlayingCard();
             }
         }
@@ -931,7 +953,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                         mIndexHelper.writeVideoInfo(mVideoInfo, true);
                     }
 
-                    if (ArchosFeatures.isAndroidTV(PlayerService.this) && !PrivateMode.isActive())
+                    if (!PrivateMode.isActive())
                     updateNowPlayingMetadata();
                     // check if it has been scraped
                 }
@@ -971,7 +993,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
         mUri = mVideoInfo.uri;
         mIntent.setData(mUri);
-        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (!PrivateMode.isActive()) {
             updateNowPlayingMetadata();
         }
         if(mCallOnDataUriOKWhenVideoInfoIsSet)
@@ -1079,7 +1101,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void onCompletion() {
         if (DBG) Log.d(TAG, "onCompletion");
 
-        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (!PrivateMode.isActive()) {
             updateNowPlayingState();
         }
         mLastPosition = LAST_POSITION_END;
@@ -1110,7 +1132,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     @Override
     public boolean onError(int errorCode, int errorQualCode, String msg) {
         if (DBG) Log.d(TAG, "onError");
-        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (!PrivateMode.isActive()) {
             updateNowPlayingState();
         }
         if(mPlayerFrontend!=null) {
@@ -1149,7 +1171,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         } else {
             if (DBG) Log.d(TAG, "onPlay: !PlayerController.STATE_NORMAL -> not startTrakt()!");
         }
-        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (!PrivateMode.isActive()) {
             updateNowPlayingState();
         }
         if(mPlayerFrontend!=null) {
@@ -1166,7 +1188,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         } else {
             if (DBG) Log.d(TAG, "onPause: other/seek state thus not doing pauseTrakt()!");
         }
-        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (!PrivateMode.isActive()) {
             updateNowPlayingState();
         }
         if(mPlayerFrontend!=null){
@@ -1304,6 +1326,29 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      * displays now playing card on android TV
      */
     private void setNowPlayingCard() {
+        // need to do that early to avoid ANR on Android 26+
+        nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel nc = new NotificationChannel(notifChannelId, notifChannelName,
+                    nm.IMPORTANCE_LOW);
+            nc.setDescription(notifChannelDescr);
+            if (nm != null)
+                nm.createNotificationChannel(nc);
+        }
+        nb = new NotificationCompat.Builder(this, notifChannelId)
+                .setSmallIcon(R.drawable.video2)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setTicker(null).setOnlyAlertOnce(true).setOngoing(true).setAutoCancel(true);
+        nb.setContentTitle(getString(R.string.now_playing));
+        if(mPlayer!=null) {
+            Log.d("PHH", "Got a player!");
+            nb.mActions.clear();
+            if (mPlayer.isPlaying())
+                nb.addAction(new NotificationCompat.Action(R.drawable.video_pause, getString(R.string.floating_player_pause), PendingIntent.getBroadcast(this, 0, new Intent(PAUSE_INTENT), 0)));
+            else if (mPlayer.isInPlaybackState())
+                nb.addAction(new NotificationCompat.Action(R.drawable.video_play, getString(R.string.floating_player_play), PendingIntent.getBroadcast(this, 0, new Intent(PLAY_INTENT), 0)));
+        }
+
         /**
          * in case our activity has been stopped, relaunch the video
          */
@@ -1335,14 +1380,28 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                         updateNowPlayingState();
                     }
                 }
+
+                @Override
+                public void onSeekTo(long pos) {
+                    Log.d("PHH", "Seeking to " + pos);
+                    mPlayer.seekTo((int)pos);
+                }
             };
+
             mSession.setCallback(mediaSessionCallback);
             // deprecated and always true
             //mSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
             mSession.setActive(true);
         }
 
-        mSession.setSessionActivity(pi);;
+        mSession.setSessionActivity(pi);
+        nb.setStyle(
+                new androidx.media.app.NotificationCompat.MediaStyle()
+                        .setMediaSession(mSession.getSessionToken())
+                        .setShowActionsInCompactView(0)
+        );
+
+        nm.notify(PLAYER_NOTIFICATION_ID, nb.build());
     }
 
     /**
@@ -1351,16 +1410,33 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private void updateNowPlayingState() {
         if(mSession==null)
             return;
-        if (mPlayer != null && mPlayer.isPlaying()) {
+
+        if (mPlayer != null && mPlayer.isInPlaybackState()) {
             if (!mSession.isActive()) {
                 mSession.setActive(true);
             }
+
+            nb.mActions.clear();
+            if (mPlayer.isPlaying())
+                nb.addAction(new NotificationCompat.Action(R.drawable.video_pause, getString(R.string.floating_player_pause), PendingIntent.getBroadcast(this, 0, new Intent(PAUSE_INTENT), 0)));
+            else
+                nb.addAction(new NotificationCompat.Action(R.drawable.video_play, getString(R.string.floating_player_play), PendingIntent.getBroadcast(this, 0, new Intent(PLAY_INTENT), 0)));
+
             PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
                     .setActions(getAvailableActions());
-            stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f);
+            stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, mPlayer.getCurrentPosition(), 1.0f);
+            stateBuilder.setActions(PlaybackStateCompat.ACTION_SEEK_TO);
             mSession.setPlaybackState(stateBuilder.build());
-        }
-        else if (mPlayerState==PlayerState.PREPARING) {
+
+            MediaMetadataCompat.Builder metadataBuilder = new MediaMetadataCompat.Builder(mSessionMetadata);
+            metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mPlayer.getDuration());
+            mSessionMetadata = metadataBuilder.build();
+            mSession.setMetadata(mSessionMetadata);
+
+            Log.d("PHH", "Upgrading session with duration " + mPlayer.getDuration() + ", position = "  + mPlayer.getCurrentPosition());
+
+            nm.notify(PLAYER_NOTIFICATION_ID, nb.build());
+        } else if (mPlayerState==PlayerState.PREPARING) {
             if (!mSession.isActive()) {
                 mSession.setActive(true);
             }
@@ -1407,7 +1483,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.widget_default_video);
         }
         metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ART, bitmap);
-        mSession.setMetadata(metadataBuilder.build());
+
+        mSessionMetadata = metadataBuilder.build();
+        mSession.setMetadata(mSessionMetadata);
     }
 
     public long getAvailableActions() {

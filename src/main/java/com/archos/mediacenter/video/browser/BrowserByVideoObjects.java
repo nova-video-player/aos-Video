@@ -16,13 +16,18 @@
 package com.archos.mediacenter.video.browser;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.display.DisplayManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -58,6 +63,7 @@ import com.archos.mediacenter.video.browser.presenter.VideoGridShortPresenter;
 import com.archos.mediacenter.video.browser.presenter.VideoListPresenter;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.player.PlayerActivity;
+import com.archos.mediacenter.video.player.PlayerService;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.PlayUtils;
@@ -160,6 +166,14 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
         final boolean markAsTrakt = Trakt.isTraktV2Enabled(mContext, mPreferences);
         final boolean isNetwork = !FileUtils.isLocal(video.getFileUri());
         menu.add(0, R.string.play_from_beginning, 0, R.string.play_selection);
+
+        DisplayManager dm = (DisplayManager) mContext.getSystemService(Context.DISPLAY_SERVICE);
+        if(dm != null && Build.VERSION.SDK_INT >= 26) {
+            Display[] displays = dm.getDisplays();
+            if (displays.length > 1) {
+                menu.add(0, R.string.play_to_secondary, 0, R.string.play_to_secondary);
+            }
+        }
         if (resume && resumePosition != PlayerActivity.LAST_POSITION_END) {
             menu.findItem(R.string.play_from_beginning).setTitle(R.string.play_from_beginning);
             String resumeString = mContext.getString(R.string.resume) + " (" + MediaUtils.formatTime(resumePosition) + ")";
@@ -310,6 +324,28 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
         Video video = mAdapterByVideoObjects.getVideoItem(info.position);
         switch (index) {
+            case R.string.play_to_secondary: {
+                // This part of code is reachable exclusively on SDK >= 26,
+                // because the entry is added only on SDK >=26
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.putExtra(PlayerService.VIDEO, video);
+                intent.setClass(mContext, PlayerActivity.class);
+                intent.setDataAndType(video.getUri(), video.getMimeType());
+                intent.putExtra(PlayerActivity.RESUME, PlayerActivity.RESUME_NO);
+
+                ActivityOptions opts = ActivityOptions.makeBasic();
+
+                DisplayManager dm = mContext.getSystemService(DisplayManager.class);
+                Display[] displays = dm.getDisplays();
+                for(int i=0; i<displays.length; i++) {
+                    Display d = displays[i];
+                    Log.d(TAG, "Got display " + i + ":" + d.getDisplayId() + ":" + d.getName());
+                }
+
+                opts.setLaunchDisplayId(displays[1].getDisplayId());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                mContext.startActivity(intent, opts.toBundle());
+            }
 
             case R.string.play_from_beginning:
                 // play action
