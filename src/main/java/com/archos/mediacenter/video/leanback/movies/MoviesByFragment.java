@@ -48,7 +48,7 @@ import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
-import com.archos.mediacenter.video.browser.loader.MoviesByLoader;
+import com.archos.mediacenter.video.browser.loader.FilmsByLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesSelectionLoader;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
@@ -252,8 +252,8 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
         }
 
         // these two column index are the same but it looks nicer like this :-)
-        final int oldSubsetNameColumn = oldCursor.getColumnIndex(MoviesByLoader.COLUMN_SUBSET_NAME);
-        final int newSubsetNameColumn = newCursor.getColumnIndex(MoviesByLoader.COLUMN_SUBSET_NAME);
+        final int oldSubsetNameColumn = oldCursor.getColumnIndex(FilmsByLoader.COLUMN_SUBSET_NAME);
+        final int newSubsetNameColumn = newCursor.getColumnIndex(FilmsByLoader.COLUMN_SUBSET_NAME);
 
         // Check all names
         oldCursor.moveToFirst();
@@ -275,9 +275,9 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
     }
 
     private void loadCategoriesRows(Cursor c) {
-        int subsetIdColumn = c.getColumnIndex(MoviesByLoader.COLUMN_SUBSET_ID);
-        int subsetNameColumn = c.getColumnIndex(MoviesByLoader.COLUMN_SUBSET_NAME);
-        int listOfMovieIdsColumn = c.getColumnIndex(MoviesByLoader.COLUMN_LIST_OF_MOVIE_IDS);
+        int subsetIdColumn = c.getColumnIndex(FilmsByLoader.COLUMN_SUBSET_ID);
+        int subsetNameColumn = c.getColumnIndex(FilmsByLoader.COLUMN_SUBSET_NAME);
+        int listOfMovieIdsColumn = c.getColumnIndex(FilmsByLoader.COLUMN_LIST_OF_MOVIE_IDS);
 
         mRowsAdapter.clear();
         mAdaptersMap.clear();

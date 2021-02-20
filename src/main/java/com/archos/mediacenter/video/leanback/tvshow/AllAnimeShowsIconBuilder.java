@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.archos.mediacenter.video.leanback.animes;
+package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -29,39 +29,38 @@ import android.widget.ImageView;
 import com.archos.mediacenter.video.R;
 import com.archos.mediaprovider.video.VideoStore;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * Build a bitmap composed of 8 movie posters to be used in the main leanback activity
+ * Build a bitmap composed of 8 tvshow posters to be used in the main leanback activity
  */
-public class AllAnimesIconBuilder {
+public class AllAnimeShowsIconBuilder {
 
     final static String[] PROJECTION = {
             VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER,
             VideoStore.Video.VideoColumns._ID,
-            VideoStore.Video.VideoColumns.SCRAPER_COVER
+            VideoStore.Video.VideoColumns.SCRAPER_S_COVER
     };
 
     final static String SELECTION =
             VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER + "=0 AND " +
-            VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL AND " +
-            VideoStore.Video.VideoColumns.SCRAPER_COVER + " IS NOT NULL AND " +
-            VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " LIKE '%Animation%'";
+            VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " IS NOT NULL AND " +
+            VideoStore.Video.VideoColumns.SCRAPER_S_COVER + " IS NOT NULL AND " +
+            VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " LIKE '%Animation%'" +
+            ") GROUP BY (" + VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID;
 
-    private static final String TAG = "AllAnimesIconManager";
-    private static final Boolean DBG = false;
+    private static final String TAG = "AllAnimeShowsIconBuilder";
     final Context mContext;
     final int mWidth;
     final int mHeight;
 
-    public AllAnimesIconBuilder(Context context) {
+    public AllAnimeShowsIconBuilder(Context context) {
         mContext = context;
-        mWidth  = context.getResources ().getDimensionPixelSize(R.dimen.all_movies_icon_width);
-        mHeight  = context.getResources ().getDimensionPixelSize(R.dimen.all_movies_icon_height);
+        mWidth  = context.getResources ().getDimensionPixelSize(R.dimen.all_tvshows_icon_width);
+        mHeight  = context.getResources ().getDimensionPixelSize(R.dimen.all_tvshows_icon_height);
     }
 
     public Bitmap buildNewBitmap() {
@@ -78,7 +77,7 @@ public class AllAnimesIconBuilder {
 
         long endThread = SystemClock.currentThreadTimeMillis();
         long end = SystemClock.elapsedRealtime();
-        if (DBG) Log.d(TAG, "buildNewBitmap took "+(endThread-startThread)+" | "+(end-start));
+        Log.d(TAG, "buildNewBitmap took "+(endThread-startThread)+" | "+(end-start));
         return bitmap;
     }
 
@@ -86,7 +85,7 @@ public class AllAnimesIconBuilder {
         List<String> posters = getPostersList(cr);
 
         if (posters.size() == 0) {
-            if (DBG) Log.d(TAG, "not enough movies with poster to build the icon");
+            Log.d(TAG, "not enough animation shows with poster to build the icon");
             return null;
         }
 
@@ -96,14 +95,14 @@ public class AllAnimesIconBuilder {
     private List<String> getPostersList(ContentResolver cr) {
         Cursor c = cr.query(VideoStore.Video.Media.EXTERNAL_CONTENT_URI,
                 PROJECTION, SELECTION, null,
-                "RANDOM() LIMIT 12"); // get 12 random movies (8 + 4 in case some posters are invalid for any reason)
+                "RANDOM() LIMIT 12"); // get 12 random animesshows (8 + 4 in case some posters are invalid for any reason)
 
         if (c.getCount()==0) {
             c.close();
             return Collections.emptyList();
         }
 
-        final int coverIndex = c.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_COVER);
+        final int coverIndex = c.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_S_COVER);
         c.moveToFirst();
 
         ArrayList<String> list = new ArrayList<>(c.getCount());
@@ -118,7 +117,7 @@ public class AllAnimesIconBuilder {
 
     private Bitmap composeBitmap(List<String> posters) {
 
-        View compositionView  = LayoutInflater.from(mContext).inflate(R.layout.all_movies_icon, null);
+        View compositionView  = LayoutInflater.from(mContext).inflate(R.layout.all_tvshows_icon, null);
 
         // Get the 8 ImagesViews from the layout
         ArrayList<ImageView> imageViews = new ArrayList<>(8);
@@ -138,12 +137,7 @@ public class AllAnimesIconBuilder {
             
             // try next posters in case the first one fails to decode
             while (poster.hasNext()) {
-                Bitmap b;
-                try {
-                    b = BitmapFactory.decodeFile(poster.next(), options);
-                } catch(Exception e) {
-                    b = null;
-                }
+                Bitmap b = BitmapFactory.decodeFile(poster.next(), options);
                 if (b!=null) {
                     iv.setImageBitmap(b);
                     break;

@@ -57,6 +57,8 @@ public abstract class TvshowsByLoader extends CursorLoader implements CompatAndS
         if (LoaderUtils.mustHideWatchedVideo()||mForceHideVideos) {
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);
+            sb.append(" AND ");
+            sb.append(VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%Animation%'");
         }
 
         return sb.toString();

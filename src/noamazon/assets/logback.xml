@@ -60,7 +60,9 @@
   <!--logger name="com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser" level="DEBUG"/-->
 
   <!-- ftp: TRACE for verbose or DEBUG -->
-  <logger name="com.archos.filecorelibrary.ftp" level="DEBUG"/>
+  <!--logger name="com.archos.filecorelibrary.ftp" level="DEBUG"/-->
+
+  <logger name="com.archos.mediacenter.video.leanback.MainFragment" level="DEBUG"/>
 
   <includes>
     <include file="${EXT_DIR:-/sdcard}/Download/${PACKAGE_NAME}/logback.xml" optional="true" />

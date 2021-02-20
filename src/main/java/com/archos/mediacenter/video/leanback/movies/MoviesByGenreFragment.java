@@ -21,7 +21,7 @@ import android.os.Bundle;
 import android.util.SparseArray;
 
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.loader.MoviesByGenreLoader;
+import com.archos.mediacenter.video.browser.loader.FilmsByGenreLoader;
 import com.archos.mediacenter.video.leanback.VideosByFragment;
 import com.archos.mediacenter.video.utils.SortOrder;
 import com.archos.mediaprovider.video.VideoStore;
@@ -53,7 +53,7 @@ public class MoviesByGenreFragment extends VideosByFragment {
 
     @Override
     protected Loader<Cursor> getSubsetLoader(Context context) {
-        return new MoviesByGenreLoader(context);
+        return new FilmsByGenreLoader(context);
     }
 
     @Override

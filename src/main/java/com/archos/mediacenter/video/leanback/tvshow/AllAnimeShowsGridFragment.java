@@ -1,4 +1,4 @@
-// Copyright 2017 Archos SA
+// Copyright 2021 Courville Software
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.archos.mediacenter.video.leanback.movies;
+package com.archos.mediacenter.video.leanback.tvshow;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -42,10 +40,9 @@ import androidx.preference.PreferenceManager;
 
 import com.archos.customizedleanback.app.MyVerticalGridFragment;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
-import com.archos.mediacenter.video.browser.adapters.object.Movie;
-import com.archos.mediacenter.video.browser.adapters.object.Video;
-import com.archos.mediacenter.video.browser.loader.FilmsLoader;
+import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
+import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
+import com.archos.mediacenter.video.browser.loader.AllAnimeShowsLoader;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.DisplayMode;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
@@ -53,25 +50,22 @@ import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.leanback.presenter.VideoListPresenter;
 import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
-import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
+import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.DbUtils;
-import com.archos.mediacenter.video.utils.PlayUtils;
-import com.archos.mediacenter.video.utils.SortOrder;
 import com.archos.mediaprovider.video.VideoStore;
 
+public class AllAnimeShowsGridFragment extends MyVerticalGridFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-public class AllMoviesGridFragment extends MyVerticalGridFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+    private static final String TAG = "AllAnimeShowsGridFragment";
 
-    private static final String TAG = "AllMoviesGridFragment";
+    private static final String PREF_ALL_ANIMESHOWS_DISPLAY_MODE = "PREF_ALL_ANIMESHOWS_DISPLAY_MODE";
 
-    private static final String PREF_ALL_MOVIES_DISPLAY_MODE = "PREF_ALL_MOVIES_DISPLAY_MODE";
+    public static final String SORT_PARAM_KEY = AllAnimeShowsGridFragment.class.getName() + "_SORT";
 
-    public static final String SORT_PARAM_KEY = AllMoviesGridFragment.class.getName() + "_SORT";
+    public static final String SHOW_WATCHED_KEY = AllAnimeShowsGridFragment.class.getName() + "_SHOW_WATCHED";
 
-    public static final String SHOW_WATCHED_KEY = AllMoviesGridFragment.class.getName() + "_SHOW_WATCHED";
-
-    private CursorObjectAdapter mMoviesAdapter;
+    private CursorObjectAdapter mTvshowsAdapter;
     private DisplayMode mDisplayMode;
     private SharedPreferences mPrefs;
     private Overlay mOverlay;
@@ -83,15 +77,14 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
 
     private boolean mShowWatched;
 
-    private static Context mContext;
-
-    public static SparseArray<MoviesSortOrderEntry> sortOrderIndexer = new SparseArray<MoviesSortOrderEntry>();
+    public static SparseArray<TvshowsSortOrderEntry> sortOrderIndexer = new SparseArray<TvshowsSortOrderEntry>();
     static {
-        sortOrderIndexer.put(0, new MoviesSortOrderEntry(R.string.sort_by_name_asc,        "name COLLATE NOCASE ASC"));
-        sortOrderIndexer.put(1, new MoviesSortOrderEntry(R.string.sort_by_date_added_desc, VideoStore.MediaColumns.DATE_ADDED + " DESC"));
-        sortOrderIndexer.put(2, new MoviesSortOrderEntry(R.string.sort_by_year_desc,       VideoStore.Video.VideoColumns.SCRAPER_M_YEAR + " DESC"));
-        sortOrderIndexer.put(3, new MoviesSortOrderEntry(R.string.sort_by_duration_asc,    SortOrder.DURATION.getAsc()));
-        sortOrderIndexer.put(4, new MoviesSortOrderEntry(R.string.sort_by_rating_asc,      SortOrder.SCRAPER_M_RATING.getDesc()));
+        sortOrderIndexer.put(0, new TvshowsSortOrderEntry(R.string.sort_by_name_asc,        VideoStore.Video.VideoColumns.SCRAPER_TITLE + " ASC"));
+        sortOrderIndexer.put(1, new TvshowsSortOrderEntry(R.string.sort_by_date_added_desc, "max(" + VideoStore.Video.VideoColumns.DATE_ADDED + ") DESC"));
+        sortOrderIndexer.put(2, new TvshowsSortOrderEntry(R.string.sort_by_date_played_desc, "max(" + VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + ") DESC"));
+        sortOrderIndexer.put(3, new TvshowsSortOrderEntry(R.string.sort_by_date_premiered_desc,       VideoStore.Video.VideoColumns.SCRAPER_S_PREMIERED + " DESC"));
+        sortOrderIndexer.put(4, new TvshowsSortOrderEntry(R.string.sort_by_date_aired_desc, "max(" + VideoStore.Video.VideoColumns.SCRAPER_E_AIRED + ") DESC"));
+        sortOrderIndexer.put(5, new TvshowsSortOrderEntry(R.string.sort_by_rating_asc,      "IFNULL(" + VideoStore.Video.VideoColumns.SCRAPER_S_RATING + ", 0) DESC"));
     }
 
 
@@ -99,24 +92,22 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mContext = this.getContext();
-
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        int displayModeIndex = mPrefs.getInt(PREF_ALL_MOVIES_DISPLAY_MODE, -1);
+        int displayModeIndex = mPrefs.getInt(PREF_ALL_ANIMESHOWS_DISPLAY_MODE, -1);
         if (displayModeIndex<0) {
             mDisplayMode = DisplayMode.GRID; // default
         } else {
             mDisplayMode = DisplayMode.values()[displayModeIndex];
         }
-        mSortOrder = mPrefs.getString(SORT_PARAM_KEY, FilmsLoader.DEFAULT_SORT);
-        mSortOrderEntries = MoviesSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
+        mSortOrder = mPrefs.getString(SORT_PARAM_KEY, TvshowSortOrderEntries.DEFAULT_SORT);
+        mSortOrderEntries = TvshowsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
 
         mShowWatched = mPrefs.getBoolean(SHOW_WATCHED_KEY, true);
 
         updateBackground();
 
-        setTitle(getString(R.string.all_movies));
-        setEmptyTextMessage(getString(R.string.you_have_no_movies));
+        setTitle(getString(R.string.all_animeshows));
+        setEmptyTextMessage(getString(R.string.you_have_no_anime_shows));
         setOnItemViewClickedListener(new VideoViewClickedListener(getActivity()));
         setOnItemViewSelectedListener(new ItemViewSelectedListener());
 
@@ -129,17 +120,17 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (mMoviesAdapter != null) {
-                    Movie movie = (Movie)mMoviesAdapter.get(getSelectedPosition());
-                    if (movie != null) {
-                        if (!movie.isPinned())
-                            DbUtils.markAsPinned(getActivity(), movie);
+                if (mTvshowsAdapter != null) {
+                    Tvshow tvshow = (Tvshow)mTvshowsAdapter.get(getSelectedPosition());
+                    if (tvshow != null) {
+                        if (!tvshow.isPinned())
+                            DbUtils.markAsPinned(getActivity(), tvshow);
                         else
-                            DbUtils.markAsNotPinned(getActivity(), movie);
+                            DbUtils.markAsNotPinned(getActivity(), tvshow);
                         Bundle args = new Bundle();
                         args.putString("sort", mSortOrder);
                         args.putBoolean("showWatched", mShowWatched);
-                        LoaderManager.getInstance(AllMoviesGridFragment.this).restartLoader(0, args, AllMoviesGridFragment.this);
+                        LoaderManager.getInstance(AllAnimeShowsGridFragment.this).restartLoader(0, args, AllAnimeShowsGridFragment.this);
                     }
                 }
 
@@ -160,15 +151,15 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
                 break;
         }
 
-        mMoviesAdapter = new CursorObjectAdapter(filePresenter);
-        mMoviesAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
-        setAdapter(mMoviesAdapter);
+        mTvshowsAdapter = new CursorObjectAdapter(filePresenter);
+        mTvshowsAdapter.setMapper(new CompatibleCursorMapperConverter(new TvshowCursorMapper()));
+        setAdapter(mTvshowsAdapter);
 
         setGridPresenter(vgp);
         Bundle args = new Bundle();
         args.putString("sort", mSortOrder);
         args.putBoolean("showWatched", mShowWatched);
-        LoaderManager.getInstance(this).restartLoader(0, args, AllMoviesGridFragment.this);
+        LoaderManager.getInstance(this).restartLoader(0, args, AllAnimeShowsGridFragment.this);
     }
 
     @Override
@@ -194,13 +185,14 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
 
         // Set orb color
         setSearchAffordanceColor(ContextCompat.getColor(getActivity(), R.color.lightblueA200));
-        
+
         // Set first orb action
         getTitleView().setOnOrb1ClickedListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), VideoSearchActivity.class);
-                intent.putExtra(VideoSearchActivity.EXTRA_SEARCH_MODE, VideoSearchActivity.SEARCH_MODE_MOVIE);
+                
+                intent.putExtra(VideoSearchActivity.EXTRA_SEARCH_MODE, VideoSearchActivity.SEARCH_MODE_EPISODE);
                 startActivity(intent);
             }
         });
@@ -218,10 +210,10 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
                         break;
                 }
                 // Save the new setting
-                mPrefs.edit().putInt(PREF_ALL_MOVIES_DISPLAY_MODE, mDisplayMode.ordinal()).commit();
+                mPrefs.edit().putInt(PREF_ALL_ANIMESHOWS_DISPLAY_MODE, mDisplayMode.ordinal()).commit();
                 // Reload a brand new fragment
                 getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new AllMoviesGridFragment())
+                        .replace(R.id.fragment_container, new AllAnimeShowsGridFragment())
                         .commit();
             }
         });
@@ -230,19 +222,19 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         getTitleView().setOnOrb3ClickedListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mSortOrderItem = MoviesSortOrderEntry.sortOrder2Item(mSortOrder, sortOrderIndexer);
+                mSortOrderItem = TvshowsSortOrderEntry.sortOrder2Item(mSortOrder, sortOrderIndexer);
                 new AlertDialog.Builder(getActivity())
                         .setSingleChoiceItems(mSortOrderEntries, mSortOrderItem, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 if (mSortOrderItem != which) {
                                     mSortOrderItem = which;
-                                    mSortOrder = MoviesSortOrderEntry.item2SortOrder(mSortOrderItem, sortOrderIndexer);
+                                    mSortOrder = TvshowsSortOrderEntry.item2SortOrder(mSortOrderItem, sortOrderIndexer);
                                     // Save the sort mode
                                     mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).commit();
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
                                     args.putBoolean("showWatched", mShowWatched);
-                                    LoaderManager.getInstance(AllMoviesGridFragment.this).restartLoader(0, args, AllMoviesGridFragment.this);
+                                    LoaderManager.getInstance(AllAnimeShowsGridFragment.this).restartLoader(0, args, AllAnimeShowsGridFragment.this);
                                 }
                                 dialog.dismiss();
                             }
@@ -268,7 +260,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
                 Bundle args = new Bundle();
                 args.putString("sort", mSortOrder);
                 args.putBoolean("showWatched", mShowWatched);
-                LoaderManager.getInstance(AllMoviesGridFragment.this).restartLoader(0, args, AllMoviesGridFragment.this);
+                LoaderManager.getInstance(AllAnimeShowsGridFragment.this).restartLoader(0, args, AllAnimeShowsGridFragment.this);
             }
         });
 
@@ -276,7 +268,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         getTitleView().setOnOrb5ClickedListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), MoviesByAlphaActivity.class);
+                Intent intent = new Intent(getActivity(), TvshowsByAlphaActivity.class);
                 startActivity(intent);
             }
         });
@@ -305,9 +297,9 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (id == 0) {
             if (args == null) {
-                return new FilmsLoader(getActivity(), true);
+                return new AllAnimeShowsLoader(getActivity());
             } else {
-                return new FilmsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"), true);
+                return new AllAnimeShowsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"));
             }
         }
         else return null;
@@ -317,19 +309,19 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         if (getActivity() == null) return;
         if (cursorLoader.getId()==0) {
-            mMoviesAdapter.swapCursor(cursor);
+            mTvshowsAdapter.swapCursor(cursor);
             setEmptyViewVisiblity(cursor.getCount()<1);
 
             if (mShowWatched)
-                setTitle(getString(R.string.all_movies_format, cursor.getCount()));
+                setTitle(getString(R.string.all_animeshows_format, cursor.getCount()));
             else
-                setTitle(getString(R.string.not_watched_movies_format, cursor.getCount()));
+                setTitle(getString(R.string.not_watched_animeshows_format, cursor.getCount()));
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        mMoviesAdapter.swapCursor(null);
+        mTvshowsAdapter.swapCursor(null);
     }
 
     private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
@@ -343,8 +335,6 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
     }
 
     private void updateBackground() {
-        Resources r = getResources();
-
         bgMngr = BackgroundManager.getInstance(getActivity());
         if(!bgMngr.isAttached())
             bgMngr.attach(getActivity().getWindow());
@@ -361,30 +351,26 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
     public void onKeyDown(int keyCode) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_MENU:
-                if (!getTitleView().isShown() && mMoviesAdapter != null && mMoviesAdapter.size() > 0)
+                if (!getTitleView().isShown() && mTvshowsAdapter != null && mTvshowsAdapter.size() > 0)
                     setSelectedPosition(0);
                 if (!getTitleView().isFocused())
                     getTitleView().requestFocus();
                 break;
             case KeyEvent.KEYCODE_MEDIA_PLAY:
             case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                if (mMoviesAdapter != null) {
-                    Video video = (Video)mMoviesAdapter.get(getSelectedPosition());
-                    if (video != null)
-                        PlayUtils.startVideo(getActivity(), video, PlayerActivity.RESUME_FROM_LAST_POS, false, -1, null, -1);
-                }
+                // TODO
                 break;
             case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
             case KeyEvent.KEYCODE_MEDIA_NEXT:
-                if (mMoviesAdapter != null && mMoviesAdapter.size() > 0) {
-                    setSelectedPosition(mMoviesAdapter.size() - 1);
+                if (mTvshowsAdapter != null && mTvshowsAdapter.size() > 0) {
+                    setSelectedPosition(mTvshowsAdapter.size() - 1);
                     if (!getView().isFocused())
                         getView().requestFocus();
                 }
                 break;
             case KeyEvent.KEYCODE_MEDIA_REWIND:
             case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                if (mMoviesAdapter != null && mMoviesAdapter.size() > 0) {
+                if (mTvshowsAdapter != null && mTvshowsAdapter.size() > 0) {
                     setSelectedPosition(0);
                     if (!getView().isFocused())
                         getView().requestFocus();

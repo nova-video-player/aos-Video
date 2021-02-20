@@ -185,6 +185,21 @@
             android:summary="@string/preferences_tv_show_sort_order_summary"
             android:title="@string/preferences_tv_show_sort_order_title"
         app:iconSpaceReserved="false"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="show_all_animes_row"
+            android:summary="@string/preferences_show_all_animes_row_summary"
+            android:title="@string/preferences_show_all_animes_row"
+            app:iconSpaceReserved="false"/>
+
+        <ListPreference
+            android:dialogTitle="@string/preferences_anime_sort_order_title"
+            android:key="preferences_anime_sort_order"
+            android:persistent="true"
+            android:summary="@string/preferences_anime_sort_order_summary"
+            android:title="@string/preferences_anime_sort_order_title"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/category_languages"
         app:iconSpaceReserved="false" >

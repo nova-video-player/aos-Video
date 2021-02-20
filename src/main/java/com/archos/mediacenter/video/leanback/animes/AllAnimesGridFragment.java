@@ -45,7 +45,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
-import com.archos.mediacenter.video.browser.loader.MoviesLoader;
+import com.archos.mediacenter.video.browser.loader.AnimesLoader;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.DisplayMode;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
@@ -71,7 +71,7 @@ public class AllAnimesGridFragment extends MyVerticalGridFragment implements Loa
 
     public static final String SHOW_WATCHED_KEY = AllAnimesGridFragment.class.getName() + "_SHOW_WATCHED";
 
-    private CursorObjectAdapter mMoviesAdapter;
+    private CursorObjectAdapter mAnimesAdapter;
     private DisplayMode mDisplayMode;
     private SharedPreferences mPrefs;
     private Overlay mOverlay;
@@ -107,7 +107,7 @@ public class AllAnimesGridFragment extends MyVerticalGridFragment implements Loa
         } else {
             mDisplayMode = DisplayMode.values()[displayModeIndex];
         }
-        mSortOrder = mPrefs.getString(SORT_PARAM_KEY, MoviesLoader.DEFAULT_SORT);
+        mSortOrder = mPrefs.getString(SORT_PARAM_KEY, AnimesLoader.DEFAULT_SORT);
         mSortOrderEntries = AnimesSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
 
         mShowWatched = mPrefs.getBoolean(SHOW_WATCHED_KEY, true);
@@ -128,8 +128,8 @@ public class AllAnimesGridFragment extends MyVerticalGridFragment implements Loa
         View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (mMoviesAdapter != null) {
-                    Movie movie = (Movie)mMoviesAdapter.get(getSelectedPosition());
+                if (mAnimesAdapter != null) {
+                    Movie movie = (Movie)mAnimesAdapter.get(getSelectedPosition());
                     if (movie != null) {
                         if (!movie.isPinned())
                             DbUtils.markAsPinned(getActivity(), movie);
@@ -159,9 +159,9 @@ public class AllAnimesGridFragment extends MyVerticalGridFragment implements Loa
                 break;
         }
 
-        mMoviesAdapter = new CursorObjectAdapter(filePresenter);
-        mMoviesAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
-        setAdapter(mMoviesAdapter);
+        mAnimesAdapter = new CursorObjectAdapter(filePresenter);
+        mAnimesAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
+        setAdapter(mAnimesAdapter);
 
         setGridPresenter(vgp);
         Bundle args = new Bundle();
@@ -304,9 +304,9 @@ public class AllAnimesGridFragment extends MyVerticalGridFragment implements Loa
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (id == 0) {
             if (args == null) {
-                return new MoviesLoader(getActivity(), true);
+                return new AnimesLoader(getActivity(), true);
             } else {
-                return new MoviesLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"), true);
+                return new AnimesLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"), true);
             }
         }
         else return null;
@@ -316,7 +316,7 @@ public class AllAnimesGridFragment extends MyVerticalGridFragment implements Loa
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         if (getActivity() == null) return;
         if (cursorLoader.getId()==0) {
-            mMoviesAdapter.swapCursor(cursor);
+            mAnimesAdapter.swapCursor(cursor);
             setEmptyViewVisiblity(cursor.getCount()<1);
 
             if (mShowWatched)
@@ -328,7 +328,7 @@ public class AllAnimesGridFragment extends MyVerticalGridFragment implements Loa
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        mMoviesAdapter.swapCursor(null);
+        mAnimesAdapter.swapCursor(null);
     }
 
     private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
@@ -360,30 +360,30 @@ public class AllAnimesGridFragment extends MyVerticalGridFragment implements Loa
     public void onKeyDown(int keyCode) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_MENU:
-                if (!getTitleView().isShown() && mMoviesAdapter != null && mMoviesAdapter.size() > 0)
+                if (!getTitleView().isShown() && mAnimesAdapter != null && mAnimesAdapter.size() > 0)
                     setSelectedPosition(0);
                 if (!getTitleView().isFocused())
                     getTitleView().requestFocus();
                 break;
             case KeyEvent.KEYCODE_MEDIA_PLAY:
             case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                if (mMoviesAdapter != null) {
-                    Video video = (Video)mMoviesAdapter.get(getSelectedPosition());
+                if (mAnimesAdapter != null) {
+                    Video video = (Video)mAnimesAdapter.get(getSelectedPosition());
                     if (video != null)
                         PlayUtils.startVideo(getActivity(), video, PlayerActivity.RESUME_FROM_LAST_POS, false, -1, null, -1);
                 }
                 break;
             case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
             case KeyEvent.KEYCODE_MEDIA_NEXT:
-                if (mMoviesAdapter != null && mMoviesAdapter.size() > 0) {
-                    setSelectedPosition(mMoviesAdapter.size() - 1);
+                if (mAnimesAdapter != null && mAnimesAdapter.size() > 0) {
+                    setSelectedPosition(mAnimesAdapter.size() - 1);
                     if (!getView().isFocused())
                         getView().requestFocus();
                 }
                 break;
             case KeyEvent.KEYCODE_MEDIA_REWIND:
             case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                if (mMoviesAdapter != null && mMoviesAdapter.size() > 0) {
+                if (mAnimesAdapter != null && mAnimesAdapter.size() > 0) {
                     setSelectedPosition(0);
                     if (!getView().isFocused())
                         getView().requestFocus();
