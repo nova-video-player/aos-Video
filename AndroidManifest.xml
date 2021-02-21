@@ -1331,6 +1331,10 @@
             android:theme="@style/MyLeanbackTheme"/>
 
         <activity
+            android:name="com.archos.mediacenter.video.leanback.tvshow.AllAnimeShowsGridActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
             android:name="com.archos.mediacenter.video.leanback.tvshow.AllTvshowsGridActivity"
             android:theme="@style/MyLeanbackTheme"/>
 

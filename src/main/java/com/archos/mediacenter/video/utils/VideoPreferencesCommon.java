@@ -54,12 +54,15 @@ import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.UiChoiceDialog;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
+import com.archos.mediacenter.video.leanback.animes.AllAnimesGridFragment;
+import com.archos.mediacenter.video.leanback.animes.AnimesSortOrderEntry;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridFragment;
 import com.archos.mediacenter.video.leanback.movies.MoviesSortOrderEntry;
 import com.archos.mediacenter.video.leanback.settings.VideoSettingsLicencesActivity;
 import com.archos.mediacenter.video.leanback.settings.VideoSettingsMoreLeanbackActivity;
 import com.archos.mediacenter.video.leanback.tvshow.AllTvshowsGridFragment;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowsSortOrderEntry;
+import com.archos.mediacenter.video.tvshow.AnimeShowSortOrderEntries;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.credentialsmanager.CredentialsManagerPreferenceActivity;
 import com.archos.medialib.MediaFactory;
@@ -666,6 +669,14 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 
                 if (tvshowSortOrderPref.getValue() == null)
                     tvshowSortOrderPref.setValue(TvshowSortOrderEntries.DEFAULT_SORT);
+
+                ListPreference animesSortOrderPref = (ListPreference)findPreference(KEY_ANIMES_SORT_ORDER);
+
+                animesSortOrderPref.setEntries(AnimesSortOrderEntry.getSortOrderEntries(getActivity(), AllAnimesGridFragment.sortOrderIndexer));
+                animesSortOrderPref.setEntryValues(AnimesSortOrderEntry.getSortOrderEntryValues(getActivity(), AllAnimesGridFragment.sortOrderIndexer));
+
+                if (animesSortOrderPref.getValue() == null)
+                    animesSortOrderPref.setValue(AnimeShowSortOrderEntries.DEFAULT_SORT);
 
                 findPreference(KEY_SHOW_ALL_TV_SHOWS_ROW).setOnPreferenceClickListener(preference -> {
                     // Check click speed

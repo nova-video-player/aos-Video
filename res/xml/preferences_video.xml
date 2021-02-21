@@ -195,7 +195,7 @@
 
         <ListPreference
             android:dialogTitle="@string/preferences_anime_sort_order_title"
-            android:key="preferences_anime_sort_order"
+            android:key="preferences_animes_sort_order"
             android:persistent="true"
             android:summary="@string/preferences_anime_sort_order_summary"
             android:title="@string/preferences_anime_sort_order_title"

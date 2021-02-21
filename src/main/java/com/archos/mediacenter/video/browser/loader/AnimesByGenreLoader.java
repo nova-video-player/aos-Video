@@ -49,7 +49,7 @@ public class AnimesByGenreLoader extends AnimesByLoader {
                 "             ON ( m_id = movie_belongs )\n" +
                 "           JOIN genre\n" +
                 "             ON ( genre._id = genre_belongs )\n" +
-                "     WHERE m_id IS NOT NULL" + getCommonSelection()+"\n"+
+                "     WHERE m_id IS NOT NULL" + getCommonSelection()+" AND genre.name_genre IS NOT 'Animation' \n"+
                 ")\n" +
                 " GROUP BY _id\n" +
                 " ORDER BY "+mSortOrder;

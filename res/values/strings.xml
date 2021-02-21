@@ -105,10 +105,10 @@
     <string name="not_played_yet_videos">Not played yet</string>
     <string name="video_folder">Folders</string>
     <string name="movies">Movies</string>
-    <string name="animes">Animes</string>
+    <string name="animes">Animations</string>
     <string name="all_movies">All movies</string>
     <string name="all_movies_format">All movies  -  %d</string>
-    <string name="all_animes_format">All animes  -  %d</string>
+    <string name="all_animes_format">Animation movies  -  %d</string>
     <string name="all_collections">All collections</string>
     <string name="all_collections_format">All collections  -  %d</string>
     <string name="all_collection_watched">All collection watched</string>
@@ -130,14 +130,15 @@
     <string name="movies_by_year">Movies by year</string>
     <string name="all_tv_shows">TV shows</string>
     <string name="all_tvshows">All TV shows</string>
-    <string name="all_animes">All animations</string>
+    <string name="all_animes">All animation movies</string>
     <string name="all_animeshows">All animation TV shows</string>
-    <string name="animes_by_alpha">Animes alphabetical</string>
-    <string name="animes_by_genre">Animes by genre</string>
-    <string name="animes_by_rating">Animes by rating</string>
+    <string name="animes_by_alpha">Animation movies alphabetical</string>
+    <string name="animes_by_genre">Animation movies by genre</string>
+    <string name="animes_by_rating">Animation movies by rating</string>
+    <string name="animes_by_year">Animation movies by year</string>
     <string name="all_tvshows_format">All TV shows  -  %d</string>
     <string name="not_watched_tvshows_format">Not watched  -  %d</string>
-    <string name="all_animeshows_format">All animation TV shows  -  %d</string>
+    <string name="all_animeshows_format">Animation TV shows  -  %d</string>
     <string name="not_watched_animeshows_format">Not watched  -  %d</string>
     <string name="all_seasons">All seasons</string>
     <string name="tvshows_by_alpha">TV shows alphabetical</string>
@@ -277,7 +278,7 @@
     <string name="you_have_no_video">No videos</string>
     <string name="you_have_no_video_yet">Searching for videos&#8230;</string>
     <string name="you_have_no_movies">No movies</string>
-    <string name="you_have_no_animes">No animes</string>
+    <string name="you_have_no_animes">No animation movies</string>
     <string name="you_have_no_movie_collections">No collections</string>
     <string name="you_have_no_tv_shows">No TV shows</string>
     <string name="you_have_no_anime_shows">No animation TV shows</string>
@@ -736,10 +737,10 @@
    <string name="preferences_show_all_tv_shows_row">Show all TV show row</string>
    <string name="preferences_tv_show_sort_order_summary">Select the sort order of the all TV show row</string>
    <string name="preferences_tv_show_sort_order_title">All TV show row sort order</string>
-    <string name="preferences_show_all_animes_row_summary">Check to show a row with all your animes instead of the anime categories row</string>
-    <string name="preferences_show_all_animes_row">Show all anime row</string>
-    <string name="preferences_anime_sort_order_summary">Select the sort order of the all anime row</string>
-    <string name="preferences_anime_sort_order_title">All anime row sort order</string>
+    <string name="preferences_show_all_animes_row_summary">Check to show a row with all your animations movies instead of the animation categories row</string>
+    <string name="preferences_show_all_animes_row">Show all animations row</string>
+    <string name="preferences_anime_sort_order_summary">Select the sort order of the all animations row</string>
+    <string name="preferences_anime_sort_order_title">All animations row sort order</string>
 
    <string name="codepage_title">Subtitles encoding</string>
    <string name="codepage_summary">Set the encoding used in text subtitles</string>

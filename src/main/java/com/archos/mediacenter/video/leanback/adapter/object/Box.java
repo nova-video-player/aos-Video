@@ -43,6 +43,8 @@ public class Box {
         EPISODES_BY_DATE,
         COLLECTIONS,
         ALL_ANIMES,
+        ANIMES_BY_GENRE,
+        ANIMES_BY_YEAR,
         ALL_ANIMESHOWS
     }
 

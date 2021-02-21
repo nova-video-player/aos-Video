@@ -51,7 +51,7 @@ import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.leanback.presenter.VideoListPresenter;
 import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
-import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
+import com.archos.mediacenter.video.tvshow.AnimeShowSortOrderEntries;
 import com.archos.mediacenter.video.utils.DbUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -77,14 +77,14 @@ public class AllAnimeShowsGridFragment extends MyVerticalGridFragment implements
 
     private boolean mShowWatched;
 
-    public static SparseArray<TvshowsSortOrderEntry> sortOrderIndexer = new SparseArray<TvshowsSortOrderEntry>();
+    public static SparseArray<AnimeShowsSortOrderEntry> sortOrderIndexer = new SparseArray<AnimeShowsSortOrderEntry>();
     static {
-        sortOrderIndexer.put(0, new TvshowsSortOrderEntry(R.string.sort_by_name_asc,        VideoStore.Video.VideoColumns.SCRAPER_TITLE + " ASC"));
-        sortOrderIndexer.put(1, new TvshowsSortOrderEntry(R.string.sort_by_date_added_desc, "max(" + VideoStore.Video.VideoColumns.DATE_ADDED + ") DESC"));
-        sortOrderIndexer.put(2, new TvshowsSortOrderEntry(R.string.sort_by_date_played_desc, "max(" + VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + ") DESC"));
-        sortOrderIndexer.put(3, new TvshowsSortOrderEntry(R.string.sort_by_date_premiered_desc,       VideoStore.Video.VideoColumns.SCRAPER_S_PREMIERED + " DESC"));
-        sortOrderIndexer.put(4, new TvshowsSortOrderEntry(R.string.sort_by_date_aired_desc, "max(" + VideoStore.Video.VideoColumns.SCRAPER_E_AIRED + ") DESC"));
-        sortOrderIndexer.put(5, new TvshowsSortOrderEntry(R.string.sort_by_rating_asc,      "IFNULL(" + VideoStore.Video.VideoColumns.SCRAPER_S_RATING + ", 0) DESC"));
+        sortOrderIndexer.put(0, new AnimeShowsSortOrderEntry(R.string.sort_by_name_asc,        VideoStore.Video.VideoColumns.SCRAPER_TITLE + " ASC"));
+        sortOrderIndexer.put(1, new AnimeShowsSortOrderEntry(R.string.sort_by_date_added_desc, "max(" + VideoStore.Video.VideoColumns.DATE_ADDED + ") DESC"));
+        sortOrderIndexer.put(2, new AnimeShowsSortOrderEntry(R.string.sort_by_date_played_desc, "max(" + VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + ") DESC"));
+        sortOrderIndexer.put(3, new AnimeShowsSortOrderEntry(R.string.sort_by_date_premiered_desc,       VideoStore.Video.VideoColumns.SCRAPER_S_PREMIERED + " DESC"));
+        sortOrderIndexer.put(4, new AnimeShowsSortOrderEntry(R.string.sort_by_date_aired_desc, "max(" + VideoStore.Video.VideoColumns.SCRAPER_E_AIRED + ") DESC"));
+        sortOrderIndexer.put(5, new AnimeShowsSortOrderEntry(R.string.sort_by_rating_asc,      "IFNULL(" + VideoStore.Video.VideoColumns.SCRAPER_S_RATING + ", 0) DESC"));
     }
 
 
@@ -99,8 +99,8 @@ public class AllAnimeShowsGridFragment extends MyVerticalGridFragment implements
         } else {
             mDisplayMode = DisplayMode.values()[displayModeIndex];
         }
-        mSortOrder = mPrefs.getString(SORT_PARAM_KEY, TvshowSortOrderEntries.DEFAULT_SORT);
-        mSortOrderEntries = TvshowsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
+        mSortOrder = mPrefs.getString(SORT_PARAM_KEY, AnimeShowSortOrderEntries.DEFAULT_SORT);
+        mSortOrderEntries = AnimeShowsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
 
         mShowWatched = mPrefs.getBoolean(SHOW_WATCHED_KEY, true);
 
@@ -222,13 +222,13 @@ public class AllAnimeShowsGridFragment extends MyVerticalGridFragment implements
         getTitleView().setOnOrb3ClickedListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mSortOrderItem = TvshowsSortOrderEntry.sortOrder2Item(mSortOrder, sortOrderIndexer);
+                mSortOrderItem = AnimeShowsSortOrderEntry.sortOrder2Item(mSortOrder, sortOrderIndexer);
                 new AlertDialog.Builder(getActivity())
                         .setSingleChoiceItems(mSortOrderEntries, mSortOrderItem, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 if (mSortOrderItem != which) {
                                     mSortOrderItem = which;
-                                    mSortOrder = TvshowsSortOrderEntry.item2SortOrder(mSortOrderItem, sortOrderIndexer);
+                                    mSortOrder = AnimeShowsSortOrderEntry.item2SortOrder(mSortOrderItem, sortOrderIndexer);
                                     // Save the sort mode
                                     mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).commit();
                                     Bundle args = new Bundle();
