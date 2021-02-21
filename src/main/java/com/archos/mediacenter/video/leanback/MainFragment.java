@@ -181,6 +181,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private String mAnimesSortOrder;
     private String mTvShowSortOrder;
 
+    private boolean restartMoviesLoader, restartTvshowsLoader, restartAnimesLoader;
+
     private Box mNonScrapedVideosItem;
 
     private SharedPreferences mPrefs;
@@ -197,12 +199,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private AsyncTask mBuildAllAnimeShowsBoxTask;
 
     private static Activity mActivity;
-
-    private boolean mNeedBuildAllMoviesBox = false;
-    private boolean mNeedBuildAllAnimesBox = false;
-    private boolean mNeedBuildAllTvshowsBox = false;
-    private boolean mNeedBuildAllCollectionsBox = false;
-    private boolean mNeedBuildAllAnimeShowsBox = false;
 
     @Override
     public void onAttach(Context context) {
@@ -345,55 +341,70 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             mShowLastPlayedRow = newShowLastPlayedRow;
             updateLastPlayedRow(null);
         }
+
         boolean newShowMoviesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_MOVIES_ROW, VideoPreferencesCommon.SHOW_ALL_MOVIES_ROW_DEFAULT);
         if (newShowMoviesRow != mShowMoviesRow) {
             log.debug("onResume: preference changed, display all movies row: " + newShowMoviesRow + " -> updating");
             mShowMoviesRow = newShowMoviesRow;
-            // TODO MARC: what is missing here is to relaunch loader if show
-
+            if (mShowMoviesRow) restartMoviesLoader = true;
         }
-        updateMoviesRow(null);
+        String newMovieSortOrder = mPrefs.getString(VideoPreferencesCommon.KEY_MOVIE_SORT_ORDER, MoviesLoader.DEFAULT_SORT);
+        if (mShowMoviesRow && !newMovieSortOrder.equals(mMovieSortOrder)) {
+            log.debug("onResume: preference changed, showing movie row and sort order changed -> updating");
+            mMovieSortOrder = newMovieSortOrder;
+            restartMoviesLoader = true;
+        }
+        if (restartMoviesLoader) {
+            log.debug("onResume: restart ALL_MOVIES loader");
+            restartMoviesLoader = false;
+            Bundle args = new Bundle();
+            args.putString("sort", mMovieSortOrder);
+            LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_MOVIES, args, this);
+        } else
+            updateMoviesRow(null); // will be done on loader restart
+
         boolean newShowTvshowsRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_TV_SHOWS_ROW, VideoPreferencesCommon.SHOW_ALL_TV_SHOWS_ROW_DEFAULT);
         if (newShowTvshowsRow != mShowTvshowsRow) {
             log.debug("onResume: preference changed, display all tv shows row: " + newShowTvshowsRow + " -> updating");
             mShowTvshowsRow = newShowTvshowsRow;
-        }
-        updateTvShowsRow(null);
-        boolean newShowAnimesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_ANIMES_ROW, VideoPreferencesCommon.SHOW_ALL_ANIMES_ROW_DEFAULT);
-        if (newShowAnimesRow != mShowAnimesRow) {
-            log.debug("onResume: preference changed, display all animes row: " + newShowAnimesRow + " -> updating");
-            mShowAnimesRow = newShowAnimesRow;
-        }
-        // /!\ TODO MARC relaunch loader in one of the if if it has changed and showanimesrow and combine with the one below and it is called updateRow is called anyway on loader change
-        // TODO MARC check that loader not called always!
-        updateAnimesRow(null);
-        String newMovieSortOrder = mPrefs.getString(VideoPreferencesCommon.KEY_MOVIE_SORT_ORDER, MoviesLoader.DEFAULT_SORT);
-        if (mShowMoviesRow && !newMovieSortOrder.equals(mMovieSortOrder)) {
-            log.debug("onResume: preference changed, showing movie row and sort order changed -> updating");
-            log.debug("onResume: restart ALL_MOVIES loader");
-            mMovieSortOrder = newMovieSortOrder;
-            Bundle args = new Bundle();
-            args.putString("sort", mMovieSortOrder);
-            LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_MOVIES, args, this);
+            if (mShowTvshowsRow) restartTvshowsLoader = true;
         }
         String newTvShowSortOrder = mPrefs.getString(VideoPreferencesCommon.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
         if (mShowTvshowsRow && !newTvShowSortOrder.equals(mTvShowSortOrder)) {
             log.debug("onResume: preference changed, showing tv show row and sort order changed -> updating");
-            log.debug("onResume: restart ALL_TVSHOWS loader");
             mTvShowSortOrder = newTvShowSortOrder;
+            restartTvshowsLoader = true;
+        }
+        if (restartTvshowsLoader) {
+            log.debug("onResume: restart ALL_TVSHOWS loader");
+            restartTvshowsLoader = false;
             Bundle args = new Bundle();
             args.putString("sort", mTvShowSortOrder);
             LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
+        } else
+            updateTvShowsRow(null); // will be done on loader restart
+
+        boolean newShowAnimesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_ANIMES_ROW, VideoPreferencesCommon.SHOW_ALL_ANIMES_ROW_DEFAULT);
+        if (newShowAnimesRow != mShowAnimesRow) {
+            log.debug("onResume: preference changed, display all animes row: " + newShowAnimesRow + " -> updating");
+            mShowAnimesRow = newShowAnimesRow;
+            if (mShowAnimesRow) restartAnimesLoader = true;
         }
         String newAnimesSortOrder = mPrefs.getString(VideoPreferencesCommon.KEY_ANIMES_SORT_ORDER, AnimesLoader.DEFAULT_SORT);
         if (mShowAnimesRow && !newAnimesSortOrder.equals(mAnimesSortOrder)) {
             log.debug("onResume: preference changed, showing animes row and sort order changed -> updating");
-            log.debug("onResume: restart ALL_ANIMES loader");
             mAnimesSortOrder = newAnimesSortOrder;
+            restartAnimesLoader = true;
+        }
+        if (restartAnimesLoader) {
+            log.debug("onResume: restart ALL_ANIMES loader");
+            restartAnimesLoader = false;
             Bundle args = new Bundle();
             args.putString("sort", mAnimesSortOrder);
             LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_ANIMES, args, this);
-        }
+        } else
+            updateAnimesRow(null); // will be done on loader restart
+
         findAndUpdatePrivateModeIcon();
     }
 
@@ -502,25 +513,22 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         mTvshowRowAdapter.add(new Box(Box.ID.EPISODES_BY_DATE, getString(R.string.episodes_by_date), R.drawable.years_banner_2021));
         mTvshowRow = new ListRow(ROW_ID_TVSHOW2, new HeaderItem(getString(R.string.all_tv_shows)), mTvshowRowAdapter);
 
-        // TODO MARC can have this as long as there is no loader invoked
-        // this is for the movies row not the movie row
-        //if (mShowMoviesRow) {
-            mMoviesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
-            mMoviesAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
-            mMoviesRow = new ListRow(ROW_ID_ALL_MOVIES, new HeaderItem(getString(R.string.all_movies)), mMoviesAdapter);
-        //}
+        // initialize adapters even the ones not used but do not launch the loaders yet for performance considerations
 
-        //if (mShowTvshowsRow) {
-            mTvshowsAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
-            mTvshowsAdapter.setMapper(new CompatibleCursorMapperConverter(new TvshowCursorMapper()));
-            mTvshowsRow = new ListRow(ROW_ID_TVSHOWS, new HeaderItem(getString(R.string.all_tvshows)), mTvshowsAdapter);
-        //}
+        // this is for the all movies row not the movie row
+        mMoviesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
+        mMoviesAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
+        mMoviesRow = new ListRow(ROW_ID_ALL_MOVIES, new HeaderItem(getString(R.string.all_movies)), mMoviesAdapter);
 
-        //if (mShowAnimesRow) {
-            mAnimesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
-            mAnimesAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
-            mAnimesRow = new ListRow(ROW_ID_ALL_ANIMES, new HeaderItem(getString(R.string.all_animes)), mAnimesAdapter);
-        //}
+        // this is for the all tv shows row not the tv show row
+        mTvshowsAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
+        mTvshowsAdapter.setMapper(new CompatibleCursorMapperConverter(new TvshowCursorMapper()));
+        mTvshowsRow = new ListRow(ROW_ID_TVSHOWS, new HeaderItem(getString(R.string.all_tvshows)), mTvshowsAdapter);
+
+        // this is for the all animes row not the animation row
+        mAnimesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
+        mAnimesAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
+        mAnimesRow = new ListRow(ROW_ID_ALL_ANIMES, new HeaderItem(getString(R.string.all_animes)), mAnimesAdapter);
 
         mFileBrowsingRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         mFileBrowsingRowAdapter.add(new Box(Box.ID.NETWORK, getString(R.string.network_storage), R.drawable.filetype_new_server));
@@ -737,8 +745,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         log.debug("updateMoviesRow");
         if (cursor != null) mMoviesAdapter.changeCursor(cursor);
         else cursor = mMoviesAdapter.getCursor();
-        // TODO MARC
-        //else if (mMoviesAdapter != null) cursor = mMoviesAdapter.getCursor();
         int currentPosition = getRowPosition(ROW_ID_ALL_MOVIES);
         if ((cursor ==null || cursor.getCount() == 0) || !mShowMoviesRow) {
             if (currentPosition != -1)
@@ -777,9 +783,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private void updateTvShowsRow(Cursor cursor) {
         log.debug("updateTvShowsRow");
         if (cursor != null) mTvshowsAdapter.changeCursor(cursor);
-        // TODO MARC WORKS FOR MOVIES BUT NOT TVSHOWS AND ANIMES... find where init is different --> same for all
         else cursor = mTvshowsAdapter.getCursor();
-        //else if (mTvshowsAdapter != null) cursor = mTvshowsAdapter.getCursor();
         int currentPosition = getRowPosition(ROW_ID_TVSHOWS);
         if ((cursor == null || cursor.getCount() == 0) || !mShowTvshowsRow) {
             if (currentPosition != -1)
@@ -826,10 +830,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private void updateAnimesRow(Cursor cursor) {
         log.debug("updateAnimesRow");
         if (cursor != null) mAnimesAdapter.changeCursor(cursor);
-        //else cursor = mAnimesAdapter.getCursor();
-        // TODO MARC
         else cursor = mAnimesAdapter.getCursor();
-        //else if (mAnimesAdapter != null) cursor = mAnimesAdapter.getCursor();
         int currentPosition = getRowPosition(ROW_ID_ALL_ANIMES);
         if (cursor == null || cursor.getCount() == 0) {
             if (currentPosition != -1)
@@ -973,9 +974,17 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     mLastAddedInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
                 log.debug("onLoadFinished: LastAdded cursor ready with " + cursor.getCount() + " entries and " + mLastAddedInitFocus + ", updating row");
                 updateLastAddedRow(cursor);
-                // TODO MARC: should we set mNeedBuildAllMoviesBox mNeedBuildAllAnimesBox
-                //  mNeedBuildAllMoviesBox mNeedBuildAllTvshowsBox and mNeedBuildAllAnimeShowsBox
-                // if not scanning here? or resume enough???
+                // on new video additions boxes are rebuilt
+                // note: this is not triggered onResume
+                if (!scanningOnGoing && isVideosListModified(mLastAddedAdapter.getCursor(), cursor)) { // rebuild box only if not scanning
+                    buildAllMoviesBox();
+                    buildAllCollectionsBox();
+                    updateMoviesRow(cursor);
+                    buildAllTvshowsBox();
+                    updateTvShowsRow(cursor);
+                    buildAllAnimesBox();
+                    updateAnimesRow(cursor);
+                }
                 break;
             case LOADER_ID_LAST_PLAYED:
                 if (mLastPlayedInitFocus == InitFocus.NOT_FOCUSED)
@@ -984,33 +993,14 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 updateLastPlayedRow(cursor);
                 break;
             case LOADER_ID_ALL_MOVIES:
-                if (!mNeedBuildAllMoviesBox && isVideosListModified(mMoviesAdapter.getCursor(), cursor))
-                    mNeedBuildAllMoviesBox = true;
-                if (mNeedBuildAllMoviesBox && !scanningOnGoing) {
-                    buildAllMoviesBox();
-                    buildAllCollectionsBox();
-                    mNeedBuildAllMoviesBox = false;
-                }
                 log.debug("onLoadFinished: AllMovies cursor ready with " + cursor.getCount() + " entries, updating row/box");
                 updateMoviesRow(cursor);
                 break;
             case LOADER_ID_ALL_TV_SHOWS:
-                if (!mNeedBuildAllTvshowsBox && isVideosListModified(mTvshowsAdapter.getCursor(), cursor))
-                    mNeedBuildAllTvshowsBox = true;
-                if (mNeedBuildAllTvshowsBox && !scanningOnGoing) {
-                    buildAllTvshowsBox();
-                    mNeedBuildAllTvshowsBox = false;
-                }
                 log.debug("onLoadFinished: AllTvShows cursor ready with " + cursor.getCount() + "entries, updating row/box");
                 updateTvShowsRow(cursor);
                 break;
             case LOADER_ID_ALL_ANIMES:
-                if (!mNeedBuildAllAnimesBox && isVideosListModified(mAnimesAdapter.getCursor(), cursor))
-                    mNeedBuildAllAnimesBox = true;
-                if (mNeedBuildAllAnimesBox && !scanningOnGoing) {
-                    buildAllAnimesBox();
-                    mNeedBuildAllAnimesBox = false;
-                }
                 log.debug("onLoadFinished: AllAnimes cursor ready with " + cursor.getCount() + "entries, updating row/box");
                 updateAnimesRow(cursor);
                 break;
