@@ -124,10 +124,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     final static int ROW_ID_LAST_ADDED = 1000;
     final static int ROW_ID_LAST_PLAYED = 1001;
     final static int ROW_ID_MOVIES = 1002;
-    final static int ROW_ID_TVSHOW2 = 1003;
+    final static int ROW_ID_TVSHOW = 1003;
     final static int ROW_ID_ALL_MOVIES = 1007;
     final static int ROW_ID_ALL_ANIMES = 1010;
-    final static int ROW_ID_TVSHOWS = 1004;
+    final static int ROW_ID_ALL_TVSHOWS = 1004;
     final static int ROW_ID_FILES = 1005;
     final static int ROW_ID_PREFERENCES = 1006;
     final static int ROW_ID_ANIMES = 1009;
@@ -489,15 +489,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         buildAllCollectionsBox();
         mMoviesRowsAdapter.add(mAllCollectionsBox);
 
-        mAnimeRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
-        mAnimeRow = new ListRow(ROW_ID_ANIMES, new HeaderItem(getString(R.string.animes)), mAnimeRowAdapter);
-        buildAllAnimesBox();
-        mAnimeRowAdapter.add(mAllAnimesBox);
-        mAnimeRowAdapter.add(new Box(Box.ID.ANIMES_BY_GENRE, getString(R.string.animes_by_genre), R.drawable.genres_banner));
-        mAnimeRowAdapter.add(new Box(Box.ID.ANIMES_BY_YEAR, getString(R.string.animes_by_year), R.drawable.years_banner_2021));
-        buildAllAnimeShowsBox();
-        mAnimeRowAdapter.add(mAllAnimeShowsBox);
-
         mTvshowRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         buildAllTvshowsBox();
         mTvshowRowAdapter.add(mAllTvshowsBox);
@@ -506,7 +497,16 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         if (showByRating)
             mTvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_RATING, getString(R.string.tvshows_by_rating), R.drawable.ratings_banner));
         mTvshowRowAdapter.add(new Box(Box.ID.EPISODES_BY_DATE, getString(R.string.episodes_by_date), R.drawable.years_banner_2021));
-        mTvshowRow = new ListRow(ROW_ID_TVSHOW2, new HeaderItem(getString(R.string.all_tv_shows)), mTvshowRowAdapter);
+        mTvshowRow = new ListRow(ROW_ID_TVSHOW, new HeaderItem(getString(R.string.all_tv_shows)), mTvshowRowAdapter);
+
+        mAnimeRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
+        mAnimeRow = new ListRow(ROW_ID_ANIMES, new HeaderItem(getString(R.string.animes)), mAnimeRowAdapter);
+        buildAllAnimesBox();
+        mAnimeRowAdapter.add(mAllAnimesBox);
+        mAnimeRowAdapter.add(new Box(Box.ID.ANIMES_BY_GENRE, getString(R.string.animes_by_genre), R.drawable.genres_banner));
+        mAnimeRowAdapter.add(new Box(Box.ID.ANIMES_BY_YEAR, getString(R.string.animes_by_year), R.drawable.years_banner_2021));
+        buildAllAnimeShowsBox();
+        mAnimeRowAdapter.add(mAllAnimeShowsBox);
 
         // initialize adapters even the ones not used but do not launch the loaders yet for performance considerations
 
@@ -518,7 +518,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         // this is for the all tv shows row not the tv show row
         mTvshowsAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
         mTvshowsAdapter.setMapper(new CompatibleCursorMapperConverter(new TvshowCursorMapper()));
-        mTvshowsRow = new ListRow(ROW_ID_TVSHOWS, new HeaderItem(getString(R.string.all_tvshows)), mTvshowsAdapter);
+        mTvshowsRow = new ListRow(ROW_ID_ALL_TVSHOWS, new HeaderItem(getString(R.string.all_tvshows)), mTvshowsAdapter);
 
         // this is for the all animes row not the animation row
         mAnimesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
@@ -741,35 +741,44 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         if (cursor != null) mMoviesAdapter.changeCursor(cursor);
         else cursor = mMoviesAdapter.getCursor();
         int currentPosition = getRowPosition(ROW_ID_ALL_MOVIES);
-        if ((cursor ==null || cursor.getCount() == 0) || !mShowMoviesRow) {
-            if (currentPosition != -1)
+        log.debug("updateMoviesRow: current position of all movies row " + currentPosition);
+        if ((cursor ==null || cursor.getCount() == 0) || !mShowMoviesRow) { // NOT ALL MOVIES
+            log.debug("updateMoviesRow: not all movies");
+            if (currentPosition != -1) { // if ALL MOVIES ROW remove it
+                log.debug("updateMoviesRow: remove all movies row at position " + currentPosition);
                 mRowsAdapter.removeItems(currentPosition, 1);
+            }
             if (getRowPosition(ROW_ID_MOVIES) == -1) {
-                int newPosition = 0;
-                if (getRowPosition(ROW_ID_LAST_PLAYED) != -1)
+                int newPosition = 0; // init at row 0
+                if (getRowPosition(ROW_ID_LAST_PLAYED) != -1) // if LAST PLAYED ROW put it after
                     newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
-                else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
+                else if (getRowPosition(ROW_ID_LAST_ADDED) != -1) // otherwise put it after LAST ADDED ROW
                     newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
                 // TODO: disabled until issue #186 is fixed
-                /* else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
+                /* else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1) // otherwise put if after WATCHING UP NEXT
                     newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
                  */
+                log.debug("updateMoviesRow: adding movies row at " + newPosition);
                 mRowsAdapter.add(newPosition, mMovieRow);
             }
-        }
-        else {
-            if (getRowPosition(ROW_ID_MOVIES) != -1)
-                mRowsAdapter.removeItems(getRowPosition(ROW_ID_MOVIES), 1);
+        } else { // ALL MOVIES CASE
+            log.debug("updateMoviesRow: all movies");
+            int position = getRowPosition(ROW_ID_MOVIES);
+            if (position != -1) { // if MOVIES ROW remove it
+                log.debug("updateMoviesRow: remove movies row at position " + position);
+                mRowsAdapter.removeItems(position, 1);
+            }
             if (currentPosition == -1) {
-                int newPosition = 0;
-                if (getRowPosition(ROW_ID_LAST_PLAYED) != -1)
+                int newPosition = 0; // init at row 0
+                if (getRowPosition(ROW_ID_LAST_PLAYED) != -1) // if LAST PLAYED ROW put it after
                     newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
-                else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
+                else if (getRowPosition(ROW_ID_LAST_ADDED) != -1) // otherwise put it after LAST ADDED ROW
                     newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
                 // TODO: disabled until issue #186 is fixed
-                /* else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
+                /* else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1) // otherwise put if after WATCHING UP NEXT
                     newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
                  */
+                log.debug("updateMoviesRow: adding movies row at " + newPosition);
                 mRowsAdapter.add(newPosition, mMoviesRow);
             }
         }
@@ -779,11 +788,15 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         log.debug("updateTvShowsRow");
         if (cursor != null) mTvshowsAdapter.changeCursor(cursor);
         else cursor = mTvshowsAdapter.getCursor();
-        int currentPosition = getRowPosition(ROW_ID_TVSHOWS);
+        int currentPosition = getRowPosition(ROW_ID_ALL_TVSHOWS);
+        log.debug("updateTvShowsRow: current position of all tvshows row " + currentPosition);
         if ((cursor == null || cursor.getCount() == 0) || !mShowTvshowsRow) {
-            if (currentPosition != -1)
+            log.debug("updateTvShowsRow: not all tvshows");
+            if (currentPosition != -1) {
+                log.debug("updateTvShowsRow: remove all tvshows row at position " + currentPosition);
                 mRowsAdapter.removeItems(currentPosition, 1);
-            if (getRowPosition(ROW_ID_TVSHOW2) == -1) {
+            }
+            if (getRowPosition(ROW_ID_TVSHOW) == -1) {
                 int newPosition = 0;
                 if (getRowPosition(ROW_ID_MOVIES) != -1)
                     newPosition = getRowPosition(ROW_ID_MOVIES) + 1;
@@ -797,12 +810,15 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 /* else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
                     newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
                  */
+                log.debug("updateTvShowsRow: adding tvshows row at " + newPosition);
                 mRowsAdapter.add(newPosition, mTvshowRow);
             }
-        }
-        else {
-            if (getRowPosition(ROW_ID_TVSHOW2) != -1)
-                mRowsAdapter.removeItems(getRowPosition(ROW_ID_TVSHOW2), 1);
+        } else {
+            int position = getRowPosition(ROW_ID_TVSHOW);
+            if (position != -1) {
+                log.debug("updateTvShowsRow: remove tvshows row at position " + position);
+                mRowsAdapter.removeItems(position, 1);
+            }
             if (currentPosition == -1) {
                 int newPosition = 0;
                 if (getRowPosition(ROW_ID_MOVIES) != -1)
@@ -817,6 +833,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 /* else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
                     newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
                  */
+                log.debug("updateTvShowsRow: adding all tvshows row at " + newPosition);
                 mRowsAdapter.add(newPosition, mTvshowsRow);
             }
         }
@@ -827,34 +844,19 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         if (cursor != null) mAnimesAdapter.changeCursor(cursor);
         else cursor = mAnimesAdapter.getCursor();
         int currentPosition = getRowPosition(ROW_ID_ALL_ANIMES);
-        if (cursor == null || cursor.getCount() == 0) {
-            if (currentPosition != -1)
+        log.debug("updateAnimesRow: current position of all animes row " + currentPosition);
+        if ((cursor ==null || cursor.getCount() == 0) || !mShowAnimesRow) {
+            log.debug("updateAnimesRow: not all animes");
+            if (currentPosition != -1) {
+                log.debug("updateAnimesRow: remove all animations row at position " + currentPosition);
                 mRowsAdapter.removeItems(currentPosition, 1);
+            }
             if (getRowPosition(ROW_ID_ANIMES) == -1) {
                 int newPosition = 0;
-
-                if (getRowPosition(ROW_ID_TVSHOW2) != -1)
-                    newPosition = getRowPosition(ROW_ID_TVSHOW2) + 1;
-                else if (getRowPosition(ROW_ID_MOVIES) != -1)
-                    newPosition = getRowPosition(ROW_ID_MOVIES) + 1;
-                else if (getRowPosition(ROW_ID_LAST_PLAYED) != -1)
-                    newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
-                else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
-                    newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
-                // TODO: disabled until issue #186 is fixed
-                /* else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
-                    newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
-                 */
-                mRowsAdapter.add(newPosition, mAnimeRow);
-            }
-        }
-        else {
-            if (getRowPosition(ROW_ID_ANIMES) != -1)
-                mRowsAdapter.removeItems(getRowPosition(ROW_ID_ANIMES), 1);
-            if (currentPosition == -1) {
-                int newPosition = 0;
-                if (getRowPosition(ROW_ID_TVSHOW2) != -1)
-                    newPosition = getRowPosition(ROW_ID_TVSHOW2) + 1;
+                if (getRowPosition(ROW_ID_TVSHOW) != -1)
+                    newPosition = getRowPosition(ROW_ID_TVSHOW) + 1;
+                else if (getRowPosition(ROW_ID_ALL_TVSHOWS) != -1)
+                    newPosition = getRowPosition(ROW_ID_ALL_TVSHOWS) + 1;
                 else if (getRowPosition(ROW_ID_MOVIES) != -1)
                     newPosition = getRowPosition(ROW_ID_MOVIES) + 1;
                 else if (getRowPosition(ROW_ID_ALL_MOVIES) != -1)
@@ -867,11 +869,38 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 /* else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
                     newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
                  */
+                log.debug("updateAnimesRow: adding animations row at " + newPosition);
+                mRowsAdapter.add(newPosition, mAnimeRow);
+            }
+        } else {
+            int position = getRowPosition(ROW_ID_ANIMES);
+            if (position != -1) {
+                log.debug("updateAnimesRow: remove animations row at position " + position);
+                mRowsAdapter.removeItems(position, 1);
+            }
+            if (currentPosition == -1) {
+                int newPosition = 0;
+                if (getRowPosition(ROW_ID_TVSHOW) != -1)
+                    newPosition = getRowPosition(ROW_ID_TVSHOW) + 1;
+                else if (getRowPosition(ROW_ID_ALL_TVSHOWS) != -1)
+                    newPosition = getRowPosition(ROW_ID_ALL_TVSHOWS) + 1;
+                else if (getRowPosition(ROW_ID_MOVIES) != -1)
+                    newPosition = getRowPosition(ROW_ID_MOVIES) + 1;
+                else if (getRowPosition(ROW_ID_ALL_MOVIES) != -1)
+                    newPosition = getRowPosition(ROW_ID_ALL_MOVIES) + 1;
+                else if (getRowPosition(ROW_ID_LAST_PLAYED) != -1)
+                    newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
+                else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
+                    newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
+                    // TODO: disabled until issue #186 is fixed
+                /* else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
+                    newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
+                 */
+                log.debug("updateAnimesRow: adding all animations row at " + newPosition);
                 mRowsAdapter.add(newPosition, mAnimesRow);
             }
         }
     }
-
 
     private void updateNonScrapedVideosVisibility(Cursor cursor) {
         log.debug("updateNonScrapedVideosVisibility");
