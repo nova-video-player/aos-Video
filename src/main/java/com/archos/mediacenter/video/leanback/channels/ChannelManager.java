@@ -26,6 +26,7 @@ import android.util.Log;
 import com.archos.environment.ArchosFeatures;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
+import com.archos.mediacenter.video.browser.loader.AnimesLoader;
 import com.archos.mediacenter.video.browser.loader.LastAddedLoader;
 import com.archos.mediacenter.video.browser.loader.LastPlayedLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
@@ -69,6 +70,7 @@ public class ChannelManager {
     private final String mRecentlyPlayed;
     private final String mAllMovies;
     private final String mAllTvShows;
+    private final String mAllAnimes;
     private LinkedHashMap<String, ChannelData> mChannels;
     private PrepareEmptyPosterTask mPrepareEmptyPosterTask;
     private PrepareChannelsTask mPrepareChannelsTask;
@@ -95,6 +97,7 @@ public class ChannelManager {
         mRecentlyPlayed = mContext.getString(R.string.recently_played);
         mAllMovies = mContext.getString(R.string.all_movies);
         mAllTvShows = mContext.getString(R.string.all_tvshows);
+        mAllAnimes = mContext.getString(R.string.all_animes);
     }
     
     private void prepareEmptyPoster() {
@@ -244,6 +247,7 @@ public class ChannelManager {
             addInternalChannel(newChannels, mRecentlyPlayed);
             addInternalChannel(newChannels, mAllMovies);
             addInternalChannel(newChannels, mAllTvShows);
+            addInternalChannel(newChannels, mAllAnimes);
 
             Cursor listCursor = mListLoader.loadInBackground();
 
@@ -305,6 +309,7 @@ public class ChannelManager {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             String allMoviesSortOrder = prefs.getString(VideoPreferencesCommon.KEY_MOVIE_SORT_ORDER, MoviesLoader.DEFAULT_SORT);
             String allTvShowsSortOrder = prefs.getString(VideoPreferencesCommon.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
+            String allAnimesSortOrder = prefs.getString(VideoPreferencesCommon.KEY_ANIMES_SORT_ORDER, AnimesLoader.DEFAULT_SORT);
 
             // TODO: disabled until issue #186 is fixed
             //mChannels.get(mWatchingUpNext).setLoader(new WatchingUpNextLoader(mContext));
@@ -312,6 +317,7 @@ public class ChannelManager {
             mChannels.get(mRecentlyPlayed).setLoader(new LastPlayedLoader(mContext));
             mChannels.get(mAllMovies).setLoader(new MoviesLoader(mContext, allMoviesSortOrder, true, true));
             mChannels.get(mAllTvShows).setLoader(new AllTvshowsLoader(mContext, allTvShowsSortOrder, true));
+            mChannels.get(mAllAnimes).setLoader(new AnimesLoader(mContext, allAnimesSortOrder, true, true));
 
             for(ChannelData channel : mChannels.values()) {
                 if (channel.getListVideoIds() != null)
