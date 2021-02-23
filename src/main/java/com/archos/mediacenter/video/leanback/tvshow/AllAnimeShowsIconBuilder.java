@@ -45,15 +45,10 @@ public class AllAnimeShowsIconBuilder {
             VideoStore.Video.VideoColumns.SCRAPER_S_COVER
     };
 
-    final static String SELECTION =
-            VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER + "=0 AND " +
-            VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " IS NOT NULL AND " +
-            VideoStore.Video.VideoColumns.SCRAPER_S_COVER + " IS NOT NULL AND " +
-            VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " LIKE '%Animation%'" +
-            ") GROUP BY (" + VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID;
+    static String SELECTION;
 
     private static final String TAG = "AllAnimeShowsIconBuilder";
-    final Context mContext;
+    private static Context mContext;
     final int mWidth;
     final int mHeight;
 
@@ -61,6 +56,12 @@ public class AllAnimeShowsIconBuilder {
         mContext = context;
         mWidth  = context.getResources ().getDimensionPixelSize(R.dimen.all_tvshows_icon_width);
         mHeight  = context.getResources ().getDimensionPixelSize(R.dimen.all_tvshows_icon_height);
+        SELECTION = VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER + "=0 AND " +
+                VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " IS NOT NULL AND " +
+                VideoStore.Video.VideoColumns.SCRAPER_S_COVER + " IS NOT NULL AND " +
+                "( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " LIKE '%" + mContext.getString(com.archos.medialib.R.string.tv_show_genre_animation) + "%' OR " +
+                VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " LIKE '%" + mContext.getString(com.archos.medialib.R.string.tv_show_genre_anime) + "%' )" +
+                ") GROUP BY (" + VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID;
     }
 
     public Bitmap buildNewBitmap() {

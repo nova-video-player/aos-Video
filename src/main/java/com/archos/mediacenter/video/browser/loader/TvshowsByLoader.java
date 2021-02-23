@@ -34,9 +34,11 @@ public abstract class TvshowsByLoader extends CursorLoader implements CompatAndS
     protected String mSortOrder;
     private boolean mForceHideVideos;
 
+    private static Context mContext;
 
     public TvshowsByLoader(Context context) {
         super(context);
+        mContext = context;
         setUri(VideoStore.RAW_QUERY.buildUpon().appendQueryParameter("group",
                 VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " IS NOT NULL GROUP BY ( " + VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " ) "
         ).build());
@@ -57,9 +59,11 @@ public abstract class TvshowsByLoader extends CursorLoader implements CompatAndS
         if (LoaderUtils.mustHideWatchedVideo()||mForceHideVideos) {
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);
-            sb.append(" AND ");
-            sb.append(VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%Animation%'");
         }
+
+        sb.append(" AND ");
+        sb.append("( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.tv_show_genre_animation) + "%' AND " +
+                VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.tv_show_genre_anime) + "%' )");
 
         return sb.toString();
     }

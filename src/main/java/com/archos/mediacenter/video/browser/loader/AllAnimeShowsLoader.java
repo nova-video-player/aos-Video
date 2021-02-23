@@ -34,6 +34,8 @@ public class AllAnimeShowsLoader extends VideoLoader {
 
     private boolean mShowWatched;
 
+    private static Context mContext;
+
     /**
      * List all shows
      * @param context
@@ -44,6 +46,7 @@ public class AllAnimeShowsLoader extends VideoLoader {
 
     public AllAnimeShowsLoader(Context context, String SortOrder, boolean showWatched) {
         super(context);
+        mContext = context;
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
         init();
@@ -96,7 +99,8 @@ public class AllAnimeShowsLoader extends VideoLoader {
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);
         }
         sb.append(" AND ");
-        sb.append(VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " LIKE '%Animation%'");
+        sb.append("( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " LIKE '%" + mContext.getString(com.archos.medialib.R.string.tv_show_genre_animation) + "%' OR " +
+                VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " LIKE '%" + mContext.getString(com.archos.medialib.R.string.tv_show_genre_anime) + "%' )");
         sb.append(") GROUP BY (");
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID);
         return sb.toString();
