@@ -45,7 +45,7 @@ public class AnimesByYearFragment extends VideosByFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setTitle(getString(R.string.movies_by_year));
+        setTitle(getString(R.string.animes_by_year));
 
         mSortOrderEntries = AnimesSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
     }

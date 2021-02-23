@@ -46,7 +46,7 @@ public class AnimesByGenreFragment extends VideosByFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setTitle(getString(R.string.movies_by_genre));
+        setTitle(getString(R.string.animes_by_genre));
 
         mSortOrderEntries = AnimesSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
     }
