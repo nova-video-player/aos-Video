@@ -28,12 +28,15 @@ public class AnimesLoader extends VideoLoader {
 
     private boolean mShowWatched;
 
+    private static Context mContext;
+
     public AnimesLoader(Context context, boolean groupbyOnlineId) {
         this(context, DEFAULT_SORT, true, groupbyOnlineId);
     }
 
     public AnimesLoader(Context context, String SortOrder, boolean showWatched, boolean groupByOnlineId) {
         super(context);
+        mContext = context;
         mGroupByOnlineId = groupByOnlineId;
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
@@ -73,7 +76,7 @@ public class AnimesLoader extends VideoLoader {
         sb.append(" AND ");
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL");
         sb.append(" AND ");
-        sb.append(VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " LIKE '%Animation%'");
+        sb.append(VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%'");
         if (!mShowWatched) {
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);

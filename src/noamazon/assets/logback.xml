@@ -62,7 +62,12 @@
   <!-- ftp: TRACE for verbose or DEBUG -->
   <!--logger name="com.archos.filecorelibrary.ftp" level="DEBUG"/-->
 
-  <logger name="com.archos.mediacenter.video.leanback.MainFragment" level="DEBUG"/>
+  <!--logger name="com.archos.mediacenter.video.leanback.MainFragment" level="DEBUG"/-->
+
+  <logger name="com.archos.mediascraper.ScraperImage" level="DEBUG"/>
+
+
+  com.archos.mediascraper
 
   <includes>
     <include file="${EXT_DIR:-/sdcard}/Download/${PACKAGE_NAME}/logback.xml" optional="true" />

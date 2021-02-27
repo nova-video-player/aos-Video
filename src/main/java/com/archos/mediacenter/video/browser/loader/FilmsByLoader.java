@@ -35,9 +35,11 @@ public abstract class FilmsByLoader extends CursorLoader implements CompatAndSDK
 
     protected String mSortOrder;
     private boolean mForceHideVideos;
+    private static Context mContext;
 
     public FilmsByLoader(Context context) {
         super(context);
+        mContext = context;
         setUri(VideoStore.RAW_QUERY.buildUpon().appendQueryParameter("group",
                 "CASE\n"+
                         "WHEN " + VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID + ">0 THEN " + VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID+"\n" +
@@ -63,7 +65,7 @@ public abstract class FilmsByLoader extends CursorLoader implements CompatAndSDK
         }
 
         sb.append(" AND ");
-        sb.append (VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " NOT LIKE '%Animation%'");
+        sb.append (VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%'");
 
         return sb.toString();
     }

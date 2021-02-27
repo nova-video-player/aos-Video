@@ -46,12 +46,7 @@ public class AllAnimesIconBuilder {
             VideoStore.Video.VideoColumns.SCRAPER_COVER
     };
 
-    final static String SELECTION =
-            VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER + "=0 AND " +
-            VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL AND " +
-            VideoStore.Video.VideoColumns.SCRAPER_COVER + " IS NOT NULL AND " +
-            VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " LIKE '%Animation%'";
-
+    static String SELECTION;
     private static final String TAG = "AllAnimesIconManager";
     private static final Boolean DBG = false;
     final Context mContext;
@@ -62,6 +57,11 @@ public class AllAnimesIconBuilder {
         mContext = context;
         mWidth  = context.getResources ().getDimensionPixelSize(R.dimen.all_movies_icon_width);
         mHeight  = context.getResources ().getDimensionPixelSize(R.dimen.all_movies_icon_height);
+
+        SELECTION = VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER + "=0 AND " +
+                        VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL AND " +
+                        VideoStore.Video.VideoColumns.SCRAPER_COVER + " IS NOT NULL AND " +
+                        VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%'";
     }
 
     public Bitmap buildNewBitmap() {
