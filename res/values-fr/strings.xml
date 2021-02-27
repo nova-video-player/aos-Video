@@ -90,8 +90,10 @@
     <string name="not_played_yet_videos">Pas encore joué</string>
     <string name="video_folder">Dossiers</string>
     <string name="movies">Films</string>
+    <string name="animes">Animations</string>
     <string name="all_movies">Tous les films</string>
     <string name="all_movies_format">Tous les films  -  %d</string>
+    <string name="all_animes_format">Films d\'animation  -  %d</string>
     <string name="all_collections">Toutes les sagas</string>
     <string name="all_collections_format">Toutes les sagas - %d</string>
     <string name="all_collection_watched">Toutes les sagas visionnées</string>
@@ -101,6 +103,7 @@
         <item quantity="other">%d films visionnés</item>
     </plurals>
     <string name="not_watched_movies_format">Non visonnés -  %d</string>
+    <string name="not_watched_animes_format">Non visonnés -  %d</string>
     <string name="no_movie_watched">Pas de film visionné</string>
     <string name="all_movies_watched">Tous les films visionnés</string>
     <string name="movies_by_alpha">Films alphabétique</string>
@@ -110,8 +113,16 @@
     <string name="movies_by_year">Films par année</string>
     <string name="all_tv_shows">Séries</string>
     <string name="all_tvshows">Toutes les séries</string>
+    <string name="all_animes">Tous les films d\'animation</string>
+    <string name="all_animeshows">Toutes les séries d\'animation</string>
+    <string name="animes_by_alpha">Films d\'animation alphabétique</string>
+    <string name="animes_by_genre">Films d\'animation par genre</string>
+    <string name="animes_by_rating">Films d\'animation par note</string>
+    <string name="animes_by_year">Films d\'animation par année</string>
     <string name="all_tvshows_format">Toutes les séries  -  %d</string>
     <string name="not_watched_tvshows_format">Non visonnés -  %d</string>
+    <string name="all_animeshows_format">Séries d\'animation  -  %d</string>
+    <string name="not_watched_animeshows_format">Non visonnés -  %d</string>
     <string name="all_seasons">Toutes les saisons</string>
     <string name="tvshows_by_alpha">Séries ordre alphabétique</string>
     <string name="tvshows_by_genre">Séries par genre</string>
@@ -242,8 +253,10 @@
     <string name="you_have_no_video">Aucune vidéo</string>
     <string name="you_have_no_video_yet">Recherche des vidéos&#8230;</string>
     <string name="you_have_no_movies">Aucun film</string>
+    <string name="you_have_no_animes">Pas de film d\'animation</string>
     <string name="you_have_no_movie_collections">Pas de saga</string>
     <string name="you_have_no_tv_shows">Aucune série</string>
+    <string name="you_have_no_anime_shows">Pas de série d\'animation</string>
     <string name="you_have_no_non_scraped_videos">Aucune vidéo sans description</string>
     <plurals name="Nmovies">
         <item quantity="one">1 film</item>
@@ -651,6 +664,10 @@
     <string name="preferences_show_all_tv_shows_row">Afficher la ligne regroupant toutes les séries TV</string>
     <string name="preferences_tv_show_sort_order_summary">Sélectionnez l\'ordre de tri pour vos séries</string>
     <string name="preferences_tv_show_sort_order_title">Ordre de tri des séries</string>
+    <string name="preferences_show_all_animes_row_summary">Cochez pour afficher une ligne avec tous vos films d\'animation au lieu de la ligne des catégories animation</string>
+    <string name="preferences_show_all_animes_row">Afficher la ligne regroupant tous les films d\'animation</string>
+    <string name="preferences_anime_sort_order_summary">Sélectionner l\'ordre de tri de la ligne \'tous les films d\'animation\'</string>
+    <string name="preferences_anime_sort_order_title">Ordre de tri pour vos films d\'animation</string>
     <string name="codepage_title">Encodage des sous-titres</string>
     <string name="codepage_summary">Sélectionnez l\'encodage utilisé pour les sous-titres</string>
     <string name="codepage_default">Langue de l\'appareil %s</string>
