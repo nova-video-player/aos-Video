@@ -577,6 +577,7 @@
     <string name="network_bookmarks_summary">Guarda y comprueba si es posible el punto de reanudación y posición de los marcadores en la red</string>
     <string name="share_folders_smbv2">Habilitar soporte para SMBv2</string>
     <string name="share_folders_smbv2_summary">Habilitar el soporte para compartición por SMB versión 2. ⚠ Experimental</string>
+    <string name="share_folders_smb_resolv_summary">Habilitar BCAST, DNS (de lo contrario DNS, BCAST)</string>
     <string name="connection_abnormally_long">La conexión parece anormalmente larga. ¿Quieres restablecerla?</string>
     <string name="connection_reset">Restablecer</string>
     <!-- Info dialog, not indexed file -->

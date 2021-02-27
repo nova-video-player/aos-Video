@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <!-- Menu item that takes the user back to the top level screen of the music player -->
+    <string name="goto_start">کتابخانه</string>
+    <!-- Menu item that takes the user to the "now playing" screen of the music player -->
+    <!-- Menu item to refresh servers list -->
+    <string name="refresh_servers_list">تازه کردن لیست سفارشات</string>
+    <!-- Menu item to enable network shares -->
+    <string name="enable_network_shares">Enable network shares</string>
+    <string name="initial_scan">جستجوي سريع</string>
+    <!-- Library screen, menu item -->
+    <string name="search_title">جستجو</string>
+    <!-- Default name of track that doesn't have a name in the metadata -->
+    <string name="unknown_track_name">ناشناخته</string>
+    <!-- Toast after turning shuffle on -->
+    <!-- Toast after turning shuffle off -->
+    <!-- Toast after turning single repeat on -->
+    <!-- Context menu item -->
+    <string name="info">اطلاعات</string>
+    <!-- Context menu item -->
+    <string name="play_selection">پخش</string>
+    <!-- Context menu item -->
+    <string name="multiple_selection">انتخاب چندگانه</string>
+    <!-- Context menu item -->
+    <string name="play_from_beginning">Play from beginning</string>
+    <!-- Dialog box button -->
+    <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <!-- The string used in file/folder infos dialog. -->
+    <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">فیلم</string>
+    <string name="info_tab_show">نمایش</string>
+    <string name="info_tab_video">ویدیو</string>
+    <string name="info_tab_share">همرسانی</string>
+    <!-- COVER ROLL -->
+    <!-- The string used in main storage list -->
+    <string name="network_storage">شبکه</string>
+    <!-- VIDEO -->
+    <string name="video">پخش کننده ویدیو نوا</string>
+    <string name="videos">ویدیوها</string>
+    <string name="all_videos">همه ویدیوها</string>
+    <string name="video_folder">پوشه‌ها</string>
+    <string name="date_view_week">هفته</string>
+    <string name="date_view_month">ماه</string>
+    <string name="date_view_year">سال</string>
+    <string name="delete">هذف</string>
+    <string name="confirm_delete_short">پذیرش هذف</string>
+    <string name="scrap_remove_short">هذف</string>
+    <!-- for small screens -->
+    <!-- Generic strings for Movies or TV shows -->
+    <string name="scrap_year">سال</string>
+    <string name="scrap_year_format">سال: %d</string>
+    <!-- Specific strings for TV shows -->
+    <string name="scrap_status_unknown">ناشناخته</string>
+    <string name="imdb_title_url">https://www.imdb.com/title/</string>
+    <!-- To be translated only in case there is a localized IMDB -->
+    <string name="info_video">ویدیو</string>
+    <string name="info_audio">صدا</string>
+    <string name="info_audio_vbr">VBR</string>
+    <!-- VIDEO COVER ROLL -->
+    <!-- Media Center -->
+    <string name="view_mode_list">فهرست</string>
+    <string name="switch_to_list">فهرست</string>
+    <!-- VideoPlayer -->
+    <string name="floating_player_play">پخش</string>
+    <string name="floating_player_pause">درنگ</string>
+    <string name="pref_play_mode_entry_folder">پوشه</string>
+    <string name="ui_mode_auto">خودکار</string>
+    <string name="pref_s3d_mode_entry_off">خاموش</string>
+    <string name="menu_player_settings">ساماندهی</string>
+    <!-- Subtitles/Audio languages -->
+    <string name="s_arabic">عربی</string>
+    <string name="s_english">انگلیسی</string>
+    <string name="s_spanish">اسپانیایی</string>
+    <string name="s_french">فرانسوی</string>
+    <string name="s_italian">ایتالیایی</string>
+    <string name="s_japanese">ژاپنی</string>
+    <string name="s_russian">روسی</string>
+    <string name="s_turkish">ترکی</string>
+    <string name="s_chinese">چینی</string>
+    <!-- Player errors -->
+    <!-- Player plug-in -->
+    <!-- Subtitles wizard -->
+    <string name="subtitles_wizard_delete">هذف این پرونده</string>
+    <string name="subtitles_wizard_empty_list">پرونده‌ای یافت نشد</string>
+    <!-- Subloader -->
+    <!-- Subtitle Settings Dialog -->
+    <string name="subtitle_size_text">اندازه:</string>
+    <!-- Subtitle Delay Dialog -->
+    <!-- Browser.CommonDetailsView -->
+    <!-- Add a space after the right quote
+    because the right part of the quote is
+    not visible otherwise -->
+    <!-- torrent -->
+    <!-- Shortcuts -->
+    <string-array name="ssh_types">
+        <item>FTP</item>
+        <item>SFTP</item>
+        <item>FTPS</item>
+    </string-array>
+    <string name="remove_from_shortcuts">هذف میانبر</string>
+    <string name="ftp_shortcuts">میانبرهای FTP</string>
+    <string name="ssh_password">گذرواژه</string>
+    <string name="ssh_username">نام کاربری</string>
+    <!-- Preferences -->
+    <string name="preferences_category_video">ویدیو</string>
+    <string name="preferences_video_about">درباره</string>
+    <string name="preferences_video_licenses">گواهینامه</string>
+    <string name="preferences_video_advanced">پیشرفته</string>
+    <string name="locale">زبان سامانه</string>
+    <string name="yes">بله</string>
+    <string name="no">نه</string>
+    <!--  Title of the video picker activity. -->
+    <!-- Archos File Info -->
+    <string name="video_info_backdrop_remove">هذف</string>
+    <string name="notification_mode">آگهداد</string>
+    <!-- Help overlay -->
+    <string name="connection_reset">بازنشانی</string>
+    <!-- Info dialog, not indexed file -->
+    <!-- Brightness -->
+    <!--  Nfo File parsing -->
+    <string name="dec_any">پیشگزیده</string>
+    <string name="blocklist_file_not_found">پرونده یافت نشد</string>
+    <string name="blocklist_unknown_error">ناشناخته</string>
+    <string name="trakt_user">نام کاربری</string>
+    <string name="trakt_password">گذرواژه</string>
+    <string name="show_all">همه ویدیوها</string>
+    <string name="search_results">دستاورد جستجو</string>
+    <string name="leanback_weblinks_header">پیوندها</string>
+    <string name="system">سامانه</string>
+    <string name="learn_more">بیشتر بدانید</string>
+    <string name="add_to_list">افزودن به فهرست</string>
+    <string name="loading">در دریافت…</string>
+    <string name="connecting">در پیوند…</string>
+</resources>

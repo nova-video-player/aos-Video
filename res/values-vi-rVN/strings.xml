@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <!-- Menu item that takes the user back to the top level screen of the music player -->
+    <string name="goto_start">Thư viện</string>
+    <!-- Menu item that takes the user to the "now playing" screen of the music player -->
+    <!-- Menu item to refresh servers list -->
+    <string name="refresh_servers_list">Làm mới danh sách máy chủ</string>
+    <!-- Menu item to enable network shares -->
+    <string name="enable_network_shares">Bật chia sẻ mạng</string>
+    <string name="initial_scan">Quét ban đầu</string>
+    <!-- Library screen, menu item -->
+    <string name="search_title">Tìm kiếm</string>
+    <!-- Default name of track that doesn't have a name in the metadata -->
+    <string name="unknown_track_name">Không rõ</string>
+    <!-- Toast after turning shuffle on -->
+    <!-- Toast after turning shuffle off -->
+    <!-- Toast after turning single repeat on -->
+    <!-- Context menu item -->
+    <string name="info">Thông tin</string>
+    <!-- Context menu item -->
+    <string name="play_selection">Phát</string>
+    <!-- Context menu item -->
+    <string name="multiple_selection">Chọn nhiều</string>
+    <!-- Context menu item -->
+    <string name="play_from_beginning">Phát từ đầu</string>
+    <!-- Dialog box button -->
+    <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <!-- The string used in file/folder infos dialog. -->
+    <string name="info_duration">Thời lượng</string>
+    <string name="video_sources">Nguồn</string>
+    <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">Phim</string>
+    <string name="info_tab_show">Chương trình</string>
+    <string name="info_tab_episode">Tập</string>
+    <string name="info_tab_video">Video</string>
+    <string name="info_tab_file">Thông tin tệp</string>
+    <string name="info_tab_backdrop_chooser">Trình chọn phông nền</string>
+    <string name="info_tab_share">Chia sẻ</string>
+    <!-- COVER ROLL -->
+    <string name="watching_up_next">Đang xem/Tiếp theo</string>
+    <string name="recently_added">Đã thêm gần đây</string>
+    <string name="recently_added_videos">Đã thêm gần đây</string>
+    <string name="recently_played">Phát gần đây</string>
+    <string name="recently_played_videos">Phát gần đây</string>
+    <string name="video_lists">Danh sách phát</string>
+    <!-- The string used in main storage list -->
+    <string name="external_storage">Bộ nhớ ngoài</string>
+    <string name="internal_storage">Bộ nhớ trong</string>
+    <string name="network_storage">Mạng</string>
+    <string name="sd_card_storage">Thẻ SD</string>
+    <string name="usb_host_storage">Ổ đĩa ngoài</string>
+    <string name="sftp_folders">FTP</string>
+    <string name="recordings_storage">Đang ghi</string>
+    <string name="root_storage">Bộ nhớ trong</string>
+    <string name="cannot_list">Không thể liệt kê nội dung</string>
+    <!-- VIDEO -->
+    <string name="video">Nova Video Player</string>
+    <string name="videos">Video</string>
+    <string name="all_videos">Tất cả video</string>
+    <string name="video_folder">Thư mục</string>
+    <string name="movies">Phim</string>
+    <string name="all_movies">Tất cả phim</string>
+    <string name="all_movies_format">Tất cả phim  -  %d</string>
+    <string name="all_collections">Tất cả bộ sưu tập</string>
+    <string name="all_collections_format">Tất cả bộ sưu tập  -  %d</string>
+    <string name="all_collection_watched">Bộ sưu tập đã xem</string>
+    <string name="all_collection_unwatched">Bộ sưu tập chưa xem</string>
+    <string name="date_view_week">Tuần</string>
+    <string name="date_view_month">Tháng</string>
+    <string name="date_view_year">Năm</string>
+    <string name="all_movies_and_tv_shows">Phim và Chương trình TV</string>
+    <string name="bookmark">Đánh dấu</string>
+    <string name="delete">Xóa</string>
+    <string name="confirm_delete_short">Xác nhận xóa</string>
+    <string name="delete_bookmark">Xóa đánh dấu</string>
+    <!-- for small screens -->
+    <!-- Generic strings for Movies or TV shows -->
+    <string name="scrap_director">Đạo diễn</string>
+    <string name="scrap_director_format">Đọa diễn: %s</string>
+    <string name="scrap_rating">Đánh giá</string>
+    <string name="scrap_rating_format">Đánh giá: %s</string>
+    <string name="scrap_year">Năm</string>
+    <!-- Specific strings for TV shows -->
+    <string name="episode_name">Tập</string>
+    <string name="episode_season">Mùa</string>
+    <string name="scrap_status_busy">Đang tìm...</string>
+    <string name="scrap_status_success">Đã cập nhật</string>
+    <string name="scrap_status_failed">Không tìm thấy thông tin</string>
+    <!-- To be translated only in case there is a localized IMDB -->
+    <string name="info_video">Video</string>
+    <string name="info_audio">Âm thanh</string>
+    <string name="info_audio_vbr">VBR</string>
+    <string name="info_subtitle">Phụ đề</string>
+    <string name="info_file">Thông tin tệp</string>
+    <!-- VIDEO COVER ROLL -->
+    <!-- Media Center -->
+    <string name="view_mode">Chế độ hiển thị</string>
+    <string name="view_mode_list">Danh sách</string>
+    <string name="view_mode_grid">Áp phích</string>
+    <string name="view_mode_details">Chi tiết</string>
+    <string name="switch_to_list">Danh sách</string>
+    <string name="switch_to_grid">Lưới</string>
+    <!-- VideoPlayer -->
+    <string name="player_loading_video">Đang tải video\u2026</string>
+    <string name="player_audio_track_toast">Luồng âm thanh:</string>
+    <string name="player_subtitle_track_toast">Bản phụ đề:</string>
+    <string name="floating_player_restore">Khôi phục</string>
+    <string name="floating_player_play">Phát</string>
+    <string name="floating_player_pause">Tạm dừng</string>
+    <string name="player_pref_audio_delay_title">Độ trễ âm thanh</string>
+    <string name="now_playing">Đang phát</string>
+    <string name="player_window_mode">Chế độ cửa sổ</string>
+    <string name="pref_play_mode_title">Chế độ phát</string>
+    <string name="pref_play_mode_entry_folder">Thư mục</string>
+    <string name="pref_audio_filt_night_mode">Chế độ đêm</string>
+    <string name="ui_mode_auto">Tự động</string>
+    <string name="ui_mode_tv">TV</string>
+    <string name="ui_mode_normal">Máy tính bảng/Điện thoại</string>
+    <string name="pref_s3d_mode_title">Chế độ 3D</string>
+    <string name="pref_s3d_mode_entry_topbottom">Trên và dưới</string>
+    <string name="pref_s3d_mode_entry_off">Tắt</string>
+    <string name="menu_info">Thông tin</string>
+    <string name="menu_subtitles">Bản phụ đề</string>
+    <string name="menu_audio">Luồng âm thanh</string>
+    <string name="menu_lock_player">Khóa trình phát</string>
+    <string name="menu_bookmark">Đặt đánh dấu</string>
+    <string name="menu_brightness_settings">Độ sáng</string>
+    <string name="menu_player_settings">Cài đặt</string>
+    <string name="menu_change_folder">Thay đổi thư mục</string>
+    <string name="menu_change_folder_details">Chọn thư mục để bắt đầu</string>
+    <string name="unlock_instructions">Nhấn giữ biểu tượng để mở khóa</string>
+    <string name="seek_to_percentage">\"Đang tua đến %s%%</string>
+    <!-- Subtitles/Audio languages -->
+    <string name="s_arabic">Tiếng Ả rập</string>
+    <string name="s_french">Tiếng Pháp</string>
+    <string name="s_hungarian">Tiếng Hungari</string>
+    <string name="s_italian">Tiếng Ý</string>
+    <string name="s_japanese">Tiếng Nhật</string>
+    <string name="s_korean">Tiếng Hàn</string>
+    <string name="s_dutch">Tiếng Hà Lan</string>
+    <string name="s_norwegian">Tiếng Na Uy</string>
+    <string name="s_polish">Tiếng Ba Lan</string>
+    <string name="s_portuguese">Tiếng Bồ Đào Nha</string>
+    <string name="s_russian">Tiếng Nga</string>
+    <string name="s_vietnamese">Tiếng Việt</string>
+    <!-- Player errors -->
+    <string name="player_err_cantplayvideo">Không thể phát video</string>
+    <string name="player_err_cantplaysound">Không thể phát luồng âm thanh</string>
+    <string name="audiocodec_not_supported">Định dạng âm thanh (<xliff:g id="codec">%s</xliff:g>) không được hổ trợ.</string>
+    <string name="videocodec_not_supported">Định dạng video (<xliff:g id="codec">%s</xliff:g>) không được hổ trợ.</string>
+    <string name="player_err_sizetoobig">Kích thước video quá lớn</string>
+    <string name="player_err_unknown">Lỗi không rõ.</string>
+    <string name="player_err_critical">Lỗi trình phát.</string>
+    <string name="player_err_codec">Code</string>
+    <!-- Player plug-in -->
+    <string name="player_plugin_purchase">Đi đến cửa hàng</string>
+    <string name="player_plugin_purchase_google_play_button">Đi đến CH Play</string>
+    <!-- Subtitles wizard -->
+    <string name="get_subtitles_on_drive">Chọn phụ đề trên bộ nhớ</string>
+    <string name="subtitles_wizard_no_files">Không tìm thấy tệp phụ đề</string>
+    <string name="subtitles_wizard_current_files">Tệp phụ đề hiện tại</string>
+    <string name="subtitles_wizard_available_files">Tệp phụ đề có sẵn</string>
+    <string name="subtitles_wizard_empty_list">Không tìm thấy tệp</string>
+    <string name="subtitles_wizard_add_files">Bạn có thể sao chép nhiều tệp phụ đề hơn vào thư mục này để liên kết chúng với video này.</string>
+    <string name="subtitles_wizard_cache">Bộ đệm</string>
+    <!-- Subloader -->
+    <string name="get_subtitles_online">Nhận phụ đề trực tuyến</string>
+    <string name="toast_subloader_sub_found">Tìm thấy bản phụ đề cho ngôn ngữ này</string>
+    <string name="toast_subloader_sub_not_found">Không tìm thấy phụ đề cho ngôn ngữ này</string>
+    <string name="menu_subloader_allfolder">Thiếu phụ đề</string>
+    <string name="dialog_subloader_copying">Đang sao chép phụ đề…</string>
+    <string name="dialog_subloader_downloading">Đang tải xuống phụ đề…</string>
+    <string name="dialog_subloader_sumup">Tải xuống hoàn tất</string>
+    <string name="dialog_subloader_success">Phụ đề được tìm thấy cho:</string>
+    <string name="dialog_subloader_fails">Không tìm thấy phụ đề cho:</string>
+    <string name="sub_force_all_title">Buộc tải xuống phụ đề</string>
+    <string name="sub_force_all">Tất cả video của bạn đã có ít nhất một phụ đề. Bạn có muốn buộc tải xuống các phụ đề mới không?</string>
+    <string name="dialog_subloader_nonetwork_title">Không có internet</string>
+    <string name="dialog_subloader_nonetwork_message">Cần có kết nối internet để tải xuống phụ đề</string>
+    <string name="dialog_subloader_connecting">Đang kết nối đến www.opensubtitles.org…</string>
+    <!-- Subtitle Settings Dialog -->
+    <string name="subtitle_settings_title">Cài đặt phụ đề</string>
+    <string name="subtitle_size_text">Kích thước:</string>
+    <string name="subtitle_style_text">Kiểu:</string>
+    <string name="subtitle_vert_text">Vị trí dọc:</string>
+    <string name="subtitle_outline">Phụ đề trực tuyến</string>
+    <!-- Subtitle Delay Dialog -->
+    <string name="subtitle_delay_radio_ntsc2pal">NTSC &#x2192; PAL</string>
+    <string name="subtitle_delay_radio_pal2ntsc">PAL &#x2192; NTSC</string>
+    <!-- Browser.CommonDetailsView -->
+    <!-- Add a space after the right quote
+    because the right part of the quote is
+    not visible otherwise -->
+    <!-- torrent -->
+    <string name="torrent_file_to_play">Chọn tệp để phát</string>
+    <!-- Shortcuts -->
+    <string name="ssh_prompt">Kiểu FTP</string>
+    <string name="open_indexed_folder">"Mở"</string>
+    <string name="ssh_port">Cổng</string>
+    <string name="ssh_password">Mật khẩu</string>
+    <string name="ssh_username">Tên người dùng</string>
+    <string name="ssh_shortcut_name">Tên phím tắt</string>
+    <!-- Preferences -->
+    <string name="preferences">Tùy chỉnh</string>
+    <string name="preferences_category_complete">Phiên bản đầy đủ</string>
+    <string name="preferences_category_video">Video</string>
+    <string name="preferences_force_audio_passthrough">Âm thanh passthrough</string>
+    <string name="preferences_force_audio_passthrough_disabled">Tắt (khuyến nghị)</string>
+    <string name="preferences_force_audio_passthrough_summary">cho kết nối HDMI và S/PDIF, truyền âm thanh nén. ⚠ Thử nghiệm có thể dẫn đến A/V không đồng bộ</string>
+    <string name="category_languages">Phụ đề</string>
+    <string name="subtitles_hide_default">Ẩn phụ đề theo mặc định</string>
+    <string name="subtitles_hide_default_summary">Kiểm tra xem bạn có muốn ẩn phụ đề theo mặc định không</string>
+    <string name="preferences_languages">Ngôn ngữ tải xuống phụ đề</string>
+    <string name="summary_list_preference_primary">Chọn ngôn ngữ của bạn để tải xuống phụ đề</string>
+    <string name="preferences_video_about">Thông tin</string>
+    <string name="preferences_video_os_text">Phụ đề được cung cấp bởi</string>
+    <string name="preferences_video_licenses">Giấy phép</string>
+    <string name="locale">Ngôn ngữ hệ thống</string>
+    <string name="yes">Đồng ý</string>
+    <string name="no">Không</string>
+    <!--  Title of the video picker activity. -->
+    <string name="video_picker_title">Chọn video</string>
+    <!-- Archos File Info -->
+    <string name="video_info_custom_search_show_hint">Tên của chương trình tivi</string>
+    <string name="notification_mode">Thông báo</string>
+    <string name="notifications_all">Tất cả thông báo</string>
+    <string name="pref_format_mode_title">Định dạng</string>
+    <string name="format_fullscreen">Toàn màn hình</string>
+    <string name="format_optimized">Tối ưu hóa</string>
+    <string name="format_original">Nguyên bản</string>
+    <string name="format_stretched">Kéo giãn</string>
+    <!-- Help overlay -->
+    <!-- Info dialog, not indexed file -->
+    <!-- Brightness -->
+    <!--  Nfo File parsing -->
+    <string name="audio_interface_choice_title">Chọn giao diện âm thanh</string>
+    <string name="codepage_extra_932">(Shift-JIS, EUC-JP)</string>
+    <string name="codepage_extra_936">(CP936, GB231)</string>
+    <string name="codepage_extra_949">(CP949, EUC-KR)</string>
+    <string name="codepage_extra_950">(Big5)</string>
+    <string name="codepage_extra_1250">(CP1250)</string>
+    <string name="codepage_extra_1251">(CP1251)</string>
+    <string name="codepage_extra_1252">(CP1252)</string>
+    <string name="codepage_extra_1253">(CP1253)</string>
+    <string name="codepage_extra_1254">(CP1254)</string>
+    <string name="codepage_extra_1255">(CP1255)</string>
+    <string name="codepage_extra_1256">(CP1256)</string>
+    <string name="codepage_extra_1257">(CP1257)</string>
+    <string name="codepage_extra_1258">(CP1258)</string>
+    <string name="torrent_category">Torrent</string>
+    <string name="torrent_path">Đường dẫn tải về</string>
+    <string name="trakt_user">Tên người dùng</string>
+    <string name="trakt_password">Mật khẩu</string>
+    <string name="trakt_signin">Đăng nhập</string>
+    <string name="leanback_action_more_details">Thêm chi tiết</string>
+    <string name="leanback_scrap">Nhận thông tin</string>
+    <string name="leanback_scrap_choose_the_description">Chọn thông tin</string>
+    <string name="scheduled_rescan_period_no">Không có</string>
+    <string name="scheduled_rescan_period_once_a_day">Mỗi ngày</string>
+    <string name="scheduled_rescan_period_twice_a_day">Hai lần một ngày</string>
+    <string name="scheduled_rescan_period_every_six_hours">Mỗi 6 giờ</string>
+    <string name="scheduled_rescan_period_every_two_hours">Mỗi 2 giờ</string>
+    <string name="scheduled_rescan_period_every_hour">Mỗi giờ</string>
+    <string name="scheduled_rescan_time">Thời gian quét lại</string>
+    <string name="rescan_when_opening_application">Quét lại khi mở ứng dụng</string>
+    <string name="view_more">Xem thêm</string>
+    <string name="system">Hệ thống</string>
+    <string name="cast_info">Thông tin</string>
+    <string name="picture_in_picture">Ảnh trong ảnh</string>
+    <string name="cast">Truyền</string>
+    <string name="help_faq">Trợ giúp/Hỏi đáp</string>
+    <string name="provider_folders">Đám mây</string>
+    <string name="learn_more">Tìm hiểu thêm</string>
+    <string name="loading">Đang tải…</string>
+    <string name="app_id_surface">C44FB232</string>
+</resources>
