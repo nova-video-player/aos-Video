@@ -1000,7 +1000,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 updateLastAddedRow(cursor);
                 // on new video additions boxes are rebuilt
                 // note: this is not triggered onResume
-                if (!scanningOnGoing && isVideosListModified(mLastAddedAdapter.getCursor(), cursor)) { // rebuild box only if not scanning
+                if (!scanningOnGoing) { // rebuild box only if not scanning
                     buildAllMoviesBox();
                     buildAllCollectionsBox();
                     updateMoviesRow(cursor);
@@ -1008,6 +1008,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     updateTvShowsRow(cursor);
                     buildAllAnimesBox();
                     updateAnimesRow(cursor);
+                    buildAllAnimeShowsBox();
                 }
                 break;
             case LOADER_ID_LAST_PLAYED:
@@ -1038,13 +1039,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) { }
-
-    private boolean isVideosListModified(Cursor oldCursor, Cursor newCursor) {
-        if ((oldCursor == null && newCursor != null) || (oldCursor != null && newCursor == null))
-            return true;
-        return oldCursor.getCount() != newCursor.getCount();
-        // estimate
-    }
 
     private enum InitFocus {
         NOT_FOCUSED, NO_NEED_FOCUS, NEED_FOCUS, FOCUSED
