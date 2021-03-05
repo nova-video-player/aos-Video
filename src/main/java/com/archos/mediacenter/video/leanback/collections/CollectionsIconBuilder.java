@@ -44,6 +44,8 @@ public class CollectionsIconBuilder {
             ScraperStore.MovieCollections.POSTER_LARGE_FILE,
     };
 
+    // limitation: cannot remove animation genre because ScraperStore.MovieCollections has no genre
+    // and we are dealing with collection posters here i.e. no video posters
     final static String SELECTION =
             ScraperStore.MovieCollections.ID + " IS NOT NULL AND " +
             ScraperStore.MovieCollections.POSTER_LARGE_FILE + " IS NOT NULL";

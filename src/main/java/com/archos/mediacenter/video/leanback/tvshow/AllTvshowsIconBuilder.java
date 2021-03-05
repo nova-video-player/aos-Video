@@ -45,11 +45,7 @@ public class AllTvshowsIconBuilder {
             VideoStore.Video.VideoColumns.SCRAPER_S_COVER
     };
 
-    final static String SELECTION =
-            VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER + "=0 AND " +
-            VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " IS NOT NULL AND " +
-            VideoStore.Video.VideoColumns.SCRAPER_S_COVER + " IS NOT NULL" +
-            ") GROUP BY (" + VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID;
+    static String SELECTION;
 
     private static final String TAG = "AllTvshowsIconBuilder";
     final Context mContext;
@@ -58,6 +54,12 @@ public class AllTvshowsIconBuilder {
 
     public AllTvshowsIconBuilder(Context context) {
         mContext = context;
+        SELECTION = VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER + "=0 AND " +
+                    VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " IS NOT NULL AND " +
+                    VideoStore.Video.VideoColumns.SCRAPER_S_COVER + " IS NOT NULL AND " +
+                    "( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.tv_show_genre_animation) + "%' AND " +
+                        VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.tv_show_genre_anime) + "%' )" +
+                    ") GROUP BY (" + VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID ;
         mWidth  = context.getResources ().getDimensionPixelSize(R.dimen.all_tvshows_icon_width);
         mHeight  = context.getResources ().getDimensionPixelSize(R.dimen.all_tvshows_icon_height);
     }
