@@ -48,6 +48,8 @@
   <!--logger name="com.archos.mediascraper.MovieTags" level="DEBUG"/-->
   <!--logger name="com.archos.mediascraper.CollectionTags" level="DEBUG"/-->
 
+  <!--logger name="com.archos.mediascraper.thetvdb" level="DEBUG"/-->
+
   <!--logger name="com.archos.mediascraper.thetvdb.MyTheTVdb" level="TRACE"/-->
   <!--logger name="com.archos.mediascraper.themoviedb3.MyTmdb" level="TRACE"/-->
 
@@ -64,10 +66,13 @@
 
   <!--logger name="com.archos.mediacenter.video.leanback.MainFragment" level="DEBUG"/-->
 
-  <logger name="com.archos.mediascraper.ScraperImage" level="DEBUG"/>
+  <!--logger name="com.archos.mediacenter.video.leanback.scrapping.ManualShowScrappingSearchFragment" level="DEBUG"/-->
+  <!--logger name="com.archos.mediacenter.video.leanback.scrapping.ManualScrappingSearchFragment" level="DEBUG"/-->
 
-
-  com.archos.mediascraper
+  <!--logger name="com.archos.mediascraper.EpisodeTags" level="DEBUG"/-->
+  <!--logger name="com.archos.mediascraper.ScraperImage" level="DEBUG"/-->
+  <!--logger name="com.archos.mediascraper.HttpCache" level="DEBUG"/-->
+  <!--logger name="com.archos.mediascraper.ScraperImage" level="DEBUG"/-->
 
   <includes>
     <include file="${EXT_DIR:-/sdcard}/Download/${PACKAGE_NAME}/logback.xml" optional="true" />

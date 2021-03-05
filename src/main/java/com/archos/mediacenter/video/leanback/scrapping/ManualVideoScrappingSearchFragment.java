@@ -16,7 +16,6 @@ package com.archos.mediacenter.video.leanback.scrapping;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.R;
@@ -35,13 +34,15 @@ import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.preprocess.SearchInfo;
 import com.archos.mediascraper.preprocess.SearchPreprocessor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.HashMap;
 
 public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFragment {
 
-    public static final String TAG = "ManualVideoScrappingSF";
-    public static final boolean DBG = false;
+    private static final Logger log = LoggerFactory.getLogger(ManualVideoScrappingSearchFragment.class);
 
     private Video mVideo;
     private SearchInfo mSearchInfo;
@@ -116,7 +117,7 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
             }
         }
 
-        if(DBG) Log.d(TAG, "put in mTagsToSearchResultMap: "+tags);
+        log.debug("put in mTagsToSearchResultMap: "+tags);
         mTagsToSearchResultMap.put(tags, result);
 
         return tags;
@@ -158,7 +159,7 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
                     try {
                         NfoWriter.export(mVideo.getFileUri(), tags, null);
                     } catch (IOException e) {
-                        Log.w(TAG, e);
+                        log.error("IOException ", e);
                     }
                 }
 

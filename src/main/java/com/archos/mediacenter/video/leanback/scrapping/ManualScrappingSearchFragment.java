@@ -49,6 +49,9 @@ import com.archos.mediascraper.ScrapeSearchResult;
 import com.archos.mediascraper.Scraper;
 import com.archos.mediascraper.SearchResult;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -57,7 +60,7 @@ import java.util.concurrent.Executor;
  */
 public abstract class ManualScrappingSearchFragment extends SearchSupportFragment implements SearchSupportFragment.SearchResultProvider {
 
-    private static final String TAG = "ManualScrappingSF";
+    private static final Logger log = LoggerFactory.getLogger(ManualScrappingSearchFragment.class);
 
     protected static final int SEARCH_RESULT_MAX_ITEMS = 10;
 
@@ -166,7 +169,7 @@ public abstract class ManualScrappingSearchFragment extends SearchSupportFragmen
 
     @Override
     public ObjectAdapter getResultsAdapter() {
-        Log.d(TAG, "getResultsAdapter()");
+        log.debug("getResultsAdapter()");
         return mRowsAdapter;
     }
     @Override
@@ -179,7 +182,7 @@ public abstract class ManualScrappingSearchFragment extends SearchSupportFragmen
     }
 
     private boolean onQueryText(String text) {
-        Log.d(TAG, "onQueryText() "+text);
+        log.debug("onQueryText() "+text);
 
         // Makes no sens to search for one character
         if(text.length()==0){
@@ -244,7 +247,6 @@ public abstract class ManualScrappingSearchFragment extends SearchSupportFragmen
             classPresenter.addClassPresenter(SearchResult.class, new ScraperSearchResultPresenter()); // for initial search result
             classPresenter.addClassPresenter(BaseTags.class, new ScraperBaseTagsPresenter()); // for detailed result info
 
-
             mResultsAdapter = new ArrayObjectAdapter(classPresenter);
             if(mNfoTags!=null) {
                 mResultsAdapter.add(0, mNfoTags);
@@ -273,7 +275,6 @@ public abstract class ManualScrappingSearchFragment extends SearchSupportFragmen
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
         }
 
         @Override

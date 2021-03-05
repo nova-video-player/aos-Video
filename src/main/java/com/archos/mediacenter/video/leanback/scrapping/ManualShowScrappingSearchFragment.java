@@ -27,7 +27,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -51,6 +50,9 @@ import com.archos.mediascraper.TagsFactory;
 import com.archos.mediascraper.preprocess.SearchInfo;
 import com.archos.mediascraper.preprocess.SearchPreprocessor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,8 +61,7 @@ import java.util.Map;
 
 public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFragment {
 
-    public static final String TAG = "ManualShowScrappingSF";
-    public static final boolean DBG = false;
+    private static final Logger log = LoggerFactory.getLogger(ManualShowScrappingSearchFragment.class);
 
     private long mShowId;
     private String mShowName;
@@ -134,7 +135,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             buildNewShowTags(result.getTitle());
         }
 
-        if(DBG) Log.d(TAG, "put in mTagsToSearchResultMap: "+tags);
+        log.debug("put in mTagsToSearchResultMap: "+tags);
         mTagsToSearchResultMap.put(tags, result);
 
         return tags;
@@ -165,7 +166,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
                     .show();
         }
         else {
-            if(DBG) Log.d(TAG, "saveTags error should not get a " + newTags.getClass().getCanonicalName());
+            log.debug("saveTags error should not get a " + newTags.getClass().getCanonicalName());
             Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
         }
     }
@@ -205,17 +206,17 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
         protected ShowTags doInBackground(ShowTags... params) {
             // step 1: find all episodes in database that belong to the old show
             List<EpisodeTags> episodeList = getEpisodeList(mShowId);
-            if (DBG) {
-                Log.d(TAG, "--------------------\nAll episodes in database that belong to the old show:");
+            if (log.isDebugEnabled()) {
+                log.debug("--------------------\nAll episodes in database that belong to the old show:");
                 for (EpisodeTags et : episodeList) {
-                    Log.d(TAG, "      S"+et.getSeason()+" E"+et.getEpisode()+" "+et.getTitle());
+                    log.debug("      S"+et.getSeason()+" E"+et.getEpisode()+" "+et.getTitle());
                 }
-                Log.d(TAG, "--------------------");
+                log.debug("--------------------");
 
             }
             // step 2: save new show / episode info for those
             ShowTags newShow = handleSave(params[0], episodeList);
-            if (DBG) Log.d(TAG, "save finished");
+            log.debug("save finished");
             return newShow;
         }
 
@@ -309,16 +310,16 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
                 epMap = toMap(episodeList);
             } else {
                 // TODO: if notOkay then epMap is null -> should be handled
-                Log.w(TAG, "handleSave: episode details NOK!");
+                log.warn("handleSave: episode details NOK!");
                 // scraping nok thus we assume that this is the wrong tv show selected for manual scraping and trigger abort
                 return null;
             }
-            if (DBG) {
-                Log.d(TAG, "--------------------\nAll episodes for the new show:");
+            if (log.isDebugEnabled()) {
+                log.debug("--------------------\nAll episodes for the new show:");
                 for (String key : epMap.keySet()) {
-                    Log.d(TAG, "epMap "+key+" -> "+epMap.get(key).getShowTitle()+" "+epMap.get(key).getSeason()+ " "+epMap.get(key).getEpisode());
+                    log.debug("epMap "+key+" -> "+epMap.get(key).getShowTitle()+" "+epMap.get(key).getSeason()+ " "+epMap.get(key).getEpisode());
                 }
-                Log.d(TAG, "--------------------");
+                log.debug("--------------------");
             }
 
             // Update all episodes
@@ -329,7 +330,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             ArrayList<ContentProviderOperation> opList = new ArrayList<ContentProviderOperation>();
             Map<String, Long> poster2IdMap = createPosterIdMap(mContext, newShowId);
             for (EpisodeTags oldEpisodeTag : targetEpisodesList) {
-                Log.d(TAG, "Saving " + (i++) + " of " + size + " episodes.");
+                log.info("Saving " + (i++) + " of " + size + " episodes.");
                 EpisodeTags newEpisodeTag = getEpisode(epMap, oldEpisodeTag.getEpisode(), oldEpisodeTag.getSeason(), newShow);
                 newEpisodeTag.setVideoId(oldEpisodeTag.getVideoId());
                 newEpisodeTag.setShowId(newShowId);
@@ -351,18 +352,18 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
                 publishProgress(i, newEpisodeTag.getSeason(), newEpisodeTag.getEpisode());
             }
             publishProgress(PROGRESS_ID_FINALIZING);
-            Log.d(TAG, "preparations took:" + t.step());
+            log.info("preparations took:" + t.step());
             if (opList.size() > 0) {
                 try {
                     mContext.getContentResolver().applyBatch(ScraperStore.AUTHORITY, opList);
                 } catch (RemoteException e) {
-                    Log.e(TAG, "handleSave failed", e);
+                    log.error("handleSave failed", e);
                 } catch (OperationApplicationException e) {
-                    Log.e(TAG, "handleSave failed", e);
+                    log.error("handleSave failed", e);
                 }
             }
             TraktService.onNewVideo(mContext);
-            Log.d(TAG, "saving in the end:" + t.step() + " thats:" + t.total());
+            log.info("saving in the end:" + t.step() + " thats:" + t.total());
             return newShow;
         }
 
@@ -399,13 +400,17 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
                 // also check if there is a poster
                 List<ScraperImage> posters = show.getPosters();
                 if (posters != null) {
+                    log.debug( "getEpisode: posters not null");
                     for (ScraperImage image : posters) {
                         if (image.getSeason() == season) {
+                            log.debug( "getEpisode: posters download poster:" + image.getLargeUrl());
                             newEpTag.setPosters(image.asList());
                             newEpTag.downloadPoster(mContext);
                             break;
                         }
                     }
+                } else {
+                    log.debug( "getEpisode: posters is null!");
                 }
             }
             return newEpTag;
