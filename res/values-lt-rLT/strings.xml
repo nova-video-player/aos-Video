@@ -90,8 +90,10 @@
     <string name="not_played_yet_videos">Nežiūrėti</string>
     <string name="video_folder">Aplankai</string>
     <string name="movies">Filmai</string>
+    <string name="animes">Animacija</string>
     <string name="all_movies">Visi filmai</string>
     <string name="all_movies_format">Visi filmai - %d</string>
+    <string name="all_animes_format">Animaciniai filmai  -  %d</string>
     <string name="all_collections">Visos kolekcijos</string>
     <string name="all_collections_format">Visos kolekcijos  -  %d</string>
     <string name="all_collection_watched">Visos kolekcijos žiūrėtos</string>
@@ -103,6 +105,7 @@
         <item quantity="other">%d filmų žiūrėta</item>
     </plurals>
     <string name="not_watched_movies_format">Nežiūrėta - %d</string>
+    <string name="not_watched_animes_format">Nežiūrėta - %d</string>
     <string name="no_movie_watched">Nėra žiūrėtų filmų</string>
     <string name="all_movies_watched">Visi filmai žiūrėti</string>
     <string name="movies_by_alpha">Filmai pagal abėcėlę</string>
@@ -112,8 +115,16 @@
     <string name="movies_by_year">Filmai pagal metus</string>
     <string name="all_tv_shows">Serialai</string>
     <string name="all_tvshows">Visi serialai</string>
+    <string name="all_animes">Visi animaciniai filmai</string>
+    <string name="all_animeshows">Visi animaciniai serialai</string>
+    <string name="animes_by_alpha">Animaciniai filmai pagal abėcėlę</string>
+    <string name="animes_by_genre">Animacinaii filmai pagal žanrą</string>
+    <string name="animes_by_rating">Animaciniai filmai pagal reitingą</string>
+    <string name="animes_by_year">Animaciniai filmai pagal metus</string>
     <string name="all_tvshows_format">Visi serialai - %d</string>
     <string name="not_watched_tvshows_format">Nežiūrėta - %d</string>
+    <string name="all_animeshows_format">Animaciniai serialai -  %d</string>
+    <string name="not_watched_animeshows_format">Nežiūrėta - %d</string>
     <string name="all_seasons">Visi sezonai</string>
     <string name="tvshows_by_alpha">Serialai pagal abėcėlę</string>
     <string name="tvshows_by_genre">Serialai pagal žanrą</string>
@@ -246,8 +257,10 @@
     <string name="you_have_no_video">Nėra video</string>
     <string name="you_have_no_video_yet">Ieškoma video&#8230;</string>
     <string name="you_have_no_movies">Nėra filmų</string>
+    <string name="you_have_no_animes">Nėra animacinių filmų</string>
     <string name="you_have_no_movie_collections">Nėra kolekcijų</string>
     <string name="you_have_no_tv_shows">Nėra serialų</string>
+    <string name="you_have_no_anime_shows">Nėra animacinių serialų</string>
     <string name="you_have_no_non_scraped_videos">Visi video atpažinti</string>
     <plurals name="Nmovies">
         <item quantity="one">1 filmas</item>
@@ -660,6 +673,10 @@
     <string name="preferences_show_all_tv_shows_row">Rodyti visų serialų juostą</string>
     <string name="preferences_tv_show_sort_order_summary">Pasirinkite rūšiavimo tvarką visų serialų juostoje</string>
     <string name="preferences_tv_show_sort_order_title">Visų serialų rūšiavimo tvarka</string>
+    <string name="preferences_show_all_animes_row_summary">Pažymėkite visų animacinių filmų rodymui juostoje vietoje animacinių filmų kategorijų juostos</string>
+    <string name="preferences_show_all_animes_row">Rodyti visų animacinių filmų juostą</string>
+    <string name="preferences_anime_sort_order_summary">Pasirinkite visų animacinių filmų juostos rūšiavimo būdą</string>
+    <string name="preferences_anime_sort_order_title">Visų animacinių filmų juostos rūšiavimas</string>
     <string name="codepage_title">Subtitrų kodavimas</string>
     <string name="codepage_summary">Nustatykite kodavimą naudojamą subtitruose</string>
     <string name="codepage_default">Įrenginio kalba %s</string>

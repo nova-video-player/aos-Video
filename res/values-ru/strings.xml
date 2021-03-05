@@ -90,8 +90,10 @@
     <string name="not_played_yet_videos">Еще не вопроизв.</string>
     <string name="video_folder">папки</string>
     <string name="movies">Фильмы</string>
+    <string name="animes">Мультфильм</string>
     <string name="all_movies">Все фильмы</string>
     <string name="all_movies_format">Все фильмы - %d</string>
+    <string name="all_animes_format">Мультфильмы - %d</string>
     <string name="all_collections">Все коллекции</string>
     <string name="all_collections_format">Все коллекции -  %d</string>
     <string name="all_collection_watched">Все коллекции просмотрены</string>
@@ -103,6 +105,7 @@
         <item quantity="other">%d фильмов просмотрено</item>
     </plurals>
     <string name="not_watched_movies_format">Не просмотрено -  %d</string>
+    <string name="not_watched_animes_format">Не просмотрено -  %d</string>
     <string name="no_movie_watched">Нет просмотренных фильмов</string>
     <string name="all_movies_watched">Все фильмы просмотрены</string>
     <string name="movies_by_alpha">Фильмы по алфавиту</string>
@@ -112,8 +115,16 @@
     <string name="movies_by_year">Фильмы по году</string>
     <string name="all_tv_shows">Сериалы</string>
     <string name="all_tvshows">Все сериалы</string>
+    <string name="all_animes">Все мультфильмы</string>
+    <string name="all_animeshows">Все мультсериалы</string>
+    <string name="animes_by_alpha">Мультфильмы по алфавиту</string>
+    <string name="animes_by_genre">Мультфильмы по жанру</string>
+    <string name="animes_by_rating">Мультфильмы по рейтингу</string>
+    <string name="animes_by_year">Мультфильмы по году</string>
     <string name="all_tvshows_format">Все сериалы -  %d</string>
     <string name="not_watched_tvshows_format">Не просмотрено -  %d</string>
+    <string name="all_animeshows_format">Мультсериалы - %d</string>
+    <string name="not_watched_animeshows_format">Не просмотрено -  %d</string>
     <string name="all_seasons">Все сезоны</string>
     <string name="tvshows_by_alpha">Сериалы по алфавиту</string>
     <string name="tvshows_by_genre">Сериалы по жанру</string>
@@ -246,8 +257,10 @@
     <string name="you_have_no_video">Нет видео</string>
     <string name="you_have_no_video_yet">Поиск видео&#8230;</string>
     <string name="you_have_no_movies">Нет фильмов</string>
+    <string name="you_have_no_animes">Нет мультфильмов</string>
     <string name="you_have_no_movie_collections">Нет коллекций</string>
     <string name="you_have_no_tv_shows">Нет ТВ-программ</string>
+    <string name="you_have_no_anime_shows">Нет мультсериалов</string>
     <string name="you_have_no_non_scraped_videos">Нет нераспознанных видео</string>
     <plurals name="Nmovies">
         <item quantity="one">1 фильм</item>
@@ -661,6 +674,10 @@
     <string name="preferences_show_all_tv_shows_row">Показывать ряд «Все сериалы»</string>
     <string name="preferences_tv_show_sort_order_summary">Выберите порядок сортировки ряда «Все сериалы»</string>
     <string name="preferences_tv_show_sort_order_title">Порядок сортировки ряда «Все сериалы»</string>
+    <string name="preferences_show_all_animes_row_summary">Отметьте, чтобы показать ряд со всеми мультфильмами вместо ряда с мультфильмами по категориям</string>
+    <string name="preferences_show_all_animes_row">Показать ряд со всеми мультфильмами</string>
+    <string name="preferences_anime_sort_order_summary">Выберите порядок сортировки ряда с мультфильмами</string>
+    <string name="preferences_anime_sort_order_title">Порядок сортировки мультфильмов</string>
     <string name="codepage_title">Кодировка субтитров</string>
     <string name="codepage_summary">Установить кодировку субтитров</string>
     <string name="codepage_default">Язык устройства %s</string>

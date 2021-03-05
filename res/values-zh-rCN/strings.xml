@@ -90,8 +90,10 @@
     <string name="not_played_yet_videos">尚未播放</string>
     <string name="video_folder">文件夹</string>
     <string name="movies">电影</string>
+    <string name="animes">动画</string>
     <string name="all_movies">所有电影</string>
     <string name="all_movies_format">所有电影 -  %d</string>
+    <string name="all_animes_format">动画电影 -  %d</string>
     <string name="all_collections">所有收藏</string>
     <string name="all_collections_format">所有收藏 -  %d</string>
     <string name="all_collection_watched">已观看所有收藏</string>
@@ -100,6 +102,7 @@
         <item quantity="other">已观看电影 %d</item>
     </plurals>
     <string name="not_watched_movies_format">未观看-  %d</string>
+    <string name="not_watched_animes_format">未观看 -  %d</string>
     <string name="no_movie_watched">没有已观看电影</string>
     <string name="all_movies_watched">已观看所有电影</string>
     <string name="movies_by_alpha">电影：按名称字母排序</string>
@@ -109,8 +112,16 @@
     <string name="movies_by_year">电影：按年份排序</string>
     <string name="all_tv_shows">电视节目</string>
     <string name="all_tvshows">所有电视节目</string>
+    <string name="all_animes">所有动画电影</string>
+    <string name="all_animeshows">所有动画电视节目</string>
+    <string name="animes_by_alpha">按字母顺序对动画电影进行排序</string>
+    <string name="animes_by_genre">按流派对动画电影进行排序</string>
+    <string name="animes_by_rating">按评分对动画电影进行排序</string>
+    <string name="animes_by_year">按年份对动画电影进行排序</string>
     <string name="all_tvshows_format">所有电视节目  -  %d</string>
     <string name="not_watched_tvshows_format">未观看 -  %d</string>
+    <string name="all_animeshows_format">动画电视节目 -  %d</string>
+    <string name="not_watched_animeshows_format">未观看 -  %d</string>
     <string name="all_seasons">所有季数</string>
     <string name="tvshows_by_alpha">电视节目：按名称字母排序</string>
     <string name="tvshows_by_genre">电视节目：按分类排序</string>
@@ -240,8 +251,10 @@
     <string name="you_have_no_video">没有视频</string>
     <string name="you_have_no_video_yet">搜索视频&#8230;</string>
     <string name="you_have_no_movies">没有电影</string>
+    <string name="you_have_no_animes">没有动画电影</string>
     <string name="you_have_no_movie_collections">暂无收藏</string>
     <string name="you_have_no_tv_shows">没有电视节目</string>
+    <string name="you_have_no_anime_shows">没有动画电视节目</string>
     <string name="you_have_no_non_scraped_videos">没有未扫描的视频</string>
     <plurals name="Nmovies">
         <item quantity="other"><xliff:g id="count">%d</xliff:g> 部电影</item>
@@ -647,6 +660,10 @@
     <string name="preferences_show_all_tv_shows_row">显示“所有电视节目”栏</string>
     <string name="preferences_tv_show_sort_order_summary">选择“所有电视节目”栏的排序方法</string>
     <string name="preferences_tv_show_sort_order_title">“所有电视节目”栏排序</string>
+    <string name="preferences_show_all_animes_row_summary">选中以“所有动画”栏代替“动画类别”栏</string>
+    <string name="preferences_show_all_animes_row">显示“所有动画”栏</string>
+    <string name="preferences_anime_sort_order_summary">选择“所有动画”栏的排序方法</string>
+    <string name="preferences_anime_sort_order_title">“所有动画”栏排序</string>
     <string name="codepage_title">字幕编码</string>
     <string name="codepage_summary">设置文本字幕使用的编码</string>
     <string name="codepage_default">设备语言 %s</string>
