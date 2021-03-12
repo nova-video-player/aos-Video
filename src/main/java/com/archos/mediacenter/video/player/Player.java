@@ -73,7 +73,9 @@ public class Player implements IPlayerControl,
                                IMediaPlayer.OnSubtitleListener,
                                SurfaceHolder.Callback,
                                TextureView.SurfaceTextureListener{
+
     private static final Logger log = LoggerFactory.getLogger(Player.class);
+
     public static Player sPlayer;
     // settable by the client
     private Uri         mUri;
@@ -1007,21 +1009,60 @@ public class Player implements IPlayerControl,
                     float wantedRefreshRate = 0;
                     // find corresponding wantedModeId for wantedFps
                     Mode sM;
-                    float min = 1000; // init with large number easy to beat
-                    float target = 0;
+                    int metric = 0;
+                    boolean foundMatch = false;
+                    int fps = Math.round(1001 * wantedFps);
+                    int rhz = 0;
+                    int maxRhz = 0;
+
+                    // minimize judder in 3 passes selecting:
+                    // highest rr matching rr%fr=0
+                    // else highest rr maximizing number of glitches per second
+                    log.debug("CONFIG min judder targeting " + wantedFps + " fps video");
+                    log.debug("CONFIG min judder: highest rr matching rr%fr=0 pass");
                     for (int i = 0; i < supportedModes.length; i++) {
                         sM = supportedModes[i];
-                        //  minimize judder by minimizing metric=min(refresh%fps,|refresh%fps-fps|)/refresh
-                        target = Math.min(sM.getRefreshRate() % wantedFps, Math.abs(sM.getRefreshRate() % wantedFps - wantedFps)) / sM.getRefreshRate();
-                        log.debug("CONFIG evaluating " + sM.getPhysicalWidth() + "x" + sM.getPhysicalHeight() + "(" + sM.getRefreshRate() + "Hz) metric = " + target);
-                        if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth()  &&
-                                sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
-                                (target <= min || Math.abs(target - min) <= EPSILON) && (sM.getRefreshRate() >= wantedRefreshRate)) { // lower or close enough and higher rate
-                            min = target;
+                        rhz = Math.round(1001 * sM.getRefreshRate());
+                        metric = rhz % fps;
+                        log.debug("CONFIG evaluating " + sM.getPhysicalWidth() + "x" + sM.getPhysicalHeight() + "(" + sM.getRefreshRate() + "Hz) metric = " + metric);
+                        if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth() && sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
+                                metric == 0 && rhz >= maxRhz) {
+                            foundMatch = true;
+                            maxRhz = rhz;
                             wantedModeId = sM.getModeId();
-                            log.debug( "CONFIG currently chosen modeId is " + wantedModeId + " for " + sM.getRefreshRate() + " refreshrate and wanted fps was " + wantedFps + " (metric = " + min + ")");
+                            log.debug("CONFIG selecting modeId " + wantedModeId + " for " + rhz + " Hz and " + fps + " fps (metric = " + metric + ")");
                         }
                     }
+
+                    if (!foundMatch) {
+                        int a, b, div, n, k, kp, g;
+                        maxRhz = 0;
+                        int maxG = 0; // init with lowest number easy to beat
+                        log.debug("CONFIG min judder: highest rr maximizing number of glitches pass");
+                        for (int i = 0; i < supportedModes.length; i++) {
+                            sM = supportedModes[i];
+                            if (sM.getRefreshRate() > wantedFps) {
+                                rhz = Math.round(1001 * sM.getRefreshRate());
+                                div = gcd(rhz, fps);
+                                a = fps/div;
+                                b = rhz/div;
+                                n = b/a+1;
+                                k = b-(n-1)*a;
+                                kp = a*n-b;
+                                g = div*Math.min(k,kp); // number of glitches (uneven image duration)
+                                log.debug("CONFIG evaluating " + sM.getPhysicalWidth() + "x" + sM.getPhysicalHeight() + "(" + sM.getRefreshRate() + "Hz) glitches = " + g);
+                                if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth() && sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
+                                        g >= maxG && rhz >= maxRhz) {
+                                    foundMatch = true;
+                                    maxRhz = rhz;
+                                    maxG = g;
+                                    wantedModeId = sM.getModeId();
+                                    log.debug( "CONFIG selecting modeId " + wantedModeId + " for " + rhz + " Hz and " + fps + " fps (glitches = " + g + ")");
+                                }
+                            }
+                        }
+                    }
+
                     if (wantedModeId != 0 && wantedModeId != currentModeId) {
                         // apply new display mode
                         mWaitForNewRate = true;
@@ -1036,21 +1077,61 @@ public class Player implements IPlayerControl,
                     if (log.isDebugEnabled())
                         for (float r : supportedRates)
                             log.debug("CONFIG Display supported refresh rate " + r);
+
                     mRefreshRate = 0f;
-                    float min = 1000; // init with large number easy to beat
-                    float target = 0;
+
+                    int metric = 0;
+                    boolean foundMatch = false;
+                    int fps = Math.round(1001 * wantedFps);
+                    int rhz = 0;
+                    int maxRhz = 0;
+
+                    // minimize judder in 3 passes selecting:
+                    // highest rr matching rr%fr=0
+                    // else highest rr maximizing number of glitches per second
+                    log.debug("CONFIG min judder targeting " + wantedFps + " fps video");
+                    log.debug("CONFIG min judder: highest rr matching rr%fr=0 pass");
                     for (float rate : supportedRates) {
-                        log.debug("CONFIG supported rate is " + rate);
-                        //  minimize judder by minimizing metric=min(refresh%fps,|refresh%fps-fps|)/refresh
-                        target = Math.min(rate % wantedFps, Math.abs(rate % wantedFps - wantedFps)) / rate;
-                        if ((target <= min || Math.abs(target - min) <= EPSILON) && (rate >= mRefreshRate)) { // lower or close enough and higher rate
-                            min = target;
+                        rhz = Math.round(1001 * rate);
+                        metric = rhz % fps;
+                        log.debug("CONFIG evaluating " + rate + "Hz metric = " + metric);
+                        if (metric == 0 && rhz >= maxRhz) {
+                            foundMatch = true;
+                            maxRhz = rhz;
                             mRefreshRate = rate;
-                            log.debug("CONFIG currently chosen refresh rate is " + mRefreshRate + " wanted fps was " + wantedFps + " (metric = " + min + ")");
+                            log.debug( "CONFIG selecting " + mRefreshRate + " Hz for "  + wantedFps + " fps (metric = " + metric + ")");
                         }
                     }
+
+                    if (!foundMatch) {
+                        int a, b, div, n, k, kp, g;
+                        maxRhz = 0;
+                        int maxG = 0; // init with lowest number easy to beat
+                        log.debug("CONFIG min judder: highest rr maximizing number of glitches pass");
+                        for (float rate : supportedRates) {
+                            if (rate > wantedFps) {
+                                rhz = Math.round(1001 * rate);
+                                div = gcd(rhz, fps);
+                                a = fps/div;
+                                b = rhz/div;
+                                n = b/a+1;
+                                k = b-(n-1)*a;
+                                kp = a*n-b;
+                                g = div*Math.min(k,kp); // number of glitches (uneven image duration)
+                                log.debug("CONFIG evaluating " + rate + "Hz metric = " + metric);
+                                if (g >= maxG && rhz >= maxRhz) {
+                                    foundMatch = true;
+                                    maxRhz = rhz;
+                                    maxG = g;
+                                    mRefreshRate = rate;
+                                    log.debug( "CONFIG selecting " + mRefreshRate + " Hz "  + wantedFps + " fps (metric = " + metric + ")");
+                                }
+                            }
+                        }
+                    }
+
                     if (Math.abs(mRefreshRate) > 0 && Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
-                        // apply new refresh rate
+                        // apply new refresh rate only if really new
                         mWaitForNewRate = true;
                         numberRetries = NUMBER_RETRIES;
                         lp.preferredRefreshRate = mRefreshRate;
@@ -1061,6 +1142,8 @@ public class Player implements IPlayerControl,
         }
         mHandler.post(mRefreshRateCheckerAsync);
     }
+
+    public int gcd(int a, int b) { return b==0 ? a : gcd(b, a%b); }
 
     public void onCompletion(IMediaPlayer mp) {
         mCurrentState = STATE_PLAYBACK_COMPLETED;
