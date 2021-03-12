@@ -1046,13 +1046,13 @@ public class Player implements IPlayerControl,
                             mRefreshRate = rate;
                             log.debug("CONFIG currently chosen refresh rate is " + mRefreshRate + " wanted fps was " + wantedFps + " (metric = " + min + ")");
                         }
-                        if (Math.abs(mRefreshRate) > 0 && Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
-                            // apply new refresh rate
-                            mWaitForNewRate = true;
-                            numberRetries = NUMBER_RETRIES;
-                            lp.preferredRefreshRate = mRefreshRate;
-                            mWindow.setAttributes(lp);
-                        }
+                    }
+                    if (Math.abs(mRefreshRate) > 0 && Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
+                        // apply new refresh rate
+                        mWaitForNewRate = true;
+                        numberRetries = NUMBER_RETRIES;
+                        lp.preferredRefreshRate = mRefreshRate;
+                        mWindow.setAttributes(lp);
                     }
                 }
             }
