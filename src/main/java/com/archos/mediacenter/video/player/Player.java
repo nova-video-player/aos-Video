@@ -1043,13 +1043,9 @@ public class Player implements IPlayerControl,
                             sM = supportedModes[i];
                             if (sM.getRefreshRate() > wantedFps) {
                                 rhz = Math.round(1001 * sM.getRefreshRate());
-                                div = gcd(rhz, fps);
-                                a = fps/div;
-                                b = rhz/div;
-                                n = b/a+1;
-                                k = b-(n-1)*a;
-                                kp = a*n-b;
-                                g = div*Math.min(k,kp); // number of glitches (uneven image duration)
+                                k=rhz % fps;
+                                kp=fps-k;
+                                g = Math.min(k,kp); // number of glitches (uneven image duration) in 1001s
                                 log.debug("CONFIG evaluating " + sM.getPhysicalWidth() + "x" + sM.getPhysicalHeight() + "(" + sM.getRefreshRate() + "Hz) glitches = " + g);
                                 if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth() && sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
                                         g >= maxG && rhz >= maxRhz) {
@@ -1111,20 +1107,16 @@ public class Player implements IPlayerControl,
                         for (float rate : supportedRates) {
                             if (rate > wantedFps) {
                                 rhz = Math.round(1001 * rate);
-                                div = gcd(rhz, fps);
-                                a = fps/div;
-                                b = rhz/div;
-                                n = b/a+1;
-                                k = b-(n-1)*a;
-                                kp = a*n-b;
-                                g = div*Math.min(k,kp); // number of glitches (uneven image duration)
-                                log.debug("CONFIG evaluating " + rate + "Hz metric = " + metric);
+                                k=rhz % fps;
+                                kp=fps-k;
+                                g = Math.min(k,kp); // number of glitches (uneven image duration) in 1001s
+                                log.debug("CONFIG evaluating " + rate + "Hz metric = " + g);
                                 if (g >= maxG && rhz >= maxRhz) {
                                     foundMatch = true;
                                     maxRhz = rhz;
                                     maxG = g;
                                     mRefreshRate = rate;
-                                    log.debug( "CONFIG selecting " + mRefreshRate + " Hz "  + wantedFps + " fps (metric = " + metric + ")");
+                                    log.debug( "CONFIG selecting " + mRefreshRate + " Hz "  + wantedFps + " fps (glitches = " + g + ")");
                                 }
                             }
                         }
@@ -1142,8 +1134,6 @@ public class Player implements IPlayerControl,
         }
         mHandler.post(mRefreshRateCheckerAsync);
     }
-
-    public int gcd(int a, int b) { return b==0 ? a : gcd(b, a%b); }
 
     public void onCompletion(IMediaPlayer mp) {
         mCurrentState = STATE_PLAYBACK_COMPLETED;
