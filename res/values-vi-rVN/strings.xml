@@ -77,33 +77,56 @@
     <string name="all_videos">Tất cả video</string>
     <string name="video_folder">Thư mục</string>
     <string name="movies">Phim</string>
+    <string name="animes">Hoạt hình</string>
     <string name="all_movies">Tất cả phim</string>
     <string name="all_movies_format">Tất cả phim  -  %d</string>
     <string name="all_collections">Tất cả bộ sưu tập</string>
     <string name="all_collections_format">Tất cả bộ sưu tập  -  %d</string>
     <string name="all_collection_watched">Bộ sưu tập đã xem</string>
     <string name="all_collection_unwatched">Bộ sưu tập chưa xem</string>
+    <string name="not_watched_animes_format">Chưa xem  -  %d</string>
+    <string name="all_tv_shows">Chương trình TV</string>
+    <string name="all_tvshows">Tất cả chương trình TV</string>
+    <string name="all_animes">Tất cả phim hoạt hình</string>
+    <string name="not_watched_animeshows_format">Chưa xem  -  %d</string>
+    <string name="all_seasons">Tất cả mùa</string>
     <string name="date_view_week">Tuần</string>
     <string name="date_view_month">Tháng</string>
     <string name="date_view_year">Năm</string>
     <string name="all_movies_and_tv_shows">Phim và Chương trình TV</string>
+    <string name="cannot_delete_directory">Không thể xóa thư mục</string>
+    <string name="cannot_delete_file">Không thể xóa tập tin</string>
+    <string name="directory_deleted">Thư mục đã xóa</string>
+    <string name="file_deleted">Tập tin đã xóa</string>
     <string name="bookmark">Đánh dấu</string>
     <string name="delete">Xóa</string>
     <string name="confirm_delete_short">Xác nhận xóa</string>
     <string name="delete_bookmark">Xóa đánh dấu</string>
     <!-- for small screens -->
+    <string name="scrap_series_change">Thay đổi thông tin loạt phim</string>
+    <string name="scrap_change_confirmation">Thay đổi tất cả tập từ\n\t\"%1$s\"\nđến\n\t\"%2$s\"?</string>
+    <string name="scrap_change_title">Đang sửa đổi tất cả tập</string>
+    <string name="scrap_change_initializing">Đang khởi tạo…</string>
+    <string name="scrap_change_finalizing">Đang hoàn thiện…</string>
+    <string name="scrap_get_title">Đang nhận thông tin</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Đạo diễn</string>
     <string name="scrap_director_format">Đọa diễn: %s</string>
     <string name="scrap_rating">Đánh giá</string>
     <string name="scrap_rating_format">Đánh giá: %s</string>
     <string name="scrap_year">Năm</string>
+    <string name="scrap_year_format">Năm: %d</string>
     <!-- Specific strings for TV shows -->
     <string name="episode_name">Tập</string>
     <string name="episode_season">Mùa</string>
+    <string name="next_episode">Tập tiếp theo</string>
+    <string name="list_episodes">Danh sách tập</string>
+    <string name="delete_show">Xóa tất cả tập</string>
     <string name="scrap_status_busy">Đang tìm...</string>
     <string name="scrap_status_success">Đã cập nhật</string>
     <string name="scrap_status_failed">Không tìm thấy thông tin</string>
+    <string name="scrap_status_unknown">Không rõ</string>
+    <string name="scraper_folder_try_again">Bạn có muốn thử lại không?</string>
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="info_video">Video</string>
     <string name="info_audio">Âm thanh</string>
@@ -111,6 +134,7 @@
     <string name="info_subtitle">Phụ đề</string>
     <string name="info_file">Thông tin tệp</string>
     <!-- VIDEO COVER ROLL -->
+    <string name="you_have_no_animes">Không có phim hoạt hình</string>
     <!-- Media Center -->
     <string name="view_mode">Chế độ hiển thị</string>
     <string name="view_mode_list">Danh sách</string>
