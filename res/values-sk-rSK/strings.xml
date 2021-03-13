@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <!-- Menu item that takes the user back to the top level screen of the music player -->
+    <string name="goto_start">Knižnica</string>
+    <!-- Menu item that takes the user to the "now playing" screen of the music player -->
+    <!-- Menu item to refresh servers list -->
+    <!-- Menu item to enable network shares -->
+    <!-- Library screen, menu item -->
+    <string name="search_title">Hľadať</string>
+    <!-- Default name of track that doesn't have a name in the metadata -->
+    <string name="unknown_track_name">Neznámy</string>
+    <!-- Toast after turning shuffle on -->
+    <!-- Toast after turning shuffle off -->
+    <!-- Toast after turning single repeat on -->
+    <!-- Context menu item -->
+    <string name="info">Info</string>
+    <!-- Context menu item -->
+    <string name="play_selection">Prehrať</string>
+    <!-- Context menu item -->
+    <!-- Context menu item -->
+    <string name="play_from_beginning">Prehrať od začiatku</string>
+    <!-- Dialog box button -->
+    <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <string name="fast_scroll_alphabet">\u00200123456789AÁBCČDĎEÉĚFGHCHIÍJKLMNŇOÓPQRŘSŠTŤUÚVWXYÝZŽ</string>
+    <!-- The string used in file/folder infos dialog. -->
+    <!-- Infos dialog tabs -->
+    <!-- COVER ROLL -->
+    <!-- The string used in main storage list -->
+    <!-- VIDEO -->
+    <!-- for small screens -->
+    <!-- Generic strings for Movies or TV shows -->
+    <!-- Specific strings for TV shows -->
+    <!-- To be translated only in case there is a localized IMDB -->
+    <!-- VIDEO COVER ROLL -->
+    <!-- Media Center -->
+    <!-- VideoPlayer -->
+    <!-- Subtitles/Audio languages -->
+    <!-- Player errors -->
+    <!-- Player plug-in -->
+    <!-- Subtitles wizard -->
+    <!-- Subloader -->
+    <!-- Subtitle Settings Dialog -->
+    <!-- Subtitle Delay Dialog -->
+    <!-- Browser.CommonDetailsView -->
+    <!-- Add a space after the right quote
+    because the right part of the quote is
+    not visible otherwise -->
+    <!-- torrent -->
+    <!-- Shortcuts -->
+    <!-- Preferences -->
+    <!--  Title of the video picker activity. -->
+    <!-- Archos File Info -->
+    <!-- Help overlay -->
+    <!-- Info dialog, not indexed file -->
+    <!-- Brightness -->
+    <!--  Nfo File parsing -->
+</resources>
