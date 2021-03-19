@@ -1,4 +1,3 @@
-- SMBv2/3 support via jcifs-ng
-- Use DNS,BCAST default SMB resolver order to avoid slow SMB share responses in some network configurations
-- Allow AV1 hardware decoding
-- Switch to NDK r22
+- Fix SMB2/3 timeouts occurring sometimes
+- ffmpeg version 4.3.2 and dav1d version 0.8.2 upstep
+
