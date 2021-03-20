@@ -42,7 +42,7 @@ import com.archos.customizedleanback.app.MyVerticalGridFragment;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
-import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
+import com.archos.mediacenter.video.browser.loader.AllTvshowsNoAnimeLoader;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.DisplayMode;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
@@ -297,9 +297,9 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (id == 0) {
             if (args == null) {
-                return new AllTvshowsLoader(getActivity());
+                return new AllTvshowsNoAnimeLoader(getActivity());
             } else {
-                return new AllTvshowsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"));
+                return new AllTvshowsNoAnimeLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"));
             }
         }
         else return null;

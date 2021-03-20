@@ -1,4 +1,4 @@
-// Copyright 2019 Courville Software
+// Copyright 2021 Courville Software
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import androidx.loader.content.Loader;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
-public abstract class TvshowsByLoader extends CursorLoader implements CompatAndSDKCursorLoaderFactory {
+public abstract class TvshowsNoAnimeByLoader extends CursorLoader implements CompatAndSDKCursorLoaderFactory {
 
     public static final String COLUMN_COUNT = "count";
     public static final String COLUMN_SUBSET_ID = "_id";
@@ -36,7 +36,7 @@ public abstract class TvshowsByLoader extends CursorLoader implements CompatAndS
 
     private static Context mContext;
 
-    public TvshowsByLoader(Context context) {
+    public TvshowsNoAnimeByLoader(Context context) {
         super(context);
         mContext = context;
         setUri(VideoStore.RAW_QUERY.buildUpon().appendQueryParameter("group",
@@ -60,6 +60,10 @@ public abstract class TvshowsByLoader extends CursorLoader implements CompatAndS
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);
         }
+
+        sb.append(" AND ");
+        sb.append("( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.tv_show_genre_animation) + "%' AND " +
+                VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.tv_show_genre_anime) + "%' )");
 
         return sb.toString();
     }

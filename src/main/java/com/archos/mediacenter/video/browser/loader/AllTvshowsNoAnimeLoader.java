@@ -1,4 +1,4 @@
-// Copyright 2017 Archos SA
+// Copyright 2021 Courville Software
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,12 +22,9 @@ import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
-/**
- * Created by vapillon on 10/04/15.
- */
-public class AllTvshowsLoader extends VideoLoader {
+public class AllTvshowsNoAnimeLoader extends VideoLoader {
 
-    private static final String TAG = "AllTvshowsLoader";
+    private static final String TAG = "AllTvshowsNoAnimeLoader";
 
     public final static String COLUMN_SEASON_COUNT = "season_count";
     public final static String COLUMN_EPISODE_COUNT = "episode_count";
@@ -42,11 +39,11 @@ public class AllTvshowsLoader extends VideoLoader {
      * List all shows
      * @param context
      */
-    public AllTvshowsLoader(Context context) {
+    public AllTvshowsNoAnimeLoader(Context context) {
         this(context, TvshowSortOrderEntries.DEFAULT_SORT, true);
     }
 
-    public AllTvshowsLoader(Context context, String SortOrder, boolean showWatched) {
+    public AllTvshowsNoAnimeLoader(Context context, String SortOrder, boolean showWatched) {
         super(context);
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
@@ -100,6 +97,9 @@ public class AllTvshowsLoader extends VideoLoader {
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);
         }
+        sb.append(" AND ");
+        sb.append("( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.tv_show_genre_animation) + "%' AND " +
+                VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.tv_show_genre_anime) + "%' )");
         sb.append(") GROUP BY (");
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID);
         return sb.toString();

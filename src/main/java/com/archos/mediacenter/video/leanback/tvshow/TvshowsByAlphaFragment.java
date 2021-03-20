@@ -21,7 +21,7 @@ import android.os.Bundle;
 import android.util.SparseArray;
 
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.loader.TvshowsByAlphaLoader;
+import com.archos.mediacenter.video.browser.loader.TvshowsNoAnimeByAlphaLoader;
 import com.archos.mediaprovider.video.VideoStore;
 
 
@@ -52,7 +52,7 @@ public class TvshowsByAlphaFragment extends TvshowsByFragment {
 
     @Override
     protected Loader<Cursor> getSubsetLoader(Context context) {
-        return new TvshowsByAlphaLoader(context);
+        return new TvshowsNoAnimeByAlphaLoader(context);
     }
 
     @Override

@@ -21,7 +21,7 @@ import android.os.Bundle;
 import android.util.SparseArray;
 
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.loader.TvshowsByGenreLoader;
+import com.archos.mediacenter.video.browser.loader.TvshowsNoAnimeByGenreLoader;
 import com.archos.mediaprovider.video.VideoStore;
 
 
@@ -57,7 +57,7 @@ public class TvshowsByGenreFragment extends TvshowsByFragment {
 
     @Override
     protected Loader<Cursor> getSubsetLoader(Context context) {
-        return new TvshowsByGenreLoader(context);
+        return new TvshowsNoAnimeByGenreLoader(context);
     }
 
     @Override
