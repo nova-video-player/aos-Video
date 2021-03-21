@@ -1023,7 +1023,7 @@ public class Player implements IPlayerControl,
                     for (int i = 0; i < supportedModes.length; i++) {
                         sM = supportedModes[i];
                         rhz = Math.round(1001 * sM.getRefreshRate());
-                        if (rhz > fps) { // no frame drop
+                        if (rhz >= fps) { // no frame drop
                             metric = rhz % fps;
                             log.debug("CONFIG evaluating " + sM.getPhysicalWidth() + "x" + sM.getPhysicalHeight() + "(" + sM.getRefreshRate() + "Hz) metric = " + metric);
                             if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth() && sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
@@ -1044,7 +1044,7 @@ public class Player implements IPlayerControl,
                         for (int i = 0; i < supportedModes.length; i++) {
                             sM = supportedModes[i];
                             rhz = Math.round(1001 * sM.getRefreshRate());
-                            if (rhz > fps) { // no frame drop
+                            if (rhz >= fps) { // no frame drop
                                 k=rhz % fps;
                                 kp=fps-k;
                                 g = Math.min(k,kp); // number of glitches (uneven image duration) in 1001s
@@ -1091,7 +1091,7 @@ public class Player implements IPlayerControl,
                     log.debug("CONFIG min judder: highest rr matching rr%fr=0 pass");
                     for (float rate : supportedRates) {
                         rhz = Math.round(1001 * rate);
-                        if (rhz > fps) { // no frame drop
+                        if (rhz >= fps) { // no frame drop
                             metric = rhz % fps;
                             log.debug("CONFIG evaluating " + rate + "Hz metric = " + metric);
                             if (metric == 0 && rhz >= maxRhz) {
@@ -1110,7 +1110,7 @@ public class Player implements IPlayerControl,
                         log.debug("CONFIG min judder: highest rr maximizing number of glitches pass");
                         for (float rate : supportedRates) {
                             rhz = Math.round(1001 * rate);
-                            if (rhz > fps) { // no frame drop
+                            if (rhz >= fps) { // no frame drop
                                 k=rhz % fps;
                                 kp=fps-k;
                                 g = Math.min(k,kp); // number of glitches (uneven image duration) in 1001s
