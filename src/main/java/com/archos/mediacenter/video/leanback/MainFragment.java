@@ -1001,14 +1001,38 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 // on new video additions boxes are rebuilt
                 // note: this is not triggered onResume
                 if (!scanningOnGoing) { // rebuild box only if not scanning
-                    buildAllMoviesBox();
-                    buildAllCollectionsBox();
-                    updateMoviesRow(cursor);
-                    buildAllTvshowsBox();
-                    updateTvShowsRow(cursor);
-                    buildAllAnimesBox();
-                    updateAnimesRow(cursor);
-                    buildAllAnimeShowsBox();
+                    if (mShowMoviesRow) {
+                        log.debug("onLoadFinished: mShowMoviesRow --> restart ALL_MOVIES loader");
+                        Bundle args = new Bundle();
+                        args.putString("sort", mMovieSortOrder);
+                        LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_MOVIES, args, this);
+                    } else {
+                        log.debug("onLoadFinished: buildAllMoviesBox & buildAllCollectionsBox");
+                        buildAllMoviesBox();
+                        buildAllCollectionsBox();
+                        updateMoviesRow(null);
+                    }
+                    if (mShowTvshowsRow) {
+                        log.debug("onLoadFinished: mShowTvshowsRow --> restart ALL_TVSHOWS loader");
+                        Bundle args = new Bundle();
+                        args.putString("sort", mTvShowSortOrder);
+                        LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
+                    } else {
+                        log.debug("onLoadFinished: buildAllTvshowsBox");
+                        buildAllTvshowsBox();
+                        updateTvShowsRow(null);
+                    }
+                    if (mShowAnimesRow) {
+                        log.debug("onLoadFinished: mShowAnimesRow --> restart ALL_ANIMES loader");
+                        Bundle args = new Bundle();
+                        args.putString("sort", mAnimesSortOrder);
+                        LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_ANIMES, args, this);
+                    } else {
+                        log.debug("onLoadFinished: buildAllAnimesBox & buildAllAnimeShowsBox");
+                        buildAllAnimesBox();
+                        buildAllAnimeShowsBox();
+                        updateAnimesRow(null);
+                    }
                 }
                 break;
             case LOADER_ID_LAST_PLAYED:
