@@ -56,12 +56,16 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
+import com.archos.mediacenter.video.browser.loader.AllAnimesLoader;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
+import com.archos.mediacenter.video.browser.loader.AllTvshowsNoAnimeLoader;
 import com.archos.mediacenter.video.browser.loader.AnimesLoader;
+import com.archos.mediacenter.video.browser.loader.FilmsLoader;
 import com.archos.mediacenter.video.browser.loader.LastAddedLoader;
 import com.archos.mediacenter.video.browser.loader.LastPlayedLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.browser.loader.NonScrapedVideosCountLoader;
+import com.archos.mediacenter.video.browser.loader.WatchingUpNextLoader;
 import com.archos.mediacenter.video.leanback.adapter.object.Box;
 import com.archos.mediacenter.video.leanback.adapter.object.EmptyView;
 import com.archos.mediacenter.video.leanback.adapter.object.Icon;
@@ -523,7 +527,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         // this is for the all animes row not the animation row
         mAnimesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
         mAnimesAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
-        mAnimesRow = new ListRow(ROW_ID_ALL_ANIMES, new HeaderItem(getString(R.string.all_animes)), mAnimesAdapter);
+        mAnimesRow = new ListRow(ROW_ID_ALL_ANIMES, new HeaderItem(getString(R.string.all_animes_row)), mAnimesAdapter);
 
         mFileBrowsingRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         mFileBrowsingRowAdapter.add(new Box(Box.ID.NETWORK, getString(R.string.network_storage), R.drawable.filetype_new_server));
@@ -960,16 +964,17 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 return new LastPlayedLoader(mActivity);
             case LOADER_ID_ALL_MOVIES:
                 log.debug("onCreateLoader ALL_MOVIES");
-                if (args == null) return new MoviesLoader(mActivity, true);
-                else return new MoviesLoader(mActivity, args.getString("sort"), true, true);
+                if (args == null) return new FilmsLoader(mActivity, true);
+                else return new FilmsLoader(mActivity, args.getString("sort"), true, true);
             case LOADER_ID_ALL_TV_SHOWS:
                 log.debug("onCreateLoader ALL_TV_SHOWS");
-                if (args == null) return new AllTvshowsLoader(mActivity);
-                else return new AllTvshowsLoader(mActivity, args.getString("sort"), true);
+                if (args == null) return new AllTvshowsNoAnimeLoader(mActivity);
+                else return new AllTvshowsNoAnimeLoader(mActivity, args.getString("sort"), true);
             case LOADER_ID_ALL_ANIMES:
                 log.debug("onCreateLoader ALL_ANIMES");
-                if (args == null) return new AnimesLoader(mActivity, true);
-                else return new AnimesLoader(mActivity, args.getString("sort"), true, true);
+                // TODO MARC do all animes = animes shows and anime movies
+                if (args == null) return new AllAnimesLoader(mActivity, true);
+                else return new AllAnimesLoader(mActivity, args.getString("sort"), true, true);
             case LOADER_ID_NON_SCRAPED_VIDEOS_COUNT:
                 log.debug("onCreateLoader NON_SCRAPED");
                 return new NonScrapedVideosCountLoader(mActivity);
@@ -1046,11 +1051,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 updateMoviesRow(cursor);
                 break;
             case LOADER_ID_ALL_TV_SHOWS:
-                log.debug("onLoadFinished: AllTvShows cursor ready with " + cursor.getCount() + "entries, updating row/box");
+                log.debug("onLoadFinished: AllTvShows cursor ready with " + cursor.getCount() + " entries, updating row/box");
                 updateTvShowsRow(cursor);
                 break;
             case LOADER_ID_ALL_ANIMES:
-                log.debug("onLoadFinished: AllAnimes cursor ready with " + cursor.getCount() + "entries, updating row/box");
+                log.debug("onLoadFinished: AllAnimes cursor ready with " + cursor.getCount() + " entries, updating row/box");
                 updateAnimesRow(cursor);
                 break;
             case LOADER_ID_NON_SCRAPED_VIDEOS_COUNT:

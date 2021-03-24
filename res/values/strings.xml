@@ -131,6 +131,7 @@
     <string name="all_tv_shows">TV shows</string>
     <string name="all_tvshows">All TV shows</string>
     <string name="all_animes">All animation movies</string>
+    <string name="all_animes_row">All animations</string>
     <string name="all_animeshows">All animation TV shows</string>
     <string name="animes_by_alpha">Animation movies alphabetical</string>
     <string name="animes_by_genre">Animation movies by genre</string>
