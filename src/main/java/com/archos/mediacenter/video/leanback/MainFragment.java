@@ -1100,8 +1100,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         } else if (mLastAddedInitFocus == InitFocus.NEED_FOCUS) {
             log.debug("checkInitFocus: LastAdded loader ready and needs focus");
             mLastAddedInitFocus = InitFocus.FOCUSED;
+            // removing for now since it causes first row not to be focused since isLastAddedRowVisible=true but in reality it is MoviesRow displayed
             mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
-        } else if (mLastPlayedInitFocus == InitFocus.NEED_FOCUS) {
+        } else if (mLastPlayedInitFocus == InitFocus.NEED_FOCUS) { // check if row is visible to avoid selecting MoviesRow in case of slow row display
             log.debug("checkInitFocus: LastPlayed loader ready and needs focus");
             mLastPlayedInitFocus = InitFocus.FOCUSED;
         } else {
