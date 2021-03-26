@@ -701,13 +701,13 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         int currentPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT);
         if (cursor != null) {
             if (cursor.getCount() == 0 || !mShowWatchingUpNextRow) {
-                log.warn("updateWatchingUpNextRow: cursor not null and row not shown thus removing currentPosition=" + currentPosition);
+                log.debug("updateWatchingUpNextRow: cursor not null and row not shown thus removing currentPosition=" + currentPosition);
                 if (currentPosition != -1)
                     mRowsAdapter.removeItems(currentPosition, 1);
             } else {
                 if (currentPosition == -1) {
                     int newPosition = 0;
-                    log.warn("updateWatchingUpNextRow: cursor not null and row shown thus adding newPosition=" + newPosition);
+                    log.debug("updateWatchingUpNextRow: cursor not null and row shown thus adding newPosition=" + newPosition);
                     mRowsAdapter.add(newPosition, mWatchingUpNextRow);
                 }
             }
@@ -722,7 +722,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         if (cursor != null) mLastAddedAdapter.changeCursor(cursor);
         else cursor = mLastAddedAdapter.getCursor();
         int currentPosition = getRowPosition(ROW_ID_LAST_ADDED);
-        log.warn("updateLastAddedRow: currentPosition=" + currentPosition);
+        log.debug("updateLastAddedRow: currentPosition=" + currentPosition);
         if (cursor.getCount() == 0 || !mShowLastAddedRow) {
             if (currentPosition != -1)
                 mRowsAdapter.removeItems(currentPosition, 1);
@@ -731,7 +731,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 int newPosition = 0;
                 if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
                     newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
-                log.warn("updateLastAddedRow: newPosition=" + newPosition);
+                log.debug("updateLastAddedRow: newPosition=" + newPosition);
                 mRowsAdapter.add(newPosition, mLastAddedRow);
             }
         }
@@ -1011,6 +1011,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 // on new video additions boxes are rebuilt
                 // note: this is not triggered onResume
                 if (!scanningOnGoing) { // rebuild box only if not scanning
+                    LoaderManager.getInstance(this).restartLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
                     if (mShowMoviesRow) {
                         log.debug("onLoadFinished: mShowMoviesRow --> restart ALL_MOVIES loader");
                         Bundle args = new Bundle();
@@ -1086,24 +1087,21 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private InitFocus mLastAddedInitFocus = InitFocus.NOT_FOCUSED;
     private InitFocus mLastPlayedInitFocus = InitFocus.NOT_FOCUSED;
 
-    private void checkInitFocus() {
+    private void checkInitFocus() { // sets focus on line 0 when there is a line 0 loader update
         // Check if we have WatchingUpNext, LastAdded and LastPlayed loader results
-
         log.debug("checkInitFocus: mLastAddedInitFocus="+ mLastAddedInitFocus +
                 ", mLastPlayedInitFocus="+ mLastPlayedInitFocus+
                 ", mWatchingUpNextInitFocus=" + mWatchingUpNextInitFocus);
-
         if (mWatchingUpNextInitFocus == InitFocus.NEED_FOCUS) {
             log.debug("checkInitFocus: WatchingUpNext loader ready and needs focus");
             mWatchingUpNextInitFocus = InitFocus.FOCUSED;
-            //mLastAddedInitFocus = InitFocus.NO_NEED_FOCUS;
-            //mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
+            mLastAddedInitFocus = InitFocus.NO_NEED_FOCUS;
+            mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
         } else if (mLastAddedInitFocus == InitFocus.NEED_FOCUS) {
             log.debug("checkInitFocus: LastAdded loader ready and needs focus");
             mLastAddedInitFocus = InitFocus.FOCUSED;
-            // removing for now since on miproj it causes first row not to be focused since isLastAddedRowVisible=true but in reality it is Network&Files displayed
-            //mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
-        } else if (mLastPlayedInitFocus == InitFocus.NEED_FOCUS) { // check if row is visible to avoid selecting network & files in case of slow row display
+            mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
+        } else if (mLastPlayedInitFocus == InitFocus.NEED_FOCUS) {
             log.debug("checkInitFocus: LastPlayed loader ready and needs focus");
             mLastPlayedInitFocus = InitFocus.FOCUSED;
         } else {
