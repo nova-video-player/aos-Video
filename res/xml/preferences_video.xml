@@ -129,13 +129,12 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/preferences_leanback_user_interface" android:key="category_leanback_user_interface"
         app:iconSpaceReserved="false" >
-        <!-- TODO: disabled until issue #186 is fixed -->
-        <!--CheckBoxPreference
+        <CheckBoxPreference
             android:defaultValue="true"
             android:key="show_watching_up_next_row"
             android:summary="@string/preferences_show_watching_up_next_row_summary"
             android:title="@string/preferences_show_watching_up_next_row"
-            app:iconSpaceReserved="false"/-->
+            app:iconSpaceReserved="false"/>
         
         <CheckBoxPreference
             android:defaultValue="true"

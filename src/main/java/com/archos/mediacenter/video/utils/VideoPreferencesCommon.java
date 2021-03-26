@@ -54,6 +54,7 @@ import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.UiChoiceDialog;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
+import com.archos.mediacenter.video.leanback.MainFragment;
 import com.archos.mediacenter.video.leanback.animes.AllAnimesGridFragment;
 import com.archos.mediacenter.video.leanback.animes.AnimesSortOrderEntry;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridFragment;
@@ -138,7 +139,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_ENABLE_SPONSOR = "enable_sponsor";
 
     // TODO: disabled until issue #186 is fixed
-    public static final boolean SHOW_WATCHING_UP_NEXT_ROW_DEFAULT = false;
+    public static final boolean SHOW_WATCHING_UP_NEXT_ROW_DEFAULT = true;
     public static final boolean SHOW_LAST_ADDED_ROW_DEFAULT = true;
     public static final boolean SHOW_LAST_PLAYED_ROW_DEFAULT = true;
     public static final boolean SHOW_ALL_MOVIES_ROW_DEFAULT = false;
@@ -180,6 +181,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private ListPreference mSubtitlesFavLangPreferences = null;
     private MultiSelectListPreference mSubtitlesDownloadLanguagePreferences = null;
     private CheckBoxPreference mEnableSponsor = null;
+    private CheckBoxPreference mWatchingUpNext = null;
 
     private String mLastTraktUser = null;
     private Trakt.Status mTraktStatus = Trakt.Status.SUCCESS;
@@ -352,6 +354,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mAudioInterfaceChoicePreferences = (ListPreference) findPreference(KEY_AUDIO_INTERFACE_CHOICE);
         mForceSwDecPreferences = (CheckBoxPreference) findPreference(KEY_FORCE_SW);
         mEnableSponsor = (CheckBoxPreference) findPreference(KEY_ENABLE_SPONSOR);
+        mWatchingUpNext = (CheckBoxPreference) findPreference(KEY_SHOW_WATCHING_UP_NEXT_ROW);
         mForceAudioPassthrough = (CheckBoxPreference) findPreference(KEY_FORCE_AUDIO_PASSTHROUGH);
         mDisableDownmix = (CheckBoxPreference) findPreference("disable_downmix");
         mActivate3DTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_3D_SWITCH);
@@ -654,6 +657,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
                     return true;
                 });
+
+                // FIXME: for now feature watch up next is disabled because makes the interface crash
+                if (! MainFragment.FEATURE_WATCH_UP_NEXT)
+                    leanbackUserInterfaceCategory.removePreference(mWatchingUpNext);
 
                 ListPreference movieSortOrderPref = (ListPreference)findPreference(KEY_MOVIE_SORT_ORDER);
                 

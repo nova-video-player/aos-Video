@@ -34,6 +34,7 @@ import com.archos.mediacenter.video.browser.loader.WatchingUpNextLoader;
 import com.archos.mediacenter.video.browser.loader.VideoLoader;
 import com.archos.mediacenter.video.browser.loader.VideosByListLoader;
 import com.archos.mediacenter.video.browser.loader.VideosSelectionLoader;
+import com.archos.mediacenter.video.leanback.MainFragment;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsActivity;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsFragment;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowActivity;
@@ -64,8 +65,7 @@ public class ChannelManager {
     private static ChannelManager mInstance;
     
     private final Context mContext;
-    // TODO: disabled until issue #186 is fixed
-    //private final String mWatchingUpNext;
+    private final String mWatchingUpNext;
     private final String mRecentlyAdded;
     private final String mRecentlyPlayed;
     private final String mAllMovies;
@@ -91,8 +91,7 @@ public class ChannelManager {
 
     public ChannelManager(Context context) {
         mContext = context;
-        // TODO: disabled until issue #186 is fixed
-        //mWatchingUpNext = mContext.getString(R.string.watching_up_next);
+        mWatchingUpNext = mContext.getString(R.string.watching_up_next);
         mRecentlyAdded = mContext.getString(R.string.recently_added);
         mRecentlyPlayed = mContext.getString(R.string.recently_played);
         mAllMovies = mContext.getString(R.string.all_movies);
@@ -241,8 +240,7 @@ public class ChannelManager {
 
         private void addInternalChannels() {
             LinkedHashMap<String, ChannelData> newChannels = new LinkedHashMap<>();
-            // TODO: disabled until issue #186 is fixed
-            //addInternalChannel(newChannels, mWatchingUpNext);
+            if (MainFragment.FEATURE_WATCH_UP_NEXT) addInternalChannel(newChannels, mWatchingUpNext);
             addInternalChannel(newChannels, mRecentlyAdded);
             addInternalChannel(newChannels, mRecentlyPlayed);
             addInternalChannel(newChannels, mAllMovies);
@@ -311,8 +309,7 @@ public class ChannelManager {
             String allTvShowsSortOrder = prefs.getString(VideoPreferencesCommon.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
             String allAnimesSortOrder = prefs.getString(VideoPreferencesCommon.KEY_ANIMES_SORT_ORDER, AnimesLoader.DEFAULT_SORT);
 
-            // TODO: disabled until issue #186 is fixed
-            //mChannels.get(mWatchingUpNext).setLoader(new WatchingUpNextLoader(mContext));
+            if (MainFragment.FEATURE_WATCH_UP_NEXT) mChannels.get(mWatchingUpNext).setLoader(new WatchingUpNextLoader(mContext));
             mChannels.get(mRecentlyAdded).setLoader(new LastAddedLoader(mContext));
             mChannels.get(mRecentlyPlayed).setLoader(new LastPlayedLoader(mContext));
             mChannels.get(mAllMovies).setLoader(new MoviesLoader(mContext, allMoviesSortOrder, true, true));
