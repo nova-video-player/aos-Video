@@ -807,7 +807,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                             if (videoDbInfo.isShow) { // this is a show
                                 // try to use imdbId since the title can be translated...
                                 String imdbId = getIMDBID(fileUrl);
-                                if (imdbId == null) log.warn("prepareRequestList: imdbId null!!!");
+                                if (imdbId == null) Log.w(TAG, "prepareRequestList: imdbId null!!!");
                                 if (imdbId != null) {
                                     imdbId = imdbId.replaceAll("[^\\d]", "");
                                     video.put("imdbid", imdbId);
