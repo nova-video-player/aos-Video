@@ -221,9 +221,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             public void onReceive(Context context, Intent intent) {
                 if(intent!=null&& ArchosMediaIntent.ACTION_VIDEO_SCANNER_SCAN_FINISHED.equals(intent.getAction())) {
                     // in case of usb hdd update also last played row
-                    LoaderManager.getInstance(MainFragment.this).restartLoader(LOADER_ID_LAST_PLAYED, null, MainFragment.this);
+                    LoaderManager.getInstance(MainFragment.this).initLoader(LOADER_ID_LAST_PLAYED, null, MainFragment.this);
                     // prepare first row to be displayed and lock on if new context after scan
-                    LoaderManager.getInstance(MainFragment.this).restartLoader(LOADER_ID_LAST_ADDED, null, MainFragment.this);
+                    LoaderManager.getInstance(MainFragment.this).initLoader(LOADER_ID_LAST_ADDED, null, MainFragment.this);
                     log.debug("manual reload");
                 }
             }
@@ -347,14 +347,21 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         if (newShowLastAddedRow != mShowLastAddedRow) {
             log.debug("onResume: preference changed, display last added row: " + newShowLastAddedRow + " -> updating");
             mShowLastAddedRow = newShowLastAddedRow;
-            updateLastAddedRow(null);
         }
+        // update lastAdded loader: MUST use initLoader and NOT restartLoader otherwise no update
+        log.debug("onResume: restart LOADER_ID_LAST_ADDED");
+        LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_ADDED, null, this);
+
         boolean newShowLastPlayedRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_PLAYED_ROW, VideoPreferencesCommon.SHOW_LAST_PLAYED_ROW_DEFAULT);
         if (newShowLastPlayedRow != mShowLastPlayedRow) {
             log.debug("onResume: preference changed, display last player row: " + newShowLastPlayedRow + " -> updating");
             mShowLastPlayedRow = newShowLastPlayedRow;
             updateLastPlayedRow(null);
         }
+        // update lastPlayed loader (could have been an episode played with next episode): MUST use initLoader and NOT restartLoader otherwise no update
+        log.debug("onResume: restart LOADER_ID_LAST_PLAYED");
+        LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_PLAYED, null, this);
+
         boolean newShowMoviesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_MOVIES_ROW, VideoPreferencesCommon.SHOW_ALL_MOVIES_ROW_DEFAULT);
         if (newShowMoviesRow != mShowMoviesRow) {
             log.debug("onResume: preference changed, display all movies row: " + newShowMoviesRow + " -> updating");
@@ -372,7 +379,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             restartMoviesLoader = false;
             Bundle args = new Bundle();
             args.putString("sort", mMovieSortOrder);
-            LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_MOVIES, args, this);
+            LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_MOVIES, args, this);
         } else
             updateMoviesRow(null); // will be done on loader restart
 
@@ -393,7 +400,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             restartTvshowsLoader = false;
             Bundle args = new Bundle();
             args.putString("sort", mTvShowSortOrder);
-            LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
+            LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
         } else
             updateTvShowsRow(null); // will be done on loader restart
 
@@ -414,7 +421,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             restartAnimesLoader = false;
             Bundle args = new Bundle();
             args.putString("sort", mAnimesSortOrder);
-            LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_ANIMES, args, this);
+            LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_ANIMES, args, this);
         } else
             updateAnimesRow(null); // will be done on loader restart
 
@@ -678,15 +685,15 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     }
 
     private void debugRows(String function) {
-        if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1) log.debug(function + ": ROW_ID_WATCHING_UP_NEXT " + getRowPosition(ROW_ID_WATCHING_UP_NEXT));
-        if (getRowPosition(ROW_ID_LAST_ADDED) != -1) log.debug(function + ": ROW_ID_LAST_ADDED " + getRowPosition(ROW_ID_LAST_ADDED));
-        if (getRowPosition(ROW_ID_LAST_PLAYED) != -1) log.debug(function + ": ROW_ID_LAST_PLAYED " + getRowPosition(ROW_ID_LAST_PLAYED));
-        if (getRowPosition(ROW_ID_MOVIES) != -1) log.debug(function + ": ROW_ID_MOVIES " + getRowPosition(ROW_ID_MOVIES));
-        if (getRowPosition(ROW_ID_ALL_MOVIES) != -1) log.debug(function + ": ROW_ID_ALL_MOVIES " + getRowPosition(ROW_ID_ALL_MOVIES));
-        if (getRowPosition(ROW_ID_TVSHOW) != -1) log.debug(function + ": ROW_ID_TVSHOW " + getRowPosition(ROW_ID_TVSHOW));
-        if (getRowPosition(ROW_ID_ALL_TVSHOWS) != -1) log.debug(function + ": ROW_ID_ALL_TVSHOWS " + getRowPosition(ROW_ID_ALL_TVSHOWS));
-        if (getRowPosition(ROW_ID_ANIMES) != -1) log.debug(function + ": ROW_ID_ANIMES " + getRowPosition(ROW_ID_ANIMES));
-        if (getRowPosition(ROW_ID_ALL_ANIMES) != -1) log.debug(function + ": ROW_ID_ALL_ANIMES" + getRowPosition(ROW_ID_ALL_ANIMES));
+        if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1) log.trace(function + ": ROW_ID_WATCHING_UP_NEXT " + getRowPosition(ROW_ID_WATCHING_UP_NEXT));
+        if (getRowPosition(ROW_ID_LAST_ADDED) != -1) log.trace(function + ": ROW_ID_LAST_ADDED " + getRowPosition(ROW_ID_LAST_ADDED));
+        if (getRowPosition(ROW_ID_LAST_PLAYED) != -1) log.trace(function + ": ROW_ID_LAST_PLAYED " + getRowPosition(ROW_ID_LAST_PLAYED));
+        if (getRowPosition(ROW_ID_MOVIES) != -1) log.trace(function + ": ROW_ID_MOVIES " + getRowPosition(ROW_ID_MOVIES));
+        if (getRowPosition(ROW_ID_ALL_MOVIES) != -1) log.trace(function + ": ROW_ID_ALL_MOVIES " + getRowPosition(ROW_ID_ALL_MOVIES));
+        if (getRowPosition(ROW_ID_TVSHOW) != -1) log.trace(function + ": ROW_ID_TVSHOW " + getRowPosition(ROW_ID_TVSHOW));
+        if (getRowPosition(ROW_ID_ALL_TVSHOWS) != -1) log.trace(function + ": ROW_ID_ALL_TVSHOWS " + getRowPosition(ROW_ID_ALL_TVSHOWS));
+        if (getRowPosition(ROW_ID_ANIMES) != -1) log.trace(function + ": ROW_ID_ANIMES " + getRowPosition(ROW_ID_ANIMES));
+        if (getRowPosition(ROW_ID_ALL_ANIMES) != -1) log.trace(function + ": ROW_ID_ALL_ANIMES" + getRowPosition(ROW_ID_ALL_ANIMES));
     }
 
     private void updateWatchingUpNextRow(Cursor cursor) {
@@ -1011,12 +1018,12 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 // on new video additions boxes are rebuilt
                 // note: this is not triggered onResume
                 if (!scanningOnGoing) { // rebuild box only if not scanning
-                    LoaderManager.getInstance(this).restartLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
+                    LoaderManager.getInstance(this).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
                     if (mShowMoviesRow) {
                         log.debug("onLoadFinished: mShowMoviesRow --> restart ALL_MOVIES loader");
                         Bundle args = new Bundle();
                         args.putString("sort", mMovieSortOrder);
-                        LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_MOVIES, args, this);
+                        LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_MOVIES, args, this);
                     } else {
                         log.debug("onLoadFinished: buildAllMoviesBox & buildAllCollectionsBox");
                         buildAllMoviesBox();
@@ -1027,7 +1034,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                         log.debug("onLoadFinished: mShowTvshowsRow --> restart ALL_TVSHOWS loader");
                         Bundle args = new Bundle();
                         args.putString("sort", mTvShowSortOrder);
-                        LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
+                        LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
                     } else {
                         log.debug("onLoadFinished: buildAllTvshowsBox");
                         buildAllTvshowsBox();
@@ -1037,7 +1044,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                         log.debug("onLoadFinished: mShowAnimesRow --> restart ALL_ANIMES loader");
                         Bundle args = new Bundle();
                         args.putString("sort", mAnimesSortOrder);
-                        LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_ANIMES, args, this);
+                        LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_ANIMES, args, this);
                     } else {
                         log.debug("onLoadFinished: buildAllAnimesBox & buildAllAnimeShowsBox");
                         buildAllAnimesBox();
@@ -1093,24 +1100,30 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 ", mLastPlayedInitFocus="+ mLastPlayedInitFocus+
                 ", mWatchingUpNextInitFocus=" + mWatchingUpNextInitFocus);
         if (mWatchingUpNextInitFocus == InitFocus.NEED_FOCUS) {
-            log.debug("checkInitFocus: WatchingUpNext loader ready and needs focus");
-            mWatchingUpNextInitFocus = InitFocus.FOCUSED;
-            mLastAddedInitFocus = InitFocus.NO_NEED_FOCUS;
-            mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
+            log.debug("checkInitFocus: WatchingUpNext loader ready and needs focus and row is " + (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1 ? "present" : "absent"));
+            if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1) {
+                mWatchingUpNextInitFocus = InitFocus.FOCUSED;
+                //mLastAddedInitFocus = InitFocus.NO_NEED_FOCUS;
+                //mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
+            }
         } else if (mLastAddedInitFocus == InitFocus.NEED_FOCUS) {
-            log.debug("checkInitFocus: LastAdded loader ready and needs focus");
-            mLastAddedInitFocus = InitFocus.FOCUSED;
-            // removing for now since it causes first row not to be focused since isLastAddedRowVisible=true but in reality it is MoviesRow displayed
-            mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
+            log.debug("checkInitFocus: LastAdded loader ready and needs focus and row is " + (getRowPosition(ROW_ID_LAST_ADDED) != -1 ? "present" : "absent"));
+            if (getRowPosition(ROW_ID_LAST_ADDED) != -1) {
+                mLastAddedInitFocus = InitFocus.FOCUSED;
+                // removing for now since it causes first row not to be focused since isLastAddedRowVisible=true but in reality it is MoviesRow displayed
+                //mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
+            }
         } else if (mLastPlayedInitFocus == InitFocus.NEED_FOCUS) { // check if row is visible to avoid selecting MoviesRow in case of slow row display
-            log.debug("checkInitFocus: LastPlayed loader ready and needs focus");
-            mLastPlayedInitFocus = InitFocus.FOCUSED;
+            log.debug("checkInitFocus: LastPlayed loader ready and needs focus and row is " + (getRowPosition(ROW_ID_LAST_PLAYED) != -1 ? "present" : "absent"));
+            if (getRowPosition(ROW_ID_LAST_PLAYED) != -1) {
+                mLastPlayedInitFocus = InitFocus.FOCUSED;
+            }
         } else {
             log.debug("checkInitFocus: there was a cursor update on one that is tagged with FOCUSED OR NO_NEED_FOCUS");
             return; /// if nobody needs focus then exit
         }
         log.debug("checkInitFocus: sets focus on row 0 with animation if above rows were not visible it happens on network first");
-        // TODO FEATURE_WATCH_UP_NEXT source of the crash
+        // FIXME FEATURE_WATCH_UP_NEXT source of the crash
         if (! FEATURE_WATCH_UP_NEXT) this.setSelectedPosition(0, true);
     }
 
