@@ -1,3 +1,4 @@
 - Add support for movie collections/sagas on Android TV
 - Separate section for animation movies and series on Android TV
 - Faster TV shows media information retrieval
+- Perform tvshow opensubtitles query based on imdbId to get better matches
