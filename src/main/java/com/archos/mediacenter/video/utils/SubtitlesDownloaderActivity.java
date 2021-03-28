@@ -117,7 +117,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
     //database URI : VideoStore.Video.Media.EXTERNAL_CONTENT_URI
     private static final String[] imdbIdProjection = {
             VideoStore.Video.VideoColumns._ID,
-            VideoStore.Video.VideoColumns.SCRAPER_M_IMDB_ID,
+            VideoStore.Video.VideoColumns.SCRAPER_IMDB_ID,
     };
 
     private static final String WHERE = VideoStore.Video.VideoColumns.DATA + "=?";
