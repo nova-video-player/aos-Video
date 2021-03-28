@@ -362,9 +362,9 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
             }
             try {
                 if (!mUsername.isEmpty() && !mPassword.isEmpty())
-                    map = ((HashMap<String, Object>) client.call("LogIn",mUsername, mPassword, "fre", USER_AGENT));
+                    map = ((HashMap<String, Object>) client.call("LogIn",mUsername, mPassword, "en", USER_AGENT));
                 else
-                    map = ((HashMap<String, Object>) client.call("LogIn","","","fre",USER_AGENT));
+                    map = ((HashMap<String, Object>) client.call("LogIn","","","en",USER_AGENT));
                 token = (String) map.get("token");
             } catch (XMLRPCException e) {
                 // TODO parse error message
