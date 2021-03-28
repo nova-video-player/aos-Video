@@ -115,7 +115,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
 
     private Cursor mCursor;
     //database URI : VideoStore.Video.Media.EXTERNAL_CONTENT_URI
-    private static final String[] mProjection = {
+    private static final String[] imdbIdProjection = {
             VideoStore.Video.VideoColumns._ID,
             VideoStore.Video.VideoColumns.SCRAPER_M_IMDB_ID,
     };
@@ -805,10 +805,19 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                             // index is used to find back fileUrl, to allow search on query or imdbid do not put the moviebytesize otherwise it is the only search criteria
                             log.debug("prepareRequestList: fourth pass index (hash,url) <- (" + hash + "," + fileUrl + ")");
                             if (videoDbInfo.isShow) { // this is a show
-                                // remove date from scraperTitle \([0-9]*\) because match does not work with e.g. The Flash (2015) or Doctor Who (2005)
-                                log.debug("prepareRequestList: replacing " + videoDbInfo.scraperTitle + ", by " +
-                                        videoDbInfo.scraperTitle.replaceAll(" *\\(\\d*?\\)", ""));
-                                video.put("query", videoDbInfo.scraperTitle.replaceAll(" *\\(\\d*?\\)", ""));
+                                // try to use imdbId since the title can be translated...
+                                String imdbId = getIMDBID(fileUrl);
+                                if (imdbId == null) log.warn("prepareRequestList: imdbId null!!!");
+                                if (imdbId != null) {
+                                    imdbId = imdbId.replaceAll("[^\\d]", "");
+                                    video.put("imdbid", imdbId);
+                                    log.debug("prepareRequestList: fourth pass serie imdbid=" + imdbId);
+                                } else {
+                                    // remove date from scraperTitle \([0-9]*\) because match does not work with e.g. The Flash (2015) or Doctor Who (2005)
+                                    video.put("query", videoDbInfo.scraperTitle.replaceAll(" *\\(\\d*?\\)", ""));
+                                    log.debug("prepareRequestList: replacing " + videoDbInfo.scraperTitle + ", by " +
+                                            videoDbInfo.scraperTitle.replaceAll(" *\\(\\d*?\\)", ""));
+                                }
                                 video.put("season", videoDbInfo.scraperSeasonNr);
                                 video.put("episode", videoDbInfo.scraperEpisodeNr);
                                 log.debug("prepareRequestList: fourth pass show query=" + videoDbInfo.scraperTitle + ", season=" + videoDbInfo.scraperSeasonNr + ", episode=" + videoDbInfo.scraperEpisodeNr);
@@ -1111,11 +1120,11 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
             mHandler.post(() -> Toast.makeText(SubtitlesDownloaderActivity.this, message, Toast.LENGTH_SHORT).show());
         }
 
-        private String getIMDBID(String path){
+        private String getIMDBID(String path) {
             String[] selection = {path};
             mCursor = getContentResolver().query(
                     VideoStore.Video.Media.EXTERNAL_CONTENT_URI,   // The content URI of the words table
-                    mProjection,                     // The columns to return for each row
+                    imdbIdProjection,                     // The columns to return for each row
                     WHERE,                          // Selection criteria
                     selection,                     // Selection
                     null);                        // The sort order for the returned rows
