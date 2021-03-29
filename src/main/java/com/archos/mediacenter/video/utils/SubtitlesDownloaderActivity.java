@@ -124,9 +124,9 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
     private static final int FIRST_PASS = 0; // moviehash+moviebytesize based (provides only one result)
     private static final int SECOND_PASS = 1; // tag (full filename) based (provides only one result) but does not work if file is renamed...
     private static final int THIRD_PASS = 2; // query (friendly name from filename) based (provides multiple choices)
-    private static final int FOURTH_PASS = 3; // scraped information based (imdbid for movie or query=showtitle season episode number) (provide multiple choices)
+    private static final int FOURTH_PASS = 3; // scraped information based (imdbid for movie/show with season episode number for show) (provide multiple choices)
     private static final boolean firstPassEnabled = true;
-    private static final boolean secondPassEnabled = true;
+    private static final boolean secondPassEnabled = false; // Better have only imdb query
     private static final boolean thirdPassEnabled = false; // NOTE: cannot select both 3rd and 4th since multiple choices
     private static final boolean fourthPassEnabled = true; // NOTE: cannot select both 3rd and 4th since multiple choices
 
