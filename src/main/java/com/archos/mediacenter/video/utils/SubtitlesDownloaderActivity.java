@@ -126,7 +126,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
     private static final int THIRD_PASS = 2; // query (friendly name from filename) based (provides multiple choices)
     private static final int FOURTH_PASS = 3; // scraped information based (imdbid for movie/show with season episode number for show) (provide multiple choices)
     private static final boolean firstPassEnabled = true;
-    private static final boolean secondPassEnabled = false; // Better have only imdb query
+    private static final boolean secondPassEnabled = true; // NOTE: keep it for non scraped content
     private static final boolean thirdPassEnabled = false; // NOTE: cannot select both 3rd and 4th since multiple choices
     private static final boolean fourthPassEnabled = true; // NOTE: cannot select both 3rd and 4th since multiple choices
 
