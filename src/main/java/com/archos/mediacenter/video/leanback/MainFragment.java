@@ -243,9 +243,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        log.debug("onActivityCreated");
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        log.debug("onViewCreated");
+        super.onViewCreated(view, savedInstanceState);
+        mOverlay = new Overlay(this);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
         mShowWatchingUpNextRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_WATCHING_UP_NEXT_ROW, VideoPreferencesCommon.SHOW_WATCHING_UP_NEXT_ROW_DEFAULT);
         if (FEATURE_WATCH_UP_NEXT) mShowWatchingUpNextRow = true;
@@ -282,9 +283,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         loadRows();
         if (mShowWatchingUpNextRow) {
             LoaderManager.getInstance(this).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
-            log.debug("onActivityCreated: init LOADER_ID_WATCHING_UP_NEXT");
+            log.debug("onViewCreated: init LOADER_ID_WATCHING_UP_NEXT");
         } else {
-            log.debug("onActivityCreated: NOT init LOADER_ID_WATCHING_UP_NEXT");
+            log.debug("onViewCreated: NOT init LOADER_ID_WATCHING_UP_NEXT");
         }
         LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_ADDED, null, this);
         LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_PLAYED, null, this);
@@ -304,12 +305,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             animesArgs.putString("sort", mAnimesSortOrder);
             LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_ANIMES, animesArgs, this);
         }
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mOverlay = new Overlay(this);
     }
 
     @Override
@@ -339,7 +334,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         if (restartWatchingUpNextLoader) {
             log.debug("onResume: restart WATCHING_UP_NEXT loader");
             restartWatchingUpNextLoader = false;
-            LoaderManager.getInstance(this).restartLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
+            LoaderManager.getInstance(this).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
         } else
             updateWatchingUpNextRow(null); // will be done on loader restart
 
@@ -1018,7 +1013,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 // on new video additions boxes are rebuilt
                 // note: this is not triggered onResume
                 if (!scanningOnGoing) { // rebuild box only if not scanning
-                    LoaderManager.getInstance(this).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
+                    if (FEATURE_WATCH_UP_NEXT) LoaderManager.getInstance(this).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
                     if (mShowMoviesRow) {
                         log.debug("onLoadFinished: mShowMoviesRow --> restart ALL_MOVIES loader");
                         Bundle args = new Bundle();
@@ -1101,7 +1096,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 ", mWatchingUpNextInitFocus=" + mWatchingUpNextInitFocus);
         if (mWatchingUpNextInitFocus == InitFocus.NEED_FOCUS) {
             log.debug("checkInitFocus: WatchingUpNext loader ready and needs focus and row is " + (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1 ? "present" : "absent"));
-            if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1) {
+            if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1 || ! FEATURE_WATCH_UP_NEXT) {
                 mWatchingUpNextInitFocus = InitFocus.FOCUSED;
                 //mLastAddedInitFocus = InitFocus.NO_NEED_FOCUS;
                 //mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
