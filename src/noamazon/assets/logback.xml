@@ -57,7 +57,7 @@
   <!--logger name="com.archos.mediaprovider.video.RemoteStateService" level="DEBUG"/-->
 
   <!-- SubtitlesDownloaderActivity: TRACE for client debug or DEBUG -->
-  <!--logger name="com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity" level="DEBUG"/-->
+  <logger name="com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity" level="TRACE"/>
 
   <!--logger name="com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser" level="DEBUG"/-->
 

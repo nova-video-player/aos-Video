@@ -804,35 +804,30 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                         if (videoDbInfo != null) {
                             // index is used to find back fileUrl, to allow search on query or imdbid do not put the moviebytesize otherwise it is the only search criteria
                             log.debug("prepareRequestList: fourth pass index (hash,url) <- (" + hash + "," + fileUrl + ")");
-                            if (videoDbInfo.isShow) { // this is a show
-                                // try to use imdbId since the title can be translated...
-                                String imdbId = getIMDBID(fileUrl);
-                                if (imdbId == null) log.warn("prepareRequestList: imdbId null!!!");
-                                if (imdbId != null) {
-                                    imdbId = imdbId.replaceAll("[^\\d]", "");
-                                    video.put("imdbid", imdbId);
-                                    log.debug("prepareRequestList: fourth pass serie imdbid=" + imdbId);
-                                } else {
+                            // try to use imdbId since the title can be translated...
+                            String imdbId = getIMDBID(fileUrl);
+                            if (imdbId != null) {
+                                // remove all non numeric characters from imdbID (often starts with tt)
+                                // if (imdbID.startsWith("tt")) imdbID = imdbID.substring(2);
+                                imdbId = imdbId.replaceAll("[^\\d]", "");
+                                video.put("imdbid", imdbId);
+                                log.debug("prepareRequestList: fourth pass imdbid=" + imdbId);
+                            } else { // imdbId is null
+                                log.warn("prepareRequestList: imdbId null!!!");
+                                if (videoDbInfo.isShow) { // this is a show
                                     // remove date from scraperTitle \([0-9]*\) because match does not work with e.g. The Flash (2015) or Doctor Who (2005)
                                     video.put("query", videoDbInfo.scraperTitle.replaceAll(" *\\(\\d*?\\)", ""));
                                     log.debug("prepareRequestList: replacing " + videoDbInfo.scraperTitle + ", by " +
                                             videoDbInfo.scraperTitle.replaceAll(" *\\(\\d*?\\)", ""));
                                 }
+                            }
+                            if (videoDbInfo.isShow) { // this is a show
                                 video.put("season", videoDbInfo.scraperSeasonNr);
                                 video.put("episode", videoDbInfo.scraperEpisodeNr);
                                 log.debug("prepareRequestList: fourth pass show query=" + videoDbInfo.scraperTitle + ", season=" + videoDbInfo.scraperSeasonNr + ", episode=" + videoDbInfo.scraperEpisodeNr);
-                            } else { // this is a movie
-                                String imdbId = getIMDBID(fileUrl);
-                                // remove all non numeric characters from imdbID (often starts with tt)
-                                // if (imdbID.startsWith("tt")) imdbID = imdbID.substring(2);
-                                if (imdbId != null) {
-                                    imdbId = imdbId.replaceAll("[^\\d]", "");
-                                    video.put("imdbid", imdbId);
-                                    log.debug("prepareRequestList: fourth pass movie imdbid=" + imdbId);
-                                }
                             }
                         } else {
-                            log.debug("prepareRequestList: fourth pass uh videoDbInfo = null!!");
+                            log.warn("prepareRequestList: fourth pass uh videoDbInfo = null!!");
                         }
                     }
                     // since SECOND or THIRD or FOURTH pass not based on hash, put in index the tag
