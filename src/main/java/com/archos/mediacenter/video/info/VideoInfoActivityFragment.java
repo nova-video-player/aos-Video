@@ -121,6 +121,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.archos.mediacenter.video.utils.VideoUtils.getFilePathFromContentUri;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -148,6 +150,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     private static final int DELETE_GROUP = 1;
     private View mRoot;
+
+    private static Context mContext;
 
     private Video mCurrentVideo;
     private AsyncTask<Video, Void, Pair<Bitmap, Video>> mThumbnailTask;
@@ -320,9 +324,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mIsPortraitMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
         mGenericPlayButton = (FloatingActionButton)mRoot.findViewById(R.id.play_toolbar);
         mGenericPlayButton.setVisibility(View.GONE);
-        mFABShowAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_show_anim);
-        mFABHideAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_hide_anim);
-        mToolbarShowAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.video_info_toolbar_show);
+        mContext = getContext();
+        mFABShowAnimation = AnimationUtils.loadAnimation(mContext, R.anim.fab_show_anim);
+        mFABHideAnimation = AnimationUtils.loadAnimation(mContext, R.anim.fab_hide_anim);
+        mToolbarShowAnimation = AnimationUtils.loadAnimation(mContext, R.anim.video_info_toolbar_show);
         mToolbarShowAnimation.setAnimationListener(this);
         mFABManager = new FABAnimationManager(mGenericPlayButton,mFABHideAnimation,mFABShowAnimation);
         mTitleBar = (Toolbar) mRoot.findViewById(R.id.titlebar);
@@ -453,7 +458,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 mVideoIdFromPlayer = bundle.getLong(EXTRA_VIDEO_ID, -1);
                 if (mVideoIdFromPlayer == -1) {
                     mPath = bundle.getString(EXTRA_VIDEO_PATH);
+                    String nPath = getFilePathFromContentUri(mContext, mPath);
+                    if (nPath != null) mPath = nPath;
                 }
+
                 CursorLoader loader = (CursorLoader) onCreateLoader(1, null);
                 if (loader == null) {
                     if (DBG) Log.w(TAG, "onCreateView loader is null");
@@ -573,6 +581,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     public void onAttach(Context context){
         if (DBG) Log.d(TAG,"onAttach");
         super.onAttach(context);
+        mContext = context;
         // handles NetworkState changes
         networkState = NetworkState.instance(getContext());
         if (propertyChangeListener == null)

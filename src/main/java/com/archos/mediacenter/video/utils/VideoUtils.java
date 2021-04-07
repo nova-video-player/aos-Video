@@ -14,12 +14,13 @@
 
 package com.archos.mediacenter.video.utils;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Environment;
 import android.util.Log;
 
+import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.video.R;
 
 import java.io.File;
@@ -176,4 +177,27 @@ public class VideoUtils {
         float density = ctx.getResources().getDisplayMetrics().density;
         return Math.round((float) dp * density);
     }
+
+    // provide path for file like content://com.archos.media/external/video/media/51
+    public static String getFilePathFromContentUri(Context context, String path) {
+        if (path == null) return null;
+        Uri mPath = Uri.parse(path);
+        if (mPath.getScheme() != null && mPath.getScheme().equals("content")) {
+            int id = 0;
+            try {
+                id = Integer.parseInt(mPath.getLastPathSegment());
+                ContentResolver cr = context.getContentResolver();
+                VideoDbInfo videoDbInfo = VideoDbInfo.fromId(cr, id);
+                if (DBG) Log.d(TAG, "getFilePathFromContentUri content translated from " + mPath + " to " + videoDbInfo.uri);
+                return videoDbInfo.uri.getPath();
+            } catch (NumberFormatException e)
+            {
+                id = -1;
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
 }
