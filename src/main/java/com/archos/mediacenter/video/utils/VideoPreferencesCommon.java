@@ -49,6 +49,7 @@ import androidx.preference.PreferenceScreen;
 import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.ExtStorageManager;
+import com.archos.filecorelibrary.jcifs.JcifsUtils;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.R;
@@ -138,6 +139,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_CREATE_REMOTE_THUMBS = VideoProvider.PREFERENCE_CREATE_REMOTE_THUMBS;
     public static final String KEY_ENABLE_SPONSOR = "enable_sponsor";
 
+    public static final String KEY_SMB2 = "pref_smbv2";
+    public static final String KEY_SMB_RESOLV = "pref_smb_resolv";
+
     // TODO: disabled until issue #186 is fixed
     public static final boolean SHOW_WATCHING_UP_NEXT_ROW_DEFAULT = true;
     public static final boolean SHOW_LAST_ADDED_ROW_DEFAULT = true;
@@ -195,6 +199,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     private Preference mTraktFull;
     private PreferenceCategory mCompleteCategory;
+
+    private CheckBoxPreference mSmb2 = null;
+    private CheckBoxPreference mSmbResolver = null;
 
     final public static int ACTIVITY_RESULT_UI_MODE_CHANGED = 665;
     final public static int ACTIVITY_RESULT_UI_ZOOM_CHANGED = 667;
@@ -363,6 +370,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mTraktSyncProgressPreference = (CheckBoxPreference) findPreference(KEY_TRAKT_SYNC_PROGRESS);
         mAdvancedPreferences = (PreferenceCategory) findPreference(KEY_ADVANCED_VIDEO_CATEGORY);
 
+        mSmb2 = (CheckBoxPreference) findPreference(KEY_SMB2);
+        mSmbResolver = (CheckBoxPreference) findPreference(KEY_SMB_RESOLV);
+
         mScraperCategory = (PreferenceCategory) findPreference(KEY_SCRAPER_CATEGORY);
         mExportManualPreference = findPreference(getString(R.string.nfo_export_manual_prefkey));
         mExportManualPreference.setOnPreferenceClickListener(preference -> {
@@ -396,6 +406,18 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             return true;
         });
 
+        // recretate contexts in case of smb pref change
+        mSmb2.setOnPreferenceChangeListener((preference, newValue) -> {
+            Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
+            JcifsUtils.notifyPrefChange();
+            return true;
+        });
+
+        mSmbResolver.setOnPreferenceChangeListener((preference, newValue) -> {
+            Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
+            JcifsUtils.notifyPrefChange();
+            return true;
+        });
 
         mDbExportManualPreference = findPreference(getString(R.string.db_export_manual_prefkey));
         mDbExportManualPreference.setOnPreferenceClickListener(preference -> {
