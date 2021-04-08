@@ -21,6 +21,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.Settings;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,10 +33,16 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediaprovider.ArchosMediaIntent;
 import com.archos.mediaprovider.video.VideoStoreImportService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by alexandre on 16/09/15.
  */
 public class PermissionChecker {
+
+    private static final Logger log = LoggerFactory.getLogger(PermissionChecker.class);
+
     private static final int PERMISSION_REQUEST = 1;
     private static PermissionChecker sPermissionChecker;
     Activity mActivity;
@@ -60,9 +68,19 @@ public class PermissionChecker {
         if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M)
             return;
         mActivity= activity;
-        if(!isDialogDisplayed&&ContextCompat.checkSelfPermission(mActivity,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED) {
-            mActivity.requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
-            isDialogDisplayed = true;
+        if(Build.VERSION.SDK_INT<30) {
+            if (!isDialogDisplayed && ContextCompat.checkSelfPermission(mActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                log.debug("checkAndRequestPermission: requesting WRITE_EXTERNAL_STORAGE");
+                mActivity.requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
+                isDialogDisplayed = true;
+            }
+        } else {
+            log.debug("checkAndRequestPermission: is MANAGE_EXTERNAL_STORAGE granted? " + Environment.isExternalStorageManager());
+            if (!isDialogDisplayed && !Environment.isExternalStorageManager()) {
+                log.debug("checkAndRequestPermission: requesting MANAGE_EXTERNAL_STORAGE");
+                mActivity.requestPermissions(new String[]{android.Manifest.permission.MANAGE_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
+                isDialogDisplayed = true;
+            }
         }
     }
 
@@ -70,58 +88,104 @@ public class PermissionChecker {
         mActivity = activity;
         if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M)
             return true;
-        else
-            return ContextCompat.checkSelfPermission(mActivity,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED;
+        else {
+            if(Build.VERSION.SDK_INT<30) {
+                return ContextCompat.checkSelfPermission(mActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+            } else {
+                return Environment.isExternalStorageManager();
+            }
+        }
     }
-
 
     @TargetApi(Build.VERSION_CODES.M)
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults, Activity activity) {
+        log.debug("onRequestPermissionsResult: requesting MANAGE_EXTERNAL_STORAGE");
+
         if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M)
             return;
         mActivity = activity;
-        if(isDialogDisplayed&&ContextCompat.checkSelfPermission(mActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-            new AlertDialog.Builder(mActivity).setTitle(R.string.error).setMessage(R.string.error_permission_storage).setPositiveButton(R.string.allow, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            // finish();
-                            isDialogDisplayed = false;
-                            if (!ActivityCompat.shouldShowRequestPermissionRationale(mActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                Intent in = new Intent();
-                                in.setAction("android.intent.action.MANAGE_APP_PERMISSIONS");
-                                in.putExtra("android.intent.extra.PACKAGE_NAME", mActivity.getPackageName());
-                                try {
-                                    mActivity.startActivity(in);
-                                } catch (java.lang.SecurityException e) {
-                                    // Create intent to start new activity
-                                    in.setData(Uri.parse("package:" + mActivity.getPackageName()));
-                                    in.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                    // start new activity to display extended information
-                                    mActivity.startActivity(in);
-
-                                }
-                            } else checkAndRequestPermission(mActivity);
+        if(Build.VERSION.SDK_INT<30) {
+            if (isDialogDisplayed && ContextCompat.checkSelfPermission(mActivity, android.Manifest.permission.MANAGE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                log.debug("onRequestPermissionsResult: MANAGE_EXTERNAL_STORAGE permission not granted");
+                new AlertDialog.Builder(mActivity).setTitle(R.string.error).setMessage(R.string.error_permission_storage).setPositiveButton(R.string.allow, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // finish();
+                                isDialogDisplayed = false;
+                                if (!ActivityCompat.shouldShowRequestPermissionRationale(mActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                                    Intent in = new Intent();
+                                    in.setAction("android.intent.action.MANAGE_APP_PERMISSIONS");
+                                    in.putExtra("android.intent.extra.PACKAGE_NAME", mActivity.getPackageName());
+                                    try {
+                                        mActivity.startActivity(in);
+                                    } catch (java.lang.SecurityException e) {
+                                        // Create intent to start new activity
+                                        in.setData(Uri.parse("package:" + mActivity.getPackageName()));
+                                        in.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                        // start new activity to display extended information
+                                        mActivity.startActivity(in);
+                                    }
+                                } else checkAndRequestPermission(mActivity);
+                            }
                         }
-                    }
-            ).setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        android.os.Process.killProcess(android.os.Process.myPid());
-                    }
-                }
-            ).setCancelable(false).show();
-
-
-        }
-        else {
-            // inform import service about the event
-            Intent serviceIntent = new Intent(mActivity, VideoStoreImportService.class);
-            serviceIntent.setAction(ArchosMediaIntent.ACTION_VIDEO_SCANNER_STORAGE_PERMISSION_GRANTED);
-            mActivity.startService(serviceIntent);
-            if(mListener!=null)
-                mListener.onPermissionGranted();
-            isDialogDisplayed = false;
-
+                ).setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                android.os.Process.killProcess(android.os.Process.myPid());
+                            }
+                        }
+                ).setCancelable(false).show();
+            } else {
+                log.debug("onRequestPermissionsResult: WRITE_EXTERNAL_STORAGE permission granted, launching scan");
+                // inform import service about the event
+                Intent serviceIntent = new Intent(mActivity, VideoStoreImportService.class);
+                serviceIntent.setAction(ArchosMediaIntent.ACTION_VIDEO_SCANNER_STORAGE_PERMISSION_GRANTED);
+                mActivity.startService(serviceIntent);
+                if (mListener != null)
+                    mListener.onPermissionGranted();
+                isDialogDisplayed = false;
+            }
+        } else {
+            if (isDialogDisplayed && ! Environment.isExternalStorageManager()) {
+                log.debug("onRequestPermissionsResult: ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION permission not granted");
+                new AlertDialog.Builder(mActivity).setTitle(R.string.error).setMessage(R.string.error_permission_all_file_access).setPositiveButton(R.string.allow, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // finish();
+                                isDialogDisplayed = false;
+                                if (!ActivityCompat.shouldShowRequestPermissionRationale(mActivity, android.Manifest.permission.MANAGE_EXTERNAL_STORAGE)) {
+                                    Intent in = new Intent();
+                                    in.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                                    in.putExtra("android.intent.extra.PACKAGE_NAME", mActivity.getPackageName());
+                                    try {
+                                        mActivity.startActivity(in);
+                                    } catch (java.lang.SecurityException e) {
+                                        // Create intent to start new activity
+                                        in.setData(Uri.parse("package:" + mActivity.getPackageName()));
+                                        in.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                        // start new activity to display extended information
+                                        mActivity.startActivity(in);
+                                    }
+                                } else checkAndRequestPermission(mActivity);
+                            }
+                        }
+                ).setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                android.os.Process.killProcess(android.os.Process.myPid());
+                            }
+                        }
+                ).setCancelable(false).show();
+            } else {
+                log.debug("onRequestPermissionsResult: ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION permission granted, launching scan");
+                // inform import service about the event
+                Intent serviceIntent = new Intent(mActivity, VideoStoreImportService.class);
+                serviceIntent.setAction(ArchosMediaIntent.ACTION_VIDEO_SCANNER_STORAGE_PERMISSION_GRANTED);
+                mActivity.startService(serviceIntent);
+                if (mListener != null)
+                    mListener.onPermissionGranted();
+                isDialogDisplayed = false;
+            }
         }
     }
 
