@@ -156,7 +156,7 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
 
         final int resumePosition = video.getResumeMs();
         final boolean resume = resumePosition > 0;
-        final boolean delete = !FileUtils.isSlowRemote(Uri.parse(entryPath));
+        final boolean delete = !FileUtils.isSlowRemote(Uri.parse(entryPath)) && video.locationSupportsDelete();
         final boolean markAsTrakt = Trakt.isTraktV2Enabled(mContext, mPreferences);
         final boolean isNetwork = !FileUtils.isLocal(video.getFileUri());
         menu.add(0, R.string.play_from_beginning, 0, R.string.play_selection);
