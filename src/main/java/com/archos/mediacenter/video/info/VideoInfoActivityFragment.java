@@ -775,8 +775,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 goToNotIndexed();
                 requestIndexAndScrap();
             }
-            if(!mIsLaunchFromPlayer)
-            addMenu(0, R.string.delete, DELETE_GROUP, R.string.delete);
+            if(!mIsLaunchFromPlayer && mCurrentVideo.locationSupportsDelete())
+                addMenu(0, R.string.delete, DELETE_GROUP, R.string.delete);
         } else {
             if (DBG) Log.d(TAG, "setCurrentVideo: should not change video");
         }
