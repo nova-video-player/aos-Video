@@ -470,9 +470,6 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
                     if(DBG) Log.d(TAG, "NFO tag is null ? "+String.valueOf(mNfoTag==null));
                 }
 
-
-
-
                 String search = mCustomSearchEditText.getText().toString();
                 SearchInfo searchInfo = mSearchInfo;
                 if (searchInfo == null) {
@@ -515,8 +512,6 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
             mPaused = false;
 
             if (DBG) Log.d(TAG, "ScraperSelectionThread : start processing items from " + mFirstItem + " to " + (itemsCount - 1));
-
-
 
             // Get the details for this match
 
@@ -562,8 +557,6 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
                     }
                     return;
                 }
-
-
             }
             int position;
             for (position = mFirstItem; position < itemsCount; position++) {
@@ -572,8 +565,15 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
                     boolean searchMovies = true;
                     if (DBG) Log.d(TAG, "ScraperSelectionThread : processing item " + position);
 
+                    SearchResult result = mResults.get(position);
+                    Bundle b = new Bundle();
+                    b.putBoolean(Scraper.ITEM_REQUEST_BASIC_VIDEO, true);
+                    if (result.isTvShow()) {
+                        b.putInt(Scraper.ITEM_REQUEST_SEASON, result.getOriginSearchSeason());
+                        b.putInt(Scraper.ITEM_REQUEST_EPISODE, result.getOriginSearchEpisode());
+                    }
                     // Get the details for this match
-                    ScrapeDetailResult detail = mScraper.getDetails(mResults.get(position), null);
+                    ScrapeDetailResult detail = mScraper.getDetails(result, b);
 
                     // Wait until the thread is unpaused because the activity data may not be available
                     // (happens when the activity is destroyed/re-created while rotating the device)

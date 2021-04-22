@@ -120,6 +120,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
         // Get the details for this match
         Bundle b = new Bundle();
         b.putBoolean(Scraper.ITEM_REQUEST_BASIC_SHOW, true);
+        // this is an entire show search not an episode nor a season
         ScrapeDetailResult detail = mScraper.getDetails(result, b);
         BaseTags tags = detail.tag;
 

@@ -33,6 +33,7 @@ import com.archos.mediascraper.SearchResult;
 import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.preprocess.SearchInfo;
 import com.archos.mediascraper.preprocess.SearchPreprocessor;
+import com.archos.mediascraper.preprocess.TvShowSearchInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,10 +100,16 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
         // Get the details for this match
         Bundle b = new Bundle();
         b.putBoolean(Scraper.ITEM_REQUEST_BASIC_VIDEO, true);
+
+        if (result.isTvShow()) {
+            b.putBoolean(Scraper.ITEM_REQUEST_BASIC_VIDEO, true);
+            b.putInt(Scraper.ITEM_REQUEST_SEASON, result.getOriginSearchSeason());
+            b.putInt(Scraper.ITEM_REQUEST_EPISODE, result.getOriginSearchEpisode());
+        }
         ScrapeDetailResult detail = mScraper.getDetails(result, b);
         BaseTags tags = detail.tag;
 
-        if (tags instanceof  EpisodeTags) {
+        if (tags instanceof EpisodeTags) {
             ((EpisodeTags)tags).getShowTags().setTitle(result.getTitle());
         }
 
@@ -142,10 +149,12 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
             @Override
             public void run() {
                 BaseTags tags = fTags;
-
+                Bundle bundle = new Bundle();
                 if (tags instanceof EpisodeTags) {
+                    bundle.putInt(Scraper.ITEM_REQUEST_SEASON, ((EpisodeTags)tags).getSeason());
+                    bundle.putInt(Scraper.ITEM_REQUEST_EPISODE, ((EpisodeTags)tags).getEpisode());
                     SearchResult sr = mTagsToSearchResultMap.get(tags); // Get the searchResult from the map we built for it
-                    ScrapeDetailResult detail = Scraper.getDetails(sr, null);
+                    ScrapeDetailResult detail = Scraper.getDetails(sr, bundle);
                     if (detail.isOkay())
                         tags = detail.tag;
                 }
