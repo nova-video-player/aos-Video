@@ -1870,7 +1870,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             //if (DBG) Log.d(TAG, "tags.getOnlineId() = " + onlineId);
             if (onlineId > 0) {
                 final String language = MovieScraper3.getLanguage(getActivity());
-                list.add(String.format(getResources().getString(R.string.tmdb_title_url), onlineId, language));
+                list.add(String.format(getResources().getString(R.string.tmdb_movie_title_url), onlineId, language));
             }
         }
 
