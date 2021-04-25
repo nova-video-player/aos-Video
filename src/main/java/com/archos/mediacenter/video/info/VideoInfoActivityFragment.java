@@ -97,6 +97,7 @@ import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
 import com.archos.mediacenter.video.utils.TrailerServiceIconFactory;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoUtils;
+import com.archos.mediacenter.video.utils.WebUtils;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
 import com.archos.mediascraper.BaseTags;
@@ -266,6 +267,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private String mIMDBId;
     private long mTMDBId;
     private long mTVDBId;
+    private long mOnlineId = -1;
     private Bitmap mBitmap;
     private String mPath ;
     private boolean mIsLaunchFromPlayer;
@@ -1073,17 +1075,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             intent.putExtra(SubtitlesDownloaderActivity.FILE_URL, mCurrentVideo.getFilePath());
             startActivityForResult(intent, REQUEST_CODE_SUBTITLES_DOWNLOADER_ACTIVITY);
         }else if(view == mTMDBIcon){
-            // TODO MARC treat show too here
             // Format TMDB URL with movie ID and preferred language
             final String language, tmdbUrl;
             if (mIsVideoMovie) {
                 language = MovieScraper3.getLanguage(getActivity());
-                tmdbUrl = String.format(getResources().getString(R.string.tmdb_movie_title_url), mTMDBId, language);
+                tmdbUrl = String.format(getResources().getString(R.string.tmdb_movie_title_url), Long.toString(mTMDBId), language);
             } else {
                 if (Scraper.SHOW_SCRAPER == Scraper.TVDB) language = ShowScraper3.getLanguage(getActivity());
                 else language = ShowScraper4.getLanguage(getActivity());
-                tmdbUrl = String.format(getResources().getString(R.string.tmdb_tvshow_title_url), mTMDBId, language);
+                tmdbUrl = String.format(getResources().getString(R.string.tmdb_tvshow_title_url), Long.toString(mOnlineId), language);
             }
+            if(DBG) Log.d(TAG, "onClick: mTMDBId=" + mTMDBId + ", tmdbUrl=" + tmdbUrl);
             // Breaks AndroidTV acceptance
             Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(tmdbUrl));
             startActivity(it);
@@ -1093,7 +1095,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             // Format TVDB URL with movie ID and preferred language
             if (Scraper.SHOW_SCRAPER == Scraper.TVDB) language = ShowScraper3.getLanguage(getActivity());
             else language = ShowScraper4.getLanguage(getActivity());
-            final String tvdbUrl = String.format(getResources().getString(R.string.tvdb_title_url), mTVDBId, language);
+            final String tvdbUrl = String.format(getResources().getString(R.string.tvdb_title_url), Long.toString(mTVDBId), language);
             // Breaks AndroidTV acceptance
             Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(tvdbUrl));
             startActivity(it);
@@ -1553,8 +1555,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
                 Video video =  (Video) cursorMapper.publicBind(cursor);
                 if (DBG) Log.d(TAG,"onLoadFinished: " + ((video == null) ? "null" : video.getFilePath()) );
-
-                if (DBG) Log.d(TAG, "online id " + cursor.getLong(cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID)));
+                mOnlineId = cursor.getLong(cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID));
+                if (DBG) Log.d(TAG, "online id " + mOnlineId);
                 mVideoList.add(video);
                 video.setMetadata(mVideoMetadateCache.get(video.getFilePath()));
                 if (DBG) Log.d(TAG, "found video : " + video.getFileUri());
@@ -1708,10 +1710,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         }
                         if (((EpisodeTags) tags).getShowTags() != null)
                             studio = ((EpisodeTags) tags).getShowTags().getStudiosFormatted();
-                        //TODO disabled for now since getOnlineId is not tvdb id
+                        //tags.getOnlineId() is the episodeId not the show Id thus using mOnlineID
                         //mTVDBIcon.setVisibility(tags.getOnlineId()>=0?View.VISIBLE:View.GONE);
-                        mTVDBIcon.setVisibility(View.GONE);
-                        mTVDBId = tags.getOnlineId();
+                        mTVDBIcon.setVisibility(mOnlineId>=0?View.VISIBLE:View.GONE);
+                        //mTVDBIcon.setVisibility(View.GONE);
+                        //mTVDBId = tags.getOnlineId();
+                        mTVDBId = mOnlineId;
+                        if(DBG) Log.d(TAG, "FullScraperTagsTask:onPostExecute: mTVDBId=" + mTVDBId);
                     } else {
                         mTVDBIcon.setVisibility(View.GONE);
                         DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
@@ -1724,8 +1729,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         }
                         if (((EpisodeTags) tags).getShowTags() != null)
                             studio = ((EpisodeTags) tags).getShowTags().getStudiosFormatted();
-                        mTMDBIcon.setVisibility(tags.getOnlineId()>=0?View.VISIBLE:View.GONE);
-                        mTMDBId = tags.getOnlineId();
+                        //tags.getOnlineId() is the episodeId not the show Id thus using mOnlineID
+                        //mTMDBIcon.setVisibility(tags.getOnlineId()>=0?View.VISIBLE:View.GONE);
+                        mTMDBIcon.setVisibility(mOnlineId>=0?View.VISIBLE:View.GONE);
+                        //mTMDBId = tags.getOnlineId();
+                        mTMDBId = mOnlineId;
+                        if(DBG) Log.d(TAG, "FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
                     }
                 }
                 else if(tags instanceof MovieTags){
@@ -1735,6 +1744,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mTMDBId = tags.getOnlineId();
                     date = ((MovieTags) tags).getYear()+"";
                     studio = ((MovieTags) tags).getStudiosFormatted();
+                    if(DBG) Log.d(TAG, "FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
                 }
                 mIMDBId = tags.getImdbId();
                 if(mIMDBId==null||mIMDBId.isEmpty())

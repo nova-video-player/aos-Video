@@ -108,6 +108,7 @@ import com.archos.mediacenter.video.leanback.presenter.ScraperImageBackdropPrese
 import com.archos.mediacenter.video.leanback.presenter.ScraperImagePosterPresenter;
 import com.archos.mediacenter.video.leanback.presenter.TrailerPresenter;
 import com.archos.mediacenter.video.leanback.presenter.VideoBadgePresenter;
+import com.archos.mediacenter.video.leanback.presenter.WebPageLinkPresenter;
 import com.archos.mediacenter.video.leanback.scrapping.ManualVideoScrappingActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowFragment;
@@ -131,11 +132,14 @@ import com.archos.mediaprovider.video.VideoStoreInternal;
 import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.EpisodeTags;
 import com.archos.mediascraper.MovieTags;
+import com.archos.mediascraper.Scraper;
 import com.archos.mediascraper.ScraperImage;
 import com.archos.mediascraper.ScraperTrailer;
 import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.VideoTags;
 import com.archos.mediascraper.xml.MovieScraper3;
+import com.archos.mediascraper.xml.ShowScraper3;
+import com.archos.mediascraper.xml.ShowScraper4;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -148,7 +152,7 @@ import java.util.List;
 public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor>, PlayUtils.SubtitleDownloadListener, SubtitleInterface, Delete.DeleteListener, XmlDb.ResumeChangeListener, ExternalPlayerWithResultStarter {
 
     private static final String TAG = "VideoDetailsFragment";
-    private static boolean DBG = false;
+    private static boolean DBG = true;
 
     /** A serialized com.archos.mediacenter.video.leanback.adapter.object.Video */
     public static final String EXTRA_VIDEO = "VIDEO";
@@ -195,6 +199,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     /** given by PlayerActivity when we are launched by it */
     private int mPlayerType;
+
+    private long mOnlineId = -1;
 
     /**
      * Flag to update all when back from player, because a lot of things may have been changed in the Video Details
@@ -810,7 +816,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 Video video =  (Video) cursorMapper.publicBind(cursor);
                 if(video.is3D())
                     mVideoBadgePresenter.setDisplay3dBadge(true);
-                if (DBG) Log.d(TAG, "online id " + cursor.getLong(cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID)));
+                mOnlineId = cursor.getLong(cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID));
+                if (DBG) Log.d(TAG, "online id " + mOnlineId);
                 mVideoList.add(video);
                 if (DBG) Log.d(TAG, "found video : " + video.getFileUri());
                 if(!mSelectCurrentVideo){ // get most advanced video
@@ -1454,15 +1461,15 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             }
 
             // Web links
-            /*List<String> links = getWebLinks(tags);
+            List<String> links = getWebLinks(tags);
             if (links.size()>0) {
                 ArrayObjectAdapter rowAdapter = new ArrayObjectAdapter(new WebPageLinkPresenter());
                 for (String link : links) {
                     rowAdapter.add(new WebPageLink(link));
                 }
                 mAdapter.add(new ListRow( new HeaderItem(getString(R.string.leanback_weblinks_header)), rowAdapter));
-            }*/
-            // No web links for now to be sure to get "leanback certification"
+            }
+            // No web links for now to be sure to get "leanback certification" --> put back web links
         }
     }
 
@@ -1871,6 +1878,13 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             if (onlineId > 0) {
                 final String language = MovieScraper3.getLanguage(getActivity());
                 list.add(String.format(getResources().getString(R.string.tmdb_movie_title_url), onlineId, language));
+            }
+        } else if (tags instanceof EpisodeTags) {
+            if (mOnlineId >0) {
+                final String language;
+                if (Scraper.SHOW_SCRAPER == Scraper.TVDB) language = ShowScraper3.getLanguage(getActivity());
+                else language = ShowScraper4.getLanguage(getActivity());
+                list.add(String.format(getResources().getString(R.string.tmdb_tvshow_title_url), mOnlineId, language));
             }
         }
 
