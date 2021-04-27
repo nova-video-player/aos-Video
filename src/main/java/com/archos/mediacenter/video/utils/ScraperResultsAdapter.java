@@ -216,7 +216,7 @@ public class ScraperResultsAdapter extends BaseAdapter {
             // Display the aired date of the current episode
             date = df.format(episodeTags.getAired());
         }
-        else if (showTags.getPremiered() != null && showTags.getPremiered().getTime() > 0) {
+        else if (showTags != null && showTags.getPremiered() != null && showTags.getPremiered().getTime() > 0) {
             // Aired date not available => try at least the premiered date
             date = df.format(showTags.getPremiered());
         }
