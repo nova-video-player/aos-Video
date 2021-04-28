@@ -239,7 +239,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     @Override
     public void onDetach() {
         super.onDetach();
-        mActivity.unregisterReceiver(mExternalStorageReceiver);
+        try {
+            mActivity.unregisterReceiver(mExternalStorageReceiver);
+        } catch(IllegalArgumentException e) {
+            log.warn("onDetach: trying to unregister mExternalStorageReceiver which is not registered!");
+        }
     }
 
     @Override
