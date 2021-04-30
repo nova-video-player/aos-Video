@@ -561,7 +561,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                             }
                             return null;
                         }
-                        Log.d(TAG, "mScraperService.getDetailsSpecial - " + current);
+                        if (DBG) Log.d(TAG, "mScraperService.getDetailsSpecial - " + current);
                         ScrapeDetailResult detail = Scraper.getDetails(matches.get(current), b);
 
                         if (detail.isOkay()) {
