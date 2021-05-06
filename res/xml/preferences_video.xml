@@ -383,6 +383,12 @@
             android:summary="@string/db_export_manual_summary"
             android:title="@string/db_export_manual_title"
             app:iconSpaceReserved="false"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:title="@string/enable_adult_scrap_title"
+            android:summary="@string/enable_adult_scrap_summary"
+            android:key="enable_adult_scrap_key"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/storage"
