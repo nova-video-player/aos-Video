@@ -1,4 +1,3 @@
 - Better tv show subtitle download based on IMDB ID
-- Fix SMB2/3 timeouts occurring sometimes
-- ffmpeg version 4.3.2 and dav1d version 0.8.2 upstep
+- Disable delete on UPnP shares not supporting it
 
