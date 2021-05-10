@@ -121,8 +121,10 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
         Bundle b = new Bundle();
         b.putBoolean(Scraper.ITEM_REQUEST_BASIC_SHOW, true);
         //b.putBoolean(Scraper.ITEM_REQUEST_ALL_EPISODES, true);
+        //b.putInt(Scraper.ITEM_REQUEST_SEASON, result.getOriginSearchSeason());
         b.putInt(Scraper.ITEM_REQUEST_SEASON, 1);
-        b.putInt(Scraper.ITEM_REQUEST_EPISODE, 1);
+        // this is required to get the season poster (episode does not have this information on tmdb)
+        //b.putInt(Scraper.ITEM_REQUEST_EPISODE, 1);
 
         // this is an entire show search not an episode nor a season
         ScrapeDetailResult detail = mScraper.getDetails(result, b);
@@ -131,7 +133,9 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
         // In theory we should get a ShowTags here but in practice we did a search for Episodes.
         // Hence we need to get the ShowTags from the EpisodeTags
         if (tags instanceof  EpisodeTags) {
+            // replace episodeTags by showTags
             tags = ((EpisodeTags)tags).getShowTags();
+            // but keep title of the result which is a show
             tags.setTitle(result.getTitle());
         }
 
@@ -196,7 +200,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
 
         @Override
         protected void onPreExecute() {
-            // TODO MARC avec progressBar https://stackoverflow.com/questions/56627616/how-to-show-a-progressbar-example-with-percentage-in-android
+            // TODO with progressBar https://stackoverflow.com/questions/56627616/how-to-show-a-progressbar-example-with-percentage-in-android
             super.onPreExecute();
             mProgressDialog = new NovaProgressDialog(mContext);
             mProgressDialog.setTitle(R.string.scrap_change_title);

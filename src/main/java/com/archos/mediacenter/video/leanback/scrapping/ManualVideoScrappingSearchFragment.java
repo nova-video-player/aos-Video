@@ -77,8 +77,6 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
         return getString(R.string.no_results_found)+" "+getString(R.string.no_results_found_show_helper);
     }
 
-
-
     @Override
     protected String getResultsHeaderText() {
         return getString(R.string.leanback_scrap_choose_the_description_for, mVideo.getFilenameNonCryptic());
@@ -104,13 +102,14 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
         if (result.isTvShow()) {
             b.putBoolean(Scraper.ITEM_REQUEST_BASIC_VIDEO, true);
             b.putInt(Scraper.ITEM_REQUEST_SEASON, result.getOriginSearchSeason());
-            b.putInt(Scraper.ITEM_REQUEST_EPISODE, result.getOriginSearchEpisode());
+            // this is required to get the season poster (episode does not have this information on tmdb)
+            //b.putInt(Scraper.ITEM_REQUEST_EPISODE, result.getOriginSearchEpisode());
         }
         ScrapeDetailResult detail = mScraper.getDetails(result, b);
         BaseTags tags = detail.tag;
 
         if (tags instanceof EpisodeTags) {
-            ((EpisodeTags)tags).getShowTags().setTitle(result.getTitle());
+            if (((EpisodeTags)tags).getShowTags() != null) ((EpisodeTags)tags).getShowTags().setTitle(result.getTitle());
         }
 
         if (tags == null) {
@@ -152,7 +151,8 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
                 Bundle bundle = new Bundle();
                 if (tags instanceof EpisodeTags) {
                     bundle.putInt(Scraper.ITEM_REQUEST_SEASON, ((EpisodeTags)tags).getSeason());
-                    bundle.putInt(Scraper.ITEM_REQUEST_EPISODE, ((EpisodeTags)tags).getEpisode());
+                    // this is required to get the season poster (episode does not have this information on tmdb)
+                    //bundle.putInt(Scraper.ITEM_REQUEST_EPISODE, ((EpisodeTags)tags).getEpisode());
                     SearchResult sr = mTagsToSearchResultMap.get(tags); // Get the searchResult from the map we built for it
                     ScrapeDetailResult detail = Scraper.getDetails(sr, bundle);
                     if (detail.isOkay())

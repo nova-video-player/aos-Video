@@ -252,8 +252,11 @@ public abstract class ManualScrappingSearchFragment extends SearchSupportFragmen
                 mResultsAdapter.add(0, mNfoTags);
                 mOffset=1;
             }
+            // Do not add all the show search results to check if season poster exists
+            /*
             if(mSearchResults!=null)
                 mResultsAdapter.addAll(mOffset, mSearchResults);
+             */
             ListRow listRow = new ListRow(new HeaderItem(getResultsHeaderText()), mResultsAdapter);
 
             mRowsAdapter.clear();
@@ -321,11 +324,16 @@ public abstract class ManualScrappingSearchFragment extends SearchSupportFragmen
 
         @Override
         protected void onProgressUpdate(SearchResultDetails... values) {
+            // remove items without a poster
+            /*
             if(values[0].mPosition<mResultsAdapter.size())
                 mResultsAdapter.replace(values[0].mPosition, values[0].mDetails);
             else
                 mResultsAdapter.add(values[0].mPosition, values[0].mDetails);
-
+             */
+            if (values[0].mDetails.getDefaultPoster() != null) {
+                mResultsAdapter.add(mResultsAdapter.size(), values[0].mDetails);
+            }
         }
     }
 }

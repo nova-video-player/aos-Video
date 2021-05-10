@@ -61,7 +61,7 @@ import java.util.List;
 public class VideoInfoScraperSearchFragment extends Fragment implements  Handler.Callback {
 
     private static final String TAG = VideoInfoScraperSearchFragment.class.getSimpleName();
-    private static final boolean DBG = false;
+    private static final boolean DBG = falseVideoDetailsFragment.java;
     
     public static final int SELECTION_DIALOG_MAX_ITEMS = 10;
     
@@ -288,9 +288,6 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
 		mResultsGroup.setVisibility(View.GONE);
     }
 
-
-
-
     public void setInfo(Video video) {
         mUri = Uri.parse(video.getFilePath());
         if(DBG) Log.d(TAG, "video Uri"+mUri);
@@ -299,7 +296,6 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
         // Check if everything is ready to setup the fragment
         setupIfReady();
     }
-
 
     /**
      * setup the UI and start the threads if ready
@@ -356,7 +352,6 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
         mResThread.start();
 
     }
-
 
     private static final int MESSAGE_SERV_RES = 1;
     private static final int MESSAGE_UPDATE_SELECTION_DIALOG = 2;
@@ -436,7 +431,8 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
             //-------------------------------------------------------------------------------
             // Build a list with the name of all matches
             mScraperResultsAdapter = new ScraperResultsAdapter(getActivity(),mNfoTag, mResults);
-            mScraperResultsAdapter.setResultList(mNfoTag,mResults);
+            //mScraperResultsAdapter.setResultList(mNfoTag,mResults);
+            mScraperResultsAdapter.setResultList(mNfoTag,null);
             mList.setAdapter(mScraperResultsAdapter);
             
             // update UI visibility
@@ -566,11 +562,14 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
                     if (DBG) Log.d(TAG, "ScraperSelectionThread : processing item " + position);
 
                     SearchResult result = mResults.get(position);
+                    // NOTE: this provides the right poster for the given season but perhaps season does not exist in getBestMatches
+                    // TODO: remove entries with no getDefaultPoster
                     Bundle b = new Bundle();
                     b.putBoolean(Scraper.ITEM_REQUEST_BASIC_VIDEO, true);
                     if (result.isTvShow()) {
                         b.putInt(Scraper.ITEM_REQUEST_SEASON, result.getOriginSearchSeason());
-                        b.putInt(Scraper.ITEM_REQUEST_EPISODE, result.getOriginSearchEpisode());
+                        // to get the correct poster
+                        //b.putInt(Scraper.ITEM_REQUEST_EPISODE, result.getOriginSearchEpisode());
                     }
                     // Get the details for this match
                     ScrapeDetailResult detail = mScraper.getDetails(result, b);
@@ -602,24 +601,38 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
                         }
                     }
 
+                    // Below gets adds all the items even the ones without poster
                     // Update the dialog adapter data
+                    /*
                     if (tags instanceof MovieTags) {
                         mScraperResultsAdapter.updateItemData(position+ offset, (MovieTags)tags);
                     }
                     else if (tags instanceof EpisodeTags) {
                         mScraperResultsAdapter.updateItemData(position+ offset, (EpisodeTags)tags);
                     }
+                     */
 
-                    // Add the available data to the tags list
-                    mSelectionTags.add(tags);
+                    // filter out empty postes (can be that the show exist but not the season searched for)
+                    if (tags.getDefaultPoster() != null) {
+                        if (tags instanceof MovieTags) {
+                            //mScraperResultsAdapter.updateItemData(position + offset, (MovieTags) tags);
+                            mScraperResultsAdapter.addItemData((MovieTags) tags);
+                        } else if (tags instanceof EpisodeTags) {
+                            //mScraperResultsAdapter.updateItemData(position + offset, (EpisodeTags) tags);
+                            mScraperResultsAdapter.addItemData((EpisodeTags) tags);
+                        }
+                        // Add the available data to the tags list
+                        mSelectionTags.add(tags);
 
-                    // Done processing the current item
-                    mSelectionItemsProcessed = position + 1+ offset;
-                    mScraperResultsAdapter.setItemsUpdated(position+ offset + 1);
+                        // Done processing the current item
+                        mSelectionItemsProcessed = position + 1+ offset;
+                        mScraperResultsAdapter.setItemsUpdated(position+ offset + 1);
 
-                    // Update the display of the selection dialog
-                    // (we must move the spinbar to the next item even if there are no infos available)
-                    mHandler.sendEmptyMessage(MESSAGE_UPDATE_SELECTION_DIALOG);
+                        // Update the display of the selection dialog
+                        // (we must move the spinbar to the next item even if there are no infos available)
+                        mHandler.sendEmptyMessage(MESSAGE_UPDATE_SELECTION_DIALOG);
+                    }
+
 
                     // Exit the loop if the activity wants to abort the thread
                     if (isInterrupted()) {

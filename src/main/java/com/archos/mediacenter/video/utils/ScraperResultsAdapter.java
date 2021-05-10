@@ -199,6 +199,26 @@ public class ScraperResultsAdapter extends BaseAdapter {
         mItems.set(position, itemData);
     }
 
+    public void addItemData(MovieTags movieTags) {
+        ItemData itemData = new ItemData(movieTags.getTitle());
+
+        File posterFile = movieTags.getCover();
+        if (posterFile != null) {
+            itemData.posterPath = posterFile.getPath();
+        }
+
+        if (movieTags.getYear() != 0) {
+            itemData.date = String.valueOf(movieTags.getYear());
+        }
+
+        if (movieTags.getDirectors().size() > 0) {
+            // Append all the directors as a single string
+            itemData.directors = TextUtils.join(", ", movieTags.getDirectors());
+        }
+
+        mItems.add(itemData);
+    }
+
     public void updateItemData(int position, EpisodeTags episodeTags) {
         // Replace the data of the item at the provided position
         ShowTags showTags = episodeTags.getShowTags();
@@ -228,6 +248,37 @@ public class ScraperResultsAdapter extends BaseAdapter {
         }
 
         mItems.set(position, itemData);
+    }
+
+    public void addItemData(EpisodeTags episodeTags) {
+        // Replace the data of the item at the provided position
+        ShowTags showTags = episodeTags.getShowTags();
+        ItemData itemData = new ItemData(episodeTags.getTitle());
+
+        // returns show cover if no ep cover exists
+        File episodeCover = episodeTags.getCover();
+        if (episodeCover != null) {
+            itemData.posterPath = episodeCover.getPath();
+        }
+
+        String date = "";
+        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
+        if (episodeTags.getAired() != null && episodeTags.getAired().getTime() > 0) {
+            // Display the aired date of the current episode
+            date = df.format(episodeTags.getAired());
+        }
+        else if (showTags != null && showTags.getPremiered() != null && showTags.getPremiered().getTime() > 0) {
+            // Aired date not available => try at least the premiered date
+            date = df.format(showTags.getPremiered());
+        }
+        itemData.date = date;
+
+        if (episodeTags.getDirectors().size() > 0) {
+            // Append all the directors as a single string
+            itemData.directors = TextUtils.join(", ", episodeTags.getDirectors());
+        }
+
+        mItems.add(itemData);
     }
 
     public void updateAvailableItemsData(List<BaseTags> tagsList) {
