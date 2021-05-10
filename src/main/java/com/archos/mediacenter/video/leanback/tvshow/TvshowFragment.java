@@ -149,6 +149,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 tvshowCursorMapper.bindColumns(cursor);
                 mTvshow = (Tvshow) tvshowCursorMapper.bind(cursor);
                 if (DBG) Log.d(TAG, "setTvshow: poster is " + mTvshow.getPosterUri());
+                cursor.close();
             }
         } else {
             Log.w(TAG, "setTvshow not done!");
