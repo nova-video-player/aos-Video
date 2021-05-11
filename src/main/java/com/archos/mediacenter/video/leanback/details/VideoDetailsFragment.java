@@ -131,13 +131,11 @@ import com.archos.mediaprovider.video.VideoStoreInternal;
 import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.EpisodeTags;
 import com.archos.mediascraper.MovieTags;
-import com.archos.mediascraper.Scraper;
 import com.archos.mediascraper.ScraperImage;
 import com.archos.mediascraper.ScraperTrailer;
 import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.VideoTags;
 import com.archos.mediascraper.xml.MovieScraper3;
-import com.archos.mediascraper.xml.ShowScraper3;
 import com.archos.mediascraper.xml.ShowScraper4;
 import com.squareup.picasso.Picasso;
 
@@ -1889,9 +1887,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             }
         } else if (tags instanceof EpisodeTags) {
             if (mOnlineId >0) {
-                final String language;
-                if (Scraper.SHOW_SCRAPER == Scraper.TVDB) language = ShowScraper3.getLanguage(getActivity());
-                else language = ShowScraper4.getLanguage(getActivity());
+                final String language = ShowScraper4.getLanguage(getActivity());
                 list.add(String.format(getResources().getString(R.string.tmdb_tvshow_title_url), mOnlineId, language));
             }
         }

@@ -438,11 +438,6 @@
             android:widgetLayout="@layout/preferences_video_tmdb_button"
             app:iconSpaceReserved="false"/>
         <Preference
-            android:key="preferences_video_tvdb"
-            android:title="@string/preferences_video_tvdb_text"
-            android:widgetLayout="@layout/preferences_video_tvdb_button"
-            app:iconSpaceReserved="false"/>
-        <Preference
             android:key="preferences_video_trakt"
             android:title="@string/preferences_video_trakt_text"
             android:widgetLayout="@layout/preferences_video_trakt_button"

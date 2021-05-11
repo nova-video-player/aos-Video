@@ -584,7 +584,7 @@
     <string name="ui_mode_summary">Choose between TV and Tablet/Phone UI</string>
     <string name="preferences_video_about">About</string>
     <string name="preferences_video_os_text">Subtitles provided by</string>
-    <string name="preferences_video_tmdb_text">Movie informations provided by</string>
+    <string name="preferences_video_tmdb_text">Movie/TV Show information provided by</string>
     <string name="preferences_video_tvdb_text">TV Show informations provided by</string>
     <string name="preferences_video_trakt_text">Video scrobbler provided by</string>
     <string name="preferences_video_licenses">Licenses</string>

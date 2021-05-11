@@ -97,7 +97,6 @@ import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
 import com.archos.mediacenter.video.utils.TrailerServiceIconFactory;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoUtils;
-import com.archos.mediacenter.video.utils.WebUtils;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
 import com.archos.mediascraper.BaseTags;
@@ -109,7 +108,6 @@ import com.archos.mediascraper.ScraperTrailer;
 import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.VideoTags;
 import com.archos.mediascraper.xml.MovieScraper3;
-import com.archos.mediascraper.xml.ShowScraper3;
 import com.archos.mediascraper.xml.ShowScraper4;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -1081,8 +1079,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 language = MovieScraper3.getLanguage(getActivity());
                 tmdbUrl = String.format(getResources().getString(R.string.tmdb_movie_title_url), Long.toString(mTMDBId), language);
             } else {
-                if (Scraper.SHOW_SCRAPER == Scraper.TVDB) language = ShowScraper3.getLanguage(getActivity());
-                else language = ShowScraper4.getLanguage(getActivity());
+                language = ShowScraper4.getLanguage(getActivity());
                 tmdbUrl = String.format(getResources().getString(R.string.tmdb_tvshow_title_url), Long.toString(mOnlineId), language);
             }
             if(DBG) Log.d(TAG, "onClick: mTMDBId=" + mTMDBId + ", tmdbUrl=" + tmdbUrl);
@@ -1093,8 +1090,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         }else if(view == mTVDBIcon){
             final String language;
             // Format TVDB URL with movie ID and preferred language
-            if (Scraper.SHOW_SCRAPER == Scraper.TVDB) language = ShowScraper3.getLanguage(getActivity());
-            else language = ShowScraper4.getLanguage(getActivity());
+            language = ShowScraper4.getLanguage(getActivity());
             final String tvdbUrl = String.format(getResources().getString(R.string.tvdb_title_url), Long.toString(mTVDBId), language);
             // Breaks AndroidTV acceptance
             Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(tvdbUrl));
@@ -1698,44 +1694,23 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 String date = null;
                 if(tags instanceof EpisodeTags){
                     mIsVideoMovie = false;
-                    if (Scraper.SHOW_SCRAPER == Scraper.TVDB) {
-                        mTMDBIcon.setVisibility(View.GONE);
-                        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
-                        if (((EpisodeTags) tags).getAired() != null && ((EpisodeTags) tags).getAired().getTime() > 0) {
-                            // Display the aired date of the current episode
-                            date = df.format(((EpisodeTags) tags).getAired());
-                        } else if (((EpisodeTags) tags).getShowTags() != null && ((EpisodeTags) tags).getShowTags().getPremiered() != null && ((EpisodeTags) tags).getShowTags().getPremiered().getTime() > 0) {
-                            // Aired date not available => try at least the premiered date
-                            date = df.format(((EpisodeTags) tags).getShowTags().getPremiered());
-                        }
-                        if (((EpisodeTags) tags).getShowTags() != null)
-                            studio = ((EpisodeTags) tags).getShowTags().getStudiosFormatted();
-                        //tags.getOnlineId() is the episodeId not the show Id thus using mOnlineID
-                        //mTVDBIcon.setVisibility(tags.getOnlineId()>=0?View.VISIBLE:View.GONE);
-                        mTVDBIcon.setVisibility(mOnlineId>=0?View.VISIBLE:View.GONE);
-                        //mTVDBIcon.setVisibility(View.GONE);
-                        //mTVDBId = tags.getOnlineId();
-                        mTVDBId = mOnlineId;
-                        if(DBG) Log.d(TAG, "FullScraperTagsTask:onPostExecute: mTVDBId=" + mTVDBId);
-                    } else {
-                        mTVDBIcon.setVisibility(View.GONE);
-                        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
-                        if (((EpisodeTags) tags).getAired() != null && ((EpisodeTags) tags).getAired().getTime() > 0) {
-                            // Display the aired date of the current episode
-                            date = df.format(((EpisodeTags) tags).getAired());
-                        } else if (((EpisodeTags) tags).getShowTags() != null && ((EpisodeTags) tags).getShowTags().getPremiered() != null && ((EpisodeTags) tags).getShowTags().getPremiered().getTime() > 0) {
-                            // Aired date not available => try at least the premiered date
-                            date = df.format(((EpisodeTags) tags).getShowTags().getPremiered());
-                        }
-                        if (((EpisodeTags) tags).getShowTags() != null)
-                            studio = ((EpisodeTags) tags).getShowTags().getStudiosFormatted();
-                        //tags.getOnlineId() is the episodeId not the show Id thus using mOnlineID
-                        //mTMDBIcon.setVisibility(tags.getOnlineId()>=0?View.VISIBLE:View.GONE);
-                        mTMDBIcon.setVisibility(mOnlineId>=0?View.VISIBLE:View.GONE);
-                        //mTMDBId = tags.getOnlineId();
-                        mTMDBId = mOnlineId;
-                        if(DBG) Log.d(TAG, "FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
+                    mTVDBIcon.setVisibility(View.GONE);
+                    DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
+                    if (((EpisodeTags) tags).getAired() != null && ((EpisodeTags) tags).getAired().getTime() > 0) {
+                        // Display the aired date of the current episode
+                        date = df.format(((EpisodeTags) tags).getAired());
+                    } else if (((EpisodeTags) tags).getShowTags() != null && ((EpisodeTags) tags).getShowTags().getPremiered() != null && ((EpisodeTags) tags).getShowTags().getPremiered().getTime() > 0) {
+                        // Aired date not available => try at least the premiered date
+                        date = df.format(((EpisodeTags) tags).getShowTags().getPremiered());
                     }
+                    if (((EpisodeTags) tags).getShowTags() != null)
+                        studio = ((EpisodeTags) tags).getShowTags().getStudiosFormatted();
+                    //tags.getOnlineId() is the episodeId not the show Id thus using mOnlineID
+                    //mTMDBIcon.setVisibility(tags.getOnlineId()>=0?View.VISIBLE:View.GONE);
+                    mTMDBIcon.setVisibility(mOnlineId>=0?View.VISIBLE:View.GONE);
+                    //mTMDBId = tags.getOnlineId();
+                    mTMDBId = mOnlineId;
+                    if(DBG) Log.d(TAG, "FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
