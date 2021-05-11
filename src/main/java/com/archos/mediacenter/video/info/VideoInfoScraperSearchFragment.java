@@ -61,7 +61,7 @@ import java.util.List;
 public class VideoInfoScraperSearchFragment extends Fragment implements  Handler.Callback {
 
     private static final String TAG = VideoInfoScraperSearchFragment.class.getSimpleName();
-    private static final boolean DBG = falseVideoDetailsFragment.java;
+    private static final boolean DBG = false;
     
     public static final int SELECTION_DIALOG_MAX_ITEMS = 10;
     
