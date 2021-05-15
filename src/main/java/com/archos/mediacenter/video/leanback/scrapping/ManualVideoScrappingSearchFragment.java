@@ -158,7 +158,8 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
                     if (detail.isOkay())
                         tags = detail.tag;
                 }
-        
+
+                log.debug("saveTagsAndFinish: downloadPoster");
                 // since poster can be deleted again we refresh it here
                 tags.downloadPoster(getActivity());
 
