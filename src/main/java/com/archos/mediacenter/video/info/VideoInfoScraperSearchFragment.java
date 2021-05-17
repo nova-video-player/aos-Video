@@ -673,7 +673,15 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
                 BaseTags tags = null;
                 boolean searchMovies = true;
                 if(mNfoTag==null) {
-                    ScrapeDetailResult detail = mScraper.getDetails(mResults.get(mResIndex), null);
+                    SearchResult result = mResults.get(mResIndex);
+                    Bundle b = new Bundle();
+                    b.putBoolean(Scraper.ITEM_REQUEST_BASIC_VIDEO, true);
+                    if (result.isTvShow()) {
+                        b.putInt(Scraper.ITEM_REQUEST_SEASON, result.getOriginSearchSeason());
+                        // to get the correct poster
+                        //b.putInt(Scraper.ITEM_REQUEST_EPISODE, result.getOriginSearchEpisode());
+                    }
+                    ScrapeDetailResult detail = mScraper.getDetails(result, b);
                     tags = detail.tag;
                     searchMovies = detail.isMovie;
                 }
