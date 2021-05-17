@@ -100,7 +100,6 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
         b.putBoolean(Scraper.ITEM_REQUEST_BASIC_VIDEO, true);
 
         if (result.isTvShow()) {
-            b.putBoolean(Scraper.ITEM_REQUEST_BASIC_VIDEO, true);
             b.putInt(Scraper.ITEM_REQUEST_SEASON, result.getOriginSearchSeason());
             // this is required to get the season poster (episode does not have this information on tmdb)
             //b.putInt(Scraper.ITEM_REQUEST_EPISODE, result.getOriginSearchEpisode());
