@@ -59,8 +59,7 @@ public class AllAnimeShowsIconBuilder {
         SELECTION = VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER + "=0 AND " +
                 VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " IS NOT NULL AND " +
                 VideoStore.Video.VideoColumns.SCRAPER_S_COVER + " IS NOT NULL AND " +
-                "( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " LIKE '%" + mContext.getString(com.archos.medialib.R.string.tv_show_genre_animation) + "%' OR " +
-                VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " LIKE '%" + mContext.getString(com.archos.medialib.R.string.tv_show_genre_anime) + "%' )" +
+                "( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " LIKE '%" + mContext.getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%')" +
                 ") GROUP BY (" + VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID;
     }
 
