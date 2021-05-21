@@ -97,16 +97,19 @@ import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
+import com.archos.mediacenter.video.leanback.adapter.object.Icon;
 import com.archos.mediacenter.video.leanback.adapter.object.WebPageLink;
 import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridFragment;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
+import com.archos.mediacenter.video.leanback.presenter.IconItemPresenter;
 import com.archos.mediacenter.video.leanback.presenter.PresenterUtils;
 import com.archos.mediacenter.video.leanback.presenter.ScraperImageBackdropPresenter;
 import com.archos.mediacenter.video.leanback.presenter.ScraperImagePosterPresenter;
 import com.archos.mediacenter.video.leanback.presenter.TrailerPresenter;
 import com.archos.mediacenter.video.leanback.presenter.VideoBadgePresenter;
+import com.archos.mediacenter.video.leanback.presenter.WebLinkPresenter;
 import com.archos.mediacenter.video.leanback.presenter.WebPageLinkPresenter;
 import com.archos.mediacenter.video.leanback.scrapping.ManualVideoScrappingActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowActivity;
@@ -416,6 +419,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     }
                 }
                 else if (item instanceof WebPageLink) {
+                    // TODO MARC this is the launch
                     WebPageLink link = (WebPageLink)item;
                     WebUtils.openWebLink(getActivity(), link.getUrl());
                 }
@@ -1469,13 +1473,14 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             // Web links
             List<String> links = getWebLinks(tags);
             if (links.size()>0) {
-                ArrayObjectAdapter rowAdapter = new ArrayObjectAdapter(new WebPageLinkPresenter());
+                // less bling bling
+                //ArrayObjectAdapter rowAdapter = new ArrayObjectAdapter(new WebPageLinkPresenter());
+                ArrayObjectAdapter rowAdapter = new ArrayObjectAdapter(new WebLinkPresenter(mColor));
                 for (String link : links) {
                     rowAdapter.add(new WebPageLink(link));
                 }
                 mAdapter.add(new ListRow( new HeaderItem(getString(R.string.leanback_weblinks_header)), rowAdapter));
             }
-            // No web links for now to be sure to get "leanback certification" --> put back web links
         }
     }
 
