@@ -495,7 +495,6 @@ desteklenmiyor.</string>
     <string name="preferences_force_audio_passthrough_disabled">Devre dışı (önerilir)</string>
     <string name="preferences_force_audio_passthrough_enable">Mod 1 (kullanımdan kaldırıldı)</string>
     <string name="preferences_force_audio_passthrough_enable2">Mod 2</string>
-    <string name="preferences_force_audio_passthrough_summary">hDMI ve S/PDIF bağlantıları için sıkıştırılmış ses aktarın. ⚠ Deneysel, A/V\'nin senkronize çıkmasına neden olabilir</string>
     <string name="preferences_disable_downmix_title">Ses stereo downmix\'i devre dışı bırak</string>
     <string name="preferences_disable_downmix_summary">Her zaman tüm kanalları çözmek ve ses çıkışı yeteneğine bağlı olarak Android downmix izin (ses kanalları kaybetme neden olabilir)</string>
     <string name="preferences_allow_3rd_party_player">Başka bir video oynatıcı kullanılmasına izin ver</string>

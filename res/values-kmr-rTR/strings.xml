@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <!-- Menu item that takes the user back to the top level screen of the music player -->
+    <string name="goto_start">Pirtûkxane</string>
+    <!-- Menu item that takes the user to the "now playing" screen of the music player -->
+    <!-- Menu item to refresh servers list -->
+    <string name="refresh_servers_list">Lîsteya serveran nû bike</string>
+    <!-- Menu item to enable network shares -->
+    <string name="enable_network_shares">Parvekirinên torê çalak bike</string>
+    <string name="initial_scan">Lênihêrandina pêşîn</string>
+    <!-- Library screen, menu item -->
+    <string name="search_title">Lê bigere</string>
+    <!-- Default name of track that doesn't have a name in the metadata -->
+    <string name="unknown_track_name">Nenas</string>
+    <!-- Toast after turning shuffle on -->
+    <!-- Toast after turning shuffle off -->
+    <!-- Toast after turning single repeat on -->
+    <!-- Context menu item -->
+    <string name="info">Agahî</string>
+    <!-- Context menu item -->
+    <string name="play_selection">Vêxe</string>
+    <!-- Context menu item -->
+    <string name="multiple_selection">Gelek hilbijartin</string>
+    <!-- Context menu item -->
+    <string name="play_from_beginning">Ji destpêkê ve lêde</string>
+    <!-- Dialog box button -->
+    <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <string name="fast_scroll_alphabet">\u0020ABCÇDEÊFGHIÎJKLMNOPQRSŞTUÛVWXYZ</string>
+    <!-- The string used in file/folder infos dialog. -->
+    <string name="info_duration">Demajok</string>
+    <string name="video_sources">Çavkaniyên</string>
+    <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">Fîlm</string>
+    <string name="info_tab_show">Nîşan bide</string>
+    <string name="info_tab_episode">Xelek</string>
+    <string name="info_tab_video">Vîdyo</string>
+    <string name="info_tab_file">Agahdariya pelê</string>
+    <string name="info_tab_backdrop_chooser">Hilbijêrê paşdemayî</string>
+    <string name="info_tab_poster_chooser">Poster hilbijêr</string>
+    <string name="info_tab_share">Parveke</string>
+    <string name="info_menu_backdrop_select">Erd</string>
+    <string name="info_menu_series_backdrop_select">Serpêhatiya Paşve</string>
+    <string name="info_menu_poster_select">Posterekî din hilbijêre</string>
+    <string name="info_menu_series_poster_select">Posterekî din hilbijêre</string>
+    <!-- COVER ROLL -->
+    <string name="watching_up_next">Temaşekirin/A pêş</string>
+    <string name="recently_added">Vê dawiyê lê zêde kir</string>
+    <string name="recently_added_videos">Vê dawiyê lê zêde kir</string>
+    <string name="recently_played">Di van demên dawî de lîstin</string>
+    <string name="recently_played_videos">Di van demên dawî de lîstin</string>
+    <string name="video_lists">Lîsteya lêdanan</string>
+    <!-- The string used in main storage list -->
+    <string name="external_storage">Derveyî</string>
+    <string name="internal_storage">Hundirî</string>
+    <string name="network_storage">Tor</string>
+    <string name="sd_card_storage">Karta SD</string>
+    <string name="usb_host_storage">Ajokera derve</string>
+    <string name="other_storage">Ajokar</string>
+    <string name="network_media_servers">Pêşkêşgerên medyayê (UPnP)</string>
+    <string name="network_shared_folders">Peldankên hevbeş (SMB)</string>
+    <string name="network_connected_as">Girêdayî wekî %s</string>
+    <string name="network_guest">mêvan</string>
+    <string name="sftp_folders">FTP</string>
+    <string name="network_jcifs">Samba (Ezmûnî)</string>
+    <string name="network_cling">UPNP (Ezmûnî)</string>
+    <string name="recordings_storage">Tomarkirinan</string>
+    <string name="root_storage">Depoya hundirî</string>
+    <string name="cannot_list">Naverok nayê lîstekirin</string>
+    <!-- VIDEO -->
+    <string name="video">Lêdera Vîdeoya Nova</string>
+    <string name="videos">Vîdyoyên</string>
+    <string name="all_videos">Hemû vîdyo</string>
+    <string name="not_played_yet_videos">Hîn nehatiye lîstin</string>
+    <string name="video_folder">Peldankan</string>
+    <string name="movies">Fîlman</string>
+    <string name="animes">Anîmasyonan</string>
+    <string name="all_movies">Hemû fîlm</string>
+    <string name="all_movies_format">Hemû fîlm - %d</string>
+    <string name="all_animes_format">Fîlmên anîmasyonê - %d</string>
+    <string name="all_collections">Hemû berhevok</string>
+    <string name="all_collections_format">Hemû berhevokan - %d</string>
+    <string name="all_collection_watched">Hemû berhevok temaşe kirin</string>
+    <string name="all_collection_unwatched">Koleksiyon nehat temaşekirin</string>
+    <plurals name="n_movies_watched">
+        <item quantity="one">%d fîlim temaşe kir</item>
+        <item quantity="other">%d fîliman temaşe kirin</item>
+    </plurals>
+    <string name="not_watched_movies_format">Nehatiye temaşekirin - %d</string>
+    <string name="not_watched_animes_format">Nehatiye temaşekirin - %d</string>
+    <string name="no_movie_watched">Filim lê temaşe nekiriye</string>
+    <string name="all_movies_watched">Hemû fîlim lê temaşe kirin</string>
+    <string name="movies_by_alpha">Fîlimên alfabetî</string>
+    <string name="movies_by_genre">Fîlimên li gorî celebê</string>
+    <string name="movies_by_rating">Fîlimên bi nirxandinê</string>
+    <string name="movie_collections">Berhevkirin</string>
+    <string name="movies_by_year">Fîlimên bi salê</string>
+    <string name="all_tv_shows">Pêşandanên TVyê</string>
+    <string name="all_tvshows">Hemî pêşandanên TVyê</string>
+    <string name="all_animes">Hemî fîlimên anîmasyonê</string>
+    <string name="all_animes_row">Hemî anîmasyon</string>
+    <string name="all_animeshows">Hemû pêşandanên TVyên anîmasyon</string>
+    <string name="animes_by_alpha">Fîlimên anîmasyonê bi alfabetî</string>
+    <string name="animes_by_genre">Fîlimên anîmasyonê li gorî celebê</string>
+    <string name="animes_by_rating">Fîlimên anîmasyonê bi rêjeyê</string>
+    <string name="animes_by_year">Fîlimên anîmasyonê bi salê</string>
+    <string name="all_tvshows_format">Hemî pêşandanên TV  -  %d</string>
+    <string name="not_watched_tvshows_format">Nehatiye temaşekirin  -  %d</string>
+    <string name="all_animeshows_format">Pêşandanên TV-yên anîmasyon  -  %d</string>
+    <string name="not_watched_animeshows_format">Nehatiye temaşekirin  -  %d</string>
+    <string name="all_seasons">Hemû demsal</string>
+    <string name="tvshows_by_alpha">TV bi alfabetî nîşan dide</string>
+    <string name="tvshows_by_genre">Televizyonan li gorî celebê nîşan dide</string>
+    <string name="tvshows_by_rating">TV bi rêjeyê pêşan dide</string>
+    <string name="episodes_by_date">Serpêhatî li gorî tarîxê</string>
+    <string name="date_view_week">Hefte</string>
+    <string name="date_view_month">Meh</string>
+    <string name="date_view_year">Sal</string>
+    <string name="all_movies_and_tv_shows">Fîlim û pêşandanên TVyê</string>
+    <string name="non_scraped_videos">Vîdyoyên nevekirî</string>
+    <string name="no_server">Pêşkêşkara medyayê nehat dîtin</string>
+    <string name="cannot_open_video">Nikare vê vîdyoyê veke</string>
+    <string name="confirm_delete">Ma hûn bi rastî dixwazin wiya jêbikin?</string>
+    <string name="deleting">Ji kerema xwe dema jêbirinê bisekinin…</string>
+    <string name="cannot_delete_directory">Peldanka nayê jêbirin</string>
+    <string name="cannot_delete_file">Pelê nayê jêbirin</string>
+    <string name="directory_deleted">Peldanka hate jêbirin</string>
+    <string name="file_deleted">Pel hate jêbirin</string>
+    <string name="resume">Berdewam bike</string>
+    <string name="remote_resume">Ji nû ve destpêkirin</string>
+    <string name="bookmark">Bijmer</string>
+    <string name="delete">Jêbirin</string>
+    <string name="confirm_delete_short">Jêbirinê piştrast bike</string>
+    <string name="delete_resume">Ji nû ve jê birin</string>
+    <string name="delete_bookmark">Bijmeran jê bike</string>
+    <string name="mark_as_watched">Lê temaşe kirin</string>
+    <string name="mark_as_not_watched">Nişankirî nehatiye temaşekirin</string>
+    <string name="upnp_not_allowed">Destûr nayê dayîn ku hûn xwe bigihînin vê servera UPnP. Ji kerema xwe pêşî veavakirina gihîştina xwe biguherînin.</string>
+    <string name="scrap_no_info">Ji bo vê vîdyoyê tu danasîna fîlim an pêşandana TVyê tune.</string>
+    <string name="scrap_remove">Agahdariyê hilînin</string>
+    <string name="scrap_remove_short">Rakirin</string>
+    <!-- for small screens -->
+    <string name="scrap_change">Agahdariya hemî beşan biguherînin</string>
+    <string name="scrap_series_change">Agahdariya rêzeyan biguherîne</string>
+    <string name="scrap_change_confirmation">Hemû xelekan biguherîne ji\n\t\"%1$s\"\nto\n\t\"%2$s\"?</string>
+    <string name="scrap_change_title">Hemû xelekan diguhezin</string>
+    <string name="scrap_change_initializing">Dest pê dike…</string>
+    <string name="scrap_change_finalizing">Diqede…</string>
+    <string name="scrap_get_title">Agahî tê wergirtin</string>
+    <!-- Generic strings for Movies or TV shows -->
+    <string name="scrap_director">Derhêner</string>
+    <string name="scrap_director_format">Derhêner: %s</string>
+    <string name="scrap_rating">Nirxandin</string>
+    <string name="scrap_rating_format">Nirxandin: %s</string>
+    <string name="scrap_year">Sal</string>
+    <string name="scrap_year_format">Sal: %d</string>
+    <string name="scrap_studio">Stûdyo</string>
+    <string name="scrap_plot">Komplo</string>
+    <string name="scrap_trailer">Rakêşekan</string>
+    <string name="scrap_cast">Kast</string>
+    <string name="scrap_cast_format">Kast: %s</string>
+    <string name="scrap_genre">Cure</string>
+    <string name="scrap_genre_format">Cureyên: %s</string>
+    <string name="scrap_genre_title">Cureyên</string>
+    <string name="scrap_aired">Weşandin</string>
+    <string name="scrap_aired_format">Hat weşandin: %s</string>
+    <string name="scrap_guests">Mêvanan</string>
+    <string name="scrap_premiered">Pêşandan</string>
+    <!-- Specific strings for TV shows -->
+    <string name="show_network">Torgilok</string>
+    <string name="episode_name">Xelek</string>
+    <string name="episode_season">Demsal</string>
+    <!-- To be translated only in case there is a localized IMDB -->
+    <string name="info_video">Vîdyo</string>
+    <string name="info_audio">Deng</string>
+    <string name="info_audio_vbr">VBR</string>
+    <string name="info_plugin_required">(pêvek pêdivî ye)</string>
+    <string name="info_subtitle">Binnivîs</string>
+    <string name="info_resume">Rewş berdewam bikin</string>
+    <string name="info_bookmark">Cihê bijmarkê</string>
+    <string name="info_file">Agahdariya pelê</string>
+    <string name="use_remote_resume">Cihê ji nû ve avakirina torê bi kar bîne?</string>
+    <!-- VIDEO COVER ROLL -->
+    <string name="you_have_no_recently_added_video">Vîdyoyêk nû lê zêde ne</string>
+    <string name="you_have_no_recently_played_video">Na vîdyoyê vê dawiyê ne lîstin</string>
+    <string name="you_have_no_video">Vîdyoyên tune</string>
+    <string name="you_have_no_video_yet">Li vîdyoyan digerin&#8230;</string>
+    <string name="you_have_no_movies">Fîlim tune</string>
+    <string name="you_have_no_animes">Fîlimên anîmasyonê tune</string>
+    <string name="you_have_no_movie_collections">Bê berhevkirin</string>
+    <string name="you_have_no_tv_shows">Nîşan dide TVyê</string>
+    <string name="you_have_no_anime_shows">Tu pêşandanên televîzyonê yên anîmasyonê tune</string>
+    <string name="you_have_no_non_scraped_videos">Vîdyoyên nexandî tune</string>
+    <plurals name="Nmovies">
+        <item quantity="one">1 fîlim</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> fîliman</item>
+    </plurals>
+    <plurals name="Nepisodes">
+        <!-- number of episodes is one -->
+        <item quantity="one">1 beşa</item>
+        <!-- number of episodes is not equal to one -->
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> beşan</item>
+    </plurals>
+    <plurals name="Nseasons">
+        <item quantity="one">1 demsal</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> demsalan</item>
+    </plurals>
+    <!-- Media Center -->
+    <string name="mediacenterlabel">Navenda Ragihandinê</string>
+    <string name="view_mode">Modeya nîşandanê</string>
+    <string name="view_mode_list">Rêzok</string>
+    <string name="view_mode_grid">Posteran</string>
+    <string name="view_mode_details">Hûrgulîyan</string>
+    <string name="switch_to_list">Rêzok</string>
+    <string name="switch_to_grid">Qefes</string>
+    <!-- VideoPlayer -->
+    <string name="player_loading_video">Vîdeo tê barkirin\u2026</string>
+    <string name="player_audio_track_toast">Strana Deng:</string>
+    <string name="player_subtitle_track_toast">Parçeya jêrnav:</string>
+    <string name="player_bookmark_set">Bijmer vî awayî miheng bû</string>
+    <!-- Subtitles/Audio languages -->
+    <!-- Player errors -->
+    <!-- Player plug-in -->
+    <!-- Subtitles wizard -->
+    <!-- Subloader -->
+    <!-- Subtitle Settings Dialog -->
+    <!-- Subtitle Delay Dialog -->
+    <!-- Browser.CommonDetailsView -->
+    <!-- Add a space after the right quote
+    because the right part of the quote is
+    not visible otherwise -->
+    <!-- torrent -->
+    <!-- Shortcuts -->
+    <!-- Preferences -->
+    <!--  Title of the video picker activity. -->
+    <!-- Archos File Info -->
+    <!-- Help overlay -->
+    <!-- Info dialog, not indexed file -->
+    <!-- Brightness -->
+    <!--  Nfo File parsing -->
+</resources>

@@ -90,8 +90,10 @@
     <string name="not_played_yet_videos">No reproducidos</string>
     <string name="video_folder">Carpetas</string>
     <string name="movies">Películas</string>
+    <string name="animes">Animaciones</string>
     <string name="all_movies">Todas las películas</string>
     <string name="all_movies_format">Todas las películas -  %d</string>
+    <string name="all_animes_format">Películas de animación  -  %d</string>
     <string name="all_collections">Todas las colecciones</string>
     <string name="all_collections_format">Todas las colecciones -  %d</string>
     <string name="all_collection_watched">Todas las colecciones vistas</string>
@@ -101,6 +103,7 @@
         <item quantity="other">%d películas vistas</item>
     </plurals>
     <string name="not_watched_movies_format">No visto  %d</string>
+    <string name="not_watched_animes_format">No visto  -  %d</string>
     <string name="no_movie_watched">Ninguna película vista</string>
     <string name="all_movies_watched">Todas las películas vistas</string>
     <string name="movies_by_alpha">Películas en orden alfabético</string>
@@ -110,6 +113,9 @@
     <string name="movies_by_year">Películas por año</string>
     <string name="all_tv_shows">Programas de TV</string>
     <string name="all_tvshows">Todos los programas de TV</string>
+    <string name="all_animes">Todas las peliculas de animación</string>
+    <string name="all_animes_row">Todas las animaciones</string>
+    <string name="all_animeshows">Todas las series de animación</string>
     <string name="all_tvshows_format">Todos los programas de TV - %d</string>
     <string name="not_watched_tvshows_format">No visto  -  %d</string>
     <string name="all_seasons">Todas las temporadas</string>
@@ -496,7 +502,6 @@
     <string name="preferences_force_audio_passthrough_disabled">Deshabitado (recomendado)</string>
     <string name="preferences_force_audio_passthrough_enable">Modo 1 (obsoleto)</string>
     <string name="preferences_force_audio_passthrough_enable2">Modo 2</string>
-    <string name="preferences_force_audio_passthrough_summary">para conexiones HDMI y S/PDIF, transmitir audio comprimido. ⚠ Experimental puede resultar en A/V fuera de sincronización</string>
     <string name="preferences_disable_downmix_title">Desactivar audio stereo downmix</string>
     <string name="preferences_disable_downmix_summary">Decodifica siempre todos los canales y permite que Android realize downmix dependiendo de la capacidades de salida de audio (puede provocar la pérdida de canales de voz)</string>
     <string name="preferences_allow_3rd_party_player">Permitir usar otro reproductor de vídeo</string>
@@ -576,8 +581,6 @@
     <string name="network_thumbnails_summary">Crea miniaturas de vídeos remotos cuando no hay carteles disponibles</string>
     <string name="network_bookmarks_summary">Guarda y comprueba si es posible el punto de reanudación y posición de los marcadores en la red</string>
     <string name="share_folders_smbv2">Habilitar soporte para SMBv2</string>
-    <string name="share_folders_smbv2_summary">Habilitar el soporte para compartición por SMB versión 2. ⚠ Experimental</string>
-    <string name="share_folders_smb_resolv_summary">Habilitar BCAST, DNS (de lo contrario DNS, BCAST)</string>
     <string name="connection_abnormally_long">La conexión parece anormalmente larga. ¿Quieres restablecerla?</string>
     <string name="connection_reset">Restablecer</string>
     <!-- Info dialog, not indexed file -->
@@ -799,6 +802,7 @@
     <string name="rescrap_not_found">Rescrapear videos sin descripción</string>
     <string name="rescrap_all_title">Re-analizar todo</string>
     <string name="rescrap_all_movies_title">Restaurar datos de todas las películas</string>
+    <string name="rescrap_all_collections_title">Recuperar todas las colecciones</string>
     <string name="nfo_export_manual_title">Exportar vídeos ya raspados</string>
     <string name="nfo_export_manual_summary">Exportar archivos .nfo de todos los vídeos ya analizados</string>
     <string name="db_export_manual_title">Exportar base de datos</string>

@@ -544,6 +544,9 @@
     <string name="ssh_password">Password</string>
     <string name="ssh_username">Username</string>
 	<string name="ssh_shortcut_name">Shortcut name</string>
+
+    <string name="smb_domain">Domain (optional)</string>
+
     <!-- Preferences -->
     <string name="preferences">Preferences</string>
 

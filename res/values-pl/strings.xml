@@ -458,7 +458,6 @@
     <string name="preferences_force_audio_passthrough_disabled">Wyłączone (zalecane)</string>
     <string name="preferences_force_audio_passthrough_enable">Tryb 1 (przestarzały)</string>
     <string name="preferences_force_audio_passthrough_enable2">Tryb 2</string>
-    <string name="preferences_force_audio_passthrough_summary">Transmituj skompresowanych dźwięk dla połączeń HDMI i S/PDIF. ⚠ Eksperymentalne! Może spowodować desynchronizację A/V</string>
     <string name="preferences_allow_3rd_party_player">Zezwól na używanie innego odtwarzacza wideo</string>
     <string name="preference_tv_3d_automatic_switch">Włącz automatyczne przełączanie TV 3D\"</string>
     <string name="category_languages">Napisy</string>

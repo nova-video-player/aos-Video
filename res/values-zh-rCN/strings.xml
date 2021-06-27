@@ -113,6 +113,7 @@
     <string name="all_tv_shows">电视节目</string>
     <string name="all_tvshows">所有电视节目</string>
     <string name="all_animes">所有动画电影</string>
+    <string name="all_animes_row">所有动画</string>
     <string name="all_animeshows">所有动画电视节目</string>
     <string name="animes_by_alpha">按字母顺序对动画电影进行排序</string>
     <string name="animes_by_genre">按流派对动画电影进行排序</string>
@@ -504,7 +505,7 @@
     <string name="preferences_force_audio_passthrough_disabled">已禁用 (推荐)</string>
     <string name="preferences_force_audio_passthrough_enable">模式1(已弃用)</string>
     <string name="preferences_force_audio_passthrough_enable2">模式2</string>
-    <string name="preferences_force_audio_passthrough_summary">对于 HDMI 和 S/PDIF 连接，传送经过压缩的音频。警告：实验性功能，可能导致音视频不同步</string>
+    <string name="preferences_force_audio_passthrough_summary">通过 HDMI 或 S/PDIF 传输压缩音频。⚠实验性功能，可能导致 A/V不同步</string>
     <string name="preferences_disable_downmix_title">禁用混音至立体声</string>
     <string name="preferences_disable_downmix_summary">总是解码所有声道，并根据音频输出能力让安卓混音(可能导致声道丢失)</string>
     <string name="preferences_allow_3rd_party_player">允许使用另外的视频播放器</string>
@@ -584,10 +585,9 @@
     <string name="network_thumbnails_summary">在没有海报可用时从远程视频创建缩略图</string>
     <string name="network_bookmarks_summary">尽可能在网络上保存并检查播放进度和位置书签</string>
     <string name="share_folders_smbv2">启用 SMBv2 支持</string>
-    <string name="share_folders_smbv2_summary">启用网络共享 SMB 版本 2 协议支持。⚠
-实验性的</string>
+    <string name="share_folders_smbv2_summary">启用网络共享 SMB 版本 2 协议支持。</string>
     <string name="share_folders_smb_resolv">SMB 解析器顺序</string>
-    <string name="share_folders_smb_resolv_summary">启用 BCAST、DNS (否则DNS,、BCAST)</string>
+    <string name="share_folders_smb_resolv_summary">启用 BCAST, DNS (默认: DNS, BCAST)。如果您的服务器无法解析或经历了慢速SMB, 请更改此选项。</string>
     <string name="connection_abnormally_long">连接似乎花了太长时间。要重置吗？</string>
     <string name="connection_reset">重置</string>
     <!-- Info dialog, not indexed file -->

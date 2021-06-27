@@ -497,7 +497,6 @@ Copertina (rotolo di copertina)</string>
     <string name="preferences_force_audio_passthrough_disabled">Preferenze_forza_audio_passthrough_disabilitato</string>
     <string name="preferences_force_audio_passthrough_enable">Preferenze_forza_audio_passthrough_abilitato</string>
     <string name="preferences_force_audio_passthrough_enable2">Mode 2</string>
-    <string name="preferences_force_audio_passthrough_summary">per connessioni HDMI e S/PDIF, trasmettere audio compresso. ⚠ Sperimentale può causare perdita di sincronizzazione A/V</string>
     <string name="preferences_disable_downmix_title">Disattiva il downmix audio stereo</string>
     <string name="preferences_disable_downmix_summary">Decodifica sempre tutti i canali e permetti il downmix di Android a seconda della capacità di uscita audio (si potrebbe avere interruzione dei canali vocali)</string>
     <string name="preferences_allow_3rd_party_player">Consenti l\'utilizzo di un altro lettore video</string>
@@ -577,9 +576,7 @@ Copertina (rotolo di copertina)</string>
     <string name="network_thumbnails_summary">Crea un\'anteprima da un video remoto quando non ci sono poster disponibili</string>
     <string name="network_bookmarks_summary">Salva e controlla per il punto di ripresa e per la posizione dei segnalibri sulla rete qualora sia possibile</string>
     <string name="share_folders_smbv2">Abilita il supporto SMBv2</string>
-    <string name="share_folders_smbv2_summary">Abilita supporto al protocollo di condivisione di rete SMB ver. 2. ⚠ Sperimentale</string>
     <string name="share_folders_smb_resolv">Ordine risolutore SMB</string>
-    <string name="share_folders_smb_resolv_summary">Abilita BCAST, DNS (altrimenti DNS, BCAST)</string>
     <string name="connection_abnormally_long">La connessione sta richiedendo più tempo del previsto. Vuoi resettarla?</string>
     <string name="connection_reset">Resetta</string>
     <!-- Info dialog, not indexed file -->
