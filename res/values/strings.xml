@@ -127,6 +127,7 @@
     <string name="movies_by_genre">Movies by genre</string>
     <string name="movies_by_rating">Movies by rating</string>
     <string name="movie_collections">Collections</string>
+    <string name="anime_collections">Anime collections</string>
     <string name="movies_by_year">Movies by year</string>
     <string name="all_tv_shows">TV shows</string>
     <string name="all_tvshows">All TV shows</string>
@@ -281,6 +282,7 @@
     <string name="you_have_no_movies">No movies</string>
     <string name="you_have_no_animes">No animation movies</string>
     <string name="you_have_no_movie_collections">No collections</string>
+    <string name="you_have_no_anime_collections">No anime collections</string>
     <string name="you_have_no_tv_shows">No TV shows</string>
     <string name="you_have_no_anime_shows">No animation TV shows</string>
     <string name="you_have_no_non_scraped_videos">No non scraped videos</string>

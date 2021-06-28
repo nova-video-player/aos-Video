@@ -1343,6 +1343,10 @@
             android:theme="@style/MyLeanbackTheme"/>
 
         <activity
+            android:name="com.archos.mediacenter.video.leanback.collections.AllAnimeCollectionsGridActivity"
+            android:theme="@style/MyLeanbackTheme"/>
+
+        <activity
             android:name="com.archos.mediacenter.video.leanback.collections.CollectionActivity"
             android:exported="true"
             android:theme="@style/MyLeanbackTheme"/>
