@@ -542,7 +542,6 @@
     <string name="ui_mode_summary">TV arba Planšetės/Telefono sąsaja</string>
     <string name="preferences_video_about">Apie</string>
     <string name="preferences_video_os_text">Subtitrus teikia</string>
-    <string name="preferences_video_tmdb_text">Filmų informaciją teikia</string>
     <string name="preferences_video_tvdb_text">Serialų informaciją teikia</string>
     <string name="preferences_video_trakt_text">Video atpažinimą teikia</string>
     <string name="preferences_video_licenses">Licencijos</string>

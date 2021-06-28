@@ -518,7 +518,6 @@
     <string name="ui_mode_summary">Vyberte rozhraní pro TV nebo pro tablet/telefon</string>
     <string name="preferences_video_about">O aplikaci</string>
     <string name="preferences_video_os_text">Titulku poskytnuty z</string>
-    <string name="preferences_video_tmdb_text">Informace o filmech poskytnuty z</string>
     <string name="preferences_video_tvdb_text">Informace o seriálech poskytnuty z</string>
     <string name="preferences_video_trakt_text">Logování sledování videí (scrobbler) poskytnuto z</string>
     <string name="preferences_video_licenses">Licence</string>

@@ -532,7 +532,6 @@
     <string name="ui_mode_summary">Escolha entre TV e Tablet/Telefone</string>
     <string name="preferences_video_about">Sobre</string>
     <string name="preferences_video_os_text">Legendas fornecidas por</string>
-    <string name="preferences_video_tmdb_text">Informações de filmes fornecidas por</string>
     <string name="preferences_video_tvdb_text">Informações de séries de TV fornecidas por</string>
     <string name="preferences_video_trakt_text">Video scrobbler fornecido por</string>
     <string name="preferences_video_licenses">Licenças</string>

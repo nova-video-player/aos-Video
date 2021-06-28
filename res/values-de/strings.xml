@@ -534,7 +534,6 @@
     <string name="ui_mode_summary">Wählen Sie zwischen TV und Telefon/Tablet-Benutzeroberfläche</string>
     <string name="preferences_video_about">Über</string>
     <string name="preferences_video_os_text">Untertitel bereitgestellt von</string>
-    <string name="preferences_video_tmdb_text">Filminformationen bereitgestellt von</string>
     <string name="preferences_video_tvdb_text">TV-Serien Informationen bereitgestellt von</string>
     <string name="preferences_video_trakt_text">Videoscrobbler bereitgestellt von</string>
     <string name="preferences_video_licenses">Lizenzen</string>

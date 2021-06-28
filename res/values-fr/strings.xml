@@ -110,6 +110,7 @@
     <string name="movies_by_genre">Films par genre</string>
     <string name="movies_by_rating">Films par note</string>
     <string name="movie_collections">Sagas</string>
+    <string name="anime_collections">Sagas films d\'animation</string>
     <string name="movies_by_year">Films par année</string>
     <string name="all_tv_shows">Séries</string>
     <string name="all_tvshows">Toutes les séries</string>
@@ -256,6 +257,7 @@
     <string name="you_have_no_movies">Aucun film</string>
     <string name="you_have_no_animes">Pas de film d\'animation</string>
     <string name="you_have_no_movie_collections">Pas de saga</string>
+    <string name="you_have_no_anime_collections">Aucune collection de films d\'animation</string>
     <string name="you_have_no_tv_shows">Aucune série</string>
     <string name="you_have_no_anime_shows">Pas de série d\'animation</string>
     <string name="you_have_no_non_scraped_videos">Aucune vidéo sans description</string>
@@ -497,6 +499,7 @@
     <string name="ssh_password">Mot-de-passe</string>
     <string name="ssh_username">Utilisateur</string>
     <string name="ssh_shortcut_name">Nom du raccourci</string>
+    <string name="smb_domain">Domaine (optionnel)</string>
     <!-- Preferences -->
     <string name="preferences">Préférences</string>
     <string name="get_the_ad_free_version">Téléchargez la version sans publicité sur Google Play</string>
@@ -534,7 +537,7 @@
     <string name="ui_mode_summary">Choisir entre les modes TV et tablette/smartphone</string>
     <string name="preferences_video_about">A propos</string>
     <string name="preferences_video_os_text">Sous-titres fournis par</string>
-    <string name="preferences_video_tmdb_text">Descriptions des films fournies par</string>
+    <string name="preferences_video_tmdb_text">Descriptions des films/séries fournies par</string>
     <string name="preferences_video_tvdb_text">Descriptions des séries fournies par</string>
     <string name="preferences_video_trakt_text">Scrobbler vidéo fourni par</string>
     <string name="preferences_video_licenses">Licences</string>

@@ -529,7 +529,6 @@
     <string name="ui_mode_summary">在电视、平板电脑/手机用户界面之间选择</string>
     <string name="preferences_video_about">关于</string>
     <string name="preferences_video_os_text">字幕提供方</string>
-    <string name="preferences_video_tmdb_text">电影信息提供方</string>
     <string name="preferences_video_tvdb_text">电视节目信息提供方</string>
     <string name="preferences_video_trakt_text">视频偏好收藏提供方</string>
     <string name="preferences_video_licenses">许可</string>

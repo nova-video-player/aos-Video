@@ -544,7 +544,6 @@
     <string name="ui_mode_summary">Интерфейс ТВ или Планшета/Телефона</string>
     <string name="preferences_video_about">О программе</string>
     <string name="preferences_video_os_text">Субтитры предоставлены</string>
-    <string name="preferences_video_tmdb_text">Информация о фильме предоставлена</string>
     <string name="preferences_video_tvdb_text">Информация о сериалах предоставлена</string>
     <string name="preferences_video_trakt_text">Видео скробблер предоставлен</string>
     <string name="preferences_video_licenses">Лицензии</string>

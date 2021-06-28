@@ -520,7 +520,6 @@ Copertina (rotolo di copertina)</string>
     <string name="ui_mode_summary">Scegli fra interfaccia TV e interfaccia tablet/telefono</string>
     <string name="preferences_video_about">Informazioni</string>
     <string name="preferences_video_os_text">Sottotitoli forniti da</string>
-    <string name="preferences_video_tmdb_text">Informazioni sul film fornite da</string>
     <string name="preferences_video_tvdb_text">Infromazioni sulla serie TV fornite daTV</string>
     <string name="preferences_video_trakt_text">Video scrobbler fornito da</string>
     <string name="preferences_video_licenses">Licenze</string>

@@ -467,7 +467,6 @@
     <string name="summary_list_preference_primary">Pobieraj napisy w swoim języku</string>
     <string name="preferences_video_about">O aplikacji</string>
     <string name="preferences_video_os_text">Dostawcy napisów</string>
-    <string name="preferences_video_tmdb_text">Dostawca informacji o filmach</string>
     <string name="preferences_video_licenses">Licencje</string>
     <string name="preferences_video_advanced">Zaawansowane</string>
     <string name="preferences_video_advanced_quit_title">Ustawienia zwykłe</string>

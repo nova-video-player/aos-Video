@@ -525,7 +525,6 @@
     <string name="ui_mode_summary">Elija entre interfaz de usuario TV y Teléfono/Tablet</string>
     <string name="preferences_video_about">Acerca de</string>
     <string name="preferences_video_os_text">Subtitulos proporcionados por</string>
-    <string name="preferences_video_tmdb_text">Información de la película proporcionada por</string>
     <string name="preferences_video_tvdb_text">Información de la Serie TV proporcionada por</string>
     <string name="preferences_video_trakt_text">Video scrobbler proporcionado por</string>
     <string name="preferences_video_licenses">Licencias</string>

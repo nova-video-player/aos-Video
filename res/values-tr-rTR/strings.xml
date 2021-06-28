@@ -518,7 +518,6 @@ desteklenmiyor.</string>
     <string name="ui_mode_summary">TV ve Tablet/Telefon kullanıcı arayüzü arasında seçim yapın</string>
     <string name="preferences_video_about">Hakkında</string>
     <string name="preferences_video_os_text">Alt Yazı Sağlayıcıları</string>
-    <string name="preferences_video_tmdb_text">Film bilgileri</string>
     <string name="preferences_video_tvdb_text">TV Şovu tarafından sağlanan bilgiler</string>
     <string name="preferences_video_trakt_text">Video scrobbler tarafından sağlanmıştır</string>
     <string name="preferences_video_licenses">Lisanslar</string>

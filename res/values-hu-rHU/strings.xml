@@ -533,7 +533,6 @@
     <string name="ui_mode_summary">Válasszon TV vagy Tablet/Telefon felület között</string>
     <string name="preferences_video_about">Névjegy</string>
     <string name="preferences_video_os_text">A feliratok szolgáltatója</string>
-    <string name="preferences_video_tmdb_text">Filmleírások szolgáltatója</string>
     <string name="preferences_video_tvdb_text">Sorozatok szoláltatója</string>
     <string name="preferences_video_trakt_text">A video meghirdetés szolgáltatója</string>
     <string name="preferences_video_licenses">Licenszek</string>

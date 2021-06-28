@@ -493,7 +493,6 @@
     <string name="ui_mode_summary">Kies tussen TV en Tablet/Telefoon UI</string>
     <string name="preferences_video_about">Over</string>
     <string name="preferences_video_os_text">Ondertitels verstrekt door</string>
-    <string name="preferences_video_tmdb_text">Film informatie verstrekt door</string>
     <string name="preferences_video_tvdb_text">TV-serie informatie verstrekt door</string>
     <string name="preferences_video_trakt_text">Video scrobbler aangeboden door</string>
     <string name="preferences_video_licenses">Licenties</string>
