@@ -21,12 +21,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.SystemClock;
+import android.provider.BaseColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.player.PlayerActivity;
+import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.ScraperStore;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -40,11 +43,8 @@ import java.util.List;
  */
 public class AnimeCollectionsIconBuilder {
 
-    // cheating to get anime movies covers instead of collection covers since there is no way to discriminate between genres in collections
     final static String[] PROJECTION = {
-            VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER,
-            VideoStore.Video.VideoColumns._ID,
-            VideoStore.Video.VideoColumns.SCRAPER_COVER
+            VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE
     };
 
     // limitation: cannot remove animation genre because ScraperStore.MovieCollections has no genre
@@ -62,7 +62,10 @@ public class AnimeCollectionsIconBuilder {
         SELECTION = VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER + "=0 AND " +
                 VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL AND " +
                 VideoStore.Video.VideoColumns.SCRAPER_COVER + " IS NOT NULL AND " +
-                VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%'";
+                VideoStore.Video.VideoColumns.SCRAPER_C_ID + " > '0' AND " +
+                VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE + " IS NOT NULL AND " +
+                VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%'" +
+                ") GROUP BY (" + VideoStore.Video.VideoColumns.SCRAPER_C_ID;
         mWidth  = context.getResources ().getDimensionPixelSize(R.dimen.all_collections_icon_width);
         mHeight  = context.getResources ().getDimensionPixelSize(R.dimen.all_collections_icon_height);
     }
@@ -106,7 +109,7 @@ public class AnimeCollectionsIconBuilder {
             return Collections.emptyList();
         }
 
-        final int coverIndex = c.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_COVER);
+        final int coverIndex = c.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE);
         c.moveToFirst();
 
         ArrayList<String> list = new ArrayList<>(c.getCount());

@@ -28,6 +28,7 @@ import android.widget.ImageView;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediaprovider.video.ScraperStore;
+import com.archos.mediaprovider.video.VideoStore;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,15 +41,10 @@ import java.util.List;
 public class CollectionsIconBuilder {
 
     final static String[] PROJECTION = {
-            ScraperStore.MovieCollections.ID,
-            ScraperStore.MovieCollections.POSTER_LARGE_FILE,
+            VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE
     };
 
-    // limitation: cannot remove animation genre because ScraperStore.MovieCollections has no genre
-    // and we are dealing with collection posters here i.e. no video posters
-    final static String SELECTION =
-            ScraperStore.MovieCollections.ID + " IS NOT NULL AND " +
-            ScraperStore.MovieCollections.POSTER_LARGE_FILE + " IS NOT NULL";
+    String SELECTION;
 
     private static final String TAG = "CollectionsIconBuilder";
     private static final Boolean DBG = false;
@@ -58,6 +54,13 @@ public class CollectionsIconBuilder {
 
     public CollectionsIconBuilder(Context context) {
         mContext = context;
+        SELECTION = VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER + "=0 AND " +
+                VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL AND " +
+                VideoStore.Video.VideoColumns.SCRAPER_COVER + " IS NOT NULL AND " +
+                VideoStore.Video.VideoColumns.SCRAPER_C_ID + " > '0' AND " +
+                VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE + " IS NOT NULL AND " +
+                VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%'" +
+                ") GROUP BY (" + VideoStore.Video.VideoColumns.SCRAPER_C_ID;
         mWidth  = context.getResources ().getDimensionPixelSize(R.dimen.all_collections_icon_width);
         mHeight  = context.getResources ().getDimensionPixelSize(R.dimen.all_collections_icon_height);
     }
@@ -92,7 +95,7 @@ public class CollectionsIconBuilder {
     }
 
     private List<String> getPostersList(ContentResolver cr) {
-        Cursor c = cr.query(ScraperStore.MovieCollections.URI.BASE,
+        Cursor c = cr.query(VideoStore.Video.Media.EXTERNAL_CONTENT_URI,
                 PROJECTION, SELECTION, null,
                 "RANDOM() LIMIT 12"); // get 12 random movies (8 + 4 in case some posters are invalid for any reason)
 
@@ -101,7 +104,7 @@ public class CollectionsIconBuilder {
             return Collections.emptyList();
         }
 
-        final int coverIndex = c.getColumnIndexOrThrow(ScraperStore.MovieCollections.POSTER_LARGE_FILE);
+        final int coverIndex = c.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE);
         c.moveToFirst();
 
         ArrayList<String> list = new ArrayList<>(c.getCount());
