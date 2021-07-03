@@ -42,12 +42,14 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
     protected SharedPreferences mPreferences;
     private String mUsername="";
     private String mPassword="";
+    private String mDomain="";
     private int mPort=-1;
     private int mType=-1;
     private String mRemote="";
     private onConnectClickListener mOnConnectClick;
     final private static String FTP_LATEST_USERNAME = "FTP_LATEST_USERNAME";
     final private static String FTP_LATEST_URI = "FTP_LATEST_URI";
+    final private static String FTP_LATEST_DOMAIN = "FTP_LATEST_DOMAIN";
 
     final public static String USERNAME = "username";
     final public static String PASSWORD = "password";
@@ -63,7 +65,7 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
     protected Spinner mTypeSp;
     protected EditText mAddressEt;
     protected EditText mPortEt;
-
+    protected EditText mDomainEt;
 
     public interface onConnectClickListener{
         public void onConnectClick(String username, Uri uri, String password);
@@ -80,9 +82,10 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
         }
         mPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         // Get latest values from preference
-        if(mUsername.isEmpty()&&mPassword.isEmpty()&&mUri==null){
+        if(mUsername.isEmpty()&&mPassword.isEmpty()&&mUri==null&&mDomain.isEmpty()){
             mUsername = mPreferences.getString(FTP_LATEST_USERNAME, "");
             String lastUri = mPreferences.getString(FTP_LATEST_URI, "");
+            mDomain = mPreferences.getString(FTP_LATEST_DOMAIN, "");
             if(!lastUri.isEmpty()){
                 mUri = Uri.parse(lastUri);
             }
@@ -114,6 +117,9 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
         mPortEt = (EditText)v.findViewById(R.id.port);
         mUsernameEt = (EditText)v.findViewById(R.id.username);
         mPasswordEt = (EditText)v.findViewById(R.id.password);
+        mDomainEt = (EditText)v.findViewById(R.id.domain);
+        // by default since it is only for samba make it invisible
+        mDomainEt.setVisibility(View.GONE);
         mPathEt = (EditText)v.findViewById(R.id.path);
         mSavePassword = (CheckBox)v.findViewById(R.id.save_password);
         mShowPassword = (CheckBox)v.findViewById(R.id.show_password_checkbox);
@@ -137,7 +143,7 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
         mPortEt.setText(portString);
         mUsernameEt.setText(mUsername);
         mPasswordEt.setText(mPassword);
-        
+        mDomainEt.setText(mDomain);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
         .setTitle(R.string.browse_ftp_server)
         .setView(v)
@@ -153,13 +159,14 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
                 if(!mUsernameEt.getText().toString().isEmpty()){
                     final String username = mUsernameEt.getText().toString();
                     final String password = mPasswordEt.getText().toString();
+                    final String domain = mDomainEt.getText().toString();
 
                     String uriToBuild = createUri();
                     onConnectClick(username, Uri.parse(uriToBuild), password);
                     if(mSavePassword.isChecked())
-                        NetworkCredentialsDatabase.getInstance().saveCredential(new Credential(username, password, uriToBuild,true));
+                        NetworkCredentialsDatabase.getInstance().saveCredential(new Credential(username, password, uriToBuild, domain,true));
                     else
-                        NetworkCredentialsDatabase.getInstance().addCredential(new Credential(username, password, uriToBuild,true));
+                        NetworkCredentialsDatabase.getInstance().addCredential(new Credential(username, password, uriToBuild, domain,true));
                     if(mOnConnectClick!=null){
                         mOnConnectClick.onConnectClick(username, Uri.parse(uriToBuild), password);
                     }
