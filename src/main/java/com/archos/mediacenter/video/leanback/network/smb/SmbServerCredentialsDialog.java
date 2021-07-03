@@ -42,19 +42,20 @@ public class SmbServerCredentialsDialog extends DialogFragment {
 
     final public static String USERNAME = "username";
     final public static String PASSWORD = "password";
+    final public static String DOMAIN = "domain";
     final public static String URI = "uri";
 
     private AlertDialog mDialog;
     private SharedPreferences mPreferences;
-    private String mUsername="";
-    private String mPassword="";
+    private String mUsername = "";
+    private String mPassword = "";
+    private String mDomain = "";
     private  Uri mUri = null;
     private onConnectClickListener mOnConnectClick;
     private OnClickListener mOnCancelClickListener;
 
-
     public interface onConnectClickListener{
-        public void onConnectClick(String username, Uri path, String password);
+        public void onConnectClick(String username, Uri path, String password, String domain);
     }
 
     public SmbServerCredentialsDialog() {}
@@ -69,22 +70,26 @@ public class SmbServerCredentialsDialog extends DialogFragment {
         }
         mPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         // Get latest values from preference
-        if(mUsername.isEmpty()&&mPassword.isEmpty()){
+        if(mUsername.isEmpty()&&mPassword.isEmpty()&&mDomain.isEmpty()){
             mUsername = mPreferences.getString(SMB_LATEST_USERNAME, "");
         }
         if(mPassword.isEmpty()&&mUri!=null){
             NetworkCredentialsDatabase database = NetworkCredentialsDatabase.getInstance();
             Credential cred = database.getCredential(mUri.toString());
             if(cred!=null){
-                mPassword= cred.getPassword();
+                mPassword = cred.getPassword();
+                mDomain = cred.getDomain();
             }
         }
         final View v = getActivity().getLayoutInflater().inflate(R.layout.ssh_credential_layout, null);
+
         v.findViewById(R.id.ssh_spinner).setVisibility(View.GONE);
         v.findViewById(R.id.remote).setVisibility(View.GONE);
         v.findViewById(R.id.port).setVisibility(View.GONE);
         final EditText usernameEt = (EditText)v.findViewById(R.id.username);
         final EditText passwordEt = (EditText)v.findViewById(R.id.password);
+        final EditText domainEt = (EditText)v.findViewById(R.id.domain);
+        v.findViewById(R.id.domain).setVisibility(View.VISIBLE);
         v.findViewById(R.id.path).setVisibility(View.GONE);
         final CheckBox savePassword = (CheckBox)v.findViewById(R.id.save_password);
         final CheckBox showPassword = (CheckBox)v.findViewById(R.id.show_password_checkbox);
@@ -114,9 +119,9 @@ public class SmbServerCredentialsDialog extends DialogFragment {
             public void onClick(DialogInterface dialog,int id) {
                 if(!usernameEt.getText().toString().isEmpty()){
 
-
                     final String username = usernameEt.getText().toString();
                     final String password = passwordEt.getText().toString();
+                    final String domain = domainEt.getText().toString();
 
                     // Store new values to preferences
                     mPreferences.edit()
@@ -125,11 +130,11 @@ public class SmbServerCredentialsDialog extends DialogFragment {
                     .apply();
 
                     if(savePassword.isChecked())
-                        NetworkCredentialsDatabase.getInstance().saveCredential(new Credential(username, password, mUri.toString(),true));
+                        NetworkCredentialsDatabase.getInstance().saveCredential(new Credential(username, password, mUri.toString(), domain,true));
                     else
-                        NetworkCredentialsDatabase.getInstance().addCredential(new Credential(username, password, mUri.toString(),true));
+                        NetworkCredentialsDatabase.getInstance().addCredential(new Credential(username, password, mUri.toString(), domain,true));
                     if(mOnConnectClick!=null){
-                        mOnConnectClick.onConnectClick(username, mUri, password);
+                        mOnConnectClick.onConnectClick(username, mUri, password, domain);
                     }
 
                 }

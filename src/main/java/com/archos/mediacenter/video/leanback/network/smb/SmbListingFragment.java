@@ -132,7 +132,7 @@ public class SmbListingFragment extends NetworkListingFragment {
             }
             dialog.setOnConnectClickListener(new SmbServerCredentialsDialog.onConnectClickListener() {
                 @Override
-                public void onConnectClick(String username, Uri path, String password) {
+                public void onConnectClick(String username, Uri path, String password, String domain) {
                     mUri = path;
                     setConnectionDescription();
                     startListing(mUri);

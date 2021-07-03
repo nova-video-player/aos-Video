@@ -34,6 +34,7 @@ public class SMBServerCredentialsDialog extends ServerCredentialsDialog {
         mAddressEt.setVisibility(View.GONE);
         mPortEt.setVisibility(View.GONE);
         mPathEt.setVisibility(View.GONE);
+        mDomainEt.setVisibility(View.VISIBLE);
         if(mUsernameEt.getText().toString().isEmpty()){
             mUsernameEt.setText(mPreferences.getString(SMB_LATEST_USERNAME,""));
         }

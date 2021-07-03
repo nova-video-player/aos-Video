@@ -110,6 +110,7 @@ public class FtpServerCredentialsDialog extends DialogFragment {
         final EditText pathEt = (EditText)v.findViewById(R.id.path);
         final CheckBox savePassword = (CheckBox)v.findViewById(R.id.save_password);
         final CheckBox showPassword = (CheckBox)v.findViewById(R.id.show_password_checkbox);
+        v.findViewById(R.id.domain).setVisibility(View.GONE);
         showPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -184,9 +185,9 @@ public class FtpServerCredentialsDialog extends DialogFragment {
                         path = "/"+path;
                     uriToBuild +="://"+(!address.isEmpty()?address+(port!=-1?":"+port:""):"")+path;
                     if(savePassword.isChecked())
-                        NetworkCredentialsDatabase.getInstance().saveCredential(new Credential(username, password, uriToBuild,true));
+                        NetworkCredentialsDatabase.getInstance().saveCredential(new Credential(username, password, uriToBuild,"",true));
                     else
-                        NetworkCredentialsDatabase.getInstance().addCredential(new Credential(username, password, uriToBuild,true));
+                        NetworkCredentialsDatabase.getInstance().addCredential(new Credential(username, password, uriToBuild, "",true));
                     if(mOnConnectClick!=null){
                         mOnConnectClick.onConnectClick(username, path, password, port, type, address);
                     }
