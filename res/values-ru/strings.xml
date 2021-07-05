@@ -112,6 +112,7 @@
     <string name="movies_by_genre">Фильмы по жанру</string>
     <string name="movies_by_rating">Фильмы по рейтингу</string>
     <string name="movie_collections">Коллекции</string>
+    <string name="anime_collections">Коллекции аниме</string>
     <string name="movies_by_year">Фильмы по году</string>
     <string name="all_tv_shows">Сериалы</string>
     <string name="all_tvshows">Все сериалы</string>
@@ -260,6 +261,7 @@
     <string name="you_have_no_movies">Нет фильмов</string>
     <string name="you_have_no_animes">Нет мультфильмов</string>
     <string name="you_have_no_movie_collections">Нет коллекций</string>
+    <string name="you_have_no_anime_collections">Нет коллекций аниме</string>
     <string name="you_have_no_tv_shows">Нет ТВ-программ</string>
     <string name="you_have_no_anime_shows">Нет мультсериалов</string>
     <string name="you_have_no_non_scraped_videos">Нет нераспознанных видео</string>
@@ -507,6 +509,7 @@
     <string name="ssh_password">Пароль</string>
     <string name="ssh_username">Имя пользователя</string>
     <string name="ssh_shortcut_name">Имя ярлыка</string>
+    <string name="smb_domain">Домен (необязательно)</string>
     <!-- Preferences -->
     <string name="preferences">Настройки</string>
     <string name="get_the_ad_free_version">Получите версию без рекламы на Google Play</string>
@@ -544,6 +547,7 @@
     <string name="ui_mode_summary">Интерфейс ТВ или Планшета/Телефона</string>
     <string name="preferences_video_about">О программе</string>
     <string name="preferences_video_os_text">Субтитры предоставлены</string>
+    <string name="preferences_video_tmdb_text">Информация о фильмах/сериалах предоставлена</string>
     <string name="preferences_video_tvdb_text">Информация о сериалах предоставлена</string>
     <string name="preferences_video_trakt_text">Видео скробблер предоставлен</string>
     <string name="preferences_video_licenses">Лицензии</string>

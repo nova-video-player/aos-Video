@@ -21,7 +21,7 @@
     <string name="goto_start">Bibliothek</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
     <!-- Menu item to refresh servers list -->
-    <string name="refresh_servers_list">Serverliste aktualisieren</string>
+    <string name="refresh_servers_list">Liste der Server aktualisieren</string>
     <!-- Menu item to enable network shares -->
     <string name="enable_network_shares">Netzwerkfreigaben aktivieren</string>
     <string name="initial_scan">Erster Scan</string>
@@ -51,9 +51,9 @@
     <string name="info_tab_show">Serie</string>
     <string name="info_tab_episode">Episode</string>
     <string name="info_tab_video">Video</string>
-    <string name="info_tab_file">Dateiinfo</string>
+    <string name="info_tab_file">Datei-Info</string>
     <string name="info_tab_backdrop_chooser">Hintergrundwähler</string>
-    <string name="info_tab_poster_chooser">Posterwähler</string>
+    <string name="info_tab_poster_chooser">Poster-Auswähler</string>
     <string name="info_tab_share">Teilen</string>
     <string name="info_menu_backdrop_select">Hintergrund</string>
     <string name="info_menu_series_backdrop_select">Serien Hintergrund</string>
@@ -110,6 +110,7 @@
     <string name="movies_by_genre">Filme nach Genre</string>
     <string name="movies_by_rating">Filme nach Bewertung</string>
     <string name="movie_collections">Sammlungen</string>
+    <string name="anime_collections">Anime Sammlung</string>
     <string name="movies_by_year">Filme nach Jahr</string>
     <string name="all_tv_shows">Serien</string>
     <string name="all_tvshows">Alle Serien</string>
@@ -134,10 +135,10 @@
     <string name="date_view_year">Jahr</string>
     <string name="all_movies_and_tv_shows">Filme und Serien</string>
     <string name="non_scraped_videos">Nicht gescrapte Videos</string>
-    <string name="no_server">Kein Medien-Server gefunden</string>
+    <string name="no_server">Medien-Server nicht gefunden</string>
     <string name="cannot_open_video">Dieses Video kann nicht geöffnet werden</string>
     <string name="confirm_delete">Wollen Sie wirklich löschen?</string>
-    <string name="deleting">wird gelöscht, bitte warten…</string>
+    <string name="deleting">Wird gelöscht, bitte warten…</string>
     <string name="cannot_delete_directory">Der Ordner kann nicht gelöscht werden</string>
     <string name="cannot_delete_file">Die Datei kann nicht gelöscht werden</string>
     <string name="directory_deleted">Der Ordner wurde gelöscht</string>
@@ -256,6 +257,7 @@
     <string name="you_have_no_movies">Keine Filme</string>
     <string name="you_have_no_animes">Keine Animationsfilme</string>
     <string name="you_have_no_movie_collections">Keine Sammlungen</string>
+    <string name="you_have_no_anime_collections">Keine Anime Sammlung</string>
     <string name="you_have_no_tv_shows">Keine Serien</string>
     <string name="you_have_no_anime_shows">Keine Animations-TV-Serien</string>
     <string name="you_have_no_non_scraped_videos">Nicht gescrapte Videos</string>
@@ -309,7 +311,7 @@
     <string name="pref_s3d_mode_entry_topbottom">Untereinander</string>
     <string name="pref_s3d_mode_entry_anaglyph">Anaglyph</string>
     <string name="pref_s3d_mode_entry_off">Aus</string>
-    <string name="menu_info">Informationen</string>
+    <string name="menu_info">Info</string>
     <string name="menu_subtitles">Untertitel</string>
     <string name="menu_audio">Tonspuren</string>
     <string name="menu_lock_player">Player sperren</string>
@@ -497,6 +499,7 @@
     <string name="ssh_password">Passwort</string>
     <string name="ssh_username">Benutzername</string>
     <string name="ssh_shortcut_name">Name der Verknüpfung</string>
+    <string name="smb_domain">Domain (optional)</string>
     <!-- Preferences -->
     <string name="preferences">Einstellungen</string>
     <string name="get_the_ad_free_version">Holen Sie sich die werbefreie Version auf Google Play!</string>
@@ -534,6 +537,7 @@
     <string name="ui_mode_summary">Wählen Sie zwischen TV und Telefon/Tablet-Benutzeroberfläche</string>
     <string name="preferences_video_about">Über</string>
     <string name="preferences_video_os_text">Untertitel bereitgestellt von</string>
+    <string name="preferences_video_tmdb_text">Film/Serien Information bereitgestellt von</string>
     <string name="preferences_video_tvdb_text">TV-Serien Informationen bereitgestellt von</string>
     <string name="preferences_video_trakt_text">Videoscrobbler bereitgestellt von</string>
     <string name="preferences_video_licenses">Lizenzen</string>

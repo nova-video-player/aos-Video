@@ -109,6 +109,7 @@
     <string name="movies_by_genre">电影：按分类排序</string>
     <string name="movies_by_rating">电影：按评分排序</string>
     <string name="movie_collections">收藏</string>
+    <string name="anime_collections">动漫合集</string>
     <string name="movies_by_year">电影：按年份排序</string>
     <string name="all_tv_shows">电视节目</string>
     <string name="all_tvshows">所有电视节目</string>
@@ -254,6 +255,7 @@
     <string name="you_have_no_movies">没有电影</string>
     <string name="you_have_no_animes">没有动画电影</string>
     <string name="you_have_no_movie_collections">暂无收藏</string>
+    <string name="you_have_no_anime_collections">无动漫合集</string>
     <string name="you_have_no_tv_shows">没有电视节目</string>
     <string name="you_have_no_anime_shows">没有动画电视节目</string>
     <string name="you_have_no_non_scraped_videos">没有未扫描的视频</string>
@@ -492,6 +494,7 @@
     <string name="ssh_password">密码</string>
     <string name="ssh_username">用户名</string>
     <string name="ssh_shortcut_name">快捷方式名称</string>
+    <string name="smb_domain">域名(可选)</string>
     <!-- Preferences -->
     <string name="preferences">首选项</string>
     <string name="get_the_ad_free_version">在 Google Play 上获取无广告版本</string>
@@ -529,6 +532,7 @@
     <string name="ui_mode_summary">在电视、平板电脑/手机用户界面之间选择</string>
     <string name="preferences_video_about">关于</string>
     <string name="preferences_video_os_text">字幕提供方</string>
+    <string name="preferences_video_tmdb_text">电影/电视节目信息提供方</string>
     <string name="preferences_video_tvdb_text">电视节目信息提供方</string>
     <string name="preferences_video_trakt_text">视频偏好收藏提供方</string>
     <string name="preferences_video_licenses">许可</string>

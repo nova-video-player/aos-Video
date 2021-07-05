@@ -110,14 +110,21 @@
     <string name="movies_by_genre">Películas por género</string>
     <string name="movies_by_rating">Películas por valoración</string>
     <string name="movie_collections">Colecciones</string>
+    <string name="anime_collections">Colecciones de anime</string>
     <string name="movies_by_year">Películas por año</string>
     <string name="all_tv_shows">Programas de TV</string>
     <string name="all_tvshows">Todos los programas de TV</string>
     <string name="all_animes">Todas las peliculas de animación</string>
     <string name="all_animes_row">Todas las animaciones</string>
     <string name="all_animeshows">Todas las series de animación</string>
+    <string name="animes_by_alpha">Películas de animación por orden alfabético</string>
+    <string name="animes_by_genre">Películas de animación por género</string>
+    <string name="animes_by_rating">Películas de animación por clasificación</string>
+    <string name="animes_by_year">Películas de animación por año</string>
     <string name="all_tvshows_format">Todos los programas de TV - %d</string>
     <string name="not_watched_tvshows_format">No visto  -  %d</string>
+    <string name="all_animeshows_format">Series de animación  -  %d</string>
+    <string name="not_watched_animeshows_format">No visto  - %d</string>
     <string name="all_seasons">Todas las temporadas</string>
     <string name="tvshows_by_alpha">Programas de TV por orden alfabético</string>
     <string name="tvshows_by_genre">Programas de TV por género</string>
@@ -248,8 +255,11 @@
     <string name="you_have_no_video">No hay vídeos</string>
     <string name="you_have_no_video_yet">Buscando videos&#8230;</string>
     <string name="you_have_no_movies">No hay películas</string>
+    <string name="you_have_no_animes">No hay películas de animación</string>
     <string name="you_have_no_movie_collections">Sin colecciones</string>
+    <string name="you_have_no_anime_collections">No hay colecciones de anime</string>
     <string name="you_have_no_tv_shows">No hay programas de televisión</string>
+    <string name="you_have_no_anime_shows">No hay series de animación</string>
     <string name="you_have_no_non_scraped_videos">Vídeos sin analizar</string>
     <plurals name="Nmovies">
         <item quantity="one">1 película</item>
@@ -489,6 +499,7 @@
     <string name="ssh_password">Contraseña</string>
     <string name="ssh_username">Usuario</string>
     <string name="ssh_shortcut_name">Nombre del acceso directo</string>
+    <string name="smb_domain">Dominio (opcional)</string>
     <!-- Preferences -->
     <string name="preferences">Preferencias</string>
     <string name="get_the_ad_free_version">Obtener la versión libre de anuncios en Google Play</string>
@@ -502,6 +513,7 @@
     <string name="preferences_force_audio_passthrough_disabled">Deshabitado (recomendado)</string>
     <string name="preferences_force_audio_passthrough_enable">Modo 1 (obsoleto)</string>
     <string name="preferences_force_audio_passthrough_enable2">Modo 2</string>
+    <string name="preferences_force_audio_passthrough_summary">Transmite audio comprimido a través de HDMI o S/PDIF. ⚠ Experimental puede resultar en A/V desincronizado</string>
     <string name="preferences_disable_downmix_title">Desactivar audio stereo downmix</string>
     <string name="preferences_disable_downmix_summary">Decodifica siempre todos los canales y permite que Android realize downmix dependiendo de la capacidades de salida de audio (puede provocar la pérdida de canales de voz)</string>
     <string name="preferences_allow_3rd_party_player">Permitir usar otro reproductor de vídeo</string>
@@ -525,6 +537,7 @@
     <string name="ui_mode_summary">Elija entre interfaz de usuario TV y Teléfono/Tablet</string>
     <string name="preferences_video_about">Acerca de</string>
     <string name="preferences_video_os_text">Subtitulos proporcionados por</string>
+    <string name="preferences_video_tmdb_text">Información de la Película / Serie TV proporcionada por</string>
     <string name="preferences_video_tvdb_text">Información de la Serie TV proporcionada por</string>
     <string name="preferences_video_trakt_text">Video scrobbler proporcionado por</string>
     <string name="preferences_video_licenses">Licencias</string>
@@ -580,6 +593,9 @@
     <string name="network_thumbnails_summary">Crea miniaturas de vídeos remotos cuando no hay carteles disponibles</string>
     <string name="network_bookmarks_summary">Guarda y comprueba si es posible el punto de reanudación y posición de los marcadores en la red</string>
     <string name="share_folders_smbv2">Habilitar soporte para SMBv2</string>
+    <string name="share_folders_smbv2_summary">Habilitar compatibilidad con protocolo SMB versión 2 de compartición de red.</string>
+    <string name="share_folders_smb_resolv">Resolver orden SMB</string>
+    <string name="share_folders_smb_resolv_summary">Habilitar BCAST, DNS (por defecto: DNS, BCAST). Cambie esto si su servidor no logra resolver o experimenta SMB lento.</string>
     <string name="connection_abnormally_long">La conexión parece anormalmente larga. ¿Quieres restablecerla?</string>
     <string name="connection_reset">Restablecer</string>
     <!-- Info dialog, not indexed file -->
@@ -652,6 +668,10 @@
     <string name="preferences_show_all_tv_shows_row">Mostrar fila todos los programas de TV</string>
     <string name="preferences_tv_show_sort_order_summary">Seleccione el orden de todos los programas de TV</string>
     <string name="preferences_tv_show_sort_order_title">Ordenar fila todos los programas de TV</string>
+    <string name="preferences_show_all_animes_row_summary">Marque para mostrar una fila con todas sus películas de animación en lugar de la fila de categorías de animación</string>
+    <string name="preferences_show_all_animes_row">Mostrar todas las filas de animaciones</string>
+    <string name="preferences_anime_sort_order_summary">Seleccione el orden de clasificación de la fila de todas las animaciones</string>
+    <string name="preferences_anime_sort_order_title">Orden de clasificación de filas de todas las animaciones</string>
     <string name="codepage_title">Codificación de subtítulos</string>
     <string name="codepage_summary">Establecer la codificación utilizada en subtítulos de texto</string>
     <string name="codepage_default">Idioma del dispositivo %s</string>
@@ -797,6 +817,7 @@
     <string name="nfo_export_in_progress">Exportación NFO en progreso</string>
     <string name="rescrap_in_progress">Recuperando toda la biblioteca</string>
     <string name="rescrap_movies_in_progress">Restaurando datos de todas las películas</string>
+    <string name="rescrap_collections_in_progress">Recuperando todas las colecciones</string>
     <string name="acquire_external_usb_permission">Nova Video necesita permiso especial para acceder al almacenamiento externo. Por favor, seleccione su almacenamiento en la siguiente pantalla</string>
     <string name="rescrap_not_found">Rescrapear videos sin descripción</string>
     <string name="rescrap_all_title">Re-analizar todo</string>

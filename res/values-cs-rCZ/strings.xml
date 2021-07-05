@@ -106,6 +106,7 @@
     <string name="movies_by_genre">Filmy dle žánrů</string>
     <string name="movies_by_rating">Filmy dle hodnocení</string>
     <string name="movie_collections">Kolekce</string>
+    <string name="anime_collections">Anime kolekce</string>
     <string name="movies_by_year">Filmy dle roků</string>
     <string name="all_tv_shows">Seriály</string>
     <string name="all_tvshows">Všechny seriály</string>
@@ -248,6 +249,7 @@
     <string name="you_have_no_movies">Žádné filmy</string>
     <string name="you_have_no_animes">Žádné animované filmy</string>
     <string name="you_have_no_movie_collections">Žádné kolekce</string>
+    <string name="you_have_no_anime_collections">Žádné anime kolekce</string>
     <string name="you_have_no_tv_shows">Žádné seriály</string>
     <string name="you_have_no_anime_shows">Žádné animované seriály</string>
     <string name="you_have_no_non_scraped_videos">Nejsou žádná videa bez získaných informací</string>
@@ -481,6 +483,7 @@
     <string name="ssh_password">Heslo</string>
     <string name="ssh_username">Uživatelské jméno</string>
     <string name="ssh_shortcut_name">Název zástupce</string>
+    <string name="smb_domain">Doména (volitelné)</string>
     <!-- Preferences -->
     <string name="preferences">Nastavení</string>
     <string name="get_the_ad_free_version">Získejte verzi bez reklam na Google Play</string>
@@ -518,6 +521,7 @@
     <string name="ui_mode_summary">Vyberte rozhraní pro TV nebo pro tablet/telefon</string>
     <string name="preferences_video_about">O aplikaci</string>
     <string name="preferences_video_os_text">Titulku poskytnuty z</string>
+    <string name="preferences_video_tmdb_text">Informace o filmu/seriálu dodávány</string>
     <string name="preferences_video_tvdb_text">Informace o seriálech poskytnuty z</string>
     <string name="preferences_video_trakt_text">Logování sledování videí (scrobbler) poskytnuto z</string>
     <string name="preferences_video_licenses">Licence</string>
