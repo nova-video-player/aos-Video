@@ -1754,8 +1754,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                         button.setBackgroundResource(R.drawable.transparent_ripple);
                         button.setCompoundDrawables(img, null, null, null);
-                        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.JELLY_BEAN_MR1)
-                            button.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+                        button.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
                         mScrapTrailers.addView(button);
                     }
 
