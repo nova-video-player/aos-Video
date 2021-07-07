@@ -17,6 +17,8 @@ package com.archos.mediacenter.video.leanback.presenter;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+
+import androidx.leanback.widget.BaseCardView;
 import androidx.leanback.widget.Presenter;
 import androidx.core.content.ContextCompat;
 import android.text.format.Formatter;
@@ -76,7 +78,7 @@ public class VideoBadgePresenter extends Presenter {
         private final TextView mSizeTv;
 
         public BadgeViewHolder(Context context) {
-            super(new CustomBaseCardview(context));
+            super(new BaseCardView(context));
             view.setFocusable(true);
             view.setFocusableInTouchMode(true);
             mRootView = LayoutInflater.from(mContext).inflate(R.layout.leanback_badge_presenter,(FrameLayout) view, false);

@@ -68,7 +68,7 @@ public abstract class ScraperImagePresenter extends Presenter {
         private ScraperImage mImage;
 
         public ViewHolder(Context context) {
-            super(new CustomBaseCardview(context));
+            super(new BaseCardView(context));
             mBaseCardView = (BaseCardView)view;
             mBaseCardView.setBackgroundColor(ContextCompat.getColor(context, R.color.lb_basic_card_bg_color));
             mBaseCardView.setFocusable(true);
