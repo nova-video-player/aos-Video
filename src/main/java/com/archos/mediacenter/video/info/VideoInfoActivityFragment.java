@@ -395,8 +395,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mPosterImageView.setOnClickListener(this);
         mWatchedView = mRoot.findViewById(R.id.trakt_watched);
         //poster animation
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP)
-            mPosterImageView.setTransitionName(VideoInfoActivity.SHARED_ELEMENT_NAME);
+        mPosterImageView.setTransitionName(VideoInfoActivity.SHARED_ELEMENT_NAME);
         mVideoTrackTextView = (TextView) mRoot.findViewById(R.id.video_track);
         mAudioTrackTextView = (TextView) mRoot.findViewById(R.id.audio_track);
         mIndexButton = (Button) mRoot.findViewById(R.id.index_button);

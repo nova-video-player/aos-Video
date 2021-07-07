@@ -718,12 +718,8 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                     intent.putExtra(TvshowActivity.SLIDE_DIRECTION_EXTRA, direction);
                     // Launch next activity with slide animation
                     // Starting from lollipop we need to give an empty "SceneTransitionAnimation" for this to work
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
-                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                    } else {
-                        startActivity(intent);
-                    }
+                    mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
+                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                     // Delay the finish the "old" activity, else it breaks the animation
                     mHandler.postDelayed(new Runnable() {
                         public void run() {

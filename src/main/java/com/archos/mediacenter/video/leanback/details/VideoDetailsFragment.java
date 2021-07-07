@@ -325,23 +325,21 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         // allow Video Badges Animation at end of enter transition to prevent a huge animation glitch when opening VideoDetails
         /*
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            //getActivity().getWindow().getEnterTransition().addListener(new TransitionListener() {
-            TransitionHelper.addTransitionListener(
-                    TransitionHelper.getEnterTransition(getActivity().getWindow()),
-                    new TransitionListener() {
-                        public void onTransitionCancel(Transition transition) {}
-                        public void onTransitionStart(Transition transition) {}
-                        public void onTransitionPause(Transition transition) {}
-                        public void onTransitionResume(Transition transition) {}
-                        public void onTransitionEnd(Transition transition) {
-                            if (mDescriptionPresenter != null) {
-                                mDescriptionPresenter.allowVideoBadgesAnimation();
-                            }
+        //getActivity().getWindow().getEnterTransition().addListener(new TransitionListener() {
+        TransitionHelper.addTransitionListener(
+                TransitionHelper.getEnterTransition(getActivity().getWindow()),
+                new TransitionListener() {
+                    public void onTransitionCancel(Transition transition) {}
+                    public void onTransitionStart(Transition transition) {}
+                    public void onTransitionPause(Transition transition) {}
+                    public void onTransitionResume(Transition transition) {}
+                    public void onTransitionEnd(Transition transition) {
+                        if (mDescriptionPresenter != null) {
+                            mDescriptionPresenter.allowVideoBadgesAnimation();
                         }
                     }
-            );
-        }
+                }
+        );
          */
         Intent intent = getActivity().getIntent();
         mSelectCurrentVideo = intent.getBooleanExtra(EXTRA_FORCE_VIDEO_SELECTION, false) ;
@@ -608,12 +606,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     intent.putExtra(TvshowFragment.EXTRA_TVSHOW, mTvshow);
                     // Launch next activity with slide animation
                     // Starting from lollipop we need to give an empty "SceneTransitionAnimation" for this to work
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
-                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                    } else {
-                        startActivity(intent);
-                    }
+                    mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
+                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                     // Delay the finish the "old" activity, else it breaks the animation
                     mHandler.postDelayed(new Runnable() {
                         public void run() {
@@ -629,12 +623,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 intent.putExtra(VideoDetailsActivity.SLIDE_TRANSITION_EXTRA, true);
                 // Launch next activity with slide animation
                 // Starting from lollipop we need to give an empty "SceneTransitionAnimation" for this to work
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
-                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                } else {
-                    startActivity(intent);
-                }
+                mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 // Delay the finish the "old" activity, else it breaks the animation
                 mHandler.postDelayed(new Runnable() {
                     public void run() {
@@ -2001,12 +1991,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     intent.putExtra(VideoDetailsActivity.SLIDE_DIRECTION_EXTRA, direction);
                     // Launch next activity with slide animation
                     // Starting from lollipop we need to give an empty "SceneTransitionAnimation" for this to work
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
-                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                    } else {
-                        startActivity(intent);
-                    }
+                    mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
+                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                     // Delay the finish the "old" activity, else it breaks the animation
                     mHandler.postDelayed(new Runnable() {
                         public void run() {

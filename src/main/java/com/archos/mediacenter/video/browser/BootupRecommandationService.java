@@ -50,7 +50,7 @@ public class BootupRecommandationService extends BroadcastReceiver {
 	}
 
 	private static void scheduleRecommendationUpdate(Context context) {
-		if(ArchosFeatures.isAndroidTV(context) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < Build.VERSION_CODES.O && AppState.isForeGround()){
+		if(ArchosFeatures.isAndroidTV(context) && Build.VERSION.SDK_INT < Build.VERSION_CODES.O && AppState.isForeGround()){
 			Intent recommendationIntent = new Intent(context, UpdateRecommendationsService.class);
 			context.startService(recommendationIntent);
 		}

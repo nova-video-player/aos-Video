@@ -85,12 +85,8 @@ public final class ShadowHelper {
      * Returns the ShadowHelper.
      */
     private ShadowHelper() {
-        if (Build.VERSION.SDK_INT >= 21) {
-            mSupportsDynamicShadow = true;
-            mImpl = new ShadowHelperApi21Impl();
-        } else {
-            mImpl = new ShadowHelperStubImpl();
-        }
+        mSupportsDynamicShadow = true;
+        mImpl = new ShadowHelperApi21Impl();
     }
 
     public static ShadowHelper getInstance() {

@@ -104,23 +104,23 @@ public class CustomApplication extends Application {
 
     @Override
     public void onCreate() {
-        /* if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= 16) {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                    .detectDiskReads()
-                    .detectDiskWrites()
-                    .detectAll()
-                    .penaltyLog()
-                    .penaltyFlashScreen()
-                    .build());
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                    .detectLeakedSqlLiteObjects()
-                    .detectLeakedClosableObjects()
-                    .detectActivityLeaks()
-                    .detectLeakedRegistrationObjects()
-                    .penaltyLog()
-                    //.penaltyDeath()
-                    .build());
-        } */
+        /*
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectAll()
+                .penaltyLog()
+                .penaltyFlashScreen()
+                .build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                .detectLeakedClosableObjects()
+                .detectActivityLeaks()
+                .detectLeakedRegistrationObjects()
+                .penaltyLog()
+                //.penaltyDeath()
+                .build());
+        */
 
         if (BuildConfig.DEBUG) {
             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
