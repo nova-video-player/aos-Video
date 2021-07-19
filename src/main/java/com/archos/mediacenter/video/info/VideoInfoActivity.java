@@ -106,10 +106,8 @@ public class VideoInfoActivity extends AppCompatActivity {
 
     public void setBackgroundColor(int color){
         getWindow().getDecorView().setBackgroundColor(color);
-        if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setNavigationBarColor(color);
-            getWindow().setStatusBarColor(color);
-        }
+        getWindow().setNavigationBarColor(color);
+        getWindow().setStatusBarColor(color);
     }
 
     @Override

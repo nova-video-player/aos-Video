@@ -37,17 +37,15 @@ public class VideoDetailsActivity extends LeanbackActivity {
         super.onCreate(savedInstanceState);
 
         // Lollipop only :-(
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
+        getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
 
-            // Always set the exit transition because the "Next Episode" transition may be needed (we don't know yet)
-            getWindow().setExitTransition(new Slide(Gravity.LEFT));
+        // Always set the exit transition because the "Next Episode" transition may be needed (we don't know yet)
+        getWindow().setExitTransition(new Slide(Gravity.LEFT));
 
-            // Set the enter animation only when asked (i.e. it is a "Next Episode" transition)
-            if (getIntent().getBooleanExtra(SLIDE_TRANSITION_EXTRA, false)) {
-                int direction = getIntent().getIntExtra(SLIDE_DIRECTION_EXTRA, Gravity.RIGHT);
-                getWindow().setEnterTransition(new Slide(direction));
-            }
+        // Set the enter animation only when asked (i.e. it is a "Next Episode" transition)
+        if (getIntent().getBooleanExtra(SLIDE_TRANSITION_EXTRA, false)) {
+            int direction = getIntent().getIntExtra(SLIDE_DIRECTION_EXTRA, Gravity.RIGHT);
+            getWindow().setEnterTransition(new Slide(direction));
         }
 
         setContentView(R.layout.androidtv_details_activity);

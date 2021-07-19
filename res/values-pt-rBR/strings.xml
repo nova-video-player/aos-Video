@@ -110,10 +110,12 @@
     <string name="movies_by_genre">Filmes por gênero</string>
     <string name="movies_by_rating">Filmes mais avaliados</string>
     <string name="movie_collections">Nenhuma coleção</string>
+    <string name="anime_collections">Coleções de anime</string>
     <string name="movies_by_year">Filmes por ano</string>
     <string name="all_tv_shows">Séries de TV</string>
     <string name="all_tvshows">Todas as séries de TV</string>
     <string name="all_animes">Todos os filmes animados</string>
+    <string name="all_animes_row">Todas animações</string>
     <string name="all_animeshows">Todas as séries de animação</string>
     <string name="animes_by_alpha">Filmes de animação - alfabético</string>
     <string name="animes_by_genre">Filmes de animação por gênero</string>
@@ -255,6 +257,7 @@
     <string name="you_have_no_movies">Sem filmes</string>
     <string name="you_have_no_animes">Nenhum filme de animação</string>
     <string name="you_have_no_movie_collections">Sem coleções</string>
+    <string name="you_have_no_anime_collections">Nenhuma coleção de animes</string>
     <string name="you_have_no_tv_shows">Sem séries de TV</string>
     <string name="you_have_no_anime_shows">Nenhuma animação de TV</string>
     <string name="you_have_no_non_scraped_videos">Nenhum vídeo não identificado</string>
@@ -496,6 +499,7 @@
     <string name="ssh_password">Senha</string>
     <string name="ssh_username">Nome de usuário</string>
     <string name="ssh_shortcut_name">Nome do atalho</string>
+    <string name="smb_domain">Domínio (opcional)</string>
     <!-- Preferences -->
     <string name="preferences">Preferências</string>
     <string name="get_the_ad_free_version">Obtenha a versão sem anúncios no Google Play</string>
@@ -509,7 +513,7 @@
     <string name="preferences_force_audio_passthrough_disabled">Desativado (recomendado)</string>
     <string name="preferences_force_audio_passthrough_enable">Modo 1 (descontinuado)</string>
     <string name="preferences_force_audio_passthrough_enable2">Modo 2</string>
-    <string name="preferences_force_audio_passthrough_summary">para conexões HDMI e S/PDIF, transmitir áudio comprimido. :ward: Experimental e pode resultar em problemas de sincronização de áudio e vídeo</string>
+    <string name="preferences_force_audio_passthrough_summary">Transmitir audio comprimido via HDMI or S/PDIF. ⚠ Experimental e talvez resulte em falta de sincronia de A/V</string>
     <string name="preferences_disable_downmix_title">Desativar downmix de áudio estéreo</string>
     <string name="preferences_disable_downmix_summary">Sempre decodificar todos os canais e deixar o downmix do Android dependendo da capacidade de saída de áudio (pode resultar na perda de canais de voz)</string>
     <string name="preferences_allow_3rd_party_player">Permitir usar outro reprodutor de vídeo</string>
@@ -533,7 +537,7 @@
     <string name="ui_mode_summary">Escolha entre TV e Tablet/Telefone</string>
     <string name="preferences_video_about">Sobre</string>
     <string name="preferences_video_os_text">Legendas fornecidas por</string>
-    <string name="preferences_video_tmdb_text">Informações de filmes fornecidas por</string>
+    <string name="preferences_video_tmdb_text">Informações de séries de TV e Filmes fornecidas por</string>
     <string name="preferences_video_tvdb_text">Informações de séries de TV fornecidas por</string>
     <string name="preferences_video_trakt_text">Video scrobbler fornecido por</string>
     <string name="preferences_video_licenses">Licenças</string>
@@ -589,9 +593,9 @@
     <string name="network_thumbnails_summary">Criar miniaturas de vídeos remotos quando um cartaz não estiver disponível</string>
     <string name="network_bookmarks_summary">Salvar e verificar o ponto de retorno e posicionar favoritos na rede quando possível</string>
     <string name="share_folders_smbv2">Habilitar suporte a SMBv2</string>
-    <string name="share_folders_smbv2_summary">Habilitar protocolo SMB versão 2 para compartilhamentos de rede. ⚠ Experimental</string>
+    <string name="share_folders_smbv2_summary">Habilitar suporte a comparilhamento via Protocolo SMB Versão 2.</string>
     <string name="share_folders_smb_resolv">Ordem de resolução SMB</string>
-    <string name="share_folders_smb_resolv_summary">Habilitar BCAST, DNS (Caso contrário DNS, BCAST)</string>
+    <string name="share_folders_smb_resolv_summary">Habilitar BCAST, DNS (Padrão: DNS, BCAST). Modifique esta opção se tiver problemas de resolucão de nome ou experimentar lentidão com SMB.</string>
     <string name="connection_abnormally_long">A conexão parece anormalmente longa. Gostaria de redefini-la?</string>
     <string name="connection_reset">Redefinir</string>
     <!-- Info dialog, not indexed file -->

@@ -62,17 +62,14 @@ public class CustomListPreference extends ListPreference {
 
         public View getView(int position, View converView, ViewGroup viewGroup){
             View v = super.getView(position, converView, viewGroup);
-            v.setEnabled(isEnabled(position));
+            v.setEnabled(true);
             ((CheckedTextView)v).setChecked(Integer.valueOf(getSharedPreferences().getString(getKey(), "0")) == position);
 
             return v;
         }
 
         public boolean isEnabled(int position) {
-            if (position >= 2&& Build.VERSION.SDK_INT< Build.VERSION_CODES.LOLLIPOP)
-                return false;
-            else
-                return true;
+            return true;
         }
 
 

@@ -519,7 +519,6 @@
     <string name="preferences_force_audio_passthrough_disabled">Išjungta (rekomenduojama)</string>
     <string name="preferences_force_audio_passthrough_enable">Režimas 1 (pasenęs)</string>
     <string name="preferences_force_audio_passthrough_enable2">Režimas 2</string>
-    <string name="preferences_force_audio_passthrough_summary">tiesioginis garso perdavimas per HDMI ir S/PIDF jungtis. ⚠ Eksperimentinė, gali kilti problemų su vaizdo ir garso sinchronizacija</string>
     <string name="preferences_disable_downmix_title">Išjungti garso konvertavimą į stereo</string>
     <string name="preferences_disable_downmix_summary">Visuomet iškoduoti visus garso kanalus ir leisti Android sistemai konvertuoti garsą priklausomai nuo išėjimo suderinamumo (gali būti prarasti balso kanalai)</string>
     <string name="preferences_allow_3rd_party_player">Leisti naudoti kitą video grotuvą</string>
@@ -543,7 +542,6 @@
     <string name="ui_mode_summary">TV arba Planšetės/Telefono sąsaja</string>
     <string name="preferences_video_about">Apie</string>
     <string name="preferences_video_os_text">Subtitrus teikia</string>
-    <string name="preferences_video_tmdb_text">Filmų informaciją teikia</string>
     <string name="preferences_video_tvdb_text">Serialų informaciją teikia</string>
     <string name="preferences_video_trakt_text">Video atpažinimą teikia</string>
     <string name="preferences_video_licenses">Licencijos</string>
@@ -599,8 +597,7 @@
     <string name="network_thumbnails_summary">Kurti piktogramas nuotoliniams failams be viršelių</string>
     <string name="network_bookmarks_summary">Kai įmanoma išsaugoti ir tikrinti tęsimo vietų žymes tinkle</string>
     <string name="share_folders_smbv2">Įjungti SMBv2 palaikymą</string>
-    <string name="share_folders_smbv2_summary">Įjungti tinklo dalinimosi SMB ver. 2 protokolo palaikymą. ⚠ Eksperimentinė funkcija</string>
-    <string name="share_folders_smb_resolv_summary">Įjungti BCAST, DNS (kitu atveju DNS, BCAST)</string>
+    <string name="share_folders_smb_resolv">SMB naudojimo seka</string>
     <string name="connection_abnormally_long">Susijungimas neįprastai ilgas. Nutraukti?</string>
     <string name="connection_reset">Nutraukti</string>
     <!-- Info dialog, not indexed file -->

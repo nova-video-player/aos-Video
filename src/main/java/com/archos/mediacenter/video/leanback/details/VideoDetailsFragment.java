@@ -35,7 +35,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.SpannableString;
 import android.transition.Slide;
-import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -98,16 +97,20 @@ import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
+import com.archos.mediacenter.video.leanback.adapter.object.Icon;
 import com.archos.mediacenter.video.leanback.adapter.object.WebPageLink;
 import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridFragment;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
+import com.archos.mediacenter.video.leanback.presenter.IconItemPresenter;
 import com.archos.mediacenter.video.leanback.presenter.PresenterUtils;
 import com.archos.mediacenter.video.leanback.presenter.ScraperImageBackdropPresenter;
 import com.archos.mediacenter.video.leanback.presenter.ScraperImagePosterPresenter;
 import com.archos.mediacenter.video.leanback.presenter.TrailerPresenter;
 import com.archos.mediacenter.video.leanback.presenter.VideoBadgePresenter;
+import com.archos.mediacenter.video.leanback.presenter.WebLinkPresenter;
+import com.archos.mediacenter.video.leanback.presenter.WebPageLinkPresenter;
 import com.archos.mediacenter.video.leanback.scrapping.ManualVideoScrappingActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowFragment;
@@ -136,7 +139,11 @@ import com.archos.mediascraper.ScraperTrailer;
 import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.VideoTags;
 import com.archos.mediascraper.xml.MovieScraper3;
+import com.archos.mediascraper.xml.ShowScraper4;
 import com.squareup.picasso.Picasso;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -147,8 +154,7 @@ import java.util.List;
 
 public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor>, PlayUtils.SubtitleDownloadListener, SubtitleInterface, Delete.DeleteListener, XmlDb.ResumeChangeListener, ExternalPlayerWithResultStarter {
 
-    private static final String TAG = "VideoDetailsFragment";
-    private static boolean DBG = false;
+    private static final Logger log = LoggerFactory.getLogger(VideoDetailsFragment.class);
 
     /** A serialized com.archos.mediacenter.video.leanback.adapter.object.Video */
     public static final String EXTRA_VIDEO = "VIDEO";
@@ -195,6 +201,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     /** given by PlayerActivity when we are launched by it */
     private int mPlayerType;
+
+    private long mOnlineId = -1;
 
     /**
      * Flag to update all when back from player, because a lot of things may have been changed in the Video Details
@@ -268,7 +276,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (DBG) Log.d(TAG, "onCreate");
+        log.debug("onCreate");
 
         mSubtitleListCache = new HashMap<>();
         mVideoMetadateCache = new HashMap<>();
@@ -317,23 +325,21 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         // allow Video Badges Animation at end of enter transition to prevent a huge animation glitch when opening VideoDetails
         /*
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            //getActivity().getWindow().getEnterTransition().addListener(new TransitionListener() {
-            TransitionHelper.addTransitionListener(
-                    TransitionHelper.getEnterTransition(getActivity().getWindow()),
-                    new TransitionListener() {
-                        public void onTransitionCancel(Transition transition) {}
-                        public void onTransitionStart(Transition transition) {}
-                        public void onTransitionPause(Transition transition) {}
-                        public void onTransitionResume(Transition transition) {}
-                        public void onTransitionEnd(Transition transition) {
-                            if (mDescriptionPresenter != null) {
-                                mDescriptionPresenter.allowVideoBadgesAnimation();
-                            }
+        //getActivity().getWindow().getEnterTransition().addListener(new TransitionListener() {
+        TransitionHelper.addTransitionListener(
+                TransitionHelper.getEnterTransition(getActivity().getWindow()),
+                new TransitionListener() {
+                    public void onTransitionCancel(Transition transition) {}
+                    public void onTransitionStart(Transition transition) {}
+                    public void onTransitionPause(Transition transition) {}
+                    public void onTransitionResume(Transition transition) {}
+                    public void onTransitionEnd(Transition transition) {
+                        if (mDescriptionPresenter != null) {
+                            mDescriptionPresenter.allowVideoBadgesAnimation();
                         }
                     }
-            );
-        }
+                }
+        );
          */
         Intent intent = getActivity().getIntent();
         mSelectCurrentVideo = intent.getBooleanExtra(EXTRA_FORCE_VIDEO_SELECTION, false) ;
@@ -349,7 +355,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             }
         } else { // initialization of watched state
             mIsVideoWatched = mVideo.isWatched();
-            if (DBG) Log.d(TAG, "onCreate: init mIsVideoWatched=" + mIsVideoWatched);
+            log.debug("onCreate: init mIsVideoWatched=" + mIsVideoWatched);
         }
 
         mLaunchedFromPlayer = intent.getBooleanExtra(EXTRA_LAUNCHED_FROM_PLAYER, false);
@@ -395,7 +401,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     if (row == mFileListRow) {
                         Video old = mVideo;
                         mVideo = (Video) item;
-                        if (DBG) Log.d(TAG, "Video selected");
+                        log.debug("Video selected");
                         mShouldUpdateRemoteResume = true;
                         if(!smoothUpdateVideo(mVideo, old)){
                             // Full update if this is not a smooth update case
@@ -411,6 +417,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     }
                 }
                 else if (item instanceof WebPageLink) {
+                    // TODO MARC this is the launch
                     WebPageLink link = (WebPageLink)item;
                     WebUtils.openWebLink(getActivity(), link.getUrl());
                 }
@@ -483,7 +490,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             }
         }
         //do not update remote resume
-        if (DBG) Log.d(TAG, "removeParseListener");
+        log.debug("removeParseListener");
         XmlDb.getInstance().removeParseListener(mRemoteDbObserver);
         XmlDb.getInstance().removeResumeChangeListener(this);
         super.onStop();
@@ -493,7 +500,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onResume() {
         super.onResume();
-        if (DBG) Log.d(TAG, "onResume");
+        log.debug("onResume");
         mShouldUpdateRemoteResume = true;
         mOverlay.resume();
         if(mResumeFromPlayer && ArchosUtils.isAmazonApk()) {
@@ -541,7 +548,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onPause() {
         super.onPause();
-        if (DBG) Log.d(TAG, "onPause");
+        log.debug("onPause");
         mOverlay.pause();
     }
 
@@ -599,12 +606,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     intent.putExtra(TvshowFragment.EXTRA_TVSHOW, mTvshow);
                     // Launch next activity with slide animation
                     // Starting from lollipop we need to give an empty "SceneTransitionAnimation" for this to work
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
-                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                    } else {
-                        startActivity(intent);
-                    }
+                    mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
+                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                     // Delay the finish the "old" activity, else it breaks the animation
                     mHandler.postDelayed(new Runnable() {
                         public void run() {
@@ -620,12 +623,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 intent.putExtra(VideoDetailsActivity.SLIDE_TRANSITION_EXTRA, true);
                 // Launch next activity with slide animation
                 // Starting from lollipop we need to give an empty "SceneTransitionAnimation" for this to work
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
-                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                } else {
-                    startActivity(intent);
-                }
+                mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 // Delay the finish the "old" activity, else it breaks the animation
                 mHandler.postDelayed(new Runnable() {
                     public void run() {
@@ -742,20 +741,20 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         @Override
         public void onParseOk(XmlDb.ParseResult result) {
 
-            if (DBG) Log.d(TAG, "onParseOk");
+            log.debug("onParseOk");
             XmlDb xmlDb = XmlDb.getInstance();
             //xmlDb.removeParseListener(this);
             if(getActivity()==null) { //too late
 
-                if (DBG) Log.d(TAG, "getActivity is null, leaving");
+                log.debug("getActivity is null, leaving");
                 return;
             }
             VideoDbInfo videoInfo = null;
             if (result.success) {
-                if (DBG) Log.d(TAG, "result.success");
+                log.debug("result.success");
                 videoInfo = xmlDb.getEntry(mVideo.getFileUri());
                 if(videoInfo!=null){
-                    if (DBG) Log.d(TAG, "videoInfo!=null "+videoInfo.resume);
+                    log.debug("videoInfo!=null "+videoInfo.resume);
                     mVideo.setRemoteResumeMs(videoInfo.resume);
                     // Update the action adapter if there is a network resume
                     if (mDetailsOverviewRow!=null) {
@@ -797,7 +796,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             //TODO remove sources list
         }
         else {
-            if (DBG) Log.d(TAG, "found " + cursor.getCount() + " videos");
+            log.debug("onLoadFinished: found " + cursor.getCount() + " videos");
             // Build video objects from the new cursor data
 
             mVideoBadgePresenter.setDisplay3dBadge(false);
@@ -810,9 +809,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 Video video =  (Video) cursorMapper.publicBind(cursor);
                 if(video.is3D())
                     mVideoBadgePresenter.setDisplay3dBadge(true);
-                if (DBG) Log.d(TAG, "online id " + cursor.getLong(cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID)));
+                mOnlineId = cursor.getLong(cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID));
+                log.debug("onLoadFinished: online id " + mOnlineId);
                 mVideoList.add(video);
-                if (DBG) Log.d(TAG, "found video : " + video.getFileUri());
+                log.debug("onLoadFinished: found video : " + video.getFileUri());
                 if(!mSelectCurrentVideo){ // get most advanced video
                     if(video.getLastPlayed()>0&&mVideo==null||mVideo!=null&&video.getLastPlayed()>mVideo.getLastPlayed()){
                         mVideo = video;
@@ -892,7 +892,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
      * @return
      */
     private boolean smoothUpdateVideo(Video currentVideo, Video oldVideoObject) {
-        if (DBG) Log.d(TAG, "smoothUpdateVideo");
+        log.debug("smoothUpdateVideo");
         boolean smoothUpdate = false;
         // Check if we really need to update the fragment
         boolean needToUpdateDetailsOverview;
@@ -955,6 +955,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     if (pres instanceof BackgroundColorPresenter)
                         ((BackgroundColorPresenter) pres).setBackgroundColor(mColor);
                 }
+                // this is required to remove backdrop after removal of description
+                if (needToUpdateDetailsOverview) mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(currentVideo);
+
             }
         }else {
             smoothUpdate = true;
@@ -963,7 +966,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             //before that, we couldn't be sure to have the right file uri. Now that we are, try to get remote resume
             currentVideo.setRemoteResumeMs(-1);//reset remote resume
             if (!mLaunchedFromPlayer && !FileUtils.isLocal(currentVideo.getFileUri()) && UriUtils.isCompatibleWithRemoteDB(currentVideo.getFileUri())) {
-                if (DBG) Log.d(TAG, "addParseListener");
+                log.debug("addParseListener");
                 XmlDb.getInstance().addParseListener(mRemoteDbObserver);
                 XmlDb.getInstance().parseXmlLocation(currentVideo.getFileUri());
             }
@@ -975,15 +978,15 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     }
 
     private boolean foundDifferencesRequiringDetailsUpdate(Video v1, Video v2) {
-        if (v1==null || v2==null) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate null"); return true;}
-        if (v1.getClass() != v2.getClass()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate class"); return true;}
-        if (v1.getId() != v2.getId()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate id"); return true;}
-        if (v1.hasScraperData() != v2.hasScraperData()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate hasScraperData"); return true;}
-        if (v1.getResumeMs() != v2.getResumeMs()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate resumeMs"); return true;}
-        if (v1.isWatched() != v2.isWatched()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isWatched"); return true;}
-        if (v1.isUserHidden() != v2.isUserHidden()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isUserHidden"); return true;}
-        //if (v1.subtitleCount() != v2.subtitleCount()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate subtitleCount"); return true;}
-        //if (v1.externalSubtitleCount() != v2.externalSubtitleCount()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate externalSubtitleCount"); return true;}
+        if (v1==null || v2==null) {log.debug("foundDifferencesRequiringDetailsUpdate null"); mShouldLoadBackdrop = true; return true;}
+        if (v1.getClass() != v2.getClass()) {log.debug("foundDifferencesRequiringDetailsUpdate class"); mShouldLoadBackdrop = true; return true;}
+        if (v1.getId() != v2.getId()) {log.debug("foundDifferencesRequiringDetailsUpdate id"); mShouldLoadBackdrop = true; return true;}
+        if (v1.hasScraperData() != v2.hasScraperData()) {log.debug("foundDifferencesRequiringDetailsUpdate hasScraperData"); mShouldLoadBackdrop = true; return true;}
+        if (v1.getResumeMs() != v2.getResumeMs()) {log.debug("foundDifferencesRequiringDetailsUpdate resumeMs"); return true;}
+        if (v1.isWatched() != v2.isWatched()) {log.debug("foundDifferencesRequiringDetailsUpdate isWatched"); return true;}
+        if (v1.isUserHidden() != v2.isUserHidden()) {log.debug("foundDifferencesRequiringDetailsUpdate isUserHidden"); return true;}
+        //if (v1.subtitleCount() != v2.subtitleCount()) {log.debug("foundDifferencesRequiringDetailsUpdate subtitleCount"); return true;}
+        //if (v1.externalSubtitleCount() != v2.externalSubtitleCount()) {log.debug("foundDifferencesRequiringDetailsUpdate externalSubtitleCount"); return true;}
         return false;
     }
 
@@ -992,7 +995,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     @Override
     public void onResumeChange(Uri videoFile, int resumePercent) {
-        if (DBG) Log.d(TAG, "onResumeChange()");
+        log.debug("onResumeChange()");
         if(mHasRetrievedDetails&&isAdded()&&!isDetached()&&videoFile.equals(mVideo.getFileUri())){
             VideoDbInfo info = XmlDb.getEntry(videoFile);
             if(info!=null) {
@@ -1041,7 +1044,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     }
                 }
                 catch (IOException e) {
-                    Log.e(TAG, "DetailsOverviewRow Picasso load exception", e);
+                    log.error("DetailsOverviewRow Picasso load exception", e);
                 }
                 return new Pair<>(bitmap, video);
             }
@@ -1079,7 +1082,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
      */
 
     private void fullyReloadVideo(Video video, Bitmap poster) {
-        if (DBG) Log.d(TAG, "fullyReloadVideo: mShouldLoadBackdrop=" + mShouldLoadBackdrop);
+        log.debug("fullyReloadVideo: mShouldLoadBackdrop=" + mShouldLoadBackdrop);
         if(mShouldLoadBackdrop)
             BackgroundManager.getInstance(getActivity()).setDrawable(new ColorDrawable(VideoInfoCommonClass.getDarkerColor(mColor)));
         mSubtitlesDetailsRow = new SubtitlesDetailsRow(getActivity(), video, null);
@@ -1202,13 +1205,13 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             mVideoInfoTask = new VideoInfoTask().execute(video);
 
         if (poster == null) {
-            if (DBG) Log.d(TAG, "fullyReloadVideo: no poster, generate it");
+            log.debug("fullyReloadVideo: no poster, generate it");
 
             mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
             mDetailsOverviewRow.setImageScaleUpAllowed(false);
             mThumbnailAsyncTask = new ThumbnailAsyncTask().execute(mVideo);
         }else{
-            if (DBG) Log.d(TAG, "fullyReloadVideo: should put watched mark on poster " + (mVideo.isWatched() || mIsVideoWatched));
+            log.debug("fullyReloadVideo: should put watched mark on poster " + (mVideo.isWatched() || mIsVideoWatched));
             if (mVideo.isWatched() || mIsVideoWatched)
                 poster = PresenterUtils.addWatchedMark(poster, getContext());
             mDetailsOverviewRow.setImageBitmap(getActivity(), poster);
@@ -1281,7 +1284,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             if(mLaunchedFromPlayer && mVideoMetadataFromPlayer!=null && mVideoMetadataFromPlayer.getVideoTrack()!=null)
                 return mVideoMetadataFromPlayer;
             else if(mVideoMetadateCache.containsKey(startingPath)){
-                if (DBG) Log.d(TAG, "metadata retrieved from cache "+startingPath);
+                log.debug("metadata retrieved from cache "+startingPath);
                 return mVideoMetadateCache.get(startingPath);
             }
             else {
@@ -1367,6 +1370,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         }
 
         protected void onPostExecute(BaseTags tags) {
+            log.debug("onPostExecute");
             if(isCancelled()||getActivity().isDestroyed())
                 return;
             // Update the action adapter if there is a next episode
@@ -1378,8 +1382,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             }
             if (tags!=null && !mLaunchedFromPlayer) { // in player case the player is displayed in the background, not the backdrop
                 if(mShouldLoadBackdrop) {
+                    log.debug("onPostExecute: loading backdrop");
                     mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,tags);
                     mShouldLoadBackdrop = false;
+                } else {
+                    log.debug("onPostExecute: should not load backdrop");
                 }
             }
             if (tags!=null) {
@@ -1454,15 +1461,16 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             }
 
             // Web links
-            /*List<String> links = getWebLinks(tags);
+            List<String> links = getWebLinks(tags);
             if (links.size()>0) {
-                ArrayObjectAdapter rowAdapter = new ArrayObjectAdapter(new WebPageLinkPresenter());
+                // less bling bling
+                //ArrayObjectAdapter rowAdapter = new ArrayObjectAdapter(new WebPageLinkPresenter());
+                ArrayObjectAdapter rowAdapter = new ArrayObjectAdapter(new WebLinkPresenter(mColor));
                 for (String link : links) {
                     rowAdapter.add(new WebPageLink(link));
                 }
                 mAdapter.add(new ListRow( new HeaderItem(getString(R.string.leanback_weblinks_header)), rowAdapter));
-            }*/
-            // No web links for now to be sure to get "leanback certification"
+            }
         }
     }
 
@@ -1559,7 +1567,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_SUBTITLES_ACTIVITY && resultCode == Activity.RESULT_OK) {
-            if (DBG) Log.d(TAG, "Get RESULT_OK from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
+            log.debug("Get RESULT_OK from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
             // Update the subtitle row
             if (mSubtitleFilesListerTask !=null) {
                 mSubtitleFilesListerTask.cancel(true);
@@ -1610,7 +1618,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                         .get();
 
             } catch (IOException e) {
-                Log.e(TAG, "PosterSaverTask Picasso load exception", e);
+                log.error("PosterSaverTask Picasso load exception", e);
             }
 
             return bitmap;
@@ -1867,16 +1875,21 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         // TMDB
         if (tags instanceof MovieTags) {
             final long onlineId = tags.getOnlineId();
-            //if (DBG) Log.d(TAG, "tags.getOnlineId() = " + onlineId);
+            //log.debug("tags.getOnlineId() = " + onlineId);
             if (onlineId > 0) {
                 final String language = MovieScraper3.getLanguage(getActivity());
-                list.add(String.format(getResources().getString(R.string.tmdb_title_url), onlineId, language));
+                list.add(String.format(getResources().getString(R.string.tmdb_movie_title_url), onlineId, language));
+            }
+        } else if (tags instanceof EpisodeTags) {
+            if (mOnlineId >0) {
+                final String language = ShowScraper4.getLanguage(getActivity());
+                list.add(String.format(getResources().getString(R.string.tmdb_tvshow_title_url), mOnlineId, language));
             }
         }
 
         // IMDB (valid for both movies and episodes)
         String imdbId=tags.getImdbId();
-        //if (DBG) Log.d(TAG, "tags.getImdbId() = "+imdbId);
+        //log.debug("tags.getImdbId() = "+imdbId);
         if ((imdbId!=null) && (!imdbId.isEmpty())) {
             list.add(getResources().getString(R.string.imdb_title_url) + imdbId);
         }
@@ -1978,12 +1991,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     intent.putExtra(VideoDetailsActivity.SLIDE_DIRECTION_EXTRA, direction);
                     // Launch next activity with slide animation
                     // Starting from lollipop we need to give an empty "SceneTransitionAnimation" for this to work
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
-                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                    } else {
-                        startActivity(intent);
-                    }
+                    mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
+                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                     // Delay the finish the "old" activity, else it breaks the animation
                     mHandler.postDelayed(new Runnable() {
                         public void run() {
@@ -1997,7 +2006,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     }
 
     public static void setWatchState(Boolean isVideoWatched) {
-        if (DBG) Log.d(TAG, "setWatchState to " + isVideoWatched);
+        log.debug("setWatchState to " + isVideoWatched);
         mIsVideoWatched = isVideoWatched;
     }
 }

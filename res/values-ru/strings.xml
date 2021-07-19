@@ -112,10 +112,12 @@
     <string name="movies_by_genre">Фильмы по жанру</string>
     <string name="movies_by_rating">Фильмы по рейтингу</string>
     <string name="movie_collections">Коллекции</string>
+    <string name="anime_collections">Коллекции аниме</string>
     <string name="movies_by_year">Фильмы по году</string>
     <string name="all_tv_shows">Сериалы</string>
     <string name="all_tvshows">Все сериалы</string>
     <string name="all_animes">Все мультфильмы</string>
+    <string name="all_animes_row">Все мультфильмы</string>
     <string name="all_animeshows">Все мультсериалы</string>
     <string name="animes_by_alpha">Мультфильмы по алфавиту</string>
     <string name="animes_by_genre">Мультфильмы по жанру</string>
@@ -259,6 +261,7 @@
     <string name="you_have_no_movies">Нет фильмов</string>
     <string name="you_have_no_animes">Нет мультфильмов</string>
     <string name="you_have_no_movie_collections">Нет коллекций</string>
+    <string name="you_have_no_anime_collections">Нет коллекций аниме</string>
     <string name="you_have_no_tv_shows">Нет ТВ-программ</string>
     <string name="you_have_no_anime_shows">Нет мультсериалов</string>
     <string name="you_have_no_non_scraped_videos">Нет нераспознанных видео</string>
@@ -506,6 +509,7 @@
     <string name="ssh_password">Пароль</string>
     <string name="ssh_username">Имя пользователя</string>
     <string name="ssh_shortcut_name">Имя ярлыка</string>
+    <string name="smb_domain">Домен (необязательно)</string>
     <!-- Preferences -->
     <string name="preferences">Настройки</string>
     <string name="get_the_ad_free_version">Получите версию без рекламы на Google Play</string>
@@ -519,7 +523,7 @@
     <string name="preferences_force_audio_passthrough_disabled">Отключено (рекомендуется)</string>
     <string name="preferences_force_audio_passthrough_enable">Режим 1 (устаревший)</string>
     <string name="preferences_force_audio_passthrough_enable2">Режим 2</string>
-    <string name="preferences_force_audio_passthrough_summary">Сквозная передача звука для HDMI и S/PDIF подключений. ⚠ Может вызвать рассинхронизацию аудио и видео</string>
+    <string name="preferences_force_audio_passthrough_summary">Передача сжатого аудио через HDMI или S/PDIF. ⚠ Может привести к рассинхронизации звука и видео</string>
     <string name="preferences_disable_downmix_title">Запретить даунмикс звука в стерео</string>
     <string name="preferences_disable_downmix_summary">Всегда декодировать все каналы, микширование производится средствами ОС в зависимости от характеристик аудиовыхода (может привести к потери голосовых каналов)</string>
     <string name="preferences_allow_3rd_party_player">Разрешить использование другого видеоплеера</string>
@@ -543,7 +547,7 @@
     <string name="ui_mode_summary">Интерфейс ТВ или Планшета/Телефона</string>
     <string name="preferences_video_about">О программе</string>
     <string name="preferences_video_os_text">Субтитры предоставлены</string>
-    <string name="preferences_video_tmdb_text">Информация о фильме предоставлена</string>
+    <string name="preferences_video_tmdb_text">Информация о фильмах/сериалах предоставлена</string>
     <string name="preferences_video_tvdb_text">Информация о сериалах предоставлена</string>
     <string name="preferences_video_trakt_text">Видео скробблер предоставлен</string>
     <string name="preferences_video_licenses">Лицензии</string>
@@ -599,9 +603,9 @@
     <string name="network_thumbnails_summary">Cоздавать эскизы для видео на сетевых источниках, когда недоступен постер</string>
     <string name="network_bookmarks_summary">Сохранять точки возобновления просмотра и позиции закладок по сети, когда доступно</string>
     <string name="share_folders_smbv2">Включить поддержку SMBv2</string>
-    <string name="share_folders_smbv2_summary">Включить поддержку протокола SMB2. ⚠ Экспериментально</string>
+    <string name="share_folders_smbv2_summary">Включить поддержку протокола SMB версии 2.</string>
     <string name="share_folders_smb_resolv">Порядок использования сервисов имен</string>
-    <string name="share_folders_smb_resolv_summary">Включить BCAST, DNS (иначе DNS, BCAST)</string>
+    <string name="share_folders_smb_resolv_summary">Включить BCAST, DNS (по умолчанию: DNS, BCAST). Измените, если не удается разрешить имена в сети, или SMB работает медленно.</string>
     <string name="connection_abnormally_long">Соединение слишком долгое. Хотите прервать его?</string>
     <string name="connection_reset">Сброс</string>
     <!-- Info dialog, not indexed file -->

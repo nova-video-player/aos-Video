@@ -72,7 +72,9 @@ import com.archos.mediacenter.video.leanback.animes.AllAnimesGridActivity;
 import com.archos.mediacenter.video.leanback.animes.AllAnimesIconBuilder;
 import com.archos.mediacenter.video.leanback.animes.AnimesByGenreActivity;
 import com.archos.mediacenter.video.leanback.animes.AnimesByYearActivity;
+import com.archos.mediacenter.video.leanback.collections.AllAnimeCollectionsGridActivity;
 import com.archos.mediacenter.video.leanback.collections.AllCollectionsGridActivity;
+import com.archos.mediacenter.video.leanback.collections.AnimeCollectionsIconBuilder;
 import com.archos.mediacenter.video.leanback.collections.CollectionsIconBuilder;
 import com.archos.mediacenter.video.leanback.filebrowsing.ExtStorageListingActivity;
 import com.archos.mediacenter.video.leanback.filebrowsing.LocalListingActivity;
@@ -168,6 +170,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private static Box mAllAnimesBox;
     private static Box mAllTvshowsBox;
     private static Box mAllCollectionsBox;
+    private static Box mAllAnimeCollectionsBox;
     private static Box mAllAnimeShowsBox;
 
     private boolean mShowWatchingUpNextRow;
@@ -196,6 +199,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private AsyncTask mBuildAllAnimesBoxTask;
     private AsyncTask mBuildAllTvshowsBoxTask;
     private AsyncTask mBuildAllCollectionsBoxTask;
+    private AsyncTask mBuildAllAnimeCollectionsBoxTask;
     private AsyncTask mBuildAllAnimeShowsBoxTask;
 
     private static Activity mActivity;
@@ -239,7 +243,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     @Override
     public void onDetach() {
         super.onDetach();
-        mActivity.unregisterReceiver(mExternalStorageReceiver);
+        try {
+            mActivity.unregisterReceiver(mExternalStorageReceiver);
+        } catch(IllegalArgumentException e) {
+            log.warn("onDetach: trying to unregister mExternalStorageReceiver which is not registered!");
+        }
     }
 
     @Override
@@ -520,6 +528,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         buildAllAnimeShowsBox();
         mAnimeRowAdapter.add(mAllAnimeShowsBox);
 
+        buildAllAnimeCollectionsBox();
+        mAnimeRowAdapter.add(mAllAnimeCollectionsBox);
+
         // initialize adapters even the ones not used but do not launch the loaders yet for performance considerations
 
         // this is for the all movies row not the movie row
@@ -609,6 +620,28 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             if (bitmap != null && mAllCollectionsBox != null && mMovieRow != null) {
                 mAllCollectionsBox.setBitmap(bitmap);
                 ((ArrayObjectAdapter)mMovieRow.getAdapter()).replace(3, mAllCollectionsBox);
+            }
+        }
+    }
+
+    private void buildAllAnimeCollectionsBox() {
+        log.debug("buildAllAnimeCollectionsBox");
+        mAllAnimeCollectionsBox = new Box(Box.ID.ANIME_COLLECTIONS, getString(R.string.anime_collections), R.drawable.movies_banner);
+        if (mBuildAllAnimeCollectionsBoxTask != null) mBuildAllAnimeCollectionsBoxTask.cancel(true);
+        mBuildAllAnimeCollectionsBoxTask = new buildAllAnimeCollectionsBoxTask().execute();
+    }
+
+    private static class buildAllAnimeCollectionsBoxTask extends AsyncTask<Void, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            Bitmap iconBitmap = new AnimeCollectionsIconBuilder(mActivity).buildNewBitmap();
+            return iconBitmap;
+        }
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap != null && mAllAnimeCollectionsBox != null && mMovieRow != null) {
+                mAllAnimeCollectionsBox.setBitmap(bitmap);
+                ((ArrayObjectAdapter)mAnimeRow.getAdapter()).replace(4, mAllAnimeCollectionsBox);
             }
         }
     }
@@ -1293,7 +1326,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     case COLLECTIONS:
                         mActivity.startActivity(new Intent(mActivity, AllCollectionsGridActivity.class));
                         break;
-
+                    case ANIME_COLLECTIONS:
+                        mActivity.startActivity(new Intent(mActivity, AllAnimeCollectionsGridActivity.class));
+                        break;
                 }
             }
             else if (item instanceof Icon) {

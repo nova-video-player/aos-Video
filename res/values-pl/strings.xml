@@ -458,7 +458,6 @@
     <string name="preferences_force_audio_passthrough_disabled">Wyłączone (zalecane)</string>
     <string name="preferences_force_audio_passthrough_enable">Tryb 1 (przestarzały)</string>
     <string name="preferences_force_audio_passthrough_enable2">Tryb 2</string>
-    <string name="preferences_force_audio_passthrough_summary">Transmituj skompresowanych dźwięk dla połączeń HDMI i S/PDIF. ⚠ Eksperymentalne! Może spowodować desynchronizację A/V</string>
     <string name="preferences_allow_3rd_party_player">Zezwól na używanie innego odtwarzacza wideo</string>
     <string name="preference_tv_3d_automatic_switch">Włącz automatyczne przełączanie TV 3D\"</string>
     <string name="category_languages">Napisy</string>
@@ -468,7 +467,6 @@
     <string name="summary_list_preference_primary">Pobieraj napisy w swoim języku</string>
     <string name="preferences_video_about">O aplikacji</string>
     <string name="preferences_video_os_text">Dostawcy napisów</string>
-    <string name="preferences_video_tmdb_text">Dostawca informacji o filmach</string>
     <string name="preferences_video_licenses">Licencje</string>
     <string name="preferences_video_advanced">Zaawansowane</string>
     <string name="preferences_video_advanced_quit_title">Ustawienia zwykłe</string>

@@ -74,6 +74,14 @@
   <!--logger name="com.archos.mediascraper.HttpCache" level="DEBUG"/-->
   <!--logger name="com.archos.mediascraper.ScraperImage" level="DEBUG"/-->
 
+  <logger name="com.archos.mediascraper" level="DEBUG"/>
+  <logger name="com.archos.mediacenter.video.leanback.scrapping" level="DEBUG"/>
+  <logger name="com.archos.mediascraper.themoviedb3" level="TRACE"/>
+  <logger name="com.archos.mediacenter.video.leanback.presenter" level="TRACE"/>
+  <logger name="com.archos.mediascraper.themoviedb3.ShowIdEpisodes" level="TRACE"/>
+  <logger name="com.archos.mediacenter.video.leanback.details" level="DEBUG"/>
+  <logger name="com.archos.mediacenter.video.info" level="DEBUG"/>
+
   <includes>
     <include file="${EXT_DIR:-/sdcard}/Download/${PACKAGE_NAME}/logback.xml" optional="true" />
   </includes>

@@ -106,10 +106,12 @@
     <string name="movies_by_genre">Filmy dle žánrů</string>
     <string name="movies_by_rating">Filmy dle hodnocení</string>
     <string name="movie_collections">Kolekce</string>
+    <string name="anime_collections">Anime kolekce</string>
     <string name="movies_by_year">Filmy dle roků</string>
     <string name="all_tv_shows">Seriály</string>
     <string name="all_tvshows">Všechny seriály</string>
     <string name="all_animes">Všechny animované filmy</string>
+    <string name="all_animes_row">Všechny animované</string>
     <string name="all_animeshows">Všechny animované seriály</string>
     <string name="animes_by_alpha">Animované filmy abecedně</string>
     <string name="animes_by_genre">Animované filmy dle žánru</string>
@@ -247,6 +249,7 @@
     <string name="you_have_no_movies">Žádné filmy</string>
     <string name="you_have_no_animes">Žádné animované filmy</string>
     <string name="you_have_no_movie_collections">Žádné kolekce</string>
+    <string name="you_have_no_anime_collections">Žádné anime kolekce</string>
     <string name="you_have_no_tv_shows">Žádné seriály</string>
     <string name="you_have_no_anime_shows">Žádné animované seriály</string>
     <string name="you_have_no_non_scraped_videos">Nejsou žádná videa bez získaných informací</string>
@@ -480,6 +483,7 @@
     <string name="ssh_password">Heslo</string>
     <string name="ssh_username">Uživatelské jméno</string>
     <string name="ssh_shortcut_name">Název zástupce</string>
+    <string name="smb_domain">Doména (volitelné)</string>
     <!-- Preferences -->
     <string name="preferences">Nastavení</string>
     <string name="get_the_ad_free_version">Získejte verzi bez reklam na Google Play</string>
@@ -493,7 +497,7 @@
     <string name="preferences_force_audio_passthrough_disabled">Vypnuto (doporučeno)</string>
     <string name="preferences_force_audio_passthrough_enable">Režim 1 (zastaralý)</string>
     <string name="preferences_force_audio_passthrough_enable2">Režim 2</string>
-    <string name="preferences_force_audio_passthrough_summary">pro připojení HDMI a S/PDIF přenos komprimovaného zvuku. ⚠ Experimentální nastavení může mít za následek nesynchronní A/V</string>
+    <string name="preferences_force_audio_passthrough_summary">Posílat komprimovaný zvuk přes HDMI nebo S/PDIF. ⚠ Experimentální funkce může mít za následek chybnou A/V synchronizaci</string>
     <string name="preferences_disable_downmix_title">Vypnout stereo down-mix</string>
     <string name="preferences_disable_downmix_summary">Vždy dekódovat všechny kanály a nechat Android provést down-mix v závislosti na schopnostech audio výstupu (může vyústit ve ztrátu hlasových kanálů)</string>
     <string name="preferences_allow_3rd_party_player">Umožnit používání jiného přehrávače</string>
@@ -517,7 +521,7 @@
     <string name="ui_mode_summary">Vyberte rozhraní pro TV nebo pro tablet/telefon</string>
     <string name="preferences_video_about">O aplikaci</string>
     <string name="preferences_video_os_text">Titulku poskytnuty z</string>
-    <string name="preferences_video_tmdb_text">Informace o filmech poskytnuty z</string>
+    <string name="preferences_video_tmdb_text">Informace o filmu/seriálu dodávány</string>
     <string name="preferences_video_tvdb_text">Informace o seriálech poskytnuty z</string>
     <string name="preferences_video_trakt_text">Logování sledování videí (scrobbler) poskytnuto z</string>
     <string name="preferences_video_licenses">Licence</string>
@@ -573,9 +577,9 @@
     <string name="network_thumbnails_summary">Vytvořit náhledy pro vzdálená videa v případě, kdy není k dispozici plakát</string>
     <string name="network_bookmarks_summary">Uložit a zkontrolovat pozice obnovení a záložky na síťových připojeních pokud je to možné</string>
     <string name="share_folders_smbv2">Aktivovat podporu pro SMBv2</string>
-    <string name="share_folders_smbv2_summary">Aktivovat sdílené síťové složky s podporou protokolu SMB verze 2. ⚠ Experimentální</string>
+    <string name="share_folders_smbv2_summary">Povolit podporu síťového protokolu SMB verze 2.</string>
     <string name="share_folders_smb_resolv">Pořadí resolvingu SMB</string>
-    <string name="share_folders_smb_resolv_summary">Použít BCAST, DNS (jinak se použije DNS, BCAST)</string>
+    <string name="share_folders_smb_resolv_summary">Povolit BCAST, DNS (výchozí: DNS, BCAST). Změňte toto, pokud selhává odezva serveru nebo sledujete pomalé SMB.</string>
     <string name="connection_abnormally_long">Připojování trvá neobvykle dlouho. Chcete ho zresetovat?</string>
     <string name="connection_reset">Resetovat</string>
     <!-- Info dialog, not indexed file -->

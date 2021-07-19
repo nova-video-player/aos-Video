@@ -109,10 +109,12 @@
     <string name="movies_by_genre">电影：按分类排序</string>
     <string name="movies_by_rating">电影：按评分排序</string>
     <string name="movie_collections">收藏</string>
+    <string name="anime_collections">动漫合集</string>
     <string name="movies_by_year">电影：按年份排序</string>
     <string name="all_tv_shows">电视节目</string>
     <string name="all_tvshows">所有电视节目</string>
     <string name="all_animes">所有动画电影</string>
+    <string name="all_animes_row">所有动画</string>
     <string name="all_animeshows">所有动画电视节目</string>
     <string name="animes_by_alpha">按字母顺序对动画电影进行排序</string>
     <string name="animes_by_genre">按流派对动画电影进行排序</string>
@@ -253,6 +255,7 @@
     <string name="you_have_no_movies">没有电影</string>
     <string name="you_have_no_animes">没有动画电影</string>
     <string name="you_have_no_movie_collections">暂无收藏</string>
+    <string name="you_have_no_anime_collections">无动漫合集</string>
     <string name="you_have_no_tv_shows">没有电视节目</string>
     <string name="you_have_no_anime_shows">没有动画电视节目</string>
     <string name="you_have_no_non_scraped_videos">没有未扫描的视频</string>
@@ -491,6 +494,7 @@
     <string name="ssh_password">密码</string>
     <string name="ssh_username">用户名</string>
     <string name="ssh_shortcut_name">快捷方式名称</string>
+    <string name="smb_domain">域名(可选)</string>
     <!-- Preferences -->
     <string name="preferences">首选项</string>
     <string name="get_the_ad_free_version">在 Google Play 上获取无广告版本</string>
@@ -504,7 +508,7 @@
     <string name="preferences_force_audio_passthrough_disabled">已禁用 (推荐)</string>
     <string name="preferences_force_audio_passthrough_enable">模式1(已弃用)</string>
     <string name="preferences_force_audio_passthrough_enable2">模式2</string>
-    <string name="preferences_force_audio_passthrough_summary">对于 HDMI 和 S/PDIF 连接，传送经过压缩的音频。警告：实验性功能，可能导致音视频不同步</string>
+    <string name="preferences_force_audio_passthrough_summary">通过 HDMI 或 S/PDIF 传输压缩音频。⚠实验性功能，可能导致 A/V不同步</string>
     <string name="preferences_disable_downmix_title">禁用混音至立体声</string>
     <string name="preferences_disable_downmix_summary">总是解码所有声道，并根据音频输出能力让安卓混音(可能导致声道丢失)</string>
     <string name="preferences_allow_3rd_party_player">允许使用另外的视频播放器</string>
@@ -528,7 +532,7 @@
     <string name="ui_mode_summary">在电视、平板电脑/手机用户界面之间选择</string>
     <string name="preferences_video_about">关于</string>
     <string name="preferences_video_os_text">字幕提供方</string>
-    <string name="preferences_video_tmdb_text">电影信息提供方</string>
+    <string name="preferences_video_tmdb_text">电影/电视节目信息提供方</string>
     <string name="preferences_video_tvdb_text">电视节目信息提供方</string>
     <string name="preferences_video_trakt_text">视频偏好收藏提供方</string>
     <string name="preferences_video_licenses">许可</string>
@@ -584,10 +588,9 @@
     <string name="network_thumbnails_summary">在没有海报可用时从远程视频创建缩略图</string>
     <string name="network_bookmarks_summary">尽可能在网络上保存并检查播放进度和位置书签</string>
     <string name="share_folders_smbv2">启用 SMBv2 支持</string>
-    <string name="share_folders_smbv2_summary">启用网络共享 SMB 版本 2 协议支持。⚠
-实验性的</string>
+    <string name="share_folders_smbv2_summary">启用网络共享 SMB 版本 2 协议支持。</string>
     <string name="share_folders_smb_resolv">SMB 解析器顺序</string>
-    <string name="share_folders_smb_resolv_summary">启用 BCAST、DNS (否则DNS,、BCAST)</string>
+    <string name="share_folders_smb_resolv_summary">启用 BCAST, DNS (默认: DNS, BCAST)。如果您的服务器无法解析或经历了慢速SMB, 请更改此选项。</string>
     <string name="connection_abnormally_long">连接似乎花了太长时间。要重置吗？</string>
     <string name="connection_reset">重置</string>
     <!-- Info dialog, not indexed file -->

@@ -45,7 +45,8 @@
 
     <string name="faq_url">https://home.courville.org/nova_video_player-faq/index.html</string>
 
-    <string name="tmdb_title_url">https://www.themoviedb.org/movie/%1$s?language=%2$s</string>
+    <string name="tmdb_movie_title_url">https://www.themoviedb.org/movie/%1$s?language=%2$s</string>
+    <string name="tmdb_tvshow_title_url">https://www.themoviedb.org/tv/%1$s?language=%2$s</string>
     <string name="tvdb_title_url">http://www.thetvdb.com/?tab=series&amp;id=%1$s&amp;language=%2$s</string>
     <string name="action_resume">com.archos.mediacenter.video.action_resume</string>
     <string name="action_recently_added">com.archos.mediacenter.video.action_recently_added</string>

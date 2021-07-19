@@ -42,7 +42,10 @@
     <string name="play_from_beginning">Play from beginning</string>
     <!-- Dialog box button -->
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <!-- The string used in file/folder infos dialog. -->
+    <string name="info_duration">Duration</string>
+    <string name="video_sources">منابع</string>
     <!-- Infos dialog tabs -->
     <string name="info_tab_movie">فیلم</string>
     <string name="info_tab_show">نمایش</string>

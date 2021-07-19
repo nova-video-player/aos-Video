@@ -117,10 +117,8 @@ public class BrowserBySmb extends BrowserByNetwork {
         final int userStart = description.indexOf(mUser);
         final int userEnd = userStart + mUser.length();
         final SpannableStringBuilder sb = new SpannableStringBuilder(description);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            sb.setSpan(new TypefaceSpan("sans-serif-light"), 0, description.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-            sb.setSpan(new TypefaceSpan("sans-serif"), userStart, userEnd, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        }
+        sb.setSpan(new TypefaceSpan("sans-serif-light"), 0, description.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        sb.setSpan(new TypefaceSpan("sans-serif"), userStart, userEnd, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         sb.setSpan(new StyleSpan(Typeface.BOLD), userStart, userEnd, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         mButton.setText(sb);
     }

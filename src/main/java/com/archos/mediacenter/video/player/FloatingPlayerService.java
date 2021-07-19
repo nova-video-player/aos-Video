@@ -500,11 +500,10 @@ public class FloatingPlayerService extends Service implements AppState.OnForeGro
         if(mSize>=0) {
             Display display = mWindowManager.getDefaultDisplay();
             Point point = new Point();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-                display.getRealSize(point);
+            display.getRealSize(point);
             display.getSize(point);
-            int size = (int) ((mParamsF.width / (float)(point.y<point.x ?point.x:point.y)) * mSize);
-            int vpos = (int) ((mParamsF.height / (float)(point.y<point.x ?point.y:point.x)) * mVPos);
+            int size = (int) ((mParamsF.width / (float)(Math.max(point.y, point.x))) * mSize);
+            int vpos = (int) ((mParamsF.height / (float)(Math.min(point.y, point.x))) * mVPos);
             mSubtitleManager.setSize(size);
             mSubtitleManager.setVerticalPosition(vpos);
         }
@@ -516,7 +515,7 @@ public class FloatingPlayerService extends Service implements AppState.OnForeGro
                 PlayerService.sPlayerService.removePlayerFrontend(this,isStartingPlayerActivity);
             try {
                 mWindowManager.removeViewImmediate(mFloatingPlayerRootView);
-            }catch (java.lang.IllegalArgumentException e){}
+            } catch (java.lang.IllegalArgumentException e){}
             contains = false;
         }
     }

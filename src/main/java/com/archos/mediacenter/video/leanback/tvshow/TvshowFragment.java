@@ -137,8 +137,28 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     private int oldSelectedSubPosition = 0;
     private boolean mHasDetailRow;
 
+    private void setmTvshow(long id) {
+        if (DBG) Log.d(TAG, "setTvshow: for id=" + id);
+        if (id != -1) {
+            // TvshowLoader is a CursorLoader
+            TvshowLoader tvshowLoader = new TvshowLoader(getActivity(), id);
+            Cursor cursor = tvshowLoader.loadInBackground();
+            if(cursor != null && cursor.getCount()>0) {
+                cursor.moveToFirst();
+                TvshowCursorMapper tvshowCursorMapper = new TvshowCursorMapper();
+                tvshowCursorMapper.bindColumns(cursor);
+                mTvshow = (Tvshow) tvshowCursorMapper.bind(cursor);
+                if (DBG) Log.d(TAG, "setTvshow: poster is " + mTvshow.getPosterUri());
+                cursor.close();
+            }
+        } else {
+            Log.w(TAG, "setTvshow not done!");
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        if (DBG) Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
 
         Object transition = TransitionHelper.getEnterTransition(getActivity().getWindow());
@@ -163,18 +183,8 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
         if (mTvshow == null) {
             long tvShowId = intent.getLongExtra(EXTRA_TV_SHOW_ID, -1);
-
-            if (tvShowId != -1) {
-                // TvshowLoader is a CursorLoader
-                TvshowLoader tvshowLoader = new TvshowLoader(getActivity(), tvShowId);
-                Cursor cursor = tvshowLoader.loadInBackground();
-                if(cursor != null && cursor.getCount()>0) {
-                    cursor.moveToFirst();
-                    TvshowCursorMapper tvshowCursorMapper = new TvshowCursorMapper();
-                    tvshowCursorMapper.bindColumns(cursor);
-                    mTvshow = (Tvshow) tvshowCursorMapper.bind(cursor);
-                }
-            }
+            if (DBG) Log.d(TAG, "onCreate: tvShowId=" + tvShowId);
+            setmTvshow(tvShowId);
         }
 
         mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
@@ -334,18 +344,21 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        if (DBG) Log.d(TAG, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
         mOverlay = new Overlay(this);
     }
 
     @Override
     public void onDestroyView() {
+        if (DBG) Log.d(TAG, "onDestroyView");
         mOverlay.destroy();
         super.onDestroyView();
     }
 
     @Override
     public void onStop() {
+        if (DBG) Log.d(TAG, "onStop");
         mBackdropTask.cancel(true);
         if (mFullScraperTagsTask!=null) {
             mFullScraperTagsTask.cancel(true);
@@ -358,21 +371,25 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
     @Override
     public void onResume() {
+        if (DBG) Log.d(TAG, "onResume");
         super.onResume();
         mOverlay.resume();
         // Start loading the detailed info about the show if needed
         if (mTvshow.getShowTags()==null) {
+            if (DBG) Log.d(TAG, "onResume: mTvshow.getShowTags()==null -> FullScraperTagsTask");
             mFullScraperTagsTask = new FullScraperTagsTask().execute(mTvshow);
         }
         if (mBackdropTask!=null) {
+            if (DBG) Log.d(TAG, "onResume: mBackdropTask!=null -> cancel");
             mBackdropTask.cancel(true);
         }
+        if (DBG) Log.d(TAG, "onResume: new backdropTask");
         mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mTvshow.getShowTags());
-
     }
 
     @Override
     public void onPause() {
+        if (DBG) Log.d(TAG, "onPause");
         super.onPause();
         mOverlay.pause();
     }
@@ -406,7 +423,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 mDetailsOverviewRow.setItem(mTvshow);
         }
         if ((requestCode == REQUEST_CODE_MORE_DETAILS || requestCode == REQUEST_CODE_VIDEO) && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Get RESULT_OK from TvshowMoreDetailsFragment/VideoDetailsFragment");
+            Log.d(TAG, "onActivityResult: got RESULT_OK from TvshowMoreDetailsFragment/VideoDetailsFragment");
 
             // Only Poster and/or backdrop has been changed.
             // But the ShowTags must be recomputed as well.
@@ -425,12 +442,17 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             mFullScraperTagsTask = new FullScraperTagsTask().execute(mTvshow);
         }
         else if (requestCode == REQUEST_CODE_CHANGE_TVSHOW && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Get RESULT_OK from ManualShowScrappingActivity");
+            Log.d(TAG, "onActivityResult: got RESULT_OK from ManualShowScrappingActivity");
             // Whole show has been changed, need to reload everything
             // First update the TvShow instance we have here with the data returned by ManualShowScrappingActivity
             String newName = data.getStringExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_NAME);
             Long newId = data.getLongExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_ID, -1);
-            mTvshow = new Tvshow(newId, newName, null, mTvshow.getSeasonCount(), mTvshow.getEpisodeCount(), mTvshow.getEpisodeWatchedCount());
+
+            if (DBG) Log.d(TAG, "onActivityResult: newName=" + newName + ", newId=" + newId);
+            // doing this assumes same number of seasons/episodes and results in null getPosterUri...
+            //mTvshow = new Tvshow(newId, newName, null, mTvshow.getSeasonCount(), mTvshow.getEpisodeCount(), mTvshow.getEpisodeWatchedCount());
+            setmTvshow(newId);
+
             // Clear all the loader managers because they need to be recreated with the new ID
             LoaderManager.getInstance(this).destroyLoader(SEASONS_LOADER_ID);
             if (mSeasonAdapters != null){
@@ -461,10 +483,13 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         @Override
         protected Tvshow doInBackground(Tvshow... tvshows) {
             mTvshow.setShowTags( (ShowTags)tvshows[0].getFullScraperTags(getActivity()));
+            if (DBG) Log.d(TAG, "FullScraperTagsTask:doInBackground:" + (mTvshow != null ? mTvshow.getName() + " " + mTvshow.getPosterUri(): "null"));
             return mTvshow;
         }
 
         protected void onPostExecute(Tvshow tvshow) {
+            if (DBG) Log.d(TAG, "FullScraperTagsTask:onPostExecute:" + (tvshow != null ? tvshow.getName() + " " + tvshow.getPosterUri(): "null") + ", rebuild and restart loader");
+
             if (tvshow.getShowTags()==null) {
                 Log.e(TAG, "FullScraperTagsTask failed to get ShowTags for "+mTvshow);
                 return;
@@ -490,10 +515,10 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-        if (id==SEASONS_LOADER_ID) {
+        if (DBG) Log.d(TAG, "onCreateLoader id=" + id);
+        if (id == SEASONS_LOADER_ID) {
             return new SeasonsLoader(getActivity(), mTvshow.getTvshowId());
-        }
-        else {
+        } else {
             // The season number is put in the id argument
             return new EpisodesLoader(getActivity(), mTvshow.getTvshowId(), id, true);
         }
@@ -501,6 +526,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        if (DBG) Log.d(TAG, "onLoadFinished");
         if (getActivity() == null) return;
         if (cursorLoader.getId()==SEASONS_LOADER_ID) {
             final int seasonNumberColumn = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON);
@@ -581,6 +607,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         @Override
         protected Pair<Tvshow, Bitmap> doInBackground(Tvshow... shows) {
             Tvshow tvshow = shows[0];
+            if (DBG) Log.d(TAG, "DetailRowBuilderTask: tvshow posterUri " + tvshow.getPosterUri());
             Bitmap bitmap = generateTvshowBitmap(tvshow.getPosterUri(), tvshow.isWatched());
             return new Pair<>(tvshow, bitmap);
         }
@@ -589,6 +616,8 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         protected void onPostExecute(Pair<Tvshow, Bitmap> result) {
             Tvshow tvshow = result.first;
             Bitmap bitmap = result.second;
+
+            if (DBG) Log.d(TAG, "DetailRowBuilderTask:onPostExecute: tvshow " + tvshow.getName());
 
             // Buttons
             if (mDetailsOverviewRow == null) {
@@ -689,12 +718,8 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                     intent.putExtra(TvshowActivity.SLIDE_DIRECTION_EXTRA, direction);
                     // Launch next activity with slide animation
                     // Starting from lollipop we need to give an empty "SceneTransitionAnimation" for this to work
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
-                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                    } else {
-                        startActivity(intent);
-                    }
+                    mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
+                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                     // Delay the finish the "old" activity, else it breaks the animation
                     mHandler.postDelayed(new Runnable() {
                         public void run() {
@@ -719,6 +744,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     }
 
     private Bitmap generateTvshowBitmap(Uri posterUri, boolean isWatched) {
+        if (DBG) Log.d(TAG, "generateTvshowBitmap: posterUri=" + posterUri);
         Bitmap bitmap = null;
         try {
             if (posterUri != null) {

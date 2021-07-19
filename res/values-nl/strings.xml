@@ -95,6 +95,7 @@
     <string name="movies_by_alpha">Films alfabetisch</string>
     <string name="movies_by_genre">Films op genre</string>
     <string name="movies_by_rating">Films per rating</string>
+    <string name="anime_collections">Anime collecties</string>
     <string name="movies_by_year">Films per jaar</string>
     <string name="all_tv_shows">Tv-series</string>
     <string name="all_tvshows">Alle TV-series</string>
@@ -230,6 +231,7 @@
     <string name="you_have_no_video">Geen video\'s</string>
     <string name="you_have_no_video_yet">Zoeken naar video\'s&#8230;</string>
     <string name="you_have_no_movies">Geen films</string>
+    <string name="you_have_no_anime_collections">Geen anime collecties</string>
     <string name="you_have_no_tv_shows">Geen tv-series</string>
     <string name="you_have_no_non_scraped_videos">Geen video\'s zonder opgehaalde informatie</string>
     <plurals name="Nmovies">
@@ -463,6 +465,7 @@
     <string name="ssh_password">Wachtwoord</string>
     <string name="ssh_username">Gebruikersnaam</string>
     <string name="ssh_shortcut_name">Naam voor snelkoppeling</string>
+    <string name="smb_domain">Domein (optioneel)</string>
     <!-- Preferences -->
     <string name="preferences">Voorkeuren</string>
     <string name="get_the_ad_free_version">Krijg de advertentievrije versie op Google Play</string>
@@ -493,7 +496,7 @@
     <string name="ui_mode_summary">Kies tussen TV en Tablet/Telefoon UI</string>
     <string name="preferences_video_about">Over</string>
     <string name="preferences_video_os_text">Ondertitels verstrekt door</string>
-    <string name="preferences_video_tmdb_text">Film informatie verstrekt door</string>
+    <string name="preferences_video_tmdb_text">Film/TV Show informatie verstrekt door</string>
     <string name="preferences_video_tvdb_text">TV-serie informatie verstrekt door</string>
     <string name="preferences_video_trakt_text">Video scrobbler aangeboden door</string>
     <string name="preferences_video_licenses">Licenties</string>

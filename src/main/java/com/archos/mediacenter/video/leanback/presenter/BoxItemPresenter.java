@@ -37,7 +37,7 @@ public class BoxItemPresenter extends Presenter {
         TextView mTextView;
 
         public BoxViewHolder(ViewGroup parent) {
-            super(new CustomBaseCardview(parent.getContext()));
+            super(new BaseCardView(parent.getContext()));
             mCard = (BaseCardView)view;
             mCard.setFocusable(true);
             mCard.setFocusableInTouchMode(true);

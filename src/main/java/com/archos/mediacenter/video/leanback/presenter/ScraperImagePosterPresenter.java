@@ -19,13 +19,16 @@ import android.content.Context;
 import com.archos.mediacenter.video.R;
 import com.archos.mediascraper.ScraperImage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Poster, just poster (no name, no details, just the image)
  * Created by vapillon on 10/04/15.
  */
 public class ScraperImagePosterPresenter extends ScraperImagePresenter {
 
-    private static final String TAG = "ScraperImagePosterPresenter";
+    private static final Logger log = LoggerFactory.getLogger(ScraperImagePosterPresenter.class);
 
     public ScraperImagePosterPresenter() {
         super();
@@ -46,6 +49,8 @@ public class ScraperImagePosterPresenter extends ScraperImagePresenter {
      */
     @Override
     public String getImageUrl(ScraperImage image) {
+        return image.getLargeUrl();
+        /*
         // Poster thumbnails on TMDB are to small -> use full resolution posters
         if (image.isMovie()) {
             return image.getLargeUrl();
@@ -53,5 +58,6 @@ public class ScraperImagePosterPresenter extends ScraperImagePresenter {
             // Poster thumbnails on TVDB are enough
             return image.getThumbUrl();
         }
+         */
     }
 }

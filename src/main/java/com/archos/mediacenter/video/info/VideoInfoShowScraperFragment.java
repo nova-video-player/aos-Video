@@ -30,7 +30,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import androidx.fragment.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +63,9 @@ import com.archos.mediascraper.TagsFactory;
 import com.archos.mediascraper.preprocess.SearchInfo;
 import com.archos.mediascraper.preprocess.SearchPreprocessor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,8 +76,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         OnItemClickListener, OnClickListener, OnEditorActionListener,
         Handler.Callback {
 
-    protected static final boolean DBG = false;
-    protected static final String TAG = VideoInfoShowScraperFragment.class.getSimpleName();
+    private static final Logger log = LoggerFactory.getLogger(VideoInfoShowScraperFragment.class);
     public static final String SHOW_ID = "show_id";
 
     protected Scraper mScraper;
@@ -102,7 +103,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
     private SearchInfo mSearchInfo;
 
     public VideoInfoShowScraperFragment() {
-        if (DBG) Log.d(TAG, "CTOR");
+        log.debug("CTOR");
         mResultsList = new ArrayList<ProgressItem>();
     }
 
@@ -116,7 +117,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (DBG) Log.d(TAG, "onCreate savedInstanceState=" + savedInstanceState);
+        log.debug("onCreate savedInstanceState=" + savedInstanceState);
         super.onCreate(savedInstanceState);
 
         // we'd like to keep this instance when rotating
@@ -136,7 +137,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        if (DBG) Log.d(TAG, "onViewCreated");
+        log.debug("onViewCreated");
         mListView = (ListView) mView.findViewById(R.id.list);
         mListView.setOnItemClickListener(this);
         mListView.setAdapter(mAdapter);
@@ -158,9 +159,6 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         // limit the way the window is adjusted when softkeyboard is opened
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-
-
-
         setInfoItem((Base)getActivity().getIntent().getSerializableExtra(VideoInfoScraperActivity.EXTRA_SHOW));
 
         // restore display state
@@ -171,7 +169,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
 
     @Override
     public void onStart() {
-        if (DBG) Log.d(TAG, "onStart");
+        log.debug("onStart");
         resumeCurrentTask();
         super.onStart();
     }
@@ -193,14 +191,14 @@ public class VideoInfoShowScraperFragment extends Fragment implements
 
     @Override
     public void onStop() {
-        if (DBG) Log.d(TAG, "onStop");
+        log.debug("onStop");
         pauseCurrentTask();
         super.onStop();
     }
 
     @Override
     public void onDestroyView() {
-        if (DBG) Log.d(TAG, "onDestroyView");
+        log.debug("onDestroyView");
         super.onDestroyView();
         // null references to views
         mSearchContainer = null;
@@ -214,14 +212,14 @@ public class VideoInfoShowScraperFragment extends Fragment implements
 
     @Override
     public void onDestroy() {
-        if (DBG) Log.d(TAG, "onDestroy");
+        log.debug("onDestroy");
         cancelCurrentTask();
         super.onDestroy();
     }
 
     @Override
     public void onDetach() {
-        if (DBG) Log.d(TAG, "onDetach");
+        log.debug("onDetach");
         super.onDetach();
         mScraper = null;
     }
@@ -229,12 +227,12 @@ public class VideoInfoShowScraperFragment extends Fragment implements
 
 
     public void setInfoItem(Base item) {
-        if (DBG) Log.d(TAG, "setInfoItem");
+        log.debug("setInfoItem");
 
         ShowTags newTag = (ShowTags) item.getFullScraperTags(getActivity());
         long oldId = mShowTag != null ? mShowTag.getId() : 0;
         long newId = newTag != null ? newTag.getId() : 0;
-        if (DBG) Log.d(TAG, "old:" + oldId + " new:" + newId);
+        log.debug("setInfoItem: old:" + oldId + " new:" + newId);
         if (oldId != newId) {
             mShowTag = newTag;
         }
@@ -245,7 +243,6 @@ public class VideoInfoShowScraperFragment extends Fragment implements
             mSearchEdTxt.setSelected(false);
 
         }
-
     }
 
 
@@ -264,7 +261,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
 
     // ---------------------- IMPLEMENTS OnItemClickListener ---------------- //
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (DBG) Log.d(TAG, "onItemClick");
+        log.debug("onItemClick");
         HashMap<String,EpisodeTags> map = position < mResultsList.size() ? mResultsList.get(position).epMap : null;
         if (map != null) {
             SaveItem item = new SaveItem();
@@ -276,14 +273,14 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         } else if (mCurrentSearchTask != null) {
             mCurrentSearchTask.requestSave(position, mShowTag, getActivity(), mHandler.obtainMessage());
         } else {
-            Log.e(TAG, "Failed to save, no task & no result available");
+            log.error("Failed to save, no task & no result available");
         }
         setDisplayState(DisplayState.APPLY_RESULT);
     }
 
     // ---------------------- IMPLEMENTS OnClickListener -------------------- //
     public void onClick(View v) {
-        if (DBG) Log.d(TAG, "onClick");
+        log.debug("onClick");
 
         switch (v.getId()) {
             case R.id.cancel:
@@ -296,14 +293,14 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                 startSearch();
                 break;
             default:
-                Log.e(TAG, "Click on " + v + " not supported.");
+                log.error("Click on " + v + " not supported.");
                 break;
         }
     }
 
     // ---------------------- IMPLEMENTS OnEditorActionListener ------------- //
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (DBG) Log.d(TAG, "onEditorAction");
+        log.debug("onEditorAction");
         mSearchButton.callOnClick();
         return true;
     }
@@ -318,7 +315,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
     }
 
     private void setDisplayState(DisplayState state) {
-        if (DBG) Log.d(TAG, "setDisplayState:" + state.name());
+        log.debug("setDisplayState:" + state.name());
         mDisplayState = state;
         switch (state) {
             case SEARCH_INITIAL:
@@ -380,21 +377,21 @@ public class VideoInfoShowScraperFragment extends Fragment implements
     }
 
     private void pauseCurrentTask() {
-        if (DBG) Log.d(TAG, "pauseCurrentTask");
+        log.debug("pauseCurrentTask");
         if (mCurrentSearchTask != null) {
             mCurrentSearchTask.pause();
         }
     }
 
     private void resumeCurrentTask() {
-        if (DBG) Log.d(TAG, "resumeCurrentTask");
+        log.debug("resumeCurrentTask");
         if (mCurrentSearchTask != null) {
             mCurrentSearchTask.resume();
         }
     }
 
     private void cancelCurrentTask() {
-        if (DBG) Log.d(TAG, "cancelCurrentTask");
+        log.debug("cancelCurrentTask");
         if (mCurrentSearchTask != null) {
             // cancel before resume so it exists after waiting
             mCurrentSearchTask.cancel(false);
@@ -405,7 +402,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
     }
 
     private void startSearch() {
-        if (DBG) Log.d(TAG, "startSearch");
+        log.debug("startSearch");
         // make sure there is no old task
         cancelCurrentTask();
         // start searching
@@ -415,7 +412,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
     }
 
     protected void onUpdateProgress(ProgressItem item) {
-        if (DBG) Log.d(TAG, "onUpdateProgress:" + item);
+        log.debug("onUpdateProgress:" + item);
         if (item.position < 0) {
             mResultsList.clear();
             mAdapter = new ScraperResultsAdapter(getActivity(),null, item.list);
@@ -446,7 +443,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
 
     // ---------------------- SEARCH VIA SCRAPER SERVICE -------------------- //
     protected void onSearchFinished() {
-        if (DBG) Log.d(TAG, "onSearchFinished");
+        log.debug("onSearchFinished");
         mCurrentSearchTask = null;
     }
 
@@ -485,7 +482,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         public SearchTask() { /* empty */ }
 
         public void requestSave(int resultId, ShowTags saveTarget, Context saveContext, Message message) {
-            if (DBG) Log.d(TAG, "requestSave " + resultId);
+            log.debug("requestSave " + resultId);
             mSaveRequestId = resultId;
             mSaveContext = saveContext.getApplicationContext();
             mSaveTarget = saveTarget;
@@ -511,11 +508,11 @@ public class VideoInfoShowScraperFragment extends Fragment implements
             if (!mPause) return;
             synchronized (mWaitObject) {
                 while (mPause) {
-                    Log.d(TAG, "checkPause - Paused");
+                    log.debug("checkPause - Paused");
                     try {
                         mWaitObject.wait();
                     } catch (InterruptedException e) {
-                        Log.d(TAG, "checkPause - InterruptedException");
+                        log.debug("checkPause - InterruptedException");
                         // expected
                     }
                 }
@@ -536,7 +533,10 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                     int current = 0;
                     while (!isCancelled() && current < count) {
                         Bundle b = new Bundle();
-                        b.putBoolean(Scraper.ITEM_REQUEST_ALL_EPISODES, true);
+                        // no need to get all episodes
+                        //b.putBoolean(Scraper.ITEM_REQUEST_ALL_EPISODES, true);
+                        b.putInt(Scraper.ITEM_REQUEST_SEASON, 1);
+                        b.putInt(Scraper.ITEM_REQUEST_EPISODE, 1);
                         checkPause();
                         if (isCancelled())
                              return null;
@@ -544,7 +544,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                         HashMap<String, EpisodeTags> epMap = null;
                         if (mSaveRequested) {
                             current = mSaveRequestId;
-                            if (DBG) Log.d(TAG, "fetching / saving item: " + current);
+                            log.debug("fetching / saving item: " + current);
                             ScrapeDetailResult detail = Scraper.getDetails(matches.get(current), b);
                             if (detail.isOkay()) {
                                 tag = detail.tag;
@@ -561,7 +561,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                             }
                             return null;
                         }
-                        Log.d(TAG, "mScraperService.getDetailsSpecial - " + current);
+                        log.debug("mScraperService.getDetailsSpecial - " + current);
                         ScrapeDetailResult detail = Scraper.getDetails(matches.get(current), b);
 
                         if (detail.isOkay()) {
@@ -603,7 +603,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                 return;
 
             if (values != null && values.length > 0) {
-                Log.d(TAG, "onProgressUpdate got " + values.length + " items");
+                log.debug("onProgressUpdate got " + values.length + " items");
                 onUpdateProgress(values[0]);
             }
         }
@@ -641,7 +641,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                 long showID = handleSave(params[0], episodeList);
                 Message m = params[0].sendOnSuccess;
                 m.arg1 = (int) showID;
-                if (DBG) Log.d(TAG, "save finished, sending message");
+                log.debug("save finished, sending message");
                 if (m != null)
                     m.sendToTarget();
             }
@@ -697,7 +697,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                 ArrayList<ContentProviderOperation> opList = new ArrayList<ContentProviderOperation>();
                 Map<String, Long> poster2IdMap = createPosterIdMap(mContext, targetShowId);
                 for (EpisodeTags epTag : targetList) {
-                    Log.d(TAG, "Saving " + (i++) + " of " + size + " episodes.");
+                    log.debug("Saving " + (i++) + " of " + size + " episodes.");
                     EpisodeTags targetEpTag = getEpisode(item.source, epTag.getEpisode(), epTag.getSeason(), targetShow);
                     targetEpTag.setVideoId(epTag.getVideoId());
                     targetEpTag.setShowId(targetShowId);
@@ -715,18 +715,18 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                         }
                     }
                 }
-                Log.d(TAG, "preparations took:" + t.step());
+                log.debug("preparations took:" + t.step());
                 if (opList.size() > 0) {
                     try {
                         mContext.getContentResolver().applyBatch(ScraperStore.AUTHORITY, opList);
                     } catch (RemoteException e) {
-                        Log.e(TAG, "handleSave failed", e);
+                        log.error("handleSave failed", e);
                     } catch (OperationApplicationException e) {
-                        Log.e(TAG, "handleSave failed", e);
+                        log.error("handleSave failed", e);
                     }
                 }
                 TraktService.onNewVideo(mContext);
-                Log.d(TAG, "saving in the end:" + t.step() + " thats:" + t.total());
+                log.debug("saving in the end:" + t.step() + " thats:" + t.total());
                 return targetShowId;
             }
             return -1;

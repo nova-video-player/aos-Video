@@ -31,6 +31,10 @@ import com.archos.mediascraper.ScraperImage;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -39,8 +43,8 @@ import java.util.ArrayList;
  */
 public abstract class ScraperImagePresenter extends Presenter {
 
-    private static final String TAG = "ScraperImagePresenter";
-    
+    private static final Logger log = LoggerFactory.getLogger(ScraperImagePresenter.class);
+
     private ArrayList<ViewHolder> mViewHolders = new ArrayList<>();
     private boolean mBigMode = false;
 
@@ -64,7 +68,7 @@ public abstract class ScraperImagePresenter extends Presenter {
         private ScraperImage mImage;
 
         public ViewHolder(Context context) {
-            super(new CustomBaseCardview(context));
+            super(new BaseCardView(context));
             mBaseCardView = (BaseCardView)view;
             mBaseCardView.setBackgroundColor(ContextCompat.getColor(context, R.color.lb_basic_card_bg_color));
             mBaseCardView.setFocusable(true);
@@ -101,13 +105,25 @@ public abstract class ScraperImagePresenter extends Presenter {
 
         public void loadImage() {
             Context c = view.getContext();
-
-            Picasso.get()
-                    .load(getAdjustedImageUrl(mImage))
-                    .resize(getAdjustedWidth(c), getAdjustedHeight(c)) // better resize to card size, since backdrop files are pretty large
-                    .centerCrop()
-                    .error(R.drawable.filetype_new_image)
-                    .into(mImageViewTarget);
+            String adjustedImageUrl = getAdjustedImageUrl(mImage);
+            log.debug("loadImage: picasso loads " + adjustedImageUrl);
+            File imgFile = mImage.getLargeFileF();
+            if (! imgFile.exists()) { // download via picasso
+                log.debug("loadImage: " + mImage.getLargeFile() + " does not exist (could be for size reason)");
+                Picasso.get()
+                        .load(adjustedImageUrl)
+                        .resize(getAdjustedWidth(c), getAdjustedHeight(c)) // better resize to card size, since backdrop files are pretty large
+                        .centerCrop()
+                        .error(R.drawable.filetype_new_image)
+                        .into(mImageViewTarget);
+            } else { // use existing file
+                Picasso.get()
+                        .load(mImage.getLargeFileF())
+                        .resize(getAdjustedWidth(c), getAdjustedHeight(c)) // better resize to card size, since backdrop files are pretty large
+                        .centerCrop()
+                        .error(R.drawable.filetype_new_image)
+                        .into(mImageViewTarget);
+            }
         }
     }
 

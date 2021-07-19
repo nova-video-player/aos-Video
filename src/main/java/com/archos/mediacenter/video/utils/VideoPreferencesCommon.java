@@ -120,7 +120,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     public static final String KEY_VIDEO_OS = "preferences_video_os";
     public static final String KEY_TMDB="preferences_video_tmdb";
-    public static final String KEY_TVDB="preferences_video_tvdb";
     public static final String KEY_TRAKT="preferences_video_trakt";
     public static final String KEY_TRAKT_SYNC_PROGRESS ="trakt_sync_resume";
     public static final String KEY_LICENCES="preferences_video_licences";
@@ -339,10 +338,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         findPreference(KEY_TMDB).setOnPreferenceClickListener(preference -> {
             videoPreferenceTmdbClick();
-            return false;
-        });
-        findPreference(KEY_TVDB).setOnPreferenceClickListener(preference -> {
-            videoPreferenceTvdbClick();
             return false;
         });
         findPreference(KEY_TRAKT).setOnPreferenceClickListener(preference -> {
@@ -788,10 +783,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public void videoPreferenceTmdbClick() {
         // Breaks AndroidTV acceptance: text is cut on edges
         //WebUtils.openWebLink(getActivity(), "https://www.themoviedb.org/faq/general");
-    }
-    public void videoPreferenceTvdbClick() {
-        // Breaks AndroidTV acceptance: contains non fullscreen ads
-        //WebUtils.openWebLink(getActivity(), "https://thetvdb.com/donate");
     }
     public void videoPreferenceTraktClick() {
         //WebUtils.openWebLink(getActivity(), "https://trakt.tv/about");

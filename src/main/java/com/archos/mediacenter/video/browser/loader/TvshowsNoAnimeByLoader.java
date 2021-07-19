@@ -62,8 +62,7 @@ public abstract class TvshowsNoAnimeByLoader extends CursorLoader implements Com
         }
 
         sb.append(" AND ");
-        sb.append("( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.tv_show_genre_animation) + "%' AND " +
-                VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.tv_show_genre_anime) + "%' )");
+        sb.append("( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%')");
 
         return sb.toString();
     }

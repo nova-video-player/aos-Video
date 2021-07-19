@@ -248,7 +248,6 @@
     <string name="preferences_category_video">Video</string>
     <string name="preferences_force_audio_passthrough">Âm thanh passthrough</string>
     <string name="preferences_force_audio_passthrough_disabled">Tắt (khuyến nghị)</string>
-    <string name="preferences_force_audio_passthrough_summary">cho kết nối HDMI và S/PDIF, truyền âm thanh nén. ⚠ Thử nghiệm có thể dẫn đến A/V không đồng bộ</string>
     <string name="category_languages">Phụ đề</string>
     <string name="subtitles_hide_default">Ẩn phụ đề theo mặc định</string>
     <string name="subtitles_hide_default_summary">Kiểm tra xem bạn có muốn ẩn phụ đề theo mặc định không</string>

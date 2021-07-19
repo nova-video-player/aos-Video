@@ -45,7 +45,8 @@ public class Box {
         ALL_ANIMES,
         ANIMES_BY_GENRE,
         ANIMES_BY_YEAR,
-        ALL_ANIMESHOWS
+        ALL_ANIMESHOWS,
+        ANIME_COLLECTIONS
     }
 
     final private ID mBoxId;

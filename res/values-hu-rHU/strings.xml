@@ -90,8 +90,10 @@
     <string name="not_played_yet_videos">Még nem játszott</string>
     <string name="video_folder">Mappák</string>
     <string name="movies">Filmek</string>
+    <string name="animes">Animációk</string>
     <string name="all_movies">Összes film</string>
     <string name="all_movies_format">Összes film - %d</string>
+    <string name="all_animes_format">Animációs filmek - %d</string>
     <string name="all_collections">Összes gyűjtemény</string>
     <string name="all_collections_format">Összes gyűjtemény - %d</string>
     <string name="all_collection_watched">Összes gyűjtemény megnézve</string>
@@ -101,6 +103,7 @@
         <item quantity="other">%d film megnézve</item>
     </plurals>
     <string name="not_watched_movies_format">Nem látott - %d</string>
+    <string name="not_watched_animes_format">Nem látott - %d</string>
     <string name="no_movie_watched">Nincs megnézett film</string>
     <string name="all_movies_watched">Összes film megnézve</string>
     <string name="movies_by_alpha">Filmek cím szerint</string>
@@ -110,8 +113,17 @@
     <string name="movies_by_year">Filmek év szerint</string>
     <string name="all_tv_shows">Sorozatok</string>
     <string name="all_tvshows">Minden sorozat</string>
+    <string name="all_animes">Az összes animációs film</string>
+    <string name="all_animes_row">Az összes animáció</string>
+    <string name="all_animeshows">Az összes animációs sorozat</string>
+    <string name="animes_by_alpha">Animációs filmek betűsorrendben</string>
+    <string name="animes_by_genre">Animációs filmek műfaj szerint</string>
+    <string name="animes_by_rating">Animációs filmek értékelés szerint</string>
+    <string name="animes_by_year">Animációs filmek év szerint</string>
     <string name="all_tvshows_format">Összes sorozat - %d</string>
     <string name="not_watched_tvshows_format">Nem látott - %d</string>
+    <string name="all_animeshows_format">Animációs sorozatok - %d</string>
+    <string name="not_watched_animeshows_format">Nem látott - %d</string>
     <string name="all_seasons">Összes évad</string>
     <string name="tvshows_by_alpha">Sorozatok ABC sorrendben</string>
     <string name="tvshows_by_genre">Sorozatok műfaj szerint</string>
@@ -242,8 +254,10 @@
     <string name="you_have_no_video">Nincsenek videók</string>
     <string name="you_have_no_video_yet">Videók keresése&#8230;</string>
     <string name="you_have_no_movies">Nincsenek filmek</string>
+    <string name="you_have_no_animes">Nincs animációs film</string>
     <string name="you_have_no_movie_collections">Nincsenek gyűjtemények</string>
     <string name="you_have_no_tv_shows">Nincsenek sorozatok</string>
+    <string name="you_have_no_anime_shows">Nincs animációs sorozat</string>
     <string name="you_have_no_non_scraped_videos">Feldolgozatlan videók kivételével</string>
     <plurals name="Nmovies">
         <item quantity="one">1 film</item>
@@ -461,6 +475,7 @@
     <string name="network_shortcuts">Hálózati parancsikonok</string>
     <string name="media_servers">Médiakiszolgálók</string>
     <string name="shortcut_list_empty">Nincs hálózati parancsikon.\n\nParancsikon létrehozásához tartsa lenyomva a célmappa nevét és válassza ki a(z) \"%s\" opciót a fenti sávon.</string>
+    <string name="ftp_shortcut_list_empty">Könyvjelző létrehozásához a kedvenc távoli mappáihoz, válassza ki a(z) \"%s\" lehetőséget a fenti sávon böngészés közben.</string>
     <string name="indexed_folders">Indexált mappák</string>
     <string name="ftp_shortcuts">FPT parancsikonok</string>
     <string name="add_to_indexed_folders">Mappa indexálása</string>
@@ -495,7 +510,7 @@
     <string name="preferences_force_audio_passthrough_disabled">Letiltva (ajánlott)</string>
     <string name="preferences_force_audio_passthrough_enable">Mód 1 (elavult)</string>
     <string name="preferences_force_audio_passthrough_enable2">Mód 2</string>
-    <string name="preferences_force_audio_passthrough_summary">HDMI és S/PDIF csatlakozások esetén, tömörített hang továbbítása. ⚠ Kísérleti! A/V szinkronizálási hibákat eredményezhet</string>
+    <string name="preferences_force_audio_passthrough_summary">Tömörített hang továbbítása HDMI vagy S/PDIF csatlakozókra. ⚠ Kísérleti, A/V szinkronizációs hiba lehetséges</string>
     <string name="preferences_disable_downmix_title">Hang sztereólekeverés kikapcsolása</string>
     <string name="preferences_disable_downmix_summary">Mindig dekódolja az összes csatornát, és az Android kezelje a lekeverést az audio kimenettől függően (a beszéd-hangsáv elvesztését eredményezheti)</string>
     <string name="preferences_allow_3rd_party_player">Másik videó lejátszó használatának engedélyezése</string>
@@ -518,7 +533,6 @@
     <string name="ui_mode_summary">Válasszon TV vagy Tablet/Telefon felület között</string>
     <string name="preferences_video_about">Névjegy</string>
     <string name="preferences_video_os_text">A feliratok szolgáltatója</string>
-    <string name="preferences_video_tmdb_text">Filmleírások szolgáltatója</string>
     <string name="preferences_video_tvdb_text">Sorozatok szoláltatója</string>
     <string name="preferences_video_trakt_text">A video meghirdetés szolgáltatója</string>
     <string name="preferences_video_licenses">Licenszek</string>
@@ -569,8 +583,6 @@
     <string name="new_videos_scrape_message">Vannak olyan új videói, melyekhez még nincs leírás és poszter.</string>
     <string name="network_thumbnails">Távoli miniatűrök létrehozása</string>
     <string name="share_folders_smbv2">SMBv2 támogatás engedélyezése</string>
-    <string name="share_folders_smbv2_summary">Az SMB hálózati megosztás 2. verziójának engedélyezése. ⚠ Kísérleti</string>
-    <string name="share_folders_smb_resolv_summary">BCAST, DNS engedélyezése (különben DNS, BCAST)</string>
     <string name="connection_reset">Visszaállítás</string>
     <!-- Info dialog, not indexed file -->
     <string name="video_browser_index_file">Hozzáadás a könyvtárhoz</string>

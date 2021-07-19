@@ -104,10 +104,7 @@ public class TVCardView extends FrameLayout implements Checkable, FocusableTVCar
         this.originalWidth=0;
         this.originalHeight=0;
         this.ofol=null;
-        if(Build.VERSION.SDK_INT>=21)
-            setAlpha((float) (minAlpha/255.0));
-        else
-            getBackground().setAlpha(minAlpha);
+        setAlpha((float) (minAlpha/255.0));
     }
     //dimensions for animations
 
@@ -414,9 +411,7 @@ public class TVCardView extends FrameLayout implements Checkable, FocusableTVCar
         final Animation a;
         if (isFocused) {
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                setElevation(10);
-            }
+            setElevation(10);
             //how should we magnify it ?
             if(parentView!=null)
                 parentView.bringToFront();
@@ -468,9 +463,7 @@ public class TVCardView extends FrameLayout implements Checkable, FocusableTVCar
             });
 
         } else {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                setElevation(0);
-            }
+            setElevation(0);
             saveFocus(null);
             boolean scale =others.size() == 0;
             a = new ExpandAnimation((int)originalX,originalWidth, originalHeight,scale?1:originalWidth, scale?1:originalHeight, scale, minAlpha, null);
@@ -534,15 +527,8 @@ public class TVCardView extends FrameLayout implements Checkable, FocusableTVCar
                 mStartScaleY=0;
                 mImageViewDeltaScaleY=0;
             }
-            if(Build.VERSION.SDK_INT>=21)
-                mStartAlpha=getAlpha();
-            else
-                mStartAlpha =  ((ColorDrawable)TVCardView.this.getBackground()).getAlpha();
-            if(Build.VERSION.SDK_INT>=21)
-                mDeltaAlpha = (float) (endAlpha/255.0-mStartAlpha);
-            else
-
-                mDeltaAlpha = endAlpha-mStartAlpha;
+            mStartAlpha=getAlpha();
+            mDeltaAlpha = (float) (endAlpha/255.0-mStartAlpha);
             originalX = getX();
             mDeltaX = endX - getX();
             this.scale = scale;
@@ -555,10 +541,7 @@ public class TVCardView extends FrameLayout implements Checkable, FocusableTVCar
             lp.height = (int) (mStartHeight + mDeltaHeight * interpolatedTime);
             lp.width = (int) (mStartWidth + mDeltaWidth * interpolatedTime);
             setLayoutParams(lp);
-            if(Build.VERSION.SDK_INT>=21)
-                TVCardView.this.setAlpha((mStartAlpha + mDeltaAlpha*interpolatedTime));
-            else 
-                TVCardView.this.getBackground().setAlpha((int)(mStartAlpha + mDeltaAlpha*interpolatedTime));
+            TVCardView.this.setAlpha((mStartAlpha + mDeltaAlpha*interpolatedTime));
             setX(originalX + mDeltaX * interpolatedTime);
             if (!scale) {
                 View v = (View) findViewById(R.id.topView);
