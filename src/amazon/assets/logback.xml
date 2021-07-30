@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration scan="true" scanPeriod="60 seconds" debug="true">
-  <property name="LOG_DIR" value="${EXT_DIR:-/sdcard}/Download/${PACKAGE_NAME}"/>
+  <property name="LOG_DIR" value="${EXT_DIR:-/sdcard}/Android/data/${PACKAGE_NAME}/files/logback"/>
 
   <appender name="logcat" class="ch.qos.logback.classic.android.LogcatAppender">
     <tagEncoder>
@@ -34,14 +34,14 @@
 
   <logger name="com.archos.mediacenter.video.leanback.MainFragment" level="DEBUG"/>
 
-  <!--logger name="com.archos.mediacenter.video.browser.MainActivity" level="DEBUG"/-->
+  <logger name="com.archos.mediacenter.video.browser.MainActivity" level="DEBUG"/>
 
   <!--logger name="com.archos.mediacenter.video.player.Player" level="DEBUG"/-->
   <!--logger name="com.archos.mediacenter.video.player.PlayerActivity" level="DEBUG"/-->
 
-  <!--logger name="com.archos.mediascraper.AutoScrapeService" level="DEBUG"/-->
-  <!--logger name="com.archos.mediascraper.xml.MovieScraper3" level="DEBUG"/-->
-  <!--logger name="com.archos.mediascraper.xml.ShowScraper3" level="DEBUG"/-->
+  <logger name="com.archos.mediascraper.AutoScrapeService" level="DEBUG"/>
+  <logger name="com.archos.mediascraper.xml.MovieScraper3" level="DEBUG"/>
+  <logger name="com.archos.mediascraper.xml.ShowScraper4" level="DEBUG"/>
   <!--logger name="com.archos.mediascraper.AllCollectionScrapeService" level="DEBUG"/-->
 
   <!--logger name="com.archos.mediascraper.ShowTags" level="DEBUG"/-->

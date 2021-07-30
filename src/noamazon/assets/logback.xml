@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration scan="true" scanPeriod="60 seconds" debug="true">
-  <property name="LOG_DIR" value="${EXT_DIR:-/sdcard}/Download/${PACKAGE_NAME}"/>
+  <property name="LOG_DIR" value="${EXT_DIR:-/sdcard}/Android/data/${PACKAGE_NAME}/files"/>
 
   <appender name="logcat" class="ch.qos.logback.classic.android.LogcatAppender">
     <tagEncoder>
@@ -81,9 +81,13 @@
   <logger name="com.archos.mediascraper.themoviedb3.ShowIdEpisodes" level="TRACE"/>
   <logger name="com.archos.mediacenter.video.leanback.details" level="DEBUG"/>
   <logger name="com.archos.mediacenter.video.info" level="DEBUG"/>
+  <logger name="com.archos.filecorelibrary.FileUtils" level="DEBUG"/>
+  <logger name="com.archos.mediaprovider.video.VideoStoreImportImpl" level="DEBUG"/>
+  <logger name="com.archos.filecorelibrary.localstorage.LocalStorageFileEditor" level="DEBUG"/>
+  <logger name="com.archos.filecorelibrary.samba" level="DEBUG"/>
 
   <includes>
-    <include file="${EXT_DIR:-/sdcard}/Download/${PACKAGE_NAME}/logback.xml" optional="true" />
+    <include file="${EXT_DIR:-/sdcard}/Android/data/${PACKAGE_NAME}/files/logback.xml" optional="true" />
   </includes>
 
   <root level="INFO">
