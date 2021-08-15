@@ -110,6 +110,7 @@
     <string name="movies_by_genre">Filmek műfaj szerint</string>
     <string name="movies_by_rating">Filmek értékelés szerint</string>
     <string name="movie_collections">Gyűjtemények</string>
+    <string name="anime_collections">Anime gyűjtemény</string>
     <string name="movies_by_year">Filmek év szerint</string>
     <string name="all_tv_shows">Sorozatok</string>
     <string name="all_tvshows">Minden sorozat</string>
@@ -256,6 +257,7 @@
     <string name="you_have_no_movies">Nincsenek filmek</string>
     <string name="you_have_no_animes">Nincs animációs film</string>
     <string name="you_have_no_movie_collections">Nincsenek gyűjtemények</string>
+    <string name="you_have_no_anime_collections">Nem anime gyűjtemény</string>
     <string name="you_have_no_tv_shows">Nincsenek sorozatok</string>
     <string name="you_have_no_anime_shows">Nincs animációs sorozat</string>
     <string name="you_have_no_non_scraped_videos">Feldolgozatlan videók kivételével</string>
@@ -436,8 +438,6 @@
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Sebesség igazítása</string>
     <string name="subtitle_delay_radio_none">nincs</string>
-    <string name="subtitle_delay_radio_ntsc2pal">NTSC &#x2192; PAL</string>
-    <string name="subtitle_delay_radio_pal2ntsc">PAL &#x2192; NTSC</string>
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
     because the right part of the quote is
@@ -497,6 +497,7 @@
     <string name="ssh_password">Jelszó</string>
     <string name="ssh_username">Felhasználónév</string>
     <string name="ssh_shortcut_name">Parancsikon neve</string>
+    <string name="smb_domain">Domain (nem kötelező)</string>
     <!-- Preferences -->
     <string name="preferences">Beállítások</string>
     <string name="get_the_ad_free_version">Szerezze meg a reklámmentes verzíót a Google Play-en</string>
@@ -514,6 +515,7 @@
     <string name="preferences_disable_downmix_title">Hang sztereólekeverés kikapcsolása</string>
     <string name="preferences_disable_downmix_summary">Mindig dekódolja az összes csatornát, és az Android kezelje a lekeverést az audio kimenettől függően (a beszéd-hangsáv elvesztését eredményezheti)</string>
     <string name="preferences_allow_3rd_party_player">Másik videó lejátszó használatának engedélyezése</string>
+    <string name="preferences_allow_3rd_party_player_summary">Más kompatibilis videolejátszó alkalmazásokat fog javasolni az Android a video elindításakor. Ne feledje, hogy egyes funkciók nem fognak működni (folytatás, könyvjelzők, stb.)</string>
     <string name="preference_tv_3d_automatic_switch">Automatikus 3D TV átkapcsolás engedélyezése</string>
     <string name="preference_tv_3d_automatic_switch_summary">Csak akkor használja ezt a funkciót, ha a 3D TV-je támogatja</string>
     <string name="preference_tv_refreshrate_switch">Frissítési ráta automatikus kapcsolásának engedélyezése</string>
@@ -533,6 +535,7 @@
     <string name="ui_mode_summary">Válasszon TV vagy Tablet/Telefon felület között</string>
     <string name="preferences_video_about">Névjegy</string>
     <string name="preferences_video_os_text">A feliratok szolgáltatója</string>
+    <string name="preferences_video_tmdb_text">Film/sorozat információ szolgáltatója</string>
     <string name="preferences_video_tvdb_text">Sorozatok szoláltatója</string>
     <string name="preferences_video_trakt_text">A video meghirdetés szolgáltatója</string>
     <string name="preferences_video_licenses">Licenszek</string>
@@ -568,6 +571,8 @@
     <string name="format_optimized">Optimizálva</string>
     <string name="format_original">Eredeti</string>
     <string name="format_stretched">Nyújtott</string>
+    <string name="stereo_dive_enable">Stereo-dive hatás</string>
+    <string name="stereo_dive_disable">Stereo-dive hatás letiltása</string>
     <string name="rotation_unlock">Automatikus képernyőforgatás engedélyezése</string>
     <string name="rotation_locked">Automatikus képernyőforgatás letiltva</string>
     <string name="rotation_unlocked">Automatikus képernyőforgatás engedélyezve</string>
@@ -581,8 +586,13 @@
     <string name="help_overlay_scraper_text">Nyomja meg ezt a menüelemet poszterek és leírások kereséséhez a videóihoz. </string>
     <string name="new_videos_count">Új videó: %d</string>
     <string name="new_videos_scrape_message">Vannak olyan új videói, melyekhez még nincs leírás és poszter.</string>
+    <string name="network_bookmarks">Folytatási pontok és helyzetjelzők a hálózaton</string>
     <string name="network_thumbnails">Távoli miniatűrök létrehozása</string>
+    <string name="network_thumbnails_summary">Hozzon létre miniatűröket távoli videókból, ha nincs elérhető plakát</string>
+    <string name="network_bookmarks_summary">Mentse és ellenőrizze a folytatási pontokat és a helyzetjelzőket a hálózaton, amennyiben lehetséges</string>
     <string name="share_folders_smbv2">SMBv2 támogatás engedélyezése</string>
+    <string name="share_folders_smbv2_summary">Az SMB hálózati megosztás 2. verziójának engedélyezése.</string>
+    <string name="share_folders_smb_resolv">SMB feloldási sorrend</string>
     <string name="connection_reset">Visszaállítás</string>
     <!-- Info dialog, not indexed file -->
     <string name="video_browser_index_file">Hozzáadás a könyvtárhoz</string>
@@ -725,10 +735,10 @@
     <string name="private_mode_is_on">Privát mód BE</string>
     <string name="private_mode_is_off">Privát mód KI</string>
     <string name="private_mode">Privát mód</string>
-    <string name="private_mode_description">Privát módban a következő funkciók ki vannak kapcsolva::\n
-        - Lejátszott videók automatikus indexelése és meghirdetése\n
-        - Nemrég lejátszott\n
-        - Folytatási pozíció\n
+    <string name="private_mode_description">Privát módban a következő funkciók nem elérhetőek:\n
+        - Lejátszott videók automatikus indexelése és vizsgálata\n
+        - Nemrég lejátszott lista\n
+        - Folytatási pontok\n
         - Trakt szinkronizálás</string>
     <string name="dont_show_again">Ne mutasd többet</string>
     <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>

@@ -404,8 +404,6 @@
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Snelheidsaanpassing</string>
     <string name="subtitle_delay_radio_none">geen</string>
-    <string name="subtitle_delay_radio_ntsc2pal">NTSC &#x2192; PAL</string>
-    <string name="subtitle_delay_radio_pal2ntsc">PAL &#x2192; NTSC</string>
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
     because the right part of the quote is

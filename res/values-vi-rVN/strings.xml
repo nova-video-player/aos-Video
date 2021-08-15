@@ -102,6 +102,10 @@
     <string name="delete">Xóa</string>
     <string name="confirm_delete_short">Xác nhận xóa</string>
     <string name="delete_bookmark">Xóa đánh dấu</string>
+    <string name="mark_as_watched">Đánh dấu đã xem</string>
+    <string name="mark_as_not_watched">Đánh dấu chưa xem</string>
+    <string name="scrap_no_info">Bạn không có mô tả phim hoặc chương trình truyền hình nào cho video này.</string>
+    <string name="scrap_remove">Xóa thông tin</string>
     <!-- for small screens -->
     <string name="scrap_series_change">Thay đổi thông tin loạt phim</string>
     <string name="scrap_change_confirmation">Thay đổi tất cả tập từ\n\t\"%1$s\"\nđến\n\t\"%2$s\"?</string>
@@ -116,6 +120,10 @@
     <string name="scrap_rating_format">Đánh giá: %s</string>
     <string name="scrap_year">Năm</string>
     <string name="scrap_year_format">Năm: %d</string>
+    <string name="scrap_trailer">Trailer</string>
+    <string name="scrap_genre">Thể loại</string>
+    <string name="scrap_genre_format">Thể loại: %s</string>
+    <string name="scrap_genre_title">Thể loại</string>
     <!-- Specific strings for TV shows -->
     <string name="episode_name">Tập</string>
     <string name="episode_season">Mùa</string>
@@ -128,14 +136,36 @@
     <string name="scrap_status_unknown">Không rõ</string>
     <string name="scraper_folder_try_again">Bạn có muốn thử lại không?</string>
     <!-- To be translated only in case there is a localized IMDB -->
+    <string name="storage">Bộ nhớ</string>
+    <string name="rescan_storage">Quét lại bộ nhớ</string>
+    <string name="rescanning">Đang quét lại bộ nhớ thiết bị</string>
+    <string name="rescan_storage_summary">Quét lại bộ nhớ trong, thẻ nhớ và lưu trữ USB của thiết bị</string>
+    <string name="preference_display_all_files">Hiển thị tất cả tập tin trong trình duyệt</string>
     <string name="info_video">Video</string>
     <string name="info_audio">Âm thanh</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Phụ đề</string>
     <string name="info_file">Thông tin tệp</string>
     <!-- VIDEO COVER ROLL -->
+    <string name="you_have_no_movies">Không có phim</string>
     <string name="you_have_no_animes">Không có phim hoạt hình</string>
+    <string name="you_have_no_movie_collections">Không có bộ sưu tập</string>
+    <string name="you_have_no_anime_collections">Không có hoạt ảnh bộ sưu tập</string>
+    <string name="you_have_no_tv_shows">Không có TV show</string>
+    <string name="you_have_no_anime_shows">Không có hoạt ảnh TV show</string>
+    <plurals name="Nmovies">
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> phim</item>
+    </plurals>
+    <plurals name="Nepisodes">
+        <!-- number of episodes is one -->
+        <!-- number of episodes is not equal to one -->
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> tập</item>
+    </plurals>
+    <plurals name="Nseasons">
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> mùa</item>
+    </plurals>
     <!-- Media Center -->
+    <string name="mediacenterlabel">Trung tâm đa phương tiện</string>
     <string name="view_mode">Chế độ hiển thị</string>
     <string name="view_mode_list">Danh sách</string>
     <string name="view_mode_grid">Áp phích</string>
@@ -146,6 +176,7 @@
     <string name="player_loading_video">Đang tải video\u2026</string>
     <string name="player_audio_track_toast">Luồng âm thanh:</string>
     <string name="player_subtitle_track_toast">Bản phụ đề:</string>
+    <string name="player_pref_subtitle_delay_title">Độ trễ</string>
     <string name="floating_player_restore">Khôi phục</string>
     <string name="floating_player_play">Phát</string>
     <string name="floating_player_pause">Tạm dừng</string>
@@ -154,6 +185,7 @@
     <string name="player_window_mode">Chế độ cửa sổ</string>
     <string name="pref_play_mode_title">Chế độ phát</string>
     <string name="pref_play_mode_entry_folder">Thư mục</string>
+    <string name="pref_audio_parameters_title">Âm thanh</string>
     <string name="pref_audio_filt_night_mode">Chế độ đêm</string>
     <string name="ui_mode_auto">Tự động</string>
     <string name="ui_mode_tv">TV</string>
@@ -174,7 +206,16 @@
     <string name="seek_to_percentage">\"Đang tua đến %s%%</string>
     <!-- Subtitles/Audio languages -->
     <string name="s_arabic">Tiếng Ả rập</string>
+    <string name="s_bulgarian">Tiếng Bulgaria</string>
+    <string name="s_czech">Tiếng Séc</string>
+    <string name="s_danish">Tiếng Đan Mạch</string>
+    <string name="s_german">Tiếng Đức</string>
+    <string name="s_english">Tiếng Anh</string>
+    <string name="s_greek">Tiếng Hy Lạp</string>
+    <string name="s_spanish">Tiếng Tây Ban Nha</string>
+    <string name="s_finnish">Tiếng Phần Lan</string>
     <string name="s_french">Tiếng Pháp</string>
+    <string name="s_hebrew">Tiếng Do Thái</string>
     <string name="s_hungarian">Tiếng Hungari</string>
     <string name="s_italian">Tiếng Ý</string>
     <string name="s_japanese">Tiếng Nhật</string>
@@ -182,9 +223,16 @@
     <string name="s_dutch">Tiếng Hà Lan</string>
     <string name="s_norwegian">Tiếng Na Uy</string>
     <string name="s_polish">Tiếng Ba Lan</string>
+    <string name="s_brazilian">Tiếng Brazil</string>
     <string name="s_portuguese">Tiếng Bồ Đào Nha</string>
     <string name="s_russian">Tiếng Nga</string>
+    <string name="s_thai">Tiếng Thái</string>
+    <string name="s_turkish">Tiếng Thổ Nhĩ Kỳ</string>
+    <string name="s_chinese">Tiếng Trung</string>
     <string name="s_vietnamese">Tiếng Việt</string>
+    <string name="s_indonesian">Tiếng Indonesia</string>
+    <string name="s_malay">Tiếng Malay</string>
+    <string name="s_none">Không có</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Không thể phát video</string>
     <string name="player_err_cantplaysound">Không thể phát luồng âm thanh</string>
@@ -227,8 +275,6 @@
     <string name="subtitle_vert_text">Vị trí dọc:</string>
     <string name="subtitle_outline">Phụ đề trực tuyến</string>
     <!-- Subtitle Delay Dialog -->
-    <string name="subtitle_delay_radio_ntsc2pal">NTSC &#x2192; PAL</string>
-    <string name="subtitle_delay_radio_pal2ntsc">PAL &#x2192; NTSC</string>
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
     because the right part of the quote is

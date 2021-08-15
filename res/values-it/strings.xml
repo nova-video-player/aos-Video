@@ -423,8 +423,6 @@ Copertina (rotolo di copertina)</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Aggiusta la velocità</string>
     <string name="subtitle_delay_radio_none">Nessuno</string>
-    <string name="subtitle_delay_radio_ntsc2pal">NTSC → PAL</string>
-    <string name="subtitle_delay_radio_pal2ntsc">PAL → NTSC</string>
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
     because the right part of the quote is
