@@ -78,13 +78,16 @@ public class ChannelManager {
     public static void refreshChannels(Context context) {
         if(!ArchosFeatures.isAndroidTV(context) || Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
             return;
-        
-        if (mInstance == null) {
-            mInstance = new ChannelManager(context);
-            mInstance.prepareEmptyPoster(); 
+        // harmony os for tv claims to be leanback but does not have support for channels: catch IllegalException see #460
+        try {
+            if (mInstance == null) {
+                mInstance = new ChannelManager(context);
+                mInstance.prepareEmptyPoster();
+            }
+            mInstance.prepareChannels();
+        } catch (Exception e) {
+            if (DBG) Log.e(TAG, "refreshChannels: caught exception (HarmonyOS?)", e);
         }
-
-        mInstance.prepareChannels();
     }
 
     public ChannelManager(Context context) {
