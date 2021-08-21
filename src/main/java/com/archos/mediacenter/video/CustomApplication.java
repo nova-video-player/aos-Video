@@ -22,13 +22,13 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.util.Log;
 
 import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosUtils;
 import com.archos.environment.NetworkState;
 import com.archos.filecorelibrary.jcifs.JcifsUtils;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
+import com.archos.filecorelibrary.samba.SambaDiscovery;
 import com.archos.mediacenter.utils.AppState;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
@@ -37,6 +37,7 @@ import com.archos.mediacenter.video.picasso.SmbRequestHandler;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
 import com.archos.medialib.LibAvos;
 import com.archos.mediaprovider.video.NetworkAutoRefresh;
+import com.archos.mediaprovider.video.RemoteStateService;
 import com.archos.mediaprovider.video.VideoStoreImportReceiver;
 import com.archos.mediascraper.ScraperImage;
 import com.squareup.picasso.Picasso;
@@ -49,6 +50,11 @@ import org.acra.*;
 import org.acra.annotation.*;
 import org.acra.data.StringFormat;
 import org.acra.sender.HttpSender;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 
 @AcraCore(reportFormat = StringFormat.JSON)
@@ -59,13 +65,17 @@ import org.acra.sender.HttpSender;
 
 public class CustomApplication extends Application {
 
-    private static final String TAG = "CustomApplication";
-    private static final boolean DBG = false;
+    private static Logger log = null;
 
     private NetworkState networkState = null;
     private static boolean isNetworkStateRegistered = false;
     private static boolean isAppStateListenerAdded = false;
     private static boolean isVideStoreImportReceiverRegistered = false;
+    private static boolean isNetworkStateListenerAdded = false;
+
+    private static SambaDiscovery mSambaDiscovery = null;
+
+    private PropertyChangeListener propertyChangeListener = null;
 
     private static VideoStoreImportReceiver videoStoreImportReceiver = new VideoStoreImportReceiver();
     final static IntentFilter intentFilter = new IntentFilter();
@@ -134,20 +144,22 @@ public class CustomApplication extends Application {
 
         super.onCreate();
         // init application context to make it available to all static methods
-        CustomApplication.mContext = getApplicationContext();
+        mContext = getApplicationContext();
+        // must be done after context is available
+        log = LoggerFactory.getLogger(CustomApplication.class);
         Trakt.initApiKeys(this);
         new Thread() {
             public void run() {
                 this.setPriority(Thread.MIN_PRIORITY);
-                LibAvos.initAsync(getApplicationContext());
+                LibAvos.initAsync(mContext);
             };
         }.start();
 
         // Initialize picasso thumbnail extension
         Picasso.setSingletonInstance(
-                new Picasso.Builder(getApplicationContext())
-                        .addRequestHandler(new ThumbnailRequestHandler(getApplicationContext()))
-                        .addRequestHandler(new SmbRequestHandler(getApplicationContext()))
+                new Picasso.Builder(mContext)
+                        .addRequestHandler(new ThumbnailRequestHandler(mContext))
+                        .addRequestHandler(new SmbRequestHandler(mContext))
                         .build()
         );
 
@@ -163,23 +175,42 @@ public class CustomApplication extends Application {
         intentFilter.addDataScheme("file");
 
         // Class that keeps track of activities so we can tell is we are foreground
-        if (DBG) Log.d(TAG, "onCreate: registerActivityLifecycleCallbacks AppState");
+        log.debug("onCreate: registerActivityLifecycleCallbacks AppState");
         registerActivityLifecycleCallbacks(AppState.sCallbackHandler);
 
         // NetworkState.(un)registerNetworkCallback following AppState
         if (!isAppStateListenerAdded) {
-            if (DBG) Log.d(TAG, "addListener: AppState.addOnForeGroundListener");
+            log.debug("addListener: AppState.addOnForeGroundListener");
             AppState.addOnForeGroundListener(sForeGroundListener);
             isAppStateListenerAdded = true;
         }
         handleForeGround(AppState.isForeGround());
+
+        // must be done before sambaDiscovery otherwise no context for jcifs
+        new Thread(() -> {
+            // create instance of jcifsUtils in order to pass context and initial preference
+            if (mContext == null) log.warn("onCreate: mContext null!!!");
+            if (jcifsUtils == null) jcifsUtils = JcifsUtils.getInstance(mContext);
+        }).start();
+
+        // handles NetworkState changes
+        networkState = NetworkState.instance(mContext);
+        if (propertyChangeListener == null)
+            propertyChangeListener = evt -> {
+                if (evt.getOldValue() != evt.getNewValue()) {
+                    log.trace("NetworkState for " + evt.getPropertyName() + " changed:" + evt.getOldValue() + " -> " + evt.getNewValue());
+                    launchSambaDiscovery();
+                }
+            };
+
+        launchSambaDiscovery();
 
         // init HttpImageManager manager.
         mHttpImageManager = new HttpImageManager(HttpImageManager.createDefaultMemoryCache(), 
                 new FileSystemPersistence(BASEDIR));
 
         // Note: we do not init UPnP here, we wait for the user to enter the network view
-        if (DBG) Log.d(TAG, "onCreate: TraktService.init");
+        log.debug("onCreate: TraktService.init");
         TraktService.init();
 
         NetworkAutoRefresh.init();
@@ -189,12 +220,21 @@ public class CustomApplication extends Application {
         // only launch BootupRecommandation if on AndroidTV and before Android O otherwise target TV channels
         if(ArchosFeatures.isAndroidTV(this) && Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
             BootupRecommandationService.init();
+    }
 
-        new Thread(() -> {
-            // create instance of jcifsUtils in order to pass context and initial preference
-            if (jcifsUtils == null) jcifsUtils = JcifsUtils.getInstance(getApplicationContext());
-        }).start();
-
+    private void launchSambaDiscovery() {
+        if (networkState.hasLocalConnection()) {
+            log.debug("launchSambaDiscovery: local connection, launching samba discovery");
+            // samba discovery should not be running at this stage, but better safe than sorry
+            if (mSambaDiscovery != null) {
+                mSambaDiscovery.abort();
+            }
+            SambaDiscovery.flushShareNameResolver();
+            mSambaDiscovery = new SambaDiscovery(mContext);
+            mSambaDiscovery.setMinimumUpdatePeriodInMs(0);
+            mSambaDiscovery.start();
+        } else
+            log.debug("launchSambaDiscovery: no local connection, doing nothing");
     }
 
     // link networkState register/unregister networkCallback linked to app foreground/background lifecycle
@@ -203,28 +243,49 @@ public class CustomApplication extends Application {
     };
 
     protected void handleForeGround(boolean foreground) {
-        if (DBG) Log.d(TAG, "handleForeGround: is app foreground " + foreground);
-        if (networkState == null ) networkState = NetworkState.instance(getApplicationContext());
+        log.debug("handleForeGround: is app foreground " + foreground);
+        if (networkState == null ) networkState = NetworkState.instance(mContext);
         if (foreground) {
             if (!isVideStoreImportReceiverRegistered) {
-                if (DBG) Log.d(TAG, "handleForeGround: app now in ForeGround registerReceiver for videoStoreImportReceiver");
+                log.debug("handleForeGround: app now in ForeGround registerReceiver for videoStoreImportReceiver");
                 registerReceiver(videoStoreImportReceiver, intentFilter);
             }
             if (!isNetworkStateRegistered) {
-                if (DBG) Log.d(TAG, "handleForeGround: app now in ForeGround NetworkState.registerNetworkCallback");
+                log.debug("handleForeGround: app now in ForeGround NetworkState.registerNetworkCallback");
                 networkState.registerNetworkCallback();
                 isNetworkStateRegistered = true;
             }
+            addNetworkListener();
+            launchSambaDiscovery();
         } else {
             if (isVideStoreImportReceiverRegistered) {
-                if (DBG) Log.d(TAG, "handleForeGround: app now in ForeGround registerReceiver for videoStoreImportReceiver");
+                log.debug("handleForeGround: app now in ForeGround registerReceiver for videoStoreImportReceiver");
                 unregisterReceiver(videoStoreImportReceiver);
             }
             if (isNetworkStateRegistered) {
-                if (DBG) Log.d(TAG, "handleForeGround: app now in BackGround NetworkState.unRegisterNetworkCallback");
+                log.debug("handleForeGround: app now in BackGround NetworkState.unRegisterNetworkCallback");
                 networkState.unRegisterNetworkCallback();
                 isNetworkStateRegistered = false;
             }
+            removeNetworkListener();
+        }
+    }
+
+    private void addNetworkListener() {
+        if (networkState == null) networkState = NetworkState.instance(mContext);
+        if (!isNetworkStateListenerAdded && propertyChangeListener != null) {
+            log.trace("addNetworkListener: networkState.addPropertyChangeListener");
+            networkState.addPropertyChangeListener(propertyChangeListener);
+            isNetworkStateListenerAdded = true;
+        }
+    }
+
+    private void removeNetworkListener() {
+        if (networkState == null) networkState = NetworkState.instance(mContext);
+        if (isNetworkStateListenerAdded && propertyChangeListener != null) {
+            log.trace("removeListener: networkState.removePropertyChangeListener");
+            networkState.removePropertyChangeListener(propertyChangeListener);
+            isNetworkStateListenerAdded = false;
         }
     }
 
