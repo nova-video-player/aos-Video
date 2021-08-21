@@ -43,11 +43,10 @@ public class MainActivityLeanback extends LeanbackActivity {
     private String mCurrentUiModeLeanback;
     private PermissionChecker mPermissionChecker;
 
-
-
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults){
-        mPermissionChecker.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPermissionChecker.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
     @Override
     public void onResume(){
