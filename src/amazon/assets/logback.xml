@@ -57,7 +57,7 @@
   <!--logger name="com.archos.filecorelibrary.ftp" level="TRACE"/-->
 
   <includes>
-    <include file="${EXT_DIR:-/sdcard}/Download/${PACKAGE_NAME}/logback.xml" optional="true" />
+    <include file="${LOG_DIR}/logback.xml" optional="true" />
   </includes>
 
   <root level="INFO">
