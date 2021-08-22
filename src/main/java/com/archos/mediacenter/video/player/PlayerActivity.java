@@ -570,7 +570,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         // cutout mode: display below cutout
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false)) {
+            if(mPreferences.getBoolean("enable_cutout_mode_short_edges", true)) {
                 log.debug("onCreate applying LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES");
                 attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
             }

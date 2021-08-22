@@ -693,7 +693,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     if (DBG_CONFIG) Log.d(TAG,"updateOrientation, rotation is 90");
                     // FIXME: ALIGN_PARENT_RIGHT should have been simpler but results in shifted layout by safeInsetRight+safeInsetLeft+navigationBarHeight
                     ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false)) {
+                    if(mPreferences.getBoolean("enable_cutout_mode_short_edges", true)) {
                         if (DBG_CONFIG) Log.d(TAG,"updateOrientation, shifting right PlayerActivity.safeInsetLeft=" + PlayerActivity.safeInset.get(0));
                         relativeParams.setMargins(PlayerActivity.safeInset.get(0), 0, 0, 0); // safeInset.get(0) is safeInsetLeft
                     }
@@ -701,7 +701,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 case Surface.ROTATION_0:
                     if (DBG_CONFIG) Log.d(TAG,"updateOrientation, rotation is 0 shifting up from getNavigationBarHeight=" + getNavigationBarHeight());
                     // FIXME: this is the only way found to get in portrait the seekbar on top of navigationBar
-                    if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false))
+                    if(mPreferences.getBoolean("enable_cutout_mode_short_edges", true))
                         ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                     else
                         ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -710,7 +710,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 case Surface.ROTATION_180:
                     if (DBG_CONFIG) Log.d(TAG,"updateOrientation, rotation is 180");
                     ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                    if(mPreferences.getBoolean("enable_cutout_mode_short_edges", false)) {
+                    if(mPreferences.getBoolean("enable_cutout_mode_short_edges", true)) {
                         if (DBG_CONFIG) Log.d(TAG,"updateOrientation, shifting right PlayerActivity.safeInsetTop=" + PlayerActivity.safeInset.get(1));
                         shiftUp += PlayerActivity.safeInset.get(1); // safeInset.get(1) is safeInsetTop
                     }

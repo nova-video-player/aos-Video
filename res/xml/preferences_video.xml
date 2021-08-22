@@ -41,7 +41,7 @@
             android:title="@string/audio_interface_choice_title"
             app:iconSpaceReserved="false"/>
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="enable_cutout_mode_short_edges"
             android:persistent="true"
             android:summary="@string/preference_cutout_short_edges_summary"
