@@ -4,12 +4,12 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.android.tools.build:gradle:7.0.2'
     }
 }
 
 plugins {
-    id "com.github.triplet.play" version "2.8.0"
+    id "com.github.triplet.play" version "3.6.0-agp4.2"
     id "app.brant.amazonappstorepublisher" version "0.1.0"
 }
 
@@ -55,11 +55,14 @@ apply {
     plugin("com.github.triplet.play")
 }
 
+//import com.github.triplet.gradle.androidpublisher.ReleaseStatus
+
 play {
     serviceAccountCredentials = file("nova.json")
     track = 'internal' // rollout, beta, alpha, release, internal
-    userFraction = 1.0 // rollout rate in %/100
-    releaseStatus = "completed"
+    userFraction = (double) 1.0 // rollout rate in %/100
+    //releaseStatus = 'completed'
+    //releaseStatus.set(ReleaseStatus.IN_PROGRESS)
 }
 
 amazon {
@@ -126,9 +129,6 @@ android {
             }
         }
     }
-    aaptOptions {
-        additionalParameters "--no-version-vectors"
-    }
     flavorDimensions "amazon"
     productFlavors {
         amazon {
@@ -177,6 +177,9 @@ android {
         pickFirst 'lib/x86_64/libc++_shared.so'
         pickFirst 'lib/armeabi-v7a/libc++_shared.so'
         pickFirst 'lib/arm64-v8a/libc++_shared.so'
+    }
+    androidResources {
+        additionalParameters '--no-version-vectors'
     }
     if (project.ext.has("ProjectKeyStoreFile")) {
         signingConfigs {
