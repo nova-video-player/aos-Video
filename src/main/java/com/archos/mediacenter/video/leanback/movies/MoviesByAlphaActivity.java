@@ -23,4 +23,8 @@ public class MoviesByAlphaActivity extends SingleFragmentActivity {
     public Fragment getFragmentInstance() {
         return new MoviesByAlphaFragment();
     }
+
+    public void onBackPressed(){
+        finish();
+    }
 }

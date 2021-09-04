@@ -23,4 +23,8 @@ public class EpisodesByDateActivity extends SingleFragmentActivity {
     public Fragment getFragmentInstance() {
         return new EpisodesByDateFragment();
     }
+
+    public void onBackPressed(){
+        finish();
+    }
 }

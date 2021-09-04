@@ -435,7 +435,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     public void onPause() {
         super.onPause();
         mOverlay.pause();
-        mActivity.unregisterReceiver(mUpdateReceiver);
+        try {
+            mActivity.unregisterReceiver(mUpdateReceiver);
+        } catch (IllegalArgumentException e) {
+            log.error("onPause: update receiver not registered");
+        }
     }
 
     private void updateBackground() {

@@ -23,4 +23,8 @@ public class MoviesByGenreActivity extends SingleFragmentActivity {
     public Fragment getFragmentInstance() {
         return new MoviesByGenreFragment();
     }
+
+    public void onBackPressed(){
+        finish();
+    }
 }

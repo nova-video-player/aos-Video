@@ -23,4 +23,8 @@ public class AnimesByRatingActivity extends SingleFragmentActivity {
     public Fragment getFragmentInstance() {
         return new AnimesByRatingFragment();
     }
+
+    public void onBackPressed(){
+        finish();
+    }
 }

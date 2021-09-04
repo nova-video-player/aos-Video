@@ -23,4 +23,8 @@ public class MoviesByYearActivity extends SingleFragmentActivity {
     public Fragment getFragmentInstance() {
         return new MoviesByYearFragment();
     }
+
+    public void onBackPressed(){
+        finish();
+    }
 }

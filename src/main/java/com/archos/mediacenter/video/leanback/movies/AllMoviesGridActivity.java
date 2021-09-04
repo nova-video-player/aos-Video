@@ -46,4 +46,8 @@ public class AllMoviesGridActivity extends SingleFragmentActivity {
 
         return super.onKeyDown(keyCode, event);
     }
+
+    public void onBackPressed(){
+        finish();
+    }
 }

@@ -23,4 +23,8 @@ public class AnimesByGenreActivity extends SingleFragmentActivity {
     public Fragment getFragmentInstance() {
         return new AnimesByGenreFragment();
     }
+
+    public void onBackPressed(){
+        finish();
+    }
 }

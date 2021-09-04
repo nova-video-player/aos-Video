@@ -23,4 +23,8 @@ public class TvshowsByGenreActivity extends SingleFragmentActivity {
     public Fragment getFragmentInstance() {
         return new TvshowsByGenreFragment();
     }
+
+    public void onBackPressed(){
+        finish();
+    }
 }

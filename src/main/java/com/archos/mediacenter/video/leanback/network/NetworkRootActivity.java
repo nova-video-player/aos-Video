@@ -60,6 +60,8 @@ public class NetworkRootActivity extends SingleFragmentActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    public void onBackPressed() { finish(); }
+
     private int keyupCount = 0;
     private long keyupTrainStartTimeMs = 0;
 }
