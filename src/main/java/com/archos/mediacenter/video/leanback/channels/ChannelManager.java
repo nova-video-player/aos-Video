@@ -119,8 +119,12 @@ public class ChannelManager {
     }
 
     private void onChannelsPrepared() {
-        mInstance.createChannels();
-        mInstance.refreshChannels();
+        try {
+            mInstance.createChannels();
+            mInstance.refreshChannels();
+        } catch (Exception e) {
+            if (DBG) Log.e(TAG, "onChannelsPrepared: caught exception (HarmonyOS?)", e);
+        }
     }
 
     private void createChannels() {
