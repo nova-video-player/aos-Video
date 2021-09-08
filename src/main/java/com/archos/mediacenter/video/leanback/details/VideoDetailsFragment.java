@@ -1888,7 +1888,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         }
 
         // IMDB (valid for both movies and episodes)
-        String imdbId=tags.getImdbId();
+        String imdbId = null;
+        if (tags != null) imdbId = tags.getImdbId();
         //log.debug("tags.getImdbId() = "+imdbId);
         if ((imdbId!=null) && (!imdbId.isEmpty())) {
             list.add(getResources().getString(R.string.imdb_title_url) + imdbId);
