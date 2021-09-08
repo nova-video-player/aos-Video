@@ -339,12 +339,20 @@ public class ChannelManager {
             long channelId = getChannelId(channel);
 
             if (channelId == -1) {
-                channelId = createChannel(channel);
-                channel.setId(channelId);
+                try {
+                    channelId = createChannel(channel);
+                    channel.setId(channelId);
+                } catch (Exception e) {
+                    if (DBG) Log.e(TAG, "CreateChannelTask:doInBackground: caught exception (HarmonyOS?)", e);
+                }
             }
             else {
-                channel.setId(channelId);
-                updateChannel(channel);
+                try {
+                    channel.setId(channelId);
+                    updateChannel(channel);
+                } catch (Exception e) {
+                    if (DBG) Log.e(TAG, "CreateChannelTask:doInBackground: caught exception (HarmonyOS?)", e);
+                }
             }
             
             return null;
@@ -374,12 +382,17 @@ public class ChannelManager {
         }
 
         private long createChannel(ChannelData channel) {
-            Uri uri = mContext.getContentResolver().insert(TvContractCompat.Channels.CONTENT_URI, buildChannel(channel).toContentValues());
-            long id = ContentUris.parseId(uri);
-            
-            ChannelLogoUtils.storeChannelLogo(mContext, id, BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.video2_full));
-            
-            return id;
+            try {
+                Uri uri = mContext.getContentResolver().insert(TvContractCompat.Channels.CONTENT_URI, buildChannel(channel).toContentValues());
+                long id = ContentUris.parseId(uri);
+
+                ChannelLogoUtils.storeChannelLogo(mContext, id, BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.video2_full));
+
+                return id;
+            } catch (Exception e) {
+                if (DBG) Log.e(TAG, "refreshChannels: caught exception (HarmonyOS?)", e);
+            }
+            return -1;
         }
 
         private void updateChannel(ChannelData channel) {
