@@ -1,6 +1,6 @@
 - Fix crash on Android 12/S/API31
 - Full screen display is enabled by default even on displays with cutouts
 - Properly report DTS-HD and DTS-HD MA
-- ffmpeg 4.4 and dav1d 0.9 integration 
+- ffmpeg 4.4 and dav1d 0.9.2 integration 
 - Better tv show subtitle download based on IMDB ID
 - Disable delete on UPnP shares not supporting it
