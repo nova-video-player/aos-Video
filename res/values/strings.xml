@@ -594,6 +594,9 @@
     <string name="preferences_network_mobile_vpn_summary">Use it only with VPN configuration, and beware of your data usage.</string>
     <string name="preferences_network_mobile_vpn_title">Enable network share on mobile connection</string>
 
+    <string name="preferences_network_prefer_vpn_summary">Use VPN over local network interfaces.</string>
+    <string name="preferences_network_prefer_vpn_title">Prefer VPN network</string>
+
     <string name="preferences_video_advanced">Advanced</string>
     <string name="preferences_video_advanced_quit_title">Regular preferences</string>
     <string name="preferences_video_advanced_quit_summary">Get back to regular preferences</string>
