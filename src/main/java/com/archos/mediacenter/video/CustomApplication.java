@@ -249,6 +249,7 @@ public class CustomApplication extends Application {
             if (!isVideStoreImportReceiverRegistered) {
                 log.debug("handleForeGround: app now in ForeGround registerReceiver for videoStoreImportReceiver");
                 registerReceiver(videoStoreImportReceiver, intentFilter);
+                isVideStoreImportReceiverRegistered = true;
             }
             if (!isNetworkStateRegistered) {
                 log.debug("handleForeGround: app now in ForeGround NetworkState.registerNetworkCallback");
@@ -261,6 +262,7 @@ public class CustomApplication extends Application {
             if (isVideStoreImportReceiverRegistered) {
                 log.debug("handleForeGround: app now in ForeGround registerReceiver for videoStoreImportReceiver");
                 unregisterReceiver(videoStoreImportReceiver);
+                isVideStoreImportReceiverRegistered = false;
             }
             if (isNetworkStateRegistered) {
                 log.debug("handleForeGround: app now in BackGround NetworkState.unRegisterNetworkCallback");
