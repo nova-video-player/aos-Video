@@ -762,7 +762,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         else cursor = mLastAddedAdapter.getCursor();
         int currentPosition = getRowPosition(ROW_ID_LAST_ADDED);
         log.debug("updateLastAddedRow: currentPosition=" + currentPosition);
-        if (cursor.getCount() == 0 || !mShowLastAddedRow) {
+        if (cursor != null && (cursor.getCount() == 0 || !mShowLastAddedRow)) {
             if (currentPosition != -1)
                 mRowsAdapter.removeItems(currentPosition, 1);
         } else {
@@ -782,7 +782,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         if (cursor != null) mLastPlayedAdapter.changeCursor(cursor);
         else cursor = mLastPlayedAdapter.getCursor();
         int currentPosition = getRowPosition(ROW_ID_LAST_PLAYED);
-        if (cursor.getCount() == 0 || !mShowLastPlayedRow) {
+        if (cursor != null && (cursor.getCount() == 0 || !mShowLastPlayedRow)) {
             if (currentPosition != -1)
                 mRowsAdapter.removeItems(currentPosition, 1);
         } else {
@@ -804,7 +804,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         else cursor = mMoviesAdapter.getCursor();
         int currentPosition = getRowPosition(ROW_ID_ALL_MOVIES);
         log.debug("updateMoviesRow: current position of all movies row " + currentPosition);
-        if ((cursor ==null || cursor.getCount() == 0) || !mShowMoviesRow) { // NOT ALL MOVIES
+        if ((cursor == null || cursor.getCount() == 0) || !mShowMoviesRow) { // NOT ALL MOVIES
             log.debug("updateMoviesRow: not all movies");
             if (currentPosition != -1) { // if ALL MOVIES ROW remove it
                 log.debug("updateMoviesRow: remove all movies row at position " + currentPosition);
@@ -1131,25 +1131,25 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         log.debug("checkInitFocus: mLastAddedInitFocus="+ mLastAddedInitFocus +
                 ", mLastPlayedInitFocus="+ mLastPlayedInitFocus+
                 ", mWatchingUpNextInitFocus=" + mWatchingUpNextInitFocus);
+        log.debug("checkInitFocus: mShowWatchingUpNextRow="+ mShowWatchingUpNextRow +
+                ", mShowLastAddedRow="+ mShowLastAddedRow+
+                ", mShowLastPlayedRow=" + mShowLastPlayedRow);
         if (mWatchingUpNextInitFocus == InitFocus.NEED_FOCUS) {
             log.debug("checkInitFocus: WatchingUpNext loader ready and needs focus and row is " + (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1 ? "present" : "absent"));
-            if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1 || ! FEATURE_WATCH_UP_NEXT) {
-                mWatchingUpNextInitFocus = InitFocus.FOCUSED;
-                //mLastAddedInitFocus = InitFocus.NO_NEED_FOCUS;
-                //mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
-            }
+            mWatchingUpNextInitFocus = InitFocus.FOCUSED;
+            //mLastAddedInitFocus = InitFocus.NO_NEED_FOCUS;
+            //mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
+            if (FEATURE_WATCH_UP_NEXT && getRowPosition(ROW_ID_WATCHING_UP_NEXT) == -1) return;
         } else if (mLastAddedInitFocus == InitFocus.NEED_FOCUS) {
             log.debug("checkInitFocus: LastAdded loader ready and needs focus and row is " + (getRowPosition(ROW_ID_LAST_ADDED) != -1 ? "present" : "absent"));
-            if (getRowPosition(ROW_ID_LAST_ADDED) != -1) {
-                mLastAddedInitFocus = InitFocus.FOCUSED;
-                // removing for now since it causes first row not to be focused since isLastAddedRowVisible=true but in reality it is MoviesRow displayed
-                //mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
-            }
+            mLastAddedInitFocus = InitFocus.FOCUSED;
+            // removing for now since it causes first row not to be focused since isLastAddedRowVisible=true but in reality it is MoviesRow displayed
+            //mLastPlayedInitFocus = InitFocus.NO_NEED_FOCUS;
+            if (getRowPosition(ROW_ID_LAST_ADDED) == -1) return;
         } else if (mLastPlayedInitFocus == InitFocus.NEED_FOCUS) { // check if row is visible to avoid selecting MoviesRow in case of slow row display
             log.debug("checkInitFocus: LastPlayed loader ready and needs focus and row is " + (getRowPosition(ROW_ID_LAST_PLAYED) != -1 ? "present" : "absent"));
-            if (getRowPosition(ROW_ID_LAST_PLAYED) != -1) {
-                mLastPlayedInitFocus = InitFocus.FOCUSED;
-            }
+            mLastPlayedInitFocus = InitFocus.FOCUSED;
+            if (getRowPosition(ROW_ID_LAST_PLAYED) == -1) return;
         } else {
             log.debug("checkInitFocus: there was a cursor update on one that is tagged with FOCUSED OR NO_NEED_FOCUS");
             return; /// if nobody needs focus then exit
