@@ -147,6 +147,14 @@ public class CustomApplication extends Application {
         mContext = getApplicationContext();
         // must be done after context is available
         log = LoggerFactory.getLogger(CustomApplication.class);
+
+        // must be done before sambaDiscovery otherwise no context for jcifs
+        new Thread(() -> {
+            // create instance of jcifsUtils in order to pass context and initial preference
+            if (mContext == null) log.warn("onCreate: mContext null!!!");
+            if (jcifsUtils == null) jcifsUtils = JcifsUtils.getInstance(mContext);
+        }).start();
+
         Trakt.initApiKeys(this);
         new Thread() {
             public void run() {
@@ -185,13 +193,6 @@ public class CustomApplication extends Application {
             isAppStateListenerAdded = true;
         }
         handleForeGround(AppState.isForeGround());
-
-        // must be done before sambaDiscovery otherwise no context for jcifs
-        new Thread(() -> {
-            // create instance of jcifsUtils in order to pass context and initial preference
-            if (mContext == null) log.warn("onCreate: mContext null!!!");
-            if (jcifsUtils == null) jcifsUtils = JcifsUtils.getInstance(mContext);
-        }).start();
 
         // handles NetworkState changes
         networkState = NetworkState.instance(mContext);
