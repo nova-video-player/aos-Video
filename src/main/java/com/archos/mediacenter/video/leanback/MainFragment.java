@@ -1041,12 +1041,12 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 if (mWatchingUpNextInitFocus == InitFocus.NOT_FOCUSED)
                     mWatchingUpNextInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
                 log.debug("onLoadFinished: WatchingUpNext cursor ready with " + cursor.getCount() + " entries and " + mLastAddedInitFocus + ", updating row");
-                updateWatchingUpNextRow(cursor);
+                if (mShowWatchingUpNextRow) updateWatchingUpNextRow(cursor);
             case LOADER_ID_LAST_ADDED:
                 if (mLastAddedInitFocus == InitFocus.NOT_FOCUSED)
                     mLastAddedInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
                 log.debug("onLoadFinished: LastAdded cursor ready with " + cursor.getCount() + " entries and " + mLastAddedInitFocus + ", updating row");
-                updateLastAddedRow(cursor);
+                if (mShowLastAddedRow) updateLastAddedRow(cursor);
                 // on new video additions boxes are rebuilt
                 // note: this is not triggered onResume
                 if (!scanningOnGoing) { // rebuild box only if not scanning
@@ -1089,7 +1089,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 if (mLastPlayedInitFocus == InitFocus.NOT_FOCUSED)
                     mLastPlayedInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
                 log.debug("onLoadFinished: LastPlayed cursor ready with " + cursor.getCount() + " entries and " + mLastAddedInitFocus + ", updating row");
-                updateLastPlayedRow(cursor);
+                if (mShowLastPlayedRow) updateLastPlayedRow(cursor);
                 break;
             case LOADER_ID_ALL_MOVIES:
                 log.debug("onLoadFinished: AllMovies cursor ready with " + cursor.getCount() + " entries, updating row/box");
@@ -1155,8 +1155,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             return; /// if nobody needs focus then exit
         }
         log.debug("checkInitFocus: sets focus on row 0 with animation if above rows were not visible it happens on network first");
-        // FIXME FEATURE_WATCH_UP_NEXT source of the crash
-        if (! FEATURE_WATCH_UP_NEXT) this.setSelectedPosition(0, true);
+        if ((FEATURE_WATCH_UP_NEXT && mShowWatchingUpNextRow) || mShowLastAddedRow || mShowLastPlayedRow) this.setSelectedPosition(0, true);
     }
 
     /**
