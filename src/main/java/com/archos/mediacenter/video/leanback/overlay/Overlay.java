@@ -26,12 +26,15 @@ import android.view.ViewGroup;
 import com.archos.customizedleanback.app.MyVerticalGridFragment;
 import com.archos.mediacenter.video.R;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * ScannerAndScraperProgress must be created while in the Fragment.onViewCreated() AND must be "paused" and "resumed" in onPause() and onResume()
  * Created by vapillon on 26/05/15.
  */
 public class Overlay {
-    private static final String TAG = "Overlay";
+    private static final Logger log = LoggerFactory.getLogger(Overlay.class);
 
     // For now i'm doing some basic polling...
     final static int REPEAT_PERIOD_MS = 1000;
@@ -47,7 +50,7 @@ public class Overlay {
      * @param fragment
      */
     public Overlay(Fragment fragment) {
-
+        log.debug("Overlay: creation");
         if (!fragment.isAdded()) {
             throw new IllegalStateException("Overlay must be created once the fragment is added!");
         }
@@ -86,6 +89,7 @@ public class Overlay {
      * MUST be called in the fragment onResume method
      */
     public void destroy() {
+        log.debug("destroy");
         mScanProgress.destroy();
         mClock.destroy();
     }
@@ -94,6 +98,7 @@ public class Overlay {
      * MUST be called in the fragment onDestroyView method
      */
     public void resume() {
+        log.debug("resume");
         mScanProgress.resume();
         mClock.resume();
     }
@@ -102,6 +107,7 @@ public class Overlay {
      * MUST be called in the fragment onPause method
      */
     public void pause() {
+        log.debug("pause");
         mScanProgress.pause();
         mClock.pause();
     }
@@ -110,10 +116,12 @@ public class Overlay {
      * To be called whenever you want to hide the overlay widgets
      */
     public void hide() {
+        log.debug("hide");
         mOverlayRoot.setVisibility(View.GONE);
     }
 
     public void show() {
+        log.debug("show");
         mOverlayRoot.setVisibility(View.VISIBLE);
     }
 }

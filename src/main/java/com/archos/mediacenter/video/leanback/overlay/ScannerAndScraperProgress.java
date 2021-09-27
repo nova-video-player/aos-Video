@@ -25,10 +25,15 @@ import com.archos.mediaprovider.ImportState;
 import com.archos.mediaprovider.video.NetworkScannerReceiver;
 import com.archos.mediascraper.AutoScrapeService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by vapillon on 16/06/15.
  */
 public class ScannerAndScraperProgress {
+
+    private static final Logger log = LoggerFactory.getLogger(ScannerAndScraperProgress.class);
 
     // For now i'm doing some basic polling...
     final static int REPEAT_PERIOD_MS = 1000;
@@ -50,17 +55,18 @@ public class ScannerAndScraperProgress {
         mProgressGroup = overlayContainer.findViewById(R.id.progress_group);
         mProgressWheel = (ProgressBar) mProgressGroup.findViewById(R.id.progress);
         mCount = (TextView) mProgressGroup.findViewById(R.id.count);
-
+        log.debug("ScannerAndScraperProgress: creation");
         mInitialScanMessage = context.getString(R.string.initial_scan);
-
         mRepeatHandler.post(mRepeatRunnable);
     }
 
     public void destroy() {
+        log.debug("destroy");
         // all things that need to be stopped are stopped in pause() already
     }
 
     public void resume() {
+        log.debug("resume: view visible");
         mGeneralVisibility = View.VISIBLE;
         updateCount();
         updateVisibility();
@@ -68,6 +74,7 @@ public class ScannerAndScraperProgress {
     }
 
     public void pause() {
+        log.debug("pause: view gone");
         mGeneralVisibility = View.GONE;
         updateVisibility();
         mRepeatHandler.removeCallbacks(mRepeatRunnable);
@@ -78,6 +85,7 @@ public class ScannerAndScraperProgress {
         public void run() {
             boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking() || AutoScrapeService.isScraping() || ImportState.VIDEO.isInitialImport() || ImportState.VIDEO.isRegularImport();
             mStatusVisibility = scanningOnGoing ? View.VISIBLE : View.GONE;
+            log.debug("mRepeatRunnable: visibility " + mStatusVisibility);
             updateCount();
             updateVisibility();
             mRepeatHandler.postDelayed(this, REPEAT_PERIOD_MS);
@@ -89,8 +97,7 @@ public class ScannerAndScraperProgress {
     private void updateVisibility() {
         if ((mGeneralVisibility == View.VISIBLE) && (mStatusVisibility == View.VISIBLE)) {
             mProgressGroup.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             mProgressGroup.setVisibility(View.GONE);
         }
     }
@@ -112,9 +119,11 @@ public class ScannerAndScraperProgress {
 
         // Display count only if greater than zero
         if (count > 0) {
+            log.debug("mRepeatRunnable: updateCount visible " + count);
             mCount.setText(msg+Integer.toString(count));
             mCount.setVisibility(View.VISIBLE);
         } else {
+            log.debug("mRepeatRunnable: updateCount invisible");
             mCount.setVisibility(View.INVISIBLE);
         }
     }
