@@ -64,13 +64,13 @@
   <logger name="com.archos.mediascraper.EpisodeTags" level="DEBUG"/>
   <logger name="com.archos.mediascraper.ScraperImage" level="DEBUG"/>-->
 
-  <logger name="com.archos.mediaprovider.video.VideoStoreImportReceiver" level="DEBUG"/>
+  <!--<logger name="com.archos.mediaprovider.video.VideoStoreImportReceiver" level="DEBUG"/>
   <logger name="com.archos.mediaprovider.video.VideoStoreImportService" level="DEBUG"/>
-
+  <logger name="com.archos.mediaprovider.ImportState" level="DEBUG"/>
   <logger name="com.archos.mediacenter.video.leanback.overlay.Overlay" level="DEBUG"/>
   <logger name="com.archos.mediacenter.video.leanback.overlay.ScannerAndScraperProgress" level="DEBUG"/>
   <logger name="com.archos.mediaprovider.video.NetworkScannerReceiver" level="DEBUG"/>
-  <logger name="com.archos.mediaprovider.video.NetworkScannerServiceVideom" level="DEBUG"/>
+  <logger name="com.archos.mediaprovider.video.NetworkScannerServiceVideo" level="DEBUG"/>-->
 
   <!--<logger name="com.archos.filecorelibrary.localstorage.LocalStorageFileEditor" level="DEBUG"/>-->
 
