@@ -85,7 +85,11 @@ public class ScannerAndScraperProgress {
         public void run() {
             boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking() || AutoScrapeService.isScraping() || ImportState.VIDEO.isInitialImport() || ImportState.VIDEO.isRegularImport();
             mStatusVisibility = scanningOnGoing ? View.VISIBLE : View.GONE;
-            log.debug("mRepeatRunnable: visibility " + mStatusVisibility);
+            log.trace("mRepeatRunnable: visibility " + mStatusVisibility + " because scanningOngoing " + scanningOnGoing +
+                    " due to networkScanner " + NetworkScannerReceiver.isScannerWorking() +
+                    " due to autoScrapeService " + AutoScrapeService.isScraping() +
+                    " due to isInitialImport " + ImportState.VIDEO.isInitialImport() +
+                    " due to isRegularImport " + ImportState.VIDEO.isRegularImport());
             updateCount();
             updateVisibility();
             mRepeatHandler.postDelayed(this, REPEAT_PERIOD_MS);
@@ -95,6 +99,7 @@ public class ScannerAndScraperProgress {
 
     /** Compute the visibility of the progress group. Both mGeneralVisibility and mStatusVisibility must be VISIBLE for the view to be visible */
     private void updateVisibility() {
+        log.trace("updateVisibility: (0 visible, 8 gone) mGeneralVisibility " + mGeneralVisibility + ", mStatusVisibility " + mStatusVisibility);
         if ((mGeneralVisibility == View.VISIBLE) && (mStatusVisibility == View.VISIBLE)) {
             mProgressGroup.setVisibility(View.VISIBLE);
         } else {
@@ -111,19 +116,21 @@ public class ScannerAndScraperProgress {
         if (ImportState.VIDEO.isInitialImport()) {
             msg = mInitialScanMessage+"\n";
             count = ImportState.VIDEO.getNumberOfFilesRemainingToImport();
+            log.trace("updateCount: initial import count " + count);
         }
         // If not initial import count, check autoscraper count
         if (count==0) {
             count = AutoScrapeService.getNumberOfFilesRemainingToProcess();
+            log.trace("updateCount: not initial import count " + count);
         }
 
         // Display count only if greater than zero
         if (count > 0) {
-            log.debug("mRepeatRunnable: updateCount visible " + count);
+            log.trace("updateCount: visible " + count);
             mCount.setText(msg+Integer.toString(count));
             mCount.setVisibility(View.VISIBLE);
         } else {
-            log.debug("mRepeatRunnable: updateCount invisible");
+            log.trace("updateCount: invisible");
             mCount.setVisibility(View.INVISIBLE);
         }
     }
