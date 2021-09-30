@@ -8,3 +8,4 @@
 - New refresh rate selection algorithm optimizing judder effect
 - Add domain option to samba network credential dialog
 - Optimize network shares rescan speed in case of files delete/rename
+- Dolby vision support
