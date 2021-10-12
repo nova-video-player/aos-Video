@@ -144,7 +144,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private static final int PLAYMODE_FOLDER = 1;
     private static final int PLAYMODE_REPEAT_SINGLE = 2;
     private static final int PLAYMODE_REPEAT_FOLDER = 3;
-
+    private static final int PLAYMODE_BINGE = 4;
 
     public static final int LAST_POSITION_UNKNOWN = -1;
     public static final int LAST_POSITION_END = -2;
@@ -283,8 +283,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      *              <li><b>false</b> ends after last in folder
      *              </ul>
      */
-    private void updateNextVideo(boolean repeatFolder, boolean sync) {
-        if (DBG) Log.d(TAG, "updateNextVideo: repeatfolder " + repeatFolder + ", sync " + sync);
+    private void updateNextVideo(boolean repeatFolder, boolean binge, boolean sync) {
+        if (DBG) Log.d(TAG, "updateNextVideo: repeatfolder " + repeatFolder + ", binge " + binge + ", sync " + sync);
         // reset to nothing
         mNextUri = null;
         mNextVideoId = -1;
@@ -293,7 +293,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mUpdateNextTask.setListener(null);
         }
         mUpdateNextTask = new UpdateNextTask(getContentResolver(),(Video)mIntent.getSerializableExtra(VIDEO), mUri, null, -1, mIntent.getLongExtra(PLAYLIST_ID, -1));
-        if (!sync) {
+        if (!sync) { // seems to be always the case in the calls
             mUpdateNextTask.setListener(new UpdateNextTask.Listener() {
                 @Override
                 public void onResult(Uri uri, long id) {
@@ -303,9 +303,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     mUpdateNextTask = null;
                 }
             });
-            mUpdateNextTask.execute(repeatFolder);
+            mUpdateNextTask.execute(repeatFolder, binge);
         } else {
-            mUpdateNextTask.execute(repeatFolder);
+            mUpdateNextTask.execute(repeatFolder, binge);
             UpdateNextTask.Result result = null;
             try {
                 result = mUpdateNextTask.get();
@@ -348,9 +348,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 mNextUri = null;
                 mNextVideoId = -1;
             } else if (PLAYMODE_FOLDER == newPlaymode) {
-                updateNextVideo(false, wait);
+                updateNextVideo(false, false, wait);
             } else if (PLAYMODE_REPEAT_FOLDER == newPlaymode) {
-                updateNextVideo(true, wait);
+                updateNextVideo(true, false, wait);
+            } else if (PLAYMODE_BINGE == newPlaymode) {
+                updateNextVideo(false, true, wait);
             } else {
                 if (DBG) Log.d(TAG, "unknown Playmode: " + newPlaymode);
             }

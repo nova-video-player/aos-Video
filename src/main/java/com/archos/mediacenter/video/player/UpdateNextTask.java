@@ -21,6 +21,8 @@ import android.os.AsyncTask;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import androidx.loader.content.CursorLoader;
+
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.FileComparator;
 import com.archos.filecorelibrary.FileUtils;
@@ -31,12 +33,15 @@ import com.archos.filecorelibrary.ftp.AuthenticationException;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.RawListerFactoryWithUpnp;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserMoviesBy;
+import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
+import com.archos.mediacenter.video.browser.loader.NextEpisodeLoader;
 import com.archos.mediacenter.video.browser.loader.VideosByListLoader;
 import com.archos.mediacenter.video.info.MultipleVideoLoader;
 import com.archos.mediacenter.video.info.SingleVideoLoader;
+import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediaprovider.video.ListTables;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
@@ -63,7 +68,7 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
     private final Video mVideo;
     private Uri mUri;
     private Listener mListener;
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
     private static final String TAG = "UpdateNextTask";
     protected static class Result {
         public final Uri uri;
@@ -147,8 +152,8 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
         return null;
     }
 
-    public UpdateNextTask.Result run(boolean repeatFolder) {
-        if (DBG) Log.d(TAG, "UpdateNextTask.Result: repeatFolder " + repeatFolder);
+    public UpdateNextTask.Result run(boolean repeatFolder, boolean binge) {
+        if (DBG) Log.d(TAG, "UpdateNextTask.Result: repeatFolder " + repeatFolder + ", binge " + binge);
         // reset to nothing
         Uri nextUri = null;
         long nextId = -1;
@@ -169,6 +174,21 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
                 BaseTags tags = mVideo.getFullScraperTags(ArchosUtils.getGlobalContext());
                 long currentEpisodeId = tags instanceof EpisodeTags ? tags.getOnlineId() : -1;
                 long currentMovieId = tags instanceof MovieTags ? tags.getOnlineId() : -1;
+
+                // binge watch mode to find next episode
+                if (binge && currentEpisodeId != -1) {
+                    CursorLoader loader = new NextEpisodeLoader(ArchosUtils.getGlobalContext(), (EpisodeTags)tags);
+                    Cursor c = loader.loadInBackground();
+                    if (c.getCount()>0) {
+                        c.moveToFirst();
+                        nextUri = Uri.parse(c.getString(c.getColumnIndex(VideoStore.MediaColumns.DATA)));
+                    }
+                    c.close();
+                    if (DBG) Log.d(TAG, "UpdateNextTask.Result binge mode " + nextUri);
+                    if (nextUri != null) return new Result(nextUri, nextId);
+                    else return null;
+                }
+
                 boolean useNextVideo = false;
                 String selection = "Select \n" +
                         "   v._id as _id,\n" +
@@ -359,7 +379,7 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
     protected UpdateNextTask.Result doInBackground(Boolean... params) {
         if (params.length < 1)
             return null;
-        return run(params[0]);
+        return run(params[0], params[1]);
     }
 
     @Override

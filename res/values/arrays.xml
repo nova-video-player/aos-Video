@@ -50,6 +50,7 @@
         <item>@string/pref_play_mode_entry_folder</item>
         <item>@string/pref_play_mode_entry_repeat_single</item>
         <item>@string/pref_play_mode_entry_repeat_folder</item>
+        <item>@string/pref_play_mode_entry_binge</item>
     </string-array>
     <string-array name="pref_s3d_mode_entries" translatable="false">
         <item>@string/pref_s3d_mode_entry_sbs</item>
