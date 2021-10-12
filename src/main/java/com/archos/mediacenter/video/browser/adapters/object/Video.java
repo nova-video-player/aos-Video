@@ -241,6 +241,7 @@ public class Video extends Base implements Serializable {
     }
 
     public boolean isLocalFile() {
+        if (getFileUri() == null || getFileUri().getScheme() == null) return false;
         return getFileUri().getScheme().equals("file");
     }
 
