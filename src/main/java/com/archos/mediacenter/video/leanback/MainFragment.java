@@ -54,11 +54,12 @@ import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.video.DensityTweak;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.MainActivity;
+import com.archos.mediacenter.video.browser.adapters.mappers.AnimesNShowsMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
-import com.archos.mediacenter.video.browser.loader.AllAnimesLoader;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsNoAnimeLoader;
 import com.archos.mediacenter.video.browser.loader.AnimesLoader;
+import com.archos.mediacenter.video.browser.loader.AnimesNShowsLoader;
 import com.archos.mediacenter.video.browser.loader.FilmsLoader;
 import com.archos.mediacenter.video.browser.loader.LastAddedLoader;
 import com.archos.mediacenter.video.browser.loader.LastPlayedLoader;
@@ -549,7 +550,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         // this is for the all animes row not the animation row
         mAnimesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
-        mAnimesAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
+        mAnimesAdapter.setMapper(new CompatibleCursorMapperConverter(new AnimesNShowsMapper()));
         mAnimesRow = new ListRow(ROW_ID_ALL_ANIMES, new HeaderItem(getString(R.string.all_animes_row)), mAnimesAdapter);
 
         mFileBrowsingRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
@@ -1021,8 +1022,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 else return new AllTvshowsNoAnimeLoader(mActivity, args.getString("sort"), true);
             case LOADER_ID_ALL_ANIMES:
                 log.debug("onCreateLoader ALL_ANIMES");
-                if (args == null) return new AllAnimesLoader(mActivity, true);
-                else return new AllAnimesLoader(mActivity, args.getString("sort"), true, true);
+                if (args == null) return new AnimesNShowsLoader(mActivity);
+                else return new AnimesNShowsLoader(mActivity, args.getString("sort"), true);
             case LOADER_ID_NON_SCRAPED_VIDEOS_COUNT:
                 log.debug("onCreateLoader NON_SCRAPED");
                 return new NonScrapedVideosCountLoader(mActivity);
