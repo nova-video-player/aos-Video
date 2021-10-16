@@ -54,6 +54,7 @@ import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.BootupRecommandationService;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
@@ -112,7 +113,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public static final int RESUME_FROM_LOCAL_POS = 4;
     public static final String RESUME = "resume";
     private static final String TAG = "PlayerService";
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
 
     private static final boolean PERIODIC_BOOKMARK_SAVE = false;
 
@@ -470,6 +471,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             }
         }
         if (DBG) Log.d(TAG, "mIndexHelper != null " + String.valueOf(mIndexHelper != null));
+
+        // store file that is playing
+        if (DBG) Log.d(TAG, "onStart videoUri " + mUri + ", videoId " + mVideoId);
+        CustomApplication.setLastVideoPlayedId(mVideoId);
+        CustomApplication.setLastVideoPlayedUri(mUri);
 
         if(mIndexHelper!=null&&mVideoInfo==null)
             requestVideoDb();

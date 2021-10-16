@@ -19,6 +19,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
@@ -110,6 +111,18 @@ public class CustomApplication extends Application {
 
     public boolean isAutoScraperActive() {
         return mAutoScraperActive;
+    }
+
+    // store latest video played on a global level
+    private static long mLastVideoPlayerId = -42;
+    private static Uri mLastVideoPlayedUri = null;
+    public static void setLastVideoPlayedId(long videoId) { mLastVideoPlayerId = videoId; }
+    public static long getLastVideoPlayedId() { return mLastVideoPlayerId; }
+    public static void setLastVideoPlayedUri(Uri videoUri) { mLastVideoPlayedUri = videoUri; }
+    public static Uri getLastVideoPlayedUri() { return mLastVideoPlayedUri; }
+    public static void resetLastVideoPlayed() {
+        setLastVideoPlayedUri(null);
+        setLastVideoPlayedId(-42);
     }
 
     @Override

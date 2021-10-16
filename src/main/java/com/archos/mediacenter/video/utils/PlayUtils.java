@@ -46,7 +46,7 @@ import java.io.IOException;
  */
 public class PlayUtils implements IndexHelper.Listener {
     private final static String TAG = "PlayUtils";
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
 
     private IndexHelper mIndexHelper;
     private VideoDbInfo mVideoDbInfo;
@@ -58,7 +58,6 @@ public class PlayUtils implements IndexHelper.Listener {
     private Context mContext;
     private long mPlaylistId;
     private Video mVideo;
-
 
     @Override
     public void onScraped(ScrapeDetailResult result) {

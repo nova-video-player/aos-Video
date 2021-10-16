@@ -73,6 +73,7 @@ import com.archos.mediacenter.utils.imageview.ImageViewSetter;
 import com.archos.mediacenter.utils.imageview.ImageViewSetterConfiguration;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.utils.videodb.XmlDb;
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.Delete;
 import com.archos.mediacenter.video.browser.FileManagerService;
@@ -84,6 +85,7 @@ import com.archos.mediacenter.video.browser.dialogs.DialogRetrieveSubtitles;
 import com.archos.mediacenter.video.browser.dialogs.Paste;
 import com.archos.mediacenter.video.browser.filebrowsing.BrowserByFolder;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
+import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
 import com.archos.mediacenter.video.player.PlayerService;
 import com.archos.mediacenter.video.player.PrivateMode;
@@ -270,6 +272,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private String mPath ;
     private boolean mIsLaunchFromPlayer;
     private long mVideoIdFromPlayer;
+    private String mVideoPathFromPlayer;
     private TextView mGenreTextView;
     private BaseTags mTags;
     private int mPlayerType;
@@ -309,6 +312,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     public void onCreate(Bundle save){
         if (DBG) Log.d(TAG,"onCreate");
         super.onCreate(save);
+        CustomApplication.resetLastVideoPlayed();
         mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
         mVideoList = new ArrayList<>();
         mBackgroundLoader = new DelayedBackgroundLoader(getActivity(), 0, 0.2f);
@@ -679,11 +683,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             if (DBG) Log.d(TAG, "setCurrentVideo: should change video");
             mTitleBar.getMenu().clear();
 
-
             Video oldVideo = mCurrentVideo;
             mCurrentVideo = video;
             String name = null;
             if(video instanceof Episode){
+                if (DBG) Log.d(TAG, "setCurrentVideo: new video and it is an episode");
                 Episode episode = (Episode) video;
                 if(episode.getName()!=null) {
                     setTextOrHideContainer(mEpisodeTitleView, episode.getName(), mEpisodeTitleView);
@@ -694,11 +698,14 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     name = episode.getShowName();
                 }
                 setTextOrHideContainer(mEpisodeSeasonView, getContext().getString(R.string.leanback_episode_SXEX_code, episode.getSeasonNumber(), episode.getEpisodeNumber()), mEpisodeSeasonView);
+                if (DBG) Log.d(TAG, "setCurrentVideo: " + name + "-s" +
+                        episode.getSeasonNumber()+ "e" + episode.getEpisodeNumber() + " " + episode.getName());
 
                 if(mSecondaryEpisodeSeasonView!=null)
                     setTextOrHideContainer(mSecondaryEpisodeSeasonView, getContext().getString(R.string.leanback_episode_SXEX_code, episode.getSeasonNumber(), episode.getEpisodeNumber()), mSecondaryEpisodeSeasonView);
             }
             else{
+                if (DBG) Log.d(TAG, "setCurrentVideo: new video and it is NOT an episode");
                 if(video.getName()!=null)
                     name = video.getName();
                 mEpisodeSeasonView.setVisibility(View.GONE);
@@ -876,7 +883,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         if (v1.isUserHidden() != v2.isUserHidden()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isUserHidden"); return true;}
         if (v1.getPosterUri()!=null&&!v1.getPosterUri().equals(v2.getPosterUri())
                 ||v2.getPosterUri()!=null&&!v2.getPosterUri().equals(v1.getPosterUri())) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate getPosterUri"); return true;}
-
         //if (v1.subtitleCount() != v2.subtitleCount()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate subtitleCount"); return true;}
         //if (v1.externalSubtitleCountexternalSubtitleCount() != v2.externalSubtitleCount()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate externalSubtitleCount"); return true;}
         return false;
@@ -1480,7 +1486,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
 
     private void updateSourceList(){
-        if (DBG) Log.d(TAG,"updateSourceList");
         if(mVideoBadgePresenter == null)
             mVideoBadgePresenter = new VideoBadgePresenter(getActivity());
         mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
@@ -1635,7 +1640,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
         }
     }
-
 
     private class FullScraperTagsTask extends AsyncTask<Video, Void, BaseTags> {
         private final Activity mActivity;
@@ -1859,6 +1863,40 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     @Override
     public void onResume() {
+        // update video in case of binge watching or repeat mode
+        if (DBG) Log.d(TAG, "onResume: mIsLeavingPlayerActivity " + mIsLeavingPlayerActivity);
+        long playerVideoId = CustomApplication.getLastVideoPlayedId();
+        Uri playerVideoUri = CustomApplication.getLastVideoPlayedUri();
+        if (DBG) Log.d(TAG, "onResume: current mVideo " + mCurrentVideo.getFileUri() + "(" + mCurrentVideo.getId() +
+                "), playerVideo " + playerVideoUri + "(" + playerVideoId +"), mVideoIdFromPlayer " + mVideoIdFromPlayer +
+                ", mVideoFromPlayer " + mVideoPathFromPlayer + "(" + mVideoIdFromPlayer + ")");
+        if ((playerVideoId != -42 && mCurrentVideo.getId() != playerVideoId) ||
+                (playerVideoUri != null && mCurrentVideo.getFileUri() != playerVideoUri)) {
+            Video mNewVideo;
+            mVideoPathFromPlayer = playerVideoUri.toString();
+            mVideoIdFromPlayer = playerVideoId;
+            if (DBG) Log.d(TAG, "onResume: not the same video than before (repeat mode?) target is " + mVideoPathFromPlayer);
+            // get mVideo set to new video
+            CursorLoader loader = new MultipleVideoLoader(getActivity(), mVideoPathFromPlayer);
+            Cursor c = loader.loadInBackground();
+            if (c.getCount()>0) {
+                c.moveToFirst();
+                mNewVideo = (Video) new CompatibleCursorMapperConverter(new VideoCursorMapper()).convert(c);
+                if (DBG) Log.d(TAG, "onResume: yay we get a new video " + mNewVideo.getFilePath());
+                setSelectedSource(mNewVideo);
+                //setCurrentVideo(mNewVideo);
+                //updateSourceList();
+            } else {
+                if (DBG) Log.d(TAG, "onResume: oops no video found");
+            }
+            c.close();
+            // refresh overall UI?
+            // TODO MARC?
+
+            //LoaderManager.getInstance(this).restartLoader(1, null, this);
+            //mFirstOnResume = true; // trigger reload of the info
+        }
+
         if(mIsLeavingPlayerActivity)
             StoreRatingDialogBuilder.displayStoreRatingDialogIfNeeded(getContext());
         mIsLeavingPlayerActivity = false;

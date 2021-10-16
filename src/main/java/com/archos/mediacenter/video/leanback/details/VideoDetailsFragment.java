@@ -75,6 +75,7 @@ import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.utils.videodb.XmlDb;
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.BootupRecommandationService;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.lists.ListDialog;
@@ -277,6 +278,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         log.debug("onCreate");
+
+        CustomApplication.resetLastVideoPlayed();
 
         mSubtitleListCache = new HashMap<>();
         mVideoMetadateCache = new HashMap<>();
@@ -511,6 +514,33 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 }
             },2000);
         }
+
+        // update video in case of binge watching or repeat mode
+        log.debug("onResume: mFirstOnResume " + mFirstOnResume + ", mResumeFromPlayer " + mResumeFromPlayer);
+        long playerVideoId = CustomApplication.getLastVideoPlayedId();
+        Uri playerVideoUri = CustomApplication.getLastVideoPlayedUri();
+        log.debug("onResume: current mVideo " + mVideo.getFileUri() + "(" + mVideo.getId() +
+                "), playerVideo " + playerVideoUri + "(" + playerVideoId +"), mVideoIdFromPlayer " + mVideoIdFromPlayer +
+                ", mVideoFromPlayer " + mVideoPathFromPlayer + "(" + mVideoIdFromPlayer + ")");
+        if ((playerVideoId != -42 && mVideo.getId() != playerVideoId) ||
+            (playerVideoUri != null && mVideo.getFileUri() != playerVideoUri)) {
+            mVideoPathFromPlayer = playerVideoUri.toString();
+            mVideoIdFromPlayer = playerVideoId;
+            log.debug("onResume: not the same video than before (repeat mode?) target is " + mVideoPathFromPlayer);
+            // get mVideo set to new video
+            CursorLoader loader = new MultipleVideoLoader(getActivity(), mVideoPathFromPlayer);
+            Cursor c = loader.loadInBackground();
+            if (c.getCount()>0) {
+                c.moveToFirst();
+                mVideo = (Video) new CompatibleCursorMapperConverter(new VideoCursorMapper()).convert(c);
+                log.debug("onResume: yay we get a new video " + mVideo.getFilePath());
+            } else {
+                log.debug("onResume: oops no video found");
+            }
+            c.close();
+            mFirstOnResume = true; // trigger reload of the info
+        }
+
         // Launch the first details task
         if (mFirstOnResume) {
             if (mVideo!=null) {
@@ -709,7 +739,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         }
     };
 
-    //--------------------------------------------------------------------
+
+        //--------------------------------------------------------------------
     // Implements LoaderCallbacks<Cursor>
     // We use a SingleVideoLoader to get updated from the DB using the Loader framework
     //--------------------------------------------------------------------
@@ -718,15 +749,19 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         // If we don't have the video object
         if (mVideo==null) {
             if (mVideoIdFromPlayer >=0) {
+                log.debug("onCreateLoader: mVideo is null, working from mVideoIdFromPlayer " + mVideoIdFromPlayer);
                 return new MultipleVideoLoader(getActivity(), mVideoIdFromPlayer);
             } else {
+                log.debug("onCreateLoader: mVideo is null, working from mVideoPathFromPlayer " + mVideoPathFromPlayer);
                 return new MultipleVideoLoader(getActivity(), mVideoPathFromPlayer);
             }
         }
         // If we already have the Video object
         else if (mVideo.isIndexed()) {
+            log.debug("onCreateLoader: mVideo is known and indexed with id " + mVideo.getId());
             return new MultipleVideoLoader(getActivity(), mVideo.getId());
         } else {
+            log.debug("onCreateLoader: mVideo is known not indexed with path " + mVideo.getFilePath());
             return new MultipleVideoLoader(getActivity(), mVideo.getFilePath());
         }
     }
@@ -881,7 +916,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     }.start();
                 }
             }
-
         }
     }
 
@@ -1073,9 +1107,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             }
     }
 
-
-
-
     /**
      * will reload every row with video params EXCEPT poster
      * @param video
@@ -1148,11 +1179,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 ((BackgroundColorPresenter) pres).setBackgroundColor(mColor);
         }
 
-
         if(mVideoList.size()>1) {
             //selectItem
             mFileListRow.setStartingSelectedPosition(mVideoList.indexOf(video));
-
         }
 
         mIsTvEpisode = video instanceof Episode;
@@ -1165,8 +1194,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         // Plot, Cast, Posters, Backdrops, Links rows will be added after, once we get the Scraper Tags
 
-
-
         // Start the scraper related task (backdrop, poster list, backdrop list, web links)
 
         if (video.hasScraperData()) {
@@ -1178,7 +1205,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             // Backdrop must be done in non-scrap case because there may be a backdrop remaining from previous scrap data than need to be removed (when removing scrap data)
             mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(video);
         }
-
 
         // Check subtitles. Better to do it before VideoInfoTask because it should be quicker and it is displayed higher in the Fragment
         if(mSubtitleListCache.get(video.getFileUri())==null)
@@ -1272,9 +1298,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             fullyReloadVideo(mVideo,result);
         }
     }
-
-
-
 
     private class VideoInfoTask extends AsyncTask<Video, Integer, VideoMetadata> {
         @Override
@@ -1554,11 +1577,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             case REQUEST_CODE_REMOTE_RESUME_AFTER_ADS_ACTIVITY:
                 resume = PlayerActivity.RESUME_FROM_REMOTE_POS;
                 resumePos = mVideo.getRemoteResumeMs();
-            break;
-
+                break;
             case REQUEST_CODE_PLAY_FROM_BEGIN_AFTER_ADS_ACTIVITY:
                 resume =  PlayerActivity.RESUME_NO;
-            break;
+                break;
         }
         mResumeFromPlayer = true;
         PlayUtils.startVideo(getActivity(), mVideo, resume, false,resumePos, this, getActivity().getIntent().getLongExtra(EXTRA_LIST_ID, -1));
