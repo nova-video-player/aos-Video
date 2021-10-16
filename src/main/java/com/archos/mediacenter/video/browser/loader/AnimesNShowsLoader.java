@@ -61,9 +61,10 @@ ORDER BY uName ASC
             "CASE WHEN s_id IS NULL THEN m_actors ELSE e_actors END uActors",
             "CASE WHEN s_id IS NULL THEN m_year ELSE s_premiered END uYear",
             "CASE WHEN s_id IS NULL THEN m_po_large_file ELSE s_po_large_file END uPoster",
+            "CASE WHEN s_id IS NULL THEN '0' ELSE COUNT(CASE bookmark WHEN -2 THEN 1 ELSE NULL END) END episode_watched_count",
             "CASE WHEN s_id IS NULL THEN '0' ELSE COUNT(DISTINCT e_season) END season_count",
             "CASE WHEN s_id IS NULL THEN '0' ELSE COUNT(DISTINCT e_episode) END episode_count",
-            "CASE WHEN s_id IS NULL THEN COUNT(DISTINCT  m_id) ELSE COUNT(DISTINCT e_id) END count"
+            "CASE WHEN s_id IS NULL THEN COUNT(DISTINCT m_id) ELSE COUNT(DISTINCT e_id) END count"
     };
 
     private String mSortOrder;
