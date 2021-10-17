@@ -334,7 +334,7 @@
     <string name="pref_play_mode_entry_folder">Folder</string>
     <string name="pref_play_mode_entry_repeat_folder">Repeat folder</string>
     <string name="pref_play_mode_entry_repeat_single">Repeat single</string>
-    <string name="pref_play_mode_entry_binge">Binge watch (TV)</string>
+    <string name="pref_play_mode_entry_binge">Binge watching</string>
     <string name="pref_audio_parameters_title">Sound</string>
     <string name="pref_audio_filt_title">Audio Boost</string>
     <string name="pref_audio_filt_night_mode">Night Mode</string>
