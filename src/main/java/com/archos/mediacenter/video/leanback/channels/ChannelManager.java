@@ -27,6 +27,7 @@ import com.archos.environment.ArchosFeatures;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.AnimesLoader;
+import com.archos.mediacenter.video.browser.loader.AnimesNShowsLoader;
 import com.archos.mediacenter.video.browser.loader.LastAddedLoader;
 import com.archos.mediacenter.video.browser.loader.LastPlayedLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
@@ -321,7 +322,7 @@ public class ChannelManager {
             mChannels.get(mRecentlyPlayed).setLoader(new LastPlayedLoader(mContext));
             mChannels.get(mAllMovies).setLoader(new MoviesLoader(mContext, allMoviesSortOrder, true, true));
             mChannels.get(mAllTvShows).setLoader(new AllTvshowsLoader(mContext, allTvShowsSortOrder, true));
-            mChannels.get(mAllAnimes).setLoader(new AnimesLoader(mContext, allAnimesSortOrder, true, true));
+            mChannels.get(mAllAnimes).setLoader(new AnimesNShowsLoader(mContext, allAnimesSortOrder, true));
 
             for(ChannelData channel : mChannels.values()) {
                 if (channel.getListVideoIds() != null)
