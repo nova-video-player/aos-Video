@@ -1867,9 +1867,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         if (DBG) Log.d(TAG, "onResume: mIsLeavingPlayerActivity " + mIsLeavingPlayerActivity);
         long playerVideoId = CustomApplication.getLastVideoPlayedId();
         Uri playerVideoUri = CustomApplication.getLastVideoPlayedUri();
-        if (DBG) Log.d(TAG, "onResume: current mVideo " + mCurrentVideo.getFileUri() + "(" + mCurrentVideo.getId() +
+        if (mCurrentVideo != null) if (DBG) Log.d(TAG, "onResume: current mCurrentVideo " + mCurrentVideo.getFileUri() + "(" + mCurrentVideo.getId() +
                 "), playerVideo " + playerVideoUri + "(" + playerVideoId +"), mVideoIdFromPlayer " + mVideoIdFromPlayer +
                 ", mVideoFromPlayer " + mVideoPathFromPlayer + "(" + mVideoIdFromPlayer + ")");
+        else if (DBG) Log.d(TAG, "onResume: current mVideo is null");
+
         if ((playerVideoId != -42 && mCurrentVideo.getId() != playerVideoId) ||
                 (playerVideoUri != null && mCurrentVideo.getFileUri() != playerVideoUri)) {
             Video mNewVideo;

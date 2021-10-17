@@ -519,9 +519,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         log.debug("onResume: mFirstOnResume " + mFirstOnResume + ", mResumeFromPlayer " + mResumeFromPlayer);
         long playerVideoId = CustomApplication.getLastVideoPlayedId();
         Uri playerVideoUri = CustomApplication.getLastVideoPlayedUri();
-        log.debug("onResume: current mVideo " + mVideo.getFileUri() + "(" + mVideo.getId() +
+        if (mVideo != null) log.debug("onResume: current mVideo " + mVideo.getFileUri() + "(" + mVideo.getId() +
                 "), playerVideo " + playerVideoUri + "(" + playerVideoId +"), mVideoIdFromPlayer " + mVideoIdFromPlayer +
                 ", mVideoFromPlayer " + mVideoPathFromPlayer + "(" + mVideoIdFromPlayer + ")");
+        else log.debug("onResume: current mVideo is null");
         if ((playerVideoId != -42 && mVideo.getId() != playerVideoId) ||
             (playerVideoUri != null && mVideo.getFileUri() != playerVideoUri)) {
             mVideoPathFromPlayer = playerVideoUri.toString();
