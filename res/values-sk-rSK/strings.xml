@@ -21,7 +21,10 @@
     <string name="goto_start">Knižnica</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
     <!-- Menu item to refresh servers list -->
+    <string name="refresh_servers_list">Refresh server list</string>
     <!-- Menu item to enable network shares -->
+    <string name="enable_network_shares">Enable network shares</string>
+    <string name="initial_scan">Initial scan</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Hľadať</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -34,14 +37,31 @@
     <!-- Context menu item -->
     <string name="play_selection">Prehrať</string>
     <!-- Context menu item -->
+    <string name="multiple_selection">Multiple selection</string>
     <!-- Context menu item -->
     <string name="play_from_beginning">Prehrať od začiatku</string>
     <!-- Dialog box button -->
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">\u00200123456789AÁBCČDĎEÉĚFGHCHIÍJKLMNŇOÓPQRŘSŠTŤUÚVWXYÝZŽ</string>
     <!-- The string used in file/folder infos dialog. -->
+    <string name="info_duration">Duration</string>
+    <string name="video_sources">Zdroje</string>
     <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">Film</string>
+    <string name="info_tab_show">Šou</string>
+    <string name="info_tab_episode">Epizóda</string>
+    <string name="info_tab_video">Video</string>
+    <string name="info_tab_file">Informácie o súbore</string>
+    <string name="info_tab_share">Zdielať</string>
+    <string name="info_menu_backdrop_select">Pozadie/ia/í</string>
+    <string name="info_menu_poster_select">Vyberte ďalšiu fotografiu</string>
+    <string name="info_menu_series_poster_select">Vyberte ďalšiu fotografiu</string>
     <!-- COVER ROLL -->
+    <string name="recently_added">Nedávno pridané</string>
+    <string name="recently_added_videos">Nedávno pridané</string>
+    <string name="recently_played">Nedávno prehrávané</string>
+    <string name="recently_played_videos">Nedávno prehrávané</string>
+    <string name="video_lists">Playlisty</string>
     <!-- The string used in main storage list -->
     <!-- VIDEO -->
     <!-- for small screens -->

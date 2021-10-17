@@ -300,6 +300,7 @@
     <string name="pref_play_mode_entry_folder">Dossier</string>
     <string name="pref_play_mode_entry_repeat_folder">Répétition du dossier</string>
     <string name="pref_play_mode_entry_repeat_single">Répétition du fichier</string>
+    <string name="pref_play_mode_entry_binge">Série en continue</string>
     <string name="pref_audio_parameters_title">Audio</string>
     <string name="pref_audio_filt_title">Boost audio</string>
     <string name="pref_audio_filt_night_mode">Mode nuit</string>
@@ -543,6 +544,8 @@
     <string name="preferences_video_licenses">Licences</string>
     <string name="preferences_network_mobile_vpn_summary">N\'activez cette option que pour les connexions VPN. Attention à la consommation de données.</string>
     <string name="preferences_network_mobile_vpn_title">Activer les partages réseau avec une connexion mobile</string>
+    <string name="preferences_network_prefer_vpn_summary">Utilise le VPN plutôt que les autres interfaces réseau.</string>
+    <string name="preferences_network_prefer_vpn_title">Préférer le réseau VPN</string>
     <string name="preferences_video_advanced">Avancé</string>
     <string name="preferences_video_advanced_quit_title">Paramètres par défaut</string>
     <string name="preferences_video_advanced_quit_summary">Retour aux paramètres par défaut</string>

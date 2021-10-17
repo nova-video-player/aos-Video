@@ -28,43 +28,43 @@
     <!-- Library screen, menu item -->
     <string name="search_title">Поиск</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
-    <string name="unknown_track_name">Неизвестный</string>
+    <string name="unknown_track_name">Не определен</string>
     <!-- Toast after turning shuffle on -->
     <!-- Toast after turning shuffle off -->
     <!-- Toast after turning single repeat on -->
     <!-- Context menu item -->
     <string name="info">Информация</string>
     <!-- Context menu item -->
-    <string name="play_selection">Воспроизвести</string>
+    <string name="play_selection">Смотреть</string>
     <!-- Context menu item -->
-    <string name="multiple_selection">Несколько вариантов</string>
+    <string name="multiple_selection">Выбрать несколько объектов</string>
     <!-- Context menu item -->
-    <string name="play_from_beginning">Играть с начала</string>
+    <string name="play_from_beginning">Смотреть с начала</string>
     <!-- Dialog box button -->
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet"> АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ</string>
     <!-- The string used in file/folder infos dialog. -->
-    <string name="info_duration">Длительность:</string>
+    <string name="info_duration">Длительность</string>
     <string name="video_sources">Источники</string>
     <!-- Infos dialog tabs -->
     <string name="info_tab_movie">Фильм</string>
-    <string name="info_tab_show">Шоу</string>
+    <string name="info_tab_show">Сериал</string>
     <string name="info_tab_episode">Серии</string>
     <string name="info_tab_video">Видео</string>
     <string name="info_tab_file">Информация о файле</string>
     <string name="info_tab_backdrop_chooser">Выбор фона</string>
     <string name="info_tab_poster_chooser">Выбор постера</string>
     <string name="info_tab_share">Поделиться</string>
-    <string name="info_menu_backdrop_select">Фон</string>
-    <string name="info_menu_series_backdrop_select">Фон для серии</string>
+    <string name="info_menu_backdrop_select">Выбрать другой фон</string>
+    <string name="info_menu_series_backdrop_select">Выбрать другой фон</string>
     <string name="info_menu_poster_select">Выбрать другой постер</string>
     <string name="info_menu_series_poster_select">Выбрать другой постер</string>
     <!-- COVER ROLL -->
     <string name="watching_up_next">Смотрю/Следующий</string>
-    <string name="recently_added">Недавно добавленные</string>
-    <string name="recently_added_videos">Недавно добавленные</string>
-    <string name="recently_played">Недавно воспроизведенные</string>
-    <string name="recently_played_videos">Недавно воспроизведенные</string>
+    <string name="recently_added">Добавленные</string>
+    <string name="recently_added_videos">Добавленные</string>
+    <string name="recently_played">Просмотренные</string>
+    <string name="recently_played_videos">Просмотренные</string>
     <string name="video_lists">Плейлисты</string>
     <!-- The string used in main storage list -->
     <string name="external_storage">Внешн.</string>
@@ -73,7 +73,7 @@
     <string name="sd_card_storage">Карта SD</string>
     <string name="usb_host_storage">Внешний диск</string>
     <string name="other_storage">Хранилище файлов</string>
-    <string name="network_media_servers">Медиа серверы (UPnP)</string>
+    <string name="network_media_servers">Медиа-серверы (UPnP)</string>
     <string name="network_shared_folders">Общие папки (SMB)</string>
     <string name="network_connected_as">Подключен как %s</string>
     <string name="network_guest">гость</string>
@@ -81,38 +81,38 @@
     <string name="network_jcifs">Samba (Экспериментальный)</string>
     <string name="network_cling">UPNP (Экспериментальный)</string>
     <string name="recordings_storage">Записи</string>
-    <string name="root_storage">Встроенная память</string>
+    <string name="root_storage">Bнутреннее хранилище</string>
     <string name="cannot_list">Невозможно отобразить содержимое</string>
     <!-- VIDEO -->
     <string name="video">Nova Video Player</string>
     <string name="videos">Видео</string>
     <string name="all_videos">Все видео</string>
-    <string name="not_played_yet_videos">Еще не вопроизв.</string>
-    <string name="video_folder">папки</string>
+    <string name="not_played_yet_videos">Еще нет просмотров</string>
+    <string name="video_folder">Папки</string>
     <string name="movies">Фильмы</string>
-    <string name="animes">Мультфильм</string>
+    <string name="animes">Мультфильмы</string>
     <string name="all_movies">Все фильмы</string>
-    <string name="all_movies_format">Все фильмы - %d</string>
+    <string name="all_movies_format">Фильмы - %d</string>
     <string name="all_animes_format">Мультфильмы - %d</string>
-    <string name="all_collections">Все коллекции</string>
-    <string name="all_collections_format">Все коллекции -  %d</string>
+    <string name="all_collections">Коллекции</string>
+    <string name="all_collections_format">Коллекции - %d</string>
     <string name="all_collection_watched">Все коллекции просмотрены</string>
     <string name="all_collection_unwatched">Коллекция не просмотрена</string>
     <plurals name="n_movies_watched">
-        <item quantity="one">%d фильм просмотрен</item>
+        <item quantity="one">Просмотрено - %d</item>
         <item quantity="few">%d фильма просмотрено</item>
         <item quantity="many">%d фильмов просмотрено</item>
         <item quantity="other">%d фильмов просмотрено</item>
     </plurals>
-    <string name="not_watched_movies_format">Не просмотрено -  %d</string>
-    <string name="not_watched_animes_format">Не просмотрено -  %d</string>
+    <string name="not_watched_movies_format">Не просмотрено - %d</string>
+    <string name="not_watched_animes_format">Не просмотрено - %d</string>
     <string name="no_movie_watched">Нет просмотренных фильмов</string>
     <string name="all_movies_watched">Все фильмы просмотрены</string>
     <string name="movies_by_alpha">Фильмы по алфавиту</string>
     <string name="movies_by_genre">Фильмы по жанру</string>
     <string name="movies_by_rating">Фильмы по рейтингу</string>
     <string name="movie_collections">Коллекции</string>
-    <string name="anime_collections">Коллекции аниме</string>
+    <string name="anime_collections">Коллекции</string>
     <string name="movies_by_year">Фильмы по году</string>
     <string name="all_tv_shows">Сериалы</string>
     <string name="all_tvshows">Все сериалы</string>
@@ -123,8 +123,8 @@
     <string name="animes_by_genre">Мультфильмы по жанру</string>
     <string name="animes_by_rating">Мультфильмы по рейтингу</string>
     <string name="animes_by_year">Мультфильмы по году</string>
-    <string name="all_tvshows_format">Все сериалы -  %d</string>
-    <string name="not_watched_tvshows_format">Не просмотрено -  %d</string>
+    <string name="all_tvshows_format">Сериалы - %d</string>
+    <string name="not_watched_tvshows_format">Не просмотрено - %d</string>
     <string name="all_animeshows_format">Мультсериалы - %d</string>
     <string name="not_watched_animeshows_format">Не просмотрено -  %d</string>
     <string name="all_seasons">Все сезоны</string>
@@ -139,18 +139,18 @@
     <string name="non_scraped_videos">Нераспознанные видео</string>
     <string name="no_server">Медиа-серверы не обнаружены</string>
     <string name="cannot_open_video">Невозможно открыть это видео</string>
-    <string name="confirm_delete">Вы действительно подтверждаете удаление?</string>
+    <string name="confirm_delete">Вы действительно хотите удалить?</string>
     <string name="deleting">Подождите, идет удаление…</string>
     <string name="cannot_delete_directory">Невозможно удалить папку</string>
     <string name="cannot_delete_file">Невозможно удалить файл</string>
     <string name="directory_deleted">Папка удалена</string>
     <string name="file_deleted">Файл удален</string>
-    <string name="resume">Возобновить</string>
-    <string name="remote_resume">Продолжить воспроизведение по сети</string>
+    <string name="resume">Продолжить</string>
+    <string name="remote_resume">Продолжить</string>
     <string name="bookmark">Закладка</string>
     <string name="delete">Удалить</string>
     <string name="confirm_delete_short">Подтвердить удаление</string>
-    <string name="delete_resume">Удалить возобновл.</string>
+    <string name="delete_resume">Отклонить продолжение</string>
     <string name="delete_bookmark">Удалить закладку</string>
     <string name="mark_as_watched">Просмотрено</string>
     <string name="mark_as_not_watched">Не просмотрено</string>
@@ -161,8 +161,8 @@
     <!-- for small screens -->
     <string name="scrap_change">Изменить информацию всех серий</string>
     <string name="scrap_series_change">Изменить информацию о сериале</string>
-    <string name="scrap_change_confirmation">Изменить все выпуски с\n\t\"%1$s\"\nна\n\t\"%2$s\"?</string>
-    <string name="scrap_change_title">Изменение всех эпизодов</string>
+    <string name="scrap_change_confirmation">Изменить все серии с\n\t\"%1$s\"\nна\n\t\"%2$s\"?</string>
+    <string name="scrap_change_title">Изменение всех серий</string>
     <string name="scrap_change_initializing">Инициализация…</string>
     <string name="scrap_change_finalizing">Завершение…</string>
     <string name="scrap_get_title">Получение данных</string>
@@ -187,18 +187,18 @@
     <string name="scrap_premiered">Премьера</string>
     <!-- Specific strings for TV shows -->
     <string name="show_network">Сеть</string>
-    <string name="episode_name">Эпизод</string>
+    <string name="episode_name">Серия</string>
     <string name="episode_season">Сезон</string>
-    <string name="episode_specials">Специальные выпуски</string>
-    <string name="episode_identification">Сезон %1$d Эпизод %2$d</string>
+    <string name="episode_specials">Спецвыпуски</string>
+    <string name="episode_identification">Сезон %1$d Серия %2$d</string>
     <string name="season_identification">Сезон %1$d</string>
     <string name="next_episode">Следующая серия</string>
     <string name="list_episodes">Список серий</string>
-    <string name="how_to_mark_season_watched">Нажмите на сезон, чтобы отметить все его эпизоды просмотренными или непросмотренными</string>
-    <string name="how_to_unindex_season">Нажмите на сезон, чтобы удалить все его эпизоды из библиотеки</string>
-    <string name="how_to_delete_season">Нажмите на сезон, чтобы удалить все его эпизоды</string>
-    <string name="mark_show_watched">Отметить все эпизоды просмотренными или непросмотренными</string>
-    <string name="unindex_show">Удалить все эпизоды из библиотеки</string>
+    <string name="how_to_mark_season_watched">Нажмите на сезон, чтобы отметить все его серии просмотренными или непросмотренными</string>
+    <string name="how_to_unindex_season">Нажмите на сезон, чтобы удалить все его серии из библиотеки</string>
+    <string name="how_to_delete_season">Нажмите на сезон, чтобы удалить все его серии</string>
+    <string name="mark_show_watched">Отметить все серии просмотренными или непросмотренными</string>
+    <string name="unindex_show">Удалить все серии из библиотеки</string>
     <string name="delete_show">Удалить все серии</string>
     <string name="no_episode_watched">Серии не просмотрены</string>
     <string name="all_episodes_watched">Все серии просмотрены</string>
@@ -448,6 +448,8 @@
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Настройка скорости</string>
     <string name="subtitle_delay_radio_none">нет</string>
+    <string name="subtitle_delay_radio_ntsc2pal">Субтитры быстрее, чем видео: NTSC &#x2192; PAL</string>
+    <string name="subtitle_delay_radio_pal2ntsc">Субтитры медленнее, чем видео: PAL &#x2192; NTSC</string>
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
     because the right part of the quote is

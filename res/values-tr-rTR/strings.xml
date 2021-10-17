@@ -89,8 +89,12 @@
     <string name="not_played_yet_videos">Henüz oynatılmadı</string>
     <string name="video_folder">Klasörler</string>
     <string name="movies">Filmler</string>
+    <string name="animes">Animasyonlar</string>
     <string name="all_movies">Tüm filmler</string>
     <string name="all_movies_format">Tüm filmler -  %d</string>
+    <string name="all_animes_format">Animasyon filmleri - %d</string>
+    <string name="all_collections">Tüm koleksiyonlar</string>
+    <string name="all_collections_format">Tüm koleksiyonlar - %d</string>
     <string name="not_watched_movies_format">İzlenmedi  -  %d</string>
     <string name="movies_by_alpha">Alfabetik sırala</string>
     <string name="movies_by_genre">Türe göre filmler</string>

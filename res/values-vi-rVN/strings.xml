@@ -84,7 +84,16 @@
     <string name="all_collections_format">Tất cả bộ sưu tập  -  %d</string>
     <string name="all_collection_watched">Bộ sưu tập đã xem</string>
     <string name="all_collection_unwatched">Bộ sưu tập chưa xem</string>
+    <plurals name="n_movies_watched">
+        <item quantity="other">%d phim đã xem</item>
+    </plurals>
     <string name="not_watched_animes_format">Chưa xem  -  %d</string>
+    <string name="no_movie_watched">Không có phim đã xem</string>
+    <string name="all_movies_watched">Tất cả phim đã xem</string>
+    <string name="movies_by_alpha">Phim theo bảng chữ cái</string>
+    <string name="movies_by_genre">Phim theo thể loại</string>
+    <string name="movies_by_rating">Phim theo xếp hạng</string>
+    <string name="movie_collections">Bộ sưu tập</string>
     <string name="all_tv_shows">Chương trình TV</string>
     <string name="all_tvshows">Tất cả chương trình TV</string>
     <string name="all_animes">Tất cả phim hoạt hình</string>
@@ -106,7 +115,9 @@
     <string name="mark_as_not_watched">Đánh dấu chưa xem</string>
     <string name="scrap_no_info">Bạn không có mô tả phim hoặc chương trình truyền hình nào cho video này.</string>
     <string name="scrap_remove">Xóa thông tin</string>
+    <string name="scrap_remove_short">Xóa</string>
     <!-- for small screens -->
+    <string name="scrap_change">Thay đổi thông tin của tất cả tập</string>
     <string name="scrap_series_change">Thay đổi thông tin loạt phim</string>
     <string name="scrap_change_confirmation">Thay đổi tất cả tập từ\n\t\"%1$s\"\nđến\n\t\"%2$s\"?</string>
     <string name="scrap_change_title">Đang sửa đổi tất cả tập</string>
@@ -120,6 +131,7 @@
     <string name="scrap_rating_format">Đánh giá: %s</string>
     <string name="scrap_year">Năm</string>
     <string name="scrap_year_format">Năm: %d</string>
+    <string name="scrap_studio">Studio</string>
     <string name="scrap_trailer">Trailer</string>
     <string name="scrap_genre">Thể loại</string>
     <string name="scrap_genre_format">Thể loại: %s</string>
@@ -130,10 +142,27 @@
     <string name="next_episode">Tập tiếp theo</string>
     <string name="list_episodes">Danh sách tập</string>
     <string name="delete_show">Xóa tất cả tập</string>
+    <string name="no_episode_watched">Không có tập đã xem</string>
+    <string name="all_episodes_watched">Tất cả tập đã xem</string>
+    <plurals name="n_episodes_watched">
+        <item quantity="other">%d tập đã xem</item>
+    </plurals>
+    <string name="scrap_processing">Đang truy xuất siêu dữ liệu…</string>
+    <string name="scrap_no_network">Không được kết nối với mạng.</string>
+    <string name="scrap_enable_network_first">"Vui lòng kết nối mạng trước để có thể chạy ứng dụng này."</string>
+    <string name="scrap_failed">Phim không tìm thấy trong cơ sở dữ liệu trực tuyến.</string>
+    <string name="start_auto_scraper_activity">Tìm kiếm thông tin trực tuyến</string>
+    <string name="scraper_settigns">Poster &amp; thông tin</string>
+    <string name="scrap_status_initial">Đang chờ</string>
     <string name="scrap_status_busy">Đang tìm...</string>
     <string name="scrap_status_success">Đã cập nhật</string>
     <string name="scrap_status_failed">Không tìm thấy thông tin</string>
+    <string name="scrap_status_rejected">Đã xóa thông tin</string>
     <string name="scrap_status_unknown">Không rõ</string>
+    <string name="scraper_abort_request">Bạn có thực sự muốn hủy bỏ việc tìm kiếm?</string>
+    <string name="scraper_no_files">Không có tập tin nào để xử lý</string>
+    <string name="scraper_no_new_files">Không có tập tin mới nào để xử lý</string>
+    <string name="scraper_no_new_files_in_folder">Không có tập tin mới nào để xử lý trong thư mục này</string>
     <string name="scraper_folder_try_again">Bạn có muốn thử lại không?</string>
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="storage">Bộ nhớ</string>
@@ -147,6 +176,7 @@
     <string name="info_subtitle">Phụ đề</string>
     <string name="info_file">Thông tin tệp</string>
     <!-- VIDEO COVER ROLL -->
+    <string name="you_have_no_video">Không có video</string>
     <string name="you_have_no_movies">Không có phim</string>
     <string name="you_have_no_animes">Không có phim hoạt hình</string>
     <string name="you_have_no_movie_collections">Không có bộ sưu tập</string>
@@ -279,10 +309,20 @@
     <!-- Add a space after the right quote
     because the right part of the quote is
     not visible otherwise -->
+    <string name="allow">Cho phép</string>
+    <string name="exit">Thoát</string>
     <!-- torrent -->
+    <string name="loading_torrent">Đang tải torrent…</string>
+    <string name="error_no_video_file">Không có tập tin video</string>
     <string name="torrent_file_to_play">Chọn tệp để phát</string>
     <!-- Shortcuts -->
     <string name="ssh_prompt">Kiểu FTP</string>
+    <string-array name="ssh_types">
+        <item>FTP</item>
+        <item>SFTP</item>
+        <item>FTPS</item>
+    </string-array>
+    <string name="remove_from_shortcuts">Xóa phím tắt</string>
     <string name="open_indexed_folder">"Mở"</string>
     <string name="ssh_port">Cổng</string>
     <string name="ssh_password">Mật khẩu</string>
@@ -302,6 +342,9 @@
     <string name="preferences_video_about">Thông tin</string>
     <string name="preferences_video_os_text">Phụ đề được cung cấp bởi</string>
     <string name="preferences_video_licenses">Giấy phép</string>
+    <string name="preferences_video_advanced">Nâng cao</string>
+    <string name="movie_scraper">Phim</string>
+    <string name="enable_auto_scrap">Tự động nhận thông tin về video mới</string>
     <string name="locale">Ngôn ngữ hệ thống</string>
     <string name="yes">Đồng ý</string>
     <string name="no">Không</string>
@@ -311,15 +354,26 @@
     <string name="video_info_custom_search_show_hint">Tên của chương trình tivi</string>
     <string name="notification_mode">Thông báo</string>
     <string name="notifications_all">Tất cả thông báo</string>
+    <string name="notifications_none">Không có thông báo</string>
     <string name="pref_format_mode_title">Định dạng</string>
     <string name="format_fullscreen">Toàn màn hình</string>
     <string name="format_optimized">Tối ưu hóa</string>
     <string name="format_original">Nguyên bản</string>
     <string name="format_stretched">Kéo giãn</string>
     <!-- Help overlay -->
+    <string name="new_videos_count">Video mới: %d</string>
     <!-- Info dialog, not indexed file -->
+    <string name="video_browser_index_file">Thêm vào thư viện</string>
+    <string name="video_browser_unindex_file">Xóa khỏi thư viện</string>
     <!-- Brightness -->
     <!--  Nfo File parsing -->
+    <string name="sort_mode">Chế độ sắp xếp</string>
+    <string name="sort_by_name_asc">Sắp xếp theo tên (a-z)</string>
+    <string name="sort_by_name_desc">Sắp xếp theo tên (z-a)</string>
+    <string name="sort_by_date_added_desc">Sắp xếp theo ngày thêm (mới trước)</string>
+    <string name="sort_by_date_added_asc">Sắp xếp theo ngày thêm (cũ trước)</string>
+    <string name="sort_by_date_played_desc">Sắp xếp ngày đã phát (mới trước)</string>
+    <string name="sort_by_date_premiered_desc">Sắp xếp theo ngày công chiếu (mới trước)</string>
     <string name="audio_interface_choice_title">Chọn giao diện âm thanh</string>
     <string name="codepage_extra_932">(Shift-JIS, EUC-JP)</string>
     <string name="codepage_extra_936">(CP936, GB231)</string>
