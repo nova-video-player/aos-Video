@@ -541,6 +541,7 @@
     <string name="preferences_video_licenses">Licenszek</string>
     <string name="preferences_network_mobile_vpn_summary">Csak VPN konfiguráció esetén használja, és figyeljen az adathasználatra.</string>
     <string name="preferences_network_mobile_vpn_title">Hálózati megosztás engedélyezése mobil kapcsolatokon</string>
+    <string name="preferences_network_prefer_vpn_title">VPN hálózatok előnyberészesítése</string>
     <string name="preferences_video_advanced">Haladó</string>
     <string name="preferences_video_advanced_quit_title">Gyakori beállítások</string>
     <string name="preferences_video_advanced_quit_summary">Vissza a gyakori beállításokhoz</string>

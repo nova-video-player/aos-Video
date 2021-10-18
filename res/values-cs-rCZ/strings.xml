@@ -284,6 +284,7 @@
     <string name="pref_play_mode_entry_folder">Složka</string>
     <string name="pref_play_mode_entry_repeat_folder">Opakovat vše ve složce</string>
     <string name="pref_play_mode_entry_repeat_single">Opakovat jednu položku</string>
+    <string name="pref_play_mode_entry_binge">Nepřetržité sledování (binge)</string>
     <string name="pref_audio_parameters_title">Zvuk</string>
     <string name="pref_audio_filt_title">Audio Boost</string>
     <string name="pref_audio_filt_night_mode">Noční režim</string>
@@ -527,6 +528,8 @@
     <string name="preferences_video_licenses">Licence</string>
     <string name="preferences_network_mobile_vpn_summary">Používejte pouze s VPN konfigurací a mějte na paměti využití vašich mobilních dat.</string>
     <string name="preferences_network_mobile_vpn_title">Zapnout sdílení sítě pro mobilní připojení</string>
+    <string name="preferences_network_prefer_vpn_summary">Upřednostnit VPN před lokální sítí.</string>
+    <string name="preferences_network_prefer_vpn_title">Upřednostnit VPN síť</string>
     <string name="preferences_video_advanced">Pokročilé</string>
     <string name="preferences_video_advanced_quit_title">Standardní nastavení</string>
     <string name="preferences_video_advanced_quit_summary">Zpět ke standardnímu nastavení</string>

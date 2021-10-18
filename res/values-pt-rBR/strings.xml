@@ -543,6 +543,8 @@
     <string name="preferences_video_licenses">Licenças</string>
     <string name="preferences_network_mobile_vpn_summary">Use-o apenas com a configuração VPN e cuidado com o seu uso de dados.</string>
     <string name="preferences_network_mobile_vpn_title">Habilitar compartilhamento de rede na conexão móvel</string>
+    <string name="preferences_network_prefer_vpn_summary">Usar VPN através de interfaces de rede locais.</string>
+    <string name="preferences_network_prefer_vpn_title">Preferir rede VPN</string>
     <string name="preferences_video_advanced">Avançado</string>
     <string name="preferences_video_advanced_quit_title">Preferências normais</string>
     <string name="preferences_video_advanced_quit_summary">Voltar para preferências normais</string>

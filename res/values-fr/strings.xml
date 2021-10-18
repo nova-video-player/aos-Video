@@ -300,7 +300,7 @@
     <string name="pref_play_mode_entry_folder">Dossier</string>
     <string name="pref_play_mode_entry_repeat_folder">Répétition du dossier</string>
     <string name="pref_play_mode_entry_repeat_single">Répétition du fichier</string>
-    <string name="pref_play_mode_entry_binge">Série en continue</string>
+    <string name="pref_play_mode_entry_binge">Rafale (binge)</string>
     <string name="pref_audio_parameters_title">Audio</string>
     <string name="pref_audio_filt_title">Boost audio</string>
     <string name="pref_audio_filt_night_mode">Mode nuit</string>
