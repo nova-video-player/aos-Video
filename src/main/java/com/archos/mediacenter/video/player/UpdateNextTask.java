@@ -278,97 +278,111 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
                 }
             }
             if (cursor1 != null) cursor1.close();
-
-            int bucketId = FileUtils.getBucketId(mUri);
-            if (DBG) Log.d(TAG, "UpdateNextTask.Result: trying to find for bucketId " + bucketId);
-            Cursor cursor;
-            // 1. Try to find the next video in the database
-            cursor = getNextInBucket(mResolver, bucketId, mUri.toString());
-            if (cursor != null) {
-                try {
-                    if (cursor.moveToFirst()) {
-                        nextUri = Uri.parse(cursor.getString(cursor.getColumnIndex(VideoStore.Files.FileColumns.DATA)));
-                        nextId = cursor.getInt(cursor.getColumnIndex(VideoStore.Files.FileColumns._ID));
-                        if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - next via getNextInBucket(DB):" + nextUri);
-                        return new Result(nextUri, nextId);
-                    } else if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - getNextInBucket empty cursor!?");
-                } finally {
-                    cursor.close();
-                }
-            } else if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - getNextInBucket null cursor!?");
-
-            if (repeatFolder) {
-                // 2. Try to find the first video in that folder in the database
-                cursor = getFirstInBucket(mResolver, bucketId);
+            if (! binge) {
+                int bucketId = FileUtils.getBucketId(mUri);
+                if (DBG)
+                    Log.d(TAG, "UpdateNextTask.Result: trying to find for bucketId " + bucketId);
+                Cursor cursor;
+                // 1. Try to find the next video in the database
+                cursor = getNextInBucket(mResolver, bucketId, mUri.toString());
                 if (cursor != null) {
                     try {
                         if (cursor.moveToFirst()) {
                             nextUri = Uri.parse(cursor.getString(cursor.getColumnIndex(VideoStore.Files.FileColumns.DATA)));
                             nextId = cursor.getInt(cursor.getColumnIndex(VideoStore.Files.FileColumns._ID));
-                            if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - next via getFirstInBucket(DB):" + nextUri);
+                            if (DBG)
+                                Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - next via getNextInBucket(DB):" + nextUri);
                             return new Result(nextUri, nextId);
-                        } else if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - getNextInBucket empty cursor!?");
+                        } else if (DBG)
+                            Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - getNextInBucket empty cursor!?");
                     } finally {
                         cursor.close();
                     }
-                } else if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - getFirstInBucket null cursor!?");
-            }
-            // 3. try to find the next file within the filesystem
-            if (mUri.getScheme() == null)
-                mUri = Uri.parse("file://" + mUri.toString());
-            Uri parentUri = FileUtils.getParentUrl(mUri);
-            if (parentUri != null) {
-                RawLister lister = RawListerFactoryWithUpnp.getRawListerForUrl(parentUri);
+                } else if (DBG)
+                    Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - getNextInBucket null cursor!?");
 
-                try {
-                    List<MetaFile2> files = lister.getFileList();
-                    if (files != null && files.size() > 0) {
-                        List<MetaFile2> filteredList = new ArrayList<MetaFile2>();
-                        //filter folder
-                        for (int i = 0; i < files.size(); i++) {
-                            if (files.get(i).isFile()) {
-                                String mimeType = files.get(i).getMimeType();
-                                if (mimeType != null && mimeType.startsWith("video/"))
-                                    filteredList.add(files.get(i));
-                            }
-                        }
-                        final Comparator<? super MetaFile2> comparator = new FileComparator().selectFileComparator(ListingEngine.SortOrder.SORT_BY_NAME_ASC);
-                        Collections.sort(filteredList, comparator);
-                        int total = filteredList.size();
-                        int current = -1;
-                        // try to find the current video in the list
-                        for (int i = 0; i < filteredList.size(); i++) {
-                            if (mUri.equals(filteredList.get(i).getUri())) {
-                                current = i;
-                                break;
-                            }
-                        }
-                        // if it is found
-                        if (current != -1) {
-                            int next = current + 1;
-                            // when repeat folder, just modulo
-                            if (repeatFolder) {
-                                nextUri = filteredList.get(next % total).getUri();
-                                if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - next via filesystem:" + nextUri);
+                if (repeatFolder) {
+                    // 2. Try to find the first video in that folder in the database
+                    cursor = getFirstInBucket(mResolver, bucketId);
+                    if (cursor != null) {
+                        try {
+                            if (cursor.moveToFirst()) {
+                                nextUri = Uri.parse(cursor.getString(cursor.getColumnIndex(VideoStore.Files.FileColumns.DATA)));
+                                nextId = cursor.getInt(cursor.getColumnIndex(VideoStore.Files.FileColumns._ID));
+                                if (DBG)
+                                    Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - next via getFirstInBucket(DB):" + nextUri);
                                 return new Result(nextUri, nextId);
-                            } else if (next < total) {
-                                // in no repeat more, check that next still in list
-                                nextUri = filteredList.get(next).getUri();
-                                if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - next via filesystem:" + nextUri);
-                                return new Result(nextUri, nextId);
-                            } else if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - no next in filesystem, it's the last:" + mUri);
-                        } else if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - could not find video in list:" + mUri);
-                    } else if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - could not list files / empty dir:" + mUri);
-                } catch (IOException e) {
-                    Log.e(TAG, "UpdateNextTask.Result: caught IOException ", e);
-                } catch (AuthenticationException e) {
-                    Log.e(TAG, "UpdateNextTask.Result: caught AuthenticationException ", e);
-                } catch (SftpException e) {
-                    Log.e(TAG, "UpdateNextTask.Result: caught SftpException ", e);
-                } catch (JSchException e) {
-                    Log.e(TAG, "UpdateNextTask.Result: caught JSchException ", e);
+                            } else if (DBG)
+                                Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - getNextInBucket empty cursor!?");
+                        } finally {
+                            cursor.close();
+                        }
+                    } else if (DBG)
+                        Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - getFirstInBucket null cursor!?");
                 }
-            } else if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - no parent file:" + mUri);
+                // 3. try to find the next file within the filesystem
+                if (mUri.getScheme() == null)
+                    mUri = Uri.parse("file://" + mUri.toString());
+                Uri parentUri = FileUtils.getParentUrl(mUri);
+                if (parentUri != null) {
+                    RawLister lister = RawListerFactoryWithUpnp.getRawListerForUrl(parentUri);
+
+                    try {
+                        List<MetaFile2> files = lister.getFileList();
+                        if (files != null && files.size() > 0) {
+                            List<MetaFile2> filteredList = new ArrayList<MetaFile2>();
+                            //filter folder
+                            for (int i = 0; i < files.size(); i++) {
+                                if (files.get(i).isFile()) {
+                                    String mimeType = files.get(i).getMimeType();
+                                    if (mimeType != null && mimeType.startsWith("video/"))
+                                        filteredList.add(files.get(i));
+                                }
+                            }
+                            final Comparator<? super MetaFile2> comparator = new FileComparator().selectFileComparator(ListingEngine.SortOrder.SORT_BY_NAME_ASC);
+                            Collections.sort(filteredList, comparator);
+                            int total = filteredList.size();
+                            int current = -1;
+                            // try to find the current video in the list
+                            for (int i = 0; i < filteredList.size(); i++) {
+                                if (mUri.equals(filteredList.get(i).getUri())) {
+                                    current = i;
+                                    break;
+                                }
+                            }
+                            // if it is found
+                            if (current != -1) {
+                                int next = current + 1;
+                                // when repeat folder, just modulo
+                                if (repeatFolder) {
+                                    nextUri = filteredList.get(next % total).getUri();
+                                    if (DBG)
+                                        Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - next via filesystem:" + nextUri);
+                                    return new Result(nextUri, nextId);
+                                } else if (next < total) {
+                                    // in no repeat more, check that next still in list
+                                    nextUri = filteredList.get(next).getUri();
+                                    if (DBG)
+                                        Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - next via filesystem:" + nextUri);
+                                    return new Result(nextUri, nextId);
+                                } else if (DBG)
+                                    Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - no next in filesystem, it's the last:" + mUri);
+                            } else if (DBG)
+                                Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - could not find video in list:" + mUri);
+                        } else if (DBG)
+                            Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - could not list files / empty dir:" + mUri);
+                    } catch (IOException e) {
+                        Log.e(TAG, "UpdateNextTask.Result: caught IOException ", e);
+                    } catch (AuthenticationException e) {
+                        Log.e(TAG, "UpdateNextTask.Result: caught AuthenticationException ", e);
+                    } catch (SftpException e) {
+                        Log.e(TAG, "UpdateNextTask.Result: caught SftpException ", e);
+                    } catch (JSchException e) {
+                        Log.e(TAG, "UpdateNextTask.Result: caught JSchException ", e);
+                    }
+                } else if (DBG)
+                    Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - no parent file:" + mUri);
+            }
         } else if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - not a local file:" + mUri);
 
         if (DBG) Log.d(TAG, "updateNextVideo(" + repeatFolder + ") - No next found");
