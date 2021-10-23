@@ -14,14 +14,21 @@
 
 package com.archos.mediacenter.video.leanback;
 
+import android.app.Activity;
 import android.content.Intent;
 
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
+import com.archos.filecorelibrary.FileUtilsQ;
 import com.archos.mediacenter.video.DensityTweak;
 import com.archos.mediacenter.video.EntryActivity;
 import com.archos.mediacenter.video.R;
@@ -43,6 +50,20 @@ public class MainActivityLeanback extends LeanbackActivity {
     private String mCurrentUiModeLeanback;
     private PermissionChecker mPermissionChecker;
 
+    private static Boolean deleteLauncherOK = false;
+
+    private final ActivityResultLauncher<IntentSenderRequest> deleteLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartIntentSenderForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    deleteLauncherOK = true;
+                    Toast.makeText(this, R.string.delete_error, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, R.string.delete_done, Toast.LENGTH_SHORT).show();
+                    deleteLauncherOK = false;
+                }
+            });
+
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -58,6 +79,7 @@ public class MainActivityLeanback extends LeanbackActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        FileUtilsQ.setDeleteLauncher(deleteLauncher);
         super.onCreate(savedInstanceState);
         UnavailablePosterBroadcastReceiver.registerReceiver(this);
         mPermissionChecker = new PermissionChecker();

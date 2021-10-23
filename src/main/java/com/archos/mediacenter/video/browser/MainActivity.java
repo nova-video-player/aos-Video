@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.browser;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
@@ -63,6 +64,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -75,6 +79,7 @@ import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.preference.PreferenceManager;
 
+import com.archos.filecorelibrary.FileUtilsQ;
 import com.archos.mediacenter.utils.GlobalResumeView;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.CustomApplication;
@@ -165,6 +170,14 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     private final static String StereoActivity = "com.archos.mediacenter.video.browser.MainActivityStereo";
 
+    private final ActivityResultLauncher<IntentSenderRequest> launcher = registerForActivityResult(
+            new ActivityResultContracts.StartIntentSenderForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Toast.makeText(this, "deleted", Toast.LENGTH_SHORT).show();
+                }
+            });
+
     private NewVideosActionProvider mNewVideosActionProvider = null;
 
     protected SharedPreferences mPreferences;
@@ -203,7 +216,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     }
 
     private void setHomeButton() {
-
         int iconResId = PrivateMode.isActive() ? R.mipmap.nova_private : R.mipmap.nova;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
@@ -212,6 +224,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        FileUtilsQ.setDeleteLauncher(launcher);
         requestWindowFeature(Window.FEATURE_OPTIONS_PANEL);
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         super.onCreate(savedInstanceState);

@@ -27,6 +27,7 @@ import android.os.StrictMode;
 import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosUtils;
 import com.archos.environment.NetworkState;
+import com.archos.filecorelibrary.FileUtilsQ;
 import com.archos.filecorelibrary.jcifs.JcifsUtils;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.filecorelibrary.samba.SambaDiscovery;
@@ -82,6 +83,7 @@ public class CustomApplication extends Application {
     final static IntentFilter intentFilter = new IntentFilter();
 
     private JcifsUtils jcifsUtils = null;
+    private FileUtilsQ fileUtilsQ = null;
 
     private static Context mContext = null;
 
@@ -166,6 +168,7 @@ public class CustomApplication extends Application {
             // create instance of jcifsUtils in order to pass context and initial preference
             if (mContext == null) log.warn("onCreate: mContext null!!!");
             if (jcifsUtils == null) jcifsUtils = JcifsUtils.getInstance(mContext);
+            if (fileUtilsQ == null) fileUtilsQ = FileUtilsQ.getInstance(mContext);
         }).start();
 
         Trakt.initApiKeys(this);
