@@ -46,8 +46,9 @@
 
   <logger name="com.archos.filecorelibrary.samba" level="DEBUG"/>
 
-  <!--<logger name="com.archos.mediacenter.video.player.Player" level="DEBUG"/>
-  <logger name="com.archos.mediacenter.video.player.PlayerActivity" level="DEBUG"/>-->
+  <logger name="com.archos.mediacenter.video.player.Player" level="DEBUG"/>
+  <logger name="com.archos.mediacenter.video.player.PlayerActivity" level="DEBUG"/>
+  <logger name="com.archos.mediacenter.video.leanback.details.VideoDetailsFragment" level="DEBUG"/>
 
   <!--<logger name="com.archos.mediacenter.video.leanback.details" level="DEBUG"/>
   <logger name="com.archos.mediacenter.video.info" level="DEBUG"/>-->
@@ -64,13 +65,19 @@
   <logger name="com.archos.mediascraper.EpisodeTags" level="DEBUG"/>
   <logger name="com.archos.mediascraper.ScraperImage" level="DEBUG"/>-->
 
-  <!--<logger name="com.archos.mediaprovider.video.VideoStoreImportReceiver" level="DEBUG"/>
+  <logger name="com.archos.mediaprovider.video.VideoStoreImportReceiver" level="DEBUG"/>
   <logger name="com.archos.mediaprovider.video.VideoStoreImportService" level="DEBUG"/>
-  <logger name="com.archos.mediaprovider.ImportState" level="DEBUG"/>
+  <!--<logger name="com.archos.mediaprovider.ImportState" level="DEBUG"/>
   <logger name="com.archos.mediacenter.video.leanback.overlay.Overlay" level="DEBUG"/>
-  <logger name="com.archos.mediacenter.video.leanback.overlay.ScannerAndScraperProgress" level="DEBUG"/>
+  <logger name="com.archos.mediacenter.video.leanback.overlay.ScannerAndScraperProgress" level="DEBUG"/>-->
   <logger name="com.archos.mediaprovider.video.NetworkScannerReceiver" level="DEBUG"/>
-  <logger name="com.archos.mediaprovider.video.NetworkScannerServiceVideo" level="DEBUG"/>-->
+  <logger name="com.archos.mediaprovider.video.NetworkScannerServiceVideo" level="DEBUG"/>
+
+  <logger name="com.archos.filecorelibrary.localstorage.LocalStorageFileEditor" level="DEBUG"/>
+  <logger name="com.archos.filecorelibrary.localstorage.ExternalSDFileWriter" level="DEBUG"/>
+
+  <logger name="com.archos.filecorelibrary.FileUtilsQ" level="DEBUG"/>
+
 
   <!--<logger name="com.archos.filecorelibrary.localstorage.LocalStorageFileEditor" level="DEBUG"/>-->
 
