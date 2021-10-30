@@ -170,7 +170,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     private final static String StereoActivity = "com.archos.mediacenter.video.browser.MainActivityStereo";
 
-    private final ActivityResultLauncher<IntentSenderRequest> launcher = registerForActivityResult(
+    private final ActivityResultLauncher<IntentSenderRequest> deleteLauncher = registerForActivityResult(
             new ActivityResultContracts.StartIntentSenderForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
@@ -224,7 +224,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        FileUtilsQ.setDeleteLauncher(launcher);
+        FileUtilsQ.setDeleteLauncher(deleteLauncher);
         requestWindowFeature(Window.FEATURE_OPTIONS_PANEL);
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         super.onCreate(savedInstanceState);

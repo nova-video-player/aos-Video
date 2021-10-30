@@ -45,6 +45,7 @@ import androidx.leanback.widget.RowHeaderPresenter;
 import androidx.leanback.widget.RowPresenter;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.preference.PreferenceManager;
 
 import com.archos.environment.ArchosUtils;
@@ -328,7 +329,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         log.debug("onResume");
         super.onResume();
         mOverlay.resume();
-        updateBackground();
+        updateBackground(); // TODO MARC crash here https://bug.courville.org/app/1/bug/260/report/ae058ea6-5197-4dac-9f54-afa992e39580 java.lang.IllegalStateException: Activity has been destroyed
         mActivity.registerReceiver(mUpdateReceiver, mUpdateFilter);
 
         // treat first change in settings

@@ -20,7 +20,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.FileEditor;
@@ -50,6 +49,9 @@ import com.archos.mediascraper.NfoParser;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -60,7 +62,8 @@ import java.util.List;
  */
 public class Delete {
 
-    private static final String TAG = "Delete";
+    private static final Logger log = LoggerFactory.getLogger(Delete.class);
+
     private static final int MAX_DEPTH = 3;//for folder delete : do not delete
     private static final int MIN_FILE_SIZE = 300000000; //do not delete parent folder if currently deleted file is inferior to min file size
     private static final int MAX_FOLDER_SIZE = 30000000; //do not delete parent folder if this folder is bigger than that
@@ -133,7 +136,9 @@ public class Delete {
         mListener = listener;
         mContext = context;
     }
+
     public void deleteAssociatedNfoFiles(final Uri fileUri){ //when deleting a description, also delete Nfo
+        log.debug("deleteAssociatedNfoFiles: " + fileUri);
         new Thread(){
             public void run(){
                 if(!UriUtils.isImplementedByFileCore(fileUri)||"upnp".equals(fileUri.getScheme())) //we can"t delete files on upnp
@@ -145,7 +150,7 @@ public class Delete {
                         try {
                             FileEditorFactory.getFileEditorForUrl(uri,mContext).delete();
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            log.error("deleteAssociatedNfoFiles: caught Exception", e);
                         }
 
                     }
@@ -155,6 +160,7 @@ public class Delete {
 
     }
     public void startDeleteProcess(final Uri fileUri){
+        log.debug("startDeleteProcess: " + fileUri);
         new Thread(){
             public void run(){
                 long currentFileSize = 0;
@@ -242,6 +248,7 @@ public class Delete {
 
     }
     public static boolean deleteFileAndAssociatedFiles(Context context, Uri fileUri) {
+        log.debug("deleteFileAndAssociatedFiles: " + fileUri);
         // TODO if directory do not get associate files....
         // Get list of all files (video and associated)
         List<Uri> associatedFiles = getAssociatedFiles(fileUri);
@@ -250,8 +257,8 @@ public class Delete {
         allFiles.add(fileUri);
         allFiles.addAll(associatedFiles);
         // Delete found associated files
+        Uri uriBis;
         for (Uri uri : allFiles) {
-
             FileEditor editor = FileEditorFactory.getFileEditorForUrl(uri,context);
             try {
                 if(editor instanceof LocalStorageFileEditor) //delete from database
@@ -261,7 +268,7 @@ public class Delete {
                     editor.delete();
                 }
             } catch (Exception e) {
-                Log.e(TAG, "Failed to delete file " + uri, e);
+                log.error("Failed to delete file " + uri, e);
                 if(uri == fileUri) // if failure is on main file
                     return false;
             }
@@ -276,6 +283,7 @@ public class Delete {
 
 
     public void deleteFolder(final Uri uri){
+        log.debug("deleteFolder: " + uri);
         new Thread(){
             public void run() {
                 try {
@@ -356,7 +364,8 @@ public class Delete {
         };
 
         for (String extension : extensionsToClean) {
-            Uri uri = Uri.parse(parentUri.toString() + filenameWithoutExtension + extension);
+            // relocate uri for local files to writeable location to comply with API30
+            Uri uri = FileUtils.relocateNfoJpgAppPublicDir(Uri.parse(parentUri.toString() + filenameWithoutExtension + extension));
             if (uri!=null) { // is it possible?
                 result.add(uri);
             }

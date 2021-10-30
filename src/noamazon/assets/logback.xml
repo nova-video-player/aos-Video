@@ -53,11 +53,18 @@
   <!--<logger name="com.archos.mediacenter.video.leanback.details" level="DEBUG"/>
   <logger name="com.archos.mediacenter.video.info" level="DEBUG"/>-->
 
-  <!--<logger name="com.archos.filecorelibrary.FileUtils" level="DEBUG"/>-->
+  <!-- logger name="com.archos.filecorelibrary.FileUtils" level="DEBUG"/ -->
 
   <logger name="com.archos.mediascraper.xml" level="DEBUG"/>
   <logger name="com.archos.mediascraper.themoviedb3" level="DEBUG"/>
   <logger name="com.archos.mediascraper.AutoScrapeService" level="DEBUG"/>
+
+  <logger name="com.archos.mediascraper.NfoWriter" level="TRACE"/>
+  <logger name="com.archos.mediascraper.NfoParser" level="DEBUG"/>
+  <logger name="com.archos.mediascraper.LocalImages" level="DEBUG"/>
+  <logger name="com.archos.mediacenter.video.browser.Delete" level="DEBUG"/>
+<!--  <logger name="com.archos.filecorelibrary.FileUtilsQ" level="DEBUG"/>-->
+  <logger name="com.archos.filecorelibrary.localstorage.LocalStorageFileEditor" level="DEBUG"/>
 
   <!--<logger name="com.archos.mediascraper.preprocess.TvShowMatcher" level="DEBUG"/>
   <logger name="com.archos.mediascraper.themoviedb3.ShowIdEpisodes" level="DEBUG"/>
@@ -75,11 +82,6 @@
 
   <logger name="com.archos.filecorelibrary.localstorage.LocalStorageFileEditor" level="DEBUG"/>
   <logger name="com.archos.filecorelibrary.localstorage.ExternalSDFileWriter" level="DEBUG"/>
-
-  <logger name="com.archos.filecorelibrary.FileUtilsQ" level="DEBUG"/>
-
-
-  <!--<logger name="com.archos.filecorelibrary.localstorage.LocalStorageFileEditor" level="DEBUG"/>-->
 
   <!--<logger name="com.archos.environment.NetworkState" level="TRACE"/>
   <logger name="com.archos.mediacenter.utils.AppState" level="DEBUG"/>-->
