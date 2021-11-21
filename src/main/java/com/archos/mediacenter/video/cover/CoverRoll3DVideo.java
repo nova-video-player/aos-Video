@@ -52,7 +52,6 @@ import com.archos.mediacenter.video.utils.SubtitlesWizardActivity;
 import java.io.File;
 import java.util.ArrayList;
 
-
 public class CoverRoll3DVideo extends CoverRoll3D {
 
 	static final String TAG = "CoverRoll3DVideo";

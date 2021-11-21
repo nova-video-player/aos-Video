@@ -20,7 +20,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.loader.content.Loader;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,7 +29,6 @@ import android.widget.TextView;
 
 import com.archos.mediacenter.utils.ActionBarSubmenu;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.Browser;
 import com.archos.mediacenter.video.browser.BrowserCategory;
 import com.archos.mediacenter.video.browser.ThumbnailEngineVideo;
 import com.archos.mediacenter.video.browser.adapters.PresenterAdapterByCursor;
@@ -44,16 +42,19 @@ import com.archos.mediacenter.video.browser.presenter.SeasonListPresenter;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class BrowserBySeason extends BrowserWithShowHeader  {
 
-
+    private static final Logger log = LoggerFactory.getLogger(BrowserBySeason.class);
     public static final String EXTRA_SHOW_ITEM = "show_item";
     private final static int SUBMENU_ITEM_LIST_INDEX = 0;
     private final static int SUBMENU_ITEM_GRID_INDEX = 1;
 
 
     public BrowserBySeason() {
-        Log.d(Browser.TAG, "BrowserBySeason()");
+        log.debug("BrowserBySeason()");
     }
 
 

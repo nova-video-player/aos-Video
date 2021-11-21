@@ -170,14 +170,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     private final static String StereoActivity = "com.archos.mediacenter.video.browser.MainActivityStereo";
 
-    private final ActivityResultLauncher<IntentSenderRequest> deleteLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartIntentSenderForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    Toast.makeText(this, "deleted", Toast.LENGTH_SHORT).show();
-                }
-            });
-
     private NewVideosActionProvider mNewVideosActionProvider = null;
 
     protected SharedPreferences mPreferences;
@@ -224,7 +216,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        FileUtilsQ.setDeleteLauncher(deleteLauncher);
         requestWindowFeature(Window.FEATURE_OPTIONS_PANEL);
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         super.onCreate(savedInstanceState);

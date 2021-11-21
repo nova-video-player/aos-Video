@@ -50,20 +50,6 @@ public class MainActivityLeanback extends LeanbackActivity {
     private String mCurrentUiModeLeanback;
     private PermissionChecker mPermissionChecker;
 
-    private static Boolean deleteLauncherOK = false;
-
-    private final ActivityResultLauncher<IntentSenderRequest> deleteLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartIntentSenderForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    deleteLauncherOK = true;
-                    Toast.makeText(this, R.string.delete_error, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, R.string.delete_done, Toast.LENGTH_SHORT).show();
-                    deleteLauncherOK = false;
-                }
-            });
-
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -79,7 +65,6 @@ public class MainActivityLeanback extends LeanbackActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        FileUtilsQ.setDeleteLauncher(deleteLauncher);
         super.onCreate(savedInstanceState);
         UnavailablePosterBroadcastReceiver.registerReceiver(this);
         mPermissionChecker = new PermissionChecker();
