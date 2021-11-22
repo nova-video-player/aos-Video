@@ -71,6 +71,11 @@
   <logger name="com.archos.filecorelibrary.localstorage.LocalStorageFileEditor" level="DEBUG"/>
   <logger name="com.archos.mediacenter.video.browser.Browser" level="DEBUG"/>
   <logger name="com.archos.mediacenter.video.browser.Delete" level="DEBUG"/>
+  <logger name="com.archos.mediacenter.video.info.VideoInfoActivityFragment" level="DEBUG"/>
+  <logger name="com.archos.mediacenter.video.leanback.tvshow.SeasonFragment" level="DEBUG"/>
+  <logger name="com.archos.mediacenter.video.leanback.collections.CollectionFragment" level="DEBUG"/>
+  <logger name="com.archos.mediacenter.video.leanback.details.VideoDetailsFragment" level="DEBUG"/>
+
 
   <!--<logger name="com.archos.mediascraper.preprocess.TvShowMatcher" level="DEBUG"/>
   <logger name="com.archos.mediascraper.themoviedb3.ShowIdEpisodes" level="DEBUG"/>
