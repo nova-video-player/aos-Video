@@ -256,6 +256,7 @@ public class Delete {
                         else {
                             NetworkScanner.removeVideos(context, uri);
                             isDeleteOK = editor.delete();
+                            if (isDeleteOK == null) isDeleteOK = true; // smb and other editors are returning null otherwise throws exception
                         }
                         // ok only on main video file and if we have feedback already
                         if (isDeleteOK != null && uri == fileUri) deleteOK(fileUri);
