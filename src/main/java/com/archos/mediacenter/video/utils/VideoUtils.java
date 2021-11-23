@@ -188,8 +188,13 @@ public class VideoUtils {
                 id = Integer.parseInt(mPath.getLastPathSegment());
                 ContentResolver cr = context.getContentResolver();
                 VideoDbInfo videoDbInfo = VideoDbInfo.fromId(cr, id);
-                if (DBG) Log.d(TAG, "getFilePathFromContentUri content translated from " + mPath + " to " + videoDbInfo.uri);
-                return videoDbInfo.uri.getPath();
+                if (DBG) Log.d(TAG, "getFilePathFromContentUri content translated from " + mPath + " to " + ((videoDbInfo != null) ? videoDbInfo.uri : null));
+                if (videoDbInfo != null)
+                    return videoDbInfo.uri.getPath();
+                else {
+                    Log.w(TAG, "getFilePathFromContentUri: videoDbInfo is null for " + path);
+                    return null;
+                }
             } catch (NumberFormatException e)
             {
                 id = -1;
