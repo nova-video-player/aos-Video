@@ -329,7 +329,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         log.debug("onResume");
         super.onResume();
         mOverlay.resume();
-        updateBackground(); // TODO MARC crash here https://bug.courville.org/app/1/bug/260/report/ae058ea6-5197-4dac-9f54-afa992e39580 java.lang.IllegalStateException: Activity has been destroyed
+        updateBackground();
         mActivity.registerReceiver(mUpdateReceiver, mUpdateFilter);
 
         // treat first change in settings
