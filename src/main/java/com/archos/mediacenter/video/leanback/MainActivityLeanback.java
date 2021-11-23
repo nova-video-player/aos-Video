@@ -56,8 +56,8 @@ public class MainActivityLeanback extends LeanbackActivity {
         mPermissionChecker.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
     @Override
-    public void onResume(){
-        super.onResume();
+    public void onResumeFragments(){
+        super.onResumeFragments();
         new DensityTweak(this)
                 .applyUserDensity();
         mPermissionChecker.checkAndRequestPermission(this);
