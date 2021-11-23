@@ -131,7 +131,8 @@ public class DbUtils {
         final String selection = VideoStore.MediaColumns._ID + "=?";
         final String[] selectionArgs =new String[]{Long.toString(video.getId())};
         context.getContentResolver().update(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, values, selection, selectionArgs);
-        /*delete nfo files and posters*/
+        // delete nfo files and posters: no need in theory to do the API30 gazplant
+        // TODO check and provide option to disable Q way here
         Delete delete = new Delete(null,context);
         delete.deleteAssociatedNfoFiles(video.getFileUri());
     }

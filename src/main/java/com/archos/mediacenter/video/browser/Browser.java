@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.browser;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -34,7 +35,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -57,10 +57,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.MenuItemCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -68,6 +70,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 
 import com.archos.filecorelibrary.FileExtendedInfo;
+import com.archos.filecorelibrary.FileUtilsQ;
 import com.archos.mediacenter.utils.ActionBarSubmenu;
 import com.archos.mediacenter.utils.ActionBarSubmenu.ActionBarSubmenuListener;
 import com.archos.mediacenter.utils.ThumbnailEngine;
@@ -91,8 +94,12 @@ import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.ImportState;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -104,9 +111,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
         ThumbnailEngine.Listener,
         ActionBarSubmenuListener, OnItemLongClickListener, Delete.DeleteListener, ExternalPlayerWithResultStarter {
 
-
-    private static final boolean DBG = false;
-    protected static final String TAG = "Browser";
+    private static final Logger log = LoggerFactory.getLogger(Browser.class);
 
     // Options menu items
     protected static final int MENU_VIEW_MODE_GROUP = 2;
@@ -174,9 +179,33 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     protected int mOffset=0;
     static final String CURRENT_SCROLL = "currentscroll";
     private Parcelable mListState;
+    private Delete mDelete;
 
+    private List<Uri> deleteUrisList = null;
     private static Boolean isFileManagerServiceBound = false;
 
+    private final ActivityResultLauncher<IntentSenderRequest> deleteLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartIntentSenderForResult(),
+            // TODO add block delete (folder etc.) not only .get(0)
+            result -> { // result can be RESULT_OK, RESULT_CANCELED
+                Context context = getActivity();
+                log.debug("ActivityResultLauncher deleteLauncher: result " + result.toString());
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    log.debug("ActivityResultLauncher deleteLauncher: OK, deleteUris " + ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
+                    if (mDelete != null && deleteUrisList != null && deleteUrisList.size() >= 1) {
+                        log.debug("ActivityResultLauncher deleteLauncher: calling delete.deleteOK on " + deleteUrisList.get(0));
+                        mDelete.deleteOK(deleteUrisList.get(0));
+                    }
+                    if (context != null)
+                        Toast.makeText(getActivity(), "deleteLauncherOK", Toast.LENGTH_SHORT).show();
+                } else {
+                    log.debug("ActivityResultLauncher deleteLauncher: NO, deleteUris " + ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
+                    if (context != null)
+                        Toast.makeText(getActivity(), "deleteLauncherNOK", Toast.LENGTH_SHORT).show();
+                    if (mDelete != null && deleteUrisList != null && deleteUrisList.size() > 1)
+                        mDelete.deleteNOK(deleteUrisList.get(0));
+                }
+            });
 
     /**
      * Subclasses must create a new BrowserAdapter and according to the adapter
@@ -185,6 +214,9 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        log.debug("onCreate");
+        // pass the right deleteLauncher linked to activity
+        FileUtilsQ.setDeleteLauncher(deleteLauncher);
         mSelectedPosition=0;
         mContext = getActivity().getApplicationContext();
 
@@ -212,6 +244,8 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
 
     @Override
     public void onResume() {
+        log.debug("onResume");
+        FileUtilsQ.setDeleteLauncher(deleteLauncher);
         mThumbnailEngine.setListener(this, mHandler);
         // Check if we need some thumbnails
         if (mThumbnailRequester != null)
@@ -221,6 +255,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
 
     @Override
     public void onPause() {
+        log.debug("onPause");
         //Posted in mArchosGridView to retrieve these values when the GridView is rendered.
         //risk of null values otherwise
         mArchosGridView.post(new Runnable() {
@@ -265,6 +300,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     }
     @Override
     public void onDestroy() {
+        log.debug("onDestroy");
         mThumbnailEngine.cancelPendingRequestsForThisListener(this);
 
         if (mArchosGridView != null)
@@ -436,6 +472,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        log.debug("onCreateView");
         mRootView = inflater.inflate(R.layout.browser_content_video, container, false);
         if(mViewMode== VideoUtils.VIEW_MODE_GRID){
             mArchosGridView = (AbsListView) mRootView.findViewById(R.id.archos_grid_view);
@@ -548,7 +585,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             newAdapter = true;
             mCommonDefaultInvalidate = false;
         }
-        if (DBG) Log.d(TAG, "bindAdapter: " + newAdapter);
+        log.debug("bindAdapter: " + newAdapter);
         setupAdapter(newAdapter);
         if (mArchosGridView.getAdapter() != mBrowserAdapter)
             mArchosGridView.setAdapter(mBrowserAdapter);
@@ -964,8 +1001,10 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                         if (!isParentFolder)
                             startDeletingDialog(uri);
                         else {
-                            Delete delete = new Delete(Browser.this, getActivity());
-                            delete.deleteFolder(uri.get(0));
+                            mDelete = new Delete(Browser.this, getActivity());
+                            log.debug("showConfirmDeleteDialog: update deleteUrisList with " + uri);
+                            deleteUrisList = uri;
+                            mDelete.deleteFolder(uri.get(0));
                         }
 
                     }
@@ -997,8 +1036,6 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
 
     @SuppressWarnings("unchecked")
     public void update(Observable observable, Object data){
-
-
     }
 
 
@@ -1155,21 +1192,24 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
 
     @Override
     public void onVideoFileRemoved(Uri videoFile, boolean askForFolderRemoval, Uri folder) {
+        log.debug("onVideoFileRemoved " + videoFile + ", folderRemoval " + askForFolderRemoval + ", folder " + folder);
         if(askForFolderRemoval) {
             List<Uri> toDelete = new ArrayList<>();
             toDelete.add(folder);
             showConfirmDeleteDialog(true, toDelete);
-
         }
     }
 
     @Override
     public void onDeleteSuccess() {
+        log.debug("onDeleteSuccess: refresh list");
         mDialogDeleting.dismiss();
         refresh();
     }
+
     @Override
     public void onDeleteVideoFailed(Uri videoFile) {
+        log.debug("onDeleteVideoFailed " + ((videoFile != null) ? videoFile.getPath() : null));
         Toast.makeText(getActivity(), R.string.delete_error,Toast.LENGTH_LONG).show();
         mDialogDeleting.dismiss();
     }
@@ -1177,6 +1217,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
 
     @Override
     public void onFolderRemoved(final Uri folder) {
+        log.debug("onFolderRemoved " + folder);
         if(isAdded()) {
             Toast.makeText(getActivity(), R.string.directory_deleted, Toast.LENGTH_SHORT).show();
         }
@@ -1185,20 +1226,21 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
         mArchosGridView.getCheckedItemPosition();
         mDialogDeleting = new DeleteDialog();
         mDialogDeleting.show(getParentFragmentManager(), null);
-        final Delete delete = new Delete(this,getActivity());
+        mDelete = new Delete(this,getActivity());
+        log.debug("startDeletingDialog: update deleteUrisList with " + Arrays.toString(uriToDelete.toArray()));
+        deleteUrisList = uriToDelete;
         if(uriToDelete.size()>1) {
-            delete.startMultipleDeleteProcess(uriToDelete);
+            mDelete.startMultipleDeleteProcess(uriToDelete);
+        } else {
+            mDelete.startDeleteProcess(uriToDelete.get(0));
         }
-        else
-            delete.startDeleteProcess(uriToDelete.get(0));
-
-
     }
 
     /**
      * refresh list
      */
     protected abstract void refresh();
+
     @SuppressLint("ValidFragment") // XXX
     public static class DialogForceDlSubtitles extends DialogFragment {
         @Override
@@ -1220,21 +1262,21 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     //download with metafile2
     public void startDownloadingVideo(List<Uri> uris) {
         if(FileManagerService.fileManagerService==null) {
-            if (DBG) Log.d(TAG, "startDownloadingVideo: binding FileManagerService since FileManagerService.fileManagerService==null");
+            log.debug("startDownloadingVideo: binding FileManagerService since FileManagerService.fileManagerService==null");
             isFileManagerServiceBound = getContext().bindService(new Intent(getContext(), FileManagerService.class), new ServiceConnection() {
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
-                    if (DBG) Log.d(TAG, "startDownloadingVideo: FileManagerService connected, launching PasteDialog and copy of "+ uris);
+                    log.debug("startDownloadingVideo: FileManagerService connected, launching PasteDialog and copy of "+ uris);
                     FileManagerService.fileManagerService.copyUri(uris, Uri.fromFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)));
                     showPasteDialog();
                 }
                 @Override
                 public void onServiceDisconnected(ComponentName name) {
-                    if (DBG) Log.d(TAG, "startDownloadingVideo: FileManagerService disconnected");
+                    log.debug("startDownloadingVideo: FileManagerService disconnected");
                 }
             }, Context.BIND_AUTO_CREATE);
         } else {
-            if (DBG) Log.d(TAG, "startDownloadingVideo: FileManagerService exists we should not be there..., download video and show paste dialog...");
+            log.debug("startDownloadingVideo: FileManagerService exists we should not be there..., download video and show paste dialog...");
             showPasteDialog();
             FileManagerService.fileManagerService.copyUri(uris, Uri.fromFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)));
         }

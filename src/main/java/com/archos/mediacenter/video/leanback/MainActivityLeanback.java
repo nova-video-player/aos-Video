@@ -14,14 +14,21 @@
 
 package com.archos.mediacenter.video.leanback;
 
+import android.app.Activity;
 import android.content.Intent;
 
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
+import com.archos.filecorelibrary.FileUtilsQ;
 import com.archos.mediacenter.video.DensityTweak;
 import com.archos.mediacenter.video.EntryActivity;
 import com.archos.mediacenter.video.R;
@@ -49,8 +56,8 @@ public class MainActivityLeanback extends LeanbackActivity {
         mPermissionChecker.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
     @Override
-    public void onResume(){
-        super.onResume();
+    public void onResumeFragments(){
+        super.onResumeFragments();
         new DensityTweak(this)
                 .applyUserDensity();
         mPermissionChecker.checkAndRequestPermission(this);

@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,6 +42,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
@@ -71,6 +75,7 @@ import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosUtils;
 import com.archos.environment.NetworkState;
 import com.archos.filecorelibrary.FileUtils;
+import com.archos.filecorelibrary.FileUtilsQ;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
@@ -148,6 +153,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -274,11 +280,39 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private int oldPos = 0;
     private int oldSelectedSubPosition = 0;
 
+    // need to be static otherwise ActivityResultLauncher find them null
+    private static Delete delete;
+    private static List<Uri> deleteUrisList = null;
+
+    private final ActivityResultLauncher<IntentSenderRequest> deleteLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartIntentSenderForResult(),
+            // TODO add block delete (folder etc.) not only .get(0)
+            result -> { // result can be RESULT_OK, RESULT_CANCELED
+                Context context = getActivity();
+                log.debug("ActivityResultLauncher deleteLauncher: result " + result.toString());
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    log.debug("ActivityResultLauncher deleteLauncher: OK, deleteUris " + ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
+                    if (delete != null && deleteUrisList != null && deleteUrisList.size() >= 1) {
+                        log.debug("ActivityResultLauncher deleteLauncher: calling delete.deleteOK on " + deleteUrisList.get(0));
+                        delete.deleteOK(deleteUrisList.get(0));
+                    }
+                    if (context != null)
+                        Toast.makeText(getActivity(), "deleteLauncherOK", Toast.LENGTH_SHORT).show();
+                } else {
+                    log.debug("ActivityResultLauncher deleteLauncher: NO, deleteUris " + ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
+                    if (context != null)
+                        Toast.makeText(getActivity(), "deleteLauncherNOK", Toast.LENGTH_SHORT).show();
+                    if (delete != null && deleteUrisList != null && deleteUrisList.size() > 1)
+                        delete.deleteNOK(deleteUrisList.get(0));
+                }
+            });
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         log.debug("onCreate");
-
+        // pass the right deleteLauncher linked to activity
+        FileUtilsQ.setDeleteLauncher(deleteLauncher);
         CustomApplication.resetLastVideoPlayed();
 
         mSubtitleListCache = new HashMap<>();
@@ -420,7 +454,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     }
                 }
                 else if (item instanceof WebPageLink) {
-                    // TODO MARC this is the launch
+                    // launch of web browser
                     WebPageLink link = (WebPageLink)item;
                     WebUtils.openWebLink(getActivity(), link.getUrl());
                 }
@@ -1795,6 +1829,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     @Override
     public void onVideoFileRemoved(final Uri videoFile,boolean askForFolderRemoval, final Uri folder) {
+        log.debug("onVideoFileRemoved: " + videoFile);
         Toast.makeText(getActivity(),R.string.delete_done, Toast.LENGTH_SHORT).show();
         if(askForFolderRemoval) {
             AlertDialog.Builder b = new AlertDialog.Builder(getActivity()).setTitle("");
@@ -1809,7 +1844,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            Delete delete = new Delete(VideoDetailsFragment.this, getActivity());
+                            delete = new Delete(VideoDetailsFragment.this, getActivity());
+                            deleteUrisList = Collections.singletonList(folder);
                             delete.deleteFolder(folder);
                         }
                     });
@@ -1828,6 +1864,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     }
 
     private void sendDeleteResult(Uri file){
+        log.debug("sendDeleteResult: " + file);
         Intent intent = new Intent();
         intent.setData(file);
         getActivity().setResult(ListingActivity.RESULT_FILE_DELETED, intent);
@@ -1836,6 +1873,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     @Override
     public void onDeleteVideoFailed(Uri videoFile) {
+        log.debug("onDeleteVideoFailed: " + videoFile);
         Toast.makeText(getActivity(),R.string.delete_error, Toast.LENGTH_SHORT).show();
 
         // close the fragment anyway because the un-indexing may work even if the actual delete fails
@@ -1844,22 +1882,26 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     @Override
     public void onFolderRemoved(Uri folder) {
+        log.debug("onFolderRemoved: " + folder);
         Toast.makeText(getActivity(), R.string.delete_done, Toast.LENGTH_SHORT).show();
         sendDeleteResult(folder);
     }
 
     @Override
     public void onDeleteSuccess() {
-
+        log.debug("onDeleteSuccess");
     }
     //---------------------------------------------------
 
     private void deleteFile_async(Video video) {
-        Delete delete = new Delete(this, getActivity());
+        log.debug("deleteFile_async: " + video.getFileUri());
+        delete = new Delete(this, getActivity());
+        deleteUrisList = new ArrayList<>(Arrays.asList(video.getFileUri()));
         delete.startDeleteProcess(video.getFileUri());
     }
 
     private void deleteScraperInfo(Video video) {
+        log.debug("deleteScraperInfo: " + video.getFileUri());
         // Reset the scraper fields for this item in the medialib
         // (set them to -1 because there is no need to search it again when running the automated task)
         // this also deletes the scraper data
@@ -1871,7 +1913,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         getActivity().getContentResolver().update(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, values, selection, selectionArgs);
         /*delete nfo files and posters*/
-        Delete delete = new Delete(null,getActivity());
+        delete = new Delete(null,getActivity());
+        deleteUrisList = Collections.singletonList(video.getFileUri());
         delete.deleteAssociatedNfoFiles(video.getFileUri());
     }
 
@@ -1922,6 +1965,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     }
 
     private void slightlyDelayedFinish() {
+        log.debug("slightlyDelayedFinish");
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {

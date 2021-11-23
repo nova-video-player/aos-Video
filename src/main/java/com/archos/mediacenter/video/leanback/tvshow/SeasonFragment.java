@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -23,6 +24,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.BrowseSupportFragment;
@@ -37,6 +41,7 @@ import androidx.leanback.widget.RowPresenter;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
+import com.archos.filecorelibrary.FileUtilsQ;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.Delete;
 import com.archos.mediacenter.video.browser.adapters.mappers.SeasonCursorMapper;
@@ -50,14 +55,20 @@ import com.archos.mediacenter.video.leanback.presenter.SeasonPresenter;
 import com.archos.mediacenter.video.utils.DbUtils;
 import com.archos.mediacenter.video.utils.VideoUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by vapillon on 16/06/15.
  */
 public class SeasonFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor>, Delete.DeleteListener {
 
-    private static final String TAG = "SeasonFragment";
+    private static final Logger log = LoggerFactory.getLogger(SeasonFragment.class);
 
     public static final String EXTRA_ACTION_ID = "ACTION_ID";
     public static final String EXTRA_TVSHOW_ID = "TVSHOW_ID";
@@ -77,9 +88,38 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
 
     private Overlay mOverlay;
 
+    // need to be static otherwise ActivityResultLauncher find them null
+    private static Delete delete;
+    private static List<Uri> deleteUrisList;
+
+    private final ActivityResultLauncher<IntentSenderRequest> deleteLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartIntentSenderForResult(),
+            // TODO add block delete (folder etc.) not only .get(0)
+            result -> { // result can be RESULT_OK, RESULT_CANCELED
+                Context context = getActivity();
+                log.debug("ActivityResultLauncher deleteLauncher: result " + result.toString());
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    log.debug("ActivityResultLauncher deleteLauncher: OK, deleteUris " + ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
+                    if (delete != null && deleteUrisList != null && deleteUrisList.size() >= 1) {
+                        log.debug("ActivityResultLauncher deleteLauncher: calling delete.deleteOK on " + deleteUrisList.get(0));
+                        delete.deleteOK(deleteUrisList.get(0));
+                    }
+                    if (context != null)
+                        Toast.makeText(getActivity(), "deleteLauncherOK", Toast.LENGTH_SHORT).show();
+                } else {
+                    log.debug("ActivityResultLauncher deleteLauncher: NO, deleteUris " + ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
+                    if (context != null)
+                        Toast.makeText(getActivity(), "deleteLauncherNOK", Toast.LENGTH_SHORT).show();
+                    if (delete != null && deleteUrisList != null && deleteUrisList.size() > 1)
+                        delete.deleteNOK(deleteUrisList.get(0));
+                }
+            });
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // pass the right deleteLauncher linked to activity
+        FileUtilsQ.setDeleteLauncher(deleteLauncher);
 
         mActionId = getActivity().getIntent().getLongExtra(EXTRA_ACTION_ID, -1);
         mTvshowId = getActivity().getIntent().getLongExtra(EXTRA_TVSHOW_ID, -1);
@@ -157,8 +197,8 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
                                 }
                             }
     
-                            Delete delete = new Delete(SeasonFragment.this, getActivity());
-    
+                            delete = new Delete(SeasonFragment.this, getActivity());
+                            deleteUrisList = uris;
                             if (uris.size() == 1)
                                 delete.startDeleteProcess(uris.get(0));
                             else if (uris.size() > 1)
@@ -199,8 +239,8 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
                             uris.add(uri);
                         }
 
-                        Delete delete = new Delete(SeasonFragment.this, getActivity());
-
+                        delete = new Delete(SeasonFragment.this, getActivity());
+                        deleteUrisList = uris;
                         if (uris.size() == 1)
                             delete.startDeleteProcess(uris.get(0));
                         else if (uris.size() > 1)
@@ -307,7 +347,8 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            Delete delete = new Delete(SeasonFragment.this, getActivity());
+                            delete = new Delete(SeasonFragment.this, getActivity());
+                            deleteUrisList = Collections.singletonList(folder);
                             delete.deleteFolder(folder);
                         }
                     });
