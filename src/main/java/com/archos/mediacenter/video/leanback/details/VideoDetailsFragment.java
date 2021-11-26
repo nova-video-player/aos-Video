@@ -1868,6 +1868,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         Intent intent = new Intent();
         intent.setData(file);
         getActivity().setResult(ListingActivity.RESULT_FILE_DELETED, intent);
+        // TODO: do not finish if there are multiple videos under same name check counter
+        // TODO: do the same for phoneUI
         slightlyDelayedFinish();
     }
 

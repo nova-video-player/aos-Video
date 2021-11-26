@@ -76,7 +76,6 @@
   <logger name="com.archos.mediacenter.video.leanback.collections.CollectionFragment" level="DEBUG"/>
   <logger name="com.archos.mediacenter.video.leanback.details.VideoDetailsFragment" level="DEBUG"/>
 
-
   <!--<logger name="com.archos.mediascraper.preprocess.TvShowMatcher" level="DEBUG"/>
   <logger name="com.archos.mediascraper.themoviedb3.ShowIdEpisodes" level="DEBUG"/>
   <logger name="com.archos.mediascraper.ShowTags" level="DEBUG"/>
@@ -85,6 +84,8 @@
 
   <logger name="com.archos.mediaprovider.video.VideoStoreImportReceiver" level="DEBUG"/>
   <logger name="com.archos.mediaprovider.video.VideoStoreImportService" level="DEBUG"/>
+  <logger name="com.archos.mediaprovider.video.VideoProvider" level="DEBUG"/>
+
   <!--<logger name="com.archos.mediaprovider.ImportState" level="DEBUG"/>
   <logger name="com.archos.mediacenter.video.leanback.overlay.Overlay" level="DEBUG"/>
   <logger name="com.archos.mediacenter.video.leanback.overlay.ScannerAndScraperProgress" level="DEBUG"/>-->
