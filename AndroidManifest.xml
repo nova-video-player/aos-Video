@@ -117,6 +117,7 @@
         <!-- BrowserActivityVideo used to be the entry point. We keep this alias so that old shortcuts are still working -->
         <activity-alias
             android:name="${applicationId}.browser.BrowserActivityVideo"
+            android:exported="true"
             android:targetActivity=".EntryActivity">
 
             <intent-filter>
@@ -147,6 +148,7 @@
             android:name=".browser.QueryBrowserActivityVideo"
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round"
+            android:exported="true"
             android:theme="@style/ArchosThemeBlue" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -924,6 +926,7 @@
         </activity>
         <activity
             android:name=".autoscraper.AutoScraperActivity"
+            android:exported="true"
             android:configChanges="orientation|screenLayout|screenSize"
             android:excludeFromRecents="true"
             android:icon="@mipmap/ic_launcher"
@@ -937,6 +940,7 @@
         </activity>
         <activity
             android:name=".utils.SubtitlesWizardActivity"
+            android:exported="true"
             android:excludeFromRecents="true"
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round"
@@ -958,6 +962,7 @@
         </activity>
         <activity
             android:name=".utils.VideoPreferencesActivity"
+            android:exported="true"
             android:configChanges="orientation|screenLayout"
             android:excludeFromRecents="true"
             android:icon="@mipmap/ic_launcher"
@@ -971,6 +976,7 @@
         </activity>
         <activity
             android:name=".utils.VideoPreferencesLicencesActivity"
+            android:exported="true"
             android:configChanges="orientation|screenLayout"
             android:excludeFromRecents="true"
             android:icon="@mipmap/ic_launcher"
@@ -987,6 +993,7 @@
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/video_picker_title"
+            android:exported="true"
             android:theme="@style/ArchosThemeBlue" >
             <!-- Someone asks to get content of any of the video types we support. -->
             <intent-filter>
@@ -1022,7 +1029,8 @@
         <service android:name="com.archos.mediascraper.AllCollectionScrapeService" />
         <service android:name="com.archos.mediacenter.video.browser.FileManagerService" />
 
-        <receiver android:name="com.archos.mediacenter.LibAvosReceiver" >
+        <receiver android:name="com.archos.mediacenter.LibAvosReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.archos.mediacenter.NEW_PLUGINS" />
             </intent-filter>
@@ -1041,7 +1049,8 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.archos.mediaprovider.video.NetworkAutoRefresh" >
+        <receiver android:name="com.archos.mediaprovider.video.NetworkAutoRefresh"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.archos.mediaprovider.video.NetworkAutoRefresh_force" />
             </intent-filter>
@@ -1060,7 +1069,8 @@
             android:authorities="com.archos.media.videocommunity;com.archos.media.scrapercommunity"
             android:exported="true" />
         <!-- BroadcastReceiver to trigger database import -->
-        <receiver android:name="com.archos.mediaprovider.video.VideoStoreImportReceiver" >
+        <receiver android:name="com.archos.mediaprovider.video.VideoStoreImportReceiver"
+            android:exported="true">
             <!-- Android broadcast that stops importing -->
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
@@ -1126,7 +1136,8 @@
         <service android:name="com.archos.mediacenter.utils.trakt.TraktService" />
 
         <!-- MediaScraper -->
-        <receiver android:name="com.archos.mediascraper.receiver.ScraperReceiver" >
+        <receiver android:name="com.archos.mediascraper.receiver.ScraperReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="archos.intent.action.MEDIA_LIBRARY_FLUSH" />
             </intent-filter>
@@ -1152,6 +1163,7 @@
             android:theme="@style/ArchosThemeBlue" />
         <activity
             android:name=".player.TorrentLoaderActivity"
+            android:exported="true"
             android:theme="@style/Theme.Transparent" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -1261,7 +1273,8 @@
         <service android:name="com.archos.mediaprovider.video.RemoteStateService" />
 
         <!-- keeps track of network scanning state -->
-        <receiver android:name="com.archos.mediaprovider.video.NetworkScannerReceiver" >
+        <receiver android:name="com.archos.mediaprovider.video.NetworkScannerReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="archos.media.intent.action.VIDEO_SCANNER_SCAN_STARTED" />
                 <data android:scheme="sftp" />
@@ -1284,7 +1297,8 @@
             </intent-filter>
         </receiver>
         
-        <receiver android:name="com.archos.filecorelibrary.ExtStorageReceiver" >
+        <receiver android:name="com.archos.filecorelibrary.ExtStorageReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />
                 <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
@@ -1313,6 +1327,7 @@
         <activity
             android:name="com.archos.mediacenter.video.leanback.MainActivityLeanback"
             android:banner="@drawable/androidtv_banner"
+            android:exported="true"
             android:icon="@mipmap/video2"
             android:taskAffinity="archos.task.video"
             android:label="@string/video"
