@@ -292,7 +292,8 @@ public class  UpdateRecommendationsService extends IntentService {
 		stackBuilder.addNextIntent(detailsIntent);
 		// Ensure a unique PendingIntents, otherwise all
 		// recommendations end up with the same PendingIntent
-		PendingIntent intent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent intent = stackBuilder.getPendingIntent(0,
+				((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT));
 
 		return intent;
 	}

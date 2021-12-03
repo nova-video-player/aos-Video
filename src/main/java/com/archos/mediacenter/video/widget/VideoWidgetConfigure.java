@@ -21,6 +21,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
@@ -110,7 +111,8 @@ public class VideoWidgetConfigure extends AppCompatActivity {
             intent.setAction(WidgetProviderVideo.INITIAL_UPDATE_ACTION);
             intent.setData(Uri.parse(String.valueOf(mAppWidgetId)));    // Fill data with a dummy value to avoid the "extra beeing ignored" optimization of the PendingIntent
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(VideoWidgetConfigure.this, 0, intent, 0);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(VideoWidgetConfigure.this, 0, intent,
+                    ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT));
             AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
             alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 100, pendingIntent);
 

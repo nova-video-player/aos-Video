@@ -16,11 +16,8 @@ package com.archos.mediacenter.video.browser;
 
 
 import com.archos.environment.ArchosFeatures;
-import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.utils.AppState;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

@@ -296,7 +296,8 @@ public class FileManagerService extends Service implements OperationEngineListen
 
     private PendingIntent getCancelIntent() {
         Intent intent = new Intent("CANCEL");
-        return PendingIntent.getBroadcast(this, 0, intent, 0);
+        return PendingIntent.getBroadcast(this, 0, intent,
+                ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT));
     }
 
     private Intent getOpenIntent() {
@@ -478,7 +479,8 @@ public class FileManagerService extends Service implements OperationEngineListen
         // Build the intent to send when the user clicks on the notification in the notification panel
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.setAction(MainActivity.LAUNCH_DIALOG);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
+                ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT));
 
         nb.setContentTitle(getText(R.string.copying))
                 .setContentIntent(contentIntent)
@@ -493,7 +495,8 @@ public class FileManagerService extends Service implements OperationEngineListen
         nb.setContentTitle(getText(R.string.open_file))
                 .setContentText(mProcessedFiles.get(0).getName())
                 .setWhen(System.currentTimeMillis())
-                .setContentIntent(PendingIntent.getBroadcast(this, 0, getOpenIntent(), 0));
+                .setContentIntent(PendingIntent.getBroadcast(this, 0, getOpenIntent(),
+                        ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT)));
         nm.notify(OPEN_NOTIFICATION_ID, nb.build());
     }
 

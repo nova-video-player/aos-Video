@@ -29,6 +29,7 @@ import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -369,7 +370,8 @@ abstract class RemoteViewsFactoryBase implements RemoteViewsService.RemoteViewsF
         if (notifyContentChanged) {
             intent.putExtra(WidgetProviderVideo.EXTRA_CONTENT_CHANGED, true);
         }
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, intent,
+                ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT));
         mAlarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + delay, pendingIntent);
     }
 
@@ -378,7 +380,8 @@ abstract class RemoteViewsFactoryBase implements RemoteViewsService.RemoteViewsF
 
         // Cancel any previous alarm set for a content changed event
         if (mLastContentChangedIntent != null) {
-            pendingIntent = PendingIntent.getBroadcast(mContext, 0, mLastContentChangedIntent, 0);
+            pendingIntent = PendingIntent.getBroadcast(mContext, 0, mLastContentChangedIntent,
+                    ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT));
             mAlarmManager.cancel(pendingIntent);
         }
 
@@ -388,7 +391,8 @@ abstract class RemoteViewsFactoryBase implements RemoteViewsService.RemoteViewsF
         intent.setData(Uri.parse(String.valueOf(SystemClock.elapsedRealtime())));   // Fill data with a dummy value to avoid the "extra beeing ignored" optimization of the PendingIntent
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
         mLastContentChangedIntent = intent.cloneFilter();                           // This is enough to identify the intent
-        pendingIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
+        pendingIntent = PendingIntent.getBroadcast(mContext, 0, intent,
+                ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT));
         mAlarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + delay, pendingIntent);
     }
 
