@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
      Copyright (C) 2007 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,11 +15,11 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dist="http://schemas.android.com/apk/distribution"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.archos.mediacenter.video"
     android:installLocation="auto"
-    android:sharedUserId="archos.openmediacenter"
-    xmlns:dist="http://schemas.android.com/apk/distribution">
+    android:sharedUserId="archos.openmediacenter">
 
     <dist:module dist:instant="true" />
     <supports-screens android:largeScreens="true" />
@@ -32,11 +31,18 @@
         android:required="false" />
 
     <!-- You must mark this feature as optional in order to make the app available for Android TV -->
-    <uses-feature android:name="android.hardware.microphone" android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="false" />
 
     <!-- Used to monitor the usb storage plug/unplug -->
-    <uses-feature android:required="false" android:name="android.hardware.usb.host" />
-    <uses-feature android:name="android.software.leanback" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="false" />
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.USB_PERMISSION" />
 
     <!-- Used to for scanning and trakt -->
@@ -58,21 +64,25 @@
     <!-- uses-permission android:name="android.permission.STATUS_BAR" / -->
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <!-- uses-permission android:name="android.permission.ARCHOS_READ_RAWFS" / -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!-- Required for Android TV channels -->
-    <uses-permission android:name="com.android.providers.tv.permission.READ_EPG_DATA" android:required="false"/>
-    <uses-permission android:name="com.android.providers.tv.permission.WRITE_EPG_DATA" android:required="false"/>
+    <uses-permission
+        android:name="com.android.providers.tv.permission.READ_EPG_DATA"
+        android:required="false" />
+    <uses-permission
+        android:name="com.android.providers.tv.permission.WRITE_EPG_DATA"
+        android:required="false" />
 
     <application
         android:name=".CustomApplication"
         android:allowTaskReparenting="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/video"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:usesCleartextTraffic="true">
         <meta-data
             android:name="to.dualscreen"
@@ -83,36 +93,37 @@
         only by asking for this archos framework library
         -->
         <!-- <uses-library android:name="com.archos.frameworks" /> -->
-	<uses-library android:name="org.apache.http.legacy" android:required="false" />
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
         <activity
             android:name=".EntryActivity"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/video"
             android:launchMode="singleTask"
-            android:exported="true"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:taskAffinity="archos.task.video"
-            android:theme="@style/ArchosThemeBlue" >
-        </activity>
+            android:theme="@style/ArchosThemeBlue" />
 
         <activity
             android:name=".browser.MainActivity"
+            android:banner="@drawable/androidtv_banner"
             android:configChanges="keyboard|keyboardHidden"
             android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:banner="@drawable/androidtv_banner"
             android:label="@string/video"
             android:launchMode="singleTask"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:taskAffinity="archos.task.video"
             android:theme="@style/ArchosThemeBlueNoActionBar"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustPan">
             <!-- Points to searchable meta data. -->
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value="com.archos.mediacenter.video.browser.QueryBrowserActivityVideo" />
 
-            </activity>
+        </activity>
 
         <!-- BrowserActivityVideo used to be the entry point. We keep this alias so that old shortcuts are still working -->
         <activity-alias
@@ -124,16 +135,17 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data android:name="android.app.shortcuts"
+            <meta-data
+                android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity-alias>
 
         <activity-alias
             android:name=".browser.MainActivityStereo"
             android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/video"
-            android:targetActivity=".browser.MainActivity" >
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:targetActivity=".browser.MainActivity">
 
             <!-- Points to searchable meta data. -->
             <meta-data
@@ -146,10 +158,10 @@
 
         <activity
             android:name=".browser.QueryBrowserActivityVideo"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round"
-            android:exported="true"
-            android:theme="@style/ArchosThemeBlue" >
+            android:theme="@style/ArchosThemeBlue">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <action android:name="android.intent.action.MEDIA_SEARCH" />
@@ -175,37 +187,37 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
 
         <activity
-            android:enabled="true"
-            android:exported="true"
             android:name=".player.PlayerActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize"
+            android:enabled="true"
+            android:exported="true"
             android:finishOnTaskLaunch="true"
-            android:taskAffinity="archos.task.video"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/video"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:supportsPictureInPicture="true"
-            android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round"
-            android:label="@string/video"
-            android:theme="@style/ArchosThemeBlueOverlay" >
+            android:supportsPictureInPicture="true"
+            android:taskAffinity="archos.task.video"
+            android:theme="@style/ArchosThemeBlueOverlay">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="rtmp"/>
-                <data android:scheme="rtmpe"/>
-                <data android:scheme="rtmps"/>
-                <data android:scheme="rtp"/>
-                <data android:scheme="rtsp"/>
-                <data android:scheme="mms"/>
-                <data android:scheme="mmst"/>
-                <data android:scheme="mmsh"/>
-                <data android:scheme="httplive"/>
-                <data android:scheme="udp"/>
+                <data android:scheme="rtmp" />
+                <data android:scheme="rtmpe" />
+                <data android:scheme="rtmps" />
+                <data android:scheme="rtp" />
+                <data android:scheme="rtsp" />
+                <data android:scheme="mms" />
+                <data android:scheme="mmst" />
+                <data android:scheme="mmsh" />
+                <data android:scheme="httplive" />
+                <data android:scheme="udp" />
             </intent-filter>
             <!-- data android:pathPattern=".*.mkv" /-->
             <!--
@@ -221,24 +233,24 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="file"/>
-                <data android:scheme="content"/>
-                <data android:scheme="http"/>
-                <data android:scheme="https"/>
-                <data android:host="*"/>
-                <data android:mimeType="video/*"/>
-                <data android:mimeType="application/sdp"/>
-                <data android:mimeType="application/mp4"/>
-                <data android:mimeType="application/vnd.apple.mpegurl"/>
-                <data android:mimeType="application/vnd.apple.mpegurl.audio"/>
-                <data android:mimeType="application/vnd.rn-realmedia"/>
-                <data android:mimeType="application/vnd.rn-realmedia-vbr"/>
-                <data android:mimeType="application/mpegurl"/>
-                <data android:mimeType="application/x-mpegurl"/>
-                <data android:mimeType="application/ogg"/>
-                <data android:mimeType="application/x-ogg"/>
-                <data android:mimeType="audio/mpegurl"/>
-                <data android:mimeType="audio/x-mpegurl"/>
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="*" />
+                <data android:mimeType="video/*" />
+                <data android:mimeType="application/sdp" />
+                <data android:mimeType="application/mp4" />
+                <data android:mimeType="application/vnd.apple.mpegurl" />
+                <data android:mimeType="application/vnd.apple.mpegurl.audio" />
+                <data android:mimeType="application/vnd.rn-realmedia" />
+                <data android:mimeType="application/vnd.rn-realmedia-vbr" />
+                <data android:mimeType="application/mpegurl" />
+                <data android:mimeType="application/x-mpegurl" />
+                <data android:mimeType="application/ogg" />
+                <data android:mimeType="application/x-ogg" />
+                <data android:mimeType="audio/mpegurl" />
+                <data android:mimeType="audio/x-mpegurl" />
                 <data android:mimeType="application/x-shockwave-flash" />
             </intent-filter>
             <!--
@@ -248,8 +260,10 @@
             -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="content" />
                 <data android:scheme="file" />
                 <data android:scheme="http" />
@@ -586,8 +600,10 @@
             -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="content" />
                 <data android:scheme="file" />
                 <data android:scheme="http" />
@@ -920,33 +936,34 @@
             <intent-filter>
                 <action android:name="archos.intent.action.RESUME_VIDEOPLAYER" />
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="video/*" />
                 <data android:mimeType="application/x-shockwave-flash" />
             </intent-filter>
         </activity>
         <activity
             android:name=".autoscraper.AutoScraperActivity"
-            android:exported="true"
             android:configChanges="orientation|screenLayout|screenSize"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/scraper_notification_title"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.DialogMinWidth" >
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:theme="@style/Theme.DialogMinWidth">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
             android:name=".utils.SubtitlesWizardActivity"
-            android:exported="true"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/get_subtitles_on_drive"
             android:launchMode="singleTask"
-            android:theme="@style/ArchosThemeBlueTransparent" >
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:theme="@style/ArchosThemeBlueTransparent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -955,51 +972,52 @@
             android:name=".utils.credentialsmanager.CredentialsManagerPreferenceActivity"
             android:excludeFromRecents="true"
             android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/samba_settings_title"
             android:launchMode="singleTask"
-            android:theme="@style/ArchosThemeBlue" >
-        </activity>
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:theme="@style/ArchosThemeBlue" />
         <activity
             android:name=".utils.VideoPreferencesActivity"
-            android:exported="true"
             android:configChanges="orientation|screenLayout"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/preferences"
             android:launchMode="singleTop"
-            android:theme="@style/ArchosThemeBlue" >
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:theme="@style/ArchosThemeBlue">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
             android:name=".utils.VideoPreferencesLicencesActivity"
-            android:exported="true"
             android:configChanges="orientation|screenLayout"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/preferences_video_licenses"
             android:launchMode="singleTop"
-            android:theme="@style/ArchosThemeBlue" >
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:theme="@style/ArchosThemeBlue">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
             android:name=".browser.VideoPicker"
-            android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:label="@string/video_picker_title"
             android:exported="true"
-            android:theme="@style/ArchosThemeBlue" >
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/video_picker_title"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:theme="@style/ArchosThemeBlue">
             <!-- Someone asks to get content of any of the video types we support. -->
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.OPENABLE" />
+
                 <data android:mimeType="video/*" />
             </intent-filter>
         </activity>
@@ -1018,18 +1036,20 @@
             android:name="com.archos.mediacenter.utils.HelpOverlayActivity"
             android:configChanges="orientation|screenSize"
             android:taskAffinity="archos.task.video"
-            android:theme="@style/Theme.HelpOverlay" >
-        </activity>
+            android:theme="@style/Theme.HelpOverlay" />
 
         <service android:name="org.fourthline.cling.android.AndroidUpnpServiceImpl" />
         <service android:name=".browser.TorrentObserverService" />
-        <service android:name=".player.FloatingPlayerService" android:exported="false"/>
+        <service
+            android:name=".player.FloatingPlayerService"
+            android:exported="false" />
         <service android:name=".player.PlayerService" />
         <service android:name="com.archos.mediascraper.AutoScrapeService" />
         <service android:name="com.archos.mediascraper.AllCollectionScrapeService" />
         <service android:name="com.archos.mediacenter.video.browser.FileManagerService" />
 
-        <receiver android:name="com.archos.mediacenter.LibAvosReceiver"
+        <receiver
+            android:name="com.archos.mediacenter.LibAvosReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.archos.mediacenter.NEW_PLUGINS" />
@@ -1049,7 +1069,8 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.archos.mediaprovider.video.NetworkAutoRefresh"
+        <receiver
+            android:name="com.archos.mediaprovider.video.NetworkAutoRefresh"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.archos.mediaprovider.video.NetworkAutoRefresh_force" />
@@ -1069,7 +1090,8 @@
             android:authorities="com.archos.media.videocommunity;com.archos.media.scrapercommunity"
             android:exported="true" />
         <!-- BroadcastReceiver to trigger database import -->
-        <receiver android:name="com.archos.mediaprovider.video.VideoStoreImportReceiver"
+        <receiver
+            android:name="com.archos.mediaprovider.video.VideoStoreImportReceiver"
             android:exported="true">
             <!-- Android broadcast that stops importing -->
             <intent-filter>
@@ -1080,6 +1102,7 @@
             <intent-filter>
                 <action android:name="archos.media.intent.action.VIDEO_SCANNER_SCAN_FILE" />
                 <action android:name="archos.intent.action.MEDIA_SCANNER_SCAN_FILE" />
+
                 <data android:scheme="smb" />
                 <data android:scheme="http" />
                 <data android:scheme="https" />
@@ -1098,6 +1121,7 @@
             <intent-filter>
                 <action android:name="archos.media.intent.action.VIDEO_SCANNER_REMOVE_FILE" />
                 <action android:name="archos.intent.action.MEDIA_SCANNER_REMOVE_FILE" />
+
                 <data android:scheme="sftp" />
                 <data android:scheme="ftp" />
                 <data android:scheme="ftps" />
@@ -1109,6 +1133,7 @@
             <!-- Triggers metadata update -->
             <intent-filter>
                 <action android:name="archos.media.intent.action.VIDEO_SCANNER_METADATA_UPDATE" />
+
                 <data android:scheme="sftp" />
                 <data android:scheme="ftp" />
                 <data android:scheme="ftps" />
@@ -1136,7 +1161,8 @@
         <service android:name="com.archos.mediacenter.utils.trakt.TraktService" />
 
         <!-- MediaScraper -->
-        <receiver android:name="com.archos.mediascraper.receiver.ScraperReceiver"
+        <receiver
+            android:name="com.archos.mediascraper.receiver.ScraperReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="archos.intent.action.MEDIA_LIBRARY_FLUSH" />
@@ -1153,8 +1179,7 @@
 
         <activity
             android:name=".info.VideoInfoActivity"
-            android:theme="@style/Theme.TransparentCompat">
-        </activity>
+            android:theme="@style/Theme.TransparentCompat" />
         <activity
             android:name=".info.VideoInfoScraperActivity"
             android:theme="@style/ArchosThemeBlue" />
@@ -1164,7 +1189,7 @@
         <activity
             android:name=".player.TorrentLoaderActivity"
             android:exported="true"
-            android:theme="@style/Theme.Transparent" >
+            android:theme="@style/Theme.Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -1273,10 +1298,12 @@
         <service android:name="com.archos.mediaprovider.video.RemoteStateService" />
 
         <!-- keeps track of network scanning state -->
-        <receiver android:name="com.archos.mediaprovider.video.NetworkScannerReceiver"
+        <receiver
+            android:name="com.archos.mediaprovider.video.NetworkScannerReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="archos.media.intent.action.VIDEO_SCANNER_SCAN_STARTED" />
+
                 <data android:scheme="sftp" />
                 <data android:scheme="ftp" />
                 <data android:scheme="upnp" />
@@ -1287,6 +1314,7 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="archos.media.intent.action.VIDEO_SCANNER_SCAN_FINISHED" />
+
                 <data android:scheme="sftp" />
                 <data android:scheme="ftp" />
                 <data android:scheme="upnp" />
@@ -1296,8 +1324,9 @@
                 <data android:scheme="smb" />
             </intent-filter>
         </receiver>
-        
-        <receiver android:name="com.archos.filecorelibrary.ExtStorageReceiver"
+
+        <receiver
+            android:name="com.archos.filecorelibrary.ExtStorageReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />
@@ -1329,9 +1358,9 @@
             android:banner="@drawable/androidtv_banner"
             android:exported="true"
             android:icon="@mipmap/video2"
-            android:taskAffinity="archos.task.video"
             android:label="@string/video"
-            android:theme="@style/MyLeanbackTheme" >
+            android:taskAffinity="archos.task.video"
+            android:theme="@style/MyLeanbackTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
@@ -1340,156 +1369,156 @@
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.movies.AllMoviesGridActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.animes.AllAnimesGridActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.tvshow.AllAnimeShowsGridActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.tvshow.AllTvshowsGridActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.collections.AllCollectionsGridActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.collections.AllAnimeCollectionsGridActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.collections.CollectionActivity"
             android:exported="true"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.tvshow.TvshowActivity"
             android:exported="true"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.tvshow.TvshowMoreDetailsActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.tvshow.SeasonActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.movies.MoviesByAlphaActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.movies.MoviesByGenreActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.movies.MoviesByRatingActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.movies.MoviesByYearActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.animes.AnimesByAlphaActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.animes.AnimesByGenreActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.animes.AnimesByRatingActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.animes.AnimesByYearActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.tvshow.TvshowsByAlphaActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.tvshow.TvshowsByGenreActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.tvshow.TvshowsByRatingActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.tvshow.EpisodesByDateActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.VideosByListActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.details.VideoDetailsActivity"
             android:exported="true"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.details.VideoDetailsOverlayActivity"
-            android:theme="@style/MyLeanbackTheme.Transparent"/>
+            android:theme="@style/MyLeanbackTheme.Transparent" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.scrapping.ManualVideoScrappingActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.scrapping.ManualShowScrappingActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.filebrowsing.LocalListingActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.filebrowsing.ExtStorageListingActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.network.NetworkRootActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.network.NetworkShortcutDetailsActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.network.ftp.FtpShortcutDetailsActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.network.ftp.FtpListingActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.network.smb.SmbListingActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.network.upnp.UpnpListingActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.nonscraped.NonScrapedVideosActivity"
-            android:theme="@style/MyLeanbackTheme"/>
+            android:theme="@style/MyLeanbackTheme" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.search.VideoSearchActivity"
-            android:theme="@style/MyLeanbackTheme"
-            android:exported="true" >
+            android:exported="true"
+            android:theme="@style/MyLeanbackTheme">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -1498,38 +1527,38 @@
                 android:resource="@xml/androidtv_searchable_video" />
         </activity>
 
-        <provider android:name="com.archos.mediacenter.video.leanback.search.VideoSearchProvider"
+        <provider
+            android:name="com.archos.mediacenter.video.leanback.search.VideoSearchProvider"
             android:authorities="${applicationId}.leanback.search.VideoSearchProvider"
             android:exported="true" />
 
 
         <activity
             android:name="com.archos.mediacenter.video.utils.WebViewActivity"
-            android:label="@string/leanback_archos_video_webview"
+            android:excludeFromRecents="true"
             android:exported="false"
-            android:theme="@style/ArchosThemeBlue"
-            android:excludeFromRecents="true">
-        </activity>
+            android:label="@string/leanback_archos_video_webview"
+            android:theme="@style/ArchosThemeBlue" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.network.rescan.RescanActivity"
-            android:theme="@style/Theme.Leanback.GuidedStep"/>
+            android:theme="@style/Theme.Leanback.GuidedStep" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.wizard.SubtitlesWizardActivity"
-            android:theme="@style/MyLeanbackTheme.Wizard"/>
+            android:theme="@style/MyLeanbackTheme.Wizard" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.settings.VideoSettingsActivity"
-            android:theme="@style/MyLeanbackTheme.Preferences"/>
+            android:theme="@style/MyLeanbackTheme.Preferences" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.settings.VideoSettingsLicencesActivity"
-            android:theme="@style/MyLeanbackTheme.Preferences"/>
+            android:theme="@style/MyLeanbackTheme.Preferences" />
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.settings.VideoSettingsMoreLeanbackActivity"
-            android:theme="@style/MyLeanbackTheme.Preferences"/>
+            android:theme="@style/MyLeanbackTheme.Preferences" />
 
     </application>
 
