@@ -50,6 +50,8 @@ import httpimage.HttpImageManager;
 
 import org.acra.*;
 import org.acra.annotation.*;
+import org.acra.config.CoreConfigurationBuilder;
+import org.acra.config.HttpSenderConfigurationBuilder;
 import org.acra.data.StringFormat;
 import org.acra.sender.HttpSender;
 import org.slf4j.Logger;
@@ -57,13 +59,6 @@ import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
-
-@AcraCore(reportFormat = StringFormat.JSON)
-@AcraHttpSender(uri = "https://bug.courville.org/report",
-        basicAuthLogin = "1HrXuNtb1JAtflJu",
-        basicAuthPassword = "tdCgove1nfdEVTY6",
-        httpMethod = HttpSender.Method.POST)
 
 public class CustomApplication extends Application {
 
@@ -95,7 +90,15 @@ public class CustomApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         // The following line triggers the initialization of ACRA
-        ACRA.init(this);
+        CoreConfigurationBuilder builder = new CoreConfigurationBuilder(this);
+        builder.withBuildConfigClass(BuildConfig.class).withReportFormat(StringFormat.JSON);
+        builder.getPluginConfigurationBuilder(HttpSenderConfigurationBuilder.class)
+                .withUri("https://bug.courville.org/report")
+                .withBasicAuthLogin("1HrXuNtb1JAtflJu")
+                .withBasicAuthPassword("tdCgove1nfdEVTY6")
+                .withHttpMethod(HttpSender.Method.POST)
+                .withEnabled(true);
+        ACRA.init(this, builder);
     }
 
     public static String BASEDIR;
