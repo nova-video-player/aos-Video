@@ -286,7 +286,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     private final ActivityResultLauncher<IntentSenderRequest> deleteLauncher = registerForActivityResult(
             new ActivityResultContracts.StartIntentSenderForResult(),
-            // TODO add block delete (folder etc.) not only .get(0)
             result -> { // result can be RESULT_OK, RESULT_CANCELED
                 Context context = getActivity();
                 log.debug("ActivityResultLauncher deleteLauncher: result " + result.toString());
@@ -296,12 +295,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                         log.debug("ActivityResultLauncher deleteLauncher: calling delete.deleteOK on " + deleteUrisList.get(0));
                         delete.deleteOK(deleteUrisList.get(0));
                     }
-                    if (context != null)
-                        Toast.makeText(getActivity(), "deleteLauncherOK", Toast.LENGTH_SHORT).show();
                 } else {
                     log.debug("ActivityResultLauncher deleteLauncher: NO, deleteUris " + ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
-                    if (context != null)
-                        Toast.makeText(getActivity(), "deleteLauncherNOK", Toast.LENGTH_SHORT).show();
                     if (delete != null && deleteUrisList != null && deleteUrisList.size() > 1)
                         delete.deleteNOK(deleteUrisList.get(0));
                 }
