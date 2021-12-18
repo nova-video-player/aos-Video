@@ -1,11 +1,12 @@
-- Add support for movie collections/sagas on Android TV
-- Separate section for animation movies and series on Android TV
+- Movie collections/sagas support on Android TV
+- Separate animation/movies/series sections on Android TV
 - Faster TV shows media information retrieval
-- Properly report DTSHD &  DTSHD MA
-- ffmpeg 4.4 & dav1d 0.9.2 integration
+- Report properly DTSHD & DTSHD MA
+- ffmpeg 4.4.1 & dav1d 0.9.2 upstep
 - MDNS samba discovery
 - New refresh rate selection algorithm optimizing judder effect
 - Add domain option to samba network credential dialog
 - Optimize network shares rescan speed when files deleted/renamed
 - Dolby vision support
 - Binge watch mode
+- Target API31
