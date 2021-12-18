@@ -824,6 +824,7 @@
     <string name="help_faq">Segítség / GYIK</string>
     <string name="provider_folders">Felhő</string>
     <string name="learn_more">Tudjon meg többet</string>
+    <string name="learn_more_about_codecs">A Nova Video Player csak olyan videókat tud lejátszani, melyeket a készüléke támogat. A licencek miatt, egyes formátumokat nem lehet legálisan hozzáadni, egyeseket pedig megvásárolhatja a Google Play Áruházban.</string>
     <string name="rate_us_title">☆ Támogasson minket</string>
     <string name="create_new_list">Új lista létrehozása</string>
     <string name="add_to_list">Hozzáadás listához</string>

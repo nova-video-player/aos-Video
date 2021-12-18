@@ -310,6 +310,7 @@
     <string name="pref_play_mode_entry_folder">Папка</string>
     <string name="pref_play_mode_entry_repeat_folder">Повтор папки</string>
     <string name="pref_play_mode_entry_repeat_single">Повтор одного файла</string>
+    <string name="pref_play_mode_entry_binge">Непрерывный просмотр</string>
     <string name="pref_audio_parameters_title">Aудио</string>
     <string name="pref_audio_filt_title">Усиление аудио</string>
     <string name="pref_audio_filt_night_mode">Ночной режим</string>
@@ -553,6 +554,8 @@
     <string name="preferences_video_licenses">Лицензии</string>
     <string name="preferences_network_mobile_vpn_summary">Используйте только с VPN и не забывайте о передаче мобильных данных</string>
     <string name="preferences_network_mobile_vpn_title">Включить сетевые ресурсы при мобильном подключении</string>
+    <string name="preferences_network_prefer_vpn_summary">Использовать VPN через локальные сетевые интерфейсы.</string>
+    <string name="preferences_network_prefer_vpn_title">Предпочитать VPN</string>
     <string name="preferences_video_advanced">Расширенный</string>
     <string name="preferences_video_advanced_quit_title">Основные настройки</string>
     <string name="preferences_video_advanced_quit_summary">Вернуться к основным настройкам</string>

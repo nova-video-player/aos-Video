@@ -90,6 +90,7 @@
     <string name="not_played_yet_videos">لم يتم التشغيل حتى الان</string>
     <string name="video_folder">المجلدات</string>
     <string name="movies">أفلام</string>
+    <string name="animes">رسوم متحركة</string>
     <string name="all_movies">كل الأفلام</string>
     <string name="all_movies_format">كل الأفلام</string>
     <string name="not_watched_movies_format">الأفلام التي لم يتم مشاهدتها</string>
