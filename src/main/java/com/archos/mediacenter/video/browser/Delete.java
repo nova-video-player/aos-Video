@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.browser;
 
+import static com.archos.filecorelibrary.FileUtils.isLocal;
+
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -90,12 +92,19 @@ public class Delete {
 
     public void deleteOK(Uri fileUri) {
         counter--;
-        log.debug("deleteOK: counter " + counter);
-        if (counter == 0) {
+        log.debug("deleteOK: "+ fileUri + " counter " + counter);
+        if (counter <= 0) {
             // sometimes we will want to delete parent folder, when empty or only filled with little files like subtitles or nfo
             // then, ask the user
             if (mListener != null) {
-                if (FileUtils.isLocal(fileUri) &&
+
+                if (isLocal(fileUri)) { // record if this is a directory being deleted for later
+                    log.debug("deleteOK: locale file/folder trying to delete if directory");
+                    LocalStorageFileEditor editor = new LocalStorageFileEditor(fileUri, mContext);
+                    editor.deleteDir(fileUri);
+                }
+
+                if (isLocal(fileUri) &&
                         !LocalStorageFileEditor.checkIfShouldNotTouchFolder(FileUtils.getParentUrl(fileUri))) {
                     long shouldIDelete = getFolderSizeAndStopOnMax(FileUtils.getParentUrl(fileUri), MAX_FOLDER_SIZE, 0, 0);
                     if ((currentVideoFileToDeleteSize > MIN_FILE_SIZE || shouldIDelete == 0) && MAX_FOLDER_SIZE > shouldIDelete && shouldIDelete >= 0) {
@@ -130,7 +139,7 @@ public class Delete {
 
     public void deleteNOK(Uri fileUri) {
         counter--;
-        log.debug("deleteNOK: counter " + counter);
+        log.debug("deleteNOK: " + fileUri + " counter " + counter);
         if (counter == 0) {
             if (mListener != null)
                 mHandler.post(new Runnable() {
@@ -144,7 +153,7 @@ public class Delete {
     }
 
     public void deleteFolderOK(Uri folderUri) {
-        log.debug("deleteFolderOK: counter " + counter);
+        log.debug("deleteFolderOK: " + folderUri + " counter " + counter);
         if (mListener != null)
             mHandler.post(() -> {
                 log.debug("deleteFolder onFolderRemoved " + folderUri);
@@ -163,7 +172,7 @@ public class Delete {
                     List<Uri> toDeleteLocal = new ArrayList<>();
                     for (Uri toDeleteUri : toDelete) {
                         final Uri fileUri = toDeleteUri;
-                        if (!FileUtils.isLocal(fileUri)) {
+                        if (!isLocal(fileUri)) {
                             allUrisLocal = false;
                             NetworkScanner.removeVideos(mContext, fileUri);
                             // delete file
@@ -236,7 +245,7 @@ public class Delete {
                     currentVideoFileToDelete = MetaFileFactoryWithUpnp.getMetaFileForUrl(fileUri);
                 } catch (Exception e) { }
                 //sending intent to unindex the file
-                if (FileUtils.isLocal(fileUri)) {
+                if (isLocal(fileUri)) {
                     Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,Uri.parse(VideoUtils.getMediaLibCompatibleFilepathFromUri(fileUri)));
                     intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
                     mContext.sendBroadcast(intent);
