@@ -65,7 +65,8 @@ public abstract class FilmsByLoader extends CursorLoader implements CompatAndSDK
         }
 
         sb.append(" AND ");
-        sb.append (VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%'");
+        sb.append("( " + VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " IS NULL OR " +
+                VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%' )");
 
         return sb.toString();
     }

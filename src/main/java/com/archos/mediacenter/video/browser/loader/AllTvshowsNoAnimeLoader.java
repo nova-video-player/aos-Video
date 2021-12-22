@@ -98,7 +98,8 @@ public class AllTvshowsNoAnimeLoader extends VideoLoader {
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);
         }
         sb.append(" AND ");
-        sb.append(VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%'");
+        sb.append("( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " IS NULL OR " +
+                VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%' )");
         sb.append(") GROUP BY (");
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID);
         return sb.toString();
