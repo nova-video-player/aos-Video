@@ -2353,7 +2353,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     }
 
     protected void stopDialog() {
-        if (mShowingDialogId != DIALOG_NO) {
+        if (mShowingDialogId != DIALOG_NO && mDialog != null) {
             // assume only one dialog (before there was a call to removeDialog(mShowingDialogId);
             mDialog.dismiss();
             mShowingDialogId = DIALOG_NO;
