@@ -480,60 +480,62 @@ public class Delete {
             if(video!=null && video instanceof Episode){
 
                 EpisodeTags tags = (EpisodeTags) video.getFullScraperTags(ArchosUtils.getGlobalContext());
-                EpisodesLoader episodesLoader = new EpisodesLoader(ArchosUtils.getGlobalContext(),tags.getShowId(), tags.getSeason(),false);
-                boolean shouldDeleteSeasonExportedFiles = true;
-                Cursor cursor2 = episodesLoader.loadInBackground();
-                if(cursor2!=null&&cursor2.getCount()>0){
-                    cursor2.moveToFirst();
-                    VideoCursorMapper videoCursorMapper2 = new VideoCursorMapper();
-                    videoCursorMapper2.bindColumns(cursor2);
-                    do{
-                        Episode episode2 = (Episode) videoCursorMapper2.bind(cursor2);
-                        if(!Uri.parse(episode2.getFilePath()).equals(fileUri)){
-                            shouldDeleteSeasonExportedFiles = false;
-                            break;
-                        }
-                    }while (cursor2.moveToNext());
-                    cursor2.close();
-                }
-                if(shouldDeleteSeasonExportedFiles){
-                    //add nfo/jpg files to delete
-
-                    SeasonsLoader seasonLoader = new SeasonsLoader(ArchosUtils.getGlobalContext(),tags.getShowId());
-                    boolean shouldDeleteShowExportedFiles = true;
-                    Cursor cursor3 = seasonLoader.loadInBackground();
-
-                    if(cursor3!=null&&cursor3.getCount()>0){
-
-                        SeasonCursorMapper seasonCursorMapper2 = new SeasonCursorMapper();
-                        seasonCursorMapper2.bindColumns(cursor3);
-                        cursor3.moveToFirst();
-                        do{
-                            Season season = (Season) seasonCursorMapper2.bind(cursor3);
-                            if(season.getSeasonNumber()!=tags.getSeason()){
-                                shouldDeleteShowExportedFiles = false;
+                if (tags != null) {
+                    EpisodesLoader episodesLoader = new EpisodesLoader(ArchosUtils.getGlobalContext(), tags.getShowId(), tags.getSeason(), false);
+                    boolean shouldDeleteSeasonExportedFiles = true;
+                    Cursor cursor2 = episodesLoader.loadInBackground();
+                    if (cursor2 != null && cursor2.getCount() > 0) {
+                        cursor2.moveToFirst();
+                        VideoCursorMapper videoCursorMapper2 = new VideoCursorMapper();
+                        videoCursorMapper2.bindColumns(cursor2);
+                        do {
+                            Episode episode2 = (Episode) videoCursorMapper2.bind(cursor2);
+                            if (!Uri.parse(episode2.getFilePath()).equals(fileUri)) {
+                                shouldDeleteSeasonExportedFiles = false;
                                 break;
                             }
-                        }while (cursor3.moveToNext());
-                        cursor3.close();
+                        } while (cursor2.moveToNext());
+                        cursor2.close();
                     }
-                    //add season poster file
-                    String formatedName = parentUri+NfoParser.getCustomSeasonPosterName(tags.getShowTitle(), tags.getSeason());
-                    if(formatedName!=null)
-                        result.add(Uri.parse(formatedName));
+                    if (shouldDeleteSeasonExportedFiles) {
+                        //add nfo/jpg files to delete
 
-                    if(shouldDeleteShowExportedFiles){
+                        SeasonsLoader seasonLoader = new SeasonsLoader(ArchosUtils.getGlobalContext(), tags.getShowId());
+                        boolean shouldDeleteShowExportedFiles = true;
+                        Cursor cursor3 = seasonLoader.loadInBackground();
 
-                        //add show files
-                        formatedName=NfoParser.getCustomShowNfoName(tags.getShowTitle());
-                        if(formatedName!=null)
-                            result.add(Uri.parse(parentUri+formatedName));
-                        formatedName=NfoParser.getCustomShowPosterName(tags.getShowTitle());
-                        if(formatedName!=null)
-                            result.add(Uri.parse(parentUri+formatedName));
-                        formatedName=NfoParser.getCustomShowBackdropName(tags.getShowTitle());
-                        if(formatedName!=null)
-                            result.add(Uri.parse(parentUri+formatedName));
+                        if (cursor3 != null && cursor3.getCount() > 0) {
+
+                            SeasonCursorMapper seasonCursorMapper2 = new SeasonCursorMapper();
+                            seasonCursorMapper2.bindColumns(cursor3);
+                            cursor3.moveToFirst();
+                            do {
+                                Season season = (Season) seasonCursorMapper2.bind(cursor3);
+                                if (season.getSeasonNumber() != tags.getSeason()) {
+                                    shouldDeleteShowExportedFiles = false;
+                                    break;
+                                }
+                            } while (cursor3.moveToNext());
+                            cursor3.close();
+                        }
+                        //add season poster file
+                        String formatedName = parentUri + NfoParser.getCustomSeasonPosterName(tags.getShowTitle(), tags.getSeason());
+                        if (formatedName != null)
+                            result.add(Uri.parse(formatedName));
+
+                        if (shouldDeleteShowExportedFiles) {
+
+                            //add show files
+                            formatedName = NfoParser.getCustomShowNfoName(tags.getShowTitle());
+                            if (formatedName != null)
+                                result.add(Uri.parse(parentUri + formatedName));
+                            formatedName = NfoParser.getCustomShowPosterName(tags.getShowTitle());
+                            if (formatedName != null)
+                                result.add(Uri.parse(parentUri + formatedName));
+                            formatedName = NfoParser.getCustomShowBackdropName(tags.getShowTitle());
+                            if (formatedName != null)
+                                result.add(Uri.parse(parentUri + formatedName));
+                        }
                     }
                 }
             }
