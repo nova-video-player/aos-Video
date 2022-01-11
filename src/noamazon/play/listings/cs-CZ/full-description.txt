@@ -1,4 +1,4 @@
-Nova je open source přehrávač videa určený pro tablety, telefony a zařízení Android TV.
+N.O.V.A. je open source přehrávač videa určený pro tablety, telefony a zařízení Android TV.
 Je dostupná na https://github.com/nova-video-player/aos-AVP.
 
 Univerzální přehrávač: 
