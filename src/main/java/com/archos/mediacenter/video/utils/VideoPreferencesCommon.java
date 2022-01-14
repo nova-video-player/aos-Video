@@ -52,6 +52,8 @@ import com.archos.filecorelibrary.ExtStorageManager;
 import com.archos.filecorelibrary.jcifs.JcifsUtils;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
+import com.archos.mediacenter.video.BuildConfig;
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.UiChoiceDialog;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
@@ -288,7 +290,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             editor.remove(KEY_FORCE_SW);
             editor.apply();
             // no need of the enable sponsor link if not installed from ggplay
-            if (! ArchosUtils.isInstalledfromPlayStore(getContext()))
+            if (! ArchosUtils.isInstalledfromPlayStore(getContext()) && BuildConfig.ENABLE_SPONSOR)
                 aboutCategory.removePreference(mEnableSponsor);
             else
                 aboutCategory.addPreference(mEnableSponsor);
