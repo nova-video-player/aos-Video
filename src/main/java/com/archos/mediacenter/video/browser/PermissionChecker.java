@@ -74,7 +74,6 @@ public class PermissionChecker {
             return ContextCompat.checkSelfPermission(mActivity,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED;
     }
 
-
     @TargetApi(Build.VERSION_CODES.M)
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults, Activity activity) {
         if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M)
@@ -124,6 +123,4 @@ public class PermissionChecker {
 
         }
     }
-
-
 }

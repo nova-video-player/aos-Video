@@ -14,7 +14,6 @@
 
 package com.archos.mediacenter.video.leanback.scrapping;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
@@ -34,7 +33,6 @@ import androidx.leanback.widget.Presenter;
 import androidx.leanback.widget.Row;
 import androidx.leanback.widget.RowPresenter;
 import androidx.leanback.widget.ShadowLessRowPresenter;
-import androidx.leanback.widget.SpeechRecognitionCallback;
 import android.util.Log;
 
 import com.archos.mediacenter.video.R;
@@ -77,7 +75,6 @@ public abstract class ManualScrappingSearchFragment extends SearchSupportFragmen
     private NfoTask mNfoTask;
 
     private static final int SEARCH_REQUEST_CODE = 1;
-    private SpeechRecognitionCallback mSpeechRecognitionCallback;
 
     /*
         Execute in our own serial executor :
@@ -135,18 +132,6 @@ public abstract class ManualScrappingSearchFragment extends SearchSupportFragmen
                 }
             }
         });
-        mSpeechRecognitionCallback = new SpeechRecognitionCallback() {
-
-            @Override
-            public void recognizeSpeech() {
-
-                // ACTION_RECOGNIZE_SPEECH
-                try{
-                    startActivityForResult(getRecognizerIntent(), SEARCH_REQUEST_CODE);
-                }catch (ActivityNotFoundException e){/*non google device*/}
-            }
-        };
-        setSpeechRecognitionCallback(mSpeechRecognitionCallback);
     }
 
     @Override
