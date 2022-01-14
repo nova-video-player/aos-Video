@@ -84,7 +84,6 @@
     <string name="root_storage">Interní úložiště</string>
     <string name="cannot_list">Nelze získat obsah</string>
     <!-- VIDEO -->
-    <string name="video">N.O.V.A. Video Player</string>
     <string name="videos">Videa</string>
     <string name="all_videos">Všechna videa</string>
     <string name="not_played_yet_videos">Ještě nepřehráno</string>
