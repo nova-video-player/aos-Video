@@ -2,22 +2,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/preferences">
     <PreferenceCategory
-        android:key="preferences_category_complete"
-        android:title="@string/preferences_category_complete"
-        app:iconSpaceReserved="false">
-        <Preference
-            android:key="video_ad_free"
-            android:title="@string/upgrade_to_add_free_version"
-            android:summary="@string/upgrade_to_add_free_version_description"
-            app:iconSpaceReserved="false"/>
-    </PreferenceCategory>
-    <PreferenceCategory
         android:key="preferences_about"
         android:title="@string/preferences_about"
         app:iconSpaceReserved="false">
-        <EditTextPreference
+        <Preference
             android:title="@string/APP_INFO"
-            android:key="preferences_version"/>
+            android:selectable="false"
+            android:key="preferences_version"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="preferences_category_video"

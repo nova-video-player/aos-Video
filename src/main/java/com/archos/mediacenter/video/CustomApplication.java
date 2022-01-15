@@ -19,10 +19,15 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
+
+import androidx.preference.PreferenceManager;
 
 import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosUtils;
@@ -59,6 +64,8 @@ import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CustomApplication extends Application {
 
@@ -69,6 +76,19 @@ public class CustomApplication extends Application {
     private static boolean isAppStateListenerAdded = false;
     private static boolean isVideStoreImportReceiverRegistered = false;
     private static boolean isNetworkStateListenerAdded = false;
+
+    private static int [] novaVersionArray;
+    private static String novaLongVersion;
+    private static int novaVersionCode = -1;
+    private static String novaVersionName;
+    private static boolean novaUpdated = false;
+
+    public int[] getNovaVersionArray() { return novaVersionArray; }
+    public String getNovaLongVersion() { return novaLongVersion; }
+    public int getNovaVersionCode() { return novaVersionCode; }
+    public String getNovaVersionName() { return novaVersionName; }
+    public boolean isNovaUpdated() { return novaUpdated; }
+    public void clearUpdatedFlag() { novaUpdated = false; }
 
     private static SambaDiscovery mSambaDiscovery = null;
 
@@ -240,6 +260,8 @@ public class CustomApplication extends Application {
         // only launch BootupRecommandation if on AndroidTV and before Android O otherwise target TV channels
         if(ArchosFeatures.isAndroidTV(this) && Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
             BootupRecommandationService.init();
+
+        updateVersionState();
     }
 
     private void launchSambaDiscovery() {
@@ -313,5 +335,67 @@ public class CustomApplication extends Application {
 
     public HttpImageManager getHttpImageManager() {
         return mHttpImageManager;
+    }
+
+    private void updateVersionState() {
+        try {
+            //this code gets current version-code (after upgrade it will show new versionCode)
+            PackageInfo info = this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
+            novaVersionCode = info.versionCode;
+            novaVersionName = info.versionName;
+            try {
+                novaVersionArray = splitVersion(novaVersionName);
+                novaLongVersion = "Nova v" + novaVersionArray[0] + "." + novaVersionArray[1] + "." + novaVersionArray[2] +
+                        " (" + novaVersionArray[3] + novaVersionArray[4] + novaVersionArray[5] +
+                        "." + novaVersionArray[6] + novaVersionArray[7] + ")";
+            } catch (IllegalArgumentException ie) {
+                log.error("updateVersionState: cannot split application version "+ novaVersionName);
+                novaLongVersion = "Nova v" + novaVersionName;
+            }
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            int previousVersion = sharedPreferences.getInt("current_versionCode", -1);
+            sharedPreferences.edit().putString("nova_version", novaLongVersion).commit();
+            String previousVersionName = sharedPreferences.getString("current_versionName", "0.0.0");
+            if (previousVersion > 0) {
+                if (previousVersion != novaVersionCode) {
+                    // got upgraded, save version in current_versionCode and remember former version in previous_versionCode
+                    // and indicated that we got updated in app_updated until used and reset
+                    sharedPreferences.edit().putInt("current_versionCode", novaVersionCode).commit();
+                    sharedPreferences.edit().putInt("previous_versionCode", previousVersion).commit();
+                    novaUpdated = true;
+                    sharedPreferences.edit().putBoolean("app_updated", true).commit();
+                    sharedPreferences.edit().putString("current_versionName", novaVersionName).commit();
+                    sharedPreferences.edit().putString("previous_versionName", previousVersionName).commit();
+                    log.debug("updateVersionState: update from " + previousVersionName + "(" + previousVersion + ") to "
+                            + novaVersionName + "(" + novaVersionCode + ")");
+                }
+            } else {
+                // save first app version
+                log.debug("updateVersionState: save first version " + novaVersionCode);
+                sharedPreferences.edit().putInt("current_versionCode", novaVersionCode).commit();
+                sharedPreferences.edit().putInt("previous_versionCode", -1).commit();
+                sharedPreferences.edit().putString("current_versionName", novaVersionName).commit();
+                sharedPreferences.edit().putString("previous_versionName", "0.0.0").commit();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            log.error("updateVersionState: caught NameNotFoundException", e);
+        }
+    }
+
+    // takes version major.minor.revision-YYYYMMDD.HHMMSS and convert it into an integer array
+    static int[] splitVersion(String version) throws IllegalArgumentException {
+        Matcher m = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)-(\\d\\d\\d\\d)(\\d\\d)(\\d\\d)\\.(\\d\\d)(\\d\\d)?").matcher(version);
+        if (!m.matches())
+            throw new IllegalArgumentException("Malformed application version");
+        return new int[] {
+                Integer.parseInt(m.group(1)), // major
+                Integer.parseInt(m.group(2)), // minor
+                Integer.parseInt(m.group(3)), // version
+                Integer.parseInt(m.group(4)), // year
+                Integer.parseInt(m.group(5)), // month
+                Integer.parseInt(m.group(6)), // day
+                Integer.parseInt(m.group(7)), // hour
+                Integer.parseInt(m.group(8))  // minute
+        };
     }
 }

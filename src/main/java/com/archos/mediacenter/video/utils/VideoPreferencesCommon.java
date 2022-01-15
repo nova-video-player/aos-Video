@@ -38,6 +38,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.CheckBoxPreference;
+import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
@@ -90,8 +91,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     // should we provide adaptive refresh rate for all (not only on TV)
     private static final boolean REFRESHRATE_FORALL = true;
 
-    public static final String KEY_VIDEO_AD_FREE = "video_ad_free";
-    public static final String KEY_VIDEO_AD_FREE_CATEGORY = "preferences_category_complete";
     public static final String KEY_ADVANCED_VIDEO_ENABLED = "preferences_advanced_video_enabled";
     public static final String KEY_ADVANCED_VIDEO_CATEGORY = "preferences_category_advanced_video";
     public static final String KEY_ABOUT_CATEGORY = "about_category";
@@ -139,6 +138,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_HIDE_WATCHED = "hide_watched";
     public static final String KEY_CREATE_REMOTE_THUMBS = VideoProvider.PREFERENCE_CREATE_REMOTE_THUMBS;
     public static final String KEY_ENABLE_SPONSOR = "enable_sponsor";
+    public static final String KEY_ABOUT_PREFERENCES = "preferences_about";
 
     public static final String KEY_SMB2 = "pref_smbv2";
     public static final String KEY_SMB_RESOLV = "pref_smb_resolv";
@@ -187,6 +187,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private MultiSelectListPreference mSubtitlesDownloadLanguagePreferences = null;
     private CheckBoxPreference mEnableSponsor = null;
     private CheckBoxPreference mWatchingUpNext = null;
+    private PreferenceCategory mAboutPreferences = null;
 
     private String mLastTraktUser = null;
     private Trakt.Status mTraktStatus = Trakt.Status.SUCCESS;
@@ -199,7 +200,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private Handler mHanlder = null;
 
     private Preference mTraktFull;
-    private PreferenceCategory mCompleteCategory;
 
     private CheckBoxPreference mSmb2 = null;
     private CheckBoxPreference mSmbResolver = null;
@@ -367,6 +367,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mTraktSyncProgressPreference = (CheckBoxPreference) findPreference(KEY_TRAKT_SYNC_PROGRESS);
         mAdvancedPreferences = (PreferenceCategory) findPreference(KEY_ADVANCED_VIDEO_CATEGORY);
 
+        mAboutPreferences = (PreferenceCategory) findPreference(KEY_ABOUT_PREFERENCES);
+        Preference novaVersion = (Preference) findPreference("preferences_version");
+        novaVersion.setTitle(mSharedPreferences.getString("nova_version", "@string/APP_INFO"));
+
         mSmb2 = (CheckBoxPreference) findPreference(KEY_SMB2);
         mSmbResolver = (CheckBoxPreference) findPreference(KEY_SMB_RESOLV);
 
@@ -457,7 +461,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         });
 
         mTraktFull = findPreference(KEY_TRAKT_GETFULL);
-        mCompleteCategory = (PreferenceCategory) findPreference(KEY_VIDEO_AD_FREE_CATEGORY);
         findPreference(KEY_SHARED_FOLDERS).setOnPreferenceClickListener(preference -> {
             startActivity(new Intent(getActivity(), CredentialsManagerPreferenceActivity.class));
             return false;
@@ -728,7 +731,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         // Free / Paid below was before in setPaidStatus();
         PreferenceCategory prefCategorty = (PreferenceCategory) findPreference(KEY_TRAKT_CATEGORY);
         prefCategorty.removePreference(mTraktFull);
-        getPreferenceScreen().removePreference(mCompleteCategory);
         mTraktSigninPreference.setEnabled(true);
         findPreference(KEY_TORRENT_BLOCKLIST).setOnPreferenceClickListener(null);
         findPreference(KEY_TORRENT_PATH).setOnPreferenceClickListener(null);
