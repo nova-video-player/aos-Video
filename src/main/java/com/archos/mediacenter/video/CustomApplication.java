@@ -359,6 +359,7 @@ public class CustomApplication extends Application {
                         " (" + novaVersionArray[3] + novaVersionArray[4] + novaVersionArray[5] +
                         "." + novaVersionArray[6] + novaVersionArray[7] + ")";
             } catch (IllegalArgumentException ie) {
+                novaVersionArray = new int[] { 0, 0, 0, 0, 0, 0, 0, 0};
                 log.error("updateVersionState: cannot split application version "+ novaVersionName);
                 novaLongVersion = "Nova v" + novaVersionName;
             }
@@ -369,6 +370,7 @@ public class CustomApplication extends Application {
             try {
                 novaPreviousVersionArray = splitVersion(previousVersionName);
             } catch (IllegalArgumentException ie) {
+                novaPreviousVersionArray = new int[] { 0, 0, 0, 0, 0, 0, 0, 0};
                 log.error("updateVersionState: cannot split application previous version "+ previousVersionName);
             }
             if (previousVersion > 0) {
