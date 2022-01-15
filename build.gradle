@@ -121,6 +121,9 @@ android {
         } else {
             buildConfigField "boolean", "ENABLE_SPONSOR", "false"
         }
+        resValue "string", "VERSION_NAME", versionName
+        resValue "string", "APPLICATION_ID", applicationId
+        resValue "string", "APP_INFO", "Nova v" + versionName + " (" + applicationId + ")"
     }
     splits {
         abi {

@@ -554,7 +554,8 @@
     <string name="get_the_ad_free_version">Get the ad-free version on Google Play</string>
     <string name="upgrade_to_add_free_version">Upgrade to ad-free version</string>
     <string name="upgrade_to_add_free_version_description">Buy the application license to remove the ads and enable all the features</string>
-	<string name="preferences_category_complete">Full version</string>
+    <string name="preferences_about">About</string>
+    <string name="preferences_category_complete">Full version</string>
     <string name="preferences_category_video">Video</string>
     <string name="preferences_force_software_decoding">Force software decoding</string>
     <string name="preferences_force_software_decoding_summary">You may try this option if some videos are not playing correctly</string>

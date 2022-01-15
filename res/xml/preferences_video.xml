@@ -12,6 +12,14 @@
             app:iconSpaceReserved="false"/>
     </PreferenceCategory>
     <PreferenceCategory
+        android:key="preferences_about"
+        android:title="@string/preferences_about"
+        app:iconSpaceReserved="false">
+        <EditTextPreference
+            android:title="@string/APP_INFO"
+            android:key="preferences_version"/>
+    </PreferenceCategory>
+    <PreferenceCategory
         android:key="preferences_category_video"
         android:title="@string/preferences_category_video"
         app:iconSpaceReserved="false">
