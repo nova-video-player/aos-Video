@@ -15,8 +15,10 @@
 package com.archos.mediacenter.video;
 
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -26,7 +28,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.view.View;
+import android.widget.CheckBox;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
 
 import com.archos.environment.ArchosFeatures;
@@ -78,17 +83,22 @@ public class CustomApplication extends Application {
     private static boolean isNetworkStateListenerAdded = false;
 
     private static int [] novaVersionArray;
+    private static int [] novaPreviousVersionArray;
     private static String novaLongVersion;
     private static int novaVersionCode = -1;
     private static String novaVersionName;
     private static boolean novaUpdated = false;
 
-    public int[] getNovaVersionArray() { return novaVersionArray; }
-    public String getNovaLongVersion() { return novaLongVersion; }
-    public int getNovaVersionCode() { return novaVersionCode; }
-    public String getNovaVersionName() { return novaVersionName; }
-    public boolean isNovaUpdated() { return novaUpdated; }
-    public void clearUpdatedFlag() { novaUpdated = false; }
+    public static int[] getNovaVersionArray() { return novaVersionArray; }
+    public static String getNovaLongVersion() { return novaLongVersion; }
+    public static int getNovaVersionCode() { return novaVersionCode; }
+    public static String getNovaVersionName() { return novaVersionName; }
+    public static boolean isNovaUpdated() { return novaUpdated; }
+    public static void clearUpdatedFlag(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPreferences.edit().putBoolean("app_updated", false).commit();
+        novaUpdated = false;
+    }
 
     private static SambaDiscovery mSambaDiscovery = null;
 
@@ -356,6 +366,11 @@ public class CustomApplication extends Application {
             int previousVersion = sharedPreferences.getInt("current_versionCode", -1);
             sharedPreferences.edit().putString("nova_version", novaLongVersion).commit();
             String previousVersionName = sharedPreferences.getString("current_versionName", "0.0.0");
+            try {
+                novaPreviousVersionArray = splitVersion(previousVersionName);
+            } catch (IllegalArgumentException ie) {
+                log.error("updateVersionState: cannot split application previous version "+ previousVersionName);
+            }
             if (previousVersion > 0) {
                 if (previousVersion != novaVersionCode) {
                     // got upgraded, save version in current_versionCode and remember former version in previous_versionCode
@@ -397,5 +412,26 @@ public class CustomApplication extends Application {
                 Integer.parseInt(m.group(7)), // hour
                 Integer.parseInt(m.group(8))  // minute
         };
+    }
+
+    public static String getChangelog(Context context) {
+        if (novaPreviousVersionArray[0] == 5 && novaVersionArray[0] == 6)
+            return context.getResources().getString(R.string.v5_v6_upgrade_info);
+        else return null;
+    }
+
+    public static void showChangelogDialog(String changelog, final Activity activity) {
+        if (changelog == null) return;
+        AlertDialog dialog = new AlertDialog.Builder(activity)
+            .setTitle(R.string.upgrade_info)
+            .setMessage(changelog)
+            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    clearUpdatedFlag(activity);
+                    dialog.cancel();
+                }
+            })
+            .show();
     }
 }

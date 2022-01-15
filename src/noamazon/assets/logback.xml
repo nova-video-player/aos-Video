@@ -34,6 +34,7 @@
     </rollingPolicy>
   </appender>
 
+  <logger name="com.archos.mediacenter.video.browser.MainFragment" level="DEBUG"/>
   <logger name="com.archos.mediacenter.video.leanback.MainFragment" level="DEBUG"/>
   <logger name="com.archos.mediacenter.video.CustomApplication" level="TRACE"/>
 

@@ -313,7 +313,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 }
             }
         };
-
+        CustomApplication.showChangelogDialog(CustomApplication.getChangelog(this.getApplicationContext()), this);
     }
 
     private boolean isShortcutIntent() {

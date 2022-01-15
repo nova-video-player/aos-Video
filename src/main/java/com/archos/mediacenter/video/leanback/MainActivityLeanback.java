@@ -29,6 +29,7 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.archos.filecorelibrary.FileUtilsQ;
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.DensityTweak;
 import com.archos.mediacenter.video.EntryActivity;
 import com.archos.mediacenter.video.R;
@@ -81,6 +82,7 @@ public class MainActivityLeanback extends LeanbackActivity {
             intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
             sendBroadcast(intent);
         }
+        CustomApplication.showChangelogDialog(CustomApplication.getChangelog(this.getApplicationContext()), this);
     }
 
 

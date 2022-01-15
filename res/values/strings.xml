@@ -974,4 +974,8 @@
     <string name="enable_sponsor_title">Enable Nova sponsor link</string>
     <string name="enable_sponsor_summary">Enable sponsor link for donations: every contribution helps.</string>
 
+    <string name="upgrade_info">Upgrade information</string>
+    <string name="v5_v6_upgrade_info">WARNING: this Nova major update requires to rescan all video collection for multimedia information re-aquisition.
+        It is strongly advised to restart from a clean install to avoid problems. Please check FAQ for details.</string>
+
 </resources>
