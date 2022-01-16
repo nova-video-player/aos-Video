@@ -64,4 +64,6 @@
     <string name="rescrap_all_collections_prefkey">rescrap_all_collections_prefkey</string>
     <string name="db_export_manual_prefkey">db_export_manual_prefkey</string>
 
+    <string name="nova">Nova Video Player</string>
+
 </resources>
