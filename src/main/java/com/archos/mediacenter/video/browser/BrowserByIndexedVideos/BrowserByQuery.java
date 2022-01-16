@@ -72,7 +72,7 @@ public class BrowserByQuery extends CursorBrowserByVideo {
 
     @Override
     protected String getActionBarTitle() {
-        return getString(R.string.video);
+        return getString(R.string.nova);
     }
 
     @Override

@@ -497,7 +497,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     @Override
     public int getTitleID() {
-        return R.string.video;
+        return R.string.nova;
     }
 
     public View getGlobalBackdropView() {
