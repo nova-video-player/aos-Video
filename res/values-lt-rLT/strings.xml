@@ -84,7 +84,6 @@
     <string name="root_storage">Vidinė saugykla</string>
     <string name="cannot_list">Neįmanoma parodyti turinio</string>
     <!-- VIDEO -->
-    <string name="video">Nova Video grotuvas</string>
     <string name="videos">Vaizdo įrašai</string>
     <string name="all_videos">Visi vaizdo įrašai</string>
     <string name="not_played_yet_videos">Nežiūrėti</string>

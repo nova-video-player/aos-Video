@@ -84,7 +84,6 @@
     <string name="root_storage">Memoria interna</string>
     <string name="cannot_list">No se puede listar el contenido</string>
     <!-- VIDEO -->
-    <string name="video">Nova Video Player</string>
     <string name="videos">Vídeos</string>
     <string name="all_videos">Todos los vídeos</string>
     <string name="not_played_yet_videos">No reproducidos</string>

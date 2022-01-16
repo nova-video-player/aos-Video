@@ -84,7 +84,6 @@
     <string name="root_storage">Bнутреннее хранилище</string>
     <string name="cannot_list">Невозможно отобразить содержимое</string>
     <!-- VIDEO -->
-    <string name="video">Nova Video Player</string>
     <string name="videos">Видео</string>
     <string name="all_videos">Все видео</string>
     <string name="not_played_yet_videos">Еще нет просмотров</string>

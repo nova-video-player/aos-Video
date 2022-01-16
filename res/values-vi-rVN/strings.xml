@@ -72,7 +72,6 @@
     <string name="root_storage">Bộ nhớ trong</string>
     <string name="cannot_list">Không thể liệt kê nội dung</string>
     <!-- VIDEO -->
-    <string name="video">Nova Video Player</string>
     <string name="videos">Video</string>
     <string name="all_videos">Tất cả video</string>
     <string name="video_folder">Thư mục</string>

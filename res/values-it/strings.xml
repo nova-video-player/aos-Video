@@ -85,7 +85,6 @@ Copertina (rotolo di copertina)</string>
     <string name="root_storage">Archiviazione interna</string>
     <string name="cannot_list">Impossibile elencare il contenuto</string>
     <!-- VIDEO -->
-    <string name="video">Nova Video Player</string>
     <string name="videos">Video</string>
     <string name="all_videos">Tutti i video</string>
     <string name="not_played_yet_videos">Non ancora visti</string>

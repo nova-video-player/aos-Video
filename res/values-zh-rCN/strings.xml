@@ -84,7 +84,6 @@
     <string name="root_storage">内部存储</string>
     <string name="cannot_list">无法列出内容</string>
     <!-- VIDEO -->
-    <string name="video">Nova 视频播放器</string>
     <string name="videos">视频</string>
     <string name="all_videos">所有视频</string>
     <string name="not_played_yet_videos">尚未播放</string>

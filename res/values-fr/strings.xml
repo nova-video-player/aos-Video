@@ -84,7 +84,6 @@
     <string name="root_storage">Stockage interne</string>
     <string name="cannot_list">Erreur à la lecture du contenu</string>
     <!-- VIDEO -->
-    <string name="video">Nova Video Player</string>
     <string name="videos">Vidéos</string>
     <string name="all_videos">Toutes les vidéos</string>
     <string name="not_played_yet_videos">Pas encore joué</string>
@@ -506,6 +505,7 @@
     <string name="get_the_ad_free_version">Téléchargez la version sans publicité sur Google Play</string>
     <string name="upgrade_to_add_free_version">Mettre-à-jour vers la version sans publicité</string>
     <string name="upgrade_to_add_free_version_description">Supprime les publicités et active toutes les fonctionnalités</string>
+    <string name="preferences_about">À propos</string>
     <string name="preferences_category_complete">Version complète</string>
     <string name="preferences_category_video">Vidéo</string>
     <string name="preferences_force_software_decoding">Forcer le décodage logiciel</string>
@@ -878,4 +878,6 @@
     <string name="sponsor">Sponsoriser Nova</string>
     <string name="enable_sponsor_title">Activer le lien de sponsor Nova</string>
     <string name="enable_sponsor_summary">Activer le lien pour effectuer des dons: chaque contribution compte.</string>
+    <string name="upgrade_info">Informations sur la mise à jour</string>
+    <string name="v5_v6_upgrade_info">ATTENTION : cette mise à jour majeure de Nova nécessite de re-scanner toute la bibliothèque de vidéos pour réacquérir les informations multimédia. Il est fortement conseillé de reinstaller complètement l\'application afin d\'éviter les problèmes. Veuillez consulter la FAQ pour plus de détails.</string>
 </resources>

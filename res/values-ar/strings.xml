@@ -84,7 +84,6 @@
     <string name="root_storage">وحدة تخزين داخلية</string>
     <string name="cannot_list">لا يمكن تسجيل المحتويات</string>
     <!-- VIDEO -->
-    <string name="video">مشغل الفيديو المحلي</string>
     <string name="videos">الفيديوهات</string>
     <string name="all_videos">كل الفيديوهات</string>
     <string name="not_played_yet_videos">لم يتم التشغيل حتى الان</string>

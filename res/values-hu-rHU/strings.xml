@@ -84,7 +84,6 @@
     <string name="root_storage">Belső tárhely</string>
     <string name="cannot_list">A tartalom nem listázható</string>
     <!-- VIDEO -->
-    <string name="video">Nova Videólejátszó</string>
     <string name="videos">Videók</string>
     <string name="all_videos">Összes videó</string>
     <string name="not_played_yet_videos">Még nem játszott</string>
