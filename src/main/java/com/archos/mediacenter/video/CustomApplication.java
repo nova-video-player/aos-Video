@@ -423,7 +423,10 @@ public class CustomApplication extends Application {
     }
 
     public static void showChangelogDialog(String changelog, final Activity activity) {
-        if (changelog == null) return;
+        if (changelog == null) {
+            clearUpdatedFlag(activity);
+            return;
+        }
         AlertDialog dialog = new AlertDialog.Builder(activity)
             .setTitle(R.string.upgrade_info)
             .setMessage(changelog)
