@@ -290,10 +290,13 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             editor.remove(KEY_FORCE_SW);
             editor.apply();
             // no need of the enable sponsor link if not installed from ggplay
-            if (! ArchosUtils.isInstalledfromPlayStore(getContext()) && BuildConfig.ENABLE_SPONSOR)
+            if (! ArchosUtils.isInstalledfromPlayStore(getContext()) && BuildConfig.ENABLE_SPONSOR) {
                 aboutCategory.removePreference(mEnableSponsor);
-            else
-                aboutCategory.addPreference(mEnableSponsor);
+            } else {
+                if (BuildConfig.ENABLE_SPONSOR)
+                    aboutCategory.addPreference(mEnableSponsor);
+                else aboutCategory.removePreference(mEnableSponsor);
+            }
             prefCategory.removePreference(mForceSwDecPreferences);
             prefCategory.addPreference(mDecChoicePreferences);
             prefCategory.addPreference(mAudioInterfaceChoicePreferences);
