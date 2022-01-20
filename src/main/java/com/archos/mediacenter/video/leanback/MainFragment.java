@@ -187,7 +187,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private String mMovieSortOrder;
     private boolean mShowTvshowsRow;
     private boolean mShowAnimesRow;
-    private boolean mEnableSponsor;
+    private boolean mEnableSponsor = false;
     private String mAnimesSortOrder;
     private String mTvShowSortOrder;
 
@@ -579,7 +579,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         mPreferencesRowAdapter.add(new Icon(Icon.ID.LEGACY_UI, getString(R.string.leanback_legacy_ui), R.drawable.legacy_ui_icon));
         mPreferencesRowAdapter.add(new Icon(Icon.ID.HELP_FAQ, getString(R.string.help_faq), R.drawable.lollipop_help));
 
-        mEnableSponsor = mPrefs.getBoolean(VideoPreferencesCommon.KEY_ENABLE_SPONSOR, VideoPreferencesCommon.ENABLE_SPONSOR_DEFAULT);
+        if (BuildConfig.ENABLE_SPONSOR) mEnableSponsor = mPrefs.getBoolean(VideoPreferencesCommon.KEY_ENABLE_SPONSOR, VideoPreferencesCommon.ENABLE_SPONSOR_DEFAULT);
         if (((! ArchosUtils.isInstalledfromPlayStore(mActivity.getApplicationContext())) && BuildConfig.ENABLE_SPONSOR) || mEnableSponsor) {
             mPreferencesRowAdapter.add(new Icon(Icon.ID.SPONSOR, getString(R.string.sponsor), R.drawable.piggy_bank_leanback_256));
         }

@@ -397,6 +397,8 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             return result;
         }
 
+        // TODO MARC set poster to show too and backdrop... for show season and episode!!!
+
         private EpisodeTags getEpisode(Map<String, EpisodeTags> map, int episode, int season, ShowTags show) {
             // TODO: handle map being null to avoid crash
             EpisodeTags newEpTag = map.get(season + "|" + episode);

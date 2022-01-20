@@ -88,7 +88,7 @@ abstract public class BrowserCategory extends ListFragment {
     private NetworkState networkState = null;
     private PropertyChangeListener propertyChangeListener = null;
     private boolean mNetworkStateListenerAdded = false;
-    private boolean mEnableSponsor;
+    private boolean mEnableSponsor = false;
 
     /**
      * This object is used to store basic info for the category list item.
@@ -528,7 +528,7 @@ abstract public class BrowserCategory extends ListFragment {
         itemData.text = R.string.help_faq;
         mCategoryList.add(itemData);
         // Google Play is allergic to piggies... no donation button
-        mEnableSponsor = mPreferences.getBoolean(VideoPreferencesCommon.KEY_ENABLE_SPONSOR, VideoPreferencesCommon.ENABLE_SPONSOR_DEFAULT);
+        if (BuildConfig.ENABLE_SPONSOR) mEnableSponsor = mPreferences.getBoolean(VideoPreferencesCommon.KEY_ENABLE_SPONSOR, VideoPreferencesCommon.ENABLE_SPONSOR_DEFAULT);
         if (((! ArchosUtils.isInstalledfromPlayStore(getActivity().getApplicationContext()) && BuildConfig.ENABLE_SPONSOR)) || mEnableSponsor) {
             itemData = new ItemData();
             itemData.icon = R.drawable.piggy_bank;
