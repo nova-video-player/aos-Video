@@ -294,6 +294,7 @@
     <string name="pref_play_mode_entry_folder">文件夹</string>
     <string name="pref_play_mode_entry_repeat_folder">重复文件夹</string>
     <string name="pref_play_mode_entry_repeat_single">单次重复</string>
+    <string name="pref_play_mode_entry_binge">刷剧</string>
     <string name="pref_audio_parameters_title">声音</string>
     <string name="pref_audio_filt_title">音频增强</string>
     <string name="pref_audio_filt_night_mode">夜间模式</string>
@@ -499,6 +500,7 @@
     <string name="get_the_ad_free_version">在 Google Play 上获取无广告版本</string>
     <string name="upgrade_to_add_free_version">升级到无广告版本</string>
     <string name="upgrade_to_add_free_version_description">购买应用程序许可以移除广告并启用所有功能</string>
+    <string name="preferences_about">关于</string>
     <string name="preferences_category_complete">完整版本</string>
     <string name="preferences_category_video">视频</string>
     <string name="preferences_force_software_decoding">强制软件解码</string>
@@ -871,4 +873,7 @@
     <string name="sponsor">赞助 Nova</string>
     <string name="enable_sponsor_title">启用 Nova 赞助链接</string>
     <string name="enable_sponsor_summary">启用捐赠赞助链接：每个捐赠都有帮助。</string>
+    <string name="upgrade_info">升级信息</string>
+    <string name="v5_v6_upgrade_info">警告：此版本 Nova 有重大更新，需要重新扫描所有视频收藏库以重新获取多媒体信息。
+        强烈建议重新安装后重新启动，以避免出现问题。详情请参阅“常见问题”。</string>
 </resources>

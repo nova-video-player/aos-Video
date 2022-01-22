@@ -489,6 +489,7 @@
     <string name="get_the_ad_free_version">Získejte verzi bez reklam na Google Play</string>
     <string name="upgrade_to_add_free_version">Upgradovat na verzi bez reklam</string>
     <string name="upgrade_to_add_free_version_description">Koupit licenci k aplikaci pro odstranění reklam a aktivaci všech funkcí</string>
+    <string name="preferences_about">O aplikaci</string>
     <string name="preferences_category_complete">Plná verze</string>
     <string name="preferences_category_video">Video</string>
     <string name="preferences_force_software_decoding">Vynutit softwarové dekódování</string>
@@ -861,4 +862,6 @@
     <string name="sponsor">Podpořte aplikaci Nova</string>
     <string name="enable_sponsor_title">Aktivovat odkaz na sponzorské dary pro aplikaci Nova</string>
     <string name="enable_sponsor_summary">Aktivovat odkaz na sponzorské dary: každý příspěvek pomůže.</string>
+    <string name="upgrade_info">Informace o aktualizaci</string>
+    <string name="v5_v6_upgrade_info">VAROVÁNÍ: tato významná aktualizace aplikace vyžaduje opětovné naskenování všech videí pro opětovné získání popisných informací.         Pro vyvarování se problémů doporučujeme začít znovu s čistou instalací. Prosím přečtěte si časté otázky (FAQ) pro další detaily.</string>
 </resources>

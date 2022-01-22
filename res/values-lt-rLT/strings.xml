@@ -508,6 +508,7 @@
     <string name="get_the_ad_free_version">Gaukite versiją be reklamų iš Google Play</string>
     <string name="upgrade_to_add_free_version">Įsigyti programos versiją be reklamos</string>
     <string name="upgrade_to_add_free_version_description">Norėdami naudotis pilnu funkcionalumu ir nematyti reklamos įsigykite programos licenciją</string>
+    <string name="preferences_about">Apie</string>
     <string name="preferences_category_complete">Pilna versija</string>
     <string name="preferences_category_video">Video</string>
     <string name="preferences_force_software_decoding">Priverstinis programinis dekodavimas</string>

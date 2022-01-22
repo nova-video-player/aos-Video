@@ -515,6 +515,7 @@
     <string name="get_the_ad_free_version">Получите версию без рекламы на Google Play</string>
     <string name="upgrade_to_add_free_version">Обновить до версии без рекламы</string>
     <string name="upgrade_to_add_free_version_description">Купите лицензию приложения, чтобы удалить рекламу и активировать все функции</string>
+    <string name="preferences_about">О программе</string>
     <string name="preferences_category_complete">Полная версия</string>
     <string name="preferences_category_video">Видео</string>
     <string name="preferences_force_software_decoding">Принудительное программное декодирование</string>
@@ -887,4 +888,6 @@
     <string name="sponsor">Поддержать Nova</string>
     <string name="enable_sponsor_title">Ссылка для поддержки Nova</string>
     <string name="enable_sponsor_summary">Перейти по ссылке для пожертвований: важна любая помощь проекту.</string>
+    <string name="upgrade_info">Информация об обновлении</string>
+    <string name="v5_v6_upgrade_info">ВНИМАНИЕ: Это обновление Nova потребует пересканировать всю библиотеку мультимедиа. Чтобы избежать проблем, настоятельно рекомендуется полностью переустановить программу. Пожалуйста, ознакомьтесь с FAQ для подробностей.</string>
 </resources>

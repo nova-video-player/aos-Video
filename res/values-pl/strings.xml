@@ -89,8 +89,12 @@
     <string name="not_played_yet_videos">Nieodtwarzane</string>
     <string name="video_folder">Foldery</string>
     <string name="movies">Filmy</string>
+    <string name="animes">Animacje</string>
     <string name="all_movies">Wszystkie filmy</string>
     <string name="all_movies_format">Wszystkie filmy - %d</string>
+    <string name="all_animes_format">Filmy animowane  -  %d</string>
+    <string name="all_collections">Wszystkie kolekcje</string>
+    <string name="all_collections_format">Wszystkie kolekcje -  %d</string>
     <string name="not_watched_movies_format">Nieobejrzane - %d</string>
     <string name="movies_by_alpha">Filmy alfabetycznie</string>
     <string name="movies_by_genre">Filmy według gatunku</string>

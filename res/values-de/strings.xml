@@ -505,6 +505,7 @@
     <string name="get_the_ad_free_version">Holen Sie sich die werbefreie Version auf Google Play!</string>
     <string name="upgrade_to_add_free_version">Auf werbefreie Version upgraden</string>
     <string name="upgrade_to_add_free_version_description">Kaufen Sie die Anwendungslizenz um die Anzeigen zu entfernen und alle Funktionen zu freizuschalten</string>
+    <string name="preferences_about">Über</string>
     <string name="preferences_category_complete">Vollversion</string>
     <string name="preferences_category_video">Video</string>
     <string name="preferences_force_software_decoding">Software Dekoder verwenden</string>
@@ -877,4 +878,7 @@
     <string name="sponsor">Sponsor Nova</string>
     <string name="enable_sponsor_title">Nova Sponsor-Link aktivieren</string>
     <string name="enable_sponsor_summary">Aktiviere den Sponsor-Link für Spenden: jeder Spendenbeitrag hilft.</string>
+    <string name="upgrade_info">Upgrade Information</string>
+    <string name="v5_v6_upgrade_info">WARNUNG: Dieses Nova-Update erfordert ein erneutes Durchsuchen der Videosammlung für die Multimedia-Informationen.
+        Es wird dringend empfohlen, von einer sauberen Installation neu zu starten, um Probleme zu vermeiden. Bitte überprüfen Sie die FAQ für Details.</string>
 </resources>
