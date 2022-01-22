@@ -20,7 +20,7 @@ import com.archos.mediacenter.video.R;
 
 public class MoviesByAlphaLoader extends MoviesByLoader {
 
-    private static final String DEFAULT_SORT = COLUMN_SUBSET_NAME+" COLLATE NOCASE ASC";
+    private static final String DEFAULT_SORT = COLUMN_SUBSET_NAME+" COLLATE LOCALIZED ASC";
 
     public MoviesByAlphaLoader(Context context) {
         super(context);

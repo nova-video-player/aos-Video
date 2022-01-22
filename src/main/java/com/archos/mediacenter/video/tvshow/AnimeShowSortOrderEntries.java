@@ -26,7 +26,7 @@ import java.util.List;
 
 public class AnimeShowSortOrderEntries {
 
-    public final static String DEFAULT_SORT = VideoStore.Video.VideoColumns.SCRAPER_TITLE + " ASC";
+    public final static String DEFAULT_SORT = VideoStore.Video.VideoColumns.SCRAPER_TITLE + " COLLATE LOCALIZED ASC";
 
     static private class sortOrderEntry {
         int mId;

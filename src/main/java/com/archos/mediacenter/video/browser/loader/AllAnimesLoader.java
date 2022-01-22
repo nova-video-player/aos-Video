@@ -26,7 +26,7 @@ public class AllAnimesLoader extends VideoLoader {
 
     private static final String TAG = "AllAnimesLoader";
 
-    static public String DEFAULT_SORT = "name COLLATE NOCASE ASC";
+    static public String DEFAULT_SORT = "name COLLATE LOCALIZED ASC";
 
     private String mSortOrder;
     private static Context mContext;

@@ -46,7 +46,7 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 
     private static final String SELECTION = VideoStore.Video.VideoColumns.ARCHOS_HIDE_FILE + "=0";
 
-	private static final String DEFAULT_SORT = "name COLLATE NOCASE ASC,"
+	private static final String DEFAULT_SORT = "name COLLATE LOCALIZED ASC,"
             + VideoColumns.SCRAPER_E_SEASON + " ASC ,"
             + VideoColumns.SCRAPER_E_EPISODE + " ASC";
 
@@ -168,7 +168,7 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 			if ((itemid & MENU_ITEM_SORT_ORDER_MASK) == MENU_ITEM_DESC) {
 				sSort = " DESC";
 			}
-			sortOrder = "name COLLATE NOCASE" + sSort + ","
+			sortOrder = "name COLLATE LOCALIZED" + sSort + ","
 	            + VideoColumns.SCRAPER_E_SEASON + sSort + ","
 	            + VideoColumns.SCRAPER_E_EPISODE + sSort;
 			parseOrderAfterType = false; // sort order is already integrated in sortOrder this stage

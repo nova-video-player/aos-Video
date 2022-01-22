@@ -29,7 +29,7 @@ public class AnimesNShowsLoader extends VideoLoader {
 
     private static final Logger log = LoggerFactory.getLogger(AnimesNShowsLoader.class);
 
-    static public String DEFAULT_SORT = "name COLLATE NOCASE ASC";
+    static public String DEFAULT_SORT = "name COLLATE LOCALIZED ASC";
 
     /* Design: get all animation movies and shows and regroup by shows all episodes
 SELECT

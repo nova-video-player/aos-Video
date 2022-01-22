@@ -30,7 +30,7 @@ public class AllCollectionsLoader extends VideoLoader {
     private static final String TAG = AllCollectionsLoader.class.getSimpleName();
     private static final boolean DBG = false;
 
-    public static final String DEFAULT_SORT = COLUMN_NAME + ", "
+    public static final String DEFAULT_SORT = COLUMN_NAME + " COLLATE LOCALIZED ASC, "
             + VideoStore.Video.VideoColumns.SCRAPER_C_ID;
 
     public final static String COLUMN_COLLECTION_COUNT = "collection_count";

@@ -27,7 +27,7 @@ public class BrowserNeverPlayed extends CursorBrowserByVideo {
 
     private static final String SELECT_NEVER_PLAYED = VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED
             + "==0 AND " + VideoStore.Video.VideoColumns.ARCHOS_HIDE_FILE + "=0";
-    private static final String SORT_BY_NAME_VIDEO = VideoStore.MediaColumns.DISPLAY_NAME + " ASC";
+    private static final String SORT_BY_NAME_VIDEO = VideoStore.MediaColumns.DISPLAY_NAME + " LOCALIZED ASC";
 
 
 

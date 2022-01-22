@@ -25,7 +25,7 @@ import java.util.List;
 
 public class CollectionsSortOrderEntries {
 
-    public final static String DEFAULT_SORT = VideoStore.Video.VideoColumns.SCRAPER_C_NAME + " ASC";
+    public final static String DEFAULT_SORT = VideoStore.Video.VideoColumns.SCRAPER_C_NAME + " COLLATE LOCALIZED ASC";
 
     static private class sortOrderEntry {
         int mId;

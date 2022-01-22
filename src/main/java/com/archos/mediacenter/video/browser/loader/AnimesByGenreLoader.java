@@ -18,7 +18,7 @@ import android.content.Context;
 
 public class AnimesByGenreLoader extends AnimesByLoader {
 
-    private static final String DEFAULT_SORT = COLUMN_SUBSET_NAME+" COLLATE NOCASE";
+    private static final String DEFAULT_SORT = COLUMN_SUBSET_NAME+" COLLATE LOCALIZED";
 
     public AnimesByGenreLoader(Context context) {
         super(context);

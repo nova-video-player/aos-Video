@@ -36,7 +36,7 @@ public class AnimesByRatingFragment extends VideosByFragment {
     private static SparseArray<AnimesSortOrderEntry> sortOrderIndexer = new SparseArray<AnimesSortOrderEntry>();
     static {
         sortOrderIndexer.put(0, new AnimesSortOrderEntry(R.string.sort_by_rating_asc,      SortOrder.SCRAPER_M_RATING.getDesc()));
-        sortOrderIndexer.put(1, new AnimesSortOrderEntry(R.string.sort_by_name_asc,        "name COLLATE NOCASE ASC"));
+        sortOrderIndexer.put(1, new AnimesSortOrderEntry(R.string.sort_by_name_asc,        "name COLLATE LOCALIZED ASC"));
         sortOrderIndexer.put(2, new AnimesSortOrderEntry(R.string.sort_by_date_added_desc, VideoStore.MediaColumns.DATE_ADDED + " DESC"));
         sortOrderIndexer.put(3, new AnimesSortOrderEntry(R.string.sort_by_year_desc,       VideoStore.Video.VideoColumns.SCRAPER_M_YEAR + " DESC"));
         sortOrderIndexer.put(4, new AnimesSortOrderEntry(R.string.sort_by_duration_asc,    SortOrder.DURATION.getAsc()));

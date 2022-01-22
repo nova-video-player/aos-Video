@@ -87,7 +87,7 @@ public class AllAnimeCollectionsGridFragment extends MyVerticalGridFragment impl
 
     public static SparseArray<CollectionsSortOrderEntry> sortOrderIndexer = new SparseArray<CollectionsSortOrderEntry>();
     static {
-        sortOrderIndexer.put(0, new CollectionsSortOrderEntry(R.string.sort_by_name_asc,"name COLLATE NOCASE ASC"));
+        sortOrderIndexer.put(0, new CollectionsSortOrderEntry(R.string.sort_by_name_asc,"name COLLATE LOCALIZED ASC"));
     }
 
     @Override

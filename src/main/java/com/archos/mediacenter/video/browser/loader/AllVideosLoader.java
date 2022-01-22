@@ -23,7 +23,7 @@ import com.archos.mediaprovider.video.VideoStore;
  */
 public class AllVideosLoader extends VideoLoader {
 
-    private static final String DEFAULT_SORT = "name COLLATE NOCASE ASC,"
+    private static final String DEFAULT_SORT = "name COLLATE LOCALIZED ASC,"
             + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + " ASC ,"
             + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE + " ASC";
 

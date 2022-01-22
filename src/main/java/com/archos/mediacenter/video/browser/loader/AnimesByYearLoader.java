@@ -20,7 +20,7 @@ import com.archos.mediacenter.video.R;
 
 public class AnimesByYearLoader extends AnimesByLoader {
 
-    private static final String DEFAULT_SORT = COLUMN_SUBSET_NAME+" COLLATE NOCASE DESC";
+    private static final String DEFAULT_SORT = COLUMN_SUBSET_NAME+" COLLATE LOCALIZED DESC";
 
     public AnimesByYearLoader(Context context) {
         super(context);

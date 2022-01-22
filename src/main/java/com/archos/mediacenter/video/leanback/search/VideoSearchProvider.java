@@ -52,7 +52,7 @@ public class VideoSearchProvider extends ContentProvider {
 
     // sort based on scraper title, file title, season number and episode number (video without cover at end to keep poster format)
     private static final String SORT = VideoStore.Video.VideoColumns.SCRAPER_COVER + " IS NOT NULL DESC,"
-            + "coalesce(" + VideoStore.Video.VideoColumns.SCRAPER_TITLE + "," + VideoStore.MediaColumns.TITLE + ") COLLATE NOCASE ASC,"
+            + "coalesce(" + VideoStore.Video.VideoColumns.SCRAPER_TITLE + "," + VideoStore.MediaColumns.TITLE + ") COLLATE LOCALIZED ASC,"
             + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + " ASC,"
             + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE + " ASC";
 

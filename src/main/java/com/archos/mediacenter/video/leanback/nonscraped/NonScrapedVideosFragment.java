@@ -72,7 +72,7 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
 
     private static SparseArray<NonScrapedSortOrderEntry> sortOrderIndexer = new SparseArray<NonScrapedSortOrderEntry>();
     static {
-        sortOrderIndexer.put(0, new NonScrapedSortOrderEntry(R.string.sort_by_name_asc,        "name COLLATE NOCASE ASC"));
+        sortOrderIndexer.put(0, new NonScrapedSortOrderEntry(R.string.sort_by_name_asc,        "name COLLATE LOCALIZED ASC"));
         sortOrderIndexer.put(1, new NonScrapedSortOrderEntry(R.string.sort_by_date_added_desc, VideoStore.MediaColumns.DATE_ADDED + " DESC"));
         sortOrderIndexer.put(2, new NonScrapedSortOrderEntry(R.string.sort_by_duration_asc,    SortOrder.DURATION.getAsc()));
     }

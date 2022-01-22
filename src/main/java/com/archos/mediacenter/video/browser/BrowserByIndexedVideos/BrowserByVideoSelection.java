@@ -30,7 +30,7 @@ public class BrowserByVideoSelection extends CursorBrowserByVideo {
 
 	public static final String SELECTION_ALL_MOVIES = VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL";
 
-	public static final String DEFAULT_SORT = "name COLLATE NOCASE";
+	public static final String DEFAULT_SORT = "name COLLATE LOCALIZED";
 
 	static final String SORT_PARAM_KEY = BrowserByVideoSelection.class.getName()+"_SORT";
 
@@ -159,7 +159,7 @@ public class BrowserByVideoSelection extends CursorBrowserByVideo {
 		switch (itemid & MENU_ITEM_SORT_TYPE_MASK) {
 		// What is sorted
 		case MENU_ITEM_NAME:
-			sortOrder = "name COLLATE NOCASE";
+			sortOrder = "name COLLATE LOCALIZED";
 			break;
 		case MENU_ITEM_YEAR:
 			sortOrder = VideoColumns.SCRAPER_M_YEAR;

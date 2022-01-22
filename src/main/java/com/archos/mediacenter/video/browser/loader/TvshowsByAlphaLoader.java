@@ -20,7 +20,7 @@ import com.archos.mediacenter.video.R;
 
 public class TvshowsByAlphaLoader extends TvshowsByLoader {
 
-    public static final String DEFAULT_SORT = COLUMN_SUBSET_NAME+" COLLATE NOCASE ASC";
+    public static final String DEFAULT_SORT = COLUMN_SUBSET_NAME+" COLLATE LOCALIZED ASC";
 
     public TvshowsByAlphaLoader(Context context) {
         super(context);
@@ -44,7 +44,7 @@ public class TvshowsByAlphaLoader extends TvshowsByLoader {
                 "FROM  ( \n" +
                 "  SELECT s_id, s_po_large_file, s_name FROM video\n"+
                 "  WHERE s_id IS NOT NULL AND s_name IS NOT NULL"+ getCommonSelection()+"\n"+
-                "  GROUP BY s_name COLLATE NOCASE\n" +
+                "  GROUP BY s_name COLLATE LOCALIZED\n" +
                 ") \n" +
                 "GROUP BY name\n" +
                 " ORDER BY " + mSortOrder;

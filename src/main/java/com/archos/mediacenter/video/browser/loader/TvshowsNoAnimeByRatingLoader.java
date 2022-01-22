@@ -20,7 +20,7 @@ import com.archos.mediacenter.video.R;
 
 public class TvshowsNoAnimeByRatingLoader extends TvshowsNoAnimeByLoader {
 
-    public static final String DEFAULT_SORT = COLUMN_SUBSET_NAME+" COLLATE NOCASE DESC";
+    public static final String DEFAULT_SORT = COLUMN_SUBSET_NAME+" COLLATE LOCALIZED DESC";
 
     public TvshowsNoAnimeByRatingLoader(Context context) {
         super(context);

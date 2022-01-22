@@ -18,7 +18,7 @@ import android.content.Context;
 
 public class TvshowsNoAnimeByGenreLoader extends TvshowsNoAnimeByLoader {
 
-    public static final String DEFAULT_SORT = COLUMN_SUBSET_NAME+" COLLATE NOCASE ASC";
+    public static final String DEFAULT_SORT = COLUMN_SUBSET_NAME+" COLLATE LOCALIZED ASC";
 
     public TvshowsNoAnimeByGenreLoader(Context context) {
         super(context);

@@ -28,7 +28,7 @@ public class SearchNonScrapedVideoLoader extends VideoLoader {
                                             VideoStore.MediaColumns.DATA + " NOT LIKE ?"; // not in camera path
     private static final String CAMERA_PATH_ARG = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getPath() + "/Camera/%";
     private static final String DEFAULT_QUERY = "";
-    private static final String DEFAULT_SORT = "name COLLATE NOCASE ASC";
+    private static final String DEFAULT_SORT = "name COLLATE LOCALIZED ASC";
 
     private String mSortOrder = DEFAULT_SORT;
     private String mQuery = DEFAULT_QUERY;

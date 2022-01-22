@@ -87,7 +87,7 @@ public class BrowserPlaylists extends BrowserMoviesBy {
 
     @Override
     protected String getDefaultSortOrder() {
-        return COLUMN_NAME+" COLLATE NOCASE DESC";
+        return COLUMN_NAME+" COLLATE LOCALIZED DESC";
     }
 
     @Override

@@ -24,7 +24,7 @@ import com.archos.mediaprovider.video.VideoStore;
  */
 public class MoviesLoader extends VideoLoader {
 
-    static public String DEFAULT_SORT = "name COLLATE NOCASE ASC";
+    static public String DEFAULT_SORT = "name COLLATE LOCALIZED ASC";
     private final boolean mGroupByOnlineId;
 
     private String mSortOrder;

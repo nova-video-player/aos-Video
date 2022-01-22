@@ -13,7 +13,7 @@ public class SearchEpisodeLoader extends VideoLoader {
                                           + VideoStore.MediaColumns.TITLE + " LIKE ?)";
 
     private static final String DEFAULT_QUERY = "";
-    private static final String DEFAULT_SORT = "name COLLATE NOCASE,"
+    private static final String DEFAULT_SORT = "name COLLATE LOCALIZED,"
             + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + " ASC,"
             + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE + " ASC";
 

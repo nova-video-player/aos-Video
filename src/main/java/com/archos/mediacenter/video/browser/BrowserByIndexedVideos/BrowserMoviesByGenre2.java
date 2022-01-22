@@ -48,7 +48,7 @@ public class BrowserMoviesByGenre2 extends BrowserMoviesBy {
 
     @Override
     protected String getDefaultSortOrder() {
-        return COLUMN_NAME+" COLLATE NOCASE ASC";
+        return COLUMN_NAME+" COLLATE LOCALIZED ASC";
     }
 
     @Override

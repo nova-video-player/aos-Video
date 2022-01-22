@@ -201,7 +201,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 		switch (itemid & MENU_ITEM_SORT_TYPE_MASK) {
 		// What is sorted
 		case MENU_ITEM_NAME:
-            sortOrder = COLUMN_NAME + " COLLATE NOCASE";
+            sortOrder = COLUMN_NAME + " COLLATE LOCALIZED";
             break;
 		}
 

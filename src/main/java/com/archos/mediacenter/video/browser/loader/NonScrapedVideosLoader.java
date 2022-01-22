@@ -27,7 +27,7 @@ public class NonScrapedVideosLoader extends VideoLoader {
     private static final String CAMERA_PATH_ARG = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getPath() + "/Camera/%";
     private static final String[] SELECTION_ARGS = { CAMERA_PATH_ARG };
 
-    static public String DEFAULT_SORT = "name COLLATE NOCASE ASC";
+    static public String DEFAULT_SORT = "name COLLATE LOCALIZED ASC";
 
     private String mSortOrder;
 
