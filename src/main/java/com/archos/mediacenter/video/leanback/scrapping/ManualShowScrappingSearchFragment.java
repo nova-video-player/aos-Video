@@ -119,10 +119,10 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
     protected BaseTags getTagFromSearchResult(SearchResult result) {
         // Get the details for this match
         Bundle b = new Bundle();
-        b.putBoolean(Scraper.ITEM_REQUEST_BASIC_SHOW, true);
-        //b.putBoolean(Scraper.ITEM_REQUEST_ALL_EPISODES, true);
+        //b.putBoolean(Scraper.ITEM_REQUEST_BASIC_SHOW, true);
+        b.putBoolean(Scraper.ITEM_REQUEST_ALL_EPISODES, true);
         //b.putInt(Scraper.ITEM_REQUEST_SEASON, result.getOriginSearchSeason());
-        b.putInt(Scraper.ITEM_REQUEST_SEASON, 1);
+        //b.putInt(Scraper.ITEM_REQUEST_SEASON, 1);
         // this is required to get the season poster (episode does not have this information on tmdb)
         //b.putInt(Scraper.ITEM_REQUEST_EPISODE, 1);
 
@@ -396,8 +396,6 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             }
             return result;
         }
-
-        // TODO MARC set poster to show too and backdrop... for show season and episode!!!
 
         private EpisodeTags getEpisode(Map<String, EpisodeTags> map, int episode, int season, ShowTags show) {
             // TODO: handle map being null to avoid crash

@@ -533,7 +533,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                     int current = 0;
                     while (!isCancelled() && current < count) {
                         Bundle b = new Bundle();
-                        // no need to get all episodes
+                        // no need to get all episodes?
                         //b.putBoolean(Scraper.ITEM_REQUEST_ALL_EPISODES, true);
                         b.putInt(Scraper.ITEM_REQUEST_SEASON, 1);
                         b.putInt(Scraper.ITEM_REQUEST_EPISODE, 1);

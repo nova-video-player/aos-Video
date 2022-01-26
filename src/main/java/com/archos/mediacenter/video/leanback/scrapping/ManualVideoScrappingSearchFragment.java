@@ -93,7 +93,6 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
         mSearchInfo.setUserInput(text);
         return mScraper.getBestMatches(mSearchInfo, SEARCH_RESULT_MAX_ITEMS);
     }
-
     protected BaseTags getTagFromSearchResult(SearchResult result) {
         // Get the details for this match
         Bundle b = new Bundle();
@@ -106,8 +105,9 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
         }
         ScrapeDetailResult detail = mScraper.getDetails(result, b);
         BaseTags tags = detail.tag;
-
+        log.debug("getTagFromSearchResult: found tag " + tags);
         if (tags instanceof EpisodeTags) {
+            log.debug("getTagFromSearchResult: found EpisodeTags");
             if (((EpisodeTags)tags).getShowTags() != null) ((EpisodeTags)tags).getShowTags().setTitle(result.getTitle());
         }
 
@@ -122,7 +122,7 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
             }
         }
 
-        log.debug("put in mTagsToSearchResultMap: "+tags);
+        log.trace("getTagFromSearchResult: put in mTagsToSearchResultMap " + tags);
         mTagsToSearchResultMap.put(tags, result);
 
         return tags;
@@ -134,6 +134,9 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
      */
     @Override
     protected void saveTagsAndFinish(final BaseTags fTags) {
+
+        log.debug("saveTagsAndFinish");
+
         final NovaProgressDialog progressDialog = new NovaProgressDialog(getActivity());
         progressDialog.setTitle(R.string.scrap_get_title);
         progressDialog.setMessage(getString(R.string.scrap_change_initializing));
@@ -143,12 +146,16 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
         progressDialog.setMax(1);
         progressDialog.show();
 
+        // at this point the shows have been displayed and one is selected as fTags
+
         new Thread() {
             @Override
             public void run() {
                 BaseTags tags = fTags;
                 Bundle bundle = new Bundle();
                 if (tags instanceof EpisodeTags) {
+                    // note that this is for a single episode scraping not the whole show here thus get only the required season
+                    // this enables to get the right poster from the show
                     bundle.putInt(Scraper.ITEM_REQUEST_SEASON, ((EpisodeTags)tags).getSeason());
                     // this is required to get the season poster (episode does not have this information on tmdb)
                     //bundle.putInt(Scraper.ITEM_REQUEST_EPISODE, ((EpisodeTags)tags).getEpisode());
@@ -158,9 +165,11 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
                         tags = detail.tag;
                 }
 
+                log.trace("saveTagsAndFinish: found this tag " + tags);
                 log.debug("saveTagsAndFinish: downloadPoster");
+
                 // since poster can be deleted again we refresh it here
-                tags.downloadPoster(getActivity());
+                //tags.downloadPoster(getActivity());
 
                 // Nfo export does network access => thread
                 if (NfoWriter.isNfoAutoExportEnabled(getActivity())) {
