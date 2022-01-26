@@ -17,11 +17,17 @@ package com.archos.mediacenter.video.info;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+
+import android.util.Log;
 import android.view.Menu;
 
 import com.archos.mediacenter.video.R;
 
 public class VideoInfoScraperActivity extends FragmentActivity {
+
+    private static final boolean DBG = false;
+    private static final String TAG = "VISA";
+
     public static final String EXTRA_VIDEO = "video";
     public static final String EXTRA_SHOW = "show";
 
@@ -30,10 +36,13 @@ public class VideoInfoScraperActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_info_posterandbackdrop);
         Fragment frag;
-        if(getIntent().getSerializableExtra(EXTRA_VIDEO)!=null)
+        if(getIntent().getSerializableExtra(EXTRA_VIDEO)!=null) {
+            if (DBG) Log.d(TAG, "onCreate: detected video");
             frag = new VideoInfoScraperSearchFragment();
-        else
+        } else {
+            if (DBG) Log.d(TAG, "onCreate: detected show");
             frag = new VideoInfoShowScraperFragment();
+        }
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.root,frag)
