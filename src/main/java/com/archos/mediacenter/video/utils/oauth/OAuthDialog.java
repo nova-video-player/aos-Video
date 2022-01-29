@@ -26,14 +26,16 @@ import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.RequiresApi;
+
 import android.util.Log;
-import android.view.Display;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -98,28 +100,27 @@ public class OAuthDialog extends Dialog {
 		super.onCreate(savedInstanceState);
         if (DBG) Log.d(TAG, "onCreate");
 
+        // get another progress dialog while loading the page in this dialog
         mProgress = NovaProgressDialog.show(getContext(), "", getContext().getResources().getString(R.string.loading), true);
 		mProgress.setCancelable(true);
 		mProgress.setCanceledOnTouchOutside(false);
 
-		mLayout = new LinearLayout(getContext());
-		mLayout.setOrientation(LinearLayout.VERTICAL);
+		setContentView(R.layout.oauth_dialog);
 
-		mWebView = new WebView(getContext());
-		mWebView.setVerticalScrollBarEnabled(false);
-		mWebView.setHorizontalScrollBarEnabled(false);
-		//mWebView.getSettings().setSupportZoom(false);
-		mWebView.setLayoutParams(MATCH);
+		getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+
+		mWebView = (WebView) findViewById(R.id.webview);
 		mWebView.getSettings().setJavaScriptEnabled(true);
+		//mWebView.setVerticalScrollBarEnabled(false);
+		//mWebView.setHorizontalScrollBarEnabled(false);
+		// resize to fit content
+		mWebView.getSettings().setUseWideViewPort(true);
+		mWebView.getSettings().setLoadWithOverviewMode(true);
 
 		mWebView.setWebViewClient(new OAuthWebViewClient());
-        mWebView.setWebChromeClient(new WebChromeClient());
-        
-        mWebView.loadUrl(mReq.getLocationUri());
-        mLayout.addView(mWebView);
-        
-        Display display = getWindow().getWindowManager().getDefaultDisplay();
-		addContentView(mLayout, new FrameLayout.LayoutParams(display.getWidth() - 20, display.getHeight() - 20));
+		mWebView.setWebChromeClient(new WebChromeClient());
+		mWebView.loadUrl(mReq.getLocationUri());
+
 		CookieManager.getInstance().removeAllCookies(null);
 
 	}
@@ -247,7 +248,7 @@ public class OAuthDialog extends Dialog {
 			if (DBG) Log.d(TAG, "onPageFinished for url " + url);
 			super.onPageFinished(view, url);
             mProgress.dismiss();
-            injectCSS();
+			injectCSS();
 		}
 	}
 
