@@ -16,7 +16,7 @@
 -->
 
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
-            android:label="@string/video"
+            android:label="@string/nova"
             android:includeInGlobalSearch="true"
             android:searchSuggestAuthority="browser.SearchProviderVideocommunity"
             android:searchSuggestThreshold="3"

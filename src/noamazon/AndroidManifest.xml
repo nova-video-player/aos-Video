@@ -33,7 +33,7 @@
             android:name="com.archos.mediacenter.video.widget.VideoWidgetConfigure"
             android:icon="@mipmap/video2"
             android:exported="true"
-            android:label="@string/video"
+            android:label="@string/nova"
             android:theme="@style/Theme.DialogMinWidth" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
@@ -42,7 +42,7 @@
 
         <receiver
             android:name="com.archos.mediacenter.video.widget.WidgetProviderVideo"
-            android:label="@string/video"
+            android:label="@string/nova"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

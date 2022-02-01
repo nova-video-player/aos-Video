@@ -16,7 +16,7 @@
 -->
 
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
-     android:label="@string/video"
+     android:label="@string/nova"
      android:searchSettingsDescription="@string/all_movies_and_tv_shows"
      android:searchSuggestAuthority="com.archos.mediacenter.videocommunity.leanback.search.VideoSearchProvider"
      android:searchSuggestIntentAction="android.intent.action.VIEW"
