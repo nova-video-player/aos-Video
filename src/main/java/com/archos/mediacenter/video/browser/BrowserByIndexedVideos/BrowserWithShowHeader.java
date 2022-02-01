@@ -88,7 +88,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     protected View mApplicationFrameLayout;
     private boolean mPlotIsFullyDisplayed;
 
-
     public BrowserWithShowHeader() {
         if (DBG) Log.d(TAG, "BrowserBySeason()");
     }
@@ -119,12 +118,10 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         addHeaderView();
     }
 
-
     @Override
     public int getEmptyMessage() {
         return R.string.scraper_no_episode_found;
     }
-
 
     protected void applySelectedViewMode(int newMode) {
         if(mHeaderView!=null) { //removing headerview
@@ -144,7 +141,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
             addHeaderView();
         bindAdapter();
-
     }
 
     private void addHeaderView() {
@@ -239,10 +235,9 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         }
     }
 
-
-
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if (DBG) Log.d(TAG, "onLoadFinished");
         super.onLoadFinished(loader, cursor);
         if (getActivity() == null) return;
         if(loader.getId()==SHOW_LOADER_ID) {
@@ -259,16 +254,16 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 // calls at the end BrowserWithShowHeaders for no apparent reason (tried to determine code path)
                 // since this happens when getActivity() == null avoid doing UI stuff hides the issue that still remains to be fixed properly
                 if (getActivity() != null) {
+                    if (DBG) Log.d(TAG, "onLoadFinished: activity not null");
                     mTvShowAsyncTask = new TvShowAsyncTask().executeOnExecutor(mSerialExecutor,getPosterUri(),mShow);
                     getActivity().invalidateOptionsMenu();
                 } else {
-                    if (DBG) Log.w(TAG,"FIXME: onLoadFinished getActivity is null");
+                    if (DBG) Log.w(TAG,"onLoadFinished: FIXME onLoadFinished getActivity is null");
                 }
             }
 
         }
     }
-
 
     private boolean needToReload(Tvshow oldShow, Tvshow newShow) {
         if (oldShow==null || newShow==null) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate null"); return true;}
@@ -278,8 +273,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         if (oldShow.getPosterUri()!=null&&!oldShow.getPosterUri().equals(newShow.getPosterUri())||newShow.getPosterUri()!=null&&newShow.getPosterUri().equals(oldShow.getPosterUri())) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate getPosterUri"); return true;}
         return false;
     }
-
-
 
     @Override
     public void onStop(){
@@ -301,7 +294,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 this.bitmap = bitmap;
                 this.tags = tags;
             }
-
         }
         @Override
         protected TvShowAsyncTask.Result doInBackground(Object... postersUri) {
@@ -336,7 +328,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         protected void onPostExecute(TvShowAsyncTask.Result result) {
             Tvshow show = result.show;
 
-
             final TextView plotTv = (TextView) mHeaderView.findViewById(R.id.plot);
             mHeaderView.findViewById(R.id.loading).setVisibility(View.GONE);
 
@@ -353,7 +344,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             ((TextView)mHeaderView.findViewById(R.id.name)).setText(show.getName());
             plotTv.setText(show.getPlot());
             plotTv.setMaxLines(Integer.MAX_VALUE);
-
 
             setSeason((TextView)mHeaderView.findViewById(R.id.season));
             plotTv.setVisibility(View.VISIBLE);
@@ -384,7 +374,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 mBackgroundSetter.set(mApplicationBackdrop, mBackgroundLoader, result.tags.getDefaultBackdrop());
 
         }
-
     }
 
     protected abstract void setSeason(TextView seasonView);
@@ -395,10 +384,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
     public void onResume(){
         super.onResume();
-
     }
-
-
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -420,6 +406,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     }
 
     protected abstract Uri getPosterUri();
+
     @Override
     protected void postBindAdapter() {
         super.postBindAdapter();
@@ -467,7 +454,5 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         }
         return null;
     }
-
-
 
 }

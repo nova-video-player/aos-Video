@@ -224,8 +224,6 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         mScraper = null;
     }
 
-
-
     public void setInfoItem(Base item) {
         log.debug("setInfoItem");
 
@@ -245,8 +243,6 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         }
     }
 
-
-
     // ---------------------- IMPLEMENTS Handler.Callback ------------------- //
     public boolean handleMessage(Message msg) {
         // the only message we ever get is send once saving is complete
@@ -264,6 +260,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         log.debug("onItemClick");
         HashMap<String,EpisodeTags> map = position < mResultsList.size() ? mResultsList.get(position).epMap : null;
         if (map != null) {
+            log.debug("onItemClick: map not null");
             SaveItem item = new SaveItem();
             item.source = map;
             item.target = mShowTag;
@@ -271,9 +268,10 @@ public class VideoInfoShowScraperFragment extends Fragment implements
             cancelCurrentTask();
             EpSaveTask.createAndRun(getActivity(), item);
         } else if (mCurrentSearchTask != null) {
+            log.debug("onItemClick: requestSave");
             mCurrentSearchTask.requestSave(position, mShowTag, getActivity(), mHandler.obtainMessage());
         } else {
-            log.error("Failed to save, no task & no result available");
+            log.error("onItemClick: failed to save, no task & no result available");
         }
         setDisplayState(DisplayState.APPLY_RESULT);
     }
@@ -482,7 +480,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         public SearchTask() { /* empty */ }
 
         public void requestSave(int resultId, ShowTags saveTarget, Context saveContext, Message message) {
-            log.debug("requestSave " + resultId);
+            log.debug("SearchTask.requestSave: " + resultId);
             mSaveRequestId = resultId;
             mSaveContext = saveContext.getApplicationContext();
             mSaveTarget = saveTarget;
@@ -641,7 +639,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                 long showID = handleSave(params[0], episodeList);
                 Message m = params[0].sendOnSuccess;
                 m.arg1 = (int) showID;
-                log.debug("save finished, sending message");
+                log.debug("EpSaveTask.doInBackground: save finished, sending message");
                 if (m != null)
                     m.sendToTarget();
             }
@@ -651,6 +649,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         private List<EpisodeTags> getEpisodeList(ShowTags sTag) {
             ArrayList<EpisodeTags> result = new ArrayList<EpisodeTags>();
             if (sTag != null) {
+                log.debug("EpSaveTask.getEpisodeList: " + sTag.getTitle());
                 // get EpisodeTags by ShowId
                 long sId = sTag.getId();
                 ContentResolver cr = mContext.getContentResolver();
@@ -674,6 +673,8 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                         }
                     }
                 }
+            } else {
+                log.warn("EpSaveTask.getEpisodeList: sTag null!");
             }
             return result;
         }
@@ -697,7 +698,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                 ArrayList<ContentProviderOperation> opList = new ArrayList<ContentProviderOperation>();
                 Map<String, Long> poster2IdMap = createPosterIdMap(mContext, targetShowId);
                 for (EpisodeTags epTag : targetList) {
-                    log.debug("Saving " + (i++) + " of " + size + " episodes.");
+                    log.debug("handleSave: saving " + (i++) + " of " + size + " episodes.");
                     EpisodeTags targetEpTag = getEpisode(item.source, epTag.getEpisode(), epTag.getSeason(), targetShow);
                     targetEpTag.setVideoId(epTag.getVideoId());
                     targetEpTag.setShowId(targetShowId);
@@ -726,7 +727,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                     }
                 }
                 TraktService.onNewVideo(mContext);
-                log.debug("saving in the end:" + t.step() + " thats:" + t.total());
+                log.debug("handleSave: saving in the end:" + t.step() + " thats:" + t.total());
                 return targetShowId;
             }
             return -1;
