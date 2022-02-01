@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <!-- Menu item that takes the user back to the top level screen of the music player -->
+    <string name="goto_start">媒體庫</string>
+    <!-- Menu item that takes the user to the "now playing" screen of the music player -->
+    <!-- Menu item to refresh servers list -->
+    <string name="refresh_servers_list">更新伺服器清單</string>
+    <!-- Menu item to enable network shares -->
+    <string name="enable_network_shares">啟用網路分享</string>
+    <string name="initial_scan">初始化掃描</string>
+    <!-- Library screen, menu item -->
+    <string name="search_title">搜尋</string>
+    <!-- Default name of track that doesn't have a name in the metadata -->
+    <string name="unknown_track_name">未知</string>
+    <!-- Toast after turning shuffle on -->
+    <!-- Toast after turning shuffle off -->
+    <!-- Toast after turning single repeat on -->
+    <!-- Context menu item -->
+    <string name="info">資訊</string>
+    <!-- Context menu item -->
+    <string name="play_selection">播放</string>
+    <!-- Context menu item -->
+    <string name="multiple_selection">多重選取</string>
+    <!-- Context menu item -->
+    <string name="play_from_beginning">從頭播放</string>
+    <!-- Dialog box button -->
+    <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <string name="fast_scroll_alphabet">ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙㄧㄨㄩㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦ</string>
+    <!-- The string used in file/folder infos dialog. -->
+    <string name="info_duration">片長</string>
+    <string name="video_sources">來源</string>
+    <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">電影</string>
+    <string name="info_tab_show">影集</string>
+    <string name="info_tab_episode">集數</string>
+    <string name="info_tab_video">影片</string>
+    <string name="info_tab_file">檔案資訊</string>
+    <string name="info_tab_backdrop_chooser">背景選擇器</string>
+    <string name="info_tab_poster_chooser">海報選擇器</string>
+    <string name="info_tab_share">分享</string>
+    <string name="info_menu_backdrop_select">背景</string>
+    <string name="info_menu_series_backdrop_select">影集背景</string>
+    <string name="info_menu_poster_select">選擇另一張海報</string>
+    <string name="info_menu_series_poster_select">選擇另一張海報</string>
+    <!-- COVER ROLL -->
+    <string name="watching_up_next">正在觀看 / 稍後觀看</string>
+    <string name="recently_added">最近新增</string>
+    <string name="recently_added_videos">最近新增</string>
+    <string name="recently_played">最近播放</string>
+    <string name="recently_played_videos">最近播放</string>
+    <string name="video_lists">播放清單</string>
+    <!-- The string used in main storage list -->
+    <string name="external_storage">外部儲存空間</string>
+    <string name="internal_storage">內部儲存空間</string>
+    <string name="network_storage">雲端儲存空間</string>
+    <string name="sd_card_storage">記憶卡</string>
+    <string name="usb_host_storage">外部儲存裝置</string>
+    <string name="other_storage">儲存裝置</string>
+    <string name="network_media_servers">多媒體伺服器 (UPnP)</string>
+    <string name="network_shared_folders">共享資料夾 (SMB)</string>
+    <string name="network_connected_as">已連接 %s</string>
+    <string name="network_guest">訪客</string>
+    <string name="sftp_folders">FTP</string>
+    <string name="network_jcifs">Samba (實驗性)</string>
+    <string name="network_cling">UPNP (實驗性)</string>
+    <string name="recordings_storage">錄影</string>
+    <string name="root_storage">內部儲存空間</string>
+    <string name="cannot_list">不能列出內容</string>
+    <!-- VIDEO -->
+    <string name="videos">影片</string>
+    <string name="all_videos">所有影片</string>
+    <string name="not_played_yet_videos">未播放</string>
+    <string name="video_folder">資料夾</string>
+    <string name="movies">電影</string>
+    <string name="animes">動畫</string>
+    <string name="all_movies">所有電影</string>
+    <string name="all_movies_format">所有電影  -  %d</string>
+    <string name="all_animes_format">電影動畫  -  %d</string>
+    <string name="all_collections">全部收藏</string>
+    <string name="all_collections_format">全部收藏  -  %d</string>
+    <string name="all_collection_watched">已觀看的收藏</string>
+    <string name="all_collection_unwatched">未觀看的收藏</string>
+    <plurals name="n_movies_watched">
+        <item quantity="other">已觀看電影 %d</item>
+    </plurals>
+    <string name="not_watched_movies_format">未觀看  -  %d</string>
+    <string name="not_watched_animes_format">未觀看  -  %d</string>
+    <string name="no_movie_watched">沒有已觀看電影</string>
+    <string name="all_movies_watched">已觀看所有電影</string>
+    <string name="movies_by_alpha">電影：按名稱排列</string>
+    <string name="movies_by_genre">電影：按分類排列</string>
+    <string name="movies_by_rating">電影：按評分排列</string>
+    <string name="movie_collections">收藏</string>
+    <string name="anime_collections">動畫收藏</string>
+    <string name="movies_by_year">電影：按年份排列</string>
+    <string name="all_tv_shows">電視劇</string>
+    <string name="all_tvshows">所有電視劇</string>
+    <string name="all_animes">所有電影動畫</string>
+    <string name="all_animes_row">所有動畫</string>
+    <string name="all_animeshows">所有電視動畫</string>
+    <string name="animes_by_alpha">動畫：按名稱排列</string>
+    <string name="animes_by_genre">動畫：按分類排列</string>
+    <string name="animes_by_rating">動畫：按評分排列</string>
+    <string name="animes_by_year">動畫：按年份排列</string>
+    <string name="all_tvshows_format">所有電視劇  -  %d</string>
+    <string name="not_watched_tvshows_format">未觀看  -  %d</string>
+    <string name="all_animeshows_format">所有電視動畫  -  %d</string>
+    <string name="not_watched_animeshows_format">未觀看  -  %d</string>
+    <string name="all_seasons">所有季數</string>
+    <string name="tvshows_by_alpha">電視劇：按名稱排列</string>
+    <string name="tvshows_by_genre">電視劇：按分類排列</string>
+    <string name="tvshows_by_rating">電視劇：按評分排列</string>
+    <string name="episodes_by_date">劇集：按日期排列</string>
+    <string name="date_view_week">週</string>
+    <string name="date_view_month">月</string>
+    <string name="date_view_year">年</string>
+    <string name="all_movies_and_tv_shows">電影和電視劇</string>
+    <string name="non_scraped_videos">未抓取資料的影片</string>
+    <string name="no_server">找不到媒體伺服器</string>
+    <string name="cannot_open_video">無法打開此影片</string>
+    <string name="confirm_delete">確定要刪除嗎？</string>
+    <string name="deleting">正在進行刪除，請稍候…</string>
+    <string name="cannot_delete_directory">無法刪除資料夾</string>
+    <string name="cannot_delete_file">無法刪除檔案</string>
+    <string name="directory_deleted">資料夾已刪除</string>
+    <string name="file_deleted">檔案已刪除</string>
+    <string name="resume">繼續播放</string>
+    <string name="remote_resume">繼續播放</string>
+    <string name="bookmark">我的最愛</string>
+    <string name="delete">刪除</string>
+    <string name="confirm_delete_short">確認刪除</string>
+    <string name="delete_resume">刪除播放進度</string>
+    <string name="delete_bookmark">刪除我的最愛</string>
+    <string name="mark_as_watched">設為「已觀看」</string>
+    <string name="mark_as_not_watched">設為「尚未觀看」</string>
+    <string name="upnp_not_allowed">您無法存取此 UPnP 伺服器，請先修改存取設定。</string>
+    <string name="scrap_no_info">沒有該影片的電影或電視劇的資訊。</string>
+    <string name="scrap_remove">移除資訊</string>
+    <string name="scrap_remove_short">移除</string>
+    <!-- for small screens -->
+    <string name="scrap_change">改變所有劇集的資訊</string>
+    <string name="scrap_series_change">更改影集的資訊</string>
+    <string name="scrap_change_confirmation">將所有劇集從\n\t「%1$s」\n改為\n\t「%2$s」？</string>
+    <string name="scrap_change_title">修改所有劇集</string>
+    <string name="scrap_change_initializing">正在初始化...</string>
+    <string name="scrap_change_finalizing">正在完成…</string>
+    <string name="scrap_get_title">正在取得資訊</string>
+    <!-- Generic strings for Movies or TV shows -->
+    <string name="scrap_director">導演</string>
+    <string name="scrap_director_format">導演：%s</string>
+    <string name="scrap_rating">評分</string>
+    <string name="scrap_rating_format">評分：%s</string>
+    <string name="scrap_year">年份</string>
+    <string name="scrap_year_format">年份：%d</string>
+    <string name="scrap_studio">製片廠</string>
+    <string name="scrap_plot">劇情</string>
+    <string name="scrap_trailer">預告</string>
+    <string name="scrap_cast">演員</string>
+    <string name="scrap_cast_format">演員：%s</string>
+    <string name="scrap_genre">分類</string>
+    <string name="scrap_genre_format">分類：%s</string>
+    <string name="scrap_genre_title">分類</string>
+    <string name="scrap_aired">上映</string>
+    <string name="scrap_aired_format">上映：%s</string>
+    <string name="scrap_guests">來賓</string>
+    <string name="scrap_premiered">首映</string>
+    <!-- Specific strings for TV shows -->
+    <string name="show_network">網路</string>
+    <string name="episode_name">集數</string>
+    <string name="episode_season">季數</string>
+    <string name="episode_specials">特別收錄</string>
+    <string name="episode_identification">第 %1$d 季 第 %2$d 集</string>
+    <string name="season_identification">第 %1$d 季</string>
+    <string name="next_episode">下一集</string>
+    <string name="list_episodes">劇集列表</string>
+    <string name="how_to_mark_season_watched">單擊某一季讓所有該劇集設為「已觀看」或「尚未觀看」</string>
+    <string name="how_to_unindex_season">單擊某一季讓所有該劇集從媒體庫移除</string>
+    <string name="how_to_delete_season">單擊某一季將刪除該所有劇集</string>
+    <string name="mark_show_watched">將所有劇集設為「已觀看」或「尚未觀看」</string>
+    <string name="unindex_show">從媒體庫移除所有劇集</string>
+    <string name="delete_show">刪除所有劇集</string>
+    <string name="no_episode_watched">沒有已觀看劇集</string>
+    <string name="all_episodes_watched">已觀看所有劇集</string>
+    <plurals name="n_episodes_watched">
+        <item quantity="other">已觀看 %d 集</item>
+    </plurals>
+    <string name="scrap_processing">正在擷取詮釋資料...</string>
+    <string name="scrap_no_network">未連線至網路。</string>
+    <string name="scrap_enable_network_first">"請先連線至網路再開啟本應用程式。"</string>
+    <string name="scrap_failed">線上資料庫找不到該電影。</string>
+    <string name="start_auto_scraper_activity">線上搜尋資料</string>
+    <string name="scraper_settigns">海報和資料</string>
+    <string name="scrap_status_initial">已佇列</string>
+    <string name="scrap_status_busy">搜尋中……</string>
+    <string name="scrap_status_success">已更新</string>
+    <string name="scrap_status_failed">找不到資訊</string>
+    <string name="scrap_status_rejected">資料已移除</string>
+    <string name="scrap_status_unknown">未知</string>
+    <string name="scraper_abort_request">您確定要中止搜尋嗎？</string>
+    <string name="scraper_no_files">沒有檔案需要處理</string>
+    <string name="scraper_no_new_files">沒有新檔案需要處理</string>
+    <string name="scraper_no_new_files_in_folder">此資料夾中沒有新檔案需要處理</string>
+    <string name="scraper_folder_no_files">此處仍有 %d 個影片之前沒有找到資料。</string>
+    <string name="scraper_folder_no_file">此處仍有一個影片之前沒有找到資料。</string>
+    <string name="scraper_folder_try_again">是否要再試一次？</string>
+    <string name="scraper_notification_title">線上搜尋資料中</string>
+    <string name="scraper_notification_progress">已處理 %1$d/%2$d 的檔案</string>
+    <string name="scraper_no_episode_found">未找到劇集</string>
+    <string name="scraper_suggest_message">可藉由「線上搜尋資料」選單搜尋您影片的海報和資料。</string>
+    <string name="scraper_no_movie_text">目前沒有您電影的海報和說明</string>
+    <string name="scraper_no_movie_button_label">線上搜尋電影資料</string>
+    <string name="scraper_no_tv_show_text">目前沒有您電視劇的海報和說明</string>
+    <string name="scraper_no_tv_show_button_label">線上搜尋電視劇資料</string>
+    <string name="imdb_title_url">https://www.imdb.com/title/</string>
+    <!-- To be translated only in case there is a localized IMDB -->
+    <string name="storage">儲存空間</string>
+    <string name="rescan_storage">重新掃描儲存空間</string>
+    <string name="rescanning">重新掃瞄儲存裝置中</string>
+    <string name="rescan_storage_summary">重新掃瞄內部、記憶卡和 USB 儲存裝置</string>
+    <string name="preference_display_all_files">在瀏覽器中顯示所有檔案</string>
+    <string name="preference_display_all_files_summary">同時顯示非影片檔案</string>
+    <string name="info_processing">正在確認媒體的內容...</string>
+    <string name="info_video">影片</string>
+    <string name="info_audio">音訊</string>
+    <string name="info_audio_vbr">VBR (可變位元率)</string>
+    <string name="info_plugin_required">(需要套件)</string>
+    <string name="info_subtitle">字幕</string>
+    <string name="info_resume">續播進度</string>
+    <string name="info_bookmark">將進度加入我的最愛</string>
+    <string name="info_file">檔案資訊</string>
+    <string name="use_remote_resume">使用雲端的續播進度？</string>
+    <!-- VIDEO COVER ROLL -->
+    <string name="you_have_no_recently_added_video">沒有最近新增的影片</string>
+    <string name="you_have_no_recently_played_video">沒有最近播放的影片</string>
+    <string name="you_have_no_video">沒有任何影片</string>
+    <string name="you_have_no_video_yet">正在搜尋影片&#8230;</string>
+    <string name="you_have_no_movies">沒有任何電影</string>
+    <string name="you_have_no_animes">沒有任何電影動畫</string>
+    <string name="you_have_no_movie_collections">暫無收藏</string>
+    <string name="you_have_no_anime_collections">沒有任何動畫收藏</string>
+    <string name="you_have_no_tv_shows">沒有任何電視劇</string>
+    <string name="you_have_no_anime_shows">沒有任何電視動畫</string>
+    <string name="you_have_no_non_scraped_videos">沒有未抓取資料的影片</string>
+    <plurals name="Nmovies">
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> 部電影</item>
+    </plurals>
+    <plurals name="Nepisodes">
+        <!-- number of episodes is one -->
+        <!-- number of episodes is not equal to one -->
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> 集</item>
+    </plurals>
+    <plurals name="Nseasons">
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> 季</item>
+    </plurals>
+    <!-- Media Center -->
+    <string name="mediacenterlabel">多媒體中心</string>
+    <string name="view_mode">顯示模式</string>
+    <string name="view_mode_list">清單</string>
+    <string name="view_mode_grid">海報</string>
+    <string name="view_mode_details">詳細資料</string>
+    <string name="switch_to_list">清單顯示</string>
+    <string name="switch_to_grid">格狀顯示</string>
+    <!-- VideoPlayer -->
+    <string name="player_loading_video">正在載入影片\u2026</string>
+    <string name="player_audio_track_toast">音軌：</string>
+    <string name="player_subtitle_track_toast">字幕軌：</string>
+    <string name="player_bookmark_set">我的最愛設定於</string>
+    <string name="player_pref_subtitle_delay_title">延遲</string>
+    <string name="floating_player_restore">還原</string>
+    <string name="floating_player_play">播放</string>
+    <string name="floating_player_pause">暫停</string>
+    <string name="player_pref_audio_delay_title">音訊延遲</string>
+    <string name="now_playing">正在播放</string>
+    <string name="player_window_mode">視窗模式</string>
+    <string name="pref_play_mode_title">播放模式</string>
+    <string name="pref_play_mode_entry_single">單檔</string>
+    <string name="pref_play_mode_entry_folder">資料夾</string>
+    <string name="pref_play_mode_entry_repeat_folder">資料夾循環模式</string>
+    <string name="pref_play_mode_entry_repeat_single">單檔循環模式</string>
+    <string name="pref_play_mode_entry_binge">追劇模式</string>
+    <string name="pref_audio_parameters_title">音效</string>
+    <string name="pref_audio_filt_title">音訊增強</string>
+    <string name="pref_audio_filt_night_mode">夜間模式</string>
+    <string name="ui_mode_auto">自動</string>
+    <string name="ui_mode_tv">電視</string>
+    <string name="ui_mode_normal">平板 / 手機</string>
+    <string name="pref_s3d_mode_title">3D 模式</string>
+    <string name="pref_s3d_mode_entry_sbs">並排</string>
+    <string name="pref_s3d_mode_entry_topbottom">上下</string>
+    <string name="pref_s3d_mode_entry_anaglyph">立體電影</string>
+    <string name="pref_s3d_mode_entry_off">關閉</string>
+    <string name="menu_info">資訊</string>
+    <string name="menu_subtitles">字幕軌</string>
+    <string name="menu_audio">音軌</string>
+    <string name="menu_lock_player">鎖定播放器</string>
+    <string name="menu_bookmark">設定我的最愛</string>
+    <string name="menu_brightness_settings">亮度</string>
+    <string name="menu_player_settings">設定</string>
+    <string name="menu_change_folder">變更資料夾</string>
+    <string name="menu_change_folder_details">選擇起始資料夾</string>
+    <string name="unlock_instructions">長按圖示來解鎖</string>
+    <string name="seek_to_percentage">快轉至 %s%%</string>
+    <!-- Subtitles/Audio languages -->
+    <string name="s_arabic">阿拉伯文</string>
+    <string name="s_bulgarian">保加利亞文</string>
+    <string name="Bosnian">波士尼亞文</string>
+    <string name="s_czech">捷克文</string>
+    <string name="s_danish">丹麥文</string>
+    <string name="s_german">德文</string>
+    <string name="s_english">英文</string>
+    <string name="s_greek">希臘文</string>
+    <string name="s_spanish">西班牙文</string>
+    <string name="s_finnish">芬蘭文</string>
+    <string name="s_french">法文</string>
+    <string name="s_hebrew">希伯來文</string>
+    <string name="s_hungarian">匈牙利文</string>
+    <string name="s_italian">義大利文</string>
+    <string name="s_japanese">日文</string>
+    <string name="s_korean">韓文</string>
+    <string name="s_dutch">荷蘭文</string>
+    <string name="s_norwegian">挪威文</string>
+    <string name="s_polish">波蘭文</string>
+    <string name="s_brazilian">巴西文</string>
+    <string name="s_portuguese">葡萄牙文</string>
+    <string name="s_russian">俄文</string>
+    <string name="Romanian">羅馬尼亞文</string>
+    <string name="Serbo_Croatian">塞爾維亞-克羅埃西亞文</string>
+    <string name="Croatian">克羅埃西亞文</string>
+    <string name="Serbian">塞爾維亞文</string>
+    <string name="Slovenian">斯洛維尼亞文</string>
+    <string name="s_swedish">瑞典文</string>
+    <string name="s_thai">泰文</string>
+    <string name="s_turkish">土耳其文</string>
+    <string name="s_chinese">簡體中文</string>
+    <string name="s_vietnamese">越南文</string>
+    <string name="s_lithuanian">立陶宛文</string>
+    <string name="s_indonesian">印尼文</string>
+    <string name="s_malay">馬來文</string>
+    <string name="s_none">無</string>
+    <!-- Player errors -->
+    <string name="player_err_cantplayvideo">無法播放影片</string>
+    <string name="player_err_cantplaysound">無法播放音軌</string>
+    <string name="audiocodec_not_supported">不支援該音訊格式 (<xliff:g id="codec">%s</xliff:g>)。</string>
+    <string name="videocodec_not_supported">不支援該影片格式 (<xliff:g id="codec">%s</xliff:g>)。</string>
+    <string name="player_err_file">影片檔案不存在。</string>
+    <string name="player_err_sizetoobig">影片檔案過大</string>
+    <string name="player_err_unknown">未知的錯誤。</string>
+    <string name="player_err_critical">媒體播放器錯誤。</string>
+    <string name="player_err_forcodec">用於解碼器</string>
+    <string name="player_err_notinterleaved">影片和音訊並非交錯格式。</string>
+    <string name="player_err_codec">編碼</string>
+    <string name="player_err_isnotsupported">不支援。</string>
+    <string name="player_err_fileNoLicense">找不到該檔案的授權。</string>
+    <string name="player_err_fileerror">檔案損毀或不完整。</string>
+    <string name="player_err_connection_failed">連線失敗。</string>
+    <string name="player_err_video_decoder_error">影片解碼錯誤：</string>
+    <string name="player_err_qpel_and_gmc">「1/4 像素」和「GMC」</string>
+    <string name="player_err_profile_and_level">「畫質」和「壓縮層級」</string>
+    <string name="player_err_interlaced">交错式</string>
+    <!-- Player plug-in -->
+    <string name="player_plugin_cinema_title">影院套件</string>
+    <string name="player_plugin_cinema">影院套件 (DVD, MPEG-2, AC3)</string>
+    <string name="player_plugin_ac3_title">AC3 套件</string>
+    <string name="player_plugin_ac3">AC3 套件</string>
+    <string name="player_plugin_mpeg2_title">MPEG-2 套件</string>
+    <string name="player_plugin_mpeg2">MPEG-2 套件 (DVD)</string>
+    <string name="player_plugin_video_msg">該檔案包含 <xliff:g id="video">%1$s</xliff:g> 影片格式。</string>
+    <string name="player_plugin_audio_msg">該檔案包含 <xliff:g id="audio">%1$s</xliff:g> 音訊格式。</string>
+    <string name="player_plugin_video_audio_msg">該檔案包含 <xliff:g id="video">%1$s</xliff:g> 影片格式和 <xliff:g id="audio">%2$s</xliff:g> 音訊格式。</string>
+    <string name="player_plugin_purchase_msg">您需要購買 <xliff:g id="plugin">%1$s</xliff:g></string>
+    <string name="player_plugin_purchase">前往商店</string>
+    <string name="player_plugin_purchase_archos_msg">您可以在 www.archos.com 購買額外的解碼套件。</string>
+    <string name="player_plugin_purchase_google_play_msg">您可以在 Play 商店購買額外的解碼套件。</string>
+    <string name="player_plugin_purchase_google_play_button">前往 Play 商店</string>
+    <string name="plugin_update_required_title">需要更新解碼器</string>
+    <string name="plugin_update_required_message">您似乎已經為 Nova Video Player 安裝了額外的解碼套件。\n\n新版的 Nova Video Player 需要更新這些解碼套件，\n\n請至 Play 商店更新和重裝解碼套件。</string>
+    <!-- Subtitles wizard -->
+    <string name="get_subtitles_on_drive">選擇儲存裝置上的字幕</string>
+    <string name="subtitles_wizard_no_files">找不到字幕檔</string>
+    <string name="subtitles_wizard_current_files">目前字幕檔</string>
+    <string name="subtitles_wizard_available_files">可使用的字幕檔</string>
+    <string name="subtitles_wizard_associate">將該檔案與影片相關聯</string>
+    <string name="subtitles_wizard_delete">刪除此檔案</string>
+    <string name="subtitles_wizard_empty_list">找不到任何檔案</string>
+    <string name="subtitles_wizard_add_files">您可以複製額外的字幕檔到這個資料夾，以便與此影片相關聯。</string>
+    <string name="subtitles_wizard_help">選擇任何可用的字幕檔與影片 %s 相關聯，該字幕檔將被重新命名以符合影片名稱。</string>
+    <string name="subtitles_wizard_empty_list_help">找不到任何字幕檔。您需要先複製一個或多個字幕檔到這個資料夾，以便與影片 %s 相關聯。</string>
+    <string name="subtitles_wizard_cache">快取</string>
+    <!-- Subloader -->
+    <string name="get_subtitles_online">從網路上取得字幕</string>
+    <string name="toast_subloader_sub_found">找到該語言的字幕軌</string>
+    <string name="toast_subloader_sub_not_found">找不到該語言的字幕軌</string>
+    <string name="toast_subloader_service_unreachable">與字幕網站連線發生問題</string>
+    <string name="menu_subloader_allfolder">取得缺少的字幕</string>
+    <string name="dialog_subloader_copying">正在複製字幕...</string>
+    <string name="dialog_subloader_downloading">正在下載字幕…</string>
+    <string name="dialog_subloader_sumup">下載完成</string>
+    <string name="dialog_subloader_success">找到字幕：</string>
+    <string name="dialog_subloader_fails">找不到字幕：</string>
+    <string name="sub_force_all_title">強制下載字幕</string>
+    <string name="sub_force_all">您所有的影片已經至少有一個字幕軌，您確定要強制下載新的字幕軌嗎？</string>
+    <string name="dialog_subloader_nonetwork_title">沒有網際網路連線</string>
+    <string name="dialog_subloader_nonetwork_message">必須有網路連線才能下載字幕</string>
+    <string name="dialog_subloader_connecting">正在連結至 www.opensubtitles.org…</string>
+    <string name="dialog_subloader_credentials">Opensubtitles 憑證</string>
+    <string name="dialog_subloader_credentials_empty">您必須提供一組有效的使用者名稱及密碼！</string>
+    <string name="toast_subloader_credentials_empty">為了下載字幕，請在設定中提供您的 opensubtitles 憑證</string>
+    <string name="toast_subloader_login_failed">不正確的 opensubtitles 憑證或伺服器無法連線</string>
+    <!-- Subtitle Settings Dialog -->
+    <string name="subtitle_settings_title">字幕設定</string>
+    <string name="subtitle_sample_text">「範例」</string>
+    <string name="subtitle_size_text">檔案大小：</string>
+    <string name="subtitle_style_text">樣式：</string>
+    <string name="subtitle_vert_text">垂直位置：</string>
+    <string name="subtitle_outline">字幕邊框厚度</string>
+    <!-- Subtitle Delay Dialog -->
+    <string name="subtitle_delay_speed">字幕延遲調整</string>
+    <string name="subtitle_delay_radio_none">無</string>
+    <string name="subtitle_delay_radio_ntsc2pal">字幕快於影片：NTSC &#x2192; PAL</string>
+    <string name="subtitle_delay_radio_pal2ntsc">字幕慢於影片：PAL &#x2192; NTSC</string>
+    <!-- Browser.CommonDetailsView -->
+    <!-- Add a space after the right quote
+    because the right part of the quote is
+    not visible otherwise -->
+    <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
+    <string name="error_permission">權限不足</string>
+    <string name="error_permission_storage">Nova Video Player 需要存取權限才能讀取本機的影片，請授予該權限。</string>
+    <string name="allow">允許</string>
+    <string name="exit">退出</string>
+    <!-- torrent -->
+    <string name="error">發生錯誤</string>
+    <string name="error_loading_torrent">載入種子時出現錯誤</string>
+    <string name="error_downloading_not_enough_space">下載種子時出現錯誤：空間不足</string>
+    <string name="loading_torrent">正在載入種子...</string>
+    <string name="error_no_video_file">沒有任何影片檔</string>
+    <string name="torrent_file_to_play">選擇要播放的檔案</string>
+    <string name="torrent_buy_premium_message">僅付費版才提供 BT 串流播放</string>
+    <string name="torrent_buy_premium">購買付費版本</string>
+    <!-- Shortcuts -->
+    <string name="add_to_shortcuts">新增捷徑</string>
+    <string name="add_ssh_server">瀏覽 FTP 伺服器</string>
+    <string name="add_ssh_shortcut">新增為捷徑</string>
+    <string name="ssh_prompt">FTP 類型</string>
+    <string name="ssh_empty_view"> 「您可以瀏覽自己的 FTP 伺服器並播放」</string>
+    <string-array name="ssh_types">
+        <item>FTP</item>
+        <item>SFTP</item>
+        <item>FTPS</item>
+    </string-array>
+    <string name="remove_from_shortcuts">刪除捷徑</string>
+    <string name="shortcut_added">捷徑 %s 已建立</string>
+    <string name="shortcut_removed">捷徑 %s 已刪除</string>
+    <string name="server_not_available">伺服器目前無法連線</string>
+    <string name="cannot_open_shortcut">目前無法使用該捷徑的內容，\n請檢查您具有足夠的權限。</string>
+    <string name="network_shortcuts">網路捷徑</string>
+    <string name="media_servers">媒體伺服器</string>
+    <string name="shortcut_list_empty">網路捷徑未建立。\n\n長按您喜歡的雲端資料夾並在指令工具列上方選擇「%s」新增捷徑。</string>
+    <string name="ftp_shortcut_list_empty">請在瀏覽伺服器時，在指令工具列上方選擇「%s」，新增您喜歡的雲端資料夾的捷徑。</string>
+    <string name="indexed_folders">已索引的資料夾</string>
+    <string name="ftp_shortcuts">FTP 捷徑</string>
+    <string name="add_to_indexed_folders">索引資料夾</string>
+    <string name="add_to_library">新增至媒體庫</string>
+    <!-- Preferences -->
+    <!--  Title of the video picker activity. -->
+    <!-- Archos File Info -->
+    <!-- Help overlay -->
+    <!-- Info dialog, not indexed file -->
+    <!-- Brightness -->
+    <!--  Nfo File parsing -->
+</resources>
