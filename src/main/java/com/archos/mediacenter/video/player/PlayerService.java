@@ -19,10 +19,12 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
@@ -388,6 +390,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (Trakt.isTraktV2Enabled(this, mPreferences) && !PrivateMode.isActive()) {
             mTraktClient = new TraktService.Client(this, mTraktListener, false);
         }
+
+        registerReceiver(headsetPluggedReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
+
         setPlayer();
         Intent intent = new Intent(PLAYER_SERVICE_STARTED);
         intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
@@ -998,6 +1003,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if(mIndexHelper!=null)
             mIndexHelper.abort();
         mDestroyed = true;
+        unregisterReceiver(headsetPluggedReceiver);
         sPlayerService=null;
         if(mTorrent!=null)
             try {
@@ -1470,5 +1476,32 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void setAudioFilt() {
         mPlayer.setAudioFilter(mAudioFilt, mNightModeOn);
     }
+
+    // Pause when wired headset is disconnected
+    private final BroadcastReceiver headsetPluggedReceiver = new BroadcastReceiver() {
+        private static final int UNPLUGGED = 0;
+        private static final int PLUGGED = 1;
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (isInitialStickyBroadcast()) {
+                // intent received just after started reflects only the current state do not process it
+                return;
+            }
+            if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
+                int state = intent.getIntExtra("state", -1);
+                Log.d(TAG, "headsetPluggedReceiver: headset plug event: " + state);
+                if (state != -1) {
+                    if (state == UNPLUGGED) {
+                        if (DBG) Log.d(TAG, "headsetPluggedReceiver: headset unplugged during playback");
+                        if (mPlayer != null) mPlayer.pause(PlayerController.STATE_NORMAL);
+                    } else if (state == PLUGGED) {
+                        if (DBG)  Log.d(TAG, "headsetPluggedReceiver: headset plugged during playback");
+                    }
+                } else {
+                    Log.e(TAG, "headsetPluggedReceiver: received invalid ACTION_HEADSET_PLUG intent");
+                }
+            }
+        }
+    };
 
 }
