@@ -127,6 +127,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     private static final String PREF_PRIVATE_MODE = "PREF_PRIVATE_MODE";
 
+
+    // TODO MARC during scraping reload ID 43 and 42 45 it should not?
+
     final static int LOADER_ID_LAST_ADDED = 42;
     final static int LOADER_ID_LAST_PLAYED = 43;
     final static int LOADER_ID_ALL_TV_SHOWS = 44;
@@ -582,6 +585,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         if (BuildConfig.ENABLE_SPONSOR) mEnableSponsor = mPrefs.getBoolean(VideoPreferencesCommon.KEY_ENABLE_SPONSOR, VideoPreferencesCommon.ENABLE_SPONSOR_DEFAULT) && BuildConfig.ENABLE_SPONSOR;
         if (((! ArchosUtils.isInstalledfromPlayStore(mActivity.getApplicationContext())) && BuildConfig.ENABLE_SPONSOR) || mEnableSponsor) {
             mPreferencesRowAdapter.add(new Icon(Icon.ID.SPONSOR, getString(R.string.sponsor), R.drawable.piggy_bank_leanback_256));
+        } else {
+            mPreferencesRowAdapter.remove(new Icon(Icon.ID.SPONSOR, getString(R.string.sponsor), R.drawable.piggy_bank_leanback_256));
         }
         // Must use an IconListRow to have the dedicated presenter used (see ClassPresenterSelector above)
         mRowsAdapter.add(new IconListRow(ROW_ID_PREFERENCES,

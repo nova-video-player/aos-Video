@@ -529,7 +529,7 @@ abstract public class BrowserCategory extends ListFragment {
         mCategoryList.add(itemData);
         // Google Play is allergic to piggies... no donation button
         if (BuildConfig.ENABLE_SPONSOR) mEnableSponsor = mPreferences.getBoolean(VideoPreferencesCommon.KEY_ENABLE_SPONSOR, VideoPreferencesCommon.ENABLE_SPONSOR_DEFAULT) && BuildConfig.ENABLE_SPONSOR;
-        if (((! ArchosUtils.isInstalledfromPlayStore(getActivity().getApplicationContext()) && BuildConfig.ENABLE_SPONSOR)) || mEnableSponsor) {
+        if (((! ArchosUtils.isInstalledfromPlayStore(getActivity().getApplicationContext()) && BuildConfig.ENABLE_SPONSOR)) || (mEnableSponsor && BuildConfig.ENABLE_SPONSOR)) {
             itemData = new ItemData();
             itemData.icon = R.drawable.piggy_bank;
             itemData.text = R.string.sponsor;
