@@ -26,6 +26,7 @@ import android.os.Message;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -34,6 +35,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.utils.oauth.OAuthDialog;
 
 import java.text.NumberFormat;
 
@@ -53,6 +55,9 @@ import java.text.NumberFormat;
  * to inform the user of the task's progress.
  */
 public class NovaProgressDialog extends AlertDialog {
+
+    private final static boolean DBG = false;
+    private static final String TAG = NovaProgressDialog.class.getSimpleName();
     
     /**
      * Creates a NovaProgressDialog with a circular, spinning progress
@@ -440,8 +445,10 @@ public class NovaProgressDialog extends AlertDialog {
      */
     public void setIndeterminate(boolean indeterminate) {
         if (mProgress != null) {
+            if (DBG) Log.d(TAG, "setIndeterminate: mProgress not null");
             mProgress.setIndeterminate(indeterminate);
         } else {
+            if (DBG) Log.d(TAG, "setIndeterminate: mProgress is null");
             mIndeterminate = indeterminate;
         }
     }
