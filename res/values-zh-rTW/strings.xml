@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">更新伺服器清單</string>
     <!-- Menu item to enable network shares -->
-    <string name="enable_network_shares">啟用網路分享</string>
+    <string name="enable_network_shares">開啟網路分享</string>
     <string name="initial_scan">初始化掃描</string>
     <!-- Library screen, menu item -->
     <string name="search_title">搜尋</string>
@@ -421,7 +421,7 @@
     <string name="dialog_subloader_connecting">正在連結至 www.opensubtitles.org…</string>
     <string name="dialog_subloader_credentials">Opensubtitles 憑證</string>
     <string name="dialog_subloader_credentials_empty">您必須提供一組有效的使用者名稱及密碼！</string>
-    <string name="toast_subloader_credentials_empty">為了下載字幕，請在設定中提供您的 opensubtitles 憑證</string>
+    <string name="toast_subloader_credentials_empty">請在設定選項中提供您的 opensubtitles 憑證以下載字幕</string>
     <string name="toast_subloader_login_failed">不正確的 opensubtitles 憑證或伺服器無法連線</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">字幕設定</string>
@@ -433,8 +433,6 @@
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">字幕延遲調整</string>
     <string name="subtitle_delay_radio_none">無</string>
-    <string name="subtitle_delay_radio_ntsc2pal">字幕快於影片：NTSC &#x2192; PAL</string>
-    <string name="subtitle_delay_radio_pal2ntsc">字幕慢於影片：PAL &#x2192; NTSC</string>
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
     because the right part of the quote is
@@ -477,7 +475,66 @@
     <string name="ftp_shortcuts">FTP 捷徑</string>
     <string name="add_to_indexed_folders">索引資料夾</string>
     <string name="add_to_library">新增至媒體庫</string>
+    <string name="add_all_items_to_library">立刻將所有影片新增至媒體庫嗎？</string>
+    <string name="indexed_folder_added">資料夾 %s 已新增至媒體庫</string>
+    <string name="remove_from_indexed_folders">從媒體庫中移除</string>
+    <string name="indexed_folder_removed">資料夾 %s 已從媒體庫中移除</string>
+    <string name="indexed_folders_list_empty">目前沒有雲端資料夾已被索引。\n\n瀏覽雲端資料夾並在指令工具列上方選擇「%s」，即可新增此資料夾內容至媒體庫。</string>
+    <string name="indexed_folders_list_empty_ftp">目前沒有 ftp 資料夾已被索引。</string>
+    <string name="open_indexed_folder">"開啟"</string>
+    <string name="rescan_indexed_folders">重新掃描所有已索引的資料夾</string>
+    <string name="last_rescan_never">永不</string>
+    <string name="upnp_indexing_warning_title">正在索引 UPnP</string>
+    <string name="upnp_indexing_warning_message">UPnP 索引無法提供像 SMB 索引那樣多的功能。\n如果您的伺服器或是個人電腦支援的話，建議使用 SMB 資料夾索引方式。\n</string>
+    <string name="ssh_error">無法連線：請檢查您的網路狀態及憑證</string>
+    <string name="ssh_remote_address">雲端位置</string>
+    <string name="ssh_port">連接埠</string>
+    <string name="ssh_password">密碼</string>
+    <string name="ssh_username">使用者名稱</string>
+    <string name="ssh_shortcut_name">捷徑名稱</string>
+    <string name="smb_domain">網域 (可選填)</string>
     <!-- Preferences -->
+    <string name="preferences">偏好設定</string>
+    <string name="get_the_ad_free_version">在 Google Play 上取得無廣告版本</string>
+    <string name="upgrade_to_add_free_version">升級至無廣告版本</string>
+    <string name="upgrade_to_add_free_version_description">購買這個程式的授權可以移除廣告並啟用所有功能</string>
+    <string name="preferences_about">關於本軟體</string>
+    <string name="preferences_category_complete">完整版</string>
+    <string name="preferences_category_video">影片</string>
+    <string name="preferences_force_software_decoding">強制軟體解碼</string>
+    <string name="preferences_force_software_decoding_summary">假如部分影片播放不正常，您可以嘗試開啟此選項</string>
+    <string name="preferences_force_audio_passthrough">原始音訊傳遞</string>
+    <string name="preferences_force_audio_passthrough_disabled">已關閉 (推薦)</string>
+    <string name="preferences_force_audio_passthrough_enable">Mode 1 (不推薦)</string>
+    <string name="preferences_force_audio_passthrough_enable2">Mode 2</string>
+    <string name="preferences_force_audio_passthrough_summary">藉由 HDMI 或 S/PDIF 傳送壓縮音訊 (⚠ 實驗性功能可能會導致聲音影片的不同步)</string>
+    <string name="preferences_disable_downmix_title">關閉立體聲降混</string>
+    <string name="preferences_disable_downmix_summary">總是解碼所有聲道，並讓安卓系統依據音訊輸出的性能來降混 (可能會導致失去部分聲道)</string>
+    <string name="preferences_allow_3rd_party_player">允許使用其它的影片播放器</string>
+    <string name="preferences_allow_3rd_party_player_summary">在開始撥放影片時，安卓系統會提示其它相容的播放軟體。請注意，使用其它的播放器可能會導致部分功能無法運作 (例如繼續播放、我的最愛等)</string>
+    <string name="preference_tv_3d_automatic_switch">開啟自動 3D 電視開關</string>
+    <string name="preference_tv_3d_automatic_switch_summary">只有在您的 3D 電視支援的情況下使用此功能</string>
+    <string name="preference_tv_refreshrate_switch">開啟自動重新整理頻率開關</string>
+    <string name="preference_tv_refreshrate_switch_summary">藉由調適最佳重新整理頻率及影片播放速率來去除抖動效應 (部分裝置可能不支援)</string>
+    <string name="preference_cutout_short_edges">強制全螢幕</string>
+    <string name="preference_cutout_short_edges_summary">允許截短畫面讓橫擺畫面全螢幕</string>
+    <string name="category_languages">字幕</string>
+    <string name="subtitles_hide_default">預設隱藏字幕</string>
+    <string name="subtitles_hide_default_summary">如要預設隱藏字幕請勾選</string>
+    <string name="subtitles_credentials_title">Opensubtitles 憑證</string>
+    <string name="subtitles_credentials_summary">請提供您的 opensubtitles 憑證以下載字幕</string>
+    <string name="preferences_languages">下載字幕的語言</string>
+    <string name="summary_list_preference_primary">選擇您想下載字幕的語言</string>
+    <string name="favSubLang_title">影片字幕的語言</string>
+    <string name="favSubLang_summary">選擇您觀賞影片字幕的偏好語言</string>
+    <string name="ui_mode_title">使用者介面模式</string>
+    <string name="ui_mode_summary">選擇使用者介面是電視或平板/手機</string>
+    <string name="preferences_video_about">關於本軟體</string>
+    <string name="preferences_video_os_text">字幕提供來自</string>
+    <string name="preferences_video_tmdb_text">電影/電視劇資訊提供來自</string>
+    <string name="preferences_video_tvdb_text">電視劇資訊提供來自</string>
+    <string name="preferences_video_trakt_text">影片觀看記錄同步服務提供來自</string>
+    <string name="preferences_video_licenses">授權</string>
     <!--  Title of the video picker activity. -->
     <!-- Archos File Info -->
     <!-- Help overlay -->

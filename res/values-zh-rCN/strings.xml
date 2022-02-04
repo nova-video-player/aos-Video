@@ -433,8 +433,8 @@
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">速度调整</string>
     <string name="subtitle_delay_radio_none">无</string>
-    <string name="subtitle_delay_radio_ntsc2pal">字幕比视频快：NTSC &#x2192; PAL</string>
-    <string name="subtitle_delay_radio_pal2ntsc">字幕比视频慢：PAL &#x2192; NTSC。</string>
+    <string name="subtitle_delay_radio_ntsc2pal">字幕太快了</string>
+    <string name="subtitle_delay_radio_pal2ntsc">字幕太慢了</string>
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
     because the right part of the quote is

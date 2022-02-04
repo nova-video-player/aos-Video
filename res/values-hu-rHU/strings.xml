@@ -437,6 +437,8 @@
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Sebesség igazítása</string>
     <string name="subtitle_delay_radio_none">nincs</string>
+    <string name="subtitle_delay_radio_ntsc2pal">A feliratok sietnek</string>
+    <string name="subtitle_delay_radio_pal2ntsc">A feliratok késnek</string>
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
     because the right part of the quote is
@@ -502,6 +504,7 @@
     <string name="get_the_ad_free_version">Szerezze meg a reklámmentes verzíót a Google Play-en</string>
     <string name="upgrade_to_add_free_version">Frissítés reklámmentes változatra</string>
     <string name="upgrade_to_add_free_version_description">Vásárolja meg az applikációt a reklámok eltávolításához és az összes funkció használatához</string>
+    <string name="preferences_about">Névjegy</string>
     <string name="preferences_category_complete">Teljes verzió</string>
     <string name="preferences_category_video">Videó</string>
     <string name="preferences_force_software_decoding">Szoftveres dekódolás kényszerítése</string>
@@ -593,6 +596,7 @@
     <string name="share_folders_smbv2">SMBv2 támogatás engedélyezése</string>
     <string name="share_folders_smbv2_summary">Az SMB hálózati megosztás 2. verziójának engedélyezése.</string>
     <string name="share_folders_smb_resolv">SMB feloldási sorrend</string>
+    <string name="share_folders_smb_resolv_summary">BCAST, DNS bekpcsolása (alapértelmezett: DNS, BCAST). Ezt kapcsolja be, ha a szerver nem található, vagy lassú az SMB.</string>
     <string name="connection_reset">Visszaállítás</string>
     <!-- Info dialog, not indexed file -->
     <string name="video_browser_index_file">Hozzáadás a könyvtárhoz</string>
