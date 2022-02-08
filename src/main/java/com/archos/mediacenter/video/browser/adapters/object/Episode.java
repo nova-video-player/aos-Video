@@ -120,4 +120,8 @@ public class Episode extends Video implements Serializable {
     public String getDirector() {
         return "";
     }
+
+    public String getWriter() {
+        return "";
+    }
 }

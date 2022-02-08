@@ -214,6 +214,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mCastTextView;
     private TextView mScrapDirector;
     private TextView mScrapDirectorTitle;
+    private TextView mScrapWriter;
+    private TextView mScrapWriterTitle;
     private View mIMDBIcon;
     private View mTMDBIcon;
     private View mTVDBIcon;
@@ -453,6 +455,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mScrapButton.setOnClickListener(this);
         mScrapDirector =(TextView) mRoot.findViewById(R.id.scrap_director);
         mScrapDirectorTitle =(TextView) mRoot.findViewById(R.id.scrap_director_title);
+        mScrapWriter =(TextView) mRoot.findViewById(R.id.scrap_writer);
+        mScrapWriterTitle =(TextView) mRoot.findViewById(R.id.scrap_writer_title);
         mScrapYear =(TextView) mRoot.findViewById(R.id.scrap_date);
         mScrapDuration =(TextView) mRoot.findViewById(R.id.scrap_duration);
         mScrapRating =(TextView) mRoot.findViewById(R.id.scrap_rating);
@@ -1722,6 +1726,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 }
                 setTextOrHideContainer(mCastTextView, cast, mCastTextView, mCastTextViewTitle);
                 setTextOrHideContainer(mScrapDirector, tags.getDirectorsFormatted(), mScrapDirector, mScrapDirectorTitle);
+                setTextOrHideContainer(mScrapWriter, tags.getWritersFormatted(), mScrapWriter, mScrapWriterTitle);
                 String date = null;
                 if(tags instanceof EpisodeTags){
                     mIsVideoMovie = false;

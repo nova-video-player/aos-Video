@@ -11,6 +11,9 @@
             
 	  <TextView android:id="@+id/director"
 	        style="@style/CoverDescription.Secondary"/>
+
+	<TextView android:id="@+id/writer"
+		style="@style/CoverDescription.Secondary"/>
             
 	  <TextView android:id="@+id/duration"
             style="@style/CoverDescription.Duration"/>
