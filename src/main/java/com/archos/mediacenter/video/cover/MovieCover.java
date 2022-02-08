@@ -50,6 +50,7 @@ public class MovieCover extends BaseVideoCover {
 	private static View sDescriptionViewMovie = null;
 	private static TextView sMovieTitle = null;
 	private static TextView sMovieDirector = null;
+	private static TextView sMovieWriter = null;
 	private static TextView sMovieDuration = null;
 
 	public MovieCover(long videoId, String filepath, long durationMs, long scraperId) {
@@ -75,6 +76,7 @@ public class MovieCover extends BaseVideoCover {
 		sDescriptionViewMovie = null;
 		sMovieTitle = null;
 		sMovieDirector = null;
+		sMovieWriter = null;
 		sMovieDuration = null;
 	}
 
@@ -183,11 +185,19 @@ public class MovieCover extends BaseVideoCover {
 			else { //fall-back on year if there is no director info
 				sMovieDirector.setText(Integer.toString(mMovieInfo.getYear()));
 			}
+
+			if ((mMovieInfo.getWriters()!=null) && mMovieInfo.getWriters().length()>0) {
+				sMovieWriter.setText(mMovieInfo.getWriters());
+			}
+			else { //fall-back on year if there is no writer info
+				sMovieWriter.setText(Integer.toString(mMovieInfo.getYear()));
+			}
 		}
 		else {
 			// Scraper info not available or not valid => fall-back on filename (this is not a common expected use-case...)
 			sMovieTitle.setText(factory.removeFilenameExtension((new File(mFilepath)).getName()));
 			sMovieDirector.setText("-");
+			sMovieWriter.setText("-");
 		}
 
 		if (mDurationMs!=0) {
@@ -211,6 +221,7 @@ public class MovieCover extends BaseVideoCover {
 		sDescriptionViewMovie = factory.getLayoutInflater().inflate(R.layout.cover_floating_description_movie, null);
 		sMovieTitle = (TextView)sDescriptionViewMovie.findViewById(R.id.movie_title);
 		sMovieDirector = (TextView)sDescriptionViewMovie.findViewById(R.id.director);
+		sMovieWriter = (TextView)sDescriptionViewMovie.findViewById(R.id.writer);
 		sMovieDuration = (TextView)sDescriptionViewMovie.findViewById(R.id.duration);
 
 		sDescriptionViewMovie.setLayoutParams( new FrameLayout.LayoutParams(DESCRIPTION_TEXTURE_WIDTH,DESCRIPTION_TEXTURE_HEIGHT) );

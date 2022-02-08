@@ -90,6 +90,7 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
             Movie movie = (Movie) video;
             rating = movie.getRating();
             detailedLineOne = mContext.getResources().getString(R.string.scrap_director)+" "+movie.getDirector();
+            detailedLineOne = mContext.getResources().getString(R.string.scrap_writer)+" "+movie.getWriter();
             detailedLineTwo = movie.getDescriptionBody();
             detailedLineThree = mContext.getResources().getString(R.string.scrap_cast)+" "+movie.getActors();
         }

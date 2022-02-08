@@ -110,6 +110,25 @@
             </LinearLayout>
 
             <LinearLayout
+
+                android:id="@+id/scrap_writer_container"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/VideoInfoFileInfo.Title2"
+                    android:id="@+id/scrap_writer_title"
+                    android:text="@string/scrap_writer" />
+
+                <TextView
+                    android:id="@+id/scrap_writer"
+                    style="@style/VideoInfoFileInfo"
+                    android:paddingLeft="8dip" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/scrap_studio_container"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

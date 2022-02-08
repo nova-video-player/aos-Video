@@ -43,6 +43,7 @@ public class MovieInfo extends BaseInfo {
     private float mRating;
     private String mPlot;
     private String mDirectors;
+    private String mWriters;
     private String mActors;
     private String mGenres;
 
@@ -78,6 +79,7 @@ public class MovieInfo extends BaseInfo {
                 mYear = movieTag.getYear();
                 mRating = movieTag.getRating();
                 mDirectors = movieTag.getDirectorsFormatted();
+                mWriters = movieTag.getWritersFormatted();
                 mActors = movieTag.getActorsFormatted();
                 mGenres = movieTag.getGenresFormatted();
                 mPlot = movieTag.getPlot();
@@ -122,6 +124,10 @@ public class MovieInfo extends BaseInfo {
         return mDirectors;
     }
 
+    public String getWriters() {
+        return mWriters;
+    }
+
     public String getGenres() {
         return mGenres;
     }
@@ -138,6 +144,12 @@ public class MovieInfo extends BaseInfo {
             view.setText(EMPTY);
         } else {
             view.setText(res.getString(R.string.scrap_director_format, mDirectors));
+        }
+
+        if (mWriters == null) {
+            view.setText(EMPTY);
+        } else {
+            view.setText(res.getString(R.string.scrap_writer_format, mWriters));
         }
     }
 
