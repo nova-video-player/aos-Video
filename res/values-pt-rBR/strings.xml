@@ -438,6 +438,8 @@
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Ajuste de velocidade</string>
     <string name="subtitle_delay_radio_none">nenhum</string>
+    <string name="subtitle_delay_radio_ntsc2pal">Legenda adiantada</string>
+    <string name="subtitle_delay_radio_pal2ntsc">Legenda atrasada</string>
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
     because the right part of the quote is
@@ -503,6 +505,7 @@
     <string name="get_the_ad_free_version">Obtenha a versão sem anúncios no Google Play</string>
     <string name="upgrade_to_add_free_version">Atualize para a versão sem anúncios</string>
     <string name="upgrade_to_add_free_version_description">Compre a licença do aplicativo para remover os anúncios e ativar todos os recursos</string>
+    <string name="preferences_about">Sobre</string>
     <string name="preferences_category_complete">Versão completa</string>
     <string name="preferences_category_video">Vídeo</string>
     <string name="preferences_force_software_decoding">Forçar decodificação de software</string>
@@ -875,4 +878,6 @@
     <string name="sponsor">Patrocinar Nova</string>
     <string name="enable_sponsor_title">Habilitar link de patrocinador Nova</string>
     <string name="enable_sponsor_summary">Habilitar link de patrocinador Nova: cada contribuição ajuda.</string>
+    <string name="upgrade_info">Informações sobre atualização</string>
+    <string name="v5_v6_upgrade_info">ATENÇÃO: Esta atualização do NOVA requer uma nova verificação de toda a biblioteca de mídia.        É extremamente recomendado re-começar com uma instalação limpa para evitar complicações. Por favor, consulte as perguntas frequentes (FAQ) para mais detalhes.</string>
 </resources>
