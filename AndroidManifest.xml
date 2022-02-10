@@ -45,6 +45,11 @@
 
     <uses-permission android:name="android.permission.USB_PERMISSION" />
 
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-feature android:name="android.hardware.bluetooth" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+
     <!-- Used to for scanning and trakt -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
@@ -1047,7 +1052,23 @@
         <service
             android:name=".player.FloatingPlayerService"
             android:exported="false" />
-        <service android:name=".player.PlayerService" />
+
+        <receiver android:name="androidx.media.session.MediaButtonReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.archos.mediacenter.video.player.MediaButtonService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </service>
+
+        <service android:name="com.archos.mediacenter.video.player.PlayerService"
+            android:exported="true"/>
         <service android:name="com.archos.mediascraper.AutoScrapeService" />
         <service android:name="com.archos.mediascraper.AllCollectionScrapeService" />
         <service android:name="com.archos.mediacenter.video.browser.FileManagerService" />
