@@ -28,8 +28,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.view.View;
-import android.widget.CheckBox;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
@@ -49,7 +47,6 @@ import com.archos.mediacenter.video.picasso.SmbRequestHandler;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
 import com.archos.medialib.LibAvos;
 import com.archos.mediaprovider.video.NetworkAutoRefresh;
-import com.archos.mediaprovider.video.RemoteStateService;
 import com.archos.mediaprovider.video.VideoStoreImportReceiver;
 import com.archos.mediascraper.ScraperImage;
 import com.squareup.picasso.Picasso;
@@ -59,7 +56,6 @@ import httpimage.FileSystemPersistence;
 import httpimage.HttpImageManager;
 
 import org.acra.*;
-import org.acra.annotation.*;
 import org.acra.config.CoreConfigurationBuilder;
 import org.acra.config.HttpSenderConfigurationBuilder;
 import org.acra.data.StringFormat;
@@ -67,7 +63,6 @@ import org.acra.sender.HttpSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
