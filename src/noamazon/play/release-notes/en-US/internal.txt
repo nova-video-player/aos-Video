@@ -1,12 +1,13 @@
-- Movie collections/sagas support on Android TV
-- Separate animation/movies/series sections on Android TV
-- Faster TV shows media information retrieval
-- Report properly DTSHD & DTSHD MA
+- Movie collections/sagas support on ADTV
+- Separate animation/movies/series sections on ADTV
+- Faster TV shows information retrieval
 - ffmpeg 4.4.1 & dav1d 0.9.2 upstep
-- MDNS samba discovery
-- New refresh rate selection algorithm optimizing judder effect
-- Add domain option to samba network credential dialog
-- Optimize network shares rescan speed when files deleted/renamed
+- MDNS SMB discovery
+- Optimized refresh rate selection optimizing judder effect
+- Domain option added to SMB credential dialog
+- Faster network shares rescan when files deleted/renamed
 - Dolby vision support
 - Binge watch mode
 - Target API31
+- Bluetooth media buttons support
+- Fix ADTV net share periodic rescan
