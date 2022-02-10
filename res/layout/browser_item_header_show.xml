@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
-    android:layout_height="@dimen/video_details_item_height"
+    android:layout_height="fill_parent"
     android:background="@drawable/transparent_ripple"
     android:clickable="false"
     android:focusable="false"
@@ -94,33 +94,86 @@
         android:layout_above="@+id/view_more"
         android:id="@+id/scrollView"
         android:fadingEdgeLength="50dp">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/plot"
-        android:paddingRight="5dp"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/plot"
+            android:paddingRight="5dp"
 
 
-        />
+            />
+
+
+
     </com.archos.mediacenter.video.browser.BrowserByIndexedVideos.ArchosFadeView>
+
     <TextView
+        android:id="@+id/view_more"
+        style="@style/VideoInfoFileInfo.Title2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/view_more"
-        android:paddingBottom="5dp"
-        android:paddingRight="5dp"
-        style="@style/VideoInfoFileInfo.Title2"
-        android:layout_toEndOf="@+id/thumbnail"
-        android:layout_toRightOf="@+id/thumbnail"
-        android:gravity="right"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:text="@string/view_more"
+        android:layout_toEndOf="@+id/thumbnail"
+        android:layout_toRightOf="@+id/thumbnail"
         android:ellipsize="end"
-        android:textSize="@dimen/video_info_small_text"
-        android:layout_alignParentEnd="true" />
+        android:gravity="right"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
+        android:text="@string/view_more"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/video_info_small_text" />
 
+    <LinearLayout
+        android:layout_below="@id/thumbnail"
+        android:id="@+id/content_rating_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/rounded_edges">
+
+        <TextView
+            android:id="@+id/content_rating"
+            android:textSize="@dimen/video_info_small_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="1dp"
+            android:gravity="center_horizontal"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold"
+            android:textColor="@color/grid_item_background"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_below="@id/content_rating_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="left"
+            android:lines="1"
+            android:maxLines="1"
+            android:text="Networks:  "
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/video_info_small_text" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/network"
+            android:paddingTop="15dp"
+            android:paddingRight="5dp"
+            android:textSize="@dimen/video_info_small_text"
+            android:layout_below="@id/content_rating_container"
+            />
+    </LinearLayout>
 
 </RelativeLayout>
