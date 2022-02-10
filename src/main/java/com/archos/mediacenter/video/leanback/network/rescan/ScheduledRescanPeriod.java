@@ -26,6 +26,7 @@ import androidx.leanback.widget.GuidedAction;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediaprovider.video.NetworkAutoRefresh;
+import com.archos.mediaprovider.video.NetworkScannerUtil;
 
 import java.util.List;
 
@@ -133,7 +134,7 @@ public class ScheduledRescanPeriod extends GuidedStepSupportFragment {
     public void onResume(){
         super.onResume();
         if(mHasClickedAction){ //needed when going to ScheduledRescanTime then coming back by pressing "back". popBackStack will also get there.
-            NetworkAutoRefresh.scheduleNewRescan(getActivity(),ScheduledRescanTime.sTime*60*60*1000, getPeriod()* 60 *60* 1000,true);
+            NetworkScannerUtil.scheduleNewRescan(getActivity(),ScheduledRescanTime.sTime*60*60*1000, getPeriod()* 60 *60* 1000,true);
             mHasClickedAction = false;
         }
     }
@@ -166,9 +167,8 @@ public class ScheduledRescanPeriod extends GuidedStepSupportFragment {
                 break;
         }
 
-
         if (goBack) {
-            NetworkAutoRefresh.scheduleNewRescan(getActivity(),0, getPeriod()* 60 *60* 1000,true);
+            NetworkScannerUtil.scheduleNewRescan(getActivity(),0, getPeriod()* 60 *60* 1000,true);
             getParentFragmentManager().popBackStack();
         } else {
             add(getParentFragmentManager(), new ScheduledRescanTime());
