@@ -766,7 +766,11 @@ public class Player implements IPlayerControl,
     public boolean isPlaying() {
         return isInPlaybackState() && mMediaPlayer.isPlaying();
     }
-    
+
+    public boolean isPaused() {
+        return isInPlaybackState() && ! mMediaPlayer.isPlaying();
+    }
+
     public boolean isInPlaybackState() {
         return (mMediaPlayer != null &&
                 mCurrentState != STATE_ERROR &&
