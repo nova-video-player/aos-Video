@@ -14,7 +14,6 @@
 
 package com.archos.mediacenter.video.player;
 
-import android.annotation.TargetApi;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -30,7 +29,6 @@ import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaMetadata;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -46,7 +44,6 @@ import androidx.preference.PreferenceManager;
 import androidx.core.app.NotificationCompat;
 
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import com.archos.environment.ArchosFeatures;
 import com.archos.filecorelibrary.FileUtils;
@@ -78,6 +75,9 @@ import java.util.concurrent.ExecutionException;
 
 import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by alexandre on 28/08/15.
  */
@@ -106,6 +106,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         seeks to last position
      */
 
+    private static final Logger log = LoggerFactory.getLogger(PlayerService.class);
+
     public static final String PLAYER_SERVICE_STARTED = "PLAYER_SERVICE_STARTED";
 
     public static final int RESUME_NO = 0;
@@ -114,8 +116,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public static final int RESUME_FROM_REMOTE_POS = 3;
     public static final int RESUME_FROM_LOCAL_POS = 4;
     public static final String RESUME = "resume";
-    private static final String TAG = "PlayerService";
-    private static final boolean DBG = true;
 
     private static final boolean PERIODIC_BOOKMARK_SAVE = false;
 
@@ -130,7 +130,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private SharedPreferences mPreferences;
     private PlayerFrontend mPlayerFrontend;
     private Handler mHandler;
-    private Player mPlayer;
+    private static Player mPlayer;
     public static final String KEY_STREAMING_URI = "streaming_uri";
     private Uri mUri;
     private Uri mStreamingUri;
@@ -182,6 +182,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private boolean mDestroyed;
     private Runnable mAutoSaveTask;
 
+    private Intent mediaButtonServiceIntent;
+
     public enum PlayerState {
         INIT,
         PREPARING,
@@ -227,7 +229,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
            mTorrent = null;
-
         }
     };
 
@@ -264,14 +265,12 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         public void notifyObserver(String daemonString) {
             if(mPlayerFrontend!=null)
                 mPlayerFrontend.onTorrentUpdate(daemonString);
-
         }
 
         @Override
         public void warnOnNotEnoughSpace() {
             if(mPlayerFrontend!=null)
                 mPlayerFrontend.onTorrentNotEnoughSpace();
-
         }
     };
 
@@ -287,7 +286,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      *              </ul>
      */
     private void updateNextVideo(boolean repeatFolder, boolean binge, boolean sync) {
-        if (DBG) Log.d(TAG, "updateNextVideo: repeatfolder " + repeatFolder + ", binge " + binge + ", sync " + sync);
+        log.debug("updateNextVideo: repeatfolder " + repeatFolder + ", binge " + binge + ", sync " + sync);
         // reset to nothing
         mNextUri = null;
         mNextVideoId = -1;
@@ -300,7 +299,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mUpdateNextTask.setListener(new UpdateNextTask.Listener() {
                 @Override
                 public void onResult(Uri uri, long id) {
-                    if (DBG) Log.d(TAG, "updateNextVideo: UpdateNextTask onResult: next video and id " + uri + ", id: "+id);
+                    log.debug("updateNextVideo: UpdateNextTask onResult: next video and id " + uri + ", id: "+id);
                     mNextUri = uri;
                     mNextVideoId = id;
                     mUpdateNextTask = null;
@@ -338,7 +337,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     public void setPlayMode(int newPlaymode, boolean wait) {
         mPlayMode = newPlaymode;
-        if (DBG) Log.d(TAG, "setPlaymode: new Playmode " + newPlaymode);
+        log.debug("setPlaymode: new Playmode " + newPlaymode);
         if (PLAYMODE_REPEAT_SINGLE == newPlaymode || mForceSingleRepeatMode) {
             mPlayer.setLooping(true);
             // just in Case we drop out to OnCompletion
@@ -357,7 +356,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             } else if (PLAYMODE_BINGE == newPlaymode) {
                 updateNextVideo(false, true, wait);
             } else {
-                if (DBG) Log.d(TAG, "unknown Playmode: " + newPlaymode);
+                log.debug("unknown Playmode: " + newPlaymode);
             }
         }
     }
@@ -372,7 +371,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     @Override
     public void onCreate() {
         super.onCreate();
-        if (DBG) Log.d(TAG, "onCreate()");
+        log.debug("onCreate()");
         sPlayerService = this;
         mHandler = new Handler();
         if (PERIODIC_BOOKMARK_SAVE) {
@@ -391,7 +390,12 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mTraktClient = new TraktService.Client(this, mTraktListener, false);
         }
 
+        log.debug("onCreate: register headsetPluggedReceiver");
         registerReceiver(headsetPluggedReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
+
+        log.debug("onCreate: start mediaButtonService");
+        mediaButtonServiceIntent = new Intent(this, MediaButtonService.class);
+        startService(mediaButtonServiceIntent);
 
         setPlayer();
         Intent intent = new Intent(PLAYER_SERVICE_STARTED);
@@ -407,7 +411,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      */
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (DBG) Log.d(TAG, "onStartCommand");
+        log.debug("onStartCommand");
         super.onStartCommand(intent, flags, startId);
         return START_NOT_STICKY;
     }
@@ -416,7 +420,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (intent == null || intent.getData() == null)
             return;
 
-        if (DBG) Log.d(TAG, "onStart() ");
+        log.debug("onStart() ");
         mCallOnDataUriOKWhenVideoInfoIsSet = true;
         mIntent = intent;
         boolean isDemoMode = (intent.getIntExtra(VIDEO_PLAYER_DEMO_MODE_EXTRA, 0) == 1);
@@ -435,7 +439,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mUri = Uri.parse(mIntent.getStringExtra(KEY_ORIGINAL_TORRENT_URL));
         }
         mUri = Uri.parse(removeFileSlashSlash(mUri.toString())); // we need to remove "file://"
-        if (DBG) Log.d(TAG, "onStart() "+mUri);
+        log.debug("onStart() "+mUri);
         mStreamingUri = intent.getParcelableExtra(KEY_STREAMING_URI);
         if(mPlayerFrontend!=null)
             mPlayerFrontend.setUri(mUri, mStreamingUri);
@@ -471,14 +475,14 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         else if(mVideoId==-1){
             Uri correctedUri = FileUtils.getRealUriFromVideoURI(this,mUri);
             if(correctedUri!=null) {
-                if (DBG) Log.d(TAG, "correctedUri " + correctedUri);
+                log.debug("correctedUri " + correctedUri);
                 mUri = correctedUri;
             }
         }
-        if (DBG) Log.d(TAG, "mIndexHelper != null " + String.valueOf(mIndexHelper != null));
+        log.debug("mIndexHelper != null " + String.valueOf(mIndexHelper != null));
 
         // store file that is playing
-        if (DBG) Log.d(TAG, "onStart videoUri " + mUri + ", videoId " + mVideoId);
+        log.debug("onStart videoUri " + mUri + ", videoId " + mVideoId);
         CustomApplication.setLastVideoPlayedId(mVideoId);
         CustomApplication.setLastVideoPlayedUri(mUri);
 
@@ -566,7 +570,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     private void onDataUriOK() {
-        if (DBG) Log.d(TAG, "onDataUriOK "+mUri);
+        log.debug("onDataUriOK "+mUri);
         mCallOnDataUriOKWhenVideoInfoIsSet = false;
         //we check if we have a streaming uri, if we don't, streaming Uri must be equal to mUri
         if (mStreamingUri == null) {
@@ -626,7 +630,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     private void onStreamingUriOK() {
-        if (DBG) Log.d(TAG, "onStreamingUriOK " + mStreamingUri);
+        log.debug("onStreamingUriOK " + mStreamingUri);
         if(mTorrentFilePosition==-1)
             prepareSubs();
         if(mPlayerFrontend!=null)
@@ -673,7 +677,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void removePlayerFrontend(PlayerFrontend playerFrontend, boolean prepareForSurfaceSwitch) {
         if(mPlayerFrontend!=playerFrontend)
             return;
-        if (DBG) Log.d(TAG, "removePlayerFrontend "+String.valueOf(prepareForSurfaceSwitch));
+        log.debug("removePlayerFrontend "+String.valueOf(prepareForSurfaceSwitch));
         mIsChangingSurface = prepareForSurfaceSwitch;
         mPlayerFrontend = null;
         stopAndSaveVideoState();
@@ -703,7 +707,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void saveVideoStateIfReady(){
         if(mIndexHelper!=null) {
             if ((mPlayerState != PlayerState.INIT && mPlayerState != PlayerState.PREPARING)) {// if it has really been played at least once, otherwise it would overwrite lastresume with 0
-                if (DBG) Log.d(TAG, "saveVideoStateIfReady");
+                log.debug("saveVideoStateIfReady");
                 if (mLastPosition != LAST_POSITION_END) //if last position, we went there through "onCompletion"
                     mLastPosition = getBookmarkPosition();
                 if (mVideoInfo != null && !PrivateMode.isActive()) {
@@ -712,7 +716,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     if (duration > 0)
                         mVideoInfo.duration = duration;
                     mVideoInfo.lastTimePlayed = Long.valueOf(System.currentTimeMillis() / 1000L);
-                    Log.d(TAG, "saveVideoStateIfReady: save bookmark at " + mVideoInfo.lastTimePlayed);
+                    log.info("saveVideoStateIfReady: save bookmark at " + mVideoInfo.lastTimePlayed);
                     mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
                     // disable periodic trakt save this should be done with pauseTrakt() anyway
                     //stopTrakt(); //this writes mVideoInfo.traktResume
@@ -730,12 +734,12 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     public void stopAndSaveVideoState(){
-        if (DBG) Log.d(TAG, "stopAndSaveVideoState");
+        log.debug("stopAndSaveVideoState");
         if(mIndexHelper!=null) {
             mIndexHelper.abort(); //too late : do not retrieve db info
             saveVideoStateIfReady();
             if ((mPlayerState != PlayerState.INIT && mPlayerState != PlayerState.PREPARING)) {
-                if (DBG) Log.d(TAG, "stopAndSaveVideoState: stopTrakt");
+                log.debug("stopAndSaveVideoState: stopTrakt");
                 stopTrakt();
             }
             if (mUpdateNextTask != null) {
@@ -771,7 +775,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
         if(mUri!=null)
             playerFrontend.setUri(mUri,mStreamingUri);
-        if (DBG) Log.d(TAG, "switchPlayerFrontend " + String.valueOf(mVideoInfo != null));
+        log.debug("switchPlayerFrontend " + String.valueOf(mVideoInfo != null));
 
         if(mVideoInfo!=null)
             playerFrontend.setVideoInfo(mVideoInfo);
@@ -816,7 +820,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     };
 
     private void startTrakt() {
-        if (DBG) Log.d(TAG, "startTrakt");
+        log.debug("startTrakt");
         if (mTraktClient != null) {
             mTraktError = false;
             mTraktLiveScrobblingEnabled = Trakt.isLiveScrobblingEnabled(mPreferences);
@@ -824,7 +828,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                  int progress = getPlayerProgress();
                 mVideoInfo.traktResume = -progress;
                 mVideoInfo.duration = Player.sPlayer.getDuration();
-                if (DBG) Log.d(TAG, "startTrakt: trakt watching progress=" + progress);
+                log.debug("startTrakt: trakt watching progress=" + progress);
                 mTraktClient.watching(mVideoInfo, progress);
                 mHandler.postDelayed(mTraktWatchingRunnable, Trakt.WATCHING_DELAY_MS);
                 mTraktWatching = true;
@@ -833,29 +837,29 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     private void stopTrakt() {
-        if (DBG) Log.d(TAG, "stopTrakt");
+        log.debug("stopTrakt");
         if (mTraktClient != null) {
-            if (DBG) Log.d(TAG, "stopTrakt: mTraktClient != null, mTraktWatching=" + mTraktWatching);
+            log.debug("stopTrakt: mTraktClient != null, mTraktWatching=" + mTraktWatching);
             if (mTraktWatching) {
                 mHandler.removeCallbacks(mTraktWatchingRunnable);
                 int progress = getPlayerProgress();
                 if (progress >= 0){
                     mVideoInfo.traktResume = - progress;
-                    if (DBG) Log.d(TAG, "stopTrakt: watchingStop progress=" + progress);
+                    log.debug("stopTrakt: watchingStop progress=" + progress);
                     mTraktClient.watchingStop(mVideoInfo, progress);
                 }
-                if (DBG) Log.d(TAG, "stopTrakt: progress negative not doing anything, progress=" + progress);
+                log.debug("stopTrakt: progress negative not doing anything, progress=" + progress);
                 mTraktWatching = false;
             } else if (!mTraktError && Trakt.shouldMarkAsSeen(getPlayerProgress())) {
-                if (DBG) Log.d(TAG, "stopTrakt: Trakt.ACTION_SEEN");
+                log.debug("stopTrakt: Trakt.ACTION_SEEN");
                 mTraktClient.markAs(mVideoInfo, Trakt.ACTION_SEEN);
             } else {
-                if (DBG) Log.d(TAG, "stopTrakt: mTraktWatching=false and should not mark as seend, doing nothing!!!");
+                log.debug("stopTrakt: mTraktWatching=false and should not mark as seend, doing nothing!!!");
             }
         }
         // We now use the DB flag ARCHOS_TRAKT_SEEN even if there is no sync with trakt
         else {
-            if (DBG) Log.d(TAG, "stopTrakt: mTraktClient == null, not sending watchStop");
+            log.debug("stopTrakt: mTraktClient == null, not sending watchStop");
             if (mVideoId>=0 && Trakt.shouldMarkAsSeen(getPlayerProgress()) && !PrivateMode.isActive()) {
                 final ContentValues cv = new ContentValues(1);
                 cv.put(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN, Trakt.TRAKT_DB_MARKED);
@@ -867,13 +871,13 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     private void pauseTrakt() {
-        if (DBG) Log.d(TAG, "pauseTrakt");
+        log.debug("pauseTrakt");
         if (mTraktClient != null) {
             if (mTraktWatching) {
                 int progress = getPlayerProgress();
                 if (progress > 0) {
                     mVideoInfo.traktResume = - progress;
-                    if (DBG) Log.d(TAG, "pauseTrakt: watchingPause progress=" + progress);
+                    log.debug("pauseTrakt: watchingPause progress=" + progress);
                     mTraktClient.watchingPause(mVideoInfo, progress);
                 }
                 // consider that in pause we are still watching it is only on stop that it is the end
@@ -1000,16 +1004,20 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     @Override
     public void onDestroy(){
         super.onDestroy();
+        log.debug("onDestroy: release mediaSessionCompat");
+        if (mSession != null) mSession.release();
+        stopService(mediaButtonServiceIntent);
         if(mIndexHelper!=null)
             mIndexHelper.abort();
         mDestroyed = true;
+        log.debug("onDestroy: unregister headsetPluggedReceiver and mediaButtonReceiver");
         unregisterReceiver(headsetPluggedReceiver);
         sPlayerService=null;
         if(mTorrent!=null)
             try {
                 unbindService(mTorrentObserverServiceConnection);
             }catch(java.lang.IllegalArgumentException e) {}
-        if (DBG) Log.d(TAG, "onDestroy");
+        log.debug("onDestroy");
 
     }
 
@@ -1031,16 +1039,16 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void onScraped(ScrapeDetailResult result) {}
 
     private void postPreparedAndVideoDb() {
-        if (DBG) Log.d(TAG, "postPreparedAndVideoDb");
+        log.debug("postPreparedAndVideoDb");
         if(mVideoInfo!=null&&mPlayerState==PlayerState.PREPARED) {
             if (mLastPosition == mPlayer.getDuration())
                 mLastPosition = 0;
             Player.sPlayer.seekTo(mLastPosition); //mLastPosition = mVideoInfo.resume when first start of service OR position on stop when switching player
-            if (DBG) Log.d(TAG, "seek to "+mLastPosition);
+            log.debug("seek to "+mLastPosition);
             setAudioDelay(mAudioDelay, true);
             if(mPlayOnResume) {
                 mPlayerFrontend.onFirstPlay();
-                if (DBG) Log.d(TAG, "postPreparedAndVideoDb: player start PlayerController.STATE_NORMAL");
+                log.debug("postPreparedAndVideoDb: player start PlayerController.STATE_NORMAL");
                 Player.sPlayer.start(PlayerController.STATE_NORMAL);
                 PlayerService.sPlayerService.mPlayerState = PlayerService.PlayerState.PLAYING;
             }
@@ -1083,7 +1091,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     @Override
     public void onPrepared() {
-        if (DBG) Log.d(TAG, "onPrepared()");
+        log.debug("onPrepared()");
         mPlayerState = PlayerState.PREPARED;
         if(mPlayerFrontend!=null) {
             mPlayerFrontend.onPrepared();
@@ -1096,14 +1104,14 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      */
     @Override
     public void onCompletion() {
-        if (DBG) Log.d(TAG, "onCompletion");
+        log.debug("onCompletion");
 
         if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             updateNowPlayingState();
         }
         mLastPosition = LAST_POSITION_END;
         if (mNextUri != null) {
-            if (DBG) Log.d(TAG, "onCompletion: we have a new video " + mNextUri);
+            log.debug("onCompletion: we have a new video " + mNextUri);
             stopAndSaveVideoState();
             if(mPlayerFrontend!=null) {
                 mPlayerFrontend.onCompletion();
@@ -1119,7 +1127,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mLastPosition = 0;
             onStart(mIntent);
         } else {
-            if (DBG) Log.d(TAG, "onCompletion: we have no new video");
+            log.debug("onCompletion: we have no new video");
             if(mPlayerFrontend!=null) {
                 mPlayerFrontend.onEnd();
             }
@@ -1128,7 +1136,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     @Override
     public boolean onError(int errorCode, int errorQualCode, String msg) {
-        if (DBG) Log.d(TAG, "onError");
+        log.debug("onError");
         if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             updateNowPlayingState();
         }
@@ -1161,12 +1169,12 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     @Override
     public void onPlay(int state) {
-        if (DBG) Log.d(TAG, "onPlay");
+        log.debug("onPlay");
         if (state == PlayerController.STATE_NORMAL) {
-            if (DBG) Log.d(TAG, "onPlay: PlayerController.STATE_NORMAL -> startTrakt()");
+            log.debug("onPlay: PlayerController.STATE_NORMAL -> startTrakt()");
             startTrakt();
         } else {
-            if (DBG) Log.d(TAG, "onPlay: !PlayerController.STATE_NORMAL -> not startTrakt()!");
+            log.debug("onPlay: !PlayerController.STATE_NORMAL -> not startTrakt()!");
         }
         if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             updateNowPlayingState();
@@ -1178,12 +1186,12 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     @Override
     public void onPause(int state) {
-        if (DBG) Log.d(TAG, "onPause");
+        log.debug("onPause");
         if (state == PlayerController.STATE_NORMAL) {
-            if (DBG) Log.d(TAG, "onPause: normal state thus pauseTrakt()!");
+            log.debug("onPause: normal state thus pauseTrakt()!");
             pauseTrakt();
         } else {
-            if (DBG) Log.d(TAG, "onPause: other/seek state thus not doing pauseTrakt()!");
+            log.debug("onPause: other/seek state thus not doing pauseTrakt()!");
         }
         if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             updateNowPlayingState();
@@ -1236,7 +1244,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (mVideoInfo.audioTrack != newAudioTrack && !mPlayer.setAudioTrack(mVideoInfo.audioTrack))
             supported = false;
         if (nbTrack>0 && !supported) {
-            Log.e(TAG, "audio not supported!");
+            log.error("audio not supported!");
             mVideoInfo.audioTrack = 0;
             VideoMetadata.AudioTrack at = mPlayer.getVideoMetadata().getAudioTrack(0);
             if(mPlayerFrontend!=null) {
@@ -1283,7 +1291,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 if (newSubtitleTrack != mVideoInfo.subtitleTrack &&
                         !mPlayer.setSubtitleTrack(mVideoInfo.subtitleTrack))
                     mVideoInfo.subtitleTrack = noneTrack;
-                    if (DBG) Log.d(TAG, "SubtitleDelay = "+String.valueOf(mVideoInfo.subtitleDelay));
+                log.debug("SubtitleDelay = "+String.valueOf(mVideoInfo.subtitleDelay));
                     mPlayer.setSubtitleDelay(mVideoInfo.subtitleDelay);
                     if (mVideoInfo.subtitleRatio >= 0) {
                         mPlayer.setSubtitleRatio(mVideoInfo.subtitleRatio);
@@ -1338,7 +1346,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 @Override
                 public void onPlay() {
                     super.onPlay();
-                    if (DBG) Log.d(TAG, "setNowPlayingCards.onPlay PlayerController.STATE_OTHER");
+                    log.debug("setNowPlayingCards.onPlay PlayerController.STATE_OTHER");
                     if (Player.sPlayer != null) {
                         Player.sPlayer.start(PlayerController.STATE_OTHER);
                         updateNowPlayingState();
@@ -1348,7 +1356,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 @Override
                 public void onPause() {
                     super.onPause();
-                    if (DBG) Log.d(TAG, "setNowPlayingCards.onPause PlayerController.STATE_OTHER");
+                    log.debug("setNowPlayingCards.onPause PlayerController.STATE_OTHER");
                     if (Player.sPlayer != null) {
                         Player.sPlayer.pause(PlayerController.STATE_OTHER);
                         updateNowPlayingState();
@@ -1397,7 +1405,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private void stopNowPlayingCard() {
         if(mSession==null)
             return;
-        if (DBG) Log.d(TAG, "stopNowPlayingCard");
+        log.debug("stopNowPlayingCard");
 
         PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
                 .setActions(getAvailableActions());
@@ -1477,6 +1485,23 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         mPlayer.setAudioFilter(mAudioFilt, mNightModeOn);
     }
 
+    public static void pausePlayer() {
+        if (mPlayer != null && mPlayer.isPlaying()) mPlayer.pause(PlayerController.STATE_NORMAL);
+    }
+
+    public static void playPausePlayer() {
+        if (mPlayer != null) {
+            if (mPlayer.isPlaying())
+                mPlayer.pause(PlayerController.STATE_NORMAL);
+            else if (mPlayer.isPaused())
+                mPlayer.start(PlayerController.STATE_NORMAL);
+        }
+    }
+
+    public static void startPlayer() {
+        if (mPlayer != null && mPlayer.isPaused()) mPlayer.start(PlayerController.STATE_NORMAL);
+    }
+
     // Pause when wired headset is disconnected
     private final BroadcastReceiver headsetPluggedReceiver = new BroadcastReceiver() {
         private static final int UNPLUGGED = 0;
@@ -1489,19 +1514,18 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             }
             if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
                 int state = intent.getIntExtra("state", -1);
-                Log.d(TAG, "headsetPluggedReceiver: headset plug event: " + state);
+                log.debug("headsetPluggedReceiver: headset plug event: " + state);
                 if (state != -1) {
                     if (state == UNPLUGGED) {
-                        if (DBG) Log.d(TAG, "headsetPluggedReceiver: headset unplugged during playback");
-                        if (mPlayer != null) mPlayer.pause(PlayerController.STATE_NORMAL);
+                        log.debug("headsetPluggedReceiver: headset unplugged during playback");
+                        if (mPlayer != null && mPlayer.isPlaying()) mPlayer.pause(PlayerController.STATE_NORMAL);
                     } else if (state == PLUGGED) {
-                        if (DBG)  Log.d(TAG, "headsetPluggedReceiver: headset plugged during playback");
+                        log.debug("headsetPluggedReceiver: headset plugged during playback");
                     }
                 } else {
-                    Log.e(TAG, "headsetPluggedReceiver: received invalid ACTION_HEADSET_PLUG intent");
+                    log.error("headsetPluggedReceiver: received invalid ACTION_HEADSET_PLUG intent");
                 }
             }
         }
     };
-
 }
