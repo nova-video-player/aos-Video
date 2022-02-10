@@ -57,6 +57,7 @@ import com.archos.mediacenter.video.utils.DelayedBackgroundLoader;
 import com.archos.mediacenter.video.utils.SerialExecutor;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.VideoStore;
+import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.ShowTags;
 import com.squareup.picasso.Picasso;
 
@@ -327,9 +328,21 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         }
         protected void onPostExecute(TvShowAsyncTask.Result result) {
             Tvshow show = result.show;
-
+            BaseTags tags = result.tags;
             final TextView plotTv = (TextView) mHeaderView.findViewById(R.id.plot);
             mHeaderView.findViewById(R.id.loading).setVisibility(View.GONE);
+
+            TextView tvpg = (TextView) mHeaderView.findViewById(R.id.content_rating);
+            View tvpgContainer = (View) mHeaderView.findViewById(R.id.content_rating_container);
+            if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
+                tvpg.setVisibility(View.GONE);
+                tvpgContainer.setVisibility(View.GONE);
+            } else {
+                tvpg.setText(tags.getContentRating());
+            }
+
+            TextView network = (TextView) mHeaderView.findViewById(R.id.network);
+            network.setText(show.getStudio());
 
             ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));
             posterView.setImageBitmap(result.bitmap);
