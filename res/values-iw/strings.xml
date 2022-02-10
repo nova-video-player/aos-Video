@@ -370,6 +370,8 @@
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">כוונון מהירות</string>
     <string name="subtitle_delay_radio_none">ללא</string>
+    <string name="subtitle_delay_radio_ntsc2pal">הכתוביות מהירות מידי</string>
+    <string name="subtitle_delay_radio_pal2ntsc">הכתוביות איטיות מידי</string>
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
     because the right part of the quote is
