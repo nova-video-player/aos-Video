@@ -62,6 +62,10 @@ import com.archos.mediascraper.ShowTags;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
@@ -329,6 +333,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         protected void onPostExecute(TvShowAsyncTask.Result result) {
             Tvshow show = result.show;
             BaseTags tags = result.tags;
+            ShowTags showTags = result.tags;
             final TextView plotTv = (TextView) mHeaderView.findViewById(R.id.plot);
             mHeaderView.findViewById(R.id.loading).setVisibility(View.GONE);
 
@@ -343,6 +348,13 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
             TextView network = (TextView) mHeaderView.findViewById(R.id.network);
             network.setText(show.getStudio());
+
+            TextView Premiered = (TextView) mHeaderView.findViewById(R.id.premiered);
+            String pattern = "yyyy-MM-dd";
+            DateFormat df = new SimpleDateFormat(pattern);
+            Date today = showTags.getPremiered();
+            String todayAsString = df.format(today);
+            Premiered.setText(todayAsString);
 
             ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));
             posterView.setImageBitmap(result.bitmap);
