@@ -333,7 +333,11 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             mHeaderView.findViewById(R.id.loading).setVisibility(View.GONE);
 
             TextView tvpg = (TextView) mHeaderView.findViewById(R.id.content_rating);
-            tvpg.setText(tags.getContentRating());
+            if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
+                tvpg.setText("N/A");
+            } else {
+                tvpg.setText(tags.getContentRating());
+            }
 
             TextView network = (TextView) mHeaderView.findViewById(R.id.network);
             network.setText(show.getStudio());

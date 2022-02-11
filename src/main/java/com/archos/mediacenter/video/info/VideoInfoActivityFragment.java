@@ -1762,7 +1762,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     log.debug("FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
                 }
                 // set content rating
-                setTextOrHideContainer(mScrapCertification, tags.getContentRating());
+                if (tags.getContentRating().isEmpty()) {
+                    setTextOrHideContainer(mScrapCertification, "N/A");
+                } else {
+                    setTextOrHideContainer(mScrapCertification, tags.getContentRating());
+                }
                 mIMDBId = tags.getImdbId();
                 if(mIMDBId==null||mIMDBId.isEmpty())
                     mIMDBIcon.setVisibility(View.GONE);
