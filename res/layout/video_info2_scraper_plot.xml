@@ -38,12 +38,12 @@
             <TextView
                 android:id="@+id/scrap_date"
                 style="@style/VideoInfoFileInfo"
-                android:layout_marginRight="@dimen/video_info_margin_simple" />
+                android:layout_marginRight="@dimen/video_info_margin_half" />
 
             <TextView
                 android:id="@+id/scrap_duration"
                 style="@style/VideoInfoFileInfo"
-                android:layout_marginRight="@dimen/video_info_margin_simple"
+                android:layout_marginRight="@dimen/video_info_margin_half"
                 />
 
 
@@ -54,7 +54,7 @@
                 android:drawablePadding="2dip"
                 android:drawableLeft="@drawable/little_star"
                 android:gravity="center_vertical"
-                android:layout_marginRight="@dimen/video_info_margin_simple"/>
+                android:layout_marginRight="@dimen/video_info_margin_half"/>
 
             <LinearLayout
                 android:id="@+id/content_rating_container"
