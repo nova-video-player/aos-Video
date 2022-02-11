@@ -261,7 +261,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mScrapDuration;
     private TextView mScrapRating;
     private View mScrapStudioContainer;
-    private TextView mScrapCertification;
+    private TextView mScrapContentRating;
+    private View mScrapContentRatingContainer;
 
 
     //play buttons and poster
@@ -467,7 +468,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mScrapDetailsCard =mRoot.findViewById(R.id.scrap_details_container);
         mScrapStudio =(TextView) mRoot.findViewById(R.id.scrap_studio);
         mScrapStudioContainer = mRoot.findViewById(R.id.scrap_studio_container);
-        mScrapCertification = mRoot.findViewById(R.id.content_rating);
+        mScrapContentRating = mRoot.findViewById(R.id.content_rating);
+        mScrapContentRatingContainer = mRoot.findViewById(R.id.content_rating_container);
 
 
 
@@ -1762,10 +1764,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     log.debug("FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
                 }
                 // set content rating
-                if (tags.getContentRating().isEmpty()) {
-                    setTextOrHideContainer(mScrapCertification, "N/A");
+                if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
+                    mScrapContentRating.setVisibility(View.GONE);
+                    mScrapContentRatingContainer.setVisibility(View.GONE);
                 } else {
-                    setTextOrHideContainer(mScrapCertification, tags.getContentRating());
+                    setTextOrHideContainer(mScrapContentRating, tags.getContentRating());
                 }
                 mIMDBId = tags.getImdbId();
                 if(mIMDBId==null||mIMDBId.isEmpty())
