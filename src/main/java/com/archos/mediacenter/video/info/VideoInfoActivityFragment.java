@@ -261,6 +261,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mScrapDuration;
     private TextView mScrapRating;
     private View mScrapStudioContainer;
+    private TextView mScrapCertification;
+
 
     //play buttons and poster
 
@@ -465,6 +467,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mScrapDetailsCard =mRoot.findViewById(R.id.scrap_details_container);
         mScrapStudio =(TextView) mRoot.findViewById(R.id.scrap_studio);
         mScrapStudioContainer = mRoot.findViewById(R.id.scrap_studio_container);
+        mScrapCertification = mRoot.findViewById(R.id.content_rating);
+
 
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
@@ -1757,6 +1761,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     studio = ((MovieTags) tags).getStudiosFormatted();
                     log.debug("FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
                 }
+                // set content rating
+                setTextOrHideContainer(mScrapCertification, tags.getContentRating());
                 mIMDBId = tags.getImdbId();
                 if(mIMDBId==null||mIMDBId.isEmpty())
                     mIMDBIcon.setVisibility(View.GONE);
