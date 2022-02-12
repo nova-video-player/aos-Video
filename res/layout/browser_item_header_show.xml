@@ -162,7 +162,7 @@
             android:gravity="left"
             android:lines="1"
             android:maxLines="1"
-            android:text="Networks:  "
+            android:text="@string/networks"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_small_text" />
         <TextView
@@ -189,7 +189,7 @@
             android:gravity="left"
             android:lines="1"
             android:maxLines="1"
-            android:text="Premiered:  "
+            android:text="@string/premiered"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_small_text" />
         <TextView
