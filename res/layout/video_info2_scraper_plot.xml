@@ -24,27 +24,7 @@
         android:orientation="vertical" >
 
 
-        <LinearLayout
-            android:id="@+id/content_rating_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:background="@drawable/rounded_edges">
 
-            <TextView
-                android:id="@+id/content_rating"
-                android:textSize="@dimen/video_info_small_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginBottom="1dp"
-                android:gravity="center_horizontal"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:textColor="@color/grid_item_background"
-                />
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/scrap_rating_container"
