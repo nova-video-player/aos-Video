@@ -342,6 +342,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
             if (cursor.getCount()==0) {
                 // remove shortcuts row if empty
                 mRowsAdapter.remove(mIndexedFoldersListRow);
+                cursor.close();
             }
             else {
                 // Add it back in first row if it is not
