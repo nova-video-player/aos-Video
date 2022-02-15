@@ -355,6 +355,9 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             Date date = showTags.getPremiered();
             String dateAsString = df.format(date);
             Premiered.setText(dateAsString);
+            Premiered.setVisibility(View.VISIBLE);
+            network.setVisibility(View.VISIBLE);
+            plotTv.setVisibility(View.VISIBLE);
 
             ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));
             posterView.setImageBitmap(result.bitmap);
@@ -368,32 +371,30 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             setColor(mColor);
             ((TextView)mHeaderView.findViewById(R.id.name)).setText(show.getName());
             plotTv.setText(show.getPlot());
-            plotTv.setMaxLines(Integer.MAX_VALUE);
+
+            if(!mPlotIsFullyDisplayed)
+                plotTv.setMaxLines(5);
+            else
+                plotTv.setMaxLines(50);
 
             setSeason((TextView)mHeaderView.findViewById(R.id.season));
-            plotTv.setVisibility(View.VISIBLE);
-                if(!mPlotIsFullyDisplayed)
-                mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height);
-            else
-                mHeaderView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            mHeaderView.setOnClickListener(new View.OnClickListener() {
+            plotTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     View viewMore = mHeaderView.findViewById(R.id.view_more);
                     if (viewMore.getVisibility() == View.VISIBLE) {
-                        plotTv.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                        plotTv.setMaxLines(50);
                         viewMore.setVisibility(View.GONE);
-                        mHeaderView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
                         mPlotIsFullyDisplayed = true;
                     } else {
-                        plotTv.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+                        plotTv.setMaxLines(5);
                         viewMore.setVisibility(View.VISIBLE);
-                        mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height);
                         mPlotIsFullyDisplayed = false;
                     }
                     mBrowserAdapter.notifyDataSetChanged();
                 }
             });
+
 
             if(result.tags!=null&&result.tags.getDefaultBackdrop()!=null)
                 mBackgroundSetter.set(mApplicationBackdrop, mBackgroundLoader, result.tags.getDefaultBackdrop());
