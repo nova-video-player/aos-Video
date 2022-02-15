@@ -6,6 +6,7 @@
     android:background="@drawable/transparent_ripple"
     android:clickable="false"
     android:focusable="false"
+    android:paddingBottom="50dp"
     android:gravity="center_vertical" >
 
     <ProgressBar
@@ -110,13 +111,15 @@
     </LinearLayout>
 
     <TextView
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/thumbnail"
         android:id="@+id/plot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/premiered_container"
+        android:layout_alignParentStart="true"
+        android:paddingTop="15dp"
         android:paddingRight="5dp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
     <TextView
         android:id="@+id/view_more"
         style="@style/VideoInfoFileInfo.Title2"
@@ -124,6 +127,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/plot"
         android:layout_alignParentEnd="true"
+
+        android:layout_alignParentBottom="true"
         android:ellipsize="end"
         android:gravity="right"
         android:paddingRight="5dp"
@@ -134,7 +139,7 @@
 
     <LinearLayout
         android:id="@+id/network_container"
-        android:layout_below="@id/view_more"
+        android:layout_below="@id/thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -156,7 +161,6 @@
             android:paddingTop="15dp"
             android:paddingRight="5dp"
             android:textSize="@dimen/video_info_small_text"
-            android:layout_below="@id/content_rating_container"
             />
     </LinearLayout>
 
@@ -166,7 +170,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/network_container"
-        android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
         <TextView
@@ -184,7 +187,6 @@
             android:id="@+id/premiered"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/content_rating_container"
             android:paddingTop="15dp"
             android:paddingRight="5dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
