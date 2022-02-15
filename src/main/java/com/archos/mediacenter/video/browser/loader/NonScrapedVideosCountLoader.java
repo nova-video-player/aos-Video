@@ -39,6 +39,9 @@ public class NonScrapedVideosCountLoader extends VideoLoader {
     public NonScrapedVideosCountLoader(Context context) {
         super(context);
         init();
+        // cf. https://github.com/nova-video-player/aos-AVP/issues/134 reduce strain
+        // only updates the CursorLoader on data change every 10s since used only in MainFragment as nonScraped box presence
+        setUpdateThrottle(10000);
     }
 
     @Override

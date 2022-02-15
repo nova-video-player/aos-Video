@@ -197,9 +197,10 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
         setSelection(getSelection());
         setSelectionArgs(getSelectionArgs());
         setSortOrder(getSortOrder());
-        // TODO check if this has no perf penalty
+        // TODO check if this has no perf penalty it is for https://github.com/nova-video-player/aos-AVP/issues/134
         // only updates the CursorLoader on data change every 2s
-        setUpdateThrottle(2000);
+        // disable for now and only deal with it in master loaders i.e. LastAddedLoader and LaspPlayedLoader NonScrapedVideosCountLoader
+        //setUpdateThrottle(2000);
     }
 
     @Override
