@@ -43,6 +43,7 @@ public class WebViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide(); // no title bar
         mUri = getIntent().getData();
         setContentView(R.layout.webview_activity);
         mWebView = findViewById(R.id.webview_activity);
