@@ -355,9 +355,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             Date date = showTags.getPremiered();
             String dateAsString = df.format(date);
             Premiered.setText(dateAsString);
-            Premiered.setVisibility(View.VISIBLE);
-            network.setVisibility(View.VISIBLE);
-            plotTv.setVisibility(View.VISIBLE);
 
             ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));
             posterView.setImageBitmap(result.bitmap);
@@ -373,7 +370,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             plotTv.setText(show.getPlot());
 
             if(!mPlotIsFullyDisplayed)
-                plotTv.setMaxLines(5);
+                plotTv.setMaxLines(4);
             else
                 plotTv.setMaxLines(50);
 
@@ -387,7 +384,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                         viewMore.setVisibility(View.GONE);
                         mPlotIsFullyDisplayed = true;
                     } else {
-                        plotTv.setMaxLines(5);
+                        plotTv.setMaxLines(4);
                         viewMore.setVisibility(View.VISIBLE);
                         mPlotIsFullyDisplayed = false;
                     }
