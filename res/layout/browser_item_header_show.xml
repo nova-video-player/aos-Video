@@ -101,20 +101,20 @@
 
     <com.archos.mediacenter.video.browser.BrowserByIndexedVideos.ArchosFadeView
         android:id="@+id/scrollView"
-        android:paddingTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/view_more"
         android:layout_below="@+id/series_plot_header"
         android:fadingEdgeLength="50dp"
+        android:paddingTop="4dp"
         android:requiresFadingEdge="vertical">
 
         <TextView
             android:id="@+id/plot"
 
-            android:background="@drawable/transparent_ripple"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/transparent_ripple"
             android:paddingRight="5dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
 
