@@ -97,7 +97,7 @@
         android:singleLine="true"
         android:text="@string/series_plot"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="@dimen/video_info_small_text" />
+        android:textSize="@dimen/video_info_medium_text" />
 
     <com.archos.mediacenter.video.browser.BrowserByIndexedVideos.ArchosFadeView
         android:id="@+id/scrollView"
@@ -186,7 +186,7 @@
         android:orientation="horizontal"
         android:paddingTop="10dp">
         <TextView
-            android:layout_width="90dp"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:gravity="left"
@@ -194,7 +194,7 @@
             android:maxLines="1"
             android:text="@string/networks"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_small_text" />
+            android:textSize="@dimen/video_info_medium_text" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -202,7 +202,7 @@
             android:id="@+id/network"
 
             android:paddingRight="5dp"
-            android:textSize="@dimen/video_info_small_text"
+            android:textSize="@dimen/video_info_medium_text"
             android:layout_below="@id/content_rating_container"
             />
     </LinearLayout>
@@ -215,7 +215,7 @@
         android:orientation="horizontal"
         android:paddingTop="10dp">
         <TextView
-            android:layout_width="90dp"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:gravity="left"
@@ -223,14 +223,14 @@
             android:maxLines="1"
             android:text="@string/premiered"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_small_text" />
+            android:textSize="@dimen/video_info_medium_text" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/premiered"
             android:paddingRight="5dp"
-            android:textSize="@dimen/video_info_small_text"
+            android:textSize="@dimen/video_info_medium_text"
             android:layout_below="@id/content_rating_container"
             />
     </LinearLayout>
