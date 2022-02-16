@@ -980,5 +980,6 @@
         It is strongly advised to restart from a clean install to avoid problems. Please check FAQ for details.</string>
     <string name="networks">Networks:</string>
     <string name="premiered">Premiered:</string>
+    <string name="series_plot">Series Overview:</string>
 
 </resources>

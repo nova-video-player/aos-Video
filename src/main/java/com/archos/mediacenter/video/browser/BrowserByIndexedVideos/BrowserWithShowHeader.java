@@ -372,7 +372,28 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
             setSeason((TextView)mHeaderView.findViewById(R.id.season));
             plotTv.setVisibility(View.VISIBLE);
-            mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height_2);
+            if(!mPlotIsFullyDisplayed)
+                mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height_new);
+            else
+                mHeaderView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            plotTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    View viewMore = mHeaderView.findViewById(R.id.view_more);
+                    if (viewMore.getVisibility() == View.VISIBLE) {
+                        plotTv.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                        viewMore.setVisibility(View.GONE);
+                        mHeaderView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                        mPlotIsFullyDisplayed = true;
+                    } else {
+                        plotTv.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+                        viewMore.setVisibility(View.VISIBLE);
+                        mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height_new);
+                        mPlotIsFullyDisplayed = false;
+                    }
+                    mBrowserAdapter.notifyDataSetChanged();
+                }
+            });
 
             if(result.tags!=null&&result.tags.getDefaultBackdrop()!=null)
                 mBackgroundSetter.set(mApplicationBackdrop, mBackgroundLoader, result.tags.getDefaultBackdrop());

@@ -77,32 +77,49 @@
     <TextView
         android:id="@+id/season"
         style="@style/BrowserText.Name.Video"
-        android:layout_width="match_parent"
         android:layout_below="@id/name"
         android:layout_marginTop="3dip"
-        android:layout_toRightOf="@id/thumbnail"
         android:paddingTop="0dip"
-        android:singleLine="true" />
+        android:layout_toRightOf="@id/thumbnail"
+        android:singleLine="true"
+        android:layout_width="match_parent" />
+
+    <TextView
+        android:id="@+id/series_plot_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/premiered_container"
+        android:layout_marginTop="3dip"
+        android:ellipsize="end"
+        android:lines="1"
+        android:maxLines="1"
+        android:paddingTop="10dp"
+        android:singleLine="true"
+        android:text="@string/series_plot"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/video_info_small_text" />
+
     <com.archos.mediacenter.video.browser.BrowserByIndexedVideos.ArchosFadeView
+        android:id="@+id/scrollView"
+        android:paddingTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:requiresFadingEdge="vertical"
-        android:layout_toEndOf="@+id/thumbnail"
-        android:layout_toRightOf="@+id/thumbnail"
-        android:layout_below="@+id/premiered_container"
         android:layout_above="@+id/view_more"
-        android:id="@+id/scrollView"
-        android:fadingEdgeLength="50dp">
+        android:layout_below="@+id/series_plot_header"
+        android:fadingEdgeLength="50dp"
+        android:requiresFadingEdge="vertical">
+
         <TextView
+            android:id="@+id/plot"
+
+            android:background="@drawable/transparent_ripple"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/plot"
             android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
 
 
             />
-
 
 
     </com.archos.mediacenter.video.browser.BrowserByIndexedVideos.ArchosFadeView>
@@ -126,9 +143,10 @@
         android:textSize="@dimen/video_info_small_text" />
 
     <LinearLayout
-        android:layout_below="@id/season"
-        android:layout_toEndOf="@+id/thumbnail"
         android:id="@+id/content_rating_container"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@+id/thumbnail"
+        android:layout_below="@id/season"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -154,9 +172,10 @@
         android:layout_below="@id/thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:gravity="left"
@@ -170,7 +189,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/network"
-            android:paddingTop="15dp"
+
             android:paddingRight="5dp"
             android:textSize="@dimen/video_info_small_text"
             android:layout_below="@id/content_rating_container"
@@ -182,9 +201,10 @@
         android:layout_below="@id/network_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:gravity="left"
@@ -198,7 +218,6 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/premiered"
-            android:paddingTop="15dp"
             android:paddingRight="5dp"
             android:textSize="@dimen/video_info_small_text"
             android:layout_below="@id/content_rating_container"
