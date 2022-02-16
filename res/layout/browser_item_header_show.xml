@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/transparent_ripple"
     android:clickable="false"
     android:focusable="false"
     android:gravity="center_vertical" >
@@ -21,10 +20,10 @@
         android:id="@+id/thumbnail"
         android:layout_width="@dimen/video_details_poster_width"
         android:layout_height="@dimen/video_details_poster_height"
-        android:layout_marginBottom="@dimen/video_details_poster_margin_bottom"
         android:layout_marginLeft="@dimen/video_details_poster_margin_left"
-        android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name"
         android:layout_marginTop="@dimen/video_details_poster_margin_top"
+        android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name"
+        android:layout_marginBottom="@dimen/video_details_poster_margin_bottom"
         android:background="@color/default_icon_background"
         android:scaleType="center" />
 
@@ -78,19 +77,19 @@
     <TextView
         android:id="@+id/season"
         style="@style/BrowserText.Name.Video"
+        android:layout_width="match_parent"
         android:layout_below="@id/name"
         android:layout_marginTop="3dip"
-        android:paddingTop="0dip"
         android:layout_toRightOf="@id/thumbnail"
-        android:singleLine="true"
-        android:layout_width="match_parent" />
+        android:paddingTop="0dip"
+        android:singleLine="true" />
     <com.archos.mediacenter.video.browser.BrowserByIndexedVideos.ArchosFadeView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:requiresFadingEdge="vertical"
         android:layout_toEndOf="@+id/thumbnail"
         android:layout_toRightOf="@+id/thumbnail"
-        android:layout_below="@+id/season"
+        android:layout_below="@+id/premiered_container"
         android:layout_above="@+id/view_more"
         android:id="@+id/scrollView"
         android:fadingEdgeLength="50dp">
@@ -127,7 +126,8 @@
         android:textSize="@dimen/video_info_small_text" />
 
     <LinearLayout
-        android:layout_below="@id/thumbnail"
+        android:layout_below="@id/season"
+        android:layout_toEndOf="@+id/thumbnail"
         android:id="@+id/content_rating_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -151,7 +151,7 @@
 
     <LinearLayout
         android:id="@+id/network_container"
-        android:layout_below="@id/content_rating_container"
+        android:layout_below="@id/thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -178,6 +178,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/premiered_container"
         android:layout_below="@id/network_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
