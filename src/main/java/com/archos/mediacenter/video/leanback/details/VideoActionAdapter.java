@@ -38,10 +38,14 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
     public static final int ACTION_RESUME = 1;
     public static final int ACTION_LOCAL_RESUME = 2;
     public static final int ACTION_REMOTE_RESUME = 3;
-    public static final int ACTION_PLAY_FROM_BEGIN = 4;
+
+    // two play buttons one before or after next episode for tvshow
+    public static final int ACTION_PLAY = 4;
 
     public static final int ACTION_NEXT_EPISODE = 5;
-    public static final int ACTION_LIST_EPISODES = 6;
+    public static final int ACTION_PLAY_FROM_BEGIN = 6;
+
+    public static final int ACTION_LIST_EPISODES = 7;
     public static final int ACTION_MARK_AS_WATCHED = 10;
     public static final int ACTION_MARK_AS_NOT_WATCHED = 11;
     public static final int ACTION_INDEX = 20;
@@ -73,8 +77,6 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
         update(video, inPlayer, displayRemoveFromList, displayConfirmDelete, nextEpisode, isTvEpisode);
     }
 
-    // TODO MARC modify here order of buttons
-
     public void update(Video video, boolean inPlayer, boolean displayRemoveFromList, boolean displayConfirmDelete, Episode nextEpisode, boolean isTvEpisode){
         Video oldVideo = mCurrentVideo;
         mCurrentVideo = video;
@@ -102,14 +104,10 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
             }
             if(video.getResumeMs() > 0 || video.getRemoteResumeMs() > 0){
                 set(ACTION_PLAY_FROM_BEGIN, new Action(ACTION_PLAY_FROM_BEGIN, mContext.getString(R.string.play_from_beginning)));
+                clear(ACTION_PLAY);
             } else{
-                set(ACTION_PLAY_FROM_BEGIN, new Action(ACTION_PLAY_FROM_BEGIN, mContext.getString(R.string.play_selection)));
-            }
-
-            if (nextEpisode!=null) {
-                set(ACTION_NEXT_EPISODE, new Action(ACTION_NEXT_EPISODE, mContext.getString(R.string.next_episode)));
-            }else{
-                clear(ACTION_NEXT_EPISODE);
+                set(ACTION_PLAY, new Action(ACTION_PLAY, mContext.getString(R.string.play_selection)));
+                clear(ACTION_PLAY_FROM_BEGIN);
             }
 
             if (isTvEpisode) {
@@ -244,9 +242,11 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
         }
 
         if(video.getResumeMs() > 0 || video.getRemoteResumeMs() > 0){
-            set(ACTION_PLAY_FROM_BEGIN, new Action(ACTION_PLAY_FROM_BEGIN, context.getString(R.string.play_from_beginning)));
+            set(ACTION_PLAY_FROM_BEGIN, new Action(ACTION_PLAY_FROM_BEGIN, mContext.getString(R.string.play_from_beginning)));
+            clear(ACTION_PLAY);
         } else{
-            set(ACTION_PLAY_FROM_BEGIN, new Action(ACTION_PLAY_FROM_BEGIN, context.getString(R.string.play_selection)));
+            set(ACTION_PLAY, new Action(ACTION_PLAY, mContext.getString(R.string.play_selection)));
+            clear(ACTION_PLAY_FROM_BEGIN);
         }
         notifyChanged();
     }
@@ -254,7 +254,8 @@ public class VideoActionAdapter extends SparseArrayObjectAdapter {
     public void updateToNonIndexed(Context context) {
         clear(ACTION_RESUME);
         clear(ACTION_LOCAL_RESUME);
-        set(ACTION_PLAY_FROM_BEGIN, new Action(ACTION_PLAY_FROM_BEGIN, context.getString(R.string.play_selection)));
+        set(ACTION_PLAY, new Action(ACTION_PLAY, context.getString(R.string.play_selection)));
+        clear(ACTION_PLAY_FROM_BEGIN);
         clear(ACTION_NEXT_EPISODE);
         clear(ACTION_LIST_EPISODES);
         clear(ACTION_MARK_AS_WATCHED);

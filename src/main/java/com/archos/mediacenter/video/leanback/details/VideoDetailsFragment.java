@@ -641,7 +641,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             if (action.getId() == VideoActionAdapter.ACTION_REMOTE_RESUME) {
                 startAds(REQUEST_CODE_REMOTE_RESUME_AFTER_ADS_ACTIVITY);
             }
-            else if (action.getId() == VideoActionAdapter.ACTION_PLAY_FROM_BEGIN) {
+            else if (action.getId() == VideoActionAdapter.ACTION_PLAY_FROM_BEGIN || action.getId() == VideoActionAdapter.ACTION_PLAY) {
                 if (isFilePlayable) {
                     startAds(REQUEST_CODE_PLAY_FROM_BEGIN_AFTER_ADS_ACTIVITY);
                 } else {
