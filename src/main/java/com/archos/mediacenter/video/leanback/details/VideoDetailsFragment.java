@@ -1035,8 +1035,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 XmlDb.getInstance().parseXmlLocation(currentVideo.getFileUri());
             }
             mShouldUpdateRemoteResume = false;
-        }else if(oldVideoObject!=null)
-            currentVideo.setRemoteResumeMs(oldVideoObject.getRemoteResumeMs());
+        }else if(oldVideoObject!=null) {
+            // should not set the currentVideo remoteResumeMs to oldVideoObject one otherwise we inherit old network resume and get two buttons
+            //currentVideo.setRemoteResumeMs(oldVideoObject.getRemoteResumeMs());
+        }
         mHasRetrievedDetails = true;
         return smoothUpdate;
     }
