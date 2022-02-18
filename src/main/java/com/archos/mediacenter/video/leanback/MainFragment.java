@@ -589,6 +589,12 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         setAdapter(mRowsAdapter);
     }
 
+    private boolean isCursorCountChanged(Cursor oldCursor, Cursor newCursor) {
+        if ((oldCursor == null && newCursor != null) || (oldCursor != null && newCursor == null))
+            return true;
+        return oldCursor.getCount() != newCursor.getCount();
+    }
+
     private void buildAllMoviesBox() {
         log.debug("buildAllMoviesBox");
         mAllMoviesBox = new Box(Box.ID.ALL_MOVIES, getString(R.string.all_movies), R.drawable.movies_banner);
@@ -1063,8 +1069,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                         LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_MOVIES, args, this);
                     } else {
                         log.debug("onLoadFinished: buildAllMoviesBox & buildAllCollectionsBox");
-                        buildAllMoviesBox();
-                        buildAllCollectionsBox();
+                        if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor)) {
+                            buildAllMoviesBox();
+                            buildAllCollectionsBox();
+                        }
                         updateMoviesRow(null);
                     }
                     if (mShowTvshowsRow) {
@@ -1074,7 +1082,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                         LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
                     } else {
                         log.debug("onLoadFinished: buildAllTvshowsBox");
-                        buildAllTvshowsBox();
+                        if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor))
+                            buildAllTvshowsBox();
                         updateTvShowsRow(null);
                     }
                     if (mShowAnimesRow) {
@@ -1084,8 +1093,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                         LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_ANIMES, args, this);
                     } else {
                         log.debug("onLoadFinished: buildAllAnimesBox & buildAllAnimeShowsBox");
-                        buildAllAnimesBox();
-                        buildAllAnimeShowsBox();
+                        if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor)) {
+                            buildAllAnimesBox();
+                            buildAllAnimeShowsBox();
+                        }
                         updateAnimesRow(null);
                     }
                 }
@@ -1098,19 +1109,23 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 break;
             case LOADER_ID_ALL_MOVIES:
                 log.debug("onLoadFinished: AllMovies cursor ready with " + cursor.getCount() + " entries, updating row/box");
-                updateMoviesRow(cursor);
+                if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor))
+                    updateMoviesRow(cursor);
                 break;
             case LOADER_ID_ALL_TV_SHOWS:
                 log.debug("onLoadFinished: AllTvShows cursor ready with " + cursor.getCount() + " entries, updating row/box");
-                updateTvShowsRow(cursor);
+                if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor))
+                    updateTvShowsRow(cursor);
                 break;
             case LOADER_ID_ALL_ANIMES:
                 log.debug("onLoadFinished: AllAnimes cursor ready with " + cursor.getCount() + " entries, updating row/box");
-                updateAnimesRow(cursor);
+                if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor))
+                    updateAnimesRow(cursor);
                 break;
             case LOADER_ID_NON_SCRAPED_VIDEOS_COUNT:
                 log.debug("onLoadFinished: NonScrapedVideos cursor ready with " + cursor.getCount());
-                updateNonScrapedVideosVisibility(cursor);
+                if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor))
+                    updateNonScrapedVideosVisibility(cursor);
                 break;
         }
         checkInitFocus();
