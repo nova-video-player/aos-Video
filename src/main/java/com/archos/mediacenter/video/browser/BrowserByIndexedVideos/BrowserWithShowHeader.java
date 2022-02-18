@@ -359,6 +359,9 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             TextView PremieredYear = (TextView) mHeaderView.findViewById(R.id.premiered_year);
             PremieredYear.setText(Integer.toString(showTags.getPremieredYear()));
 
+            TextView seriesGenres = (TextView) mHeaderView.findViewById(R.id.series_genres);
+            seriesGenres.setText(showTags.getGenresFormatted());
+
             ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));
             posterView.setImageBitmap(result.bitmap);
             posterView.setOnClickListener(new View.OnClickListener() {

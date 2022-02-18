@@ -981,5 +981,6 @@
     <string name="networks">Networks:</string>
     <string name="premiered">Premiered:</string>
     <string name="series_plot">Series Overview:</string>
+    <string name="series_genres">Genres:</string>
 
 </resources>
