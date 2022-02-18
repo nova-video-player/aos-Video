@@ -299,6 +299,7 @@
     <string name="pref_play_mode_entry_folder">Mappa</string>
     <string name="pref_play_mode_entry_repeat_folder">Mappa ismétlése</string>
     <string name="pref_play_mode_entry_repeat_single">Videó ismétlése</string>
+    <string name="pref_play_mode_entry_binge">Folyamatos nézés</string>
     <string name="pref_audio_parameters_title">Hang</string>
     <string name="pref_audio_filt_title">Hangkiemelés</string>
     <string name="pref_audio_filt_night_mode">Éjszakai mód</string>
@@ -543,6 +544,7 @@
     <string name="preferences_video_licenses">Licenszek</string>
     <string name="preferences_network_mobile_vpn_summary">Csak VPN konfiguráció esetén használja, és figyeljen az adathasználatra.</string>
     <string name="preferences_network_mobile_vpn_title">Hálózati megosztás engedélyezése mobil kapcsolatokon</string>
+    <string name="preferences_network_prefer_vpn_summary">Használj VPN-t helyi hálózaton keresztül.</string>
     <string name="preferences_network_prefer_vpn_title">VPN hálózatok előnyberészesítése</string>
     <string name="preferences_video_advanced">Haladó</string>
     <string name="preferences_video_advanced_quit_title">Gyakori beállítások</string>
@@ -597,15 +599,21 @@
     <string name="share_folders_smbv2_summary">Az SMB hálózati megosztás 2. verziójának engedélyezése.</string>
     <string name="share_folders_smb_resolv">SMB feloldási sorrend</string>
     <string name="share_folders_smb_resolv_summary">BCAST, DNS bekpcsolása (alapértelmezett: DNS, BCAST). Ezt kapcsolja be, ha a szerver nem található, vagy lassú az SMB.</string>
+    <string name="connection_abnormally_long">A kapcsolódás szokatlanul hosszúnak tűnik. Szeretnéd visszaállítani?</string>
     <string name="connection_reset">Visszaállítás</string>
     <!-- Info dialog, not indexed file -->
+    <string name="video_info_unindexed_message">Ez a fájl jelenleg nincs indexelve a videokönyvtárban.\nPoszterek és információk keresése csak az indexelt fájlok esetén érhető el.\nSzeretnéd most indexelni?</string>
+    <string name="video_info_unindexed_message2">A fájl feldolgozása folyamatban van. Ez eltarthat egy ideig.</string>
     <string name="video_browser_index_file">Hozzáadás a könyvtárhoz</string>
     <string name="video_browser_unindex_file">Eltávólítás a könyvtárból</string>
     <!-- Brightness -->
+    <string name="auto_brightness_message">A fényerő nem módosítható, mert az automatikus fényerő mód jelenleg engedélyezve van.</string>
     <!--  Nfo File parsing -->
     <string name="network_nfo_parse">\'nfo\' fájlok feldolgozása</string>
     <string name="network_nfo_parse_summary">Boxee / XBMC \'.nfo\' fájlok beolvasása a keresés/újrakeresés során, médiaadatok és poszterek kinyeréséhez.</string>
+    <string name="ask_to_mail_media_DB">Szeretnéd elküldeni videoadatbázist a Nova fejlesztőcsapatának, hogy segítsen nekik hibakeresésben?\n\nA videofájlokat (természetesen) nem küldjük, de a fájlnevek teljes listáját igen.</string>
     <string name="no_email_installed">Nem található email alkalmazás</string>
+    <string name="zipping_library_before_mailing">A könyvtár másolatának tömörítése postázás előtt…</string>
     <string name="zipped_library_mail_subject">Nova videóadatbázis küldése</string>
     <string name="zipped_library_mail_text">Kérjük, írja le a tapasztalt problémát\n\n</string>
     <string name="sort_mode">Rendezés</string>
@@ -628,6 +636,9 @@
     <string name="sort_by_date_aired_desc">Rendezés sugárzási dátum szerint (legújabb előbb)</string>
     <string name="sort_by_recently_added_episode_desc">Mostanában hozzáadott epizódok előbb</string>
     <string name="dec_choice_title">Dekóder választása</string>
+    <string name="dec_choice_summary">Speciális beállítás, megszakíthatja a videó dekódolását.</string>
+    <string name="dec_hw_omx">Hardveres dekódolás (IOMX w/ swbuf)</string>
+    <string name="dec_hw_omxplus">Hardveres dekódolás (IOMX w/ hwbuf)</string>
     <string name="dec_hw_omxcodec">Hardveres dekódolás (OMXCodec)</string>
     <string name="dec_hw_mediacodec">Hardveres dekódolás (MediaCodec)</string>
     <string name="dec_sw">Szoftveres dekódolás</string>
@@ -639,6 +650,7 @@
     <string name="audio_interface_choice_summary">Fejlett beállítások, elronthatja az audio dekódolást.</string>
     <string name="audio_interface_opensles">OpenSL ES kényszerítése</string>
     <string name="audio_interface_audiotrack">Audiotrack kényszerítése</string>
+    <string name="audio_interface_any">Alapértelmezett logika</string>
     <string name="preferences_user_interface">Felhasználói felület</string>
     <string name="preferences_display_resume_box_summary">Megjeleníti vagy elrejti a gombot a legújabb videó lejátszásának folytatásához a főképernyőn</string>
     <string name="preferences_display_resume_box">Folytatás gomb megjelenítése</string>
@@ -659,6 +671,10 @@
     <string name="preferences_show_all_tv_shows_row">Összes sorozat polc megjelenítése</string>
     <string name="preferences_tv_show_sort_order_summary">Válassza ki a sorozatok rendezési sorrendjét</string>
     <string name="preferences_tv_show_sort_order_title">Sorozatok rendezése</string>
+    <string name="preferences_show_all_animes_row_summary">Jelölje be, ha az animációs kategóriák sora helyett az összes animációs filmjét szeretné megjeleníteni</string>
+    <string name="preferences_show_all_animes_row">Az összes animációs sor megjelenítése</string>
+    <string name="preferences_anime_sort_order_summary">Válassza ki az összes animáció sor rendezési sorrendjét</string>
+    <string name="preferences_anime_sort_order_title">Az összes animációs sor megjelenítése sorrendben</string>
     <string name="codepage_title">Feliratok kódolása</string>
     <string name="codepage_summary">A feliratokban használt szövegkódolás beállítása</string>
     <string name="codepage_default">Eszköz nyelve %s</string>
@@ -780,6 +796,7 @@
     <string name="rescan_description">Az indexelt mappák újrafeldolgozása új tartalom hozzáadásához</string>
     <string name="rescan_now">Újrafeldolgozás most</string>
     <string name="rescan_now_description">Kézi újrafeldolgozás</string>
+    <string name="rescan_error_wifi_info_standby">Úgy tűnik, hogy a WiFi készenléti állapotban le van tiltva. Az automatikus újrakeresés sikerességének biztosítása érdekében állítsa be készenléti állapotban is a WiFi engedélyezését.</string>
     <string name="rescan_error_wifi">Hiba: a WiFi ki volt kapcsolva az újrafeldolgozás során</string>
     <string name="rescan_error_wifi_click_for_more_info">kattintson ide a részletekért</string>
     <string name="rescan_error_server">Hiba: nem sikerül elérni a szervert</string>
@@ -795,6 +812,7 @@
     <string name="scheduled_rescan_time">Újrafeldolgozási idő</string>
     <string name="rescan_when_opening_application">Újrafeldolgozás az applikáció megnyitásakor</string>
     <string name="last_rescan_occured">Utolsó újrafeldolgozás:</string>
+    <string name="error_permission_display_over_apps">Az ablak módnak speciális engedélyekre van szüksége ahhoz, hogy más alkalmazások előtt megjelenjen. Kérjük, adja meg a Nova Video Playernek ezt az engedélyt, hogy ablak módba váltson.</string>
     <string name="intro_overlay_text">Érintse meg a videók továbbításához a TV-re</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
@@ -803,6 +821,7 @@
     <string name="rescrap_in_progress">A teljes könyvtár újrafeldolgozása folyamatban</string>
     <string name="rescrap_movies_in_progress">Összes film újrafeldolgozása folyamatban</string>
     <string name="rescrap_collections_in_progress">Összes gyűjtemény újrafeldolgozása folyamatban</string>
+    <string name="acquire_external_usb_permission">A Nova Videonak speciális engedélyre van szüksége a külső tárhely eléréséhez. Kérjük, válassza ki a tárhelyet a következő képernyőn</string>
     <string name="rescrap_not_found">Leírás nélküli videók újrafeldolgozása</string>
     <string name="rescrap_all_title">Minden újrafeldolgozása</string>
     <string name="rescrap_all_movies_title">Összes film újrafeldolgozása</string>
@@ -814,24 +833,39 @@
     <string name="db_export_in_progress">Adatbázís exportálása folyamatban</string>
     <string name="system">Rendszer</string>
     <string name="keep_setting">Beállítás megjegyzése globálisan</string>
+    <string name="select_sub_file"><![CDATA[Nem található pontos felirat a <font color=#29b6f6><i>%s</i></font><br />fájlhoz, kérjük, próbálja meg a következő listák közül:]]></string>
+    <string name="switch_remote_empty_message">A távoli megjelenítési módra váltás nagyobb keresési lehetőséget biztosíthat</string>
+    <string name="cast_stream_mode">Stream mód</string>
     <string name="cast_remote_display_mode">Távoli kijelző</string>
+    <string name="cast_remote_display_mode_description">a nova videolejátszó által támogatott összes formátum lejátszható a távoli kijelzőn. A minőség azonban romolhat.</string>
+    <string name="cast_stream_mode_description">Optimális minőség, de bizonyos formátumok nem támogatottak</string>
     <string name="sleep_timer_title">Elalvás időzítő</string>
     <string name="sleep_timer_description">Videó leállítása ennyi idő után: </string>
     <string name="cast_mode">Képátvitel mód</string>
     <string name="cast_info">Infó</string>
+    <string name="troubleshoot_streammode_msg">A Nova videolejátszó jelenleg stream cast módban van.
+         \nEz jó videóminőséget eredményez, de problémákat okozhat a hangsávoknál és a feliratoknál.
+         Próbáljon meg átváltani távoli megjelenítési módra.</string>
+    <string name="troubleshoot_remotemode_msg">A Nova videolejátszó jelenleg távoli megjelenítési módban van.
+         \nEszközétől és a hálózat minőségétől függően minőségromlást és teljesítményproblémákat tapasztalhat. </string>
     <string name="picture_in_picture">Kép a képben</string>
     <string name="cast">Átvitel</string>
+    <string name="cast_warning">A Cast-támogatás a Chromecast kodekkorlátozása miatt korlátozott. E korlátozások mérséklése érdekében 2 átküldési mód van megvalósítva: Chromecast és Screencast (automatikus tartalékkal). Vegye figyelembe, hogy a teljesítménnyel és a minőséggel kapcsolatos problémák a hálózat vagy az eszköz korlátaiból is adódhatnak.</string>
     <string name="cast_warning_title">Kísérleti funkció</string>
     <string name="cast_fallback_message">Hiba: visszatérés a kijelző átvitelhez</string>
+    <string name="cast_introduction">Új kísérleti funkció: \nGoogle Cast</string>
+    <string name="cast_select_for_full_control">Érintse meg a vezérlő kiterjesztéséhez</string>
     <string name="cast_audio_background">A hang nem fog működni, amíg a Nova Videó Lejátszó a háttérben fut</string>
     <string name="help_faq">Segítség / GYIK</string>
     <string name="provider_folders">Felhő</string>
     <string name="learn_more">Tudjon meg többet</string>
     <string name="learn_more_about_codecs">A Nova Video Player csak olyan videókat tud lejátszani, melyeket a készüléke támogat. A licencek miatt, egyes formátumokat nem lehet legálisan hozzáadni, egyeseket pedig megvásárolhatja a Google Play Áruházban.</string>
+    <string name="rate_us">Ha tetszik ez az alkalmazás, kérjük, támogasson minket 5 csillaggal</string>
     <string name="rate_us_title">☆ Támogasson minket</string>
     <string name="create_new_list">Új lista létrehozása</string>
     <string name="add_to_list">Hozzáadás listához</string>
     <string name="no_resume_available">A folytatás jelenleg nem elérhető</string>
+    <string name="no_list_detected">Jelenleg nem található lista. A lista létrehozható új elemek hozzáadásával közvetlenül a videó információiból, vagy szinkronizálható trakt-fiókoddal.</string>
     <string name="premium_already_purchased">A prémium már meg lett vásárolva</string>
     <string name="remove_from_list">Eltávolítás a listából</string>
     <string name="warning_swdec">Figyelem: hardveres dekódolás kikapcsolva!</string>
@@ -844,4 +878,7 @@
     <string name="sponsor">A Nova támogatása</string>
     <string name="enable_sponsor_title">Nova támogatói link bekapcsolása</string>
     <string name="enable_sponsor_summary">Támogatói link bekapcsolása adományokhoz: minden hozzájárulás segít.</string>
+    <string name="upgrade_info">Frissítési információk</string>
+    <string name="v5_v6_upgrade_info">FIGYELMEZTETÉS:  a Nova jelentős frissítése megköveteli az összes videogyűjtemény újraolvasását a multimédiás információk újra beszerzéséhez.
+         A problémák elkerülése érdekében erősen ajánlott tiszta telepítésről újraindítani. Kérjük, olvassa el a GYIK-ot a részletekért.</string>
 </resources>

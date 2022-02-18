@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <!-- Menu item that takes the user back to the top level screen of the music player -->
+    <string name="goto_start">Bibliotek</string>
+    <!-- Menu item that takes the user to the "now playing" screen of the music player -->
+    <!-- Menu item to refresh servers list -->
+    <string name="refresh_servers_list">Uppdatera serverlistan</string>
+    <!-- Menu item to enable network shares -->
+    <string name="enable_network_shares">Aktivera nätverksdelning</string>
+    <string name="initial_scan">Första skanning</string>
+    <!-- Library screen, menu item -->
+    <string name="search_title">Sök</string>
+    <!-- Default name of track that doesn't have a name in the metadata -->
+    <string name="unknown_track_name">Okänd</string>
+    <!-- Toast after turning shuffle on -->
+    <!-- Toast after turning shuffle off -->
+    <!-- Toast after turning single repeat on -->
+    <!-- Context menu item -->
+    <string name="info">Info</string>
+    <!-- Context menu item -->
+    <string name="play_selection">Spela</string>
+    <!-- Context menu item -->
+    <string name="multiple_selection">Välj flera</string>
+    <!-- Context menu item -->
+    <string name="play_from_beginning">Spela från början</string>
+    <!-- Dialog box button -->
+    <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ</string>
+    <!-- The string used in file/folder infos dialog. -->
+    <string name="info_duration">Längd</string>
+    <string name="video_sources">Källor</string>
+    <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">Film</string>
+    <string name="info_tab_show">Program</string>
+    <string name="info_tab_episode">Avsnitt</string>
+    <string name="info_tab_video">Video</string>
+    <string name="info_tab_file">Filinfo</string>
+    <string name="info_tab_backdrop_chooser">Bakgrundsväljare</string>
+    <string name="info_tab_poster_chooser">Affischväljare</string>
+    <string name="info_tab_share">Dela</string>
+    <string name="info_menu_backdrop_select">Bakgrund</string>
+    <string name="info_menu_series_backdrop_select">Seriebakgrund</string>
+    <string name="info_menu_poster_select">Välj en annan affisch</string>
+    <string name="info_menu_series_poster_select">Välj en annan affisch</string>
+    <!-- COVER ROLL -->
+    <string name="watching_up_next">Tittar på/nästa</string>
+    <string name="recently_added">Nyligen tillagda</string>
+    <string name="recently_added_videos">Nyligen tillagda</string>
+    <string name="recently_played">Nyligen spelade</string>
+    <string name="recently_played_videos">Nyligen spelade</string>
+    <string name="video_lists">Spellistor</string>
+    <!-- The string used in main storage list -->
+    <string name="external_storage">Extern</string>
+    <string name="internal_storage">Intern</string>
+    <string name="network_storage">Nätverk</string>
+    <string name="sd_card_storage">SD-kort</string>
+    <string name="usb_host_storage">Extern enhet</string>
+    <string name="other_storage">Enhet</string>
+    <string name="network_media_servers">Mediaservrar (UPnP)</string>
+    <string name="network_shared_folders">Delade mappar (SMB)</string>
+    <string name="network_connected_as">Ansluten som %s</string>
+    <string name="network_guest">gäst</string>
+    <string name="sftp_folders">FTP</string>
+    <string name="network_jcifs">Samba (experimentell)</string>
+    <string name="network_cling">UPNP (Experimentell)</string>
+    <string name="recordings_storage">Inspelningar</string>
+    <string name="root_storage">Intern lagring</string>
+    <string name="cannot_list">Kan inte lista innehåll</string>
+    <!-- VIDEO -->
+    <string name="videos">Videor</string>
+    <string name="all_videos">Alla videor</string>
+    <string name="not_played_yet_videos">Ej spelade</string>
+    <string name="directory_deleted">Mappen har tagits bort</string>
+    <string name="file_deleted">Filen har tagits bort</string>
+    <string name="resume">Återuppta</string>
+    <string name="remote_resume">Fjärråteruppta</string>
+    <string name="bookmark">Bokmärk</string>
+    <string name="delete">Radera</string>
+    <string name="confirm_delete_short">Bekräfta radering</string>
+    <string name="delete_resume">Ta bort resume</string>
+    <string name="delete_bookmark">Ta bort bokmärke</string>
+    <string name="mark_as_watched">Markera som sedd</string>
+    <string name="mark_as_not_watched">Markera som ej sedd</string>
+    <string name="upnp_not_allowed">Du har inte behörighet att komma åt denna UPnP-server. Vänligen ändra din åtkomstkonfiguration först.</string>
+    <string name="scrap_no_info">Du har ingen beskrivning av den här videon.</string>
+    <string name="scrap_remove">Ta bort information</string>
+    <string name="scrap_remove_short">Ta bort</string>
+    <!-- for small screens -->
+    <string name="scrap_change">Ändra info om alla avsnitt</string>
+    <string name="scrap_series_change">Ändra serieinformation</string>
+    <string name="scrap_change_confirmation">Ändra alla avsnitt från\n\t\"%1$s\"\ntill\n\t\"%2$s\"?</string>
+    <string name="scrap_change_title">Ändrar alla avsnitt</string>
+    <string name="scrap_change_initializing">Initierar…</string>
+    <string name="scrap_change_finalizing">Slutför…</string>
+    <string name="scrap_get_title">Hämtar information</string>
+    <!-- Generic strings for Movies or TV shows -->
+    <string name="scrap_director">Regissör</string>
+    <string name="scrap_director_format">Regi: %s</string>
+    <string name="scrap_rating">Betyg</string>
+    <string name="scrap_rating_format">Betyg: %s</string>
+    <string name="scrap_year">År</string>
+    <string name="scrap_year_format">År: %d</string>
+    <string name="scrap_studio">Studio</string>
+    <string name="scrap_plot">Handling</string>
+    <string name="scrap_trailer">Trailers</string>
+    <string name="scrap_cast">Roller</string>
+    <string name="scrap_cast_format">Roller: %s</string>
+    <string name="scrap_genre">Genre</string>
+    <string name="scrap_genre_format">Genrer: %s</string>
+    <string name="scrap_genre_title">Genrer</string>
+    <string name="scrap_aired">Publicerades</string>
+    <string name="scrap_aired_format">Publicerades: %s</string>
+    <string name="scrap_guests">Gäster</string>
+    <string name="scrap_premiered">Premiär</string>
+    <!-- Specific strings for TV shows -->
+    <string name="show_network">Nätverk</string>
+    <string name="episode_name">Avsnitt</string>
+    <string name="episode_season">Säsong</string>
+    <string name="episode_specials">Specialare</string>
+    <string name="episode_identification">Säsong %1$d Avsnitt %2$d</string>
+    <string name="season_identification">Säsong %1$d</string>
+    <string name="next_episode">Nästa avsnitt</string>
+    <string name="list_episodes">Lista avsnitt</string>
+    <string name="how_to_mark_season_watched">Klicka på en säsong för att markera alla dess avsnitt sedda eller osedda</string>
+    <string name="how_to_unindex_season">Klicka på en säsong för att ta bort alla dess avsnitt från biblioteket</string>
+    <!-- To be translated only in case there is a localized IMDB -->
+    <string name="use_remote_resume">Använd nätverkets återupptagningsposition?</string>
+    <!-- VIDEO COVER ROLL -->
+    <string name="you_have_no_recently_added_video">Inga nyligen tillagda videor</string>
+    <string name="you_have_no_recently_played_video">Ingen nyligen spelade videor</string>
+    <string name="you_have_no_video">Inga videor</string>
+    <string name="you_have_no_video_yet">Söker efter videor&#8230;</string>
+    <string name="you_have_no_movies">Inga filmer</string>
+    <string name="you_have_no_animes">Inga animeringsfilmer</string>
+    <string name="you_have_no_movie_collections">Inga samlingar</string>
+    <string name="you_have_no_anime_collections">Inga anime-samlingar</string>
+    <string name="you_have_no_tv_shows">Inga TV-program</string>
+    <string name="you_have_no_anime_shows">Inga tecknade TV-serier</string>
+    <string name="you_have_no_non_scraped_videos">Inga icke skrapade videor</string>
+    <plurals name="Nmovies">
+        <item quantity="one">1 film</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> filmer</item>
+    </plurals>
+    <!-- Media Center -->
+    <string name="mediacenterlabel">Media Center</string>
+    <string name="view_mode">Visningsläge</string>
+    <string name="view_mode_list">Lista</string>
+    <string name="view_mode_grid">Affischer</string>
+    <string name="view_mode_details">Detaljer</string>
+    <string name="switch_to_list">Lista</string>
+    <string name="switch_to_grid">Rutnät</string>
+    <!-- VideoPlayer -->
+    <string name="player_loading_video">Laddar video\u2026</string>
+    <string name="player_audio_track_toast">Ljudspår:</string>
+    <string name="player_subtitle_track_toast">Undertext spår:</string>
+    <string name="player_bookmark_set">Bokmärke inställt den</string>
+    <string name="player_pref_subtitle_delay_title">Fördröjning</string>
+    <string name="floating_player_restore">Återställ</string>
+    <string name="floating_player_play">Spela</string>
+    <string name="floating_player_pause">Pausa</string>
+    <string name="player_pref_audio_delay_title">Ljudfördröjning</string>
+    <string name="now_playing">Nu spelas</string>
+    <string name="player_window_mode">Fönsterläge</string>
+    <string name="pref_play_mode_title">Uppspelningsläge</string>
+    <string name="pref_play_mode_entry_single">Singel</string>
+    <string name="pref_play_mode_entry_folder">Mapp</string>
+    <string name="pref_play_mode_entry_repeat_folder">Upprepa mapp</string>
+    <string name="pref_play_mode_entry_repeat_single">Upprepa singel</string>
+    <string name="pref_play_mode_entry_binge">Binge-tittar</string>
+    <string name="pref_audio_parameters_title">Ljud</string>
+    <string name="pref_audio_filt_title">Ljud Boost</string>
+    <string name="pref_audio_filt_night_mode">Nattläge</string>
+    <string name="ui_mode_auto">Auto</string>
+    <string name="ui_mode_tv">TV</string>
+    <string name="ui_mode_normal">Surfplatta/telefon</string>
+    <string name="pref_s3d_mode_title">3D-läge</string>
+    <string name="pref_s3d_mode_entry_sbs">Sida vid sida</string>
+    <string name="pref_s3d_mode_entry_topbottom">Topp och Botten</string>
+    <string name="pref_s3d_mode_entry_anaglyph">Anaglyf</string>
+    <string name="pref_s3d_mode_entry_off">Av</string>
+    <!-- Subtitles/Audio languages -->
+    <!-- Player errors -->
+    <string name="videocodec_not_supported">Videoformatet (<xliff:g id="codec">%s</xliff:g>) stöds ej.</string>
+    <string name="player_err_file">Videofilen finns inte.</string>
+    <string name="player_err_sizetoobig">Videostorlek för stor</string>
+    <string name="player_err_unknown">Okänt fel.</string>
+    <string name="player_err_critical">Mediaspelarfel.</string>
+    <string name="player_err_forcodec">för codec</string>
+    <string name="player_err_notinterleaved">Video- och ljudströmmar är inte INTERLEAVED.</string>
+    <string name="player_err_codec">Kodek</string>
+    <string name="player_err_isnotsupported">stöds ej.</string>
+    <string name="player_err_fileNoLicense">Ingen licens hittades för denna fil.</string>
+    <string name="player_err_fileerror">Filen är skadad eller ofullständig.</string>
+    <string name="player_err_connection_failed">Anslutningen misslyckades.</string>
+    <string name="player_err_video_decoder_error">Fel vid videoavkodning:</string>
+    <string name="player_err_qpel_and_gmc">\"Kvartalspixel\" och \"GMC\"</string>
+    <string name="player_err_profile_and_level">\"Profil\" och \"Nivå\"</string>
+    <string name="player_err_interlaced">Sammanflätad</string>
+    <!-- Player plug-in -->
+    <string name="player_plugin_cinema_title">Bio-plug-in</string>
+    <string name="player_plugin_cinema">Bio-plug-in (DVD, MPEG-2, AC3)</string>
+    <string name="player_plugin_ac3_title">AC3 plug-in</string>
+    <string name="player_plugin_ac3">AC3 plug-in</string>
+    <string name="player_plugin_mpeg2_title">MPEG-2 plug-in</string>
+    <string name="player_plugin_mpeg2">MPEG-2 plug-in (DVD)</string>
+    <string name="player_plugin_video_msg">Filen innehåller ett <xliff:g id="video">%1$s</xliff:g> videoformat.</string>
+    <string name="player_plugin_audio_msg">Den här filen innehåller ett <xliff:g id="audio">%1$s</xliff:g> ljudformat.</string>
+    <string name="player_plugin_video_audio_msg">Den här filen innehåller ett <xliff:g id="video">%1$s</xliff:g> videoformat och ett <xliff:g id="audio">%2$s</xliff:g> ljudformat.</string>
+    <string name="player_plugin_purchase_msg">Du måste köpa <xliff:g id="plugin">%1$s</xliff:g></string>
+    <string name="player_plugin_purchase">Gå till butiken</string>
+    <string name="player_plugin_purchase_archos_msg">Du kan köpa ytterligare codec plug-ins på www.archos.com.</string>
+    <string name="player_plugin_purchase_google_play_msg">Du kan köpa ytterligare codec plug-ins på Google Play.</string>
+    <string name="player_plugin_purchase_google_play_button">Gå till Google Play</string>
+    <string name="plugin_update_required_title">Kodekuppdatering krävs</string>
+    <string name="plugin_update_required_message">Det verkar som om du redan har ytterligare codecs installerat för Nova Video Player.\n\nDenna nya version av Nova Video Player kräver en uppdatering av dessa codecs.\n\nGå till Google Play för att uppdatera och installera om codecs.</string>
+    <!-- Subtitles wizard -->
+    <string name="get_subtitles_on_drive">Välj undertexter från lagring</string>
+    <string name="subtitles_wizard_no_files">Inga undertextfiler hittades</string>
+    <string name="subtitles_wizard_current_files">Aktuella undertextfiler</string>
+    <string name="subtitles_wizard_available_files">Tillgängliga undertextfiler</string>
+    <string name="subtitles_wizard_associate">Koppla den här filen till videon</string>
+    <string name="subtitles_wizard_delete">Ta bort denna fil</string>
+    <string name="subtitles_wizard_empty_list">Ingen fil hittades</string>
+    <string name="subtitles_wizard_add_files">Du kan kopiera fler undertextfiler till den här mappen för att associera dem till den här videon.</string>
+    <string name="subtitles_wizard_help">Välj någon av de tillgängliga undertextfilerna för att associera den med videon %s. Filen kommer att döpas om för att matcha namnet på videon.</string>
+    <string name="subtitles_wizard_empty_list_help">Inga undertextfiler hittades. Du måste kopiera först en eller flera undertextfiler till den här mappen för att kunna associera dem med videon %s.</string>
+    <string name="subtitles_wizard_cache">Cacheminne</string>
+    <!-- Subloader -->
+    <string name="get_subtitles_online">Hämta undertexter online</string>
+    <string name="toast_subloader_sub_found">Undertextspår hittades för detta språk</string>
+    <string name="toast_subloader_sub_not_found">Undertextspår hittades inte för detta språk</string>
+    <string name="toast_subloader_service_unreachable">undertext-server-avbrott</string>
+    <string name="menu_subloader_allfolder">Hämta saknade undertexter</string>
+    <string name="dialog_subloader_copying">Kopierar undertexter…</string>
+    <string name="dialog_subloader_downloading">Laddar ner undertexter…</string>
+    <!-- Subtitle Settings Dialog -->
+    <!-- Subtitle Delay Dialog -->
+    <!-- Browser.CommonDetailsView -->
+    <!-- Add a space after the right quote
+    because the right part of the quote is
+    not visible otherwise -->
+    <!-- torrent -->
+    <!-- Shortcuts -->
+    <string name="shortcut_list_empty">Inga nätverksgenvägar skapade.\n\nFör att skapa genvägar till dina favorit-fjärrmappar långklicka på målmapparna och välj \"%s\" i översta åtgärdsfältet.</string>
+    <string name="ftp_shortcut_list_empty">För att skapa genvägar till dina favoritmappar väljer du \"%s\" i det översta åtgärdsfältet när du bläddrar på en server.</string>
+    <string name="indexed_folders">Indexerade mappar</string>
+    <string name="ftp_shortcuts">FTP genvägar</string>
+    <string name="add_to_indexed_folders">Indexerade mappar</string>
+    <string name="add_to_library">Lägg till i bibliotek</string>
+    <string name="add_all_items_to_library">Lägg till alla videor till biblioteket direkt?</string>
+    <string name="indexed_folder_added">Mappen %s har lagts till i biblioteket</string>
+    <string name="remove_from_indexed_folders">Ta bort från bibliotek</string>
+    <string name="indexed_folder_removed">Mappen %s borttagen från biblioteket</string>
+    <string name="indexed_folders_list_empty">Inga nätverksmappar indexeras för närvarande.\n\nDu kan lägga till innehållet i en nätverksmapp till biblioteket genom att bläddra till den här mappen och välja \"%s\" i åtgärdsfältet överst.</string>
+    <string name="indexed_folders_list_empty_ftp">Inga ftp-mappar indexeras för närvarande.</string>
+    <string name="open_indexed_folder">"Öppna"</string>
+    <string name="rescan_indexed_folders">Skanna alla indexerade mappar igen</string>
+    <string name="last_rescan_never">Aldrig</string>
+    <string name="upnp_indexing_warning_title">UPnP-indexering</string>
+    <string name="upnp_indexing_warning_message">UPnP-indexering tillåter inte så många funktioner som SMB-indexering.\nDet rekommenderas att indexera en SMB-mapp istället om din server eller dator stöder det.\n</string>
+    <string name="ssh_error">Det går inte att ansluta, vänligen kontrollera din anslutning och inloggningsuppgifter</string>
+    <string name="ssh_remote_address">Serveradress</string>
+    <string name="ssh_port">Port</string>
+    <string name="ssh_password">Lösenord</string>
+    <string name="ssh_username">Användarnamn</string>
+    <string name="ssh_shortcut_name">Genvägsnamn</string>
+    <string name="smb_domain">Domän (valfritt)</string>
+    <!-- Preferences -->
+    <string name="preferences">Inställningar</string>
+    <string name="get_the_ad_free_version">Hämta den annonsfria versionen på Google Play</string>
+    <string name="upgrade_to_add_free_version">Uppgradera till annonsfri version</string>
+    <string name="upgrade_to_add_free_version_description">Köp programlicensen för att ta bort annonserna och aktivera alla funktioner</string>
+    <string name="preferences_about">Om</string>
+    <string name="preferences_category_complete">Fullversion</string>
+    <string name="preferences_category_video">Video</string>
+    <string name="preferences_force_software_decoding">Tvinga programvaruavkodning</string>
+    <string name="preferences_force_software_decoding_summary">Du kan prova detta alternativ om videor inte spelas upp korrekt</string>
+    <string name="preferences_force_audio_passthrough">Ljudgenomströmning</string>
+    <string name="preferences_force_audio_passthrough_disabled">Inaktiverad (rekommenderas)</string>
+    <string name="preferences_force_audio_passthrough_enable">Läge 1 (föråldrat)</string>
+    <string name="preferences_force_audio_passthrough_enable2">Läge 2</string>
+    <string name="preferences_force_audio_passthrough_summary">Överför komprimerat ljud över HDMI eller S/PDIF. ⚠ Experimentell: kan resultera i A/V ur synk</string>
+    <string name="preferences_disable_downmix_title">Inaktivera nedmixning av stereoljud</string>
+    <!--  Title of the video picker activity. -->
+    <!-- Archos File Info -->
+    <!-- Help overlay -->
+    <!-- Info dialog, not indexed file -->
+    <!-- Brightness -->
+    <!--  Nfo File parsing -->
+</resources>
