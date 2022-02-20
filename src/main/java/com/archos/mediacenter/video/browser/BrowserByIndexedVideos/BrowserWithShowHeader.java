@@ -38,6 +38,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
 
 import com.archos.mediacenter.utils.ActionBarSubmenu;
 import com.archos.mediacenter.utils.imageview.ImageProcessor;
@@ -58,6 +59,7 @@ import com.archos.mediacenter.video.utils.SerialExecutor;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.BaseTags;
+import com.archos.mediascraper.ScraperImage;
 import com.archos.mediascraper.ShowTags;
 import com.squareup.picasso.Picasso;
 
@@ -334,6 +336,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             Tvshow show = result.show;
             BaseTags tags = result.tags;
             ShowTags showTags = result.tags;
+            ScraperImage image = new ScraperImage(ScraperImage.Type.SHOW_NETWORK, mTitle);
+
             final TextView plotTv = (TextView) mHeaderView.findViewById(R.id.plot);
             mHeaderView.findViewById(R.id.loading).setVisibility(View.GONE);
 
@@ -361,6 +365,10 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
             TextView seriesGenres = (TextView) mHeaderView.findViewById(R.id.series_genres);
             seriesGenres.setText(showTags.getGenresFormatted());
+
+            ImageView logo = ((ImageView)mHeaderView.findViewById(R.id.net_logo));
+            Glide.with(mContext).load(tags.getNetworkLogo())
+                    .fitCenter().into(logo);
 
             ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));
             posterView.setImageBitmap(result.bitmap);

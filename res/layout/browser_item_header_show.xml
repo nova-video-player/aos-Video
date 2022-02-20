@@ -28,6 +28,15 @@
         android:scaleType="center" />
 
     <ImageView
+        android:id="@+id/net_logo"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_marginEnd="4dip"
+        android:layout_below="@id/premiered_year"
+        android:layout_alignParentEnd="true"
+        android:scaleType="center" />
+
+    <ImageView
         android:id="@+id/flag_3d"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -62,13 +71,13 @@
 
     <TextView
         android:id="@+id/name"
+        style="@style/textAppearanceLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dip"
         android:layout_toRightOf="@id/thumbnail"
         android:paddingTop="8dip"
         android:singleLine="true"
-        style="@style/textAppearanceLarge"
         android:textSize="24dip"
         android:typeface="sans" />
 
@@ -146,7 +155,7 @@
         android:id="@+id/content_rating_container"
         android:layout_marginTop="10dp"
         android:layout_toEndOf="@+id/thumbnail"
-        android:layout_below="@id/season"
+        android:layout_below="@id/premiered_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -169,8 +178,9 @@
 
     <TextView
         android:id="@+id/premiered_year"
-        android:layout_below="@id/content_rating_container"
+        android:layout_below="@id/season"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_toEndOf="@+id/thumbnail"
         android:textSize="@dimen/video_info_medium_text"
         android:layout_width="wrap_content"

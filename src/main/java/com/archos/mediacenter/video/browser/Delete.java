@@ -535,6 +535,9 @@ public class Delete {
                             formatedName = NfoParser.getCustomShowBackdropName(tags.getShowTitle());
                             if (formatedName != null)
                                 result.add(Uri.parse(parentUri + formatedName));
+                            formatedName = NfoParser.getCustomShowNetworkLogoName(tags.getShowTitle());
+                            if (formatedName != null)
+                                result.add(Uri.parse(parentUri + formatedName));
                         }
                     }
                 }
