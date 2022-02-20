@@ -370,6 +370,10 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             Glide.with(mContext).load(tags.getNetworkLogo())
                     .fitCenter().into(logo);
 
+            TextView seriesRating = (TextView) mHeaderView.findViewById(R.id.series_rating);
+            seriesRating.setText(String.valueOf(showTags.getRating()));
+
+
             ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));
             posterView.setImageBitmap(result.bitmap);
             posterView.setOnClickListener(new View.OnClickListener() {
