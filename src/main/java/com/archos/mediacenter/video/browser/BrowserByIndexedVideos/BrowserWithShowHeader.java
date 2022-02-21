@@ -26,7 +26,6 @@ import androidx.loader.app.LoaderManager;
 import androidx.core.content.ContextCompat;
 import androidx.loader.content.Loader;
 import androidx.palette.graphics.Palette;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,16 +60,17 @@ import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.ShowTags;
 import com.squareup.picasso.Picasso;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
-    private static final boolean DBG = false;
-    private static final String TAG = "BrowserWithShowHeader";
+    private static final Logger log = LoggerFactory.getLogger(BrowserWithShowHeader.class);
 
     static final private String BROWSER_SHOW = BrowserListOfEpisodes.class.getName();
     public static final String EXTRA_SHOW_ITEM = "show_item";
@@ -94,7 +94,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     private boolean mPlotIsFullyDisplayed;
 
     public BrowserWithShowHeader() {
-        if (DBG) Log.d(TAG, "BrowserBySeason()");
+        log.debug("BrowserBySeason()");
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -242,7 +242,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (DBG) Log.d(TAG, "onLoadFinished");
+        log.debug("onLoadFinished");
         super.onLoadFinished(loader, cursor);
         if (getActivity() == null) return;
         if(loader.getId()==SHOW_LOADER_ID) {
@@ -259,11 +259,11 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 // calls at the end BrowserWithShowHeaders for no apparent reason (tried to determine code path)
                 // since this happens when getActivity() == null avoid doing UI stuff hides the issue that still remains to be fixed properly
                 if (getActivity() != null) {
-                    if (DBG) Log.d(TAG, "onLoadFinished: activity not null");
+                    log.debug("onLoadFinished: activity not null");
                     mTvShowAsyncTask = new TvShowAsyncTask().executeOnExecutor(mSerialExecutor,getPosterUri(),mShow);
                     getActivity().invalidateOptionsMenu();
                 } else {
-                    if (DBG) Log.w(TAG,"onLoadFinished: FIXME onLoadFinished getActivity is null");
+                    log.debug("onLoadFinished: FIXME onLoadFinished getActivity is null");
                 }
             }
 
@@ -271,11 +271,11 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     }
 
     private boolean needToReload(Tvshow oldShow, Tvshow newShow) {
-        if (oldShow==null || newShow==null) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate null"); return true;}
-        if (oldShow.getClass() != newShow.getClass()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate class"); return true;}
-        if (oldShow.getTvshowId() != newShow.getTvshowId()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate getTvshowId"); return true;}
-        if (oldShow.isTraktSeen() != newShow.isTraktSeen()) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate isTraktSeen"); return true;}
-        if (oldShow.getPosterUri()!=null&&!oldShow.getPosterUri().equals(newShow.getPosterUri())||newShow.getPosterUri()!=null&&newShow.getPosterUri().equals(oldShow.getPosterUri())) {if (DBG) Log.d(TAG, "foundDifferencesRequiringDetailsUpdate getPosterUri"); return true;}
+        if (oldShow==null || newShow==null) {log.debug("foundDifferencesRequiringDetailsUpdate null"); return true;}
+        if (oldShow.getClass() != newShow.getClass()) {log.debug("foundDifferencesRequiringDetailsUpdate class"); return true;}
+        if (oldShow.getTvshowId() != newShow.getTvshowId()) {log.debug("foundDifferencesRequiringDetailsUpdate getTvshowId"); return true;}
+        if (oldShow.isTraktSeen() != newShow.isTraktSeen()) {log.debug("foundDifferencesRequiringDetailsUpdate isTraktSeen"); return true;}
+        if (oldShow.getPosterUri()!=null&&!oldShow.getPosterUri().equals(newShow.getPosterUri())||newShow.getPosterUri()!=null&&newShow.getPosterUri().equals(oldShow.getPosterUri())) {log.debug("foundDifferencesRequiringDetailsUpdate getPosterUri"); return true;}
         return false;
     }
 
@@ -307,14 +307,14 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             Bitmap bitmap = null;
             try {
                 posterUri = show.getPosterUri();
-                if (DBG) Log.d(TAG, "TvShowAsyncTask.Result show " + show.getName() + " postersUri " + posterUri);
+                log.debug("TvShowAsyncTask.Result show " + show.getName() + " postersUri " + posterUri);
                 if (posterUri != null) {
                     bitmap = Picasso.get()
                             .load(posterUri)
                             .resizeDimen(R.dimen.video_details_poster_width,R.dimen.video_details_poster_height)
                             .noFade() // no fade since we are using activity transition anyway
                             .get();
-                    if (DBG) Log.d("XXX", "------ "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
+                    log.debug("TvShowAsyncTask.Result: "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
                     if(bitmap!=null) {
                         Palette palette = Palette.from(bitmap).generate();
                         mColor = palette.getDarkVibrantColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
@@ -322,10 +322,10 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 }
             }
             catch (IOException e) {
-                Log.d(TAG, "DetailsOverviewRow Picasso load exception", e);
+                log.error("DetailsOverviewRow: caught IOException, Picasso load exception", e);
             }
             catch (NullPointerException e) { // getDefaultPoster() may return null (seen once at least)
-                Log.d(TAG, "DetailsOverviewRow doInBackground exception", e);
+                log.error("DetailsOverviewRow: caught NullPointerException doInBackground exception", e);
             }
 
             return new TvShowAsyncTask.Result(show, bitmap,(ShowTags) show.getFullScraperTags(getActivity()));
@@ -417,12 +417,12 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         try {
             info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         } catch (ClassCastException e) {
-            Log.e(TAG, "bad menuInfo", e);
+            log.error("onCreateContextMenu: bad menuInfo", e);
             return;
         }
         // This can be null sometimes, don't crash...
         if (info == null) {
-            Log.e(TAG, "bad menuInfo");
+            log.error("onCreateContextMenu: bad menuInfo");
             return;
         }
 
