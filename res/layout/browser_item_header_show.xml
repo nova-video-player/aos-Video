@@ -158,16 +158,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="left"
-            android:lines="1"
-            android:maxLines="1"
-            android:text="@string/networks"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_small_text" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/network"
             android:paddingTop="15dp"
@@ -182,16 +172,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="left"
-            android:lines="1"
-            android:maxLines="1"
-            android:text="@string/premiered"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_small_text" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
