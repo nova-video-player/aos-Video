@@ -69,8 +69,6 @@ for informations (duration for files, number of files for directories).
 
 	<include layout="@layout/browser_item_list_common"
 		android:layout_alignParentBottom="true"
-		android:layout_toEndOf="@+id/left_area"
-		android:layout_height="TODO"
-		android:layout_width="TODO" />
+		android:layout_toEndOf="@+id/left_area"/>
 
 </RelativeLayout>
