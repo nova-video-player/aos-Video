@@ -26,6 +26,9 @@ import androidx.loader.app.LoaderManager;
 import androidx.core.content.ContextCompat;
 import androidx.loader.content.Loader;
 import androidx.palette.graphics.Palette;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -38,6 +41,9 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
 import com.bumptech.glide.Glide;
 
 import com.archos.mediacenter.utils.ActionBarSubmenu;
@@ -63,11 +69,14 @@ import com.archos.mediascraper.ScraperImage;
 import com.archos.mediascraper.ShowTags;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
@@ -94,6 +103,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     private int mColor;
     protected View mApplicationFrameLayout;
     private boolean mPlotIsFullyDisplayed;
+    private RecyclerView recyclerView;
 
     public BrowserWithShowHeader() {
         if (DBG) Log.d(TAG, "BrowserBySeason()");
@@ -372,6 +382,22 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
             TextView seriesRating = (TextView) mHeaderView.findViewById(R.id.series_rating);
             seriesRating.setText(String.valueOf(showTags.getRating()));
+
+            // setting Network RecyclerView
+            recyclerView = mHeaderView.findViewById(R.id.net_logo_rv);
+            List<String> NetworkLogoPaths = new ArrayList<>();
+            for (int i = tags.getNetworkLogosLargeFileF().size() - 1; i >= 0; i--) {
+                String avaialbeLogopath = String.valueOf(tags.getNetworkLogosLargeFileF().get(i));
+                NetworkLogoPaths.add(avaialbeLogopath);}
+            LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+            recyclerView.setLayoutManager(layoutManager);
+            ShowNetworkAdapter.OnItemClickListener indicatorCallback = new ShowNetworkAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(String item) {
+                }
+            };
+            final ShowNetworkAdapter logoAdapter = new ShowNetworkAdapter(NetworkLogoPaths,indicatorCallback);
+            recyclerView.setAdapter(logoAdapter);
 
 
             ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));

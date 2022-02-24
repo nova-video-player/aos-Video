@@ -36,6 +36,12 @@
         android:layout_marginEnd="10dp"
         android:scaleType="center" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/net_logo_rv"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_below="@id/thumbnail" />
+
     <ImageView
         android:id="@+id/flag_3d"
         android:layout_width="wrap_content"
@@ -229,7 +235,7 @@
 
     <LinearLayout
         android:id="@+id/network_container"
-        android:layout_below="@id/thumbnail"
+        android:layout_below="@id/net_logo_rv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
