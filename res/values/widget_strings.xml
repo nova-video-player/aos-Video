@@ -14,9 +14,9 @@
      limitations under the License.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="empty_view_text_video">No videos found</string>
+    <string name="empty_view_text_video">No video found</string>
 
-    <string name="cant_play_video">Cant not play this video</string>
+    <string name="cant_play_video">Cannot play this video</string>
     
     <string name="content_title">Content type:</string>
     <string name="content_all_videos">All videos</string>
