@@ -28,6 +28,8 @@ import androidx.preference.PreferenceManager;
 import androidx.leanback.widget.BaseCardView;
 import androidx.leanback.widget.ImageCardView;
 import androidx.leanback.widget.Presenter;
+
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +39,7 @@ import android.widget.TextView;
 
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.FileUtils;
+import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
@@ -45,6 +48,7 @@ import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.leanback.UnavailablePosterBroadcastReceiver;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
+import com.archos.mediacenter.video.player.Player;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediaprovider.video.VideoProvider;
 import com.squareup.picasso.Picasso;
@@ -234,9 +238,15 @@ public class PosterImageCardPresenter extends Presenter {
     private void bindVideo(VideoViewHolder vh, Video video) {
         final ImageCardView card = vh.getImageCardView();
 
+        int resumeMs = video.getResumeMs();
+        int durationMs = video.getDurationMs();
+        int progress = 0;
+        if (durationMs != 0)
+            progress = (int) ((double) resumeMs / (double) durationMs * 100);
+        if (DBG) Log.d(TAG, "bindVideo: resumeMs " + resumeMs + ", durationMs " +
+                durationMs + ", progess " + progress + "%");
         // setup the trakt flag BEFORE the poster because it is handled in a strange way in the ImageCardViewTarget
-        vh.mImageCardViewTarget.setWatchedFlag(video.isWatched() || video.getResumeMs() == PlayerActivity.LAST_POSITION_END);
-
+        vh.mImageCardViewTarget.setWatchedFlag(video.isWatched() || video.getResumeMs() == PlayerActivity.LAST_POSITION_END || progress >= Trakt.SCROBBLE_THRESHOLD);
 
         Uri posterUri = video.getPosterUri();
         boolean isLarge= false;
@@ -291,7 +301,6 @@ public class PosterImageCardPresenter extends Presenter {
             vh.updateCardView(mErrorDrawable);
 
         }
-        int resumeMs = video.getResumeMs();
         if (resumeMs == 0 || resumeMs == PlayerActivity.LAST_POSITION_UNKNOWN || resumeMs == PlayerActivity.LAST_POSITION_END) {
             vh.setResumeInPercent(0, isLarge);
         /*} else if (resumeMs == PlayerActivity.LAST_POSITION_END) {
