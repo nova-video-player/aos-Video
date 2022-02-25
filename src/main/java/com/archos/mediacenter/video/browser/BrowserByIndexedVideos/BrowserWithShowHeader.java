@@ -307,7 +307,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             Uri posterUri = (Uri) postersUri[0];
             Bitmap bitmap = null;
             try {
-                posterUri = show.getPosterUri();
                 log.debug("TvShowAsyncTask.Result show " + show.getName() + " postersUri " + posterUri);
                 if (posterUri != null) {
                     bitmap = Picasso.get()
