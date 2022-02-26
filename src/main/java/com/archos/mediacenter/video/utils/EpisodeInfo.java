@@ -64,6 +64,7 @@ public class EpisodeInfo extends BaseInfo {
     private float mShowRating;
     private String mActors;
     private String mDirectors;
+    private String mWriters;
 
     /**
      * Get episode infos (title, season, number, etc.). It performs two database
@@ -125,6 +126,7 @@ public class EpisodeInfo extends BaseInfo {
                    mShowRating = showTags.getRating();
                    mActors = showTags.getActorsFormatted();
                    mDirectors = episodeTags.getDirectorsFormatted();
+                   mWriters = episodeTags.getWritersFormatted();
                    mShowGenres = showTags.getGenresFormatted();
                    mValid = true;
                }
@@ -204,6 +206,10 @@ public class EpisodeInfo extends BaseInfo {
 
     public String getDirectors() {
         return mDirectors;
+    }
+
+    public String getWriters() {
+        return mWriters;
     }
 
     public long getTVShowId() {
