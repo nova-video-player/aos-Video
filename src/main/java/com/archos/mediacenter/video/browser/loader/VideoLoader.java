@@ -70,8 +70,7 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
     private static final String DETAIL_LINE_ONE = COALESCE + "'%s ' ||"
             + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + " ||' %s ' ||"
             + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE + ",'%s ' ||"
-            + VideoStore.Video.VideoColumns.SCRAPER_DIRECTORS + ") AS detail_line_one"
-            + VideoStore.Video.VideoColumns.SCRAPER_WRITERS + ") AS detail_line_one";
+            + VideoStore.Video.VideoColumns.SCRAPER_DIRECTORS + ") AS detail_line_one";
     private static final String DETAIL_LINE_TWO = COALESCE
             + VideoStore.Video.VideoColumns.SCRAPER_E_NAME + ", "
             + VideoStore.Video.VideoColumns.SCRAPER_M_PLOT + ") AS detail_line_two";
