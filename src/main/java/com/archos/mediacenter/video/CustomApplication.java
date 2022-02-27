@@ -115,15 +115,17 @@ public class CustomApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         // The following line triggers the initialization of ACRA
-        CoreConfigurationBuilder builder = new CoreConfigurationBuilder(this);
-        builder.withBuildConfigClass(BuildConfig.class).withReportFormat(StringFormat.JSON);
-        builder.getPluginConfigurationBuilder(HttpSenderConfigurationBuilder.class)
-                .withUri("https://bug.courville.org/report")
-                .withBasicAuthLogin("1HrXuNtb1JAtflJu")
-                .withBasicAuthPassword("tdCgove1nfdEVTY6")
-                .withHttpMethod(HttpSender.Method.POST)
-                .withEnabled(true);
-        ACRA.init(this, builder);
+        if (BuildConfig.ENABLE_ACRA) {
+            CoreConfigurationBuilder builder = new CoreConfigurationBuilder(this);
+            builder.withBuildConfigClass(BuildConfig.class).withReportFormat(StringFormat.JSON);
+            builder.getPluginConfigurationBuilder(HttpSenderConfigurationBuilder.class)
+                    .withUri("https://bug.courville.org/report")
+                    .withBasicAuthLogin("1HrXuNtb1JAtflJu")
+                    .withBasicAuthPassword("tdCgove1nfdEVTY6")
+                    .withHttpMethod(HttpSender.Method.POST)
+                    .withEnabled(true);
+            ACRA.init(this, builder);
+        }
     }
 
     public static String BASEDIR;

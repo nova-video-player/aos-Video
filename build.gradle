@@ -126,6 +126,11 @@ android {
         } else {
             buildConfigField "boolean", "ADULT_SCRAPE", "false"
         }
+        if (project.hasProperty("acra")) {
+            buildConfigField "boolean", "ENABLE_ACRA", "true"
+        } else {
+            buildConfigField "boolean", "ENABLE_ACRA", "false"
+        }
         resValue "string", "VERSION_NAME", versionName
         resValue "string", "APPLICATION_ID", applicationId
         resValue "string", "APP_INFO", "Nova v" + versionName + " (" + applicationId + ")"
