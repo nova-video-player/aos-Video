@@ -309,6 +309,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             // Get all episodes for the new show
             SearchResult sr = mTagsToSearchResultMap.get(newShow); // Get the searchResult from the map we built for it
             Bundle b = new Bundle();
+            // TODO MARC not sure we need all
             b.putBoolean(Scraper.ITEM_REQUEST_ALL_EPISODES, true);
             ScrapeDetailResult detail = Scraper.getDetails(sr, b);
             HashMap<String, EpisodeTags> epMap = null;

@@ -104,6 +104,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_FORCE_AUDIO_PASSTHROUGH = "force_audio_passthrough";
     public static final String KEY_ACTIVATE_REFRESHRATE_SWITCH = "enable_tv_refreshrate_switch";
     public static final String KEY_ACTIVATE_3D_SWITCH = "activate_tv_switch";
+    public static final String KEY_ADULT_SCRAPE = "enable_adult_scrap_key";
     
     public static final String KEY_SHOW_WATCHING_UP_NEXT_ROW = "show_watching_up_next_row";
     public static final String KEY_SHOW_LAST_ADDED_ROW = "show_last_added_row";
@@ -188,6 +189,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mEnableSponsor = null;
     private CheckBoxPreference mWatchingUpNext = null;
     private PreferenceCategory mAboutPreferences = null;
+    private CheckBoxPreference mAdultScrape = null;
 
     private String mLastTraktUser = null;
     private Trakt.Status mTraktStatus = Trakt.Status.SUCCESS;
@@ -302,6 +304,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             prefCategory.addPreference(mAudioInterfaceChoicePreferences);
             prefScraperCategory.addPreference(mDbExportManualPreference);
             getPreferenceScreen().addPreference(mAdvancedPreferences);
+            if (BuildConfig.ADULT_SCRAPE) prefScraperCategory.addPreference(mAdultScrape);
         } else {
             // normal preferences
             //Editor editor = mDecChoicePreferences.getEditor();
@@ -315,6 +318,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             prefCategory.addPreference(mForceSwDecPreferences);
             prefScraperCategory.removePreference(mDbExportManualPreference);
             getPreferenceScreen().removePreference(mAdvancedPreferences);
+            prefScraperCategory.removePreference(mAdultScrape);
         }
     }
 
@@ -367,6 +371,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mActivate3DTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_3D_SWITCH);
         mEnableCutoutModeShortEdge = (CheckBoxPreference) findPreference("enable_cutout_mode_short_edges");
         mActivateRefreshrateTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_REFRESHRATE_SWITCH);
+        mAdultScrape = (CheckBoxPreference) findPreference(KEY_ADULT_SCRAPE);
         mTraktSyncProgressPreference = (CheckBoxPreference) findPreference(KEY_TRAKT_SYNC_PROGRESS);
         mAdvancedPreferences = (PreferenceCategory) findPreference(KEY_ADVANCED_VIDEO_CATEGORY);
 

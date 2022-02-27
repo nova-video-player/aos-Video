@@ -121,6 +121,11 @@ android {
         } else {
             buildConfigField "boolean", "ENABLE_SPONSOR", "false"
         }
+        if (project.hasProperty("adultScrape")) {
+            buildConfigField "boolean", "ADULT_SCRAPE", "true"
+        } else {
+            buildConfigField "boolean", "ADULT_SCRAPE", "false"
+        }
         resValue "string", "VERSION_NAME", versionName
         resValue "string", "APPLICATION_ID", applicationId
         resValue "string", "APP_INFO", "Nova v" + versionName + " (" + applicationId + ")"

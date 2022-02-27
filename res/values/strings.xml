@@ -608,6 +608,8 @@
     <string name="tv_scraper">TV Shows</string>
     <string name="movie_scraper">Movies</string>
     <string name="enable_auto_scrap">Automatically get info for new videos</string>
+    <string name="enable_adult_scrap_title">Adult video scraping</string>
+    <string name="enable_adult_scrap_summary">Enable adult video information retrieval (disabled by default)</string>
     <string name="locale">System language</string>
 
     <string name="yes">Yes</string>
