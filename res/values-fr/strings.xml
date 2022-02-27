@@ -165,7 +165,9 @@
     <string name="scrap_get_title">Récupération des infos</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Réalisateur</string>
+    <string name="scrap_writer">Scénariste</string>
     <string name="scrap_director_format">Réalisateur: %s</string>
+    <string name="scrap_writer_format">Scénariste : %s</string>
     <string name="scrap_rating">Notes</string>
     <string name="scrap_rating_format">Notes: %s</string>
     <string name="scrap_year">Année</string>
@@ -553,6 +555,8 @@
     <string name="tv_scraper">Séries</string>
     <string name="movie_scraper">Films</string>
     <string name="enable_auto_scrap">Obtenir automatiquement des descriptions pour les nouvelles vidéos</string>
+    <string name="enable_adult_scrap_title">Descriptions des vidéos pour adultes</string>
+    <string name="enable_adult_scrap_summary">Activer la récupération des informations des vidéos pour adultes (désactivé par défaut)</string>
     <string name="locale">Langue du système</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
@@ -880,4 +884,6 @@
     <string name="enable_sponsor_summary">Activer le lien pour effectuer des dons: chaque contribution compte.</string>
     <string name="upgrade_info">Informations sur la mise à jour</string>
     <string name="v5_v6_upgrade_info">ATTENTION : cette mise à jour majeure de Nova nécessite de re-scanner toute la bibliothèque de vidéos pour réacquérir les informations multimédia. Il est fortement conseillé de reinstaller complètement l\'application afin d\'éviter les problèmes. Veuillez consulter la FAQ pour plus de détails.</string>
+    <string name="networks">Chaînes :</string>
+    <string name="premiered">1ère diffusion :</string>
 </resources>

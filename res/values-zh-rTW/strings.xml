@@ -150,13 +150,13 @@
     <string name="delete_bookmark">刪除書籤</string>
     <string name="mark_as_watched">設為「已觀看」</string>
     <string name="mark_as_not_watched">設為「尚未觀看」</string>
-    <string name="upnp_not_allowed">您無法存取此 UPnP 伺服器，請先修改存取設定。</string>
+    <string name="upnp_not_allowed">您無法存取此 UPnP 伺服器，請先變更存取設定。</string>
     <string name="scrap_no_info">沒有該影片的電影或電視劇的資訊。</string>
     <string name="scrap_remove">移除資訊</string>
     <string name="scrap_remove_short">移除</string>
     <!-- for small screens -->
-    <string name="scrap_change">改變所有劇集的資訊</string>
-    <string name="scrap_series_change">更改影集的資訊</string>
+    <string name="scrap_change">修改所有劇集的資訊</string>
+    <string name="scrap_series_change">修改影集的資訊</string>
     <string name="scrap_change_confirmation">將所有劇集從\n\t「%1$s」\n改為\n\t「%2$s」？</string>
     <string name="scrap_change_title">修改所有劇集</string>
     <string name="scrap_change_initializing">正在初始化...</string>
@@ -509,7 +509,7 @@
     <string name="preferences_force_audio_passthrough_disabled">已停用 (推薦)</string>
     <string name="preferences_force_audio_passthrough_enable">Mode 1 (不推薦)</string>
     <string name="preferences_force_audio_passthrough_enable2">Mode 2</string>
-    <string name="preferences_force_audio_passthrough_summary">藉由 HDMI 或 S/PDIF 傳送壓縮音訊 (⚠ 實驗性功能可能會導致聲音影片的不同步)</string>
+    <string name="preferences_force_audio_passthrough_summary">藉由 HDMI 或 S/PDIF 傳送壓縮音訊 (⚠ 實驗性功能，可能會導致影音的不同步)</string>
     <string name="preferences_disable_downmix_title">關閉立體聲降混</string>
     <string name="preferences_disable_downmix_summary">總是解碼所有聲道，並讓安卓系統依據音訊輸出的性能來降混 (可能會導致失去部分聲道)</string>
     <string name="preferences_allow_3rd_party_player">允許使用其它的影片播放器</string>
@@ -531,7 +531,7 @@
     <string name="favSubLang_summary">選擇您觀賞影片字幕的偏好語言</string>
     <string name="ui_mode_title">使用者介面模式</string>
     <string name="ui_mode_summary">選擇使用者介面是電視或平板/手機</string>
-    <string name="preferences_video_about">關於本軟體</string>
+    <string name="preferences_video_about">關於</string>
     <string name="preferences_video_os_text">字幕提供來自</string>
     <string name="preferences_video_tmdb_text">電影/電視劇資訊提供來自</string>
     <string name="preferences_video_tvdb_text">電視劇資訊提供來自</string>
@@ -593,7 +593,7 @@
     <string name="share_folders_smbv2">開啟 SMBv2 支援</string>
     <string name="share_folders_smbv2_summary">開啟網路分享 SMB 通訊協定第二版的支援</string>
     <string name="share_folders_smb_resolv">SMB 解析器順序</string>
-    <string name="share_folders_smb_resolv_summary">開啟 BCAST, DNS (預設：DNS, BCAST)。假如您的伺服器解析失敗或是 SMB 過慢，請修改這個選項</string>
+    <string name="share_folders_smb_resolv_summary">開啟 BCAST, DNS (預設：DNS, BCAST)。假如您的伺服器解析失敗或是 SMB 過慢，請變更此選項</string>
     <string name="connection_abnormally_long">連線似乎異常緩慢，要重啟嗎？</string>
     <string name="connection_reset">重啟</string>
     <!-- Info dialog, not indexed file -->
@@ -822,7 +822,7 @@
     <string name="rescrap_all_movies_title">重新抓取所有電影的資料</string>
     <string name="rescrap_all_collections_title">重新抓取所有收藏的資料</string>
     <string name="nfo_export_manual_title">匯出已經抓取資料的影片</string>
-    <string name="nfo_export_manual_summary">匯出每個已經抓取資料影片的 nfo 檔案</string>
+    <string name="nfo_export_manual_summary">匯出每個已經抓取資料影片的 .nfo 檔案</string>
     <string name="db_export_manual_title">匯出媒體資料庫</string>
     <string name="db_export_manual_summary">匯出 media.db 檔案至 /sdcard 以進行除錯</string>
     <string name="db_export_in_progress">資料庫匯出中</string>
