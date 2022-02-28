@@ -1,13 +1,6 @@
-- Movie collections/sagas support on ADTV
-- Separate animation/movies/series sections on ADTV
-- Faster TV shows information retrieval
-- ffmpeg 4.4.1 & dav1d 0.9.2 upstep
-- MDNS SMB discovery
-- Optimized refresh rate selection optimizing judder effect
-- Domain option added to SMB credential dialog
-- Faster network shares rescan when files deleted/renamed
-- Dolby vision support
-- Binge watch mode
-- Target API31
-- Bluetooth media buttons support
-- Fix ADTV net share periodic rescan
+- Scrobbler threshold raised to 90%
+- Fix crash changing info on tvshow
+- Add adult scrape hidden option NOT on google play
+- Blacklist nova scrape files for initial video import
+- Swedish translations
+- Fix NFO processing not working on SMB share
