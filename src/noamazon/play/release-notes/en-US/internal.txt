@@ -4,3 +4,4 @@
 - Blacklist nova scrape files for initial video import
 - Swedish translations
 - Fix NFO processing not working on SMB share
+- Fix scrape in loop
