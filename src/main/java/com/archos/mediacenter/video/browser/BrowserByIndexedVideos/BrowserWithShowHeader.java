@@ -43,7 +43,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.archos.mediacenter.video.browser.adapters.SeasonsData;
 import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
+import com.archos.mediascraper.EpisodeTags;
 import com.bumptech.glide.Glide;
 
 import com.archos.mediacenter.utils.ActionBarSubmenu;
@@ -74,6 +76,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -104,6 +107,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     protected View mApplicationFrameLayout;
     private boolean mPlotIsFullyDisplayed;
     private RecyclerView recyclerView;
+    private SeasonsData seasonsData;
 
     public BrowserWithShowHeader() {
         if (DBG) Log.d(TAG, "BrowserBySeason()");
@@ -345,6 +349,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             Tvshow show = result.show;
             BaseTags tags = result.tags;
             ShowTags showTags = result.tags;
+            EpisodeTags episodeTags = new EpisodeTags();
+
             ScraperImage image = new ScraperImage(ScraperImage.Type.SHOW_NETWORK, mTitle);
 
             final TextView plotTv = (TextView) mHeaderView.findViewById(R.id.plot);
@@ -374,6 +380,32 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
             TextView seriesGenres = (TextView) mHeaderView.findViewById(R.id.series_genres);
             seriesGenres.setText(showTags.getGenresFormatted());
+
+
+            TextView mSeasonPlot = (TextView) mHeaderView.findViewById(R.id.season_plot);
+            List <String>  seasonPlots = showTags.getSeasonPlots();
+            List <SeasonsData>  finalSeasonPlots = new ArrayList<>();
+            for (int i = 0; i < seasonPlots.size(); i++) {
+                String seasonPlot = seasonPlots.get(i);
+                List <String>  seasonPlotsFormatted;
+                seasonPlotsFormatted = Arrays.asList(seasonPlot.split("\\s*=&%\\s*"));
+                seasonsData = new SeasonsData();
+                seasonsData.setSeasonNumber(seasonPlotsFormatted.get(0));
+                seasonsData.setSeasonPlot(seasonPlotsFormatted.get(1));
+                seasonsData.setSeasonName(seasonPlotsFormatted.get(2));
+                finalSeasonPlots.add(seasonsData);
+            }
+            Bundle args = getArguments();
+            Boolean equalSeasonNumbers = false;
+            int currentSeason = args.getInt(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON, 0);
+            for (int i = 0; i < finalSeasonPlots.size(); i++) {
+                String seasonNumber = finalSeasonPlots.get(i).getSeasonNumber().replace("SeasonNumber ", "");
+                if (currentSeason == Integer.parseInt(seasonNumber)){
+                    equalSeasonNumbers = true;
+                    mSeasonPlot.setText(finalSeasonPlots.get(i).getSeasonPlot());
+                }
+            }
+            setSeasonPlot((TextView)mHeaderView.findViewById(R.id.season_plot));
 
             ImageView logo = ((ImageView)mHeaderView.findViewById(R.id.net_logo));
             Glide.with(mContext).load(tags.getNetworkLogo())
@@ -445,6 +477,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     }
 
     protected abstract void setSeason(TextView seasonView);
+
+    protected abstract void setSeasonPlot(TextView seasonPlotView);
 
     protected abstract void setColor(int color);
 

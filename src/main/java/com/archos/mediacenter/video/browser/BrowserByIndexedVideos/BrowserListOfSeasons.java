@@ -117,6 +117,11 @@ public class BrowserListOfSeasons extends BrowserWithShowHeader  {
     }
 
     @Override
+    protected void setSeasonPlot(TextView seasonPlotView) {
+        seasonPlotView.setVisibility(View.GONE);
+    }
+
+    @Override
     protected void setColor(int color) {
 
     }

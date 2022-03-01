@@ -263,6 +263,10 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
         seasonView.setText(getResources().getString(R.string.episode_season) + " " + mSeason);
     }
 
+    @Override
+    protected void setSeasonPlot(TextView seasonPlotView) {
+    }
+
 
     @Override
     public int getFirstFilePosition() {
