@@ -356,6 +356,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             final TextView plotTv = (TextView) mHeaderView.findViewById(R.id.series_plot);
             mHeaderView.findViewById(R.id.loading).setVisibility(View.GONE);
 
+            mHeaderView.findViewById(R.id.series_plot).setVisibility(View.GONE);
+
             TextView tvpg = (TextView) mHeaderView.findViewById(R.id.content_rating);
             View tvpgContainer = (View) mHeaderView.findViewById(R.id.content_rating_container);
             if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {

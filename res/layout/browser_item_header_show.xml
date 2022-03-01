@@ -47,9 +47,8 @@
         style="@style/textAppearanceLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/series_plot"
+        android:layout_below="@id/series_plot_container"
         android:layout_marginTop="8dip"
-        android:paddingTop="8dip"
         android:textSize="14dip"
         android:typeface="sans" />
 
@@ -124,16 +123,23 @@
         android:text="@string/series_plot"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="@dimen/video_info_medium_text" />
-
-    <TextView
-        android:id="@+id/series_plot"
+    <LinearLayout
+        android:id="@+id/series_plot_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/series_plot_header"
-        android:background="@drawable/transparent_ripple"
-        android:paddingRight="5dp"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp">
 
+        <TextView
+            android:id="@+id/series_plot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/transparent_ripple"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/content_rating_container"
         android:layout_marginTop="15dp"
