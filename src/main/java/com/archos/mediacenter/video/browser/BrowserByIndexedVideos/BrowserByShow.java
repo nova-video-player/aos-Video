@@ -269,6 +269,10 @@ public class BrowserByShow extends BrowserWithShowHeader {
     protected void setSeasonPlot(TextView seasonPlotView) {
     }
 
+    @Override
+    protected void setSeasonPlotHeader(TextView seasonPlotHeaderView) {
+    }
+
 
     @Override
     public int getFirstFilePosition() {

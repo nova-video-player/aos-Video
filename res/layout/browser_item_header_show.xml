@@ -122,11 +122,25 @@
         android:text="@string/series_plot"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="@dimen/video_info_medium_text" />
+    <TextView
+        android:id="@+id/season_plot_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/series_plot_header"
+        android:layout_marginTop="3dip"
+        android:ellipsize="end"
+        android:lines="1"
+        android:maxLines="1"
+        android:paddingTop="10dp"
+        android:singleLine="true"
+        android:text="@string/season_plot"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/video_info_medium_text" />
     <LinearLayout
         android:id="@+id/series_plot_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/series_plot_header"
+        android:layout_below="@+id/season_plot_header"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp">

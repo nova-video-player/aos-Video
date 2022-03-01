@@ -980,7 +980,8 @@
         It is strongly advised to restart from a clean install to avoid problems. Please check FAQ for details.</string>
     <string name="networks">Networks:</string>
     <string name="premiered">Premiered:</string>
-    <string name="series_plot">Series Overview:</string>
+    <string name="series_plot">Series Plot:</string>
+    <string name="season_plot">Season Plot:</string>
     <string name="series_genres">Genres:</string>
 
 </resources>

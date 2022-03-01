@@ -449,6 +449,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             mSeasonPlot.setTag(true);
 
             setSeason((TextView)mHeaderView.findViewById(R.id.season));
+            setSeasonPlotHeader((TextView)mHeaderView.findViewById(R.id.season_plot_header));
             plotTv.setVisibility(View.VISIBLE);
             if(!mPlotIsFullyDisplayed)
                 mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height_new);
@@ -499,6 +500,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     protected abstract void setSeason(TextView seasonView);
 
     protected abstract void setSeasonPlot(TextView seasonPlotView);
+
+    protected abstract void setSeasonPlotHeader(TextView seasonPlotHeaderView);
 
     protected abstract void setColor(int color);
 

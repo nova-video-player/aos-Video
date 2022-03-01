@@ -83,6 +83,9 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
         // Hide series plot in seasons
         LinearLayout linearLayout = view.findViewById(R.id.series_plot_container);
         linearLayout.setVisibility(View.GONE);
+        // Hide series plot header
+        TextView seriesPlotHeader = view.findViewById(R.id.series_plot_header);
+        seriesPlotHeader.setVisibility(View.GONE);
     }
     @Override
     public void onDestroyView() {
@@ -269,6 +272,10 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
 
     @Override
     protected void setSeasonPlot(TextView seasonPlotView) {
+    }
+
+    @Override
+    protected void setSeasonPlotHeader(TextView seasonPlotHeaderView) {
     }
 
 
