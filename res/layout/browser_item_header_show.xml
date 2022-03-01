@@ -46,10 +46,10 @@
         android:id="@+id/season_plot"
         style="@style/textAppearanceLarge"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/transparent_ripple"
+        android:layout_height="match_parent"
         android:layout_below="@id/series_plot_container"
         android:layout_marginTop="8dip"
+        android:background="@drawable/transparent_ripple"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <ImageView
