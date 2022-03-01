@@ -353,7 +353,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
             ScraperImage image = new ScraperImage(ScraperImage.Type.SHOW_NETWORK, mTitle);
 
-            final TextView plotTv = (TextView) mHeaderView.findViewById(R.id.plot);
+            final TextView plotTv = (TextView) mHeaderView.findViewById(R.id.series_plot);
             mHeaderView.findViewById(R.id.loading).setVisibility(View.GONE);
 
             TextView tvpg = (TextView) mHeaderView.findViewById(R.id.content_rating);
@@ -443,7 +443,9 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             setColor(mColor);
             ((TextView)mHeaderView.findViewById(R.id.name)).setText(show.getName());
             plotTv.setText(show.getPlot());
-            plotTv.setMaxLines(Integer.MAX_VALUE);
+            plotTv.setMaxLines(mContext.getResources().getInteger(R.integer.show_details_max_lines));
+            plotTv.setTag(true);
+            mSeasonPlot.setTag(true);
 
             setSeason((TextView)mHeaderView.findViewById(R.id.season));
             plotTv.setVisibility(View.VISIBLE);
@@ -454,17 +456,34 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             plotTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    View viewMore = mHeaderView.findViewById(R.id.view_more);
-                    if (viewMore.getVisibility() == View.VISIBLE) {
-                        plotTv.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                        viewMore.setVisibility(View.GONE);
+                    if (((Boolean) plotTv.getTag())) {
+                        plotTv.setMaxLines(Integer.MAX_VALUE);
                         mHeaderView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
                         mPlotIsFullyDisplayed = true;
+                        plotTv.setTag(false);
                     } else {
-                        plotTv.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-                        viewMore.setVisibility(View.VISIBLE);
+                        plotTv.setMaxLines(mContext.getResources().getInteger(R.integer.show_details_max_lines));
                         mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height_new);
                         mPlotIsFullyDisplayed = false;
+                        plotTv.setTag(true);
+                    }
+                    mBrowserAdapter.notifyDataSetChanged();
+                }
+            });
+
+            mSeasonPlot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (((Boolean) mSeasonPlot.getTag())) {
+                        mSeasonPlot.setMaxLines(Integer.MAX_VALUE);
+                        mHeaderView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                        mPlotIsFullyDisplayed = true;
+                        mSeasonPlot.setTag(false);
+                    } else {
+                        mSeasonPlot.setMaxLines(mContext.getResources().getInteger(R.integer.show_details_max_lines));
+                        mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height_new);
+                        mPlotIsFullyDisplayed = false;
+                        mSeasonPlot.setTag(true);
                     }
                     mBrowserAdapter.notifyDataSetChanged();
                 }
