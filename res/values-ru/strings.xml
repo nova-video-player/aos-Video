@@ -167,7 +167,9 @@
     <string name="scrap_get_title">Получение данных</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Режиссер</string>
+    <string name="scrap_writer">Сценарист</string>
     <string name="scrap_director_format">Режиссер: %s</string>
+    <string name="scrap_writer_format">Сценарист: %s</string>
     <string name="scrap_rating">Рейтинг</string>
     <string name="scrap_rating_format">Рейтинг: %s</string>
     <string name="scrap_year">Год</string>
@@ -563,6 +565,8 @@
     <string name="tv_scraper">Сериалы</string>
     <string name="movie_scraper">Фильмы</string>
     <string name="enable_auto_scrap">Автоматически получать информацию для новых видео</string>
+    <string name="enable_adult_scrap_title">Распознавание видео для взрослых</string>
+    <string name="enable_adult_scrap_summary">Включить поиск информации о фильмах для взрослых (по умолчанию: выкл)</string>
     <string name="locale">Язык системы</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
@@ -890,4 +894,6 @@
     <string name="enable_sponsor_summary">Перейти по ссылке для пожертвований: важна любая помощь проекту.</string>
     <string name="upgrade_info">Информация об обновлении</string>
     <string name="v5_v6_upgrade_info">ВНИМАНИЕ: Это обновление Nova потребует пересканировать всю библиотеку мультимедиа. Чтобы избежать проблем, настоятельно рекомендуется полностью переустановить программу. Пожалуйста, ознакомьтесь с FAQ для подробностей.</string>
+    <string name="networks">Сети:</string>
+    <string name="premiered">Премьера:</string>
 </resources>

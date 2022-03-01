@@ -165,7 +165,9 @@
     <string name="scrap_get_title">Infó lekérése</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Rendező</string>
+    <string name="scrap_writer">Író</string>
     <string name="scrap_director_format">Rendező: %s</string>
+    <string name="scrap_writer_format">Író: %s</string>
     <string name="scrap_rating">Értékelés</string>
     <string name="scrap_rating_format">Értékelés: %s</string>
     <string name="scrap_year">Év</string>
@@ -553,6 +555,8 @@
     <string name="tv_scraper">Sorozatok</string>
     <string name="movie_scraper">Filmek</string>
     <string name="enable_auto_scrap">Új videók leírásának automatikus lekérése</string>
+    <string name="enable_adult_scrap_title">Felnőtt filmek feldolgozása</string>
+    <string name="enable_adult_scrap_summary">Felnőtt filmek leírásának lekérése (alapértelmezetten kikapcsolva)</string>
     <string name="locale">Rendszernyelv</string>
     <string name="yes">Igen</string>
     <string name="no">Nem</string>
@@ -881,4 +885,6 @@
     <string name="upgrade_info">Frissítési információk</string>
     <string name="v5_v6_upgrade_info">FIGYELMEZTETÉS:  a Nova jelentős frissítése megköveteli az összes videogyűjtemény újraolvasását a multimédiás információk újra beszerzéséhez.
          A problémák elkerülése érdekében erősen ajánlott tiszta telepítésről újraindítani. Kérjük, olvassa el a GYIK-ot a részletekért.</string>
+    <string name="networks">Hálózatok:</string>
+    <string name="premiered">Bemutatva:</string>
 </resources>

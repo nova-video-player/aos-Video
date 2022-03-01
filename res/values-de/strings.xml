@@ -165,7 +165,9 @@
     <string name="scrap_get_title">Rufe Info ab</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Regisseur</string>
+    <string name="scrap_writer">Autor</string>
     <string name="scrap_director_format">Regisseur: %s</string>
+    <string name="scrap_writer_format">Autor: %s</string>
     <string name="scrap_rating">Bewertung</string>
     <string name="scrap_rating_format">Bewertung: %s</string>
     <string name="scrap_year">Jahr</string>
@@ -553,6 +555,8 @@
     <string name="tv_scraper">Serien</string>
     <string name="movie_scraper">Filme</string>
     <string name="enable_auto_scrap">Automatisch Beschreibungen für neue Videos erhalten</string>
+    <string name="enable_adult_scrap_title">Erwachsenen-Video Scraping</string>
+    <string name="enable_adult_scrap_summary">Aktiviere das Abrufen von Erwachsenen-Video-Informationen (standardmäßig deaktiviert)</string>
     <string name="locale">System Sprache</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
@@ -881,4 +885,6 @@
     <string name="upgrade_info">Upgrade Information</string>
     <string name="v5_v6_upgrade_info">WARNUNG: Dieses Nova-Update erfordert ein erneutes Durchsuchen der Videosammlung für die Multimedia-Informationen.
         Es wird dringend empfohlen, von einer sauberen Installation neu zu starten, um Probleme zu vermeiden. Bitte überprüfen Sie die FAQ für Details.</string>
+    <string name="networks">Netzwerke:</string>
+    <string name="premiered">Erstausstrahlung:</string>
 </resources>

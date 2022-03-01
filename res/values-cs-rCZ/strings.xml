@@ -161,7 +161,9 @@
     <string name="scrap_get_title">Získávám informace</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Režie</string>
+    <string name="scrap_writer">Autor</string>
     <string name="scrap_director_format">Režie: %s</string>
+    <string name="scrap_writer_format">Autor: %s</string>
     <string name="scrap_rating">Hodnocení</string>
     <string name="scrap_rating_format">Hodnocení: %s</string>
     <string name="scrap_year">Rok</string>
@@ -537,6 +539,8 @@
     <string name="tv_scraper">Seriály</string>
     <string name="movie_scraper">Filmy</string>
     <string name="enable_auto_scrap">Automaticky získat informace pro nová videa</string>
+    <string name="enable_adult_scrap_title">Získávání informací pro videa pro dospělé</string>
+    <string name="enable_adult_scrap_summary">Povolit načítání informací pro videa pro dospělé (ve výchozím nastavení vypnuto)</string>
     <string name="locale">Jazyk systému</string>
     <string name="yes">Ano</string>
     <string name="no">Ne</string>
@@ -864,4 +868,6 @@
     <string name="enable_sponsor_summary">Aktivovat odkaz na sponzorské dary: každý příspěvek pomůže.</string>
     <string name="upgrade_info">Informace o aktualizaci</string>
     <string name="v5_v6_upgrade_info">VAROVÁNÍ: tato významná aktualizace aplikace vyžaduje opětovné naskenování všech videí pro opětovné získání popisných informací.         Pro vyvarování se problémů doporučujeme začít znovu s čistou instalací. Prosím přečtěte si časté otázky (FAQ) pro další detaily.</string>
+    <string name="networks">Sítě:</string>
+    <string name="premiered">Premiéra:</string>
 </resources>

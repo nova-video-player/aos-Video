@@ -164,7 +164,9 @@
     <string name="scrap_get_title">正在取得資訊</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">導演</string>
+    <string name="scrap_writer">編劇</string>
     <string name="scrap_director_format">導演：%s</string>
+    <string name="scrap_writer_format">編劇：%s</string>
     <string name="scrap_rating">評分</string>
     <string name="scrap_rating_format">評分：%s</string>
     <string name="scrap_year">年份</string>
@@ -548,6 +550,8 @@
     <string name="tv_scraper">電視劇</string>
     <string name="movie_scraper">電影</string>
     <string name="enable_auto_scrap">自動為新增影片取得資訊</string>
+    <string name="enable_adult_scrap_title">抓取成人影片的資料</string>
+    <string name="enable_adult_scrap_summary">開啟成人影片的資訊擷取 (預設停用)</string>
     <string name="locale">系統語言</string>
     <string name="yes">是</string>
     <string name="no">否</string>
@@ -876,4 +880,6 @@
     <string name="upgrade_info">升級資訊</string>
     <string name="v5_v6_upgrade_info">警告：本版本 Nova 有重大更新，需要重新掃描所有影片的收藏以重新獲得多媒體資訊。
         強烈建議重新安裝後重起以避免發生問題，詳細資訊請參閱「説明 / 常見問題」。</string>
+    <string name="networks">網路：</string>
+    <string name="premiered">首映：</string>
 </resources>
