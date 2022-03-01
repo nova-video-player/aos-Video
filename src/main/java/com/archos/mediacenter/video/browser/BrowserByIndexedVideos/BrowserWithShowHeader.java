@@ -356,8 +356,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             final TextView plotTv = (TextView) mHeaderView.findViewById(R.id.series_plot);
             mHeaderView.findViewById(R.id.loading).setVisibility(View.GONE);
 
-            mHeaderView.findViewById(R.id.series_plot).setVisibility(View.GONE);
-
             TextView tvpg = (TextView) mHeaderView.findViewById(R.id.content_rating);
             View tvpgContainer = (View) mHeaderView.findViewById(R.id.content_rating_container);
             if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
@@ -446,6 +444,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             ((TextView)mHeaderView.findViewById(R.id.name)).setText(show.getName());
             plotTv.setText(show.getPlot());
             plotTv.setMaxLines(mContext.getResources().getInteger(R.integer.show_details_max_lines));
+            mSeasonPlot.setMaxLines(mContext.getResources().getInteger(R.integer.show_details_max_lines));
             plotTv.setTag(true);
             mSeasonPlot.setTag(true);
 

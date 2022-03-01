@@ -49,8 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/series_plot_container"
         android:layout_marginTop="8dip"
-        android:textSize="14dip"
-        android:typeface="sans" />
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <ImageView
         android:id="@+id/flag_3d"
