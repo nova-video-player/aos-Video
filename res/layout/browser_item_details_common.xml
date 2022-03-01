@@ -19,7 +19,12 @@
     <!-- Movie   : director(s) -->
     <!-- TV show : season + episode numbers -->
     <!-- Other   : empty -->
-
+    <ImageView
+        android:id="@+id/episode_picture"
+        android:layout_width="112dp"
+        android:layout_height="@dimen/video_list_item_height"
+        android:scaleType="center"
+        />
     <TextView
         android:id="@+id/detail_line_one"
         style="@style/BrowserText.Details"
@@ -42,7 +47,6 @@
         android:textStyle="italic" />
 
     <!-- All : duration -->
-
     <TextView
         android:id="@+id/info"
         style="@style/BrowserText.Info.Video"
@@ -57,8 +61,7 @@
         android:id="@+id/detail_line_three"
         style="@style/BrowserText.Details"
         android:layout_below="@id/info"
-        android:layout_marginTop="4dip"
-        android:layout_toRightOf="@id/left_area"
+        android:layout_marginTop="10dip"
         android:ellipsize="end" />
 
     <!-- Movie or TV show  : release date and rating -->
@@ -70,7 +73,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/detail_line_three"
         android:layout_marginTop="4dip"
-        android:layout_toRightOf="@id/left_area"
         layout="@layout/browser_item_details_date_and_rating" />
 
     <!--
