@@ -47,9 +47,10 @@
         style="@style/textAppearanceLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/transparent_ripple"
         android:layout_below="@id/series_plot_container"
         android:layout_marginTop="8dip"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <ImageView
         android:id="@+id/flag_3d"
