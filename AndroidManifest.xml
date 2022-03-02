@@ -1060,15 +1060,13 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="com.archos.mediacenter.video.player.MediaButtonService"
+        <service android:name="com.archos.mediacenter.video.player.PlayerService"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </service>
 
-        <service android:name="com.archos.mediacenter.video.player.PlayerService"
-            android:exported="true"/>
         <service android:name="com.archos.mediascraper.AutoScrapeService" />
         <service android:name="com.archos.mediascraper.AllCollectionScrapeService" />
         <service android:name="com.archos.mediacenter.video.browser.FileManagerService" />
