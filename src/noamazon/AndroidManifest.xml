@@ -26,13 +26,14 @@
         android:name="android.hardware.touchscreen"
         android:required="false" />
 
-    <application>
+    <application
+        android:icon="@mipmap/ic_launcher">
         <!-- ************** WIDGET ************** -->
 
         <activity
             android:name="com.archos.mediacenter.video.widget.VideoWidgetConfigure"
-            android:icon="@mipmap/video2"
-            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:exported="false"
             android:label="@string/nova"
             android:theme="@style/Theme.DialogMinWidth" >
             <intent-filter>
@@ -43,7 +44,7 @@
         <receiver
             android:name="com.archos.mediacenter.video.widget.WidgetProviderVideo"
             android:label="@string/nova"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name=".widget.RELOAD_ACTION" />
