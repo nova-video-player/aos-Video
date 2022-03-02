@@ -85,9 +85,13 @@ public class EpisodeListDetailedPresenter extends EpisodePresenter{
         super.bindView(view,object, result, positionInAdapter);
         ViewHolderDetails holder = (ViewHolderDetails) view.getTag();
 
-        Glide.with(mContext).load(tvShow.getPictureUri())
-                .fitCenter().into(holder.episodeStill);
-
+        if (tvShow.getPictureUri()!=null) {
+            Glide.with(mContext).load(tvShow.getPictureUri())
+                    .fitCenter().into(holder.episodeStill);
+        } else {
+            Glide.with(mContext).load(R.drawable.default_image)
+                    .fitCenter().into(holder.episodeStill);
+        }
 
             setViewHolderVisibility(holder, View.VISIBLE);
             holder.info.setText(MediaUtils.formatTime(tvShow.getDurationMs()));

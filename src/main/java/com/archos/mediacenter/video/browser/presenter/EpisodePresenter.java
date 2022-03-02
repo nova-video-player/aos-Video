@@ -55,8 +55,13 @@ public class EpisodePresenter extends VideoPresenter implements Presenter {
         ViewHolder holder = (ViewHolder) view.getTag();
         if(holder.secondLine!=null)
             holder.secondLine.setVisibility(View.VISIBLE);
-        Glide.with(mContext).load(episode.getPictureUri())
-                .fitCenter().into(holder.episodeStill);
+        if (episode.getPictureUri()!=null) {
+            Glide.with(mContext).load(episode.getPictureUri())
+                    .fitCenter().into(holder.episodeStill);
+        } else {
+            Glide.with(mContext).load(R.drawable.default_image)
+                    .fitCenter().into(holder.episodeStill);
+        }
         String name = episode.getName();
         if(name == null ||  name.isEmpty())
             name = episode.getShowName()+ " "+ mContext.getString(R.string.leanback_episode_SXEX_code, episode.getSeasonNumber(), episode.getEpisodeNumber());
