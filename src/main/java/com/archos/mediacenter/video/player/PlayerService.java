@@ -49,6 +49,7 @@ import com.archos.environment.ArchosFeatures;
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.StreamUriFinder;
+import com.archos.mediacenter.utils.AppState;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
@@ -181,9 +182,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private String mSubsFavoriteLanguage;
     private boolean mDestroyed;
     private Runnable mAutoSaveTask;
-
-    private Intent mediaButtonServiceIntent;
-
+    
     public enum PlayerState {
         INIT,
         PREPARING,
@@ -392,11 +391,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
         log.debug("onCreate: register headsetPluggedReceiver");
         registerReceiver(headsetPluggedReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
-
-        log.debug("onCreate: start mediaButtonService");
-        mediaButtonServiceIntent = new Intent(this, MediaButtonService.class);
-        startService(mediaButtonServiceIntent);
-
         setPlayer();
         Intent intent = new Intent(PLAYER_SERVICE_STARTED);
         intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
@@ -1006,11 +1000,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         super.onDestroy();
         log.debug("onDestroy: release mediaSessionCompat");
         if (mSession != null) mSession.release();
-        stopService(mediaButtonServiceIntent);
         if(mIndexHelper!=null)
             mIndexHelper.abort();
         mDestroyed = true;
-        log.debug("onDestroy: unregister headsetPluggedReceiver and mediaButtonReceiver");
+        log.debug("onDestroy: unregister headsetPluggedReceiver");
         unregisterReceiver(headsetPluggedReceiver);
         sPlayerService=null;
         if(mTorrent!=null)
