@@ -19,21 +19,21 @@ import com.archos.mediaprovider.video.VideoStore;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 class RemoteViewsFactoryRecentlyAdded extends RemoteViewsFactoryBase {
-    private final static String TAG = "RemoteViewsFactoryRecentlyAdded";
-    private final static boolean DBG = false;
-
+    private static final Logger log = LoggerFactory.getLogger(RemoteViewsFactoryRecentlyAdded.class);
 
     public RemoteViewsFactoryRecentlyAdded(Context context, Intent intent) {
         super(context, intent);
-        if (DBG) Log.d(TAG, "Create RecentlyAdded service for the video widget");
+        log.debug("Create RecentlyAdded service for the video widget");
     }
 
     protected boolean loadData(Context context, int maxItemCount) {
-    	if(DBG) Log.d(TAG, "loadData()");
+        log.debug("loadData()");
     	String sortOrder = VideoStore.MediaColumns.DATE_ADDED + " DESC" + " LIMIT " + maxItemCount;
         ContentResolver resolver = context.getContentResolver();
         mCursor = resolver.query(MEDIA_DB_CONTENT_URI, VIDEO_FILES_COLUMNS, WHERE_NOT_HIDDEN, null, sortOrder);

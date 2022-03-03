@@ -22,18 +22,20 @@ import android.util.Log;
 
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserByVideoSelection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 class RemoteViewsFactoryMovies extends RemoteViewsFactoryBase {
-	private final static String TAG = "RemoteViewsFactoryMovies";
-	private final static boolean DBG = false;
+	private static final Logger log = LoggerFactory.getLogger(RemoteViewsFactoryMovies.class);
 
 	public RemoteViewsFactoryMovies(Context context, Intent intent) {
 		super(context, intent);
-		if (DBG) Log.d(TAG, "RemoteViewsFactoryMovies contructor");
+		log.debug("RemoteViewsFactoryMovies contructor");
 	}
 
 	protected boolean loadData(Context context, int maxItemCount) {
-		if(DBG) Log.d(TAG, "loadData()");
+		log.debug("loadData()");
 		String sortOrder = BrowserByVideoSelection.DEFAULT_SORT + " LIMIT " + maxItemCount;
 		String selection = BrowserByVideoSelection.SELECTION_ALL_MOVIES;
 		ContentResolver resolver = context.getContentResolver();

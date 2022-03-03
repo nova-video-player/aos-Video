@@ -19,20 +19,20 @@ import com.archos.mediaprovider.video.VideoStore;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class RemoteViewsFactoryRecentlyPlayed extends RemoteViewsFactoryBase {
-    private final static String TAG = "RemoteViewsFactoryRecentlyPlayed";
-    private final static boolean DBG = false;
-
+    private static final Logger log = LoggerFactory.getLogger(RemoteViewsFactoryRecentlyPlayed.class);
 
     public RemoteViewsFactoryRecentlyPlayed(Context context, Intent intent) {
         super(context, intent);
-        if (DBG) Log.d(TAG, "Create RecentlyPlayed service for the video widget");
+        log.debug("Create RecentlyPlayed service for the video widget");
     }
 
     protected boolean loadData(Context context, int maxItemCount) {
-    	if(DBG) Log.d(TAG, "loadData()");
+        log.debug("loadData()");
     	String sortOrder = VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + " DESC" + " LIMIT " + maxItemCount;
     	String where = VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + "!=0 AND " + WHERE_NOT_HIDDEN;
         ContentResolver resolver = context.getContentResolver();

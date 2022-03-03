@@ -18,23 +18,22 @@ package com.archos.mediacenter.video.widget;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserAllTvShows;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class RemoteViewsFactoryTVShows extends RemoteViewsFactoryBase {
-    private final static String TAG = "RemoteViewsFactoryTVShows";
-    private final static boolean DBG = false;
-
+    private static final Logger log = LoggerFactory.getLogger(RemoteViewsFactoryTVShows.class);
 
     public RemoteViewsFactoryTVShows(Context context, Intent intent) {
         super(context, intent);
-        if (DBG) Log.d(TAG, "Create TVShows service for the video widget");
+        log.debug("Create TVShows service for the video widget");
     }
 
     protected boolean loadData(Context context, int maxItemCount) {
-    	if(DBG) Log.d(TAG, "loadData()");
+        log.debug("loadData()");
 		String sortOrder = BrowserAllTvShows.DEFAULT_SORT + " LIMIT " + maxItemCount;
 		String selection = BrowserAllTvShows.SELECTION;
 		ContentResolver resolver = context.getContentResolver();
