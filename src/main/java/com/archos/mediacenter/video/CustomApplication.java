@@ -309,7 +309,7 @@ public class CustomApplication extends Application {
             launchSambaDiscovery();
         } else {
             if (isVideStoreImportReceiverRegistered) {
-                log.debug("handleForeGround: app now in ForeGround registerReceiver for videoStoreImportReceiver");
+                log.debug("handleForeGround: app now in BackGround unregisterReceiver for videoStoreImportReceiver");
                 unregisterReceiver(videoStoreImportReceiver);
                 isVideStoreImportReceiverRegistered = false;
             }
