@@ -1119,8 +1119,8 @@
             <!-- Starts network indexing -->
             <intent-filter>
                 <action android:name="archos.media.intent.action.VIDEO_SCANNER_SCAN_FILE" />
+                <action android:name="android.intent.action.MEDIA_SCANNER_SCAN_FILE" />
                 <action android:name="archos.intent.action.MEDIA_SCANNER_SCAN_FILE" />
-
                 <data android:scheme="smb" />
                 <data android:scheme="http" />
                 <data android:scheme="https" />
@@ -1130,6 +1130,7 @@
                 <data android:scheme="upnp" />
                 <data android:scheme="ftps" />
                 <data android:scheme="content" />
+                <data android:scheme="file" />
             </intent-filter>
             <!-- Starts incremental local storage import -->
             <intent-filter>
