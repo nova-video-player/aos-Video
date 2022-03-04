@@ -459,35 +459,17 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
             // setting Actors RecyclerView
             actors = mHeaderView.findViewById(R.id.actor_photos);
-            List<String> actorPhotoPaths = new ArrayList<>();
-            for (int i = tags.getActorPhotosLargeFileF().size() - 1; i >= 0; i--) {
-                String avaialbeActorpath = String.valueOf(tags.getActorPhotosLargeFileF().get(i));
-                actorPhotoPaths.add(avaialbeActorpath);
-            }
-            List<String> actorNames = new ArrayList<>();
-            for (Map.Entry<String, String> entry : tags.getActors().entrySet()) {
-                    String actorName = entry.getKey();
-                actorNames.add(actorName);
-            }
-            List<String> actorCharacters = new ArrayList<>();
-            for (Map.Entry<String, String> entry : tags.getActors().entrySet()) {
-                String actorCharacter = entry.getValue();
-                actorCharacters.add(actorCharacter);
-            }
             List<CastData> seriesActors = new ArrayList<>();
             CastData castData;
-            if (actorNames.size() == actorCharacters.size() && actorCharacters.size() == actorPhotoPaths.size()) {
-                seriesActors = new ArrayList<>();
-                for (int i = 0; (i < actorNames.size()) && (i < actorCharacters.size()) && (i < actorPhotoPaths.size()); i++) {
-                    castData = new CastData();
-                    String name = actorNames.get(i);
-                    String character = actorCharacters.get(i);
-                    String filepath = actorPhotoPaths.get(i);
-                    castData.setName(name);
-                    castData.setCharacter(character);
-                    castData.setPhotoPath(filepath);
-                    seriesActors.add(castData);
-                }
+            for (int i = 0; i < tags.getWriters().size(); i++) {
+                String actor = tags.getWriters().get(i);
+                List <String>  actorsFormatted;
+                actorsFormatted = Arrays.asList(actor.split("\\s*=&%#\\s*"));
+                castData = new CastData();
+                castData.setName(actorsFormatted.get(0));
+                castData.setCharacter(actorsFormatted.get(1));
+                castData.setPhotoPath("/data/user/0/org.courville.nova/app_scraper_actorphotos" + actorsFormatted.get(2));
+                seriesActors.add(castData);
             }
             LinearLayoutManager actorsLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
             actors.setLayoutManager(actorsLayoutManager);
