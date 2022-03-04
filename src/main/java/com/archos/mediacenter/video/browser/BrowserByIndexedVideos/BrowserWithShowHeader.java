@@ -482,7 +482,9 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             actors.setAdapter(actorAdapter);
             // add space between actors
             int spacing = getResources().getDimensionPixelSize(R.dimen.cast_spacing);
-            actors.addItemDecoration(new CastAdapter.SpacesItemDecoration(spacing));
+            if (actors.getItemDecorationCount() < 1) {
+                actors.addItemDecoration(new CastAdapter.SpacesItemDecoration(spacing));
+            }
 
 
             ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));
