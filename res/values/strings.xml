@@ -983,6 +983,9 @@
     <string name="premiered">Premiered:</string>
     <string name="series_plot">Series Plot:</string>
     <string name="season_plot">Season Plot:</string>
+    <string name="actors_header">Actors:</string>
+    <string name="castname">Cast Name:</string>
+    <string name="castcharacter">Cast Character:</string>
     <string name="series_genres">Genres:</string>
 
 </resources>

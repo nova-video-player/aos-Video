@@ -44,6 +44,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.archos.mediacenter.video.browser.adapters.CastAdapter;
+import com.archos.mediacenter.video.browser.adapters.CastData;
 import com.archos.mediacenter.video.browser.adapters.SeasonsData;
 import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
 import com.archos.mediascraper.EpisodeTags;
@@ -81,6 +83,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
@@ -108,6 +111,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     protected View mApplicationFrameLayout;
     private boolean mPlotIsFullyDisplayed;
     private RecyclerView recyclerView;
+    private RecyclerView actors;
     private SeasonsData seasonsData;
 
     public BrowserWithShowHeader() {
@@ -420,10 +424,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             Glide.with(mContext).load(tags.getNetworkLogo())
                     .fitCenter().into(logo);
 
-            ImageView ActorPhoto = ((ImageView)mHeaderView.findViewById(R.id.actor_photo));
-            Glide.with(mContext).load(tags.getActorPhoto())
-                    .fitCenter().into(ActorPhoto);
-
             TextView seriesRating = (TextView) mHeaderView.findViewById(R.id.series_rating);
             seriesRating.setText(String.valueOf(showTags.getRating()));
 
@@ -442,6 +442,51 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             };
             final ShowNetworkAdapter logoAdapter = new ShowNetworkAdapter(NetworkLogoPaths,indicatorCallback);
             recyclerView.setAdapter(logoAdapter);
+
+            // setting Actors RecyclerView
+            actors = mHeaderView.findViewById(R.id.actor_photos);
+            List<String> actorPhotoPaths = new ArrayList<>();
+            for (int i = tags.getActorPhotosLargeFileF().size() - 1; i >= 0; i--) {
+                String avaialbeActorpath = String.valueOf(tags.getActorPhotosLargeFileF().get(i));
+                actorPhotoPaths.add(avaialbeActorpath);
+            }
+            List<String> actorNames = new ArrayList<>();
+            for (Map.Entry<String, String> entry : tags.getActors().entrySet()) {
+                    String actorName = entry.getKey();
+                actorNames.add(actorName);
+            }
+            List<String> actorCharacters = new ArrayList<>();
+            for (Map.Entry<String, String> entry : tags.getActors().entrySet()) {
+                String actorCharacter = entry.getValue();
+                actorCharacters.add(actorCharacter);
+            }
+            List<CastData> seriesActors = new ArrayList<>();
+            CastData castData;
+            if (actorNames.size() == actorCharacters.size() && actorCharacters.size() == actorPhotoPaths.size()) {
+                seriesActors = new ArrayList<>();
+                for (int i = 0; (i < actorNames.size()) && (i < actorCharacters.size()) && (i < actorPhotoPaths.size()); i++) {
+                    castData = new CastData();
+                    String name = actorNames.get(i);
+                    String character = actorCharacters.get(i);
+                    String filepath = actorPhotoPaths.get(i);
+                    castData.setName(name);
+                    castData.setCharacter(character);
+                    castData.setPhotoPath(filepath);
+                    seriesActors.add(castData);
+                }
+            }
+            LinearLayoutManager actorsLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+            actors.setLayoutManager(actorsLayoutManager);
+            CastAdapter.OnItemClickListener actorCallback = new CastAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                }
+            };
+            final CastAdapter actorAdapter = new CastAdapter(seriesActors,actorCallback);
+            actors.setAdapter(actorAdapter);
+            // add space between actors
+            int spacing = getResources().getDimensionPixelSize(R.dimen.cast_spacing);
+            actors.addItemDecoration(new CastAdapter.SpacesItemDecoration(spacing));
 
 
             ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));
