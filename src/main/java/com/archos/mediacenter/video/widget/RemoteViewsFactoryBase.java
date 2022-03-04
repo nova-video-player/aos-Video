@@ -372,7 +372,7 @@ abstract class RemoteViewsFactoryBase implements RemoteViewsService.RemoteViewsF
             intent.putExtra(WidgetProviderVideo.EXTRA_CONTENT_CHANGED, true);
         }
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, intent,
-                ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT));
+                ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
         mAlarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + delay, pendingIntent);
     }
 
@@ -384,7 +384,7 @@ abstract class RemoteViewsFactoryBase implements RemoteViewsService.RemoteViewsF
         // Cancel any previous alarm set for a content changed event
         if (mLastContentChangedIntent != null) {
             pendingIntent = PendingIntent.getBroadcast(mContext, 0, mLastContentChangedIntent,
-                    ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT));
+                    ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
             mAlarmManager.cancel(pendingIntent);
         }
 
@@ -395,13 +395,12 @@ abstract class RemoteViewsFactoryBase implements RemoteViewsService.RemoteViewsF
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
         mLastContentChangedIntent = intent.cloneFilter();                           // This is enough to identify the intent
         pendingIntent = PendingIntent.getBroadcast(mContext, 0, intent,
-                ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT));
+                ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
         mAlarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + delay, pendingIntent);
     }
 
     // To be implemented by each sub-class
     abstract protected boolean loadData(Context context, int itemCount);
-
 
     /****************************************************************************************
     * Content observer 
