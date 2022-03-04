@@ -420,6 +420,10 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             Glide.with(mContext).load(tags.getNetworkLogo())
                     .fitCenter().into(logo);
 
+            ImageView ActorPhoto = ((ImageView)mHeaderView.findViewById(R.id.actor_photo));
+            Glide.with(mContext).load(tags.getActorPhoto())
+                    .fitCenter().into(ActorPhoto);
+
             TextView seriesRating = (TextView) mHeaderView.findViewById(R.id.series_rating);
             seriesRating.setText(String.valueOf(showTags.getRating()));
 

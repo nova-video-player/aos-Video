@@ -41,6 +41,14 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_below="@id/thumbnail" />
+    <ImageView
+        android:id="@+id/actor_photo"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
+        android:layout_below="@id/net_logo_rv"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:scaleType="center" />
 
     <TextView
         android:id="@+id/season_plot"
@@ -231,7 +239,7 @@
 
     <LinearLayout
         android:id="@+id/created_by_container"
-        android:layout_below="@id/net_logo_rv"
+        android:layout_below="@id/actor_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
