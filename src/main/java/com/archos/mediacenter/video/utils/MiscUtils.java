@@ -21,16 +21,25 @@ import android.content.pm.PackageManager;
 import android.app.UiModeManager;
 import android.content.res.Configuration;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.DisplayCutout;
 
 import static android.content.Context.UI_MODE_SERVICE;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Created by alexandre on 02/06/17.
  */
 
 public class MiscUtils {
+
+    private static final Logger log = LoggerFactory.getLogger(MiscUtils.class);
 
     public static boolean hasCutout = false;
 
@@ -69,6 +78,21 @@ public class MiscUtils {
                 || Build.PRODUCT.contains("vbox86p")
                 || Build.PRODUCT.contains("emulator")
                 || Build.PRODUCT.contains("simulator");
+    }
+
+    public static void dumpBundle(Bundle bundle, String TAG, Boolean isDebug) {
+        if (isDebug) {
+            if (bundle != null) {
+                Set<String> keys = bundle.keySet();
+                Iterator<String> it = keys.iterator();
+                log.info(TAG + " bundle dump start");
+                while (it.hasNext()) {
+                    String key = it.next();
+                    log.info(TAG + " [" + key + "=" + bundle.get(key) + "]");
+                }
+                log.info(TAG + " bundle dump stop");
+            }
+        }
     }
 
 }
