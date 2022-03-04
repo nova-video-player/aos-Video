@@ -242,8 +242,8 @@ public class WidgetProviderVideo extends AppWidgetProvider {
     private void update(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds,
                         boolean updateRemoteAdapter, boolean showEmptyViewText, boolean showDataLoadingSpinBar) {
         log.debug("update: updateRemoteAdapter=" + updateRemoteAdapter + " showEmptyViewText=" + showEmptyViewText + " showDataLoadingSpinBar=" + showDataLoadingSpinBar);
-
-       // update each of the widgets with the remote adapter
+        
+        // update each of the widgets with the remote adapter
         for (int i = 0; i < appWidgetIds.length; ++i) {
             WidgetConfiguration config = loadConfiguration(context, appWidgetIds[i]);
 
