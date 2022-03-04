@@ -16,6 +16,8 @@
 
 package com.archos.mediacenter.video.widget;
 
+import static com.archos.mediacenter.video.utils.MiscUtils.dumpBundle;
+
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -107,13 +109,7 @@ public class WidgetProviderVideo extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         log.debug("onReceive intent=" + intent);
 
-        Bundle bundle = intent.getExtras();
-
-        if (bundle != null) {
-            for (String key : bundle.keySet()) {
-                log.debug("onReceive: intent dump " + key + " : " + (bundle.get(key) != null ? bundle.get(key) : "NULL"));
-            }
-        }
+        dumpBundle(intent.getExtras(), this.getClass().getSimpleName() + ":onReceive", log.isDebugEnabled());
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
@@ -245,13 +241,14 @@ public class WidgetProviderVideo extends AppWidgetProvider {
 
     private void update(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds,
                         boolean updateRemoteAdapter, boolean showEmptyViewText, boolean showDataLoadingSpinBar) {
-        log.debug("update : updateRemoteAdapter=" + updateRemoteAdapter + " showEmptyViewText=" + showEmptyViewText + " showDataLoadingSpinBar=" + showDataLoadingSpinBar);
+        log.debug("update: updateRemoteAdapter=" + updateRemoteAdapter + " showEmptyViewText=" + showEmptyViewText + " showDataLoadingSpinBar=" + showDataLoadingSpinBar);
 
        // update each of the widgets with the remote adapter
         for (int i = 0; i < appWidgetIds.length; ++i) {
             WidgetConfiguration config = loadConfiguration(context, appWidgetIds[i]);
 
             if (config.mode != MODE_UNKNOWN) {
+                log.debug("update: mode known");
                 // Here we setup the intent which points to the ViewService which will
                 // provide the views for this collection.
                 Intent intent = getServiceIntent(context, config.mode);
