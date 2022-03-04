@@ -2039,6 +2039,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                                 Player.sPlayer.pause(PlayerController.STATE_NORMAL);
                                 updatePausePlay();
                                 show();
+                                Player.sPlayer.finishActivity();
                             }
                             return true;
                         case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:

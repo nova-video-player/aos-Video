@@ -1262,4 +1262,8 @@ public class Player implements IPlayerControl,
         void onBufferingUpdate(int percent);
         void onSubtitle(Subtitle subtitle);
     }
+
+    public void finishActivity() {
+        if(mContext instanceof PlayerActivity) ((PlayerActivity)mContext).finish();
+    }
 }
