@@ -365,6 +365,10 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 tvpg.setText(tags.getContentRating());
             }
 
+            // Utilizing the unused series director as a pipeline for series created by tag
+            TextView createdBy = (TextView) mHeaderView.findViewById(R.id.created_by);
+            createdBy.setText(tags.getDirectorsFormatted());
+
             TextView network = (TextView) mHeaderView.findViewById(R.id.network);
             network.setText(show.getStudio());
 

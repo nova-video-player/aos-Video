@@ -978,6 +978,7 @@
     <string name="upgrade_info">Upgrade information</string>
     <string name="v5_v6_upgrade_info">WARNING: this Nova major update requires to rescan all video collection for multimedia information re-aquisition.
         It is strongly advised to restart from a clean install to avoid problems. Please check FAQ for details.</string>
+    <string name="created_by">Created By:</string>
     <string name="networks">Networks:</string>
     <string name="premiered">Premiered:</string>
     <string name="series_plot">Series Plot:</string>
