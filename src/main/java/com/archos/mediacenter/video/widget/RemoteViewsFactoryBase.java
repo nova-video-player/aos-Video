@@ -82,7 +82,6 @@ abstract class RemoteViewsFactoryBase implements RemoteViewsService.RemoteViewsF
         VideoColumns.BOOKMARK,
         VideoColumns.ARCHOS_MEDIA_SCRAPER_ID,
         VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE,
-            VideoColumns.SCRAPER_SHOW_ID,
             VideoColumns.SCRAPER_E_SEASON,
         VideoColumns.SCRAPER_E_EPISODE};
 
