@@ -265,7 +265,7 @@ public class WidgetProviderVideo extends AppWidgetProvider {
                 // Pending intent on the icon and title
                 Intent appIntent = new Intent(context, MainActivity.class);
                 PendingIntent appPendingIntent = PendingIntent.getActivity(context, 0 /* no requestCode */, appIntent,
-                        ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
+                        ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
                 rv.setOnClickPendingIntent(R.id.app_icon, appPendingIntent);
                 rv.setOnClickPendingIntent(R.id.label, appPendingIntent);
 
@@ -295,7 +295,7 @@ public class WidgetProviderVideo extends AppWidgetProvider {
                 tapIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
                 intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
                 PendingIntent tapPendingIntent = PendingIntent.getBroadcast(context, 0, tapIntent,
-                        ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
+                        ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
                 rv.setPendingIntentTemplate(R.id.gridview, tapPendingIntent);
 
                 // Apply all changes to the widget
