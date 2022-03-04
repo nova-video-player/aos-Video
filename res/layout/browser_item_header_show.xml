@@ -40,7 +40,9 @@
         android:id="@+id/net_logo_rv"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_below="@id/actor_photos" />
+        android:layout_below="@id/actor_photos"
+        android:layout_marginStart="@dimen/video_details_poster_margin_left"
+        android:layout_marginEnd="@dimen/video_details_poster_margin_left"/>
 
     <TextView
         android:id="@+id/actors_header"

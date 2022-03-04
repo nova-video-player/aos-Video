@@ -442,6 +442,20 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             };
             final ShowNetworkAdapter logoAdapter = new ShowNetworkAdapter(NetworkLogoPaths,indicatorCallback);
             recyclerView.setAdapter(logoAdapter);
+            // if only one logo available locally hide recyclerView
+            List<File> availableLogos = new ArrayList<>();
+            int size;
+            for (int i = 0; i < NetworkLogoPaths.size(); i++) {
+                String st = NetworkLogoPaths.get(i);
+                File file = new File(st);
+                if (file.exists()){
+                    availableLogos.add(file);
+                }
+            }
+            size = availableLogos.size();
+            if (size == 1){
+                recyclerView.setVisibility(View.GONE);
+            }
 
             // setting Actors RecyclerView
             actors = mHeaderView.findViewById(R.id.actor_photos);
