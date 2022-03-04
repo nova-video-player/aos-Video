@@ -79,7 +79,8 @@ abstract class RemoteViewsFactoryBase implements RemoteViewsService.RemoteViewsF
         VideoColumns.BOOKMARK,
         VideoColumns.ARCHOS_MEDIA_SCRAPER_ID,
         VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE,
-        VideoColumns.SCRAPER_E_SEASON,
+            VideoColumns.SCRAPER_SHOW_ID,
+            VideoColumns.SCRAPER_E_SEASON,
         VideoColumns.SCRAPER_E_EPISODE};
 
     protected static final String[] TVSHOWS_COLUMNS = new String[] {
@@ -155,6 +156,7 @@ abstract class RemoteViewsFactoryBase implements RemoteViewsService.RemoteViewsF
 		    showId = mCursor.getLong(mCursor.getColumnIndexOrThrow(VideoColumns.SCRAPER_SHOW_ID));
         } catch(IllegalArgumentException e) {
             // happens in case this is not show
+            log.debug("getViewAt: caught IllegalArgumentException ", e);
         }
 
         // Poster/thumbnail
@@ -198,6 +200,7 @@ abstract class RemoteViewsFactoryBase implements RemoteViewsService.RemoteViewsF
     		    textVisibility = View.VISIBLE;
         	} catch(IllegalArgumentException e) {
                 // happens in case this is not show
+                log.debug("getViewAt: caught IllegalArgumentException ", e);
             }
         }
         else if (!isPoster) {
