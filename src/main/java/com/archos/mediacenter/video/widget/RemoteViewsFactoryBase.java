@@ -17,6 +17,8 @@
 
 package com.archos.mediacenter.video.widget;
 
+import static com.archos.mediacenter.video.utils.MiscUtils.dumpBundle;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -37,6 +39,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.VideoLoader;
 import com.archos.mediaprovider.video.VideoStore;
@@ -136,8 +139,9 @@ abstract class RemoteViewsFactoryBase implements RemoteViewsService.RemoteViewsF
         }
     }
 
+    @Override
     public RemoteViews getViewAt(int position) {
-        log.debug("getData("+position+")");
+        log.debug("getViewAt("+position+")");
         // position will always range from 0 to getCount() - 1.
 
         // We construct a remote views item based on our widget item xml file, and set the
@@ -222,9 +226,10 @@ abstract class RemoteViewsFactoryBase implements RemoteViewsService.RemoteViewsF
         }
 
         Intent fillInIntent = new Intent();
-        fillInIntent.putExtras(extras);
-        rv.setOnClickFillInIntent(R.id.item_image, fillInIntent);
 
+        fillInIntent.putExtras(extras);
+        dumpBundle(fillInIntent.getExtras(), this.getClass().getSimpleName() + ":getViewAt", log.isDebugEnabled());
+        rv.setOnClickFillInIntent(R.id.item_image, fillInIntent);
         // Return the remote views object.
         return rv;
     }
@@ -283,7 +288,7 @@ abstract class RemoteViewsFactoryBase implements RemoteViewsService.RemoteViewsF
                     mCursorFailed = false;
 
                     log.debug("Data now available => set UPDATE_ACTION alarm at" + currentElapsedRealTime);
-                    setDelayedAlarm(WidgetProviderVideo.UPDATE_ACTION, UPDATE_ACTION_DELAY, true);                
+                    setDelayedAlarm(WidgetProviderVideo.UPDATE_ACTION, UPDATE_ACTION_DELAY, true);
                 }
                 else {
                     // This case is needed to display the widget content for the first time when it is created
@@ -314,9 +319,8 @@ abstract class RemoteViewsFactoryBase implements RemoteViewsService.RemoteViewsF
         log.debug("unregisterDataSetObserver");
     }
 
-
     /*****************************************************************
-    ** Addditional API
+    ** Additional API
     *****************************************************************/
 
     /*
