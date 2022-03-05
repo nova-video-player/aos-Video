@@ -609,7 +609,7 @@
     <string name="auto_brightness_message">亮度無法變更，因為自動亮度模式目前已開啟。</string>
     <!--  Nfo File parsing -->
     <string name="network_nfo_parse">處理「.nfo」檔案</string>
-    <string name="network_nfo_parse_summary">在掃描或重新掃描時讀取 Kodi 的「.nfo」檔案以獲得媒體資訊和海報</string>
+    <string name="network_nfo_parse_summary">在掃描或重新掃描時，讀取 Kodi 的「.nfo」檔案以獲得媒體資訊和海報</string>
     <string name="ask_to_mail_media_DB">您想要將您的影片資料庫寄給 Nova 開發團隊以協助他們除錯嗎？\n\n雖然影片檔案本身不會傳送，但是完整的檔案清單則會發送給開發團隊。</string>
     <string name="no_email_installed">找不到電子郵件應用程式</string>
     <string name="zipping_library_before_mailing">正在複製和壓縮媒體資料庫並傳送中...</string>
@@ -826,7 +826,7 @@
     <string name="rescrap_all_movies_title">重新抓取所有電影的資料</string>
     <string name="rescrap_all_collections_title">重新抓取所有收藏的資料</string>
     <string name="nfo_export_manual_title">匯出已經抓取資料的影片</string>
-    <string name="nfo_export_manual_summary">匯出每個已經抓取資料影片的 .nfo 檔案</string>
+    <string name="nfo_export_manual_summary">匯出每個已經抓取資料影片的「.nfo」檔案</string>
     <string name="db_export_manual_title">匯出媒體資料庫</string>
     <string name="db_export_manual_summary">匯出 media.db 檔案至 /sdcard 以進行除錯</string>
     <string name="db_export_in_progress">資料庫匯出中</string>
