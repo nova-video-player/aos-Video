@@ -586,7 +586,7 @@
     <string name="help_overlay_ssh_indexing_text">選擇「新增為捷徑」選項以快速返回您的伺服器。</string>
     <string name="help_overlay_network_indexing_text1">按此選單項目將該資料夾和子資料夾的內容給合至影片媒體庫。</string>
     <string name="help_overlay_network_indexing_text1_lb">使用「+」按鈕將該資料夾和子資料夾的內容給合至影片媒體庫。</string>
-    <string name="help_overlay_network_indexing_text2">這將使您取得電影和電視劇的海報和說明。</string>
+    <string name="help_overlay_network_indexing_text2">這將使您取得電影和電視劇的海報及說明。</string>
     <string name="help_overlay_scraper_text">按此選單項目將於網路上搜尋影片的海報和說明。 </string>
     <string name="new_videos_count">新增影片：%d</string>
     <string name="new_videos_scrape_message">您尚有無資訊及海報的新增影片。</string>
@@ -649,7 +649,7 @@
     <string name="audio_interface_choice_summary">進階設定，可能會導致音訊解碼中斷。</string>
     <string name="audio_interface_opensles">強制使用 OpenSL ES 模式</string>
     <string name="audio_interface_audiotrack">強制使用音軌模式</string>
-    <string name="audio_interface_any">預設邏輯</string>
+    <string name="audio_interface_any">預設</string>
     <string name="preferences_user_interface">使用者介面</string>
     <string name="preferences_display_resume_box_summary">在主螢幕上顯示或隱藏續播最近撥放影片的按鈕</string>
     <string name="preferences_display_resume_box">顯示續播視窗</string>
