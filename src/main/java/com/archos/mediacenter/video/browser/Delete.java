@@ -541,6 +541,9 @@ public class Delete {
                             formatedName = NfoParser.getCustomShowActorPhotoName(tags.getShowTitle());
                             if (formatedName != null)
                                 result.add(Uri.parse(parentUri + formatedName));
+                            formatedName = NfoParser.getCustomShowClearLogoName(tags.getShowTitle());
+                            if (formatedName != null)
+                                result.add(Uri.parse(parentUri + formatedName));
                         }
                     }
                 }

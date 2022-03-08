@@ -257,9 +257,19 @@
         </LinearLayout>
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/show_clearlogo"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_below="@id/thumbnail"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:scaleType="center" />
+
     <LinearLayout
         android:id="@+id/created_by_container"
-        android:layout_below="@id/thumbnail"
+        android:layout_below="@id/show_clearlogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
