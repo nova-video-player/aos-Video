@@ -26,6 +26,7 @@ import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesDetails;
+import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesDetailsEpisode;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.bumptech.glide.Glide;
 
@@ -41,7 +42,7 @@ public class EpisodeListDetailedPresenter extends EpisodePresenter{
     private final DateFormat mDateFormat;
 
     public EpisodeListDetailedPresenter(Context context, ExtendedClickListener listener) {
-        super(context, AdapterDefaultValuesDetails.INSTANCE, listener);
+        super(context, AdapterDefaultValuesDetailsEpisode.INSTANCE, listener);
         mNumberFormat = NumberFormat.getInstance();
         mNumberFormat.setMinimumFractionDigits(1);
         mNumberFormat.setMaximumFractionDigits(1);

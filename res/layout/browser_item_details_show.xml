@@ -60,6 +60,6 @@ for informations (duration for files, number of files for directories).
         app:srcCompat="@drawable/watched_icon_corner"
         android:visibility="gone" />
 
-    <include layout="@layout/browser_item_details_common" />
+    <include layout="@layout/browser_item_details_common_episode" />
 
 </RelativeLayout>
