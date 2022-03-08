@@ -62,7 +62,8 @@
         style="@style/BrowserText.Details"
         android:layout_below="@id/info"
         android:layout_marginTop="10dip"
-        android:ellipsize="end" />
+        android:ellipsize="end"
+        android:layout_toRightOf="@id/left_area"/>
 
     <!-- Movie or TV show  : release date and rating -->
     <!-- Other             : empty -->
@@ -72,8 +73,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/detail_line_three"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="4dip"
-        layout="@layout/browser_item_details_date_and_rating" />
+        android:layout_toRightOf="@id/left_area"
+        layout="@layout/browser_item_details_date_and_rating_series" />
 
     <!--
          (i) symbol.

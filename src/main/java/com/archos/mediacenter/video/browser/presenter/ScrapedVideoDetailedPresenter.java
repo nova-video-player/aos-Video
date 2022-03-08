@@ -90,9 +90,14 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
             Movie movie = (Movie) video;
             rating = movie.getRating();
             detailedLineOne = mContext.getResources().getString(R.string.scrap_director)+" "+movie.getDirector();
-            detailedLineOne = mContext.getResources().getString(R.string.scrap_writer)+" "+movie.getWriter();
             detailedLineTwo = movie.getDescriptionBody();
             detailedLineThree = mContext.getResources().getString(R.string.scrap_cast)+" "+movie.getActors();
+            holder.detailLineOne.setText(detailedLineOne);
+            holder.detailLineOne.setVisibility(View.GONE);
+            holder.detailLineThree.setText(detailedLineThree);
+            holder.detailLineThree.setVisibility(View.GONE);
+            holder.detailLineTwo.setText(detailedLineTwo);
+            holder.detailLineTwo.setVisibility(View.VISIBLE);
         }
         else if(video instanceof  Episode){
             Episode episode = (Episode)video;
@@ -104,10 +109,16 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
 
             detailedLineTwo = episode.getEpisodeName();
             detailedLineThree = episode.getDescriptionBody();
+            holder.detailLineOne.setText(detailedLineOne);
+            holder.detailLineOne.setVisibility(View.GONE);
+            holder.detailLineThree.setText(detailedLineThree);
+            holder.detailLineTwo.setText(detailedLineTwo);
+            holder.detailLineTwo.setVisibility(View.GONE);
         }
-        holder.detailLineOne.setText(detailedLineOne);
-        holder.detailLineTwo.setText(detailedLineTwo);
-        holder.detailLineThree.setText(detailedLineThree);
+
+
+
+
         String ratingFormated;
         if (rating >= 0.0f) {
             ratingFormated = mNumberFormat.format(rating);
@@ -139,7 +150,7 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
             holder.detailLineTwo.setSingleLine(true);
             holder.detailLineThree.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
             holder.detailLineThree.setSingleLine(false);
-            holder.detailLineThree.setMaxLines(3);
+            holder.detailLineThree.setMaxLines(2);
         }
         return view;
     }
