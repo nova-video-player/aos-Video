@@ -382,7 +382,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             network.setText(show.getStudio());
 
             TextView Premiered = (TextView) mHeaderView.findViewById(R.id.premiered);
-            String pattern = "yyyy-MM-dd";
+            String pattern = "MMMM dd, yyyy";
             DateFormat df = new SimpleDateFormat(pattern);
             Date date = showTags.getPremiered();
             String dateAsString = df.format(date);
