@@ -62,7 +62,6 @@
         style="@style/BrowserText.Details"
         android:layout_below="@id/info"
         android:layout_marginTop="10dip"
-        android:layout_toRightOf="@id/left_area"
         android:ellipsize="end" />
 
     <!-- Movie or TV show  : release date and rating -->
@@ -73,9 +72,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/detail_line_three"
-        android:layout_marginTop="20dip"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/left_area"
+        android:layout_marginTop="4dip"
         layout="@layout/browser_item_details_date_and_rating" />
 
     <!--
@@ -97,7 +94,7 @@
         android:background="@drawable/list_selector_holo_dark"
         app:srcCompat="@drawable/label_infoarrow" />
     <!--
-         Bottom area = progressbar + info icons 
+         Bottom area = progressbar + info icons
          NOTE: negative right margin to be close to the (i) icon despite it's large left padding (see above)
     -->
 

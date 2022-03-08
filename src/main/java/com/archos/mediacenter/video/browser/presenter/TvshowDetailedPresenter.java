@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesDetails;
+import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesDetailsShow;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesList;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 
@@ -40,7 +41,7 @@ public class TvshowDetailedPresenter extends TvshowListPresenter{
     private final DateFormat mDateFormat;
 
     public TvshowDetailedPresenter(Context context, ExtendedClickListener listener) {
-        super(context, AdapterDefaultValuesDetails.INSTANCE, listener);
+        super(context, AdapterDefaultValuesDetailsShow.INSTANCE, listener);
         mNumberFormat = NumberFormat.getInstance();
         mNumberFormat.setMinimumFractionDigits(1);
         mNumberFormat.setMaximumFractionDigits(1);
