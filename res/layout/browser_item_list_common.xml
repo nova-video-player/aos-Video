@@ -35,12 +35,12 @@
         android:id="@+id/bottom_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/info"
-        android:layout_alignParentBottom="false"
-        android:layout_marginRight="-18dip"
-        android:paddingRight="18dip"
+        android:layout_alignBottom="@id/expanded"
+        android:paddingRight="2dip"
+        android:paddingBottom="2dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:layout_toLeftOf="@id/expanded"
-
         android:orientation="horizontal" >
 
         <ProgressBar
