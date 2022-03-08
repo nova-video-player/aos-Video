@@ -94,6 +94,7 @@ public class TvshowDetailedPresenter extends TvshowListPresenter{
             holder.detailLineTwo.setText(tvShow.getPlot());
 
             holder.detailLineThree.setText(tvShow.getActors());
+            holder.detailLineThree.setVisibility(View.GONE);
             long date = tvShow.getYear();
             float rating = tvShow.getRating();
             String ratingFormated;
@@ -110,8 +111,10 @@ public class TvshowDetailedPresenter extends TvshowListPresenter{
             } else {
                 holder.release_date.setText(R.string.scrap_aired);
             }
+        holder.release_date.setVisibility(View.GONE);
+
         holder.resume.setVisibility(View.GONE);
-            holder.detailLineTwo.setSingleLine(true);
+            holder.detailLineTwo.setMaxLines(2);
             holder.detailLineThree.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
             holder.detailLineThree.setSingleLine(false);
             holder.detailLineThree.setMaxLines(3);
