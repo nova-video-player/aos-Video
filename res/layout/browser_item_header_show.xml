@@ -117,6 +117,7 @@
         style="@style/textAppearanceLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/show_clearlogo"
         android:layout_marginTop="8dip"
         android:layout_toRightOf="@id/thumbnail"
         android:paddingTop="8dip"
@@ -259,17 +260,15 @@
 
     <ImageView
         android:id="@+id/show_clearlogo"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_below="@id/thumbnail"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="2dp"
+        android:layout_toEndOf="@id/thumbnail"
         android:scaleType="center" />
 
     <LinearLayout
         android:id="@+id/created_by_container"
-        android:layout_below="@id/show_clearlogo"
+        android:layout_below="@id/thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

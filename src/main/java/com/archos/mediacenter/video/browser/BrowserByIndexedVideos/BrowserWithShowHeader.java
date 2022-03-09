@@ -424,10 +424,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             Glide.with(mContext).load(tags.getNetworkLogo())
                     .fitCenter().into(logo);
 
-            ImageView seriesClearLogo = ((ImageView)mHeaderView.findViewById(R.id.show_clearlogo));
-            Glide.with(mContext).load(tags.getClearLogo())
-                    .fitCenter().into(seriesClearLogo);
-
             TextView seriesRating = (TextView) mHeaderView.findViewById(R.id.series_rating);
             seriesRating.setText(String.valueOf(showTags.getRating()));
 
@@ -501,7 +497,18 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             });
 
             setColor(mColor);
+
+
             ((TextView)mHeaderView.findViewById(R.id.name)).setText(show.getName());
+            ImageView seriesClearLogo = ((ImageView)mHeaderView.findViewById(R.id.show_clearlogo));
+            Glide.with(mContext).load(tags.getClearLogo())
+                    .centerInside().into(seriesClearLogo);
+            if (tags.getClearLogo() != null){
+                ((TextView)mHeaderView.findViewById(R.id.name)).setVisibility(View.GONE);
+            } else {
+                seriesClearLogo.setVisibility(View.GONE);
+            }
+
             plotTv.setText(show.getPlot());
             plotTv.setMaxLines(mContext.getResources().getInteger(R.integer.show_details_max_lines));
             mSeasonPlot.setMaxLines(mContext.getResources().getInteger(R.integer.show_details_max_lines));
