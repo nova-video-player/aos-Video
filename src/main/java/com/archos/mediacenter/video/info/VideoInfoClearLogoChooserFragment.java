@@ -295,7 +295,7 @@ public class VideoInfoClearLogoChooserFragment extends Fragment implements
                         false);
                 holder = new ViewHolder();
                 holder.image = (ImageView) view.findViewById(R.id.image);
-                holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                holder.image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder) view.getTag();
