@@ -505,8 +505,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
             setColor(mColor);
 
-
-            String path = tags.getClearLogo().getPath();
             ((TextView)mHeaderView.findViewById(R.id.name)).setText(show.getName());
             ImageView seriesClearLogo = ((ImageView)mHeaderView.findViewById(R.id.show_clearlogo));
             Glide.with(mContext).load(tags.getClearLogo())
