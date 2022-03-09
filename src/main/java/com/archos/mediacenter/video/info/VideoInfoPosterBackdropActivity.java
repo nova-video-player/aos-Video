@@ -23,6 +23,7 @@ import com.archos.mediacenter.video.R;
 public class VideoInfoPosterBackdropActivity extends FragmentActivity {
     public static final  String EXTRA_VIDEO = "extra_video";
     public static final String EXTRA_CHOOSE_BACKDROP = "choose_backdrop";
+    public static final String EXTRA_CHOOSE_CLEARLOGO = "choose_clearlogo";
 
 
     @Override
@@ -32,6 +33,8 @@ public class VideoInfoPosterBackdropActivity extends FragmentActivity {
         Fragment frag = null;
         if(getIntent().getBooleanExtra(EXTRA_CHOOSE_BACKDROP, false))
             frag = new VideoInfoBackdropChooserFragment();
+        else if(getIntent().getBooleanExtra(EXTRA_CHOOSE_CLEARLOGO, false))
+            frag = new VideoInfoClearLogoChooserFragment();
         else
             frag = new VideoInfoPosterChooserFragment();
         getSupportFragmentManager()

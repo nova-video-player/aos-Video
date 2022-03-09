@@ -193,6 +193,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         if(mShow!=null){
             menu.add(0,R.string.scrap_series_change, 0, R.string.scrap_series_change);
             menu.add(0,R.string.info_menu_series_backdrop_select, 0, R.string.info_menu_series_backdrop_select);
+            menu.add(0,R.string.info_menu_series_clearlogo_select, 0, R.string.info_menu_series_clearlogo_select);
             menu.add(0,R.string.info_menu_series_poster_select, 0, R.string.info_menu_series_poster_select);
 
         }
@@ -229,6 +230,12 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
             intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mShow);
             intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_BACKDROP, true);
+            startActivity(intent);
+            return  true;
+        }else if(item.getItemId()==R.string.info_menu_series_clearlogo_select){
+            Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
+            intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mShow);
+            intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_CLEARLOGO, true);
             startActivity(intent);
             return  true;
         }else if(item.getItemId()==R.string.info_menu_series_poster_select){
@@ -499,6 +506,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             setColor(mColor);
 
 
+            String path = tags.getClearLogo().getPath();
             ((TextView)mHeaderView.findViewById(R.id.name)).setText(show.getName());
             ImageView seriesClearLogo = ((ImageView)mHeaderView.findViewById(R.id.show_clearlogo));
             Glide.with(mContext).load(tags.getClearLogo())
