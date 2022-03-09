@@ -514,6 +514,15 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             } else {
                 seriesClearLogo.setVisibility(View.GONE);
             }
+            seriesClearLogo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
+                    intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mShow);
+                    intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_CLEARLOGO, true);
+                    startActivity(intent);
+                }
+            });
 
             plotTv.setText(show.getPlot());
             plotTv.setMaxLines(mContext.getResources().getInteger(R.integer.show_details_max_lines));
