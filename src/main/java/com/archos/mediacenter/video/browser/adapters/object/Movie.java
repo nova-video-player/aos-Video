@@ -79,6 +79,10 @@ public class Movie extends Video implements Serializable {
         return "";
     }
 
+    public String getTagline() {
+        return "";
+    }
+
     public String getActors() {
         return "";
     }
