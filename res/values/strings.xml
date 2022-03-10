@@ -988,5 +988,6 @@
     <string name="castname">Cast Name:</string>
     <string name="castcharacter">Cast Character:</string>
     <string name="series_genres">Genres:</string>
+    <string name="votes">Votes</string>
 
 </resources>

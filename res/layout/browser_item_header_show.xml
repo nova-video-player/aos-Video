@@ -31,7 +31,7 @@
         android:id="@+id/net_logo"
         android:layout_width="52dp"
         android:layout_height="52dp"
-        android:layout_below="@id/info_container"
+        android:layout_below="@id/series_status"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="10dp"
         android:scaleType="center" />
@@ -187,7 +187,7 @@
         android:id="@+id/content_rating_container"
         android:layout_marginTop="15dp"
         android:layout_toEndOf="@+id/thumbnail"
-        android:layout_below="@id/info_container"
+        android:layout_below="@id/series_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -213,29 +213,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/season"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginEnd="10dp"
         android:layout_toEndOf="@+id/thumbnail"
         android:orientation="horizontal">
-
-        <TextView
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="start"
-            android:id="@+id/premiered_year"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text"
-            android:textStyle="bold" />
-
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:gravity="end"
-            android:layout_weight="1"
+            android:gravity="start"
+            android:layout_weight="1.2"
             android:orientation="horizontal">
 
             <ImageView
@@ -250,13 +238,51 @@
                 android:id="@+id/series_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/vote_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:text="@string/votes"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="12sp"
+                android:textStyle="bold" />
         </LinearLayout>
+        <TextView
+            android:layout_weight="0.4"
+            android:layout_gravity="center"
+            android:gravity="end"
+            android:id="@+id/premiered_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/video_info_medium_text"
+            android:textStyle="bold" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/series_status"
+        android:layout_below="@id/info_container"
+        android:layout_toEndOf="@+id/thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/video_info_small_text"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/show_clearlogo"
@@ -266,9 +292,18 @@
         android:layout_toEndOf="@id/thumbnail"
         android:scaleType="center" />
 
+    <TextView
+        android:id="@+id/series_tagline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/thumbnail"
+        android:layout_marginTop="10dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/video_info_medium_text" />
+
     <LinearLayout
         android:id="@+id/created_by_container"
-        android:layout_below="@id/thumbnail"
+        android:layout_below="@id/series_tagline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

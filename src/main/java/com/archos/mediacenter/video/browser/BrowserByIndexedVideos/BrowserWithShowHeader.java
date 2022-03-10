@@ -47,6 +47,7 @@ import android.widget.Toast;
 import com.archos.mediacenter.video.browser.adapters.CastAdapter;
 import com.archos.mediacenter.video.browser.adapters.CastData;
 import com.archos.mediacenter.video.browser.adapters.SeasonsData;
+import com.archos.mediacenter.video.browser.adapters.SeriesTags;
 import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
 import com.archos.mediascraper.EpisodeTags;
 import com.bumptech.glide.Glide;
@@ -493,6 +494,38 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 actors.addItemDecoration(new CastAdapter.SpacesItemDecoration(spacing));
             }
 
+            List<SeriesTags> tvShowTags = new ArrayList<>();
+            SeriesTags seriesTags;
+            for (int i = 0; i < tags.getTaglines().size(); i++) {
+                String TvTags = tags.getTaglines().get(i);
+                List <String>  TvTagsFormatted;
+                TvTagsFormatted = Arrays.asList(TvTags.split("\\s*=&%#\\s*"));
+                seriesTags = new SeriesTags();
+                seriesTags.setTagline(TvTagsFormatted.get(0));
+                seriesTags.setType(TvTagsFormatted.get(1));
+                seriesTags.setStatus(TvTagsFormatted.get(2));
+                seriesTags.setVotes(TvTagsFormatted.get(3));
+                seriesTags.setPopularity(TvTagsFormatted.get(4));
+                seriesTags.setRuntime(TvTagsFormatted.get(5));
+                tvShowTags.add(seriesTags);
+            }
+            TextView tagline = (TextView) mHeaderView.findViewById(R.id.series_tagline);
+            tagline.setText(tvShowTags.get(0).getTagline());
+            if (tvShowTags.get(0).getTagline().isEmpty()){
+                tagline.setVisibility(View.GONE);
+            }
+
+            TextView votes = (TextView) mHeaderView.findViewById(R.id.vote_count);
+            votes.setText(tvShowTags.get(0).getVotes());
+            if (tvShowTags.get(0).getVotes().isEmpty()){
+                votes.setVisibility(View.GONE);
+            }
+
+            TextView status = (TextView) mHeaderView.findViewById(R.id.series_status);
+            status.setText(tvShowTags.get(0).getStatus());
+            if (tvShowTags.get(0).getStatus().isEmpty()){
+                status.setVisibility(View.GONE);
+            }
 
             ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));
             posterView.setImageBitmap(result.bitmap);
