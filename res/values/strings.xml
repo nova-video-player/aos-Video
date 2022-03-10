@@ -989,5 +989,6 @@
     <string name="castcharacter">Cast Character:</string>
     <string name="series_genres">Genres:</string>
     <string name="votes">Votes</string>
+    <string name="minutes">mins</string>
 
 </resources>
