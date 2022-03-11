@@ -404,7 +404,9 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
 
             TextView mSeasonPlot = (TextView) mHeaderView.findViewById(R.id.season_plot);
+            TextView seasonPlotHeader = (TextView) mHeaderView.findViewById(R.id.season_plot_header);
             TextView seasonAirDate = (TextView) mHeaderView.findViewById(R.id.season_airdate);
+            LinearLayout seasonAirDateContainer = (LinearLayout) mHeaderView.findViewById(R.id.season_airdate_container);
             List <String>  seasonPlots = showTags.getSeasonPlots();
             List <SeasonsData>  finalSeasonPlots = new ArrayList<>();
             for (int i = 0; i < seasonPlots.size(); i++) {
@@ -424,7 +426,13 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 String seasonNumber = finalSeasonPlots.get(i).getSeasonNumber();
                 if (currentSeason == Integer.parseInt(seasonNumber)){
                     mSeasonPlot.setText(finalSeasonPlots.get(i).getSeasonPlot());
+                    if(finalSeasonPlots.get(i).getSeasonPlot().isEmpty()){
+                        mSeasonPlot.setVisibility(View.GONE);
+                        seasonPlotHeader.setVisibility(View.GONE);
+                    }
                     seasonAirDate.setText(finalSeasonPlots.get(i).getSeasonAirdate());
+                    if (finalSeasonPlots.get(i).getSeasonAirdate().isEmpty())
+                        seasonAirDateContainer.setVisibility(View.GONE);
                 }
             }
             setSeasonPlot((TextView)mHeaderView.findViewById(R.id.season_plot));
