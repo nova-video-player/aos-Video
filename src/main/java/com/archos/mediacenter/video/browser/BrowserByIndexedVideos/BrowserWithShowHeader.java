@@ -387,7 +387,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             if (tags.getDirectorsFormatted() == null)
                 createdbyContainer.setVisibility(View.GONE);
 
-
             TextView network = (TextView) mHeaderView.findViewById(R.id.network);
             network.setText(show.getStudio());
 
@@ -403,7 +402,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
             TextView seriesGenres = (TextView) mHeaderView.findViewById(R.id.series_genres);
             seriesGenres.setText(showTags.getGenresFormatted());
-
 
             TextView mSeasonPlot = (TextView) mHeaderView.findViewById(R.id.season_plot);
             TextView seasonPlotHeader = (TextView) mHeaderView.findViewById(R.id.season_plot_header);
@@ -504,6 +502,9 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             }
             TextView studio = (TextView) mHeaderView.findViewById(R.id.studio);
             studio.setText(studioNames);
+            LinearLayout studioNamesContainer = (LinearLayout) mHeaderView.findViewById(R.id.studio_container);
+            if (studioNames.isEmpty())
+                studioNamesContainer.setVisibility(View.GONE);
 
 
             // setting Actors RecyclerView
