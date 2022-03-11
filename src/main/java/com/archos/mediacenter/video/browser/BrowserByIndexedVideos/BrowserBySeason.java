@@ -124,6 +124,7 @@ public class BrowserBySeason extends BrowserWithShowHeader  {
 
     @Override
     protected void setSeasonPlotHeader(TextView seasonPlotHeaderView) {
+        seasonPlotHeaderView.setVisibility(View.GONE);
     }
 
     @Override
