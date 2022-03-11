@@ -404,29 +404,33 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
 
             TextView mSeasonPlot = (TextView) mHeaderView.findViewById(R.id.season_plot);
+            TextView seasonAirDate = (TextView) mHeaderView.findViewById(R.id.season_airdate);
             List <String>  seasonPlots = showTags.getSeasonPlots();
             List <SeasonsData>  finalSeasonPlots = new ArrayList<>();
             for (int i = 0; i < seasonPlots.size(); i++) {
                 String seasonPlot = seasonPlots.get(i);
                 List <String>  seasonPlotsFormatted;
-                seasonPlotsFormatted = Arrays.asList(seasonPlot.split("\\s*=&%\\s*"));
+                seasonPlotsFormatted = Arrays.asList(seasonPlot.split("\\s*=&%#\\s*"));
                 seasonsData = new SeasonsData();
                 seasonsData.setSeasonNumber(seasonPlotsFormatted.get(0));
                 seasonsData.setSeasonPlot(seasonPlotsFormatted.get(1));
                 seasonsData.setSeasonName(seasonPlotsFormatted.get(2));
+                seasonsData.setSeasonAirdate(seasonPlotsFormatted.get(3));
                 finalSeasonPlots.add(seasonsData);
             }
             Bundle args = getArguments();
-            Boolean equalSeasonNumbers = false;
             int currentSeason = args.getInt(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON, 0);
             for (int i = 0; i < finalSeasonPlots.size(); i++) {
-                String seasonNumber = finalSeasonPlots.get(i).getSeasonNumber().replace("SeasonNumber ", "");
+                String seasonNumber = finalSeasonPlots.get(i).getSeasonNumber();
                 if (currentSeason == Integer.parseInt(seasonNumber)){
-                    equalSeasonNumbers = true;
                     mSeasonPlot.setText(finalSeasonPlots.get(i).getSeasonPlot());
+                    seasonAirDate.setText(finalSeasonPlots.get(i).getSeasonAirdate());
                 }
             }
             setSeasonPlot((TextView)mHeaderView.findViewById(R.id.season_plot));
+            setSeasonAirDateContainer((LinearLayout)mHeaderView.findViewById(R.id.season_airdate_container));
+            setSeriesPremieredContainer((LinearLayout)mHeaderView.findViewById(R.id.premiered_container));
+
 
             ImageView logo = ((ImageView)mHeaderView.findViewById(R.id.net_logo));
             Glide.with(mContext).load(tags.getNetworkLogo())
@@ -629,6 +633,10 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     protected abstract void setSeasonPlot(TextView seasonPlotView);
 
     protected abstract void setSeasonPlotHeader(TextView seasonPlotHeaderView);
+
+    protected abstract void setSeasonAirDateContainer(LinearLayout seasonAirDateContainer);
+
+    protected abstract void setSeriesPremieredContainer(LinearLayout seriesPremieredContainer);
 
     protected abstract void setColor(int color);
 

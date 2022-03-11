@@ -278,6 +278,15 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
     protected void setSeasonPlotHeader(TextView seasonPlotHeaderView) {
     }
 
+    @Override
+    protected void setSeasonAirDateContainer(LinearLayout seasonAirDateContainer) {
+    }
+
+    @Override
+    protected void setSeriesPremieredContainer(LinearLayout seriesPremieredContainer) {
+        seriesPremieredContainer.setVisibility(View.GONE);
+    }
+
 
     @Override
     public int getFirstFilePosition() {

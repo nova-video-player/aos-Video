@@ -29,6 +29,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -271,6 +272,14 @@ public class BrowserByShow extends BrowserWithShowHeader {
 
     @Override
     protected void setSeasonPlotHeader(TextView seasonPlotHeaderView) {
+    }
+
+    @Override
+    protected void setSeasonAirDateContainer(LinearLayout seasonAirDateContainer) {
+    }
+
+    @Override
+    protected void setSeriesPremieredContainer(LinearLayout seriesPremieredContainer) {
     }
 
 
