@@ -990,5 +990,6 @@
     <string name="series_genres">Genres:</string>
     <string name="votes">Votes</string>
     <string name="minutes">mins</string>
+    <string name="show_type">Show Type:</string>
 
 </resources>

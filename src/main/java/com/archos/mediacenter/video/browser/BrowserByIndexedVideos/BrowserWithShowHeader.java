@@ -533,6 +533,12 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 runtime.setVisibility(View.GONE);
             }
 
+            TextView showType = (TextView) mHeaderView.findViewById(R.id.showtype);
+            showType.setText(tvShowTags.get(0).getType());
+            if (tvShowTags.get(0).getType().isEmpty()){
+                showType.setVisibility(View.GONE);
+            }
+
             ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));
             posterView.setImageBitmap(result.bitmap);
             posterView.setOnClickListener(new View.OnClickListener() {
