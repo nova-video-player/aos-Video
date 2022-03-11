@@ -1,3 +1,4 @@
+- Attempt to fix fdroid build
 - Fix tvshow rescrape having same name
 - Fix widget not launching video
 - STOP remote button stops player
