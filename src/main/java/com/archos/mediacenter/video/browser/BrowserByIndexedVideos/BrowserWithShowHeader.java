@@ -49,6 +49,7 @@ import com.archos.mediacenter.video.browser.adapters.CastData;
 import com.archos.mediacenter.video.browser.adapters.SeasonsData;
 import com.archos.mediacenter.video.browser.adapters.SeriesTags;
 import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
+import com.archos.mediacenter.video.browser.adapters.StudioAdapter;
 import com.archos.mediascraper.EpisodeTags;
 import com.bumptech.glide.Glide;
 
@@ -112,6 +113,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     protected View mApplicationFrameLayout;
     private boolean mPlotIsFullyDisplayed;
     private RecyclerView recyclerView;
+    private RecyclerView studioLogos;
     private RecyclerView actors;
     private SeasonsData seasonsData;
 
@@ -476,6 +478,23 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             if (size == 1){
                 recyclerView.setVisibility(View.GONE);
             }
+
+            // setting Studio Logo RecyclerView
+            studioLogos = mHeaderView.findViewById(R.id.studio_logo_rv);
+            List<String> StudioLogoPaths = new ArrayList<>();
+            for (int i = tags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
+                String studioLogoPath = tags.getStudioLogosLargeFileF().get(i).getPath();
+                StudioLogoPaths.add(studioLogoPath);}
+            LinearLayoutManager studioLogoLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+            studioLogos.setLayoutManager(studioLogoLayoutManager);
+            StudioAdapter.OnItemClickListener studioLogoCallback = new StudioAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(String item) {
+                }
+            };
+            final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
+            studioLogos.setAdapter(studioAdapter);
+
 
             // setting Actors RecyclerView
             actors = mHeaderView.findViewById(R.id.actor_photos);
