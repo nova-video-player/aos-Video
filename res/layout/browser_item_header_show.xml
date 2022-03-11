@@ -177,7 +177,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="2dp"
         android:layout_toEndOf="@+id/thumbnail"
         android:layout_below="@id/series_status"
         android:layout_width="match_parent"
@@ -211,7 +211,7 @@
             android:id="@+id/episode_runtime_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="22dp"
             android:layout_weight="1"
             android:layout_gravity="center"
             android:orientation="horizontal">
