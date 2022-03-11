@@ -401,6 +401,34 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/studio_container"
+        android:layout_below="@id/network_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
+        <TextView
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="left"
+            android:lines="1"
+            android:maxLines="1"
+            android:text="@string/studios"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/video_info_medium_text" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/studio"
+            android:paddingRight="5dp"
+            android:textSize="@dimen/video_info_medium_text"
+            android:layout_below="@id/content_rating_container"
+            />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/premiered_container"
         android:layout_below="@id/showtype_container"
         android:layout_width="wrap_content"
@@ -458,7 +486,7 @@
 
     <LinearLayout
         android:id="@+id/genres_container"
-        android:layout_below="@id/network_container"
+        android:layout_below="@id/studio_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

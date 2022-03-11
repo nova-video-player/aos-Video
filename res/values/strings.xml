@@ -981,6 +981,7 @@
         It is strongly advised to restart from a clean install to avoid problems. Please check FAQ for details.</string>
     <string name="created_by">Created By:</string>
     <string name="networks">Networks:</string>
+    <string name="studios">Studios:</string>
     <string name="premiered">Premiered:</string>
     <string name="airdate">Air Date:</string>
     <string name="series_plot">Series Plot:</string>

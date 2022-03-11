@@ -495,6 +495,16 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
             studioLogos.setAdapter(studioAdapter);
 
+            String studioNames = "";
+            String names = "";
+            String basePath = "/data/user/0/org.courville.nova/app_scraper_studiologos/";
+            for (int i = tags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
+                names = names + tags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(basePath, "").replaceAll(".png", "") + ", ";
+                studioNames = names.substring(0, names.length() - 2);
+            }
+            TextView studio = (TextView) mHeaderView.findViewById(R.id.studio);
+            studio.setText(studioNames);
+
 
             // setting Actors RecyclerView
             actors = mHeaderView.findViewById(R.id.actor_photos);
