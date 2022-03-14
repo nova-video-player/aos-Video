@@ -223,7 +223,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private LinearLayout mSourceLayout;
     private VideoBadgePresenter mVideoBadgePresenter;
     private View mScrapDetailsCard;
-    private CardView mScrapTrailersContainer;
+    private LinearLayout mScrapTrailersContainer;
     private View mScraperContainer;
     private TextView mCastTextViewTitle;
 
@@ -244,17 +244,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mFileSize;
     private TextView mDuration;
     private TextView mVideoTrackTextView;
-    private CardView mFileInfoContainer;
+    private LinearLayout mFileInfoContainer;
 
     //subs
     private View mSubtitleContent;
     private TextView mSubtitleHeader;
     private View mSubtitleDownloadButton;
-    private CardView mSubtitleContainer;
+    private LinearLayout mSubtitleContainer;
     private TextView mSubtitleTrack ;
 
     //plot card
-    private CardView mScraperPlotContainer;
+    private LinearLayout mScraperPlotContainer;
     private TextView mPlotTextView;
     private TextView mScrapStudio;
     private TextView mScrapYear;
@@ -410,8 +410,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mSubtitleHeader  = (TextView) mRoot.findViewById(R.id.subtitle_header);
         mSubtitleHeader.setOnClickListener(this);
         mSubtitleContent  =  mRoot.findViewById(R.id.subtitle_content);
-        mSubtitleContainer  =  (CardView)mRoot.findViewById(R.id.subtitles_container);
-        mSubtitleDownloadButton = mSubtitleContent.findViewById(R.id.subtitles_online);
+        mSubtitleContainer  =  (LinearLayout)mRoot.findViewById(R.id.subtitles_container);
+        mSubtitleDownloadButton = mRoot.findViewById(R.id.subtitles_online);
         mSubtitleDownloadButton.setOnClickListener(this);
         mResumeLocalButton = (Button) mRoot.findViewById(R.id.resume);
         mPlayButton = (Button) mRoot.findViewById(R.id.play);
@@ -421,7 +421,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mRemoteResumeButton = (Button) mRoot.findViewById(R.id.remote_resume);
         mRemoteResumeButton.setOnClickListener(this);
         mSourceLayout = (LinearLayout)mRoot.findViewById(R.id.source_layout);
-        mFileInfoContainer = (CardView)mRoot.findViewById(R.id.info_file_container);
+        mFileInfoContainer = (LinearLayout)mRoot.findViewById(R.id.info_file_container);
         mFilePathTextView = (TextView)mFileInfoContainer.findViewById(R.id.fullpath);
         mFileSize = (TextView)mRoot.findViewById(R.id.filesize);
         mFileError = (TextView)mRoot.findViewById(R.id.file_error);
@@ -449,7 +449,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mTMDBIcon.setOnClickListener(this);
         mTVDBIcon = mRoot.findViewById(R.id.scrap_link_tvdb);
         mTVDBIcon.setOnClickListener(this);
-        mScraperPlotContainer = (CardView)mRoot.findViewById(R.id.scraper_plot_container);
+        mScraperPlotContainer = (LinearLayout)mRoot.findViewById(R.id.scraper_plot_container);
         mPlotTextView = (TextView) mRoot.findViewById(R.id.scrap_plot);
         mGenreTextView = (TextView) mRoot.findViewById(R.id.scrap_genre);
         mCastTextView = (TextView) mRoot.findViewById(R.id.scrap_cast);
@@ -464,7 +464,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mScrapDuration =(TextView) mRoot.findViewById(R.id.scrap_duration);
         mScrapRating =(TextView) mRoot.findViewById(R.id.scrap_rating);
         mScrapTrailers =(LinearLayout) mRoot.findViewById(R.id.trailer_layout);
-        mScrapTrailersContainer =(CardView)mRoot.findViewById(R.id.scrap_trailer_container);
+        mScrapTrailersContainer =(LinearLayout)mRoot.findViewById(R.id.scrap_trailer_container);
         mScrapDetailsCard =mRoot.findViewById(R.id.scrap_details_container);
         mScrapStudio =(TextView) mRoot.findViewById(R.id.scrap_studio);
         mScrapStudioContainer = mRoot.findViewById(R.id.scrap_studio_container);
@@ -696,12 +696,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     private void setBackground() {
         mButtonsContainer.setCardBackgroundColor(mColor);
-        mFileInfoContainer.setCardBackgroundColor(mColor);
-        mSubtitleContainer.setCardBackgroundColor(mColor);
-        ((CardView) mScrapDetailsCard).setCardBackgroundColor(mColor);
-        mScrapTrailersContainer.setCardBackgroundColor(mColor);
+        //mFileInfoContainer.setCardBackgroundColor(mColor);
+        //mSubtitleContainer.setCardBackgroundColor(mColor);
+        //((CardView) mScrapDetailsCard).setCardBackgroundColor(mColor);
+        //mScrapTrailersContainer.setCardBackgroundColor(mColor);
         ((CardView)mPosterImageView.getParent().getParent()).setCardBackgroundColor(mColor);
-        mScraperPlotContainer.setCardBackgroundColor(mColor);
+        // mScraperPlotContainer.setCardBackgroundColor(mColor);
         mActionButtonsContainer.setCardBackgroundColor(mColor);
         if(mSecondaryTitleBar!=null)
             mTitleBarContent.setBackgroundColor(mColor);

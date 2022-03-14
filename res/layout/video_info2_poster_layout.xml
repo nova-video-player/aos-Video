@@ -8,7 +8,7 @@
     <!-- height is modified in fragment -->
     <ImageView
         android:id="@+id/poster"
-        android:layout_width="@dimen/video_info_poster_width"
+        android:layout_width="@dimen/video_info_backdrop_chooser_item_width"
         android:layout_height="wrap_content"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"

@@ -10,17 +10,11 @@
 
 
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/video_info_cardview_top_margin"
-        card_view:cardCornerRadius="4dp"
-        android:id="@+id/scrap_trailer_container"
-        android:layout_height="wrap_content"
-        >
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-
+            android:id="@+id/scrap_trailer_container"
             android:orientation="vertical"
             >
 
@@ -39,19 +33,14 @@
 
                 android:layout_width="match_parent"
                 android:id="@+id/trailer_layout"
-                android:layout_height="wrap_content"></LinearLayout>
+                android:layout_height="wrap_content">
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/video_info_cardview_top_margin"
-        card_view:cardCornerRadius="4dp"
-        android:id="@+id/scrap_details_container"
-        android:layout_height="wrap_content"
-        >
         <LinearLayout
+            android:id="@+id/scrap_details_container"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/video_info_margin_simple"
@@ -153,5 +142,4 @@
 
 
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
 </LinearLayout>
