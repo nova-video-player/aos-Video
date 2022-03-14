@@ -88,6 +88,14 @@ android {
                 keyPassword keystoreProperties['keyPassword']
             }
         }
+        debug {
+            if (keystorePropertiesFile.exists()) {
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
@@ -114,7 +122,6 @@ android {
         // amazon apk is generated with ./gradlew -Poneapk
         versionName = '6.0.52'
         versionCode = 600052
-        if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
         applicationId "org.courville.nova"
         if (project.hasProperty("sponsor")) {
             buildConfigField "boolean", "ENABLE_SPONSOR", "true"
@@ -202,25 +209,6 @@ android {
     }
     androidResources {
         additionalParameters '--no-version-vectors'
-    }
-    if (project.ext.has("ProjectKeyStoreFile")) {
-        signingConfigs {
-            release {
-                storeFile file(ProjectKeyStoreFile)
-                storePassword ProjectKeyStorePassword
-                keyAlias ProjectKeyAlias
-                keyPassword ProjectKeyPassword
-            }
-        }
-
-        buildTypes {
-            release {
-                signingConfig signingConfigs.release
-            }
-            debug {
-                signingConfig signingConfigs.release
-            }
-        }
     }
 
     applicationVariants.all { variant ->
