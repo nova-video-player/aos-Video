@@ -12,7 +12,8 @@
             android:id="@+id/picture_backdrop"
             android:layout_width="match_parent"
             android:layout_height="210dp"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="4dp"/>
         <LinearLayout  android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
