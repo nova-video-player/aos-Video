@@ -353,8 +353,8 @@ public class CustomApplication extends Application {
             try {
                 novaVersionArray = splitVersion(novaVersionName);
                 novaLongVersion = "Nova v" + novaVersionArray[0] + "." + novaVersionArray[1] + "." + novaVersionArray[2] +
-                        " (" + novaVersionArray[3] + novaVersionArray[4] + novaVersionArray[5] +
-                        "." + novaVersionArray[6] + novaVersionArray[7] + ")";
+                        " (" + novaVersionArray[3] + String.format("%02d", novaVersionArray[4]) + String.format("%02d", novaVersionArray[5]) +
+                        "." + String.format("%02d", novaVersionArray[6]) + String.format("%02d", novaVersionArray[7]) + ")";
             } catch (IllegalArgumentException ie) {
                 novaVersionArray = new int[] { 0, 0, 0, 0, 0, 0, 0, 0};
                 log.error("updateVersionState: cannot split application version "+ novaVersionName);
