@@ -268,7 +268,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     //play buttons and poster
 
-    private CardView mActionButtonsContainer;
+    private LinearLayout mActionButtonsContainer;
     private Button mRemoteResumeButton;
     private FloatingActionButton mGenericPlayButton;
     private Button mResumeLocalButton;
@@ -422,9 +422,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mSubtitleDownloadButton.setOnClickListener(this);
         mResumeLocalButton = (Button) mRoot.findViewById(R.id.resume);
         mPlayButton = (Button) mRoot.findViewById(R.id.play);
-        mActionButtonsContainer = (CardView) mRoot.findViewById(R.id.action_buttons_container);
+        mActionButtonsContainer = (LinearLayout) mRoot.findViewById(R.id.action_buttons_container);
         mResumeLocalButton.setOnClickListener(this);
         mPlayButton.setOnClickListener(this);
+        mPlayButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(mContext, getResources().getString(R.string.play_from_beginning), Toast.LENGTH_SHORT ).show();
+                return true;
+            }
+        });
+
         mRemoteResumeButton = (Button) mRoot.findViewById(R.id.remote_resume);
         mRemoteResumeButton.setOnClickListener(this);
         mSourceLayout = (LinearLayout)mRoot.findViewById(R.id.source_layout);
@@ -714,7 +722,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         //mScrapTrailersContainer.setCardBackgroundColor(mColor);
         ((CardView)mPosterImageView.getParent().getParent()).setCardBackgroundColor(mColor);
         // mScraperPlotContainer.setCardBackgroundColor(mColor);
-        mActionButtonsContainer.setCardBackgroundColor(mColor);
+        //mActionButtonsContainer.setCardBackgroundColor(mColor);
         if(mSecondaryTitleBar!=null)
             mTitleBarContent.setBackgroundColor(mColor);
         if(!mIsLaunchFromPlayer)

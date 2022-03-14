@@ -8,12 +8,63 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/picture_backdrop"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="210dp"
-            android:scaleType="centerCrop"
-            android:layout_marginBottom="4dp"/>
+            android:layout_height="0dp"
+            android:layout_marginStart="5dp"
+            android:layout_weight="5"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/picture_backdrop"
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="4dp"/>
+            <Button
+                android:id="@+id/play"
+                android:foreground="@drawable/transparent_ripple"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:paddingTop="20dip"
+                android:background="@drawable/play_temp"
+                android:paddingBottom="20dip"
+                android:visibility="visible"
+                android:layout_width="50dp"
+                android:gravity="center"
+                />
+
+            <Button
+                android:id="@+id/resume"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dip"
+                android:drawableStart="@drawable/button_icon_resume"
+                android:paddingBottom="20dip"
+                android:background="@drawable/transparent_ripple"
+                android:gravity="center"
+                android:text="@string/resume"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_alignBottom="@id/picture_backdrop"
+                android:layout_alignEnd="@id/picture_backdrop"
+                android:layout_marginEnd="6dp"
+                />
+            <Button
+                android:id="@+id/remote_resume"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/button_icon_network"
+                android:paddingTop="20dip"
+                android:paddingBottom="20dip"
+                android:background="@drawable/transparent_ripple"
+                android:gravity="center"
+                android:text="@string/remote_resume"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_alignBottom="@id/picture_backdrop"
+                android:layout_alignStart="@id/picture_backdrop"
+                android:layout_marginStart="6dp"
+                />
+        </RelativeLayout>
+
         <LinearLayout  android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -188,15 +239,7 @@
             </RelativeLayout>
 
         </LinearLayout>
-        <include
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/video_info_margin_simple"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            layout="@layout/video_info2_fragment_actions"
-            android:layout_alignParentBottom="true"
-            android:id="@+id/action_buttons_container"
-            android:layout_gravity="bottom" />
+
     </LinearLayout>
 
 </merge>
