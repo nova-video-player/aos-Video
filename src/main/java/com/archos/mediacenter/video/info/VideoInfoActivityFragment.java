@@ -113,6 +113,7 @@ import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.VideoTags;
 import com.archos.mediascraper.xml.MovieScraper3;
 import com.archos.mediascraper.xml.ShowScraper4;
+import com.bumptech.glide.Glide;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -264,7 +265,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mScrapContentRating;
     private View mScrapContentRatingContainer;
 
-
     //play buttons and poster
 
     private CardView mActionButtonsContainer;
@@ -291,6 +291,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mTitleTextView;
     private TextView mEpisodeSeasonView;
     private TextView mEpisodeTitleView;
+    private ImageView seriesClearLogo;
 
     private ObservableScrollView mScrollView;
 
@@ -471,6 +472,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mScrapContentRating = mRoot.findViewById(R.id.content_rating);
         mScrapContentRatingContainer = mRoot.findViewById(R.id.content_rating_container);
 
+
+        seriesClearLogo = mRoot.findViewById(R.id.show_clearlogo);
 
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
@@ -1753,6 +1756,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     //mTMDBId = tags.getOnlineId();
                     mTMDBId = mOnlineId;
                     log.debug("FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
+                    // Set series clearlogo
+                    ShowTags showTags = ((EpisodeTags) tags).getShowTags();
+                    Glide.with(mContext).load(showTags.getClearLogo())
+                            .centerInside().into(seriesClearLogo);
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
