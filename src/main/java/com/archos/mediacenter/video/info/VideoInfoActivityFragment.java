@@ -1748,8 +1748,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         // Aired date not available => try at least the premiered date
                         date = df.format(((EpisodeTags) tags).getShowTags().getPremiered());
                     }
-                    if (((EpisodeTags) tags).getShowTags() != null)
-                        studio = ((EpisodeTags) tags).getShowTags().getStudiosFormatted();
                     //tags.getOnlineId() is the episodeId not the show Id thus using mOnlineID
                     //mTMDBIcon.setVisibility(tags.getOnlineId()>=0?View.VISIBLE:View.GONE);
                     mTMDBIcon.setVisibility(mOnlineId>=0?View.VISIBLE:View.GONE);
@@ -1760,6 +1758,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     ShowTags showTags = ((EpisodeTags) tags).getShowTags();
                     Glide.with(mContext).load(showTags.getClearLogo())
                             .centerInside().into(seriesClearLogo);
+                    // set series studio names for episode view
+                    String names = "";
+                    String basePath = "/data/user/0/org.courville.nova/app_scraper_studiologos/";
+                    for (int i = showTags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
+                        names = names + showTags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(basePath, "").replaceAll(".png", "") + ", ";
+                        studio = names.substring(0, names.length() - 2);
+                    }
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
