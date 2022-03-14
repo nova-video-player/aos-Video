@@ -80,6 +80,7 @@ import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.Delete;
 import com.archos.mediacenter.video.browser.FileManagerService;
+import com.archos.mediacenter.video.browser.adapters.SeriesTags;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.NonIndexedVideo;
@@ -291,7 +292,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mTitleTextView;
     private TextView mEpisodeSeasonView;
     private TextView mEpisodeTitleView;
+
     private ImageView seriesClearLogo;
+    private ImageView seriesNetworkLogo;
+    private TextView mEpisodeRuntime;
+    private TextView mEpisodeVoteCount;
 
     private ObservableScrollView mScrollView;
 
@@ -474,7 +479,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
 
         seriesClearLogo = mRoot.findViewById(R.id.show_clearlogo);
-
+        seriesNetworkLogo = mRoot.findViewById(R.id.network_logo);
+        mEpisodeRuntime = mRoot.findViewById(R.id.episode_runtime);
+        mEpisodeVoteCount = mRoot.findViewById(R.id.vote_count);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -1758,6 +1765,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     ShowTags showTags = ((EpisodeTags) tags).getShowTags();
                     Glide.with(mContext).load(showTags.getClearLogo())
                             .centerInside().into(seriesClearLogo);
+                    // Set series network logo
+                    Glide.with(mContext).load(showTags.getNetworkLogo())
+                            .centerInside().into(seriesNetworkLogo);
                     // set series studio names for episode view
                     String names = "";
                     String basePath = "/data/user/0/org.courville.nova/app_scraper_studiologos/";
@@ -1765,6 +1775,25 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         names = names + showTags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(basePath, "").replaceAll(".png", "") + ", ";
                         studio = names.substring(0, names.length() - 2);
                     }
+                    // set episode runtime of the entire series(not episode)
+                    List<SeriesTags> tvShowTags = new ArrayList<>();
+                    SeriesTags seriesTags;
+                    for (int i = 0; i < showTags.getTaglines().size(); i++) {
+                        String TvTags = showTags.getTaglines().get(i);
+                        List <String>  TvTagsFormatted;
+                        TvTagsFormatted = Arrays.asList(TvTags.split("\\s*=&%#\\s*"));
+                        seriesTags = new SeriesTags();
+                        seriesTags.setTagline(TvTagsFormatted.get(0));
+                        seriesTags.setType(TvTagsFormatted.get(1));
+                        seriesTags.setStatus(TvTagsFormatted.get(2));
+                        seriesTags.setVotes(TvTagsFormatted.get(3));
+                        seriesTags.setPopularity(TvTagsFormatted.get(4));
+                        seriesTags.setRuntime(TvTagsFormatted.get(5));
+                        tvShowTags.add(seriesTags);
+                    }
+                    mEpisodeRuntime.setText(tvShowTags.get(0).getRuntime());
+                    // set episode vote count
+                    mEpisodeVoteCount.setText(((EpisodeTags) tags).getTaglinesFormatted());
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;

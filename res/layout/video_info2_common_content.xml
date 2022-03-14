@@ -23,38 +23,6 @@
 
                 layout="@layout/video_info2_action_poster_layout" />
 
-            <RelativeLayout
-                android:id="@+id/titlebar_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="150dip"
-                android:orientation="vertical"
-                android:paddingTop="@dimen/video_info_margin_half"
-                android:paddingBottom="@dimen/video_info_margin_half">
-
-                <TextView
-                    android:id="@+id/title_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/video_info_very_big_text" />
-
-                <TextView
-                    android:id="@+id/s_e_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/title_view"
-                    android:textSize="@dimen/video_info_medium_text"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/episode_title_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/s_e_text_view"
-                    android:textSize="@dimen/video_info_medium_text"
-                    android:textStyle="italic" />
-            </RelativeLayout>
-
 
         </FrameLayout>
         <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
