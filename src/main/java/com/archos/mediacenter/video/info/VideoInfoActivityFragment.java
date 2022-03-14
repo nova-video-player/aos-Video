@@ -295,6 +295,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     private ImageView seriesClearLogo;
     private ImageView seriesNetworkLogo;
+    private ImageView mPictureBackdrop;
     private TextView mEpisodeRuntime;
     private TextView mEpisodeVoteCount;
 
@@ -480,6 +481,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
         seriesClearLogo = mRoot.findViewById(R.id.show_clearlogo);
         seriesNetworkLogo = mRoot.findViewById(R.id.network_logo);
+        mPictureBackdrop = mRoot.findViewById(R.id.picture_backdrop);
         mEpisodeRuntime = mRoot.findViewById(R.id.episode_runtime);
         mEpisodeVoteCount = mRoot.findViewById(R.id.vote_count);
 
@@ -751,6 +753,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
                 if(mSecondaryEpisodeSeasonView!=null)
                     setTextOrHideContainer(mSecondaryEpisodeSeasonView, getContext().getString(R.string.leanback_episode_SXEX_code, episode.getSeasonNumber(), episode.getEpisodeNumber()), mSecondaryEpisodeSeasonView);
+                //set episode still image
+                Glide.with(mContext).load(episode.getPictureUri())
+                        .centerInside().into(mPictureBackdrop);
             }
             else{
                 log.debug("setCurrentVideo: new video and it is NOT an episode");
