@@ -1816,7 +1816,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             .centerInside().into(seriesClearLogo);
                     // Set series network logo
                     Glide.with(mContext).load(showTags.getNetworkLogo())
-                            .centerInside().into(seriesNetworkLogo);
+                            .fitCenter().into(seriesNetworkLogo);
                     // set series studio names for episode view
                     String names = "";
                     String basePath = "/data/user/0/org.courville.nova/app_scraper_studiologos/";
