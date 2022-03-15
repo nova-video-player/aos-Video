@@ -119,6 +119,7 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.internal.ViewUtils;
 import com.squareup.picasso.Picasso;
 
 import java.beans.PropertyChangeListener;
@@ -1747,6 +1748,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     genres = ((VideoTags) tags).getGenresFormatted();
                 }
                 setTextOrHideContainer(mPlotTextView, plot, mPlotTextView);
+                mPlotTextView.setMaxLines(4);
+                mPlotTextView.setTag(true);
+                mPlotTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (((Boolean) mPlotTextView.getTag())) {
+                            mPlotTextView.setMaxLines(50);
+                            mPlotTextView.setTag(false);
+                        } else {
+                            mPlotTextView.setMaxLines(4);
+                            mPlotTextView.setTag(true);
+                        }
+                    }
+                });
                 setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);
                 // Cast
                 String cast = tags.getActorsFormatted();
@@ -1845,6 +1860,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 if(mIMDBId==null||mIMDBId.isEmpty())
                     mIMDBIcon.setVisibility(View.GONE);
                 setTextOrHideContainer(mScrapStudio, studio,mScrapStudioContainer);
+                mScrapStudio.setMaxLines(2);
+                mScrapStudio.setTag(true);
+                mScrapStudio.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (((Boolean) mScrapStudio.getTag())) {
+                            mScrapStudio.setMaxLines(50);
+                            mScrapStudio.setTag(false);
+                        } else {
+                            mScrapStudio.setMaxLines(2);
+                            mScrapStudio.setTag(true);
+                        }
+                    }
+                });
                 setTextOrHideContainer(mScrapYear, date, mScrapYear);
                 setTextOrHideContainer(mScrapDuration, MediaUtils.formatTime(mCurrentVideo.getDurationMs()),mScrapDuration);
                 setTextOrHideContainer(mScrapRating, String.valueOf(tags.getRating()), mScrapRating);

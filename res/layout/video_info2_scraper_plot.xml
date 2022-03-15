@@ -167,6 +167,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             style="@style/VideoInfoFileInfo"
+            android:ellipsize="end"
             android:textSize="@dimen/video_info_medium_text"/>
     </LinearLayout>
 
@@ -174,5 +175,6 @@
     <TextView
         android:id="@+id/scrap_plot"
         style="@style/VideoInfoFileInfo"
+        android:ellipsize="end"
         android:textStyle="italic" />
 </LinearLayout>
