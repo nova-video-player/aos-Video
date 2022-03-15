@@ -191,25 +191,32 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/content_rating_container"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:background="@drawable/rounded_edges">
+                        android:layout_weight="0.8">
 
-                        <TextView
-                            android:id="@+id/content_rating"
-                            android:textSize="@dimen/video_info_small_text"
+                        <LinearLayout
+                            android:id="@+id/content_rating_container"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:layout_marginBottom="1dp"
-                            android:gravity="center_horizontal"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textStyle="bold"
-                            android:textColor="@color/grid_item_background"
-                            />
+                            android:layout_gravity="center"
+                            android:background="@drawable/rounded_edges">
+
+                            <TextView
+                                android:id="@+id/content_rating"
+                                android:textSize="@dimen/video_info_small_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginBottom="1dp"
+                                android:gravity="center_horizontal"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textStyle="bold"
+                                android:textColor="@color/grid_item_background"
+                                />
+                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
@@ -217,7 +224,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="22dp"
-                        android:layout_weight="1"
+                        android:layout_weight="1.2"
                         android:layout_gravity="center"
                         android:orientation="horizontal">
                         <TextView
@@ -227,22 +234,15 @@
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textSize="@dimen/video_info_medium_text"
                             android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:text="@string/minutes"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textSize="@dimen/video_info_medium_text"
-                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <ImageView
                         android:id="@+id/network_logo"
                         android:layout_width="52dp"
                         android:layout_height="52dp"
-                        android:layout_weight="1"
+                        android:layout_weight="3"
                         android:layout_gravity="center"
+                        android:gravity="end"
                         android:scaleType="center" />
                 </LinearLayout>
             </RelativeLayout>
