@@ -8,7 +8,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
-		android:gravity="left"
+		android:gravity="start"
 
 		>
 		<TextView android:id="@+id/file_info_header"
@@ -20,9 +20,7 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
-			android:gravity="left"
-			android:paddingLeft="@dimen/video_info_margin_simple"
-			android:paddingRight="@dimen/video_info_margin_simple"
+			android:gravity="start"
 			android:paddingTop="@dimen/video_info_margin_half"
 			android:paddingBottom="@dimen/video_info_margin_half">
 
@@ -52,7 +50,6 @@
 				<TextView
 					android:id="@+id/duration"
 					style="@style/VideoInfoFileInfo"
-
 					android:layout_marginRight="50dip"/>
 
 				<TextView
