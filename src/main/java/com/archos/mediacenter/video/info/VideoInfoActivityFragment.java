@@ -83,6 +83,7 @@ import com.archos.mediacenter.video.browser.FileManagerService;
 import com.archos.mediacenter.video.browser.adapters.SeriesTags;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
+import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.NonIndexedVideo;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.dialogs.DialogRetrieveSubtitles;
@@ -1862,6 +1863,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     studio = ((MovieTags) tags).getStudiosFormatted();
                     mDate.setText(getResources().getString(R.string.released));
                     log.debug("FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
+                    //set movie backdrop
+                    Glide.with(mContext).load(tags.getBackdrop())
+                            .centerInside().into(mPictureBackdrop);
                 }
                 // set content rating
                 if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
