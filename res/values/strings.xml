@@ -984,6 +984,7 @@
     <string name="studios">Studios:</string>
     <string name="premiered">Premiered:</string>
     <string name="airdate">Air Date:</string>
+    <string name="video_runtime">Video Runtime:</string>
     <string name="series_plot">Series Plot:</string>
     <string name="season_plot">Season Plot:</string>
     <string name="actors_header">Actors:</string>

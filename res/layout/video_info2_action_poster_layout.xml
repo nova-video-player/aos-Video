@@ -171,6 +171,16 @@
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
+                    <TextView
+                        android:layout_weight="0.4"
+                        android:layout_gravity="center"
+                        android:gravity="end"
+                        android:id="@+id/premiered_year"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="@dimen/video_info_medium_text"
+                        android:textStyle="bold" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_marginTop="2dp"

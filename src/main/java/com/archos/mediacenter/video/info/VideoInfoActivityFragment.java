@@ -298,6 +298,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private ImageView mPictureBackdrop;
     private TextView mEpisodeRuntime;
     private TextView mEpisodeVoteCount;
+    private TextView mTagline;
 
     private ObservableScrollView mScrollView;
 
@@ -492,6 +493,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mPictureBackdrop = mRoot.findViewById(R.id.picture_backdrop);
         mEpisodeRuntime = mRoot.findViewById(R.id.episode_runtime);
         mEpisodeVoteCount = mRoot.findViewById(R.id.vote_count);
+        mTagline = mRoot.findViewById(R.id.tagline);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -1807,6 +1809,15 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mEpisodeRuntime.setText(tvShowTags.get(0).getRuntime());
                     // set episode vote count
                     mEpisodeVoteCount.setText(((EpisodeTags) tags).getTaglinesFormatted());
+                    // set series premiered year
+                    TextView PremieredYear = mRoot.findViewById(R.id.premiered_year);
+                    PremieredYear.setText(Integer.toString(showTags.getPremieredYear()));
+                    // set series tagline
+                    if (!tvShowTags.get(0).getTagline().isEmpty()) {
+                        mTagline.setText(tvShowTags.get(0).getTagline());
+                    } else {
+                        mTagline.setVisibility(View.GONE);
+                    }
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
