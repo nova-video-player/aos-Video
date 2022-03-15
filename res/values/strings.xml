@@ -185,15 +185,15 @@
     <string name="scrap_get_title">Getting info</string>
 
     <!-- Generic strings for Movies or TV shows -->
-    <string name="scrap_director">Director</string>
-    <string name="scrap_writer">Writer</string>
+    <string name="scrap_director">Director:</string>
+    <string name="scrap_writer">Writer:</string>
     <string name="scrap_director_format">Director: %s</string>
     <string name="scrap_writer_format">Writer: %s</string>
     <string name="scrap_rating">Rating</string>
     <string name="scrap_rating_format">Rating: %s</string>
     <string name="scrap_year">Year</string>
     <string name="scrap_year_format">Year: %d</string>
-    <string name="scrap_studio">Studio</string>
+    <string name="scrap_studio">Studio:</string>
     <string name="scrap_plot">Plot</string>
     <string name="scrap_trailer">Trailers</string>
     <string name="scrap_cast">Cast</string>
@@ -984,13 +984,14 @@
     <string name="studios">Studios:</string>
     <string name="premiered">Premiered:</string>
     <string name="airdate">Air Date:</string>
-    <string name="video_runtime">Video Runtime:</string>
+    <string name="released">Released:</string>
+    <string name="video_runtime">Runtime:</string>
     <string name="series_plot">Series Plot:</string>
     <string name="season_plot">Season Plot:</string>
     <string name="actors_header">Actors:</string>
     <string name="castname">Cast Name:</string>
     <string name="castcharacter">Cast Character:</string>
-    <string name="series_genres">Genres:</string>
+    <string name="genres">Genres:</string>
     <string name="votes">Votes</string>
     <string name="minutes">mins</string>
     <string name="show_type">Show Type:</string>

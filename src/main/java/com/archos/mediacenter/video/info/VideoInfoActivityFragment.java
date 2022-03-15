@@ -299,6 +299,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mEpisodeRuntime;
     private TextView mEpisodeVoteCount;
     private TextView mTagline;
+    private TextView mDate;
 
     private ObservableScrollView mScrollView;
 
@@ -494,6 +495,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mEpisodeRuntime = mRoot.findViewById(R.id.episode_runtime);
         mEpisodeVoteCount = mRoot.findViewById(R.id.vote_count);
         mTagline = mRoot.findViewById(R.id.tagline);
+        mDate = mRoot.findViewById(R.id.scrap_date_title);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -1818,6 +1820,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     } else {
                         mTagline.setVisibility(View.GONE);
                     }
+                    LinearLayout genresContainer = mRoot.findViewById(R.id.scrap_genre_container);
+                    genresContainer.setVisibility(View.GONE);
+                    mDate.setText(getResources().getString(R.string.airdate));
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
@@ -1826,6 +1831,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mTMDBId = tags.getOnlineId();
                     date = ((MovieTags) tags).getYear()+"";
                     studio = ((MovieTags) tags).getStudiosFormatted();
+                    mDate.setText(getResources().getString(R.string.released));
                     log.debug("FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
                 }
                 // set content rating

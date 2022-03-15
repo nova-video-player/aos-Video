@@ -18,21 +18,97 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="@dimen/video_info_medium_text" />
 
+
     <LinearLayout
-        android:id="@+id/release_air_date_contaner"
-        android:layout_below="@id/premiered_container"
+        android:id="@+id/scrap_genre_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
+        android:paddingTop="2dp"
+        android:orientation="horizontal" >
         <TextView
+            android:id="@+id/scrap_genres_title"
+            android:text="@string/genres"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:gravity="start"
             android:lines="1"
             android:maxLines="1"
-            android:text="@string/airdate"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/video_info_medium_text"/>
+        <TextView
+            android:id="@+id/scrap_genre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/video_info_medium_text"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/scrap_director_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="2dp"
+        android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/scrap_director_title"
+            android:text="@string/scrap_director"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:lines="1"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/video_info_medium_text"/>
+        <TextView
+            android:id="@+id/scrap_director"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/video_info_medium_text"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/scrap_writer_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="2dp"
+        android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/scrap_writer_title"
+            android:text="@string/scrap_writer"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:lines="1"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/video_info_medium_text"/>
+        <TextView
+            android:id="@+id/scrap_writer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/video_info_medium_text"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/release_air_date_contaner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="2dp">
+        <TextView
+            android:id="@+id/scrap_date_title"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:lines="1"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text" />
         <TextView
@@ -40,9 +116,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/scrap_date"
-            android:paddingRight="5dp"
             android:textSize="@dimen/video_info_medium_text"
-            android:layout_below="@id/content_rating_container"
             />
     </LinearLayout>
 
@@ -51,7 +125,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="10dp">
+        android:paddingTop="2dp">
         <TextView
             android:layout_width="110dp"
             android:layout_height="wrap_content"
@@ -72,14 +146,33 @@
             />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/scrap_studio_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <TextView
+            android:text="@string/scrap_studio"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:lines="1"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/video_info_medium_text"/>
+        <TextView
+            android:id="@+id/scrap_studio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            style="@style/VideoInfoFileInfo"
+            android:textSize="@dimen/video_info_medium_text"/>
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/scrap_plot"
         style="@style/VideoInfoFileInfo"
         android:textStyle="italic" />
-    <TextView
-        android:layout_marginTop="@dimen/video_info_margin_half"
-        android:id="@+id/scrap_genre"
-        style="@style/VideoInfoFileInfo.Title2"
-        />
 </LinearLayout>

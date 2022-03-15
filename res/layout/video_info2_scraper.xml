@@ -79,57 +79,6 @@
                     android:padding="5dip"
                     card_view:srcCompat="@drawable/imdb_logo" />
             </LinearLayout>
-            <LinearLayout
-
-                android:id="@+id/scrap_director_container"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-
-                <TextView
-                    style="@style/VideoInfoFileInfo.Title2"
-                    android:id="@+id/scrap_director_title"
-                    android:text="@string/scrap_director" />
-
-                <TextView
-                    android:id="@+id/scrap_director"
-                    style="@style/VideoInfoFileInfo"
-                    android:paddingLeft="8dip" />
-
-            </LinearLayout>
-
-            <LinearLayout
-
-                android:id="@+id/scrap_writer_container"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-
-                <TextView
-                    style="@style/VideoInfoFileInfo.Title2"
-                    android:id="@+id/scrap_writer_title"
-                    android:text="@string/scrap_writer" />
-
-                <TextView
-                    android:id="@+id/scrap_writer"
-                    style="@style/VideoInfoFileInfo"
-                    android:paddingLeft="8dip" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/scrap_studio_container"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-                <TextView
-                    style="@style/VideoInfoFileInfo.Title2"
-                    android:text="@string/scrap_studio" />
-                <TextView
-                    android:id="@+id/scrap_studio"
-                    style="@style/VideoInfoFileInfo"
-                    android:paddingLeft="8dip" />
-            </LinearLayout>
 
             <TextView
                 android:id="@+id/scrap_cast_title"
