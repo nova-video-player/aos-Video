@@ -79,16 +79,5 @@
                     android:padding="5dip"
                     card_view:srcCompat="@drawable/imdb_logo" />
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/scrap_cast_title"
-                style="@style/VideoInfoFileInfo.Title2"
-                android:text="@string/scrap_cast" />
-
-            <TextView
-                android:id="@+id/scrap_cast"
-                style="@style/VideoInfoFileInfo" />
-
-
         </LinearLayout>
 </LinearLayout>

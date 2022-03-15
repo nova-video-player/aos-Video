@@ -196,7 +196,8 @@
     <string name="scrap_studio">Studio:</string>
     <string name="scrap_plot">Plot</string>
     <string name="scrap_trailer">Trailers</string>
-    <string name="scrap_cast">Cast</string>
+    <string name="scrap_cast">Cast:</string>
+    <string name="guest_starts">Guest Stars:</string>
     <string name="scrap_cast_format">Cast: %s</string>
     <string name="scrap_genre">Genre</string>
     <string name="scrap_genre_format">Genres: %s</string>

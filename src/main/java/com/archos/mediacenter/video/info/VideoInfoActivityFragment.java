@@ -1773,6 +1773,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     cast = showTags != null ? showTags.getActorsFormatted() : null;
                 }
                 setTextOrHideContainer(mCastTextView, cast, mCastTextView, mCastTextViewTitle);
+                mCastTextView.setMaxLines(3);
+                mCastTextView.setTag(true);
+                mCastTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (((Boolean) mCastTextView.getTag())) {
+                            mCastTextView.setMaxLines(50);
+                            mCastTextView.setTag(false);
+                        } else {
+                            mCastTextView.setMaxLines(3);
+                            mCastTextView.setTag(true);
+                        }
+                    }
+                });
                 setTextOrHideContainer(mScrapDirector, tags.getDirectorsFormatted(), mScrapDirector, mScrapDirectorTitle);
                 setTextOrHideContainer(mScrapWriter, tags.getWritersFormatted(), mScrapWriter, mScrapWriterTitle);
                 String date = null;
