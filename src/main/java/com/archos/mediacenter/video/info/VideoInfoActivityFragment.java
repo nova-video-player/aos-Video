@@ -1843,7 +1843,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     String runtimeReady = tvShowTags.get(0).getRuntime() + " " + getResources().getString(R.string.minutes);
                     mRuntime.setText(runtimeReady);
                     // set episode vote count
-                    mVoteCount.setText(((EpisodeTags) tags).getTaglinesFormatted());
+                    String voteCountReady = "(" + ((EpisodeTags) tags).getTaglinesFormatted() + " " + getResources().getString(R.string.votes) + ")";
+                    mVoteCount.setText(voteCountReady);
                     // set series premiered year
                     mYear.setText(Integer.toString(showTags.getPremieredYear()));
                     // set series tagline
@@ -1886,7 +1887,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         votes = MovieTagsFormatted.get(4);
                         popularity = MovieTagsFormatted.get(5);
                     }
-                    mVoteCount.setText(votes);
+                    String voteCountReady = "(" + votes + " " + getResources().getString(R.string.votes) + ")";
+                    mVoteCount.setText(voteCountReady);
                     String runtimeReady = runtime + " " + getResources().getString(R.string.minutes);
                     mRuntime.setText(runtimeReady);
                     if (!tagline.isEmpty()) {
