@@ -103,6 +103,7 @@
         android:paddingTop="2dp">
         <TextView
             android:id="@+id/scrap_date_title"
+            android:text="@string/released"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -184,7 +185,7 @@
         android:orientation="horizontal" >
         <TextView
             android:id="@+id/scrap_cast_title"
-            android:text="@string/guest_starts"
+            android:text="@string/scrap_cast"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"

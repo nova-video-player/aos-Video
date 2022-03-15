@@ -1856,6 +1856,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     LinearLayout genresContainer = mRoot.findViewById(R.id.scrap_genre_container);
                     genresContainer.setVisibility(View.GONE);
                     mDate.setText(getResources().getString(R.string.airdate));
+                    mCastTextViewTitle.setText(getResources().getString(R.string.guest_starts));
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
@@ -1865,6 +1866,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     date = ((MovieTags) tags).getYear()+"";
                     studio = ((MovieTags) tags).getStudiosFormatted();
                     mDate.setText(getResources().getString(R.string.released));
+                    mCastTextViewTitle.setText(getResources().getString(R.string.scrap_cast));
                     log.debug("FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
                     //set movie backdrop
                     Glide.with(mContext).load(tags.getBackdrop())
