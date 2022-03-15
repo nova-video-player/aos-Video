@@ -298,10 +298,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private ImageView seriesClearLogo;
     private ImageView seriesNetworkLogo;
     private ImageView mPictureBackdrop;
-    private TextView mEpisodeRuntime;
-    private TextView mEpisodeVoteCount;
+    private TextView mRuntime;
+    private TextView mVoteCount;
     private TextView mTagline;
     private TextView mDate;
+    private TextView mYear;
 
     private ObservableScrollView mScrollView;
 
@@ -494,10 +495,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         seriesClearLogo = mRoot.findViewById(R.id.show_clearlogo);
         seriesNetworkLogo = mRoot.findViewById(R.id.network_logo);
         mPictureBackdrop = mRoot.findViewById(R.id.picture_backdrop);
-        mEpisodeRuntime = mRoot.findViewById(R.id.episode_runtime);
-        mEpisodeVoteCount = mRoot.findViewById(R.id.vote_count);
+        mRuntime = mRoot.findViewById(R.id.runtime);
+        mVoteCount = mRoot.findViewById(R.id.vote_count);
         mTagline = mRoot.findViewById(R.id.tagline);
         mDate = mRoot.findViewById(R.id.scrap_date_title);
+        mYear = mRoot.findViewById(R.id.year);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -1838,12 +1840,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         seriesTags.setRuntime(TvTagsFormatted.get(5));
                         tvShowTags.add(seriesTags);
                     }
-                    mEpisodeRuntime.setText(tvShowTags.get(0).getRuntime());
+                    mRuntime.setText(tvShowTags.get(0).getRuntime());
                     // set episode vote count
-                    mEpisodeVoteCount.setText(((EpisodeTags) tags).getTaglinesFormatted());
+                    mVoteCount.setText(((EpisodeTags) tags).getTaglinesFormatted());
                     // set series premiered year
-                    TextView PremieredYear = mRoot.findViewById(R.id.premiered_year);
-                    PremieredYear.setText(Integer.toString(showTags.getPremieredYear()));
+                    mYear.setText(Integer.toString(showTags.getPremieredYear()));
                     // set series tagline
                     if (!tvShowTags.get(0).getTagline().isEmpty()) {
                         mTagline.setText(tvShowTags.get(0).getTagline());
@@ -1866,6 +1867,32 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     //set movie backdrop
                     Glide.with(mContext).load(tags.getBackdrop())
                             .centerInside().into(mPictureBackdrop);
+                    // set movie tags
+                    String tagline = "";
+                    String budget = "";
+                    String revenue = "";
+                    String runtime = "";
+                    String votes = "";
+                    String popularity = "";
+                    for (int i = 0; i < tags.getTaglines().size(); i++) {
+                        String MovieTags = tags.getTaglines().get(i);
+                        List <String>  MovieTagsFormatted;
+                        MovieTagsFormatted = Arrays.asList(MovieTags.split("\\s*=&%#\\s*"));
+                        tagline = MovieTagsFormatted.get(0);
+                        budget = MovieTagsFormatted.get(1);
+                        revenue = MovieTagsFormatted.get(2);
+                        runtime = MovieTagsFormatted.get(3);
+                        votes = MovieTagsFormatted.get(4);
+                        popularity = MovieTagsFormatted.get(5);
+                    }
+                    mVoteCount.setText(votes);
+                    mRuntime.setText(runtime);
+                    if (!tagline.isEmpty()) {
+                        mTagline.setText(tagline);
+                    } else {
+                        mTagline.setVisibility(View.GONE);
+                    }
+                    mYear.setText(((MovieTags) tags).getYear()+"");
                 }
                 // set content rating
                 if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
