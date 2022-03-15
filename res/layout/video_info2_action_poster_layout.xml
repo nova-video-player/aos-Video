@@ -128,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginEnd="4dp"
                     android:orientation="horizontal">
                     <LinearLayout
                         android:layout_width="0dp"
@@ -172,7 +172,6 @@
                             android:textStyle="bold" />
                     </LinearLayout>
                     <TextView
-                        android:layout_weight="0.4"
                         android:layout_gravity="center"
                         android:gravity="end"
                         android:id="@+id/year"
@@ -194,7 +193,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_weight="0.8">
+                        android:layout_weight="1">
 
                         <LinearLayout
                             android:id="@+id/content_rating_container"
@@ -224,7 +223,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="22dp"
-                        android:layout_weight="1.2"
+                        android:layout_marginEnd="22dp"
+                        android:layout_weight="1"
                         android:layout_gravity="center"
                         android:orientation="horizontal">
                         <TextView
@@ -240,7 +240,6 @@
                         android:id="@+id/network_logo"
                         android:layout_width="52dp"
                         android:layout_height="52dp"
-                        android:layout_weight="3"
                         android:layout_gravity="center"
                         android:gravity="end"
                         android:scaleType="center" />
