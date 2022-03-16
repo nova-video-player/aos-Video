@@ -65,6 +65,8 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 import androidx.palette.graphics.Palette;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.archos.environment.NetworkState;
 import com.archos.filecorelibrary.FileUtils;
@@ -80,6 +82,8 @@ import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.Delete;
 import com.archos.mediacenter.video.browser.FileManagerService;
+import com.archos.mediacenter.video.browser.adapters.CastAdapter;
+import com.archos.mediacenter.video.browser.adapters.CastData;
 import com.archos.mediacenter.video.browser.adapters.SeriesTags;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
@@ -131,6 +135,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.archos.mediacenter.video.utils.VideoUtils.getFilePathFromContentUri;
 
@@ -303,6 +308,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mTagline;
     private TextView mDate;
     private TextView mYear;
+    private RecyclerView actors;
 
     private ObservableScrollView mScrollView;
 
@@ -500,6 +506,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mTagline = mRoot.findViewById(R.id.tagline);
         mDate = mRoot.findViewById(R.id.scrap_date_title);
         mYear = mRoot.findViewById(R.id.year);
+        actors = mRoot.findViewById(R.id.actor_photos);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -1899,6 +1906,40 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         mTagline.setVisibility(View.GONE);
                     }
                     mYear.setText(((MovieTags) tags).getYear()+"");
+
+
+                    List<CastData> movieActors = new ArrayList<>();
+                    CastData castData;
+                    for (Map.Entry<String, String> entry : tags.getActors().entrySet()) {
+                        String actorNames = entry.getKey();
+                        String values = entry.getValue();
+                        List <String>  valuesFormatted;
+                        valuesFormatted = Arrays.asList(values.split("\\s*=&%#\\s*"));
+                        castData = new CastData();
+
+                        castData.setName(entry.getKey());
+                        castData.setCharacter(valuesFormatted.get(0));
+                        castData.setPhotoPath("/data/user/0/org.courville.nova/app_scraper_actorphotos" + valuesFormatted.get(1));
+                        movieActors.add(castData);
+                    }
+                    LinearLayoutManager actorsLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+                    actors.setLayoutManager(actorsLayoutManager);
+                    CastAdapter.OnItemClickListener actorCallback = new CastAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                        }
+                    };
+                    final CastAdapter actorAdapter = new CastAdapter(movieActors,actorCallback);
+                    actors.setAdapter(actorAdapter);
+                    // add space between actors
+                    int spacing = getResources().getDimensionPixelSize(R.dimen.cast_spacing);
+                    if (actors.getItemDecorationCount() < 1) {
+                        actors.addItemDecoration(new CastAdapter.SpacesItemDecoration(spacing));
+                    }
+
+
+
+
                 }
                 // set content rating
                 if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
