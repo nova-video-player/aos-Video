@@ -29,7 +29,7 @@
             android:gravity="left"
             android:layout_gravity="bottom"
             android:id="@+id/buttons_container"
-            android:layout_marginTop="@dimen/video_info_cardview_top_margin"
+            android:layout_marginTop="@dimen/video_info_margin_half"
             android:layout_below="@+id/poster_action_container"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             card_view:cardCornerRadius="@dimen/video_info_cardview_corner"
@@ -66,7 +66,7 @@
             android:layout_height="wrap_content"
             layout="@layout/video_info2_scraper_plot"
             android:layout_gravity="center_horizontal|bottom"
-            android:layout_marginTop="@dimen/video_info_cardview_top_margin"
+            android:layout_marginTop="@dimen/video_info_margin_half"
 
             android:layout_below="@+id/buttons_container"
             android:id="@+id/scraper_plot_container"
