@@ -1773,8 +1773,31 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                 });
                 setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);
-                // Cast
-                String cast = tags.getActorsFormatted();
+                // Movie Cast
+                String movieCastFormatted = "";
+                StringBuilder sb = new StringBuilder();
+                boolean firstTime = true;
+                for (Map.Entry<String, String> item : tags.getActors().entrySet()) {
+                    if (firstTime) {
+                        firstTime = false;
+                    } else {
+                        sb.append(", ");
+                    }
+
+                    String values = item.getValue();
+                    List <String>  valuesFormatted;
+                    valuesFormatted = Arrays.asList(values.split("\\s*=&%#\\s*"));
+                    String actor = item.getKey();
+                    String role = valuesFormatted.get(0);
+                    sb.append(actor);
+                    if (role != null && !role.isEmpty()) {
+                        sb.append(" (");
+                        sb.append(role);
+                        sb.append(')');
+                    }
+                }
+                movieCastFormatted = sb.toString();
+                String cast = movieCastFormatted;
                 // If cast is null and this is an episode, get the cast of the Show
                 String studio = null;
 
@@ -1911,7 +1934,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     List<CastData> movieActors = new ArrayList<>();
                     CastData castData;
                     for (Map.Entry<String, String> entry : tags.getActors().entrySet()) {
-                        String actorNames = entry.getKey();
                         String values = entry.getValue();
                         List <String>  valuesFormatted;
                         valuesFormatted = Arrays.asList(values.split("\\s*=&%#\\s*"));
