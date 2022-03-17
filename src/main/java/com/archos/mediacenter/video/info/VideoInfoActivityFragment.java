@@ -1812,7 +1812,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     @Override
                     public void onClick(View v) {
                         if (((Boolean) mCastTextView.getTag())) {
-                            mCastTextView.setMaxLines(50);
+                            mCastTextView.setMaxLines(200);
                             mCastTextView.setTag(false);
                         } else {
                             mCastTextView.setMaxLines(3);
