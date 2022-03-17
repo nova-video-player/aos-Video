@@ -206,9 +206,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/actor_photos"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/video_details_poster_margin_left"
-        android:layout_marginEnd="@dimen/video_details_poster_margin_left" />
+        android:layout_height="wrap_content" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/studio_logo_rv"
