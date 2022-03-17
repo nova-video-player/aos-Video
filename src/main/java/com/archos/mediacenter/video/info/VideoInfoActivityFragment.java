@@ -85,6 +85,7 @@ import com.archos.mediacenter.video.browser.FileManagerService;
 import com.archos.mediacenter.video.browser.adapters.CastAdapter;
 import com.archos.mediacenter.video.browser.adapters.CastData;
 import com.archos.mediacenter.video.browser.adapters.SeriesTags;
+import com.archos.mediacenter.video.browser.adapters.StudioAdapter;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
@@ -309,6 +310,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mDate;
     private TextView mYear;
     private RecyclerView actors;
+    private RecyclerView studios;
 
     private ObservableScrollView mScrollView;
 
@@ -507,6 +509,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mDate = mRoot.findViewById(R.id.scrap_date_title);
         mYear = mRoot.findViewById(R.id.year);
         actors = mRoot.findViewById(R.id.actor_photos);
+        studios = mRoot.findViewById(R.id.studio_logo_rv);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -1963,6 +1966,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     // Set series network logo
                     Glide.with(mContext).load(tags.getStudioLogo())
                             .fitCenter().into(mLogo);
+                    // setting Studio Logo RecyclerView
+                    List<String> StudioLogoPaths = new ArrayList<>();
+                    for (int i = tags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
+                        String studioLogoPath = tags.getStudioLogosLargeFileF().get(i).getPath();
+                        StudioLogoPaths.add(studioLogoPath);}
+                    LinearLayoutManager studioLogoLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+                    studios.setLayoutManager(studioLogoLayoutManager);
+                    StudioAdapter.OnItemClickListener studioLogoCallback = new StudioAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(String item) {
+                        }
+                    };
+                    final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
+                    studios.setAdapter(studioAdapter);
                 }
                 // set content rating
                 if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {

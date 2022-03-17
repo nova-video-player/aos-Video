@@ -210,4 +210,9 @@
         android:layout_marginStart="@dimen/video_details_poster_margin_left"
         android:layout_marginEnd="@dimen/video_details_poster_margin_left" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/studio_logo_rv"
+        android:layout_width="match_parent"
+        android:layout_height="55dp" />
+
 </LinearLayout>
