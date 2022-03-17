@@ -1892,6 +1892,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mCastTextViewTitle.setText(getResources().getString(R.string.guest_starts));
                     // hide studios
                     studios.setVisibility(View.GONE);
+                    // hide actors
+                    actors.setVisibility(View.GONE);
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
