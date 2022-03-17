@@ -122,6 +122,7 @@ android {
         // amazon apk is generated with ./gradlew -Poneapk
         versionName = '6.0.53'
         versionCode = 600053
+	if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
         applicationId "org.courville.nova"
         if (project.hasProperty("sponsor")) {
             buildConfigField "boolean", "ENABLE_SPONSOR", "true"
