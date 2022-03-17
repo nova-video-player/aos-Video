@@ -36,7 +36,7 @@
             android:paddingLeft="0dip">
             <!--text size is programmatically changed -->
             <ImageView
-                android:id="@+id/show_clearlogo"
+                android:id="@+id/clearlogo"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginTop="2dp"

@@ -301,7 +301,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mEpisodeSeasonView;
     private TextView mEpisodeTitleView;
 
-    private ImageView seriesClearLogo;
+    private ImageView mClearLogo;
     private ImageView mLogo;
     private ImageView mPictureBackdrop;
     private TextView mRuntime;
@@ -500,7 +500,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mScrapContentRatingContainer = mRoot.findViewById(R.id.content_rating_container);
 
 
-        seriesClearLogo = mRoot.findViewById(R.id.show_clearlogo);
+        mClearLogo = mRoot.findViewById(R.id.clearlogo);
         mLogo = mRoot.findViewById(R.id.logo);
         mPictureBackdrop = mRoot.findViewById(R.id.picture_backdrop);
         mRuntime = mRoot.findViewById(R.id.runtime);
@@ -1846,7 +1846,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     // Set series clearlogo
                     ShowTags showTags = ((EpisodeTags) tags).getShowTags();
                     Glide.with(mContext).load(showTags.getClearLogo())
-                            .centerInside().into(seriesClearLogo);
+                            .centerInside().into(mClearLogo);
                     // Set series network logo
                     Glide.with(mContext).load(showTags.getNetworkLogo())
                             .fitCenter().into(mLogo);
@@ -1984,6 +1984,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     };
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
                     studios.setAdapter(studioAdapter);
+                    // movie ClearLogo
+                    Glide.with(mContext).load(tags.getClearLogo())
+                            .centerInside().into(mClearLogo);
                 }
                 // set content rating
                 if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
