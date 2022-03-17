@@ -301,7 +301,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mEpisodeTitleView;
 
     private ImageView seriesClearLogo;
-    private ImageView seriesNetworkLogo;
+    private ImageView mLogo;
     private ImageView mPictureBackdrop;
     private TextView mRuntime;
     private TextView mVoteCount;
@@ -499,7 +499,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
 
         seriesClearLogo = mRoot.findViewById(R.id.show_clearlogo);
-        seriesNetworkLogo = mRoot.findViewById(R.id.network_logo);
+        mLogo = mRoot.findViewById(R.id.logo);
         mPictureBackdrop = mRoot.findViewById(R.id.picture_backdrop);
         mRuntime = mRoot.findViewById(R.id.runtime);
         mVoteCount = mRoot.findViewById(R.id.vote_count);
@@ -1846,7 +1846,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             .centerInside().into(seriesClearLogo);
                     // Set series network logo
                     Glide.with(mContext).load(showTags.getNetworkLogo())
-                            .fitCenter().into(seriesNetworkLogo);
+                            .fitCenter().into(mLogo);
                     // set series studio names for episode view
                     String names = "";
                     String basePath = "/data/user/0/org.courville.nova/app_scraper_studiologos/";
@@ -1960,6 +1960,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                     // hide cast textview
                     mCastTextView.setVisibility(View.GONE);
+                    // Set series network logo
+                    Glide.with(mContext).load(tags.getStudioLogo())
+                            .fitCenter().into(mLogo);
                 }
                 // set content rating
                 if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {

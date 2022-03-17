@@ -228,7 +228,7 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:id="@+id/network_logo"
+                        android:id="@+id/logo"
                         android:layout_width="52dp"
                         android:layout_height="52dp"
                         android:layout_gravity="center"
