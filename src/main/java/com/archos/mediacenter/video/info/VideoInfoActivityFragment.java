@@ -1958,10 +1958,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     if (actors.getItemDecorationCount() < 1) {
                         actors.addItemDecoration(new CastAdapter.SpacesItemDecoration(spacing));
                     }
-
-
-
-
+                    // hide cast textview
+                    mCastTextView.setVisibility(View.GONE);
                 }
                 // set content rating
                 if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
