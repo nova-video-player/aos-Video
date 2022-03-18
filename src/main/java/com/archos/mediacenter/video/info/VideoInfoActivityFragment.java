@@ -1811,6 +1811,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 // If cast is null and this is an episode, get the cast of the Show
                 String studio = null;
 
+                // click on ClearLogo to choose another
+                mClearLogo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
+                        intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
+                        intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_CLEARLOGO, true);
+                        startActivity(intent);
+                    }
+                });
+
                 if (cast == null & tags instanceof EpisodeTags) {
                     ShowTags showTags = ((EpisodeTags) tags).getShowTags();
                     cast = showTags != null ? showTags.getActorsFormatted() : null;
@@ -1854,15 +1865,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     ShowTags showTags = ((EpisodeTags) tags).getShowTags();
                     Glide.with(mContext).load(showTags.getClearLogo())
                             .centerInside().into(mClearLogo);
-                    mClearLogo.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
-                            intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
-                            intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_CLEARLOGO, true);
-                            startActivity(intent);
-                        }
-                    });
                     // Set series network logo
                     Glide.with(mContext).load(showTags.getNetworkLogo())
                             .fitCenter().into(mLogo);
