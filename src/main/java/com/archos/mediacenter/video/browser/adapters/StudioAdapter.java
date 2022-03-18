@@ -15,7 +15,8 @@ import java.util.List;
 
 public class StudioAdapter extends RecyclerView.Adapter<StudioAdapter.StudioViewHolder> {
     public interface OnItemClickListener {
-        void onItemClick(int item);
+        void onItemClick(String item);
+        void onItemLongClick(int position);
     }
     private List<String> StudioLogoPaths;
     private OnItemClickListener listener;
@@ -36,13 +37,18 @@ public class StudioAdapter extends RecyclerView.Adapter<StudioAdapter.StudioView
         String basepath = "/data/user/0/org.courville.nova/app_scraper_studiologos/";
         String extension = ".png";
         final String clicked_studioname = path.replace(basepath, "").replace(extension, "");
-
         final int Position = position;
         vh.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onItemClick(Position);
                 Toast.makeText(vh.itemView.getContext(), clicked_studioname, Toast.LENGTH_SHORT).show();
+            }
+        });
+        vh.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                listener.onItemLongClick(Position);
+                return false;
             }
         });
     }

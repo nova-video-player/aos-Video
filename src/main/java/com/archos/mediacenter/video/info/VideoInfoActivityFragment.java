@@ -36,6 +36,7 @@ import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.util.Pair;
 import android.util.TypedValue;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -2005,11 +2006,15 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     studios.setLayoutManager(studioLogoLayoutManager);
                     StudioAdapter.OnItemClickListener studioLogoCallback = new StudioAdapter.OnItemClickListener() {
                         @Override
-                        public void onItemClick(int item) {
+                        public void onItemClick(String item) {
+                        }
+                        @Override
+                        public void onItemLongClick(int position) {
+                            studios.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                             Glide.with(mContext).clear(mLogo);
-                            Glide.with(mContext).load(tags.getStudioLogosLargeFileF().get(item))
+                            Glide.with(mContext).load(tags.getStudioLogosLargeFileF().get(position))
                                     .fitCenter().into(mLogo);
-                            ScraperImage clickedImage = (ScraperImage) scraperImage.get(item);
+                            ScraperImage clickedImage = (ScraperImage) scraperImage.get(position);
                             new VideoInfoActivityFragment.ClearLogoSaver(mContext, new VideoInfoActivityFragment()).execute(clickedImage);
                         }
                     };

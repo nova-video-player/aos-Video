@@ -484,7 +484,12 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             studioLogos.setLayoutManager(studioLogoLayoutManager);
             StudioAdapter.OnItemClickListener studioLogoCallback = new StudioAdapter.OnItemClickListener() {
                 @Override
-                public void onItemClick(int item) {
+                public void onItemClick(String item) {
+                }
+
+                @Override
+                public void onItemLongClick(int position) {
+
                 }
             };
             final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
