@@ -34,7 +34,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
-import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -88,7 +87,6 @@ import com.archos.mediacenter.video.browser.adapters.SeriesTags;
 import com.archos.mediacenter.video.browser.adapters.StudioAdapter;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
-import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.NonIndexedVideo;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.dialogs.DialogRetrieveSubtitles;
@@ -115,6 +113,7 @@ import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.EpisodeTags;
 import com.archos.mediascraper.MovieTags;
 import com.archos.mediascraper.NfoWriter;
+import com.archos.mediascraper.ScraperImage;
 import com.archos.mediascraper.ScraperTrailer;
 import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.VideoTags;
@@ -125,7 +124,6 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.internal.ViewUtils;
 import com.squareup.picasso.Picasso;
 
 import java.beans.PropertyChangeListener;
@@ -1999,17 +1997,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             .fitCenter().into(mLogo);
                     // setting Studio Logo RecyclerView
                     List<String> StudioLogoPaths = new ArrayList<>();
-                    for (int i = tags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
+                    for (int i = 0; i < tags.getStudioLogosLargeFileF().size(); i++) {
                         String studioLogoPath = tags.getStudioLogosLargeFileF().get(i).getPath();
                         StudioLogoPaths.add(studioLogoPath);}
+                    List<ScraperImage> scraperImage = tags.getStudioLogos();
                     LinearLayoutManager studioLogoLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
                     studios.setLayoutManager(studioLogoLayoutManager);
                     StudioAdapter.OnItemClickListener studioLogoCallback = new StudioAdapter.OnItemClickListener() {
                         @Override
-                        public void onItemClick(String item) {
+                        public void onItemClick(int item) {
                             Glide.with(mContext).clear(mLogo);
-                            Glide.with(mContext).load(item)
+                            Glide.with(mContext).load(tags.getStudioLogosLargeFileF().get(item))
                                     .fitCenter().into(mLogo);
+                            ScraperImage clickedImage = (ScraperImage) scraperImage.get(item);
+                            new VideoInfoActivityFragment.ClearLogoSaver(mContext, new VideoInfoActivityFragment()).execute(clickedImage);
                         }
                     };
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
@@ -2088,7 +2089,26 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }
         }
     }
+    private static class ClearLogoSaver extends AsyncTask<ScraperImage, Void, Void> {
+        private final VideoInfoActivityFragment mHost;
 
+        public ClearLogoSaver(Context context, VideoInfoActivityFragment host) {
+            mContext = context;
+            mHost = host;
+        }
+
+        @Override
+        protected Void doInBackground(ScraperImage... params) {
+            if (params != null && params.length > 0) {
+                params[0].setAsDefault(mContext);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+        }
+    }
     private void setTextOrHideContainer(TextView textView, String text, View... toHideOrShow) {
         if(text!=null&&!text.isEmpty()) {
             textView.setText(text);

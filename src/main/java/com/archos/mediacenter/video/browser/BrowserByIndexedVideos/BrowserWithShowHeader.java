@@ -42,7 +42,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.archos.mediacenter.video.browser.adapters.CastAdapter;
 import com.archos.mediacenter.video.browser.adapters.CastData;
@@ -82,10 +81,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
@@ -487,7 +484,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             studioLogos.setLayoutManager(studioLogoLayoutManager);
             StudioAdapter.OnItemClickListener studioLogoCallback = new StudioAdapter.OnItemClickListener() {
                 @Override
-                public void onItemClick(String item) {
+                public void onItemClick(int item) {
                 }
             };
             final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
