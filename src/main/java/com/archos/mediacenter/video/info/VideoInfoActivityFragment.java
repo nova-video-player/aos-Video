@@ -2010,7 +2010,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         }
                         @Override
                         public void onItemLongClick(int position) {
-                            studios.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                             Glide.with(mContext).clear(mLogo);
                             Glide.with(mContext).load(tags.getStudioLogosLargeFileF().get(position))
                                     .fitCenter().into(mLogo);
