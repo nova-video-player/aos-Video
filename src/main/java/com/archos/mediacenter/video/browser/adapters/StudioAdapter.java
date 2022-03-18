@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,7 +18,6 @@ public class StudioAdapter extends RecyclerView.Adapter<StudioAdapter.StudioView
         void onItemClick(String item);
     }
     private List<String> StudioLogoPaths;
-    private String path;
     private OnItemClickListener listener;
     public StudioAdapter(List<String> StudioLogoPaths, OnItemClickListener listener) {
         this.StudioLogoPaths = (List<String>) StudioLogoPaths;
@@ -31,11 +31,16 @@ public class StudioAdapter extends RecyclerView.Adapter<StudioAdapter.StudioView
     }
     @Override
     public void onBindViewHolder( StudioAdapter.StudioViewHolder vh, int position) {
-        path = StudioLogoPaths.get(position);
+        final String path = StudioLogoPaths.get(position);
         Glide.with(vh.itemView.getContext()).load(path).into(vh.logoImage);
+        String basepath = "/data/user/0/org.courville.nova/app_scraper_studiologos/";
+        String extension = ".png";
+        final String clicked_studioname = path.replace(basepath, "").replace(extension, "");
         vh.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                listener.onItemClick(path);
+                Toast.makeText(vh.itemView.getContext(), clicked_studioname, Toast.LENGTH_SHORT).show();
             }
         });
     }

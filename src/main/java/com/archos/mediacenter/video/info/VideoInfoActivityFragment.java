@@ -2007,6 +2007,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     StudioAdapter.OnItemClickListener studioLogoCallback = new StudioAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(String item) {
+                            Glide.with(mContext).clear(mLogo);
+                            Glide.with(mContext).load(item)
+                                    .fitCenter().into(mLogo);
                         }
                     };
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
