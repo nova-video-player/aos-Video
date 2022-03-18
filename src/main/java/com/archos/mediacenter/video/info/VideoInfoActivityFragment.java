@@ -1029,6 +1029,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mScraperPlotContainer.setVisibility(View.VISIBLE);
 
         addMenu(0, R.string.info_menu_backdrop_select, 0, R.string.info_menu_backdrop_select);
+        addMenu(0, R.string.info_menu_movie_clearlogo_select, 0, R.string.info_menu_movie_clearlogo_select);
         addMenu(0, R.string.info_menu_poster_select, 0, R.string.info_menu_poster_select);
         addMenu(0, R.string.nfo_export_button, 0, R.string.nfo_export_button);
         addMenu(0, R.string.scrap_remove, DELETE_GROUP, R.string.scrap_remove);
@@ -1279,6 +1280,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
                 intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_BACKDROP, true);
                 startActivityForResult(intent, REQUEST_BACKDROP_ACTIVITY);
+                break;
+            case R.string.info_menu_movie_clearlogo_select:
+                Intent clearlogo = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
+                clearlogo.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
+                clearlogo.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_CLEARLOGO, true);
+                startActivity(clearlogo);
                 break;
             case R.string.delete:
                 deleteFile_async(mCurrentVideo);

@@ -69,6 +69,7 @@
     <string name="info_menu_backdrop_select">Backdrop</string>
     <string name="info_menu_series_backdrop_select">Series Backdrop</string>
     <string name="info_menu_series_clearlogo_select">Series ClearLogo</string>
+    <string name="info_menu_movie_clearlogo_select">ClearLogo</string>
     <string name="info_menu_poster_select">Select another poster</string>
     <string name="info_menu_series_poster_select">Select another poster</string>
 
