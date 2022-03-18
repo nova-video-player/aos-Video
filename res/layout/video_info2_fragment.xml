@@ -35,12 +35,24 @@
             android:background="@android:color/transparent"
             android:paddingLeft="0dip">
             <!--text size is programmatically changed -->
-            <ImageView
-                android:id="@+id/clearlogo"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginTop="2dp"
-                android:scaleType="center" />
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/video_info_margin_half"
+                android:paddingBottom="@dimen/video_info_margin_half"
+                android:orientation="vertical" >
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/video_info_very_big_text" />
+                <ImageView
+                    android:id="@+id/clearlogo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="2dp"
+                    android:scaleType="center" />
+            </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
 <!-- inside a coordinator layout : floating button will put itself in the right place-->
         <com.google.android.material.floatingactionbutton.FloatingActionButton

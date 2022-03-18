@@ -311,6 +311,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mYear;
     private RecyclerView actors;
     private RecyclerView studios;
+    private TextView mToolbarTitle;
 
     private ObservableScrollView mScrollView;
 
@@ -510,6 +511,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mYear = mRoot.findViewById(R.id.year);
         actors = mRoot.findViewById(R.id.actor_photos);
         studios = mRoot.findViewById(R.id.studio_logo_rv);
+        mToolbarTitle = mRoot.findViewById(R.id.toolbar_title);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -794,6 +796,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 if(mSecondaryEpisodeTitleView!=null)
                     mSecondaryEpisodeTitleView.setVisibility(View.GONE);
             }
+
+            mToolbarTitle.setText(name);
 
             if(name!=null) {
                 if (name.length() > 30) {
@@ -1863,6 +1867,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     log.debug("FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
                     // Set series clearlogo
                     ShowTags showTags = ((EpisodeTags) tags).getShowTags();
+                    if (showTags.getClearLogo() != null){
+                        mToolbarTitle.setVisibility(View.GONE);
+                    } else {
+                        mClearLogo.setVisibility(View.GONE);
+                    }
                     Glide.with(mContext).load(showTags.getClearLogo())
                             .centerInside().into(mClearLogo);
                     // Set series network logo
@@ -2003,6 +2012,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
                     studios.setAdapter(studioAdapter);
                     // movie ClearLogo
+                    if (tags.getClearLogo() != null){
+                        mToolbarTitle.setVisibility(View.GONE);
+                    } else {
+                        mClearLogo.setVisibility(View.GONE);
+                    }
                     Glide.with(mContext).load(tags.getClearLogo())
                             .centerInside().into(mClearLogo);
                 }
