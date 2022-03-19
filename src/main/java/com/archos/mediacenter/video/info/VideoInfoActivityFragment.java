@@ -2031,7 +2031,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             Glide.with(mContext).load(tags.getStudioLogosLargeFileF().get(position))
                                     .fitCenter().into(mLogo);
                             ScraperImage clickedImage = (ScraperImage) scraperImage.get(position);
-                            new VideoInfoActivityFragment.ClearLogoSaver(mContext, new VideoInfoActivityFragment()).execute(clickedImage);
+                            new StudioLogoSaver(mContext).execute(clickedImage);
                         }
                     };
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
@@ -2110,14 +2110,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }
         }
     }
-    private static class ClearLogoSaver extends AsyncTask<ScraperImage, Void, Void> {
-        private final VideoInfoActivityFragment mHost;
-
-        public ClearLogoSaver(Context context, VideoInfoActivityFragment host) {
+    private static class StudioLogoSaver extends AsyncTask<ScraperImage, Void, Void> {
+        public StudioLogoSaver(Context context) {
             mContext = context;
-            mHost = host;
         }
-
         @Override
         protected Void doInBackground(ScraperImage... params) {
             if (params != null && params.length > 0) {
@@ -2125,7 +2121,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }
             return null;
         }
-
         @Override
         protected void onPostExecute(Void result) {
         }
