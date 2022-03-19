@@ -449,6 +449,7 @@
     <string name="quotation_format">&#x00AB;%s&#x00BB;&#x2003;</string>
     <string name="error_permission">Erreur de permission</string>
     <string name="error_permission_storage">Nova Vidéo Player requiert la permission \"Stockage\" pour accéder aux vidéos de votre appareil.</string>
+    <string name="error_permission_all_file_access">Nova Video Player a besoin de la permission de gestion des stockages externes afin de gérer correctement les fichiers vidéos/NFO locaux, veuillez accorder cette autorisation.</string>
     <string name="allow">Autoriser</string>
     <string name="exit">Quitter</string>
     <!-- torrent -->
