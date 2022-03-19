@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback;
 
+import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermission;
+
 import android.app.Activity;
 import android.content.Intent;
 
@@ -68,7 +70,7 @@ public class MainActivityLeanback extends LeanbackActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UnavailablePosterBroadcastReceiver.registerReceiver(this);
-        mPermissionChecker = new PermissionChecker();
+        mPermissionChecker = new PermissionChecker(hasManageExternalStoragePermission(getApplicationContext()));
         new DensityTweak(this)
                 .applyUserDensity()
                 .showDensityChoiceIfNeeded();

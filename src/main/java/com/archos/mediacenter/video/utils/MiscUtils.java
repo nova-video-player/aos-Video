@@ -95,21 +95,4 @@ public class MiscUtils {
             }
         }
     }
-
-    // returns permissions listed in the manifest file
-    public static String[] getPermissions(Context context) {
-        try {
-            return context
-                    .getPackageManager()
-                    .getPackageInfo(context.getPackageName(), PackageManager.GET_PERMISSIONS)
-                    .requestedPermissions;
-        } catch (PackageManager.NameNotFoundException e) {
-            log.error("getPermissions: caught PackageManager.NameNotFoundException", e);
-            return new String[0];
-        }
-    }
-
-    public static boolean hasPermission(String permission, Context context) {
-        return Arrays.asList(getPermissions(context)).contains(permission);
-    }
 }

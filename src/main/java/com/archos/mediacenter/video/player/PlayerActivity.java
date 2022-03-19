@@ -128,6 +128,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static com.archos.environment.ArchosFeatures.isChromeOS;
+import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermission;
 import static com.archos.mediacenter.video.utils.MiscUtils.isEmulator;
 
 
@@ -554,7 +555,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         super.onCreate(icicle);
         mIndexHelper = new IndexHelper(this, LoaderManager.getInstance(this), LOADER_INDEX);
 
-        mPermissionChecker = new PermissionChecker();
+        mPermissionChecker = new PermissionChecker(hasManageExternalStoragePermission(getApplicationContext()));
         mPermissionChecker.setListener(this);
         VideoEffect.resetForcedMode();
         VideoEffect.setStereoForced(MainActivity.mStereoForced);

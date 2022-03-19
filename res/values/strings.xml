@@ -493,6 +493,7 @@
 
     <string name="error_permission">Not enough permissions</string>
     <string name="error_permission_storage">Nova Video Player needs storage permission to read local videos, please, grant this permission.</string>
+    <string name="error_permission_all_file_access">Nova Video Player needs all external storage management permission to manage local videos/NFO files correctly, please, grant this permission.</string>
     <string name="allow">Allow</string>
     <string name="exit">Exit</string>
     <!-- torrent -->

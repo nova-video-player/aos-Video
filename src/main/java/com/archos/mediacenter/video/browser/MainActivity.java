@@ -15,6 +15,8 @@
 
 package com.archos.mediacenter.video.browser;
 
+import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermission;
+
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -255,7 +257,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
         mGlobalResumeViewStub = (ViewStub) findViewById(R.id.global_resume_stub);
         AutoScrapeService.registerObserver(this);
-        mPermissionChecker = new PermissionChecker();
+        mPermissionChecker = new PermissionChecker(hasManageExternalStoragePermission(getApplicationContext()));
         setBackground();
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);

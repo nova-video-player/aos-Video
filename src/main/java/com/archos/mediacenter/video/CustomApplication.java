@@ -15,6 +15,9 @@
 package com.archos.mediacenter.video;
 
 
+import static com.archos.filecorelibrary.FileUtils.getPermissions;
+import static com.archos.filecorelibrary.FileUtils.hasPermission;
+
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -64,6 +67,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyChangeListener;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -267,6 +271,9 @@ public class CustomApplication extends Application {
         // only launch BootupRecommandation if on AndroidTV and before Android O otherwise target TV channels
         if(ArchosFeatures.isAndroidTV(this) && Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
             BootupRecommandationService.init();
+
+        log.trace("onCreate: manifest permissions " + Arrays.toString(getPermissions(mContext)));
+        log.trace("onCreate: has permission android.permission.MANAGE_EXTERNAL_STORAGE " + hasPermission("android.permission.MANAGE_EXTERNAL_STORAGE", mContext));
 
         updateVersionState();
     }

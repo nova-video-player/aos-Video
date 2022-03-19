@@ -34,13 +34,19 @@ allprojects {
         checkAmazonReleaseDuplicateClasses.dependsOn(preBuild)
         checkAmazonDebugAndroidTestDuplicateClasses.dependsOn(preBuild)
         checkNoamazonDebugAndroidTestDuplicateClasses.dependsOn(preBuild)
+        checkManageexternalstorageReleaseDuplicateClasses.dependsOn(preBuild)
+        checkManageexternalstorageDebugDuplicateClasses.dependsOn(preBuild)
 
         desugarNoamazonDebugFileDependencies.dependsOn(preBuild)
         compileNoamazonDebugJavaWithJavac.dependsOn(preBuild)
         desugarAmazonDebugFileDependencies.dependsOn(preBuild)
         compileAmazonDebugJavaWithJavac.dependsOn(preBuild)
+        desugarManageexternalstorageDebugFileDependencies.dependsOn(preBuild)
+        compileManageexternalstorageDebugJavaWithJavac.dependsOn(preBuild)
 
         collectNoamazonReleaseDependencies.dependsOn(preBuild)
+        collectAmazonReleaseDependencies.dependsOn(preBuild)
+        collectManageexternalstorageReleaseDependencies.dependsOn(preBuild)
     }
 }
 
@@ -167,6 +173,9 @@ android {
         noamazon {
             dimension "amazon"
         }
+        manageexternalstorage {
+            dimension "amazon"
+        }
     }
     buildTypes {
         release {
@@ -237,6 +246,7 @@ android {
                 outputFileName = outputFileName.replace("-release", "-universal-release")
             }
             outputFileName = outputFileName.replace("-noamazon-", "-")
+                    .replace("-manageexternalstorage-", "-")
                     .replace("-release.apk", "-API_${api}+-release.apk")
                     .replace("-debug.apk", "-API_${api}+-debug.apk")
             variant.getAssembleProvider().configure() {
