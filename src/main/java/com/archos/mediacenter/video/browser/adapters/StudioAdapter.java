@@ -47,7 +47,7 @@ public class StudioAdapter extends RecyclerView.Adapter<StudioAdapter.StudioView
         vh.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(vh.itemView.getContext(), vh.itemView.getContext().getResources().getString(R.string.studiologo_changed) + " " + clicked_studioname, Toast.LENGTH_SHORT ).show();
+                //Toast.makeText(vh.itemView.getContext(), vh.itemView.getContext().getResources().getString(R.string.studiologo_changed) + " " + clicked_studioname, Toast.LENGTH_SHORT ).show();
                 listener.onItemLongClick(Position);
                 return true;
             }

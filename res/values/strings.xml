@@ -49,7 +49,7 @@
     <string name="play_from_beginning">Play from beginning</string>
     <!-- Dialog box button -->
 
-    <string name="studiologo_changed">Default Studio Logo changed to:</string>
+    <string name="studiologo_changed">Default Studio Logo changed to</string>
 
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>

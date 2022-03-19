@@ -36,6 +36,7 @@ import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.util.Pair;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -2010,6 +2011,22 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         }
                         @Override
                         public void onItemLongClick(int position) {
+                            String path = StudioLogoPaths.get(position);
+                            String basepath = "/data/user/0/org.courville.nova/app_scraper_studiologos/";
+                            String extension = ".png";
+                            String clicked_studioname = path.replace(basepath, "").replace(extension, "");
+                            LayoutInflater inflater = LayoutInflater.from(mContext);
+                            View layout = inflater.inflate(R.layout.custom_toast,
+                                    mRoot.findViewById(R.id.toast_layout_root));
+                            TextView header = layout.findViewById(R.id.message_header);
+                            TextView newStudio = layout.findViewById(R.id.new_studio);
+                            header.setText(getResources().getString(R.string.studiologo_changed));
+                            newStudio.setText(clicked_studioname);
+                            Toast toast = new Toast(mContext);
+                            toast.setGravity(Gravity.BOTTOM, 0, 50);
+                            toast.setDuration(Toast.LENGTH_SHORT);
+                            toast.setView(layout);
+                            toast.show();
                             Glide.with(mContext).clear(mLogo);
                             Glide.with(mContext).load(tags.getStudioLogosLargeFileF().get(position))
                                     .fitCenter().into(mLogo);
