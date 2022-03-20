@@ -113,6 +113,7 @@ import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
 import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.EpisodeTags;
+import com.archos.mediascraper.MediaScraper;
 import com.archos.mediascraper.MovieTags;
 import com.archos.mediascraper.NfoWriter;
 import com.archos.mediascraper.ScraperImage;
@@ -1879,7 +1880,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             .fitCenter().into(mLogo);
                     // set series studio names for episode view
                     String names = "";
-                    String basePath = "/data/user/0/org.courville.nova/app_scraper_studiologos/";
+                    String basePath = MediaScraper.getStudioLogoDirectory(mContext) + "/";
                     for (int i = showTags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
                         names = names + showTags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(basePath, "").replaceAll(".png", "") + ", ";
                         studio = names.substring(0, names.length() - 2);
@@ -1975,7 +1976,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
                         castData.setName(entry.getKey());
                         castData.setCharacter(valuesFormatted.get(0));
-                        castData.setPhotoPath("/data/user/0/org.courville.nova/app_scraper_actorphotos" + valuesFormatted.get(1));
+                        castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext) + valuesFormatted.get(1));
                         movieActors.add(castData);
                     }
                     LinearLayoutManager actorsLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
@@ -2012,7 +2013,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         @Override
                         public void onItemLongClick(int position) {
                             String path = StudioLogoPaths.get(position);
-                            String basepath = "/data/user/0/org.courville.nova/app_scraper_studiologos/";
+                            String basepath = MediaScraper.getStudioLogoDirectory(mContext) + "/";
                             String extension = ".png";
                             String clicked_studioname = path.replace(basepath, "").replace(extension, "");
                             LayoutInflater inflater = LayoutInflater.from(mContext);
