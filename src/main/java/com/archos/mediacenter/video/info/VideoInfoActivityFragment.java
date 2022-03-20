@@ -1849,6 +1849,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 setTextOrHideContainer(mScrapDirector, tags.getDirectorsFormatted(), mScrapDirector, mScrapDirectorTitle);
                 setTextOrHideContainer(mScrapWriter, tags.getWritersFormatted(), mScrapWriter, mScrapWriterTitle);
                 String date = null;
+                String basePath = MediaScraper.getStudioLogoDirectory(mContext) + "/";
                 if(tags instanceof EpisodeTags){
                     mIsVideoMovie = false;
                     mTVDBIcon.setVisibility(View.GONE);
@@ -1880,7 +1881,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             .fitCenter().into(mLogo);
                     // set series studio names for episode view
                     String names = "";
-                    String basePath = MediaScraper.getStudioLogoDirectory(mContext) + "/";
                     for (int i = showTags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
                         names = names + showTags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(basePath, "").replaceAll(".png", "") + ", ";
                         studio = names.substring(0, names.length() - 2);
@@ -2013,9 +2013,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         @Override
                         public void onItemLongClick(int position) {
                             String path = StudioLogoPaths.get(position);
-                            String basepath = MediaScraper.getStudioLogoDirectory(mContext) + "/";
                             String extension = ".png";
-                            String clicked_studioname = path.replace(basepath, "").replace(extension, "");
+                            String clicked_studioname = path.replace(basePath, "").replace(extension, "");
                             LayoutInflater inflater = LayoutInflater.from(mContext);
                             View layout = inflater.inflate(R.layout.custom_toast,
                                     mRoot.findViewById(R.id.toast_layout_root));
