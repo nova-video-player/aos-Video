@@ -2021,6 +2021,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                                     mRoot.findViewById(R.id.toast_layout_root));
                             TextView header = layout.findViewById(R.id.message_header);
                             TextView newStudio = layout.findViewById(R.id.new_studio);
+                            ImageView toastLogo = layout.findViewById(R.id.toast_logo);
+                            Glide.with(mContext).load(tags.getStudioLogosLargeFileF().get(position))
+                                    .fitCenter().into(toastLogo);
                             header.setText(getResources().getString(R.string.studiologo_changed));
                             newStudio.setText(clicked_studioname);
                             Toast toast = new Toast(mContext);
