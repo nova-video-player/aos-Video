@@ -1850,6 +1850,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 setTextOrHideContainer(mScrapWriter, tags.getWritersFormatted(), mScrapWriter, mScrapWriterTitle);
                 String date = null;
                 String basePath = MediaScraper.getStudioLogoDirectory(mContext) + "/";
+                String extension = ".png";
                 if(tags instanceof EpisodeTags){
                     mIsVideoMovie = false;
                     mTVDBIcon.setVisibility(View.GONE);
@@ -1882,7 +1883,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     // set series studio names for episode view
                     String names = "";
                     for (int i = showTags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
-                        names = names + showTags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(basePath, "").replaceAll(".png", "") + ", ";
+                        names = names + showTags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(basePath, "").replaceAll(extension, "") + ", ";
                         studio = names.substring(0, names.length() - 2);
                     }
                     // set episode runtime of the entire series(not episode)
@@ -2013,7 +2014,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         @Override
                         public void onItemLongClick(int position) {
                             String path = StudioLogoPaths.get(position);
-                            String extension = ".png";
                             String clicked_studioname = path.replace(basePath, "").replace(extension, "");
                             LayoutInflater inflater = LayoutInflater.from(mContext);
                             View layout = inflater.inflate(R.layout.custom_toast,
