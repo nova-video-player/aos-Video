@@ -1898,7 +1898,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
                         intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
                         intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_CLEARLOGO, true);
-                        startActivityForResult(intent, REQUEST_CLEARLOGO_ACTIVITY);
+                        activityResultLaunch.launch(intent);
                     }
                 });
 
