@@ -180,8 +180,7 @@
         android:maxLines="4"
         android:clickable="true"
         android:focusable="true"
-        android:ellipsize="end"
-        android:textStyle="italic" />
+        android:ellipsize="end"/>
 
     <LinearLayout
         android:id="@+id/scrap_cast_container"
