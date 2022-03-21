@@ -175,6 +175,11 @@
     <TextView
         android:id="@+id/scrap_plot"
         style="@style/VideoInfoFileInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="4"
+        android:clickable="true"
+        android:focusable="true"
         android:ellipsize="end"
         android:textStyle="italic" />
 

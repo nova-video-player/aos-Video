@@ -14,6 +14,9 @@
 
 package com.archos.mediacenter.video.info;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -34,6 +37,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -1773,20 +1777,75 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     genres = ((VideoTags) tags).getGenresFormatted();
                 }
                 setTextOrHideContainer(mPlotTextView, plot, mPlotTextView);
-                mPlotTextView.setMaxLines(4);
-                mPlotTextView.setTag(true);
-                mPlotTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (((Boolean) mPlotTextView.getTag())) {
-                            mPlotTextView.setMaxLines(50);
-                            mPlotTextView.setTag(false);
-                        } else {
-                            mPlotTextView.setMaxLines(4);
-                            mPlotTextView.setTag(true);
-                        }
+                int expectedWidthOfTextView = getResources().getDisplayMetrics().widthPixels;
+                int originalMaxLines = mPlotTextView.getMaxLines();
+                if (originalMaxLines < 0 || originalMaxLines == Integer.MAX_VALUE)
+                    Log.d("AppLog", "already unbounded textView maxLines");
+                else {
+                    mPlotTextView.setMaxLines(Integer.MAX_VALUE);
+                    mPlotTextView.measure(
+                            View.MeasureSpec.makeMeasureSpec(expectedWidthOfTextView, View.MeasureSpec.AT_MOST),
+                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                    );
+                    int measuredLineCount = mPlotTextView.getLineCount();
+                    int measuredTargetHeight = mPlotTextView.getMeasuredHeight();
+                    int height = mPlotTextView.getHeight();
+                    Log.d("AppLog", "lines:$measuredLineCount/$originalMaxLines");
+                    mPlotTextView.setHeight(height *4);
+                    mPlotTextView.setEllipsize(TextUtils.TruncateAt.END);
+                    mPlotTextView.setMaxLines(4);
+                    if (measuredLineCount <= originalMaxLines)
+                        Log.d("AppLog", "fit in original maxLines");
+                    else {
+                        Log.d("AppLog", "exceeded original maxLines");
+                        mPlotTextView.setTag(true);
+                        mPlotTextView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (((Boolean) mPlotTextView.getTag())) {
+                                    mPlotTextView.setMaxLines(Integer.MAX_VALUE);
+                                    ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
+                                    ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), height * measuredLineCount);
+                                    animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                        @Override
+                                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                            int value = (int) valueAnimator.getAnimatedValue();
+                                            layoutParams.height = value;
+                                            mPlotTextView.requestLayout();
+                                        }
+                                    });
+                                    animation.start();
+                                    //animation.setDuration(500);
+                                    layoutParams.height = mPlotTextView.getHeight();
+                                    mPlotTextView.setTag(false);
+                                } else {
+                                    ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
+                                    ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), height * 4);
+                                    animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                        @Override
+                                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                            int value = (int) valueAnimator.getAnimatedValue();
+                                            layoutParams.height = value;
+                                            mPlotTextView.requestLayout();
+                                        }
+                                    });
+                                    animation.addListener(new AnimatorListenerAdapter()
+                                    {
+                                        @Override
+                                        public void onAnimationEnd(Animator animation)
+                                        {
+                                            mPlotTextView.setMaxLines(4);
+                                        }
+                                    });
+                                    animation.start();
+                                    //animation.setDuration(500);
+                                    layoutParams.height = mPlotTextView.getHeight();
+                                    mPlotTextView.setTag(true);
+                                }
+                            }
+                        });
                     }
-                });
+                }
                 setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);
                 // Movie Cast
                 String movieCastFormatted = "";
