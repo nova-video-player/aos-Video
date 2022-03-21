@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.archos.mediacenter.utils.ActionBarSubmenu;
@@ -114,6 +115,25 @@ public class BrowserListOfSeasons extends BrowserWithShowHeader  {
     @Override
     protected void setSeason(TextView seasonView) {
         seasonView.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void setSeasonPlot(TextView seasonPlotView) {
+        seasonPlotView.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void setSeasonPlotHeader(TextView seasonPlotHeaderView) {
+        seasonPlotHeaderView.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void setSeasonAirDateContainer(LinearLayout seasonAirDateContainer) {
+        seasonAirDateContainer.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void setSeriesPremieredContainer(LinearLayout seriesPremieredContainer) {
     }
 
     @Override

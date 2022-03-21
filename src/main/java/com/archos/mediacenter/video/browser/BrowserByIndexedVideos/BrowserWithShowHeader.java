@@ -26,6 +26,10 @@ import androidx.loader.app.LoaderManager;
 import androidx.core.content.ContextCompat;
 import androidx.loader.content.Loader;
 import androidx.palette.graphics.Palette;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,8 +39,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.archos.mediacenter.video.browser.adapters.CastAdapter;
+import com.archos.mediacenter.video.browser.adapters.CastData;
+import com.archos.mediacenter.video.browser.adapters.SeasonsData;
+import com.archos.mediacenter.video.browser.adapters.SeriesTags;
+import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
+import com.archos.mediacenter.video.browser.adapters.StudioAdapter;
+import com.archos.mediascraper.EpisodeTags;
+import com.bumptech.glide.Glide;
 
 import com.archos.mediacenter.utils.ActionBarSubmenu;
 import com.archos.mediacenter.utils.imageview.ImageProcessor;
@@ -57,16 +71,21 @@ import com.archos.mediacenter.video.utils.SerialExecutor;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.BaseTags;
+import com.archos.mediascraper.ScraperImage;
 import com.archos.mediascraper.ShowTags;
 import com.squareup.picasso.Picasso;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
@@ -92,6 +111,10 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     private int mColor;
     protected View mApplicationFrameLayout;
     private boolean mPlotIsFullyDisplayed;
+    private RecyclerView recyclerView;
+    private RecyclerView studioLogos;
+    private RecyclerView actors;
+    private SeasonsData seasonsData;
 
     public BrowserWithShowHeader() {
         log.debug("BrowserBySeason()");
@@ -172,6 +195,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         if(mShow!=null){
             menu.add(0,R.string.scrap_series_change, 0, R.string.scrap_series_change);
             menu.add(0,R.string.info_menu_series_backdrop_select, 0, R.string.info_menu_series_backdrop_select);
+            menu.add(0,R.string.info_menu_series_clearlogo_select, 0, R.string.info_menu_series_clearlogo_select);
             menu.add(0,R.string.info_menu_series_poster_select, 0, R.string.info_menu_series_poster_select);
 
         }
@@ -208,6 +232,12 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
             intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mShow);
             intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_BACKDROP, true);
+            startActivity(intent);
+            return  true;
+        }else if(item.getItemId()==R.string.info_menu_series_clearlogo_select){
+            Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
+            intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mShow);
+            intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_CLEARLOGO, true);
             startActivity(intent);
             return  true;
         }else if(item.getItemId()==R.string.info_menu_series_poster_select){
@@ -335,7 +365,11 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             Tvshow show = result.show;
             BaseTags tags = result.tags;
             ShowTags showTags = result.tags;
-            final TextView plotTv = (TextView) mHeaderView.findViewById(R.id.plot);
+            EpisodeTags episodeTags = new EpisodeTags();
+
+            ScraperImage image = new ScraperImage(ScraperImage.Type.SHOW_NETWORK, mTitle);
+
+            final TextView plotTv = (TextView) mHeaderView.findViewById(R.id.series_plot);
             mHeaderView.findViewById(R.id.loading).setVisibility(View.GONE);
 
             TextView tvpg = (TextView) mHeaderView.findViewById(R.id.content_rating);
@@ -347,15 +381,211 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 tvpg.setText(tags.getContentRating());
             }
 
+            // Utilizing the unused series director as a pipeline for series created by tag
+            TextView createdBy = (TextView) mHeaderView.findViewById(R.id.created_by);
+            createdBy.setText(tags.getDirectorsFormatted());
+            LinearLayout createdbyContainer = (LinearLayout) mHeaderView.findViewById(R.id.created_by_container);
+            if (tags.getDirectorsFormatted() == null)
+                createdbyContainer.setVisibility(View.GONE);
+
             TextView network = (TextView) mHeaderView.findViewById(R.id.network);
             network.setText(show.getStudio());
 
             TextView Premiered = (TextView) mHeaderView.findViewById(R.id.premiered);
-            String pattern = "yyyy-MM-dd";
+            String pattern = "MMMM dd, yyyy";
             DateFormat df = new SimpleDateFormat(pattern);
-            Date today = showTags.getPremiered();
-            String todayAsString = df.format(today);
-            Premiered.setText(todayAsString);
+            Date date = showTags.getPremiered();
+            String dateAsString = df.format(date);
+            Premiered.setText(dateAsString);
+
+            TextView PremieredYear = (TextView) mHeaderView.findViewById(R.id.premiered_year);
+            PremieredYear.setText(Integer.toString(showTags.getPremieredYear()));
+
+            TextView seriesGenres = (TextView) mHeaderView.findViewById(R.id.series_genres);
+            seriesGenres.setText(showTags.getGenresFormatted());
+
+            TextView mSeasonPlot = (TextView) mHeaderView.findViewById(R.id.season_plot);
+            TextView seasonPlotHeader = (TextView) mHeaderView.findViewById(R.id.season_plot_header);
+            TextView seasonAirDate = (TextView) mHeaderView.findViewById(R.id.season_airdate);
+            LinearLayout seasonAirDateContainer = (LinearLayout) mHeaderView.findViewById(R.id.season_airdate_container);
+            List <String>  seasonPlots = showTags.getSeasonPlots();
+            List <SeasonsData>  finalSeasonPlots = new ArrayList<>();
+            for (int i = 0; i < seasonPlots.size(); i++) {
+                String seasonPlot = seasonPlots.get(i);
+                List <String>  seasonPlotsFormatted;
+                seasonPlotsFormatted = Arrays.asList(seasonPlot.split("\\s*=&%#\\s*"));
+                seasonsData = new SeasonsData();
+                seasonsData.setSeasonNumber(seasonPlotsFormatted.get(0));
+                seasonsData.setSeasonPlot(seasonPlotsFormatted.get(1));
+                seasonsData.setSeasonName(seasonPlotsFormatted.get(2));
+                seasonsData.setSeasonAirdate(seasonPlotsFormatted.get(3));
+                finalSeasonPlots.add(seasonsData);
+            }
+            Bundle args = getArguments();
+            int currentSeason = args.getInt(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON, 0);
+            for (int i = 0; i < finalSeasonPlots.size(); i++) {
+                String seasonNumber = finalSeasonPlots.get(i).getSeasonNumber();
+                if (currentSeason == Integer.parseInt(seasonNumber)){
+                    mSeasonPlot.setText(finalSeasonPlots.get(i).getSeasonPlot());
+                    if(finalSeasonPlots.get(i).getSeasonPlot().isEmpty()){
+                        mSeasonPlot.setVisibility(View.GONE);
+                        seasonPlotHeader.setVisibility(View.GONE);
+                    }
+                    seasonAirDate.setText(finalSeasonPlots.get(i).getSeasonAirdate());
+                    if (finalSeasonPlots.get(i).getSeasonAirdate().isEmpty())
+                        seasonAirDateContainer.setVisibility(View.GONE);
+                }
+            }
+            setSeasonPlot((TextView)mHeaderView.findViewById(R.id.season_plot));
+            setSeasonAirDateContainer((LinearLayout)mHeaderView.findViewById(R.id.season_airdate_container));
+            setSeriesPremieredContainer((LinearLayout)mHeaderView.findViewById(R.id.premiered_container));
+
+
+            ImageView logo = ((ImageView)mHeaderView.findViewById(R.id.net_logo));
+            Glide.with(mContext).load(tags.getNetworkLogo())
+                    .fitCenter().into(logo);
+
+            TextView seriesRating = (TextView) mHeaderView.findViewById(R.id.series_rating);
+            seriesRating.setText(String.valueOf(showTags.getRating()));
+
+            // setting Network RecyclerView
+            recyclerView = mHeaderView.findViewById(R.id.net_logo_rv);
+            List<String> NetworkLogoPaths = new ArrayList<>();
+            for (int i = tags.getNetworkLogosLargeFileF().size() - 1; i >= 0; i--) {
+                String avaialbeLogopath = String.valueOf(tags.getNetworkLogosLargeFileF().get(i));
+                NetworkLogoPaths.add(avaialbeLogopath);}
+            LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+            recyclerView.setLayoutManager(layoutManager);
+            ShowNetworkAdapter.OnItemClickListener indicatorCallback = new ShowNetworkAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(String item) {
+                }
+            };
+            final ShowNetworkAdapter logoAdapter = new ShowNetworkAdapter(NetworkLogoPaths,indicatorCallback);
+            recyclerView.setAdapter(logoAdapter);
+            // if only one logo available locally hide recyclerView
+            List<File> availableLogos = new ArrayList<>();
+            int size;
+            for (int i = 0; i < NetworkLogoPaths.size(); i++) {
+                String st = NetworkLogoPaths.get(i);
+                File file = new File(st);
+                if (file.exists()){
+                    availableLogos.add(file);
+                }
+            }
+            size = availableLogos.size();
+            if (size == 1){
+                recyclerView.setVisibility(View.GONE);
+            }
+
+            // setting Studio Logo RecyclerView
+            studioLogos = mHeaderView.findViewById(R.id.studio_logo_rv);
+            List<String> StudioLogoPaths = new ArrayList<>();
+            for (int i = tags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
+                String studioLogoPath = tags.getStudioLogosLargeFileF().get(i).getPath();
+                StudioLogoPaths.add(studioLogoPath);}
+            LinearLayoutManager studioLogoLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+            studioLogos.setLayoutManager(studioLogoLayoutManager);
+            StudioAdapter.OnItemClickListener studioLogoCallback = new StudioAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(String item) {
+                }
+
+                @Override
+                public void onItemLongClick(int position) {
+
+                }
+            };
+            final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
+            studioLogos.setAdapter(studioAdapter);
+
+            String studioNames = "";
+            String names = "";
+            String basePath = "/data/user/0/org.courville.nova/app_scraper_studiologos/";
+            for (int i = tags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
+                names = names + tags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(basePath, "").replaceAll(".png", "") + ", ";
+                studioNames = names.substring(0, names.length() - 2);
+            }
+            TextView studio = (TextView) mHeaderView.findViewById(R.id.studio);
+            studio.setText(studioNames);
+            LinearLayout studioNamesContainer = (LinearLayout) mHeaderView.findViewById(R.id.studio_container);
+            if (studioNames.isEmpty())
+                studioNamesContainer.setVisibility(View.GONE);
+
+
+            // setting Actors RecyclerView
+            actors = mHeaderView.findViewById(R.id.actor_photos);
+            List<CastData> seriesActors = new ArrayList<>();
+            CastData castData;
+            for (int i = 0; i < tags.getWriters().size(); i++) {
+                String actor = tags.getWriters().get(i);
+                List <String>  actorsFormatted;
+                actorsFormatted = Arrays.asList(actor.split("\\s*=&%#\\s*"));
+                castData = new CastData();
+                castData.setName(actorsFormatted.get(0));
+                castData.setCharacter(actorsFormatted.get(1));
+                castData.setPhotoPath("/data/user/0/org.courville.nova/app_scraper_actorphotos" + actorsFormatted.get(2));
+                seriesActors.add(castData);
+            }
+            LinearLayoutManager actorsLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+            actors.setLayoutManager(actorsLayoutManager);
+            CastAdapter.OnItemClickListener actorCallback = new CastAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                }
+            };
+            final CastAdapter actorAdapter = new CastAdapter(seriesActors,actorCallback);
+            actors.setAdapter(actorAdapter);
+            // add space between actors
+            int spacing = getResources().getDimensionPixelSize(R.dimen.cast_spacing);
+            if (actors.getItemDecorationCount() < 1) {
+                actors.addItemDecoration(new CastAdapter.SpacesItemDecoration(spacing));
+            }
+
+            List<SeriesTags> tvShowTags = new ArrayList<>();
+            SeriesTags seriesTags;
+            for (int i = 0; i < tags.getTaglines().size(); i++) {
+                String TvTags = tags.getTaglines().get(i);
+                List <String>  TvTagsFormatted;
+                TvTagsFormatted = Arrays.asList(TvTags.split("\\s*=&%#\\s*"));
+                seriesTags = new SeriesTags();
+                seriesTags.setTagline(TvTagsFormatted.get(0));
+                seriesTags.setType(TvTagsFormatted.get(1));
+                seriesTags.setStatus(TvTagsFormatted.get(2));
+                seriesTags.setVotes(TvTagsFormatted.get(3));
+                seriesTags.setPopularity(TvTagsFormatted.get(4));
+                seriesTags.setRuntime(TvTagsFormatted.get(5));
+                tvShowTags.add(seriesTags);
+            }
+            TextView tagline = (TextView) mHeaderView.findViewById(R.id.series_tagline);
+            tagline.setText(tvShowTags.get(0).getTagline());
+            if (tvShowTags.get(0).getTagline().isEmpty()){
+                tagline.setVisibility(View.GONE);
+            }
+
+            TextView votes = (TextView) mHeaderView.findViewById(R.id.vote_count);
+            votes.setText(tvShowTags.get(0).getVotes());
+            if (tvShowTags.get(0).getVotes().isEmpty()){
+                votes.setVisibility(View.GONE);
+            }
+
+            TextView status = (TextView) mHeaderView.findViewById(R.id.series_status);
+            status.setText(tvShowTags.get(0).getStatus());
+            if (tvShowTags.get(0).getStatus().isEmpty()){
+                status.setVisibility(View.GONE);
+            }
+
+            TextView runtime = (TextView) mHeaderView.findViewById(R.id.episode_runtime);
+            runtime.setText(tvShowTags.get(0).getRuntime());
+            if (tvShowTags.get(0).getRuntime().isEmpty()){
+                runtime.setVisibility(View.GONE);
+            }
+
+            TextView showType = (TextView) mHeaderView.findViewById(R.id.showtype);
+            showType.setText(tvShowTags.get(0).getType());
+            if (tvShowTags.get(0).getType().isEmpty()){
+                showType.setVisibility(View.GONE);
+            }
 
             ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));
             posterView.setImageBitmap(result.bitmap);
@@ -367,30 +597,70 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             });
 
             setColor(mColor);
-            ((TextView)mHeaderView.findViewById(R.id.name)).setText(show.getName());
-            plotTv.setText(show.getPlot());
-            plotTv.setMaxLines(Integer.MAX_VALUE);
 
-            setSeason((TextView)mHeaderView.findViewById(R.id.season));
-            plotTv.setVisibility(View.VISIBLE);
-                if(!mPlotIsFullyDisplayed)
-                mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height);
-            else
-                mHeaderView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            mHeaderView.setOnClickListener(new View.OnClickListener() {
+            ((TextView)mHeaderView.findViewById(R.id.name)).setText(show.getName());
+            ImageView seriesClearLogo = ((ImageView)mHeaderView.findViewById(R.id.show_clearlogo));
+            Glide.with(mContext).load(tags.getClearLogo())
+                    .centerInside().into(seriesClearLogo);
+            if (tags.getClearLogo() != null){
+                ((TextView)mHeaderView.findViewById(R.id.name)).setVisibility(View.GONE);
+            } else {
+                seriesClearLogo.setVisibility(View.GONE);
+            }
+            seriesClearLogo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    View viewMore = mHeaderView.findViewById(R.id.view_more);
-                    if (viewMore.getVisibility() == View.VISIBLE) {
-                        plotTv.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                        viewMore.setVisibility(View.GONE);
+                    Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
+                    intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mShow);
+                    intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_CLEARLOGO, true);
+                    startActivity(intent);
+                }
+            });
+
+            plotTv.setText(show.getPlot());
+            plotTv.setMaxLines(mContext.getResources().getInteger(R.integer.show_details_max_lines));
+            mSeasonPlot.setMaxLines(mContext.getResources().getInteger(R.integer.show_details_max_lines));
+            plotTv.setTag(true);
+            mSeasonPlot.setTag(true);
+
+            setSeason((TextView)mHeaderView.findViewById(R.id.season));
+            setSeasonPlotHeader((TextView)mHeaderView.findViewById(R.id.season_plot_header));
+            plotTv.setVisibility(View.VISIBLE);
+            if(!mPlotIsFullyDisplayed)
+                mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height_new);
+            else
+                mHeaderView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            plotTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (((Boolean) plotTv.getTag())) {
+                        plotTv.setMaxLines(Integer.MAX_VALUE);
                         mHeaderView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
                         mPlotIsFullyDisplayed = true;
+                        plotTv.setTag(false);
                     } else {
-                        plotTv.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-                        viewMore.setVisibility(View.VISIBLE);
-                        mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height);
+                        plotTv.setMaxLines(mContext.getResources().getInteger(R.integer.show_details_max_lines));
+                        mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height_new);
                         mPlotIsFullyDisplayed = false;
+                        plotTv.setTag(true);
+                    }
+                    mBrowserAdapter.notifyDataSetChanged();
+                }
+            });
+
+            mSeasonPlot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (((Boolean) mSeasonPlot.getTag())) {
+                        mSeasonPlot.setMaxLines(Integer.MAX_VALUE);
+                        mHeaderView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                        mPlotIsFullyDisplayed = true;
+                        mSeasonPlot.setTag(false);
+                    } else {
+                        mSeasonPlot.setMaxLines(mContext.getResources().getInteger(R.integer.show_details_max_lines));
+                        mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height_new);
+                        mPlotIsFullyDisplayed = false;
+                        mSeasonPlot.setTag(true);
                     }
                     mBrowserAdapter.notifyDataSetChanged();
                 }
@@ -403,6 +673,14 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     }
 
     protected abstract void setSeason(TextView seasonView);
+
+    protected abstract void setSeasonPlot(TextView seasonPlotView);
+
+    protected abstract void setSeasonPlotHeader(TextView seasonPlotHeaderView);
+
+    protected abstract void setSeasonAirDateContainer(LinearLayout seasonAirDateContainer);
+
+    protected abstract void setSeriesPremieredContainer(LinearLayout seriesPremieredContainer);
 
     protected abstract void setColor(int color);
 

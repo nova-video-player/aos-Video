@@ -13,8 +13,14 @@ for informations (duration for files, number of files for directories).
     android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical" >
 
+    <ImageView
+        android:id="@+id/episode_picture"
+        android:layout_width="112dp"
+        android:layout_height="@dimen/video_list_item_height"
+        android:scaleType="center" />
     <RelativeLayout
         android:id="@+id/left_area"
+        android:layout_marginLeft="112dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"

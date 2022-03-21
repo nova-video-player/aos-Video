@@ -1,33 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:card_view="http://schemas.android.com/apk/res-auto"
-	android:layout_width="match_parent"
-	card_view:cardCornerRadius="4dp"
-	android:layout_height="wrap_content"
-	>
+
 
 	<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
 		android:id="@+id/file_info_content"
 		android:animateLayoutChanges="true"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
-		android:gravity="left"
+		android:gravity="start"
 
 		>
 		<TextView android:id="@+id/file_info_header"
-			android:layout_width="fill_parent"
-			android:text="@string/info_file"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			style="@style/VideoInfoFileInfo.CardViewTitle"/>
+			android:text="@string/info_file"/>
 		<LinearLayout
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
-			android:gravity="left"
-			android:paddingLeft="@dimen/video_info_margin_simple"
-			android:paddingRight="@dimen/video_info_margin_simple"
+			android:gravity="start"
 			android:paddingTop="@dimen/video_info_margin_half"
 			android:paddingBottom="@dimen/video_info_margin_half">
 
@@ -57,7 +49,6 @@
 				<TextView
 					android:id="@+id/duration"
 					style="@style/VideoInfoFileInfo"
-
 					android:layout_marginRight="50dip"/>
 
 				<TextView
@@ -80,5 +71,3 @@
 
 		</LinearLayout>
 	</LinearLayout>
-
-</androidx.cardview.widget.CardView>

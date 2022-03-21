@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesList;
+import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesListSeason;
 import com.archos.mediacenter.video.browser.adapters.object.Season;
 
 import java.text.DateFormat;
@@ -33,7 +34,7 @@ public class SeasonListPresenter extends SeasonPresenter{
     private final DateFormat mDateFormat;
 
     public SeasonListPresenter(Context context, ExtendedClickListener listener) {
-        super(context, AdapterDefaultValuesList.INSTANCE, listener);
+        super(context, AdapterDefaultValuesListSeason.INSTANCE, listener);
         mNumberFormat = NumberFormat.getInstance();
         mNumberFormat.setMinimumFractionDigits(1);
         mNumberFormat.setMaximumFractionDigits(1);

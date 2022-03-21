@@ -34,9 +34,10 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
-import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,6 +66,8 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 import androidx.palette.graphics.Palette;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.archos.environment.NetworkState;
 import com.archos.filecorelibrary.FileUtils;
@@ -80,6 +83,10 @@ import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.Delete;
 import com.archos.mediacenter.video.browser.FileManagerService;
+import com.archos.mediacenter.video.browser.adapters.CastAdapter;
+import com.archos.mediacenter.video.browser.adapters.CastData;
+import com.archos.mediacenter.video.browser.adapters.SeriesTags;
+import com.archos.mediacenter.video.browser.adapters.StudioAdapter;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.NonIndexedVideo;
@@ -106,13 +113,16 @@ import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
 import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.EpisodeTags;
+import com.archos.mediascraper.MediaScraper;
 import com.archos.mediascraper.MovieTags;
 import com.archos.mediascraper.NfoWriter;
+import com.archos.mediascraper.ScraperImage;
 import com.archos.mediascraper.ScraperTrailer;
 import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.VideoTags;
 import com.archos.mediascraper.xml.MovieScraper3;
 import com.archos.mediascraper.xml.ShowScraper4;
+import com.bumptech.glide.Glide;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -127,6 +137,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.archos.mediacenter.video.utils.VideoUtils.getFilePathFromContentUri;
 
@@ -223,7 +234,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private LinearLayout mSourceLayout;
     private VideoBadgePresenter mVideoBadgePresenter;
     private View mScrapDetailsCard;
-    private CardView mScrapTrailersContainer;
+    private LinearLayout mScrapTrailersContainer;
     private View mScraperContainer;
     private TextView mCastTextViewTitle;
 
@@ -244,17 +255,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mFileSize;
     private TextView mDuration;
     private TextView mVideoTrackTextView;
-    private CardView mFileInfoContainer;
+    private LinearLayout mFileInfoContainer;
 
     //subs
     private View mSubtitleContent;
     private TextView mSubtitleHeader;
     private View mSubtitleDownloadButton;
-    private CardView mSubtitleContainer;
+    private LinearLayout mSubtitleContainer;
     private TextView mSubtitleTrack ;
 
     //plot card
-    private CardView mScraperPlotContainer;
+    private LinearLayout mScraperPlotContainer;
     private TextView mPlotTextView;
     private TextView mScrapStudio;
     private TextView mScrapYear;
@@ -264,10 +275,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mScrapContentRating;
     private View mScrapContentRatingContainer;
 
-
     //play buttons and poster
 
-    private CardView mActionButtonsContainer;
+    private LinearLayout mActionButtonsContainer;
     private Button mRemoteResumeButton;
     private FloatingActionButton mGenericPlayButton;
     private Button mResumeLocalButton;
@@ -291,6 +301,18 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mTitleTextView;
     private TextView mEpisodeSeasonView;
     private TextView mEpisodeTitleView;
+
+    private ImageView mClearLogo;
+    private ImageView mLogo;
+    private ImageView mPictureBackdrop;
+    private TextView mRuntime;
+    private TextView mVoteCount;
+    private TextView mTagline;
+    private TextView mDate;
+    private TextView mYear;
+    private RecyclerView actors;
+    private RecyclerView studios;
+    private TextView mToolbarTitle;
 
     private ObservableScrollView mScrollView;
 
@@ -410,18 +432,26 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mSubtitleHeader  = (TextView) mRoot.findViewById(R.id.subtitle_header);
         mSubtitleHeader.setOnClickListener(this);
         mSubtitleContent  =  mRoot.findViewById(R.id.subtitle_content);
-        mSubtitleContainer  =  (CardView)mRoot.findViewById(R.id.subtitles_container);
-        mSubtitleDownloadButton = mSubtitleContent.findViewById(R.id.subtitles_online);
+        mSubtitleContainer  =  (LinearLayout)mRoot.findViewById(R.id.subtitles_container);
+        mSubtitleDownloadButton = mRoot.findViewById(R.id.subtitles_online);
         mSubtitleDownloadButton.setOnClickListener(this);
         mResumeLocalButton = (Button) mRoot.findViewById(R.id.resume);
         mPlayButton = (Button) mRoot.findViewById(R.id.play);
-        mActionButtonsContainer = (CardView) mRoot.findViewById(R.id.action_buttons_container);
+        mActionButtonsContainer = (LinearLayout) mRoot.findViewById(R.id.action_buttons_container);
         mResumeLocalButton.setOnClickListener(this);
         mPlayButton.setOnClickListener(this);
+        mPlayButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(mContext, getResources().getString(R.string.play_from_beginning), Toast.LENGTH_SHORT ).show();
+                return true;
+            }
+        });
+
         mRemoteResumeButton = (Button) mRoot.findViewById(R.id.remote_resume);
         mRemoteResumeButton.setOnClickListener(this);
         mSourceLayout = (LinearLayout)mRoot.findViewById(R.id.source_layout);
-        mFileInfoContainer = (CardView)mRoot.findViewById(R.id.info_file_container);
+        mFileInfoContainer = (LinearLayout)mRoot.findViewById(R.id.info_file_container);
         mFilePathTextView = (TextView)mFileInfoContainer.findViewById(R.id.fullpath);
         mFileSize = (TextView)mRoot.findViewById(R.id.filesize);
         mFileError = (TextView)mRoot.findViewById(R.id.file_error);
@@ -449,7 +479,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mTMDBIcon.setOnClickListener(this);
         mTVDBIcon = mRoot.findViewById(R.id.scrap_link_tvdb);
         mTVDBIcon.setOnClickListener(this);
-        mScraperPlotContainer = (CardView)mRoot.findViewById(R.id.scraper_plot_container);
+        mScraperPlotContainer = (LinearLayout)mRoot.findViewById(R.id.scraper_plot_container);
         mPlotTextView = (TextView) mRoot.findViewById(R.id.scrap_plot);
         mGenreTextView = (TextView) mRoot.findViewById(R.id.scrap_genre);
         mCastTextView = (TextView) mRoot.findViewById(R.id.scrap_cast);
@@ -464,7 +494,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mScrapDuration =(TextView) mRoot.findViewById(R.id.scrap_duration);
         mScrapRating =(TextView) mRoot.findViewById(R.id.scrap_rating);
         mScrapTrailers =(LinearLayout) mRoot.findViewById(R.id.trailer_layout);
-        mScrapTrailersContainer =(CardView)mRoot.findViewById(R.id.scrap_trailer_container);
+        mScrapTrailersContainer =(LinearLayout)mRoot.findViewById(R.id.scrap_trailer_container);
         mScrapDetailsCard =mRoot.findViewById(R.id.scrap_details_container);
         mScrapStudio =(TextView) mRoot.findViewById(R.id.scrap_studio);
         mScrapStudioContainer = mRoot.findViewById(R.id.scrap_studio_container);
@@ -472,6 +502,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mScrapContentRatingContainer = mRoot.findViewById(R.id.content_rating_container);
 
 
+        mClearLogo = mRoot.findViewById(R.id.clearlogo);
+        mLogo = mRoot.findViewById(R.id.logo);
+        mPictureBackdrop = mRoot.findViewById(R.id.picture_backdrop);
+        mRuntime = mRoot.findViewById(R.id.runtime);
+        mVoteCount = mRoot.findViewById(R.id.vote_count);
+        mTagline = mRoot.findViewById(R.id.tagline);
+        mDate = mRoot.findViewById(R.id.scrap_date_title);
+        mYear = mRoot.findViewById(R.id.year);
+        actors = mRoot.findViewById(R.id.actor_photos);
+        studios = mRoot.findViewById(R.id.studio_logo_rv);
+        mToolbarTitle = mRoot.findViewById(R.id.toolbar_title);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -696,13 +737,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     private void setBackground() {
         mButtonsContainer.setCardBackgroundColor(mColor);
-        mFileInfoContainer.setCardBackgroundColor(mColor);
-        mSubtitleContainer.setCardBackgroundColor(mColor);
-        ((CardView) mScrapDetailsCard).setCardBackgroundColor(mColor);
-        mScrapTrailersContainer.setCardBackgroundColor(mColor);
+        //mFileInfoContainer.setCardBackgroundColor(mColor);
+        //mSubtitleContainer.setCardBackgroundColor(mColor);
+        //((CardView) mScrapDetailsCard).setCardBackgroundColor(mColor);
+        //mScrapTrailersContainer.setCardBackgroundColor(mColor);
         ((CardView)mPosterImageView.getParent().getParent()).setCardBackgroundColor(mColor);
-        mScraperPlotContainer.setCardBackgroundColor(mColor);
-        mActionButtonsContainer.setCardBackgroundColor(mColor);
+        // mScraperPlotContainer.setCardBackgroundColor(mColor);
+        //mActionButtonsContainer.setCardBackgroundColor(mColor);
         if(mSecondaryTitleBar!=null)
             mTitleBarContent.setBackgroundColor(mColor);
         if(!mIsLaunchFromPlayer)
@@ -741,6 +782,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
                 if(mSecondaryEpisodeSeasonView!=null)
                     setTextOrHideContainer(mSecondaryEpisodeSeasonView, getContext().getString(R.string.leanback_episode_SXEX_code, episode.getSeasonNumber(), episode.getEpisodeNumber()), mSecondaryEpisodeSeasonView);
+                //set episode still image
+                Glide.with(mContext).load(episode.getPictureUri())
+                        .centerInside().into(mPictureBackdrop);
             }
             else{
                 log.debug("setCurrentVideo: new video and it is NOT an episode");
@@ -753,6 +797,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 if(mSecondaryEpisodeTitleView!=null)
                     mSecondaryEpisodeTitleView.setVisibility(View.GONE);
             }
+
+            mToolbarTitle.setText(name);
 
             if(name!=null) {
                 if (name.length() > 30) {
@@ -988,6 +1034,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mScraperPlotContainer.setVisibility(View.VISIBLE);
 
         addMenu(0, R.string.info_menu_backdrop_select, 0, R.string.info_menu_backdrop_select);
+        addMenu(0, R.string.info_menu_movie_clearlogo_select, 0, R.string.info_menu_movie_clearlogo_select);
         addMenu(0, R.string.info_menu_poster_select, 0, R.string.info_menu_poster_select);
         addMenu(0, R.string.nfo_export_button, 0, R.string.nfo_export_button);
         addMenu(0, R.string.scrap_remove, DELETE_GROUP, R.string.scrap_remove);
@@ -1238,6 +1285,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
                 intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_BACKDROP, true);
                 startActivityForResult(intent, REQUEST_BACKDROP_ACTIVITY);
+                break;
+            case R.string.info_menu_movie_clearlogo_select:
+                Intent clearlogo = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
+                clearlogo.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
+                clearlogo.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_CLEARLOGO, true);
+                startActivity(clearlogo);
                 break;
             case R.string.delete:
                 deleteFile_async(mCurrentVideo);
@@ -1720,17 +1773,79 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     genres = ((VideoTags) tags).getGenresFormatted();
                 }
                 setTextOrHideContainer(mPlotTextView, plot, mPlotTextView);
+                mPlotTextView.setMaxLines(4);
+                mPlotTextView.setTag(true);
+                mPlotTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (((Boolean) mPlotTextView.getTag())) {
+                            mPlotTextView.setMaxLines(50);
+                            mPlotTextView.setTag(false);
+                        } else {
+                            mPlotTextView.setMaxLines(4);
+                            mPlotTextView.setTag(true);
+                        }
+                    }
+                });
                 setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);
-                // Cast
-                String cast = tags.getActorsFormatted();
+                // Movie Cast
+                String movieCastFormatted = "";
+                StringBuilder sb = new StringBuilder();
+                boolean firstTime = true;
+                for (Map.Entry<String, String> item : tags.getActors().entrySet()) {
+                    if (firstTime) {
+                        firstTime = false;
+                    } else {
+                        sb.append(", ");
+                    }
+
+                    String values = item.getValue();
+                    List <String>  valuesFormatted;
+                    valuesFormatted = Arrays.asList(values.split("\\s*=&%#\\s*"));
+                    String actor = item.getKey();
+                    String role = valuesFormatted.get(0);
+                    sb.append(actor);
+                    if (role != null && !role.isEmpty()) {
+                        sb.append(" (");
+                        sb.append(role);
+                        sb.append(')');
+                    }
+                }
+                movieCastFormatted = sb.toString();
+                String cast = movieCastFormatted;
                 // If cast is null and this is an episode, get the cast of the Show
                 String studio = null;
+
+                // click on ClearLogo to choose another
+                mClearLogo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
+                        intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
+                        intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_CLEARLOGO, true);
+                        startActivity(intent);
+                    }
+                });
 
                 if (cast == null & tags instanceof EpisodeTags) {
                     ShowTags showTags = ((EpisodeTags) tags).getShowTags();
                     cast = showTags != null ? showTags.getActorsFormatted() : null;
                 }
                 setTextOrHideContainer(mCastTextView, cast, mCastTextView, mCastTextViewTitle);
+                mCastTextView.setMaxLines(3);
+                mCastTextView.setTag(true);
+                mCastTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (((Boolean) mCastTextView.getTag())) {
+                            mCastTextView.setMaxLines(200);
+                            mCastTextView.setTag(false);
+                        } else {
+                            mCastTextView.setMaxLines(3);
+                            mCastTextView.setTag(true);
+                        }
+                    }
+                });
                 setTextOrHideContainer(mScrapDirector, tags.getDirectorsFormatted(), mScrapDirector, mScrapDirectorTitle);
                 setTextOrHideContainer(mScrapWriter, tags.getWritersFormatted(), mScrapWriter, mScrapWriterTitle);
                 String date = null;
@@ -1745,14 +1860,68 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         // Aired date not available => try at least the premiered date
                         date = df.format(((EpisodeTags) tags).getShowTags().getPremiered());
                     }
-                    if (((EpisodeTags) tags).getShowTags() != null)
-                        studio = ((EpisodeTags) tags).getShowTags().getStudiosFormatted();
                     //tags.getOnlineId() is the episodeId not the show Id thus using mOnlineID
                     //mTMDBIcon.setVisibility(tags.getOnlineId()>=0?View.VISIBLE:View.GONE);
                     mTMDBIcon.setVisibility(mOnlineId>=0?View.VISIBLE:View.GONE);
                     //mTMDBId = tags.getOnlineId();
                     mTMDBId = mOnlineId;
                     log.debug("FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
+                    // Set series clearlogo
+                    ShowTags showTags = ((EpisodeTags) tags).getShowTags();
+                    if (showTags.getClearLogo() != null){
+                        mToolbarTitle.setVisibility(View.GONE);
+                    } else {
+                        mClearLogo.setVisibility(View.GONE);
+                    }
+                    Glide.with(mContext).load(showTags.getClearLogo())
+                            .centerInside().into(mClearLogo);
+                    // Set series network logo
+                    Glide.with(mContext).load(showTags.getNetworkLogo())
+                            .fitCenter().into(mLogo);
+                    // set series studio names for episode view
+                    String names = "";
+                    String basePath = MediaScraper.getStudioLogoDirectory(mContext) + "/";
+                    for (int i = showTags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
+                        names = names + showTags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(basePath, "").replaceAll(".png", "") + ", ";
+                        studio = names.substring(0, names.length() - 2);
+                    }
+                    // set episode runtime of the entire series(not episode)
+                    List<SeriesTags> tvShowTags = new ArrayList<>();
+                    SeriesTags seriesTags;
+                    for (int i = 0; i < showTags.getTaglines().size(); i++) {
+                        String TvTags = showTags.getTaglines().get(i);
+                        List <String>  TvTagsFormatted;
+                        TvTagsFormatted = Arrays.asList(TvTags.split("\\s*=&%#\\s*"));
+                        seriesTags = new SeriesTags();
+                        seriesTags.setTagline(TvTagsFormatted.get(0));
+                        seriesTags.setType(TvTagsFormatted.get(1));
+                        seriesTags.setStatus(TvTagsFormatted.get(2));
+                        seriesTags.setVotes(TvTagsFormatted.get(3));
+                        seriesTags.setPopularity(TvTagsFormatted.get(4));
+                        seriesTags.setRuntime(TvTagsFormatted.get(5));
+                        tvShowTags.add(seriesTags);
+                    }
+                    String runtimeReady = tvShowTags.get(0).getRuntime() + " " + getResources().getString(R.string.minutes);
+                    mRuntime.setText(runtimeReady);
+                    // set episode vote count
+                    String voteCountReady = "(" + ((EpisodeTags) tags).getTaglinesFormatted() + " " + getResources().getString(R.string.votes) + ")";
+                    mVoteCount.setText(voteCountReady);
+                    // set series premiered year
+                    mYear.setText(Integer.toString(showTags.getPremieredYear()));
+                    // set series tagline
+                    if (!tvShowTags.get(0).getTagline().isEmpty()) {
+                        mTagline.setText(tvShowTags.get(0).getTagline());
+                    } else {
+                        mTagline.setVisibility(View.GONE);
+                    }
+                    LinearLayout genresContainer = mRoot.findViewById(R.id.scrap_genre_container);
+                    genresContainer.setVisibility(View.GONE);
+                    mDate.setText(getResources().getString(R.string.airdate));
+                    mCastTextViewTitle.setText(getResources().getString(R.string.guest_starts));
+                    // hide studios
+                    studios.setVisibility(View.GONE);
+                    // hide actors
+                    actors.setVisibility(View.GONE);
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
@@ -1761,7 +1930,121 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mTMDBId = tags.getOnlineId();
                     date = ((MovieTags) tags).getYear()+"";
                     studio = ((MovieTags) tags).getStudiosFormatted();
+                    mDate.setText(getResources().getString(R.string.released));
+                    mCastTextViewTitle.setText(getResources().getString(R.string.scrap_cast));
                     log.debug("FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
+                    //set movie backdrop
+                    Glide.with(mContext).load(tags.getBackdrop())
+                            .centerInside().into(mPictureBackdrop);
+                    // set movie tags
+                    String tagline = "";
+                    String budget = "";
+                    String revenue = "";
+                    String runtime = "";
+                    String votes = "";
+                    String popularity = "";
+                    for (int i = 0; i < tags.getTaglines().size(); i++) {
+                        String MovieTags = tags.getTaglines().get(i);
+                        List <String>  MovieTagsFormatted;
+                        MovieTagsFormatted = Arrays.asList(MovieTags.split("\\s*=&%#\\s*"));
+                        tagline = MovieTagsFormatted.get(0);
+                        budget = MovieTagsFormatted.get(1);
+                        revenue = MovieTagsFormatted.get(2);
+                        runtime = MovieTagsFormatted.get(3);
+                        votes = MovieTagsFormatted.get(4);
+                        popularity = MovieTagsFormatted.get(5);
+                    }
+                    String voteCountReady = "(" + votes + " " + getResources().getString(R.string.votes) + ")";
+                    mVoteCount.setText(voteCountReady);
+                    String runtimeReady = runtime + " " + getResources().getString(R.string.minutes);
+                    mRuntime.setText(runtimeReady);
+                    if (!tagline.isEmpty()) {
+                        mTagline.setText(tagline);
+                    } else {
+                        mTagline.setVisibility(View.GONE);
+                    }
+                    mYear.setText(((MovieTags) tags).getYear()+"");
+
+
+                    List<CastData> movieActors = new ArrayList<>();
+                    CastData castData;
+                    for (Map.Entry<String, String> entry : tags.getActors().entrySet()) {
+                        String values = entry.getValue();
+                        List <String>  valuesFormatted;
+                        valuesFormatted = Arrays.asList(values.split("\\s*=&%#\\s*"));
+                        castData = new CastData();
+
+                        castData.setName(entry.getKey());
+                        castData.setCharacter(valuesFormatted.get(0));
+                        castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext) + valuesFormatted.get(1));
+                        movieActors.add(castData);
+                    }
+                    LinearLayoutManager actorsLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+                    actors.setLayoutManager(actorsLayoutManager);
+                    CastAdapter.OnItemClickListener actorCallback = new CastAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                        }
+                    };
+                    final CastAdapter actorAdapter = new CastAdapter(movieActors,actorCallback);
+                    actors.setAdapter(actorAdapter);
+                    // add space between actors
+                    int spacing = getResources().getDimensionPixelSize(R.dimen.cast_spacing);
+                    if (actors.getItemDecorationCount() < 1) {
+                        actors.addItemDecoration(new CastAdapter.SpacesItemDecoration(spacing));
+                    }
+                    // hide cast textview
+                    mCastTextView.setVisibility(View.GONE);
+                    // Set series network logo
+                    Glide.with(mContext).load(tags.getStudioLogo())
+                            .fitCenter().into(mLogo);
+                    // setting Studio Logo RecyclerView
+                    List<String> StudioLogoPaths = new ArrayList<>();
+                    for (int i = 0; i < tags.getStudioLogosLargeFileF().size(); i++) {
+                        String studioLogoPath = tags.getStudioLogosLargeFileF().get(i).getPath();
+                        StudioLogoPaths.add(studioLogoPath);}
+                    List<ScraperImage> scraperImage = tags.getStudioLogos();
+                    LinearLayoutManager studioLogoLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+                    studios.setLayoutManager(studioLogoLayoutManager);
+                    StudioAdapter.OnItemClickListener studioLogoCallback = new StudioAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(String item) {
+                        }
+                        @Override
+                        public void onItemLongClick(int position) {
+                            String path = StudioLogoPaths.get(position);
+                            String basepath = MediaScraper.getStudioLogoDirectory(mContext) + "/";
+                            String extension = ".png";
+                            String clicked_studioname = path.replace(basepath, "").replace(extension, "");
+                            LayoutInflater inflater = LayoutInflater.from(mContext);
+                            View layout = inflater.inflate(R.layout.custom_toast,
+                                    mRoot.findViewById(R.id.toast_layout_root));
+                            TextView header = layout.findViewById(R.id.message_header);
+                            TextView newStudio = layout.findViewById(R.id.new_studio);
+                            header.setText(getResources().getString(R.string.studiologo_changed));
+                            newStudio.setText(clicked_studioname);
+                            Toast toast = new Toast(mContext);
+                            toast.setGravity(Gravity.BOTTOM, 0, 50);
+                            toast.setDuration(Toast.LENGTH_SHORT);
+                            toast.setView(layout);
+                            toast.show();
+                            Glide.with(mContext).clear(mLogo);
+                            Glide.with(mContext).load(tags.getStudioLogosLargeFileF().get(position))
+                                    .fitCenter().into(mLogo);
+                            ScraperImage clickedImage = (ScraperImage) scraperImage.get(position);
+                            new StudioLogoSaver(mContext).execute(clickedImage);
+                        }
+                    };
+                    final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
+                    studios.setAdapter(studioAdapter);
+                    // movie ClearLogo
+                    if (tags.getClearLogo() != null){
+                        mToolbarTitle.setVisibility(View.GONE);
+                    } else {
+                        mClearLogo.setVisibility(View.GONE);
+                    }
+                    Glide.with(mContext).load(tags.getClearLogo())
+                            .centerInside().into(mClearLogo);
                 }
                 // set content rating
                 if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
@@ -1774,6 +2057,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 if(mIMDBId==null||mIMDBId.isEmpty())
                     mIMDBIcon.setVisibility(View.GONE);
                 setTextOrHideContainer(mScrapStudio, studio,mScrapStudioContainer);
+                mScrapStudio.setMaxLines(2);
+                mScrapStudio.setTag(true);
+                mScrapStudio.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (((Boolean) mScrapStudio.getTag())) {
+                            mScrapStudio.setMaxLines(50);
+                            mScrapStudio.setTag(false);
+                        } else {
+                            mScrapStudio.setMaxLines(2);
+                            mScrapStudio.setTag(true);
+                        }
+                    }
+                });
                 setTextOrHideContainer(mScrapYear, date, mScrapYear);
                 setTextOrHideContainer(mScrapDuration, MediaUtils.formatTime(mCurrentVideo.getDurationMs()),mScrapDuration);
                 setTextOrHideContainer(mScrapRating, String.valueOf(tags.getRating()), mScrapRating);
@@ -1814,7 +2111,21 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }
         }
     }
-
+    private static class StudioLogoSaver extends AsyncTask<ScraperImage, Void, Void> {
+        public StudioLogoSaver(Context context) {
+            mContext = context;
+        }
+        @Override
+        protected Void doInBackground(ScraperImage... params) {
+            if (params != null && params.length > 0) {
+                params[0].setAsDefault(mContext);
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+        }
+    }
     private void setTextOrHideContainer(TextView textView, String text, View... toHideOrShow) {
         if(text!=null&&!text.isEmpty()) {
             textView.setText(text);

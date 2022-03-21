@@ -15,11 +15,11 @@ for informations (duration for files, number of files for directories).
 
     <RelativeLayout
         android:id="@+id/left_area"
+        android:layout_marginLeft="112dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name" >
+        android:layout_alignParentTop="true">
 
         <!-- Number on the left side -->
 
@@ -60,6 +60,6 @@ for informations (duration for files, number of files for directories).
         app:srcCompat="@drawable/watched_icon_corner"
         android:visibility="gone" />
 
-    <include layout="@layout/browser_item_details_common" />
+    <include layout="@layout/browser_item_details_common_episode" />
 
 </RelativeLayout>

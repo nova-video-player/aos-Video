@@ -36,35 +36,20 @@
             android:paddingLeft="0dip">
             <!--text size is programmatically changed -->
             <RelativeLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/titlebar_content"
-                android:paddingTop="@dimen/video_info_margin_half"
-
-                android:paddingBottom="@dimen/video_info_margin_half"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical" >
                 <TextView
-                    android:id="@+id/title_view"
+                    android:id="@+id/toolbar_title"
                     android:layout_width="match_parent"
-                    android:textSize="@dimen/video_info_very_big_text"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/s_e_text_view"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/video_info_very_big_text" />
+                <ImageView
+                    android:id="@+id/clearlogo"
                     android:layout_width="wrap_content"
-                    android:layout_below="@+id/title_view"
-                    android:textSize="@dimen/video_info_medium_text"
-                    android:textStyle="bold"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/episode_title_view"
-                    android:layout_below="@+id/title_view"
-                    android:layout_toRightOf="@+id/s_e_text_view"
-                    android:layout_marginLeft="@dimen/video_info_margin_half"
-                    android:layout_width="wrap_content"
-                    android:textStyle="italic"
-                    android:textSize="@dimen/video_info_medium_text"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="50dp"
+                    android:layout_marginTop="2dp"
+                    android:scaleType="center" />
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
 <!-- inside a coordinator layout : floating button will put itself in the right place-->

@@ -1073,10 +1073,9 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             mDisplayModeSubmenu.clear();
             mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_list_mode2, R.string.view_mode_list, 0);
             mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_poster_mode, R.string.view_mode_grid, 0);
-            // Details view is only proposed on tablets, not on phones
-            if (getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE)||TVUtils.isTV(getActivity())) {
-                mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_details_mode2, R.string.view_mode_details, 0);
-            }
+
+            mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_details_mode2, R.string.view_mode_details, 0);
+
             mDisplayModeSubmenu.selectSubmenuItem(getSubmenuItemIndex(mViewMode));
         }
         if(shouldEnableMultiSelection())

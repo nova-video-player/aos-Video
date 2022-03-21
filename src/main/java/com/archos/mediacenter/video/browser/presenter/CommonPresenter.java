@@ -62,6 +62,7 @@ public class CommonPresenter implements Presenter {
         TextView name;
         TextView number;
         View secondLine;
+        ImageView episodeStill;
         // This is the clickable zone.
         View expandedZone;
         View countcontainer;
@@ -98,6 +99,7 @@ public class CommonPresenter implements Presenter {
         }
 
         holder.video3D = (ImageView) view.findViewById(R.id.flag_3d);
+        holder.episodeStill = (ImageView) view.findViewById(R.id.episode_picture);
         holder.expanded = (ImageButton) view.findViewById(R.id.expanded);
         holder.secondLine=view.findViewById(R.id.bottom_row);
         holder.name = (TextView) view.findViewById(R.id.name);

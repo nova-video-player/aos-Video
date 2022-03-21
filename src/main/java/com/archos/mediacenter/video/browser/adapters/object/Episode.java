@@ -124,4 +124,8 @@ public class Episode extends Video implements Serializable {
     public String getWriter() {
         return "";
     }
+
+    public String getTagline() {
+        return "";
+    }
 }

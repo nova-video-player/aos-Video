@@ -29,6 +29,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -79,6 +80,12 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
         ((MainActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(null);
         ((ListView)mArchosGridView).setDivider(new ColorDrawable(ContextCompat.getColor(getContext(), R.color.transparent_white_list_divider)));
         ((ListView)mArchosGridView).setDividerHeight(3);
+        // Hide series plot in seasons
+        LinearLayout linearLayout = view.findViewById(R.id.series_plot_container);
+        linearLayout.setVisibility(View.GONE);
+        // Hide series plot header
+        TextView seriesPlotHeader = view.findViewById(R.id.series_plot_header);
+        seriesPlotHeader.setVisibility(View.GONE);
     }
     @Override
     public void onDestroyView() {
@@ -261,6 +268,23 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
     @Override
     protected void setSeason(TextView seasonView) {
         seasonView.setText(getResources().getString(R.string.episode_season) + " " + mSeason);
+    }
+
+    @Override
+    protected void setSeasonPlot(TextView seasonPlotView) {
+    }
+
+    @Override
+    protected void setSeasonPlotHeader(TextView seasonPlotHeaderView) {
+    }
+
+    @Override
+    protected void setSeasonAirDateContainer(LinearLayout seasonAirDateContainer) {
+    }
+
+    @Override
+    protected void setSeriesPremieredContainer(LinearLayout seriesPremieredContainer) {
+        seriesPremieredContainer.setVisibility(View.GONE);
     }
 
 

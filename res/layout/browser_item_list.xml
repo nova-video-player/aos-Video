@@ -8,7 +8,7 @@ for informations (duration for files, number of files for directories).
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
-    android:layout_height="@dimen/video_list_item_height"
+    android:layout_height="@dimen/video_details_item_height"
     android:descendantFocusability="blocksDescendants"
     android:background="@drawable/list_item_background"
     android:gravity="center_vertical" >
@@ -24,12 +24,12 @@ for informations (duration for files, number of files for directories).
 
         <ImageView
             android:id="@+id/thumbnail"
-            android:layout_width="@dimen/video_list_thumbnail_width"
-            android:layout_height="@dimen/video_list_thumbnail_height"
-            android:layout_marginBottom="@dimen/video_list_thumbnail_margin_bottom"
+            android:layout_width="@dimen/video_details_poster_width"
+            android:layout_height="@dimen/video_details_poster_height"
             android:layout_marginLeft="@dimen/video_list_thumbnail_margin_left"
-            android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name"
             android:layout_marginTop="@dimen/video_list_thumbnail_margin_top"
+            android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name"
+            android:layout_marginBottom="@dimen/video_list_thumbnail_margin_bottom"
             android:background="@color/default_icon_background" />
 
 
@@ -69,6 +69,8 @@ for informations (duration for files, number of files for directories).
 
     <include layout="@layout/browser_item_list_common"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/left_area" />
+        android:layout_toEndOf="@+id/left_area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

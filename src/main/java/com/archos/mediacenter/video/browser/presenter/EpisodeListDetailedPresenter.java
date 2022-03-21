@@ -19,13 +19,16 @@ import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesDetails;
+import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesDetailsEpisode;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
+import com.bumptech.glide.Glide;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -39,7 +42,7 @@ public class EpisodeListDetailedPresenter extends EpisodePresenter{
     private final DateFormat mDateFormat;
 
     public EpisodeListDetailedPresenter(Context context, ExtendedClickListener listener) {
-        super(context, AdapterDefaultValuesDetails.INSTANCE, listener);
+        super(context, AdapterDefaultValuesDetailsEpisode.INSTANCE, listener);
         mNumberFormat = NumberFormat.getInstance();
         mNumberFormat.setMinimumFractionDigits(1);
         mNumberFormat.setMaximumFractionDigits(1);
@@ -47,6 +50,7 @@ public class EpisodeListDetailedPresenter extends EpisodePresenter{
     }
 
     static class ViewHolderDetails extends ViewHolder {
+        ImageView episodeStill;
         TextView detailLineOne;
         TextView detailLineTwo;
         TextView detailLineThree;
@@ -66,6 +70,7 @@ public class EpisodeListDetailedPresenter extends EpisodePresenter{
         view.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, height));
 
         ViewHolderDetails holder = (ViewHolderDetails) view.getTag();
+        holder.episodeStill = (ImageView) view.findViewById(R.id.episode_picture);
         holder.detailLineOne = (TextView) view.findViewById(R.id.detail_line_one);
         holder.detailLineTwo = (TextView) view.findViewById(R.id.detail_line_two);
         holder.detailLineThree = (TextView) view.findViewById(R.id.detail_line_three);
@@ -81,8 +86,13 @@ public class EpisodeListDetailedPresenter extends EpisodePresenter{
         super.bindView(view,object, result, positionInAdapter);
         ViewHolderDetails holder = (ViewHolderDetails) view.getTag();
 
-
-
+        if (tvShow.getPictureUri()!=null) {
+            Glide.with(mContext).load(tvShow.getPictureUri())
+                    .fitCenter().into(holder.episodeStill);
+        } else {
+            Glide.with(mContext).load(R.drawable.default_image)
+                    .fitCenter().into(holder.episodeStill);
+        }
 
             setViewHolderVisibility(holder, View.VISIBLE);
             holder.info.setText(MediaUtils.formatTime(tvShow.getDurationMs()));

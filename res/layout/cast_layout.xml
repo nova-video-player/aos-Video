@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:card_view="http://schemas.android.com/tools"
+	android:layout_width="80dp"
+	android:layout_height="wrap_content"
+	android:foreground="@drawable/transparent_ripple">
+
+	<LinearLayout
+		android:layout_width="80dp"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:orientation="vertical"
+		android:layout_marginBottom="3dp">
+
+		<ImageView
+			android:id="@+id/cast_photo"
+			android:layout_width="80dp"
+			android:layout_height="110dp"
+			android:orientation="horizontal"
+			android:scaleType="centerCrop"
+			android:src="@drawable/nocast" />
+
+		<LinearLayout
+			android:layout_width="78dp"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+			<TextView
+				android:id="@+id/cast_name"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/castname"
+				android:textSize="11sp"
+				android:ellipsize="end"
+				android:maxLines="1"
+				android:textColor="#ffffff"/>
+
+			<TextView
+				android:id="@+id/cast_character"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/castcharacter"
+				android:textSize="11sp"
+				android:ellipsize="end"
+				android:maxLines="1"/>
+		</LinearLayout>
+	</LinearLayout>
+
+</FrameLayout>
