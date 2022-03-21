@@ -1809,8 +1809,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                                     animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                         @Override
                                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                                            int value = (int) valueAnimator.getAnimatedValue();
-                                            layoutParams.height = value;
+                                            layoutParams.height =  (int) valueAnimator.getAnimatedValue();
                                             mPlotTextView.requestLayout();
                                         }
                                     });
@@ -1824,8 +1823,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                                     animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                         @Override
                                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                                            int value = (int) valueAnimator.getAnimatedValue();
-                                            layoutParams.height = value;
+                                            layoutParams.height =  (int) valueAnimator.getAnimatedValue();
                                             mPlotTextView.requestLayout();
                                         }
                                     });
