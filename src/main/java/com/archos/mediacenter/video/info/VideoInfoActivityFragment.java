@@ -234,6 +234,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mScrapDirectorTitle;
     private TextView mScrapWriter;
     private TextView mScrapWriterTitle;
+    private TextView mScrapProducer;
+    private TextView mScrapProducerTitle;
     private View mIMDBIcon;
     private View mTMDBIcon;
     private View mTVDBIcon;
@@ -497,6 +499,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mScrapDirectorTitle =(TextView) mRoot.findViewById(R.id.scrap_director_title);
         mScrapWriter =(TextView) mRoot.findViewById(R.id.scrap_writer);
         mScrapWriterTitle =(TextView) mRoot.findViewById(R.id.scrap_writer_title);
+        mScrapProducer =(TextView) mRoot.findViewById(R.id.scrap_producer);
+        mScrapProducerTitle =(TextView) mRoot.findViewById(R.id.scrap_producer_title);
         mScrapYear =(TextView) mRoot.findViewById(R.id.scrap_date);
         mScrapDuration =(TextView) mRoot.findViewById(R.id.scrap_duration);
         mScrapRating =(TextView) mRoot.findViewById(R.id.scrap_rating);
@@ -1955,6 +1959,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     // Set series network logo
                     Glide.with(mContext).load(showTags.getNetworkLogo())
                             .fitCenter().into(mLogo);
+                    setTextOrHideContainer(mScrapProducer, showTags.getProducersFormatted(), mScrapProducer, mScrapProducerTitle);
                     // set series studio names for episode view
                     String names = "";
                     for (int i = showTags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
@@ -2122,6 +2127,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                     Glide.with(mContext).load(tags.getClearLogo())
                             .centerInside().into(mClearLogo);
+                    setTextOrHideContainer(mScrapProducer, tags.getProducersFormatted(), mScrapProducer, mScrapProducerTitle);
                 }
                 // set content rating
                 if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
