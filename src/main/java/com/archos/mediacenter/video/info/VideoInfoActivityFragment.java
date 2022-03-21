@@ -172,6 +172,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     public static final int REQUEST_CODE_SUBTITLES_DOWNLOADER_ACTIVITY      = 987;
     public static final int REQUEST_BACKDROP_ACTIVITY      = 988;
     private static final int PLAY_ACTIVITY_REQUEST_CODE = 989;
+    public static final int REQUEST_CLEARLOGO_ACTIVITY      = 990;
 
     private static final int DELETE_GROUP = 1;
     private View mRoot;
@@ -699,6 +700,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mCurrentVideo);
         }
         else if(requestCode == REQUEST_BACKDROP_ACTIVITY && resultCode == Activity.RESULT_OK){
+            if(mFullScraperTagsTask!=null)
+                mFullScraperTagsTask.cancel(true);
+            mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
+            mFullScraperTagsTask.execute(mCurrentVideo);
+        }
+        else if(requestCode == REQUEST_CLEARLOGO_ACTIVITY && resultCode == Activity.RESULT_OK){
             if(mFullScraperTagsTask!=null)
                 mFullScraperTagsTask.cancel(true);
             mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
@@ -1294,7 +1301,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 Intent clearlogo = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
                 clearlogo.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
                 clearlogo.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_CLEARLOGO, true);
-                startActivity(clearlogo);
+                startActivityForResult(clearlogo, REQUEST_CLEARLOGO_ACTIVITY);
                 break;
             case R.string.delete:
                 deleteFile_async(mCurrentVideo);
@@ -1880,7 +1887,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
                         intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
                         intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_CLEARLOGO, true);
-                        startActivity(intent);
+                        startActivityForResult(intent, REQUEST_CLEARLOGO_ACTIVITY);
                     }
                 });
 
