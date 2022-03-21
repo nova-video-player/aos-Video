@@ -54,6 +54,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -686,6 +688,21 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         updateUI(); // be sure to be on right state
     }
 
+    // New method to launch activity Result
+    public ActivityResultLauncher<Intent> activityResultLaunch = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if(result.getResultCode() == REQUEST_CLEARLOGO_ACTIVITY){
+                        if(mFullScraperTagsTask!=null)
+                            mFullScraperTagsTask.cancel(true);
+                        mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
+                        mFullScraperTagsTask.execute(mCurrentVideo);
+                    }
+                }
+            });
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         log.debug("onActivityResult");
@@ -700,12 +717,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mCurrentVideo);
         }
         else if(requestCode == REQUEST_BACKDROP_ACTIVITY && resultCode == Activity.RESULT_OK){
-            if(mFullScraperTagsTask!=null)
-                mFullScraperTagsTask.cancel(true);
-            mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
-            mFullScraperTagsTask.execute(mCurrentVideo);
-        }
-        else if(requestCode == REQUEST_CLEARLOGO_ACTIVITY && resultCode == Activity.RESULT_OK){
             if(mFullScraperTagsTask!=null)
                 mFullScraperTagsTask.cancel(true);
             mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
@@ -1301,7 +1312,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 Intent clearlogo = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
                 clearlogo.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
                 clearlogo.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_CLEARLOGO, true);
-                startActivityForResult(clearlogo, REQUEST_CLEARLOGO_ACTIVITY);
+                activityResultLaunch.launch(clearlogo);
                 break;
             case R.string.delete:
                 deleteFile_async(mCurrentVideo);

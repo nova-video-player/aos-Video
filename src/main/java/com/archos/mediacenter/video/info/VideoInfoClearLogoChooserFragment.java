@@ -171,7 +171,7 @@ public class VideoInfoClearLogoChooserFragment extends Fragment implements
 
         mAdapter.cleanup();
         if(hasClearLogoChanged)
-            getActivity().setResult(AppCompatActivity.RESULT_OK);
+            getActivity().setResult(990, getActivity().getIntent());
         else
             getActivity().setResult(AppCompatActivity.RESULT_CANCELED);
         getActivity().finish();
