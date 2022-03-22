@@ -71,6 +71,31 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/scrap_producer_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="2dp"
+        android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/scrap_producer_title"
+            android:text="@string/scrap_producer"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:lines="1"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/video_info_medium_text"/>
+        <TextView
+            android:id="@+id/scrap_producer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/video_info_medium_text"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/scrap_writer_container"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -175,8 +200,12 @@
     <TextView
         android:id="@+id/scrap_plot"
         style="@style/VideoInfoFileInfo"
-        android:ellipsize="end"
-        android:textStyle="italic" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="4"
+        android:clickable="true"
+        android:focusable="true"
+        android:ellipsize="end"/>
 
     <LinearLayout
         android:id="@+id/scrap_cast_container"

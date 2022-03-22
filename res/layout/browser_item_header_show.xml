@@ -371,10 +371,38 @@
             />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/producer_container"
+        android:layout_below="@id/created_by_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
+        <TextView
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="left"
+            android:lines="1"
+            android:maxLines="1"
+            android:text="@string/scrap_producer"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/video_info_medium_text" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/producer"
+            android:paddingRight="5dp"
+            android:textSize="@dimen/video_info_medium_text"
+            android:layout_below="@id/content_rating_container"
+            />
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/network_container"
-        android:layout_below="@id/created_by_container"
+        android:layout_below="@id/producer_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

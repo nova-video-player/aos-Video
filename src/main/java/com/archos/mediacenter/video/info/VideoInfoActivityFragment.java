@@ -14,6 +14,9 @@
 
 package com.archos.mediacenter.video.info;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -34,6 +37,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -50,6 +54,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -168,6 +174,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     public static final int REQUEST_CODE_SUBTITLES_DOWNLOADER_ACTIVITY      = 987;
     public static final int REQUEST_BACKDROP_ACTIVITY      = 988;
     private static final int PLAY_ACTIVITY_REQUEST_CODE = 989;
+    public static final int REQUEST_CLEARLOGO_ACTIVITY      = 990;
 
     private static final int DELETE_GROUP = 1;
     private View mRoot;
@@ -227,6 +234,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mScrapDirectorTitle;
     private TextView mScrapWriter;
     private TextView mScrapWriterTitle;
+    private TextView mScrapProducer;
+    private TextView mScrapProducerTitle;
     private View mIMDBIcon;
     private View mTMDBIcon;
     private View mTVDBIcon;
@@ -490,6 +499,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mScrapDirectorTitle =(TextView) mRoot.findViewById(R.id.scrap_director_title);
         mScrapWriter =(TextView) mRoot.findViewById(R.id.scrap_writer);
         mScrapWriterTitle =(TextView) mRoot.findViewById(R.id.scrap_writer_title);
+        mScrapProducer =(TextView) mRoot.findViewById(R.id.scrap_producer);
+        mScrapProducerTitle =(TextView) mRoot.findViewById(R.id.scrap_producer_title);
         mScrapYear =(TextView) mRoot.findViewById(R.id.scrap_date);
         mScrapDuration =(TextView) mRoot.findViewById(R.id.scrap_duration);
         mScrapRating =(TextView) mRoot.findViewById(R.id.scrap_rating);
@@ -680,6 +691,21 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             };
         updateUI(); // be sure to be on right state
     }
+
+    // New method to launch activity Result
+    public ActivityResultLauncher<Intent> activityResultLaunch = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if(result.getResultCode() == REQUEST_CLEARLOGO_ACTIVITY){
+                        if(mFullScraperTagsTask!=null)
+                            mFullScraperTagsTask.cancel(true);
+                        mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
+                        mFullScraperTagsTask.execute(mCurrentVideo);
+                    }
+                }
+            });
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1290,7 +1316,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 Intent clearlogo = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
                 clearlogo.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
                 clearlogo.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_CLEARLOGO, true);
-                startActivity(clearlogo);
+                activityResultLaunch.launch(clearlogo);
                 break;
             case R.string.delete:
                 deleteFile_async(mCurrentVideo);
@@ -1773,20 +1799,73 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     genres = ((VideoTags) tags).getGenresFormatted();
                 }
                 setTextOrHideContainer(mPlotTextView, plot, mPlotTextView);
-                mPlotTextView.setMaxLines(4);
-                mPlotTextView.setTag(true);
-                mPlotTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (((Boolean) mPlotTextView.getTag())) {
-                            mPlotTextView.setMaxLines(50);
-                            mPlotTextView.setTag(false);
-                        } else {
-                            mPlotTextView.setMaxLines(4);
-                            mPlotTextView.setTag(true);
-                        }
+                int expectedWidthOfTextView = getResources().getDisplayMetrics().widthPixels;
+                int originalMaxLines = mPlotTextView.getMaxLines();
+                if (originalMaxLines < 0 || originalMaxLines == Integer.MAX_VALUE)
+                    Log.d("AppLog", "already unbounded textView maxLines");
+                else {
+                    mPlotTextView.setMaxLines(Integer.MAX_VALUE);
+                    mPlotTextView.measure(
+                            View.MeasureSpec.makeMeasureSpec(expectedWidthOfTextView, View.MeasureSpec.AT_MOST),
+                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                    );
+                    int measuredLineCount = mPlotTextView.getLineCount();
+                    int measuredTargetHeight = mPlotTextView.getMeasuredHeight();
+                    int height = mPlotTextView.getHeight();
+                    Log.d("AppLog", "lines:$measuredLineCount/$originalMaxLines");
+                    mPlotTextView.setHeight(height *4);
+                    mPlotTextView.setEllipsize(TextUtils.TruncateAt.END);
+                    mPlotTextView.setMaxLines(4);
+                    if (measuredLineCount <= originalMaxLines)
+                        Log.d("AppLog", "fit in original maxLines");
+                    else {
+                        Log.d("AppLog", "exceeded original maxLines");
+                        mPlotTextView.setTag(true);
+                        mPlotTextView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (((Boolean) mPlotTextView.getTag())) {
+                                    mPlotTextView.setMaxLines(Integer.MAX_VALUE);
+                                    ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
+                                    ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), height * measuredLineCount);
+                                    animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                        @Override
+                                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                            layoutParams.height =  (int) valueAnimator.getAnimatedValue();
+                                            mPlotTextView.requestLayout();
+                                        }
+                                    });
+                                    animation.start();
+                                    //animation.setDuration(500);
+                                    layoutParams.height = mPlotTextView.getHeight();
+                                    mPlotTextView.setTag(false);
+                                } else {
+                                    ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
+                                    ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), height * 4);
+                                    animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                        @Override
+                                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                            layoutParams.height =  (int) valueAnimator.getAnimatedValue();
+                                            mPlotTextView.requestLayout();
+                                        }
+                                    });
+                                    animation.addListener(new AnimatorListenerAdapter()
+                                    {
+                                        @Override
+                                        public void onAnimationEnd(Animator animation)
+                                        {
+                                            mPlotTextView.setMaxLines(4);
+                                        }
+                                    });
+                                    animation.start();
+                                    //animation.setDuration(500);
+                                    layoutParams.height = mPlotTextView.getHeight();
+                                    mPlotTextView.setTag(true);
+                                }
+                            }
+                        });
                     }
-                });
+                }
                 setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);
                 // Movie Cast
                 String movieCastFormatted = "";
@@ -1823,7 +1902,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
                         intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
                         intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_CLEARLOGO, true);
-                        startActivity(intent);
+                        activityResultLaunch.launch(intent);
                     }
                 });
 
@@ -1849,6 +1928,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 setTextOrHideContainer(mScrapDirector, tags.getDirectorsFormatted(), mScrapDirector, mScrapDirectorTitle);
                 setTextOrHideContainer(mScrapWriter, tags.getWritersFormatted(), mScrapWriter, mScrapWriterTitle);
                 String date = null;
+                String basePath = MediaScraper.getStudioLogoDirectory(mContext) + "/";
+                String extension = ".png";
                 if(tags instanceof EpisodeTags){
                     mIsVideoMovie = false;
                     mTVDBIcon.setVisibility(View.GONE);
@@ -1878,11 +1959,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     // Set series network logo
                     Glide.with(mContext).load(showTags.getNetworkLogo())
                             .fitCenter().into(mLogo);
+                    setTextOrHideContainer(mScrapProducer, showTags.getProducersFormatted(), mScrapProducer, mScrapProducerTitle);
                     // set series studio names for episode view
                     String names = "";
-                    String basePath = MediaScraper.getStudioLogoDirectory(mContext) + "/";
                     for (int i = showTags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
-                        names = names + showTags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(basePath, "").replaceAll(".png", "") + ", ";
+                        names = names + showTags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(basePath, "").replaceAll(extension, "") + ", ";
                         studio = names.substring(0, names.length() - 2);
                     }
                     // set episode runtime of the entire series(not episode)
@@ -2013,14 +2094,15 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         @Override
                         public void onItemLongClick(int position) {
                             String path = StudioLogoPaths.get(position);
-                            String basepath = MediaScraper.getStudioLogoDirectory(mContext) + "/";
-                            String extension = ".png";
-                            String clicked_studioname = path.replace(basepath, "").replace(extension, "");
+                            String clicked_studioname = path.replace(basePath, "").replace(extension, "");
                             LayoutInflater inflater = LayoutInflater.from(mContext);
                             View layout = inflater.inflate(R.layout.custom_toast,
                                     mRoot.findViewById(R.id.toast_layout_root));
                             TextView header = layout.findViewById(R.id.message_header);
                             TextView newStudio = layout.findViewById(R.id.new_studio);
+                            ImageView toastLogo = layout.findViewById(R.id.toast_logo);
+                            Glide.with(mContext).load(tags.getStudioLogosLargeFileF().get(position))
+                                    .fitCenter().into(toastLogo);
                             header.setText(getResources().getString(R.string.studiologo_changed));
                             newStudio.setText(clicked_studioname);
                             Toast toast = new Toast(mContext);
@@ -2045,6 +2127,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                     Glide.with(mContext).load(tags.getClearLogo())
                             .centerInside().into(mClearLogo);
+                    setTextOrHideContainer(mScrapProducer, tags.getProducersFormatted(), mScrapProducer, mScrapProducerTitle);
                 }
                 // set content rating
                 if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {

@@ -388,6 +388,14 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             if (tags.getDirectorsFormatted() == null)
                 createdbyContainer.setVisibility(View.GONE);
 
+
+            TextView producer = (TextView) mHeaderView.findViewById(R.id.producer);
+            producer.setText(tags.getProducersFormatted());
+            LinearLayout producerContainer = (LinearLayout) mHeaderView.findViewById(R.id.producer_container);
+            if (tags.getProducersFormatted() == null)
+                producerContainer.setVisibility(View.GONE);
+
+
             TextView network = (TextView) mHeaderView.findViewById(R.id.network);
             network.setText(show.getStudio());
 
