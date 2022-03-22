@@ -1811,9 +1811,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     );
                     int measuredLineCount = mPlotTextView.getLineCount();
                     int measuredTargetHeight = mPlotTextView.getMeasuredHeight();
-                    int height = mPlotTextView.getHeight();
+                    int lineHeight = mPlotTextView.getLineHeight();
                     Log.d("AppLog", "lines:$measuredLineCount/$originalMaxLines");
-                    mPlotTextView.setHeight(height *4);
+                    mPlotTextView.setHeight(lineHeight *4);
                     mPlotTextView.setEllipsize(TextUtils.TruncateAt.END);
                     mPlotTextView.setMaxLines(4);
                     if (measuredLineCount <= originalMaxLines)
@@ -1827,7 +1827,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                                 if (((Boolean) mPlotTextView.getTag())) {
                                     mPlotTextView.setMaxLines(Integer.MAX_VALUE);
                                     ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
-                                    ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), height * measuredLineCount);
+                                    ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), lineHeight * measuredLineCount);
                                     animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                         @Override
                                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -1841,7 +1841,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                                     mPlotTextView.setTag(false);
                                 } else {
                                     ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
-                                    ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), height * 4);
+                                    ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), lineHeight * 4);
                                     animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                         @Override
                                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
