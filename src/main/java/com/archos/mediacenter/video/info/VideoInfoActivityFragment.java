@@ -1809,6 +1809,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mIsVideoMovie = null;
                     genres = ((VideoTags) tags).getGenresFormatted();
                 }
+                setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);
                 setTextOrHideContainer(mPlotTextView, plot, mPlotTextView);
                 int expectedWidthOfTextView = getResources().getDisplayMetrics().widthPixels;
                 int originalMaxLines = mPlotTextView.getMaxLines();
@@ -1876,7 +1877,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         });
                     }
                 }
-                setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);
                 // Movie Cast
                 String movieCastFormatted = "";
                 StringBuilder sb = new StringBuilder();
