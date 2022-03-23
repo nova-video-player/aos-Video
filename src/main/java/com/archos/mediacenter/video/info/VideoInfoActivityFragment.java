@@ -1843,7 +1843,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                                     mPlotTextView.setTag(false);
                                 } else {
                                     ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
-                                    ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), lineHeight * 4);
+                                    ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), lineHeight * 4 + 10);
                                     animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                         @Override
                                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
