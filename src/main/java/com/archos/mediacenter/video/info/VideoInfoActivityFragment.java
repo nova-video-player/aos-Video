@@ -251,6 +251,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     // Backdrop
     private ImageViewSetter mBackgroundSetter;
     private ImageProcessor mBackgroundLoader;
+    private ImageProcessor mBackgroundLoaderPlay;
     private ImageView mApplicationBackdrop;
 
     //file info
@@ -382,6 +383,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
         mVideoList = new ArrayList<>();
         mBackgroundLoader = new DelayedBackgroundLoader(getActivity(), 0, 0.2f);
+        mBackgroundLoaderPlay = new DelayedBackgroundLoader(getActivity(), 0, 1);
         ImageViewSetterConfiguration config = ImageViewSetterConfiguration.Builder.createNew()
                 .setUseCache(false)
                 .build();
@@ -2014,8 +2016,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mCastTextViewTitle.setText(getResources().getString(R.string.scrap_cast));
                     log.debug("FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
                     //set movie backdrop
-                    Glide.with(mContext).load(tags.getBackdrop())
-                            .centerInside().into(mPictureBackdrop);
+                    mBackgroundSetter.set(mPictureBackdrop, mBackgroundLoaderPlay, tags.getDefaultBackdrop());
                     // set movie tags
                     String tagline = "";
                     String budget = "";
