@@ -324,6 +324,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private RecyclerView actors;
     private RecyclerView studios;
     private TextView mToolbarTitle;
+    private TextView mCreatedBy;
+    private View mCreatedByContainer;
 
     private ObservableScrollView mScrollView;
 
@@ -527,6 +529,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         actors = mRoot.findViewById(R.id.actor_photos);
         studios = mRoot.findViewById(R.id.studio_logo_rv);
         mToolbarTitle = mRoot.findViewById(R.id.toolbar_title);
+        mCreatedBy = mRoot.findViewById(R.id.scrap_createdby);
+        mCreatedByContainer = mRoot.findViewById(R.id.scrap_createdby_container);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -2005,6 +2009,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     studios.setVisibility(View.GONE);
                     // hide actors
                     actors.setVisibility(View.GONE);
+                    // set series created by
+                    if (showTags.getDirectorsFormatted() == null || showTags.getDirectorsFormatted().isEmpty()) {
+                        mCreatedBy.setVisibility(View.GONE);
+                        mCreatedByContainer.setVisibility(View.GONE);
+                    } else {
+                        setTextOrHideContainer(mCreatedBy, showTags.getDirectorsFormatted() , mCreatedByContainer);
+                    }
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
@@ -2143,6 +2154,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     Glide.with(mContext).load(tags.getClearLogo())
                             .centerInside().into(mClearLogo);
                     setTextOrHideContainer(mScrapProducer, tags.getProducersFormatted(), mScrapProducer, mScrapProducerTitle);
+                    // hide Created by
+                    mCreatedBy.setVisibility(View.GONE);
+                    mCreatedByContainer.setVisibility(View.GONE);
                 }
                 // set content rating
                 if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
