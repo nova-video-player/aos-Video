@@ -326,6 +326,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mToolbarTitle;
     private TextView mCreatedBy;
     private View mCreatedByContainer;
+    private TextView mGuestStars;
+    private TextView mGuestStarsTitle;
 
     private ObservableScrollView mScrollView;
 
@@ -498,6 +500,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mGenreTextView = (TextView) mRoot.findViewById(R.id.scrap_genre);
         mCastTextView = (TextView) mRoot.findViewById(R.id.scrap_cast);
         mCastTextViewTitle = (TextView) mRoot.findViewById(R.id.scrap_cast_title);
+        mGuestStars = (TextView) mRoot.findViewById(R.id.scrap_gueststars);
+        mGuestStarsTitle = (TextView) mRoot.findViewById(R.id.scrap_gueststars_title);
         mScrapButton = (Button) mRoot.findViewById(R.id.scrap_button);
         mScrapButton.setOnClickListener(this);
         mScrapDirector =(TextView) mRoot.findViewById(R.id.scrap_director);
@@ -1898,7 +1902,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 }
                 movieCastFormatted = sb.toString();
                 String cast = movieCastFormatted;
-                // If cast is null and this is an episode, get the cast of the Show
+                setTextOrHideContainer(mCastTextView, cast, mCastTextView, mCastTextViewTitle);
                 String studio = null;
 
                 // click on ClearLogo to choose another
@@ -1912,22 +1916,22 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                 });
 
-                if (cast == null & tags instanceof EpisodeTags) {
-                    ShowTags showTags = ((EpisodeTags) tags).getShowTags();
-                    cast = showTags != null ? showTags.getActorsFormatted() : null;
+                String guestStars = "";
+                if (tags instanceof EpisodeTags) {
+                    guestStars = tags.getActorsFormatted();
                 }
-                setTextOrHideContainer(mCastTextView, cast, mCastTextView, mCastTextViewTitle);
-                mCastTextView.setMaxLines(3);
-                mCastTextView.setTag(true);
-                mCastTextView.setOnClickListener(new View.OnClickListener() {
+                setTextOrHideContainer(mGuestStars, guestStars, mGuestStars, mGuestStarsTitle);
+                mGuestStars.setMaxLines(3);
+                mGuestStars.setTag(true);
+                mGuestStars.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (((Boolean) mCastTextView.getTag())) {
-                            mCastTextView.setMaxLines(200);
-                            mCastTextView.setTag(false);
+                        if (((Boolean) mGuestStars.getTag())) {
+                            mGuestStars.setMaxLines(200);
+                            mGuestStars.setTag(false);
                         } else {
-                            mCastTextView.setMaxLines(3);
-                            mCastTextView.setTag(true);
+                            mGuestStars.setMaxLines(3);
+                            mGuestStars.setTag(true);
                         }
                     }
                 });
@@ -1936,6 +1940,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 String date = null;
                 String basePath = MediaScraper.getStudioLogoDirectory(mContext) + "/";
                 String extension = ".png";
+                // hide cast textview
+                mCastTextView.setVisibility(View.GONE);
                 if(tags instanceof EpisodeTags){
                     mIsVideoMovie = false;
                     mTVDBIcon.setVisibility(View.GONE);
@@ -2004,17 +2010,41 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     LinearLayout genresContainer = mRoot.findViewById(R.id.scrap_genre_container);
                     genresContainer.setVisibility(View.GONE);
                     mDate.setText(getResources().getString(R.string.airdate));
-                    mCastTextViewTitle.setText(getResources().getString(R.string.guest_starts));
                     // hide studios
                     studios.setVisibility(View.GONE);
-                    // hide actors
-                    actors.setVisibility(View.GONE);
                     // set series created by
                     if (showTags.getDirectorsFormatted() == null || showTags.getDirectorsFormatted().isEmpty()) {
                         mCreatedBy.setVisibility(View.GONE);
                         mCreatedByContainer.setVisibility(View.GONE);
                     } else {
                         setTextOrHideContainer(mCreatedBy, showTags.getDirectorsFormatted() , mCreatedByContainer);
+                    }
+                    // setting Actors RecyclerView
+                    List<CastData> seriesActors = new ArrayList<>();
+                    CastData castData;
+                    for (int i = 0; i < showTags.getWriters().size(); i++) {
+                        String actor = showTags.getWriters().get(i);
+                        List <String>  actorsFormatted;
+                        actorsFormatted = Arrays.asList(actor.split("\\s*=&%#\\s*"));
+                        castData = new CastData();
+                        castData.setName(actorsFormatted.get(0));
+                        castData.setCharacter(actorsFormatted.get(1));
+                        castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext) + actorsFormatted.get(2));
+                        seriesActors.add(castData);
+                    }
+                    LinearLayoutManager actorsLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+                    actors.setLayoutManager(actorsLayoutManager);
+                    CastAdapter.OnItemClickListener actorCallback = new CastAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                        }
+                    };
+                    final CastAdapter actorAdapter = new CastAdapter(seriesActors,actorCallback);
+                    actors.setAdapter(actorAdapter);
+                    // add space between actors
+                    int spacing = getResources().getDimensionPixelSize(R.dimen.cast_spacing);
+                    if (actors.getItemDecorationCount() < 1) {
+                        actors.addItemDecoration(new CastAdapter.SpacesItemDecoration(spacing));
                     }
                 }
                 else if(tags instanceof MovieTags){
@@ -2025,7 +2055,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     date = ((MovieTags) tags).getYear()+"";
                     studio = ((MovieTags) tags).getStudiosFormatted();
                     mDate.setText(getResources().getString(R.string.released));
-                    mCastTextViewTitle.setText(getResources().getString(R.string.scrap_cast));
                     log.debug("FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
                     //set movie backdrop
                     mBackgroundSetter.set(mPictureBackdrop, mBackgroundLoaderPlay, tags.getDefaultBackdrop());
@@ -2086,8 +2115,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     if (actors.getItemDecorationCount() < 1) {
                         actors.addItemDecoration(new CastAdapter.SpacesItemDecoration(spacing));
                     }
-                    // hide cast textview
-                    mCastTextView.setVisibility(View.GONE);
+                    // hide GuestStars
+                    mGuestStarsTitle.setVisibility(View.GONE);
+                    mGuestStars.setVisibility(View.GONE);
                     // Set series network logo
                     Glide.with(mContext).load(tags.getStudioLogo())
                             .fitCenter().into(mLogo);
