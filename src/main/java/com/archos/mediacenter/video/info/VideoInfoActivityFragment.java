@@ -1829,7 +1829,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                                 if (((Boolean) mPlotTextView.getTag())) {
                                     mPlotTextView.setMaxLines(Integer.MAX_VALUE);
                                     ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
-                                    ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), lineHeight * measuredLineCount);
+                                    ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), measuredTargetHeight);
                                     animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                         @Override
                                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
