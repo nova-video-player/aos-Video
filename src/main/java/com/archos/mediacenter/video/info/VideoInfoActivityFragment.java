@@ -328,6 +328,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private View mCreatedByContainer;
     private TextView mGuestStars;
     private TextView mGuestStarsTitle;
+    private LinearLayout genresContainer;
 
     private ObservableScrollView mScrollView;
 
@@ -535,6 +536,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mToolbarTitle = mRoot.findViewById(R.id.toolbar_title);
         mCreatedBy = mRoot.findViewById(R.id.scrap_createdby);
         mCreatedByContainer = mRoot.findViewById(R.id.scrap_createdby_container);
+        genresContainer = mRoot.findViewById(R.id.scrap_genre_container);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -1808,8 +1810,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 if (tags instanceof VideoTags) {
                     mIsVideoMovie = null;
                     genres = ((VideoTags) tags).getGenresFormatted();
+                    if (genres == null || genres.isEmpty()){
+                        genresContainer.setVisibility(View.GONE);
+                    } else {
+                        setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);
+                    }
                 }
-                setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);
                 setTextOrHideContainer(mPlotTextView, plot, mPlotTextView);
                 int expectedWidthOfTextView = getResources().getDisplayMetrics().widthPixels;
                 int originalMaxLines = mPlotTextView.getMaxLines();
@@ -2007,8 +2013,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     } else {
                         mTagline.setVisibility(View.GONE);
                     }
-                    LinearLayout genresContainer = mRoot.findViewById(R.id.scrap_genre_container);
-                    genresContainer.setVisibility(View.GONE);
                     mDate.setText(getResources().getString(R.string.airdate));
                     // hide studios
                     studios.setVisibility(View.GONE);
@@ -2045,6 +2049,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     int spacing = getResources().getDimensionPixelSize(R.dimen.cast_spacing);
                     if (actors.getItemDecorationCount() < 1) {
                         actors.addItemDecoration(new CastAdapter.SpacesItemDecoration(spacing));
+                    }
+                    // set series genres
+                    genres = showTags.getGenresFormatted();
+                    if (genres == null || genres.isEmpty()){
+                        genresContainer.setVisibility(View.GONE);
+                    } else {
+                        setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);
                     }
                 }
                 else if(tags instanceof MovieTags){
