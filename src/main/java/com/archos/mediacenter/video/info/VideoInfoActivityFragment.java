@@ -1813,7 +1813,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     int measuredTargetHeight = mPlotTextView.getMeasuredHeight();
                     int lineHeight = mPlotTextView.getLineHeight();
                     Log.d("AppLog", "lines:$measuredLineCount/$originalMaxLines");
-                    mPlotTextView.setHeight(lineHeight *4);
                     mPlotTextView.setEllipsize(TextUtils.TruncateAt.END);
                     mPlotTextView.setMaxLines(4);
                     if (measuredLineCount <= originalMaxLines)
