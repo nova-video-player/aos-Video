@@ -136,6 +136,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -2084,6 +2085,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     for (int i = 0; i < tags.getStudioLogosLargeFileF().size(); i++) {
                         String studioLogoPath = tags.getStudioLogosLargeFileF().get(i).getPath();
                         StudioLogoPaths.add(studioLogoPath);}
+                    // if no Studio file found locally hide studios
+                    List<File> availableStudioLogos = new ArrayList<>();
+                    int size;
+                    for (int i = 0; i < StudioLogoPaths.size(); i++) {
+                        String st = StudioLogoPaths.get(i);
+                        File file = new File(st);
+                        if (file.exists()){
+                            availableStudioLogos.add(file);
+                        }
+                    }
+                    size = availableStudioLogos.size();
+                    if (size == 0){
+                        studios.setVisibility(View.GONE);
+                    }
                     List<ScraperImage> scraperImage = tags.getStudioLogos();
                     LinearLayoutManager studioLogoLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
                     studios.setLayoutManager(studioLogoLayoutManager);
