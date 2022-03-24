@@ -2258,6 +2258,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     // hide Created by
                     mCreatedBy.setVisibility(View.GONE);
                     mCreatedByContainer.setVisibility(View.GONE);
+                    //Hide networks rv in movie
+                    networks.setVisibility(View.GONE);
                 }
                 // set content rating
                 if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
