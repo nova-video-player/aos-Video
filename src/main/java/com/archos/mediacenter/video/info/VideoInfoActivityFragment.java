@@ -2121,14 +2121,16 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         networks.setVisibility(View.GONE);
                     }
                     // Set default series network logo
-                    File networkFile = new File(showTags.getNetworkLogo().getPath());
-                    if (networkFile.exists()){
-                        Glide.with(mContext).load(showTags.getNetworkLogo())
-                                .fitCenter().into(mLogo);
-                    } else {
-                        for (int i = 0; i < availableNetworkLogos.size(); i++) {
-                            Glide.with(mContext).load(availableNetworkLogos.get(0))
+                    if (showTags.getNetworkLogo() != null){
+                        File networkFile = new File(showTags.getNetworkLogo().getPath());
+                        if (networkFile.exists()){
+                            Glide.with(mContext).load(showTags.getNetworkLogo())
                                     .fitCenter().into(mLogo);
+                        } else {
+                            for (int i = 0; i < availableNetworkLogos.size(); i++) {
+                                Glide.with(mContext).load(availableNetworkLogos.get(0))
+                                        .fitCenter().into(mLogo);
+                            }
                         }
                     }
                     // setting Studio Logo RecyclerView
@@ -2301,14 +2303,16 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
                     studios.setAdapter(studioAdapter);
                     // Set default movie studio logo
-                    File studioFile = new File(tags.getStudioLogo().getPath());
-                    if (studioFile.exists()){
-                        Glide.with(mContext).load(tags.getStudioLogo())
-                                .fitCenter().into(mLogo);
-                    } else {
-                        for (int i = 0; i < availableStudioLogos.size(); i++) {
-                            Glide.with(mContext).load(availableStudioLogos.get(0))
+                    if (tags.getStudioLogo() != null){
+                        File studioFile = new File(tags.getStudioLogo().getPath());
+                        if (studioFile.exists()){
+                            Glide.with(mContext).load(tags.getStudioLogo())
                                     .fitCenter().into(mLogo);
+                        } else {
+                            for (int i = 0; i < availableStudioLogos.size(); i++) {
+                                Glide.with(mContext).load(availableStudioLogos.get(0))
+                                        .fitCenter().into(mLogo);
+                            }
                         }
                     }
                     // movie ClearLogo
