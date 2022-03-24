@@ -2226,7 +2226,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     // hide GuestStars
                     mGuestStarsTitle.setVisibility(View.GONE);
                     mGuestStars.setVisibility(View.GONE);
-                    // Set series network logo
+                    // Set movie studio logo
                     Glide.with(mContext).load(tags.getStudioLogo())
                             .fitCenter().into(mLogo);
                     // setting Studio Logo RecyclerView
