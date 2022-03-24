@@ -2194,7 +2194,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         setTextOrHideContainer(mMusiccomposer, showTags.getMusiccomposersFormatted() , mMusiccomposerContainer);
                     }
                     // set production countries
-                    if (showTags.getCountriesFormatted().isEmpty()){
+                    if (showTags.getCountriesFormatted() == null || showTags.getCountriesFormatted().isEmpty()){
                         mCountries.setVisibility(View.GONE);
                         mCountriesContainer.setVisibility(View.GONE);
                     }else{
@@ -2253,7 +2253,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         setTextOrHideContainer(mOriginalLanguage, name, mOriginalLanguageContainer);
                     }
                     // set production countries
-                    if (tags.getCountriesFormatted().isEmpty()){
+                    if (tags.getCountriesFormatted() == null || tags.getCountriesFormatted().isEmpty()){
                         mCountries.setVisibility(View.GONE);
                         mCountriesContainer.setVisibility(View.GONE);
                     }else{
