@@ -92,6 +92,7 @@ import com.archos.mediacenter.video.browser.FileManagerService;
 import com.archos.mediacenter.video.browser.adapters.CastAdapter;
 import com.archos.mediacenter.video.browser.adapters.CastData;
 import com.archos.mediacenter.video.browser.adapters.SeriesTags;
+import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
 import com.archos.mediacenter.video.browser.adapters.StudioAdapter;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
@@ -329,6 +330,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mGuestStars;
     private TextView mGuestStarsTitle;
     private LinearLayout genresContainer;
+    private RecyclerView networks;
 
     private ObservableScrollView mScrollView;
 
@@ -537,6 +539,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mCreatedBy = mRoot.findViewById(R.id.scrap_createdby);
         mCreatedByContainer = mRoot.findViewById(R.id.scrap_createdby_container);
         genresContainer = mRoot.findViewById(R.id.scrap_genre_container);
+        networks = mRoot.findViewById(R.id.network_logo_rv);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -1944,7 +1947,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 setTextOrHideContainer(mScrapDirector, tags.getDirectorsFormatted(), mScrapDirector, mScrapDirectorTitle);
                 setTextOrHideContainer(mScrapWriter, tags.getWritersFormatted(), mScrapWriter, mScrapWriterTitle);
                 String date = null;
-                String basePath = MediaScraper.getStudioLogoDirectory(mContext) + "/";
+                String baseStudioPath = MediaScraper.getStudioLogoDirectory(mContext).getPath() + "/";
+                String baseNetworkPath = MediaScraper.getNetworkLogoDirectory(mContext).getPath() + "/";
                 String extension = ".png";
                 // hide cast textview
                 mCastTextView.setVisibility(View.GONE);
@@ -1981,7 +1985,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     // set series studio names for episode view
                     String names = "";
                     for (int i = showTags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
-                        names = names + showTags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(basePath, "").replaceAll(extension, "") + ", ";
+                        names = names + showTags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(baseStudioPath, "").replaceAll(extension, "") + ", ";
                         studio = names.substring(0, names.length() - 2);
                     }
                     // set episode runtime of the entire series(not episode)
@@ -2056,6 +2060,62 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         genresContainer.setVisibility(View.GONE);
                     } else {
                         setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);
+                    }
+                    // setting Networks RecyclerView
+                    List<ScraperImage> networkImage = showTags.getNetworkLogos();
+                    List<String> NetworkLogoPaths = new ArrayList<>();
+                    for (int i = 0; i < showTags.getNetworkLogosLargeFileF().size(); i++) {
+                        String avaialbeLogopath = String.valueOf(showTags.getNetworkLogosLargeFileF().get(i));
+                        NetworkLogoPaths.add(avaialbeLogopath);}
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+                    networks.setLayoutManager(layoutManager);
+                    ShowNetworkAdapter.OnItemClickListener indicatorCallback = new ShowNetworkAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(String item) {
+                        }
+
+                        @Override
+                        public void onItemLongClick(int position) {
+                            String path = NetworkLogoPaths.get(position);
+                            String clicked_logoName = path.replace(baseNetworkPath, "").replace(extension, "");
+                            LayoutInflater inflater = LayoutInflater.from(mContext);
+                            View layout = inflater.inflate(R.layout.custom_toast,
+                                    mRoot.findViewById(R.id.toast_layout_root));
+                            TextView header = layout.findViewById(R.id.header);
+                            TextView newLogoText = layout.findViewById(R.id.new_logo_text);
+                            ImageView newLogoImage = layout.findViewById(R.id.new_logo_image);
+                            Glide.with(mContext).load(showTags.getNetworkLogosLargeFileF().get(position))
+                                    .fitCenter().into(newLogoImage);
+                            header.setText(getResources().getString(R.string.networklogo_changed));
+                            newLogoText.setText(clicked_logoName);
+                            Toast toast = new Toast(mContext);
+                            toast.setGravity(Gravity.BOTTOM, 0, 50);
+                            toast.setDuration(Toast.LENGTH_SHORT);
+                            toast.setView(layout);
+                            toast.show();
+                            Glide.with(mContext).clear(mLogo);
+                            Glide.with(mContext).load(showTags.getNetworkLogosLargeFileF().get(position))
+                                    .fitCenter().into(mLogo);
+                            ScraperImage clickedImage = (ScraperImage) networkImage.get(position);
+                            new StudioLogoSaver(mContext).execute(clickedImage);
+
+                        }
+                    };
+                    final ShowNetworkAdapter networkLogoAdapter = new ShowNetworkAdapter(NetworkLogoPaths,indicatorCallback);
+                    networks.setAdapter(networkLogoAdapter);
+                    // if only one or zero logo available locally hide recyclerView
+                    List<File> availableLogos = new ArrayList<>();
+                    int size;
+                    for (int i = 0; i < NetworkLogoPaths.size(); i++) {
+                        String st = NetworkLogoPaths.get(i);
+                        File file = new File(st);
+                        if (file.exists()){
+                            availableLogos.add(file);
+                        }
+                    }
+                    size = availableLogos.size();
+                    if (size <= 1){
+                    //    networks.setVisibility(View.GONE);
                     }
                 }
                 else if(tags instanceof MovieTags){
@@ -2151,7 +2211,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     if (size == 0){
                         studios.setVisibility(View.GONE);
                     }
-                    List<ScraperImage> scraperImage = tags.getStudioLogos();
+                    List<ScraperImage> studioImage = tags.getStudioLogos();
                     LinearLayoutManager studioLogoLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
                     studios.setLayoutManager(studioLogoLayoutManager);
                     StudioAdapter.OnItemClickListener studioLogoCallback = new StudioAdapter.OnItemClickListener() {
@@ -2161,17 +2221,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         @Override
                         public void onItemLongClick(int position) {
                             String path = StudioLogoPaths.get(position);
-                            String clicked_studioname = path.replace(basePath, "").replace(extension, "");
+                            String clicked_studioname = path.replace(baseStudioPath, "").replace(extension, "");
                             LayoutInflater inflater = LayoutInflater.from(mContext);
                             View layout = inflater.inflate(R.layout.custom_toast,
                                     mRoot.findViewById(R.id.toast_layout_root));
-                            TextView header = layout.findViewById(R.id.message_header);
-                            TextView newStudio = layout.findViewById(R.id.new_studio);
-                            ImageView toastLogo = layout.findViewById(R.id.toast_logo);
+                            TextView header = layout.findViewById(R.id.header);
+                            TextView newLogoText = layout.findViewById(R.id.new_logo_text);
+                            ImageView newLogoImage = layout.findViewById(R.id.new_logo_image);
                             Glide.with(mContext).load(tags.getStudioLogosLargeFileF().get(position))
-                                    .fitCenter().into(toastLogo);
+                                    .fitCenter().into(newLogoImage);
                             header.setText(getResources().getString(R.string.studiologo_changed));
-                            newStudio.setText(clicked_studioname);
+                            newLogoText.setText(clicked_studioname);
                             Toast toast = new Toast(mContext);
                             toast.setGravity(Gravity.BOTTOM, 0, 50);
                             toast.setDuration(Toast.LENGTH_SHORT);
@@ -2180,7 +2240,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             Glide.with(mContext).clear(mLogo);
                             Glide.with(mContext).load(tags.getStudioLogosLargeFileF().get(position))
                                     .fitCenter().into(mLogo);
-                            ScraperImage clickedImage = (ScraperImage) scraperImage.get(position);
+                            ScraperImage clickedImage = (ScraperImage) studioImage.get(position);
                             new StudioLogoSaver(mContext).execute(clickedImage);
                         }
                     };

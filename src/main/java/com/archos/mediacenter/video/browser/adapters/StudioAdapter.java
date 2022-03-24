@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediascraper.MediaScraper;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
@@ -44,9 +45,9 @@ public class StudioAdapter extends RecyclerView.Adapter<StudioAdapter.StudioView
             vh.itemView.setLayoutParams(params);
             vh.itemView.setVisibility(View.GONE);
         }
-        String basepath = "/data/user/0/org.courville.nova/app_scraper_studiologos/";
+        String baseStudioPath = MediaScraper.getStudioLogoDirectory(vh.itemView.getContext()).getPath() + "/";
         String extension = ".png";
-        final String clicked_studioname = path.replace(basepath, "").replace(extension, "");
+        final String clicked_studioname = path.replace(baseStudioPath, "").replace(extension, "");
         final int Position = position;
         vh.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

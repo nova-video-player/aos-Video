@@ -468,6 +468,11 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 @Override
                 public void onItemClick(String item) {
                 }
+
+                @Override
+                public void onItemLongClick(int position) {
+
+                }
             };
             final ShowNetworkAdapter logoAdapter = new ShowNetworkAdapter(NetworkLogoPaths,indicatorCallback);
             recyclerView.setAdapter(logoAdapter);
