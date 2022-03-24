@@ -2193,6 +2193,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     } else {
                         setTextOrHideContainer(mMusiccomposer, showTags.getMusiccomposersFormatted() , mMusiccomposerContainer);
                     }
+                    // set production countries
+                    if (showTags.getCountriesFormatted().isEmpty()){
+                        mCountries.setVisibility(View.GONE);
+                        mCountriesContainer.setVisibility(View.GONE);
+                    }else{
+                        mCountries.setText(showTags.getCountriesFormatted());
+                    }
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
