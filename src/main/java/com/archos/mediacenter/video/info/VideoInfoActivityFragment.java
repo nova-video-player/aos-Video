@@ -2137,7 +2137,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     if (availableSize == 0){
                         studios.setVisibility(View.GONE);
                     }
-                    List<ScraperImage> studioImage = showTags.getStudioLogos();
                     LinearLayoutManager studioLogoLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
                     studios.setLayoutManager(studioLogoLayoutManager);
                     StudioAdapter.OnItemClickListener studioLogoCallback = new StudioAdapter.OnItemClickListener() {
