@@ -1,7 +1,7 @@
 package com.archos.mediacenter.video.browser.adapters;
 
 public class SeriesTags {
-    String tagline, type, status, votes, popularity, runtime;
+    String tagline, type, status, votes, popularity, runtime, originallanguage;
 
     public SeriesTags() {
     }
@@ -52,5 +52,13 @@ public class SeriesTags {
 
     public void setRuntime(String runtime) {
         this.runtime = runtime;
+    }
+
+    public String getOriginallanguage() {
+        return originallanguage;
+    }
+
+    public void setOriginallanguage(String originallanguage) {
+        this.originallanguage = originallanguage;
     }
 }

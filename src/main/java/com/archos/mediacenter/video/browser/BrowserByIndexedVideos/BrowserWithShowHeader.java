@@ -86,6 +86,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
@@ -577,6 +578,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 seriesTags.setVotes(TvTagsFormatted.get(3));
                 seriesTags.setPopularity(TvTagsFormatted.get(4));
                 seriesTags.setRuntime(TvTagsFormatted.get(5));
+                seriesTags.setOriginallanguage(TvTagsFormatted.get(6));
                 tvShowTags.add(seriesTags);
             }
             TextView tagline = (TextView) mHeaderView.findViewById(R.id.series_tagline);
@@ -607,6 +609,18 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             showType.setText(tvShowTags.get(0).getType());
             if (tvShowTags.get(0).getType().isEmpty()){
                 showType.setVisibility(View.GONE);
+            }
+
+            // set Original language
+            Locale loc = new Locale(tvShowTags.get(0).getOriginallanguage());
+            String name = loc.getDisplayLanguage(loc);
+            TextView mOriginalLanguage = (TextView) mHeaderView.findViewById(R.id.scrap_original_language);
+            LinearLayout mOriginalLanguageContainer = (LinearLayout) mHeaderView.findViewById(R.id.scrap_original_language_container);
+            if (tvShowTags.get(0).getOriginallanguage().isEmpty()) {
+                mOriginalLanguage.setVisibility(View.GONE);
+                mOriginalLanguageContainer.setVisibility(View.GONE);
+            } else {
+                mOriginalLanguage.setText(name);
             }
 
             ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));

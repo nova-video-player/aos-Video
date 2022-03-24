@@ -145,6 +145,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static com.archos.mediacenter.video.utils.VideoUtils.getFilePathFromContentUri;
@@ -335,6 +336,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private View mScreenplayContainer;
     private TextView mMusiccomposer;
     private View mMusiccomposerContainer;
+    private TextView mOriginalLanguage;
+    private View mOriginalLanguageContainer;
 
     private ObservableScrollView mScrollView;
 
@@ -548,6 +551,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mScreenplayContainer = mRoot.findViewById(R.id.scrap_screenplay_container);
         mMusiccomposer = mRoot.findViewById(R.id.scrap_musiccomposer);
         mMusiccomposerContainer = mRoot.findViewById(R.id.scrap_musiccomposer_container);
+        mOriginalLanguage = mRoot.findViewById(R.id.scrap_original_language);
+        mOriginalLanguageContainer = mRoot.findViewById(R.id.scrap_original_language_container);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -2008,6 +2013,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         seriesTags.setVotes(TvTagsFormatted.get(3));
                         seriesTags.setPopularity(TvTagsFormatted.get(4));
                         seriesTags.setRuntime(TvTagsFormatted.get(5));
+                        seriesTags.setOriginallanguage(TvTagsFormatted.get(6));
                         tvShowTags.add(seriesTags);
                     }
                     String runtimeReady = tvShowTags.get(0).getRuntime() + " " + getResources().getString(R.string.minutes);
@@ -2022,6 +2028,15 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         mTagline.setText(tvShowTags.get(0).getTagline());
                     } else {
                         mTagline.setVisibility(View.GONE);
+                    }
+                    // set Original language
+                    Locale loc = new Locale(tvShowTags.get(0).getOriginallanguage());
+                    String name = loc.getDisplayLanguage(loc);
+                    if (tvShowTags.get(0).getOriginallanguage().isEmpty()) {
+                        mOriginalLanguage.setVisibility(View.GONE);
+                        mOriginalLanguageContainer.setVisibility(View.GONE);
+                    } else {
+                        setTextOrHideContainer(mOriginalLanguage, name, mOriginalLanguageContainer);
                     }
                     mDate.setText(getResources().getString(R.string.airdate));
                     // set series created by
@@ -2193,6 +2208,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     String votes = "";
                     String popularity = "";
                     String releaseDate = "";
+                    String originalLanguage = "";
                     for (int i = 0; i < tags.getTaglines().size(); i++) {
                         String MovieTags = tags.getTaglines().get(i);
                         List <String>  MovieTagsFormatted;
@@ -2204,6 +2220,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         votes = MovieTagsFormatted.get(4);
                         popularity = MovieTagsFormatted.get(5);
                         releaseDate = MovieTagsFormatted.get(6);
+                        originalLanguage = MovieTagsFormatted.get(7);
                     }
                     date = releaseDate;
                     String voteCountReady = "(" + votes + " " + getResources().getString(R.string.votes) + ")";
@@ -2215,9 +2232,18 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     } else {
                         mTagline.setVisibility(View.GONE);
                     }
+                    // set Original language
+                    Locale loc = new Locale(originalLanguage);
+                    String name = loc.getDisplayLanguage(loc);
+                    if (originalLanguage.isEmpty()) {
+                        mOriginalLanguage.setVisibility(View.GONE);
+                        mOriginalLanguageContainer.setVisibility(View.GONE);
+                    } else {
+                        setTextOrHideContainer(mOriginalLanguage, name, mOriginalLanguageContainer);
+                    }
+                    // set year
                     mYear.setText(((MovieTags) tags).getYear()+"");
-
-
+                    //set cast
                     List<CastData> movieActors = new ArrayList<>();
                     CastData castData;
                     for (Map.Entry<String, String> entry : tags.getActors().entrySet()) {
