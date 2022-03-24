@@ -2104,19 +2104,19 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     };
                     final ShowNetworkAdapter networkLogoAdapter = new ShowNetworkAdapter(NetworkLogoPaths,indicatorCallback);
                     networks.setAdapter(networkLogoAdapter);
-                    // if only one or zero logo available locally hide recyclerView
-                    List<File> availableLogos = new ArrayList<>();
-                    int size;
+                    // if no network file found locally hide networks
+                    List<File> availableNetworkLogos = new ArrayList<>();
+                    int networksSize;
                     for (int i = 0; i < NetworkLogoPaths.size(); i++) {
                         String st = NetworkLogoPaths.get(i);
                         File file = new File(st);
                         if (file.exists()){
-                            availableLogos.add(file);
+                            availableNetworkLogos.add(file);
                         }
                     }
-                    size = availableLogos.size();
-                    if (size <= 1){
-                    //    networks.setVisibility(View.GONE);
+                    networksSize = availableNetworkLogos.size();
+                    if (networksSize == 0){
+                        networks.setVisibility(View.GONE);
                     }
                     // setting Studio Logo RecyclerView
                     List<String> StudioLogoPaths = new ArrayList<>();
@@ -2125,7 +2125,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         StudioLogoPaths.add(studioLogoPath);}
                     // if no Studio file found locally hide studios
                     List<File> availableStudioLogos = new ArrayList<>();
-                    int availableSize;
+                    int studiosSize;
                     for (int i = 0; i < StudioLogoPaths.size(); i++) {
                         String st = StudioLogoPaths.get(i);
                         File file = new File(st);
@@ -2133,8 +2133,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             availableStudioLogos.add(file);
                         }
                     }
-                    availableSize = availableStudioLogos.size();
-                    if (availableSize == 0){
+                    studiosSize = availableStudioLogos.size();
+                    if (studiosSize == 0){
                         studios.setVisibility(View.GONE);
                     }
                     LinearLayoutManager studioLogoLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
