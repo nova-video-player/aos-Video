@@ -2152,7 +2152,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mTVDBIcon.setVisibility(View.GONE);
                     mTMDBIcon.setVisibility(tags.getOnlineId()>=0?View.VISIBLE:View.GONE);
                     mTMDBId = tags.getOnlineId();
-                    date = ((MovieTags) tags).getYear()+"";
                     studio = ((MovieTags) tags).getStudiosFormatted();
                     mDate.setText(getResources().getString(R.string.released));
                     log.debug("FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
@@ -2165,6 +2164,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     String runtime = "";
                     String votes = "";
                     String popularity = "";
+                    String releaseDate = "";
                     for (int i = 0; i < tags.getTaglines().size(); i++) {
                         String MovieTags = tags.getTaglines().get(i);
                         List <String>  MovieTagsFormatted;
@@ -2175,7 +2175,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         runtime = MovieTagsFormatted.get(3);
                         votes = MovieTagsFormatted.get(4);
                         popularity = MovieTagsFormatted.get(5);
+                        releaseDate = MovieTagsFormatted.get(6);
                     }
+                    date = releaseDate;
                     String voteCountReady = "(" + votes + " " + getResources().getString(R.string.votes) + ")";
                     mVoteCount.setText(voteCountReady);
                     String runtimeReady = runtime + " " + getResources().getString(R.string.minutes);
