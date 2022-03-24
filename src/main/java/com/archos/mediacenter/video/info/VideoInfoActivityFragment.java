@@ -2149,15 +2149,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     };
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
                     studios.setAdapter(studioAdapter);
-
-
-                    // set screenplay
-                    if (showTags.getScreenplaysFormatted() == null || showTags.getScreenplaysFormatted().isEmpty()) {
-                        mScreenplay.setVisibility(View.GONE);
-                        mScreenplayContainer.setVisibility(View.GONE);
-                    } else {
-                        setTextOrHideContainer(mScreenplay, showTags.getScreenplaysFormatted() , mScreenplayContainer);
-                    }
+                    //hide screenplay
+                    mScreenplay.setVisibility(View.GONE);
+                    mScreenplayContainer.setVisibility(View.GONE);
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
