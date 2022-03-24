@@ -2018,8 +2018,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         mTagline.setVisibility(View.GONE);
                     }
                     mDate.setText(getResources().getString(R.string.airdate));
-                    // hide studios
-                    studios.setVisibility(View.GONE);
                     // set series created by
                     if (showTags.getDirectorsFormatted() == null || showTags.getDirectorsFormatted().isEmpty()) {
                         mCreatedBy.setVisibility(View.GONE);
@@ -2117,6 +2115,38 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     if (size <= 1){
                     //    networks.setVisibility(View.GONE);
                     }
+                    // setting Studio Logo RecyclerView
+                    List<String> StudioLogoPaths = new ArrayList<>();
+                    for (int i = 0; i < showTags.getStudioLogosLargeFileF().size(); i++) {
+                        String studioLogoPath = showTags.getStudioLogosLargeFileF().get(i).getPath();
+                        StudioLogoPaths.add(studioLogoPath);}
+                    // if no Studio file found locally hide studios
+                    List<File> availableStudioLogos = new ArrayList<>();
+                    int availableSize;
+                    for (int i = 0; i < StudioLogoPaths.size(); i++) {
+                        String st = StudioLogoPaths.get(i);
+                        File file = new File(st);
+                        if (file.exists()){
+                            availableStudioLogos.add(file);
+                        }
+                    }
+                    availableSize = availableStudioLogos.size();
+                    if (availableSize == 0){
+                        studios.setVisibility(View.GONE);
+                    }
+                    List<ScraperImage> studioImage = showTags.getStudioLogos();
+                    LinearLayoutManager studioLogoLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+                    studios.setLayoutManager(studioLogoLayoutManager);
+                    StudioAdapter.OnItemClickListener studioLogoCallback = new StudioAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(String item) {
+                        }
+                        @Override
+                        public void onItemLongClick(int position) {
+                        }
+                    };
+                    final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
+                    studios.setAdapter(studioAdapter);
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;

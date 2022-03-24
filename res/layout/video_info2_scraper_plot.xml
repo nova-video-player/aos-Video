@@ -287,13 +287,13 @@
         android:layout_height="wrap_content" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/studio_logo_rv"
-        android:layout_width="match_parent"
-        android:layout_height="55dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/network_logo_rv"
         android:layout_width="match_parent"
         android:layout_height="55dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/studio_logo_rv"
+        android:layout_width="match_parent"
+        android:layout_height="55dp" />
 
 </LinearLayout>
