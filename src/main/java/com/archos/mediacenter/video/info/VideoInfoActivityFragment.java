@@ -331,6 +331,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mGuestStarsTitle;
     private LinearLayout genresContainer;
     private RecyclerView networks;
+    private TextView mScreenplay;
+    private View mScreenplayContainer;
 
     private ObservableScrollView mScrollView;
 
@@ -540,6 +542,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mCreatedByContainer = mRoot.findViewById(R.id.scrap_createdby_container);
         genresContainer = mRoot.findViewById(R.id.scrap_genre_container);
         networks = mRoot.findViewById(R.id.network_logo_rv);
+        mScreenplay = mRoot.findViewById(R.id.scrap_screenplay);
+        mScreenplayContainer = mRoot.findViewById(R.id.scrap_screenplay_container);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -2146,6 +2150,15 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     };
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
                     studios.setAdapter(studioAdapter);
+
+
+                    // set screenplay
+                    if (showTags.getScreenplaysFormatted() == null || showTags.getScreenplaysFormatted().isEmpty()) {
+                        mScreenplay.setVisibility(View.GONE);
+                        mScreenplayContainer.setVisibility(View.GONE);
+                    } else {
+                        setTextOrHideContainer(mScreenplay, showTags.getScreenplaysFormatted() , mScreenplayContainer);
+                    }
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
@@ -2291,6 +2304,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mCreatedByContainer.setVisibility(View.GONE);
                     //Hide networks rv in movie
                     networks.setVisibility(View.GONE);
+                    // set screenplay
+                    if (tags.getScreenplaysFormatted() == null || tags.getScreenplaysFormatted().isEmpty()) {
+                        mScreenplay.setVisibility(View.GONE);
+                        mScreenplayContainer.setVisibility(View.GONE);
+                    } else {
+                        setTextOrHideContainer(mScreenplay, tags.getScreenplaysFormatted() , mScreenplayContainer);
+                    }
                 }
                 // set content rating
                 if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
