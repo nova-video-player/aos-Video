@@ -2037,7 +2037,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         castData = new CastData();
                         castData.setName(actorsFormatted.get(0));
                         castData.setCharacter(actorsFormatted.get(1));
-                        castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext) + actorsFormatted.get(2));
+                        castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext).getPath() + actorsFormatted.get(2));
                         seriesActors.add(castData);
                     }
                     LinearLayoutManager actorsLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
@@ -2169,7 +2169,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
                         castData.setName(entry.getKey());
                         castData.setCharacter(valuesFormatted.get(0));
-                        castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext) + valuesFormatted.get(1));
+                        castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext).getPath() + valuesFormatted.get(1));
                         movieActors.add(castData);
                     }
                     LinearLayoutManager actorsLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
