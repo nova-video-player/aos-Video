@@ -333,6 +333,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private RecyclerView networks;
     private TextView mScreenplay;
     private View mScreenplayContainer;
+    private TextView mMusiccomposer;
+    private View mMusiccomposerContainer;
 
     private ObservableScrollView mScrollView;
 
@@ -544,6 +546,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         networks = mRoot.findViewById(R.id.network_logo_rv);
         mScreenplay = mRoot.findViewById(R.id.scrap_screenplay);
         mScreenplayContainer = mRoot.findViewById(R.id.scrap_screenplay_container);
+        mMusiccomposer = mRoot.findViewById(R.id.scrap_musiccomposer);
+        mMusiccomposerContainer = mRoot.findViewById(R.id.scrap_musiccomposer_container);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -2161,6 +2165,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     //hide screenplay
                     mScreenplay.setVisibility(View.GONE);
                     mScreenplayContainer.setVisibility(View.GONE);
+                    // set Original Music Composer
+                    if (showTags.getMusiccomposersFormatted() == null || showTags.getMusiccomposersFormatted().isEmpty()) {
+                        mMusiccomposer.setVisibility(View.GONE);
+                        mMusiccomposerContainer.setVisibility(View.GONE);
+                    } else {
+                        setTextOrHideContainer(mMusiccomposer, showTags.getMusiccomposersFormatted() , mMusiccomposerContainer);
+                    }
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
@@ -2320,6 +2331,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         mScreenplayContainer.setVisibility(View.GONE);
                     } else {
                         setTextOrHideContainer(mScreenplay, tags.getScreenplaysFormatted() , mScreenplayContainer);
+                    }
+                    // set Original Music Composer
+                    if (tags.getMusiccomposersFormatted() == null || tags.getMusiccomposersFormatted().isEmpty()) {
+                        mMusiccomposer.setVisibility(View.GONE);
+                        mMusiccomposerContainer.setVisibility(View.GONE);
+                    } else {
+                        setTextOrHideContainer(mMusiccomposer, tags.getMusiccomposersFormatted() , mMusiccomposerContainer);
                     }
                 }
                 // set content rating

@@ -192,6 +192,7 @@
     <string name="scrap_director">Director:</string>
     <string name="scrap_writer">Writer:</string>
     <string name="scrap_screenplay">Screenplay:</string>
+    <string name="scrap_musiccomposer">Music:</string>
     <string name="scrap_producer">Producer:</string>
     <string name="scrap_director_format">Director: %s</string>
     <string name="scrap_writer_format">Writer: %s</string>

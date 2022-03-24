@@ -395,6 +395,15 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             if (tags.getProducersFormatted() == null)
                 producerContainer.setVisibility(View.GONE);
 
+            // set Original Music Composer
+            TextView mMusiccomposer = (TextView) mHeaderView.findViewById(R.id.musiccomposer);
+            LinearLayout mMusiccomposerContainer = (LinearLayout) mHeaderView.findViewById(R.id.musiccomposer_container);
+            if (tags.getMusiccomposersFormatted() == null || tags.getMusiccomposersFormatted().isEmpty()) {
+                mMusiccomposer.setVisibility(View.GONE);
+                mMusiccomposerContainer.setVisibility(View.GONE);
+            } else {
+                mMusiccomposer.setText(tags.getMusiccomposersFormatted());
+            }
 
             TextView network = (TextView) mHeaderView.findViewById(R.id.network);
             network.setText(show.getStudio());
