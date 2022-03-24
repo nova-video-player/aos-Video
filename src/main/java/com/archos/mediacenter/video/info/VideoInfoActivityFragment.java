@@ -2242,7 +2242,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         StudioLogoPaths.add(studioLogoPath);}
                     // if no Studio file found locally hide studios
                     List<File> availableStudioLogos = new ArrayList<>();
-                    int size;
+                    int studiosSize;
                     for (int i = 0; i < StudioLogoPaths.size(); i++) {
                         String path = StudioLogoPaths.get(i);
                         File file = new File(path);
@@ -2250,8 +2250,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             availableStudioLogos.add(file);
                         }
                     }
-                    size = availableStudioLogos.size();
-                    if (size == 0){
+                    studiosSize = availableStudioLogos.size();
+                    if (studiosSize == 0){
                         studios.setVisibility(View.GONE);
                     }
                     List<ScraperImage> studioImage = tags.getStudioLogos();
