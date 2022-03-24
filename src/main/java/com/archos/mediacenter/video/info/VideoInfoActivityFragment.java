@@ -2246,13 +2246,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         setTextOrHideContainer(mOriginalLanguage, name, mOriginalLanguageContainer);
                     }
                     // set production countries
-                    String countries = "";
-                    for (int i = 0; i < tags.getCountries().size(); i++) {
-                        String countryCode = tags.getCountries().get(i);
-                        Locale locale = new Locale("", countryCode);
-                        String country = locale.getDisplayCountry();
-                        countries = countries + country + ", ";
-                        mCountries.setText(countries.substring(0, countries.length() - 2));
+                    if (tags.getCountriesFormatted().isEmpty()){
+                        mCountries.setVisibility(View.GONE);
+                        mCountriesContainer.setVisibility(View.GONE);
+                    }else{
+                        mCountries.setText(tags.getCountriesFormatted());
                     }
                     // set year
                     mYear.setText(((MovieTags) tags).getYear()+"");
