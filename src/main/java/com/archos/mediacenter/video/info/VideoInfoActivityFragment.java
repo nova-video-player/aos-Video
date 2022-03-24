@@ -338,6 +338,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private View mMusiccomposerContainer;
     private TextView mOriginalLanguage;
     private View mOriginalLanguageContainer;
+    private TextView mCountries;
+    private View mCountriesContainer;
 
     private ObservableScrollView mScrollView;
 
@@ -553,6 +555,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mMusiccomposerContainer = mRoot.findViewById(R.id.scrap_musiccomposer_container);
         mOriginalLanguage = mRoot.findViewById(R.id.scrap_original_language);
         mOriginalLanguageContainer = mRoot.findViewById(R.id.scrap_original_language_container);
+        mCountries = mRoot.findViewById(R.id.scrap_production_countries);
+        mCountriesContainer = mRoot.findViewById(R.id.scrap_production_countries_container);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -2240,6 +2244,15 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         mOriginalLanguageContainer.setVisibility(View.GONE);
                     } else {
                         setTextOrHideContainer(mOriginalLanguage, name, mOriginalLanguageContainer);
+                    }
+                    // set production countries
+                    String countries = "";
+                    for (int i = 0; i < tags.getCountries().size(); i++) {
+                        String countryCode = tags.getCountries().get(i);
+                        Locale locale = new Locale("", countryCode);
+                        String country = locale.getDisplayCountry();
+                        countries = countries + country + ", ";
+                        mCountries.setText(countries.substring(0, countries.length() - 2));
                     }
                     // set year
                     mYear.setText(((MovieTags) tags).getYear()+"");
