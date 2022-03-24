@@ -1982,9 +1982,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                     Glide.with(mContext).load(showTags.getClearLogo())
                             .centerInside().into(mClearLogo);
-                    // Set series network logo
-                    Glide.with(mContext).load(showTags.getNetworkLogo())
-                            .fitCenter().into(mLogo);
+                    //set series producer
                     setTextOrHideContainer(mScrapProducer, showTags.getProducersFormatted(), mScrapProducer, mScrapProducerTitle);
                     // set series studio names for episode view
                     String names = "";
@@ -2108,8 +2106,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     List<File> availableNetworkLogos = new ArrayList<>();
                     int networksSize;
                     for (int i = 0; i < NetworkLogoPaths.size(); i++) {
-                        String st = NetworkLogoPaths.get(i);
-                        File file = new File(st);
+                        String path = NetworkLogoPaths.get(i);
+                        File file = new File(path);
                         if (file.exists()){
                             availableNetworkLogos.add(file);
                         }
@@ -2117,6 +2115,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     networksSize = availableNetworkLogos.size();
                     if (networksSize == 0){
                         networks.setVisibility(View.GONE);
+                    }
+                    // Set default series network logo
+                    File networkFile = new File(showTags.getNetworkLogo().getPath());
+                    if (networkFile.exists()){
+                        Glide.with(mContext).load(showTags.getNetworkLogo())
+                                .fitCenter().into(mLogo);
+                    } else {
+                        for (int i = 0; i < availableNetworkLogos.size(); i++) {
+                            Glide.with(mContext).load(availableNetworkLogos.get(0))
+                                    .fitCenter().into(mLogo);
+                        }
                     }
                     // setting Studio Logo RecyclerView
                     List<String> StudioLogoPaths = new ArrayList<>();
@@ -2127,10 +2136,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     List<File> availableStudioLogos = new ArrayList<>();
                     int studiosSize;
                     for (int i = 0; i < StudioLogoPaths.size(); i++) {
-                        String st = StudioLogoPaths.get(i);
-                        File file = new File(st);
-                        if (file.exists()){
-                            availableStudioLogos.add(file);
+                        String path = StudioLogoPaths.get(i);
+                        File studioFile = new File(path);
+                        if (studioFile.exists()){
+                            availableStudioLogos.add(studioFile);
                         }
                     }
                     studiosSize = availableStudioLogos.size();
@@ -2235,8 +2244,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     List<File> availableStudioLogos = new ArrayList<>();
                     int size;
                     for (int i = 0; i < StudioLogoPaths.size(); i++) {
-                        String st = StudioLogoPaths.get(i);
-                        File file = new File(st);
+                        String path = StudioLogoPaths.get(i);
+                        File file = new File(path);
                         if (file.exists()){
                             availableStudioLogos.add(file);
                         }
@@ -2280,14 +2289,14 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     };
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
                     studios.setAdapter(studioAdapter);
-                    // Set movie studio logo
-                    File file = new File(tags.getStudioLogo().getPath());
-                    if (file.exists()){
+                    // Set default movie studio logo
+                    File studioFile = new File(tags.getStudioLogo().getPath());
+                    if (studioFile.exists()){
                         Glide.with(mContext).load(tags.getStudioLogo())
                                 .fitCenter().into(mLogo);
                     } else {
                         for (int i = 0; i < availableStudioLogos.size(); i++) {
-                            Glide.with(mContext).load(availableStudioLogos.get(i))
+                            Glide.with(mContext).load(availableStudioLogos.get(0))
                                     .fitCenter().into(mLogo);
                         }
                     }
