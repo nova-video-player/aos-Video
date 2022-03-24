@@ -2226,9 +2226,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     // hide GuestStars
                     mGuestStarsTitle.setVisibility(View.GONE);
                     mGuestStars.setVisibility(View.GONE);
-                    // Set movie studio logo
-                    Glide.with(mContext).load(tags.getStudioLogo())
-                            .fitCenter().into(mLogo);
                     // setting Studio Logo RecyclerView
                     List<String> StudioLogoPaths = new ArrayList<>();
                     for (int i = 0; i < tags.getStudioLogosLargeFileF().size(); i++) {
@@ -2283,6 +2280,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     };
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
                     studios.setAdapter(studioAdapter);
+                    // Set movie studio logo
+                    File file = new File(tags.getStudioLogo().getPath());
+                    if (file.exists()){
+                        Glide.with(mContext).load(tags.getStudioLogo())
+                                .fitCenter().into(mLogo);
+                    } else {
+                        for (int i = 0; i < availableStudioLogos.size(); i++) {
+                            Glide.with(mContext).load(availableStudioLogos.get(i))
+                                    .fitCenter().into(mLogo);
+                        }
+                    }
                     // movie ClearLogo
                     if (tags.getClearLogo() != null){
                         mToolbarTitle.setVisibility(View.GONE);
