@@ -633,6 +633,16 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 mCountries.setText(showTags.getCountriesFormatted());
             }
 
+            // set spoken languages
+            TextView mSpokenLanguages = (TextView) mHeaderView.findViewById(R.id.scrap_spoken_languages);
+            LinearLayout mSpokenLanguagesContainer = (LinearLayout) mHeaderView.findViewById(R.id.scrap_spoken_languages_container);
+            if (showTags.getSpokenlanguagesFormatted() == null || showTags.getSpokenlanguagesFormatted().isEmpty()){
+                mSpokenLanguages.setVisibility(View.GONE);
+                mSpokenLanguagesContainer.setVisibility(View.GONE);
+            } else {
+                mSpokenLanguages.setText(showTags.getSpokenlanguagesFormatted());
+            }
+
             ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));
             posterView.setImageBitmap(result.bitmap);
             posterView.setOnClickListener(new View.OnClickListener() {
