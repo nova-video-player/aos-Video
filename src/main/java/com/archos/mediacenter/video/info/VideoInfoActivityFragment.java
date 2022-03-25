@@ -2211,18 +2211,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         mCountries.setText(showTags.getCountriesFormatted());
                     }
                     // set spoken languages
-                    String spokenLanguages = "";
-                    if (showTags.getScreenplays() == null){
+                    if (showTags.getSpokenlanguagesFormatted() == null || showTags.getSpokenlanguagesFormatted().isEmpty()){
                         mSpokenLanguages.setVisibility(View.GONE);
                         mSpokenLanguagesContainer.setVisibility(View.GONE);
                     }else{
-                        for (int i = 0; i < showTags.getScreenplays().size(); i++) {
-                            String languageCode = showTags.getScreenplays().get(i);
-                            Locale locale = new Locale(languageCode);
-                            String spokenLanguage = locale.getDisplayLanguage(locale);
-                            spokenLanguages = spokenLanguages + spokenLanguage + ", ";
-                            mSpokenLanguages.setText(spokenLanguages.substring(0, spokenLanguages.length() - 2));
-                        }
+                        mSpokenLanguages.setText(showTags.getSpokenlanguagesFormatted());
                     }
                 }
                 else if(tags instanceof MovieTags){
@@ -2277,18 +2270,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         setTextOrHideContainer(mOriginalLanguage, name, mOriginalLanguageContainer);
                     }
                     // set spoken languages
-                    String spokenLanguages = "";
-                    if (tags.getSeasonPlots() == null){
+                    if (tags.getSpokenlanguagesFormatted() == null || tags.getSpokenlanguagesFormatted().isEmpty()){
                         mSpokenLanguages.setVisibility(View.GONE);
                         mSpokenLanguagesContainer.setVisibility(View.GONE);
                     }else{
-                        for (int i = 0; i < tags.getSeasonPlots().size(); i++) {
-                            String languageCode = tags.getSeasonPlots().get(i);
-                            Locale locale = new Locale(languageCode);
-                            String spokenLanguage = locale.getDisplayLanguage(locale);
-                            spokenLanguages = spokenLanguages + spokenLanguage + ", ";
-                            mSpokenLanguages.setText(spokenLanguages.substring(0, spokenLanguages.length() - 2));
-                        }
+                        mSpokenLanguages.setText(tags.getSpokenlanguagesFormatted());
                     }
                     // set production countries
                     if (tags.getCountriesFormatted() == null || tags.getCountriesFormatted().isEmpty()){
