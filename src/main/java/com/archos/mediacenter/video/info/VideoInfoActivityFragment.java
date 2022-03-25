@@ -340,6 +340,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private View mOriginalLanguageContainer;
     private TextView mCountries;
     private View mCountriesContainer;
+    private TextView mSpokenLanguages;
+    private View mSpokenLanguagesContainer;
 
     private ObservableScrollView mScrollView;
 
@@ -557,6 +559,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mOriginalLanguageContainer = mRoot.findViewById(R.id.scrap_original_language_container);
         mCountries = mRoot.findViewById(R.id.scrap_production_countries);
         mCountriesContainer = mRoot.findViewById(R.id.scrap_production_countries_container);
+        mSpokenLanguages = mRoot.findViewById(R.id.scrap_spoken_languages);
+        mSpokenLanguagesContainer = mRoot.findViewById(R.id.scrap_spoken_languages_container);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -2206,6 +2210,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }else{
                         mCountries.setText(showTags.getCountriesFormatted());
                     }
+                    // set spoken languages
+                    String spokenLanguages = "";
+                    if (showTags.getScreenplays() == null){
+                        mSpokenLanguages.setVisibility(View.GONE);
+                        mSpokenLanguagesContainer.setVisibility(View.GONE);
+                    }else{
+                        for (int i = 0; i < showTags.getScreenplays().size(); i++) {
+                            String languageCode = showTags.getScreenplays().get(i);
+                            Locale locale = new Locale(languageCode);
+                            String spokenLanguage = locale.getDisplayLanguage(locale);
+                            spokenLanguages = spokenLanguages + spokenLanguage + ", ";
+                            mSpokenLanguages.setText(spokenLanguages.substring(0, spokenLanguages.length() - 2));
+                        }
+                    }
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
@@ -2257,6 +2275,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         mOriginalLanguageContainer.setVisibility(View.GONE);
                     } else {
                         setTextOrHideContainer(mOriginalLanguage, name, mOriginalLanguageContainer);
+                    }
+                    // set spoken languages
+                    String spokenLanguages = "";
+                    if (tags.getSeasonPlots() == null){
+                        mSpokenLanguages.setVisibility(View.GONE);
+                        mSpokenLanguagesContainer.setVisibility(View.GONE);
+                    }else{
+                        for (int i = 0; i < tags.getSeasonPlots().size(); i++) {
+                            String languageCode = tags.getSeasonPlots().get(i);
+                            Locale locale = new Locale(languageCode);
+                            String spokenLanguage = locale.getDisplayLanguage(locale);
+                            spokenLanguages = spokenLanguages + spokenLanguage + ", ";
+                            mSpokenLanguages.setText(spokenLanguages.substring(0, spokenLanguages.length() - 2));
+                        }
                     }
                     // set production countries
                     if (tags.getCountriesFormatted() == null || tags.getCountriesFormatted().isEmpty()){
