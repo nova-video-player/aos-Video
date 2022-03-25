@@ -1928,7 +1928,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 }
                 movieCastFormatted = sb.toString();
                 String cast = movieCastFormatted;
-                setTextOrHideContainer(mCastTextView, cast, mCastTextView, mCastTextViewTitle);
+                mCastTextView.setText(cast);
                 String studio = null;
 
                 // click on ClearLogo to choose another
