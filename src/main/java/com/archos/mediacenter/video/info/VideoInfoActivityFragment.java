@@ -2077,6 +2077,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     if (actors.getItemDecorationCount() < 1) {
                         actors.addItemDecoration(new CastAdapter.SpacesItemDecoration(spacing));
                     }
+                    // hide actors rv & cast header if size = 0
+                    int actorsSize = seriesActors.size();
+                    if (actorsSize == 0){
+                        mCastTextViewTitle.setVisibility(View.GONE);
+                        actors.setVisibility(View.GONE);
+                    }
                     // set series genres
                     genres = showTags.getGenresFormatted();
                     if (genres == null || genres.isEmpty()){
@@ -2288,6 +2294,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     int spacing = getResources().getDimensionPixelSize(R.dimen.cast_spacing);
                     if (actors.getItemDecorationCount() < 1) {
                         actors.addItemDecoration(new CastAdapter.SpacesItemDecoration(spacing));
+                    }
+                    // hide actors rv & cast header if size = 0
+                    int actorsSize = movieActors.size();
+                    if (actorsSize == 0){
+                        mCastTextViewTitle.setVisibility(View.GONE);
+                        actors.setVisibility(View.GONE);
                     }
                     // hide GuestStars
                     mGuestStarsTitle.setVisibility(View.GONE);
