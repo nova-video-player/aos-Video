@@ -120,10 +120,9 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
         FileDetailsViewHolder vh = (FileDetailsViewHolder) holder;
         vh.mFullWidthViewHolder.getMainContainer().setBackgroundColor(mColor);
         vh.mFileNameTv.setText(videoObject.getFilenameNonCryptic());
-        
         String path = videoObject.getFriendlyPath();
         String parentPath = "";
-        if (path != null) path.substring(0, path.lastIndexOf("/"));
+        if (path != null) parentPath = path.substring(0, path.lastIndexOf("/"));
 
         vh.mFilePathTv.setText(parentPath);
         vh.mProgress.setVisibility(View.GONE);
