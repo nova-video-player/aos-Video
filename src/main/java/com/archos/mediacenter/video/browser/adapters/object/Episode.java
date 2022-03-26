@@ -35,7 +35,7 @@ public class Episode extends Video implements Serializable {
     final String mEpisodeName;
     final long mEpisodeDate;
     final float mEpisodeRating;
-    final String mEpisodeContentRating = "";
+    final String mEpisodeContentRating;
     final String mEpisodePlot;
     final String mShowName;
     private final String mPictureUri; /*picture uri is an official thumbnail*/
@@ -123,9 +123,7 @@ public class Episode extends Video implements Serializable {
         return "";
     }
 
-    public String getContentRating() {
-        return mEpisodeContentRating;
-    }
+    public String getContentRating() { return mEpisodeContentRating; }
 
     public String getWriter() {
         return "";

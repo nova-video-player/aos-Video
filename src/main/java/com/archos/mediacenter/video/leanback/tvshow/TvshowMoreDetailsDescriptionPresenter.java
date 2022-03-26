@@ -74,7 +74,8 @@ public class TvshowMoreDetailsDescriptionPresenter extends Presenter {
         setTextOrSetGoneIfZero(vh.mRating, tags.getRating());
         setTextOrSetGoneIfEmpty(vh.mContentRating, tags.getContentRating());
         vh.mContentRating.setTextColor(TvshowMoreDetailsFragment.getDominantColor());
-        if (tags.getContentRating().isEmpty()) vh.mContentRatingContainer.setVisibility(View.GONE);
+        String contentRating = tags.getContentRating();
+        if (contentRating == null || contentRating.isEmpty()) vh.mContentRatingContainer.setVisibility(View.GONE);
         vh.mTraktWatched.setVisibility(mShowWatched ? View.VISIBLE : View.GONE);
     }
     

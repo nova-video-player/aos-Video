@@ -32,7 +32,7 @@ public class Tvshow extends Base implements Serializable {
     private final boolean mIsTraktSeen;
     private final boolean mIsTraktLibrary;
     private final float mRating;
-    private final String mContentRating = "";
+    private final String mContentRating;
 
     public int getYear() {
         return mYear;
@@ -163,7 +163,5 @@ public class Tvshow extends Base implements Serializable {
         return mRating;
     }
 
-    public String getContentRating() {
-        return mContentRating;
-    }
+    public String getContentRating() { return mContentRating; }
 }
