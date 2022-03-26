@@ -97,6 +97,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     private ArchosDetailsOverviewRowPresenter mOverviewRowPresenter;
     private TvshowMoreDetailsDescriptionPresenter mDescriptionPresenter;
     private int mColor;
+    private static int dominantColor = 0;
     private Handler mHandler;
     private int oldPos = 0;
     private int oldSelectedSubPosition = 0;
@@ -119,8 +120,6 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
         mOverviewRowPresenter.setListener(helper);
         mOverviewRowPresenter.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.leanback_details_background));
         mOverviewRowPresenter.setOnActionClickedListener(null);
-
-
 
         setOnItemViewClickedListener(new OnItemViewClickedListener() {
             @Override
@@ -309,6 +308,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                         mColor = palette.getDarkMutedSwatch().getRgb();
                     else
                         mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
+                    dominantColor = mColor;
                     mDetailsRow.setImageBitmap(getActivity(), bitmap);
                     mDetailsRow.setImageScaleUpAllowed(true);
                 }
@@ -491,6 +491,10 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
             // The activity result is set to OK if the poster or backdrop is changed
             getActivity().setResult(Activity.RESULT_OK);
        }
+    }
+
+    public static int getDominantColor() {
+        return dominantColor;
     }
 
 }

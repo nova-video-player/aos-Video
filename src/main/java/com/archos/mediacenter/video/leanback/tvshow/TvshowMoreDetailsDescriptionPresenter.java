@@ -37,6 +37,8 @@ public class TvshowMoreDetailsDescriptionPresenter extends Presenter {
         final TextView mTitle;
         final TextView mDate;
         final TextView mRating;
+        final View mContentRatingContainer;
+        final TextView mContentRating;
         final ImageView mTraktWatched;
 
         public ViewHolder(final View view) {
@@ -45,6 +47,8 @@ public class TvshowMoreDetailsDescriptionPresenter extends Presenter {
             mTitle = (TextView) view.findViewById(androidx.leanback.R.id.lb_details_description_title);
             mDate = (TextView) view.findViewById(R.id.date);
             mRating = (TextView) view.findViewById(R.id.rating);
+            mContentRatingContainer = (View) view.findViewById(R.id.content_rating_container);
+            mContentRating = (TextView) view.findViewById(R.id.content_rating);
             mTraktWatched = (ImageView) view.findViewById(R.id.trakt_watched);
         }
     }
@@ -68,7 +72,9 @@ public class TvshowMoreDetailsDescriptionPresenter extends Presenter {
         vh.mTitle.setText(tags.getTitle());
         setTextOrSetGoneIfEmpty(vh.mDate, getYearFormatted(tags.getPremiered()));
         setTextOrSetGoneIfZero(vh.mRating, tags.getRating());
-
+        setTextOrSetGoneIfEmpty(vh.mContentRating, tags.getContentRating());
+        vh.mContentRating.setTextColor(TvshowMoreDetailsFragment.getDominantColor());
+        if (tags.getContentRating().isEmpty()) vh.mContentRatingContainer.setVisibility(View.GONE);
         vh.mTraktWatched.setVisibility(mShowWatched ? View.VISIBLE : View.GONE);
     }
     

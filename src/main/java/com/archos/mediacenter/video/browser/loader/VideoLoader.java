@@ -47,6 +47,7 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
     public static final String COLUMN_PLOT = "plot";
     public static final String COLUMN_DATE = "date";
     public static final String COLUMN_RATING = "rating";
+    public static final String COLUMN_CONTENT_RATING = "content_rating";
 
     public static final String DEFAULT_SORT = COLUMN_NAME + ", "
             + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + ", "
@@ -63,6 +64,8 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
             + "," + VideoStore.MediaColumns.TITLE + ") AS " + COLUMN_NAME;
     protected static final String RATING = COALESCE
             + VideoStore.Video.VideoColumns.SCRAPER_RATING + ",'-1')" + " AS " + COLUMN_RATING;
+    protected static final String CONTENT_RATING = COALESCE
+            + VideoStore.Video.VideoColumns.SCRAPER_CONTENT_RATING + ",'')" + " AS " + COLUMN_CONTENT_RATING;
     protected static final String PLOT = COALESCE
             + VideoStore.Video.VideoColumns.SCRAPER_M_PLOT + ","
             + VideoStore.Video.VideoColumns.SCRAPER_E_PLOT + ") as " + COLUMN_PLOT;
@@ -105,7 +108,7 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
             VideoStore.Video.VideoColumns.SCRAPER_TITLE,
             VideoStore.Video.VideoColumns.SCRAPER_BACKDROP_LARGE_URL,
             VideoStore.Video.VideoColumns.SCRAPER_BACKDROP_LARGE_FILE,
-            DATE, RATING, PLOT,
+            DATE, RATING, CONTENT_RATING, PLOT,
 
             VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_ID,
 

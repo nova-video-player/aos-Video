@@ -132,6 +132,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
     private Overlay mOverlay;
     private int mColor;
+    private static int dominantColor = 0;
     private Handler mHandler;
     private int oldPos = 0;
     private int oldSelectedSubPosition = 0;
@@ -769,6 +770,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                     mColor = palette.getDarkMutedSwatch().getRgb();
                 else
                     mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
+                dominantColor = mColor;
                 if (isWatched)
                     bitmap = PresenterUtils.addWatchedMark(bitmap, getContext());
             }
@@ -797,5 +799,9 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 }
             }
         }
+    }
+
+    public static int getDominantColor() {
+        return dominantColor;
     }
 }

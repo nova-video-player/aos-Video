@@ -258,6 +258,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private boolean mAnimationIsRunning;
 
     private int mColor;
+    private static int dominantColor = 0;
     private ArrayList<Video> mVideoList;
     private ArrayObjectAdapter mFileListAdapter;
     private SelectableListRow mFileListRow;
@@ -769,8 +770,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         }
     };
 
-
-        //--------------------------------------------------------------------
+    //--------------------------------------------------------------------
     // Implements LoaderCallbacks<Cursor>
     // We use a SingleVideoLoader to get updated from the DB using the Loader framework
     //--------------------------------------------------------------------
@@ -1323,6 +1323,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     mColor = palette.getDarkMutedSwatch().getRgb();
                 else
                     mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
+                dominantColor = mColor;
                 mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
                 mOverviewRowPresenter.updateBackgroundColor(mColor);
                 mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
@@ -2075,5 +2076,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     public static void setWatchState(Boolean isVideoWatched) {
         log.debug("setWatchState to " + isVideoWatched);
         mIsVideoWatched = isVideoWatched;
+    }
+
+    public static int getDominantColor() {
+        return dominantColor;
     }
 }

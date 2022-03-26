@@ -72,8 +72,6 @@ public class Video extends Base implements Serializable {
         video3dMode, guessedDefinition, traktSeen, isTraktLibrary, hasSubs, isUserHidden, lastTimePlayed,-1, -1, null, null, null, null, -1,1,size);
     }
 
-
-
     public Video(long id, String filePath, String name, Uri posterUri, int durationMs, int resumeMs,
                  int video3dMode, int guessedDefinition, boolean traktSeen, boolean isTraktLibrary,
                  boolean hasSubs,
