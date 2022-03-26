@@ -15,7 +15,6 @@
         android:layout_centerInParent="true" />
 
     <!-- Poster on the left side -->
-
     <ImageView
         android:id="@+id/thumbnail"
         android:layout_width="@dimen/video_details_poster_width"
@@ -26,58 +25,6 @@
         android:layout_marginBottom="@dimen/video_details_poster_margin_bottom"
         android:background="@color/default_icon_background"
         android:scaleType="center" />
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/net_logo_rv"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_below="@id/actor_photos"
-        android:layout_marginStart="@dimen/video_details_poster_margin_left"
-        android:layout_marginEnd="@dimen/video_details_poster_margin_left"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/studio_logo_rv"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_below="@id/net_logo_rv"
-        android:layout_marginStart="@dimen/video_details_poster_margin_left"
-        android:layout_marginEnd="@dimen/video_details_poster_margin_left"/>
-
-    <TextView
-        android:id="@+id/actors_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/season_plot"
-        android:layout_marginStart="@dimen/video_details_poster_margin_left"
-        android:layout_marginTop="3dip"
-        android:ellipsize="end"
-        android:lines="1"
-        android:maxLines="1"
-        android:paddingTop="10dp"
-        android:paddingBottom="5dp"
-        android:singleLine="true"
-        android:text="@string/actors_header"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="@dimen/video_info_medium_text" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/actor_photos"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/actors_header"
-        android:layout_marginStart="@dimen/video_details_poster_margin_left"
-        android:layout_marginEnd="@dimen/video_details_poster_margin_left" />
-
-    <TextView
-        android:id="@+id/season_plot"
-        style="@style/textAppearanceLarge"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/series_plot_container"
-        android:layout_marginTop="8dip"
-        android:background="@drawable/transparent_ripple"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <ImageView
         android:id="@+id/flag_3d"
@@ -111,7 +58,6 @@
         android:visibility="gone" />
 
     <!-- TV show title -->
-
     <TextView
         android:id="@+id/name"
         style="@style/textAppearanceLarge"
@@ -126,7 +72,6 @@
         android:typeface="sans" />
 
     <!-- TV show season -->
-
     <TextView
         android:id="@+id/season"
         style="@style/BrowserText.Name.Video"
@@ -136,53 +81,6 @@
         android:layout_toRightOf="@id/thumbnail"
         android:paddingTop="0dip"
         android:singleLine="true" />
-
-    <TextView
-        android:id="@+id/series_plot_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/season_airdate_container"
-        android:layout_marginTop="3dip"
-        android:ellipsize="end"
-        android:lines="1"
-        android:maxLines="1"
-        android:paddingTop="10dp"
-        android:singleLine="true"
-        android:text="@string/series_plot"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="@dimen/video_info_medium_text" />
-
-    <TextView
-        android:id="@+id/season_plot_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/series_plot_header"
-        android:layout_marginTop="3dip"
-        android:ellipsize="end"
-        android:lines="1"
-        android:maxLines="1"
-        android:paddingTop="10dp"
-        android:singleLine="true"
-        android:text="@string/season_plot"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="@dimen/video_info_medium_text" />
-    <LinearLayout
-        android:id="@+id/series_plot_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/season_plot_header"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp">
-
-        <TextView
-            android:id="@+id/series_plot"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/transparent_ripple"
-            android:paddingRight="5dp"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </LinearLayout>
 
     <LinearLayout
         android:layout_marginTop="2dp"
@@ -334,350 +232,411 @@
         android:layout_toEndOf="@id/thumbnail"
         android:scaleType="center" />
 
-    <TextView
-        android:id="@+id/series_tagline"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/thumbnail"
-        android:layout_marginTop="10dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="@dimen/video_info_medium_text" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/thumbnail"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp"
+        android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/created_by_container"
-        android:layout_below="@id/series_tagline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
         <TextView
-            android:layout_width="110dp"
+            android:id="@+id/series_tagline"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="left"
-            android:lines="1"
-            android:maxLines="1"
-            android:text="@string/created_by"
+            android:layout_marginTop="10dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text" />
-        <TextView
+
+        <LinearLayout
+            android:id="@+id/created_by_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/created_by"
-            android:paddingRight="5dp"
-            android:textSize="@dimen/video_info_medium_text"
-            android:layout_below="@id/content_rating_container"
-            />
-    </LinearLayout>
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/created_by"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/video_info_medium_text" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/created_by"
+                android:textSize="@dimen/video_info_medium_text"
+                />
+        </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/producer_container"
-        android:layout_below="@id/created_by_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-        <TextView
-            android:layout_width="110dp"
+        <LinearLayout
+            android:id="@+id/producer_container"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/scrap_producer"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/video_info_medium_text" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/producer"
+                android:textSize="@dimen/video_info_medium_text"
+                />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/network_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/networks"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/video_info_medium_text" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/network"
+                android:textSize="@dimen/video_info_medium_text"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/studio_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/studios"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/video_info_medium_text" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/studio"
+                android:textSize="@dimen/video_info_medium_text"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/premiered_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/premiered"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/video_info_medium_text" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/premiered"
+                android:textSize="@dimen/video_info_medium_text"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/season_airdate_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/airdate"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/video_info_medium_text" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/season_airdate"
+                android:textSize="@dimen/video_info_medium_text"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/genres_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/genres"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/video_info_medium_text" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/series_genres"
+                android:textSize="@dimen/video_info_medium_text"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/showtype_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/show_type"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/video_info_medium_text" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/showtype"
+                android:textSize="@dimen/video_info_medium_text"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/musiccomposer_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/scrap_musiccomposer"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/video_info_medium_text" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/musiccomposer"
+                android:textSize="@dimen/video_info_medium_text"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/scrap_original_language_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/scrap_original_language"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/video_info_medium_text" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/scrap_original_language"
+                android:textSize="@dimen/video_info_medium_text"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/scrap_production_countries_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/scrap_production_countries"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/video_info_medium_text" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/scrap_production_countries"
+                android:textSize="@dimen/video_info_medium_text"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/scrap_spoken_languages_container_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/scrap_spoken_languages"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/video_info_medium_text" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/scrap_spoken_languages"
+                android:textSize="@dimen/video_info_medium_text"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/season_plot_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dip"
             android:ellipsize="end"
-            android:gravity="left"
             android:lines="1"
             android:maxLines="1"
-            android:text="@string/scrap_producer"
+            android:paddingTop="10dp"
+            android:singleLine="true"
+            android:text="@string/season_plot"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text" />
+
         <TextView
+            android:id="@+id/season_plot"
+            style="@style/textAppearanceLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dip"
+            android:background="@drawable/transparent_ripple"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/series_plot_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/producer"
-            android:paddingRight="5dp"
-            android:textSize="@dimen/video_info_medium_text"
-            android:layout_below="@id/content_rating_container"
-            />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/network_container"
-        android:layout_below="@id/producer_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-        <TextView
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
+            android:layout_marginTop="3dip"
             android:ellipsize="end"
-            android:gravity="left"
             android:lines="1"
             android:maxLines="1"
-            android:text="@string/networks"
+            android:paddingTop="10dp"
+            android:singleLine="true"
+            android:text="@string/series_plot"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text" />
+
+        <LinearLayout
+            android:id="@+id/series_plot_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/series_plot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/transparent_ripple"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
         <TextView
+            android:id="@+id/actors_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/network"
-            android:paddingRight="5dp"
-            android:textSize="@dimen/video_info_medium_text"
-            android:layout_below="@id/content_rating_container"
-            />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/studio_container"
-        android:layout_below="@id/network_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-        <TextView
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/video_details_poster_margin_left"
+            android:layout_marginTop="3dip"
             android:ellipsize="end"
-            android:gravity="left"
             android:lines="1"
             android:maxLines="1"
-            android:text="@string/studios"
+            android:paddingTop="10dp"
+            android:paddingBottom="5dp"
+            android:singleLine="true"
+            android:text="@string/actors_header"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/studio"
-            android:paddingRight="5dp"
-            android:textSize="@dimen/video_info_medium_text"
-            android:layout_below="@id/content_rating_container"
-            />
-    </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/premiered_container"
-        android:layout_below="@id/scrap_spoken_languages_container_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-        <TextView
-            android:layout_width="110dp"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/actor_photos"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="left"
-            android:lines="1"
-            android:maxLines="1"
-            android:text="@string/premiered"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/premiered"
-            android:paddingRight="5dp"
-            android:textSize="@dimen/video_info_medium_text"
-            android:layout_below="@id/content_rating_container"
-            />
-    </LinearLayout>
+            android:layout_marginStart="@dimen/video_details_poster_margin_left"
+            android:layout_marginEnd="@dimen/video_details_poster_margin_left" />
 
-    <LinearLayout
-        android:id="@+id/season_airdate_container"
-        android:layout_below="@id/premiered_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-        <TextView
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="left"
-            android:lines="1"
-            android:maxLines="1"
-            android:text="@string/airdate"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/season_airdate"
-            android:paddingRight="5dp"
-            android:textSize="@dimen/video_info_medium_text"
-            android:layout_below="@id/content_rating_container"
-            />
-    </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/net_logo_rv"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginStart="@dimen/video_details_poster_margin_left"
+            android:layout_marginEnd="@dimen/video_details_poster_margin_left"/>
 
-    <LinearLayout
-        android:id="@+id/genres_container"
-        android:layout_below="@id/studio_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-        <TextView
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="left"
-            android:lines="1"
-            android:maxLines="1"
-            android:text="@string/genres"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/series_genres"
-            android:paddingRight="5dp"
-            android:textSize="@dimen/video_info_medium_text"
-            android:layout_below="@id/content_rating_container"
-            />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/showtype_container"
-        android:layout_below="@id/genres_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-        <TextView
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="left"
-            android:lines="1"
-            android:maxLines="1"
-            android:text="@string/show_type"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/showtype"
-            android:paddingRight="5dp"
-            android:textSize="@dimen/video_info_medium_text"
-            android:layout_below="@id/content_rating_container"
-            />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/musiccomposer_container"
-        android:layout_below="@id/showtype_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-        <TextView
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="left"
-            android:lines="1"
-            android:maxLines="1"
-            android:text="@string/scrap_musiccomposer"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/musiccomposer"
-            android:paddingRight="5dp"
-            android:textSize="@dimen/video_info_medium_text"
-            android:layout_below="@id/content_rating_container"
-            />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/scrap_original_language_container"
-        android:layout_below="@id/musiccomposer_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-        <TextView
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="left"
-            android:lines="1"
-            android:maxLines="1"
-            android:text="@string/scrap_original_language"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/scrap_original_language"
-            android:paddingRight="5dp"
-            android:textSize="@dimen/video_info_medium_text"
-            android:layout_below="@id/content_rating_container"
-            />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/scrap_production_countries_container"
-        android:layout_below="@id/scrap_original_language_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-        <TextView
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="left"
-            android:lines="1"
-            android:maxLines="1"
-            android:text="@string/scrap_production_countries"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/scrap_production_countries"
-            android:paddingRight="5dp"
-            android:textSize="@dimen/video_info_medium_text"
-            android:layout_below="@id/content_rating_container"
-            />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/scrap_spoken_languages_container_container"
-        android:layout_below="@id/scrap_production_countries_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-        <TextView
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="left"
-            android:lines="1"
-            android:maxLines="1"
-            android:text="@string/scrap_spoken_languages"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/scrap_spoken_languages"
-            android:paddingRight="5dp"
-            android:textSize="@dimen/video_info_medium_text"
-            android:layout_below="@id/content_rating_container"
-            />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/studio_logo_rv"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginStart="@dimen/video_details_poster_margin_left"
+            android:layout_marginEnd="@dimen/video_details_poster_margin_left"/>
     </LinearLayout>
 
 </RelativeLayout>
