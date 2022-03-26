@@ -30,7 +30,7 @@ public class Movie extends Video implements Serializable {
     final long mMovieId;
     final int mYear;
     final float mRating;
-    final String mContentRating;
+    final String mContentRating = "";
     final String mPlot;
     private final long mOnlineId;
     private long mPinned;
