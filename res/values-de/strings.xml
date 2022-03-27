@@ -449,6 +449,7 @@
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
     <string name="error_permission">Keine ausreichende Berechtigungen</string>
     <string name="error_permission_storage">Nova Video Player benötigt die Erlaubnis auf den Speicher des Geräts zugreifen zu können, um lokale Videos abspielen zu können. Bitte erteilen Sie die Erlaubnis.</string>
+    <string name="error_permission_all_file_access">Nova Video Player benötigt alle Berechtigung auf externen Speicher zuzugreifen, um lokale Video/NFO-Dateien korrekt zu verwalten, bitte erteilen Sie diese Berechtigung.</string>
     <string name="allow">Erlauben</string>
     <string name="exit">Beenden</string>
     <!-- torrent -->

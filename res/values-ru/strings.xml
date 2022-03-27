@@ -459,6 +459,7 @@
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
     <string name="error_permission">Недостаточно прав</string>
     <string name="error_permission_storage">Nova Video Player требуется разрешение на чтение локальных видео, пожалуйста, предоставьте это разрешение.</string>
+    <string name="error_permission_all_file_access">Nova Video Player требуется доступ к внешнему хранилищу для корректной работы с локальными видео/NFO файлами. Пожалуйста, предоставьте это разрешение.</string>
     <string name="allow">Разрешить</string>
     <string name="exit">Выйти</string>
     <!-- torrent -->
