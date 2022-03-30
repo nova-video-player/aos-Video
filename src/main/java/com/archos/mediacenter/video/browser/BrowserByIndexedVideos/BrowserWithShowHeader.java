@@ -144,7 +144,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         mBackgroundSetter = new ImageViewSetter(getActivity(), config);
         mHeaderView = LayoutInflater.from(getContext()).inflate(R.layout.browser_item_header_show, null);
         mHeaderView.findViewById(R.id.loading).setVisibility(View.VISIBLE);
-        mHeaderView.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.video_details_item_height_new));
         addHeaderView();
     }
 
@@ -682,22 +681,18 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             setSeason((TextView)mHeaderView.findViewById(R.id.season));
             setSeasonPlotHeader((TextView)mHeaderView.findViewById(R.id.season_plot_header));
             plotTv.setVisibility(View.VISIBLE);
-            if(!mPlotIsFullyDisplayed)
-                mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height_new);
-            else
-                mHeaderView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+
+            //notify browser adapter that the views are filled with data for wrap content to work
+            mBrowserAdapter.notifyDataSetChanged();
+
             plotTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (((Boolean) plotTv.getTag())) {
                         plotTv.setMaxLines(Integer.MAX_VALUE);
-                        mHeaderView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                        mPlotIsFullyDisplayed = true;
                         plotTv.setTag(false);
                     } else {
                         plotTv.setMaxLines(mContext.getResources().getInteger(R.integer.show_details_max_lines));
-                        mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height_new);
-                        mPlotIsFullyDisplayed = false;
                         plotTv.setTag(true);
                     }
                     mBrowserAdapter.notifyDataSetChanged();
@@ -709,13 +704,9 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 public void onClick(View view) {
                     if (((Boolean) mSeasonPlot.getTag())) {
                         mSeasonPlot.setMaxLines(Integer.MAX_VALUE);
-                        mHeaderView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                        mPlotIsFullyDisplayed = true;
                         mSeasonPlot.setTag(false);
                     } else {
                         mSeasonPlot.setMaxLines(mContext.getResources().getInteger(R.integer.show_details_max_lines));
-                        mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height_new);
-                        mPlotIsFullyDisplayed = false;
                         mSeasonPlot.setTag(true);
                     }
                     mBrowserAdapter.notifyDataSetChanged();
