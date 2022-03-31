@@ -855,7 +855,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
                 // set coordinator layout bottom margin to 140 (40 x 3.5) for episodes selector
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
-                params.bottomMargin = 140;
+                params.bottomMargin = 252;
             }
             else{
                 log.debug("setCurrentVideo: new video and it is NOT an episode");
