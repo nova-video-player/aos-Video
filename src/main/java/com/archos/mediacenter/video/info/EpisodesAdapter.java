@@ -5,12 +5,15 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.archos.mediacenter.video.R;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -42,22 +45,33 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.Episod
 
     @Override
     public void onBindViewHolder(EpisodesAdapter.EpisodesViewHolder vh, int position) {
-        TextView tv = (TextView) vh.itemView;
+        TextView textView = vh.itemView.findViewById(R.id.episode_number);
+        ImageView imageView = vh.itemView.findViewById(R.id.episode_picture);
+        LinearLayout pictureContainer = vh.itemView.findViewById(R.id.episode_picture_container);
         EpisodeModel episodeModel = episodeslist.get(position);
-        tv.setText(Integer.toString(episodeModel.getEpisodeNumber()));
-        tv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        textView.setText(Integer.toString(episodeModel.getEpisodeNumber()));
+        textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+
+        if (episodeModel.getEpisodePath()!=null) {
+            Glide.with(vh.itemView.getContext()).load(episodeModel.getEpisodePath())
+                    .centerCrop().into(imageView);
+        } else {
+            Glide.with(vh.itemView.getContext()).load(R.drawable.default_image)
+                    .centerCrop().into(imageView);
+        }
 
         Drawable background = ResourcesCompat.getDrawable(vh.itemView.getContext().getResources(),
                 R.drawable.episode_selector, null);
 
         if (selectedIndex == position) {
-            //vh.itemView.setBackgroundColor(Color.YELLOW);
-            vh.itemView.setBackground(background);
-            tv.setTextColor(Color.BLACK);
+            pictureContainer.setBackgroundColor(vh.itemView.getContext().getResources().getColor(R.color.green700));
+            textView.setBackground(background);
+            textView.setTextColor(Color.BLACK);
 
         } else {
-            vh.itemView.setBackgroundColor(Color.TRANSPARENT);
-            tv.setTextColor(Color.WHITE);
+            pictureContainer.setBackgroundColor(Color.TRANSPARENT);
+            textView.setBackgroundColor(Color.TRANSPARENT);
+            textView.setTextColor(Color.WHITE);
         }
 
         final int newPosition = position;
@@ -82,10 +96,10 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.Episod
     }
 
     public class EpisodesViewHolder extends RecyclerView.ViewHolder {
-        protected TextView episode;
+        protected TextView episodeNumber;
+        protected ImageView episodePicture;
         public EpisodesViewHolder(View itemView) {
             super(itemView);
-            episode = (TextView) itemView.findViewById(R.id.episode_number);
         }
     }
 }

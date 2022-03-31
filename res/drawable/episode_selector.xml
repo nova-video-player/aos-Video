@@ -4,6 +4,6 @@
 
     <corners
         android:radius="45dp"/>
-    <solid android:color="@color/selected_episode" />
+    <solid android:color="@color/green700" />
 
 </shape>
