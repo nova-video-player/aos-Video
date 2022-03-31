@@ -520,6 +520,20 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             };
             final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
             studioLogos.setAdapter(studioAdapter);
+            // if no Studio file found locally hide studios
+            List<File> availableStudioLogos = new ArrayList<>();
+            int studiosSize;
+            for (int i = 0; i < StudioLogoPaths.size(); i++) {
+                String path = StudioLogoPaths.get(i);
+                File studioFile = new File(path);
+                if (studioFile.exists()){
+                    availableStudioLogos.add(studioFile);
+                }
+            }
+            studiosSize = availableStudioLogos.size();
+            if (studiosSize == 0){
+                studioLogos.setVisibility(View.GONE);
+            }
 
             String studioNames = "";
             String names = "";
