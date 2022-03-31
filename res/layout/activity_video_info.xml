@@ -5,7 +5,6 @@
     android:orientation="vertical">
 
     <androidx.viewpager.widget.ViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,6 +14,8 @@
         android:id="@+id/episode_selector"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="@dimen/video_info_cardview_corner"
+        android:paddingRight="@dimen/video_info_cardview_corner"/>
 
 </RelativeLayout>
