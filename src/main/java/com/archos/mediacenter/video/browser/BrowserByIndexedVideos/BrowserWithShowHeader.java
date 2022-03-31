@@ -458,9 +458,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             setSeriesPremieredContainer((LinearLayout)mHeaderView.findViewById(R.id.premiered_container));
 
 
-            ImageView logo = ((ImageView)mHeaderView.findViewById(R.id.net_logo));
-            Glide.with(mContext).load(tags.getNetworkLogo())
-                    .fitCenter().into(logo);
+            ImageView networkLogo = mHeaderView.findViewById(R.id.network_logo);
+            Picasso.get().load(tags.getNetworkLogo()).fit().centerInside().into(networkLogo);
 
             TextView seriesRating = (TextView) mHeaderView.findViewById(R.id.series_rating);
             seriesRating.setText(String.valueOf(showTags.getRating()));
@@ -580,31 +579,32 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 seriesTags.setOriginallanguage(TvTagsFormatted.get(6));
                 tvShowTags.add(seriesTags);
             }
-            TextView tagline = (TextView) mHeaderView.findViewById(R.id.series_tagline);
+            TextView tagline = mHeaderView.findViewById(R.id.series_tagline);
             tagline.setText(tvShowTags.get(0).getTagline());
             if (tvShowTags.get(0).getTagline().isEmpty()){
                 tagline.setVisibility(View.GONE);
             }
 
-            TextView votes = (TextView) mHeaderView.findViewById(R.id.vote_count);
+            TextView votes = mHeaderView.findViewById(R.id.vote_count);
             votes.setText(tvShowTags.get(0).getVotes());
             if (tvShowTags.get(0).getVotes().isEmpty()){
                 votes.setVisibility(View.GONE);
             }
 
-            TextView status = (TextView) mHeaderView.findViewById(R.id.series_status);
+            TextView status = mHeaderView.findViewById(R.id.series_status);
             status.setText(tvShowTags.get(0).getStatus());
             if (tvShowTags.get(0).getStatus().isEmpty()){
                 status.setVisibility(View.GONE);
             }
 
-            TextView runtime = (TextView) mHeaderView.findViewById(R.id.episode_runtime);
-            runtime.setText(tvShowTags.get(0).getRuntime());
+            TextView episodeRuntime = mHeaderView.findViewById(R.id.episode_runtime);
+            String runtimeReady = tvShowTags.get(0).getRuntime() + " " + getResources().getString(R.string.minutes);
+            episodeRuntime.setText(runtimeReady);
             if (tvShowTags.get(0).getRuntime().isEmpty()){
-                runtime.setVisibility(View.GONE);
+                episodeRuntime.setVisibility(View.GONE);
             }
 
-            TextView showType = (TextView) mHeaderView.findViewById(R.id.showtype);
+            TextView showType = mHeaderView.findViewById(R.id.showtype);
             showType.setText(tvShowTags.get(0).getType());
             if (tvShowTags.get(0).getType().isEmpty()){
                 showType.setVisibility(View.GONE);
@@ -613,8 +613,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             // set Original language
             Locale loc = new Locale(tvShowTags.get(0).getOriginallanguage());
             String name = loc.getDisplayLanguage(loc);
-            TextView mOriginalLanguage = (TextView) mHeaderView.findViewById(R.id.scrap_original_language);
-            LinearLayout mOriginalLanguageContainer = (LinearLayout) mHeaderView.findViewById(R.id.scrap_original_language_container);
+            TextView mOriginalLanguage = mHeaderView.findViewById(R.id.scrap_original_language);
+            LinearLayout mOriginalLanguageContainer = mHeaderView.findViewById(R.id.scrap_original_language_container);
             if (tvShowTags.get(0).getOriginallanguage().isEmpty()) {
                 mOriginalLanguage.setVisibility(View.GONE);
                 mOriginalLanguageContainer.setVisibility(View.GONE);

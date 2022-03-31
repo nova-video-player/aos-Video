@@ -84,41 +84,48 @@
         android:singleLine="true" />
 
     <LinearLayout
-        android:layout_marginTop="2dp"
         android:layout_toEndOf="@+id/thumbnail"
         android:layout_below="@id/series_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="4dp"
-        android:orientation="horizontal">
+        android:layout_marginEnd="10dp"
+        android:orientation="horizontal" >
 
         <LinearLayout
-            android:id="@+id/content_rating_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/rounded_edges">
+            android:layout_weight="1">
 
-            <TextView
-                android:id="@+id/content_rating"
-                android:textSize="@dimen/video_info_small_text"
+            <LinearLayout
+                android:id="@+id/content_rating_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginBottom="1dp"
-                android:gravity="center_horizontal"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:textColor="@color/grid_item_background"
-                />
+                android:layout_gravity="center"
+                android:background="@drawable/rounded_edges">
+
+                <TextView
+                    android:id="@+id/content_rating"
+                    android:textSize="@dimen/video_info_small_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="1dp"
+                    android:gravity="center_horizontal"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
+                    android:textColor="@color/grid_item_background"
+                    />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/episode_runtime_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="22dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_weight="1"
             android:layout_gravity="center"
             android:orientation="horizontal">
@@ -129,25 +136,16 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text"
                 android:textStyle="bold" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="@string/minutes"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"
-                android:textStyle="bold" />
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/net_logo"
+            android:id="@+id/network_logo"
             android:layout_width="52dp"
             android:layout_height="52dp"
-            android:layout_weight="1"
             android:layout_gravity="center"
+            android:gravity="end"
             android:scaleType="center" />
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/info_container"
@@ -158,7 +156,7 @@
         android:layout_marginBottom="5dp"
         android:layout_marginEnd="10dp"
         android:layout_toEndOf="@+id/thumbnail"
-        android:orientation="horizontal">
+        android:orientation="horizontal" >
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -166,7 +164,6 @@
             android:gravity="start"
             android:layout_weight="1.2"
             android:orientation="horizontal">
-
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
@@ -174,7 +171,6 @@
                 android:layout_gravity="center"
                 android:scaleType="centerInside"
                 android:src="@drawable/star_rating" />
-
             <TextView
                 android:id="@+id/series_rating"
                 android:layout_width="wrap_content"
@@ -183,28 +179,17 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text"
                 android:textStyle="bold" />
-
             <TextView
                 android:id="@+id/vote_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="5dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="5dp"
-                android:text="@string/votes"
+                android:layout_marginStart="2dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
         <TextView
-            android:layout_weight="0.4"
             android:layout_gravity="center"
             android:gravity="end"
             android:id="@+id/premiered_year"
@@ -238,9 +223,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/thumbnail"
+        android:orientation="vertical"
         android:paddingStart="2dp"
-        android:paddingEnd="2dp"
-        android:orientation="vertical">
+        android:paddingEnd="2dp">
 
         <TextView
             android:id="@+id/series_tagline"
@@ -256,6 +241,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="10dp">
+
             <TextView
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
@@ -266,13 +252,13 @@
                 android:text="@string/created_by"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
+
             <TextView
+                android:id="@+id/created_by"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/created_by"
-                android:textSize="@dimen/video_info_medium_text"
-                />
+                android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
 
         <LinearLayout
@@ -281,6 +267,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="10dp">
+
             <TextView
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
@@ -291,13 +278,13 @@
                 android:text="@string/scrap_producer"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
+
             <TextView
+                android:id="@+id/producer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/producer"
-                android:textSize="@dimen/video_info_medium_text"
-                />
+                android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
 
 
@@ -307,6 +294,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="10dp">
+
             <TextView
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
@@ -317,13 +305,13 @@
                 android:text="@string/networks"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
+
             <TextView
+                android:id="@+id/network"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/network"
-                android:textSize="@dimen/video_info_medium_text"
-                />
+                android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
 
         <LinearLayout
@@ -332,6 +320,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="10dp">
+
             <TextView
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
@@ -342,13 +331,13 @@
                 android:text="@string/studios"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
+
             <TextView
+                android:id="@+id/studio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/studio"
-                android:textSize="@dimen/video_info_medium_text"
-                />
+                android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
 
         <LinearLayout
@@ -357,6 +346,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="10dp">
+
             <TextView
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
@@ -367,13 +357,13 @@
                 android:text="@string/premiered"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
+
             <TextView
+                android:id="@+id/premiered"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/premiered"
-                android:textSize="@dimen/video_info_medium_text"
-                />
+                android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
 
         <LinearLayout
@@ -382,6 +372,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="10dp">
+
             <TextView
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
@@ -392,13 +383,13 @@
                 android:text="@string/airdate"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
+
             <TextView
+                android:id="@+id/season_airdate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/season_airdate"
-                android:textSize="@dimen/video_info_medium_text"
-                />
+                android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
 
         <LinearLayout
@@ -407,6 +398,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="10dp">
+
             <TextView
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
@@ -417,13 +409,13 @@
                 android:text="@string/genres"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
+
             <TextView
+                android:id="@+id/series_genres"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/series_genres"
-                android:textSize="@dimen/video_info_medium_text"
-                />
+                android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
 
         <LinearLayout
@@ -432,6 +424,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="10dp">
+
             <TextView
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
@@ -442,13 +435,13 @@
                 android:text="@string/show_type"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
+
             <TextView
+                android:id="@+id/showtype"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/showtype"
-                android:textSize="@dimen/video_info_medium_text"
-                />
+                android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
 
         <LinearLayout
@@ -457,6 +450,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="10dp">
+
             <TextView
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
@@ -467,13 +461,13 @@
                 android:text="@string/scrap_musiccomposer"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
+
             <TextView
+                android:id="@+id/musiccomposer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/musiccomposer"
-                android:textSize="@dimen/video_info_medium_text"
-                />
+                android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
 
         <LinearLayout
@@ -482,6 +476,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="10dp">
+
             <TextView
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
@@ -492,13 +487,13 @@
                 android:text="@string/scrap_original_language"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
+
             <TextView
+                android:id="@+id/scrap_original_language"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/scrap_original_language"
-                android:textSize="@dimen/video_info_medium_text"
-                />
+                android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
 
         <LinearLayout
@@ -507,6 +502,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="10dp">
+
             <TextView
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
@@ -517,13 +513,13 @@
                 android:text="@string/scrap_production_countries"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
+
             <TextView
+                android:id="@+id/scrap_production_countries"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/scrap_production_countries"
-                android:textSize="@dimen/video_info_medium_text"
-                />
+                android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
 
         <LinearLayout
@@ -532,6 +528,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="10dp">
+
             <TextView
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
@@ -542,13 +539,13 @@
                 android:text="@string/scrap_spoken_languages"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
+
             <TextView
+                android:id="@+id/scrap_spoken_languages"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/scrap_spoken_languages"
-                android:textSize="@dimen/video_info_medium_text"
-                />
+                android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
 
         <TextView
@@ -631,14 +628,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/video_details_poster_margin_left"
-            android:layout_marginEnd="@dimen/video_details_poster_margin_left"/>
+            android:layout_marginEnd="@dimen/video_details_poster_margin_left" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/studio_logo_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/video_details_poster_margin_left"
-            android:layout_marginEnd="@dimen/video_details_poster_margin_left"/>
+            android:layout_marginEnd="@dimen/video_details_poster_margin_left" />
     </LinearLayout>
 
 </RelativeLayout>
