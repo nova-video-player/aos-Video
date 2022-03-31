@@ -50,6 +50,7 @@ import com.archos.mediacenter.video.browser.adapters.SeriesTags;
 import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
 import com.archos.mediacenter.video.browser.adapters.StudioAdapter;
 import com.archos.mediascraper.EpisodeTags;
+import com.archos.mediascraper.MediaScraper;
 import com.bumptech.glide.Glide;
 
 import com.archos.mediacenter.utils.ActionBarSubmenu;
@@ -522,9 +523,9 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
             String studioNames = "";
             String names = "";
-            String basePath = "/data/user/0/org.courville.nova/app_scraper_studiologos/";
+            String baseStudioPath = MediaScraper.getStudioLogoDirectory(mContext).getPath() + "/";
             for (int i = tags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
-                names = names + tags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(basePath, "").replaceAll(".png", "") + ", ";
+                names = names + tags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(baseStudioPath, "").replaceAll(".png", "") + ", ";
                 studioNames = names.substring(0, names.length() - 2);
             }
             TextView studio = (TextView) mHeaderView.findViewById(R.id.studio);
@@ -545,7 +546,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 castData = new CastData();
                 castData.setName(actorsFormatted.get(0));
                 castData.setCharacter(actorsFormatted.get(1));
-                castData.setPhotoPath("/data/user/0/org.courville.nova/app_scraper_actorphotos" + actorsFormatted.get(2));
+                castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext).getPath() + actorsFormatted.get(2));
                 seriesActors.add(castData);
             }
             LinearLayoutManager actorsLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
