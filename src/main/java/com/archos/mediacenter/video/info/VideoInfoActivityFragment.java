@@ -51,6 +51,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,6 +66,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.ToolbarWidgetWrapper;
 import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
@@ -342,6 +344,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private View mCountriesContainer;
     private TextView mSpokenLanguages;
     private View mSpokenLanguagesContainer;
+    private CoordinatorLayout mCoordinatorLayout;
 
     private ObservableScrollView mScrollView;
 
@@ -561,6 +564,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mCountriesContainer = mRoot.findViewById(R.id.scrap_production_countries_container);
         mSpokenLanguages = mRoot.findViewById(R.id.scrap_spoken_languages);
         mSpokenLanguagesContainer = mRoot.findViewById(R.id.scrap_spoken_languages_container);
+        mCoordinatorLayout = mRoot.findViewById(R.id.coordinator_layout);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -848,6 +852,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 //set episode still image
                 Glide.with(mContext).load(episode.getPictureUri())
                         .centerInside().into(mPictureBackdrop);
+
+                // set coordinator layout bottom margin to 140 (40 x 3.5) for episodes selector
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
+                params.bottomMargin = 140;
             }
             else{
                 log.debug("setCurrentVideo: new video and it is NOT an episode");
