@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/episode_number"
-	android:layout_width="35dp"
-	android:layout_height="35dp"
+	android:layout_width="40dp"
+	android:layout_height="40dp"
 	android:textAppearance="?android:attr/textAppearanceListItemSmall"
+	android:textStyle="bold"
 	android:gravity="center"
 	android:layout_marginRight="1dp"
 	android:layout_marginLeft="1dp"/>
