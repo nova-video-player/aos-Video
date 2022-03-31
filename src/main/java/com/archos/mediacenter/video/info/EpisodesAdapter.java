@@ -51,8 +51,8 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.Episod
                 R.drawable.episode_selector, null);
 
         if (selectedIndex == position) {
-            vh.itemView.setBackgroundColor(Color.YELLOW);
-            //vh.itemView.setBackground(background);
+            //vh.itemView.setBackgroundColor(Color.YELLOW);
+            vh.itemView.setBackground(background);
             tv.setTextColor(Color.BLACK);
 
         } else {
