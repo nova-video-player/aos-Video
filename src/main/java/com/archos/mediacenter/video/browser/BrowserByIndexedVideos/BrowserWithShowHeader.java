@@ -113,7 +113,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     private int mColor;
     protected View mApplicationFrameLayout;
     private boolean mPlotIsFullyDisplayed;
-    private RecyclerView recyclerView;
+    private RecyclerView networkLogos;
     private RecyclerView studioLogos;
     private RecyclerView actors;
     private SeasonsData seasonsData;
@@ -466,13 +466,13 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             seriesRating.setText(String.valueOf(showTags.getRating()));
 
             // setting Network RecyclerView
-            recyclerView = mHeaderView.findViewById(R.id.net_logo_rv);
+            networkLogos = mHeaderView.findViewById(R.id.net_logo_rv);
             List<String> NetworkLogoPaths = new ArrayList<>();
             for (int i = tags.getNetworkLogosLargeFileF().size() - 1; i >= 0; i--) {
                 String avaialbeLogopath = String.valueOf(tags.getNetworkLogosLargeFileF().get(i));
                 NetworkLogoPaths.add(avaialbeLogopath);}
             LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
-            recyclerView.setLayoutManager(layoutManager);
+            networkLogos.setLayoutManager(layoutManager);
             ShowNetworkAdapter.OnItemClickListener indicatorCallback = new ShowNetworkAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(String item) {
@@ -484,8 +484,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 }
             };
             final ShowNetworkAdapter logoAdapter = new ShowNetworkAdapter(NetworkLogoPaths,indicatorCallback);
-            recyclerView.setAdapter(logoAdapter);
-            // if only one logo available locally hide recyclerView
+            networkLogos.setAdapter(logoAdapter);
+            // if only one or zero logo available locally hide networkLogos
             List<File> availableLogos = new ArrayList<>();
             int size;
             for (int i = 0; i < NetworkLogoPaths.size(); i++) {
@@ -496,8 +496,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 }
             }
             size = availableLogos.size();
-            if (size == 1){
-                recyclerView.setVisibility(View.GONE);
+            if (size <= 1){
+                networkLogos.setVisibility(View.GONE);
             }
 
             // setting Studio Logo RecyclerView
