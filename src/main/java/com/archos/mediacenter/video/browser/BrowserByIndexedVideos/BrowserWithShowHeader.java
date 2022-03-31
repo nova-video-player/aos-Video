@@ -563,6 +563,13 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             if (actors.getItemDecorationCount() < 1) {
                 actors.addItemDecoration(new CastAdapter.SpacesItemDecoration(spacing));
             }
+            // hide actors rv & cast header if size = 0
+            TextView actorsHeader = mHeaderView.findViewById(R.id.actors_header);
+            int actorsSize = seriesActors.size();
+            if (actorsSize == 0){
+                actorsHeader.setVisibility(View.GONE);
+                actors.setVisibility(View.GONE);
+            }
 
             List<SeriesTags> tvShowTags = new ArrayList<>();
             SeriesTags seriesTags;
