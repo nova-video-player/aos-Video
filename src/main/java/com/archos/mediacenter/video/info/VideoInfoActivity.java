@@ -16,6 +16,10 @@ package com.archos.mediacenter.video.info;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,12 +33,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
+import com.archos.mediaprovider.VideoDb;
+import com.archos.mediaprovider.video.VideoOpenHelper;
+import com.archos.mediaprovider.video.VideoStore;
+import com.archos.mediascraper.EpisodeTags;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class VideoInfoActivity extends AppCompatActivity {
 
@@ -56,6 +68,7 @@ public class VideoInfoActivity extends AppCompatActivity {
     public static final String EXTRA_USE_VIDEO_METADATA = "useVideoMetadata";
     public static final String EXTRA_PLAYER_TYPE = "playerType";
     public static final String EXTRA_FORCE_VIDEO_SELECTION = "force_video_selection";
+    List<VideoInfoActivityFragment> fragments = new ArrayList<>();
 
     private ArrayList<Uri> mPaths;
     private Video mCurrentVideo;
@@ -63,7 +76,6 @@ public class VideoInfoActivity extends AppCompatActivity {
     private long mId;
     private boolean mForceCurrentPosition;
     private Fragment mCurrentFragment;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,16 +95,76 @@ public class VideoInfoActivity extends AppCompatActivity {
         if(getIntent().hasExtra(EXTRA_VIDEO))
             mCurrentVideo = (Video) getIntent().getSerializableExtra(EXTRA_VIDEO);
 
-        mForceCurrentPosition = getIntent().getBooleanExtra(EXTRA_FORCE_VIDEO_SELECTION, false);
-        mGlobalBackdrop = getLayoutInflater().inflate(R.layout.browser_main_video_backdrop, null);
         setContentView(R.layout.activity_video_info);
         mViewPager = (ViewPager)findViewById(R.id.pager);
+
+        // episode selector
+        if(mCurrentVideo instanceof Episode) {
+            Episode episodeVideo = (Episode) mCurrentVideo;
+            long onlineId = episodeVideo.getOnlineId();
+            int season = episodeVideo.getSeasonNumber();
+
+            List<Integer> mEpisodesList = getShowEpisodesListForSeason(onlineId, season, getApplicationContext());
+            List<EpisodeModel> episodeModelList = new ArrayList<>();
+
+            for (int i = 0; i < mEpisodesList.size(); i++) {
+                int episode = mEpisodesList.get(i);
+                EpisodeModel episodeModel = new EpisodeModel();
+                episodeModel.setEpisodeNumber(episode);
+                episodeModelList.add(episodeModel);
+            }
+            RecyclerView mEpisodes = (RecyclerView)findViewById(R.id.episode_selector);
+            LinearLayoutManager layoutManager
+                    = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+            mEpisodes.setLayoutManager(layoutManager);
+
+            // Setting RecyclerView Adapter
+            EpisodesAdapter.OnItemClickListener onItemClickListener = new EpisodesAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    mViewPager.setCurrentItem(position, false);
+                }
+            };
+            final EpisodesAdapter episodesAdapter = new EpisodesAdapter(episodeModelList, onItemClickListener);
+            mEpisodes.setAdapter(episodesAdapter);
+
+            episodesAdapter.setSelectedIndex(mCurrentPosition);
+            mEpisodes.smoothScrollToPosition(mCurrentPosition);
+
+            mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+                @Override
+                public void onPageSelected(int position) {
+                    episodesAdapter.setSelectedIndex(position);
+                    episodesAdapter.notifyDataSetChanged();
+                    mEpisodes.smoothScrollToPosition(position);
+                }
+            });
+        }
+
+        mForceCurrentPosition = getIntent().getBooleanExtra(EXTRA_FORCE_VIDEO_SELECTION, false);
+        mGlobalBackdrop = getLayoutInflater().inflate(R.layout.browser_main_video_backdrop, null);
         mViewPager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager()));
         if(mCurrentPosition>0)
             mViewPager.setCurrentItem(mCurrentPosition);
         globalLayout.addView(mGlobalBackdrop, 0);
+    }
 
-
+    private List<Integer> getShowEpisodesListForSeason(Long onlineId, int season, Context context) {
+        SQLiteDatabase db = VideoDb.get(context);
+        Cursor cursor = db.rawQuery("SELECT " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE +
+                        " FROM " + VideoOpenHelper.VIDEO_VIEW_NAME +
+                        " WHERE (" + VideoStore.Video.VideoColumns.SCRAPER_S_ONLINE_ID + " = " + onlineId +
+                        " AND " + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + " = " + season + ")" +
+                        " GROUP BY " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE +
+                        " ORDER BY " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE
+                , null);
+        List<Integer> result = new ArrayList<>();
+        if (cursor != null) {
+            while (cursor.moveToNext())
+                result.add(cursor.getInt(0));
+            cursor.close();
+        }
+        return result;
     }
 
     protected void onStop(){
