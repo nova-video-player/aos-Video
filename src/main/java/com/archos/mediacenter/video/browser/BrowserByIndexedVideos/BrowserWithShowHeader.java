@@ -586,9 +586,11 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             }
 
             TextView votes = mHeaderView.findViewById(R.id.vote_count);
-            votes.setText(tvShowTags.get(0).getVotes());
+            String voteCountReady = tvShowTags.get(0).getVotes() + " " + getResources().getString(R.string.votes);
             if (tvShowTags.get(0).getVotes().isEmpty()){
                 votes.setVisibility(View.GONE);
+            }else{
+                votes.setText(voteCountReady);
             }
 
             TextView status = mHeaderView.findViewById(R.id.series_status);
