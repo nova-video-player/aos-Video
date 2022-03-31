@@ -105,7 +105,7 @@ public class VideoInfoActivity extends AppCompatActivity {
             int season = episodeVideo.getSeasonNumber();
 
             List<EpisodeModel> episodes = new ArrayList<>();
-            Cursor cursor = getShowEpisodeNumbersForSeason55(onlineId, season, getApplicationContext());
+            Cursor cursor = getShowEpisodesListForSeason(onlineId, season, getApplicationContext());
             if (cursor != null) {
                 int mEpisodePictureColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE);
                 int mEpisodeNumberColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE);
@@ -154,24 +154,7 @@ public class VideoInfoActivity extends AppCompatActivity {
         globalLayout.addView(mGlobalBackdrop, 0);
     }
 
-    private List<Integer> getShowEpisodesListForSeason(Long onlineId, int season, Context context) {
-        SQLiteDatabase db = VideoDb.get(context);
-        Cursor cursor = db.rawQuery("SELECT " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE +
-                        " FROM " + VideoOpenHelper.VIDEO_VIEW_NAME +
-                        " WHERE (" + VideoStore.Video.VideoColumns.SCRAPER_S_ONLINE_ID + " = " + onlineId +
-                        " AND " + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + " = " + season + ")" +
-                        " GROUP BY " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE +
-                        " ORDER BY " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE
-                , null);
-        List<Integer> result = new ArrayList<>();
-        if (cursor != null) {
-            while (cursor.moveToNext())
-                result.add(cursor.getInt(0));
-            cursor.close();
-        }
-        return result;
-    }
-    private Cursor getShowEpisodeNumbersForSeason55(Long onlineId, int season, Context context) {
+    private Cursor getShowEpisodesListForSeason(Long onlineId, int season, Context context) {
         SQLiteDatabase db = VideoDb.get(context);
         return db.rawQuery( "SELECT " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE + ", " + VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE +
                         " FROM " + VideoOpenHelper.VIDEO_VIEW_NAME +
