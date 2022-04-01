@@ -573,9 +573,9 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 names = names + tags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(baseStudioPath, "").replaceAll(".png", "") + ", ";
                 studioNames = names.substring(0, names.length() - 2);
             }
-            TextView studio = (TextView) mHeaderView.findViewById(R.id.studio);
+            TextView studio = mHeaderView.findViewById(R.id.studio);
             studio.setText(studioNames);
-            LinearLayout studioNamesContainer = (LinearLayout) mHeaderView.findViewById(R.id.studio_container);
+            LinearLayout studioNamesContainer = mHeaderView.findViewById(R.id.studio_container);
             if (studioNames.isEmpty())
                 studioNamesContainer.setVisibility(View.GONE);
 
@@ -678,8 +678,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             }
 
             // set production countries
-            TextView mCountries = (TextView) mHeaderView.findViewById(R.id.scrap_production_countries);
-            LinearLayout mCountriesContainer = (LinearLayout) mHeaderView.findViewById(R.id.scrap_production_countries_container);
+            TextView mCountries = mHeaderView.findViewById(R.id.scrap_production_countries);
+            LinearLayout mCountriesContainer = mHeaderView.findViewById(R.id.scrap_production_countries_container);
             if (showTags.getCountriesFormatted() == null || showTags.getCountriesFormatted().isEmpty()){
                 mCountries.setVisibility(View.GONE);
                 mCountriesContainer.setVisibility(View.GONE);
@@ -688,8 +688,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             }
 
             // set spoken languages
-            TextView mSpokenLanguages = (TextView) mHeaderView.findViewById(R.id.scrap_spoken_languages);
-            LinearLayout mSpokenLanguagesContainer = (LinearLayout) mHeaderView.findViewById(R.id.scrap_spoken_languages_container);
+            TextView mSpokenLanguages = mHeaderView.findViewById(R.id.scrap_spoken_languages);
+            LinearLayout mSpokenLanguagesContainer = mHeaderView.findViewById(R.id.scrap_spoken_languages_container);
             if (showTags.getSpokenlanguagesFormatted() == null || showTags.getSpokenlanguagesFormatted().isEmpty()){
                 mSpokenLanguages.setVisibility(View.GONE);
                 mSpokenLanguagesContainer.setVisibility(View.GONE);
@@ -697,7 +697,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 mSpokenLanguages.setText(showTags.getSpokenlanguagesFormatted());
             }
 
-            ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));
+            ImageView posterView = mHeaderView.findViewById(R.id.thumbnail);
             posterView.setImageBitmap(result.bitmap);
             posterView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -709,11 +709,11 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             setColor(mColor);
 
             ((TextView)mHeaderView.findViewById(R.id.name)).setText(show.getName());
-            ImageView seriesClearLogo = ((ImageView)mHeaderView.findViewById(R.id.show_clearlogo));
+            ImageView seriesClearLogo = mHeaderView.findViewById(R.id.show_clearlogo);
             Glide.with(mContext).load(tags.getClearLogo())
                     .centerInside().into(seriesClearLogo);
             if (tags.getClearLogo() != null){
-                ((TextView)mHeaderView.findViewById(R.id.name)).setVisibility(View.GONE);
+                mHeaderView.findViewById(R.id.name).setVisibility(View.GONE);
             } else {
                 seriesClearLogo.setVisibility(View.GONE);
             }
@@ -733,8 +733,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             plotTv.setTag(true);
             mSeasonPlot.setTag(true);
 
-            setSeason((TextView)mHeaderView.findViewById(R.id.season));
-            setSeasonPlotHeader((TextView)mHeaderView.findViewById(R.id.season_plot_header));
+            setSeason(mHeaderView.findViewById(R.id.season));
+            setSeasonPlotHeader(mHeaderView.findViewById(R.id.season_plot_header));
             plotTv.setVisibility(View.VISIBLE);
 
             //notify browser adapter that the views are filled with data for wrap content to work
