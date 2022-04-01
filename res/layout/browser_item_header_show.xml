@@ -103,7 +103,6 @@
         style="@style/BrowserText.Name.Video"
         android:layout_width="match_parent"
         android:layout_below="@id/name"
-        android:layout_marginTop="3dip"
         android:layout_toEndOf="@id/series_thumbnail_cardview"
         android:paddingTop="0dip"
         android:singleLine="true" />
