@@ -33,24 +33,31 @@
     </androidx.cardview.widget.CardView>
 
     <!-- Poster on the left side -->
-    <ImageView
-        android:id="@+id/thumbnail"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/series_thumbnail_cardview"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_below="@id/series_backdrop_cardview"
-        android:layout_width="@dimen/video_details_poster_width"
-        android:layout_height="@dimen/video_details_poster_height"
-        android:layout_marginStart="@dimen/video_details_poster_margin_left"
-        android:layout_marginTop="@dimen/video_details_poster_margin_top"
+        card_view:cardCornerRadius="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_marginStart="2dp"
         android:layout_marginEnd="@dimen/content_list_space_between_thumbnail_and_name"
-        android:layout_marginBottom="@dimen/video_details_poster_margin_bottom"
-        android:background="@color/default_icon_background"
-        android:scaleType="center" />
+        android:layout_gravity="center_horizontal"	>
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="@dimen/video_details_poster_width"
+            android:layout_height="@dimen/video_details_poster_height"
+            android:background="@color/default_icon_background"
+            android:scaleType="center" />
+    </androidx.cardview.widget.CardView>
 
     <ImageView
         android:id="@+id/flag_3d"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/thumbnail"
-        android:layout_alignEnd="@id/thumbnail"
+        android:layout_alignBottom="@id/series_thumbnail_cardview"
+        android:layout_alignEnd="@id/series_thumbnail_cardview"
         android:layout_marginBottom="@dimen/video_3d_label_margin_grid"
         android:layout_marginEnd="@dimen/video_3d_label_margin_grid"
         app:srcCompat="@drawable/label_3d"
@@ -60,8 +67,8 @@
         android:id="@+id/trakt_watched"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@id/thumbnail"
-        android:layout_alignTop="@id/thumbnail"
+        android:layout_alignEnd="@id/series_thumbnail_cardview"
+        android:layout_alignTop="@id/series_thumbnail_cardview"
         app:srcCompat="@drawable/watched_icon_corner"
         android:visibility="gone" />
 
@@ -69,8 +76,8 @@
         android:id="@+id/trakt_library"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@id/thumbnail"
-        android:layout_alignTop="@id/thumbnail"
+        android:layout_alignStart="@id/series_thumbnail_cardview"
+        android:layout_alignTop="@id/series_thumbnail_cardview"
         android:layout_marginStart="@dimen/video_trakt_library_margin_left"
         android:scaleType="fitStart"
         app:srcCompat="@drawable/label_trakt_library"
@@ -84,7 +91,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/show_clearlogo"
         android:layout_marginTop="8dip"
-        android:layout_toEndOf="@id/thumbnail"
+        android:layout_toEndOf="@id/series_thumbnail_cardview"
         android:paddingTop="8dip"
         android:singleLine="true"
         android:textSize="24sp"
@@ -97,12 +104,12 @@
         android:layout_width="match_parent"
         android:layout_below="@id/name"
         android:layout_marginTop="3dip"
-        android:layout_toEndOf="@id/thumbnail"
+        android:layout_toEndOf="@id/series_thumbnail_cardview"
         android:paddingTop="0dip"
         android:singleLine="true" />
 
     <LinearLayout
-        android:layout_toEndOf="@+id/thumbnail"
+        android:layout_toEndOf="@+id/series_thumbnail_cardview"
         android:layout_below="@id/series_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -173,7 +180,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:layout_marginEnd="10dp"
-        android:layout_toEndOf="@+id/thumbnail"
+        android:layout_toEndOf="@+id/series_thumbnail_cardview"
         android:orientation="horizontal" >
         <LinearLayout
             android:layout_width="0dp"
@@ -220,7 +227,7 @@
     <TextView
         android:id="@+id/series_status"
         android:layout_below="@id/info_container"
-        android:layout_toEndOf="@+id/thumbnail"
+        android:layout_toEndOf="@+id/series_thumbnail_cardview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -233,7 +240,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="2dp"
-        android:layout_toEndOf="@id/thumbnail"
+        android:layout_toEndOf="@id/series_thumbnail_cardview"
         android:adjustViewBounds="true"
         android:scaleType="fitStart" />
 
@@ -241,7 +248,7 @@
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/thumbnail"
+        android:layout_below="@+id/series_thumbnail_cardview"
         android:orientation="vertical"
         android:paddingStart="2dp"
         android:paddingEnd="2dp">
