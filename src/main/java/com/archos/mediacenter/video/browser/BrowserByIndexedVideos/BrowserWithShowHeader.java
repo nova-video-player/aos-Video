@@ -30,7 +30,6 @@ import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -52,10 +51,7 @@ import com.archos.mediacenter.video.browser.adapters.SeasonsData;
 import com.archos.mediacenter.video.browser.adapters.SeriesTags;
 import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
 import com.archos.mediacenter.video.browser.adapters.StudioAdapter;
-import com.archos.mediacenter.video.info.VideoInfoActivityFragment;
-import com.archos.mediascraper.EpisodeTags;
 import com.archos.mediascraper.MediaScraper;
-import com.bumptech.glide.Glide;
 
 import com.archos.mediacenter.utils.ActionBarSubmenu;
 import com.archos.mediacenter.utils.imageview.ImageProcessor;
@@ -710,9 +706,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
             ((TextView)mHeaderView.findViewById(R.id.name)).setText(show.getName());
             ImageView seriesClearLogo = mHeaderView.findViewById(R.id.show_clearlogo);
-            Glide.with(mContext).load(tags.getClearLogo())
-                    .centerInside().into(seriesClearLogo);
             if (tags.getClearLogo() != null){
+                Picasso.get().load(tags.getClearLogo()).into(seriesClearLogo);
                 mHeaderView.findViewById(R.id.name).setVisibility(View.GONE);
             } else {
                 seriesClearLogo.setVisibility(View.GONE);

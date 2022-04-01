@@ -211,11 +211,12 @@
 
     <ImageView
         android:id="@+id/show_clearlogo"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="2dp"
         android:layout_toEndOf="@id/thumbnail"
-        android:scaleType="center" />
+        android:scaleType="fitStart"
+        android:adjustViewBounds="true" />
 
     <LinearLayout
         android:id="@+id/main_layout"
