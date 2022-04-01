@@ -15,9 +15,27 @@
         android:id="@+id/loading"
         android:layout_centerInParent="true" />
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/series_backdrop_cardview"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        card_view:cardCornerRadius="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_gravity="center_horizontal"	>
+        <ImageView
+            android:id="@+id/series_backdrop"
+            android:layout_width="match_parent"
+            android:layout_height="210dp"
+            android:scaleType="centerCrop" />
+    </androidx.cardview.widget.CardView>
+
     <!-- Poster on the left side -->
     <ImageView
         android:id="@+id/thumbnail"
+        android:layout_below="@id/series_backdrop_cardview"
         android:layout_width="@dimen/video_details_poster_width"
         android:layout_height="@dimen/video_details_poster_height"
         android:layout_marginStart="@dimen/video_details_poster_margin_left"
@@ -211,12 +229,13 @@
 
     <ImageView
         android:id="@+id/show_clearlogo"
+        android:layout_below="@id/series_backdrop_cardview"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="2dp"
         android:layout_toEndOf="@id/thumbnail"
-        android:scaleType="fitStart"
-        android:adjustViewBounds="true" />
+        android:adjustViewBounds="true"
+        android:scaleType="fitStart" />
 
     <LinearLayout
         android:id="@+id/main_layout"

@@ -108,6 +108,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
     private ImageViewSetter mBackgroundSetter;
     private ImageProcessor mBackgroundLoader;
+    private ImageProcessor mSeriesBackdropLoader;
     private ImageView mApplicationBackdrop;
     private SerialExecutor mSerialExecutor;
     private int mColor;
@@ -132,6 +133,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         mHideWatched = false;
 
         mBackgroundLoader = new DelayedBackgroundLoader(getActivity(), 800, 0.2f);
+        mSeriesBackdropLoader = new DelayedBackgroundLoader(getActivity(), 0, 1);
 
     }
     public void onViewCreated(View v, Bundle save){
@@ -457,6 +459,19 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
             TextView seriesRating = mHeaderView.findViewById(R.id.series_rating);
             seriesRating.setText(String.valueOf(showTags.getRating()));
+
+            // set series backdrop at top
+            ImageView seriesBackdrop = mHeaderView.findViewById(R.id.series_backdrop);
+            mBackgroundSetter.set(seriesBackdrop, mSeriesBackdropLoader, tags.getDefaultBackdrop());
+            seriesBackdrop.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
+                    intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mShow);
+                    intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_BACKDROP, true);
+                    startActivity(intent);
+                }
+            });
 
             ImageView networkLogo = mHeaderView.findViewById(R.id.network_logo);
 
