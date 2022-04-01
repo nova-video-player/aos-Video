@@ -42,6 +42,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -145,7 +146,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         mApplicationBackdrop = (ImageView) (((MainActivity) getActivity()).getGlobalBackdropView().findViewById(R.id.backdrop));
         mApplicationBackdrop.setAlpha(0f);
         mBackgroundSetter = new ImageViewSetter(getActivity(), config);
-        mHeaderView = LayoutInflater.from(getContext()).inflate(R.layout.browser_item_header_show, null);
+        mHeaderView = LayoutInflater.from(getContext()).inflate(R.layout.browser_item_header_show, new RelativeLayout(mContext), false);
         mHeaderView.findViewById(R.id.loading).setVisibility(View.VISIBLE);
         addHeaderView();
     }
