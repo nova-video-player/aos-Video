@@ -370,15 +370,12 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             Tvshow show = result.show;
             BaseTags tags = result.tags;
             ShowTags showTags = result.tags;
-            EpisodeTags episodeTags = new EpisodeTags();
 
-            ScraperImage image = new ScraperImage(ScraperImage.Type.SHOW_NETWORK, mTitle);
-
-            final TextView plotTv = (TextView) mHeaderView.findViewById(R.id.series_plot);
+            final TextView plotTv = mHeaderView.findViewById(R.id.series_plot);
             mHeaderView.findViewById(R.id.loading).setVisibility(View.GONE);
 
-            TextView tvpg = (TextView) mHeaderView.findViewById(R.id.content_rating);
-            View tvpgContainer = (View) mHeaderView.findViewById(R.id.content_rating_container);
+            TextView tvpg = mHeaderView.findViewById(R.id.content_rating);
+            View tvpgContainer = mHeaderView.findViewById(R.id.content_rating_container);
             if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
                 tvpg.setVisibility(View.GONE);
                 tvpgContainer.setVisibility(View.GONE);
@@ -387,22 +384,22 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             }
 
             // Utilizing the unused series director as a pipeline for series created by tag
-            TextView createdBy = (TextView) mHeaderView.findViewById(R.id.created_by);
+            TextView createdBy = mHeaderView.findViewById(R.id.created_by);
             createdBy.setText(tags.getDirectorsFormatted());
-            LinearLayout createdbyContainer = (LinearLayout) mHeaderView.findViewById(R.id.created_by_container);
+            LinearLayout createdbyContainer = mHeaderView.findViewById(R.id.created_by_container);
             if (tags.getDirectorsFormatted() == null)
                 createdbyContainer.setVisibility(View.GONE);
 
 
-            TextView producer = (TextView) mHeaderView.findViewById(R.id.producer);
+            TextView producer = mHeaderView.findViewById(R.id.producer);
             producer.setText(tags.getProducersFormatted());
-            LinearLayout producerContainer = (LinearLayout) mHeaderView.findViewById(R.id.producer_container);
+            LinearLayout producerContainer = mHeaderView.findViewById(R.id.producer_container);
             if (tags.getProducersFormatted() == null)
                 producerContainer.setVisibility(View.GONE);
 
             // set Original Music Composer
-            TextView mMusiccomposer = (TextView) mHeaderView.findViewById(R.id.musiccomposer);
-            LinearLayout mMusiccomposerContainer = (LinearLayout) mHeaderView.findViewById(R.id.musiccomposer_container);
+            TextView mMusiccomposer = mHeaderView.findViewById(R.id.musiccomposer);
+            LinearLayout mMusiccomposerContainer = mHeaderView.findViewById(R.id.musiccomposer_container);
             if (tags.getMusiccomposersFormatted() == null || tags.getMusiccomposersFormatted().isEmpty()) {
                 mMusiccomposer.setVisibility(View.GONE);
                 mMusiccomposerContainer.setVisibility(View.GONE);
@@ -410,26 +407,26 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 mMusiccomposer.setText(tags.getMusiccomposersFormatted());
             }
 
-            TextView network = (TextView) mHeaderView.findViewById(R.id.network);
+            TextView network = mHeaderView.findViewById(R.id.network);
             network.setText(show.getStudio());
 
-            TextView Premiered = (TextView) mHeaderView.findViewById(R.id.premiered);
+            TextView Premiered = mHeaderView.findViewById(R.id.premiered);
             String pattern = "MMMM dd, yyyy";
             DateFormat df = new SimpleDateFormat(pattern);
             Date date = showTags.getPremiered();
             String dateAsString = df.format(date);
             Premiered.setText(dateAsString);
 
-            TextView PremieredYear = (TextView) mHeaderView.findViewById(R.id.premiered_year);
+            TextView PremieredYear = mHeaderView.findViewById(R.id.premiered_year);
             PremieredYear.setText(Integer.toString(showTags.getPremieredYear()));
 
-            TextView seriesGenres = (TextView) mHeaderView.findViewById(R.id.series_genres);
+            TextView seriesGenres = mHeaderView.findViewById(R.id.series_genres);
             seriesGenres.setText(showTags.getGenresFormatted());
 
-            TextView mSeasonPlot = (TextView) mHeaderView.findViewById(R.id.season_plot);
-            TextView seasonPlotHeader = (TextView) mHeaderView.findViewById(R.id.season_plot_header);
-            TextView seasonAirDate = (TextView) mHeaderView.findViewById(R.id.season_airdate);
-            LinearLayout seasonAirDateContainer = (LinearLayout) mHeaderView.findViewById(R.id.season_airdate_container);
+            TextView mSeasonPlot = mHeaderView.findViewById(R.id.season_plot);
+            TextView seasonPlotHeader = mHeaderView.findViewById(R.id.season_plot_header);
+            TextView seasonAirDate = mHeaderView.findViewById(R.id.season_airdate);
+            LinearLayout seasonAirDateContainer = mHeaderView.findViewById(R.id.season_airdate_container);
             List <String>  seasonPlots = showTags.getSeasonPlots();
             List <SeasonsData>  finalSeasonPlots = new ArrayList<>();
             for (int i = 0; i < seasonPlots.size(); i++) {
@@ -458,11 +455,11 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                         seasonAirDateContainer.setVisibility(View.GONE);
                 }
             }
-            setSeasonPlot((TextView)mHeaderView.findViewById(R.id.season_plot));
-            setSeasonAirDateContainer((LinearLayout)mHeaderView.findViewById(R.id.season_airdate_container));
-            setSeriesPremieredContainer((LinearLayout)mHeaderView.findViewById(R.id.premiered_container));
+            setSeasonPlot(mHeaderView.findViewById(R.id.season_plot));
+            setSeasonAirDateContainer(mHeaderView.findViewById(R.id.season_airdate_container));
+            setSeriesPremieredContainer(mHeaderView.findViewById(R.id.premiered_container));
 
-            TextView seriesRating = (TextView) mHeaderView.findViewById(R.id.series_rating);
+            TextView seriesRating = mHeaderView.findViewById(R.id.series_rating);
             seriesRating.setText(String.valueOf(showTags.getRating()));
 
             ImageView networkLogo = mHeaderView.findViewById(R.id.network_logo);
