@@ -40,7 +40,7 @@
 
 	</LinearLayout>
 	<ImageView
-		android:id="@+id/new_logo_image"
+		android:id="@+id/toast_logo_image"
 		android:layout_width="52dp"
 		android:layout_height="52dp"
 		android:scaleType="center" />

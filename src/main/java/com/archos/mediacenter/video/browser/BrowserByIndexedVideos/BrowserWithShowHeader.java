@@ -494,7 +494,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                             mHeaderView.findViewById(R.id.toast_layout_root));
                     TextView header = layout.findViewById(R.id.header);
                     TextView newLogoText = layout.findViewById(R.id.new_logo_text);
-                    ImageView newLogoImage = layout.findViewById(R.id.new_logo_image);
+                    ImageView newLogoImage = layout.findViewById(R.id.toast_logo_image);
                     Picasso.get().load(showTags.getNetworkLogosLargeFileF().get(position)).fit().centerInside().into(newLogoImage);
                     header.setText(getResources().getString(R.string.networklogo_changed));
                     newLogoText.setText(clicked_logoName);

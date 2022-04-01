@@ -2124,7 +2124,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                                     mRoot.findViewById(R.id.toast_layout_root));
                             TextView header = layout.findViewById(R.id.header);
                             TextView newLogoText = layout.findViewById(R.id.new_logo_text);
-                            ImageView newLogoImage = layout.findViewById(R.id.new_logo_image);
+                            ImageView newLogoImage = layout.findViewById(R.id.toast_logo_image);
                             Glide.with(mContext).load(showTags.getNetworkLogosLargeFileF().get(position))
                                     .fitCenter().into(newLogoImage);
                             header.setText(getResources().getString(R.string.networklogo_changed));
@@ -2365,7 +2365,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                                     mRoot.findViewById(R.id.toast_layout_root));
                             TextView header = layout.findViewById(R.id.header);
                             TextView newLogoText = layout.findViewById(R.id.new_logo_text);
-                            ImageView newLogoImage = layout.findViewById(R.id.new_logo_image);
+                            ImageView newLogoImage = layout.findViewById(R.id.toast_logo_image);
                             Glide.with(mContext).load(tags.getStudioLogosLargeFileF().get(position))
                                     .fitCenter().into(newLogoImage);
                             header.setText(getResources().getString(R.string.studiologo_changed));
