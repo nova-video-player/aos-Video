@@ -16,6 +16,7 @@
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -31,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,6 +44,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.archos.mediacenter.video.browser.adapters.CastAdapter;
 import com.archos.mediacenter.video.browser.adapters.CastData;
@@ -49,6 +52,7 @@ import com.archos.mediacenter.video.browser.adapters.SeasonsData;
 import com.archos.mediacenter.video.browser.adapters.SeriesTags;
 import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
 import com.archos.mediacenter.video.browser.adapters.StudioAdapter;
+import com.archos.mediacenter.video.info.VideoInfoActivityFragment;
 import com.archos.mediascraper.EpisodeTags;
 import com.archos.mediascraper.MediaScraper;
 import com.bumptech.glide.Glide;
@@ -465,10 +469,13 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             TextView seriesRating = (TextView) mHeaderView.findViewById(R.id.series_rating);
             seriesRating.setText(String.valueOf(showTags.getRating()));
 
-            // setting Network RecyclerView
+            // setting Networks RecyclerView
+            String baseNetworkPath = MediaScraper.getNetworkLogoDirectory(mContext).getPath() + "/";
+            String extension = ".png";
+            List<ScraperImage> networkImage = showTags.getNetworkLogos();
             networkLogos = mHeaderView.findViewById(R.id.net_logo_rv);
             List<String> NetworkLogoPaths = new ArrayList<>();
-            for (int i = tags.getNetworkLogosLargeFileF().size() - 1; i >= 0; i--) {
+            for (int i = 0; i < tags.getNetworkLogosLargeFileF().size(); i++) {
                 String avaialbeLogopath = String.valueOf(tags.getNetworkLogosLargeFileF().get(i));
                 NetworkLogoPaths.add(avaialbeLogopath);}
             LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
@@ -480,7 +487,25 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
                 @Override
                 public void onItemLongClick(int position) {
-
+                    String path = NetworkLogoPaths.get(position);
+                    String clicked_logoName = path.replace(baseNetworkPath, "").replace(extension, "");
+                    LayoutInflater inflater = LayoutInflater.from(mContext);
+                    View layout = inflater.inflate(R.layout.custom_toast,
+                            mHeaderView.findViewById(R.id.toast_layout_root));
+                    TextView header = layout.findViewById(R.id.header);
+                    TextView newLogoText = layout.findViewById(R.id.new_logo_text);
+                    ImageView newLogoImage = layout.findViewById(R.id.new_logo_image);
+                    Picasso.get().load(showTags.getNetworkLogosLargeFileF().get(position)).fit().centerInside().into(newLogoImage);
+                    header.setText(getResources().getString(R.string.networklogo_changed));
+                    newLogoText.setText(clicked_logoName);
+                    Toast toast = new Toast(mContext);
+                    toast.setGravity(Gravity.BOTTOM, 0, 50);
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.setView(layout);
+                    toast.show();
+                    Picasso.get().load(showTags.getNetworkLogosLargeFileF().get(position)).fit().centerInside().into(networkLogo);
+                    ScraperImage clickedImage = networkImage.get(position);
+                    new BrowserWithShowHeader.LogoSaver(mContext).execute(clickedImage);
                 }
             };
             final ShowNetworkAdapter logoAdapter = new ShowNetworkAdapter(NetworkLogoPaths,indicatorCallback);
@@ -740,6 +765,22 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             if(result.tags!=null&&result.tags.getDefaultBackdrop()!=null)
                 mBackgroundSetter.set(mApplicationBackdrop, mBackgroundLoader, result.tags.getDefaultBackdrop());
 
+        }
+    }
+
+    public class LogoSaver extends AsyncTask<ScraperImage, Void, Void> {
+        public LogoSaver(Context context) {
+            mContext = context;
+        }
+        @Override
+        protected Void doInBackground(ScraperImage... params) {
+            if (params != null && params.length > 0) {
+                params[0].setAsDefault(mContext);
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
         }
     }
 
