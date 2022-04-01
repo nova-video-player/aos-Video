@@ -462,12 +462,10 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             setSeasonAirDateContainer((LinearLayout)mHeaderView.findViewById(R.id.season_airdate_container));
             setSeriesPremieredContainer((LinearLayout)mHeaderView.findViewById(R.id.premiered_container));
 
-
-            ImageView networkLogo = mHeaderView.findViewById(R.id.network_logo);
-            Picasso.get().load(tags.getNetworkLogo()).fit().centerInside().into(networkLogo);
-
             TextView seriesRating = (TextView) mHeaderView.findViewById(R.id.series_rating);
             seriesRating.setText(String.valueOf(showTags.getRating()));
+
+            ImageView networkLogo = mHeaderView.findViewById(R.id.network_logo);
 
             // setting Networks RecyclerView
             String baseNetworkPath = MediaScraper.getNetworkLogoDirectory(mContext).getPath() + "/";
@@ -523,6 +521,17 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             size = availableLogos.size();
             if (size <= 1){
                 networkLogos.setVisibility(View.GONE);
+            }
+            // Set default series network logo
+            if (tags.getNetworkLogo() != null){
+                File networkFile = new File(tags.getNetworkLogo().getPath());
+                if (networkFile.exists()){
+                    Picasso.get().load(tags.getNetworkLogo()).fit().centerInside().into(networkLogo);
+                } else {
+                    for (int i = 0; i < availableLogos.size(); i++) {
+                        Picasso.get().load(availableLogos.get(0)).fit().centerInside().into(networkLogo);
+                    }
+                }
             }
 
             // setting Studio Logo RecyclerView
