@@ -9,7 +9,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 import com.archos.mediacenter.video.R;
 import com.archos.mediascraper.MediaScraper;
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.List;
@@ -37,7 +37,7 @@ public class ShowNetworkAdapter extends RecyclerView.Adapter<ShowNetworkAdapter.
         final String path = NetworkLogoPaths.get(position);
         File file = new File(path);
         if (file.exists()){
-            Glide.with(vh.itemView.getContext()).load(path).into(vh.logoImage);
+            Picasso.get().load(file).into(vh.logoImage);
         } else {
             ViewGroup.LayoutParams params = vh.itemView.getLayoutParams();
             params.height = 0;
