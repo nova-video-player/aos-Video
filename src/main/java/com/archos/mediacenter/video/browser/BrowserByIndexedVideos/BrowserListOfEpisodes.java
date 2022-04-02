@@ -267,8 +267,6 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
 
     @Override
     protected void setSeason(TextView seasonView) {
-        String season = getResources().getString(R.string.episode_season) + " " + mSeason;
-        seasonView.setText(season);
     }
 
     @Override

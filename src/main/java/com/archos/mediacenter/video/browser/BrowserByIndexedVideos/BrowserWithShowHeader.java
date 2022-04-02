@@ -744,7 +744,17 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             plotTv.setTag(true);
             mSeasonPlot.setTag(true);
 
+            //set season zero name (specials or extra)
+            TextView mSeason = mHeaderView.findViewById(R.id.season);
+            String season = "";
+            if (currentSeason == 0){
+                season = tags.getSeasonTags().get(0).getSeasonName();
+            } else{
+                season = getResources().getString(R.string.episode_season) + " " + currentSeason;
+            }
+            mSeason.setText(season);
             setSeason(mHeaderView.findViewById(R.id.season));
+
             setSeasonPlotHeader(mHeaderView.findViewById(R.id.season_plot_header));
             plotTv.setVisibility(View.VISIBLE);
 
