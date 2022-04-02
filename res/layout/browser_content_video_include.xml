@@ -38,7 +38,7 @@
 
     <ListView
         android:id="@+id/archos_list_view"
-        style="@style/ArchosGridView"
+        style="@style/ArchosListView"
         android:layout_below="@id/connection_button"
         android:layout_alignWithParentIfMissing="true"
         android:divider="@null"

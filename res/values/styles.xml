@@ -103,6 +103,25 @@
         <item name="android:scrollbarStyle">outsideOverlay</item>
     </style>
 
+    <!-- Archos ListView theme for the browser -->
+    <style name="ArchosListView">
+        <item name="android:id">@id/browser_items</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:paddingTop">10dip</item>
+        <item name="android:paddingLeft">0dip</item>
+        <item name="android:paddingRight">0dip</item>
+        <item name="android:clipToPadding">false</item>
+
+        <item name="android:textSize">18sp</item>
+        <item name="android:drawSelectorOnTop">false</item>
+        <item name="android:fastScrollEnabled">false</item><!-- true lead to errors on 4.0 -->
+        <item name="android:choiceMode">singleChoice</item>
+        <item name="android:cacheColorHint">#00000000</item>
+        <item name="android:textFilterEnabled">true</item>
+        <item name="android:scrollbarStyle">outsideOverlay</item>
+    </style>
+
     <!-- Common styles for Music and Video Browsers -->
 
     <style name="MainLine" parent="textAppearanceMedium">
