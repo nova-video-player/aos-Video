@@ -753,7 +753,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 season = getResources().getString(R.string.episode_season) + " " + currentSeason;
             }
             mSeason.setText(season);
-            setSeason(mHeaderView.findViewById(R.id.season));
+            setSeason(mSeason);
 
             setSeasonPlotHeader(mHeaderView.findViewById(R.id.season_plot_header));
             plotTv.setVisibility(View.VISIBLE);
