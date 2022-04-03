@@ -17,6 +17,10 @@ def keystorePropertiesFile = rootProject.file("keystore.properties");
 def keystoreProperties = new Properties()
 if (keystorePropertiesFile.exists()) keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
+def sentryPropertiesFile = rootProject.file("sentry.properties");
+def sentryProperties = new Properties()
+if (sentryPropertiesFile.exists()) sentryProperties.load(new FileInputStream(sentryPropertiesFile))
+
 allprojects {
     repositories {
         google()
@@ -128,7 +132,7 @@ android {
         // amazon apk is generated with ./gradlew -Poneapk
         versionName = '6.0.56'
         versionCode = 600056
-	if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
+        if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
         applicationId "org.courville.nova"
         if (project.hasProperty("sponsor")) {
             buildConfigField "boolean", "ENABLE_SPONSOR", "true"
@@ -140,10 +144,17 @@ android {
         } else {
             buildConfigField "boolean", "ADULT_SCRAPE", "false"
         }
-        if (project.hasProperty("acra")) {
-            buildConfigField "boolean", "ENABLE_ACRA", "true"
+        if (sentryPropertiesFile.exists()) {
+            if (project.hasProperty("bugReport")) {
+                buildConfigField "boolean", "ENABLE_BUG_REPORT", "true"
+                buildConfigField "String", "SENTRY_DSN", "\"${sentryProperties['dsn']}\""
+            } else {
+                buildConfigField "boolean", "ENABLE_BUG_REPORT", "false"
+                buildConfigField "String", "SENTRY_DSN", "\"\""
+            }
         } else {
-            buildConfigField "boolean", "ENABLE_ACRA", "false"
+            buildConfigField "boolean", "ENABLE_BUG_REPORT", "false"
+            buildConfigField "String", "SENTRY_DSN", "\"\""
         }
         resValue "string", "VERSION_NAME", versionName
         resValue "string", "APPLICATION_ID", applicationId
@@ -262,7 +273,6 @@ dependencies {
     implementation project(':FileCoreLibrary')
     implementation project(':MediaLib')
     implementation 'com.squareup.picasso:picasso:2.8'
-    implementation 'ch.acra:acra-http:5.8.4'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
     implementation 'androidx.media:media:1.5.0'
     implementation 'androidx.core:core:1.7.0'
@@ -280,4 +290,5 @@ dependencies {
     implementation 'androidx.leanback:leanback-preference:1.2.0-alpha02'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
     implementation 'fr.turri:aXMLRPC:1.12.0'
+    implementation 'io.sentry:sentry-android:5.7.1'
 }

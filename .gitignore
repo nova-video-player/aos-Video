@@ -11,5 +11,6 @@ libs/armeabi-v7a
 *.iml
 .idea/
 keystore.properties
+sentry.properties
 nova.json
 crowdin.yml

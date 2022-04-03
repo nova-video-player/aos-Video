@@ -54,15 +54,10 @@ import com.archos.mediaprovider.video.VideoStoreImportReceiver;
 import com.archos.mediascraper.ScraperImage;
 import com.squareup.picasso.Picasso;
 
-
 import httpimage.FileSystemPersistence;
 import httpimage.HttpImageManager;
+import io.sentry.android.core.SentryAndroid;
 
-import org.acra.*;
-import org.acra.config.CoreConfigurationBuilder;
-import org.acra.config.HttpSenderConfigurationBuilder;
-import org.acra.data.StringFormat;
-import org.acra.sender.HttpSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,17 +113,12 @@ public class CustomApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        // The following line triggers the initialization of ACRA
-        if (BuildConfig.ENABLE_ACRA) {
-            CoreConfigurationBuilder builder = new CoreConfigurationBuilder(this);
-            builder.withBuildConfigClass(BuildConfig.class).withReportFormat(StringFormat.JSON);
-            builder.getPluginConfigurationBuilder(HttpSenderConfigurationBuilder.class)
-                    .withUri("https://bug.courville.org/report")
-                    .withBasicAuthLogin("1HrXuNtb1JAtflJu")
-                    .withBasicAuthPassword("tdCgove1nfdEVTY6")
-                    .withHttpMethod(HttpSender.Method.POST)
-                    .withEnabled(true);
-            ACRA.init(this, builder);
+        if (BuildConfig.ENABLE_BUG_REPORT) {
+            SentryAndroid.init(this, options -> {
+                options.setDsn(BuildConfig.SENTRY_DSN);
+                options.setSampleRate(null);
+                options.setDebug(true);
+                });
         }
     }
 
