@@ -61,10 +61,10 @@
     <string name="info_menu_series_poster_select">בחר פוסטר נוסף</string>
     <!-- COVER ROLL -->
     <string name="watching_up_next">בצפייה/הבא</string>
-    <string name="recently_added">נוסף לאחרונה</string>
-    <string name="recently_added_videos">נוסף לאחרונה</string>
-    <string name="recently_played">הופעל לאחרונה</string>
-    <string name="recently_played_videos">הופעל לאחרונה</string>
+    <string name="recently_added">נוספו לאחרונה</string>
+    <string name="recently_added_videos">נוספו לאחרונה</string>
+    <string name="recently_played">הופעלו לאחרונה</string>
+    <string name="recently_played_videos">הופעלו לאחרונה</string>
     <string name="video_lists">רשימות ניגון</string>
     <!-- The string used in main storage list -->
     <string name="external_storage">חיצוני</string>
@@ -97,6 +97,12 @@
     <string name="all_collections_format">כל האוספים - %d</string>
     <string name="all_collection_watched">כל האוספים שנצפו</string>
     <string name="all_collection_unwatched">אוספים שלא נצפו</string>
+    <plurals name="n_movies_watched">
+        <item quantity="one">סרט אחד נצפה</item>
+        <item quantity="two">%d סרטים נצפו</item>
+        <item quantity="many">%d סרטים נצפו</item>
+        <item quantity="other">%d סרטים נצפו</item>
+    </plurals>
     <string name="not_watched_movies_format">לא נצפו - %d</string>
     <string name="not_watched_animes_format">לא נצפו - %d</string>
     <string name="no_movie_watched">אין סרטים שנצפו</string>
@@ -197,6 +203,12 @@
     <string name="delete_show">מחק את כל הפרקים</string>
     <string name="no_episode_watched">אין פרקים שנצפו</string>
     <string name="all_episodes_watched">כל הפרקים נצפו</string>
+    <plurals name="n_episodes_watched">
+        <item quantity="one">פרק אחד נצפה</item>
+        <item quantity="two">%d פרקים נצפו</item>
+        <item quantity="many">%d פרקים נצפו</item>
+        <item quantity="other">%d פרקים נצפו</item>
+    </plurals>
     <string name="scrap_processing">מקבל מידע תוכן…</string>
     <string name="scrap_no_network">לא מחובר לרשת.</string>
     <string name="scrap_enable_network_first">"אנא התחבר קודם לרשת בכדי שתוכל להפעיל יישום זה."</string>
@@ -215,8 +227,8 @@
     <string name="scraper_no_new_files_in_folder">אין קבצים חדשים לעיבוד בתיקייה זו</string>
     <string name="scraper_folder_no_files">עם זאת, קיימים עדיין %d קבצי וידאו אשר אין להם מידע שנמצא בעבר.</string>
     <string name="scraper_folder_no_file">עם זאת, קיים עדיין קובץ וידאו אשר אין לו מידע שנמצא בעבר.</string>
-    <string name="scraper_folder_try_again">האם ברצונך לנסות שנית ?</string>
-    <string name="scraper_notification_title">מחפש מידע באופן מקוון</string>
+    <string name="scraper_folder_try_again">האם ברצונך לנסות שנית?</string>
+    <string name="scraper_notification_title">חיפוש מידע באופן מקוון</string>
     <string name="scraper_notification_progress">\"%1$d מתוך %2$d קבצים עובדו</string>
     <string name="scraper_no_episode_found">לא נמצא פרק</string>
     <string name="scraper_suggest_message">באפשרותך לחפש פוסטרים ומידע עבור סרטי הוידאו שלך באופן מקוון ע\"י התפריט \'חפש מידע באופן מקוון\'.</string>
@@ -243,8 +255,8 @@
     <string name="info_file">מידע קובץ</string>
     <string name="use_remote_resume">המשך מהנקודה שנשמרה דרך הרשת?</string>
     <!-- VIDEO COVER ROLL -->
-    <string name="you_have_no_recently_added_video">לא נוסף לאחרונה וידאו</string>
-    <string name="you_have_no_recently_played_video">לא הופעל לאחרונה וידאו</string>
+    <string name="you_have_no_recently_added_video">לא נוסף וידאו לאחרונה</string>
+    <string name="you_have_no_recently_played_video">לא הופעל וידאו לאחרונה</string>
     <string name="you_have_no_video">אין וידאו</string>
     <string name="you_have_no_video_yet">מחפש סרטונים&#8230;</string>
     <string name="you_have_no_movies">אין סרטים</string>
@@ -254,6 +266,26 @@
     <string name="you_have_no_tv_shows">אין סדרות</string>
     <string name="you_have_no_anime_shows">אין סדרות אנימציה</string>
     <string name="you_have_no_non_scraped_videos">אין קבצי וידאו ללא מידע מדיה</string>
+    <plurals name="Nmovies">
+        <item quantity="one">סרט אחד</item>
+        <item quantity="two"><xliff:g id="count">%d</xliff:g> סרטים</item>
+        <item quantity="many"><xliff:g id="count">%d</xliff:g> סרטים</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> סרטים</item>
+    </plurals>
+    <plurals name="Nepisodes">
+        <!-- number of episodes is one -->
+        <item quantity="one">פרק אחד</item>
+        <item quantity="two"><xliff:g id="count">%d</xliff:g> פרקים</item>
+        <item quantity="many"><xliff:g id="count">%d</xliff:g> פרקים</item>
+        <!-- number of episodes is not equal to one -->
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> פרקים</item>
+    </plurals>
+    <plurals name="Nseasons">
+        <item quantity="one">עונה אחת</item>
+        <item quantity="two"><xliff:g id="count">%d</xliff:g> עונות</item>
+        <item quantity="many"><xliff:g id="count">%d</xliff:g> עונות</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> עונות</item>
+    </plurals>
     <!-- Media Center -->
     <string name="mediacenterlabel">מרכז המדיה</string>
     <string name="view_mode">מצב תצוגה</string>
@@ -301,6 +333,7 @@
     <string name="menu_change_folder">החלף תיקייה</string>
     <string name="menu_change_folder_details">בחר תיקייה שממנה יש להתחיל</string>
     <string name="unlock_instructions">לחיצה ארוכה על הסמל כדי לשחרר נעילה</string>
+    <string name="seek_to_percentage">סורק ל-%%%s</string>
     <!-- Subtitles/Audio languages -->
     <string name="s_arabic">ערבית</string>
     <string name="s_bulgarian">בולגרית</string>
@@ -374,6 +407,9 @@
     <string name="player_plugin_purchase_google_play_msg">ניתן לרכוש תוספי פיענוח נוספים ב- Google Play</string>
     <string name="player_plugin_purchase_google_play_button">עבור אל Google Play</string>
     <string name="plugin_update_required_title">נדרש עדכון קודק</string>
+    <string name="plugin_update_required_message">נראש שכבר מותקנים לך מפענחים נוספים עובר Nova Video Player.\n\n
+גרסה חדשה זו דורשת עדכון של מפענחים אלו.\n\n
+כנס ל-Google Play לעדכון והתקנה מחדש של המפענחים.</string>
     <!-- Subtitles wizard -->
     <string name="get_subtitles_on_drive">בחר כתוביות באחסון</string>
     <string name="subtitles_wizard_no_files">לא נמצאו קבצי כתוביות</string>
@@ -398,7 +434,7 @@
     <string name="dialog_subloader_success">כתוביות נמצאו עבור:</string>
     <string name="dialog_subloader_fails">כתוביות לא נמצאו עבור:</string>
     <string name="sub_force_all_title">אילוץ הורדת כתוביות</string>
-    <string name="sub_force_all">כל קבצי הוידאו מכילים לפחות רצועת כתוביות אחת. האם ברצונך לאלץ הורדת רצועת כתוביות חדשה ?</string>
+    <string name="sub_force_all">כל קבצי הוידאו מכילים לפחות רצועת כתוביות אחת. האם ברצונך לאלץ הורדת רצועת כתוביות חדשה?</string>
     <string name="dialog_subloader_nonetwork_title">אין חיבור אינטרנט</string>
     <string name="dialog_subloader_nonetwork_message">חיבור אינטרנט נדרש ע\"מ להוריד כתוביות</string>
     <string name="dialog_subloader_connecting">מתחבר אל www.opensubtitles.org…</string>
@@ -501,6 +537,7 @@
     <string name="preference_tv_3d_automatic_switch">אפשר מעבר אוטומטי של הטלוויזיה ל-3D</string>
     <string name="preference_tv_3d_automatic_switch_summary">השתמש בתכונה זו רק אם האלויזיה שלך תומכת ב-3D</string>
     <string name="preference_tv_refreshrate_switch">אפשר שינוי אוטומטי של קצב הרענון</string>
+    <string name="preference_tv_refreshrate_switch_summary">הסר את אפקט הרעידה על ידי התאמת קצב רענון המסך לקצב הפריימים של הוידאו (תלוי בתמיכת המכשיר)</string>
     <string name="preference_cutout_short_edges">וידאו על מסך מלא עם חורים במסך</string>
     <string name="preference_cutout_short_edges_summary">אפשר תצוגה על מסך מלא במכשיר עם חורים במסך</string>
     <string name="category_languages">כתוביות</string>
@@ -518,6 +555,7 @@
     <string name="preferences_video_os_text">כתוביות מסופקות ע\"י</string>
     <string name="preferences_video_tmdb_text">מידע סרט/סדרה מסופק ע\"י</string>
     <string name="preferences_video_tvdb_text">מידע סדרה מסופק ע\"י</string>
+    <string name="preferences_video_trakt_text">מעקב צפייה מסופק ע\"י</string>
     <string name="preferences_video_licenses">רישיונות</string>
     <string name="preferences_network_mobile_vpn_summary">השתמש בזה רק בקונפיגורציית VPN, ושים לב לשימוש בנתונים.</string>
     <string name="preferences_network_mobile_vpn_title">אפשר שיתוף רשת בחיבור סלולרי</string>
@@ -547,9 +585,9 @@
     <string name="video_info_backdrop_set_as">קבע תמונה כ- </string>
     <string name="video_info_share_message">"צפיתי בסרטון \"%1$s\" על מכשיר ה- Nova %2$s שלי"</string>
     <string name="notification_mode">התראות</string>
-    <string name="notifications_all">כל ההתרעות</string>
-    <string name="notifications_alerts">צלילי התרעות בלבד</string>
-    <string name="notifications_none">ללא התרעות</string>
+    <string name="notifications_all">כל ההתראות</string>
+    <string name="notifications_alerts">צלילי התראות בלבד</string>
+    <string name="notifications_none">ללא התראות</string>
     <string name="pref_format_mode_title">פורמט</string>
     <string name="format_fullscreen">מסך מלא</string>
     <string name="format_optimized">אופטימלי</string>
@@ -576,6 +614,7 @@
     <string name="network_bookmarks_summary">שמור ובדוק נקודות המשך וסימניות מיקום ברשת אם מתאפשר</string>
     <string name="share_folders_smbv2">אפשר תמיכה ב-SMBv2</string>
     <string name="share_folders_smbv2_summary">אפשר תמיכה בפרוטוקול שיתוף רשת SMB גרסה 2.</string>
+    <string name="share_folders_smb_resolv">סדר חיפוש SMB</string>
     <string name="share_folders_smb_resolv_summary">אפשר BCAST, DNS (ברירת מחדל DNS, BCAST). שנה זאת אם יש כשלונות בגישה לשרת או שחיבור SMB איטי.</string>
     <string name="connection_abnormally_long">ההתחברות נמשכת זמן רב מאד. האם תרצה לאתחל את התהליך?</string>
     <string name="connection_reset">איפוס</string>
@@ -589,8 +628,10 @@
     <!--  Nfo File parsing -->
     <string name="network_nfo_parse">עבד קבצי NFO</string>
     <string name="network_nfo_parse_summary">קרא קבצי NFO של קודי במהלך הסריקה כדי לאסוף מידע מדיה ופוסטרים.</string>
+    <string name="ask_to_mail_media_DB">האם אתה רוצה לשלוח את מאגר הוידאו לצוות הפיתוח על מנת לסייע בפתרון התקלה?\n\nכמובן שקבצי הוידאו לא יישלוח, אלא רק הרשימה המלאה של שמות הקבצים.</string>
     <string name="no_email_installed">לא נמצאו יישומוני דוא״ל</string>
     <string name="zipping_library_before_mailing">דוחס עותק של הסיפרייה לפני השליחה…</string>
+    <string name="zipped_library_mail_subject">Nova Video Database Dump</string>
     <string name="zipped_library_mail_text">תאר בבקשה את הבעיה שבה נתקלת\n\n</string>
     <string name="sort_mode">שיטת המיון</string>
     <string name="sort_by_name_asc">מיין לפי שם (א - ת)</string>
@@ -712,7 +753,9 @@
     <string name="trakt_signin_title">התחבר</string>
     <string name="trakt_wipe_dialog_title">להתנתק מ-Trakt.tv?</string>
     <string name="trakt_wipe_title">התנתק מ-Trakt.tv</string>
+    <string name="trakt_live_scrobbling_title">מעקב צפייה חי</string>
     <string name="trakt_live_scrobbling_summary">שתף קבצי וידאו נצפים ב-Trakt</string>
+    <string name="trakt_getfull_summary">מעקב צפייה של Trakt זמין רק בגרסה בתשלום</string>
     <string name="trakt_sync_collection_title">סנכרן אוסף הסדרות והסרטים</string>
     <string name="trakt_sync_trakt_resume_title">סנכרון נקודת המשך</string>
     <string name="trakt_sync_trakt_resume">השתמש בנקודת המשך של Trakt אם היא יותר מתקדמת מהמקומית</string>
@@ -745,7 +788,7 @@
     <string name="leanback_posters_header">פוסטרים</string>
     <string name="leanback_season_posters_header">פוסטרים של העונה</string>
     <string name="leanback_backdrops_header">רקעים</string>
-    <string name="leanback_tvshow_backdrops_header">רקעים של סדרה</string>
+    <string name="leanback_tvshow_backdrops_header">רקעים של הסדרה</string>
     <string name="leanback_poster_changed">הפוסטר שונה</string>
     <string name="leanback_backdrop_changed">הרקע שונה</string>
     <string name="leanback_weblinks_header">קישורים</string>
@@ -787,7 +830,7 @@
     <string name="rescan_when_opening_application">סריקה מחדש בפתיחת היישום</string>
     <string name="last_rescan_occured">סריקה אחרונה ב:</string>
     <string name="error_permission_display_over_apps">מצב חלון צריך הרשאה מיוחדת לצורך הצגה מעל יישומים אחרים. אנא הענק הרשאה זו ל-Nova Video Player כדי לעבור למצב חלון.</string>
-    <string name="intro_overlay_text">גם כדי להקרין קבצי וידאו לטלוויזיה שלך</string>
+    <string name="intro_overlay_text">גע כדי להקרין קבצי וידאו לטלוויזיה שלך</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">ראה עוד</string>
@@ -808,21 +851,33 @@
     <string name="system">מערכת</string>
     <string name="keep_setting">שמור הגדרה זו גלובלית</string>
     <string name="select_sub_file"><![CDATA[לא נמצאו כתוביות מדויקות עבור הקובץ <font color=#29b6f6><i>%s</i></font><br />אנא נסה מתוך הרשימה:]]></string>
+    <string name="switch_remote_empty_message">מעבר למצב תצוגה מרוחקת יכול לתת יותר אפשרויות ערוצים</string>
     <string name="cast_stream_mode">מצב הזרמה</string>
     <string name="cast_remote_display_mode">תצוגה מרוחקת</string>
+    <string name="cast_remote_display_mode_description">כל הפורמטים הנתמכים על ידי הנגן ניתנים לניגון על המסך המרוחק. יחד עם זאת, תיתכן ירידה באיכות.</string>
+    <string name="cast_stream_mode_description">איכות אופטימלית אבל חלק מהפורמטים לא נתמכים.</string>
     <string name="sleep_timer_title">טיימר שינה</string>
     <string name="sleep_timer_description">הפסק וידאו אחרי: </string>
-    <string name="cast_mode">מצב הקרנה</string>
+    <string name="cast_mode">מצב הזרמה</string>
     <string name="cast_info">מידע</string>
+    <string name="troubleshoot_streammode_msg">הנגן נמצע כרגע במצב הזרמה.
+\n        זה גורם לאיכות וידאו טובה אבל ייתכנו בעיות עם ערוצי אודיו וכתוביות.
+\n        נסה לעבור למצב תצוגה מרוחקת.</string>
+    <string name="troubleshoot_remotemode_msg">הנגן נמצא כרגע במצב תצוגה מרוחקת.
+\n        כתלות במכשיר שלך ואיכות הרשת, תיתכן ירידה מסוימת באיכות ובעיות ביצועים.</string>
     <string name="picture_in_picture">תמונה בתוך תמונה</string>
     <string name="cast">הקרנה</string>
+    <string name="cast_warning">התמיכה בהזרמה מוגבלת עקב מגבלות מפענח של Chromecast. כדי להתגבר על מגבלות אלו, מומשו 2 מודים של הזרמה: Chromecast והזרמת מסך (עם מעבר אוטומטי). שים לב שבעיות ביצועים ואיכות יכולות לנבוע גם ממגבלות המכשיר והרשת.</string>
     <string name="cast_warning_title">תכונה ניסיונית</string>
+    <string name="cast_fallback_message">שגיאה: מעבר להזרמת מסך</string>
     <string name="cast_introduction">תכונה ניסיונית חדשה :\n
 Google cast</string>
+    <string name="cast_select_for_full_control">גע כדי להרחיב</string>
     <string name="cast_audio_background">השמע לא יעבוד כאשר Nova Video Player רץ ברקע</string>
     <string name="help_faq">עזרה / שאלות נפוצות</string>
     <string name="provider_folders">ענן</string>
     <string name="learn_more">מידע נוסף</string>
+    <string name="learn_more_about_codecs">Nova Video Player יכול לנגן רק קבצים שנתמכים על ידי המכשיר שלך. עקב ענייני רישוי, חלק מהפורמטים לא נכללים מסיבות חוקיות, ואחרים ניתנים לרכישה ב-Google Play Store.</string>
     <string name="rate_us">אם אתה אוהב את האפליקציה, אנא תמוך בנו עם דירוג של 5 כוכבים</string>
     <string name="rate_us_title">☆ תמוך בנו</string>
     <string name="create_new_list">צור רשימה חדשה</string>
@@ -842,6 +897,8 @@ Google cast</string>
     <string name="enable_sponsor_title">אפשר קישור מתן חסות</string>
     <string name="enable_sponsor_summary">אפשר קישור מתן חסות עבור תרומות: כל תמיכה עוזרת.</string>
     <string name="upgrade_info">מידע שדרוג</string>
+    <string name="v5_v6_upgrade_info">אזהרה: עדכון משמעותי זה דורש סריקה מחדש של כל אוסף הוידאו על מנת לאסוף את פרטי המדיה.
+        מאד מומלץ להתחיל מחדש עם התקנה נקייה כדי למנוע בעיות. לפרטים ראה שאלות נפוצות.</string>
     <string name="networks">רשתות:</string>
     <string name="premiered">שודר לראשונה:</string>
 </resources>
