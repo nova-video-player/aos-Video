@@ -33,10 +33,11 @@ public class Movie extends Video implements Serializable {
     final String mPlot;
     private final long mOnlineId;
     private long mPinned;
+    private String mBackdropPath;
 
     public Movie(long id, String filePath, String name, long movieId, String plot, int year, float rating, Uri posterUri, int duration, int resume,
                  int video3dMode, int guessedDefinition, boolean traktSeen, boolean isTraktLibrary,boolean hasSubs, boolean isUserHidden, long onlineId, long lastTimePlayed,
-                 int calculatedWidth, int calculatedHeight, String audioFormat, String videoFormat, String guessedAudioFormat, String guessedVideoFormat,  int calculatedBestAudiotrack, int occurencies, long size, long pinned) {
+                 int calculatedWidth, int calculatedHeight, String audioFormat, String videoFormat, String guessedAudioFormat, String guessedVideoFormat,  int calculatedBestAudiotrack, int occurencies, long size, long pinned, String backdropPath) {
         super(id, filePath, name, posterUri,
                 duration, resume, video3dMode, guessedDefinition,  traktSeen, isTraktLibrary,hasSubs, isUserHidden,lastTimePlayed,
                 calculatedWidth, calculatedHeight, audioFormat, videoFormat, guessedAudioFormat, guessedVideoFormat, calculatedBestAudiotrack,occurencies,size);
@@ -46,6 +47,7 @@ public class Movie extends Video implements Serializable {
         mPlot = plot;
         mOnlineId = onlineId;
         mPinned = pinned;
+        mBackdropPath = backdropPath;
     }
 
     public long getOnlineId(){
@@ -93,5 +95,10 @@ public class Movie extends Video implements Serializable {
 
     public long getMovieId() {
         return mMovieId;
+    }
+
+
+    public String getBackdropPath() {
+        return mBackdropPath;
     }
 }

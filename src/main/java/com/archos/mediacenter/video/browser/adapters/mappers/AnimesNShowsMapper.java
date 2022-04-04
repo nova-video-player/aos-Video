@@ -229,7 +229,8 @@ public class AnimesNShowsMapper implements CompatibleCursorMapper {
                     videoFormat,
                     calculatedBestAudiotrack,
                     count, c.getLong(mSizeColumn),
-                    c.getLong(mPinnedColumn));
+                    c.getLong(mPinnedColumn),
+                    c.getString(mBackdropFileColumn));
         }
         return null;
     }

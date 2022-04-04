@@ -230,7 +230,8 @@ public class VideoCursorMapper implements CompatibleCursorMapper {
                     videoFormat,
                     calculatedBestAudiotrack,
                     count, c.getLong(mSizeColumn),
-                    c.getLong(mPinnedColumn));
+                    c.getLong(mPinnedColumn),
+                    c.getString(mBackdropFileColumn));
         }
 
         else {
