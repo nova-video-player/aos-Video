@@ -31,12 +31,14 @@ public class AllVideosLoader extends VideoLoader {
 
     public AllVideosLoader(Context context) {
         super(context);
+        setUpdateThrottle(5000);
         init();
     }
 
     public AllVideosLoader(Context context, String sortOrder) {
         super(context);
         mSortOrder = sortOrder;
+        setUpdateThrottle(5000);
         init();
     }
 

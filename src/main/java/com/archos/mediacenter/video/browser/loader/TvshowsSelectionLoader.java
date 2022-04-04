@@ -73,6 +73,7 @@ public class TvshowsSelectionLoader extends VideoLoader {
                 VideoStore.Video.VideoColumns.SCRAPER_S_PLOT,
                 VideoStore.Video.VideoColumns.SCRAPER_E_ACTORS,
                 VideoStore.Video.VideoColumns.SCRAPER_S_RATING,
+                VideoStore.Video.VideoColumns.SCRAPER_S_CONTENT_RATING,
                 "max(" + VideoStore.Video.VideoColumns.DATE_ADDED + ") AS " + SORT_COUMN_LAST_ADDED,
                 "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + ") AS " + COLUMN_SEASON_COUNT,
                 "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + " || ',' || " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE + ") AS " + COLUMN_EPISODE_COUNT,

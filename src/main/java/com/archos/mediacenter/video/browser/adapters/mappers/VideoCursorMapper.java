@@ -37,7 +37,7 @@ public class VideoCursorMapper implements CompatibleCursorMapper {
     private static final String TAG = "VideoCursorMapper";
     private static final boolean DBG = false;
 
-    int mIdColumn, mScraperTypeColumn, mPathColumn, mNameColumn, mPosterPathColumn, mDateColumn, mRatingColumn, mPlotColumn;
+    int mIdColumn, mScraperTypeColumn, mPathColumn, mNameColumn, mPosterPathColumn, mDateColumn, mRatingColumn, mContentRatingColumn, mPlotColumn;
     int mDurationColumn, mResumeColumn, mBookmarkColumn, m3dColumn, mGuessedDefinitionColumn;
     int mMovieIdColumn;
     int mCollectionIdColumn;
@@ -77,7 +77,6 @@ public class VideoCursorMapper implements CompatibleCursorMapper {
         mEpisodeNameColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_NAME);
         mEpisodePictureColumn  = c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE);
 
-
         // Movies stuff
         mMovieIdColumn =  c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID);
         mCollectionIdColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_C_ID);
@@ -88,6 +87,7 @@ public class VideoCursorMapper implements CompatibleCursorMapper {
         mDateColumn = c.getColumnIndex(VideoLoader.COLUMN_DATE);
         mRatingColumn = c.getColumnIndex(VideoLoader.COLUMN_RATING);
         mPlotColumn = c.getColumnIndex(VideoLoader.COLUMN_PLOT);
+        mContentRatingColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_CONTENT_RATING);
 
         mShowNameColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_TITLE);
         mPathColumn = c.getColumnIndex(VideoStore.MediaColumns.DATA);
@@ -170,7 +170,6 @@ public class VideoCursorMapper implements CompatibleCursorMapper {
             count = c.getInt(mCountColumn);
         }
 
-
         if (scraperType == BaseTags.TV_SHOW) {
             return new Episode(c.getLong(mIdColumn),
                     c.getLong(mEpisodeIdColumn),
@@ -179,6 +178,7 @@ public class VideoCursorMapper implements CompatibleCursorMapper {
                     c.getString(mEpisodeNameColumn),
                     c.getLong(mDateColumn),
                     c.getFloat(mRatingColumn),
+                    c.getString(mContentRatingColumn),
                     c.getString(mPlotColumn),
                     c.getString(mShowNameColumn),
                     filePath,
@@ -211,6 +211,7 @@ public class VideoCursorMapper implements CompatibleCursorMapper {
                     c.getString(mPlotColumn),
                     c.getInt(mDateColumn),
                     c.getFloat(mRatingColumn),
+                    c.getString(mContentRatingColumn),
                     getPosterUri(c.getString(mPosterPathColumn)),
                     c.getInt(mDurationColumn),
                     c.getInt(mResumeColumn),
@@ -232,9 +233,7 @@ public class VideoCursorMapper implements CompatibleCursorMapper {
                     count, c.getLong(mSizeColumn),
                     c.getLong(mPinnedColumn),
                     c.getString(mBackdropFileColumn));
-        }
-
-        else {
+        } else {
             return new Video(
                     c.getLong(mIdColumn),
                     filePath,
@@ -251,8 +250,6 @@ public class VideoCursorMapper implements CompatibleCursorMapper {
                     c.getLong(mLastTimePlayedColumn), c.getInt(mSizeColumn));
         }
     }
-
-
 
     private Uri getPosterUri(String path) {
         if (path!=null && !path.isEmpty()) {

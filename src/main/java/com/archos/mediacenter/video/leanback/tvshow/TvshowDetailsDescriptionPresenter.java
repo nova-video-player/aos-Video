@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
+import com.archos.mediacenter.video.leanback.details.VideoDetailsFragment;
 import com.archos.mediascraper.ShowTags;
 
 import java.text.SimpleDateFormat;
@@ -41,6 +42,8 @@ public class TvshowDetailsDescriptionPresenter extends Presenter {
         final TextView mTitle;
         final TextView mDate;
         final TextView mRating;
+        final View mContentRatingContainer;
+        final TextView mContentRating;
         final TextView mBody;
         final ImageView mTraktWatched;
         private ViewTreeObserver.OnPreDrawListener mPreDrawListener;
@@ -50,6 +53,8 @@ public class TvshowDetailsDescriptionPresenter extends Presenter {
             mTitle = (TextView) view.findViewById(androidx.leanback.R.id.lb_details_description_title);
             mDate = (TextView) view.findViewById(R.id.date);
             mRating = (TextView) view.findViewById(R.id.rating);
+            mContentRatingContainer = (View) view.findViewById(R.id.content_rating_container);
+            mContentRating = (TextView) view.findViewById(R.id.content_rating);
             mBody = (TextView) view.findViewById(androidx.leanback.R.id.lb_details_description_body);
             mTraktWatched = (ImageView) view.findViewById(R.id.trakt_watched);
 
@@ -114,6 +119,10 @@ public class TvshowDetailsDescriptionPresenter extends Presenter {
         vh.mBody.setText(tags.getPlot());
         setTextOrSetGoneIfEmpty(vh.mDate, getYearFormatted(tags.getPremiered()));
         setTextOrSetGoneIfZero(vh.mRating, tags.getRating());
+        setTextOrSetGoneIfEmpty(vh.mContentRating, tags.getContentRating());
+        vh.mContentRating.setTextColor(TvshowFragment.getDominantColor());
+        String contentRating = tags.getContentRating();
+        if (contentRating == null || contentRating.isEmpty()) vh.mContentRatingContainer.setVisibility(View.GONE);
 
         vh.mTraktWatched.setVisibility(show.isWatched() ? View.VISIBLE : View.GONE);
     }

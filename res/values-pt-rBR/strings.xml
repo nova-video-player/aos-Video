@@ -165,7 +165,9 @@
     <string name="scrap_get_title">Obtendo informações</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Diretor</string>
+    <string name="scrap_writer">Roteirista</string>
     <string name="scrap_director_format">Diretor: %s</string>
+    <string name="scrap_writer_format">Roteirista: %s</string>
     <string name="scrap_rating">Classificação</string>
     <string name="scrap_rating_format">Classificação: %s</string>
     <string name="scrap_year">Ano</string>
@@ -203,7 +205,7 @@
         <item quantity="one">%d episódio assistido</item>
         <item quantity="other">%d episódios assistidos</item>
     </plurals>
-    <string name="scrap_processing">Buscando metadados…</string>
+    <string name="scrap_processing">Recuperando metadados…</string>
     <string name="scrap_no_network">Não conectado a uma rede.</string>
     <string name="scrap_enable_network_first">"Por favor, conecte-se a uma rede primeiro para poder executar esta aplicação."</string>
     <string name="scrap_failed">O filme não foi encontrado no banco de dados online.</string>
@@ -447,6 +449,7 @@
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
     <string name="error_permission">Sem permissões suficientes</string>
     <string name="error_permission_storage">O reprodutor de vídeo Nova precisa de permissão de armazenamento para ler vídeos locais, por favor, conceda essa permissão.</string>
+    <string name="error_permission_all_file_access">O Nova Video Player precisa de todas as permissões de gerenciamento de armazenamento externo para gerenciar vídeos locais/arquivos NFO corretamente, por favor, conceda essa permissão.</string>
     <string name="allow">Permitir</string>
     <string name="exit">Sair</string>
     <!-- torrent -->
@@ -553,6 +556,8 @@
     <string name="tv_scraper">Séries de TV</string>
     <string name="movie_scraper">Filmes</string>
     <string name="enable_auto_scrap">Obter informações automaticamente para novos vídeos</string>
+    <string name="enable_adult_scrap_title">Obter informações de vídeos adultos</string>
+    <string name="enable_adult_scrap_summary">Habilitar recuperação de informações de vídeo adultos (desativado por padrão)</string>
     <string name="locale">Idioma do sistema</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
@@ -818,13 +823,13 @@
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Ver mais</string>
     <string name="nfo_export_in_progress">Exportação NFO em andamento</string>
-    <string name="rescrap_in_progress">Refazendo scrape de toda a biblioteca</string>
-    <string name="rescrap_movies_in_progress">Refazendo scrape de todos filmes</string>
+    <string name="rescrap_in_progress">Obtendo informações de toda a biblioteca</string>
+    <string name="rescrap_movies_in_progress">Obtendo informações de todos os filmes</string>
     <string name="rescrap_collections_in_progress">Obtendo informações de todas coleções</string>
     <string name="acquire_external_usb_permission">O Nova Vídeo precisa de permissão especial para acessar o armazenamento externo. Por favor, selecione seu armazenamento na próxima tela</string>
-    <string name="rescrap_not_found">Refazer scrape de vídeos sem descrição</string>
-    <string name="rescrap_all_title">Refazer scrape de tudo</string>
-    <string name="rescrap_all_movies_title">Refazer scrape de todos os filmes</string>
+    <string name="rescrap_not_found">Atualizar informações de vídeos sem descrição</string>
+    <string name="rescrap_all_title">Atualizar informações de tudo</string>
+    <string name="rescrap_all_movies_title">Atualizar informações de todos os filmes</string>
     <string name="rescrap_all_collections_title">Atualizar informações de todas coleções</string>
     <string name="nfo_export_manual_title">Exportar vídeos já identificados</string>
     <string name="nfo_export_manual_summary">Exportar arquivos .nfo de todos vídeos já identificado</string>
@@ -880,4 +885,6 @@
     <string name="enable_sponsor_summary">Habilitar link de patrocinador Nova: cada contribuição ajuda.</string>
     <string name="upgrade_info">Informações sobre atualização</string>
     <string name="v5_v6_upgrade_info">ATENÇÃO: Esta atualização do NOVA requer uma nova verificação de toda a biblioteca de mídia.        É extremamente recomendado re-começar com uma instalação limpa para evitar complicações. Por favor, consulte as perguntas frequentes (FAQ) para mais detalhes.</string>
+    <string name="networks">Redes:</string>
+    <string name="premiered">Estreia:</string>
 </resources>

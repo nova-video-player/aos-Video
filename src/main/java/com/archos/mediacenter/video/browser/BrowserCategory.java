@@ -518,7 +518,7 @@ abstract public class BrowserCategory extends ListFragment {
     }
 
     private void addLastItems() {
-        mCategoryList.add("");
+        mCategoryList.add("Nova" + " v" + getText(R.string.VERSION_NAME));
         ItemData itemData = new ItemData();
         itemData.icon = R.drawable.android29_ic_settings;
         itemData.text = R.string.preferences;

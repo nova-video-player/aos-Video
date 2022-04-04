@@ -66,4 +66,14 @@
 
     <string name="nova">Nova Video Player</string>
 
+    <string name="resolution_4k">4k</string>
+    // do not say p since it can be i too
+    <string name="resolution_1080p">1080</string>
+    <string name="resolution_720p">720</string>
+    <string name="resolution_SD">SD</string>
+    <string name="resolution_3D">3D</string>
+    <string name="audio_7_1">7.1</string>
+    <string name="audio_5_1">5.1</string>
+    <string name="audio_2_0">2.0</string>
+
 </resources>

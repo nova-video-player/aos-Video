@@ -35,13 +35,14 @@ public class Episode extends Video implements Serializable {
     final String mEpisodeName;
     final long mEpisodeDate;
     final float mEpisodeRating;
+    final String mEpisodeContentRating;
     final String mEpisodePlot;
     final String mShowName;
     private final String mPictureUri; /*picture uri is an official thumbnail*/
     private final long mOnlineId;
 
 
-    public Episode(long id, long episodeId, int seasonNumber, int episodeNumber, String episodeName, long episodeDate, float episodeRating, String episodePlot,String showName,
+    public Episode(long id, long episodeId, int seasonNumber, int episodeNumber, String episodeName, long episodeDate, float episodeRating, String episodeContentRating, String episodePlot, String showName,
                    String filePath, Uri pictureUri, Uri posterUri, int duration, int resume,
                    int video3dMode, int guessedDefinition, boolean traktSeen, boolean isTraktLibrary,boolean hasSubs, boolean isUserHidden, long onlineId, long lastTimePlayed,
                    int calculatedWidth, int calculatedHeight, String bestAudioFormat, String videoFormat,String guessedAudioFormat, String guessedVideoFormat, int calculatedBestAudiotrack, int occurencies, long size) {
@@ -55,6 +56,7 @@ public class Episode extends Video implements Serializable {
         mEpisodeName = episodeName;
         mEpisodeDate = episodeDate;
         mEpisodeRating = episodeRating;
+        mEpisodeContentRating = episodeContentRating;
         mEpisodePlot = episodePlot;
         mShowName = showName;
         mOnlineId = onlineId;
@@ -120,6 +122,8 @@ public class Episode extends Video implements Serializable {
     public String getDirector() {
         return "";
     }
+
+    public String getContentRating() { return mEpisodeContentRating; }
 
     public String getWriter() {
         return "";

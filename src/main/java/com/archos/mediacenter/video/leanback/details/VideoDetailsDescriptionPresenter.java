@@ -52,16 +52,21 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
     public static class ViewHolder extends Presenter.ViewHolder {
         final TextView mTitle;
         final View mEpisodeGroup;
+        final View mContentRatingContainer;
         final TextView mEpisodeSXEX;
         final TextView mEpisodeTitle;
         final TextView mDate;
         final TextView mDuration;
         final TextView mRating;
+        final TextView mContentRating;
         final TextView mBody;
         final ImageView mTraktWatched;
-        final ImageView mResolutionBadge;
-        final ImageView mAudioBadge;
-        final ImageView m3dBadge;
+        final View mResolutionBadgeContainer;
+        final TextView mResolutionBadge;
+        final View mAudioBadgeContainer;
+        final TextView mAudioBadge;
+        final View m3dBadgeContainer;
+        final TextView m3dBadge;
         final LinearLayout mBadgesLayout;
         final LayoutTransition mBadgesLayoutTransition;
         private ViewTreeObserver.OnPreDrawListener mPreDrawListener;
@@ -75,11 +80,16 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
             mDate = (TextView) view.findViewById(R.id.date);
             mDuration = (TextView) view.findViewById(R.id.duration);
             mRating = (TextView) view.findViewById(R.id.rating);
+            mContentRatingContainer = (View) view.findViewById(R.id.content_rating_container);
+            mContentRating = (TextView) view.findViewById(R.id.content_rating);
             mBody = (TextView) view.findViewById(androidx.leanback.R.id.lb_details_description_body);
             mTraktWatched = (ImageView) view.findViewById(R.id.trakt_watched);
-            mResolutionBadge = (ImageView) view.findViewById(R.id.badge_resolution);
-            mAudioBadge = (ImageView) view.findViewById(R.id.badge_audio);
-            m3dBadge = (ImageView) view.findViewById(R.id.badge_3d);
+            mResolutionBadgeContainer = (View) view.findViewById(R.id.badge_resolution_container);
+            mResolutionBadge = (TextView) view.findViewById(R.id.badge_resolution);
+            mAudioBadgeContainer = (View) view.findViewById(R.id.badge_audio_container);
+            mAudioBadge = (TextView) view.findViewById(R.id.badge_audio);
+            m3dBadgeContainer = (View) view.findViewById(R.id.badge_3d_container);
+            m3dBadge = (TextView) view.findViewById(R.id.badge_3d);
 
             // Disallow Video Badges Animation for now, will be allowed at end of VideoDetails enter transition
             // to prevent a huge animation glitch when VideoDetails is opened
@@ -154,6 +164,9 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
             vh.mEpisodeGroup.setVisibility(View.VISIBLE);
             setTextOrSetGoneIfEmpty(vh.mDate, episode.getEpisodeDateFormatted());
             setTextOrSetGoneIfZero(vh.mRating, episode.getEpisodeRating());
+            setTextOrSetGoneIfEmpty(vh.mContentRating, episode.getContentRating());
+            vh.mContentRating.setTextColor(VideoDetailsFragment.getDominantColor());
+            if (episode.getContentRating().isEmpty()) vh.mContentRatingContainer.setVisibility(View.GONE);
         }
         else if (video instanceof Movie){
             Movie movie = (Movie)video;
@@ -161,6 +174,9 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
             vh.mEpisodeGroup.setVisibility(View.GONE);
             setTextOrSetGoneIfEmpty(vh.mDate, Integer.toString(movie.getYear()));
             setTextOrSetGoneIfZero(vh.mRating, movie.getRating());
+            setTextOrSetGoneIfEmpty(vh.mContentRating, movie.getContentRating());
+            vh.mContentRating.setTextColor(VideoDetailsFragment.getDominantColor());
+            if (movie.getContentRating().isEmpty()) vh.mContentRatingContainer.setVisibility(View.GONE);
         }
         else {
             // Non-scraped video
@@ -241,7 +257,6 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
         super.onViewDetachedFromWindow(holder);
     }
 
-
     public void update(Video mVideo) {
         if (mSingleViewHolder != null) {
             onBindViewHolder(mSingleViewHolder, mVideo);
@@ -258,34 +273,43 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
      * Display video badge according to the guess we got from the filename parsing
      */
     private void displayGuessesVideoBadges(ViewHolder vh, Video video) {
-        int resolutionBadgeResId = -1;
+        boolean visible = false;
+        String resolutionBadgeRes = "";
         switch (video.getNormalizedDefinition()) {
             case VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_4K:
-                resolutionBadgeResId = R.drawable.badge_4k;
+                resolutionBadgeRes = vh.view.getContext().getString(R.string.resolution_4k);
+                visible = true;
                 break;
             case VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_1080P:
-                resolutionBadgeResId = R.drawable.badge_1080;
+                resolutionBadgeRes = vh.view.getContext().getString(R.string.resolution_1080p);
+                visible = true;
                 break;
             case VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_720P:
-                resolutionBadgeResId = R.drawable.badge_720;
+                resolutionBadgeRes = vh.view.getContext().getString(R.string.resolution_720p);
+                visible = true;
                 break;
             case VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_SD:
-                resolutionBadgeResId = R.drawable.badge_sd;
+                resolutionBadgeRes = vh.view.getContext().getString(R.string.resolution_SD);
+                visible = true;
                 break;
             case VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_UNKNOWN:
             default:
                 // Better display nothing (instead of SD) when we do not know
+                visible = false;
                 break;
         }
 
-        if (resolutionBadgeResId>-1) {
-            vh.mResolutionBadge.setImageResource(resolutionBadgeResId);
-            vh.mResolutionBadge.setVisibility(View.VISIBLE);
+        if (visible) {
+            setTextOrSetGoneIfEmpty(vh.mResolutionBadge, resolutionBadgeRes);
+            vh.mResolutionBadge.setTextColor(VideoDetailsFragment.getDominantColor());
+            vh.mResolutionBadgeContainer.setVisibility(View.VISIBLE);
         }
         else {
-            vh.mResolutionBadge.setVisibility(View.GONE);
+            vh.mResolutionBadgeContainer.setVisibility(View.GONE);
         }
     }
+
+    // TODO MARC color of the text is not black!!!
 
     /**
      * Display Video and Audio badges based on the actual VideoMetadata from the file.
@@ -309,28 +333,33 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
             // Resolution badge
             final int w = metadata.getVideoWidth();
             final int h = metadata.getVideoHeight();
-            int resolutionBadgeResId = -1;
+            String resolutionBadgeRes = "";
+            boolean visible = false;
             if (w>=3840 || h>=2160) {
-                resolutionBadgeResId = R.drawable.badge_4k;
+                resolutionBadgeRes = mSingleViewHolder.view.getContext().getString(R.string.resolution_4k);
+                visible = true;
             }
 	    // normally you would expect w>=1920 || h>=1080 but based on collection empirical observation we need to include a margin to detect fhd video resolution
             else if (w>=1728 || h>=1040) {
-                resolutionBadgeResId = R.drawable.badge_1080;
+                resolutionBadgeRes = mSingleViewHolder.view.getContext().getString(R.string.resolution_1080p);
+                visible = true;
             }
 	    // normally you would expect w>=1280 || h>=720 but based on collection empirical observation we need to include a margin to detect hd video resolution
             else if (w>=1200 || h>=720) {
-                resolutionBadgeResId = R.drawable.badge_720;
+                resolutionBadgeRes = mSingleViewHolder.view.getContext().getString(R.string.resolution_720p);
+                visible = true;
             }
             else if (w>0 && h>0){
-                resolutionBadgeResId = R.drawable.badge_sd;
+                resolutionBadgeRes = mSingleViewHolder.view.getContext().getString(R.string.resolution_SD);
+                visible = true;
             }
 
-            if (resolutionBadgeResId>-1) {
-                mSingleViewHolder.mResolutionBadge.setImageResource(resolutionBadgeResId);
-                mSingleViewHolder.mResolutionBadge.setVisibility(View.VISIBLE);
-            }
-            else {
-                mSingleViewHolder.mResolutionBadge.setVisibility(View.GONE);
+            if (visible) {
+                setTextOrSetGoneIfEmpty(mSingleViewHolder.mResolutionBadge, resolutionBadgeRes);
+                mSingleViewHolder.mResolutionBadge.setTextColor(VideoDetailsFragment.getDominantColor());
+                mSingleViewHolder.mResolutionBadgeContainer.setVisibility(View.VISIBLE);
+            } else {
+                mSingleViewHolder.mResolutionBadgeContainer.setVisibility(View.GONE);
             }
 
             // Audio badge
@@ -353,20 +382,21 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
             }
 
             if (audioChannels != -1) {
-                int audioBadgeResId = -1;
+                String audioBadgeRes = "";
 
-                if (audioChannels == 7)
-                    audioBadgeResId = R.drawable.badge_7_1;
-                else if (audioChannels == 5)
-                    audioBadgeResId = R.drawable.badge_5_1;
-                else if (audioChannels == 2)
-                    audioBadgeResId = R.drawable.badge_2_0;
-
-                mSingleViewHolder.mAudioBadge.setImageResource(audioBadgeResId);
-                mSingleViewHolder.mAudioBadge.setVisibility(View.VISIBLE);
+                if (audioChannels == 7) {
+                    audioBadgeRes = mSingleViewHolder.view.getContext().getString(R.string.audio_7_1);
+                } else if (audioChannels == 5) {
+                    audioBadgeRes = mSingleViewHolder.view.getContext().getString(R.string.audio_5_1);
+                } else if (audioChannels == 2) {
+                    audioBadgeRes = mSingleViewHolder.view.getContext().getString(R.string.audio_2_0);
+                }
+                setTextOrSetGoneIfEmpty(mSingleViewHolder.mAudioBadge, audioBadgeRes);
+                mSingleViewHolder.mAudioBadge.setTextColor(VideoDetailsFragment.getDominantColor());
+                mSingleViewHolder.mAudioBadgeContainer.setVisibility(View.VISIBLE);
             }
             else {
-                mSingleViewHolder.mAudioBadge.setVisibility(View.GONE);
+                mSingleViewHolder.mAudioBadgeContainer.setVisibility(View.GONE);
             }
 
         }

@@ -90,7 +90,7 @@ public class PermissionChecker {
                                 //Manifest.permission.READ_EXTERNAL_STORAGE,
                                 Manifest.permission.MANAGE_EXTERNAL_STORAGE
                         },
-                        PERM_REQ_RW
+                        PERM_REQ_MANAGE
                 );
                 isDialogDisplayed = true;
             }
@@ -103,7 +103,7 @@ public class PermissionChecker {
                                 Manifest.permission.READ_EXTERNAL_STORAGE,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE
                         },
-                        PERM_REQ_MANAGE
+                        PERM_REQ_RW
                 );
                 isDialogDisplayed = true;
             }
@@ -156,12 +156,14 @@ public class PermissionChecker {
 
         switch (requestCode) {
             case PERM_REQ_RW:
+                log.debug("configuring PERM_REQ_RW");
                 permissionToRequest = android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
                 action = "android.intent.action.MANAGE_APP_PERMISSIONS";
                 errorMessage = R.string.error_permission_storage;
                 intent = new Intent();
                 ;;
             case PERM_REQ_MANAGE:
+                log.debug("configuring PERM_REQ_MANAGE");
                 if(Build.VERSION.SDK_INT>29 && hasManageExternalStoragePermission) {
                     permissionToRequest = android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
                     action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION;

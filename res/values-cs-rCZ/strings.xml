@@ -433,6 +433,7 @@
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
     <string name="error_permission">Nedostatečná oprávnění</string>
     <string name="error_permission_storage">Nova Video Player vyžaduje oprávnění k úložišti pro možnost načtení lokálních souborů. Prosím potvrďte toto oprávnění.</string>
+    <string name="error_permission_all_file_access">Nova Video Player vyžaduje všechna oprávnění k externím úložištím pro možnost správy lokálních video a NFO souborů, prosím udělte toto oprávnění.</string>
     <string name="allow">Povolit</string>
     <string name="exit">Ukončit</string>
     <!-- torrent -->

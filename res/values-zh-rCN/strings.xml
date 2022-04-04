@@ -444,6 +444,7 @@
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
     <string name="error_permission">权限不足</string>
     <string name="error_permission_storage">Nova 视频播放器需要存储权限才能读取本地视频，请授予此权限。</string>
+    <string name="error_permission_all_file_access">Nova 视频播放器需要所有外部存储管理权限来正确管理本地视频 / NFO 文件，请授予此权限。</string>
     <string name="allow">允许</string>
     <string name="exit">退出</string>
     <!-- torrent -->

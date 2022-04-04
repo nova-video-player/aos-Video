@@ -47,6 +47,7 @@ public class AllAnimesLoader extends VideoLoader {
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
         mGroupByOnlineId = groupByOnlineId;
+        setUpdateThrottle(5000);
         init();
     }
 

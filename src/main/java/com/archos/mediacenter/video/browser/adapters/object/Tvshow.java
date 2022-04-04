@@ -29,11 +29,10 @@ import java.io.Serializable;
  */
 public class Tvshow extends Base implements Serializable {
 
-
-
     private final boolean mIsTraktSeen;
     private final boolean mIsTraktLibrary;
     private final float mRating;
+    private final String mContentRating;
 
     public int getYear() {
         return mYear;
@@ -69,9 +68,8 @@ public class Tvshow extends Base implements Serializable {
     private ShowTags mShowTags;
 
     public Tvshow(long tvshowId, String name, Uri posterUri, int seasonCount, int episodeCount, int episodeWatchedCount) {
-        this(tvshowId,name, posterUri, seasonCount, episodeCount, episodeWatchedCount, false, false, null, null,null, -1,-1, 0);
+        this(tvshowId, name, posterUri, seasonCount, episodeCount, episodeWatchedCount, false, false, null, null,null, -1,-1, "", 0);
     }
-
 
     public Tvshow(long tvshowId,
                   String name,
@@ -86,6 +84,7 @@ public class Tvshow extends Base implements Serializable {
                   String actors,
                   int year,
                   float rating,
+                  String contentRating,
                   long pinned) {
         super(name, posterUri);
         mTvshowId = tvshowId;
@@ -99,6 +98,7 @@ public class Tvshow extends Base implements Serializable {
         mActors = actors;
         mYear = year;
         mRating = rating;
+        mContentRating = contentRating;
         mPinned = pinned;
     }
 
@@ -162,4 +162,6 @@ public class Tvshow extends Base implements Serializable {
     public float getRating() {
         return mRating;
     }
+
+    public String getContentRating() { return mContentRating; }
 }

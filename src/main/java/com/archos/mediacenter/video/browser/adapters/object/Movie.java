@@ -30,12 +30,13 @@ public class Movie extends Video implements Serializable {
     final long mMovieId;
     final int mYear;
     final float mRating;
+    final String mContentRating;
     final String mPlot;
     private final long mOnlineId;
     private long mPinned;
     private String mBackdropPath;
 
-    public Movie(long id, String filePath, String name, long movieId, String plot, int year, float rating, Uri posterUri, int duration, int resume,
+    public Movie(long id, String filePath, String name, long movieId, String plot, int year, float rating, String contentRating, Uri posterUri, int duration, int resume,
                  int video3dMode, int guessedDefinition, boolean traktSeen, boolean isTraktLibrary,boolean hasSubs, boolean isUserHidden, long onlineId, long lastTimePlayed,
                  int calculatedWidth, int calculatedHeight, String audioFormat, String videoFormat, String guessedAudioFormat, String guessedVideoFormat,  int calculatedBestAudiotrack, int occurencies, long size, long pinned, String backdropPath) {
         super(id, filePath, name, posterUri,
@@ -44,6 +45,7 @@ public class Movie extends Video implements Serializable {
         mMovieId = movieId;
         mYear = year;
         mRating = rating;
+        mContentRating = contentRating;
         mPlot = plot;
         mOnlineId = onlineId;
         mPinned = pinned;
@@ -67,11 +69,12 @@ public class Movie extends Video implements Serializable {
         return mRating;
     }
 
+    public String getContentRating() { return mContentRating; }
+
     @Override
     public BaseTags getFullScraperTags(Context context) {
         return TagsFactory.buildMovieTags(context, mMovieId);
     }
-
 
     public String getDirector() {
         return "";
