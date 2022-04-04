@@ -25,6 +25,9 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
 import com.archos.mediacenter.video.browser.adapters.object.Season;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by alexandre on 27/10/15.
  */
@@ -45,7 +48,14 @@ public class SeasonPresenter extends CommonPresenter implements Presenter {
         ViewHolder holder = (ViewHolder) view.getTag();
         String season = mContext.getResources().getString(R.string.episode_season);
 
-        String name = season+" "+tvShow.getSeasonNumber();
+        List<String> seasonTagsFormatted = Arrays.asList(tvShow.getSeasonTags().split("\\s*=&%#\\s*"));
+        String seasonName = seasonTagsFormatted.get(2);
+        String name = "";
+        if (tvShow.getSeasonNumber() == 0){
+            name = seasonName;
+        } else{
+            name = season+" "+tvShow.getSeasonNumber();
+        }
         if(holder.name!=null) {
             holder.name.setText(name);
         }
