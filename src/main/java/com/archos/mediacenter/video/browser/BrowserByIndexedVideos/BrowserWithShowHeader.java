@@ -436,7 +436,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 seasonsData.setSeasonNumber(seasonPlotsFormatted.get(0));
                 seasonsData.setSeasonPlot(seasonPlotsFormatted.get(1));
                 seasonsData.setSeasonName(seasonPlotsFormatted.get(2));
-                seasonsData.setSeasonAirdate(seasonPlotsFormatted.get(3));
+                seasonsData.setSeasonAirdate(seasonPlotsFormatted.get(3).replaceAll("&&&&####", ""));
                 finalSeasonPlots.add(seasonsData);
             }
             Bundle args = getArguments();
