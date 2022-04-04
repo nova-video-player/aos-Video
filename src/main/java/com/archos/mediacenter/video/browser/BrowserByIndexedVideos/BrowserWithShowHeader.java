@@ -452,6 +452,11 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                     seasonAirDate.setText(finalSeasonPlots.get(i).getSeasonAirdate());
                     if (finalSeasonPlots.get(i).getSeasonAirdate().isEmpty())
                         seasonAirDateContainer.setVisibility(View.GONE);
+                    //set season name
+                    TextView mSeason = mHeaderView.findViewById(R.id.season);
+                    String seasonName = finalSeasonPlots.get(i).getSeasonName();
+                    mSeason.setText(seasonName);
+                    setSeason(mSeason);
                 }
             }
             setSeasonPlot(mHeaderView.findViewById(R.id.season_plot));
@@ -743,17 +748,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             mSeasonPlot.setMaxLines(mContext.getResources().getInteger(R.integer.show_details_max_lines));
             plotTv.setTag(true);
             mSeasonPlot.setTag(true);
-
-            //set season zero name (specials or extra)
-            TextView mSeason = mHeaderView.findViewById(R.id.season);
-            String season = "";
-            if (currentSeason == 0){
-                season = tags.getSeasonTags().get(0).getSeasonName();
-            } else{
-                season = getResources().getString(R.string.episode_season) + " " + currentSeason;
-            }
-            mSeason.setText(season);
-            setSeason(mSeason);
 
             setSeasonPlotHeader(mHeaderView.findViewById(R.id.season_plot_header));
             plotTv.setVisibility(View.VISIBLE);

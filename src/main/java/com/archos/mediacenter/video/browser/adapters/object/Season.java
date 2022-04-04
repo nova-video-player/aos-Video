@@ -18,12 +18,10 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.archos.mediascraper.BaseTags;
-import com.archos.mediascraper.SeasonData;
 import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.TagsFactory;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Created by vapillon on 10/04/15.
