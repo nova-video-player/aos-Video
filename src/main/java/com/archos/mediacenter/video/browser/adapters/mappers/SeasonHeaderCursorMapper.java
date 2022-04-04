@@ -85,7 +85,7 @@ public class SeasonHeaderCursorMapper implements CompatibleCursorMapper {
 
 
 
-            return new Season(-1, c.getString(mShowNameColumn), getPosterUri(c), c.getInt(mEpisodeSeasonColumn), 0, 0);
+            return new Season(-1, c.getString(mShowNameColumn), getPosterUri(c), c.getInt(mEpisodeSeasonColumn), 0, 0, "");
 
     }
 

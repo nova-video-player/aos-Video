@@ -34,6 +34,7 @@ public class SeasonCursorMapper implements CompatibleCursorMapper {
     int mSeasonNumberColumn;
     int mEpisodeTotalCountColumn;
     int mEpisodeWatchedCountColumn;
+    int mSeasonTags;
 
     public SeasonCursorMapper() {
     }
@@ -46,6 +47,7 @@ public class SeasonCursorMapper implements CompatibleCursorMapper {
         mSeasonNumberColumn = cursor.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON);
         mEpisodeTotalCountColumn = cursor.getColumnIndexOrThrow(SeasonsLoader.COLUMN_EPISODE_TOTAL_COUNT);
         mEpisodeWatchedCountColumn =  cursor.getColumnIndexOrThrow(SeasonsLoader.COLUMN_EPISODE_WATCHED_COUNT);
+        mSeasonTags = cursor.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_S_SEASONPLOTS);
     }
 
     @Override
@@ -56,7 +58,8 @@ public class SeasonCursorMapper implements CompatibleCursorMapper {
                 getPosterUri(cursor),
                 cursor.getInt(mSeasonNumberColumn),
                 cursor.getInt(mEpisodeTotalCountColumn),
-                cursor.getInt(mEpisodeWatchedCountColumn)
+                cursor.getInt(mEpisodeWatchedCountColumn),
+                cursor.getString(mSeasonTags)
         );
     }
 

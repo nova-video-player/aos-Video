@@ -308,15 +308,17 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
 
         int episodeTotalCount = 0;
         int episodeWatchedCount = 0;
-    
+        String mSeasonTags ="";
         for (int i = 1; i < mSeasonsAdapter.size(); i++) {
             Season season = (Season)mSeasonsAdapter.get(i);
 
             episodeTotalCount += season.getEpisodeTotalCount();
             episodeWatchedCount += season.getEpisodeWatchedCount();
+            mSeasonTags = season.getSeasonTags();
         }
 
-        Season allSeasons = new Season(mTvshowId, mTvshowName, mTvshowPosterUri, -1, episodeTotalCount, episodeWatchedCount);
+
+        Season allSeasons = new Season(mTvshowId, mTvshowName, mTvshowPosterUri, -1, episodeTotalCount, episodeWatchedCount, mSeasonTags);
 
         mSeasonPresenter.setAllSeasons(allSeasons);
         mSeasonsAdapter.onCursorChanged();

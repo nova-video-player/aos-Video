@@ -14,11 +14,16 @@
 
 package com.archos.mediacenter.video.browser.adapters.object;
 
+import android.content.Context;
 import android.net.Uri;
 
+import com.archos.mediascraper.BaseTags;
+import com.archos.mediascraper.SeasonData;
 import com.archos.mediascraper.ShowTags;
+import com.archos.mediascraper.TagsFactory;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by vapillon on 10/04/15.
@@ -30,6 +35,7 @@ public class Season extends Base implements Serializable {
     private int mSeasonNumber;
     private int mEpisodeTotalCount;
     private int mEpisodeWatchedCount;
+    private String  mSeasonTags;
 
     /**
      * Not computed by this class but only a place to store it.
@@ -37,12 +43,13 @@ public class Season extends Base implements Serializable {
      */
     private ShowTags mShowTags;
 
-    public Season(long showId, String showName, Uri posterUri, int seasonNumber, int episodeTotalCount, int episodeWatchedCount) {
+    public Season(long showId, String showName, Uri posterUri, int seasonNumber, int episodeTotalCount, int episodeWatchedCount, String seasontags) {
         super(showName, posterUri);
         mShowId = showId;
         mSeasonNumber = seasonNumber;
         mEpisodeTotalCount = episodeTotalCount;
         mEpisodeWatchedCount = episodeWatchedCount;
+        mSeasonTags = seasontags;
     }
 
     public long getShowId() {
@@ -71,5 +78,11 @@ public class Season extends Base implements Serializable {
 
     public boolean allEpisodesNotWatched() {
         return mEpisodeWatchedCount==0 && mEpisodeTotalCount>0;
+    }
+    public BaseTags getFullScraperTags(Context context) {
+        return TagsFactory.buildShowTags(context, mShowId);
+    }
+    public String getSeasonTags() {
+        return mSeasonTags;
     }
 }

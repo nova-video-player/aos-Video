@@ -62,7 +62,8 @@ public class SeasonsLoader extends VideoLoader {
                 VideoLoader.COVER,
                 VideoStore.Video.VideoColumns.SCRAPER_E_SEASON,
                 "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE + ") AS " + COLUMN_EPISODE_TOTAL_COUNT,
-                "COUNT(CASE "+VideoStore.Video.VideoColumns.BOOKMARK+" WHEN "+PlayerActivity.LAST_POSITION_END+" THEN 1 ELSE NULL END) AS " + COLUMN_EPISODE_WATCHED_COUNT
+                "COUNT(CASE "+VideoStore.Video.VideoColumns.BOOKMARK+" WHEN "+PlayerActivity.LAST_POSITION_END+" THEN 1 ELSE NULL END) AS " + COLUMN_EPISODE_WATCHED_COUNT,
+                VideoStore.Video.VideoColumns.SCRAPER_S_SEASONPLOTS
         };
 
         // count() - count(CASE Archos_traktSeen WHEN 0 THEN 0 ELSE NULL END) AS watched,
