@@ -163,14 +163,11 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
     // limit to 1 thread for less epileptic visual effect and a queue of 5200 = 100 years of 52 weeks
     // Note that now it is handled by androidx and should be "bug free" --> remove this hack for now
     // For ref sake currently cursorLoader executor by default is ThreadPoolExecutor(5, 128, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10), tocheck)
-    /*
     private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>(5200));
-    */
     public VideoLoader(Context context) {
         super(context);
         // self introspection to use another Executor than AsyncTaskLoader which has 128 threads but a total queue of 10... cf. https://github.com/nova-video-player/aos-AVP/issues/141
-        /*
         try {
             Field f = AsyncTaskLoader.class.getDeclaredField("mExecutor");
             f.setAccessible(true);
@@ -180,7 +177,6 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
         } catch (IllegalAccessException e) {
             Log.w(TAG, "VideoLoader caught IllegalAccessException ", e);
         }
-         */
     }
 
     @Override
