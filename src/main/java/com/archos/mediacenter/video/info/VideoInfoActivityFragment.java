@@ -1851,7 +1851,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 int expectedWidthOfTextView = getResources().getDisplayMetrics().widthPixels;
                 int originalMaxLines = mPlotTextView.getMaxLines();
                 if (originalMaxLines < 0 || originalMaxLines == Integer.MAX_VALUE)
-                    Log.d("AppLog", "already unbounded textView maxLines");
+                    log.debug("FullScraperTagsTask: already unbounded textView maxLines");
                 else {
                     mPlotTextView.setMaxLines(Integer.MAX_VALUE);
                     mPlotTextView.measure(
@@ -1861,13 +1861,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     int measuredLineCount = mPlotTextView.getLineCount();
                     int measuredTargetHeight = mPlotTextView.getMeasuredHeight();
                     int lineHeight = mPlotTextView.getLineHeight();
-                    Log.d("AppLog", "lines:$measuredLineCount/$originalMaxLines");
+                    log.debug("FullScraperTagsTask: lines:$measuredLineCount/$originalMaxLines");
                     mPlotTextView.setEllipsize(TextUtils.TruncateAt.END);
                     mPlotTextView.setMaxLines(4);
                     if (measuredLineCount <= originalMaxLines)
-                        Log.d("AppLog", "fit in original maxLines");
+                        log.debug("FullScraperTagsTask: fit in original maxLines");
                     else {
-                        Log.d("AppLog", "exceeded original maxLines");
+                        log.debug("FullScraperTagsTask: exceeded original maxLines");
                         mPlotTextView.setTag(true);
                         mPlotTextView.setOnClickListener(new View.OnClickListener() {
                             @Override
