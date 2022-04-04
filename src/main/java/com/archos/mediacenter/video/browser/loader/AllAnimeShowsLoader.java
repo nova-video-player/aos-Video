@@ -49,6 +49,7 @@ public class AllAnimeShowsLoader extends VideoLoader {
         mContext = context;
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
+        setUpdateThrottle(5000);
         init();
     }
 

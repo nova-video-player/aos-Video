@@ -46,8 +46,6 @@ public class VideosByListLoader extends CursorLoader implements CompatAndSDKCurs
         setSelection(getSelection(context));
     }
 
-
-
     public String getSelection(Context context) {
         String cmd =  "Select \n" +
                 "   l._id as _id,\n" +
@@ -81,5 +79,6 @@ public class VideosByListLoader extends CursorLoader implements CompatAndSDKCurs
         return  new CursorLoader(getContext(),
                 getUri(), getProjection(), getSelection(), getSelectionArgs(),
                 getSortOrder());
-    }}
+    }
+}
 
