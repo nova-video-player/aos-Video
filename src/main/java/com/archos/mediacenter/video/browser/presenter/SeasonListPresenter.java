@@ -19,12 +19,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
+import com.archos.mediacenter.video.browser.SeasonsBrowserData;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesList;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesListSeason;
+import com.archos.mediacenter.video.browser.adapters.SeasonsData;
 import com.archos.mediacenter.video.browser.adapters.object.Season;
+import com.archos.mediaprovider.video.VideoStore;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by alexandre on 27/10/15.
@@ -51,8 +58,31 @@ public class SeasonListPresenter extends SeasonPresenter{
     @Override
     public View bindView(View view, Object object, ThumbnailEngine.Result result, int positionInAdapter) {
         super.bindView(view,object, result, positionInAdapter);
+        ViewHolder holder = (ViewHolder) view.getTag();
+        Season season = (Season) object;
+        List<String> seasonTags = Arrays.asList(season.getSeasonTags().split("\\s*&&&&####,\\s*"));
 
 
+        List <SeasonsBrowserData>  finalSeasonPlots = new ArrayList<>();
+        for (int i = 0; i < seasonTags.size(); i++) {
+            String seasonPlot = seasonTags.get(i);
+            List <String>  seasonPlotsFormatted;
+            seasonPlotsFormatted = Arrays.asList(seasonPlot.split("\\s*=&%#\\s*"));
+            SeasonsBrowserData seasonsBrowserData = new SeasonsBrowserData();
+            seasonsBrowserData.setSeasonNumber(seasonPlotsFormatted.get(0));
+            seasonsBrowserData.setSeasonPlot(seasonPlotsFormatted.get(1));
+            seasonsBrowserData.setSeasonAirdate(seasonPlotsFormatted.get(3).replaceAll("&&&&####", ""));
+            finalSeasonPlots.add(seasonsBrowserData);
+        }
+
+        int currentSeason = season.getSeasonNumber();
+        for (int i = 0; i < finalSeasonPlots.size(); i++) {
+            String seasonNumber = finalSeasonPlots.get(i).getSeasonNumber();
+            if (currentSeason == Integer.parseInt(seasonNumber)) {
+                holder.seasonPlot.setText(finalSeasonPlots.get(i).getSeasonPlot());
+                holder.seasonPlot.setMaxLines(5);
+            }
+        }
         return view;
     }
 

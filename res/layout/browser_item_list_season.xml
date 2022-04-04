@@ -69,7 +69,7 @@ for informations (duration for files, number of files for directories).
 			android:visibility="gone" />
 	</RelativeLayout>
 
-	<include layout="@layout/browser_item_list_common"
+	<include layout="@layout/browser_item_list_common_season"
 		android:layout_alignParentBottom="true"
 		android:layout_toEndOf="@+id/left_area"/>
 
