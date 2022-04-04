@@ -112,7 +112,7 @@ public class CommonPresenter implements Presenter {
         holder.bookmark = (ImageLabel) view.findViewById(R.id.bookmark_notif);
         holder.subtitle = (ImageLabel) view.findViewById(R.id.subtitle_notif);
         holder.network = (ImageLabel) view.findViewById(R.id.network_notif);
-        holder.seasonPlot =(TextView) view.findViewById(R.id.season_plot_list);
+        holder.seasonPlot =(TextView) view.findViewById(R.id.season_plot);
         holder.seasonAirDate =(TextView) view.findViewById(R.id.season_air_date);
 
         view.setTag(holder);
