@@ -81,6 +81,7 @@ public class SeasonListPresenter extends SeasonPresenter{
             if (currentSeason == Integer.parseInt(seasonNumber)) {
                 holder.seasonPlot.setText(finalSeasonPlots.get(i).getSeasonPlot());
                 holder.seasonPlot.setMaxLines(5);
+                holder.seasonAirDate.setText(finalSeasonPlots.get(i).getSeasonAirdate());
             }
         }
         return view;

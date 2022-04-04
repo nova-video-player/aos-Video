@@ -68,6 +68,7 @@ public class CommonPresenter implements Presenter {
         View countcontainer;
         TextView count;
         TextView seasonPlot;
+        TextView seasonAirDate;
     }
 
     public CommonPresenter(Context context, AdapterDefaultValues defaultValues, ExtendedClickListener onExtendedClick){
@@ -112,6 +113,7 @@ public class CommonPresenter implements Presenter {
         holder.subtitle = (ImageLabel) view.findViewById(R.id.subtitle_notif);
         holder.network = (ImageLabel) view.findViewById(R.id.network_notif);
         holder.seasonPlot =(TextView) view.findViewById(R.id.season_plot_list);
+        holder.seasonAirDate =(TextView) view.findViewById(R.id.season_air_date);
 
         view.setTag(holder);
         return view;

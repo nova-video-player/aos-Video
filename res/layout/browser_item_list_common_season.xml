@@ -129,4 +129,14 @@
         android:layout_marginRight="18dip"
         android:layout_toLeftOf="@id/expanded"
         android:layout_toRightOf="@id/left_area" />
+
+    <TextView
+        android:id="@+id/season_air_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_toStartOf="@id/expanded"
+        android:layout_toEndOf="@id/left_area"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="2dp"/>
 </merge>
