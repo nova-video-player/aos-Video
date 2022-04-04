@@ -42,6 +42,7 @@ public class TvshowCursorMapper implements CompatibleCursorMapper {
     int mRatingColumn;
     int mContentRatingColumn;
     int mPinnedColumn;
+    int mBackdropFileColumn;
     public TvshowCursorMapper() {
     }
 
@@ -61,6 +62,7 @@ public class TvshowCursorMapper implements CompatibleCursorMapper {
         mRatingColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_S_RATING);
         mContentRatingColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_S_CONTENT_RATING);
         mPinnedColumn = cursor.getColumnIndex(VideoStore.Video.VideoColumns.NOVA_PINNED);
+        mBackdropFileColumn = cursor.getColumnIndexOrThrow(VideoStore.Video.VideoColumns.SCRAPER_BACKDROP_LARGE_FILE);
     }
 
     public Object bind(Cursor cursor) {
@@ -79,7 +81,8 @@ public class TvshowCursorMapper implements CompatibleCursorMapper {
                 cursor.getInt(mYearColumn),
                 cursor.getFloat(mRatingColumn),
                 cursor.getString(mContentRatingColumn),
-                mPinnedColumn != -1 ? cursor.getLong(mPinnedColumn) : -1
+                mPinnedColumn != -1 ? cursor.getLong(mPinnedColumn) : -1,
+                cursor.getString(mBackdropFileColumn)
         );
     }
 

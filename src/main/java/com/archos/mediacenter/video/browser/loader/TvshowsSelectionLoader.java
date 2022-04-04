@@ -80,6 +80,7 @@ public class TvshowsSelectionLoader extends VideoLoader {
                 "COUNT(CASE "+VideoStore.Video.VideoColumns.BOOKMARK+" WHEN "+PlayerActivity.LAST_POSITION_END+" THEN 1 ELSE NULL END) AS " + COLUMN_EPISODE_WATCHED_COUNT,
                 getTraktProjection(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN),
                 getTraktProjection(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_LIBRARY),
+                VideoStore.Video.VideoColumns.SCRAPER_BACKDROP_LARGE_FILE
         };
     }
 

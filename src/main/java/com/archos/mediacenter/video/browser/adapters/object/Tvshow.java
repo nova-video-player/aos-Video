@@ -60,6 +60,7 @@ public class Tvshow extends Base implements Serializable {
     private int mEpisodeWatchedCount;
 
     private long mPinned;
+    private String mBackdropPath;
 
     /**
      * Not computed by this class but only a place to store it.
@@ -67,8 +68,8 @@ public class Tvshow extends Base implements Serializable {
      */
     private ShowTags mShowTags;
 
-    public Tvshow(long tvshowId, String name, Uri posterUri, int seasonCount, int episodeCount, int episodeWatchedCount) {
-        this(tvshowId, name, posterUri, seasonCount, episodeCount, episodeWatchedCount, false, false, null, null,null, -1,-1, "", 0);
+    public Tvshow(long tvshowId, String name, Uri posterUri, int seasonCount, int episodeCount, int episodeWatchedCount, String backdropPath) {
+        this(tvshowId, name, posterUri, seasonCount, episodeCount, episodeWatchedCount, false, false, null, null,null, -1,-1, "", 0, backdropPath);
     }
 
     public Tvshow(long tvshowId,
@@ -85,7 +86,8 @@ public class Tvshow extends Base implements Serializable {
                   int year,
                   float rating,
                   String contentRating,
-                  long pinned) {
+                  long pinned,
+                  String backdropPath) {
         super(name, posterUri);
         mTvshowId = tvshowId;
         mSeasonCount = seasonCount;
@@ -100,6 +102,7 @@ public class Tvshow extends Base implements Serializable {
         mRating = rating;
         mContentRating = contentRating;
         mPinned = pinned;
+        mBackdropPath = backdropPath;
     }
 
     public String getCountString(Context context) {
@@ -164,4 +167,8 @@ public class Tvshow extends Base implements Serializable {
     }
 
     public String getContentRating() { return mContentRating; }
+
+    public String getBackdropPath() {
+        return mBackdropPath;
+    }
 }
