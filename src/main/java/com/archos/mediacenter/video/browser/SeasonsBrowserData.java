@@ -1,7 +1,7 @@
 package com.archos.mediacenter.video.browser;
 
 public class SeasonsBrowserData {
-    String seasonPlot, seasonNumber, airdate;
+    String seasonPlot, seasonNumber, seasonName, seasonAirDate;
 
     public SeasonsBrowserData() {
     }
@@ -10,8 +10,8 @@ public class SeasonsBrowserData {
         return seasonPlot;
     }
 
-    public void setSeasonPlot(String seasonPlot) {
-        this.seasonPlot = seasonPlot;
+    public void setSeasonPlot(String seasonplot) {
+        this.seasonPlot = seasonplot;
     }
 
 
@@ -19,15 +19,23 @@ public class SeasonsBrowserData {
         return seasonNumber;
     }
 
-    public void setSeasonNumber(String seasonNumber) {
-        this.seasonNumber = seasonNumber;
+    public void setSeasonNumber(String seasonnumber) {
+        this.seasonNumber = seasonnumber;
+    }
+
+    public String getSeasonName() {
+        return seasonName;
+    }
+
+    public void setSeasonName(String seasonname) {
+        this.seasonName = seasonname;
     }
 
     public String getSeasonAirdate() {
-        return airdate;
+        return seasonAirDate;
     }
 
     public void setSeasonAirdate(String airdate) {
-        this.airdate = airdate;
+        this.seasonAirDate = airdate;
     }
 }

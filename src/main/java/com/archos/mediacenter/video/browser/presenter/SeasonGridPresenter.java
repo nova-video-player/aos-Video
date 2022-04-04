@@ -15,12 +15,19 @@
 package com.archos.mediacenter.video.browser.presenter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
+import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.SeasonsBrowserData;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesGrid;
 import com.archos.mediacenter.video.browser.adapters.object.Season;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by alexandre on 27/10/15.
@@ -36,9 +43,38 @@ public class SeasonGridPresenter extends SeasonPresenter{
 
     @Override
     public View bindView(View view, Object object, ThumbnailEngine.Result result, int positionInAdapter) {
-        Season tvShow = (Season) object;
-        ViewHolder holder = (ViewHolder) view.getTag();
         super.bindView(view,object, result, positionInAdapter);
+        Season season = (Season) object;
+        ViewHolder holder = (ViewHolder) view.getTag();
+        List<String> seasonTags = Arrays.asList(season.getSeasonTags().split("\\s*&&&&####,\\s*"));
+        List <SeasonsBrowserData>  finalSeasonTags = new ArrayList<>();
+        for (int i = 0; i < seasonTags.size(); i++) {
+            String seasonPlot = seasonTags.get(i);
+            List <String>  seasonPlotsFormatted;
+            seasonPlotsFormatted = Arrays.asList(seasonPlot.split("\\s*=&%#\\s*"));
+            SeasonsBrowserData seasonsBrowserData = new SeasonsBrowserData();
+            seasonsBrowserData.setSeasonNumber(seasonPlotsFormatted.get(0));
+            seasonsBrowserData.setSeasonName(seasonPlotsFormatted.get(2));
+            finalSeasonTags.add(seasonsBrowserData);
+        }
+
+        String seasonText = mContext.getResources().getString(R.string.episode_season);
+        int currentSeason = season.getSeasonNumber();
+        for (int i = 0; i < finalSeasonTags.size(); i++) {
+            String seasonNumber = finalSeasonTags.get(i).getSeasonNumber();
+            if (currentSeason == Integer.parseInt(seasonNumber)) {
+                String name = "";
+                if (finalSeasonTags.get(i).getSeasonName().isEmpty()){
+                    name = seasonText+" "+season.getSeasonNumber();
+                }else{
+                    name = finalSeasonTags.get(i).getSeasonName();
+                }
+                if(holder.name!=null) {
+                    holder.name.setText(name);
+                    holder.name.setEllipsize(TextUtils.TruncateAt.END);
+                }
+            }
+        }
         if(holder.secondLine!=null)
             holder.secondLine.setVisibility(View.VISIBLE);
         return view;

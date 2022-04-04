@@ -46,21 +46,7 @@ public class SeasonPresenter extends CommonPresenter implements Presenter {
                 // on the file type (file, folder or shortcut)
                 // ------------------------------------------------
         ViewHolder holder = (ViewHolder) view.getTag();
-        String season = mContext.getResources().getString(R.string.episode_season);
 
-        List<String> seasonTagsFormatted = Arrays.asList(tvShow.getSeasonTags().split("\\s*=&%#\\s*"));
-        String seasonName = seasonTagsFormatted.get(2);
-        String name = "";
-        if (tvShow.getSeasonNumber() == 0){
-            name = seasonName;
-        } else{
-            name = season+" "+tvShow.getSeasonNumber();
-        }
-        if(holder.name!=null) {
-            holder.name.setText(name);
-        }
-        if(holder.name!=null)
-            holder.name.setEllipsize(TextUtils.TruncateAt.END);
         if(holder.secondLine!=null)
             holder.secondLine.setVisibility(View.VISIBLE);
         // Set thumbnail.

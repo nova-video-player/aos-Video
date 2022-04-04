@@ -15,10 +15,12 @@
 package com.archos.mediacenter.video.browser.presenter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
+import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.SeasonsBrowserData;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesList;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesListSeason;
@@ -63,7 +65,7 @@ public class SeasonListPresenter extends SeasonPresenter{
         List<String> seasonTags = Arrays.asList(season.getSeasonTags().split("\\s*&&&&####,\\s*"));
 
 
-        List <SeasonsBrowserData>  finalSeasonPlots = new ArrayList<>();
+        List <SeasonsBrowserData>  finalSeasonTags = new ArrayList<>();
         for (int i = 0; i < seasonTags.size(); i++) {
             String seasonPlot = seasonTags.get(i);
             List <String>  seasonPlotsFormatted;
@@ -71,17 +73,29 @@ public class SeasonListPresenter extends SeasonPresenter{
             SeasonsBrowserData seasonsBrowserData = new SeasonsBrowserData();
             seasonsBrowserData.setSeasonNumber(seasonPlotsFormatted.get(0));
             seasonsBrowserData.setSeasonPlot(seasonPlotsFormatted.get(1));
+            seasonsBrowserData.setSeasonName(seasonPlotsFormatted.get(2));
             seasonsBrowserData.setSeasonAirdate(seasonPlotsFormatted.get(3).replaceAll("&&&&####", ""));
-            finalSeasonPlots.add(seasonsBrowserData);
+            finalSeasonTags.add(seasonsBrowserData);
         }
 
+        String seasonText = mContext.getResources().getString(R.string.episode_season);
         int currentSeason = season.getSeasonNumber();
-        for (int i = 0; i < finalSeasonPlots.size(); i++) {
-            String seasonNumber = finalSeasonPlots.get(i).getSeasonNumber();
+        for (int i = 0; i < finalSeasonTags.size(); i++) {
+            String seasonNumber = finalSeasonTags.get(i).getSeasonNumber();
             if (currentSeason == Integer.parseInt(seasonNumber)) {
-                holder.seasonPlot.setText(finalSeasonPlots.get(i).getSeasonPlot());
+                holder.seasonPlot.setText(finalSeasonTags.get(i).getSeasonPlot());
                 holder.seasonPlot.setMaxLines(5);
-                holder.seasonAirDate.setText(finalSeasonPlots.get(i).getSeasonAirdate());
+                holder.seasonAirDate.setText(finalSeasonTags.get(i).getSeasonAirdate());
+                String name = "";
+                if (finalSeasonTags.get(i).getSeasonName().isEmpty()){
+                    name = seasonText+" "+season.getSeasonNumber();
+                }else{
+                    name = finalSeasonTags.get(i).getSeasonName();
+                }
+                if(holder.name!=null) {
+                    holder.name.setText(name);
+                    holder.name.setEllipsize(TextUtils.TruncateAt.END);
+                }
             }
         }
         return view;
