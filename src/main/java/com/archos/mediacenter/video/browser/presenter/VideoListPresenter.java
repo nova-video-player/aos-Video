@@ -28,9 +28,13 @@ import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesList;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
+import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.TextShadowSpan;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 import httpimage.HttpImageManager;
 
@@ -99,6 +103,14 @@ public class VideoListPresenter extends VideoPresenter{
         } else if(holder.resume!=null){
             // Show disabled video icon (there is no such disabled resume slider)
             holder.resume.setVisibility(View.GONE);
+        }
+
+        // set backdrop
+        if(video instanceof Movie){
+            Movie movie = (Movie) video;
+            if (movie.getBackdropPath()!= null)
+                Picasso.get().load(new File(movie.getBackdropPath())).into(holder.thumbnail);
+            holder.thumbnail.setClipToOutline(true);
         }
 
         return view;
