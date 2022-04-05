@@ -22,8 +22,11 @@ import android.view.ViewGroup;
 import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesList;
+import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesListShow;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 
@@ -35,7 +38,7 @@ public class TvshowListPresenter extends TvShowPresenter{
     private final DateFormat mDateFormat;
 
     public TvshowListPresenter(Context context, ExtendedClickListener listener) {
-        super(context, AdapterDefaultValuesList.INSTANCE, listener);
+        super(context, AdapterDefaultValuesListShow.INSTANCE, listener);
         mNumberFormat = NumberFormat.getInstance();
         mNumberFormat.setMinimumFractionDigits(1);
         mNumberFormat.setMaximumFractionDigits(1);
@@ -109,8 +112,10 @@ public class TvshowListPresenter extends TvShowPresenter{
             holder.detailLineThree.setMaxLines(3);
 */
 
-
-
+        // set backdrop
+        if (tvShow.getBackdropPath()!= null)
+            Picasso.get().load(new File(tvShow.getBackdropPath())).into(holder.thumbnail);
+        holder.thumbnail.setClipToOutline(true);
         return view;
     }
 

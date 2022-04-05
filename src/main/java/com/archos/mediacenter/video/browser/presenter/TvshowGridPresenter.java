@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.browser.presenter;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
@@ -45,7 +46,18 @@ public class TvshowGridPresenter extends TvShowPresenter{
 
         holder.name.setText(tvShow.getName());
 
+        // Set thumbnail.
+        if (result == null || result.getThumbnail() == null) {
+            holder.thumbnail.setImageResource(mDefaultValues.getDefaultVideoThumbnail());
+            //holder.thumbnail.setColorFilter(mDefaultIconsColor);
+            holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER); // thumbnail may be smaller, must not be over scaled
 
+        } else {
+            holder.thumbnail.setImageBitmap(result.getThumbnail());
+            holder.thumbnail.clearColorFilter();
+            holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP); // poster must be scaled in detailled view
+
+        }
 
         return view;
     }

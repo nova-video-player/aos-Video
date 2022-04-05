@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
@@ -28,7 +29,9 @@ import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesDetails
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesDetailsShow;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesList;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Date;
@@ -119,6 +122,17 @@ public class TvshowDetailedPresenter extends TvshowListPresenter{
             holder.detailLineThree.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
             holder.detailLineThree.setSingleLine(false);
             holder.detailLineThree.setMaxLines(3);
+
+        // Set thumbnail.
+        if (result == null || result.getThumbnail() == null || tvShow.getPosterUri() == null) {
+            Picasso.get().load(String.valueOf(mDefaultValues.getDefaultVideoThumbnail())).into(holder.thumbnail);
+            holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER);
+        } else {
+            Picasso.get().load(String.valueOf(tvShow.getPosterUri())).into(holder.thumbnail);
+            holder.thumbnail.clearColorFilter();
+            holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP); // poster must be scaled in detailled view
+        }
+
         return view;
     }
     private void setViewHolderVisibility(ViewHolderDetails holder, int visibility) {

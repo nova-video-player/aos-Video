@@ -47,18 +47,6 @@ public class TvShowPresenter extends CommonPresenter implements Presenter {
 
         if(holder.secondLine!=null)
             holder.secondLine.setVisibility(View.VISIBLE);
-        // Set thumbnail.
-        if (result == null || result.getThumbnail() == null) {
-            holder.thumbnail.setImageResource(mDefaultValues.getDefaultVideoThumbnail());
-            //holder.thumbnail.setColorFilter(mDefaultIconsColor);
-            holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER); // thumbnail may be smaller, must not be over scaled
-
-        } else {
-            holder.thumbnail.setImageBitmap(result.getThumbnail());
-            holder.thumbnail.clearColorFilter();
-            holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP); // poster must be scaled in detailled view
-
-        }
 
         int count = tvShow.getSeasonCount();
         if (DBG) Log.d("XXX", "getInfo() count=" + count);
