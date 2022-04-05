@@ -66,6 +66,14 @@ for informations (duration for files, number of files for directories).
             android:layout_marginLeft="@dimen/video_list_trakt_library_margin_left"
             app:srcCompat="@drawable/label_trakt_library_small"
             android:visibility="gone" />
+
+        <include
+            layout="@layout/video_occurencies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/thumbnail"
+            android:layout_alignTop="@id/thumbnail"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <include layout="@layout/browser_item_list_common"
