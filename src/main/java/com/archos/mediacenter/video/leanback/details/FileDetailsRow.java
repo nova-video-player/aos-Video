@@ -35,7 +35,7 @@ public class FileDetailsRow extends FullWidthRow {
     }
 
     public boolean shouldHideLoadingAndMetadata(){//hide when torrent and no metadata
-        return mVideo!=null&&mVideo.getMetadata()==null&&mVideo.getFileUri().getLastPathSegment().endsWith("torrent");
+        return mVideo!=null&&mVideo.getMetadata()==null&&mVideo.getFileUri()!=null&&mVideo.getFileUri().getLastPathSegment().endsWith("torrent");
     }
 
     public Video getVideo() {
