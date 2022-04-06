@@ -618,8 +618,8 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     // Delay the finish the "old" activity, else it breaks the animation
                     mHandler.postDelayed(new Runnable() {
                         public void run() {
-                            if (getActivity()!=null) // better safe than sorry
-                                getActivity().finish();
+                            Activity activity = getActivity();
+                            if (activity != null) activity.finish(); // better safe than sorry
                         }
                     }, 1000);
                 }

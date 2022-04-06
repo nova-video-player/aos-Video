@@ -473,7 +473,8 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                getActivity().finish();
+                Activity activity = getActivity();
+                if (activity != null) activity.finish(); // better safe than sorry
             }
         }, 200);
     }

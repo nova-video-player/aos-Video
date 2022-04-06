@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.network;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -177,7 +178,8 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
         getView().postDelayed(new Runnable() {
             @Override
             public void run() {
-                getActivity().finish();
+                Activity activity = getActivity();
+                if (activity != null) activity.finish(); // better safe than sorry
             }
         }, 200);
     }
