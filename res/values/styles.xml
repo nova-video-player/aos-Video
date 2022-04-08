@@ -337,6 +337,8 @@
     <!-- Force same size for ToolbarTitle in portrait/landscape. -->
     <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/gotham_book</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="AlertDialog">
