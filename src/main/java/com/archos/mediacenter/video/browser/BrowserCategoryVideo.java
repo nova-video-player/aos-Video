@@ -51,7 +51,7 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
     static final int KEY_ACTIONBAR_NAVIGATION_POSITION_DEFAULT = 0; // first on is "All movies"
 
     static final int MOVIE_CATEGORIES_NAMES_ID[] = {
-            R.string.all_movies,
+            R.string.movies,
             R.string.movies_by_year,
             R.string.movies_by_genre,
     };
@@ -205,7 +205,7 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
         for (int i=0; i<MOVIE_CATEGORIES_NAMES_ID.length; i++) {
             movieCategoriesNames[i] = getResources().getString(MOVIE_CATEGORIES_NAMES_ID[i]);
         }
-        ab.setListNavigationCallbacks( new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item, movieCategoriesNames), this);
+        ab.setListNavigationCallbacks( new ArrayAdapter(getActivity(), R.layout.movie_browser_type, movieCategoriesNames), this);
 
         // Set default value
         int defaultListPosition = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(KEY_ACTIONBAR_NAVIGATION_POSITION, KEY_ACTIONBAR_NAVIGATION_POSITION_DEFAULT);
