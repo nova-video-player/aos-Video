@@ -265,7 +265,8 @@
             android:id="@+id/series_tagline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
             android:fontFamily="@font/lato_regular"
             android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -276,7 +277,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
 
             <TextView
                 android:layout_width="110dp"
@@ -306,7 +308,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
 
             <TextView
                 android:layout_width="110dp"
@@ -337,7 +340,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
 
             <TextView
                 android:layout_width="110dp"
@@ -368,7 +372,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
 
             <TextView
                 android:layout_width="110dp"
@@ -398,7 +403,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
 
             <TextView
                 android:layout_width="110dp"
@@ -427,11 +433,11 @@
             android:id="@+id/season_plot_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dip"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
             android:ellipsize="end"
             android:lines="1"
             android:maxLines="1"
-            android:paddingTop="10dp"
             android:singleLine="true"
             android:text="@string/season_plot"
             android:fontFamily="@font/lato_regular"
@@ -445,7 +451,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:layout_marginTop="8dip"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
             android:background="@drawable/transparent_ripple"
             android:fontFamily="@font/lato_regular"
             android:textColor="@color/white_font"
@@ -455,11 +462,11 @@
             android:id="@+id/series_plot_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dip"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
             android:ellipsize="end"
             android:lines="1"
             android:maxLines="1"
-            android:paddingTop="10dp"
             android:singleLine="true"
             android:text="@string/series_plot"
             android:fontFamily="@font/lato_regular"
@@ -472,7 +479,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
 
             <TextView
                 android:id="@+id/series_plot"
@@ -490,12 +498,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/video_details_poster_margin_left"
-            android:layout_marginTop="3dip"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
             android:ellipsize="end"
             android:lines="1"
             android:maxLines="1"
-            android:paddingTop="10dp"
-            android:paddingBottom="5dp"
             android:singleLine="true"
             android:text="@string/actors_header"
             android:fontFamily="@font/lato_regular"
@@ -515,8 +522,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
 
             <TextView
                 android:layout_width="110dp"
@@ -546,8 +553,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
 
             <TextView
                 android:layout_width="110dp"
@@ -579,16 +586,16 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/video_details_poster_margin_left"
             android:layout_marginEnd="@dimen/video_details_poster_margin_left"
-            android:layout_marginTop="-5dp"
-            android:layout_marginBottom="-5dp"/>
+            android:layout_marginTop="-3dp"
+            android:layout_marginBottom="-3dp"/>
 
         <LinearLayout
             android:id="@+id/studio_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
 
             <TextView
                 android:layout_width="110dp"
@@ -620,16 +627,16 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/video_details_poster_margin_left"
             android:layout_marginEnd="@dimen/video_details_poster_margin_left"
-            android:layout_marginTop="-5dp"
-            android:layout_marginBottom="-5dp"/>
+            android:layout_marginTop="-3dp"
+            android:layout_marginBottom="-3dp"/>
 
         <LinearLayout
             android:id="@+id/musiccomposer_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
 
             <TextView
                 android:layout_width="110dp"
@@ -659,8 +666,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
 
             <TextView
                 android:layout_width="110dp"
@@ -690,8 +697,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
 
             <TextView
                 android:layout_width="110dp"
@@ -721,8 +728,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
 
             <TextView
                 android:layout_width="110dp"
