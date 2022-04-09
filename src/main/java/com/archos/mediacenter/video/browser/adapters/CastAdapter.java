@@ -10,8 +10,9 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.archos.mediacenter.video.R;
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 public class CastAdapter extends RecyclerView.Adapter<CastAdapter.CastViewHolder> {
@@ -24,7 +25,7 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.CastViewHolder
     private OnItemClickListener listener;
 
     public CastAdapter(List<CastData> cast, OnItemClickListener listener) {
-        this.cast = (List<CastData>) cast;
+        this.cast = cast;
         this.listener = listener;
     }
     @Override
@@ -36,10 +37,9 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.CastViewHolder
 
     @Override
     public void onBindViewHolder(CastAdapter.CastViewHolder vh, int position) {
-        final String ActorName = cast.get(position).getName();
         vh.actorName.setText(cast.get(position).getName());
         vh.actorCharacter.setText(cast.get(position).getCharacter());
-        Glide.with(vh.itemView.getContext()).load(cast.get(position).getPhotoPath()).fitCenter().error(R.drawable.nocast).into(vh.actorPhoto);
+        Picasso.get().load(new File(cast.get(position).getPhotoPath())).fit().centerInside().error(R.drawable.nocast).into(vh.actorPhoto);
         final int Index = position;
         vh.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
