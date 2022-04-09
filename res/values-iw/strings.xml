@@ -51,7 +51,7 @@
     <string name="info_tab_show">תכנית</string>
     <string name="info_tab_episode">פרק</string>
     <string name="info_tab_video">סרטון</string>
-    <string name="info_tab_file">מידע קובץ</string>
+    <string name="info_tab_file">מידע על הקובץ</string>
     <string name="info_tab_backdrop_chooser">בוחר רקע</string>
     <string name="info_tab_poster_chooser">בוחר פוסטר</string>
     <string name="info_tab_share">שתף</string>
@@ -249,7 +249,7 @@
     <string name="info_audio">אודיו</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_plugin_required">(נדרש תוסף)</string>
-    <string name="info_subtitle">כתובית</string>
+    <string name="info_subtitle">כתוביות</string>
     <string name="info_resume">נקודת המשך</string>
     <string name="info_bookmark">הוסף סימניה במיקום</string>
     <string name="info_file">מידע קובץ</string>
@@ -297,7 +297,7 @@
     <!-- VideoPlayer -->
     <string name="player_loading_video">טוען וידאו\u2026</string>
     <string name="player_audio_track_toast">רצועת שמע:</string>
-    <string name="player_subtitle_track_toast">רצועת כתובית:</string>
+    <string name="player_subtitle_track_toast">רצועת כתוביות:</string>
     <string name="player_bookmark_set">הגדרת סימניה ב- </string>
     <string name="player_pref_subtitle_delay_title">רווח</string>
     <string name="floating_player_restore">שחזר</string>
@@ -324,7 +324,7 @@
     <string name="pref_s3d_mode_entry_anaglyph">אנגליף</string>
     <string name="pref_s3d_mode_entry_off">כבוי</string>
     <string name="menu_info">מידע</string>
-    <string name="menu_subtitles">רצועות כתובית</string>
+    <string name="menu_subtitles">רצועות כתוביות</string>
     <string name="menu_audio">רצועות שמע</string>
     <string name="menu_lock_player">נעל נגן</string>
     <string name="menu_bookmark">הגדר סימניה</string>
@@ -443,7 +443,7 @@
     <string name="toast_subloader_credentials_empty">הזן את פרטי משתמש ה-opensubtitles שלך בהגדרות, על מנת שתוכל להוריד כתוביות</string>
     <string name="toast_subloader_login_failed">פרטי משתמש opensubtitles לא נכונים, או שהשרות לא זמין</string>
     <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_settings_title">הגדרות כתובית</string>
+    <string name="subtitle_settings_title">הגדרות כתוביות</string>
     <string name="subtitle_sample_text">\"דוגמא\"</string>
     <string name="subtitle_size_text">גודל:</string>
     <string name="subtitle_style_text">סגנון:‏</string>
@@ -756,7 +756,7 @@
     <string name="trakt_live_scrobbling_title">מעקב צפייה חי</string>
     <string name="trakt_live_scrobbling_summary">שתף קבצי וידאו נצפים ב-Trakt</string>
     <string name="trakt_getfull_summary">מעקב צפייה של Trakt זמין רק בגרסה בתשלום</string>
-    <string name="trakt_sync_collection_title">סנכרן אוסף הסדרות והסרטים</string>
+    <string name="trakt_sync_collection_title">סנכרון אוסף הסדרות והסרטים</string>
     <string name="trakt_sync_trakt_resume_title">סנכרון נקודת המשך</string>
     <string name="trakt_sync_trakt_resume">השתמש בנקודת המשך של Trakt אם היא יותר מתקדמת מהמקומית</string>
     <string name="trakt_sync_collection_summary">הוסף אוטומטית את כל קבצי הוידאו מספריית Nova שלך לאוסף ה-Trakt שלך</string>
