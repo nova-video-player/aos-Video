@@ -499,7 +499,12 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                     //set season name
                     TextView mSeason = mHeaderView.findViewById(R.id.season);
                     String seasonName = finalSeasonPlots.get(i).getSeasonName();
-                    mSeason.setText(seasonName);
+                    String seasonReady = getResources().getString(R.string.episode_season) + " " + currentSeason;
+                    if (seasonName.isEmpty()){
+                        mSeason.setText(seasonReady);
+                    }else{
+                        mSeason.setText(seasonName);
+                    }
                     setSeason(mSeason);
                 }
             }
