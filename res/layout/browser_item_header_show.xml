@@ -472,7 +472,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="5dp">
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
 
             <TextView
                 android:layout_width="110dp"
@@ -498,7 +499,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
 
             <TextView
                 android:layout_width="110dp"
@@ -525,13 +527,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/video_details_poster_margin_left"
-            android:layout_marginEnd="@dimen/video_details_poster_margin_left" />
+            android:layout_marginEnd="@dimen/video_details_poster_margin_left"
+            android:layout_marginTop="-5dp"
+            android:layout_marginBottom="-5dp"/>
 
         <LinearLayout
             android:id="@+id/studio_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
 
             <TextView
                 android:layout_width="110dp"
@@ -558,13 +564,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/video_details_poster_margin_left"
-            android:layout_marginEnd="@dimen/video_details_poster_margin_left" />
+            android:layout_marginEnd="@dimen/video_details_poster_margin_left"
+            android:layout_marginTop="-5dp"
+            android:layout_marginBottom="-5dp"/>
 
         <LinearLayout
             android:id="@+id/musiccomposer_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
 
             <TextView
                 android:layout_width="110dp"
@@ -590,7 +600,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
 
             <TextView
                 android:layout_width="110dp"
@@ -616,7 +627,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
 
             <TextView
                 android:layout_width="110dp"
@@ -642,7 +654,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
 
             <TextView
                 android:layout_width="110dp"
