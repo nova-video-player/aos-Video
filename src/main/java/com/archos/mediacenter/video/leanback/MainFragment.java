@@ -331,6 +331,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     public void onResume() {
         log.debug("onResume");
         super.onResume();
+        if (mActivity == null) mActivity = getActivity();
         mOverlay.resume();
         updateBackground();
         mActivity.registerReceiver(mUpdateReceiver, mUpdateFilter);
