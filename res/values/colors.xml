@@ -69,4 +69,6 @@
 
     <color name="private_mode">#01142A</color>
     <color name="translucent_black">#98000000</color>
+    <color name="white_font">#FFFFFF</color>
+    <color name="header_font">#C8DFF1</color>
 </resources>

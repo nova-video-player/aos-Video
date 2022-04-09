@@ -257,6 +257,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text" />
 
@@ -275,6 +277,8 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/genres"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
 
@@ -282,6 +286,8 @@
                 android:id="@+id/series_genres"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
@@ -301,6 +307,8 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/created_by"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
 
@@ -309,6 +317,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
@@ -328,6 +338,8 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/scrap_producer"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
 
@@ -336,6 +348,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
@@ -355,6 +369,8 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/premiered"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
 
@@ -362,6 +378,8 @@
                 android:id="@+id/premiered"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
@@ -381,6 +399,8 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/airdate"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
 
@@ -388,6 +408,8 @@
                 android:id="@+id/season_airdate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
@@ -403,6 +425,8 @@
             android:paddingTop="10dp"
             android:singleLine="true"
             android:text="@string/season_plot"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text" />
 
@@ -413,6 +437,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dip"
             android:background="@drawable/transparent_ripple"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -426,6 +452,8 @@
             android:paddingTop="10dp"
             android:singleLine="true"
             android:text="@string/series_plot"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text" />
 
@@ -440,6 +468,8 @@
                 android:id="@+id/series_plot"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/white_font"
                 android:background="@drawable/transparent_ripple"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
@@ -457,6 +487,8 @@
             android:paddingBottom="5dp"
             android:singleLine="true"
             android:text="@string/actors_header"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text" />
 
@@ -483,6 +515,8 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/show_type"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
 
@@ -490,6 +524,8 @@
                 android:id="@+id/showtype"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
@@ -510,6 +546,8 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/networks"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
 
@@ -518,6 +556,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
@@ -547,6 +587,8 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/studios"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
 
@@ -555,6 +597,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
@@ -584,6 +628,8 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/scrap_musiccomposer"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
 
@@ -591,6 +637,8 @@
                 android:id="@+id/musiccomposer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
@@ -611,6 +659,8 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/scrap_original_language"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
 
@@ -618,6 +668,8 @@
                 android:id="@+id/scrap_original_language"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
@@ -638,6 +690,8 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/scrap_production_countries"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
 
@@ -645,6 +699,8 @@
                 android:id="@+id/scrap_production_countries"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
@@ -665,6 +721,8 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/scrap_spoken_languages"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
 
@@ -672,6 +730,8 @@
                 android:id="@+id/scrap_spoken_languages"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text" />
         </LinearLayout>
