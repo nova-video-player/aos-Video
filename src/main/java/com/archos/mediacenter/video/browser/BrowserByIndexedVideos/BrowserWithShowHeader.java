@@ -488,14 +488,17 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             for (int i = 0; i < finalSeasonPlots.size(); i++) {
                 String seasonNumber = finalSeasonPlots.get(i).getSeasonNumber();
                 if (currentSeason == Integer.parseInt(seasonNumber)){
-                    mSeasonPlot.setText(finalSeasonPlots.get(i).getSeasonPlot());
                     if(finalSeasonPlots.get(i).getSeasonPlot().isEmpty()){
                         mSeasonPlot.setVisibility(View.GONE);
                         seasonPlotHeader.setVisibility(View.GONE);
+                    }else{
+                        mSeasonPlot.setText(finalSeasonPlots.get(i).getSeasonPlot());
                     }
-                    seasonAirDate.setText(finalSeasonPlots.get(i).getSeasonAirdate());
-                    if (finalSeasonPlots.get(i).getSeasonAirdate().isEmpty())
+                    if (finalSeasonPlots.get(i).getSeasonAirdate().isEmpty()) {
                         seasonAirDateContainer.setVisibility(View.GONE);
+                    }else{
+                        seasonAirDate.setText(finalSeasonPlots.get(i).getSeasonAirdate());
+                    }
                     //set season name
                     TextView mSeason = mHeaderView.findViewById(R.id.season);
                     String seasonName = finalSeasonPlots.get(i).getSeasonName();
