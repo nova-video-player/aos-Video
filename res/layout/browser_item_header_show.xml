@@ -86,26 +86,29 @@
     <!-- TV show title -->
     <TextView
         android:id="@+id/name"
-        style="@style/textAppearanceLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/show_clearlogo"
         android:layout_marginTop="8dip"
         android:layout_toEndOf="@id/series_thumbnail_cardview"
-        android:paddingTop="8dip"
+        android:fontFamily="@font/lato_regular"
+        android:paddingTop="1dp"
         android:singleLine="true"
-        android:textSize="24sp"
-        android:typeface="sans" />
+        android:textColor="@color/white_font"
+        android:textSize="24sp" />
 
     <!-- TV show season -->
     <TextView
         android:id="@+id/season"
-        style="@style/BrowserText.Name.Video"
+        android:fontFamily="@font/lato_bold"
+        android:textColor="@color/white_font"
         android:layout_width="match_parent"
         android:layout_below="@id/name"
         android:layout_toEndOf="@id/series_thumbnail_cardview"
-        android:paddingTop="0dip"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:paddingTop="1dp"
+        android:textSize="14sp"
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:layout_toEndOf="@+id/series_thumbnail_cardview"
@@ -157,9 +160,10 @@
                 android:id="@+id/episode_runtime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_bold"
+                android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"
-                android:textStyle="bold" />
+                android:textSize="@dimen/video_info_medium_text"/>
         </LinearLayout>
 
         <ImageView
@@ -200,15 +204,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:fontFamily="@font/lato_bold"
+                android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"
-                android:textStyle="bold" />
+                android:textSize="@dimen/video_info_medium_text"/>
             <TextView
                 android:id="@+id/vote_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginStart="2dp"
+                android:layout_marginStart="3dp"
+                android:fontFamily="@font/lato_light"
+                android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -218,9 +225,10 @@
             android:id="@+id/premiered_year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_bold"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text"
-            android:textStyle="bold" />
+            android:textSize="@dimen/video_info_medium_text"/>
     </LinearLayout>
 
     <TextView
@@ -229,15 +237,16 @@
         android:layout_toEndOf="@+id/series_thumbnail_cardview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/lato_bold"
+        android:textColor="@color/header_font"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="@dimen/video_info_small_text"
-        android:textStyle="bold" />
+        android:textSize="@dimen/video_info_small_text"/>
 
     <ImageView
         android:id="@+id/show_clearlogo"
-        android:layout_below="@id/series_backdrop_cardview"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_below="@id/series_backdrop_cardview"
         android:layout_marginTop="2dp"
         android:layout_toEndOf="@id/series_thumbnail_cardview"
         android:adjustViewBounds="true"
