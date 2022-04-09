@@ -407,6 +407,21 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
             TextView network = mHeaderView.findViewById(R.id.network);
             network.setText(show.getStudio());
+            network.setMaxLines(1);
+            network.setTag(true);
+            network.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (((Boolean) network.getTag())) {
+                        network.setMaxLines(Integer.MAX_VALUE);
+                        network.setTag(false);
+                    } else {
+                        network.setMaxLines(1);
+                        network.setTag(true);
+                    }
+                    mBrowserAdapter.notifyDataSetChanged();
+                }
+            });
 
             TextView Premiered = mHeaderView.findViewById(R.id.premiered);
             String pattern = "MMMM dd, yyyy";
@@ -594,6 +609,21 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             LinearLayout studioNamesContainer = mHeaderView.findViewById(R.id.studio_container);
             if (studioNames.isEmpty())
                 studioNamesContainer.setVisibility(View.GONE);
+            studio.setMaxLines(1);
+            studio.setTag(true);
+            studio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (((Boolean) studio.getTag())) {
+                        studio.setMaxLines(Integer.MAX_VALUE);
+                        studio.setTag(false);
+                    } else {
+                        studio.setMaxLines(1);
+                        studio.setTag(true);
+                    }
+                    mBrowserAdapter.notifyDataSetChanged();
+                }
+            });
 
 
             // setting Actors RecyclerView
