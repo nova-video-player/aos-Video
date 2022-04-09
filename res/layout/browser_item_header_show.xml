@@ -101,7 +101,7 @@
     <TextView
         android:id="@+id/season"
         android:fontFamily="@font/lato_bold"
-        android:textColor="@color/white_font"
+        android:textColor="@color/header_font"
         android:layout_width="match_parent"
         android:layout_below="@id/name"
         android:layout_toEndOf="@id/series_thumbnail_cardview"
