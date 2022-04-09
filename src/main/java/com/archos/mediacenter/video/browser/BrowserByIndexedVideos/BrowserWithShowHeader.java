@@ -387,6 +387,21 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             LinearLayout createdbyContainer = mHeaderView.findViewById(R.id.created_by_container);
             if (tags.getDirectorsFormatted() == null)
                 createdbyContainer.setVisibility(View.GONE);
+            createdBy.setMaxLines(2);
+            createdBy.setTag(true);
+            createdBy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (((Boolean) createdBy.getTag())) {
+                        createdBy.setMaxLines(Integer.MAX_VALUE);
+                        createdBy.setTag(false);
+                    } else {
+                        createdBy.setMaxLines(2);
+                        createdBy.setTag(true);
+                    }
+                    mBrowserAdapter.notifyDataSetChanged();
+                }
+            });
 
 
             TextView producer = mHeaderView.findViewById(R.id.producer);
@@ -394,6 +409,21 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             LinearLayout producerContainer = mHeaderView.findViewById(R.id.producer_container);
             if (tags.getProducersFormatted() == null)
                 producerContainer.setVisibility(View.GONE);
+            producer.setMaxLines(2);
+            producer.setTag(true);
+            producer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (((Boolean) producer.getTag())) {
+                        producer.setMaxLines(Integer.MAX_VALUE);
+                        producer.setTag(false);
+                    } else {
+                        producer.setMaxLines(2);
+                        producer.setTag(true);
+                    }
+                    mBrowserAdapter.notifyDataSetChanged();
+                }
+            });
 
             // set Original Music Composer
             TextView mMusiccomposer = mHeaderView.findViewById(R.id.musiccomposer);
