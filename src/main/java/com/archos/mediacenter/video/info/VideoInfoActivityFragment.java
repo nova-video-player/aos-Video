@@ -954,7 +954,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         log.debug("requestIndexAndScrap");
         if (!PrivateMode.isActive()) {
 
-            if (mCurrentVideo.getId() == -1&&!mCurrentVideo.getFileUri().equals(mLastIndexed)) {
+            if (mCurrentVideo.getId() == -1&&mCurrentVideo.getFileUri()!=null&&!mCurrentVideo.getFileUri().equals(mLastIndexed)) {
                 mLastIndexed = mCurrentVideo.getFileUri();
                 if(UriUtils.isIndexable(mCurrentVideo.getFileUri())) {
                     final Uri uri = mCurrentVideo.getFileUri();
