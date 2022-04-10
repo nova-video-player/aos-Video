@@ -344,6 +344,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mSpokenLanguages;
     private View mSpokenLanguagesContainer;
     private CoordinatorLayout mCoordinatorLayout;
+    private TextView mNetworks;
+    private View mNetworksContainer;
 
     private ObservableScrollView mScrollView;
 
@@ -564,6 +566,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mSpokenLanguages = mRoot.findViewById(R.id.scrap_spoken_languages);
         mSpokenLanguagesContainer = mRoot.findViewById(R.id.scrap_spoken_languages_container);
         mCoordinatorLayout = mRoot.findViewById(R.id.coordinator_layout);
+        mNetworks = mRoot.findViewById(R.id.networks);
+        mNetworksContainer = mRoot.findViewById(R.id.network_container);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -2307,6 +2311,19 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         mSpokenLanguagesContainer.setVisibility(View.GONE);
                     }else{
                         mSpokenLanguages.setText(showTags.getSpokenlanguagesFormatted());
+                    }
+                    // set network names
+                    String networkNames = "";
+                    String networks = "";
+                    for (int i = 0; i < NetworkLogoPaths.size(); i++) {
+                        networks = networks + NetworkLogoPaths.get(i).replaceAll(baseNetworkPath, "").replaceAll(".png", "") + ", ";
+                        networkNames = networks.substring(0, networks.length() - 2);
+                    }
+                    if (networkNames.isEmpty()){
+                        mNetworks.setVisibility(View.GONE);
+                        mNetworksContainer.setVisibility(View.GONE);
+                    }else{
+                        mNetworks.setText(networkNames);
                     }
                 }
                 else if(tags instanceof MovieTags){
