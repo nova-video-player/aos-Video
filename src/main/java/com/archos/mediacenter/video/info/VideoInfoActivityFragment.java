@@ -2576,6 +2576,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     } else {
                         setTextOrHideContainer(mMusiccomposer, tags.getMusiccomposersFormatted() , mMusiccomposerContainer);
                     }
+                    //hide networks
+                    mNetworks.setVisibility(View.GONE);
+                    mNetworksContainer.setVisibility(View.GONE);
                 }
                 // set content rating
                 if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
