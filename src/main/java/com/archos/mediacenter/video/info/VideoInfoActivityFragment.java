@@ -1958,7 +1958,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     guestStars = tags.getActorsFormatted();
                 }
                 setTextOrHideContainer(mGuestStars, guestStars, mGuestStars, mGuestStarsTitle);
-                mGuestStars.setMaxLines(3);
+                mGuestStars.setMaxLines(2);
                 mGuestStars.setTag(true);
                 mGuestStars.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1967,7 +1967,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             mGuestStars.setMaxLines(200);
                             mGuestStars.setTag(false);
                         } else {
-                            mGuestStars.setMaxLines(3);
+                            mGuestStars.setMaxLines(2);
                             mGuestStars.setTag(true);
                         }
                     }
