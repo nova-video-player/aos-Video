@@ -172,7 +172,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
-                            android:layout_marginStart="2dp"
+                            android:layout_marginStart="3dp"
                             android:fontFamily="@font/lato_light"
                             android:textColor="@color/header_font"
                             android:textAppearance="?android:attr/textAppearanceMedium"
