@@ -471,7 +471,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mSubtitleDownloadButton.setOnClickListener(this);
         mResumeLocalButton = (Button) mRoot.findViewById(R.id.resume);
         mPlayButton = (Button) mRoot.findViewById(R.id.play);
-        mActionButtonsContainer = (LinearLayout) mRoot.findViewById(R.id.action_buttons_container);
+        //mActionButtonsContainer = (LinearLayout) mRoot.findViewById(R.id.action_buttons_container);
         mResumeLocalButton.setOnClickListener(this);
         mPlayButton.setOnClickListener(this);
         mPlayButton.setOnLongClickListener(new View.OnLongClickListener() {
@@ -633,8 +633,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
         ((ObservableScrollView)mRoot.findViewById(R.id.scrollView)).setScrollViewCallbacks(this);
 
-        if(mIsLaunchFromPlayer) //hide play button
-            mActionButtonsContainer.setVisibility(View.GONE);
+        //if(mIsLaunchFromPlayer) //hide play button
+            //mActionButtonsContainer.setVisibility(View.GONE);
         return mRoot;
     }
 
@@ -872,7 +872,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mSecondaryEpisodeTitleView.setVisibility(View.GONE);
             }
 
-            mToolbarTitle.setText(name);
+            //mToolbarTitle.setText(name);
 
             if(name!=null) {
                 if (name.length() > 30) {

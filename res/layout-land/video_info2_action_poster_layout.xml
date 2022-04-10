@@ -2,8 +2,76 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout  android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/picture_backdrop_cardview"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            card_view:cardCornerRadius="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_gravity="center_horizontal"	>
+            <ImageView
+                android:id="@+id/picture_backdrop"
+                android:layout_width="match_parent"
+                android:layout_height="360dp"
+                android:scaleType="centerCrop"/>
+        </androidx.cardview.widget.CardView>
+        <Button
+            android:id="@+id/play"
+            android:foreground="@drawable/transparent_ripple"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:paddingTop="20dip"
+            android:background="@drawable/play_button"
+            android:paddingBottom="20dip"
+            android:visibility="visible"
+            android:layout_width="50dp"
+            android:gravity="center"
+            />
+
+        <Button
+            android:id="@+id/resume"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dip"
+            android:drawableStart="@drawable/button_icon_resume"
+            android:paddingBottom="20dip"
+            android:background="@drawable/transparent_ripple"
+            android:gravity="center"
+            android:text="@string/resume"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_alignBottom="@id/picture_backdrop_cardview"
+            android:layout_alignEnd="@id/picture_backdrop_cardview"
+            android:layout_marginEnd="6dp"
+            />
+        <Button
+            android:id="@+id/remote_resume"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/button_icon_network"
+            android:paddingTop="20dip"
+            android:paddingBottom="20dip"
+            android:background="@drawable/transparent_ripple"
+            android:gravity="center"
+            android:text="@string/remote_resume"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_alignBottom="@id/picture_backdrop_cardview"
+            android:layout_alignStart="@id/picture_backdrop_cardview"
+            android:layout_marginStart="6dp"
+            />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
 
         android:id="@+id/posterCard"
@@ -24,43 +92,165 @@
 
         </androidx.cardview.widget.CardView>
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/secondary_titlebar"
             android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/video_info_margin_simple"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="bottom">
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_weight="2"
-                android:layout_height="match_parent"
-                android:paddingRight="@dimen/video_info_margin_simple"
-                android:layout_marginBottom="@dimen/video_info_margin_half"
-                android:id="@+id/secondary_titlebar"
-                android:paddingTop="@dimen/video_info_margin_half"
-                android:paddingBottom="@dimen/video_info_margin_half"
-                android:orientation="vertical"
-                >
-                <include
-                    layout="@layout/video_info2_titlebar_layout"
-                    android:background="@android:color/transparent">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="5"
+            android:orientation="vertical">
 
-                </include>
-            </RelativeLayout>
-            <FrameLayout
+            <TextView
+                android:id="@+id/title_view"
                 android:layout_width="match_parent"
-
                 android:layout_height="wrap_content"
-                >
-                <include
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/white_font"
+                android:singleLine="true"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/s_e_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title_view"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/header_font"
+                android:textSize="@dimen/video_info_medium_text"/>
+
+            <TextView
+                android:id="@+id/episode_title_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/s_e_text_view"
+                android:fontFamily="@font/lato_lightitalic"
+                android:textColor="@color/header_font"
+                android:singleLine="true"
+                android:textSize="@dimen/video_info_medium_text" />
+
+
+            <LinearLayout
+                android:id="@+id/info_container"
+                android:layout_below="@+id/episode_title_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="4dp"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:gravity="start"
+                    android:layout_weight="1.2"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_gravity="center"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/star_rating" />
+                    <TextView
+                        android:id="@+id/scrap_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:fontFamily="@font/lato_bold"
+                        android:textColor="@color/header_font"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="@dimen/video_info_medium_text"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/vote_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginStart="3dp"
+                        android:fontFamily="@font/lato_light"
+                        android:textColor="@color/header_font"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <TextView
+                    android:layout_gravity="center"
+                    android:gravity="end"
+                    android:id="@+id/year"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    layout="@layout/video_info2_fragment_actions"
-                    android:layout_alignParentBottom="true"
-                    android:id="@+id/action_buttons_container"
-                    android:layout_gravity="bottom" />
-            </FrameLayout>
-        </LinearLayout>
+                    android:fontFamily="@font/lato_bold"
+                    android:textColor="@color/header_font"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="@dimen/video_info_medium_text"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="2dp"
+                android:layout_below="@+id/info_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:orientation="horizontal">
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1">
+
+                    <LinearLayout
+                        android:id="@+id/content_rating_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/rounded_edges">
+
+                        <TextView
+                            android:id="@+id/content_rating"
+                            android:textSize="15sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:gravity="center_horizontal"
+                            android:fontFamily="@font/gotham_narrow_black"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/black"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/runtime_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/runtime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato_bold"
+                        android:textColor="@color/header_font"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="@dimen/video_info_medium_text"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/logo"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_gravity="center"
+                    android:gravity="end"
+                    android:scaleType="center" />
+            </LinearLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
     </LinearLayout>
 </merge>

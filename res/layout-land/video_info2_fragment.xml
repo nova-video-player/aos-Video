@@ -41,7 +41,6 @@
                 />
             </RelativeLayout>
             <androidx.appcompat.widget.Toolbar
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/titlebar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -50,8 +49,26 @@
                 android:layout_margin="0dp"
                 android:background="@android:color/transparent"
                 android:paddingLeft="0dip">
-
-
+                <!--text size is programmatically changed -->
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+                    <TextView
+                        android:id="@+id/toolbar_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato_regular"
+                        android:singleLine="true"
+                        android:textColor="@color/white_font"
+                        android:textSize="24sp"/>
+                    <ImageView
+                        android:id="@+id/clearlogo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="2dp"
+                        android:scaleType="center" />
+                </RelativeLayout>
             </androidx.appcompat.widget.Toolbar>
         </FrameLayout>
 
