@@ -781,6 +781,13 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 mSpokenLanguages.setText(showTags.getSpokenlanguagesFormatted());
             }
 
+            TextView popularity = mHeaderView.findViewById(R.id.scrap_popularity);
+            if (tvShowTags.get(0).getPopularity().isEmpty()){
+                popularity.setVisibility(View.GONE);
+            }else{
+                popularity.setText(tvShowTags.get(0).getPopularity());
+            }
+
             ImageView posterView = mHeaderView.findViewById(R.id.thumbnail);
             posterView.setImageBitmap(result.bitmap);
             posterView.setOnClickListener(new View.OnClickListener() {
