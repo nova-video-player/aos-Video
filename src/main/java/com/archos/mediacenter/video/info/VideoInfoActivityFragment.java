@@ -2319,6 +2319,15 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     log.debug("FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
                     //set movie backdrop
                     mBackgroundSetter.set(mPictureBackdrop, mBackgroundLoaderPlay, tags.getDefaultBackdrop());
+                    mPictureBackdrop.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
+                            intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
+                            intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_BACKDROP, true);
+                            startActivityForResult(intent, REQUEST_BACKDROP_ACTIVITY);
+                        }
+                    });
                     // set movie tags
                     String tagline = "";
                     String budget = "";
