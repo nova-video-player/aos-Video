@@ -204,7 +204,7 @@
     <string name="scrap_rating_format">Rating: %s</string>
     <string name="scrap_year">Year</string>
     <string name="scrap_year_format">Year: %d</string>
-    <string name="scrap_studio">Studio:</string>
+    <string name="scrap_studio">Studios:</string>
     <string name="scrap_plot">Plot</string>
     <string name="scrap_trailer">Trailers</string>
     <string name="scrap_cast">Cast:</string>
