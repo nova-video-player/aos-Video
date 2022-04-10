@@ -133,16 +133,15 @@
 
                 <TextView
                     android:id="@+id/content_rating"
-                    android:textSize="@dimen/video_info_small_text"
+                    android:textSize="15sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_marginBottom="1dp"
                     android:gravity="center_horizontal"
+                    android:fontFamily="@font/gotham_narrow_black"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold"
-                    android:textColor="@color/grid_item_background"
+                    android:textColor="@color/black"
                     />
             </LinearLayout>
         </LinearLayout>
