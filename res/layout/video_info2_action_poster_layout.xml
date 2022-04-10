@@ -113,7 +113,7 @@
                     android:fontFamily="@font/lato_regular"
                     android:textColor="@color/white_font"
                     android:singleLine="true"
-                    android:textSize="24sp" />
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/s_e_text_view"
