@@ -15,6 +15,8 @@
         android:paddingBottom="@dimen/video_info_margin_half"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/lato_regular"
+        android:textColor="@color/white_font"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="@dimen/video_info_medium_text" />
 
@@ -34,12 +36,16 @@
             android:gravity="start"
             android:lines="1"
             android:maxLines="1"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
         <TextView
             android:id="@+id/scrap_genre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
     </LinearLayout>
@@ -59,12 +65,16 @@
             android:gravity="start"
             android:lines="1"
             android:maxLines="1"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
         <TextView
             android:id="@+id/scrap_director"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
     </LinearLayout>
@@ -84,12 +94,16 @@
             android:gravity="start"
             android:lines="1"
             android:maxLines="1"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
         <TextView
             android:id="@+id/scrap_writer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
     </LinearLayout>
@@ -109,12 +123,16 @@
             android:gravity="start"
             android:lines="1"
             android:maxLines="1"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
         <TextView
             android:id="@+id/scrap_createdby"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
     </LinearLayout>
@@ -134,12 +152,16 @@
             android:gravity="start"
             android:lines="1"
             android:maxLines="1"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
         <TextView
             android:id="@+id/scrap_producer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
     </LinearLayout>
@@ -159,11 +181,15 @@
             android:gravity="start"
             android:lines="1"
             android:maxLines="1"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/scrap_date"
             android:textSize="@dimen/video_info_medium_text"
@@ -184,6 +210,8 @@
             android:lines="1"
             android:maxLines="1"
             android:text="@string/video_runtime"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text" />
         <TextView
@@ -191,19 +219,22 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/scrap_duration"
-            style="@style/VideoInfoFileInfo"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/white_font"
             android:textSize="@dimen/video_info_medium_text"
             />
     </LinearLayout>
 
     <TextView
         android:id="@+id/scrap_plot"
-        style="@style/VideoInfoFileInfo"
+        android:fontFamily="@font/lato_regular"
+        android:textColor="@color/white_font"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="4"
         android:clickable="true"
         android:focusable="true"
+        android:textSize="@dimen/video_info_medium_text"
         android:ellipsize="end"/>
 
     <LinearLayout
@@ -220,12 +251,16 @@
             android:gravity="start"
             android:lines="1"
             android:maxLines="1"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
         <TextView
             android:id="@+id/scrap_cast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:ellipsize="end"
             android:textSize="@dimen/video_info_medium_text"/>
@@ -250,12 +285,16 @@
             android:gravity="start"
             android:lines="1"
             android:maxLines="1"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
         <TextView
             android:id="@+id/scrap_gueststars"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:ellipsize="end"
             android:textSize="@dimen/video_info_medium_text"/>
@@ -279,12 +318,16 @@
             android:gravity="start"
             android:lines="1"
             android:maxLines="1"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
         <TextView
             android:id="@+id/scrap_studio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:ellipsize="end"
             android:textSize="@dimen/video_info_medium_text"/>
@@ -310,12 +353,16 @@
             android:gravity="start"
             android:lines="1"
             android:maxLines="1"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
         <TextView
             android:id="@+id/scrap_screenplay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
     </LinearLayout>
@@ -335,12 +382,16 @@
             android:gravity="start"
             android:lines="1"
             android:maxLines="1"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
         <TextView
             android:id="@+id/scrap_musiccomposer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
     </LinearLayout>
@@ -360,12 +411,16 @@
             android:gravity="start"
             android:lines="1"
             android:maxLines="1"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
         <TextView
             android:id="@+id/scrap_original_language"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
     </LinearLayout>
@@ -385,12 +440,16 @@
             android:gravity="start"
             android:lines="1"
             android:maxLines="1"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
         <TextView
             android:id="@+id/scrap_production_countries"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
     </LinearLayout>
@@ -410,12 +469,16 @@
             android:gravity="start"
             android:lines="1"
             android:maxLines="1"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
         <TextView
             android:id="@+id/scrap_spoken_languages"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text"/>
     </LinearLayout>
