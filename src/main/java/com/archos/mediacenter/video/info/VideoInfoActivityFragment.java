@@ -1847,6 +1847,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);
                     }
                 }
+                mGenreTextView.setMaxLines(2);
+                mGenreTextView.setTag(true);
+                mGenreTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (((Boolean) mGenreTextView.getTag())) {
+                            mGenreTextView.setMaxLines(50);
+                            mGenreTextView.setTag(false);
+                        } else {
+                            mGenreTextView.setMaxLines(2);
+                            mGenreTextView.setTag(true);
+                        }
+                    }
+                });
                 setTextOrHideContainer(mPlotTextView, plot, mPlotTextView);
                 int expectedWidthOfTextView = getResources().getDisplayMetrics().widthPixels;
                 int originalMaxLines = mPlotTextView.getMaxLines();
@@ -2157,6 +2171,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     } else {
                         setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);
                     }
+                    mGenreTextView.setMaxLines(2);
+                    mGenreTextView.setTag(true);
+                    mGenreTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (((Boolean) mGenreTextView.getTag())) {
+                                mGenreTextView.setMaxLines(50);
+                                mGenreTextView.setTag(false);
+                            } else {
+                                mGenreTextView.setMaxLines(2);
+                                mGenreTextView.setTag(true);
+                            }
+                        }
+                    });
                     // setting Networks RecyclerView
                     List<ScraperImage> networkImage = showTags.getNetworkLogos();
                     List<String> NetworkLogoPaths = new ArrayList<>();
