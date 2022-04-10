@@ -13,12 +13,20 @@
             android:layout_height="0dp"
             android:layout_weight="5"
             android:orientation="vertical">
-            <ImageView
-                android:id="@+id/picture_backdrop"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/series_backdrop_cardview"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                card_view:cardCornerRadius="4dp"
                 android:layout_width="match_parent"
-                android:layout_height="210dp"
-                android:scaleType="centerCrop"
-                android:layout_marginBottom="4dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_gravity="center_horizontal"	>
+                <ImageView
+                    android:id="@+id/picture_backdrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp"
+                    android:scaleType="centerCrop"/>
+            </androidx.cardview.widget.CardView>
             <Button
                 android:id="@+id/play"
                 android:foreground="@drawable/transparent_ripple"
