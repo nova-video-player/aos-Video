@@ -14,7 +14,7 @@
             android:layout_weight="5"
             android:orientation="vertical">
             <androidx.cardview.widget.CardView
-                android:id="@+id/series_backdrop_cardview"
+                android:id="@+id/picture_backdrop_cardview"
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 card_view:cardCornerRadius="4dp"
                 android:layout_width="match_parent"
@@ -51,8 +51,8 @@
                 android:text="@string/resume"
                 android:visibility="visible"
                 android:layout_width="wrap_content"
-                android:layout_alignBottom="@id/picture_backdrop"
-                android:layout_alignEnd="@id/picture_backdrop"
+                android:layout_alignBottom="@id/picture_backdrop_cardview"
+                android:layout_alignEnd="@id/picture_backdrop_cardview"
                 android:layout_marginEnd="6dp"
                 />
             <Button
@@ -66,8 +66,8 @@
                 android:text="@string/remote_resume"
                 android:visibility="visible"
                 android:layout_width="wrap_content"
-                android:layout_alignBottom="@id/picture_backdrop"
-                android:layout_alignStart="@id/picture_backdrop"
+                android:layout_alignBottom="@id/picture_backdrop_cardview"
+                android:layout_alignStart="@id/picture_backdrop_cardview"
                 android:layout_marginStart="6dp"
                 />
         </RelativeLayout>
