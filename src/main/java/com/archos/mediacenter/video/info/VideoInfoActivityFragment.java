@@ -1974,6 +1974,34 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 });
                 setTextOrHideContainer(mScrapDirector, tags.getDirectorsFormatted(), mScrapDirector, mScrapDirectorTitle);
                 setTextOrHideContainer(mScrapWriter, tags.getWritersFormatted(), mScrapWriter, mScrapWriterTitle);
+                mScrapDirector.setMaxLines(2);
+                mScrapDirector.setTag(true);
+                mScrapDirector.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (((Boolean) mScrapDirector.getTag())) {
+                            mScrapDirector.setMaxLines(50);
+                            mScrapDirector.setTag(false);
+                        } else {
+                            mScrapDirector.setMaxLines(2);
+                            mScrapDirector.setTag(true);
+                        }
+                    }
+                });
+                mScrapWriter.setMaxLines(2);
+                mScrapWriter.setTag(true);
+                mScrapWriter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (((Boolean) mScrapWriter.getTag())) {
+                            mScrapWriter.setMaxLines(50);
+                            mScrapWriter.setTag(false);
+                        } else {
+                            mScrapWriter.setMaxLines(2);
+                            mScrapWriter.setTag(true);
+                        }
+                    }
+                });
                 String date = null;
                 String baseStudioPath = MediaScraper.getStudioLogoDirectory(mContext).getPath() + "/";
                 String baseNetworkPath = MediaScraper.getNetworkLogoDirectory(mContext).getPath() + "/";
@@ -2008,6 +2036,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             .centerInside().into(mClearLogo);
                     //set series producer
                     setTextOrHideContainer(mScrapProducer, showTags.getProducersFormatted(), mScrapProducer, mScrapProducerTitle);
+                    mScrapProducer.setMaxLines(2);
+                    mScrapProducer.setTag(true);
+                    mScrapProducer.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (((Boolean) mScrapProducer.getTag())) {
+                                mScrapProducer.setMaxLines(50);
+                                mScrapProducer.setTag(false);
+                            } else {
+                                mScrapProducer.setMaxLines(2);
+                                mScrapProducer.setTag(true);
+                            }
+                        }
+                    });
                     // set series studio names for episode view
                     String names = "";
                     for (int i = showTags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
@@ -2061,6 +2103,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     } else {
                         setTextOrHideContainer(mCreatedBy, showTags.getDirectorsFormatted() , mCreatedByContainer);
                     }
+                    mCreatedBy.setMaxLines(2);
+                    mCreatedBy.setTag(true);
+                    mCreatedBy.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (((Boolean) mCreatedBy.getTag())) {
+                                mCreatedBy.setMaxLines(50);
+                                mCreatedBy.setTag(false);
+                            } else {
+                                mCreatedBy.setMaxLines(2);
+                                mCreatedBy.setTag(true);
+                            }
+                        }
+                    });
                     // setting Actors RecyclerView
                     List<CastData> seriesActors = new ArrayList<>();
                     CastData castData;
@@ -2405,6 +2461,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     Glide.with(mContext).load(tags.getClearLogo())
                             .centerInside().into(mClearLogo);
                     setTextOrHideContainer(mScrapProducer, tags.getProducersFormatted(), mScrapProducer, mScrapProducerTitle);
+                    mScrapProducer.setMaxLines(2);
+                    mScrapProducer.setTag(true);
+                    mScrapProducer.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (((Boolean) mScrapProducer.getTag())) {
+                                mScrapProducer.setMaxLines(50);
+                                mScrapProducer.setTag(false);
+                            } else {
+                                mScrapProducer.setMaxLines(2);
+                                mScrapProducer.setTag(true);
+                            }
+                        }
+                    });
                     // hide Created by
                     mCreatedBy.setVisibility(View.GONE);
                     mCreatedByContainer.setVisibility(View.GONE);
@@ -2417,6 +2487,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     } else {
                         setTextOrHideContainer(mScreenplay, tags.getScreenplaysFormatted() , mScreenplayContainer);
                     }
+                    mScreenplay.setMaxLines(2);
+                    mScreenplay.setTag(true);
+                    mScreenplay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (((Boolean) mScreenplay.getTag())) {
+                                mScreenplay.setMaxLines(50);
+                                mScreenplay.setTag(false);
+                            } else {
+                                mScreenplay.setMaxLines(2);
+                                mScreenplay.setTag(true);
+                            }
+                        }
+                    });
                     // set Original Music Composer
                     if (tags.getMusiccomposersFormatted() == null || tags.getMusiccomposersFormatted().isEmpty()) {
                         mMusiccomposer.setVisibility(View.GONE);
