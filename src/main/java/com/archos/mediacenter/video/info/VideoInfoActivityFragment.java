@@ -2325,6 +2325,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }else{
                         mNetworks.setText(networkNames);
                     }
+                    mNetworks.setMaxLines(1);
+                    mNetworks.setTag(true);
+                    mNetworks.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (((Boolean) mNetworks.getTag())) {
+                                mNetworks.setMaxLines(50);
+                                mNetworks.setTag(false);
+                            } else {
+                                mNetworks.setMaxLines(1);
+                                mNetworks.setTag(true);
+                            }
+                        }
+                    });
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
