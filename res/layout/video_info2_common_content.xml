@@ -66,8 +66,6 @@
             android:layout_height="wrap_content"
             layout="@layout/video_info2_scraper_plot"
             android:layout_gravity="center_horizontal|bottom"
-            android:layout_marginTop="@dimen/video_info_margin_half"
-
             android:layout_below="@+id/buttons_container"
             android:id="@+id/scraper_plot_container"
             android:layout_alignParentStart="true"
