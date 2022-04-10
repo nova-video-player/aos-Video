@@ -110,7 +110,10 @@
                     android:id="@+id/title_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/video_info_very_big_text" />
+                    android:fontFamily="@font/lato_regular"
+                    android:textColor="@color/white_font"
+                    android:singleLine="true"
+                    android:textSize="24sp" />
 
                 <TextView
                     android:id="@+id/s_e_text_view"
@@ -176,6 +179,8 @@
                         android:id="@+id/year"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato_bold"
+                        android:textColor="@color/header_font"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textSize="@dimen/video_info_medium_text"
                         android:textStyle="bold" />
@@ -230,6 +235,8 @@
                             android:id="@+id/runtime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/lato_bold"
+                            android:textColor="@color/header_font"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textSize="@dimen/video_info_medium_text"
                             android:textStyle="bold" />
