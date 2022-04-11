@@ -28,13 +28,13 @@
             <Button
                 android:id="@+id/play"
                 android:foreground="@drawable/transparent_ripple"
-                android:layout_height="50dp"
+                android:layout_height="65dp"
                 android:layout_centerInParent="true"
                 android:paddingTop="20dip"
                 android:background="@drawable/play_button"
                 android:paddingBottom="20dip"
                 android:visibility="visible"
-                android:layout_width="50dp"
+                android:layout_width="65dp"
                 android:gravity="center"
                 />
 
