@@ -198,7 +198,7 @@ public class ChannelManager {
                     catch (FileNotFoundException e) {
                         Log.e(TAG, "createEmptyPosterFile", e);
                     } finally {
-                        stream.close();
+                        if (stream != null) stream.close();
                     }
                 }
                 catch (IOException e) {
