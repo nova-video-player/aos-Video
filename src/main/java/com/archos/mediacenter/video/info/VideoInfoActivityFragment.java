@@ -847,7 +847,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 //set episode still image
                 Picasso.get().load(episode.getPictureUri()).into(mPictureBackdrop);
 
-                // set coordinator layout bottom margin to 140 (40 x 3.5) for episodes selector
+                // set coordinator layout bottom margin
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
                 params.bottomMargin = 240;
             }
