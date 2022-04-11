@@ -25,10 +25,9 @@ import android.widget.TextView;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesDetails;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesDetailsEpisode;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -87,11 +86,9 @@ public class EpisodeListDetailedPresenter extends EpisodePresenter{
         ViewHolderDetails holder = (ViewHolderDetails) view.getTag();
 
         if (tvShow.getPictureUri()!=null) {
-            Glide.with(mContext).load(tvShow.getPictureUri())
-                    .fitCenter().into(holder.episodeStill);
+            Picasso.get().load(tvShow.getPictureUri()).fit().centerCrop().into(holder.episodeStill);
         } else {
-            Glide.with(mContext).load(R.drawable.default_image)
-                    .fitCenter().into(holder.episodeStill);
+            Picasso.get().load(R.drawable.default_image).fit().centerCrop().into(holder.episodeStill);
         }
 
             setViewHolderVisibility(holder, View.VISIBLE);

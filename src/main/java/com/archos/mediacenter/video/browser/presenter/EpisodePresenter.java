@@ -24,7 +24,7 @@ import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
 import com.archos.mediacenter.video.browser.adapters.ItemViewType;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.player.PlayerActivity;
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by alexandre on 27/10/15.
@@ -56,11 +56,9 @@ public class EpisodePresenter extends VideoPresenter implements Presenter {
         if(holder.secondLine!=null)
             holder.secondLine.setVisibility(View.VISIBLE);
         if (episode.getPictureUri()!=null) {
-            Glide.with(mContext).load(episode.getPictureUri())
-                    .fitCenter().into(holder.episodeStill);
+            Picasso.get().load(episode.getPictureUri()).fit().centerCrop().into(holder.episodeStill);
         } else {
-            Glide.with(mContext).load(R.drawable.default_image)
-                    .fitCenter().into(holder.episodeStill);
+            Picasso.get().load(R.drawable.default_image).fit().centerCrop().into(holder.episodeStill);
         }
         String name = episode.getName();
         if(name == null ||  name.isEmpty())

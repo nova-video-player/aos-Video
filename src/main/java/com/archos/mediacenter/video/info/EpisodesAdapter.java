@@ -13,8 +13,9 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.archos.mediacenter.video.R;
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.EpisodesViewHolder> {
@@ -53,11 +54,9 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.Episod
         textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 
         if (episodeModel.getEpisodePath()!=null) {
-            Glide.with(vh.itemView.getContext()).load(episodeModel.getEpisodePath())
-                    .centerCrop().into(imageView);
+            Picasso.get().load(new File(episodeModel.getEpisodePath())).fit().centerCrop().into(imageView);
         } else {
-            Glide.with(vh.itemView.getContext()).load(R.drawable.default_image)
-                    .centerCrop().into(imageView);
+            Picasso.get().load(R.drawable.default_image).fit().centerCrop().into(imageView);
         }
 
         Drawable background = ResourcesCompat.getDrawable(vh.itemView.getContext().getResources(),
