@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.2'
+        classpath 'com.android.tools.build:gradle:7.1.3'
     }
 }
 
@@ -195,41 +195,51 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-project.txt'
         }
     }
-    lintOptions {
-        disable 'MissingTranslation'
-        checkReleaseBuilds false
-        abortOnError false
-    }
     packagingOptions {
-        exclude 'META-INF/*.kotlin_module'
-        exclude 'META-INF/*.version'
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/beans.xml'
-        exclude 'META-INF/maven'
-        exclude 'META-INF/services/**'
-        exclude 'README'
-        exclude 'com/**'
-        exclude 'jcifs2/**'
-        exclude 'kotlin/**'
-        exclude 'okhttp3/**'
-        exclude 'org/**'
-        exclude '**/*.txt'
-        exclude '**/*.xml'
-        pickFirst 'lib/x86/libnvpnativehelper.so'
-        pickFirst 'lib/x86_64/libnvpnativehelper.so'
-        pickFirst 'lib/armeabi-v7a/libnvpnativehelper.so'
-        pickFirst 'lib/arm64-v8a/libnvpnativehelper.so'
-        pickFirst 'lib/x86/libc++_shared.so'
-        pickFirst 'lib/x86_64/libc++_shared.so'
-        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
-        pickFirst 'lib/arm64-v8a/libc++_shared.so'
+        jniLibs {
+            excludes += ['META-INF/services/**',
+                         'com/**',
+                         'jcifs2/**',
+                         'kotlin/**',
+                         'okhttp3/**',
+                         'org/**']
+            pickFirsts += ['lib/x86/libnvpnativehelper.so',
+                           'lib/x86_64/libnvpnativehelper.so',
+                           'lib/armeabi-v7a/libnvpnativehelper.so',
+                           'lib/arm64-v8a/libnvpnativehelper.so',
+                           'lib/x86/libc++_shared.so',
+                           'lib/x86_64/libc++_shared.so',
+                           'lib/armeabi-v7a/libc++_shared.so',
+                           'lib/arm64-v8a/libc++_shared.so']
+        }
+        resources {
+            excludes += ['META-INF/*.kotlin_module',
+                         'META-INF/*.version',
+                         'META-INF/DEPENDENCIES',
+                         'META-INF/LICENSE',
+                         'META-INF/NOTICE',
+                         'META-INF/LICENSE.txt',
+                         'META-INF/NOTICE.txt',
+                         'META-INF/beans.xml',
+                         'META-INF/maven',
+                         'META-INF/services/**',
+                         'README',
+                         'com/**',
+                         'jcifs2/**',
+                         'kotlin/**',
+                         'okhttp3/**',
+                         'org/**',
+                         '**/*.txt',
+                         '**/*.xml']
+        }
     }
     androidResources {
         additionalParameters '--no-version-vectors'
+    }
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+        disable 'MissingTranslation'
     }
 
     applicationVariants.all { variant ->
