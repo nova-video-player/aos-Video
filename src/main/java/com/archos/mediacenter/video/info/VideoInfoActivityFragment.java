@@ -872,7 +872,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mSecondaryEpisodeTitleView.setVisibility(View.GONE);
             }
 
-            //mToolbarTitle.setText(name);
+            mToolbarTitle.setText(name);
 
             if(name!=null) {
                 if (name.length() > 30) {
