@@ -130,7 +130,6 @@ import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.VideoTags;
 import com.archos.mediascraper.xml.MovieScraper3;
 import com.archos.mediascraper.xml.ShowScraper4;
-import com.bumptech.glide.Glide;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -2204,8 +2203,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             TextView header = layout.findViewById(R.id.header);
                             TextView newLogoText = layout.findViewById(R.id.new_logo_text);
                             ImageView newLogoImage = layout.findViewById(R.id.toast_logo_image);
-                            Glide.with(mContext).load(showTags.getNetworkLogosLargeFileF().get(position))
-                                    .fitCenter().into(newLogoImage);
+                            Picasso.get().load(showTags.getNetworkLogosLargeFileF().get(position)).fit().centerInside().into(newLogoImage);
                             header.setText(getResources().getString(R.string.networklogo_changed));
                             newLogoText.setText(clicked_logoName);
                             Toast toast = new Toast(mContext);
@@ -2213,10 +2211,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             toast.setDuration(Toast.LENGTH_SHORT);
                             toast.setView(layout);
                             toast.show();
-                            Glide.with(mContext).clear(mLogo);
-                            Glide.with(mContext).load(showTags.getNetworkLogosLargeFileF().get(position))
-                                    .fitCenter().into(mLogo);
-                            ScraperImage clickedImage = (ScraperImage) networkImage.get(position);
+                            Picasso.get().load(showTags.getNetworkLogosLargeFileF().get(position)).fit().centerInside().into(mLogo);
+                            ScraperImage clickedImage = networkImage.get(position);
                             new LogoSaver(mContext).execute(clickedImage);
                         }
                     };
@@ -2240,12 +2236,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     if (showTags.getNetworkLogo() != null){
                         File networkFile = new File(showTags.getNetworkLogo().getPath());
                         if (networkFile.exists()){
-                            Glide.with(mContext).load(showTags.getNetworkLogo())
-                                    .fitCenter().into(mLogo);
+                            Picasso.get().load(showTags.getNetworkLogo()).fit().centerInside().into(mLogo);
                         } else {
                             for (int i = 0; i < availableNetworkLogos.size(); i++) {
-                                Glide.with(mContext).load(availableNetworkLogos.get(0))
-                                        .fitCenter().into(mLogo);
+                                Picasso.get().load(availableNetworkLogos.get(0)).fit().centerInside().into(mLogo);
                             }
                         }
                     }
@@ -2481,8 +2475,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             TextView header = layout.findViewById(R.id.header);
                             TextView newLogoText = layout.findViewById(R.id.new_logo_text);
                             ImageView newLogoImage = layout.findViewById(R.id.toast_logo_image);
-                            Glide.with(mContext).load(tags.getStudioLogosLargeFileF().get(position))
-                                    .fitCenter().into(newLogoImage);
+                            Picasso.get().load(tags.getStudioLogosLargeFileF().get(position)).fit().centerInside().into(newLogoImage);
                             header.setText(getResources().getString(R.string.studiologo_changed));
                             newLogoText.setText(clicked_studioname);
                             Toast toast = new Toast(mContext);
@@ -2490,9 +2483,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             toast.setDuration(Toast.LENGTH_SHORT);
                             toast.setView(layout);
                             toast.show();
-                            Glide.with(mContext).clear(mLogo);
-                            Glide.with(mContext).load(tags.getStudioLogosLargeFileF().get(position))
-                                    .fitCenter().into(mLogo);
+                            Picasso.get().load(tags.getStudioLogosLargeFileF().get(position)).fit().centerInside().into(mLogo);
                             ScraperImage clickedImage = (ScraperImage) studioImage.get(position);
                             new LogoSaver(mContext).execute(clickedImage);
                         }
@@ -2503,12 +2494,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     if (tags.getStudioLogo() != null){
                         File studioFile = new File(tags.getStudioLogo().getPath());
                         if (studioFile.exists()){
-                            Glide.with(mContext).load(tags.getStudioLogo())
-                                    .fitCenter().into(mLogo);
+                            Picasso.get().load(tags.getStudioLogo()).fit().centerInside().into(mLogo);
                         } else {
                             for (int i = 0; i < availableStudioLogos.size(); i++) {
-                                Glide.with(mContext).load(availableStudioLogos.get(0))
-                                        .fitCenter().into(mLogo);
+                                Picasso.get().load(availableStudioLogos.get(0)).fit().centerInside().into(mLogo);
                             }
                         }
                     }
@@ -2518,8 +2507,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     } else {
                         mClearLogo.setVisibility(View.GONE);
                     }
-                    Glide.with(mContext).load(tags.getClearLogo())
-                            .centerInside().into(mClearLogo);
+                    Picasso.get().load(tags.getClearLogo()).into(mClearLogo);
                     setTextOrHideContainer(mScrapProducer, tags.getProducersFormatted(), mScrapProducer, mScrapProducerTitle);
                     mScrapProducer.setMaxLines(2);
                     mScrapProducer.setTag(true);
