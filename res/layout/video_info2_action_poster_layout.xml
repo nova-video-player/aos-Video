@@ -43,9 +43,11 @@
             <Button
                 android:id="@+id/resume"
                 android:layout_height="wrap_content"
-                android:paddingTop="20dip"
+                android:paddingTop="10dip"
                 android:drawableStart="@drawable/button_icon_resume"
-                android:paddingBottom="20dip"
+                android:paddingBottom="10dip"
+                android:paddingStart="10dip"
+                android:paddingEnd="10dip"
                 android:background="@drawable/transparent_ripple"
                 android:gravity="center"
                 android:text="@string/resume"
@@ -53,14 +55,16 @@
                 android:layout_width="wrap_content"
                 android:layout_alignBottom="@id/picture_backdrop_cardview"
                 android:layout_alignEnd="@id/picture_backdrop_cardview"
-                android:layout_marginEnd="6dp"
+                android:layout_marginEnd="0dp"
                 />
             <Button
                 android:id="@+id/remote_resume"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/button_icon_network"
-                android:paddingTop="20dip"
-                android:paddingBottom="20dip"
+                android:paddingTop="10dip"
+                android:paddingBottom="10dip"
+                android:paddingStart="10dip"
+                android:paddingEnd="10dip"
                 android:background="@drawable/transparent_ripple"
                 android:gravity="center"
                 android:text="@string/remote_resume"
@@ -68,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_alignBottom="@id/picture_backdrop_cardview"
                 android:layout_alignStart="@id/picture_backdrop_cardview"
-                android:layout_marginStart="6dp"
+                android:layout_marginStart="0dp"
                 />
         </RelativeLayout>
 
