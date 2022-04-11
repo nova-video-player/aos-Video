@@ -49,7 +49,8 @@
                     android:id="@+id/clearlogo"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"
                     android:scaleType="center" />
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
