@@ -102,8 +102,8 @@ public class VideoMetadata implements Serializable {
 
         public final int bitRate;
         public final int fps;
-	public final int fpsRate;
-	public final int fpsScale;
+        public final int fpsRate;
+        public final int fpsScale;
         public final int s3dMode;
         public final int decoder;
     }
@@ -207,7 +207,7 @@ public class VideoMetadata implements Serializable {
         int nbTrack;
         if (data.has(IMediaPlayer.METADATA_KEY_FILE_SIZE))
             mFileSize = data.getLong(IMediaPlayer.METADATA_KEY_FILE_SIZE);
-	if (data.has(IMediaPlayer.METADATA_KEY_DURATION))
+	    if (data.has(IMediaPlayer.METADATA_KEY_DURATION))
             mDuration = data.getInt(IMediaPlayer.METADATA_KEY_DURATION);
         if (data.has(IMediaPlayer.METADATA_KEY_VIDEO_WIDTH))
             mVideoWidth = data.getInt(IMediaPlayer.METADATA_KEY_VIDEO_WIDTH);
