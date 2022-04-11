@@ -25,25 +25,11 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:id="@+id/toolbar_container">
-            <RelativeLayout
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:paddingLeft="@dimen/info_activity_horizontal_margin"
-                android:paddingRight="@dimen/video_info_margin_simple"
-                android:paddingTop="@dimen/video_info_margin_half"
-                android:paddingBottom="@dimen/video_info_margin_half"
-                android:orientation="vertical"
-                android:id="@+id/titlebar_content"
-                >
-            <!--used to cast a shadow-->
-            <include
-                layout="@layout/video_info2_titlebar_layout"
-                />
-            </RelativeLayout>
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/titlebar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 app:contentInsetLeft="0dp"
                 app:contentInsetStart="0dp"
                 android:layout_margin="0dp"
@@ -65,8 +51,9 @@
                     <ImageView
                         android:id="@+id/clearlogo"
                         android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="2dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="1dp"
+                        android:layout_marginBottom="1dp"
                         android:scaleType="center" />
                 </RelativeLayout>
             </androidx.appcompat.widget.Toolbar>

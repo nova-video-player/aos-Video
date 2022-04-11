@@ -6,7 +6,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp">
+        android:layout_marginTop="34dp">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -94,7 +94,7 @@
             </androidx.cardview.widget.CardView>
 
             <RelativeLayout
-                android:id="@+id/secondary_titlebar"
+                android:id="@+id/titlebar_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"

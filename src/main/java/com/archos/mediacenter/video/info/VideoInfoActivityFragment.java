@@ -432,15 +432,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mTitleBar = (Toolbar) mRoot.findViewById(R.id.titlebar);
         mTitleBarContent = mRoot.findViewById(R.id.titlebar_content);
 
-        mSecondaryTitleBar = (ViewGroup) mRoot.findViewById(R.id.secondary_titlebar);
-        if(mSecondaryTitleBar!=null) {
-            mToolbarContainer = mRoot.findViewById(R.id.toolbar_container);
-            mTitleBarContent.setVisibility(View.GONE);
-            mSecondaryEpisodeTitleView = (TextView) mSecondaryTitleBar.findViewById(R.id.episode_title_view);
-            mSecondaryEpisodeSeasonView = (TextView) mSecondaryTitleBar.findViewById(R.id.s_e_text_view);
-            mSecondaryTitleTextView = (TextView) mSecondaryTitleBar.findViewById(R.id.title_view);
+        mToolbarContainer = mRoot.findViewById(R.id.toolbar_container);
 
-        }
         mTitleBar.setOnMenuItemClickListener(this);
         mToolbarWidgetWrapper = new ToolbarWidgetWrapper(mTitleBar, false);
         mToolbarWidgetWrapper.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP);
@@ -1459,16 +1452,16 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         if (coeff < 0)
             coeff=0;
         int alpha = (int) (coeff * 255);
-        if(mIsPortraitMode) {
-            mTitleBar.setBackgroundColor(VideoInfoCommonClass.getAlphaColor(mColor, alpha));
-            ViewCompat.setElevation(mTitleBar, coeff * 5);
-        }
+
+        mTitleBar.setBackgroundColor(VideoInfoCommonClass.getAlphaColor(mColor, alpha));
+        ViewCompat.setElevation(mTitleBar, coeff * 5);
+
             if (!mIsLaunchFromPlayer &&scroll >=  (!mIsPortraitMode?-mHeaderHeight:0)+getResources().getDimension(R.dimen.video_info_poster_height) + getResources().getDimension(R.dimen.video_info_margin_half)) {
                 mFABManager.showFAB(animate);
             } else if(!mIsLaunchFromPlayer) {
                 mFABManager.hideFAB(animate);
             }
-
+/**
         if(!mIsPortraitMode){
             Rect bounds = new Rect();
             mTitleBar.getDrawingRect(bounds);
@@ -1498,6 +1491,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 }
             }
         }
+*/
     }
 
     @Override
