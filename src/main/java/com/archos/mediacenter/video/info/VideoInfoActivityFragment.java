@@ -845,7 +845,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 if(mSecondaryEpisodeSeasonView!=null)
                     setTextOrHideContainer(mSecondaryEpisodeSeasonView, getContext().getString(R.string.leanback_episode_SXEX_code, episode.getSeasonNumber(), episode.getEpisodeNumber()), mSecondaryEpisodeSeasonView);
                 //set episode still image
-                Picasso.get().load(episode.getPictureUri()).fit().centerCrop().into(mPictureBackdrop);
+                Picasso.get().load(episode.getPictureUri()).into(mPictureBackdrop);
 
                 // set coordinator layout bottom margin to 140 (40 x 3.5) for episodes selector
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
