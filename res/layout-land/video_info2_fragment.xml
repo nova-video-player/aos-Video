@@ -11,6 +11,7 @@
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/genres_banner" />
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_above="@+id/miniController1"
