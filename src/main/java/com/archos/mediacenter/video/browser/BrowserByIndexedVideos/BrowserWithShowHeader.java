@@ -18,6 +18,7 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -530,6 +531,10 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                     startActivity(intent);
                 }
             });
+            boolean mIsLandscapeMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+            if (mIsLandscapeMode){
+                seriesBackdrop.getLayoutParams().height = 1100;
+            }
 
             ImageView networkLogo = mHeaderView.findViewById(R.id.network_logo);
 
