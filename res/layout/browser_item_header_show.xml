@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
         android:layout_marginStart="4dp"
-        android:layout_marginEnd="@dimen/content_list_space_between_thumbnail_and_name"
+        android:layout_marginEnd="8dip"
         android:layout_gravity="center_horizontal"	>
         <ImageView
             android:id="@+id/thumbnail"
@@ -82,6 +82,16 @@
         android:scaleType="fitStart"
         app:srcCompat="@drawable/label_trakt_library"
         android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/show_clearlogo"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/series_backdrop_cardview"
+        android:layout_marginTop="2dp"
+        android:layout_toEndOf="@id/series_thumbnail_cardview"
+        android:adjustViewBounds="true"
+        android:scaleType="fitStart" />
 
     <!-- TV show title -->
     <TextView
@@ -240,16 +250,6 @@
         android:textColor="@color/header_font"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="@dimen/video_info_small_text"/>
-
-    <ImageView
-        android:id="@+id/show_clearlogo"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@id/series_backdrop_cardview"
-        android:layout_marginTop="2dp"
-        android:layout_toEndOf="@id/series_thumbnail_cardview"
-        android:adjustViewBounds="true"
-        android:scaleType="fitStart" />
 
     <LinearLayout
         android:id="@+id/main_layout"
