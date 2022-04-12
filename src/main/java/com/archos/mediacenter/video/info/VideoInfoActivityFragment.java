@@ -1858,6 +1858,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                 });
                 setTextOrHideContainer(mPlotTextView, plot, mPlotTextView);
+                // set plot animation
                 int expectedWidthOfTextView = getResources().getDisplayMetrics().widthPixels;
                 int originalMaxLines = mPlotTextView.getMaxLines();
                 if (originalMaxLines < 0 || originalMaxLines == Integer.MAX_VALUE)
