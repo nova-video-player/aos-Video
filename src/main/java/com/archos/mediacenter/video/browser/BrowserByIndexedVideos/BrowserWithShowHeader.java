@@ -161,7 +161,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         if(mHeaderView!=null) { //removing headerview
             if (mArchosGridView instanceof ListView) {
                 ((ListView) mArchosGridView).removeHeaderView(mHeaderView);
-                ((AdapterView)mHeaderView.getParent()).removeViewInLayout(mHeaderView);
+                if(mHeaderView.getParent() != null)
+                    ((AdapterView)mHeaderView.getParent()).removeViewInLayout(mHeaderView);
             }
             if(mArchosGridView instanceof HeaderGridView)
                 ((HeaderGridView) mArchosGridView).removeHeaderView(mHeaderView);
