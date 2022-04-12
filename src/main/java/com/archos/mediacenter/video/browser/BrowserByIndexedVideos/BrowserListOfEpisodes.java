@@ -238,7 +238,7 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
         mApplicationFrameLayout.setBackground(trans);
         trans.startTransition(200);
         mLastColor = darkColor;
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        //getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         getActivity().getWindow().setStatusBarColor(VideoInfoCommonClass.getAlphaColor(darkColor, 160));
     }
