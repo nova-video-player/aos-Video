@@ -102,8 +102,14 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         mHideOption = false;
         mSerialExecutor = new SerialExecutor();
         //be aware that argument can be changed in activityresult
-        mShowId = getArguments().getLong(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID, 0);
-        mShow = (Tvshow) getArguments().getSerializable(EXTRA_SHOW_ITEM);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            mShowId = getArguments().getLong(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID, 0);
+            mShow = (Tvshow) getArguments().getSerializable(EXTRA_SHOW_ITEM);
+        } else {
+            mShowId = 0;
+            mShow = null;
+        }
         mHideWatched = false;
 
         mBackgroundLoader = new DelayedBackgroundLoader(getActivity(), 800, 0.2f);
@@ -156,13 +162,11 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                     //to avoid cast exception
                     mHeaderView.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
                     ((ListView) mArchosGridView).addHeaderView(mHeaderView);
-
                 }
                 if (mArchosGridView instanceof HeaderGridView) {
                     //to avoid cast exception
                     mHeaderView.setLayoutParams(new HeaderGridView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
                     ((HeaderGridView) mArchosGridView).addHeaderView(mHeaderView);
-
                 }
             }
     }
@@ -173,7 +177,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             menu.add(0,R.string.scrap_series_change, 0, R.string.scrap_series_change);
             menu.add(0,R.string.info_menu_series_backdrop_select, 0, R.string.info_menu_series_backdrop_select);
             menu.add(0,R.string.info_menu_series_poster_select, 0, R.string.info_menu_series_poster_select);
-
         }
         super.onCreateOptionsMenu(menu, inflater);
         if (mBrowserAdapter != null

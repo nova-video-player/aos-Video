@@ -125,8 +125,8 @@ public class PlayUtils implements IndexHelper.Listener {
         if("application/x-bittorrent".equals(mimeType)){
             startTorrent(context, video.getFileUri(), mimeType, resume);
         }
-
-        else if("upnp".equals(video.getFileUri().getScheme())&&(video.getStreamingUri()==null||"upnp".equals(video.getStreamingUri().getScheme()))){ // retrieve streaming uri for external player
+        else if(video.getFileUri() != null && "upnp".equals(video.getFileUri().getScheme()) &&
+                        (video.getStreamingUri()==null || "upnp".equals(video.getStreamingUri().getScheme()))){ // retrieve streaming uri for external player
             StreamUriFinder uriFinder = new StreamUriFinder(video.getFileUri(), context);
             uriFinder.setListener(new StreamUriFinder.Listener() {
                 @Override

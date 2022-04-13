@@ -141,6 +141,7 @@ public class VideoUtils {
      * @return path
      */
     public static String getMediaLibCompatibleFilepathFromUri(Uri uri) {
+        if (uri == null) return null;
         String filePath;
         if ("content".equals(uri.getScheme())) {
             filePath = uri.toString();
