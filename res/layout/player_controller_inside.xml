@@ -33,7 +33,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:visibility="invisible"
+        android:visibility="visible"
         android:layout_gravity="center"
         android:orientation="vertical"
         android:layout_alignParentTop="true"
@@ -45,7 +45,6 @@
             android:layout_gravity="center"
             android:layout_weight = "0"
             android:scrollbars="horizontal"
-            android:foreground="@color/lightblueA200"
              />
         <FrameLayout
             android:id="@+id/play_pause_touch_zone"
@@ -54,7 +53,6 @@
             android:layout_weight = "1"
             android:layout_gravity="center"
             android:scrollbars="horizontal"
-            android:foreground="@color/green700"
             />
         <FrameLayout
             android:id="@+id/lower_touch_zone"
@@ -63,7 +61,6 @@
             android:layout_weight = "0"
             android:layout_gravity="center"
             android:scrollbars="horizontal"
-            android:foreground="@color/lightblueA200"
              />
     </LinearLayout>
 
