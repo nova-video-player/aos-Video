@@ -246,7 +246,12 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private boolean             isTVMode = false;
     private long                mLastTouchEventTime = -1;
     private View mPlayPauseTouchZone;
+    private View mUpperPauseTouchZone;
+    private View mLowerPauseTouchZone;
     private boolean mPlayPauseOnTouchActivated = false;
+    private boolean mUpperZone = false;
+    private boolean mMiddleZone = false;
+    private boolean mLowerZone = false;
 
     public interface Settings {
         void switchSubtitleTrack();
@@ -415,9 +420,23 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             mPauseButton.setOnClickListener(mPauseListener);
         }
 
-        View playPauseTouchZone = v.findViewById(R.id.play_touch_zone);
-        if(playPauseTouchZone != null &&mPlayPauseOnTouchActivated)
-            playPauseTouchZone.setOnClickListener(mPauseListener);
+        SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        mPlayPauseOnTouchActivated = mPreferences.getBoolean("enable_PlayPause_onTouch", true);
+
+        View upperTouchZone = v.findViewById(R.id.upper_touch_zone);
+        View playPauseTouchZone = v.findViewById(R.id.play_pause_touch_zone);
+        View lowerTouchZone = v.findViewById(R.id.lower_touch_zone);
+        if(playPauseTouchZone != null && mPlayPauseOnTouchActivated) {
+            mMiddleZone = true;
+            playPauseTouchZone.setOnClickListener(mPlayPauseListener);
+            playPauseTouchZone.setSoundEffectsEnabled(false);
+        }
+        if(upperTouchZone != null && mPlayPauseOnTouchActivated) {
+            mUpperZone = true;
+        }
+        if(lowerTouchZone != null && mPlayPauseOnTouchActivated) {
+            mLowerZone = true;
+        }
 
         ImageButton mForwardButton = (ImageButton) v.findViewById(R.id.forward);
         if (mForwardButton != null) {
@@ -508,6 +527,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             this.mUnlockInstructions = unlockInstructions;
             this.mVolumeBar = volumeBar;
             this.mPlayPauseTouchZone = playPauseTouchZone;
+            this.mUpperPauseTouchZone = upperTouchZone;
+            this.mLowerPauseTouchZone = lowerTouchZone;
             this.mControlBar=mControlBar;
             this.mPauseButton=mPauseButton;
             this.mFormatButton=mFormatButton ;
@@ -885,9 +906,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         if (mControlBar != null && mControlBarShowing != show) {
             log.debug("showControlBar "+String.valueOf(show));
             setVisibility(mControlBar, show, true);
-            if(mPlayPauseTouchZone!=null){
-                setVisibility(mPlayPauseTouchZone, show, false);
-            }
             if (mControlBar2 != null && splitView ) {
                 setVisibility(mControlBar2, show, true);
             }
@@ -946,7 +964,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         if ((flags & FLAG_SIDE_CONTROL_BAR) != 0) {
             showControlBar(visible);
             // On phone we don't know how to display control bar without volume bar nicely, so force volume bar
-            
+
         }
         if ((flags & FLAG_SIDE_SYSTEM_BAR) != 0) {
             showSystemBar(visible);
@@ -992,6 +1010,10 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             mOnShowHideListener.onShow();
 
         if (timeout != 0 && Player.sPlayer.isPlaying()) {
+            sendFadeOut(timeout);
+        }
+
+        if (timeout != 0 && Player.sPlayer.isPaused()) {
             sendFadeOut(timeout);
         }
     }
@@ -1366,6 +1388,15 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         updatePausePlay();
     }
 
+    private void doPlayPause() {
+            if (Player.sPlayer.isPlaying()) {
+                Player.sPlayer.pause(PlayerController.STATE_NORMAL);
+            } else {
+                Player.sPlayer.start(PlayerController.STATE_NORMAL);
+            }
+        updatePausePlay();
+    }
+
     public void setEnabled(boolean enabled) {
         if (mControllerView == null)
             return;
@@ -1642,6 +1673,12 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }
     };
 
+    private View.OnClickListener mPlayPauseListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            doPlayPause();
+        }
+    };
+
     private View.OnClickListener mBackwardListener = new View.OnClickListener() {
         public void onClick(View v) {
             onSeek(-1, false);
@@ -1798,13 +1835,13 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         if (isTVMenuDisplayed) mLastTouchEventTime = event.getEventTime();
         if(mControllerViewLeft!=null){
             View overlay = mControllerViewLeft.findViewById(R.id.help_overlay);
-    
+
             if(event.getAction()==KeyEvent.ACTION_DOWN&&overlay!=null&&overlay.getVisibility()==View.VISIBLE){
-                sendOverlayFadeOut(0); 
+                sendOverlayFadeOut(0);
                 return true;
             }
         }
-        
+
         if (mControllerView == null)
             return false;
         if(isTVMenuDisplayed){
@@ -1837,8 +1874,14 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             flags &= ~(FLAG_SIDE_CONTROL_BAR);
         }
 
-        toggleMediaControlsVisiblity(flags);
-        
+        if (mUpperZone || mLowerZone){
+            toggleMediaControlsVisiblity(flags);
+        }
+
+        if (!mPlayPauseOnTouchActivated){
+            toggleMediaControlsVisiblity(flags);
+        }
+
         switchMode(false);
         return true;
     }

@@ -181,6 +181,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mDisableDownmix = null;
     private CheckBoxPreference mActivateRefreshrateTVSwitch = null;
     private CheckBoxPreference mEnableCutoutModeShortEdge = null;
+    private CheckBoxPreference mEnablePlayPauseOnTouch = null;
     private CheckBoxPreference mActivate3DTVSwitch = null;
     private PreferenceCategory mAdvancedPreferences = null;
     private PreferenceCategory mScraperCategory = null;
@@ -279,6 +280,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             else {
                 prefCategory.removePreference(mEnableCutoutModeShortEdge);
             }
+            prefCategory.addPreference(mEnablePlayPauseOnTouch);
         } else {
             prefCategory.removePreference(mDisableDownmix); // on TV downmix is disabled: do not show the option
             prefCategory.addPreference(mActivate3DTVSwitch);
@@ -370,6 +372,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mDisableDownmix = (CheckBoxPreference) findPreference("disable_downmix");
         mActivate3DTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_3D_SWITCH);
         mEnableCutoutModeShortEdge = (CheckBoxPreference) findPreference("enable_cutout_mode_short_edges");
+        mEnablePlayPauseOnTouch = (CheckBoxPreference) findPreference("enable_PlayPause_onTouch");
         mActivateRefreshrateTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_REFRESHRATE_SWITCH);
         mAdultScrape = (CheckBoxPreference) findPreference(KEY_ADULT_SCRAPE);
         mTraktSyncProgressPreference = (CheckBoxPreference) findPreference(KEY_TRAKT_SYNC_PROGRESS);

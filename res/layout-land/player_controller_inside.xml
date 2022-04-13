@@ -27,19 +27,43 @@
         android:layout_alignParentTop="true"
         layout="@layout/player_controller_left" />
 
-
-    <FrameLayout
-        android:id="@+id/play_touch_zone"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:scrollbars="horizontal"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:layout_toRightOf="@+id/volume_bar"
-        android:layout_above="@+id/control_bar"
+        android:visibility="invisible"
         android:layout_gravity="center"
-        android:visibility="invisible">
-
-    </FrameLayout>
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_toEndOf="@+id/volume_bar">
+        <FrameLayout
+            android:id="@+id/upper_touch_zone"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:layout_weight = "0"
+            android:scrollbars="horizontal"
+            android:foreground="@color/lightblueA200"
+            />
+        <FrameLayout
+            android:id="@+id/play_pause_touch_zone"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight = "1"
+            android:layout_gravity="center"
+            android:scrollbars="horizontal"
+            android:foreground="@color/green700"
+            />
+        <FrameLayout
+            android:id="@+id/lower_touch_zone"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_weight = "0"
+            android:layout_gravity="center"
+            android:scrollbars="horizontal"
+            android:foreground="@color/lightblueA200"
+            />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/control_bar"

@@ -49,6 +49,13 @@
             app:iconSpaceReserved="false" />
         <CheckBoxPreference
             android:defaultValue="false"
+            android:key="enable_PlayPause_onTouch"
+            android:persistent="true"
+            android:summary="@string/preference_PlayPause_onTouch_summary"
+            android:title="@string/preference_PlayPause_onTouch"
+            app:iconSpaceReserved="false" />
+        <CheckBoxPreference
+            android:defaultValue="false"
             android:key="allow_3rd_party_player"
             android:persistent="true"
             android:summary="@string/preferences_allow_3rd_party_player_summary"
