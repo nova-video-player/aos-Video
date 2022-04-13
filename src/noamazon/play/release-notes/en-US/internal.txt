@@ -1,4 +1,5 @@
-- Attempt to fix fdroid build
+- ffmpeg 5.01, dav1d 1.0.0 upstep
+- Fix fdroid build
 - Fix tvshow rescrape having same name
 - Fix widget not launching video
 - STOP remote button stops player
