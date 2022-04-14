@@ -23,6 +23,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
@@ -77,6 +79,9 @@ public class VideoInfoActivity extends AppCompatActivity {
     private long mId;
     private boolean mForceCurrentPosition;
     private Fragment mCurrentFragment;
+
+    private static final float MILLISECONDS_PER_INCH_PIC = 45f; //default is 25f (bigger = slower)
+    private static final float MILLISECONDS_PER_INCH_NUM = 85f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +134,12 @@ public class VideoInfoActivity extends AppCompatActivity {
             String mode = prefs.getString("episode_scrollView", null);
             int selectedMode = Integer.parseInt(mode);
             if (selectedMode == 0){
+                LinearSmoothScroller linearSmoothScroller = new LinearSmoothScroller(mEpisodes.getContext()) {
+                    @Override
+                    protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
+                        return MILLISECONDS_PER_INCH_PIC / displayMetrics.densityDpi;
+                    }
+                };
                 // Setting Episode pictures & numbers RecyclerView Adapter
                 EpisodesAdapter.OnItemClickListener onItemClickListener = new EpisodesAdapter.OnItemClickListener() {
                     @Override
@@ -146,11 +157,18 @@ public class VideoInfoActivity extends AppCompatActivity {
                     public void onPageSelected(int position) {
                         episodesAdapter.setSelectedIndex(position);
                         episodesAdapter.notifyDataSetChanged();
-                        mEpisodes.smoothScrollToPosition(position);
+                        linearSmoothScroller.setTargetPosition(position);
+                        layoutManager.startSmoothScroll(linearSmoothScroller);
                     }
                 });
             }
             if (selectedMode == 1){
+                LinearSmoothScroller linearSmoothScroller = new LinearSmoothScroller(mEpisodes.getContext()) {
+                    @Override
+                    protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
+                        return MILLISECONDS_PER_INCH_NUM / displayMetrics.densityDpi;
+                    }
+                };
                 // Setting Episode numbers RecyclerView Adapter
                 EpisodeNumbersAdapter.OnItemClickListener onItemClickListener = new EpisodeNumbersAdapter.OnItemClickListener() {
                     @Override
@@ -168,7 +186,8 @@ public class VideoInfoActivity extends AppCompatActivity {
                     public void onPageSelected(int position) {
                         episodesAdapter.setSelectedIndex(position);
                         episodesAdapter.notifyDataSetChanged();
-                        mEpisodes.smoothScrollToPosition(position);
+                        linearSmoothScroller.setTargetPosition(position);
+                        layoutManager.startSmoothScroll(linearSmoothScroller);
                     }
                 });
             }
