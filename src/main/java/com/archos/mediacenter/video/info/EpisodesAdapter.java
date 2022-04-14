@@ -63,12 +63,12 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.Episod
                 R.drawable.episode_selector, null);
 
         if (selectedIndex == position) {
-            pictureContainer.setBackgroundColor(vh.itemView.getContext().getResources().getColor(R.color.green700));
+            pictureContainer.setBackgroundColor(vh.itemView.getContext().getResources().getColor(R.color.selected_episode_picture));
             textView.setBackground(background);
             textView.setTextColor(Color.BLACK);
 
         } else {
-            pictureContainer.setBackgroundColor(Color.TRANSPARENT);
+            pictureContainer.setBackgroundColor(vh.itemView.getContext().getResources().getColor(R.color.unselected_episode_picture));
             textView.setBackgroundColor(Color.TRANSPARENT);
             textView.setTextColor(Color.WHITE);
         }

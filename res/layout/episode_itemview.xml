@@ -19,21 +19,19 @@
 			>
 			<LinearLayout
 				android:id="@+id/episode_picture_container"
-				android:layout_width="252px"
-				android:layout_height="154px"
-				android:gravity="center_vertical"
-				android:orientation="vertical" >
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:padding="4px" >
 				<androidx.cardview.widget.CardView
 					xmlns:card_view="http://schemas.android.com/apk/res-auto"
 					card_view:cardCornerRadius="10.5px"
 					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_horizontal"	>
+					android:layout_height="wrap_content">
 					<ImageView
 						android:id="@+id/episode_picture"
 						android:layout_width="245px"
-						android:layout_height="147px"
-						android:scaleType="center"
+						android:layout_height="145px"
 						/>
 				</androidx.cardview.widget.CardView>
 			</LinearLayout>
