@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.browser;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -184,7 +185,7 @@ public class PermissionChecker {
                                 intent.putExtra("android.intent.extra.PACKAGE_NAME", mActivity.getPackageName());
                                 try {
                                     mActivity.startActivity(intent);
-                                } catch (java.lang.SecurityException e) {
+                                } catch (SecurityException | ActivityNotFoundException e) {
                                     // Create intent to start new activity
                                     intent.setData(Uri.parse("package:" + mActivity.getPackageName()));
                                     intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
