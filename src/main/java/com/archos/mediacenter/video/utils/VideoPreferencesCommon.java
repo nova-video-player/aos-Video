@@ -282,7 +282,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 prefCategory.removePreference(mEnableCutoutModeShortEdge);
             }
             prefCategory.addPreference(mEnablePlayPauseOnTouch);
-            prefCategory.addPreference(mEpisodeScrollViewPreferences);
         } else {
             prefCategory.removePreference(mDisableDownmix); // on TV downmix is disabled: do not show the option
             prefCategory.addPreference(mActivate3DTVSwitch);
@@ -678,8 +677,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                     userInterfaceCategory.removePreference(uiZoomPref);
                 }
             }
+            userInterfaceCategory.addPreference(mEpisodeScrollViewPreferences);
         }
-        
+
         PreferenceCategory leanbackUserInterfaceCategory = (PreferenceCategory)findPreference("category_leanback_user_interface");
         
         if (leanbackUserInterfaceCategory != null) {
