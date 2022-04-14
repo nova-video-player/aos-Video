@@ -3150,11 +3150,11 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         log.info("onTrackSelected(" + position + "): " + name);
         if (trackInfoController == mAudioInfoController) {
             AudioTrack at = mPlayer.getVideoMetadata().getAudioTrack(position);
-            if (at.supported) {
+            if (at != null && at.supported) {
                 ret = setPlayerAudioTrack(position);
                 if (ret)
                     mVideoInfo.audioTrack = position;
-            } else if (!at.supported){
+            } else if (at == null || !at.supported){
                 mErrorMsg = at.format;
                 myShowDialog(DIALOG_CODEC_NOT_SUPPORTED);
             }
