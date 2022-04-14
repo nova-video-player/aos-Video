@@ -7,32 +7,32 @@
 	android:foreground="@drawable/transparent_ripple">
 
 	<LinearLayout
-		android:layout_width="72dp"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:orientation="vertical" >
 
 		<androidx.cardview.widget.CardView
 			xmlns:card_view="http://schemas.android.com/apk/res-auto"
-			card_view:cardCornerRadius="4dp"
+			card_view:cardCornerRadius="14px"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			>
 			<LinearLayout
 				android:id="@+id/episode_picture_container"
-				android:layout_width="72dp"
-				android:layout_height="44dp"
+				android:layout_width="252px"
+				android:layout_height="154px"
 				android:gravity="center_vertical"
 				android:orientation="vertical" >
 				<androidx.cardview.widget.CardView
 					xmlns:card_view="http://schemas.android.com/apk/res-auto"
-					card_view:cardCornerRadius="3dp"
+					card_view:cardCornerRadius="10.5px"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_horizontal"	>
 					<ImageView
 						android:id="@+id/episode_picture"
-						android:layout_width="70dp"
-						android:layout_height="42dp"
+						android:layout_width="245px"
+						android:layout_height="147px"
 						android:scaleType="center"
 						/>
 				</androidx.cardview.widget.CardView>
@@ -41,13 +41,13 @@
 
 		<TextView
 			android:id="@+id/episode_number"
-			android:layout_width="22dp"
-			android:layout_height="22dp"
+			android:layout_width="77px"
+			android:layout_height="77px"
 			android:layout_marginTop="1dp"
 			android:layout_marginBottom="1dp"
 			android:textAppearance="?android:attr/textAppearanceListItemSmall"
 			android:textSize="12sp"
-			android:textStyle="bold"
+			android:fontFamily="@font/gotham_narrow_bold"
 			android:gravity="center"
 			android:layout_gravity="center" />
 	</LinearLayout>

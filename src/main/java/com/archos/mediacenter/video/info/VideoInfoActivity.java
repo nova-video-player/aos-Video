@@ -33,6 +33,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -118,32 +119,63 @@ public class VideoInfoActivity extends AppCompatActivity {
                 cursor.close();
             }
 
+            // Set Episode RecyclerView
             RecyclerView mEpisodes = (RecyclerView)findViewById(R.id.episode_selector);
             LinearLayoutManager layoutManager
                     = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
             mEpisodes.setLayoutManager(layoutManager);
 
-            // Setting RecyclerView Adapter
-            EpisodesAdapter.OnItemClickListener onItemClickListener = new EpisodesAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(int position) {
-                    mViewPager.setCurrentItem(position, false);
-                }
-            };
-            final EpisodesAdapter episodesAdapter = new EpisodesAdapter(episodes, onItemClickListener);
-            mEpisodes.setAdapter(episodesAdapter);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            String mode = prefs.getString("episode_scrollView", null);
+            int selectedMode = Integer.parseInt(mode);
+            if (selectedMode == 0){
+                // Setting Episode pictures & numbers RecyclerView Adapter
+                EpisodesAdapter.OnItemClickListener onItemClickListener = new EpisodesAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        mViewPager.setCurrentItem(position, false);
+                    }
+                };
+                final EpisodesAdapter episodesAdapter = new EpisodesAdapter(episodes, onItemClickListener);
+                mEpisodes.setAdapter(episodesAdapter);
+                episodesAdapter.setSelectedIndex(mCurrentPosition);
+                mEpisodes.smoothScrollToPosition(mCurrentPosition);
 
-            episodesAdapter.setSelectedIndex(mCurrentPosition);
-            mEpisodes.smoothScrollToPosition(mCurrentPosition);
+                mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        episodesAdapter.setSelectedIndex(position);
+                        episodesAdapter.notifyDataSetChanged();
+                        mEpisodes.smoothScrollToPosition(position);
+                    }
+                });
+            }
+            if (selectedMode == 1){
+                // Setting Episode numbers RecyclerView Adapter
+                EpisodeNumbersAdapter.OnItemClickListener onItemClickListener = new EpisodeNumbersAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        mViewPager.setCurrentItem(position, false);
+                    }
+                };
+                final EpisodeNumbersAdapter episodesAdapter = new EpisodeNumbersAdapter(episodes, onItemClickListener);
+                mEpisodes.setAdapter(episodesAdapter);
+                episodesAdapter.setSelectedIndex(mCurrentPosition);
+                mEpisodes.smoothScrollToPosition(mCurrentPosition);
 
-            mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-                @Override
-                public void onPageSelected(int position) {
-                    episodesAdapter.setSelectedIndex(position);
-                    episodesAdapter.notifyDataSetChanged();
-                    mEpisodes.smoothScrollToPosition(position);
-                }
-            });
+                mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        episodesAdapter.setSelectedIndex(position);
+                        episodesAdapter.notifyDataSetChanged();
+                        mEpisodes.smoothScrollToPosition(position);
+                    }
+                });
+            }
+            if (selectedMode == 2){
+                // Hide Episode RecyclerView
+                mEpisodes.setVisibility(View.GONE);
+            }
         }
 
         mForceCurrentPosition = getIntent().getBooleanExtra(EXTRA_FORCE_VIDEO_SELECTION, false);

@@ -1014,4 +1014,10 @@
     <string name="preference_PlayPause_onTouch">Play/Pause Video on Touch</string>
     <string name="preference_PlayPause_onTouch_summary">When tapping on the middle area of a playing video the video will be paused/resumed on successive taps instead of showing On-Screen controls. To show On-Screen controls tap on upper or lower part of the screen.</string>
 
+    <string name="episode_scrollView_mode_title">Episode Scroll Mode</string>
+    <string name="episode_scrollView_mode_summery">Displays a horizontal scroll view when viewing Episode info, through which you can instantly switch to the desired episode. There are three viewing modes, episode pictures, episode numbers or completely hide the scroll view.</string>
+    <string name="episode_pictures">Episode Pictures</string>
+    <string name="episode_numbers">Episode Numbers</string>
+    <string name="hide_episode_scrollview">Hide</string>
+
 </resources>

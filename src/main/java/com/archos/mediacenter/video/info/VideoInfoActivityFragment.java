@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -73,6 +74,7 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 import androidx.palette.graphics.Palette;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -849,7 +851,18 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
                 // set coordinator layout bottom margin
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
-                params.bottomMargin = 240;
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+                String str = prefs.getString("episode_scrollView", null);
+                int decoder = Integer.parseInt(str);
+                if (decoder == 0){
+                    params.bottomMargin = 240;
+                }
+                if (decoder == 1){
+                    params.bottomMargin = 123;
+                }
+                if (decoder == 2){
+                    params.bottomMargin = 0;
+                }
             }
             else{
                 log.debug("setCurrentVideo: new video and it is NOT an episode");

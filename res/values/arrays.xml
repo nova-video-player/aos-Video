@@ -218,4 +218,14 @@
         <item>932</item>
         <item>949</item>
     </string-array>
+    <string-array name="episode_scrollView_mode_entries" translatable="false">
+        <item>@string/episode_pictures</item>
+        <item>@string/episode_numbers</item>
+        <item>@string/hide_episode_scrollview</item>
+    </string-array>
+    <string-array name="episode_scrollView_mode_entryValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 </resources>

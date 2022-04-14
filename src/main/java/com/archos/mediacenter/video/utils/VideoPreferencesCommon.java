@@ -175,6 +175,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private int mMoreLeanbackPrefsClickCount = 0;
     private long mMoreLeanbackPrefsClickLastTime = 0;
     private ListPreference mDecChoicePreferences = null;
+    private ListPreference mEpisodeScrollViewPreferences = null;
     private ListPreference mAudioInterfaceChoicePreferences = null;
     private CheckBoxPreference mForceSwDecPreferences = null;
     private CheckBoxPreference mForceAudioPassthrough = null;
@@ -281,6 +282,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 prefCategory.removePreference(mEnableCutoutModeShortEdge);
             }
             prefCategory.addPreference(mEnablePlayPauseOnTouch);
+            prefCategory.addPreference(mEpisodeScrollViewPreferences);
         } else {
             prefCategory.removePreference(mDisableDownmix); // on TV downmix is disabled: do not show the option
             prefCategory.addPreference(mActivate3DTVSwitch);
@@ -364,6 +366,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         });
 
         mDecChoicePreferences = (ListPreference) findPreference(KEY_DEC_CHOICE);
+        mEpisodeScrollViewPreferences = (ListPreference) findPreference("episode_scrollView");
         mAudioInterfaceChoicePreferences = (ListPreference) findPreference(KEY_AUDIO_INTERFACE_CHOICE);
         mForceSwDecPreferences = (CheckBoxPreference) findPreference(KEY_FORCE_SW);
         mEnableSponsor = (CheckBoxPreference) findPreference(KEY_ENABLE_SPONSOR);
