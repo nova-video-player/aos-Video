@@ -124,13 +124,24 @@ public class VideoInfoActivity extends AppCompatActivity {
                 cursor.close();
             }
 
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
             // Set Episode RecyclerView
             RecyclerView mEpisodes = (RecyclerView)findViewById(R.id.episode_selector);
             LinearLayoutManager layoutManager
                     = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
             mEpisodes.setLayoutManager(layoutManager);
 
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            boolean browserIsTvShow;
+            if(mPaths.size() != episodes.size()){
+                browserIsTvShow = false;
+                mEpisodes.setVisibility(View.GONE);
+            } else {
+                browserIsTvShow = true;
+                mEpisodes.setVisibility(View.VISIBLE);
+            }
+            prefs.edit().putBoolean("BrowserIsTvShow", browserIsTvShow).apply();
+
             String mode = prefs.getString("episode_scrollView", null);
             int selectedMode = Integer.parseInt(mode);
             if (selectedMode == 0){

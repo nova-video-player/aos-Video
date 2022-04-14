@@ -853,6 +853,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
                 String str = prefs.getString("episode_scrollView", null);
+                boolean browserIsTvShow = prefs.getBoolean("BrowserIsTvShow", true);
                 int decoder = Integer.parseInt(str);
                 if (decoder == 0){
                     params.bottomMargin = 240;
@@ -860,7 +861,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 if (decoder == 1){
                     params.bottomMargin = 123;
                 }
-                if (decoder == 2){
+                if (decoder == 2 || !browserIsTvShow){
                     params.bottomMargin = 0;
                 }
             }
