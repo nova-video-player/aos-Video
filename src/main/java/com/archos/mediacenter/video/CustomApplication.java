@@ -265,7 +265,7 @@ public class CustomApplication extends Application {
         log.trace("onCreate: manifest permissions " + Arrays.toString(getPermissions(mContext)));
         log.trace("onCreate: has permission android.permission.MANAGE_EXTERNAL_STORAGE " + hasPermission("android.permission.MANAGE_EXTERNAL_STORAGE", mContext));
 
-        updateVersionState();
+        updateVersionState(this);
     }
 
     private void launchSambaDiscovery() {
@@ -341,10 +341,10 @@ public class CustomApplication extends Application {
         return mHttpImageManager;
     }
 
-    private void updateVersionState() {
+    private static void updateVersionState(Context context) {
         try {
             //this code gets current version-code (after upgrade it will show new versionCode)
-            PackageInfo info = this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
+            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             novaVersionCode = info.versionCode;
             novaVersionName = info.versionName;
             try {
@@ -357,9 +357,9 @@ public class CustomApplication extends Application {
                 log.error("updateVersionState: cannot split application version "+ novaVersionName);
                 novaLongVersion = "Nova v" + novaVersionName;
             }
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             int previousVersion = sharedPreferences.getInt("current_versionCode", -1);
-            sharedPreferences.edit().putString("nova_version", novaLongVersion).commit();
+            sharedPreferences.edit().putString("nova_version", novaLongVersion).apply();
             String previousVersionName = sharedPreferences.getString("current_versionName", "0.0.0");
             try {
                 novaPreviousVersionArray = splitVersion(previousVersionName);
@@ -411,7 +411,8 @@ public class CustomApplication extends Application {
     }
 
     public static String getChangelog(Context context) {
-        if (novaPreviousVersionArray[0] == 5 && novaVersionArray[0] == 6)
+        log.debug("getChangelog: " + novaPreviousVersionArray[0] + "->" + novaVersionArray[0]);
+        if (novaPreviousVersionArray[0] > 0 && novaPreviousVersionArray[0] <= 5 && novaVersionArray[0] > 5)
             return context.getResources().getString(R.string.v5_v6_upgrade_info);
         else return null;
     }
@@ -420,6 +421,8 @@ public class CustomApplication extends Application {
         if (changelog == null) {
             clearUpdatedFlag(activity);
             return;
+        } else {
+            log.debug("showChangelogDialog: changelog is null, nothing to do.");
         }
         AlertDialog dialog = new AlertDialog.Builder(activity)
             .setTitle(R.string.upgrade_info)
@@ -429,6 +432,7 @@ public class CustomApplication extends Application {
                 public void onClick(DialogInterface dialog, int which) {
                     clearUpdatedFlag(activity);
                     dialog.cancel();
+                    updateVersionState(activity); // be sure not to display twice
                 }
             })
             .show();
