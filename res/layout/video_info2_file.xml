@@ -35,7 +35,7 @@
 				android:id="@+id/file_error"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:fontFamily="@font/lato_regular"
+				android:fontFamily="@font/lato_bold"
 				style="@style/VideoInfoFileInfo"
 				android:paddingTop="@dimen/video_info_margin_half"
 				android:singleLine="false"
