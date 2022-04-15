@@ -143,7 +143,12 @@ public class VideoInfoActivity extends AppCompatActivity {
             prefs.edit().putBoolean("BrowserIsTvShow", browserIsTvShow).apply();
 
             String mode = prefs.getString("episode_scrollView", null);
-            int selectedMode = Integer.parseInt(mode);
+            int selectedMode;
+            if(mode == null){
+                selectedMode = 0;
+            }else{
+                selectedMode = Integer.parseInt(mode);
+            }
             if (selectedMode == 0){
                 LinearSmoothScroller linearSmoothScroller = new LinearSmoothScroller(mEpisodes.getContext()) {
                     @Override

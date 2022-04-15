@@ -852,16 +852,21 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 // set coordinator layout bottom margin
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-                String str = prefs.getString("episode_scrollView", null);
+                String mode = prefs.getString("episode_scrollView", null);
                 boolean browserIsTvShow = prefs.getBoolean("BrowserIsTvShow", true);
-                int decoder = Integer.parseInt(str);
-                if (decoder == 0){
+                int selectedMode;
+                if(mode == null){
+                    selectedMode = 0;
+                }else{
+                    selectedMode = Integer.parseInt(mode);
+                }
+                if (selectedMode == 0){
                     params.bottomMargin = 240;
                 }
-                if (decoder == 1){
+                if (selectedMode == 1){
                     params.bottomMargin = 123;
                 }
-                if (decoder == 2 || !browserIsTvShow){
+                if (selectedMode == 2 || !browserIsTvShow){
                     params.bottomMargin = 0;
                 }
             }
