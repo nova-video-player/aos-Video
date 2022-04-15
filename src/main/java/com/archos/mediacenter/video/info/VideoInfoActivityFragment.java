@@ -2235,6 +2235,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             Picasso.get().load(showTags.getNetworkLogosLargeFileF().get(position)).fit().centerInside().into(mLogo);
                             ScraperImage clickedImage = networkImage.get(position);
                             new LogoSaver(mContext).execute(clickedImage);
+                            mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
+                            mFullScraperTagsTask.execute(mCurrentVideo);
                         }
                     };
                     final ShowNetworkAdapter networkLogoAdapter = new ShowNetworkAdapter(NetworkLogoPaths,indicatorCallback);
@@ -2507,6 +2509,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             Picasso.get().load(tags.getStudioLogosLargeFileF().get(position)).fit().centerInside().into(mLogo);
                             ScraperImage clickedImage = (ScraperImage) studioImage.get(position);
                             new LogoSaver(mContext).execute(clickedImage);
+                            mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
+                            mFullScraperTagsTask.execute(mCurrentVideo);
                         }
                     };
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
