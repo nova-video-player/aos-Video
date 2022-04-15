@@ -57,7 +57,7 @@ public class VideoInfoActivity extends AppCompatActivity {
     private static final boolean DBG = false;
 
     public static final String SHARED_ELEMENT_NAME = "poster";
-    public static final int MAX_VIDEO = 200;
+    public static final int MAX_VIDEO = 1000;
     public static final String EXTRA_NO_ONLINE_UPDATE = "no_online_updates";
     private View mGlobalBackdrop;
     private ViewPager mViewPager;
