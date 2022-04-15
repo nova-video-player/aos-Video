@@ -131,7 +131,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/s_e_text_view"
-                    android:fontFamily="@font/lato_lightitalic"
+                    android:fontFamily="@font/lato_light_italic"
                     android:textColor="@color/header_font"
                     android:singleLine="true"
                     android:textSize="@dimen/video_info_medium_text" />
