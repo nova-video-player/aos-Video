@@ -35,7 +35,10 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:textColor="@android:color/white"
                 android:background="@drawable/transparent_ripple"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:layout_gravity="center_horizontal"
                 android:text="@string/get_subtitles_online"
                 android:layout_height="wrap_content" />
 
