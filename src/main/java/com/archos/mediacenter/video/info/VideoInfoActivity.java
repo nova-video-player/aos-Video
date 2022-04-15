@@ -142,6 +142,14 @@ public class VideoInfoActivity extends AppCompatActivity {
             }
             prefs.edit().putBoolean("BrowserIsTvShow", browserIsTvShow).apply();
 
+            boolean oneEpisode;
+            if(episodes.size() == 1){
+                oneEpisode = true;
+            }else{
+                oneEpisode = false;
+            }
+            prefs.edit().putBoolean("oneEpisode", oneEpisode).apply();
+
             String mode = prefs.getString("episode_scrollView", null);
             int selectedMode;
             if(mode == null){
@@ -207,7 +215,7 @@ public class VideoInfoActivity extends AppCompatActivity {
                     }
                 });
             }
-            if (selectedMode == 2){
+            if (selectedMode == 2 || oneEpisode){
                 // Hide Episode RecyclerView
                 mEpisodes.setVisibility(View.GONE);
             }

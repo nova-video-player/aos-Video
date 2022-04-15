@@ -854,6 +854,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
                 String mode = prefs.getString("episode_scrollView", null);
                 boolean browserIsTvShow = prefs.getBoolean("BrowserIsTvShow", true);
+                boolean oneEpisode = prefs.getBoolean("oneEpisode", true);
                 int selectedMode;
                 if(mode == null){
                     selectedMode = 0;
@@ -866,7 +867,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 if (selectedMode == 1){
                     params.bottomMargin = 123;
                 }
-                if (selectedMode == 2 || !browserIsTvShow){
+                if (selectedMode == 2 || !browserIsTvShow || oneEpisode){
                     params.bottomMargin = 0;
                 }
             }
