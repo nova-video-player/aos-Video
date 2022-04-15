@@ -34,7 +34,7 @@
             <TextView
                 android:id="@+id/video_decoder"
                 style="@style/VideoInfoFileInfo.Smaller"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/lato_regular_italic"
                 android:textColor="@color/white_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
