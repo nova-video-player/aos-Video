@@ -31,9 +31,6 @@
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/video_info_margin_simple"
                 android:paddingRight="@dimen/video_info_margin_simple"
-                android:paddingTop="@dimen/video_info_margin_half"
-                android:paddingBottom="@dimen/video_info_margin_half"
-
                 android:layout_width="match_parent"
                 android:id="@+id/trailer_layout"
                 android:layout_height="wrap_content">

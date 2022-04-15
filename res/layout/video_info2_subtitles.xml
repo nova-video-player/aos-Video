@@ -19,14 +19,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="left"
-            android:paddingTop="@dimen/video_info_margin_quarter"
-            android:paddingBottom="@dimen/video_info_margin_quarter"
             android:weightSum="1">
             <TextView
                 android:id="@+id/subtitle_track"
                 android:fontFamily="@font/lato_regular"
                 android:textColor="@color/white_font"
-                android:padding="@dimen/video_info_margin_half"
                 style="@style/VideoInfoFileInfo"
                 android:paddingLeft="32dip"/>
 
