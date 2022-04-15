@@ -14,6 +14,8 @@
 		<TextView android:id="@+id/file_info_header"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:fontFamily="@font/lato_regular"
+			android:textColor="@color/header_font"
 			android:text="@string/info_file"/>
 		<LinearLayout
 			android:layout_width="fill_parent"
@@ -27,12 +29,15 @@
 			<TextView android:id="@+id/fullpath"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
+				android:fontFamily="@font/lato_regular"
+				android:textColor="@color/white_font"
 				android:textSize="@dimen/video_info_medium_text"/>
 
 			<TextView
 				android:id="@+id/file_error"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:fontFamily="@font/lato_regular"
 				style="@style/VideoInfoFileInfo"
 				android:paddingTop="@dimen/video_info_margin_half"
 				android:singleLine="false"
@@ -49,11 +54,15 @@
 				<TextView
 					android:id="@+id/duration"
 					style="@style/VideoInfoFileInfo"
+					android:fontFamily="@font/lato_regular"
+					android:textColor="@color/white_font"
 					android:layout_marginRight="50dip"/>
 
 				<TextView
 					android:id="@+id/filesize"
 					style="@style/VideoInfoFileInfo"
+					android:fontFamily="@font/lato_regular"
+					android:textColor="@color/white_font"
 					android:layout_marginLeft="10dip"/>
 			</LinearLayout>
 
