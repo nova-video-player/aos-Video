@@ -16,21 +16,15 @@ package com.archos.mediacenter.video.leanback;
 
 import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermission;
 
-import android.app.Activity;
 import android.content.Intent;
 
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.IntentSenderRequest;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import android.view.KeyEvent;
-import android.widget.Toast;
 
-import com.archos.filecorelibrary.FileUtilsQ;
 import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.DensityTweak;
 import com.archos.mediacenter.video.EntryActivity;
