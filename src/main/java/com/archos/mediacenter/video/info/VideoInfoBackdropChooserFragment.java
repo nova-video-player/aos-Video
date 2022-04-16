@@ -185,11 +185,13 @@ public class VideoInfoBackdropChooserFragment extends Fragment implements
     /* default */ void stop(boolean hasBackdropChanged) {
 
         mAdapter.cleanup();
-        if(hasBackdropChanged)
-            getActivity().setResult(AppCompatActivity.RESULT_OK);
-        else
-            getActivity().setResult(AppCompatActivity.RESULT_CANCELED);
-        getActivity().finish();
+        if (getActivity() != null) {
+            if (hasBackdropChanged)
+                getActivity().setResult(AppCompatActivity.RESULT_OK);
+            else
+                getActivity().setResult(AppCompatActivity.RESULT_CANCELED);
+            getActivity().finish();
+        }
     }
 
     private void startLoadingIfReady() {
