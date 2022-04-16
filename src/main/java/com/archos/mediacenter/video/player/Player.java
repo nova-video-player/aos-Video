@@ -505,6 +505,7 @@ public class Player implements IPlayerControl,
                     mMediaPlayer.setSurface(surface);
                     surface.release();
                 }
+
                 mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mMediaPlayer.setScreenOnWhilePlaying(true);
                 if (mResumeCtx.getSeek() != -1 && !mSurfaceController.supportOpenGLVideoEffect()) {
@@ -515,13 +516,7 @@ public class Player implements IPlayerControl,
                 // we don't set the target state here either, but preserve the
                 // target state that was there before.
                 mCurrentState = STATE_PREPARING;
-            } catch (IOException ex) {
-                onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, null);
-                return;
-            } catch (IllegalArgumentException ex) {
-                onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, null);
-                return;
-            } catch (IllegalStateException ex) {
+            } catch (NullPointerException | IOException | IllegalArgumentException | IllegalStateException ex) {
                 onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, null);
                 return;
             }
