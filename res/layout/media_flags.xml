@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/media_type"
-        android:layout_width="70dp"
-        android:layout_height="55dp"
+        android:layout_width="60dp"
+        android:layout_height="48dp"
         android:clickable="true"
         android:focusable="true"
         android:background="@drawable/transparent_ripple"
@@ -17,8 +17,8 @@
 
     <ImageView
         android:id="@+id/video_codec"
-        android:layout_width="70dp"
-        android:layout_height="55dp"
+        android:layout_width="60dp"
+        android:layout_height="48dp"
         android:clickable="true"
         android:focusable="true"
         android:background="@drawable/transparent_ripple"
@@ -26,8 +26,8 @@
 
     <ImageView
         android:id="@+id/video_resolution"
-        android:layout_width="70dp"
-        android:layout_height="55dp"
+        android:layout_width="60dp"
+        android:layout_height="48dp"
         android:clickable="true"
         android:focusable="true"
         android:background="@drawable/transparent_ripple"
@@ -35,8 +35,8 @@
 
     <ImageView
         android:id="@+id/audio_codec"
-        android:layout_width="70dp"
-        android:layout_height="55dp"
+        android:layout_width="60dp"
+        android:layout_height="48dp"
         android:clickable="true"
         android:focusable="true"
         android:background="@drawable/transparent_ripple"
@@ -44,8 +44,8 @@
 
     <ImageView
         android:id="@+id/audio_channels"
-        android:layout_width="70dp"
-        android:layout_height="55dp"
+        android:layout_width="60dp"
+        android:layout_height="48dp"
         android:clickable="true"
         android:focusable="true"
         android:background="@drawable/transparent_ripple"
@@ -53,8 +53,8 @@
 
     <ImageView
         android:id="@+id/flag_3d"
-        android:layout_width="70dp"
-        android:layout_height="55dp"
+        android:layout_width="60dp"
+        android:layout_height="48dp"
         android:clickable="true"
         android:focusable="true"
         android:background="@drawable/transparent_ripple"

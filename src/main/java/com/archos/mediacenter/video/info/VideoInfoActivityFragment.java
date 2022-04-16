@@ -975,22 +975,24 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             // definition is not known
             if(definition == 0){
                 //mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/480.png"));
-            }
+            }else
             // definition is 720p
             if(definition == 1){
                 mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/720.png"));
-            }
+            }else
             // definition is 1080p
             if(definition == 2){
                 mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/1080.png"));
-            }
+            }else
             // definition is 4K/2160p
             if(definition == 3){
                 mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/4k.png"));
-            }
+            }else
             // definition is SD
             if(definition == 4){
                 mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/480.png"));
+            }else{
+                mVideoResolution.setVisibility(View.GONE);
             }
 
             // set 3D video flag
@@ -1222,17 +1224,22 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             assert videoMetadata.getVideoTrack() != null;
             String format = videoMetadata.getVideoTrack().format;
             if (format != null){
-                if (format.equals("H.264")){
-                    mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/h264.png"));
-                }
-                if (format.equals("HEVC/H.265")){
-                    mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/hevc.png"));
-                }
-                if (format.equals("MPEG-2")){
-                    mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg2video.png"));
-                }
-                if (format.equals("MPEG-4")){
-                    mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg4.png"));
+                switch (format) {
+                    case "H.264":
+                        mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/h264.png"));
+                        break;
+                    case "HEVC/H.265":
+                        mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/hevc.png"));
+                        break;
+                    case "MPEG-2":
+                        mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg2video.png"));
+                        break;
+                    case "MPEG-4":
+                        mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg4.png"));
+                        break;
+                    default:
+                        mVideoCodec.setVisibility(View.GONE);
+                        break;
                 }
             }
 
@@ -1244,26 +1251,28 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 audioTrackFormat = videoMetadata.getAudioTrack(0).format;
                 if (audioTrackFormat.equalsIgnoreCase("Digital")) {
                     mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/dts.png"));
-                }
-                if (audioTrackFormat.equalsIgnoreCase("AC3")) {
+                }else if (audioTrackFormat.equalsIgnoreCase("AC3")) {
                     mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/ac3.png"));
-                }
-                if (audioTrackFormat.equalsIgnoreCase("EAC3")) {
+                }else if (audioTrackFormat.equalsIgnoreCase("EAC3")) {
                     mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/eac3.png"));
-                }
-                if (audioTrackFormat.equalsIgnoreCase("AAC")) {
+                }else if (audioTrackFormat.equalsIgnoreCase("AAC")) {
                     mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/aac.png"));
+                }else{
+                    mAudioCodec.setVisibility(View.GONE);
                 }
+
                 String audioTrackChannels = "";
                 audioTrackChannels = videoMetadata.getAudioTrack(0).channels;
-                if (audioTrackChannels.equalsIgnoreCase("Stereo")) {
+                if (audioTrackChannels.equalsIgnoreCase("Mono")) {
+                    mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/1.png"));
+                }else if (audioTrackChannels.equalsIgnoreCase("Stereo")) {
                     mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/2.png"));
-                }
-                if (audioTrackChannels.equalsIgnoreCase("5.1")) {
+                }else if (audioTrackChannels.equalsIgnoreCase("5.1")) {
                     mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/6.png"));
-                }
-                if (audioTrackChannels.equalsIgnoreCase("7.1")) {
+                }else if (audioTrackChannels.equalsIgnoreCase("7.1")) {
                     mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/8.png"));
+                }else{
+                    mAudioChannels.setVisibility(View.GONE);
                 }
             }
             if (videoMetadata.getAudioTrackNb() == 0) {
