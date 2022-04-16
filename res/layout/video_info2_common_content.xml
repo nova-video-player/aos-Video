@@ -70,9 +70,19 @@
             android:id="@+id/scraper_plot_container"
             android:layout_alignParentStart="true"
             />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/media_flags"
+            android:layout_below="@+id/scraper_plot_container"
+            android:id="@+id/media_flags_container"
+            android:layout_alignParentStart="true"
+            />
+
         <HorizontalScrollView
             android:id="@+id/source_container"
-            android:layout_below="@+id/scraper_plot_container"
+            android:layout_below="@+id/media_flags_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
@@ -81,7 +91,7 @@
                 android:id="@+id/source_layout"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"></LinearLayout>
+                android:layout_height="wrap_content" />
         </HorizontalScrollView>
 
         <include
@@ -91,7 +101,7 @@
             android:id="@+id/info_file_container"
             android:layout_below="@+id/source_container"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="@dimen/video_info_cardview_top_margin"
+            android:layout_marginTop="4dp"
             />
 
         <include

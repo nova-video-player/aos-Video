@@ -24,11 +24,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -41,7 +42,6 @@ import android.text.format.Formatter;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,7 +51,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -141,6 +140,7 @@ import com.squareup.picasso.Picasso;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -149,6 +149,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static com.archos.mediacenter.video.utils.VideoUtils.getFilePathFromContentUri;
 
@@ -347,6 +348,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private CoordinatorLayout mCoordinatorLayout;
     private TextView mNetworks;
     private View mNetworksContainer;
+    private ImageView mVideoCodec;
+    private ImageView mVideoResolution;
+    private ImageView mAudioCodec;
+    private ImageView mAudioChannels;
+    private ImageView m3Dflag;
+    private ImageView mMediaType;
 
     private ObservableScrollView mScrollView;
 
@@ -562,6 +569,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mCoordinatorLayout = mRoot.findViewById(R.id.coordinator_layout);
         mNetworks = mRoot.findViewById(R.id.networks);
         mNetworksContainer = mRoot.findViewById(R.id.network_container);
+        mVideoCodec = mRoot.findViewById(R.id.video_codec);
+        mVideoResolution = mRoot.findViewById(R.id.video_resolution);
+        mAudioCodec = mRoot.findViewById(R.id.audio_codec);
+        mAudioChannels = mRoot.findViewById(R.id.audio_channels);
+        m3Dflag = mRoot.findViewById(R.id.flag_3d);
+        mMediaType = mRoot.findViewById(R.id.media_type);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -956,6 +969,55 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }
             if(!mIsLaunchFromPlayer && mCurrentVideo.locationSupportsDelete())
                 addMenu(0, R.string.delete, DELETE_GROUP, R.string.delete);
+
+            // set video definition flags
+            int definition = video.getNormalizedDefinition();
+            // definition is not known
+            if(definition == 0){
+                //mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/480.png"));
+            }
+            // definition is 720p
+            if(definition == 1){
+                mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/720.png"));
+            }
+            // definition is 1080p
+            if(definition == 2){
+                mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/1080.png"));
+            }
+            // definition is 4K/2160p
+            if(definition == 3){
+                mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/4k.png"));
+            }
+            // definition is SD
+            if(definition == 4){
+                mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/480.png"));
+            }
+
+            // set 3D video flag
+            String filePath = video.getFilePath();
+            if(Pattern.compile(Pattern.quote("3d"), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                m3Dflag.setImageBitmap(getBitmapFromAsset("videocodec/3dbd.png"));
+                m3Dflag.setVisibility(View.VISIBLE);
+            }else{
+                m3Dflag.setVisibility(View.GONE);
+            }
+
+            // set Media Type flag
+            String b1 = "bluray";
+            String b2 = "blu ray";
+            String b3 = "blu-ray";
+            String b4 = "brrip";
+            String b5 = "bdrip";
+            if(Pattern.compile(Pattern.quote(b1), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
+                    Pattern.compile(Pattern.quote(b2), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
+                    Pattern.compile(Pattern.quote(b3), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
+                    Pattern.compile(Pattern.quote(b4), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
+                    Pattern.compile(Pattern.quote(b5), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mMediaType.setImageBitmap(getBitmapFromAsset("videocodec/bluray.png"));
+                mMediaType.setVisibility(View.VISIBLE);
+            }else{
+                mMediaType.setVisibility(View.GONE);
+            }
         } else {
             log.debug("setCurrentVideo: should not change video");
         }
@@ -1141,6 +1203,58 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             if (videoMetadata.getVideoTrack() != null) {
                 mVideoTrackTextView.setText(VideoInfoCommonClass.getVideoTrackString(videoMetadata, getResources()));
             }
+
+            // set video codec flags
+            assert videoMetadata.getVideoTrack() != null;
+            String format = videoMetadata.getVideoTrack().format;
+            if (format != null){
+                if (format.equals("H.264")){
+                    mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/h264.png"));
+                }
+                if (format.equals("HEVC/H.265")){
+                    mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/hevc.png"));
+                }
+                if (format.equals("MPEG-2")){
+                    mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg2video.png"));
+                }
+            }
+
+            // set audio codec flags
+            if (videoMetadata.getAudioTrackNb() != 0) {
+                mAudioCodec.setVisibility(View.VISIBLE);
+                mAudioChannels.setVisibility(View.VISIBLE);
+                String audioTrackFormat = "";
+                audioTrackFormat = videoMetadata.getAudioTrack(0).format;
+                if (audioTrackFormat.equalsIgnoreCase("Digital")) {
+                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/dts.png"));
+                }
+                if (audioTrackFormat.equalsIgnoreCase("AC3")) {
+                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/ac3.png"));
+                }
+                if (audioTrackFormat.equalsIgnoreCase("EAC3")) {
+                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/eac3.png"));
+                }
+                if (audioTrackFormat.equalsIgnoreCase("AAC")) {
+                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/aac.png"));
+                }
+                String audioTrackChannels = "";
+                audioTrackChannels = videoMetadata.getAudioTrack(0).channels;
+                if (audioTrackChannels.equalsIgnoreCase("Stereo")) {
+                    mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/2.png"));
+                }
+                if (audioTrackChannels.equalsIgnoreCase("5.1")) {
+                    mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/6.png"));
+                }
+                if (audioTrackChannels.equalsIgnoreCase("7.1")) {
+                    mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/8.png"));
+                }
+            }
+            if (videoMetadata.getAudioTrackNb() == 0) {
+                mAudioCodec.setVisibility(View.GONE);
+                mAudioChannels.setVisibility(View.GONE);
+            }
+
+
             mFileInfoAudioVideoContainer.setVisibility(View.VISIBLE);
             mFileInfoContainerLoading.setVisibility(View.GONE);
             mDuration.setVisibility(View.VISIBLE);
@@ -1152,6 +1266,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             String audiotrack = VideoInfoCommonClass.getAudioTrackString(videoMetadata, getResources(), getActivity());
             setTextOrHideContainer(mAudioTrackTextView, audiotrack, mRoot.findViewById(R.id.audio_row));
         }
+    }
+
+    private Bitmap getBitmapFromAsset(String MediaFlag){
+        AssetManager assetManager = mContext.getAssets();
+        InputStream inputStream = null;
+        try {
+            inputStream = assetManager.open(MediaFlag);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return BitmapFactory.decodeStream(inputStream);
     }
 
     private void updateSubtitleInfo(VideoMetadata videoMetadata, List<SubtitleManager.SubtitleFile> externalSubs){

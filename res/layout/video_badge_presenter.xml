@@ -8,7 +8,8 @@
     card_view:cardCornerRadius="4dp"
     android:layout_below="@+id/short_scrap_plot"
     android:layout_marginRight="@dimen/video_info_margin_simple"
-    android:layout_marginTop="@dimen/video_info_cardview_top_margin"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
     android:layout_height="wrap_content"
     >
     <LinearLayout
