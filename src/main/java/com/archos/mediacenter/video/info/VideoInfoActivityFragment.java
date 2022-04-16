@@ -1008,12 +1008,26 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             String b3 = "blu-ray";
             String b4 = "brrip";
             String b5 = "bdrip";
+            String w1 = "webdl";
+            String w2 = "web-dl";
+            String w3 = "webrip";
+            String w4 = "web-rip";
+            String d = "dvd";
             if(Pattern.compile(Pattern.quote(b1), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
                     Pattern.compile(Pattern.quote(b2), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
                     Pattern.compile(Pattern.quote(b3), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
                     Pattern.compile(Pattern.quote(b4), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
-                    Pattern.compile(Pattern.quote(b5), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                    Pattern.compile(Pattern.quote(b5), Pattern.CASE_INSENSITIVE).matcher(filePath).find()) {
                 mMediaType.setImageBitmap(getBitmapFromAsset("videocodec/bluray.png"));
+                mMediaType.setVisibility(View.VISIBLE);
+            }else if(Pattern.compile(Pattern.quote(w1), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
+                    Pattern.compile(Pattern.quote(w2), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
+                    Pattern.compile(Pattern.quote(w3), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
+                    Pattern.compile(Pattern.quote(w4), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mMediaType.setImageBitmap(getBitmapFromAsset("videocodec/webtv.png"));
+                mMediaType.setVisibility(View.VISIBLE);
+            }else if(Pattern.compile(Pattern.quote(d), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mMediaType.setImageBitmap(getBitmapFromAsset("videocodec/dvd.png"));
                 mMediaType.setVisibility(View.VISIBLE);
             }else{
                 mMediaType.setVisibility(View.GONE);
@@ -1216,6 +1230,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 }
                 if (format.equals("MPEG-2")){
                     mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg2video.png"));
+                }
+                if (format.equals("MPEG-4")){
+                    mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg4.png"));
                 }
             }
 
