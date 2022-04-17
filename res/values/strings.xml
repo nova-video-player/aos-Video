@@ -1011,7 +1011,7 @@
     <string name="minutes">mins</string>
     <string name="show_type">Show Type:</string>
 
-    <string name="preference_PlayPause_onTouch">Play/Pause Video on Touch</string>
+    <string name="preference_PlayPause_onTouch">Enable Play/Pause on Touch</string>
     <string name="preference_PlayPause_onTouch_summary">When tapping on the middle area of a playing video the video will be paused/resumed on successive taps instead of showing On-Screen controls. To show On-Screen controls tap on upper or lower part of the screen.</string>
 
     <string name="episode_scrollView_mode_title">Episode Scroll Mode</string>

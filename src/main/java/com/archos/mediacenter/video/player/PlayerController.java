@@ -421,7 +421,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }
 
         SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        mPlayPauseOnTouchActivated = mPreferences.getBoolean("enable_PlayPause_onTouch", true);
+        mPlayPauseOnTouchActivated = mPreferences.getBoolean("enable_PlayPause_onTouch", false);
 
         View upperTouchZone = v.findViewById(R.id.upper_touch_zone);
         View playPauseTouchZone = v.findViewById(R.id.play_pause_touch_zone);
