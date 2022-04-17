@@ -15,6 +15,7 @@
 
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
+import androidx.preference.PreferenceManager;
 
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.ActionBarSubmenu;
@@ -342,12 +344,20 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
         args.putLong(VideoColumns.SCRAPER_SHOW_ID,
 				tvshow.getTvshowId());
 
-        Fragment f = null;
+
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+		boolean displayTvOverView = prefs.getBoolean("display_TvOverview", false);
+
+		Fragment f = null;
 		if(tvshow.getSeasonCount()>1) {
 			f = new BrowserListOfSeasons();
 			f.setArguments(args);
 		} else {
-			f = new BrowserListOfEpisodes();
+			if (displayTvOverView){
+				f = new BrowserListOfSeasons();
+			}else{
+				f = new BrowserListOfEpisodes();
+			}
 			f.setArguments(args);
 		}
         BrowserCategory category = (BrowserCategory) getParentFragmentManager().findFragmentById(R.id.category);

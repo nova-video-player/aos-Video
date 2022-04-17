@@ -183,6 +183,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mActivateRefreshrateTVSwitch = null;
     private CheckBoxPreference mEnableCutoutModeShortEdge = null;
     private CheckBoxPreference mEnablePlayPauseOnTouch = null;
+    private CheckBoxPreference mEnableDisplayTvOverView = null;
     private CheckBoxPreference mActivate3DTVSwitch = null;
     private PreferenceCategory mAdvancedPreferences = null;
     private PreferenceCategory mScraperCategory = null;
@@ -366,6 +367,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         mDecChoicePreferences = (ListPreference) findPreference(KEY_DEC_CHOICE);
         mEpisodeScrollViewPreferences = (ListPreference) findPreference("episode_scrollView");
+        mEnableDisplayTvOverView = (CheckBoxPreference) findPreference("display_TvOverview");
         mAudioInterfaceChoicePreferences = (ListPreference) findPreference(KEY_AUDIO_INTERFACE_CHOICE);
         mForceSwDecPreferences = (CheckBoxPreference) findPreference(KEY_FORCE_SW);
         mEnableSponsor = (CheckBoxPreference) findPreference(KEY_ENABLE_SPONSOR);
@@ -678,6 +680,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 }
             }
             userInterfaceCategory.addPreference(mEpisodeScrollViewPreferences);
+            userInterfaceCategory.addPreference(mEnableDisplayTvOverView);
         }
 
         PreferenceCategory leanbackUserInterfaceCategory = (PreferenceCategory)findPreference("category_leanback_user_interface");

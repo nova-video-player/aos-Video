@@ -1020,4 +1020,7 @@
     <string name="episode_numbers">Episode Numbers</string>
     <string name="hide_episode_scrollview">Hide</string>
 
+    <string name="preference_display_TvOverview_if_only_one_season">Display TV Show overview</string>
+    <string name="preference_display_TvOverview_if_only_one_season_summary">Enable this to display TV Show overview screen if there is one season only. By default it is disabled and it will jump to display list of episodes.</string>
+
 </resources>
