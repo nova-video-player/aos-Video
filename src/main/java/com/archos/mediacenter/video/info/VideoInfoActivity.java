@@ -153,7 +153,7 @@ public class VideoInfoActivity extends AppCompatActivity {
             String mode = prefs.getString("episode_scrollView", null);
             int selectedMode;
             if(mode == null){
-                selectedMode = 0;
+                selectedMode = 1;
             }else{
                 selectedMode = Integer.parseInt(mode);
             }

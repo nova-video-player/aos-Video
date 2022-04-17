@@ -134,7 +134,7 @@
             app:iconSpaceReserved="false"/>
 
         <ListPreference
-            android:defaultValue="0"
+            android:defaultValue="1"
             android:dialogTitle="@string/episode_scrollView_mode_title"
             android:entries="@array/episode_scrollView_mode_entries"
             android:entryValues="@array/episode_scrollView_mode_entryValues"

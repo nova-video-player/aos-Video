@@ -870,7 +870,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 boolean oneEpisode = prefs.getBoolean("oneEpisode", true);
                 int selectedMode;
                 if(mode == null){
-                    selectedMode = 0;
+                    selectedMode = 1;
                 }else{
                     selectedMode = Integer.parseInt(mode);
                 }
