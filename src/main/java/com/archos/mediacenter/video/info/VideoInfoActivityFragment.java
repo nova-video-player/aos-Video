@@ -989,7 +989,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             int definition = video.getNormalizedDefinition();
             // definition is not known
             if(definition == 0){
-                //mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/480.png"));
+                mVideoResolution.setVisibility(View.GONE);
             }else
             // definition is 720p
             if(definition == 1){
