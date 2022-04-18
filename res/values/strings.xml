@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 ** Copyright 2007, The Android Open Source Project
 **
@@ -17,7 +16,7 @@
 */
 -->
 
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
 
     <!-- Menu item that takes the user back to the top level screen of the music player -->
     <string name="goto_start">Library</string>
@@ -57,14 +56,14 @@
 
 
     <string name="video_sources">Sources</string>
-	<!-- Infos dialog tabs -->
-	<string name="info_tab_movie">Movie</string>
-	<string name="info_tab_show">Show</string>
-	<string name="info_tab_episode">Episode</string>
-	<string name="info_tab_video">Video</string>
-	<string name="info_tab_file">File info</string>
-	<string name="info_tab_backdrop_chooser">Backdrop chooser</string>
-	<string name="info_tab_poster_chooser">Poster chooser</string>
+    <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">Movie</string>
+    <string name="info_tab_show">Show</string>
+    <string name="info_tab_episode">Episode</string>
+    <string name="info_tab_video">Video</string>
+    <string name="info_tab_file">File info</string>
+    <string name="info_tab_backdrop_chooser">Backdrop chooser</string>
+    <string name="info_tab_poster_chooser">Poster chooser</string>
     <string name="info_tab_share">Share</string>
     <string name="info_menu_backdrop_select">Backdrop</string>
     <string name="info_menu_series_backdrop_select">Series Backdrop</string>
@@ -307,7 +306,7 @@
 
     <!-- Media Center -->
     <string name="mediacenterlabel">Media Center</string>
-    
+
     <string name="view_mode">Display mode</string>
     <string name="view_mode_list">List</string>
     <string name="view_mode_grid">Posters</string>
@@ -339,9 +338,9 @@
     <string name="pref_audio_parameters_title">Sound</string>
     <string name="pref_audio_filt_title">Audio Boost</string>
     <string name="pref_audio_filt_night_mode">Night Mode</string>
- 	<string name="ui_mode_auto">Auto</string>
- 	<string name="ui_mode_tv">TV</string>
- 	<string name="ui_mode_normal">Tablet/Phone</string>
+    <string name="ui_mode_auto">Auto</string>
+    <string name="ui_mode_tv">TV</string>
+    <string name="ui_mode_normal">Tablet/Phone</string>
     <string name="pref_s3d_mode_title">3D mode</string>
     <string name="pref_s3d_mode_entry_sbs">Side by side</string>
     <string name="pref_s3d_mode_entry_topbottom">Top and bottom</string>
@@ -505,13 +504,13 @@
     <string name="torrent_file_to_play">Choose a file to play</string>
     <string name="torrent_buy_premium_message">Torrent streaming is only available on paid version</string>
     <string name="torrent_buy_premium">Buy premium version</string>
-    
+
     <!-- Shortcuts -->
     <string name="add_to_shortcuts">Create a shortcut</string>
     <string name="add_ssh_server">Browse a FTP server</string>
     <string name="add_ssh_shortcut">Add as shortcut</string>
-     <string name="ssh_prompt">FTP type</string>
- 	<string name="ssh_empty_view"> "You can browse and play from your own ftp server"</string>
+    <string name="ssh_prompt">FTP type</string>
+    <string name="ssh_empty_view"> "You can browse and play from your own ftp server"</string>
     <string-array name="ssh_types">
         <item>FTP</item>
         <item>SFTP</item>
@@ -544,11 +543,11 @@
     <string name="upnp_indexing_warning_message">UPnP indexing does not allow as many features as SMB indexing.\nIt is recommended to index a SMB folder instead if your server or PC supports it.\n</string>
 
     <string name="ssh_error">Unable to connect : please, check your connection and credentials</string>
-   	<string name="ssh_remote_address">Remote address</string>
-   	<string name="ssh_port">Port</string>
+    <string name="ssh_remote_address">Remote address</string>
+    <string name="ssh_port">Port</string>
     <string name="ssh_password">Password</string>
     <string name="ssh_username">Username</string>
-	<string name="ssh_shortcut_name">Shortcut name</string>
+    <string name="ssh_shortcut_name">Shortcut name</string>
     <string name="smb_domain">Domain (optional)</string>
     <!-- Preferences -->
     <string name="preferences">Preferences</string>
@@ -585,9 +584,9 @@
 
     <string name="preferences_languages">Subtitles download languages</string>
     <string name="summary_list_preference_primary">Select your languages for downloading subtitles</string>
-    <string name="favSubLang_title">Subtitles reading language</string> 
+    <string name="favSubLang_title">Subtitles reading language</string>
     <string name="favSubLang_summary">Choose your favorite language for reading subtitles</string>
-	<string name="ui_mode_title">User interface mode</string>
+    <string name="ui_mode_title">User interface mode</string>
     <string name="ui_mode_summary">Choose between TV and Tablet/Phone UI</string>
     <string name="preferences_video_about">About</string>
     <string name="preferences_video_os_text">Subtitles provided by</string>
@@ -636,7 +635,7 @@
     <string name="notifications_all">All notifications</string>
     <string name="notifications_alerts">Notification alerts only</string>
     <string name="notifications_none">No notifications</string>
-    
+
     <string name="pref_format_mode_title">Format</string>
     <string name="format_fullscreen">Fullscreen</string>
     <string name="format_optimized">Optimized</string>
@@ -644,28 +643,28 @@
     <string name="format_stretched">Stretched</string>
 
     <string name="stereo_dive_enable">Stereo dive effect</string>
- 	<string name="stereo_dive_disable">Disable stereo dive effect</string>
+    <string name="stereo_dive_disable">Disable stereo dive effect</string>
     <string name="rotation_unlock">Enable automatic screen rotation</string>
     <string name="rotation_locked">Automatic screen rotation disabled</string>
     <string name="rotation_unlocked">Automatic screen rotation enabled</string>
 
     <string name="network_reindex">Re-scan content</string>
 
-   <!-- Help overlay -->
-   <string name="help_overlay_menu">Press the UP arrow key\nto display the TV menu</string>
-   <string name="help_overlay_ssh_indexing_text">Select the \"Add as shortcut\" option to quickly come back to your server.</string>
+    <!-- Help overlay -->
+    <string name="help_overlay_menu">Press the UP arrow key\nto display the TV menu</string>
+    <string name="help_overlay_ssh_indexing_text">Select the \"Add as shortcut\" option to quickly come back to your server.</string>
 
-   <string name="help_overlay_network_indexing_text1">Press this menu item to integrate the content of this folder and its subfolders to the Video Library.</string>
-   <string name="help_overlay_network_indexing_text1_lb">Use the + button to integrate the content of this folder and its sub-folders to the Video Library.</string>
-   <string name="help_overlay_network_indexing_text2">It will allow you to get posters and descriptions for the movies and TV shows.</string>
-   <string name="help_overlay_scraper_text">Press this menu item to search posters and descriptions online for your videos. </string>
+    <string name="help_overlay_network_indexing_text1">Press this menu item to integrate the content of this folder and its subfolders to the Video Library.</string>
+    <string name="help_overlay_network_indexing_text1_lb">Use the + button to integrate the content of this folder and its sub-folders to the Video Library.</string>
+    <string name="help_overlay_network_indexing_text2">It will allow you to get posters and descriptions for the movies and TV shows.</string>
+    <string name="help_overlay_scraper_text">Press this menu item to search posters and descriptions online for your videos. </string>
 
-   <string name="new_videos_count">New Videos: %d</string>
-   <string name="new_videos_scrape_message">You have new videos that don\'t have information and posters yet.</string>
-   <string name="network_bookmarks">Resume points and position bookmarks on network</string>
-   <string name="network_thumbnails">Create remote thumbnails</string>
+    <string name="new_videos_count">New Videos: %d</string>
+    <string name="new_videos_scrape_message">You have new videos that don\'t have information and posters yet.</string>
+    <string name="network_bookmarks">Resume points and position bookmarks on network</string>
+    <string name="network_thumbnails">Create remote thumbnails</string>
     <string name="network_thumbnails_summary">Create thumbnails from remote videos when no poster available</string>
-   <string name="network_bookmarks_summary">Save and check for resume point and position bookmarks on network when possible</string>
+    <string name="network_bookmarks_summary">Save and check for resume point and position bookmarks on network when possible</string>
     <string name="share_folders_smbv2">Enable SMBv2 support</string>
     <string name="share_folders_smbv2_summary">Enable network share SMB version 2 protocol support.</string>
     <string name="share_folders_smb_resolv">SMB resolver order</string>
@@ -682,46 +681,46 @@
     <!-- Brightness -->
     <string name="auto_brightness_message">Brightness cannot be changed because automatic brightness mode is currently enabled.</string>
 
-   <!--  Nfo File parsing -->
-   <string name="network_nfo_parse">Process \'.nfo\' files</string>
-   <string name="network_nfo_parse_summary">Read Kodi \'.nfo\' files during (re-)scanning to gather media information and posters.</string>
-   <string name="ask_to_mail_media_DB">Do you want to mail your Video database to Nova development team in order to help them check a bug?\n\nThe video files are (of course) not mailed, but the full list of file names is.</string>
-   <string name="no_email_installed">No email application found</string>
-   <string name="zipping_library_before_mailing">Zipping a copy of the library before mailing it…</string>
-   <string name="zipped_library_mail_subject">Nova Video Database Dump</string>
-   <string name="zipped_library_mail_text">Please describe the problem you\'re experiencing\n\n</string>
+    <!--  Nfo File parsing -->
+    <string name="network_nfo_parse">Process \'.nfo\' files</string>
+    <string name="network_nfo_parse_summary">Read Kodi \'.nfo\' files during (re-)scanning to gather media information and posters.</string>
+    <string name="ask_to_mail_media_DB">Do you want to mail your Video database to Nova development team in order to help them check a bug?\n\nThe video files are (of course) not mailed, but the full list of file names is.</string>
+    <string name="no_email_installed">No email application found</string>
+    <string name="zipping_library_before_mailing">Zipping a copy of the library before mailing it…</string>
+    <string name="zipped_library_mail_subject">Nova Video Database Dump</string>
+    <string name="zipped_library_mail_text">Please describe the problem you\'re experiencing\n\n</string>
 
-   <string name="sort_mode">Sort mode</string>
-   <string name="sort_by_name_asc">Sort by name (a - z)</string>
-   <string name="sort_by_name_desc">Sort by name (z - a)</string>
-   <string name="sort_by_year_asc">Sort by year (oldest first)</string>
-   <string name="sort_by_year_desc">Sort by year (newest first)</string>
-   <string name="sort_by_date_asc">Sort by date (oldest first)</string>
-   <string name="sort_by_date_desc">Sort by date (newest first)</string>
-   <string name="sort_by_duration_asc">Sort by duration (shortest first)</string>
-   <string name="sort_by_duration_desc">Sort by duration (longest first)</string>
-   <string name="sort_by_genre_asc">Sort by genre (a > z)</string>
-   <string name="sort_by_genre_desc">Sort by genre (z > a)</string>
-   <string name="sort_by_rating_asc">Sort by rating (best first)</string>
-   <string name="sort_by_date_added_desc">Sort by date added (newest first)</string>
-   <string name="sort_by_date_added_asc">Sort by date added (oldest first)</string>
-   <string name="sort_by_date_played_desc">Sort by date played (newest first)</string>
-   <string name="sort_by_date_premiered_desc">Sort by date premiered (newest first)</string>
-   <string name="sort_by_date_premiered_asc">Sort by date premiered (oldest first)</string>
-   <string name="sort_by_date_aired_desc">Sort by date aired (newest first)</string>
-   <string name="sort_by_recently_added_episode_desc">Recently added episodes first</string>
+    <string name="sort_mode">Sort mode</string>
+    <string name="sort_by_name_asc">Sort by name (a - z)</string>
+    <string name="sort_by_name_desc">Sort by name (z - a)</string>
+    <string name="sort_by_year_asc">Sort by year (oldest first)</string>
+    <string name="sort_by_year_desc">Sort by year (newest first)</string>
+    <string name="sort_by_date_asc">Sort by date (oldest first)</string>
+    <string name="sort_by_date_desc">Sort by date (newest first)</string>
+    <string name="sort_by_duration_asc">Sort by duration (shortest first)</string>
+    <string name="sort_by_duration_desc">Sort by duration (longest first)</string>
+    <string name="sort_by_genre_asc">Sort by genre (a > z)</string>
+    <string name="sort_by_genre_desc">Sort by genre (z > a)</string>
+    <string name="sort_by_rating_asc">Sort by rating (best first)</string>
+    <string name="sort_by_date_added_desc">Sort by date added (newest first)</string>
+    <string name="sort_by_date_added_asc">Sort by date added (oldest first)</string>
+    <string name="sort_by_date_played_desc">Sort by date played (newest first)</string>
+    <string name="sort_by_date_premiered_desc">Sort by date premiered (newest first)</string>
+    <string name="sort_by_date_premiered_asc">Sort by date premiered (oldest first)</string>
+    <string name="sort_by_date_aired_desc">Sort by date aired (newest first)</string>
+    <string name="sort_by_recently_added_episode_desc">Recently added episodes first</string>
 
-   <string name="dec_choice_title">Choose decoder</string>
-   <string name="dec_choice_summary">Advanced preference, may break video decoding.</string>
-   <string name="dec_hw_omx">Hardware decoding (IOMX w/ swbuf)</string>
-   <string name="dec_hw_omxplus">Hardware decoding (IOMX w/ hwbuf)</string>
-   <string name="dec_hw_omxcodec">Hardware decoding (OMXCodec)</string>
-   <string name="dec_hw_mediacodec">Hardware decoding (MediaCodec)</string>
-   <string name="dec_sw">Software decoding</string>
-   <string name="dec_hw">Hardware decoding</string>
-   <string name="dec_unknown">Unknown decoding</string>
-   <string name="dec_any">Default</string>
-   <string name="dec_android">Android MediaPlayer</string>
+    <string name="dec_choice_title">Choose decoder</string>
+    <string name="dec_choice_summary">Advanced preference, may break video decoding.</string>
+    <string name="dec_hw_omx">Hardware decoding (IOMX w/ swbuf)</string>
+    <string name="dec_hw_omxplus">Hardware decoding (IOMX w/ hwbuf)</string>
+    <string name="dec_hw_omxcodec">Hardware decoding (OMXCodec)</string>
+    <string name="dec_hw_mediacodec">Hardware decoding (MediaCodec)</string>
+    <string name="dec_sw">Software decoding</string>
+    <string name="dec_hw">Hardware decoding</string>
+    <string name="dec_unknown">Unknown decoding</string>
+    <string name="dec_any">Default</string>
+    <string name="dec_android">Android MediaPlayer</string>
 
     <string name="audio_interface_choice_title">Choose audio interface</string>
     <string name="audio_interface_choice_summary">Advanced preference, may break audio decoding.</string>
@@ -729,111 +728,112 @@
     <string name="audio_interface_audiotrack">Force Audiotrack</string>
     <string name="audio_interface_any">Default logic</string>
 
-   <string name="preferences_user_interface">User Interface</string>
-   <string name="preferences_display_resume_box_summary">Display or hide the button resuming the latest video in the main screen</string>
-   <string name="preferences_display_resume_box">Display resume box</string>
+    <string name="preferences_user_interface">User Interface</string>
+    <string name="preferences_display_resume_box_summary">Display or hide the button resuming the latest video in the main screen</string>
+    <string name="preferences_display_resume_box">Display resume box</string>
 
-   <string name="preferences_leanback_user_interface">TV User Interface</string>
-   <string name="preferences_show_watching_up_next_row_summary">Check to show a row with your currently watching and up next videos</string>
-   <string name="preferences_show_watching_up_next_row">Show watching/up next row</string>
-   <string name="preferences_show_last_added_row_summary">Check to show a row with your last added media</string>
-   <string name="preferences_show_last_added_row">Show last added row</string>
-   <string name="preferences_show_last_played_row_summary">Check to show a row with your last played media</string>
-   <string name="preferences_show_last_played_row">Show last played row</string>
-   <string name="preferences_reset_last_played_row">Reset last played row</string>
-   <string name="reset_last_played_row_in_progress">Resetting last played row</string>
-   <string name="preferences_show_all_movies_row_summary">Check to show a row with all your movies instead of the movie categories row</string>
-   <string name="preferences_show_all_movies_row">Show all movie row</string>
-   <string name="preferences_movie_sort_order_summary">Select the sort order of the all movie row</string>
-   <string name="preferences_movie_sort_order_title">All movie row sort order</string>
-   <string name="preferences_show_all_tv_shows_row_summary">Check to show a row with all your TV shows instead of the TV show categories row</string>
-   <string name="preferences_show_all_tv_shows_row">Show all TV show row</string>
-   <string name="preferences_tv_show_sort_order_summary">Select the sort order of the all TV show row</string>
-   <string name="preferences_tv_show_sort_order_title">All TV show row sort order</string>
+    <string name="preferences_leanback_user_interface">TV User Interface</string>
+
+    <string name="preferences_show_watching_up_next_row_summary">Check to show a row with your currently watching and up next videos</string>
+    <string name="preferences_show_watching_up_next_row">Show watching/up next row</string>
+    <string name="preferences_show_last_added_row_summary">Check to show a row with your last added media</string>
+    <string name="preferences_show_last_added_row">Show last added row</string>
+    <string name="preferences_show_last_played_row_summary">Check to show a row with your last played media</string>
+    <string name="preferences_show_last_played_row">Show last played row</string>
+    <string name="preferences_reset_last_played_row">Reset last played row</string>
+    <string name="reset_last_played_row_in_progress">Resetting last played row</string>
+    <string name="preferences_show_all_movies_row_summary">Check to show a row with all your movies instead of the movie categories row</string>
+    <string name="preferences_show_all_movies_row">Show all movie row</string>
+    <string name="preferences_movie_sort_order_summary">Select the sort order of the all movie row</string>
+    <string name="preferences_movie_sort_order_title">All movie row sort order</string>
+    <string name="preferences_show_all_tv_shows_row_summary">Check to show a row with all your TV shows instead of the TV show categories row</string>
+    <string name="preferences_show_all_tv_shows_row">Show all TV show row</string>
+    <string name="preferences_tv_show_sort_order_summary">Select the sort order of the all TV show row</string>
+    <string name="preferences_tv_show_sort_order_title">All TV show row sort order</string>
     <string name="preferences_show_all_animes_row_summary">Check to show a row with all your animations movies instead of the animation categories row</string>
     <string name="preferences_show_all_animes_row">Show all animations row</string>
     <string name="preferences_anime_sort_order_summary">Select the sort order of the all animations row</string>
     <string name="preferences_anime_sort_order_title">All animations row sort order</string>
 
-   <string name="codepage_title">Subtitles encoding</string>
-   <string name="codepage_summary">Set the encoding used in text subtitles</string>
-   <string name="codepage_default">Device language %s</string>
-   <string name="codepage_874">Thai (CP874)</string>
-   <string name="codepage_932">Japanese (Shift-JIS, EUC-JP)</string>
-   <string name="codepage_936">Simplified Chinese (CP936, GB2312)</string>
-   <string name="codepage_949">Korean (CP949, EUC-KR)</string>
-   <string name="codepage_950">Traditional Chinese (Big5)</string>
-   <string name="codepage_1250">Eastern European (CP1250)</string>
-   <string name="codepage_1251">Cyrillic (CP1251)</string>
-   <string name="codepage_1252">Western European (CP1252)</string>
+    <string name="codepage_title">Subtitles encoding</string>
+    <string name="codepage_summary">Set the encoding used in text subtitles</string>
+    <string name="codepage_default">Device language %s</string>
+    <string name="codepage_874">Thai (CP874)</string>
+    <string name="codepage_932">Japanese (Shift-JIS, EUC-JP)</string>
+    <string name="codepage_936">Simplified Chinese (CP936, GB2312)</string>
+    <string name="codepage_949">Korean (CP949, EUC-KR)</string>
+    <string name="codepage_950">Traditional Chinese (Big5)</string>
+    <string name="codepage_1250">Eastern European (CP1250)</string>
+    <string name="codepage_1251">Cyrillic (CP1251)</string>
+    <string name="codepage_1252">Western European (CP1252)</string>
     <string name="codepage_28606">Southern European (CP28606)</string>
     <string name="codepage_1253">Greek (CP1253)</string>
-   <string name="codepage_1254">Turkish (CP1254)</string>
-   <string name="codepage_1255">Hebrew (CP1255)</string>
-   <string name="codepage_1256">Arabic (CP1256)</string>
-   <string name="codepage_1257">Baltic (CP1257)</string>
-   <string name="codepage_1258">Vietnamese (CP1258)</string>
+    <string name="codepage_1254">Turkish (CP1254)</string>
+    <string name="codepage_1255">Hebrew (CP1255)</string>
+    <string name="codepage_1256">Arabic (CP1256)</string>
+    <string name="codepage_1257">Baltic (CP1257)</string>
+    <string name="codepage_1258">Vietnamese (CP1258)</string>
 
-   <string name="codepage_extra_874">(CP874)</string>
-   <string name="codepage_extra_932">(Shift-JIS, EUC-JP)</string>
-   <string name="codepage_extra_936">(CP936, GB231)</string>
-   <string name="codepage_extra_949">(CP949, EUC-KR)</string>
-   <string name="codepage_extra_950">(Big5)</string>
-   <string name="codepage_extra_1250">(CP1250)</string>
-   <string name="codepage_extra_1251">(CP1251)</string>
-   <string name="codepage_extra_1252">(CP1252)</string>
-   <string name="codepage_extra_1253">(CP1253)</string>
-   <string name="codepage_extra_1254">(CP1254)</string>
-   <string name="codepage_extra_1255">(CP1255)</string>
-   <string name="codepage_extra_1256">(CP1256)</string>
-   <string name="codepage_extra_1257">(CP1257)</string>
-   <string name="codepage_extra_1258">(CP1258)</string>
+    <string name="codepage_extra_874">(CP874)</string>
+    <string name="codepage_extra_932">(Shift-JIS, EUC-JP)</string>
+    <string name="codepage_extra_936">(CP936, GB231)</string>
+    <string name="codepage_extra_949">(CP949, EUC-KR)</string>
+    <string name="codepage_extra_950">(Big5)</string>
+    <string name="codepage_extra_1250">(CP1250)</string>
+    <string name="codepage_extra_1251">(CP1251)</string>
+    <string name="codepage_extra_1252">(CP1252)</string>
+    <string name="codepage_extra_1253">(CP1253)</string>
+    <string name="codepage_extra_1254">(CP1254)</string>
+    <string name="codepage_extra_1255">(CP1255)</string>
+    <string name="codepage_extra_1256">(CP1256)</string>
+    <string name="codepage_extra_1257">(CP1257)</string>
+    <string name="codepage_extra_1258">(CP1258)</string>
 
-   <string name="torrent_category">Torrent</string>
-   <string name="torrent_path">Download path</string>
-   <string name="torrent_blocklist">Blocklist</string>
-   <string name="blocklist_empty">URL shouldn\'t be empty</string>
-   <string name="blocklist_invalid">Blocklist invalid</string>
-   <string name="blocklist_downloading">Downloading blocklist</string>
-   <string name="blocklist_file_not_found">File not found</string>
-   <string name="blocklist_success">Blocklist refresh success</string>
-   <string name="blocklist_unknown_error">Unknown</string>
-   <string name="blocklist_not_loaded">Not loaded</string>
-   <string name="torrent_blocklist_url">Blocklist Url</string>
+    <string name="torrent_category">Torrent</string>
+    <string name="torrent_path">Download path</string>
+    <string name="torrent_blocklist">Blocklist</string>
+    <string name="blocklist_empty">URL shouldn\'t be empty</string>
+    <string name="blocklist_invalid">Blocklist invalid</string>
+    <string name="blocklist_downloading">Downloading blocklist</string>
+    <string name="blocklist_file_not_found">File not found</string>
+    <string name="blocklist_success">Blocklist refresh success</string>
+    <string name="blocklist_unknown_error">Unknown</string>
+    <string name="blocklist_not_loaded">Not loaded</string>
+    <string name="torrent_blocklist_url">Blocklist Url</string>
 
-   <string name="sdk_not_supported">Android 4.3 is not supported yet.\nWe\'re working hard to fix it and hope to have a new version soon!</string>
-   <string name="manually_create_share">Add indexed folder by URI</string>
-   <string name="share_infos_incomplete">You need to fill path</string>
-   <string name="share_path">Path</string>
+    <string name="sdk_not_supported">Android 4.3 is not supported yet.\nWe\'re working hard to fix it and hope to have a new version soon!</string>
+    <string name="manually_create_share">Add indexed folder by URI</string>
+    <string name="share_infos_incomplete">You need to fill path</string>
+    <string name="share_path">Path</string>
 
-   <string name="category_trakt">Trakt</string>
-   <string name="trakt_user">Username</string>
-   <string name="trakt_password">Password</string>
-   <string name="trakt_signin">Sign in</string>
-   <string name="trakt_list_signin">Sign into Trakt</string>
-   <string name="trakt_status_login">Signing in&#8230;</string>
-   <string name="trakt_signin_summary_logged">Signed in</string>
-   <string name="trakt_signin_summary_logged_error">Authentication error</string>
-   <string name="trakt_signin_summary">Not signed in</string>
+    <string name="category_trakt">Trakt</string>
+    <string name="trakt_user">Username</string>
+    <string name="trakt_password">Password</string>
+    <string name="trakt_signin">Sign in</string>
+    <string name="trakt_list_signin">Sign into Trakt</string>
+    <string name="trakt_status_login">Signing in&#8230;</string>
+    <string name="trakt_signin_summary_logged">Signed in</string>
+    <string name="trakt_signin_summary_logged_error">Authentication error</string>
+    <string name="trakt_signin_summary">Not signed in</string>
     <string name="trakt_relog_description">An issue with Trakt has been detected and credentials must be reset, please login again.</string>
-   <string name="trakt_signin_dialog_title">Sign in</string>
-   <string name="trakt_signin_title">Sign In</string>
-   <string name="trakt_wipe_dialog_title">Sign out of Trakt.tv\?</string>
-   <string name="trakt_wipe_title">Sign out of Trakt.tv</string>
-   <string name="trakt_live_scrobbling_title">Live scrobbler</string>
-   <string name="trakt_live_scrobbling_summary">Share videos being watched on Trakt</string>
-   <string name="trakt_getfull_summary">Trakt scrobbler is only available with paid version</string>
-   <string name="trakt_sync_collection_title">Synchronize TV show and movie collections</string>
-   <string name="trakt_sync_trakt_resume_title">Sync trakt resume position</string>
-   <string name="trakt_sync_trakt_resume">Use trakt resume position when more advanced than local</string>
-   <string name="trakt_sync_collection_summary">Automatically add all videos from your Nova library to your Trakt collection</string>
-   <string name="trakt_toast_syncing">Syncing with Trakt&#8230;</string>
+    <string name="trakt_signin_dialog_title">Sign in</string>
+    <string name="trakt_signin_title">Sign In</string>
+    <string name="trakt_wipe_dialog_title">Sign out of Trakt.tv\?</string>
+    <string name="trakt_wipe_title">Sign out of Trakt.tv</string>
+    <string name="trakt_live_scrobbling_title">Live scrobbler</string>
+    <string name="trakt_live_scrobbling_summary">Share videos being watched on Trakt</string>
+    <string name="trakt_getfull_summary">Trakt scrobbler is only available with paid version</string>
+    <string name="trakt_sync_collection_title">Synchronize TV show and movie collections</string>
+    <string name="trakt_sync_trakt_resume_title">Sync trakt resume position</string>
+    <string name="trakt_sync_trakt_resume">Use trakt resume position when more advanced than local</string>
+    <string name="trakt_sync_collection_summary">Automatically add all videos from your Nova library to your Trakt collection</string>
+    <string name="trakt_toast_syncing">Syncing with Trakt&#8230;</string>
 
-   <string name="show_all">All videos</string>
-   <string name="hide_seen">Not watched</string>
-   <string name="search_results">Search results</string>
+    <string name="show_all">All videos</string>
+    <string name="hide_seen">Not watched</string>
+    <string name="search_results">Search results</string>
 
-   <string name="no_results_found">No results found.</string>
+    <string name="no_results_found">No results found.</string>
     <string name="no_results_found_show_helper">For TV show, specify season and episode, like \"S01E01\"</string>
     <string name="leanback_video_info_custom_search_file_hint">"Moviename or Showname S01E01"</string>
     <string name="activate_private_mode">Activate private mode</string>
