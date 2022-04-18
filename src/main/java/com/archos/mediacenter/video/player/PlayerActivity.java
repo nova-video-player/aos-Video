@@ -815,13 +815,20 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             VideoPreferencesCommon.resetPassthroughPref(mPreferences);
             LibAvos.setPassthrough(Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")));
             mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mPreferences.getBoolean("disable_downmix", false)) // Android is recent enough not to require downmix on phones/tablets
-                LibAvos.setDownmix(0);
-            else
-                if(ArchosFeatures.isAndroidTV(this))  // no downmix on AndroidTV
+            // note enable_downmix_androidtv and disable_downmix are the opposite same settings but only one applies to androidTV
+            // this is done on purpose to respect logic of presentation and default value
+            if (ArchosFeatures.isAndroidTV(this)) {
+                if (mPreferences.getBoolean("enable_downmix_androidtv", false))
+                    LibAvos.setDownmix(1);
+                else
+                    LibAvos.setDownmix(0);
+            } else {
+                // Android is recent enough not to require downmix on phones/tablets if enabled
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mPreferences.getBoolean("disable_downmix", false))
                     LibAvos.setDownmix(0);
                 else
                     LibAvos.setDownmix(1);
+            }
         }
 
         //if not started from floating player, we have to stop our video

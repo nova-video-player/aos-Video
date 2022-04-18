@@ -179,6 +179,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mForceSwDecPreferences = null;
     private CheckBoxPreference mForceAudioPassthrough = null;
     private CheckBoxPreference mDisableDownmix = null;
+    private CheckBoxPreference mEnableDownmixATV = null;
     private CheckBoxPreference mActivateRefreshrateTVSwitch = null;
     private CheckBoxPreference mEnableCutoutModeShortEdge = null;
     private CheckBoxPreference mActivate3DTVSwitch = null;
@@ -280,7 +281,11 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 prefCategory.removePreference(mEnableCutoutModeShortEdge);
             }
         } else {
-            prefCategory.removePreference(mDisableDownmix); // on TV downmix is disabled: do not show the option
+            // note enable_downmix_androidtv and disable_downmix are the opposite same settings but only one applies to androidTV
+            // this is done on purpose to respect logic of presentation and default value
+            // on huawei harmonyOS seems that you need downmix otherwise you loose front channels
+            prefCategory.removePreference(mDisableDownmix); // on TV downmix for phone/tablet is disabled: do not show the option
+            prefCategory.addPreference(mEnableDownmixATV); // on TV downmix is disabled: show the option to enable it for harmonyOS
             prefCategory.addPreference(mActivate3DTVSwitch);
             prefCategory.addPreference(mActivateRefreshrateTVSwitch);
             prefCategory.removePreference(mEnableCutoutModeShortEdge);
@@ -368,6 +373,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mWatchingUpNext = (CheckBoxPreference) findPreference(KEY_SHOW_WATCHING_UP_NEXT_ROW);
         mForceAudioPassthrough = (CheckBoxPreference) findPreference(KEY_FORCE_AUDIO_PASSTHROUGH);
         mDisableDownmix = (CheckBoxPreference) findPreference("disable_downmix");
+        mEnableDownmixATV = (CheckBoxPreference) findPreference("enable_downmix_androidtv");
         mActivate3DTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_3D_SWITCH);
         mEnableCutoutModeShortEdge = (CheckBoxPreference) findPreference("enable_cutout_mode_short_edges");
         mActivateRefreshrateTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_REFRESHRATE_SWITCH);
