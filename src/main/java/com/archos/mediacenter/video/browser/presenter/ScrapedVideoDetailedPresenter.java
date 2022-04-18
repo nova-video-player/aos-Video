@@ -102,13 +102,10 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
             holder.detailLineTwo.setVisibility(View.VISIBLE);
 
             // Set thumbnail.
-            if (thumbnailResult == null || thumbnailResult.getThumbnail() == null || movie.getPosterUri() == null) {
-                Picasso.get().load(String.valueOf(mDefaultValues.getDefaultVideoThumbnail())).into(holder.thumbnail);
-                holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER);
-            } else {
+            if (movie.getPosterUri() != null) {
                 Picasso.get().load(String.valueOf(movie.getPosterUri())).into(holder.thumbnail);
                 holder.thumbnail.clearColorFilter();
-                holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP); // poster must be scaled in detailled view
+                holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
             }
         }
         else if(video instanceof  Episode){
