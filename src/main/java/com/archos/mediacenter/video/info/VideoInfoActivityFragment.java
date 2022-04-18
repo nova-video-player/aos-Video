@@ -362,6 +362,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mMoviePopularity;
     private View mMovieInfoContainer;
     private View mEpisodeInfoContainer;
+    private View mInfoContainer;
+    private View mMainInfoContainer;
 
     private ObservableScrollView mScrollView;
 
@@ -590,6 +592,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mMoviePopularity = mRoot.findViewById(R.id.movie_popularity);
         mMovieInfoContainer = mRoot.findViewById(R.id.movie_info_container);
         mEpisodeInfoContainer = mRoot.findViewById(R.id.episode_info_container);
+        mInfoContainer = mRoot.findViewById(R.id.info_container);
+        mMainInfoContainer = mRoot.findViewById(R.id.main_info_container);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -1093,9 +1097,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 mMediaType.setVisibility(View.GONE);
             }
 
+            //hide tags if not movie or episode
             if (!(video instanceof Episode ) && !(video instanceof Movie)){
                 mMovieInfoContainer.setVisibility(View.GONE);
                 mEpisodeInfoContainer.setVisibility(View.GONE);
+                mInfoContainer.setVisibility(View.GONE);
+                mMainInfoContainer.setVisibility(View.GONE);
             }
 
         } else {

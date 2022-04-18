@@ -310,6 +310,7 @@
                         android:textStyle="bold" />
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/main_info_container"
                     android:layout_marginTop="2dp"
                     android:layout_below="@+id/info_container"
                     android:layout_width="match_parent"
