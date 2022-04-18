@@ -364,6 +364,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private View mEpisodeInfoContainer;
     private View mInfoContainer;
     private View mMainInfoContainer;
+    private TextView mSeriesPopularity;
+    private View mSeriesPopularityContainer;
 
     private ObservableScrollView mScrollView;
 
@@ -594,6 +596,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mEpisodeInfoContainer = mRoot.findViewById(R.id.episode_info_container);
         mInfoContainer = mRoot.findViewById(R.id.info_container);
         mMainInfoContainer = mRoot.findViewById(R.id.main_info_container);
+        mSeriesPopularity = mRoot.findViewById(R.id.scrap_popularity);
+        mSeriesPopularityContainer = mRoot.findViewById(R.id.scrap_popularity_container);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -2572,6 +2576,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     });
                     //hide movie Info Container
                     mMovieInfoContainer.setVisibility(View.GONE);
+                    //set series Popularity
+                    if(tvShowTags.get(0).getPopularity().isEmpty()){
+                        mSeriesPopularityContainer.setVisibility(View.GONE);
+                    }else{
+                        mSeriesPopularity.setText(tvShowTags.get(0).getPopularity());
+                    }
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
@@ -2816,6 +2826,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                     //hide Episode Info Container
                     mEpisodeInfoContainer.setVisibility(View.GONE);
+                    //hide series Popularity
+                    mSeriesPopularityContainer.setVisibility(View.GONE);
                 }
                 // set content rating
                 if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
