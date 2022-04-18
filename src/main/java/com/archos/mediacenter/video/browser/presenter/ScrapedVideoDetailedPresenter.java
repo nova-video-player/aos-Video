@@ -18,6 +18,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
@@ -26,6 +27,7 @@ import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesDetails
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
+import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -98,6 +100,16 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
             holder.detailLineThree.setVisibility(View.GONE);
             holder.detailLineTwo.setText(detailedLineTwo);
             holder.detailLineTwo.setVisibility(View.VISIBLE);
+
+            // Set thumbnail.
+            if (thumbnailResult == null || thumbnailResult.getThumbnail() == null || movie.getPosterUri() == null) {
+                Picasso.get().load(String.valueOf(mDefaultValues.getDefaultVideoThumbnail())).into(holder.thumbnail);
+                holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER);
+            } else {
+                Picasso.get().load(String.valueOf(movie.getPosterUri())).into(holder.thumbnail);
+                holder.thumbnail.clearColorFilter();
+                holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP); // poster must be scaled in detailled view
+            }
         }
         else if(video instanceof  Episode){
             Episode episode = (Episode)video;
