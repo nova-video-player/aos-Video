@@ -98,6 +98,7 @@ import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
 import com.archos.mediacenter.video.browser.adapters.StudioAdapter;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
+import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.NonIndexedVideo;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.dialogs.DialogRetrieveSubtitles;
@@ -354,6 +355,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private ImageView mAudioChannels;
     private ImageView m3Dflag;
     private ImageView mMediaType;
+    private TextView mEpisodeResolution;
+    private View mEpisodeResolutionContainer;
+    private TextView mMovieResolution;
+    private View mMovieResolutionContainer;
 
     private ObservableScrollView mScrollView;
 
@@ -575,6 +580,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mAudioChannels = mRoot.findViewById(R.id.audio_channels);
         m3Dflag = mRoot.findViewById(R.id.flag_3d);
         mMediaType = mRoot.findViewById(R.id.media_type);
+        mEpisodeResolution = mRoot.findViewById(R.id.episode_resolution);
+        mEpisodeResolutionContainer = mRoot.findViewById(R.id.episode_resolution_container);
+        mMovieResolution = mRoot.findViewById(R.id.movie_resolution);
+        mMovieResolutionContainer = mRoot.findViewById(R.id.movie_resolution_container);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -993,6 +1002,48 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/480.png"));
             }else{
                 mVideoResolution.setVisibility(View.GONE);
+            }
+
+            // set definition text
+            if(video instanceof Episode){
+                mMovieResolutionContainer.setVisibility(View.GONE);
+                switch (definition) {
+                    case 1:
+                    case 2:
+                        mEpisodeResolution.setText(getResources().getString(R.string.resolution_HD));
+                        break;
+                    case 3:
+                        mEpisodeResolution.setText(getResources().getString(R.string.resolution_4k));
+                        break;
+                    case 4:
+                        mEpisodeResolution.setText(getResources().getString(R.string.resolution_SD));
+                        break;
+                    case 0:
+                    default:
+                        mEpisodeResolutionContainer.setVisibility(View.GONE);
+                        break;
+                }
+            }else if(video instanceof Movie){
+                mEpisodeResolutionContainer.setVisibility(View.GONE);
+                switch (definition) {
+                    case 1:
+                    case 2:
+                        mMovieResolution.setText(getResources().getString(R.string.resolution_HD));
+                        break;
+                    case 3:
+                        mMovieResolution.setText(getResources().getString(R.string.resolution_4k));
+                        break;
+                    case 4:
+                        mMovieResolution.setText(getResources().getString(R.string.resolution_SD));
+                        break;
+                    case 0:
+                    default:
+                        mMovieResolutionContainer.setVisibility(View.GONE);
+                        break;
+                }
+            }else{
+                mEpisodeResolutionContainer.setVisibility(View.GONE);
+                mMovieResolutionContainer.setVisibility(View.GONE);
             }
 
             // set 3D video flag
