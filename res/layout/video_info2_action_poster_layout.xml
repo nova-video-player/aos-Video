@@ -117,40 +117,54 @@
                     android:singleLine="true"
                     android:textSize="22sp" />
 
-                <TextView
-                    android:id="@+id/s_e_text_view"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/episode_info_container"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/title_view"
-                    android:fontFamily="@font/lato_regular"
-                    android:textColor="@color/header_font"
-                    android:textSize="@dimen/video_info_medium_text"/>
-
-                <LinearLayout
-                    android:id="@+id/episode_resolution_container"
-                    android:layout_alignTop="@+id/s_e_text_view"
                     android:layout_alignEnd="@+id/info_container"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:orientation="horizontal">
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/s_e_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:background="@drawable/resolution_background">
+                        android:fontFamily="@font/lato_regular"
+                        android:textColor="@color/header_font"
+                        android:textSize="@dimen/video_info_medium_text"/>
 
-                        <TextView
-                            android:id="@+id/episode_resolution"
-                            android:textSize="14sp"
+                    <View
+                        android:layout_width="wrap_content"
+                        android:layout_height="8dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"/>
+
+                    <LinearLayout
+                        android:id="@+id/episode_resolution_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center">
+
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="3dp"
-                            android:layout_marginRight="3dp"
-                            android:gravity="center_horizontal"
-                            android:fontFamily="@font/gotham_narrow_black"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/black"
-                            />
+                            android:layout_gravity="center"
+                            android:background="@drawable/resolution_background">
+
+                            <TextView
+                                android:id="@+id/episode_resolution"
+                                android:textSize="14sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="3dp"
+                                android:layout_marginRight="3dp"
+                                android:gravity="center_horizontal"
+                                android:fontFamily="@font/gotham_narrow_black"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@color/black"
+                                />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -158,44 +172,90 @@
                     android:id="@+id/episode_title_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/s_e_text_view"
+                    android:layout_marginTop="3dp"
+                    android:layout_below="@+id/episode_info_container"
                     android:fontFamily="@font/lato_light_italic"
                     android:textColor="@color/header_font"
                     android:singleLine="true"
                     android:textSize="@dimen/video_info_medium_text" />
 
                 <LinearLayout
-                    android:id="@+id/movie_resolution_container"
+                    android:id="@+id/movie_info_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_below="@+id/episode_title_view"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/movie_popularity_container"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_weight="0"
                         android:layout_gravity="center"
-                        android:background="@drawable/resolution_background">
-
+                        android:orientation="vertical">
                         <TextView
-                            android:id="@+id/movie_resolution"
-                            android:textSize="14sp"
+                            android:id="@+id/movie_popularity_header"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="3dp"
-                            android:layout_marginRight="3dp"
-                            android:gravity="center_horizontal"
-                            android:fontFamily="@font/gotham_narrow_black"
+                            android:layout_gravity="start"
+                            android:fontFamily="@font/lato_bold"
+                            android:text="@string/movie_popularity_header"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/black"
-                            />
+                            android:textColor="@color/header_font"
+                            android:textSize="11sp" />
+                        <TextView
+                            android:id="@+id/movie_popularity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:fontFamily="@font/lato_bold"
+                            android:text="00"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/yellow"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="wrap_content"
+                        android:layout_height="8dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"/>
+
+                    <LinearLayout
+                        android:id="@+id/movie_resolution_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:layout_gravity="center">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@drawable/resolution_background">
+
+                            <TextView
+                                android:id="@+id/movie_resolution"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="3dp"
+                                android:layout_marginRight="3dp"
+                                android:text="HD"
+                                android:fontFamily="@font/gotham_narrow_black"
+                                android:gravity="center_horizontal"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@color/black"
+                                android:textSize="14sp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/info_container"
-                    android:layout_below="@+id/movie_resolution_container"
+                    android:layout_below="@+id/movie_info_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"

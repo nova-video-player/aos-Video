@@ -359,6 +359,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private View mEpisodeResolutionContainer;
     private TextView mMovieResolution;
     private View mMovieResolutionContainer;
+    private TextView mMoviePopularity;
+    private View mMovieInfoContainer;
+    private View mEpisodeInfoContainer;
 
     private ObservableScrollView mScrollView;
 
@@ -584,6 +587,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mEpisodeResolutionContainer = mRoot.findViewById(R.id.episode_resolution_container);
         mMovieResolution = mRoot.findViewById(R.id.movie_resolution);
         mMovieResolutionContainer = mRoot.findViewById(R.id.movie_resolution_container);
+        mMoviePopularity = mRoot.findViewById(R.id.movie_popularity);
+        mMovieInfoContainer = mRoot.findViewById(R.id.movie_info_container);
+        mEpisodeInfoContainer = mRoot.findViewById(R.id.episode_info_container);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -1085,6 +1091,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }else{
                 mMediaType.setVisibility(View.GONE);
             }
+
+            if (!(video instanceof Episode ) && !(video instanceof Movie)){
+                mMovieInfoContainer.setVisibility(View.GONE);
+                mEpisodeInfoContainer.setVisibility(View.GONE);
+            }
+
         } else {
             log.debug("setCurrentVideo: should not change video");
         }
@@ -2550,6 +2562,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             }
                         }
                     });
+                    //hide movie Info Container
+                    mMovieInfoContainer.setVisibility(View.GONE);
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
@@ -2786,6 +2800,14 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     //hide networks
                     mNetworks.setVisibility(View.GONE);
                     mNetworksContainer.setVisibility(View.GONE);
+                    //set movie popularity
+                    if (popularity.isEmpty()){
+                        mMoviePopularity.setVisibility(View.GONE);
+                    }else{
+                        mMoviePopularity.setText(popularity);
+                    }
+                    //hide Episode Info Container
+                    mEpisodeInfoContainer.setVisibility(View.GONE);
                 }
                 // set content rating
                 if (tags.getContentRating()==null || tags.getContentRating().isEmpty()) {
