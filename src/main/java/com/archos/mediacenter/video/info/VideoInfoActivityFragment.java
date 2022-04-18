@@ -987,27 +987,28 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
             // set video definition flags
             int definition = video.getNormalizedDefinition();
-            // definition is not known
-            if(definition == 0){
-                mVideoResolution.setVisibility(View.GONE);
-            }else
-            // definition is 720p
-            if(definition == 1){
-                mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/720.png"));
-            }else
-            // definition is 1080p
-            if(definition == 2){
-                mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/1080.png"));
-            }else
-            // definition is 4K/2160p
-            if(definition == 3){
-                mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/4k.png"));
-            }else
-            // definition is SD
-            if(definition == 4){
-                mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/480.png"));
-            }else{
-                mVideoResolution.setVisibility(View.GONE);
+            switch (definition) {
+                // definition is 720p
+                case 1:
+                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/720.png"));
+                    break;
+                // definition is 1080p
+                case 2:
+                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/1080.png"));
+                    break;
+                // definition is 4K/2160p
+                case 3:
+                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/4k.png"));
+                    break;
+                // definition is SD
+                case 4:
+                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/480.png"));
+                    break;
+                // definition is not known
+                case 0:
+                default:
+                    mVideoResolution.setVisibility(View.GONE);
+                    break;
             }
 
             // set definition text
