@@ -534,7 +534,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             });
             boolean mIsLandscapeMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
             if (mIsLandscapeMode){
-                seriesBackdrop.getLayoutParams().height = 1100;
+                //seriesBackdrop.getLayoutParams().height = 1100;
             }
 
             ImageView networkLogo = mHeaderView.findViewById(R.id.network_logo);
