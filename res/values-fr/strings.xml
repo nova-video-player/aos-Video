@@ -16,7 +16,7 @@
 ** limitations under the License.
 */
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
     <!-- Menu item that takes the user back to the top level screen of the music player -->
     <string name="goto_start">Bibliothèque</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
@@ -520,6 +520,8 @@
     <string name="preferences_force_audio_passthrough_summary">Transmission du signal audio compressé via HDMI ou S/PDIF. ⚠ Expérimental, peut occasionner une désynchronisation A/V</string>
     <string name="preferences_disable_downmix_title">Désactiver le mixage audio stéréo</string>
     <string name="preferences_disable_downmix_summary">Toujours décoder tous les canaux et laisser Android remixer l\'audio en fonction des capacités du récepteur (peut résulter dans la perte du canal voix)</string>
+    <string name="preferences_enable_downmix_androidtv_title">Forcer le mixage audio stéréo</string>
+    <string name="preferences_enable_downmix_androidtv_summary">Toujours convertir la piste audio multicanaux en stéréo (à sélectionner si les dialogues sont inaudibles)</string>
     <string name="preferences_allow_3rd_party_player">Permettre l\'utilisation d\'un autre player vidéo</string>
     <string name="preferences_allow_3rd_party_player_summary">Les autres applications compatibles seront proposées par Android au lancement d\'une vidéo. Notez bien que certaines fonctionnalités ne sont pas supportées (point de reprise, marque page, etc.)</string>
     <string name="preference_tv_3d_automatic_switch">Activer automatiquement la commutation 3D\"</string>
@@ -660,6 +662,8 @@
     <string name="preferences_display_resume_box_summary">Afficher ou cacher le bouton de reprise de la dernière vidéo dans l\'écran principal</string>
     <string name="preferences_display_resume_box">Afficher le bouton de reprise de la vidéo</string>
     <string name="preferences_leanback_user_interface">Interface utilisateur TV</string>
+    <string name="preferences_show_animation_row_summary">Cochez pour afficher une ligne avec les tuiles d\'animation accédant séparément aux vidéos d\'animation des films et séries TV</string>
+    <string name="preferences_show_animation_row">Afficher la ligne des tuiles d\'animation</string>
     <string name="preferences_show_watching_up_next_row_summary">Cochez pour afficher une ligne avec les vidéos en cours et les prochaines</string>
     <string name="preferences_show_watching_up_next_row">Afficher la ligne en cours/prochaines</string>
     <string name="preferences_show_last_added_row_summary">Cochez pour afficher une ligne avec vos dernières vidéos ajoutées</string>

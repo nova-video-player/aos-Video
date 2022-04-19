@@ -16,7 +16,7 @@
 ** limitations under the License.
 */
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
     <!-- Menu item that takes the user back to the top level screen of the music player -->
     <string name="goto_start">Biblioteca</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
@@ -48,16 +48,16 @@
     <string name="video_sources">Fuentes</string>
     <!-- Infos dialog tabs -->
     <string name="info_tab_movie">Película</string>
-    <string name="info_tab_show">Mostrar</string>
+    <string name="info_tab_show">Serie</string>
     <string name="info_tab_episode">Episodio</string>
     <string name="info_tab_video">Vídeo</string>
     <string name="info_tab_file">Información de archivo</string>
     <string name="info_tab_backdrop_chooser">Selector de fondos</string>
-    <string name="info_tab_poster_chooser">Selector de carátula</string>
+    <string name="info_tab_poster_chooser">Elección de poster</string>
     <string name="info_tab_share">Compartir</string>
     <string name="info_menu_backdrop_select">Imagen de fondo</string>
     <string name="info_menu_series_backdrop_select">Imagen de fondo de la serie</string>
-    <string name="info_menu_poster_select">Seleccione otro poster</string>
+    <string name="info_menu_poster_select">Seleccionar otro poster</string>
     <string name="info_menu_series_poster_select">Seleccionar otro poster</string>
     <!-- COVER ROLL -->
     <string name="watching_up_next">Viendo/Próximo</string>
@@ -165,7 +165,9 @@
     <string name="scrap_get_title">Obteniendo información</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Director</string>
+    <string name="scrap_writer">Escritor</string>
     <string name="scrap_director_format">Director: %s</string>
+    <string name="scrap_writer_format">Escritor/a: %s</string>
     <string name="scrap_rating">Valoración</string>
     <string name="scrap_rating_format">Valoración: %s</string>
     <string name="scrap_year">Año</string>
@@ -299,6 +301,7 @@
     <string name="pref_play_mode_entry_folder">Carpeta</string>
     <string name="pref_play_mode_entry_repeat_folder">Repetir carpeta</string>
     <string name="pref_play_mode_entry_repeat_single">Repetir único</string>
+    <string name="pref_play_mode_entry_binge">Maratón de series</string>
     <string name="pref_audio_parameters_title">Audio</string>
     <string name="pref_audio_filt_title">Activar audio</string>
     <string name="pref_audio_filt_night_mode">Modo noche</string>
@@ -437,6 +440,8 @@
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Ajuste de la velocidad</string>
     <string name="subtitle_delay_radio_none">ninguno</string>
+    <string name="subtitle_delay_radio_ntsc2pal">Subtítulos demasiado rápidos</string>
+    <string name="subtitle_delay_radio_pal2ntsc">Subtítulos demasiado lentos</string>
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
     because the right part of the quote is
@@ -444,6 +449,7 @@
     <string name="quotation_format">“%s” </string>
     <string name="error_permission">No hay suficientes permisos</string>
     <string name="error_permission_storage">Nova Video Player necesita permiso de almacenamiento para leer vídeos locales. Por favor, conceda este permiso.</string>
+    <string name="error_permission_all_file_access">Nova Video Player necesita todos los permisos de gestión de almacenamiento externo para administrar correctamente los archivos locales de videos/NFO, por favor, conceda este permiso.</string>
     <string name="allow">Permitir</string>
     <string name="exit">Salir</string>
     <!-- torrent -->
@@ -502,6 +508,7 @@
     <string name="get_the_ad_free_version">Obtener la versión libre de anuncios en Google Play</string>
     <string name="upgrade_to_add_free_version">Actualizar a versión libre de anuncios</string>
     <string name="upgrade_to_add_free_version_description">Compra la licencia de la aplicación para eliminar los anuncios y activar todas las características</string>
+    <string name="preferences_about">Acerca de</string>
     <string name="preferences_category_complete">Versión completa</string>
     <string name="preferences_category_video">Vídeo</string>
     <string name="preferences_force_software_decoding">Forzar decodificación por software</string>
@@ -540,6 +547,8 @@
     <string name="preferences_video_licenses">Licencias</string>
     <string name="preferences_network_mobile_vpn_summary">Úsalo sólo con la configuración VPN y cuidado con el uso de sus datos.</string>
     <string name="preferences_network_mobile_vpn_title">Activar compartir red en conexión móvil</string>
+    <string name="preferences_network_prefer_vpn_summary">Usar VPN sobre interfaces de red locales.</string>
+    <string name="preferences_network_prefer_vpn_title">Red VPN preferida</string>
     <string name="preferences_video_advanced">Avanzado</string>
     <string name="preferences_video_advanced_quit_title">Preferencias regulares</string>
     <string name="preferences_video_advanced_quit_summary">Volver a preferencias regulares</string>
@@ -547,6 +556,8 @@
     <string name="tv_scraper">Programas de TV</string>
     <string name="movie_scraper">Películas</string>
     <string name="enable_auto_scrap">Obtener información automáticamente para nuevos vídeos</string>
+    <string name="enable_adult_scrap_title">Scraping de vídeo adulto</string>
+    <string name="enable_adult_scrap_summary">Activar recuperación de información de vídeo para adultos (deshabilitado por defecto)</string>
     <string name="locale">Idioma del sistema</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
@@ -581,10 +592,10 @@
     <string name="help_overlay_ssh_indexing_text">Seleccione la opción \"Añadir como acceso directo\" para volver rápidamente a su servidor.</string>
     <string name="help_overlay_network_indexing_text1">Pulse esta opción de menú para incorporar el contenido de esta carpeta y sus subcarpetas a la biblioteca de vídeo.</string>
     <string name="help_overlay_network_indexing_text1_lb">Utilice el botón + para integrar el contenido de esta carpeta y sus subcarpetas a la Biblioteca de Vídeos.</string>
-    <string name="help_overlay_network_indexing_text2">Podrá conseguir carátulas y descripciones de películas y programas de TV.</string>
-    <string name="help_overlay_scraper_text">Pulse esta opción de menú para buscar carátulas y descripciones en línea para sus vídeos. </string>
+    <string name="help_overlay_network_indexing_text2">Le permitirá obtener carteles y descripciones para las películas y programas de televisión.</string>
+    <string name="help_overlay_scraper_text">Presione este elemento de menú para buscar online carteles y descripciones para sus vídeos. </string>
     <string name="new_videos_count">Nuevos vídeos: %d</string>
-    <string name="new_videos_scrape_message">Tiene nuevos vídeos para los que aún no dispone de información o carátulas.</string>
+    <string name="new_videos_scrape_message">Tienes nuevos vídeos que aún no tienen información y carteles.</string>
     <string name="network_bookmarks">Reanudar puntos y posición de marcadores en red</string>
     <string name="network_thumbnails">Crear miniaturas remotas</string>
     <string name="network_thumbnails_summary">Crea miniaturas de vídeos remotos cuando no hay carteles disponibles</string>
@@ -604,7 +615,7 @@
     <string name="auto_brightness_message">No se puede cambiar el brillo porque está activado el modo de brillo automático.</string>
     <!--  Nfo File parsing -->
     <string name="network_nfo_parse">Procesar archivos \'.nfo\'</string>
-    <string name="network_nfo_parse_summary">Lee los archivos Kodi \'.nfo\' durante (re-)escaneando para reunir información de medios y carteles.</string>
+    <string name="network_nfo_parse_summary">Lee los archivos Kodi \'.nfo\' durante el (re-)escaneado para reunir información de medios y carteles.</string>
     <string name="ask_to_mail_media_DB">¿Quieres enviar tu base de datos de vídeo al equipo de desarrollo Nova para ayudarles a comprobar un error?\n\nLos archivos de vídeo no son (por supuesto) enviados por correo, pero la lista completa de nombres de archivos si lo será.</string>
     <string name="no_email_installed">No se encontró ninguna aplicación de correo</string>
     <string name="zipping_library_before_mailing">Comprimir una copia de la biblioteca antes de enviar por correo…</string>
@@ -763,10 +774,10 @@
     <string name="leanback_subtitles_integrated">Integrado</string>
     <string name="leanback_subtitles_external">Almacenamiento externo</string>
     <string name="leanback_posters_header">Carteles</string>
-    <string name="leanback_season_posters_header">Carteles de temporada</string>
+    <string name="leanback_season_posters_header">Posters para temporada</string>
     <string name="leanback_backdrops_header">Fondos</string>
     <string name="leanback_tvshow_backdrops_header">Fondos para programas de TV</string>
-    <string name="leanback_poster_changed">El cartel ha sido cambiado</string>
+    <string name="leanback_poster_changed">El poster ha sido cambiado</string>
     <string name="leanback_backdrop_changed">El fondo ha sido cambiado</string>
     <string name="leanback_weblinks_header">Enlaces</string>
     <string name="leanback_action_more_details">Más detalles</string>
@@ -872,4 +883,9 @@
     <string name="sponsor">Patrocinar Nova</string>
     <string name="enable_sponsor_title">Habilitar el enlace de patrocinador de Nova</string>
     <string name="enable_sponsor_summary">Activar enlace de patrocinador para donaciones: cada contribución ayuda.</string>
+    <string name="upgrade_info">Información de la actualización</string>
+    <string name="v5_v6_upgrade_info">ATENCIÓN: esta actualización importante de Nova requiere volver a escanear toda la colección de vídeo para readquisición de información multimedia.
+        Se recomienda encarecidamente reiniciar desde una instalación limpia para evitar problemas. Por favor, compruebe FAQ para más detalles.</string>
+    <string name="networks">Redes:</string>
+    <string name="premiered">Estrenado:</string>
 </resources>
