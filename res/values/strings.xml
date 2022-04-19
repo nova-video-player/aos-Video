@@ -735,7 +735,8 @@
     <string name="preferences_display_resume_box">Display resume box</string>
 
     <string name="preferences_leanback_user_interface">TV User Interface</string>
-
+    <string name="preferences_show_animation_row_summary">Check to show a row with animation tiles accessing separately animation videos from movies and TV shows</string>
+    <string name="preferences_show_animation_row">Show animation tiles row</string>
     <string name="preferences_show_watching_up_next_row_summary">Check to show a row with your currently watching and up next videos</string>
     <string name="preferences_show_watching_up_next_row">Show watching/up next row</string>
     <string name="preferences_show_last_added_row_summary">Check to show a row with your last added media</string>
