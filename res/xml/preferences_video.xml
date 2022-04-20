@@ -152,6 +152,14 @@
             android:title="@string/preference_display_TvOverview_if_only_one_season"
             app:iconSpaceReserved="false" />
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="dark_mode"
+            android:persistent="true"
+            android:summary="@string/preference_dark_blue_mode_summery"
+            android:title="@string/preference_dark_blue_mode_title"
+            app:iconSpaceReserved="false" />
+
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/preferences_leanback_user_interface" android:key="category_leanback_user_interface"
         app:iconSpaceReserved="false" >

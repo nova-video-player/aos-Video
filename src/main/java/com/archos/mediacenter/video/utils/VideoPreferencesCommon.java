@@ -33,6 +33,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -57,6 +58,7 @@ import com.archos.mediacenter.video.BuildConfig;
 import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.UiChoiceDialog;
+import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.leanback.MainFragment;
 import com.archos.mediacenter.video.leanback.animes.AllAnimesGridFragment;
@@ -183,6 +185,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mActivateRefreshrateTVSwitch = null;
     private CheckBoxPreference mEnableCutoutModeShortEdge = null;
     private CheckBoxPreference mEnablePlayPauseOnTouch = null;
+    private CheckBoxPreference mDarkMode = null;
     private CheckBoxPreference mEnableDisplayTvOverView = null;
     private CheckBoxPreference mActivate3DTVSwitch = null;
     private PreferenceCategory mAdvancedPreferences = null;
@@ -367,6 +370,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         mDecChoicePreferences = (ListPreference) findPreference(KEY_DEC_CHOICE);
         mEpisodeScrollViewPreferences = (ListPreference) findPreference("episode_scrollView");
+        mDarkMode = (CheckBoxPreference) findPreference("dark_mode");
         mEnableDisplayTvOverView = (CheckBoxPreference) findPreference("display_TvOverview");
         mAudioInterfaceChoicePreferences = (ListPreference) findPreference(KEY_AUDIO_INTERFACE_CHOICE);
         mForceSwDecPreferences = (CheckBoxPreference) findPreference(KEY_FORCE_SW);
@@ -434,6 +438,20 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             JcifsUtils.notifyPrefChange();
             return true;
         });
+
+        // set dark mode
+        mDarkMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(@NonNull Preference preference, Object darkModeActive) {
+                if ((Boolean) darkModeActive) {
+                    MainActivity.getmInstanceActivity().setDarkMode();
+                } else {
+                    MainActivity.getmInstanceActivity().setNormalMode();
+                }
+                return true;
+            }
+        });
+
 
         mDbExportManualPreference = findPreference(getString(R.string.db_export_manual_prefkey));
         mDbExportManualPreference.setOnPreferenceClickListener(preference -> {

@@ -209,6 +209,25 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             mDrawerLayout.findViewById(R.id.category_container).setBackgroundResource(backgroundResId);
     }
 
+    private static MainActivity mInstanceActivity;
+    public static MainActivity getmInstanceActivity() {
+        return mInstanceActivity;
+    }
+
+    public void setDarkMode() {
+        int backgroundResId = R.drawable.dark_mode;
+        getWindow().getDecorView().setBackgroundResource(backgroundResId);
+        if(mDrawerLayout != null)
+            mDrawerLayout.findViewById(R.id.category_container).setBackgroundResource(backgroundResId);
+    }
+
+    public void setNormalMode() {
+        int backgroundResId = R.drawable.background_2014;
+        getWindow().getDecorView().setBackgroundResource(backgroundResId);
+        if(mDrawerLayout != null)
+            mDrawerLayout.findViewById(R.id.category_container).setBackgroundResource(backgroundResId);
+    }
+
     private void setHomeButton() {
         int iconResId = PrivateMode.isActive() ? R.mipmap.nova_private : R.mipmap.nova;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -316,6 +335,21 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             }
         };
         CustomApplication.showChangelogDialog(CustomApplication.getChangelog(this.getApplicationContext()), this);
+
+        mInstanceActivity = this;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean darkModeActive = prefs.getBoolean("dark_mode", false);
+        if(darkModeActive){
+            setDarkMode();
+        }else{
+            setNormalMode();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mInstanceActivity = null;
     }
 
     private boolean isShortcutIntent() {
