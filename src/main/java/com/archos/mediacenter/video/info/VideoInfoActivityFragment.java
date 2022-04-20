@@ -1697,7 +1697,14 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             coeff=0;
         int alpha = (int) (coeff * 255);
 
-        mTitleBar.setBackgroundColor(VideoInfoCommonClass.getAlphaColor(mColor, alpha));
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        boolean darkModeActive = prefs.getBoolean("dark_mode", false);
+        if(darkModeActive){
+            mTitleBar.setBackgroundColor(mContext.getResources().getColor(R.color.deep_dark_blue_transparent));
+        }else{
+            mTitleBar.setBackgroundColor(VideoInfoCommonClass.getAlphaColor(mColor, alpha));
+        }
+
         ViewCompat.setElevation(mTitleBar, coeff * 5);
 
             if (!mIsLaunchFromPlayer &&scroll >=  (!mIsPortraitMode?-mHeaderHeight:0)+getResources().getDimension(R.dimen.video_info_poster_height) + getResources().getDimension(R.dimen.video_info_margin_half)) {
