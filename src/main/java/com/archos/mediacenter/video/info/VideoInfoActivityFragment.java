@@ -846,13 +846,18 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         //mActionButtonsContainer.setCardBackgroundColor(mColor);
         if(mSecondaryTitleBar!=null)
             mTitleBarContent.setBackgroundColor(mColor);
-        if(!mIsLaunchFromPlayer)
-            mRoot.setBackgroundColor(VideoInfoCommonClass.getDarkerColor(mColor));
-        else
-            mRoot.setBackgroundColor(VideoInfoCommonClass.getAlphaColor(VideoInfoCommonClass.getDarkerColor(mColor),160));
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         boolean darkModeActive = prefs.getBoolean("dark_mode", false);
+        if(!mIsLaunchFromPlayer) {
+            if (darkModeActive) {
+                mRoot.setBackgroundColor(mContext.getResources().getColor(R.color.deep_dark_blue));
+            } else {
+                mRoot.setBackgroundColor(VideoInfoCommonClass.getDarkerColor(mColor));
+            }
+        } else {
+            mRoot.setBackgroundColor(VideoInfoCommonClass.getAlphaColor(VideoInfoCommonClass.getDarkerColor(mColor), 160));
+        }
         if(mGenericPlayButton!=null) {
             if (darkModeActive) {
                 mGenericPlayButton.setBackgroundTintList(ContextCompat.getColorStateList(mContext, R.color.fab_dark_blue));
