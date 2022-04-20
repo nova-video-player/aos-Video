@@ -916,7 +916,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 if (selectedMode == 1){
                     params.bottomMargin = 123;
                 }
-                if (selectedMode == 2 || !browserIsTvShow || oneEpisode){
+                if (selectedMode == 2 || !browserIsTvShow || oneEpisode || mIsLaunchFromPlayer){
                     params.bottomMargin = 0;
                 }
             }
