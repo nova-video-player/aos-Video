@@ -15,13 +15,18 @@
 package com.archos.mediacenter.video.utils;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+
 import android.view.MenuItem;
 import android.view.View;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.MainActivity;
+import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 
 public class VideoPreferencesActivity extends AppCompatActivity {
 
@@ -33,12 +38,40 @@ public class VideoPreferencesActivity extends AppCompatActivity {
     public final static int    FOLDER_PICKER_REQUEST_CODE=2;
     public static final String EXTRA_LAUNCH_INAPP_PURCHASE = "extra_launch_inapp_purchase";
 
+    private static VideoPreferencesActivity mInstanceActivity;
+    public static VideoPreferencesActivity getmInstanceActivity() {
+        return mInstanceActivity;
+    }
+
+    public void setDarkMode() {
+        setTheme(R.style.DarkBlueTheme);
+    }
+
+    public void setNormalMode() {
+        setTheme(R.style.ArchosThemeBlue);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean darkModeActive = prefs.getBoolean("dark_mode", false);
+        if (darkModeActive) {
+            setDarkMode();
+        } else {
+            setNormalMode();
+        }
         setContentView(R.layout.preferences_video);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        mInstanceActivity = this;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mInstanceActivity = null;
     }
 
     public void videoPreferenceOsClick(View v) {

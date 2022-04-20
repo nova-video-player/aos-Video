@@ -445,8 +445,12 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             public boolean onPreferenceChange(@NonNull Preference preference, Object darkModeActive) {
                 if ((Boolean) darkModeActive) {
                     MainActivity.getmInstanceActivity().setDarkMode();
+                    VideoPreferencesActivity.getmInstanceActivity().setDarkMode();
+                    VideoPreferencesActivity.getmInstanceActivity().recreate();
                 } else {
                     MainActivity.getmInstanceActivity().setNormalMode();
+                    VideoPreferencesActivity.getmInstanceActivity().setNormalMode();
+                    VideoPreferencesActivity.getmInstanceActivity().recreate();
                 }
                 return true;
             }
