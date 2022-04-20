@@ -15,6 +15,7 @@
 
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -24,6 +25,8 @@ import android.os.Build;
 import android.os.Bundle;
 import androidx.core.content.ContextCompat;
 import androidx.loader.content.Loader;
+import androidx.preference.PreferenceManager;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -235,7 +238,13 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
         int darkColor = VideoInfoCommonClass.getDarkerColor(color);
         ColorDrawable[] colord = {new ColorDrawable(mLastColor), new ColorDrawable(darkColor)};
         TransitionDrawable trans = new TransitionDrawable(colord);
-        mApplicationFrameLayout.setBackground(trans);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        boolean darkModeActive = prefs.getBoolean("dark_mode", false);
+        if (darkModeActive) {
+            mApplicationFrameLayout.setBackgroundColor(mContext.getResources().getColor(R.color.deep_dark_blue));
+        } else {
+            mApplicationFrameLayout.setBackground(trans);
+        }
         trans.startTransition(200);
         mLastColor = darkColor;
         //getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
