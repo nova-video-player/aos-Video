@@ -77,7 +77,7 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
 
     public void onViewCreated(View view, Bundle save ){
         super.onViewCreated(view, save);
-        ((MainActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(null);
+        //((MainActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(null);
         ((ListView)mArchosGridView).setDivider(new ColorDrawable(ContextCompat.getColor(getContext(), R.color.transparent_white_list_divider)));
         ((ListView)mArchosGridView).setDividerHeight(3);
         // Hide series plot in seasons
@@ -93,7 +93,7 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
         ((ListView)mArchosGridView).setDivider(null); //unset otherwise, crash in listview
         ((ListView)mArchosGridView).setDividerHeight(0);
         mApplicationFrameLayout.setBackground(null);
-        ((MainActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.color.leanback_background_transparent));
+        //((MainActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.color.leanback_background_transparent));
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         //getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 

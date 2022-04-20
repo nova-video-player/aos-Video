@@ -41,6 +41,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -73,6 +74,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.text.HtmlCompat;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
@@ -213,12 +215,13 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     public static MainActivity getmInstanceActivity() {
         return mInstanceActivity;
     }
+    private Toolbar mToolbar;
 
     public void setDarkMode() {
-        int backgroundResId = R.drawable.dark_mode;
-        getWindow().getDecorView().setBackgroundResource(backgroundResId);
+        getWindow().getDecorView().setBackgroundResource(R.color.deep_dark_blue);
         if(mDrawerLayout != null)
-            mDrawerLayout.findViewById(R.id.category_container).setBackgroundResource(backgroundResId);
+            mDrawerLayout.findViewById(R.id.category_container).setBackgroundResource(R.color.deep_dark_blue);
+        mToolbar.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.deep_dark_blue_transparent));
     }
 
     public void setNormalMode() {
@@ -226,6 +229,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         getWindow().getDecorView().setBackgroundResource(backgroundResId);
         if(mDrawerLayout != null)
             mDrawerLayout.findViewById(R.id.category_container).setBackgroundResource(backgroundResId);
+        mToolbar.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.leanback_background_transparent));
     }
 
     private void setHomeButton() {
@@ -253,6 +257,8 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 mDrawerLayout.openDrawer(GravityCompat.START);
 
         }
+
+        mToolbar = (Toolbar)findViewById(R.id.main_toolbar);
 
         // determine if display has cutouts
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

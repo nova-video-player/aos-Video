@@ -29,7 +29,6 @@ category, and contents.
                 android:layout_alignParentTop="true"
                 android:layout_height="40dp"
                 android:layout_width="match_parent"
-                android:background="@color/leanback_background_transparent"
                 android:minHeight="?attr/actionBarSize"
                 app:titleTextAppearance="@style/ToolbarTitle"
                 />
