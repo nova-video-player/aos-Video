@@ -14,8 +14,11 @@
 
 package com.archos.mediacenter.video.utils;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+
 import android.view.MenuItem;
 
 import com.archos.mediacenter.video.R;
@@ -25,6 +28,13 @@ public class VideoPreferencesLicencesActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean darkModeActive = prefs.getBoolean("dark_mode", false);
+        if(darkModeActive){
+            setTheme(R.style.DarkBlueTheme);
+        }else{
+            setTheme(R.style.ArchosThemeBlue);
+        }
         setContentView(R.layout.preferences_licences);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
