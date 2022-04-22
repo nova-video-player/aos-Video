@@ -89,9 +89,9 @@
         <item name="android:id">@id/browser_items</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:paddingTop">1dip</item>
-        <item name="android:paddingLeft">@dimen/content_list_left_margin</item>
-        <item name="android:paddingRight">@dimen/content_list_right_margin</item>
+        <item name="android:paddingTop">1dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
         <item name="android:clipToPadding">false</item>
 
         <item name="android:textSize">18sp</item>

@@ -14,9 +14,13 @@
 
 package com.archos.mediacenter.video.browser.presenter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.video.R;
@@ -77,6 +81,28 @@ public class SeasonGridPresenter extends SeasonPresenter{
         }
         if(holder.secondLine!=null)
             holder.secondLine.setVisibility(View.VISIBLE);
+
+        //set gridview thumbnail Width & Height
+        boolean mIsPortraitMode = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int windowWidth = displayMetrics.widthPixels;
+        int width;
+        if(mIsPortraitMode){
+            width = windowWidth - 56;
+        }else{
+            width = windowWidth - 98;
+        }
+        int columnWidth;
+        if(mIsPortraitMode){
+            columnWidth = width / 3 ;
+        }else{
+            columnWidth = width / 6 ;
+        }
+        int height = columnWidth / 2;
+        int columnHeight = height * 3;
+        holder.thumbnail.setLayoutParams(new RelativeLayout.LayoutParams(columnWidth, columnHeight));
+
         return view;
     }
 }

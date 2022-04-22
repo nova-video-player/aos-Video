@@ -35,6 +35,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Parcelable;
+import android.util.DisplayMetrics;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -101,6 +102,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -526,17 +528,41 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             case VideoUtils.VIEW_MODE_GRID_SHORT:
             case VideoUtils.VIEW_MODE_GRID:
 
+                boolean mIsPortraitMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                ((Activity) requireContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int windowWidth = displayMetrics.widthPixels;
+                int width;
+                if(mIsPortraitMode){
+                    width = windowWidth - 56;
+                }else{
+                    width = windowWidth - 98;
+                }
+                int columnWidth;
+                if(mIsPortraitMode){
+                    columnWidth = width / 3 ;
+                }else{
+                    columnWidth = width / 6 ;
+                }
+
                 mArchosGridView = (AbsListView) mRootView.findViewById(R.id.archos_grid_view);
                 mRootView.findViewById(R.id.archos_list_view).setVisibility(View.GONE);
                 mArchosGridView.setVisibility(View.VISIBLE);
-                if(mArchosGridView instanceof GridView)
-                    ((GridView)mArchosGridView).setNumColumns(GridView.AUTO_FIT);
-                verticalSpacing = res.getDimensionPixelSize(R.dimen.content_grid_vertical_spacing_between_items);
+                if(mArchosGridView instanceof GridView) {
+                    if(mIsPortraitMode){
+                        ((GridView) mArchosGridView).setNumColumns(3);
+                    }else{
+                        ((GridView) mArchosGridView).setNumColumns(6);
+                    }
+                }
+                verticalSpacing = 14;
                 // setHorizontalSpacing() doesn't allow to have well-centered column. Having larger
                 // columns and making sure the items are centered in it makes it.
-                if(mArchosGridView instanceof GridView&&mode==VideoUtils.VIEW_MODE_GRID)
-                    ((GridView)mArchosGridView).setColumnWidth(res.getDimensionPixelSize(R.dimen.video_grid_column_width) +
-                            res.getDimensionPixelSize(R.dimen.content_grid_horizontal_minimal_spacing_between_items));
+                if(mArchosGridView instanceof GridView&&mode==VideoUtils.VIEW_MODE_GRID) {
+                    ((GridView) mArchosGridView).setColumnWidth(columnWidth);
+                    //((GridView) mArchosGridView).setLayoutParams(new AbsListView.LayoutParams(colWidth, colHeight));
+                }
+
                 else if(mArchosGridView instanceof GridView&&mode==VideoUtils.VIEW_MODE_GRID_SHORT)
                     ((GridView)mArchosGridView).setColumnWidth(res.getDimensionPixelSize(R.dimen.video_info_grid_column_width));
                 stretchMode = GridView.STRETCH_SPACING_UNIFORM;

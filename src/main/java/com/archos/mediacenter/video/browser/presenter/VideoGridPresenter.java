@@ -14,11 +14,16 @@
 
 package com.archos.mediacenter.video.browser.presenter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.GridView;
+import android.widget.RelativeLayout;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
@@ -74,7 +79,26 @@ public class VideoGridPresenter extends VideoPresenter{
             holder.name.setEllipsize(TextUtils.TruncateAt.MIDDLE);
         }
 
-
+        //set gridview thumbnail Width & Height
+        boolean mIsPortraitMode = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int windowWidth = displayMetrics.widthPixels;
+        int width;
+        if(mIsPortraitMode){
+            width = windowWidth - 56;
+        }else{
+            width = windowWidth - 98;
+        }
+        int columnWidth;
+        if(mIsPortraitMode){
+            columnWidth = width / 3 ;
+        }else{
+            columnWidth = width / 6 ;
+        }
+        int height = columnWidth / 2;
+        int columnHeight = height * 3;
+        holder.thumbnail.setLayoutParams(new RelativeLayout.LayoutParams(columnWidth, columnHeight));
 
         int resumePosition = video.getRemoteResumeMs()>0?video.getRemoteResumeMs():video.getResumeMs();
         boolean resume = resumePosition>0||resumePosition == PlayerActivity.LAST_POSITION_END;
@@ -86,7 +110,7 @@ public class VideoGridPresenter extends VideoPresenter{
 
         } else if(holder.resume!=null){
             // Show disabled video icon (there is no such disabled resume slider)
-            holder.resume.setVisibility(View.GONE);
+            //holder.resume.setVisibility(View.GONE);
 
         }
 

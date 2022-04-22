@@ -19,7 +19,7 @@
     >
     <RelativeLayout
 
-        android:layout_width="@dimen/video_grid_poster_width"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:paddingBottom="5dip"
@@ -33,11 +33,10 @@
 
         <ImageView
             android:id="@+id/thumbnail"
-            android:layout_width="@dimen/video_grid_poster_width"
-            android:layout_height="@dimen/video_grid_poster_height"
-
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@color/default_icon_background"
-            android:scaleType="center" />
+            android:scaleType="centerCrop" />
 
         <ImageView
             android:id="@+id/flag_3d"
