@@ -130,6 +130,20 @@ public class VideoGridPresenter extends VideoPresenter{
 
         }
 
+        boolean hideGridviewInfo = prefs.getBoolean("hide_gridview_info", false);
+        int bottomPadding = (int) mContext.getResources().getDimension(R.dimen.gridview_root_bottom_padding);
+        if(hideGridviewInfo){
+            holder.ItemViewRoot.setPadding(0,0,0,0);
+            holder.secondLine.setVisibility(View.GONE);
+            holder.name.setVisibility(View.GONE);
+            holder.resume.setVisibility(View.GONE);
+        }else{
+            holder.ItemViewRoot.setPadding(0,0,0,bottomPadding);
+            holder.secondLine.setVisibility(View.VISIBLE);
+            holder.name.setVisibility(View.VISIBLE);
+            holder.resume.setVisibility(View.VISIBLE);
+        }
+
         return view;
     }
 

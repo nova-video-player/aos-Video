@@ -118,6 +118,9 @@ public class SeasonGridPresenter extends SeasonPresenter{
         int columnHeight = height * 3;
         holder.thumbnail.setLayoutParams(new RelativeLayout.LayoutParams(columnWidth, columnHeight));
 
+        int bottomPadding = (int) mContext.getResources().getDimension(R.dimen.gridview_root_bottom_padding);
+        holder.ItemViewRoot.setPadding(0,0,0,bottomPadding);
+
         return view;
     }
 }

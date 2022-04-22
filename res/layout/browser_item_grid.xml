@@ -18,11 +18,10 @@
     android:layout_height="wrap_content"
     >
     <RelativeLayout
-
+        android:id="@+id/itemViewRoot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:paddingBottom="5dip"
         android:descendantFocusability="blocksDescendants"
         android:background="@drawable/list_item_background"
         android:gravity="center"
