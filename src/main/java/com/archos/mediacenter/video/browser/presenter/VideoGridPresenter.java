@@ -33,6 +33,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesGrid;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
+import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.TextShadowSpan;
@@ -132,16 +133,18 @@ public class VideoGridPresenter extends VideoPresenter{
 
         boolean hideGridviewInfo = prefs.getBoolean("hide_gridview_info", false);
         int bottomPadding = (int) mContext.getResources().getDimension(R.dimen.gridview_root_bottom_padding);
-        if(hideGridviewInfo){
-            holder.ItemViewRoot.setPadding(0,0,0,0);
-            holder.secondLine.setVisibility(View.GONE);
-            holder.name.setVisibility(View.GONE);
-            holder.resume.setVisibility(View.GONE);
-        }else{
-            holder.ItemViewRoot.setPadding(0,0,0,bottomPadding);
-            holder.secondLine.setVisibility(View.VISIBLE);
-            holder.name.setVisibility(View.VISIBLE);
-            holder.resume.setVisibility(View.VISIBLE);
+        if(video instanceof Movie){
+            if(hideGridviewInfo){
+                holder.ItemViewRoot.setPadding(0,0,0,0);
+                holder.secondLine.setVisibility(View.GONE);
+                holder.name.setVisibility(View.GONE);
+                holder.resume.setVisibility(View.GONE);
+            }else{
+                holder.ItemViewRoot.setPadding(0,0,0,bottomPadding);
+                holder.secondLine.setVisibility(View.VISIBLE);
+                holder.name.setVisibility(View.VISIBLE);
+                holder.resume.setVisibility(View.VISIBLE);
+            }
         }
 
         return view;
