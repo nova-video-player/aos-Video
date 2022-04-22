@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.browser.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -25,7 +26,10 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 
+import androidx.preference.PreferenceManager;
+
 import com.archos.mediacenter.utils.ThumbnailEngine;
+import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesGrid;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
@@ -80,19 +84,31 @@ public class VideoGridPresenter extends VideoPresenter{
         }
 
         //set gridview thumbnail Width & Height
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        boolean drawerOpen = prefs.getBoolean("drawerOpen", true);
+        boolean mIsLandscapeMode = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         boolean mIsPortraitMode = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+
+        //width subtraction when number of columns is 5 && mIsLandscapeMode && drawerOpen
+        int categoryWidth = (int) mContext.getResources().getDimension(R.dimen.categories_list_width);
+        int subtraction = categoryWidth + 84;
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int windowWidth = displayMetrics.widthPixels;
         int width;
         if(mIsPortraitMode){
             width = windowWidth - 56;
+        }else if(mIsLandscapeMode && drawerOpen){
+            width = windowWidth - subtraction;
         }else{
             width = windowWidth - 98;
         }
         int columnWidth;
         if(mIsPortraitMode){
             columnWidth = width / 3 ;
+        }else if(mIsLandscapeMode && drawerOpen){
+            columnWidth = width / 5 ;
         }else{
             columnWidth = width / 6 ;
         }

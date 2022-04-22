@@ -343,8 +343,14 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         CustomApplication.showChangelogDialog(CustomApplication.getChangelog(this.getApplicationContext()), this);
 
         mInstanceActivity = this;
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean darkModeActive = prefs.getBoolean("dark_mode", false);
+
+        boolean drawerOpen;
+        drawerOpen = mDrawerLayout == null || mDrawerLayout.isDrawerOpen(GravityCompat.START);
+        prefs.edit().putBoolean("drawerOpen", drawerOpen).apply();
+
         if(darkModeActive){
             setDarkMode();
         }else{

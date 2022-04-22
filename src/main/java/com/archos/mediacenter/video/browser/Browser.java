@@ -528,6 +528,14 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             case VideoUtils.VIEW_MODE_GRID_SHORT:
             case VideoUtils.VIEW_MODE_GRID:
 
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+                boolean drawerOpen = prefs.getBoolean("drawerOpen", true);
+                boolean mIsLandscapeMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+
+                //width subtraction when number of columns is 5 && mIsLandscapeMode && drawerOpen
+                int categoryWidth = (int) getResources().getDimension(R.dimen.categories_list_width);
+                int subtraction = categoryWidth + 84;
+
                 boolean mIsPortraitMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
                 DisplayMetrics displayMetrics = new DisplayMetrics();
                 ((Activity) requireContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -535,12 +543,16 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                 int width;
                 if(mIsPortraitMode){
                     width = windowWidth - 56;
+                }else if(mIsLandscapeMode && drawerOpen){
+                    width = windowWidth - subtraction;
                 }else{
                     width = windowWidth - 98;
                 }
                 int columnWidth;
                 if(mIsPortraitMode){
                     columnWidth = width / 3 ;
+                }else if(mIsLandscapeMode && drawerOpen){
+                    columnWidth = width / 5 ;
                 }else{
                     columnWidth = width / 6 ;
                 }
@@ -551,6 +563,8 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                 if(mArchosGridView instanceof GridView) {
                     if(mIsPortraitMode){
                         ((GridView) mArchosGridView).setNumColumns(3);
+                    }else if(mIsLandscapeMode && drawerOpen){
+                        ((GridView) mArchosGridView).setNumColumns(5);
                     }else{
                         ((GridView) mArchosGridView).setNumColumns(6);
                     }
