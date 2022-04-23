@@ -9,6 +9,8 @@ for informations (duration for files, number of files for directories).
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="90dip"
+    android:paddingStart="4dip"
+    android:paddingEnd="4dip"
     android:descendantFocusability="blocksDescendants"
     android:background="@drawable/list_item_background"
     android:gravity="center_vertical" >
