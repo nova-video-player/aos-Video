@@ -106,7 +106,6 @@
         style="@style/BrowserText.Name.Video"
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_marginTop="5dp"
         android:layout_marginRight="18dip"
         android:layout_toLeftOf="@id/expanded"
         android:layout_toRightOf="@id/left_area" />
