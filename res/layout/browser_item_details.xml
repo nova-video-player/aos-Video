@@ -8,7 +8,7 @@ for informations (duration for files, number of files for directories).
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
-    android:layout_height="@dimen/video_details_item_height"
+    android:layout_height="@dimen/video_details_poster_height"
     android:background="@drawable/list_item_background"
     android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical" >
@@ -23,23 +23,27 @@ for informations (duration for files, number of files for directories).
 
         <!-- Poster on the left side -->
 
-        <ImageView
-            android:id="@+id/thumbnail"
-            android:layout_width="@dimen/video_details_poster_width"
-            android:layout_height="@dimen/video_details_poster_height"
-            android:layout_marginBottom="@dimen/video_details_poster_margin_bottom"
-            android:layout_marginLeft="@dimen/video_details_poster_margin_left"
-            android:layout_marginRight="0dip"
-            android:layout_marginTop="@dimen/video_details_poster_margin_top"
-            android:background="@color/default_icon_background"
-            android:scaleType="center" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/series_thumbnail_cardview"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            card_view:cardCornerRadius="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"	>
+            <ImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="@dimen/video_details_poster_width"
+                android:layout_height="@dimen/video_details_poster_height"
+                android:background="@color/default_icon_background"
+                android:scaleType="center" />
+        </androidx.cardview.widget.CardView>
 
         <ImageView
             android:id="@+id/flag_3d"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/thumbnail"
-            android:layout_alignRight="@id/thumbnail"
+            android:layout_alignBottom="@id/series_thumbnail_cardview"
+            android:layout_alignRight="@id/series_thumbnail_cardview"
             android:layout_marginBottom="@dimen/video_3d_label_margin_grid"
             android:layout_marginRight="@dimen/video_3d_label_margin_grid"
             app:srcCompat="@drawable/label_3d"
@@ -49,8 +53,8 @@ for informations (duration for files, number of files for directories).
             android:id="@+id/trakt_watched"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@id/thumbnail"
-            android:layout_alignTop="@id/thumbnail"
+            android:layout_alignRight="@id/series_thumbnail_cardview"
+            android:layout_alignTop="@id/series_thumbnail_cardview"
             android:layout_marginRight="-2px"
             android:layout_marginTop="-2px"
             app:srcCompat="@drawable/watched_icon_corner"
@@ -60,8 +64,8 @@ for informations (duration for files, number of files for directories).
             android:id="@+id/trakt_library"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/thumbnail"
-            android:layout_alignTop="@id/thumbnail"
+            android:layout_alignLeft="@id/series_thumbnail_cardview"
+            android:layout_alignTop="@id/series_thumbnail_cardview"
             android:layout_marginLeft="@dimen/video_trakt_library_margin_left"
             app:srcCompat="@drawable/label_trakt_library"
             android:visibility="gone" />
