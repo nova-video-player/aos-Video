@@ -27,7 +27,7 @@
             </androidx.cardview.widget.CardView>
             <Button
                 android:id="@+id/play"
-                android:foreground="@drawable/transparent_ripple"
+                android:foreground="@drawable/circular_ripple"
                 android:layout_height="65dp"
                 android:layout_centerInParent="true"
                 android:paddingTop="20dip"
