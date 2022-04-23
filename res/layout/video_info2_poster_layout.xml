@@ -9,8 +9,8 @@
     <ImageView
         android:id="@+id/poster"
         android:layout_width="@dimen/video_info_backdrop_chooser_item_width"
-        android:layout_height="wrap_content"
-        android:scaleType="fitCenter"
+        android:layout_height="191dip"
+        android:scaleType="centerCrop"
         android:adjustViewBounds="true"
         android:layout_gravity="center_horizontal" />
     <ImageView
