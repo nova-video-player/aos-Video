@@ -182,7 +182,7 @@
     </style>
 
     <style name="BrowserText.Name.Video">
-        <item name="android:paddingTop">8dip</item>
+        <item name="android:paddingTop">14dip</item>
     </style>
 
     <style name="BrowserText.Info.InfoBlue.Video">
