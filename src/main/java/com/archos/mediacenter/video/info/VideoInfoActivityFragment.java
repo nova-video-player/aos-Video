@@ -904,7 +904,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 String mode = prefs.getString("episode_scrollView", null);
                 boolean browserIsTvShow = prefs.getBoolean("BrowserIsTvShow", true);
                 boolean oneEpisode = prefs.getBoolean("oneEpisode", true);
-                boolean notEpisode = prefs.getBoolean("notEpisode", true);
                 int selectedMode;
                 if(mode == null){
                     selectedMode = 1;
@@ -917,7 +916,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 if (selectedMode == 1){
                     params.bottomMargin = 123;
                 }
-                if (selectedMode == 2 || !browserIsTvShow || oneEpisode || mIsLaunchFromPlayer || notEpisode){
+                if (selectedMode == 2 || !browserIsTvShow || oneEpisode || mIsLaunchFromPlayer){
                     params.bottomMargin = 0;
                 }
             }

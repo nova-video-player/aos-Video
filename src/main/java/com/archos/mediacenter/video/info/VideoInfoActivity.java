@@ -104,10 +104,6 @@ public class VideoInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_video_info);
         mViewPager = (ViewPager)findViewById(R.id.pager);
 
-        // episode selector
-
-        // not episode means it is still an episode but launched as non-episode object
-        boolean notEpisode;
         if(mCurrentVideo instanceof Episode) {
             Episode episodeVideo = (Episode) mCurrentVideo;
             long onlineId = episodeVideo.getOnlineId();
@@ -222,12 +218,7 @@ public class VideoInfoActivity extends AppCompatActivity {
                 // Hide Episode RecyclerView
                 mEpisodes.setVisibility(View.GONE);
             }
-            notEpisode = false;
-        }else{
-            notEpisode = true;
         }
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        prefs.edit().putBoolean("notEpisode", notEpisode).apply();
 
         mForceCurrentPosition = getIntent().getBooleanExtra(EXTRA_FORCE_VIDEO_SELECTION, false);
         mGlobalBackdrop = getLayoutInflater().inflate(R.layout.browser_main_video_backdrop, null);
