@@ -37,7 +37,7 @@ public enum AdapterDefaultValuesListEpisode implements AdapterDefaultValues {
     }
 
     public int getLayoutId() {
-        return R.layout.browser_item_list_episode;
+        return R.layout.browser_item_list_show_episode;
     }
 
     public int getLayoutId(int itemType) {
@@ -67,12 +67,10 @@ public enum AdapterDefaultValuesListEpisode implements AdapterDefaultValues {
             case ItemViewType.ITEM_VIEW_TYPE_HEADER_SHOW:
                 layoutId = R.layout.browser_item_header_show;
                 break;
-            case ItemViewType.ITEM_VIEW_TYPE_SHOW:
-                layoutId = R.layout.browser_item_list_show_episode;
-                break;
             case ListingAdapter.ITEM_VIEW_TYPE_FILE:
+            case ItemViewType.ITEM_VIEW_TYPE_SHOW:
             default:
-                layoutId = R.layout.browser_item_list_episode;
+                layoutId = R.layout.browser_item_list_show_episode;
                 break;
         }
 
