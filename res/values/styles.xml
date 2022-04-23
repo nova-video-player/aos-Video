@@ -114,7 +114,7 @@
         <item name="android:clipToPadding">false</item>
 
         <item name="android:textSize">18sp</item>
-        <item name="android:drawSelectorOnTop">false</item>
+        <item name="android:drawSelectorOnTop">true</item>
         <item name="android:fastScrollEnabled">false</item><!-- true lead to errors on 4.0 -->
         <item name="android:choiceMode">singleChoice</item>
         <item name="android:cacheColorHint">#00000000</item>
