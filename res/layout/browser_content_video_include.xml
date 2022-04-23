@@ -42,7 +42,7 @@
         android:layout_below="@id/connection_button"
         android:layout_alignWithParentIfMissing="true"
         android:divider="@null"
-        android:dividerHeight="@dimen/content_list_vertical_spacing_between_items" />
+        android:dividerHeight="4dip" />
 
     <!-- This view doesn't consume memory when the listview isn't empty -->
 
