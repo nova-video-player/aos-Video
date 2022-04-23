@@ -348,7 +348,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         boolean darkModeActive = prefs.getBoolean("dark_mode", false);
 
         boolean drawerOpen;
-        drawerOpen = mDrawerLayout == null || mDrawerLayout.isDrawerOpen(GravityCompat.START);
+        drawerOpen = mDrawerLayout == null;
         prefs.edit().putBoolean("drawerOpen", drawerOpen).apply();
 
         if(darkModeActive){
