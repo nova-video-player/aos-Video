@@ -68,7 +68,7 @@ public enum AdapterDefaultValuesListEpisode implements AdapterDefaultValues {
                 layoutId = R.layout.browser_item_header_show;
                 break;
             case ItemViewType.ITEM_VIEW_TYPE_SHOW:
-                layoutId = R.layout.browser_item_list_show;
+                layoutId = R.layout.browser_item_list_show_episode;
                 break;
             case ListingAdapter.ITEM_VIEW_TYPE_FILE:
             default:
