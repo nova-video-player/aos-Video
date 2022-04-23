@@ -42,6 +42,7 @@ import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.browser.ThumbnailRequesterVideo;
 import com.archos.mediacenter.video.browser.adapters.AdapterByShow;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesList;
+import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesListEpisode;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.loader.EpisodesLoader;
@@ -186,7 +187,7 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
             }
 
             else {
-                mEpisodePresenter = new EpisodePresenter(getContext(),AdapterDefaultValuesList.INSTANCE ,this);
+                mEpisodePresenter = new EpisodePresenter(getContext(), AdapterDefaultValuesListEpisode.INSTANCE ,this);
             }
             mEpisodePresenter.setTransparent(true);
             ((AdapterByShow) mBrowserAdapter).setPresenter(Episode.class, mEpisodePresenter );
