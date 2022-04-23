@@ -65,4 +65,6 @@
 
     <dimen name="gridview_root_bottom_padding">5dip</dimen>
 
+    <dimen name="list_divider_height">4dip</dimen>
+
 </resources>

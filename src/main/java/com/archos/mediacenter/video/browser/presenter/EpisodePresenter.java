@@ -60,8 +60,8 @@ public class EpisodePresenter extends VideoPresenter implements Presenter {
         } else {
             Picasso.get().load(R.drawable.default_image).fit().centerCrop().into(holder.episodeStill);
         }
-        String name = episode.getName();
-        if(name == null ||  name.isEmpty())
+        String name = episode.getEpisodeNumber() + ". " + episode.getName();
+        if(episode.getName() == null ||  episode.getName().isEmpty())
             name = episode.getShowName()+ " "+ mContext.getString(R.string.leanback_episode_SXEX_code, episode.getSeasonNumber(), episode.getEpisodeNumber());
         holder.name.setText(name);
         int resumePosition = episode.getRemoteResumeMs()>0?episode.getRemoteResumeMs():episode.getResumeMs();
@@ -84,6 +84,7 @@ public class EpisodePresenter extends VideoPresenter implements Presenter {
             holder.name.setEllipsize(TextUtils.TruncateAt.END);
 
         holder.number.setText(""+episode.getEpisodeNumber());
+        holder.number.setVisibility(View.GONE);
 
         if(holder.expanded!=null)
             holder.expanded.setVisibility(View.GONE);

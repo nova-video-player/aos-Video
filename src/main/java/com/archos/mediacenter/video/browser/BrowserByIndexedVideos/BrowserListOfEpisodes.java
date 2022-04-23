@@ -82,8 +82,9 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
     public void onViewCreated(View view, Bundle save ){
         super.onViewCreated(view, save);
         //((MainActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(null);
-        ((ListView)mArchosGridView).setDivider(new ColorDrawable(ContextCompat.getColor(getContext(), R.color.transparent_white_list_divider)));
-        ((ListView)mArchosGridView).setDividerHeight(3);
+        ((ListView)mArchosGridView).setDivider(new ColorDrawable(ContextCompat.getColor(getContext(), R.color.transparent)));
+        int dividerHeight = (int) getResources().getDimension(R.dimen.list_divider_height);
+        ((ListView)mArchosGridView).setDividerHeight(dividerHeight);
         // Hide series plot in seasons
         LinearLayout linearLayout = view.findViewById(R.id.series_plot_container);
         linearLayout.setVisibility(View.GONE);
