@@ -1025,8 +1025,9 @@ public class Player implements IPlayerControl,
                         if (rhz >= fps) { // no frame drop
                             metric = rhz % fps;
                             log.debug("CONFIG evaluating " + sM.getPhysicalWidth() + "x" + sM.getPhysicalHeight() + "(" + sM.getRefreshRate() + "Hz) metric = " + metric);
+                            // be more tolerant on metric == 0 check since on firestick roundings make it not null
                             if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth() && sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
-                                    metric == 0 && rhz >= maxRhz) {
+                                    metric < 10 && rhz >= maxRhz) {
                                 foundMatch = true;
                                 maxRhz = rhz;
                                 wantedModeId = sM.getModeId();
@@ -1093,7 +1094,8 @@ public class Player implements IPlayerControl,
                         if (rhz >= fps) { // no frame drop
                             metric = rhz % fps;
                             log.debug("CONFIG evaluating " + rate + "Hz metric = " + metric);
-                            if (metric == 0 && rhz >= maxRhz) {
+                            // be more tolerant on metric == 0 check since on firestick roundings make it not null
+                            if (metric < 10 && rhz >= maxRhz) {
                                 foundMatch = true;
                                 maxRhz = rhz;
                                 mRefreshRate = rate;
