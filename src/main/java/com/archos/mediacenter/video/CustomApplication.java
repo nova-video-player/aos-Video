@@ -56,6 +56,7 @@ import com.squareup.picasso.Picasso;
 
 import httpimage.FileSystemPersistence;
 import httpimage.HttpImageManager;
+import io.sentry.SentryLevel;
 import io.sentry.android.core.SentryAndroid;
 
 import org.slf4j.Logger;
@@ -294,8 +295,12 @@ public class CustomApplication extends Application {
         if (foreground) {
             if (!isVideStoreImportReceiverRegistered) {
                 log.debug("handleForeGround: app now in ForeGround registerReceiver for videoStoreImportReceiver");
+                ArchosUtils.addBreadcrumb(SentryLevel.INFO, "CustomApplication.handleForeGround", "app now in ForeGround registerReceiver for videoStoreImportReceiver");
                 registerReceiver(videoStoreImportReceiver, intentFilter);
                 isVideStoreImportReceiverRegistered = true;
+            } else {
+                log.debug("handleForeGround: app now in ForeGround registerReceiver videoStoreImportReceiver already registered");
+                ArchosUtils.addBreadcrumb(SentryLevel.INFO, "CustomApplication.handleForeGround", "app now in ForeGround videoStoreImportReceiver already registered");
             }
             if (!isNetworkStateRegistered) {
                 log.debug("handleForeGround: app now in ForeGround NetworkState.registerNetworkCallback");
@@ -307,8 +312,12 @@ public class CustomApplication extends Application {
         } else {
             if (isVideStoreImportReceiverRegistered) {
                 log.debug("handleForeGround: app now in BackGround unregisterReceiver for videoStoreImportReceiver");
+                ArchosUtils.addBreadcrumb(SentryLevel.INFO, "CustomApplication.handleForeGround", "app now in Background unregister videoStoreImportReceiver");
                 unregisterReceiver(videoStoreImportReceiver);
                 isVideStoreImportReceiverRegistered = false;
+            } else {
+                log.debug("handleForeGround: app now in BackGround, videoStoreImportReceiver already unregistered");
+                ArchosUtils.addBreadcrumb(SentryLevel.INFO, "CustomApplication.handleForeGround", "app now in Background videoStoreImportReceiver already unregistered");
             }
             if (isNetworkStateRegistered) {
                 log.debug("handleForeGround: app now in BackGround NetworkState.unRegisterNetworkCallback");
