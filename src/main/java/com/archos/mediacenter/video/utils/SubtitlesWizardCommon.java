@@ -370,12 +370,13 @@ public class SubtitlesWizardCommon {
         String name = FileUtils.getFileNameWithoutExtension(mVideoUri);
 
         String helpMessage;
-        if (mAvailableFilesCount == 0 && mCurrentFilesCount == 0) {
-            helpMessage = getString(R.string.subtitles_wizard_empty_list_help).replace("%s", name);
-        }
-        else {
-            helpMessage = getString(R.string.subtitles_wizard_help).replace("%s", name);
-        }
+        if (name != null) {
+            if (mAvailableFilesCount == 0 && mCurrentFilesCount == 0) {
+                helpMessage = getString(R.string.subtitles_wizard_empty_list_help).replace("%s", name);
+            } else {
+                helpMessage = getString(R.string.subtitles_wizard_help).replace("%s", name);
+            }
+        } else helpMessage = "No guidance, no video file!";
 
         return helpMessage;
     }
