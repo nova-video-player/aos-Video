@@ -51,8 +51,8 @@
     <logger name="jcifs.smb.SmbTransportImpl" level="TRACE"/>
     <logger name="com.archos.filecorelibrary.samba" level="DEBUG"/>-->
 
-    <!--<logger name="com.archos.mediacenter.video.player.Player" level="DEBUG"/>
-    <logger name="com.archos.mediacenter.video.player.PlayerActivity" level="DEBUG"/>
+    <logger name="com.archos.mediacenter.video.player.Player" level="DEBUG"/>
+    <!--<logger name="com.archos.mediacenter.video.player.PlayerActivity" level="DEBUG"/>
     <logger name="com.archos.mediacenter.video.player.PlayerController" level="DEBUG"/>
     <logger name="com.archos.mediacenter.video.player.PlayerService" level="DEBUG"/>
     <logger name="com.archos.mediacenter.video.player.MediaButtonService" level="DEBUG"/>-->
@@ -92,11 +92,12 @@
     <!--<logger name="com.archos.mediascraper.ShowTags" level="DEBUG"/>-->
 
     <!--<logger name="com.archos.mediascraper.AutoScrapeService" level="DEBUG"/>
-    <logger name="com.archos.mediaprovider.video.VideoProvider" level="DEBUG"/>
-    <logger name="com.archos.mediaprovider.video.VideoStoreImportReceiver" level="DEBUG"/>
-    <logger name="com.archos.mediaprovider.video.VideoStoreImportService" level="DEBUG"/>
     <logger name="com.archos.mediaprovider.video.VideoStoreImportImpl" level="DEBUG"/>
     <logger name="com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserWithShowHeader" level="DEBUG"/>-->
+
+    <logger name="com.archos.mediaprovider.video.VideoStoreImportReceiver" level="DEBUG"/>
+    <logger name="com.archos.mediaprovider.video.VideoStoreImportService" level="DEBUG"/>
+    <logger name="com.archos.mediaprovider.video.VideoProvider" level="TRACE"/>
 
     <!--<logger name="com.archos.mediacenter.video.widget.WidgetProviderVideo" level="DEBUG"/>-->
 
