@@ -201,20 +201,20 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
-                            android:fontFamily="@font/lato_bold"
+                            android:fontFamily="@font/gotham_narrow_medium"
                             android:text="@string/movie_popularity_header"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textColor="@color/header_font"
-                            android:textSize="11sp" />
+                            android:textSize="14sp" />
                         <TextView
                             android:id="@+id/movie_popularity"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
-                            android:fontFamily="@font/lato_bold"
+                            android:fontFamily="@font/gotham_narrow_medium"
                             android:text="00"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/yellow"
+                            android:textColor="@color/light_orange"
                             android:textSize="11sp" />
                     </LinearLayout>
 

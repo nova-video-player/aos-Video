@@ -71,4 +71,6 @@
     <color name="translucent_black">#98000000</color>
     <color name="white_font">#FFFFFF</color>
     <color name="header_font">#C8DFF1</color>
+
+    <color name="light_orange">#CC9900</color>
 </resources>
