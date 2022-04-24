@@ -1,14 +1,4 @@
-- ffmpeg 5.01, dav1d 1.0.0 upstep
+- Stability enhancements
+- Fix adaptive refresh rate selection on firestick
+- ffmpeg 4.4.2 and dav1d 1.0.0
 - Fix fdroid build
-- Fix tvshow rescrape having same name
-- Fix widget not launching video
-- STOP remote button stops player
-- Make rescan storage setting work
-- Scrobbler threshold raised to 90%
-- Fix crash changing info on tvshow
-- Add adult scrape hidden option NOT on google play
-- Blacklist nova scrape files for initial video import
-- Swedish translations
-- Fix NFO processing not working on SMB share
-- Fix scrape in loop
-- Display content rating
