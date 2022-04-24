@@ -263,7 +263,7 @@ public class Delete {
     }
 
     public void deleteFileAndAssociatedFiles(Context context, Uri fileUri) {
-        if (! "upnp".equals(fileUri.getScheme())) { // no delete with upnp
+        if (! ("upnp".equals(fileUri.getScheme()) || "http".equals(fileUri.getScheme())) ) { // no delete with upnp or http
             log.debug("deleteFileAndAssociatedFiles: " + fileUri);
             new Thread() {
                 public void run() {
