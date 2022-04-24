@@ -15,7 +15,6 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_alignParentTop="true"
-        android:layout_above="@+id/miniController1"
         android:layout_height="wrap_content">
         <include
             layout="@layout/video_info2_common_content"
