@@ -663,6 +663,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
         ((ObservableScrollView)mRoot.findViewById(R.id.scrollView)).setScrollViewCallbacks(this);
 
+        //retain toolbar background color when scrolled and orientation changed
+        View scrollView = mRoot.findViewById(R.id.scroll_content);
+        if (savedInstanceState != null) // It's not null
+            updateHeaderBackground(scrollView.getScrollY(), false);
+
         //if(mIsLaunchFromPlayer) //hide play button
             //mActionButtonsContainer.setVisibility(View.GONE);
         return mRoot;
