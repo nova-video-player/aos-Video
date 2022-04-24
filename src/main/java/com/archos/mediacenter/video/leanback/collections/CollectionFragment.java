@@ -285,48 +285,52 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
     @Override
     public void onVideoFileRemoved(final Uri videoFile,boolean askForFolderRemoval, final Uri folder) {
-        Toast.makeText(getActivity(),R.string.delete_done, Toast.LENGTH_SHORT).show();
-        if(askForFolderRemoval) {
-            AlertDialog.Builder b = new AlertDialog.Builder(getActivity()).setTitle("");
-            b.setIcon(R.drawable.filetype_new_folder);
-            b.setMessage(R.string.confirm_delete_parent_folder);
-            b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    sendDeleteResult(videoFile);
-                }
-            })
-                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            delete = new Delete(CollectionFragment.this, getActivity());
-                            deleteUrisList = Collections.singletonList(folder);
-                            delete.deleteFolder(folder);
-                        }
-                    });
-            b.setOnCancelListener(dialogInterface -> sendDeleteResult(videoFile));
-            b.create().show();
-        }
-        else {
+        Activity activity = getActivity();
+        if (activity != null) Toast.makeText(activity, R.string.delete_done, Toast.LENGTH_SHORT).show();
+        if (askForFolderRemoval) {
+            if (activity != null) {
+                AlertDialog.Builder b = new AlertDialog.Builder(activity).setTitle("");
+                b.setIcon(R.drawable.filetype_new_folder);
+                b.setMessage(R.string.confirm_delete_parent_folder);
+                b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        sendDeleteResult(videoFile);
+                    }
+                })
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                delete = new Delete(CollectionFragment.this, activity);
+                                deleteUrisList = Collections.singletonList(folder);
+                                delete.deleteFolder(folder);
+                            }
+                        });
+                b.setOnCancelListener(dialogInterface -> sendDeleteResult(videoFile));
+                b.create().show();
+            }
+        } else {
             sendDeleteResult(videoFile);
         }
-
     }
 
     private void sendDeleteResult(Uri file){
         Intent intent = new Intent();
         intent.setData(file);
-        getActivity().setResult(ListingActivity.RESULT_FILE_DELETED, intent);
+        Activity activity = getActivity();
+        if (activity != null) activity.setResult(ListingActivity.RESULT_FILE_DELETED, intent);
     }
 
     @Override
     public void onDeleteVideoFailed(Uri videoFile) {
-        Toast.makeText(getActivity(),R.string.delete_error, Toast.LENGTH_SHORT).show();
+        Activity activity = getActivity();
+        if (activity != null) Toast.makeText(activity,R.string.delete_error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onFolderRemoved(Uri folder) {
-        Toast.makeText(getActivity(), R.string.delete_done, Toast.LENGTH_SHORT).show();
+        Activity activity = getActivity();
+        if (activity != null) Toast.makeText(activity, R.string.delete_done, Toast.LENGTH_SHORT).show();
         sendDeleteResult(folder);
     }
 
