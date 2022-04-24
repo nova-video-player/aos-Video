@@ -242,7 +242,6 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
         HttpImageManager imageManager = application.getHttpImageManager();
         if(viewMode== VideoUtils.VIEW_MODE_LIST) {
             adapterInterface.setPresenter(Video.class, new VideoListPresenter(activity, listener,imageManager));
-            adapterInterface.setPresenter(Episode.class, new ScrapedVideoDetailedPresenter(activity, listener,imageManager));
         }
         else if (viewMode == VideoUtils.VIEW_MODE_GRID_SHORT){
             adapterInterface.setPresenter(Video.class, new VideoGridShortPresenter(activity, listener, imageManager));
