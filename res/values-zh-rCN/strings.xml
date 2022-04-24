@@ -515,6 +515,8 @@
     <string name="preferences_force_audio_passthrough_summary">通过 HDMI 或 S/PDIF 传输压缩音频。⚠实验性功能，可能导致 A/V不同步</string>
     <string name="preferences_disable_downmix_title">禁用混音至立体声</string>
     <string name="preferences_disable_downmix_summary">总是解码所有声道，并根据音频输出能力让安卓混音(可能导致声道丢失)</string>
+    <string name="preferences_enable_downmix_androidtv_title">强制音频立体声降低混频</string>
+    <string name="preferences_enable_downmix_androidtv_summary">始终将多通道音轨缩混为立体声 (如果语音通道听不到，则选择此选项)</string>
     <string name="preferences_allow_3rd_party_player">允许使用另外的视频播放器</string>
     <string name="preferences_allow_3rd_party_player_summary">在启动视频播放时安卓系统将提示其他兼容的视频播放器。 请注意，某些功能将无法工作 (恢复播放、书签等)</string>
     <string name="preference_tv_3d_automatic_switch">启用自动 3D 电视开关</string>
@@ -655,6 +657,8 @@
     <string name="preferences_display_resume_box_summary">在主屏幕上显示或隐藏“恢复播放最近视频”的按钮</string>
     <string name="preferences_display_resume_box">显示恢复播放窗口</string>
     <string name="preferences_leanback_user_interface">电视用户界面</string>
+    <string name="preferences_show_animation_row_summary">勾选以显示带有动画图块的行，这些图块分别访问电影和电视节目中的动画视频</string>
+    <string name="preferences_show_animation_row">显示动画图块行</string>
     <string name="preferences_show_watching_up_next_row_summary">选中以显示当前正在观看和随后观看的视频栏</string>
     <string name="preferences_show_watching_up_next_row">显示“正在观看/随后观看”栏</string>
     <string name="preferences_show_last_added_row_summary">选中以显示您最近添加的媒体</string>

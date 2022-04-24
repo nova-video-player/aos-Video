@@ -520,6 +520,8 @@
     <string name="preferences_force_audio_passthrough_summary">Übertrage komprimiertes Audio über HDMI oder S/PDIF. ⚠Experimentell, kann dazu führen, dass A/V nicht synchron sind</string>
     <string name="preferences_disable_downmix_title">Audio Stereo-Downmix deaktivieren</string>
     <string name="preferences_disable_downmix_summary">Immer alle Kanäle dekodieren und Android den Downmix abhängig von der Audio-Ausgabefähigkeit durchführen lassen (kann zu verlorenen Sprachkanälen führen)</string>
+    <string name="preferences_enable_downmix_androidtv_title">Audio-Stereo-Downmix erzwingen</string>
+    <string name="preferences_enable_downmix_androidtv_summary">Immer mehrere Audiokanäle zu Stereo downmixen. (Auswählen, wenn Sprachkanäle nicht hörbar sind)</string>
     <string name="preferences_allow_3rd_party_player">Videos mit anderen Apps abspielen</string>
     <string name="preferences_allow_3rd_party_player_summary">Kompatible Apps werden zum Abspielen vorgeschlagen. Einige Features wie Fortsetzungspunkte und Lesezeichen werden allerdings nicht funktionieren.</string>
     <string name="preference_tv_3d_automatic_switch">Automatische 3D-Umschaltung\"</string>
@@ -660,6 +662,8 @@
     <string name="preferences_display_resume_box_summary">Button um das neueste Video im Hauptbildschirm fortzusetzen anzeigen oder verbergen</string>
     <string name="preferences_display_resume_box">Wiederherstellungsfeld anzeigen</string>
     <string name="preferences_leanback_user_interface">TV-Benutzeroberfläche</string>
+    <string name="preferences_show_animation_row_summary">Auswählen, um eine Zeile mit Animations-Kacheln anzuzeigen, die separat auf Animationsvideos von Filmen und Fernsehserien zugreifen</string>
+    <string name="preferences_show_animation_row">Zeile für Animations-Kacheln anzeigen</string>
     <string name="preferences_show_watching_up_next_row_summary">Anhaken, um eine Zeile mit den gerade laufenden oder anstehenden Videos anzuzeigen</string>
     <string name="preferences_show_watching_up_next_row">Zeige Laufendes/Nächste Reihe</string>
     <string name="preferences_show_last_added_row_summary">Anhaken um eine Zeile mit den zuletzt hinzugefügten Medien anzuzeigen</string>

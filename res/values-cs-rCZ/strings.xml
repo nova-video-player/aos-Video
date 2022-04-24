@@ -504,6 +504,8 @@
     <string name="preferences_force_audio_passthrough_summary">Posílat komprimovaný zvuk přes HDMI nebo S/PDIF. ⚠ Experimentální funkce může mít za následek chybnou A/V synchronizaci</string>
     <string name="preferences_disable_downmix_title">Vypnout stereo down-mix</string>
     <string name="preferences_disable_downmix_summary">Vždy dekódovat všechny kanály a nechat Android provést down-mix v závislosti na schopnostech audio výstupu (může vyústit ve ztrátu hlasových kanálů)</string>
+    <string name="preferences_enable_downmix_androidtv_title">Vynutit stereo downmix</string>
+    <string name="preferences_enable_downmix_androidtv_summary">Vždy udělat downmix více audio kanálů do sterea (vyberte, pokud nejsou slyšet hlasové kanály)</string>
     <string name="preferences_allow_3rd_party_player">Umožnit používání jiného přehrávače</string>
     <string name="preferences_allow_3rd_party_player_summary">Pokud zvolíte přehrávání videa, budou vám systémem nabídnuty další kompatibilní aplikace pro přehrávání. Vezměte na vědomí, že některé funkce nebudou dostupné (obnovení přehrávání, záložky apod.)</string>
     <string name="preference_tv_3d_automatic_switch">Zapnout automatické přepínání TV do 3D\"</string>

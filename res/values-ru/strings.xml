@@ -530,6 +530,8 @@
     <string name="preferences_force_audio_passthrough_summary">Передача сжатого аудио через HDMI или S/PDIF. ⚠ Может привести к рассинхронизации звука и видео</string>
     <string name="preferences_disable_downmix_title">Запретить даунмикс звука в стерео</string>
     <string name="preferences_disable_downmix_summary">Всегда декодировать все каналы, микширование производится средствами ОС в зависимости от характеристик аудиовыхода (может привести к потери голосовых каналов)</string>
+    <string name="preferences_enable_downmix_androidtv_title">Принудительный вывод в стерео</string>
+    <string name="preferences_enable_downmix_androidtv_summary">Всегда выводить многоканальный звук в стерео (выбрать, если не слышны некоторые каналы)</string>
     <string name="preferences_allow_3rd_party_player">Разрешить использование другого видеоплеера</string>
     <string name="preferences_allow_3rd_party_player_summary">При запуске воспроизведения будет предложен выбор других проигрывателей. Некоторые функции при этом могут не работать (продолжить воспроизведение, закладки и др.)</string>
     <string name="preference_tv_3d_automatic_switch">Автоматическое переключение 3D TV</string>
@@ -670,6 +672,8 @@
     <string name="preferences_display_resume_box_summary">Показать/скрыть кнопку возобновления просмотра последнего видео на главном экране</string>
     <string name="preferences_display_resume_box">Отображать окно \"Возобновить\"</string>
     <string name="preferences_leanback_user_interface">Пользовательский интерфейс ТВ</string>
+    <string name="preferences_show_animation_row_summary">Отметьте, чтобы показать ряд с анимационными плитками отдельно от мультфильмов и мультсериалов</string>
+    <string name="preferences_show_animation_row">Показать ряд с анимационными плитками</string>
     <string name="preferences_show_watching_up_next_row_summary">Отметьте, чтобы показать ряд с видео, которое Вы смотрите</string>
     <string name="preferences_show_watching_up_next_row">Показывать ряд «Смотрю/Следующее»</string>
     <string name="preferences_show_last_added_row_summary">Отметьте, чтобы показать ряд с недавно добавленным видео</string>

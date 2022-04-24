@@ -515,6 +515,8 @@
     <string name="preferences_force_audio_passthrough_summary">藉由 HDMI 或 S/PDIF 傳送壓縮音訊 (⚠ 實驗性功能，可能會導致影音的不同步)</string>
     <string name="preferences_disable_downmix_title">關閉立體聲降混</string>
     <string name="preferences_disable_downmix_summary">總是解碼所有聲道，並讓安卓系統依據音訊輸出的性能來降混 (可能會導致失去部分聲道)</string>
+    <string name="preferences_enable_downmix_androidtv_title">強制立體聲降混</string>
+    <string name="preferences_enable_downmix_androidtv_summary">總是將多音軌聲道降混為立體聲 (如果聽不到語音聲道，可嘗試開啟此選項)</string>
     <string name="preferences_allow_3rd_party_player">允許使用其它的影片播放器</string>
     <string name="preferences_allow_3rd_party_player_summary">在開始撥放影片時，安卓系統會提示其它相容的播放軟體。請注意，使用其它的播放器可能會導致部分功能無法運作 (例如繼續播放、書籤等)</string>
     <string name="preference_tv_3d_automatic_switch">開啟自動 3D 電視開關</string>
@@ -655,6 +657,8 @@
     <string name="preferences_display_resume_box_summary">在主螢幕上顯示或隱藏續播最近撥放影片的按鈕</string>
     <string name="preferences_display_resume_box">顯示續播視窗</string>
     <string name="preferences_leanback_user_interface">電視使用者介面</string>
+    <string name="preferences_show_animation_row_summary">如要在主畫面將動畫影片與電影和電視劇分開顯示請勾選</string>
+    <string name="preferences_show_animation_row">顯示動畫圖塊</string>
     <string name="preferences_show_watching_up_next_row_summary">如要在選單中顯示目前和接下來要觀看影片的選項請勾選</string>
     <string name="preferences_show_watching_up_next_row">顯示「正在觀看 / 稍後觀看」</string>
     <string name="preferences_show_last_added_row_summary">如要在選單中顯示最近新增影片的選項請勾選</string>
