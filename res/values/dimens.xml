@@ -63,7 +63,7 @@
     <item name="wrap_content" format="integer" type="dimen">-2</item>
     <dimen name="lb_guidedactions_item_icon_width">@dimen/wrap_content</dimen>
 
-    <dimen name="gridview_root_bottom_padding">5dip</dimen>
+    <dimen name="gridview_root_bottom_padding">1dip</dimen>
 
     <dimen name="list_divider_height">4dip</dimen>
 
