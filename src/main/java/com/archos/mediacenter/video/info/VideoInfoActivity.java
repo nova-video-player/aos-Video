@@ -59,6 +59,7 @@ public class VideoInfoActivity extends AppCompatActivity {
     public static final String SHARED_ELEMENT_NAME = "poster";
     public static final int MAX_VIDEO = 1000;
     public static final String EXTRA_NO_ONLINE_UPDATE = "no_online_updates";
+    private static String name;
     private View mGlobalBackdrop;
     private ViewPager mViewPager;
     public static final String EXTRA_VIDEO = "VIDEO";
@@ -130,16 +131,6 @@ public class VideoInfoActivity extends AppCompatActivity {
             LinearLayoutManager layoutManager
                     = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
             mEpisodes.setLayoutManager(layoutManager);
-
-            boolean browserIsTvShow;
-            if(mPaths.size() != episodes.size()){
-                browserIsTvShow = false;
-                mEpisodes.setVisibility(View.GONE);
-            } else {
-                browserIsTvShow = true;
-                mEpisodes.setVisibility(View.VISIBLE);
-            }
-            prefs.edit().putBoolean("BrowserIsTvShow", browserIsTvShow).apply();
 
             boolean oneEpisode;
             if(episodes.size() == 1){
@@ -220,6 +211,11 @@ public class VideoInfoActivity extends AppCompatActivity {
             }
         }
 
+        boolean BrowserListOfEpisodes;
+        BrowserListOfEpisodes = name.equalsIgnoreCase("BrowserListOfEpisodes");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        prefs.edit().putBoolean("BrowserListOfEpisodes", BrowserListOfEpisodes).apply();
+
         mForceCurrentPosition = getIntent().getBooleanExtra(EXTRA_FORCE_VIDEO_SELECTION, false);
         mGlobalBackdrop = getLayoutInflater().inflate(R.layout.browser_main_video_backdrop, null);
         mViewPager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager()));
@@ -295,6 +291,7 @@ public class VideoInfoActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_CURRENT_POSITION, currentPosition);
         if(fragment!=null) {
             fragment.startActivityForResult(intent, 0);
+            name = fragment.getClass().getSimpleName();
         }else if(context instanceof AppCompatActivity)
             ((AppCompatActivity) context).startActivityForResult(intent, 0);
         else {
