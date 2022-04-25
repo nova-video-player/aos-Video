@@ -38,6 +38,7 @@
 				android:layout_height="wrap_content"
 				android:text="@string/castname"
 				android:textSize="11sp"
+				android:fontFamily="@font/gotham_narrow_book"
 				android:ellipsize="end"
 				android:maxLines="1"
 				android:textColor="#ffffff"/>
@@ -48,6 +49,7 @@
 				android:layout_height="wrap_content"
 				android:text="@string/castcharacter"
 				android:textSize="11sp"
+				android:fontFamily="@font/gotham_narrow_book"
 				android:ellipsize="end"
 				android:maxLines="1"/>
 		</LinearLayout>
