@@ -155,6 +155,7 @@
                 <TextView
                     android:id="@+id/info"
                     style="@style/BrowserTinyText.Info"
+                    android:layout_marginBottom="1dip"
                     android:layout_marginLeft="4dip"
                     android:layout_alignParentLeft="true"
                     android:layout_below="@id/name" />
