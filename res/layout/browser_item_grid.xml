@@ -106,20 +106,15 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:paddingTop="5dip" />
+                android:paddingTop="0dip" />
 
             <!-- left area = duration -->
-
-
-
-
-
 
 
             <LinearLayout
                 android:id="@+id/bottom_row"
                 android:layout_width="wrap_content"
-                android:layout_height="18dip"
+                android:layout_height="22dip"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/name"
                 android:gravity="center_vertical|right"
@@ -155,7 +150,7 @@
                 <TextView
                     android:id="@+id/info"
                     style="@style/BrowserTinyText.Info"
-                    android:layout_marginBottom="1dip"
+                    android:layout_marginBottom="0.8dip"
                     android:layout_marginLeft="4dip"
                     android:layout_alignParentLeft="true"
                     android:layout_below="@id/name" />
