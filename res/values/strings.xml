@@ -1033,6 +1033,6 @@
     <string name="actor_name">Actor name</string>
     <string name="actor_character">Actor character</string>
 
-    <string name="preference_display_actorPhoto_toast_title">Display actor photo in toast</string>
-    <string name="preference_display_actorPhoto_toast_summery">When enabled the actor photo will be displayed above name and character.</string>
+    <string name="preference_display_actorPhoto_toast_title">Actor photo in toast message</string>
+    <string name="preference_display_actorPhoto_toast_summery">When enabled the actor photo will be displayed above name and character when an actor is clicked.</string>
 </resources>
