@@ -1029,4 +1029,10 @@
 
     <string name="preference_hide_gridview_info_title">Hide Gridview title and info</string>
     <string name="preference_hide_gridview_info_summery">When enabled title, progress bar and info below poster will be hidden in Posters view mode.</string>
+
+    <string name="actor_name">Actor name</string>
+    <string name="actor_character">Actor character</string>
+
+    <string name="preference_display_actorPhoto_toast_title">Display actor photo in toast</string>
+    <string name="preference_display_actorPhoto_toast_summery">When enabled the actor photo will be displayed above name and character.</string>
 </resources>
