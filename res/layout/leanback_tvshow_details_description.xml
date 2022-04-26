@@ -79,7 +79,6 @@
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="1dp"
                 android:gravity="center_horizontal"
-                android:text="PG-13"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/grid_item_background"
                 android:textSize="@dimen/video_info_small_text"
