@@ -91,11 +91,22 @@
             android:clickable="false"
             android:indeterminate="false"
             android:paddingLeft="0dip"
-            android:progress="0" />
+            android:progress="70" />
+
+        <View
+            android:id="@+id/empty_progress"
+            android:layout_width="match_parent"
+            android:layout_height="2dip"
+            android:layout_below="@id/resume_notif"
+            android:background="@color/transparent"
+            android:indeterminateOnly="false"
+            android:indeterminate="false"
+            android:orientation="horizontal"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/resume_notif"
+            android:layout_below="@id/empty_progress"
             android:layout_marginLeft="4dip" >
 
             <!-- line 1 = name -->

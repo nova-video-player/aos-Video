@@ -118,17 +118,7 @@ public class VideoGridPresenter extends VideoPresenter{
 
         int resumePosition = video.getRemoteResumeMs()>0?video.getRemoteResumeMs():video.getResumeMs();
         boolean resume = resumePosition>0||resumePosition == PlayerActivity.LAST_POSITION_END;
-        if (resume&&holder.resume!=null) {
-            int duration = video.getDurationMs();
-            duration = duration > 0 ? duration : resumePosition>0&&resumePosition<=100? 100 : 0;//resume can now be a percentage
-            boolean displayProgressSlider = !mIsTablet&&(duration>0 ||resumePosition == PlayerActivity.LAST_POSITION_END); // Display the progress bar if we know the duration
-            setResume(displayProgressSlider,duration > 0 ? duration : 100, resumePosition, holder.resume);
 
-        } else if(holder.resume!=null){
-            // Show disabled video icon (there is no such disabled resume slider)
-            holder.resume.setVisibility(View.GONE);
-
-        }
 
         boolean hideGridviewInfo = prefs.getBoolean("hide_gridview_info", false);
         int bottomPadding = (int) mContext.getResources().getDimension(R.dimen.gridview_root_bottom_padding);
@@ -137,11 +127,25 @@ public class VideoGridPresenter extends VideoPresenter{
             holder.secondLine.setVisibility(View.GONE);
             holder.name.setVisibility(View.GONE);
             holder.resume.setVisibility(View.GONE);
+            holder.EmptyProgress.setVisibility(View.VISIBLE);
         }else{
             holder.ItemViewRoot.setPadding(0,0,0,bottomPadding);
             holder.secondLine.setVisibility(View.VISIBLE);
             holder.name.setVisibility(View.VISIBLE);
-            holder.resume.setVisibility(View.VISIBLE);
+            if (resume&&holder.resume!=null) {
+                int duration = video.getDurationMs();
+                duration = duration > 0 ? duration : resumePosition>0&&resumePosition<=100? 100 : 0;//resume can now be a percentage
+                boolean displayProgressSlider = !mIsTablet&&(duration>0 ||resumePosition == PlayerActivity.LAST_POSITION_END); // Display the progress bar if we know the duration
+                setResume(displayProgressSlider,duration > 0 ? duration : 100, resumePosition, holder.resume);
+
+                holder.EmptyProgress.setVisibility(View.GONE);
+
+            } else if(holder.resume!=null){
+                // Show disabled video icon (there is no such disabled resume slider)
+                holder.resume.setVisibility(View.GONE);
+                holder.EmptyProgress.setVisibility(View.VISIBLE);
+
+            }
         }
 
         return view;

@@ -70,6 +70,7 @@ public class CommonPresenter implements Presenter {
         TextView seasonPlot;
         TextView seasonAirDate;
         View ItemViewRoot;
+        View EmptyProgress;
     }
 
     public CommonPresenter(Context context, AdapterDefaultValues defaultValues, ExtendedClickListener onExtendedClick){
@@ -117,6 +118,7 @@ public class CommonPresenter implements Presenter {
         holder.seasonAirDate =(TextView) view.findViewById(R.id.season_air_date);
 
         holder.ItemViewRoot =(View) view.findViewById(R.id.itemViewRoot);
+        holder.EmptyProgress =(View) view.findViewById(R.id.empty_progress);
 
         view.setTag(holder);
         return view;
