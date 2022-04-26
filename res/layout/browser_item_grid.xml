@@ -146,6 +146,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:paddingTop="1dip"
                     android:layout_marginRight="8dip"
                     android:clickable="false"
                     android:src="@drawable/label_subtitles_small" />
