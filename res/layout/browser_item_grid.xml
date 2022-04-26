@@ -91,7 +91,7 @@
             android:clickable="false"
             android:indeterminate="false"
             android:paddingLeft="0dip"
-            android:progress="70" />
+            android:progress="0" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

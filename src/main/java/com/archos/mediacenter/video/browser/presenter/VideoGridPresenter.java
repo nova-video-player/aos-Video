@@ -126,7 +126,7 @@ public class VideoGridPresenter extends VideoPresenter{
 
         } else if(holder.resume!=null){
             // Show disabled video icon (there is no such disabled resume slider)
-            //holder.resume.setVisibility(View.GONE);
+            holder.resume.setVisibility(View.GONE);
 
         }
 
