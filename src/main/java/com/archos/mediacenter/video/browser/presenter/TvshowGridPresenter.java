@@ -106,12 +106,10 @@ public class TvshowGridPresenter extends TvShowPresenter{
             holder.ItemViewRoot.setPadding(0,0,0,0);
             holder.secondLine.setVisibility(View.GONE);
             holder.name.setVisibility(View.GONE);
-            holder.resume.setVisibility(View.GONE);
         }else{
             holder.ItemViewRoot.setPadding(0,0,0,bottomPadding);
             holder.secondLine.setVisibility(View.VISIBLE);
             holder.name.setVisibility(View.VISIBLE);
-            holder.resume.setVisibility(View.VISIBLE);
         }
 
         return view;
