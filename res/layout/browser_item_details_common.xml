@@ -19,12 +19,6 @@
     <!-- Movie   : director(s) -->
     <!-- TV show : season + episode numbers -->
     <!-- Other   : empty -->
-    <ImageView
-        android:id="@+id/episode_picture"
-        android:layout_width="112dp"
-        android:layout_height="@dimen/video_list_item_height"
-        android:scaleType="center"
-        />
 
     <TextView
         android:id="@+id/release_date"
