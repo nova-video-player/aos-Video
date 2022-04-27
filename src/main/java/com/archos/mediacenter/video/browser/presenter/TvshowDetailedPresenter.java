@@ -118,7 +118,7 @@ public class TvshowDetailedPresenter extends TvshowListPresenter{
         holder.release_date.setVisibility(View.GONE);
 
         holder.resume.setVisibility(View.GONE);
-            holder.detailLineTwo.setMaxLines(2);
+            holder.detailLineTwo.setMaxLines(3);
             holder.detailLineThree.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
             holder.detailLineThree.setSingleLine(false);
             holder.detailLineThree.setMaxLines(3);

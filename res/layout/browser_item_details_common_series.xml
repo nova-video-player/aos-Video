@@ -26,10 +26,18 @@
 		android:scaleType="center"
 		/>
 	<TextView
+		android:id="@+id/release_date"
+		style="@style/BrowserText.Details"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="3dip"
+		android:layout_toEndOf="@id/left_area"
+		android:layout_below="@id/name"/>
+	<TextView
 		android:id="@+id/detail_line_one"
 		style="@style/BrowserText.Details"
-		android:layout_below="@id/name"
-		android:layout_marginTop="8dip"
+		android:layout_below="@id/release_date"
+		android:layout_marginTop="3dip"
 		android:layout_toRightOf="@id/left_area"
 		android:singleLine="true" />
 
@@ -41,7 +49,7 @@
 		android:id="@+id/detail_line_two"
 		style="@style/BrowserText.Details"
 		android:layout_below="@id/detail_line_one"
-		android:layout_marginTop="4dip"
+		android:layout_marginTop="3dip"
 		android:layout_toRightOf="@id/left_area"
 		android:ellipsize="end"
 		android:textStyle="italic" />
@@ -68,15 +76,30 @@
 	<!-- Movie or TV show  : release date and rating -->
 	<!-- Other             : empty -->
 
-	<include
-		android:id="@+id/rating_and_date"
+	<LinearLayout
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/detail_line_three"
-		android:layout_marginTop="14dip"
 		android:layout_alignParentBottom="true"
-		android:layout_toRightOf="@id/left_area"
-		layout="@layout/browser_item_details_date_and_rating_series" />
+		android:layout_marginTop="3dip"
+		android:layout_toRightOf="@id/left_area">
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical">
+			<ImageView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="0.9dp"
+				android:src="@drawable/little_star"/>
+			<TextView
+				android:id="@+id/rating"
+				style="@style/BrowserText.Details"
+				android:layout_marginStart="1dp"
+				android:drawablePadding="2dip"/>
+		</LinearLayout>
+	</LinearLayout>
 
 	<!--
 		 (i) symbol.
