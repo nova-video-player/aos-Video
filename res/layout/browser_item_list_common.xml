@@ -103,7 +103,8 @@
 
     <TextView
         android:id="@+id/name"
-        style="@style/BrowserText.Name.Video"
+        style="@style/BrowserText.Name"
+        android:paddingTop="8dip"
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
         android:layout_marginRight="18dip"
