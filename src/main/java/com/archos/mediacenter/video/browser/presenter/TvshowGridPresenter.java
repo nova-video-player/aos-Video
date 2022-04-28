@@ -112,6 +112,8 @@ public class TvshowGridPresenter extends TvShowPresenter{
             holder.name.setVisibility(View.VISIBLE);
         }
 
+        holder.EmptyProgress.setVisibility(View.GONE);
+
         return view;
     }
 }

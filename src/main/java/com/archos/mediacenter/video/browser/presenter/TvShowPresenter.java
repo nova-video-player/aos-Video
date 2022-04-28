@@ -65,7 +65,6 @@ public class TvShowPresenter extends CommonPresenter implements Presenter {
         holder.subtitle.setVisibility(View.VISIBLE);
         holder.subtitle.setEnabled(false);
         holder.resume.setVisibility(View.GONE);
-        holder.EmptyProgress.setVisibility(View.GONE);
         if(holder.expanded!=null)
             holder.expanded.setVisibility(View.GONE);
 
