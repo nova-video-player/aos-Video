@@ -84,6 +84,8 @@ public class VideoInfoActivity extends AppCompatActivity {
     private static final float MILLISECONDS_PER_INCH_PIC = 45f; //default is 25f (bigger = slower)
     private static final float MILLISECONDS_PER_INCH_NUM = 85f;
 
+    private boolean BrowserListOfEpisodes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (DBG) Log.d(TAG,"onCreate");
@@ -211,8 +213,9 @@ public class VideoInfoActivity extends AppCompatActivity {
             }
         }
 
-        boolean BrowserListOfEpisodes;
-        BrowserListOfEpisodes = name.equalsIgnoreCase("BrowserListOfEpisodes");
+        if (name!=null) {
+            BrowserListOfEpisodes = name.equalsIgnoreCase("BrowserListOfEpisodes");
+        }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         prefs.edit().putBoolean("BrowserListOfEpisodes", BrowserListOfEpisodes).apply();
 
