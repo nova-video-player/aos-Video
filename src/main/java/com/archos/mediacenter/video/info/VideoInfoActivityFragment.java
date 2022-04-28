@@ -1813,6 +1813,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 else{
                     mScrapTrailersContainer.setVisibility(View.GONE);
                 }
+            } else { // tag is null
+                mScrapContentRating.setVisibility(View.GONE);
+                mScrapContentRatingContainer.setVisibility(View.GONE);
             }
         }
     }
