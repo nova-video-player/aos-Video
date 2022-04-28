@@ -444,11 +444,16 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         boolean mIsLandscapeMode = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         String mPosterPath = prefs.getString("mPosterPath", null);
-        if(mPosterPath!=null && mIsLandscapeMode) {
-            Picasso.get().load(new File(mPosterPath)).into(poster);
+        if(mIsLandscapeMode){
+            if(mPosterPath ==null || mPosterPath.isEmpty()) {
+                poster.setVisibility(View.GONE);
+            }else{
+                Picasso.get().load(new File(mPosterPath)).into(poster);
+            }
         }else{
             poster.setVisibility(View.GONE);
         }
+
 
         ImageButton mForwardButton = (ImageButton) v.findViewById(R.id.forward);
         if (mForwardButton != null) {
