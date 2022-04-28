@@ -121,6 +121,8 @@ public class SeasonGridPresenter extends SeasonPresenter{
         int bottomPadding = (int) mContext.getResources().getDimension(R.dimen.gridview_root_bottom_padding);
         holder.ItemViewRoot.setPadding(0,0,0,bottomPadding);
 
+        holder.EmptyProgress.setVisibility(View.GONE);
+
         return view;
     }
 }
