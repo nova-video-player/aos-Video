@@ -127,7 +127,7 @@ public class VideoGridPresenter extends VideoPresenter{
             holder.secondLine.setVisibility(View.GONE);
             holder.name.setVisibility(View.GONE);
             holder.resume.setVisibility(View.GONE);
-            holder.EmptyProgress.setVisibility(View.VISIBLE);
+            holder.EmptyProgress.setVisibility(View.GONE);
         }else{
             holder.ItemViewRoot.setPadding(0,0,0,bottomPadding);
             holder.secondLine.setVisibility(View.VISIBLE);
