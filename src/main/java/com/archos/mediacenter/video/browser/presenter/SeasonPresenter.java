@@ -75,7 +75,6 @@ public class SeasonPresenter extends CommonPresenter implements Presenter {
         holder.subtitle.setEnabled(false);
 
         holder.resume.setVisibility(View.GONE);
-        holder.EmptyProgress.setVisibility(View.GONE);
         if(holder.expanded!=null)
             holder.expanded.setVisibility(View.GONE);
 
