@@ -2610,6 +2610,11 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 }
             }
 
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            if(mPosterPath!=null) {
+                prefs.edit().putString("mPosterPath", mPosterPath).apply();
+            }
+
             switch (mVideoInfo.videoStereo) {
                 case 4: // Anaglyph mode
                     viewMode = VideoEffect.ANAGLYPH_MODE;

@@ -63,7 +63,9 @@ import com.archos.mediacenter.video.player.tvmenu.TVCardView;
 import com.archos.mediacenter.video.player.tvmenu.TVMenuAdapter;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Formatter;
@@ -436,6 +438,16 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }
         if(lowerTouchZone != null && mPlayPauseOnTouchActivated) {
             mLowerZone = true;
+        }
+
+        ImageView poster = v.findViewById(R.id.poster);
+        boolean mIsLandscapeMode = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String mPosterPath = prefs.getString("mPosterPath", null);
+        if(mPosterPath!=null && mIsLandscapeMode) {
+            Picasso.get().load(new File(mPosterPath)).into(poster);
+        }else{
+            poster.setVisibility(View.GONE);
         }
 
         ImageButton mForwardButton = (ImageButton) v.findViewById(R.id.forward);
