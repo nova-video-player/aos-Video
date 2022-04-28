@@ -20,8 +20,7 @@ for informations (duration for files, number of files for directories).
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_alignParentLeft="true"
-		android:layout_alignParentTop="true"
-		android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name" >
+		android:layout_alignParentTop="true">
 
 		<!-- Poster on the left side -->
 
@@ -30,47 +29,54 @@ for informations (duration for files, number of files for directories).
 			xmlns:card_view="http://schemas.android.com/apk/res-auto"
 			card_view:cardCornerRadius="4dp"
 			android:layout_width="wrap_content"
+			android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_horizontal"	>
-			<ImageView
-				android:id="@+id/thumbnail"
-				android:layout_width="@dimen/video_details_poster_width"
-				android:layout_height="@dimen/video_details_poster_height"
-				android:background="@color/default_icon_background"
-				android:scaleType="center" />
+			<RelativeLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:gravity="center"
+				android:orientation="vertical" >
+				<ImageView
+					android:id="@+id/thumbnail"
+					android:layout_width="@dimen/video_details_poster_width"
+					android:layout_height="@dimen/video_details_poster_height"
+					android:background="@color/default_icon_background"
+					android:scaleType="center" />
+				<ImageView
+					android:id="@+id/flag_3d"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignBottom="@id/thumbnail"
+					android:layout_alignRight="@id/thumbnail"
+					android:layout_marginBottom="@dimen/video_3d_label_margin_list"
+					android:layout_marginRight="@dimen/video_3d_label_margin_list"
+					app:srcCompat="@drawable/label_3d_small"
+					android:visibility="gone" />
+
+				<ImageView
+					android:id="@+id/trakt_watched"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignRight="@id/thumbnail"
+					android:layout_alignTop="@id/thumbnail"
+					android:layout_marginRight="-2px"
+					android:layout_marginTop="-2px"
+					app:srcCompat="@drawable/watched_icon_corner"
+					android:visibility="gone" />
+
+				<ImageView
+					android:id="@+id/trakt_library"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignLeft="@id/thumbnail"
+					android:layout_alignTop="@id/thumbnail"
+					android:layout_marginLeft="@dimen/video_list_trakt_library_margin_left"
+					app:srcCompat="@drawable/label_trakt_library_small"
+					android:visibility="gone" />
+			</RelativeLayout>
 		</androidx.cardview.widget.CardView>
-
-		<ImageView
-			android:id="@+id/flag_3d"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignBottom="@id/series_thumbnail_cardview"
-			android:layout_alignRight="@id/series_thumbnail_cardview"
-			android:layout_marginBottom="@dimen/video_3d_label_margin_grid"
-			android:layout_marginRight="@dimen/video_3d_label_margin_grid"
-			app:srcCompat="@drawable/label_3d"
-			android:visibility="gone" />
-
-		<ImageView
-			android:id="@+id/trakt_watched"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignRight="@id/series_thumbnail_cardview"
-			android:layout_alignTop="@id/series_thumbnail_cardview"
-			android:layout_marginRight="-2px"
-			android:layout_marginTop="-2px"
-			app:srcCompat="@drawable/watched_icon_corner"
-			android:visibility="gone" />
-
-		<ImageView
-			android:id="@+id/trakt_library"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignLeft="@id/series_thumbnail_cardview"
-			android:layout_alignTop="@id/series_thumbnail_cardview"
-			android:layout_marginLeft="@dimen/video_trakt_library_margin_left"
-			app:srcCompat="@drawable/label_trakt_library"
-			android:visibility="gone" />
 	</RelativeLayout>
 
 	<include layout="@layout/browser_item_details_common_series" />
