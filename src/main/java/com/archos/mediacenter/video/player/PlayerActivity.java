@@ -2665,7 +2665,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             }
         }
 
-        mPlayerController.setVideoTitle(mTitle);
+        //mPlayerController.setVideoTitle(mTitle);
 
         postVideoInfoAndPrepared();
     }
