@@ -24,6 +24,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
@@ -35,6 +36,7 @@ import androidx.preference.PreferenceManager;
 import androidx.appcompat.app.ActionBar;
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -45,11 +47,13 @@ import android.view.View.OnFocusChangeListener;
 import android.view.View.OnGenericMotionListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -440,6 +444,15 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             mLowerZone = true;
         }
 
+        ViewOutlineProvider mViewOutlineProvider = new ViewOutlineProvider() {
+            @Override
+            public void getOutline(final View view, final Outline outline) {
+                float cornerRadiusDP = 4f;
+                float cornerRadius = TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, cornerRadiusDP, mContext.getResources().getDisplayMetrics());
+                outline.setRoundRect(0, 0, view.getWidth(), (int)(view.getHeight() + cornerRadius), cornerRadius);
+            }
+        };
+
         ImageView poster = v.findViewById(R.id.poster);
         boolean mIsLandscapeMode = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -452,6 +465,18 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             }
         }else{
             poster.setVisibility(View.GONE);
+        }
+
+        LinearLayout linearLayout = v.findViewById(R.id.poster_cardview_layout);
+        linearLayout.setOutlineProvider(mViewOutlineProvider);
+        linearLayout.setClipToOutline(true);
+
+        TextView title = v.findViewById(R.id.title);
+        String mTitle = prefs.getString("mTitle", null);
+        if(mIsLandscapeMode){
+            title.setText(mTitle);
+        }else{
+            title.setVisibility(View.GONE);
         }
 
 

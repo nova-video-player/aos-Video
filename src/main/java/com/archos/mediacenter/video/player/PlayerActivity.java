@@ -2617,6 +2617,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 prefs.edit().putString("mPosterPath", "").apply();
             }
 
+            prefs.edit().putString("mTitle", mTitle).apply();
+
             switch (mVideoInfo.videoStereo) {
                 case 4: // Anaglyph mode
                     viewMode = VideoEffect.ANAGLYPH_MODE;

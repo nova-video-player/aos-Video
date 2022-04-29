@@ -76,19 +76,31 @@
         android:orientation="vertical"
         android:visibility="invisible" >
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/poster_cardview"
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            card_view:cardCornerRadius="4dp"
-            android:layout_marginStart="4dip"
+        <LinearLayout
+            android:id="@+id/poster_cardview_layout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/poster"
-                android:layout_width="100dp"
-                android:layout_height="150dp"
-                android:scaleType="centerCrop" />
-        </androidx.cardview.widget.CardView>
+            android:layout_height="wrap_content"
+            android:background="@drawable/player_bar_2014">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/poster_cardview"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                card_view:cardCornerRadius="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/poster"
+                    android:layout_width="100dp"
+                    android:layout_height="150dp"
+                    android:scaleType="centerCrop"/>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_toEndOf="@+id/poster_cardview"
+            style="@style/BrowserText.Title"
+            />
 
         <RelativeLayout
             android:layout_width="fill_parent"
