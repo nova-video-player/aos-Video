@@ -18,12 +18,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import androidx.loader.content.Loader;
+import androidx.preference.PreferenceManager;
+
 import android.util.SparseArray;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.FilmsByAlphaLoader;
+import com.archos.mediacenter.video.browser.loader.MoviesByAlphaLoader;
 import com.archos.mediacenter.video.leanback.VideosByFragment;
 import com.archos.mediacenter.video.utils.SortOrder;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 
 
@@ -32,6 +36,7 @@ public class MoviesByAlphaFragment extends VideosByFragment {
     private static final String SORT_PARAM_KEY = MoviesByAlphaFragment.class.getName() + "_SORT";
 
     private CharSequence[] mSortOrderEntries;
+    private boolean showAnimeTilesRow;
 
     private static SparseArray<MoviesSortOrderEntry> sortOrderIndexer = new SparseArray<MoviesSortOrderEntry>();
     static {
@@ -49,11 +54,14 @@ public class MoviesByAlphaFragment extends VideosByFragment {
         setTitle(getString(R.string.movies_by_alpha));
 
         mSortOrderEntries = MoviesSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
+        showAnimeTilesRow = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
     }
 
     @Override
     protected Loader<Cursor> getSubsetLoader(Context context) {
-        return new FilmsByAlphaLoader(context);
+        if (showAnimeTilesRow)
+            return new FilmsByAlphaLoader(context);
+        else return new MoviesByAlphaLoader(context);
     }
 
     @Override

@@ -136,6 +136,14 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/preferences_leanback_user_interface" android:key="category_leanback_user_interface"
         app:iconSpaceReserved="false" >
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="show_animation_row"
+            android:summary="@string/preferences_separate_animation_from_movies_summary"
+            android:title="@string/preferences_separate_animation_from_movies"
+            app:iconSpaceReserved="false"/>
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="show_watching_up_next_row"

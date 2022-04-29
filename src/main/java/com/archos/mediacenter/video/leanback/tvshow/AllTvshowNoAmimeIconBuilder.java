@@ -1,4 +1,4 @@
-// Copyright 2019 Courville Software
+// Copyright 2022 Courville Software
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * Build a bitmap composed of 8 tvshow posters to be used in the main leanback activity
  */
-public class AllTvshowsIconBuilder {
+public class AllTvshowNoAmimeIconBuilder {
 
     final static String[] PROJECTION = {
             VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER,
@@ -47,16 +47,17 @@ public class AllTvshowsIconBuilder {
 
     static String SELECTION;
 
-    private static final String TAG = "AllTvshowsIconBuilder";
+    private static final String TAG = "AllTvshowNoAmimeIconBuilder";
     final Context mContext;
     final int mWidth;
     final int mHeight;
 
-    public AllTvshowsIconBuilder(Context context) {
+    public AllTvshowNoAmimeIconBuilder(Context context) {
         mContext = context;
         SELECTION = VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER + "=0 AND " +
                     VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " IS NOT NULL AND " +
-                    VideoStore.Video.VideoColumns.SCRAPER_S_COVER + " IS NOT NULL" +
+                    VideoStore.Video.VideoColumns.SCRAPER_S_COVER + " IS NOT NULL AND " +
+                    "( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%')" +
                     ") GROUP BY (" + VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID ;
         mWidth  = context.getResources ().getDimensionPixelSize(R.dimen.all_tvshows_icon_width);
         mHeight  = context.getResources ().getDimensionPixelSize(R.dimen.all_tvshows_icon_height);

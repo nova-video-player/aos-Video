@@ -58,6 +58,7 @@ import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.browser.adapters.mappers.AnimesNShowsMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
+import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsNoAnimeLoader;
 import com.archos.mediacenter.video.browser.loader.AnimesLoader;
 import com.archos.mediacenter.video.browser.loader.AnimesNShowsLoader;
@@ -78,8 +79,10 @@ import com.archos.mediacenter.video.leanback.collections.AllAnimeCollectionsGrid
 import com.archos.mediacenter.video.leanback.collections.AllCollectionsGridActivity;
 import com.archos.mediacenter.video.leanback.collections.AnimeCollectionsIconBuilder;
 import com.archos.mediacenter.video.leanback.collections.CollectionsIconBuilder;
+import com.archos.mediacenter.video.leanback.collections.CollectionsMoviesIconBuilder;
 import com.archos.mediacenter.video.leanback.filebrowsing.ExtStorageListingActivity;
 import com.archos.mediacenter.video.leanback.filebrowsing.LocalListingActivity;
+import com.archos.mediacenter.video.leanback.movies.AllFilmsIconBuilder;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridActivity;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesIconBuilder;
 import com.archos.mediacenter.video.leanback.movies.MoviesByAlphaActivity;
@@ -95,6 +98,7 @@ import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
 import com.archos.mediacenter.video.leanback.tvshow.AllAnimeShowsGridActivity;
 import com.archos.mediacenter.video.leanback.tvshow.AllAnimeShowsIconBuilder;
+import com.archos.mediacenter.video.leanback.tvshow.AllTvshowNoAmimeIconBuilder;
 import com.archos.mediacenter.video.leanback.tvshow.AllTvshowsGridActivity;
 import com.archos.mediacenter.video.leanback.tvshow.AllTvshowsIconBuilder;
 import com.archos.mediacenter.video.leanback.tvshow.EpisodesByDateActivity;
@@ -121,9 +125,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     public final static boolean FEATURE_WATCH_UP_NEXT = false;
 
     private static final String PREF_PRIVATE_MODE = "PREF_PRIVATE_MODE";
-
-
-    // TODO MARC during scraping reload ID 43 and 42 45 it should not?
 
     final static int LOADER_ID_LAST_ADDED = 42;
     final static int LOADER_ID_LAST_PLAYED = 43;
@@ -178,6 +179,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private static Box mAllAnimeCollectionsBox;
     private static Box mAllAnimeShowsBox;
 
+    private static boolean mSeparateAnimeFromShowMovie;
     private boolean mShowWatchingUpNextRow;
     private boolean mShowLastAddedRow;
     private boolean mShowLastPlayedRow;
@@ -261,6 +263,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         super.onViewCreated(view, savedInstanceState);
         mOverlay = new Overlay(this);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        mSeparateAnimeFromShowMovie = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
         mShowWatchingUpNextRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_WATCHING_UP_NEXT_ROW, VideoPreferencesCommon.SHOW_WATCHING_UP_NEXT_ROW_DEFAULT);
         if (FEATURE_WATCH_UP_NEXT) mShowWatchingUpNextRow = true;
         else mShowWatchingUpNextRow = false;
@@ -313,7 +316,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_TV_SHOWS, tvshowArgs, this);
         }
         LoaderManager.getInstance(this).initLoader(LOADER_ID_NON_SCRAPED_VIDEOS_COUNT, null, this);
-        if (mShowAnimesRow) {
+        if (mShowAnimesRow && mSeparateAnimeFromShowMovie) {
             Bundle animesArgs = new Bundle();
             animesArgs.putString("sort", mAnimesSortOrder);
             LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_ANIMES, animesArgs, this);
@@ -336,6 +339,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         updateBackground();
         mActivity.registerReceiver(mUpdateReceiver, mUpdateFilter);
 
+        // TODO MARC redo layout and loaders if newSeparateAnimeFromShowMovie != mSeparateAnimeFromShowMovie
+        boolean newSeparateAnimeFromShowMovie = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
         // treat first change in settings
         boolean newShowWatchingUpNextRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_WATCHING_UP_NEXT_ROW, VideoPreferencesCommon.SHOW_WATCHING_UP_NEXT_ROW_DEFAULT);
         if (FEATURE_WATCH_UP_NEXT) newShowWatchingUpNextRow = true;
@@ -372,7 +377,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_PLAYED, null, this);
 
         boolean newShowMoviesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_MOVIES_ROW, VideoPreferencesCommon.SHOW_ALL_MOVIES_ROW_DEFAULT);
-        if (newShowMoviesRow != mShowMoviesRow) {
+        if (newShowMoviesRow != mShowMoviesRow || newSeparateAnimeFromShowMovie != mSeparateAnimeFromShowMovie) {
             log.debug("onResume: preference changed, display all movies row: " + newShowMoviesRow + " -> updating");
             mShowMoviesRow = newShowMoviesRow;
             if (mShowMoviesRow) restartMoviesLoader = true;
@@ -393,7 +398,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             updateMoviesRow(null); // will be done on loader restart
 
         boolean newShowTvshowsRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_TV_SHOWS_ROW, VideoPreferencesCommon.SHOW_ALL_TV_SHOWS_ROW_DEFAULT);
-        if (newShowTvshowsRow != mShowTvshowsRow) {
+        if (newShowTvshowsRow != mShowTvshowsRow || newSeparateAnimeFromShowMovie != mSeparateAnimeFromShowMovie) {
             log.debug("onResume: preference changed, display all tv shows row: " + newShowTvshowsRow + " -> updating");
             mShowTvshowsRow = newShowTvshowsRow;
             if (mShowTvshowsRow) restartTvshowsLoader = true;
@@ -414,13 +419,14 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             updateTvShowsRow(null); // will be done on loader restart
 
         boolean newShowAnimesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_ANIMES_ROW, VideoPreferencesCommon.SHOW_ALL_ANIMES_ROW_DEFAULT);
-        if (newShowAnimesRow != mShowAnimesRow) {
+        // TODO MARC if showAnimeTilesRow = || mSeparateAnimeFromShowMovie != mShowAnimeTilesRow
+        if (newShowAnimesRow != mShowAnimesRow && mSeparateAnimeFromShowMovie) {
             log.debug("onResume: preference changed, display all animes row: " + newShowAnimesRow + " -> updating");
             mShowAnimesRow = newShowAnimesRow;
             if (mShowAnimesRow) restartAnimesLoader = true;
         }
         String newAnimesSortOrder = mPrefs.getString(VideoPreferencesCommon.KEY_ANIMES_SORT_ORDER, AnimesLoader.DEFAULT_SORT);
-        if (mShowAnimesRow && !newAnimesSortOrder.equals(mAnimesSortOrder)) {
+        if (mShowAnimesRow && !newAnimesSortOrder.equals(mAnimesSortOrder) && mSeparateAnimeFromShowMovie) {
             log.debug("onResume: preference changed, showing animes row and sort order changed -> updating");
             mAnimesSortOrder = newAnimesSortOrder;
             restartAnimesLoader = true;
@@ -432,7 +438,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             args.putString("sort", mAnimesSortOrder);
             LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_ANIMES, args, this);
         } else
-            updateAnimesRow(null); // will be done on loader restart
+            if (mSeparateAnimeFromShowMovie) updateAnimesRow(null); // will be done on loader restart
 
         findAndUpdatePrivateModeIcon();
     }
@@ -531,6 +537,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         mAnimeRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         mAnimeRow = new ListRow(ROW_ID_ANIMES, new HeaderItem(getString(R.string.animes)), mAnimeRowAdapter);
+        // TODO MARC do it only if mSeparateAnimeFromShowMovie ?
         buildAllAnimesBox();
         mAnimeRowAdapter.add(mAllAnimesBox);
         mAnimeRowAdapter.add(new Box(Box.ID.ANIMES_BY_GENRE, getString(R.string.animes_by_genre), R.drawable.genres_banner));
@@ -553,6 +560,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         mTvshowsAdapter.setMapper(new CompatibleCursorMapperConverter(new TvshowCursorMapper()));
         mTvshowsRow = new ListRow(ROW_ID_ALL_TVSHOWS, new HeaderItem(getString(R.string.all_tvshows)), mTvshowsAdapter);
 
+        // TODO MARC only if mSeparateAnimeFromShowMovie
         // this is for the all animes row not the animation row
         mAnimesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
         mAnimesAdapter.setMapper(new CompatibleCursorMapperConverter(new AnimesNShowsMapper()));
@@ -606,7 +614,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private static class buildAllMoviesBoxTask extends AsyncTask<Void, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(Void... params) {
-            Bitmap iconBitmap = new AllMoviesIconBuilder(mActivity).buildNewBitmap();
+            Bitmap iconBitmap;
+            if (mSeparateAnimeFromShowMovie) iconBitmap = new AllFilmsIconBuilder(mActivity).buildNewBitmap();
+            else iconBitmap = new AllMoviesIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
         }
         @Override
@@ -628,7 +638,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private static class buildAllCollectionsBoxTask extends AsyncTask<Void, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(Void... params) {
-            Bitmap iconBitmap = new CollectionsIconBuilder(mActivity).buildNewBitmap();
+            Bitmap iconBitmap;
+            if (mSeparateAnimeFromShowMovie) iconBitmap = new CollectionsIconBuilder(mActivity).buildNewBitmap();
+            else iconBitmap = new CollectionsMoviesIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
         }
         @Override
@@ -716,7 +728,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private static class buildAllTvshowsBoxTask extends AsyncTask<Void, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(Void... params) {
-            Bitmap iconBitmap = new AllTvshowsIconBuilder(mActivity).buildNewBitmap();
+            Bitmap iconBitmap;
+            if (mSeparateAnimeFromShowMovie) iconBitmap = new AllTvshowNoAmimeIconBuilder(mActivity).buildNewBitmap();
+            else iconBitmap = new AllTvshowsIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
         }
         @Override
@@ -1025,16 +1039,32 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 return new LastPlayedLoader(mActivity);
             case LOADER_ID_ALL_MOVIES:
                 log.debug("onCreateLoader ALL_MOVIES");
-                if (args == null) return new FilmsLoader(mActivity, true);
-                else return new FilmsLoader(mActivity, args.getString("sort"), true, true);
+                if (mSeparateAnimeFromShowMovie) {
+                    if (args == null) return new FilmsLoader(mActivity, true);
+                    else return new FilmsLoader(mActivity, args.getString("sort"), true, true);
+                } else {
+                    if (args == null) return new MoviesLoader(mActivity, true);
+                    else return new MoviesLoader(mActivity, args.getString("sort"), true, true);
+                }
             case LOADER_ID_ALL_TV_SHOWS:
                 log.debug("onCreateLoader ALL_TV_SHOWS");
-                if (args == null) return new AllTvshowsNoAnimeLoader(mActivity);
-                else return new AllTvshowsNoAnimeLoader(mActivity, args.getString("sort"), true);
+                if (mSeparateAnimeFromShowMovie) {
+                    if (args == null) return new AllTvshowsNoAnimeLoader(mActivity);
+                    else return new AllTvshowsNoAnimeLoader(mActivity, args.getString("sort"), true);
+                } else {
+                    if (args == null) return new AllTvshowsLoader(mActivity);
+                    else return new AllTvshowsLoader(mActivity, args.getString("sort"), true);
+                }
             case LOADER_ID_ALL_ANIMES:
+                // TODO MARC check not clear if needed if mSeparateAnimeFromShowMovie false
                 log.debug("onCreateLoader ALL_ANIMES");
-                if (args == null) return new AnimesNShowsLoader(mActivity);
-                else return new AnimesNShowsLoader(mActivity, args.getString("sort"), true);
+                if (mSeparateAnimeFromShowMovie) {
+                    if (args == null) return new AnimesNShowsLoader(mActivity);
+                    else return new AnimesNShowsLoader(mActivity, args.getString("sort"), true);
+                } else {
+                    if (args == null) return new AnimesLoader(mActivity, true);
+                    else return new AnimesLoader(mActivity, args.getString("sort"), true, true);
+                }
             case LOADER_ID_NON_SCRAPED_VIDEOS_COUNT:
                 log.debug("onCreateLoader NON_SCRAPED");
                 return new NonScrapedVideosCountLoader(mActivity);
@@ -1042,6 +1072,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 return null;
         }
     }
+
+    // TODO MARC finished here
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
@@ -1087,18 +1119,21 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                             buildAllTvshowsBox();
                         updateTvShowsRow(null);
                     }
-                    if (mShowAnimesRow) {
-                        log.debug("onLoadFinished: mShowAnimesRow --> restart ALL_ANIMES loader");
-                        Bundle args = new Bundle();
-                        args.putString("sort", mAnimesSortOrder);
-                        LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_ANIMES, args, this);
-                    } else {
-                        log.debug("onLoadFinished: buildAllAnimesBox & buildAllAnimeShowsBox");
-                        if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor)) {
-                            buildAllAnimesBox();
-                            buildAllAnimeShowsBox();
+                    // TODO MARC check if we do not need to disable row
+                    if (mSeparateAnimeFromShowMovie) {
+                        if (mShowAnimesRow) {
+                            log.debug("onLoadFinished: mShowAnimesRow --> restart ALL_ANIMES loader");
+                            Bundle args = new Bundle();
+                            args.putString("sort", mAnimesSortOrder);
+                            LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_ANIMES, args, this);
+                        } else {
+                            log.debug("onLoadFinished: buildAllAnimesBox & buildAllAnimeShowsBox");
+                            if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor)) {
+                                buildAllAnimesBox();
+                                buildAllAnimeShowsBox();
+                            }
+                            updateAnimesRow(null);
                         }
-                        updateAnimesRow(null);
                     }
                 }
                 break;
@@ -1120,7 +1155,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 break;
             case LOADER_ID_ALL_ANIMES:
                 log.debug("onLoadFinished: AllAnimes cursor ready with " + cursor.getCount() + " entries, updating row/box");
-                if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor))
+                if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor) && mSeparateAnimeFromShowMovie)
                     updateAnimesRow(cursor);
                 break;
             case LOADER_ID_NON_SCRAPED_VIDEOS_COUNT:

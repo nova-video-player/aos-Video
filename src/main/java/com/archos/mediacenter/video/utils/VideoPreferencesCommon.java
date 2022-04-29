@@ -88,6 +88,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private static final String TAG = VideoPreferencesCommon.class.getSimpleName();
     private static final boolean DBG = false;
 
+    // TODO MARC if mSeparateAnimeFromShowMovie is false remove possibility to add animations row and maintain it if changed
+
     // should we provide adaptive refresh rate for all (not only on TV)
     private static final boolean REFRESHRATE_FORALL = true;
 
@@ -105,7 +107,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_ACTIVATE_REFRESHRATE_SWITCH = "enable_tv_refreshrate_switch";
     public static final String KEY_ACTIVATE_3D_SWITCH = "activate_tv_switch";
     public static final String KEY_ADULT_SCRAPE = "enable_adult_scrap_key";
-    
+
+    public static final String KEY_SEPARATE_ANIME_MOVIE_SHOW = "separate_anime_movie_show";
     public static final String KEY_SHOW_WATCHING_UP_NEXT_ROW = "show_watching_up_next_row";
     public static final String KEY_SHOW_LAST_ADDED_ROW = "show_last_added_row";
     public static final String KEY_SHOW_LAST_PLAYED_ROW = "show_last_played_row";
@@ -144,6 +147,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_SMB2 = "pref_smbv2";
     public static final String KEY_SMB_RESOLV = "pref_smb_resolv";
 
+    public static final boolean SEPARATE_ANIME_MOVIE_SHOW_DEFAULT = true;
     // TODO: disabled until issue #186 is fixed
     public static final boolean SHOW_WATCHING_UP_NEXT_ROW_DEFAULT = true;
     public static final boolean SHOW_LAST_ADDED_ROW_DEFAULT = true;

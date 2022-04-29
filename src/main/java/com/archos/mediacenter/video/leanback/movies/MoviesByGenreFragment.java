@@ -16,22 +16,26 @@ package com.archos.mediacenter.video.leanback.movies;
 
 import android.content.Context;
 import androidx.loader.content.Loader;
+import androidx.preference.PreferenceManager;
+
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.SparseArray;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.FilmsByGenreLoader;
+import com.archos.mediacenter.video.browser.loader.MoviesByGenreLoader;
 import com.archos.mediacenter.video.leanback.VideosByFragment;
 import com.archos.mediacenter.video.utils.SortOrder;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
-
 
 public class MoviesByGenreFragment extends VideosByFragment {
 
     private static final String SORT_PARAM_KEY = MoviesByGenreFragment.class.getName() + "_SORT";
 
     private CharSequence[] mSortOrderEntries;
+    private boolean showAnimeTilesRow;
 
     private static SparseArray<MoviesSortOrderEntry> sortOrderIndexer = new SparseArray<MoviesSortOrderEntry>();
     static {
@@ -47,13 +51,15 @@ public class MoviesByGenreFragment extends VideosByFragment {
         super.onActivityCreated(savedInstanceState);
 
         setTitle(getString(R.string.movies_by_genre));
-
         mSortOrderEntries = MoviesSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
+        showAnimeTilesRow = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
     }
 
     @Override
     protected Loader<Cursor> getSubsetLoader(Context context) {
-        return new FilmsByGenreLoader(context);
+        if (showAnimeTilesRow)
+            return new FilmsByGenreLoader(context);
+        else return new MoviesByGenreLoader(context);
     }
 
     @Override

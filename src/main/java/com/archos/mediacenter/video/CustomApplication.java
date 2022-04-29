@@ -56,6 +56,7 @@ import com.squareup.picasso.Picasso;
 
 import httpimage.FileSystemPersistence;
 import httpimage.HttpImageManager;
+import io.sentry.Sentry;
 import io.sentry.SentryLevel;
 import io.sentry.android.core.SentryAndroid;
 
