@@ -457,7 +457,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         boolean mIsLandscapeMode = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         String mPosterPath = prefs.getString("mPosterPath", null);
-        if(mIsLandscapeMode){
+        boolean mDisplayPosterInPlayer = prefs.getBoolean("display_poster_player", true);
+        if(mIsLandscapeMode && mDisplayPosterInPlayer){
             if(mPosterPath ==null || mPosterPath.isEmpty()) {
                 poster.setVisibility(View.GONE);
             }else{

@@ -1035,4 +1035,7 @@
 
     <string name="preference_display_actorPhoto_toast_title">Actor photo in toast message</string>
     <string name="preference_display_actorPhoto_toast_summery">When enabled the actor photo will be displayed above name and character when an actor is clicked.</string>
+
+    <string name="preference_display_poster_player_title">Display poster in video player</string>
+    <string name="preference_display_poster_player_summary">Displays Movie or Episode poster image in the playback screen in landscape mode.</string>
 </resources>
