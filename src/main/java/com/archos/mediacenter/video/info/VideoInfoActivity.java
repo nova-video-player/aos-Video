@@ -107,6 +107,12 @@ public class VideoInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_video_info);
         mViewPager = (ViewPager)findViewById(R.id.pager);
 
+        if (name!=null) {
+            BrowserListOfEpisodes = name.equalsIgnoreCase("BrowserListOfEpisodes");
+        }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        prefs.edit().putBoolean("BrowserListOfEpisodes", BrowserListOfEpisodes).apply();
+
         if(mCurrentVideo instanceof Episode) {
             Episode episodeVideo = (Episode) mCurrentVideo;
             long onlineId = episodeVideo.getOnlineId();
@@ -125,8 +131,6 @@ public class VideoInfoActivity extends AppCompatActivity {
                 }
                 cursor.close();
             }
-
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
             // Set Episode RecyclerView
             RecyclerView mEpisodes = (RecyclerView)findViewById(R.id.episode_selector);
@@ -207,17 +211,11 @@ public class VideoInfoActivity extends AppCompatActivity {
                     }
                 });
             }
-            if (selectedMode == 2 || oneEpisode){
+            if (selectedMode == 2 || oneEpisode || !BrowserListOfEpisodes){
                 // Hide Episode RecyclerView
                 mEpisodes.setVisibility(View.GONE);
             }
         }
-
-        if (name!=null) {
-            BrowserListOfEpisodes = name.equalsIgnoreCase("BrowserListOfEpisodes");
-        }
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        prefs.edit().putBoolean("BrowserListOfEpisodes", BrowserListOfEpisodes).apply();
 
         mForceCurrentPosition = getIntent().getBooleanExtra(EXTRA_FORCE_VIDEO_SELECTION, false);
         mGlobalBackdrop = getLayoutInflater().inflate(R.layout.browser_main_video_backdrop, null);
