@@ -753,28 +753,53 @@ public class VideoInfoShowScraperFragment extends Fragment implements
             return result;
         }
 
-        private EpisodeTags getEpisode(Map<String, EpisodeTags> map, int episode, int season, ShowTags show) {
-            EpisodeTags newEpTag = map.get(season + "|" + episode);
-            if (newEpTag == null) {
-                newEpTag = new EpisodeTags();
+        private EpisodeTags getEpisode(Map<String, EpisodeTags> allEpisodes, int epnum, int season, ShowTags showTags) {
+            log.debug("buildTag allEpisodes.size=" + allEpisodes.size() + " epnum=" + epnum + ", season=" + season + ", showId=" + showTags.getId());
+            EpisodeTags episodeTag = null;
+            if (!allEpisodes.isEmpty()) {
+                String key = season + "|" + epnum;
+                log.debug("buildTag: allEpisodes not empty trying to find " + key);
+                episodeTag = allEpisodes.get(key);
+            }
+            if (episodeTag == null) {
+                log.debug("buildTag: shoot episode not in allEpisodes");
+                episodeTag = new EpisodeTags();
                 // assume episode / season of request
-                newEpTag.setSeason(season);
-                newEpTag.setEpisode(episode);
-                newEpTag.setShowTags(show);
+                episodeTag.setSeason(season);
+                episodeTag.setEpisode(epnum);
+                episodeTag.setShowTags(showTags);
                 // also check if there is a poster
-                List<ScraperImage> posters = show.getPosters();
+                List<ScraperImage> posters = showTags.getPosters();
                 if (posters != null) {
+                    log.debug("buildTag: posters not null");
                     for (ScraperImage image : posters) {
                         if (image.getSeason() == season) {
-                            newEpTag.setPosters(image.asList());
-                            newEpTag.downloadPoster(mContext);
-                            newEpTag.downloadPicture(mContext);
+                            log.debug("buildTag: " + showTags.getTitle() + " season poster s" + season + " " + image.getLargeUrl());
+                            episodeTag.setPosters(image.asList());
+                            episodeTag.downloadPoster(mContext);
                             break;
                         }
                     }
                 }
+            } else {
+                log.debug("buildTag: episodeTag not null");
+                if (episodeTag.getPosters() == null) {
+                    log.warn("buildTag: " + episodeTag.getTitle() + " has null posters!");
+                } else if (episodeTag.getPosters().isEmpty()) {
+                    log.warn("buildTag: " + episodeTag.getTitle() + " has empty posters!");
+                }
+                if (episodeTag.getDefaultPoster() == null) {
+                    log.warn("buildTag: " + episodeTag.getTitle() + " has no defaultPoster! Should add default show one.");
+                }
+                if (episodeTag.getShowTags() == null) {
+                    log.warn("buildTag: " + episodeTag.getTitle() + " has empty showTags!");
+                }
+                // download still & poster because episode has been selected here
+                episodeTag.downloadPicture(mContext);
+                episodeTag.downloadPoster(mContext);
             }
-            return newEpTag;
+            log.debug("buildTag: " + episodeTag.getShowTitle() + " " + episodeTag.getShowId() + " " + episodeTag.getTitle());
+            return episodeTag;
         }
     }
 
