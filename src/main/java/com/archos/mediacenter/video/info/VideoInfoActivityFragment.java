@@ -1325,10 +1325,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/hevc.png"));
                         break;
                     case "MPEG-2":
-                        mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg2video.png"));
+                        mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg2.png"));
                         break;
                     case "MPEG-4":
                         mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg4.png"));
+                        break;
+                    case "mpeg1video":
+                        mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg1video.png"));
                         break;
                     default:
                         mVideoCodec.setVisibility(View.GONE);
@@ -1350,6 +1353,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/eac3.png"));
                 }else if (audioTrackFormat.equalsIgnoreCase("AAC")) {
                     mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/aac.png"));
+                }else if (audioTrackFormat.equalsIgnoreCase("MP3")) {
+                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/mp3.png"));
+                }else if (audioTrackFormat.equalsIgnoreCase("FLAC")) {
+                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/flac.png"));
                 }else{
                     mAudioCodec.setVisibility(View.GONE);
                 }
