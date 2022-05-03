@@ -1038,4 +1038,7 @@
 
     <string name="preference_display_poster_player_title">Display poster in video player</string>
     <string name="preference_display_poster_player_summary">Displays Movie or Episode poster image in the playback screen in landscape mode.</string>
+
+    <string name="start_time">start time</string>
+    <string name="end_time">start time</string>
 </resources>

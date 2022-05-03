@@ -69,7 +69,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginRight="0dip"
         android:layout_toRightOf="@+id/volume_bar"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/poster_cardview_layout"
@@ -133,7 +134,7 @@
                     android:id="@+id/time_current"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hi how are you"
+                    android:text="@string/start_time"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:textSize="@dimen/player_time_text_size"
@@ -155,7 +156,7 @@
                     android:id="@+id/time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hi how are you"
+                    android:text="@string/end_time"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
                     android:textSize="@dimen/player_time_text_size"
