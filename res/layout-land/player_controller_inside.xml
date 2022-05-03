@@ -103,7 +103,7 @@
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginStart="8dp"
                 android:fontFamily="@font/gotham_narrow_bold"
                 android:textSize="18sp"
@@ -127,16 +127,15 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:paddingTop="31dip"
-                    android:paddingBottom="13dip" />
+                    android:paddingTop="22dip"/>
 
                 <TextView
                     android:id="@+id/time_current"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Hi how are you"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:paddingTop="10dip"
                     android:textSize="@dimen/player_time_text_size"
                     android:textStyle="bold" />
 
@@ -148,7 +147,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dip"
-                    android:layout_marginTop="12dip"
+                    android:layout_marginTop="2dip"
                     android:layout_toRightOf="@id/time_current"
                     android:visibility="gone" />
 
@@ -156,9 +155,9 @@
                     android:id="@+id/time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Hi how are you"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
-                    android:paddingTop="10dip"
                     android:textSize="@dimen/player_time_text_size"
                     android:textStyle="bold" />
             </RelativeLayout>
