@@ -474,11 +474,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
         TextView title = v.findViewById(R.id.title);
         String mTitle = prefs.getString("mTitle", null);
-        if(mIsLandscapeMode){
-            title.setText(mTitle);
-        }else{
-            title.setVisibility(View.GONE);
-        }
+        title.setText(mTitle);
 
 
         ImageButton mForwardButton = (ImageButton) v.findViewById(R.id.forward);

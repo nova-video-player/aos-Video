@@ -80,7 +80,8 @@
             android:id="@+id/poster_cardview_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/player_bar_2014">
+            android:background="@drawable/player_bar_2014"
+            android:visibility="gone">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/poster_cardview"
@@ -98,8 +99,16 @@
 
         <TextView
             android:id="@+id/title"
-            android:layout_toEndOf="@+id/poster_cardview"
-            style="@style/BrowserText.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="10dip"
+            android:layout_marginEnd="10dip"
+            android:fontFamily="@font/gotham_narrow_bold"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:ellipsize="end"
+            android:singleLine="true"
             />
 
         <RelativeLayout
