@@ -69,8 +69,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginRight="0dip"
         android:layout_toRightOf="@+id/volume_bar"
-        android:orientation="horizontal"
-        android:visibility="gone" >
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/poster_cardview_layout"
@@ -105,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginStart="25dp"
+                android:layout_marginStart="8dp"
                 android:fontFamily="@font/gotham_narrow_bold"
                 android:textSize="18sp"
                 android:textColor="@color/white"
@@ -113,93 +112,110 @@
                 android:singleLine="true"
                 />
 
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:paddingLeft="@dimen/player_button_padding_half"
+                android:paddingRight="@dimen/player_button_padding_half" >
+
+                <com.archos.mediacenter.utils.seekbar.ArchosProgressSlider
+                    android:id="@+id/seek_progress"
+                    style="@style/PlayerSliderHorizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:paddingTop="31dip"
+                    android:paddingBottom="13dip" />
+
+                <TextView
+                    android:id="@+id/time_current"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:paddingTop="10dip"
+                    android:textSize="@dimen/player_time_text_size"
+                    android:textStyle="bold" />
+
+                <ProgressBar
+                    android:id="@+id/seek_state"
+                    style="?android:attr/progressBarStyleSmallTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dip"
+                    android:layout_marginTop="12dip"
+                    android:layout_toRightOf="@id/time_current"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:paddingTop="10dip"
+                    android:textSize="@dimen/player_time_text_size"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
             <LinearLayout
-                android:id="@+id/control_area"
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/player2014_bar_width"
                 android:layout_marginRight="0dip"
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/pause"
                     style="@style/PlayerControlButton"
                     android:paddingLeft="@dimen/player_button_padding_full"
                     android:paddingRight="@dimen/player_button_padding_full"
-                    ads:srcCompat="@drawable/video_play_selector" />
+                    android:layout_weight="0"
+                    ads:srcCompat="@drawable/video_format_original_selector"
+                    android:visibility="invisible"/>
 
-                <ImageButton
-                    android:id="@+id/backward"
-                    style="@style/PlayerControlButton"
-                    android:layout_marginLeft="-12dip"
-                    android:paddingLeft="0dip"
-                    android:paddingRight="@dimen/player_button_padding_half"
-                    ads:srcCompat="@drawable/video_backward_selector" />
-
-                <RelativeLayout
-                    android:layout_width="0dip"
-                    android:layout_height="fill_parent"
+                <LinearLayout
+                    android:id="@+id/control_area"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/player2014_bar_width"
+                    android:gravity="center_horizontal"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/player_button_padding_half"
-                    android:paddingRight="@dimen/player_button_padding_half" >
+                    android:orientation="horizontal">
 
-                    <com.archos.mediacenter.utils.seekbar.ArchosProgressSlider
-                        android:id="@+id/seek_progress"
-                        style="@style/PlayerSliderHorizontal"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:paddingBottom="13dip"
-                        android:paddingTop="31dip" />
+                    <ImageButton
+                        android:id="@+id/backward"
+                        style="@style/PlayerControlButton"
+                        android:layout_marginLeft="-12dip"
+                        android:paddingLeft="0dip"
+                        android:paddingRight="@dimen/player_button_padding_half"
+                        ads:srcCompat="@drawable/video_backward_selector" />
 
-                    <TextView
-                        android:id="@+id/time_current"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:paddingTop="10dip"
-                        android:textSize="@dimen/player_time_text_size"
-                        android:textStyle="bold" />
+                    <ImageButton
+                        android:id="@+id/pause"
+                        style="@style/PlayerControlButton"
+                        android:paddingLeft="@dimen/player_button_padding_full"
+                        android:paddingRight="@dimen/player_button_padding_full"
+                        ads:srcCompat="@drawable/video_play_selector" />
 
-                    <ProgressBar
-                        android:id="@+id/seek_state"
-                        style="?android:attr/progressBarStyleSmallTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="5dip"
-                        android:layout_marginTop="12dip"
-                        android:layout_toRightOf="@id/time_current"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:id="@+id/time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:paddingTop="10dip"
-                        android:textSize="@dimen/player_time_text_size"
-                        android:textStyle="bold" />
-                </RelativeLayout>
-
-                <ImageButton
-                    android:id="@+id/forward"
-                    style="@style/PlayerControlButton"
-                    android:paddingLeft="@dimen/player_button_padding_half"
-                    android:paddingRight="@dimen/player_button_padding_small"
-                    ads:srcCompat="@drawable/video_forward_selector" />
+                    <ImageButton
+                        android:id="@+id/forward"
+                        style="@style/PlayerControlButton"
+                        android:paddingLeft="@dimen/player_button_padding_half"
+                        android:paddingRight="@dimen/player_button_padding_small"
+                        ads:srcCompat="@drawable/video_forward_selector" />
+                </LinearLayout>
 
                 <ImageButton
                     android:id="@+id/format"
+                    android:layout_weight="0"
                     style="@style/PlayerControlButton"
-                    android:layout_marginLeft="-10dip"
-                    android:layout_marginRight="10dip"
                     android:paddingLeft="@dimen/player_button_padding_full"
                     android:paddingRight="@dimen/player_button_padding_full"
                     ads:srcCompat="@drawable/video_format_original_selector" />
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
