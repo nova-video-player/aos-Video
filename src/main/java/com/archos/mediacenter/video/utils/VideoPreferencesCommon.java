@@ -769,7 +769,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                     });
                 }
             });
-
         }
     }
 

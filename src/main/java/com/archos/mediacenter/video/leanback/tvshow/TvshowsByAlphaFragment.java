@@ -16,12 +16,16 @@ package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.content.Context;
 import androidx.loader.content.Loader;
+import androidx.preference.PreferenceManager;
+
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.SparseArray;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.loader.TvshowsByAlphaLoader;
 import com.archos.mediacenter.video.browser.loader.TvshowsNoAnimeByAlphaLoader;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 
 
@@ -30,6 +34,7 @@ public class TvshowsByAlphaFragment extends TvshowsByFragment {
     private static final String SORT_PARAM_KEY = TvshowsByAlphaFragment.class.getName() + "_SORT";
 
     private CharSequence[] mSortOrderEntries;
+    private boolean mSeparateAnimeFromShowMovie;
 
     private static SparseArray<TvshowsSortOrderEntry> sortOrderIndexer = new SparseArray<TvshowsSortOrderEntry>();
     static {
@@ -48,11 +53,13 @@ public class TvshowsByAlphaFragment extends TvshowsByFragment {
         setTitle(getString(R.string.tvshows_by_alpha));
 
         mSortOrderEntries = TvshowsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
+        mSeparateAnimeFromShowMovie = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
     }
 
     @Override
     protected Loader<Cursor> getSubsetLoader(Context context) {
-        return new TvshowsNoAnimeByAlphaLoader(context);
+        if (mSeparateAnimeFromShowMovie) return new TvshowsNoAnimeByAlphaLoader(context);
+        else return new TvshowsByAlphaLoader(context);
     }
 
     @Override

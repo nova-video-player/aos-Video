@@ -22,6 +22,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.View;
@@ -45,7 +46,10 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
+import com.archos.mediacenter.video.browser.loader.FilmsByRatingLoader;
 import com.archos.mediacenter.video.browser.loader.FilmsLoader;
+import com.archos.mediacenter.video.browser.loader.MoviesByRatingLoader;
+import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.DisplayMode;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
@@ -58,6 +62,7 @@ import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.utils.DbUtils;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.SortOrder;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 
 
@@ -83,6 +88,8 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
 
     private boolean mShowWatched;
 
+    private static boolean mSeparateAnimeFromShowMovie;
+
     private static Context mContext;
 
     public static SparseArray<MoviesSortOrderEntry> sortOrderIndexer = new SparseArray<MoviesSortOrderEntry>();
@@ -93,7 +100,6 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         sortOrderIndexer.put(3, new MoviesSortOrderEntry(R.string.sort_by_duration_asc,    SortOrder.DURATION.getAsc()));
         sortOrderIndexer.put(4, new MoviesSortOrderEntry(R.string.sort_by_rating_asc,      SortOrder.SCRAPER_M_RATING.getDesc()));
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,7 +114,10 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         } else {
             mDisplayMode = DisplayMode.values()[displayModeIndex];
         }
-        mSortOrder = mPrefs.getString(SORT_PARAM_KEY, FilmsLoader.DEFAULT_SORT);
+
+        mSeparateAnimeFromShowMovie = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
+        if (mSeparateAnimeFromShowMovie) mSortOrder = mPrefs.getString(SORT_PARAM_KEY, FilmsLoader.DEFAULT_SORT);
+        else mSortOrder = mPrefs.getString(SORT_PARAM_KEY, MoviesLoader.DEFAULT_SORT);
         mSortOrderEntries = MoviesSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
 
         mShowWatched = mPrefs.getBoolean(SHOW_WATCHED_KEY, true);
@@ -305,9 +314,13 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (id == 0) {
             if (args == null) {
-                return new FilmsLoader(getActivity(), true);
+                if (mSeparateAnimeFromShowMovie)
+                    return new FilmsLoader(getActivity(), true);
+                else return new MoviesLoader(getActivity(), true);
             } else {
-                return new FilmsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"), true);
+                if (mSeparateAnimeFromShowMovie)
+                    return new FilmsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"), true);
+                else return new MoviesLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"), true);
             }
         }
         else return null;

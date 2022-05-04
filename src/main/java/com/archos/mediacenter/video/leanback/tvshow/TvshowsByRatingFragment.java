@@ -16,12 +16,18 @@ package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.content.Context;
 import androidx.loader.content.Loader;
+import androidx.preference.PreferenceManager;
+
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.SparseArray;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.loader.TvshowsByGenreLoader;
+import com.archos.mediacenter.video.browser.loader.TvshowsByRatingLoader;
+import com.archos.mediacenter.video.browser.loader.TvshowsNoAnimeByGenreLoader;
 import com.archos.mediacenter.video.browser.loader.TvshowsNoAnimeByRatingLoader;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 
 
@@ -30,6 +36,7 @@ public class TvshowsByRatingFragment extends TvshowsByFragment {
     private static final String SORT_PARAM_KEY = TvshowsByRatingFragment.class.getName() + "_SORT";
 
     private CharSequence[] mSortOrderEntries;
+    private boolean mSeparateAnimeFromShowMovie;
 
     private static SparseArray<TvshowsSortOrderEntry> sortOrderIndexer = new SparseArray<TvshowsSortOrderEntry>();
     static {
@@ -52,11 +59,13 @@ public class TvshowsByRatingFragment extends TvshowsByFragment {
         setTitle(getString(R.string.tvshows_by_rating));
 
         mSortOrderEntries = TvshowsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
+        mSeparateAnimeFromShowMovie = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
     }
 
     @Override
     protected Loader<Cursor> getSubsetLoader(Context context) {
-        return new TvshowsNoAnimeByRatingLoader(context);
+        if (mSeparateAnimeFromShowMovie) return new TvshowsNoAnimeByRatingLoader(context);
+        else return new TvshowsByRatingLoader(context);
     }
 
     @Override

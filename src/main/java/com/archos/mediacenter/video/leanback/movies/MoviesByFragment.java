@@ -72,7 +72,7 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
 
     private int mSortOrderItem;
     private String mSortOrder;
-    private boolean showAnimeTilesRow;
+    private boolean mSeparateAnimeFromShowMovie;
 
     /**
      * We can have a single instance of presenter and mapper used for all the subset rows created
@@ -153,7 +153,7 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mSortOrder = mPrefs.getString(getSortOrderParamKey(), MoviesLoader.DEFAULT_SORT);
-        showAnimeTilesRow = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
+        mSeparateAnimeFromShowMovie = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
 
         Resources r = getResources();
 
@@ -256,7 +256,7 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
 
         // these two column index are the same but it looks nicer like this :-)
         int oldSubsetNameColumn, newSubsetNameColumn;
-        if (showAnimeTilesRow) {
+        if (mSeparateAnimeFromShowMovie) {
             oldSubsetNameColumn = oldCursor.getColumnIndex(FilmsByLoader.COLUMN_SUBSET_NAME);
             newSubsetNameColumn = newCursor.getColumnIndex(FilmsByLoader.COLUMN_SUBSET_NAME);
         } else {
@@ -285,7 +285,7 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
 
     private void loadCategoriesRows(Cursor c) {
         int subsetIdColumn, subsetNameColumn, listOfMovieIdsColumn;
-        if (showAnimeTilesRow) {
+        if (mSeparateAnimeFromShowMovie) {
             subsetIdColumn = c.getColumnIndex(FilmsByLoader.COLUMN_SUBSET_ID);
             subsetNameColumn = c.getColumnIndex(FilmsByLoader.COLUMN_SUBSET_NAME);
             listOfMovieIdsColumn = c.getColumnIndex(FilmsByLoader.COLUMN_LIST_OF_MOVIE_IDS);

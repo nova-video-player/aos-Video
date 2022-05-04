@@ -42,7 +42,10 @@ import com.archos.customizedleanback.app.MyVerticalGridFragment;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
+import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsNoAnimeLoader;
+import com.archos.mediacenter.video.browser.loader.FilmsLoader;
+import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.DisplayMode;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
@@ -53,6 +56,7 @@ import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.DbUtils;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 
 public class AllTvshowsGridFragment extends MyVerticalGridFragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -76,6 +80,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
     private BackgroundManager bgMngr = null;
 
     private boolean mShowWatched;
+    private static boolean mSeparateAnimeFromShowMovie;
 
     public static SparseArray<TvshowsSortOrderEntry> sortOrderIndexer = new SparseArray<TvshowsSortOrderEntry>();
     static {
@@ -101,7 +106,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
         }
         mSortOrder = mPrefs.getString(SORT_PARAM_KEY, TvshowSortOrderEntries.DEFAULT_SORT);
         mSortOrderEntries = TvshowsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
-
+        mSeparateAnimeFromShowMovie = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
         mShowWatched = mPrefs.getBoolean(SHOW_WATCHED_KEY, true);
 
         updateBackground();
@@ -297,9 +302,13 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (id == 0) {
             if (args == null) {
-                return new AllTvshowsNoAnimeLoader(getActivity());
+                if (mSeparateAnimeFromShowMovie)
+                    return new AllTvshowsNoAnimeLoader(getActivity());
+                else return new AllTvshowsLoader(getActivity());
             } else {
-                return new AllTvshowsNoAnimeLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"));
+                if (mSeparateAnimeFromShowMovie)
+                    return new AllTvshowsNoAnimeLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"));
+                else return new AllTvshowsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"));
             }
         }
         else return null;

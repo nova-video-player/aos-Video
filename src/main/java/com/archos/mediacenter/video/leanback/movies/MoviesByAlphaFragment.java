@@ -36,7 +36,7 @@ public class MoviesByAlphaFragment extends VideosByFragment {
     private static final String SORT_PARAM_KEY = MoviesByAlphaFragment.class.getName() + "_SORT";
 
     private CharSequence[] mSortOrderEntries;
-    private boolean showAnimeTilesRow;
+    private boolean mSeparateAnimeFromShowMovie;
 
     private static SparseArray<MoviesSortOrderEntry> sortOrderIndexer = new SparseArray<MoviesSortOrderEntry>();
     static {
@@ -54,12 +54,12 @@ public class MoviesByAlphaFragment extends VideosByFragment {
         setTitle(getString(R.string.movies_by_alpha));
 
         mSortOrderEntries = MoviesSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
-        showAnimeTilesRow = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
+        mSeparateAnimeFromShowMovie = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
     }
 
     @Override
     protected Loader<Cursor> getSubsetLoader(Context context) {
-        if (showAnimeTilesRow)
+        if (mSeparateAnimeFromShowMovie)
             return new FilmsByAlphaLoader(context);
         else return new MoviesByAlphaLoader(context);
     }

@@ -42,6 +42,7 @@ import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 
 import java.util.ArrayList;
 

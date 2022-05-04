@@ -30,8 +30,12 @@ import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.EpisodesByDateLoader;
+import com.archos.mediacenter.video.browser.loader.EpisodesNoAnimeByDateLoader;
 import com.archos.mediacenter.video.browser.loader.EpisodesSelectionLoader;
+import com.archos.mediacenter.video.browser.loader.TvshowsByRatingLoader;
+import com.archos.mediacenter.video.browser.loader.TvshowsNoAnimeByRatingLoader;
 import com.archos.mediacenter.video.leanback.VideosByFragment;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 
 
@@ -42,6 +46,7 @@ public class EpisodesByDateFragment extends VideosByFragment {
 
     private SharedPreferences mPrefs;
     private int mDateView;
+    private boolean mSeparateAnimeFromShowMovie;
 
     public EpisodesByDateFragment() {
         super(VideoStore.Video.VideoColumns.SCRAPER_E_AIRED);
@@ -51,6 +56,7 @@ public class EpisodesByDateFragment extends VideosByFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mDateView = mPrefs.getInt(VIEW_PARAM_KEY, 0);
+        mSeparateAnimeFromShowMovie = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
 
         super.onActivityCreated(savedInstanceState);
 
@@ -91,7 +97,8 @@ public class EpisodesByDateFragment extends VideosByFragment {
 
     @Override
     protected Loader<Cursor> getSubsetLoader(Context context) {
-        return new EpisodesByDateLoader(context, EpisodesByDateLoader.DateView.values()[mDateView]);
+        if (mSeparateAnimeFromShowMovie) return new EpisodesNoAnimeByDateLoader(context, EpisodesNoAnimeByDateLoader.DateView.values()[mDateView]);
+        else return new EpisodesByDateLoader(context, EpisodesByDateLoader.DateView.values()[mDateView]);
     }
 
     @Override

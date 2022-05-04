@@ -139,7 +139,7 @@
 
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="show_animation_row"
+            android:key="separate_anime_movie_show"
             android:summary="@string/preferences_separate_animation_from_movies_summary"
             android:title="@string/preferences_separate_animation_from_movies"
             app:iconSpaceReserved="false"/>
