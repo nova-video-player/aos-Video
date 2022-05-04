@@ -1320,18 +1320,27 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 switch (format) {
                     case "H.264":
                         mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/h264.png"));
+                        mVideoCodec.setVisibility(View.VISIBLE);
                         break;
                     case "HEVC/H.265":
                         mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/hevc.png"));
+                        mVideoCodec.setVisibility(View.VISIBLE);
                         break;
                     case "MPEG-2":
                         mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg2.png"));
+                        mVideoCodec.setVisibility(View.VISIBLE);
                         break;
                     case "MPEG-4":
                         mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg4.png"));
+                        mVideoCodec.setVisibility(View.VISIBLE);
                         break;
                     case "mpeg1video":
                         mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg1video.png"));
+                        mVideoCodec.setVisibility(View.VISIBLE);
+                        break;
+                    case "AV1":
+                        mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/av1.png"));
+                        mVideoCodec.setVisibility(View.VISIBLE);
                         break;
                     default:
                         mVideoCodec.setVisibility(View.GONE);
