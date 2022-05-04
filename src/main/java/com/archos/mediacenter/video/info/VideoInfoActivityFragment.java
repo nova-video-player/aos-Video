@@ -1342,6 +1342,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/av1.png"));
                         mVideoCodec.setVisibility(View.VISIBLE);
                         break;
+                    case "wmv2":
+                        mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/wmv2.png"));
+                        mVideoCodec.setVisibility(View.VISIBLE);
+                        break;
                     default:
                         mVideoCodec.setVisibility(View.GONE);
                         break;
@@ -1366,6 +1370,16 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/mp3.png"));
                 }else if (audioTrackFormat.equalsIgnoreCase("FLAC")) {
                     mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/flac.png"));
+                }else if (audioTrackFormat.equalsIgnoreCase("ALAC")) {
+                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/alac.png"));
+                }else if (audioTrackFormat.equalsIgnoreCase("MP2")) {
+                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/mp2.png"));
+                }else if (audioTrackFormat.contains("Vorbis")) {
+                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/vorbis.png"));
+                }else if (audioTrackFormat.equalsIgnoreCase("WMA")) {
+                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/wma.png"));
+                }else if (audioTrackFormat.equalsIgnoreCase("wmav1")) {
+                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/wma.png"));
                 }else{
                     mAudioCodec.setVisibility(View.GONE);
                 }
