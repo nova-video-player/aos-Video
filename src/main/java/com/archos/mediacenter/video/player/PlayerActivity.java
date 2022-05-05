@@ -544,6 +544,44 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         }
     }
 
+    private VideoMetadata mMetaData;
+    public void setMetadata(VideoMetadata metaData) {
+        mMetaData = metaData;
+    }
+    public VideoMetadata getMetadata() {
+        return mMetaData;
+    }
+    public int getGuessedDefinition() {
+        return mVideoInfo.videoDefinition;
+    }
+    public int getNormalizedDefinition(){
+        int w = mVideoInfo.mCalculatedWidth;
+        int h = mVideoInfo.mCalculatedHeight;
+        if(getMetadata()!=null){
+            w = getMetadata().getVideoWidth();
+            h = getMetadata().getVideoHeight();
+        }
+        if(w>0&&h>0) {
+            // Resolution badge
+
+            if (w >= 3840 || h >= 2160) {
+                return  VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_4K;
+            }
+            // normally you would expect w>=1920 || h>=1080 but based on collection empirical observation we need to include a margin to detect fhd video resolution
+            else if (w >= 1728 || h >= 1040) {
+                return  VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_1080P;
+            }
+            // normally you would expect w>=1280 || h>=720 but based on collection empirical observation we need to include a margin to detect hd video resolution
+            else if (w >= 1200 || h >= 720) {
+                return  VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_720P;
+            } else if (w > 0 && h > 0) {
+                return  VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_SD;
+            }
+        }
+        return getGuessedDefinition();
+
+    }
+
     public void setUIExternalSurface(Surface uiSurface) {
         mSubtitleManager.setUIExternalSurface(uiSurface);
     }
@@ -2616,8 +2654,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             }else{
                 prefs.edit().putString("mPosterPath", "").apply();
             }
-
+            int definition = getNormalizedDefinition();
             prefs.edit().putString("mTitle", mTitle).apply();
+            prefs.edit().putInt("mVideoDefinition", definition).apply();
 
             switch (mVideoInfo.videoStereo) {
                 case 4: // Anaglyph mode

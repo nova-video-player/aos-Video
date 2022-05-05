@@ -128,7 +128,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:paddingTop="22dip"/>
+                    android:paddingTop="22dip" />
 
                 <TextView
                     android:id="@+id/time_current"
@@ -163,13 +163,14 @@
                     android:textStyle="bold" />
             </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/player2014_bar_width"
                 android:layout_marginRight="0dip"
                 android:orientation="horizontal">
 
                 <ImageButton
+                    android:id="@+id/empty_button"
                     style="@style/PlayerControlButton"
                     android:paddingLeft="@dimen/player_button_padding_full"
                     android:paddingRight="@dimen/player_button_padding_full"
@@ -178,9 +179,41 @@
                     android:visibility="invisible"/>
 
                 <LinearLayout
+                    android:id="@+id/definition_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/empty_button"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_gravity="center">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/resolution_background">
+
+                        <TextView
+                            android:id="@+id/definition"
+                            android:textSize="14sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/video_definition"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:gravity="center_horizontal"
+                            android:fontFamily="@font/gotham_narrow_black"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/black"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/control_area"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/player2014_bar_width"
+                    android:layout_centerInParent="true"
                     android:gravity="center_horizontal"
                     android:layout_weight="1"
                     android:orientation="horizontal">
@@ -188,7 +221,6 @@
                     <ImageButton
                         android:id="@+id/backward"
                         style="@style/PlayerControlButton"
-                        android:layout_marginLeft="-12dip"
                         android:paddingLeft="0dip"
                         android:paddingRight="@dimen/player_button_padding_half"
                         ads:srcCompat="@drawable/video_backward_selector" />
@@ -211,12 +243,13 @@
                 <ImageButton
                     android:id="@+id/format"
                     android:layout_weight="0"
+                    android:layout_alignParentEnd="true"
                     style="@style/PlayerControlButton"
                     android:paddingLeft="@dimen/player_button_padding_full"
                     android:paddingRight="@dimen/player_button_padding_full"
                     ads:srcCompat="@drawable/video_format_original_selector" />
 
-            </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
     <include

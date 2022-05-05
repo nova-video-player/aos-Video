@@ -1041,4 +1041,5 @@
 
     <string name="start_time">start time</string>
     <string name="end_time">start time</string>
+    <string name="video_definition">HD</string>
 </resources>

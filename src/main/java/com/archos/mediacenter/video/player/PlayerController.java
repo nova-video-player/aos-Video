@@ -476,6 +476,30 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         String mTitle = prefs.getString("mTitle", null);
         title.setText(mTitle);
 
+        int definition = prefs.getInt("mVideoDefinition", 0);
+
+        TextView mVideoDefinition = v.findViewById(R.id.definition);
+        LinearLayout mVideoDefinitionContainer = v.findViewById(R.id.definition_container);
+
+        if(mIsLandscapeMode){
+            switch (definition) {
+                case 1:
+                case 2:
+                    mVideoDefinition.setText(mContext.getResources().getString(R.string.resolution_HD));
+                    break;
+                case 3:
+                    mVideoDefinition.setText(mContext.getResources().getString(R.string.resolution_4k));
+                    break;
+                case 4:
+                    mVideoDefinition.setText(mContext.getResources().getString(R.string.resolution_SD));
+                    break;
+                case 0:
+                default:
+                    mVideoDefinitionContainer.setVisibility(View.GONE);
+                    break;
+            }
+        }
+
 
         ImageButton mForwardButton = (ImageButton) v.findViewById(R.id.forward);
         if (mForwardButton != null) {
