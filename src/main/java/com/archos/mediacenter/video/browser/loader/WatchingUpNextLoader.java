@@ -10,6 +10,9 @@ public class WatchingUpNextLoader extends VideoLoader {
     public WatchingUpNextLoader(Context context) {
         super(context);
         init();
+        // cf. https://github.com/nova-video-player/aos-AVP/issues/134 reduce strain
+        // only updates the CursorLoader on data change every 10s since used only in MainFragment as nonScraped box presence
+        setUpdateThrottle(5000);
     }
 
     @Override
