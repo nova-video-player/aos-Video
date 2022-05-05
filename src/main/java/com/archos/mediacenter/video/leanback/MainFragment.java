@@ -771,7 +771,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         }
         int currentPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT);
         if (cursor != null) {
-            if (cursor.getCount() == 0 || !mShowWatchingUpNextRow) {
+            if (cursor != null && (cursor.getCount() == 0 || !mShowWatchingUpNextRow)) {
                 log.debug("updateWatchingUpNextRow: cursor not null and row not shown thus removing currentPosition=" + currentPosition);
                 if (currentPosition != -1)
                     mRowsAdapter.removeItems(currentPosition, 1);
@@ -1096,7 +1096,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             case LOADER_ID_WATCHING_UP_NEXT:
                 if (mWatchingUpNextInitFocus == InitFocus.NOT_FOCUSED)
                     mWatchingUpNextInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
-                log.debug("onLoadFinished: WatchingUpNext cursor ready with " + cursor.getCount() + " entries and " + mLastAddedInitFocus + ", updating row");
+                log.debug("onLoadFinished: WatchingUpNext cursor ready with " + cursor.getCount() + " entries and " + mWatchingUpNextInitFocus + ", updating row");
                 if (mShowWatchingUpNextRow) updateWatchingUpNextRow(cursor);
             case LOADER_ID_LAST_ADDED:
                 if (mLastAddedInitFocus == InitFocus.NOT_FOCUSED)
@@ -1106,7 +1106,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 // on new video additions boxes are rebuilt
                 // note: this is not triggered onResume
                 if (!scanningOnGoing) { // rebuild box only if not scanning
-                    if (FEATURE_WATCH_UP_NEXT) LoaderManager.getInstance(this).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
+                    if (mShowWatchingUpNextRow) LoaderManager.getInstance(this).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
                     if (mShowMoviesRow) {
                         log.debug("onLoadFinished: mShowMoviesRow --> restart ALL_MOVIES loader");
                         Bundle args = new Bundle();
