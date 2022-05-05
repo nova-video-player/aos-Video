@@ -1,4 +1,4 @@
-// Copyright 2020 Courville Software
+// Copyright 2022 Courville Software
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,9 +25,9 @@ import com.archos.mediaprovider.video.VideoStore;
 
 import java.util.Arrays;
 
-public class AllCollectionsLoader extends VideoLoader {
+public class AllCollectionsNoAnimeLoader extends VideoLoader {
 
-    private static final String TAG = AllCollectionsLoader.class.getSimpleName();
+    private static final String TAG = AllCollectionsNoAnimeLoader.class.getSimpleName();
     private static final boolean DBG = false;
 
     public static final String DEFAULT_SORT = COLUMN_NAME + " COLLATE LOCALIZED ASC, "
@@ -45,11 +45,11 @@ public class AllCollectionsLoader extends VideoLoader {
      * List all movie collections
      * @param context
      */
-    public AllCollectionsLoader(Context context) {
+    public AllCollectionsNoAnimeLoader(Context context) {
         this(context, CollectionsSortOrderEntries.DEFAULT_SORT, true);
     }
 
-    public AllCollectionsLoader(Context context, String SortOrder, boolean collectionWatched) {
+    public AllCollectionsNoAnimeLoader(Context context, String SortOrder, boolean collectionWatched) {
         super(context);
         mContext = context;
         mSortOrder = SortOrder;
@@ -92,6 +92,9 @@ public class AllCollectionsLoader extends VideoLoader {
 
         if (sb.length()>0) { sb.append(" AND "); }
         sb.append( VideoStore.Video.VideoColumns.SCRAPER_C_ID + " > '0' AND " + VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE + " IS NOT NULL");
+        sb.append(" AND ");
+        sb.append("( " + VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " IS NULL OR " +
+                VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%' )");
         if (!mCollectionWatched) {
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);

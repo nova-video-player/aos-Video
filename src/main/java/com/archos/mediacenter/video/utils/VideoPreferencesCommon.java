@@ -105,7 +105,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_ACTIVATE_REFRESHRATE_SWITCH = "enable_tv_refreshrate_switch";
     public static final String KEY_ACTIVATE_3D_SWITCH = "activate_tv_switch";
     public static final String KEY_ADULT_SCRAPE = "enable_adult_scrap_key";
-    
+
+    public static final String KEY_SEPARATE_ANIME_MOVIE_SHOW = "separate_anime_movie_show";
     public static final String KEY_SHOW_WATCHING_UP_NEXT_ROW = "show_watching_up_next_row";
     public static final String KEY_SHOW_LAST_ADDED_ROW = "show_last_added_row";
     public static final String KEY_SHOW_LAST_PLAYED_ROW = "show_last_played_row";
@@ -144,6 +145,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_SMB2 = "pref_smbv2";
     public static final String KEY_SMB_RESOLV = "pref_smb_resolv";
 
+    public static final boolean SEPARATE_ANIME_MOVIE_SHOW_DEFAULT = true;
     // TODO: disabled until issue #186 is fixed
     public static final boolean SHOW_WATCHING_UP_NEXT_ROW_DEFAULT = true;
     public static final boolean SHOW_LAST_ADDED_ROW_DEFAULT = true;
@@ -200,6 +202,11 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mTraktSyncCollectionPreference = null;
     private CheckBoxPreference mTraktSyncProgressPreference = null;
     private CheckBoxPreference mAutoScrapPreference = null;
+
+    private CheckBoxPreference mSeparateAnimeMoviePreference = null;
+    private CheckBoxPreference mShowAllAnimesRowPreference = null;
+    private ListPreference mAnimesSortOrderPreference = null;
+
     private Handler mHanlder = null;
 
     private Preference mTraktFull;
@@ -380,7 +387,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mAdultScrape = (CheckBoxPreference) findPreference(KEY_ADULT_SCRAPE);
         mTraktSyncProgressPreference = (CheckBoxPreference) findPreference(KEY_TRAKT_SYNC_PROGRESS);
         mAdvancedPreferences = (PreferenceCategory) findPreference(KEY_ADVANCED_VIDEO_CATEGORY);
-
+        mSeparateAnimeMoviePreference = (CheckBoxPreference) findPreference(KEY_SEPARATE_ANIME_MOVIE_SHOW);
+        mShowAllAnimesRowPreference = (CheckBoxPreference) findPreference(KEY_SHOW_ALL_ANIMES_ROW);
+        mAnimesSortOrderPreference = (ListPreference) findPreference(KEY_ANIMES_SORT_ORDER);
         mAboutPreferences = (PreferenceCategory) findPreference(KEY_ABOUT_PREFERENCES);
         Preference novaVersion = (Preference) findPreference("preferences_version");
         novaVersion.setTitle(mSharedPreferences.getString("nova_version", "@string/APP_INFO"));
@@ -449,8 +458,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 for(String s : storageManager.getExtSdcards()) {
                     rescanPath(s);
                 }
-
-
                 for(String s : storageManager.getExtUsbStorages()) {
                     rescanPath(s);
                 }
@@ -506,6 +513,23 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 editor.apply();
                 switchAdvancedPreferences();
                 return true;
+            }
+            return false;
+        });
+
+        mSeparateAnimeMoviePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            boolean oldValue = getPreferenceManager().getSharedPreferences().getBoolean(KEY_SEPARATE_ANIME_MOVIE_SHOW, SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
+            // !oldValue is the new value...
+            mSeparateAnimeMoviePreference.setChecked(!oldValue);
+            PreferenceCategory prefCategory = (PreferenceCategory) findPreference("category_leanback_user_interface");
+            if (!oldValue) {
+                // set visible
+                prefCategory.addPreference(mShowAllAnimesRowPreference);
+                prefCategory.addPreference(mAnimesSortOrderPreference);
+            } else {
+                // set not visible
+                prefCategory.removePreference(mShowAllAnimesRowPreference);
+                prefCategory.removePreference(mAnimesSortOrderPreference);
             }
             return false;
         });
@@ -765,7 +789,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                     });
                 }
             });
-
         }
     }
 

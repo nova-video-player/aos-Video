@@ -49,6 +49,7 @@ import androidx.preference.PreferenceManager;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.loader.FilmsByLoader;
+import com.archos.mediacenter.video.browser.loader.MoviesByLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesSelectionLoader;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
@@ -56,9 +57,9 @@ import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.player.PrivateMode;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 
 import java.util.ArrayList;
-
 
 public abstract class MoviesByFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -71,6 +72,7 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
 
     private int mSortOrderItem;
     private String mSortOrder;
+    private boolean mSeparateAnimeFromShowMovie;
 
     /**
      * We can have a single instance of presenter and mapper used for all the subset rows created
@@ -151,6 +153,7 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mSortOrder = mPrefs.getString(getSortOrderParamKey(), MoviesLoader.DEFAULT_SORT);
+        mSeparateAnimeFromShowMovie = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
 
         Resources r = getResources();
 
@@ -252,8 +255,14 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
         }
 
         // these two column index are the same but it looks nicer like this :-)
-        final int oldSubsetNameColumn = oldCursor.getColumnIndex(FilmsByLoader.COLUMN_SUBSET_NAME);
-        final int newSubsetNameColumn = newCursor.getColumnIndex(FilmsByLoader.COLUMN_SUBSET_NAME);
+        int oldSubsetNameColumn, newSubsetNameColumn;
+        if (mSeparateAnimeFromShowMovie) {
+            oldSubsetNameColumn = oldCursor.getColumnIndex(FilmsByLoader.COLUMN_SUBSET_NAME);
+            newSubsetNameColumn = newCursor.getColumnIndex(FilmsByLoader.COLUMN_SUBSET_NAME);
+        } else {
+            oldSubsetNameColumn = oldCursor.getColumnIndex(MoviesByLoader.COLUMN_SUBSET_NAME);
+            newSubsetNameColumn = newCursor.getColumnIndex(MoviesByLoader.COLUMN_SUBSET_NAME);
+        }
 
         // Check all names
         oldCursor.moveToFirst();
@@ -275,9 +284,16 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
     }
 
     private void loadCategoriesRows(Cursor c) {
-        int subsetIdColumn = c.getColumnIndex(FilmsByLoader.COLUMN_SUBSET_ID);
-        int subsetNameColumn = c.getColumnIndex(FilmsByLoader.COLUMN_SUBSET_NAME);
-        int listOfMovieIdsColumn = c.getColumnIndex(FilmsByLoader.COLUMN_LIST_OF_MOVIE_IDS);
+        int subsetIdColumn, subsetNameColumn, listOfMovieIdsColumn;
+        if (mSeparateAnimeFromShowMovie) {
+            subsetIdColumn = c.getColumnIndex(FilmsByLoader.COLUMN_SUBSET_ID);
+            subsetNameColumn = c.getColumnIndex(FilmsByLoader.COLUMN_SUBSET_NAME);
+            listOfMovieIdsColumn = c.getColumnIndex(FilmsByLoader.COLUMN_LIST_OF_MOVIE_IDS);
+        } else {
+            subsetIdColumn = c.getColumnIndex(MoviesByLoader.COLUMN_SUBSET_ID);
+            subsetNameColumn = c.getColumnIndex(MoviesByLoader.COLUMN_SUBSET_NAME);
+            listOfMovieIdsColumn = c.getColumnIndex(MoviesByLoader.COLUMN_LIST_OF_MOVIE_IDS);
+        }
 
         mRowsAdapter.clear();
         mAdaptersMap.clear();

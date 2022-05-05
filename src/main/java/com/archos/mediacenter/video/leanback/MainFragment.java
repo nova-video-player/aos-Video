@@ -58,6 +58,7 @@ import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.browser.adapters.mappers.AnimesNShowsMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
+import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsNoAnimeLoader;
 import com.archos.mediacenter.video.browser.loader.AnimesLoader;
 import com.archos.mediacenter.video.browser.loader.AnimesNShowsLoader;
@@ -78,8 +79,10 @@ import com.archos.mediacenter.video.leanback.collections.AllAnimeCollectionsGrid
 import com.archos.mediacenter.video.leanback.collections.AllCollectionsGridActivity;
 import com.archos.mediacenter.video.leanback.collections.AnimeCollectionsIconBuilder;
 import com.archos.mediacenter.video.leanback.collections.CollectionsIconBuilder;
+import com.archos.mediacenter.video.leanback.collections.CollectionsMoviesIconBuilder;
 import com.archos.mediacenter.video.leanback.filebrowsing.ExtStorageListingActivity;
 import com.archos.mediacenter.video.leanback.filebrowsing.LocalListingActivity;
+import com.archos.mediacenter.video.leanback.movies.AllFilmsIconBuilder;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridActivity;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesIconBuilder;
 import com.archos.mediacenter.video.leanback.movies.MoviesByAlphaActivity;
@@ -95,6 +98,7 @@ import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
 import com.archos.mediacenter.video.leanback.tvshow.AllAnimeShowsGridActivity;
 import com.archos.mediacenter.video.leanback.tvshow.AllAnimeShowsIconBuilder;
+import com.archos.mediacenter.video.leanback.tvshow.AllTvshowNoAmimeIconBuilder;
 import com.archos.mediacenter.video.leanback.tvshow.AllTvshowsGridActivity;
 import com.archos.mediacenter.video.leanback.tvshow.AllTvshowsIconBuilder;
 import com.archos.mediacenter.video.leanback.tvshow.EpisodesByDateActivity;
@@ -121,9 +125,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     public final static boolean FEATURE_WATCH_UP_NEXT = false;
 
     private static final String PREF_PRIVATE_MODE = "PREF_PRIVATE_MODE";
-
-
-    // TODO MARC during scraping reload ID 43 and 42 45 it should not?
 
     final static int LOADER_ID_LAST_ADDED = 42;
     final static int LOADER_ID_LAST_PLAYED = 43;
@@ -178,6 +179,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private static Box mAllAnimeCollectionsBox;
     private static Box mAllAnimeShowsBox;
 
+    private static boolean mSeparateAnimeFromShowMovie;
     private boolean mShowWatchingUpNextRow;
     private boolean mShowLastAddedRow;
     private boolean mShowLastPlayedRow;
@@ -261,9 +263,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         super.onViewCreated(view, savedInstanceState);
         mOverlay = new Overlay(this);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        mSeparateAnimeFromShowMovie = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
         mShowWatchingUpNextRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_WATCHING_UP_NEXT_ROW, VideoPreferencesCommon.SHOW_WATCHING_UP_NEXT_ROW_DEFAULT);
-        if (FEATURE_WATCH_UP_NEXT) mShowWatchingUpNextRow = true;
-        else mShowWatchingUpNextRow = false;
+        if (! FEATURE_WATCH_UP_NEXT) mShowWatchingUpNextRow = false;
         mShowLastAddedRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_ADDED_ROW, VideoPreferencesCommon.SHOW_LAST_ADDED_ROW_DEFAULT);
         mShowLastPlayedRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_PLAYED_ROW, VideoPreferencesCommon.SHOW_LAST_PLAYED_ROW_DEFAULT);
         mShowMoviesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_MOVIES_ROW, VideoPreferencesCommon.SHOW_ALL_MOVIES_ROW_DEFAULT);
@@ -313,7 +315,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_TV_SHOWS, tvshowArgs, this);
         }
         LoaderManager.getInstance(this).initLoader(LOADER_ID_NON_SCRAPED_VIDEOS_COUNT, null, this);
-        if (mShowAnimesRow) {
+        if (mShowAnimesRow && mSeparateAnimeFromShowMovie) {
             Bundle animesArgs = new Bundle();
             animesArgs.putString("sort", mAnimesSortOrder);
             LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_ANIMES, animesArgs, this);
@@ -336,10 +338,20 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         updateBackground();
         mActivity.registerReceiver(mUpdateReceiver, mUpdateFilter);
 
+        boolean newSeparateAnimeFromShowMovie = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
+        if (newSeparateAnimeFromShowMovie != mSeparateAnimeFromShowMovie) {
+            if (newSeparateAnimeFromShowMovie)  // add row
+                log.debug("onResume: separate Anime From Show Movie");
+            else // remove row
+                log.debug("onResume: do not separate Anime From Show Movie");
+            mSeparateAnimeFromShowMovie = newSeparateAnimeFromShowMovie;
+            updateAnimesRow(null);
+            if (mShowMoviesRow) restartMoviesLoader = true;
+            if (mShowTvshowsRow) restartTvshowsLoader = true;
+        }
         // treat first change in settings
         boolean newShowWatchingUpNextRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_WATCHING_UP_NEXT_ROW, VideoPreferencesCommon.SHOW_WATCHING_UP_NEXT_ROW_DEFAULT);
-        if (FEATURE_WATCH_UP_NEXT) newShowWatchingUpNextRow = true;
-        else newShowWatchingUpNextRow = false;
+        if (! FEATURE_WATCH_UP_NEXT) newShowWatchingUpNextRow = mShowWatchingUpNextRow;
         if (newShowWatchingUpNextRow != mShowWatchingUpNextRow) {
             log.debug("onResume: preference changed, display watching up next row: " + newShowWatchingUpNextRow + " -> updating");
             mShowWatchingUpNextRow = newShowWatchingUpNextRow;
@@ -388,7 +400,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             restartMoviesLoader = false;
             Bundle args = new Bundle();
             args.putString("sort", mMovieSortOrder);
-            LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_MOVIES, args, this);
+            // need to restart the loader since it can change depending on animations / movies shows separation
+            LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_MOVIES, args, this);
         } else
             updateMoviesRow(null); // will be done on loader restart
 
@@ -409,18 +422,19 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             restartTvshowsLoader = false;
             Bundle args = new Bundle();
             args.putString("sort", mTvShowSortOrder);
-            LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
+            // need to restart the loader since it can change depending on animations / movies shows separation
+            LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
         } else
             updateTvShowsRow(null); // will be done on loader restart
 
         boolean newShowAnimesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_ANIMES_ROW, VideoPreferencesCommon.SHOW_ALL_ANIMES_ROW_DEFAULT);
-        if (newShowAnimesRow != mShowAnimesRow) {
+        if (newShowAnimesRow != mShowAnimesRow && mSeparateAnimeFromShowMovie) {
             log.debug("onResume: preference changed, display all animes row: " + newShowAnimesRow + " -> updating");
             mShowAnimesRow = newShowAnimesRow;
             if (mShowAnimesRow) restartAnimesLoader = true;
         }
         String newAnimesSortOrder = mPrefs.getString(VideoPreferencesCommon.KEY_ANIMES_SORT_ORDER, AnimesLoader.DEFAULT_SORT);
-        if (mShowAnimesRow && !newAnimesSortOrder.equals(mAnimesSortOrder)) {
+        if (mShowAnimesRow && !newAnimesSortOrder.equals(mAnimesSortOrder) && mSeparateAnimeFromShowMovie) {
             log.debug("onResume: preference changed, showing animes row and sort order changed -> updating");
             mAnimesSortOrder = newAnimesSortOrder;
             restartAnimesLoader = true;
@@ -432,7 +446,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             args.putString("sort", mAnimesSortOrder);
             LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_ANIMES, args, this);
         } else
-            updateAnimesRow(null); // will be done on loader restart
+            if (mSeparateAnimeFromShowMovie) updateAnimesRow(null); // will be done on loader restart
 
         findAndUpdatePrivateModeIcon();
     }
@@ -606,7 +620,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private static class buildAllMoviesBoxTask extends AsyncTask<Void, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(Void... params) {
-            Bitmap iconBitmap = new AllMoviesIconBuilder(mActivity).buildNewBitmap();
+            Bitmap iconBitmap;
+            if (mSeparateAnimeFromShowMovie) iconBitmap = new AllFilmsIconBuilder(mActivity).buildNewBitmap();
+            else iconBitmap = new AllMoviesIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
         }
         @Override
@@ -628,7 +644,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private static class buildAllCollectionsBoxTask extends AsyncTask<Void, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(Void... params) {
-            Bitmap iconBitmap = new CollectionsIconBuilder(mActivity).buildNewBitmap();
+            Bitmap iconBitmap;
+            if (mSeparateAnimeFromShowMovie) iconBitmap = new CollectionsIconBuilder(mActivity).buildNewBitmap();
+            else iconBitmap = new CollectionsMoviesIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
         }
         @Override
@@ -716,7 +734,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private static class buildAllTvshowsBoxTask extends AsyncTask<Void, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(Void... params) {
-            Bitmap iconBitmap = new AllTvshowsIconBuilder(mActivity).buildNewBitmap();
+            Bitmap iconBitmap;
+            if (mSeparateAnimeFromShowMovie) iconBitmap = new AllTvshowNoAmimeIconBuilder(mActivity).buildNewBitmap();
+            else iconBitmap = new AllTvshowsIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
         }
         @Override
@@ -919,24 +939,29 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 log.debug("updateAnimesRow: remove all animations row at position " + currentPosition);
                 mRowsAdapter.removeItems(currentPosition, 1);
             }
-            if (getRowPosition(ROW_ID_ANIMES) == -1) {
-                int newPosition = 0;
-                if (getRowPosition(ROW_ID_TVSHOW) != -1)
-                    newPosition = getRowPosition(ROW_ID_TVSHOW) + 1;
-                else if (getRowPosition(ROW_ID_ALL_TVSHOWS) != -1)
-                    newPosition = getRowPosition(ROW_ID_ALL_TVSHOWS) + 1;
-                else if (getRowPosition(ROW_ID_MOVIES) != -1)
-                    newPosition = getRowPosition(ROW_ID_MOVIES) + 1;
-                else if (getRowPosition(ROW_ID_ALL_MOVIES) != -1)
-                    newPosition = getRowPosition(ROW_ID_ALL_MOVIES) + 1;
-                else if (getRowPosition(ROW_ID_LAST_PLAYED) != -1)
-                    newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
-                else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
-                    newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
-                else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
-                    newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
-                log.debug("updateAnimesRow: adding animations row at " + newPosition);
-                mRowsAdapter.add(newPosition, mAnimeRow);
+            if (mSeparateAnimeFromShowMovie) {
+                if (getRowPosition(ROW_ID_ANIMES) == -1) {
+                    int newPosition = 0;
+                    if (getRowPosition(ROW_ID_TVSHOW) != -1)
+                        newPosition = getRowPosition(ROW_ID_TVSHOW) + 1;
+                    else if (getRowPosition(ROW_ID_ALL_TVSHOWS) != -1)
+                        newPosition = getRowPosition(ROW_ID_ALL_TVSHOWS) + 1;
+                    else if (getRowPosition(ROW_ID_MOVIES) != -1)
+                        newPosition = getRowPosition(ROW_ID_MOVIES) + 1;
+                    else if (getRowPosition(ROW_ID_ALL_MOVIES) != -1)
+                        newPosition = getRowPosition(ROW_ID_ALL_MOVIES) + 1;
+                    else if (getRowPosition(ROW_ID_LAST_PLAYED) != -1)
+                        newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
+                    else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
+                        newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
+                    else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
+                        newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
+                    log.debug("updateAnimesRow: adding animations row at " + newPosition);
+                    mRowsAdapter.add(newPosition, mAnimeRow);
+                }
+            } else {
+                // remove row mAnimeRow
+                mRowsAdapter.remove(mAnimeRow);
             }
         } else {
             int position = getRowPosition(ROW_ID_ANIMES);
@@ -944,24 +969,28 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 log.debug("updateAnimesRow: remove animations row at position " + position);
                 mRowsAdapter.removeItems(position, 1);
             }
-            if (currentPosition == -1) {
-                int newPosition = 0;
-                if (getRowPosition(ROW_ID_TVSHOW) != -1)
-                    newPosition = getRowPosition(ROW_ID_TVSHOW) + 1;
-                else if (getRowPosition(ROW_ID_ALL_TVSHOWS) != -1)
-                    newPosition = getRowPosition(ROW_ID_ALL_TVSHOWS) + 1;
-                else if (getRowPosition(ROW_ID_MOVIES) != -1)
-                    newPosition = getRowPosition(ROW_ID_MOVIES) + 1;
-                else if (getRowPosition(ROW_ID_ALL_MOVIES) != -1)
-                    newPosition = getRowPosition(ROW_ID_ALL_MOVIES) + 1;
-                else if (getRowPosition(ROW_ID_LAST_PLAYED) != -1)
-                    newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
-                else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
-                    newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
-                else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
-                    newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
-                log.debug("updateAnimesRow: adding all animations row at " + newPosition);
-                mRowsAdapter.add(newPosition, mAnimesRow);
+            if (mSeparateAnimeFromShowMovie) {
+                if (currentPosition == -1) {
+                    int newPosition = 0;
+                    if (getRowPosition(ROW_ID_TVSHOW) != -1)
+                        newPosition = getRowPosition(ROW_ID_TVSHOW) + 1;
+                    else if (getRowPosition(ROW_ID_ALL_TVSHOWS) != -1)
+                        newPosition = getRowPosition(ROW_ID_ALL_TVSHOWS) + 1;
+                    else if (getRowPosition(ROW_ID_MOVIES) != -1)
+                        newPosition = getRowPosition(ROW_ID_MOVIES) + 1;
+                    else if (getRowPosition(ROW_ID_ALL_MOVIES) != -1)
+                        newPosition = getRowPosition(ROW_ID_ALL_MOVIES) + 1;
+                    else if (getRowPosition(ROW_ID_LAST_PLAYED) != -1)
+                        newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
+                    else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
+                        newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
+                    else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
+                        newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
+                    log.debug("updateAnimesRow: adding all animations row at " + newPosition);
+                    mRowsAdapter.add(newPosition, mAnimesRow);
+                }
+            } else {
+                mRowsAdapter.remove(mAnimesRow);
             }
         }
         debugRows("updateAnimesRow");
@@ -1025,16 +1054,31 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 return new LastPlayedLoader(mActivity);
             case LOADER_ID_ALL_MOVIES:
                 log.debug("onCreateLoader ALL_MOVIES");
-                if (args == null) return new FilmsLoader(mActivity, true);
-                else return new FilmsLoader(mActivity, args.getString("sort"), true, true);
+                if (mSeparateAnimeFromShowMovie) {
+                    if (args == null) return new FilmsLoader(mActivity, true);
+                    else return new FilmsLoader(mActivity, args.getString("sort"), true, true);
+                } else {
+                    if (args == null) return new MoviesLoader(mActivity, true);
+                    else return new MoviesLoader(mActivity, args.getString("sort"), true, true);
+                }
             case LOADER_ID_ALL_TV_SHOWS:
                 log.debug("onCreateLoader ALL_TV_SHOWS");
-                if (args == null) return new AllTvshowsNoAnimeLoader(mActivity);
-                else return new AllTvshowsNoAnimeLoader(mActivity, args.getString("sort"), true);
+                if (mSeparateAnimeFromShowMovie) {
+                    if (args == null) return new AllTvshowsNoAnimeLoader(mActivity);
+                    else return new AllTvshowsNoAnimeLoader(mActivity, args.getString("sort"), true);
+                } else {
+                    if (args == null) return new AllTvshowsLoader(mActivity);
+                    else return new AllTvshowsLoader(mActivity, args.getString("sort"), true);
+                }
             case LOADER_ID_ALL_ANIMES:
                 log.debug("onCreateLoader ALL_ANIMES");
-                if (args == null) return new AnimesNShowsLoader(mActivity);
-                else return new AnimesNShowsLoader(mActivity, args.getString("sort"), true);
+                if (mSeparateAnimeFromShowMovie) {
+                    if (args == null) return new AnimesNShowsLoader(mActivity);
+                    else return new AnimesNShowsLoader(mActivity, args.getString("sort"), true);
+                } else {
+                    if (args == null) return new AnimesLoader(mActivity, true);
+                    else return new AnimesLoader(mActivity, args.getString("sort"), true, true);
+                }
             case LOADER_ID_NON_SCRAPED_VIDEOS_COUNT:
                 log.debug("onCreateLoader NON_SCRAPED");
                 return new NonScrapedVideosCountLoader(mActivity);
@@ -1087,18 +1131,20 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                             buildAllTvshowsBox();
                         updateTvShowsRow(null);
                     }
-                    if (mShowAnimesRow) {
-                        log.debug("onLoadFinished: mShowAnimesRow --> restart ALL_ANIMES loader");
-                        Bundle args = new Bundle();
-                        args.putString("sort", mAnimesSortOrder);
-                        LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_ANIMES, args, this);
-                    } else {
-                        log.debug("onLoadFinished: buildAllAnimesBox & buildAllAnimeShowsBox");
-                        if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor)) {
-                            buildAllAnimesBox();
-                            buildAllAnimeShowsBox();
+                    if (mSeparateAnimeFromShowMovie) {
+                        if (mShowAnimesRow) {
+                            log.debug("onLoadFinished: mShowAnimesRow --> restart ALL_ANIMES loader");
+                            Bundle args = new Bundle();
+                            args.putString("sort", mAnimesSortOrder);
+                            LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_ANIMES, args, this);
+                        } else {
+                            log.debug("onLoadFinished: buildAllAnimesBox & buildAllAnimeShowsBox");
+                            if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor)) {
+                                buildAllAnimesBox();
+                                buildAllAnimeShowsBox();
+                            }
+                            updateAnimesRow(null);
                         }
-                        updateAnimesRow(null);
                     }
                 }
                 break;
@@ -1120,7 +1166,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 break;
             case LOADER_ID_ALL_ANIMES:
                 log.debug("onLoadFinished: AllAnimes cursor ready with " + cursor.getCount() + " entries, updating row/box");
-                if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor))
+                if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor) && mSeparateAnimeFromShowMovie)
                     updateAnimesRow(cursor);
                 break;
             case LOADER_ID_NON_SCRAPED_VIDEOS_COUNT:

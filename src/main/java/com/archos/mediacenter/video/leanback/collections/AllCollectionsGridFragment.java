@@ -47,6 +47,9 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.CollectionCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.loader.AllCollectionsLoader;
+import com.archos.mediacenter.video.browser.loader.AllCollectionsNoAnimeLoader;
+import com.archos.mediacenter.video.browser.loader.TvshowsByAlphaLoader;
+import com.archos.mediacenter.video.browser.loader.TvshowsNoAnimeByAlphaLoader;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.DisplayMode;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
@@ -56,6 +59,7 @@ import com.archos.mediacenter.video.leanback.presenter.VideoListPresenter;
 import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.utils.DbUtils;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 
 public class AllCollectionsGridFragment extends MyVerticalGridFragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -82,6 +86,7 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
     private BackgroundManager bgMngr = null;
 
     private boolean mCollectionWatched;
+    private boolean mSeparateAnimeFromShowMovie;
 
     private static Context mContext;
 
@@ -109,6 +114,7 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
         mSortOrderEntries = CollectionsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
 
         mCollectionWatched = mPrefs.getBoolean(COLLECTION_WATCHED_KEY, true);
+        mSeparateAnimeFromShowMovie = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
 
         updateBackground();
 
@@ -296,8 +302,13 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (DBG) Log.d(TAG, "onCreateLoader");
         if (id == ALL_COLLECTIONS_LOADER_ID) {
-            if (args == null) return new AllCollectionsLoader(getActivity());
-            else return new AllCollectionsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("collectionWatched"));
+            if (args == null) {
+                if (mSeparateAnimeFromShowMovie) return new AllCollectionsNoAnimeLoader(getActivity());
+                else return new AllCollectionsLoader(getActivity());
+            } else {
+                if (mSeparateAnimeFromShowMovie) return new AllCollectionsNoAnimeLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("collectionWatched"));
+                else return new AllCollectionsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("collectionWatched"));
+            }
         }
         else return null;
     }
