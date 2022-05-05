@@ -657,8 +657,6 @@
     <string name="preferences_display_resume_box_summary">在主屏幕上显示或隐藏“恢复播放最近视频”的按钮</string>
     <string name="preferences_display_resume_box">显示恢复播放窗口</string>
     <string name="preferences_leanback_user_interface">电视用户界面</string>
-    <string name="preferences_show_animation_row_summary">勾选以显示带有动画图块的行，这些图块分别访问电影和电视节目中的动画视频</string>
-    <string name="preferences_show_animation_row">显示动画图块行</string>
     <string name="preferences_show_watching_up_next_row_summary">选中以显示当前正在观看和随后观看的视频栏</string>
     <string name="preferences_show_watching_up_next_row">显示“正在观看/随后观看”栏</string>
     <string name="preferences_show_last_added_row_summary">选中以显示您最近添加的媒体</string>

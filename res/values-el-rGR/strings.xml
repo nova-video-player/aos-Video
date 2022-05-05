@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
+    <!-- Menu item that takes the user back to the top level screen of the music player -->
+    <string name="goto_start">Βιβλιοθήκη</string>
+    <!-- Menu item that takes the user to the "now playing" screen of the music player -->
+    <!-- Menu item to refresh servers list -->
+    <string name="refresh_servers_list">Ανανέωση λίστας εξυπηρετητών</string>
+    <!-- Menu item to enable network shares -->
+    <string name="enable_network_shares">Ενεργοποίηση διαμοιρασμού δικτύου</string>
+    <string name="initial_scan">Αρχική σάρωση</string>
+    <!-- Library screen, menu item -->
+    <string name="search_title">Αναζήτηση</string>
+    <!-- Default name of track that doesn't have a name in the metadata -->
+    <string name="unknown_track_name">Άγνωστο</string>
+    <!-- Toast after turning shuffle on -->
+    <!-- Toast after turning shuffle off -->
+    <!-- Toast after turning single repeat on -->
+    <!-- Context menu item -->
+    <string name="info">Πληροφορίες</string>
+    <!-- Context menu item -->
+    <string name="play_selection">Αναπαραγωγή</string>
+    <!-- Context menu item -->
+    <string name="multiple_selection">Πολλαπλή επιλογή</string>
+    <!-- Context menu item -->
+    <string name="play_from_beginning">Αναπαραγωγή από την αρχή</string>
+    <!-- Dialog box button -->
+    <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <!-- The string used in file/folder infos dialog. -->
+    <string name="info_duration">Διάρκεια</string>
+    <string name="video_sources">Πηγές</string>
+    <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">Ταινία</string>
+    <string name="info_tab_show">Σειρά</string>
+    <string name="info_tab_episode">Επεισόδιο</string>
+    <string name="info_tab_video">Βίντεο</string>
+    <string name="info_tab_file">Πληροφορίες αρχείου</string>
+    <string name="info_tab_backdrop_chooser">Επιλογέας φόντου</string>
+    <string name="info_tab_poster_chooser">Επιλογέας αφίσας</string>
+    <string name="info_tab_share">Κοινοποίηση</string>
+    <string name="info_menu_backdrop_select">Φόντο</string>
+    <string name="info_menu_series_backdrop_select">Φόντο Σειράς</string>
+    <string name="info_menu_poster_select">Επιλογή άλλης αφίσας</string>
+    <string name="info_menu_series_poster_select">Επιλογή άλλης αφίσας</string>
+    <!-- COVER ROLL -->
+    <string name="recently_added">Προστέθηκαν πρόσφατα</string>
+    <string name="recently_added_videos">Προστέθηκαν πρόσφατα</string>
+    <string name="recently_played">Έπαιξαν πρόσφατα</string>
+    <string name="recently_played_videos">Έπαιξαν πρόσφατα</string>
+    <string name="video_lists">Λίστες αναπαραγωγής</string>
+    <!-- The string used in main storage list -->
+    <string name="external_storage">Εξωτερικός</string>
+    <string name="internal_storage">Εσωτερικός</string>
+    <string name="network_storage">Δίκτυο</string>
+    <string name="sd_card_storage">Κάρτα SD</string>
+    <string name="usb_host_storage">Εξωτερικός δίσκος</string>
+    <string name="other_storage">Οδηγός</string>
+    <string name="network_media_servers">Διακομιστές πολυμέσων (UPnP)</string>
+    <string name="network_shared_folders">Κοινόχρηστοι φάκελοι (SMB)</string>
+    <string name="network_connected_as">Συνδέθηκε ως \"%s\"</string>
+    <string name="network_guest">Επισκέπτης</string>
+    <string name="sftp_folders">FTP</string>
+    <string name="network_jcifs">Samba (Πειραματικό)</string>
+    <string name="network_cling">UPNP (Πειραματικό)</string>
+    <string name="recordings_storage">Εγγραφές</string>
+    <string name="root_storage">Εσωτερικός αποθηκευτικός χώρος</string>
+    <!-- VIDEO -->
+    <string name="videos">Βίντεο</string>
+    <string name="all_videos">Όλα τα βίντεο</string>
+    <string name="not_played_yet_videos">Δεν παίχτηκε ακόμα</string>
+    <string name="deleting">Παρακαλώ περιμένετε κατά τη διαγραφή…</string>
+    <string name="cannot_delete_directory">Αδυναμία διαγραφής φακέλου</string>
+    <string name="cannot_delete_file">Αδυναμία διαγραφής του αρχείου</string>
+    <string name="directory_deleted">Ο φάκελος διαγράφηκε</string>
+    <string name="file_deleted">Το αρχείο διαγράφηκε</string>
+    <string name="resume">Συνέχιση</string>
+    <string name="remote_resume">Απομακρυσμένη συνέχιση</string>
+    <string name="bookmark">Σελιδοδείκτης</string>
+    <string name="delete">Διαγραφή</string>
+    <string name="confirm_delete_short">Επιβεβαίωση διαγραφής</string>
+    <string name="delete_resume">Διαγραφή συνέχισης</string>
+    <string name="delete_bookmark">Διαγραφή σελιδοδείκτη</string>
+    <string name="mark_as_watched">Σήμανση ως προβληθέν</string>
+    <string name="mark_as_not_watched">Σήμανση ως μη προβληθέν</string>
+    <string name="upnp_not_allowed">Δεν επιτρέπεται η πρόσβαση σε αυτόν τον εξυπηρετητή UPnP. Παρακαλώ αλλάξτε πρώτα τις ρυθμίσεις πρόσβασης σας.</string>
+    <string name="scrap_no_info">Δεν έχετε περιγραφή ταινίας ή σειράς για αυτό το βίντεο.</string>
+    <string name="scrap_remove">Αφαίρεση πληροφοριών</string>
+    <string name="scrap_remove_short">Αφαίρεση</string>
+    <!-- for small screens -->
+    <string name="scrap_change">Αλλαγή πληροφοριών όλων των επεισοδίων</string>
+    <string name="scrap_series_change">Αλλαγή πληροφοριών σειράς</string>
+    <string name="scrap_change_confirmation">Αλλαγή όλων των επεισοδίων από\n\t\"%1$s\"\nσε\n\t\"%2$s\";</string>
+    <string name="scrap_change_title">Τροποποίηση όλων των επεισοδίων</string>
+    <string name="scrap_change_initializing">Αρχικοποίηση…</string>
+    <string name="scrap_change_finalizing">Οριστικοποίηση…</string>
+    <string name="scrap_get_title">Ανάκτηση πληροφοριών</string>
+    <!-- Generic strings for Movies or TV shows -->
+    <string name="scrap_director">Σκηνοθέτης</string>
+    <string name="scrap_writer">Σεναριογράφος</string>
+    <string name="scrap_director_format">Σκηνοθέτης: %s</string>
+    <string name="scrap_writer_format">Σεναριογράφος: %s</string>
+    <string name="scrap_rating">Βαθμολογία</string>
+    <string name="scrap_rating_format">Βαθμολογία: %s</string>
+    <string name="scrap_year">Χρονιά</string>
+    <string name="scrap_year_format">Χρονιά: %d</string>
+    <string name="scrap_studio">Στούντιο</string>
+    <string name="scrap_plot">Υπόθεση</string>
+    <string name="scrap_trailer">Τρέιλερ</string>
+    <string name="scrap_cast">Πρωταγωνιστές</string>
+    <string name="scrap_cast_format">Πρωταγωνιστές: %s</string>
+    <string name="scrap_genre">Είδος</string>
+    <string name="scrap_genre_format">Είδη: %s</string>
+    <string name="scrap_genre_title">Είδη</string>
+    <string name="scrap_aired">Προβλήθηκε</string>
+    <string name="scrap_aired_format">Προβλήθηκε: %s</string>
+    <string name="scrap_guests">Προσκεκλημένοι</string>
+    <string name="scrap_premiered">Πρεμιέρα</string>
+    <!-- Specific strings for TV shows -->
+    <string name="show_network">Κανάλι</string>
+    <string name="episode_name">Επεισόδιο</string>
+    <string name="episode_season">Σεζόν</string>
+    <string name="episode_identification">Σεζόν %1$d Επεισόδιο %2$d</string>
+    <!-- To be translated only in case there is a localized IMDB -->
+    <string name="info_audio_vbr">VBR</string>
+    <string name="info_plugin_required">(απαιτείται πρόσθετο)</string>
+    <string name="info_subtitle">Υπότιτλος</string>
+    <string name="info_resume">Συνέχιση προβολής</string>
+    <string name="info_bookmark">Θέση σελιδοδείκτη</string>
+    <string name="info_file">Πληροφορίες αρχείου</string>
+    <string name="use_remote_resume">Συνέχιση απο θέση δικτύου;</string>
+    <!-- VIDEO COVER ROLL -->
+    <string name="you_have_no_movies">Δεν υπάρχουν ταινίες</string>
+    <string name="you_have_no_animes">Δεν υπάρχουν ταινίες κινουμένων σχεδίων</string>
+    <string name="you_have_no_movie_collections">Καμία συλλογή</string>
+    <!-- Media Center -->
+    <!-- VideoPlayer -->
+    <!-- Subtitles/Audio languages -->
+    <!-- Player errors -->
+    <!-- Player plug-in -->
+    <!-- Subtitles wizard -->
+    <!-- Subloader -->
+    <!-- Subtitle Settings Dialog -->
+    <!-- Subtitle Delay Dialog -->
+    <!-- Browser.CommonDetailsView -->
+    <!-- Add a space after the right quote
+    because the right part of the quote is
+    not visible otherwise -->
+    <!-- torrent -->
+    <!-- Shortcuts -->
+    <!-- Preferences -->
+    <!--  Title of the video picker activity. -->
+    <!-- Archos File Info -->
+    <!-- Help overlay -->
+    <!-- Info dialog, not indexed file -->
+    <!-- Brightness -->
+    <!--  Nfo File parsing -->
+</resources>

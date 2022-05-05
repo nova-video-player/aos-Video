@@ -657,8 +657,6 @@
     <string name="preferences_display_resume_box_summary">在主螢幕上顯示或隱藏續播最近撥放影片的按鈕</string>
     <string name="preferences_display_resume_box">顯示續播視窗</string>
     <string name="preferences_leanback_user_interface">電視使用者介面</string>
-    <string name="preferences_show_animation_row_summary">如要在主畫面將動畫影片與電影和電視劇分開顯示請勾選</string>
-    <string name="preferences_show_animation_row">顯示動畫圖塊</string>
     <string name="preferences_show_watching_up_next_row_summary">如要在選單中顯示目前和接下來要觀看影片的選項請勾選</string>
     <string name="preferences_show_watching_up_next_row">顯示「正在觀看 / 稍後觀看」</string>
     <string name="preferences_show_last_added_row_summary">如要在選單中顯示最近新增影片的選項請勾選</string>

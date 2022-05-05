@@ -672,8 +672,6 @@
     <string name="preferences_display_resume_box_summary">Показать/скрыть кнопку возобновления просмотра последнего видео на главном экране</string>
     <string name="preferences_display_resume_box">Отображать окно \"Возобновить\"</string>
     <string name="preferences_leanback_user_interface">Пользовательский интерфейс ТВ</string>
-    <string name="preferences_show_animation_row_summary">Отметьте, чтобы показать ряд с анимационными плитками отдельно от мультфильмов и мультсериалов</string>
-    <string name="preferences_show_animation_row">Показать ряд с анимационными плитками</string>
     <string name="preferences_show_watching_up_next_row_summary">Отметьте, чтобы показать ряд с видео, которое Вы смотрите</string>
     <string name="preferences_show_watching_up_next_row">Показывать ряд «Смотрю/Следующее»</string>
     <string name="preferences_show_last_added_row_summary">Отметьте, чтобы показать ряд с недавно добавленным видео</string>

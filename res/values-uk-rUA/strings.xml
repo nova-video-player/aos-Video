@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
+    <!-- Menu item that takes the user back to the top level screen of the music player -->
+    <string name="goto_start">Бібліотека</string>
+    <!-- Menu item that takes the user to the "now playing" screen of the music player -->
+    <!-- Menu item to refresh servers list -->
+    <!-- Menu item to enable network shares -->
+    <!-- Library screen, menu item -->
+    <!-- Default name of track that doesn't have a name in the metadata -->
+    <!-- Toast after turning shuffle on -->
+    <!-- Toast after turning shuffle off -->
+    <!-- Toast after turning single repeat on -->
+    <!-- Context menu item -->
+    <!-- Context menu item -->
+    <!-- Context menu item -->
+    <!-- Context menu item -->
+    <!-- Dialog box button -->
+    <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <!-- The string used in file/folder infos dialog. -->
+    <!-- Infos dialog tabs -->
+    <!-- COVER ROLL -->
+    <string name="recently_added">Недавно додані</string>
+    <string name="recently_added_videos">Недавно додані</string>
+    <string name="recently_played">Недавно відтворювані</string>
+    <string name="recently_played_videos">Недавно відтворювані</string>
+    <!-- The string used in main storage list -->
+    <string name="network_shared_folders">Спільні теки (SMB)</string>
+    <string name="sftp_folders">FTP</string>
+    <string name="root_storage">Внутрішнє сховище</string>
+    <!-- VIDEO -->
+    <string name="videos">Відеозаписи</string>
+    <string name="all_videos">Усі відеозаписи</string>
+    <string name="video_folder">Теки</string>
+    <string name="movies">Фільми</string>
+    <string name="all_movies">Усі фільми</string>
+    <string name="all_movies_format">Усі фільми - %d</string>
+    <string name="all_movies_watched">Усі переглянуті фільми</string>
+    <string name="movies_by_alpha">Фільми за алфавітом</string>
+    <string name="movies_by_genre">Фільми за жанром</string>
+    <string name="movies_by_rating">Фільми за оцінкою</string>
+    <string name="movies_by_year">Фільми за роком</string>
+    <string name="date_view_week">Тиждень</string>
+    <string name="date_view_month">Місяць</string>
+    <string name="date_view_year">Рік</string>
+    <string name="delete">Видалити</string>
+    <string name="scrap_remove_short">Вилучити</string>
+    <!-- for small screens -->
+    <!-- Generic strings for Movies or TV shows -->
+    <string name="scrap_year">Рік</string>
+    <string name="scrap_year_format">Рік: %d</string>
+    <!-- Specific strings for TV shows -->
+    <string name="show_network">Мережа</string>
+    <string name="episode_season">Сезон</string>
+    <string name="scrap_status_success">Оновлено</string>
+    <string name="imdb_title_url">https://www.imdb.com/title/</string>
+    <!-- To be translated only in case there is a localized IMDB -->
+    <string name="storage">Сховище</string>
+    <!-- VIDEO COVER ROLL -->
+    <plurals name="Nmovies">
+        <item quantity="one">1 фільм</item>
+        <item quantity="few"><xliff:g id="count">%d</xliff:g> фільми</item>
+        <item quantity="many"><xliff:g id="count">%d</xliff:g> фільмів</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> фільмів</item>
+    </plurals>
+    <plurals name="Nseasons">
+        <item quantity="one">1 сезон</item>
+        <item quantity="few"><xliff:g id="count">%d</xliff:g> сезони</item>
+        <item quantity="many"><xliff:g id="count">%d</xliff:g> сезонів</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> сезонів</item>
+    </plurals>
+    <!-- Media Center -->
+    <!-- VideoPlayer -->
+    <string name="pref_play_mode_entry_folder">Тека</string>
+    <string name="pref_audio_parameters_title">Звук</string>
+    <string name="ui_mode_normal">Планшет/телефон</string>
+    <string name="pref_s3d_mode_title">3D-режим</string>
+    <!-- Subtitles/Audio languages -->
+    <string name="s_arabic">Арабська</string>
+    <string name="s_bulgarian">Болгарська</string>
+    <string name="Bosnian">Боснійська</string>
+    <string name="s_czech">Чеська</string>
+    <string name="s_german">Німецька</string>
+    <string name="s_english">Англійська</string>
+    <string name="s_greek">Грецька</string>
+    <string name="s_spanish">Іспанська</string>
+    <string name="s_finnish">Фінська</string>
+    <string name="s_french">Французька</string>
+    <string name="s_hebrew">Єврейська</string>
+    <string name="s_hungarian">Угорська</string>
+    <string name="s_italian">Італійська</string>
+    <string name="s_japanese">Японська</string>
+    <string name="s_korean">Корейська</string>
+    <string name="s_lithuanian">Литовська</string>
+    <string name="s_indonesian">Індонезійська</string>
+    <string name="s_malay">Малайська</string>
+    <!-- Player errors -->
+    <string name="player_err_unknown">Невідома помилка.</string>
+    <string name="player_err_codec">Кодек</string>
+    <!-- Player plug-in -->
+    <!-- Subtitles wizard -->
+    <string name="subtitles_wizard_cache">Кеш</string>
+    <!-- Subloader -->
+    <string name="dialog_subloader_copying">Копіювання субтитрів…</string>
+    <!-- Subtitle Settings Dialog -->
+    <!-- Subtitle Delay Dialog -->
+    <!-- Browser.CommonDetailsView -->
+    <!-- Add a space after the right quote
+    because the right part of the quote is
+    not visible otherwise -->
+    <!-- torrent -->
+    <!-- Shortcuts -->
+    <string name="indexed_folders">Індексовані теки</string>
+    <string name="remove_from_indexed_folders">Вилучити з бібліотеки</string>
+    <string name="rescan_indexed_folders">Пересканувати всі індексовані теки</string>
+    <!-- Preferences -->
+    <string name="preferences">Налаштування</string>
+    <string name="preferences_about">Про застосунок</string>
+    <string name="preferences_category_complete">Повна версія</string>
+    <string name="preferences_category_video">Відео</string>
+    <string name="preferences_video_about">Про</string>
+    <string name="preferences_video_os_text">Субтитри надає</string>
+    <string name="preferences_video_licenses">Ліцензії</string>
+    <!--  Title of the video picker activity. -->
+    <!-- Archos File Info -->
+    <!-- Help overlay -->
+    <string name="share_folders_smbv2">Дозволити підтримку SMBv2</string>
+    <!-- Info dialog, not indexed file -->
+    <!-- Brightness -->
+    <!--  Nfo File parsing -->
+    <string name="preferences_user_interface">Користувацький інтерфейс</string>
+    <string name="torrent_category">Торент</string>
+    <string name="torrent_path">Шлях завантаження</string>
+    <string name="torrent_blocklist">Список блокування</string>
+    <string name="blocklist_downloading">Завантаження списку блокування</string>
+    <string name="blocklist_file_not_found">Файл не знайдено</string>
+    <string name="blocklist_not_loaded">Не завантажено</string>
+    <string name="torrent_blocklist_url">Url списку блокування</string>
+    <string name="show_all">Усі відеозаписи</string>
+    <string name="provider_folders">Хмара</string>
+</resources>

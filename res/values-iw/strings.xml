@@ -50,7 +50,7 @@
     <string name="info_tab_movie">סרט</string>
     <string name="info_tab_show">תכנית</string>
     <string name="info_tab_episode">פרק</string>
-    <string name="info_tab_video">סרטון</string>
+    <string name="info_tab_video">וידאו</string>
     <string name="info_tab_file">מידע על הקובץ</string>
     <string name="info_tab_backdrop_chooser">בוחר רקע</string>
     <string name="info_tab_poster_chooser">בוחר פוסטר</string>
@@ -84,7 +84,7 @@
     <string name="root_storage">אחסון פנימי</string>
     <string name="cannot_list">לא ניתן להציג תוכן</string>
     <!-- VIDEO -->
-    <string name="videos">סרטונים</string>
+    <string name="videos">וידאו</string>
     <string name="all_videos">כל הוידאו</string>
     <string name="not_played_yet_videos">לא הופעל עדיין</string>
     <string name="video_folder">תיקיות</string>
@@ -154,7 +154,7 @@
     <string name="mark_as_watched">סמן כנצפה</string>
     <string name="mark_as_not_watched">סמן כלא נצפה</string>
     <string name="upnp_not_allowed">אינך רשאי לגשת לשרת UPnP זה. אנא שנה קודם את הגדרות הגישה שלך.</string>
-    <string name="scrap_no_info">אין תיאור של סרט או סדרה עבור סרטון זה.</string>
+    <string name="scrap_no_info">אין תיאור של סרט או סדרה עבור וידאו זה.</string>
     <string name="scrap_remove">הסר מידע זה</string>
     <string name="scrap_remove_short">הסר</string>
     <!-- for small screens -->
@@ -258,7 +258,7 @@
     <string name="you_have_no_recently_added_video">לא נוסף וידאו לאחרונה</string>
     <string name="you_have_no_recently_played_video">לא הופעל וידאו לאחרונה</string>
     <string name="you_have_no_video">אין וידאו</string>
-    <string name="you_have_no_video_yet">מחפש סרטונים&#8230;</string>
+    <string name="you_have_no_video_yet">מחפש וידאו&#8230;</string>
     <string name="you_have_no_movies">אין סרטים</string>
     <string name="you_have_no_animes">אין סרטי אנימציה</string>
     <string name="you_have_no_movie_collections">אין אוספים</string>
@@ -433,7 +433,7 @@
     <string name="dialog_subloader_sumup">ההורדה הסתיימה</string>
     <string name="dialog_subloader_success">כתוביות נמצאו עבור:</string>
     <string name="dialog_subloader_fails">כתוביות לא נמצאו עבור:</string>
-    <string name="sub_force_all_title">אילוץ הורדת כתוביות</string>
+    <string name="sub_force_all_title">כפה הורדת כתוביות</string>
     <string name="sub_force_all">כל קבצי הוידאו מכילים לפחות רצועת כתוביות אחת. האם ברצונך לאלץ הורדת רצועת כתוביות חדשה?</string>
     <string name="dialog_subloader_nonetwork_title">אין חיבור אינטרנט</string>
     <string name="dialog_subloader_nonetwork_message">חיבור אינטרנט נדרש ע\"מ להוריד כתוביות</string>
@@ -532,6 +532,8 @@
     <string name="preferences_force_audio_passthrough_summary">העברת אודיו דחוס דרך HDMI או S/PDIF. ⚠ ניסיוני, יתכן חוסר סינכרון אודיו/וידאו</string>
     <string name="preferences_disable_downmix_title">השבת שנמוך אודיו לסטריאו</string>
     <string name="preferences_disable_downmix_summary">פענח תמיד את כל הערוצים ותן לאנדרואיד לבצע שנמוך כתלות ביכולות פלט האודיו (יכול לגרום לאיבוד ערוצי קול)</string>
+    <string name="preferences_enable_downmix_androidtv_title">כפה שנמוך אודיו לסטריאו</string>
+    <string name="preferences_enable_downmix_androidtv_summary">תמיד שנמך אטדיו רב ערוצי לסטריאו (יש לבחור אם ערוצי קול לא נשמעים)</string>
     <string name="preferences_allow_3rd_party_player">אפשר שימוש בנגן וידאו אחר</string>
     <string name="preferences_allow_3rd_party_player_summary">נגני וידאו תואמים אחרים יוצעו על ידי אנדרואיד כשמפעילים ניגון וידאו. שים לב שחלק מהתכונות לא יעבדו (חזרה לנקודה, סימניות וכו\')</string>
     <string name="preference_tv_3d_automatic_switch">אפשר מעבר אוטומטי של הטלוויזיה ל-3D</string>
@@ -575,7 +577,7 @@
     <string name="no">לא</string>
     <string name="abort">ביטול</string>
     <!--  Title of the video picker activity. -->
-    <string name="video_picker_title">בחר סרטון</string>
+    <string name="video_picker_title">בחר וידאו</string>
     <!-- Archos File Info -->
     <string name="video_info_custom_search_file_hint">"\"Moviename\" או \"Showname S01E01\""</string>
     <string name="video_info_custom_search_show_hint">שם הסדרה</string>
@@ -583,7 +585,7 @@
     <string name="video_info_backdrop_select">בחר תמונה נוספת</string>
     <string name="video_info_backdrop_remove">הסר</string>
     <string name="video_info_backdrop_set_as">קבע תמונה כ- </string>
-    <string name="video_info_share_message">"צפיתי בסרטון \"%1$s\" על מכשיר ה- Nova %2$s שלי"</string>
+    <string name="video_info_share_message">"צפיתי בוידאו \"%1$s\" על ה- Nova %2$s שלי"</string>
     <string name="notification_mode">התראות</string>
     <string name="notifications_all">כל ההתראות</string>
     <string name="notifications_alerts">צלילי התראות בלבד</string>
@@ -605,9 +607,9 @@
     <string name="help_overlay_network_indexing_text1">לחץ על תפריט זה כדי לשלב את תוכן תיקייה זו ותת-התיקיות שלה לספרית הוידאו.</string>
     <string name="help_overlay_network_indexing_text1_lb">השתמש בכפתור + כדי לשלב את תוכן תיקייה זו ותת-התיקיות שלה לספרית הוידאו.</string>
     <string name="help_overlay_network_indexing_text2">יאפשר לך להשיג פוסטרים ותיאורים לסרטים וסדרות.</string>
-    <string name="help_overlay_scraper_text">לחץ על תפריט זה כדי לחפש פוסטרים ותיאורים לסרטונים שלך ברשת</string>
-    <string name="new_videos_count">סרטון חדש: %d</string>
-    <string name="new_videos_scrape_message">יש לך סרטונים חדשים ללא תיאורים ופוסטרים.</string>
+    <string name="help_overlay_scraper_text">לחץ על תפריט זה כדי לחפש פוסטרים ותיאורים לוידאו שלך ברשת.</string>
+    <string name="new_videos_count">וידאו חדש: %d</string>
+    <string name="new_videos_scrape_message">יש לך קבצי וידאו חדשים ללא תיאורים ופוסטרים.</string>
     <string name="network_bookmarks">נקודות המשך וסימניות מיקום ברשת</string>
     <string name="network_thumbnails">צור תמונות ממוזערות מרוחקות</string>
     <string name="network_thumbnails_summary">צור תמונות ממוזערות מקבצי וידאו מרוחקים כשאין פוסטר זמין</string>
@@ -839,7 +841,7 @@
     <string name="rescrap_movies_in_progress">סורק פרטי מדיה של כל הסרטים</string>
     <string name="rescrap_collections_in_progress">סורק פרטי מדיה של כל האוספים</string>
     <string name="acquire_external_usb_permission">Nova Video צריך הרשאה מיוחדת לגשת לאחסון חיצוני. בחר בבקשה את האחסון שלך במסך הבא</string>
-    <string name="rescrap_not_found">סורק פרטי מדיה של כל קבצי הוידאו ללא תיאור</string>
+    <string name="rescrap_not_found">סרוק פרטי מדיה של קבצי וידאו ללא תיאור</string>
     <string name="rescrap_all_title">סרוק את כל פרטי המדיה</string>
     <string name="rescrap_all_movies_title">סרוק פרטי מדיה של כל הסרטים</string>
     <string name="rescrap_all_collections_title">סרוק פרטי מדיה של כל האוספים</string>

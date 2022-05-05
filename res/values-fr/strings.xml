@@ -662,8 +662,8 @@
     <string name="preferences_display_resume_box_summary">Afficher ou cacher le bouton de reprise de la dernière vidéo dans l\'écran principal</string>
     <string name="preferences_display_resume_box">Afficher le bouton de reprise de la vidéo</string>
     <string name="preferences_leanback_user_interface">Interface utilisateur TV</string>
-    <string name="preferences_show_animation_row_summary">Cochez pour afficher une ligne avec les tuiles d\'animation accédant séparément aux vidéos d\'animation des films et séries TV</string>
-    <string name="preferences_show_animation_row">Afficher la ligne des tuiles d\'animation</string>
+    <string name="preferences_separate_animation_from_movies_summary">Cochez pour séparer les vidéos d\'animation des films et les séries télévisées en ajoutant une ligne d\'animation</string>
+    <string name="preferences_separate_animation_from_movies">Séparer les animations des films et des séries TV</string>
     <string name="preferences_show_watching_up_next_row_summary">Cochez pour afficher une ligne avec les vidéos en cours et les prochaines</string>
     <string name="preferences_show_watching_up_next_row">Afficher la ligne en cours/prochaines</string>
     <string name="preferences_show_last_added_row_summary">Cochez pour afficher une ligne avec vos dernières vidéos ajoutées</string>

@@ -662,8 +662,6 @@
     <string name="preferences_display_resume_box_summary">Button um das neueste Video im Hauptbildschirm fortzusetzen anzeigen oder verbergen</string>
     <string name="preferences_display_resume_box">Wiederherstellungsfeld anzeigen</string>
     <string name="preferences_leanback_user_interface">TV-Benutzeroberfläche</string>
-    <string name="preferences_show_animation_row_summary">Auswählen, um eine Zeile mit Animations-Kacheln anzuzeigen, die separat auf Animationsvideos von Filmen und Fernsehserien zugreifen</string>
-    <string name="preferences_show_animation_row">Zeile für Animations-Kacheln anzeigen</string>
     <string name="preferences_show_watching_up_next_row_summary">Anhaken, um eine Zeile mit den gerade laufenden oder anstehenden Videos anzuzeigen</string>
     <string name="preferences_show_watching_up_next_row">Zeige Laufendes/Nächste Reihe</string>
     <string name="preferences_show_last_added_row_summary">Anhaken um eine Zeile mit den zuletzt hinzugefügten Medien anzuzeigen</string>
