@@ -136,7 +136,7 @@ public class DebugDbExportDialogFragment extends DialogFragment {
                 // Build and send the intent
                 Intent emailIntent = new Intent(Intent.ACTION_SEND);
                 emailIntent.setType("text/plain");
-                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"software+video_db@archos.com"});
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"software+video_db@courville.org"});
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.zipped_library_mail_subject));
                 emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.zipped_library_mail_text));
                 emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(zipFile));
