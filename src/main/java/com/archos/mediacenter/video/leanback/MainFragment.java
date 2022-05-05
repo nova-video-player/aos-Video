@@ -265,8 +265,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         mPrefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
         mSeparateAnimeFromShowMovie = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
         mShowWatchingUpNextRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_WATCHING_UP_NEXT_ROW, VideoPreferencesCommon.SHOW_WATCHING_UP_NEXT_ROW_DEFAULT);
-        if (FEATURE_WATCH_UP_NEXT) mShowWatchingUpNextRow = true;
-        else mShowWatchingUpNextRow = false;
+        if (! FEATURE_WATCH_UP_NEXT) mShowWatchingUpNextRow = false;
         mShowLastAddedRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_ADDED_ROW, VideoPreferencesCommon.SHOW_LAST_ADDED_ROW_DEFAULT);
         mShowLastPlayedRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_PLAYED_ROW, VideoPreferencesCommon.SHOW_LAST_PLAYED_ROW_DEFAULT);
         mShowMoviesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_MOVIES_ROW, VideoPreferencesCommon.SHOW_ALL_MOVIES_ROW_DEFAULT);
@@ -339,12 +338,20 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         updateBackground();
         mActivity.registerReceiver(mUpdateReceiver, mUpdateFilter);
 
-        // TODO MARC redo layout and loaders if newSeparateAnimeFromShowMovie != mSeparateAnimeFromShowMovie
         boolean newSeparateAnimeFromShowMovie = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
+        if (newSeparateAnimeFromShowMovie != mSeparateAnimeFromShowMovie) {
+            if (newSeparateAnimeFromShowMovie)  // add row
+                log.debug("onResume: separate Anime From Show Movie");
+            else // remove row
+                log.debug("onResume: do not separate Anime From Show Movie");
+            mSeparateAnimeFromShowMovie = newSeparateAnimeFromShowMovie;
+            updateAnimesRow(null);
+            if (mShowMoviesRow) restartMoviesLoader = true;
+            if (mShowTvshowsRow) restartTvshowsLoader = true;
+        }
         // treat first change in settings
         boolean newShowWatchingUpNextRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_WATCHING_UP_NEXT_ROW, VideoPreferencesCommon.SHOW_WATCHING_UP_NEXT_ROW_DEFAULT);
-        if (FEATURE_WATCH_UP_NEXT) newShowWatchingUpNextRow = true;
-        else newShowWatchingUpNextRow = false;
+        if (! FEATURE_WATCH_UP_NEXT) newShowWatchingUpNextRow = mShowWatchingUpNextRow;
         if (newShowWatchingUpNextRow != mShowWatchingUpNextRow) {
             log.debug("onResume: preference changed, display watching up next row: " + newShowWatchingUpNextRow + " -> updating");
             mShowWatchingUpNextRow = newShowWatchingUpNextRow;
@@ -377,7 +384,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_PLAYED, null, this);
 
         boolean newShowMoviesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_MOVIES_ROW, VideoPreferencesCommon.SHOW_ALL_MOVIES_ROW_DEFAULT);
-        if (newShowMoviesRow != mShowMoviesRow || newSeparateAnimeFromShowMovie != mSeparateAnimeFromShowMovie) {
+        if (newShowMoviesRow != mShowMoviesRow) {
             log.debug("onResume: preference changed, display all movies row: " + newShowMoviesRow + " -> updating");
             mShowMoviesRow = newShowMoviesRow;
             if (mShowMoviesRow) restartMoviesLoader = true;
@@ -393,12 +400,13 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             restartMoviesLoader = false;
             Bundle args = new Bundle();
             args.putString("sort", mMovieSortOrder);
-            LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_MOVIES, args, this);
+            // need to restart the loader since it can change depending on animations / movies shows separation
+            LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_MOVIES, args, this);
         } else
             updateMoviesRow(null); // will be done on loader restart
 
         boolean newShowTvshowsRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_TV_SHOWS_ROW, VideoPreferencesCommon.SHOW_ALL_TV_SHOWS_ROW_DEFAULT);
-        if (newShowTvshowsRow != mShowTvshowsRow || newSeparateAnimeFromShowMovie != mSeparateAnimeFromShowMovie) {
+        if (newShowTvshowsRow != mShowTvshowsRow) {
             log.debug("onResume: preference changed, display all tv shows row: " + newShowTvshowsRow + " -> updating");
             mShowTvshowsRow = newShowTvshowsRow;
             if (mShowTvshowsRow) restartTvshowsLoader = true;
@@ -414,12 +422,12 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             restartTvshowsLoader = false;
             Bundle args = new Bundle();
             args.putString("sort", mTvShowSortOrder);
-            LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
+            // need to restart the loader since it can change depending on animations / movies shows separation
+            LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
         } else
             updateTvShowsRow(null); // will be done on loader restart
 
         boolean newShowAnimesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_ANIMES_ROW, VideoPreferencesCommon.SHOW_ALL_ANIMES_ROW_DEFAULT);
-        // TODO MARC if showAnimeTilesRow = || mSeparateAnimeFromShowMovie != mShowAnimeTilesRow
         if (newShowAnimesRow != mShowAnimesRow && mSeparateAnimeFromShowMovie) {
             log.debug("onResume: preference changed, display all animes row: " + newShowAnimesRow + " -> updating");
             mShowAnimesRow = newShowAnimesRow;
@@ -537,7 +545,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         mAnimeRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         mAnimeRow = new ListRow(ROW_ID_ANIMES, new HeaderItem(getString(R.string.animes)), mAnimeRowAdapter);
-        // TODO MARC do it only if mSeparateAnimeFromShowMovie ?
         buildAllAnimesBox();
         mAnimeRowAdapter.add(mAllAnimesBox);
         mAnimeRowAdapter.add(new Box(Box.ID.ANIMES_BY_GENRE, getString(R.string.animes_by_genre), R.drawable.genres_banner));
@@ -560,7 +567,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         mTvshowsAdapter.setMapper(new CompatibleCursorMapperConverter(new TvshowCursorMapper()));
         mTvshowsRow = new ListRow(ROW_ID_ALL_TVSHOWS, new HeaderItem(getString(R.string.all_tvshows)), mTvshowsAdapter);
 
-        // TODO MARC only if mSeparateAnimeFromShowMovie
         // this is for the all animes row not the animation row
         mAnimesAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(mActivity));
         mAnimesAdapter.setMapper(new CompatibleCursorMapperConverter(new AnimesNShowsMapper()));
@@ -933,24 +939,29 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 log.debug("updateAnimesRow: remove all animations row at position " + currentPosition);
                 mRowsAdapter.removeItems(currentPosition, 1);
             }
-            if (getRowPosition(ROW_ID_ANIMES) == -1) {
-                int newPosition = 0;
-                if (getRowPosition(ROW_ID_TVSHOW) != -1)
-                    newPosition = getRowPosition(ROW_ID_TVSHOW) + 1;
-                else if (getRowPosition(ROW_ID_ALL_TVSHOWS) != -1)
-                    newPosition = getRowPosition(ROW_ID_ALL_TVSHOWS) + 1;
-                else if (getRowPosition(ROW_ID_MOVIES) != -1)
-                    newPosition = getRowPosition(ROW_ID_MOVIES) + 1;
-                else if (getRowPosition(ROW_ID_ALL_MOVIES) != -1)
-                    newPosition = getRowPosition(ROW_ID_ALL_MOVIES) + 1;
-                else if (getRowPosition(ROW_ID_LAST_PLAYED) != -1)
-                    newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
-                else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
-                    newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
-                else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
-                    newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
-                log.debug("updateAnimesRow: adding animations row at " + newPosition);
-                mRowsAdapter.add(newPosition, mAnimeRow);
+            if (mSeparateAnimeFromShowMovie) {
+                if (getRowPosition(ROW_ID_ANIMES) == -1) {
+                    int newPosition = 0;
+                    if (getRowPosition(ROW_ID_TVSHOW) != -1)
+                        newPosition = getRowPosition(ROW_ID_TVSHOW) + 1;
+                    else if (getRowPosition(ROW_ID_ALL_TVSHOWS) != -1)
+                        newPosition = getRowPosition(ROW_ID_ALL_TVSHOWS) + 1;
+                    else if (getRowPosition(ROW_ID_MOVIES) != -1)
+                        newPosition = getRowPosition(ROW_ID_MOVIES) + 1;
+                    else if (getRowPosition(ROW_ID_ALL_MOVIES) != -1)
+                        newPosition = getRowPosition(ROW_ID_ALL_MOVIES) + 1;
+                    else if (getRowPosition(ROW_ID_LAST_PLAYED) != -1)
+                        newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
+                    else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
+                        newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
+                    else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
+                        newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
+                    log.debug("updateAnimesRow: adding animations row at " + newPosition);
+                    mRowsAdapter.add(newPosition, mAnimeRow);
+                }
+            } else {
+                // remove row mAnimeRow
+                mRowsAdapter.remove(mAnimeRow);
             }
         } else {
             int position = getRowPosition(ROW_ID_ANIMES);
@@ -958,24 +969,28 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 log.debug("updateAnimesRow: remove animations row at position " + position);
                 mRowsAdapter.removeItems(position, 1);
             }
-            if (currentPosition == -1) {
-                int newPosition = 0;
-                if (getRowPosition(ROW_ID_TVSHOW) != -1)
-                    newPosition = getRowPosition(ROW_ID_TVSHOW) + 1;
-                else if (getRowPosition(ROW_ID_ALL_TVSHOWS) != -1)
-                    newPosition = getRowPosition(ROW_ID_ALL_TVSHOWS) + 1;
-                else if (getRowPosition(ROW_ID_MOVIES) != -1)
-                    newPosition = getRowPosition(ROW_ID_MOVIES) + 1;
-                else if (getRowPosition(ROW_ID_ALL_MOVIES) != -1)
-                    newPosition = getRowPosition(ROW_ID_ALL_MOVIES) + 1;
-                else if (getRowPosition(ROW_ID_LAST_PLAYED) != -1)
-                    newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
-                else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
-                    newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
-                else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
-                    newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
-                log.debug("updateAnimesRow: adding all animations row at " + newPosition);
-                mRowsAdapter.add(newPosition, mAnimesRow);
+            if (mSeparateAnimeFromShowMovie) {
+                if (currentPosition == -1) {
+                    int newPosition = 0;
+                    if (getRowPosition(ROW_ID_TVSHOW) != -1)
+                        newPosition = getRowPosition(ROW_ID_TVSHOW) + 1;
+                    else if (getRowPosition(ROW_ID_ALL_TVSHOWS) != -1)
+                        newPosition = getRowPosition(ROW_ID_ALL_TVSHOWS) + 1;
+                    else if (getRowPosition(ROW_ID_MOVIES) != -1)
+                        newPosition = getRowPosition(ROW_ID_MOVIES) + 1;
+                    else if (getRowPosition(ROW_ID_ALL_MOVIES) != -1)
+                        newPosition = getRowPosition(ROW_ID_ALL_MOVIES) + 1;
+                    else if (getRowPosition(ROW_ID_LAST_PLAYED) != -1)
+                        newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
+                    else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
+                        newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
+                    else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
+                        newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
+                    log.debug("updateAnimesRow: adding all animations row at " + newPosition);
+                    mRowsAdapter.add(newPosition, mAnimesRow);
+                }
+            } else {
+                mRowsAdapter.remove(mAnimesRow);
             }
         }
         debugRows("updateAnimesRow");
@@ -1056,7 +1071,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     else return new AllTvshowsLoader(mActivity, args.getString("sort"), true);
                 }
             case LOADER_ID_ALL_ANIMES:
-                // TODO MARC check not clear if needed if mSeparateAnimeFromShowMovie false
                 log.debug("onCreateLoader ALL_ANIMES");
                 if (mSeparateAnimeFromShowMovie) {
                     if (args == null) return new AnimesNShowsLoader(mActivity);
@@ -1072,8 +1086,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 return null;
         }
     }
-
-    // TODO MARC finished here
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
@@ -1119,7 +1131,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                             buildAllTvshowsBox();
                         updateTvShowsRow(null);
                     }
-                    // TODO MARC check if we do not need to disable row
                     if (mSeparateAnimeFromShowMovie) {
                         if (mShowAnimesRow) {
                             log.debug("onLoadFinished: mShowAnimesRow --> restart ALL_ANIMES loader");
