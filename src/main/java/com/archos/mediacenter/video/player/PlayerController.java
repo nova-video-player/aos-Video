@@ -500,6 +500,15 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             }
         }
 
+        String mContentRating = prefs.getString("mContentRating", null);
+        TextView ContentRating = v.findViewById(R.id.content_rating);
+        LinearLayout ContentRatingContainer = v.findViewById(R.id.content_rating_container);
+        if(mIsLandscapeMode){
+            ContentRating.setText(mContentRating);
+        }else{
+            ContentRatingContainer.setVisibility(View.GONE);
+        }
+
 
         ImageButton mForwardButton = (ImageButton) v.findViewById(R.id.forward);
         if (mForwardButton != null) {

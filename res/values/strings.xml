@@ -1042,4 +1042,5 @@
     <string name="start_time">start time</string>
     <string name="end_time">start time</string>
     <string name="video_definition">HD</string>
+    <string name="content_rating">PG-13</string>
 </resources>

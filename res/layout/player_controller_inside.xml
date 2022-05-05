@@ -137,6 +137,36 @@
                 android:textSize="@dimen/player_time_text_size"
                 android:textStyle="bold" />
 
+            <LinearLayout
+                android:id="@+id/content_rating_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:paddingStart="50dp"
+                android:layout_gravity="center"
+                android:visibility="gone">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/rounded_edges">
+
+                    <TextView
+                        android:id="@+id/content_rating"
+                        android:textSize="15sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/content_rating"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:gravity="center_horizontal"
+                        android:fontFamily="@font/gotham_narrow_black"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/black"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
             <ProgressBar
                 android:id="@+id/seek_state"
                 style="?android:attr/progressBarStyleSmallTitle"

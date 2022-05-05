@@ -2655,8 +2655,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 prefs.edit().putString("mPosterPath", "").apply();
             }
             int definition = getNormalizedDefinition();
+            String mContentRating = mVideoInfo.mContentRating;
             prefs.edit().putString("mTitle", mTitle).apply();
             prefs.edit().putInt("mVideoDefinition", definition).apply();
+            prefs.edit().putString("mContentRating", mContentRating).apply();
 
             switch (mVideoInfo.videoStereo) {
                 case 4: // Anaglyph mode
