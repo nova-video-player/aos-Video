@@ -548,6 +548,37 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/scrap_popularity_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
+
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="start"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/scrap_popularity"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/header_font"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/video_info_medium_text" />
+
+            <TextView
+                android:id="@+id/scrap_popularity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/white_font"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/video_info_medium_text" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/network_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -638,7 +669,7 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="110dp"
+                android:layout_width="155dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="start"
@@ -648,7 +679,7 @@
                 android:fontFamily="@font/lato_regular"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/musiccomposer"
@@ -657,7 +688,7 @@
                 android:fontFamily="@font/lato_regular"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -669,7 +700,7 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="110dp"
+                android:layout_width="155dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="start"
@@ -679,7 +710,7 @@
                 android:fontFamily="@font/lato_regular"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/scrap_original_language"
@@ -688,7 +719,7 @@
                 android:fontFamily="@font/lato_regular"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -700,7 +731,7 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="110dp"
+                android:layout_width="155dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="start"
@@ -710,7 +741,7 @@
                 android:fontFamily="@font/lato_regular"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/scrap_production_countries"
@@ -719,38 +750,7 @@
                 android:fontFamily="@font/lato_regular"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/scrap_popularity_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp">
-
-            <TextView
-                android:layout_width="110dp"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="start"
-                android:lines="1"
-                android:maxLines="1"
-                android:text="@string/scrap_popularity"
-                android:fontFamily="@font/lato_regular"
-                android:textColor="@color/header_font"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
-
-            <TextView
-                android:id="@+id/scrap_popularity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/lato_regular"
-                android:textColor="@color/white_font"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -762,7 +762,7 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="110dp"
+                android:layout_width="155dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="start"
@@ -772,7 +772,7 @@
                 android:fontFamily="@font/lato_regular"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/scrap_spoken_languages"
@@ -781,7 +781,7 @@
                 android:fontFamily="@font/lato_regular"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="14sp" />
         </LinearLayout>
 
     </LinearLayout>
