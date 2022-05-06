@@ -522,7 +522,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         boolean showByRating = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_BY_RATING, VideoPreferencesCommon.SHOW_BY_RATING_DEFAULT);
 
         mMoviesRowsAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
-        buildAllMoviesBox();
+        if (! mShowMoviesRow) buildAllMoviesBox();
         mMoviesRowsAdapter.add(mAllMoviesBox);
         //mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_ALPHA, getString(R.string.movies_by_alpha), R.drawable.alpha_banner));
         mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_GENRE, getString(R.string.movies_by_genre), R.drawable.genres_banner));
@@ -530,11 +530,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_RATING, getString(R.string.movies_by_rating), R.drawable.ratings_banner));
         mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_YEAR, getString(R.string.movies_by_year), R.drawable.years_banner_2021));
         mMovieRow = new ListRow(ROW_ID_MOVIES, new HeaderItem(getString(R.string.movies)), mMoviesRowsAdapter);
-        buildAllCollectionsBox();
+        if (! mShowMoviesRow)  buildAllCollectionsBox();
         mMoviesRowsAdapter.add(mAllCollectionsBox);
 
         mTvshowRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
-        buildAllTvshowsBox();
+        if (! mShowTvshowsRow) buildAllTvshowsBox();
         mTvshowRowAdapter.add(mAllTvshowsBox);
         //tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_ALPHA, getString(R.string.tvshows_by_alpha), R.drawable.alpha_banner));
         mTvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_GENRE, getString(R.string.tvshows_by_genre), R.drawable.genres_banner));
@@ -545,14 +545,14 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         mAnimeRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         mAnimeRow = new ListRow(ROW_ID_ANIMES, new HeaderItem(getString(R.string.animes)), mAnimeRowAdapter);
-        buildAllAnimesBox();
+        if (mSeparateAnimeFromShowMovie && ! mShowAnimesRow) buildAllAnimesBox();
         mAnimeRowAdapter.add(mAllAnimesBox);
         mAnimeRowAdapter.add(new Box(Box.ID.ANIMES_BY_GENRE, getString(R.string.animes_by_genre), R.drawable.genres_banner));
         mAnimeRowAdapter.add(new Box(Box.ID.ANIMES_BY_YEAR, getString(R.string.animes_by_year), R.drawable.years_banner_2021));
-        buildAllAnimeShowsBox();
+        if (mSeparateAnimeFromShowMovie && ! mShowAnimesRow) buildAllAnimeShowsBox();
         mAnimeRowAdapter.add(mAllAnimeShowsBox);
 
-        buildAllAnimeCollectionsBox();
+        if (mSeparateAnimeFromShowMovie && ! mShowAnimesRow) buildAllAnimeCollectionsBox();
         mAnimeRowAdapter.add(mAllAnimeCollectionsBox);
 
         // initialize adapters even the ones not used but do not launch the loaders yet for performance considerations
@@ -1106,7 +1106,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 // on new video additions boxes are rebuilt
                 // note: this is not triggered onResume
                 if (!scanningOnGoing) { // rebuild box only if not scanning
-                    if (mShowWatchingUpNextRow) LoaderManager.getInstance(this).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
+                    if (mShowWatchingUpNextRow) LoaderManager.getInstance(this).restartLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
                     if (mShowMoviesRow) {
                         log.debug("onLoadFinished: mShowMoviesRow --> restart ALL_MOVIES loader");
                         Bundle args = new Bundle();
@@ -1114,7 +1114,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                         LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_MOVIES, args, this);
                     } else {
                         log.debug("onLoadFinished: buildAllMoviesBox & buildAllCollectionsBox");
-                        if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor)) {
+                        if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor) && ! mShowMoviesRow) {
                             buildAllMoviesBox();
                             buildAllCollectionsBox();
                         }
@@ -1127,7 +1127,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                         LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
                     } else {
                         log.debug("onLoadFinished: buildAllTvshowsBox");
-                        if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor))
+                        if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor) && ! mShowTvshowsRow)
                             buildAllTvshowsBox();
                         updateTvShowsRow(null);
                     }
@@ -1139,7 +1139,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                             LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_ANIMES, args, this);
                         } else {
                             log.debug("onLoadFinished: buildAllAnimesBox & buildAllAnimeShowsBox");
-                            if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor)) {
+                            if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor) && mSeparateAnimeFromShowMovie && ! mShowAnimesRow) {
                                 buildAllAnimesBox();
                                 buildAllAnimeShowsBox();
                             }
