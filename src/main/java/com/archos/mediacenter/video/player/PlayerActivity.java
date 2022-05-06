@@ -2836,7 +2836,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         mPlayerController.setMediaPlayer(mPlayer);
 
-        mPlayerController.setVideoTitle(mTitle);
+        //mPlayerController.setVideoTitle(mTitle);
         //mVideoId = getIntent().getIntExtra("id", -1);
 
         mCling = intent.getBooleanExtra("cling", false);
