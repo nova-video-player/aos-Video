@@ -348,6 +348,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             updateAnimesRow(null);
             if (mShowMoviesRow) restartMoviesLoader = true;
             if (mShowTvshowsRow) restartTvshowsLoader = true;
+            if (mSeparateAnimeFromShowMovie && ! mShowAnimesRow) {
+                buildAllAnimesBox();
+                buildAllAnimeShowsBox();
+            }
         }
         // treat first change in settings
         boolean newShowWatchingUpNextRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_WATCHING_UP_NEXT_ROW, VideoPreferencesCommon.SHOW_WATCHING_UP_NEXT_ROW_DEFAULT);
@@ -402,6 +406,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             args.putString("sort", mMovieSortOrder);
             // need to restart the loader since it can change depending on animations / movies shows separation
             LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_MOVIES, args, this);
+            if (! mShowMoviesRow) {
+                buildAllMoviesBox();
+                buildAllCollectionsBox();
+            }
         } else
             updateMoviesRow(null); // will be done on loader restart
 
@@ -424,6 +432,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             args.putString("sort", mTvShowSortOrder);
             // need to restart the loader since it can change depending on animations / movies shows separation
             LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_TV_SHOWS, args, this);
+            if (! mShowTvshowsRow) buildAllTvshowsBox();
         } else
             updateTvShowsRow(null); // will be done on loader restart
 
@@ -522,7 +531,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         boolean showByRating = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_BY_RATING, VideoPreferencesCommon.SHOW_BY_RATING_DEFAULT);
 
         mMoviesRowsAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
-        if (! mShowMoviesRow) buildAllMoviesBox();
+        buildAllMoviesBox();
         mMoviesRowsAdapter.add(mAllMoviesBox);
         //mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_ALPHA, getString(R.string.movies_by_alpha), R.drawable.alpha_banner));
         mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_GENRE, getString(R.string.movies_by_genre), R.drawable.genres_banner));
@@ -530,11 +539,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_RATING, getString(R.string.movies_by_rating), R.drawable.ratings_banner));
         mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_YEAR, getString(R.string.movies_by_year), R.drawable.years_banner_2021));
         mMovieRow = new ListRow(ROW_ID_MOVIES, new HeaderItem(getString(R.string.movies)), mMoviesRowsAdapter);
-        if (! mShowMoviesRow)  buildAllCollectionsBox();
+        buildAllCollectionsBox();
         mMoviesRowsAdapter.add(mAllCollectionsBox);
 
         mTvshowRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
-        if (! mShowTvshowsRow) buildAllTvshowsBox();
+        buildAllTvshowsBox();
         mTvshowRowAdapter.add(mAllTvshowsBox);
         //tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_ALPHA, getString(R.string.tvshows_by_alpha), R.drawable.alpha_banner));
         mTvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_GENRE, getString(R.string.tvshows_by_genre), R.drawable.genres_banner));
@@ -545,14 +554,14 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         mAnimeRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         mAnimeRow = new ListRow(ROW_ID_ANIMES, new HeaderItem(getString(R.string.animes)), mAnimeRowAdapter);
-        if (mSeparateAnimeFromShowMovie && ! mShowAnimesRow) buildAllAnimesBox();
+        buildAllAnimesBox();
         mAnimeRowAdapter.add(mAllAnimesBox);
         mAnimeRowAdapter.add(new Box(Box.ID.ANIMES_BY_GENRE, getString(R.string.animes_by_genre), R.drawable.genres_banner));
         mAnimeRowAdapter.add(new Box(Box.ID.ANIMES_BY_YEAR, getString(R.string.animes_by_year), R.drawable.years_banner_2021));
-        if (mSeparateAnimeFromShowMovie && ! mShowAnimesRow) buildAllAnimeShowsBox();
+        buildAllAnimeShowsBox();
         mAnimeRowAdapter.add(mAllAnimeShowsBox);
 
-        if (mSeparateAnimeFromShowMovie && ! mShowAnimesRow) buildAllAnimeCollectionsBox();
+        buildAllAnimeCollectionsBox();
         mAnimeRowAdapter.add(mAllAnimeCollectionsBox);
 
         // initialize adapters even the ones not used but do not launch the loaders yet for performance considerations
@@ -613,8 +622,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private void buildAllMoviesBox() {
         log.debug("buildAllMoviesBox");
         mAllMoviesBox = new Box(Box.ID.ALL_MOVIES, getString(R.string.all_movies), R.drawable.movies_banner);
-        if (mBuildAllMoviesBoxTask != null) mBuildAllMoviesBoxTask.cancel(true);
-        mBuildAllMoviesBoxTask = new buildAllMoviesBoxTask().execute();
+        if (! mShowMoviesRow) {
+            if (mBuildAllMoviesBoxTask != null) mBuildAllMoviesBoxTask.cancel(true);
+            mBuildAllMoviesBoxTask = new buildAllMoviesBoxTask().execute();
+        }
     }
 
     private static class buildAllMoviesBoxTask extends AsyncTask<Void, Void, Bitmap> {
@@ -637,8 +648,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private void buildAllCollectionsBox() {
         log.debug("buildAllCollectionsBox");
         mAllCollectionsBox = new Box(Box.ID.COLLECTIONS, getString(R.string.movie_collections), R.drawable.movies_banner);
-        if (mBuildAllCollectionsBoxTask != null) mBuildAllCollectionsBoxTask.cancel(true);
-        mBuildAllCollectionsBoxTask = new buildAllCollectionsBoxTask().execute();
+        if (! mShowMoviesRow) {
+            if (mBuildAllCollectionsBoxTask != null) mBuildAllCollectionsBoxTask.cancel(true);
+            mBuildAllCollectionsBoxTask = new buildAllCollectionsBoxTask().execute();
+        }
     }
 
     private static class buildAllCollectionsBoxTask extends AsyncTask<Void, Void, Bitmap> {
@@ -661,8 +674,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private void buildAllAnimeCollectionsBox() {
         log.debug("buildAllAnimeCollectionsBox");
         mAllAnimeCollectionsBox = new Box(Box.ID.ANIME_COLLECTIONS, getString(R.string.anime_collections), R.drawable.movies_banner);
-        if (mBuildAllAnimeCollectionsBoxTask != null) mBuildAllAnimeCollectionsBoxTask.cancel(true);
-        mBuildAllAnimeCollectionsBoxTask = new buildAllAnimeCollectionsBoxTask().execute();
+        if (mSeparateAnimeFromShowMovie && ! mShowAnimesRow) {
+            if (mBuildAllAnimeCollectionsBoxTask != null)
+                mBuildAllAnimeCollectionsBoxTask.cancel(true);
+            mBuildAllAnimeCollectionsBoxTask = new buildAllAnimeCollectionsBoxTask().execute();
+        }
     }
 
     private static class buildAllAnimeCollectionsBoxTask extends AsyncTask<Void, Void, Bitmap> {
@@ -683,8 +699,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private void buildAllAnimesBox() {
         log.debug("buildAllAnimesBox");
         mAllAnimesBox = new Box(Box.ID.ALL_ANIMES, getString(R.string.all_animes), R.drawable.movies_banner);
-        if (mBuildAllAnimesBoxTask != null) mBuildAllAnimesBoxTask.cancel(true);
-        mBuildAllAnimesBoxTask = new buildAllAnimesBoxTask().execute();
+        if (mSeparateAnimeFromShowMovie && ! mShowAnimesRow) {
+            if (mBuildAllAnimesBoxTask != null) mBuildAllAnimesBoxTask.cancel(true);
+            mBuildAllAnimesBoxTask = new buildAllAnimesBoxTask().execute();
+        }
     }
 
     private static class buildAllAnimesBoxTask extends AsyncTask<Void, Void, Bitmap> {
@@ -705,8 +723,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private void buildAllAnimeShowsBox() {
         log.debug("buildAllAnimesBox");
         mAllAnimeShowsBox = new Box(Box.ID.ALL_ANIMESHOWS, getString(R.string.all_animeshows), R.drawable.movies_banner);
-        if (mBuildAllAnimeShowsBoxTask != null) mBuildAllAnimeShowsBoxTask.cancel(true);
-        mBuildAllAnimeShowsBoxTask = new buildAllAnimeShowsBoxTask().execute();
+        if (mSeparateAnimeFromShowMovie && ! mShowAnimesRow) {
+            if (mBuildAllAnimeShowsBoxTask != null) mBuildAllAnimeShowsBoxTask.cancel(true);
+            mBuildAllAnimeShowsBoxTask = new buildAllAnimeShowsBoxTask().execute();
+        }
     }
 
     private static class buildAllAnimeShowsBoxTask extends AsyncTask<Void, Void, Bitmap> {
@@ -727,8 +747,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private void buildAllTvshowsBox() {
         log.debug("buildTvshowsMoviesBox");
         mAllTvshowsBox = new Box(Box.ID.ALL_TVSHOWS, getString(R.string.all_tvshows), R.drawable.movies_banner);
-        if (mBuildAllTvshowsBoxTask != null) mBuildAllTvshowsBoxTask.cancel(true);
-        mBuildAllTvshowsBoxTask = new buildAllTvshowsBoxTask().execute();
+        if (! mShowTvshowsRow) {
+            if (mBuildAllTvshowsBoxTask != null) mBuildAllTvshowsBoxTask.cancel(true);
+            mBuildAllTvshowsBoxTask = new buildAllTvshowsBoxTask().execute();
+        }
     }
 
     private static class buildAllTvshowsBoxTask extends AsyncTask<Void, Void, Bitmap> {
@@ -1115,8 +1137,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     } else {
                         log.debug("onLoadFinished: buildAllMoviesBox & buildAllCollectionsBox");
                         if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor) && ! mShowMoviesRow) {
+                            log.debug("onLoadFinished: build movies boxes");
                             buildAllMoviesBox();
                             buildAllCollectionsBox();
+                        } else {
+                            log.debug("onLoadFinished: do not build movies boxes");
                         }
                         updateMoviesRow(null);
                     }
@@ -1146,6 +1171,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                             updateAnimesRow(null);
                         }
                     }
+                } else {
+                    log.debug("onLoadFinished: scan ongoing doing nothing");
                 }
                 break;
             case LOADER_ID_LAST_PLAYED:
