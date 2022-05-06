@@ -70,7 +70,7 @@
         android:layout_marginRight="0dip"
         android:layout_toRightOf="@+id/volume_bar"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/poster_cardview_layout"
