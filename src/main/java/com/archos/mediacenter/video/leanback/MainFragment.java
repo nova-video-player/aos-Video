@@ -223,7 +223,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         intentFilter.addDataScheme(ExtStorageReceiver.ARCHOS_FILE_SCHEME);//new android nougat send UriExposureException when scheme = file
         mActivity.registerReceiver(mExternalStorageReceiver, intentFilter);
     }
-
     public void onCreate(Bundle bundle){
         log.debug("onCreate");
         super.onCreate(bundle);
@@ -232,9 +231,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             public void onReceive(Context context, Intent intent) {
                 if(intent!=null&& ArchosMediaIntent.ACTION_VIDEO_SCANNER_SCAN_FINISHED.equals(intent.getAction())) {
                     // in case of usb hdd update also last played row
-                    LoaderManager.getInstance(MainFragment.this).initLoader(LOADER_ID_LAST_PLAYED, null, MainFragment.this);
+                    log.debug("onCreate: updateReceiver: initLoaders");
+                    if (mShowLastPlayedRow) LoaderManager.getInstance(MainFragment.this).initLoader(LOADER_ID_LAST_PLAYED, null, MainFragment.this);
                     // prepare first row to be displayed and lock on if new context after scan
-                    LoaderManager.getInstance(MainFragment.this).initLoader(LOADER_ID_LAST_ADDED, null, MainFragment.this);
+                    if (mShowLastAddedRow) LoaderManager.getInstance(MainFragment.this).initLoader(LOADER_ID_LAST_ADDED, null, MainFragment.this);
+                    if (mShowWatchingUpNextRow) LoaderManager.getInstance(MainFragment.this).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, MainFragment.this);
                     log.debug("manual reload");
                 }
             }
@@ -297,13 +298,14 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         loadRows();
         if (mShowWatchingUpNextRow) {
+            log.debug("onViewCreated: watchingUpNext initLoader");
             LoaderManager.getInstance(this).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
             log.debug("onViewCreated: init LOADER_ID_WATCHING_UP_NEXT");
         } else {
             log.debug("onViewCreated: NOT init LOADER_ID_WATCHING_UP_NEXT");
         }
-        LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_ADDED, null, this);
-        LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_PLAYED, null, this);
+        if (mShowLastAddedRow) LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_ADDED, null, this);
+        if (mShowLastPlayedRow) LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_PLAYED, null, this);
         if (mShowMoviesRow) {
             Bundle movieArgs = new Bundle();
             movieArgs.putString("sort", mMovieSortOrder);
@@ -364,6 +366,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         if (restartWatchingUpNextLoader) {
             log.debug("onResume: restart WATCHING_UP_NEXT loader");
             restartWatchingUpNextLoader = false;
+            log.debug("onViewCreated: watchingUpNext initLoader");
             LoaderManager.getInstance(this).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
         } else
             updateWatchingUpNextRow(null); // will be done on loader restart
@@ -373,9 +376,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             log.debug("onResume: preference changed, display last added row: " + newShowLastAddedRow + " -> updating");
             mShowLastAddedRow = newShowLastAddedRow;
         }
-        // update lastAdded loader: MUST use initLoader and NOT restartLoader otherwise no update
+        // update lastAdded loader: MUST use initLoader and NOT restartLoader otherwise to avoid update if it exists
         log.debug("onResume: restart LOADER_ID_LAST_ADDED");
-        LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_ADDED, null, this);
+        if (mShowLastAddedRow) LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_ADDED, null, this);
 
         boolean newShowLastPlayedRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_PLAYED_ROW, VideoPreferencesCommon.SHOW_LAST_PLAYED_ROW_DEFAULT);
         if (newShowLastPlayedRow != mShowLastPlayedRow) {
@@ -383,9 +386,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             mShowLastPlayedRow = newShowLastPlayedRow;
             updateLastPlayedRow(null);
         }
-        // update lastPlayed loader (could have been an episode played with next episode): MUST use initLoader and NOT restartLoader otherwise no update
+        // update lastPlayed loader (could have been an episode played with next episode): MUST use initLoader and NOT restartLoader otherwise to avoid update if it exists
         log.debug("onResume: restart LOADER_ID_LAST_PLAYED");
-        LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_PLAYED, null, this);
+        if (mShowLastPlayedRow) LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_PLAYED, null, this);
 
         boolean newShowMoviesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_MOVIES_ROW, VideoPreferencesCommon.SHOW_ALL_MOVIES_ROW_DEFAULT);
         if (newShowMoviesRow != mShowMoviesRow) {
@@ -1128,7 +1131,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 // on new video additions boxes are rebuilt
                 // note: this is not triggered onResume
                 if (!scanningOnGoing) { // rebuild box only if not scanning
-                    if (mShowWatchingUpNextRow) LoaderManager.getInstance(this).restartLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
+                    if (mShowWatchingUpNextRow) LoaderManager.getInstance(this).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
                     if (mShowMoviesRow) {
                         log.debug("onLoadFinished: mShowMoviesRow --> restart ALL_MOVIES loader");
                         Bundle args = new Bundle();
