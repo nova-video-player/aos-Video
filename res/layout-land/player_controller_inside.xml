@@ -70,7 +70,7 @@
         android:layout_marginRight="0dip"
         android:layout_toRightOf="@+id/volume_bar"
         android:orientation="horizontal"
-        android:visibility="invisible">
+        android:visibility="visible">
 
         <LinearLayout
             android:id="@+id/poster_cardview_layout"
@@ -179,12 +179,43 @@
                     android:visibility="invisible"/>
 
                 <LinearLayout
+                    android:id="@+id/content_rating_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_centerInParent="true"
+                    android:layout_alignStart="@+id/empty_button"
+                    android:layout_gravity="center">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/rounded_edges">
+
+                        <TextView
+                            android:id="@+id/content_rating"
+                            android:textSize="14sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/content_rating"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:gravity="center_horizontal"
+                            android:fontFamily="@font/gotham_narrow_black"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/black"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/definition_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignStart="@+id/empty_button"
+                    android:layout_toEndOf="@+id/content_rating_container"
+                    android:paddingStart="40dp"
                     android:layout_centerInParent="true"
-                    android:layout_marginStart="8dp"
                     android:layout_gravity="center">
 
                     <LinearLayout
@@ -201,37 +232,6 @@
                             android:text="@string/video_definition"
                             android:layout_marginLeft="3dp"
                             android:layout_marginRight="3dp"
-                            android:gravity="center_horizontal"
-                            android:fontFamily="@font/gotham_narrow_black"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/black"
-                            />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/content_rating_container"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_toEndOf="@+id/definition_container"
-                    android:paddingStart="50dp"
-                    android:layout_gravity="center">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@drawable/rounded_edges">
-
-                        <TextView
-                            android:id="@+id/content_rating"
-                            android:textSize="15sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/content_rating"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
                             android:gravity="center_horizontal"
                             android:fontFamily="@font/gotham_narrow_black"
                             android:textAppearance="?android:attr/textAppearanceMedium"
