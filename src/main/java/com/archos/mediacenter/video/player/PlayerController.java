@@ -522,6 +522,19 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             }
         }
 
+        String mRating = prefs.getString("mRating", null);
+        TextView Rating = v.findViewById(R.id.rating);
+        LinearLayout RatingContainer = v.findViewById(R.id.rating_container);
+        if(mIsLandscapeMode){
+            if(mRating != null){
+                Rating.setText(mRating);
+            }else{
+                RatingContainer.setVisibility(View.GONE);
+            }
+        }else{
+            RatingContainer.setVisibility(View.GONE);
+        }
+
 
         ImageButton mForwardButton = (ImageButton) v.findViewById(R.id.forward);
         if (mForwardButton != null) {

@@ -267,6 +267,33 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/rating_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/control_area"
+                    android:layout_marginStart="35dp"
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_gravity="center"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/star_rating" />
+                    <TextView
+                        android:id="@+id/rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="8.0"
+                        android:layout_gravity="bottom"
+                        android:fontFamily="@font/lato_bold"
+                        android:textColor="@color/white"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="@dimen/video_info_medium_text"/>
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/control_area"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/player2014_bar_width"
