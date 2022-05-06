@@ -121,8 +121,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     private static final Logger log = LoggerFactory.getLogger(MainFragment.class);
 
-    // FIXME: for now disabled because makes the interface crash
-    public final static boolean FEATURE_WATCH_UP_NEXT = false;
+    public final static boolean FEATURE_WATCH_UP_NEXT = true;
 
     private static final String PREF_PRIVATE_MODE = "PREF_PRIVATE_MODE";
 
@@ -1155,6 +1154,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     mWatchingUpNextInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
                 log.debug("onLoadFinished: WatchingUpNext cursor ready with " + cursor.getCount() + " entries and " + mWatchingUpNextInitFocus + ", updating row");
                 if (mShowWatchingUpNextRow) updateWatchingUpNextRow(cursor);
+                break;
             case LOADER_ID_LAST_ADDED:
                 if (mShowMoviesRow && mLastAddedInitFocus == InitFocus.NOT_FOCUSED)
                     mLastAddedInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
