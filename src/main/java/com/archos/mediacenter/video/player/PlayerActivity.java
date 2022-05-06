@@ -2667,12 +2667,13 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             }
             String FinalEpisodeAirDate = mDateFormat.format(new Date(EpisodeAirDate));
             String rating = mVideoInfo.mRating;
+            String FinalRating = String.format("%.1f", Double.valueOf(rating));
             prefs.edit().putString("mTitle", mTitle).apply();
             prefs.edit().putInt("mVideoDefinition", definition).apply();
             prefs.edit().putString("mContentRating", mContentRating).apply();
             prefs.edit().putString("mMovieYear", mMovieYear).apply();
             prefs.edit().putString("FinalEpisodeAirDate", FinalEpisodeAirDate).apply();
-            prefs.edit().putString("mRating", rating).apply();
+            prefs.edit().putString("mRating", FinalRating).apply();
 
             switch (mVideoInfo.videoStereo) {
                 case 4: // Anaglyph mode
