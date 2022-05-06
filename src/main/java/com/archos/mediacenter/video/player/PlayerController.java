@@ -504,7 +504,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         TextView ContentRating = v.findViewById(R.id.content_rating);
         LinearLayout ContentRatingContainer = v.findViewById(R.id.content_rating_container);
         if(mIsLandscapeMode){
-            ContentRating.setText(mContentRating);
+            if (mContentRating != null){
+                ContentRating.setText(mContentRating);
+            }else{
+                ContentRatingContainer.setVisibility(View.GONE);
+            }
         }else{
             ContentRatingContainer.setVisibility(View.GONE);
         }

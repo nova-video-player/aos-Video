@@ -209,6 +209,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="32dp"
                     android:layout_centerInParent="true"
                     android:layout_alignStart="@+id/empty_button"
                     android:layout_gravity="center">
@@ -237,10 +239,11 @@
 
                 <LinearLayout
                     android:id="@+id/definition_container"
+                    android:layout_alignWithParentIfMissing="true"
+                    android:layout_marginStart="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/content_rating_container"
-                    android:paddingStart="40dp"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center">
 
