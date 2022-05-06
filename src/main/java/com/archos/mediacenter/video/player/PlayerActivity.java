@@ -120,8 +120,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -2656,9 +2658,19 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             }
             int definition = getNormalizedDefinition();
             String mContentRating = mVideoInfo.mContentRating;
+            String mMovieYear = mVideoInfo.mMovieYear;
+            String mEpisodeAirDate = mVideoInfo.mEpisodeAirDate;
+            DateFormat mDateFormat = DateFormat.getDateInstance(DateFormat.LONG);
+            long EpisodeAirDate = 0;
+            if(mEpisodeAirDate != null){
+                EpisodeAirDate = Long.parseLong(mEpisodeAirDate);
+            }
+            String FinalEpisodeAirDate = mDateFormat.format(new Date(EpisodeAirDate));
             prefs.edit().putString("mTitle", mTitle).apply();
             prefs.edit().putInt("mVideoDefinition", definition).apply();
             prefs.edit().putString("mContentRating", mContentRating).apply();
+            prefs.edit().putString("mMovieYear", mMovieYear).apply();
+            prefs.edit().putString("FinalEpisodeAirDate", FinalEpisodeAirDate).apply();
 
             switch (mVideoInfo.videoStereo) {
                 case 4: // Anaglyph mode

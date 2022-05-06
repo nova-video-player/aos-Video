@@ -1040,7 +1040,10 @@
     <string name="preference_display_poster_player_summary">Displays Movie or Episode poster image in the playback screen in landscape mode.</string>
 
     <string name="start_time">start time</string>
-    <string name="end_time">start time</string>
+    <string name="end_time">end time</string>
     <string name="video_definition">HD</string>
     <string name="content_rating">PG-13</string>
+    <string name="video_title">Video Title</string>
+    <string name="release_date">Release Date</string>
+
 </resources>

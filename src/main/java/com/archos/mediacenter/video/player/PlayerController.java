@@ -509,6 +509,19 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             ContentRatingContainer.setVisibility(View.GONE);
         }
 
+        String mMovieYear = prefs.getString("mMovieYear", null);
+        String FinalEpisodeAirDate = prefs.getString("FinalEpisodeAirDate", null);
+        TextView mReleaseDate = v.findViewById(R.id.release_date);
+        if(mIsLandscapeMode){
+            if(mMovieYear != null){
+                mReleaseDate.setText(mMovieYear);
+            }else if(FinalEpisodeAirDate != null){
+                mReleaseDate.setText(FinalEpisodeAirDate);
+            }else{
+                mReleaseDate.setVisibility(View.GONE);
+            }
+        }
+
 
         ImageButton mForwardButton = (ImageButton) v.findViewById(R.id.forward);
         if (mForwardButton != null) {
