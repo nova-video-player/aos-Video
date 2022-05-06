@@ -192,10 +192,10 @@
     <string name="scrap_director">Director:</string>
     <string name="scrap_writer">Writer:</string>
     <string name="scrap_screenplay">Screenplay:</string>
-    <string name="scrap_musiccomposer">Music:</string>
-    <string name="scrap_original_language">Language:</string>
-    <string name="scrap_production_countries">Countries:</string>
-    <string name="scrap_spoken_languages">Spoken:</string>
+    <string name="scrap_musiccomposer">Music Composer:</string>
+    <string name="scrap_original_language">Original Language:</string>
+    <string name="scrap_production_countries">Production Countries:</string>
+    <string name="scrap_spoken_languages">Spoken Languages:</string>
     <string name="scrap_popularity">Popularity:</string>
     <string name="scrap_producer">Producer:</string>
     <string name="scrap_director_format">Director: %s</string>
