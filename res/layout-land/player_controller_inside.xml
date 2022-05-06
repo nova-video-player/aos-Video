@@ -119,7 +119,7 @@
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:text="@string/video_title"
-                    android:layout_weight="4"
+                    android:layout_weight="1"
                     />
                 <TextView
                     android:id="@+id/release_date"
@@ -135,7 +135,6 @@
                     android:singleLine="true"
                     android:text="@string/release_date"
                     android:gravity="end"
-                    android:layout_weight="1"
                     />
             </LinearLayout>
 
