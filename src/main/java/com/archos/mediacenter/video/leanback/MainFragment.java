@@ -752,7 +752,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     }
 
     private void buildAllAnimeShowsBox() {
-        log.debug("buildAllAnimesBox");
+        log.debug("buildAllAnimeShowsBox");
         mAllAnimeShowsBox = new Box(Box.ID.ALL_ANIMESHOWS, getString(R.string.all_animeshows), R.drawable.movies_banner);
         if (mSeparateAnimeFromShowMovie && ! mShowAnimesRow) {
             if (mBuildAllAnimeShowsBoxTask != null) mBuildAllAnimeShowsBoxTask.cancel(true);
@@ -1145,9 +1145,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        log.debug("onLoadFinished: cursor id=" + cursorLoader.getId());
         if (mActivity == null) return;
         boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking() || AutoScrapeService.isScraping() || ImportState.VIDEO.isInitialImport();
+        log.debug("onLoadFinished: cursor id=" + cursorLoader.getId() + ", scanningOnGoing=" + scanningOnGoing);
         switch (cursorLoader.getId()) {
             case LOADER_ID_WATCHING_UP_NEXT:
                 if (mShowWatchingUpNextRow && mWatchingUpNextInitFocus == InitFocus.NOT_FOCUSED)
