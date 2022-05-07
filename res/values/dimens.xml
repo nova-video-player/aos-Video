@@ -72,4 +72,7 @@
     <dimen name="total_horizontal_spacing_landscape">28dp</dimen>
     <dimen name="gridview_vertical_spacing">4dp</dimen>
 
+    <dimen name="total_horizontal_spacing_tablet_portrait">24dp</dimen>
+    <dimen name="total_horizontal_spacing_tablet_landscape">36dp</dimen>
+
 </resources>

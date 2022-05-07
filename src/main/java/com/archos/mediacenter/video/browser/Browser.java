@@ -531,6 +531,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
                 boolean drawerIsNull = prefs.getBoolean("drawerIsNull", true);
                 boolean mIsLandscapeMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+                boolean mIsTablet = mContext.getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE);
 
                 //width subtraction when number of columns is 5 && mIsLandscapeMode && drawerIsNull
                 int categoryWidth = (int) getResources().getDimension(R.dimen.categories_list_width);
@@ -543,33 +544,64 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                 int windowWidth = displayMetrics.widthPixels;
                 int TotalHorizontalSpacingPortrait = (int) getResources().getDimension(R.dimen.total_horizontal_spacing_portrait);
                 int TotalHorizontalSpacingLandscape = (int) getResources().getDimension(R.dimen.total_horizontal_spacing_landscape);
+
+                int TotalHorizontalSpacingTabletPortrait = (int) getResources().getDimension(R.dimen.total_horizontal_spacing_tablet_portrait);
+                int TotalHorizontalSpacingTabletLandscape = (int) getResources().getDimension(R.dimen.total_horizontal_spacing_tablet_landscape);
+                int subtractionTablet = categoryWidth + TotalHorizontalSpacingTabletLandscape;
+
                 int width;
-                if(mIsPortraitMode){
-                    width = windowWidth - TotalHorizontalSpacingPortrait;
-                }else if(mIsLandscapeMode && drawerIsNull){
-                    width = windowWidth - subtraction;
+                if(!mIsTablet){
+                    if(mIsPortraitMode){
+                        width = windowWidth - TotalHorizontalSpacingPortrait;
+                    }else if(mIsLandscapeMode && drawerIsNull){
+                        width = windowWidth - subtraction;
+                    }else{
+                        width = windowWidth - TotalHorizontalSpacingLandscape;
+                    }
                 }else{
-                    width = windowWidth - TotalHorizontalSpacingLandscape;
+                    if(mIsLandscapeMode){
+                        width = windowWidth - subtractionTablet;
+                    }else{
+                        width = windowWidth - TotalHorizontalSpacingTabletPortrait;
+                    }
                 }
+
                 int columnWidth;
-                if(mIsPortraitMode){
-                    columnWidth = width / 3 ;
-                }else if(mIsLandscapeMode && drawerIsNull){
-                    columnWidth = width / 5 ;
+                if(!mIsTablet){
+                    if(mIsPortraitMode){
+                        columnWidth = width / 3 ;
+                    }else if(mIsLandscapeMode && drawerIsNull){
+                        columnWidth = width / 5 ;
+                    }else{
+                        columnWidth = width / 6 ;
+                    }
                 }else{
-                    columnWidth = width / 6 ;
+                    if(mIsLandscapeMode){
+                        columnWidth = width / 8;
+                    }else{
+                        columnWidth = width / 5;
+                    }
                 }
+
 
                 mArchosGridView = (AbsListView) mRootView.findViewById(R.id.archos_grid_view);
                 mRootView.findViewById(R.id.archos_list_view).setVisibility(View.GONE);
                 mArchosGridView.setVisibility(View.VISIBLE);
                 if(mArchosGridView instanceof GridView) {
-                    if(mIsPortraitMode){
-                        ((GridView) mArchosGridView).setNumColumns(3);
-                    }else if(mIsLandscapeMode && drawerIsNull){
-                        ((GridView) mArchosGridView).setNumColumns(5);
+                    if(!mIsTablet){
+                        if(mIsPortraitMode){
+                            ((GridView) mArchosGridView).setNumColumns(3);
+                        }else if(mIsLandscapeMode && drawerIsNull){
+                            ((GridView) mArchosGridView).setNumColumns(5);
+                        }else{
+                            ((GridView) mArchosGridView).setNumColumns(6);
+                        }
                     }else{
-                        ((GridView) mArchosGridView).setNumColumns(6);
+                        if(mIsLandscapeMode){
+                            ((GridView) mArchosGridView).setNumColumns(8);
+                        }else{
+                            ((GridView) mArchosGridView).setNumColumns(5);
+                        }
                     }
                 }
                 verticalSpacing = (int) getResources().getDimension(R.dimen.gridview_vertical_spacing);

@@ -72,6 +72,7 @@ public class TvshowGridPresenter extends TvShowPresenter{
         boolean drawerIsNull = prefs.getBoolean("drawerIsNull", true);
         boolean mIsLandscapeMode = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         boolean mIsPortraitMode = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        boolean IsTablet = mContext.getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE);
 
         //width subtraction when number of columns is 5 && mIsLandscapeMode && drawerIsNull
         int categoryWidth = (int) mContext.getResources().getDimension(R.dimen.categories_list_width);
@@ -83,21 +84,43 @@ public class TvshowGridPresenter extends TvShowPresenter{
         int windowWidth = displayMetrics.widthPixels;
         int TotalHorizontalSpacingPortrait = (int) mContext.getResources().getDimension(R.dimen.total_horizontal_spacing_portrait);
         int TotalHorizontalSpacingLandscape = (int) mContext.getResources().getDimension(R.dimen.total_horizontal_spacing_landscape);
+
+        int TotalHorizontalSpacingTabletPortrait = (int) mContext.getResources().getDimension(R.dimen.total_horizontal_spacing_tablet_portrait);
+        int TotalHorizontalSpacingTabletLandscape = (int) mContext.getResources().getDimension(R.dimen.total_horizontal_spacing_tablet_landscape);
+        int subtractionTablet = categoryWidth + TotalHorizontalSpacingTabletLandscape;
+
         int width;
-        if(mIsPortraitMode){
-            width = windowWidth - TotalHorizontalSpacingPortrait;
-        }else if(mIsLandscapeMode && drawerIsNull){
-            width = windowWidth - subtraction;
+        if(!IsTablet){
+            if(mIsPortraitMode){
+                width = windowWidth - TotalHorizontalSpacingPortrait;
+            }else if(mIsLandscapeMode && drawerIsNull){
+                width = windowWidth - subtraction;
+            }else{
+                width = windowWidth - TotalHorizontalSpacingLandscape;
+            }
         }else{
-            width = windowWidth - TotalHorizontalSpacingLandscape;
+            if(mIsLandscapeMode){
+                width = windowWidth - subtractionTablet;
+            }else{
+                width = windowWidth - TotalHorizontalSpacingTabletPortrait;
+            }
         }
+
         int columnWidth;
-        if(mIsPortraitMode){
-            columnWidth = width / 3 ;
-        }else if(mIsLandscapeMode && drawerIsNull){
-            columnWidth = width / 5 ;
+        if(!IsTablet){
+            if(mIsPortraitMode){
+                columnWidth = width / 3 ;
+            }else if(mIsLandscapeMode && drawerIsNull){
+                columnWidth = width / 5 ;
+            }else{
+                columnWidth = width / 6 ;
+            }
         }else{
-            columnWidth = width / 6 ;
+            if(mIsLandscapeMode){
+                columnWidth = width / 8;
+            }else{
+                columnWidth = width / 5;
+            }
         }
         int height = columnWidth / 2;
         int columnHeight = height * 3;
