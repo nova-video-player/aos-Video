@@ -67,4 +67,9 @@
 
     <dimen name="list_divider_height">4dip</dimen>
 
+    <dimen name="total_horizontal_spacing_landscape_null_drawer">24dp</dimen>
+    <dimen name="total_horizontal_spacing_portrait">16dp</dimen>
+    <dimen name="total_horizontal_spacing_landscape">28dp</dimen>
+    <dimen name="gridview_vertical_spacing">4dp</dimen>
+
 </resources>

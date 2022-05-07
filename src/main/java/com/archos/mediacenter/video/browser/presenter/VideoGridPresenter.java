@@ -85,29 +85,32 @@ public class VideoGridPresenter extends VideoPresenter{
 
         //set gridview thumbnail Width & Height
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        boolean drawerOpen = prefs.getBoolean("drawerOpen", true);
+        boolean drawerIsNull = prefs.getBoolean("drawerIsNull", true);
         boolean mIsLandscapeMode = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         boolean mIsPortraitMode = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
 
-        //width subtraction when number of columns is 5 && mIsLandscapeMode && drawerOpen
+        //width subtraction when number of columns is 5 && mIsLandscapeMode && drawerIsNull
         int categoryWidth = (int) mContext.getResources().getDimension(R.dimen.categories_list_width);
-        int subtraction = categoryWidth + 84;
+        int TotalHorizontalSpacingLandscapeNullDrawer = (int) mContext.getResources().getDimension(R.dimen.total_horizontal_spacing_landscape_null_drawer);
+        int subtraction = categoryWidth + TotalHorizontalSpacingLandscapeNullDrawer;
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int windowWidth = displayMetrics.widthPixels;
+        int TotalHorizontalSpacingPortrait = (int) mContext.getResources().getDimension(R.dimen.total_horizontal_spacing_portrait);
+        int TotalHorizontalSpacingLandscape = (int) mContext.getResources().getDimension(R.dimen.total_horizontal_spacing_landscape);
         int width;
         if(mIsPortraitMode){
-            width = windowWidth - 56;
-        }else if(mIsLandscapeMode && drawerOpen){
+            width = windowWidth - TotalHorizontalSpacingPortrait;
+        }else if(mIsLandscapeMode && drawerIsNull){
             width = windowWidth - subtraction;
         }else{
-            width = windowWidth - 98;
+            width = windowWidth - TotalHorizontalSpacingLandscape;
         }
         int columnWidth;
         if(mIsPortraitMode){
             columnWidth = width / 3 ;
-        }else if(mIsLandscapeMode && drawerOpen){
+        }else if(mIsLandscapeMode && drawerIsNull){
             columnWidth = width / 5 ;
         }else{
             columnWidth = width / 6 ;

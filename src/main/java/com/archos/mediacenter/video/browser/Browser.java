@@ -529,29 +529,32 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             case VideoUtils.VIEW_MODE_GRID:
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-                boolean drawerOpen = prefs.getBoolean("drawerOpen", true);
+                boolean drawerIsNull = prefs.getBoolean("drawerIsNull", true);
                 boolean mIsLandscapeMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
-                //width subtraction when number of columns is 5 && mIsLandscapeMode && drawerOpen
+                //width subtraction when number of columns is 5 && mIsLandscapeMode && drawerIsNull
                 int categoryWidth = (int) getResources().getDimension(R.dimen.categories_list_width);
-                int subtraction = categoryWidth + 84;
+                int TotalHorizontalSpacingLandscapeNullDrawer = (int) getResources().getDimension(R.dimen.total_horizontal_spacing_landscape_null_drawer);
+                int subtraction = categoryWidth + TotalHorizontalSpacingLandscapeNullDrawer;
 
                 boolean mIsPortraitMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
                 DisplayMetrics displayMetrics = new DisplayMetrics();
                 ((Activity) requireContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
                 int windowWidth = displayMetrics.widthPixels;
+                int TotalHorizontalSpacingPortrait = (int) getResources().getDimension(R.dimen.total_horizontal_spacing_portrait);
+                int TotalHorizontalSpacingLandscape = (int) getResources().getDimension(R.dimen.total_horizontal_spacing_landscape);
                 int width;
                 if(mIsPortraitMode){
-                    width = windowWidth - 56;
-                }else if(mIsLandscapeMode && drawerOpen){
+                    width = windowWidth - TotalHorizontalSpacingPortrait;
+                }else if(mIsLandscapeMode && drawerIsNull){
                     width = windowWidth - subtraction;
                 }else{
-                    width = windowWidth - 98;
+                    width = windowWidth - TotalHorizontalSpacingLandscape;
                 }
                 int columnWidth;
                 if(mIsPortraitMode){
                     columnWidth = width / 3 ;
-                }else if(mIsLandscapeMode && drawerOpen){
+                }else if(mIsLandscapeMode && drawerIsNull){
                     columnWidth = width / 5 ;
                 }else{
                     columnWidth = width / 6 ;
@@ -563,13 +566,13 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                 if(mArchosGridView instanceof GridView) {
                     if(mIsPortraitMode){
                         ((GridView) mArchosGridView).setNumColumns(3);
-                    }else if(mIsLandscapeMode && drawerOpen){
+                    }else if(mIsLandscapeMode && drawerIsNull){
                         ((GridView) mArchosGridView).setNumColumns(5);
                     }else{
                         ((GridView) mArchosGridView).setNumColumns(6);
                     }
                 }
-                verticalSpacing = 14;
+                verticalSpacing = (int) getResources().getDimension(R.dimen.gridview_vertical_spacing);
                 // setHorizontalSpacing() doesn't allow to have well-centered column. Having larger
                 // columns and making sure the items are centered in it makes it.
                 if(mArchosGridView instanceof GridView&&mode==VideoUtils.VIEW_MODE_GRID) {
