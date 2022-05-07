@@ -52,6 +52,9 @@
     <dimen name="video_info_clearlogo_chooser_image_width_max">200dip</dimen>
     <dimen name="video_info_clearlogo_chooser_image_height_max">110dip</dimen>
 
+    <dimen name="episode_number_scrollview_bottom_margin">35dp</dimen>
+    <dimen name="episode_picture_scrollview_bottom_margin">68dp</dimen>
+
     <integer name="animation_short_distance_minus">-400</integer>
     <integer name="animation_short_distance_plus">400</integer>
     <integer name="animation_long_distance_minus">-900</integer>

@@ -916,10 +916,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     selectedMode = Integer.parseInt(mode);
                 }
                 if (selectedMode == 0){
-                    params.bottomMargin = 240;
+                    params.bottomMargin = getResources().getDimensionPixelSize(R.dimen.episode_picture_scrollview_bottom_margin);
                 }
                 if (selectedMode == 1){
-                    params.bottomMargin = 123;
+                    params.bottomMargin = getResources().getDimensionPixelSize(R.dimen.episode_number_scrollview_bottom_margin);
                 }
                 if (selectedMode == 2 || !BrowserListOfEpisodes || oneEpisode || mIsLaunchFromPlayer){
                     params.bottomMargin = 0;

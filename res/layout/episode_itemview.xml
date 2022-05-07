@@ -13,7 +13,7 @@
 
 		<androidx.cardview.widget.CardView
 			xmlns:card_view="http://schemas.android.com/apk/res-auto"
-			card_view:cardCornerRadius="14px"
+			card_view:cardCornerRadius="4dp"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			>
@@ -22,16 +22,16 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:gravity="center"
-				android:padding="4px" >
+				android:padding="1.15dp" >
 				<androidx.cardview.widget.CardView
 					xmlns:card_view="http://schemas.android.com/apk/res-auto"
-					card_view:cardCornerRadius="10.5px"
+					card_view:cardCornerRadius="3dp"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content">
 					<ImageView
 						android:id="@+id/episode_picture"
-						android:layout_width="245px"
-						android:layout_height="145px"
+						android:layout_width="70dp"
+						android:layout_height="41.4dp"
 						/>
 				</androidx.cardview.widget.CardView>
 			</LinearLayout>
@@ -39,8 +39,8 @@
 
 		<TextView
 			android:id="@+id/episode_number"
-			android:layout_width="77px"
-			android:layout_height="77px"
+			android:layout_width="22dp"
+			android:layout_height="22dp"
 			android:layout_marginTop="1dp"
 			android:layout_marginBottom="1dp"
 			android:textAppearance="?android:attr/textAppearanceListItemSmall"
