@@ -22,8 +22,9 @@
                 <ImageView
                     android:id="@+id/picture_backdrop"
                     android:layout_width="match_parent"
-                    android:layout_height="340dp"
-                    android:scaleType="centerCrop"/>
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"/>
             </androidx.cardview.widget.CardView>
             <Button
                 android:id="@+id/play"
