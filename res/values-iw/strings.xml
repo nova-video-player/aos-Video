@@ -674,6 +674,8 @@
     <string name="preferences_display_resume_box_summary">הצג או הסתר את הכפתור של המשך הווידאו האחרון במסך הראשי</string>
     <string name="preferences_display_resume_box">הצג תיבת המשך</string>
     <string name="preferences_leanback_user_interface">ממשק משמתש לטלוויזיה</string>
+    <string name="preferences_separate_animation_from_movies_summary">סמן כדי להפריד את האנימציות מהסרטים והסדרות, ולהוסיף שורת אנימציות</string>
+    <string name="preferences_separate_animation_from_movies">הפרד אנימציות מסרטים וסדרות</string>
     <string name="preferences_show_watching_up_next_row_summary">סמן כדי להציג שורה עם קבצים בצפייה הבאים בתור</string>
     <string name="preferences_show_watching_up_next_row">הצג שורת בצפייה/הבא</string>
     <string name="preferences_show_last_added_row_summary">סמן כדי להציג שורה עם המדיה שנוספה לאחרונה</string>

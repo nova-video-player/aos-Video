@@ -646,6 +646,8 @@
     <string name="preferences_display_resume_box_summary">Zobrazit nebo schovat tlačítko pro obnovení posledního videa na hlavní obrazovce</string>
     <string name="preferences_display_resume_box">Zobrazit panel pro obnovení</string>
     <string name="preferences_leanback_user_interface">Uživatelské rozhraní pro TV</string>
+    <string name="preferences_separate_animation_from_movies_summary">Zatrhněte pro oddělení animovaných videí od filmů a TV pořadů přidáním řádky animovaných</string>
+    <string name="preferences_separate_animation_from_movies">Oddělit animované od filmů a televizních pořadů</string>
     <string name="preferences_show_watching_up_next_row_summary">Zvolte pro zobrazení řádku s právě sledovanými/následujícími videi</string>
     <string name="preferences_show_watching_up_next_row">Zobrazit řádku se sledovanými/následujícími</string>
     <string name="preferences_show_last_added_row_summary">Zvolte pro zobrazení řádku s naposledy přidanými videi</string>

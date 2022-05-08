@@ -170,4 +170,6 @@
     <!-- Info dialog, not indexed file -->
     <!-- Brightness -->
     <!--  Nfo File parsing -->
+    <string name="preferences_separate_animation_from_movies_summary">Επιλέξτε για να διαχωρίσετε τα βίντεο κινούμενων σχεδίων από ταινίες και τηλεόραση σε χωριστή σειρά</string>
+    <string name="preferences_separate_animation_from_movies">Διαχωρίσετε τα βίντεο κινούμενων σχεδίων από ταινίες και τηλεόραση</string>
 </resources>
