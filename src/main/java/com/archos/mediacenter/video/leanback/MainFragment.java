@@ -121,6 +121,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     private static final Logger log = LoggerFactory.getLogger(MainFragment.class);
 
+    // /!\ FIXME cannot be enabled since on large collection of videos viewed, loader takes forever to complete
+    // this causes VideoLoader that has only a poolsize of one to not process any other loaders
     public final static boolean FEATURE_WATCH_UP_NEXT = false;
 
     private static final String PREF_PRIVATE_MODE = "PREF_PRIVATE_MODE";
@@ -298,6 +300,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         loadRows();
         if (mShowWatchingUpNextRow) {
             log.debug("onViewCreated: watchingUpNext initLoader");
+            // /!\ WARNING this loader never ends if FEATURE_WATCH_UP_NEXT is true on large collection of videos watched
             LoaderManager.getInstance(this).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
             log.debug("onViewCreated: init LOADER_ID_WATCHING_UP_NEXT");
         } else {

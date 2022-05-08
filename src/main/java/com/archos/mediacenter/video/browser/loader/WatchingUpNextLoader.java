@@ -2,10 +2,16 @@ package com.archos.mediacenter.video.browser.loader;
 
 import android.content.Context;
 
-import com.archos.mediacenter.video.browser.loader.VideoLoader;
 import com.archos.mediaprovider.video.VideoStore;
 
 public class WatchingUpNextLoader extends VideoLoader {
+
+    // /!\ FIXME this query requires optimization and cannot be used for now
+    // Problem: on large collection of videos viewed, loader takes forever to complete
+    // this causes VideoLoader that has only a poolsize of one to not process any other loaders
+
+    // TODO redesign so that LastPlayed = only completed videos and
+    // UpNext = following episodes of completed videos + CurrentlyPlayed (ongoing videos not completed)
 
     public WatchingUpNextLoader(Context context) {
         super(context);
