@@ -55,6 +55,8 @@
     <dimen name="episode_number_scrollview_bottom_margin">35dp</dimen>
     <dimen name="episode_picture_scrollview_bottom_margin">68dp</dimen>
 
+    <dimen name="series_backdrop_height">240dp</dimen>
+
     <integer name="animation_short_distance_minus">-400</integer>
     <integer name="animation_short_distance_plus">400</integer>
     <integer name="animation_long_distance_minus">-900</integer>

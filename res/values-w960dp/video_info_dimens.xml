@@ -23,4 +23,6 @@
     <dimen name="video_info_backdrop_chooser_image_width">256dip</dimen>
     <dimen name="video_info_backdrop_chooser_image_height">144dip</dimen>
 
+    <dimen name="series_backdrop_height">440dp</dimen>
+
 </resources>
