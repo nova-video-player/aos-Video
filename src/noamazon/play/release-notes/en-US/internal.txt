@@ -1,4 +1,3 @@
+- Make animation row optional on android TV
+- Add more blacklisted local storage directories to speed up media import
 - Stability enhancements
-- Fix adaptive refresh rate selection on firestick
-- ffmpeg 4.4.2 and dav1d 1.0.0
-- Fix fdroid build
