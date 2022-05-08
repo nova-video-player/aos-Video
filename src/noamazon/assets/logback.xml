@@ -91,13 +91,13 @@
     <logger name="com.archos.mediascraper.ScraperImage" level="DEBUG"/>-->
     <!--<logger name="com.archos.mediascraper.ShowTags" level="DEBUG"/>-->
 
-    <!--<logger name="com.archos.mediascraper.AutoScrapeService" level="DEBUG"/>
-    <logger name="com.archos.mediaprovider.video.VideoStoreImportImpl" level="DEBUG"/>
-    <logger name="com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserWithShowHeader" level="DEBUG"/>-->
+    <!--<logger name="com.archos.mediascraper.AutoScrapeService" level="DEBUG"/>-->
+    <!--<<logger name="com.archos.mediaprovider.video.VideoStoreImportImpl" level="DEBUG"/>-->
+    <!--<logger name="com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserWithShowHeader" level="DEBUG"/>-->
 
     <logger name="com.archos.mediaprovider.video.VideoStoreImportReceiver" level="DEBUG"/>
     <logger name="com.archos.mediaprovider.video.VideoStoreImportService" level="DEBUG"/>
-    <logger name="com.archos.mediaprovider.video.VideoProvider" level="TRACE"/>
+    <!--<logger name="com.archos.mediaprovider.video.VideoProvider" level="DEBUG"/>-->
 
     <!--<logger name="com.archos.mediacenter.video.widget.WidgetProviderVideo" level="DEBUG"/>-->
 
