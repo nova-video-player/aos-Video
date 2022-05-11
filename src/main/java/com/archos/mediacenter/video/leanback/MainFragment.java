@@ -323,22 +323,26 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         restartWatchingUpNextLoader = false;
         restartLastAddedLoader = false;
         restartLastPlayedLoader = false;
-        restartMoviesLoader = true;
+        restartMoviesLoader = false;
         restartTvshowsLoader = false;
         restartAnimesLoader = false;
         // needs to be done first to know if movie/tvshow loaders need to be reloaded because
         // need to (inc|ex)clude animation videos. However do not restart updateAnimesRow because done later
         boolean newSeparateAnimeFromShowMovie = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
         if (newSeparateAnimeFromShowMovie != mSeparateAnimeFromShowMovie) {
-            if (newSeparateAnimeFromShowMovie)  // add row
-                log.debug("onResume: separate Anime From Show Movie");
-            else // remove row
-                log.debug("onResume: do not separate Anime From Show Movie");
             mSeparateAnimeFromShowMovie = newSeparateAnimeFromShowMovie;
+            if (newSeparateAnimeFromShowMovie)
+                log.debug("onResume: separate Anime From Show Movie");
+            else
+                log.debug("onResume: do not separate Anime From Show Movie");
             // need to switch loaders because movies are tvshows do not contain animations anymore
             if (mShowMoviesRow) restartMoviesLoader = true;
             if (mShowTvshowsRow) restartTvshowsLoader = true;
+            // in case we disable Anime/Show+Movie separation, there can't be an allAnimesRow
+            if (! newSeparateAnimeFromShowMovie) mShowAnimesRow = false;
             if (mShowAnimesRow) restartAnimesLoader = true;
+            else // this will add or remove row if no allAnimesRow
+                updateAnimesRow(null, false);
         }
 
         boolean newShowWatchingUpNextRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_WATCHING_UP_NEXT_ROW, VideoPreferencesCommon.SHOW_WATCHING_UP_NEXT_ROW_DEFAULT);
@@ -349,9 +353,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             if (mShowWatchingUpNextRow) restartWatchingUpNextLoader = true;
         }
         if (restartWatchingUpNextLoader) {
-            log.debug("onResume: restart WATCHING_UP_NEXT loader");
+            log.debug("onResume: watchingUpNext initLoader");
             restartWatchingUpNextLoader = false;
-            log.debug("onViewCreated: watchingUpNext initLoader");
             LoaderManager.getInstance(this).initLoader(LOADER_ID_WATCHING_UP_NEXT, null, this);
         }
 
@@ -362,9 +365,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             if (mShowLastAddedRow) restartLastAddedLoader = true;
         }
         if (restartLastAddedLoader) {
-            log.debug("onResume: restart LAST_ADDED loader");
+            log.debug("onResume: lastAdded initLoader");
             restartLastAddedLoader = false;
-            log.debug("onViewCreated: lastAdded initLoader");
             // update lastAdded loader: MUST use initLoader and NOT restartLoader otherwise to avoid update if it exists
             LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_ADDED, null, this);
         }
@@ -376,9 +378,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             if (mShowLastPlayedRow) restartLastPlayedLoader = true;
         }
         if (restartLastPlayedLoader) {
-            log.debug("onResume: restart LAST_PLAYED loader");
+            log.debug("onResume: lastPlayed initLoader");
             restartLastPlayedLoader = false;
-            log.debug("onViewCreated: lastPlayed initLoader");
             // update lastAdded loader: MUST use initLoader and NOT restartLoader otherwise to avoid update if it exists
             LoaderManager.getInstance(this).initLoader(LOADER_ID_LAST_PLAYED, null, this);
         }
@@ -436,7 +437,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             if (mShowAnimesRow) restartAnimesLoader = true;
             else if (mSeparateAnimeFromShowMovie) updateAnimesRow(null, true);
         } else
-            if (! mShowAnimesRow && mSeparateAnimeFromShowMovie && firstTimeLoad) updateTvShowsRow(null, true);
+            if (! mShowAnimesRow && mSeparateAnimeFromShowMovie && firstTimeLoad) updateAnimesRow(null, true);
         String newAnimesSortOrder = mPrefs.getString(VideoPreferencesCommon.KEY_ANIMES_SORT_ORDER, AnimesLoader.DEFAULT_SORT);
         if (mShowAnimesRow && !newAnimesSortOrder.equals(mAnimesSortOrder) && mSeparateAnimeFromShowMovie) {
             log.debug("onResume: preference changed, showing animes row and sort order changed -> updating");
