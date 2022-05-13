@@ -1,6 +1,7 @@
 package com.archos.mediacenter.video.browser.loader;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -18,7 +19,7 @@ public class WatchingUpNextLoader extends VideoLoader {
         init();
         // cf. https://github.com/nova-video-player/aos-AVP/issues/134 reduce strain
         // only updates the CursorLoader on data change every 10s since used only in MainFragment as nonScraped box presence
-        setUpdateThrottle(5000);
+        if (VideoLoader.THROTTLE) setUpdateThrottle(VideoLoader.THROTTLE_DELAY);
     }
 
     @Override

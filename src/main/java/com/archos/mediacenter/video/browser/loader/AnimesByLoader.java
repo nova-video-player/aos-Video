@@ -47,7 +47,7 @@ public abstract class AnimesByLoader extends CursorLoader implements CompatAndSD
                         "END"
         ).build());
         setSelectionArgs(null);
-        setUpdateThrottle(5000);
+        if (VideoLoader.THROTTLE) setUpdateThrottle(VideoLoader.THROTTLE_DELAY);
     }
 
     abstract protected String getSelection(Context context);

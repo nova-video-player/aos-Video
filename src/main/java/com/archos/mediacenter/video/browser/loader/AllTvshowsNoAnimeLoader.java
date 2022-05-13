@@ -48,7 +48,7 @@ public class AllTvshowsNoAnimeLoader extends VideoLoader {
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
         mContext = context;
-        setUpdateThrottle(5000);
+        if (VideoLoader.THROTTLE) setUpdateThrottle(VideoLoader.THROTTLE_DELAY);
         init();
     }
 

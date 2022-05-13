@@ -29,7 +29,7 @@ public class LastAddedLoader extends VideoLoader {
         init();
         // cf. https://github.com/nova-video-player/aos-AVP/issues/134 reduce strain
         // only updates the CursorLoader on data change every 10s since used only in MainFragment as nonScraped box presence
-        setUpdateThrottle(5000);
+        if (VideoLoader.THROTTLE) setUpdateThrottle(VideoLoader.THROTTLE_DELAY);
     }
 
     @Override
