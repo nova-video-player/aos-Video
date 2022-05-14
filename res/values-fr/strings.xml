@@ -805,6 +805,8 @@
     <string name="rescan_description">Re-scanne les dossiers indexés et ajoute les nouvelles vidéos à la bibliothèque</string>
     <string name="rescan_now">Re-scanner maintenant</string>
     <string name="rescan_now_description">Re-scan manuel</string>
+    <string name="rescan_select_shares">Sélectionner des raccourcis</string>
+    <string name="rescan_select_shares_description">Sélectionner les raccourcis réseau à rescanner automatiquement</string>
     <string name="rescan_error_wifi_info_standby">Le wifi semble être désactivé lors de la mise en veille. Pour vous assurer de la réussite de l\'auto-rescan, activez le wifi lors de la mise en veille.</string>
     <string name="rescan_error_wifi">Erreur: pas de connexion pendant le scan</string>
     <string name="rescan_error_wifi_click_for_more_info">Cliquez ici pour plus d\'informations</string>

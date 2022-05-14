@@ -59,6 +59,7 @@
     <string name="info_menu_poster_select">Επιλογή άλλης αφίσας</string>
     <string name="info_menu_series_poster_select">Επιλογή άλλης αφίσας</string>
     <!-- COVER ROLL -->
+    <string name="watching_up_next">Παρακολούθηση/Ακολουθεί</string>
     <string name="recently_added">Προστέθηκαν πρόσφατα</string>
     <string name="recently_added_videos">Προστέθηκαν πρόσφατα</string>
     <string name="recently_played">Έπαιξαν πρόσφατα</string>
@@ -80,10 +81,51 @@
     <string name="network_cling">UPNP (Πειραματικό)</string>
     <string name="recordings_storage">Εγγραφές</string>
     <string name="root_storage">Εσωτερικός αποθηκευτικός χώρος</string>
+    <string name="cannot_list">Αδυναμία προβολής περιεχομένου</string>
     <!-- VIDEO -->
     <string name="videos">Βίντεο</string>
     <string name="all_videos">Όλα τα βίντεο</string>
     <string name="not_played_yet_videos">Δεν παίχτηκε ακόμα</string>
+    <string name="video_folder">Φάκελοι</string>
+    <string name="movies">Ταινίες</string>
+    <string name="animes">Κινουμένων Σχέδιων</string>
+    <string name="all_movies">Όλες οι ταινίες</string>
+    <string name="all_movies_format">Όλες οι ταινίες -  %d</string>
+    <string name="all_animes_format">Ταινίες κινουμένων σχεδίων -  %d</string>
+    <string name="all_collections">Όλες οι συλλογές</string>
+    <string name="all_collections_format">Όλες οι συλλογές -  %d</string>
+    <string name="all_collection_watched">Όλη η συλλογή που παρακολουθήθηκε</string>
+    <string name="all_collection_unwatched">Συλλογή που δεν παρακολουθήθηκε</string>
+    <string name="not_watched_movies_format">Δεν παρακολουθήθηκε -  %d</string>
+    <string name="not_watched_animes_format">Δεν παρακολουθήθηκε -  %d</string>
+    <string name="all_movies_watched">Όλες οι ταινίες που παρακολουθήθηκαν</string>
+    <string name="movies_by_alpha">Ταινίες Αλφαβητικά</string>
+    <string name="movies_by_genre">Ταινίες ανά είδος</string>
+    <string name="movies_by_rating">Ταινίες ανά αξιολόγηση</string>
+    <string name="movie_collections">Συλλογές</string>
+    <string name="movies_by_year">Ταινίες ανά έτος</string>
+    <string name="all_tv_shows">Τηλεοπτικές σειρές</string>
+    <string name="all_tvshows">Όλες οι τηλεοπτικές σειρές</string>
+    <string name="all_animes">Όλες οι ταινίες κινουμένων σχεδίων</string>
+    <string name="all_animes_row">Όλες οι ταινίες κινουμένων σχεδίων</string>
+    <string name="all_animeshows">Όλες οι τηλεοπτικές σειρές κινουμένων σχεδίων</string>
+    <string name="animes_by_alpha">Ταινίες κινουμένων σχεδίων αλφαβητικά</string>
+    <string name="animes_by_genre">Ταινίες κινουμένων σχεδίων ανά είδος</string>
+    <string name="animes_by_rating">Ταινίες κινουμένων σχεδίων ανα αξιολόγηση</string>
+    <string name="animes_by_year">Ταινίες κινουμένων σχεδίων ανα έτος</string>
+    <string name="all_tvshows_format">Όλες οι τηλεοπτικές σειρές -  %d</string>
+    <string name="not_watched_tvshows_format">Δεν παρακολουθήθηκε -  %d</string>
+    <string name="all_animeshows_format">Τηλεοπτικές σειρές κινούμενων σχεδίων -  %d</string>
+    <string name="not_watched_animeshows_format">Δεν παρακολουθήθηκε -  %d</string>
+    <string name="tvshows_by_alpha">Τηλεοπτικές σειρές αλφαβητικά</string>
+    <string name="tvshows_by_genre">Τηλεοπτικές σειρές ανά είδος</string>
+    <string name="tvshows_by_rating">Τηλεοπτικές σειρές ανα αξιολόγηση</string>
+    <string name="episodes_by_date">Επεισόδια ανά ημερομηνία</string>
+    <string name="date_view_week">Εβδομάδα</string>
+    <string name="date_view_month">Μήνας</string>
+    <string name="date_view_year">Χρονιά</string>
+    <string name="all_movies_and_tv_shows">Ταινίες και τηλεοπτικές σειρές</string>
+    <string name="confirm_delete">Θέλετε πραγματικά να το διαγράψετε;</string>
     <string name="deleting">Παρακαλώ περιμένετε κατά τη διαγραφή…</string>
     <string name="cannot_delete_directory">Αδυναμία διαγραφής φακέλου</string>
     <string name="cannot_delete_file">Αδυναμία διαγραφής του αρχείου</string>
@@ -136,6 +178,26 @@
     <string name="episode_name">Επεισόδιο</string>
     <string name="episode_season">Σεζόν</string>
     <string name="episode_identification">Σεζόν %1$d Επεισόδιο %2$d</string>
+    <string name="mark_show_watched">Σημείωση όλων των επεισοδίων που παρακολουθήθηκαν ή δεν παρακολουθήθηκαν</string>
+    <string name="unindex_show">Αφαίρεση όλων των επεισοδίων από τη βιβλιοθήκη</string>
+    <string name="delete_show">Διαγραφή όλων των επεισοδίων</string>
+    <string name="scrap_no_network">Δεν υπάρχει σύνδεση σε δίκτυο.</string>
+    <string name="scrap_failed">Η ταινία δε βρέθηκε στην ηλεκτρονική βάση δεδομένων.</string>
+    <string name="scraper_settigns">Αφίσες &amp; πληροφορίες</string>
+    <string name="scrap_status_initial">Σε αναμονή</string>
+    <string name="scrap_status_busy">Αναζήτηση…</string>
+    <string name="scrap_status_failed">Δεν βρέθηκαν πληροφορίες</string>
+    <string name="scrap_status_rejected">Οι πληροφορίες αφαιρέθηκαν</string>
+    <string name="scrap_status_unknown">Άγνωστο</string>
+    <string name="scraper_abort_request">Θέλετε πραγματικά να διακόψετε την αναζήτηση;</string>
+    <string name="scraper_no_files">Δεν υπάρχουν αρχεία προς επεξεργασία</string>
+    <string name="scraper_no_new_files">Δεν υπάρχουν νέα αρχεία προς επεξεργασία</string>
+    <string name="scraper_no_new_files_in_folder">Δεν υπάρχουν νέα αρχεία προς επεξεργασία σε αυτόν το φάκελο</string>
+    <string name="scraper_folder_no_files">Ωστόσο, υπάρχουν ακόμα %d βίντεο για τα οποία δε βρέθηκαν πληροφορίες στο παρελθόν.</string>
+    <string name="scraper_folder_no_file">Ωστόσο, υπάρχει ακόμα ένα βίντεο για το οποίο δε βρέθηκαν πληροφορίες στο παρελθόν.</string>
+    <string name="scraper_folder_try_again">Θα θέλατε να προσπαθήσετε ξανά;</string>
+    <string name="scraper_no_episode_found">Δεν βρέθηκε επεισόδιο</string>
+    <string name="scraper_no_tv_show_text">Προς το παρόν δεν έχετε καμία αφίσα και περιγραφή για τις τηλεοπτικές σας εκπομπές</string>
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="info_audio_vbr">VBR</string>
     <string name="info_plugin_required">(απαιτείται πρόσθετο)</string>
@@ -149,7 +211,18 @@
     <string name="you_have_no_animes">Δεν υπάρχουν ταινίες κινουμένων σχεδίων</string>
     <string name="you_have_no_movie_collections">Καμία συλλογή</string>
     <!-- Media Center -->
+    <string name="switch_to_list">Λίστα</string>
+    <string name="switch_to_grid">Πλέγμα</string>
     <!-- VideoPlayer -->
+    <string name="player_pref_subtitle_delay_title">Καθυστέρηση</string>
+    <string name="floating_player_restore">Επαναφορά</string>
+    <string name="floating_player_play">Αναπαραγωγή</string>
+    <string name="floating_player_pause">Παύση</string>
+    <string name="player_pref_audio_delay_title">Καθυστέρηση ήχου</string>
+    <string name="now_playing">Αναπαραγωγή σε εξέλιξη</string>
+    <string name="player_window_mode">Λειτουργία παραθύρου</string>
+    <string name="pref_play_mode_title">Λειτουργία αναπαραγωγής</string>
+    <string name="pref_play_mode_entry_folder">Φάκελος</string>
     <!-- Subtitles/Audio languages -->
     <!-- Player errors -->
     <!-- Player plug-in -->
@@ -164,6 +237,10 @@
     <!-- torrent -->
     <!-- Shortcuts -->
     <!-- Preferences -->
+    <string name="category_languages">Υπότιτλοι</string>
+    <string name="preferences_video_about">Σχετικά</string>
+    <string name="preferences_video_os_text">Υπότιτλοι παρέχονται από</string>
+    <string name="preferences_video_tmdb_text">Πληροφορίες Ταινίας/Τηλεοπτικής σειράς παρέχονται από</string>
     <!--  Title of the video picker activity. -->
     <!-- Archos File Info -->
     <!-- Help overlay -->
