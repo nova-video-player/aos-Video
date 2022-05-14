@@ -889,6 +889,8 @@
     <string name="rescan_description">Re-scan indexed folders to add new content to the library</string>
     <string name="rescan_now">Re-scan now</string>
     <string name="rescan_now_description">Manual re-scan</string>
+    <string name="rescan_select_shares">Select shortcut</string>
+    <string name="rescan_select_shares_description">Select network shorcut to be rescanned automatically</string>
     <string name="rescan_error_wifi_info_standby">WiFi seems to be disabled on standby. To ensure success of auto-rescan, please set WiFi enable on standby.</string>
     <string name="rescan_error_wifi">Error: WiFi was off during rescan</string>
     <string name="rescan_error_wifi_click_for_more_info">click for more information</string>

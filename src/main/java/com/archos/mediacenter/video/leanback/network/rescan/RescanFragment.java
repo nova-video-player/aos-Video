@@ -42,6 +42,7 @@ import java.util.List;
 public class RescanFragment extends GuidedStepSupportFragment implements NetworkScannerServiceVideo.ScannerListener {
 
     public static final int MANUAL_RESCAN_ID = 100;
+    public static final int MANUAL_RESCAN_SELECT = 150;
     public static final int SCHEDULED_RESCAN_PERIOD_ID = 200;
     public static final int RESCAN_WHEN_OPENING_ID = 300;
     public static final int LAST_RESCAN_ID = 400;
@@ -80,6 +81,13 @@ public class RescanFragment extends GuidedStepSupportFragment implements Network
                 .build());
 
         actions.add(new GuidedAction.Builder(getActivity())
+                .id(MANUAL_RESCAN_SELECT)
+                .title(getString(R.string.rescan_select_shares))
+                .description(getString(R.string.rescan_select_shares_description))
+                .hasNext(true)
+                .build());
+
+        actions.add(new GuidedAction.Builder(getActivity())
                 .id(SCHEDULED_RESCAN_PERIOD_ID)
                 .title(getString(R.string.scheduled_rescan))
                 .description("") //updated in onCreateView()
@@ -98,7 +106,6 @@ public class RescanFragment extends GuidedStepSupportFragment implements Network
                 .title(getString(R.string.last_rescan_occured))
                 .description("") //updated in refreshLastRescanAction()
                 .build());
-
     }
     private String getTimeFormat(long millis){
         if(millis==0)
@@ -114,9 +121,7 @@ public class RescanFragment extends GuidedStepSupportFragment implements Network
         //refresh when scan state changes
         NetworkScannerServiceVideo.addListener(this);
         // Way I found to update the damn values...
-
         getActionById(SCHEDULED_RESCAN_PERIOD_ID).setLabel2(ScheduledRescanPeriod.getStringForCurrentValue(getActivity()));
-
         getActionById(RESCAN_WHEN_OPENING_ID).setLabel2(RescanWhenOpeningApplication.getStringForCurrentValue(getActivity()));
         refreshManualRescanAction();
         refreshLastRescanAction();
@@ -151,6 +156,9 @@ public class RescanFragment extends GuidedStepSupportFragment implements Network
         else if (action.getId()==RESCAN_WHEN_OPENING_ID) {
             add(getParentFragmentManager(), new RescanWhenOpeningApplication());
         }
+        else if (action.getId()==MANUAL_RESCAN_SELECT) {
+            add(getParentFragmentManager(), new ScheduledRescanShares());
+        }
     }
 
     private GuidedAction getActionById(int id) {
@@ -182,7 +190,6 @@ public class RescanFragment extends GuidedStepSupportFragment implements Network
                     message += " (" + getString(R.string.rescan_error_wifi_click_for_more_info) + ")";
                     clickable = true;
                 }
-
                 break;
             case NetworkAutoRefresh.AUTO_RESCAN_ERROR_UNABLE_TO_REACH_HOST:
                 message = getString(R.string.rescan_error_server);

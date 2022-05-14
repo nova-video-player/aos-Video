@@ -88,9 +88,6 @@ public enum ShortcutDb {
         return id;
     }
 
-
-
-
     public class Shortcut implements Serializable{
         public String name;
         public String uri;
