@@ -1,3 +1,4 @@
-- Make animation row optional on android TV
+- Add possibility to select network shortcuts to be scanned automatically on AndroidTV
+- Make animation row optional on AndroidTV
 - Add more blacklisted local storage directories to speed up media import
 - Stability enhancements
