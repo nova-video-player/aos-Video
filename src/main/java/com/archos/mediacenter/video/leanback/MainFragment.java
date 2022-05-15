@@ -1193,7 +1193,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 break;
             case LOADER_ID_ALL_ANIMES:
                 log.debug("onLoadFinished: AllAnimes cursor ready with " + cursor.getCount() + " entries, updating row/box");
-                if (mShowTvshowsRow && mSeparateAnimeFromShowMovie) updateAnimesRow(cursor, false);
+                if (mShowAnimesRow && mSeparateAnimeFromShowMovie) updateAnimesRow(cursor, false);
                 break;
             case LOADER_ID_NON_SCRAPED_VIDEOS_COUNT:
                 log.debug("onLoadFinished: NonScrapedVideos cursor ready with " + cursor.getCount());
