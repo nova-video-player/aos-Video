@@ -815,6 +815,8 @@
     <string name="rescan_description">Пересканировать индексированные папки для добавления нового содержимого в библиотеку</string>
     <string name="rescan_now">Пересканировать сейчас</string>
     <string name="rescan_now_description">Сканирование вручную</string>
+    <string name="rescan_select_shares">Выбор ярлыков</string>
+    <string name="rescan_select_shares_description">Выбор ярлыков сетевого размещения для автоматического сканирования</string>
     <string name="rescan_error_wifi_info_standby">WiFi в спящем режиме отключен. Для корректного автосканирования необходимо включить WiFi в спящем режиме.</string>
     <string name="rescan_error_wifi">Ошибка: Wi-Fi был выключен во время сканирования</string>
     <string name="rescan_error_wifi_click_for_more_info">Дополнительная информация</string>

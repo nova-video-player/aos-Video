@@ -817,6 +817,8 @@
     <string name="rescan_description">סרוק מחדש תיקיות מקוטלגות כדי להוסיף תוכן חדש לסיפרייה</string>
     <string name="rescan_now">סרוק מחדש עכשיו</string>
     <string name="rescan_now_description">סריקה מחדש ידנית</string>
+    <string name="rescan_select_shares">בחר קיצורי דרך</string>
+    <string name="rescan_select_shares_description">בחר קיצורי דרך רשת שייסרקו מחדש אוטומטית</string>
     <string name="rescan_error_wifi_info_standby">נראה ש-WiFi מושבת במצב שינה. כדי להבטיח הצלחה של סריקה מחדש אוטומטית, אנא הגדר ש-WiFi זמין במצב שינה.</string>
     <string name="rescan_error_wifi">שגיאה: WiFi היה מכובה בזמן סריקה מחדש</string>
     <string name="rescan_error_wifi_click_for_more_info">הקלק למידע נוסף</string>

@@ -800,6 +800,8 @@
     <string name="rescan_description">重新扫描已索引的文件夹以将新内容添加到库中</string>
     <string name="rescan_now">立即重新扫描</string>
     <string name="rescan_now_description">手动重新扫描</string>
+    <string name="rescan_select_shares">选择快捷方式</string>
+    <string name="rescan_select_shares_description">选择要自动重新扫描的网络快捷方式</string>
     <string name="rescan_error_wifi_info_standby">WiFi似乎在待机状态下被禁用。为了确保自动重新扫描成功，请在待机状态下启用WiFi。</string>
     <string name="rescan_error_wifi">错误：在重新扫描时关闭了WiFi</string>
     <string name="rescan_error_wifi_click_for_more_info">点击查看更多信息</string>

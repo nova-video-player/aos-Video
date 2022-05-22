@@ -789,6 +789,8 @@
     <string name="rescan_description">Znova naskenovat indexované složky pro přidání nového obsahu do knihovny</string>
     <string name="rescan_now">Znovu ihned naskenovat</string>
     <string name="rescan_now_description">Manuální opětovné skenování</string>
+    <string name="rescan_select_shares">Vybrat zástupce</string>
+    <string name="rescan_select_shares_description">Vyberte zástupce v síti, které mají být automaticky prohledávány</string>
     <string name="rescan_error_wifi_info_standby">Zdá se, že WiFi je vypnuto v režimu stand-by. Pro zajištění automatického opětovného skenování prosím aktivujte WiFi i v režimu stand-by.</string>
     <string name="rescan_error_wifi">Chyba: WiFi bylo vypnuté během skenování</string>
     <string name="rescan_error_wifi_click_for_more_info">klikněte pro více informací</string>
