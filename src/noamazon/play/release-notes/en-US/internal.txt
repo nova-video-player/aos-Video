@@ -1,4 +1,6 @@
-- Add possibility to select network shortcuts to be scanned automatically on AndroidTV
+- Add possibility to exclude network shortcuts from automatic/scheduled/manual global rescans on Android TV
+- Fix trakt multi-devices last played synchronization
+- jcifs-ng upstep
 - Make animation row optional on AndroidTV
 - Add more blacklisted local storage directories to speed up media import
 - Stability enhancements
