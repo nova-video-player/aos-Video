@@ -19,7 +19,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
@@ -31,6 +30,8 @@ import com.archos.medialib.MediaMetadata;
 import com.archos.mediaprovider.video.VideoStore;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.Serializable;
@@ -38,8 +39,7 @@ import java.io.Serializable;
 public class VideoMetadata implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private static final String TAG = "VideoMetadata";
-    private static final Boolean DBG = false;
+    private static final Logger log = LoggerFactory.getLogger(VideoMetadata.class);
 
     private File mFile;
     private String mRemotePath;
@@ -121,6 +121,7 @@ public class VideoMetadata implements Serializable {
             channels = getMetadataString(data, gapKey + IMediaPlayer.METADATA_KEY_AUDIO_TRACK_CHANNELS);
             vbr = getMetadataBool(data, gapKey + IMediaPlayer.METADATA_KEY_AUDIO_TRACK_VBR);
             supported = getMetadataBool(data, gapKey + IMediaPlayer.METADATA_KEY_AUDIO_TRACK_SUPPORTED);
+            log.debug("AudioTrack name=" + name + ", format=" + format);
         }
         
         AudioTrack(IMediaMetadataRetriever retriever, int idx) {
@@ -133,6 +134,7 @@ public class VideoMetadata implements Serializable {
             channels = getMetadataRetrieverString(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_AUDIO_TRACK_CHANNELS);
             vbr = getMetadataRetrieverBool(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_AUDIO_TRACK_VBR);
             supported = getMetadataRetrieverBool(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_AUDIO_TRACK_SUPPORTED);
+            log.debug("AudioTrack name=" + name + ", format=" + format);
         }
 
         public final String  name;
@@ -242,7 +244,7 @@ public class VideoMetadata implements Serializable {
                 retriever.setDataSource(mRemotePath);
             mFileSize = getMetadataRetrieverLong(retriever, IMediaMetadataRetriever.METADATA_KEY_FILE_SIZE);
             nbTrack = getMetadataRetrieverInt(retriever, IMediaMetadataRetriever.METADATA_KEY_NB_VIDEO_TRACK);
-            if (DBG) Log.d(TAG, "nbTrack: " + nbTrack);
+            log.debug("fillFromRetriever: nbTrack=" + nbTrack);
             if (nbTrack > 0)
                 mVideoTrack = new VideoTrack(retriever);
             nbTrack = getMetadataRetrieverInt(retriever, IMediaMetadataRetriever.METADATA_KEY_NB_AUDIO_TRACK);
@@ -347,7 +349,7 @@ public class VideoMetadata implements Serializable {
         try {
             return Integer.parseInt(retriever.extractMetadata(key));
         } catch (NumberFormatException e) {
-            Log.w(TAG, "getMetadataRetrieverInt: key (" +key+ ") is null");
+            log.warn("getMetadataRetrieverInt: key (" +key+ ") is null");
         }
         return 0;
     }
@@ -356,7 +358,7 @@ public class VideoMetadata implements Serializable {
         try {
             return Long.parseLong(retriever.extractMetadata(key));
         } catch (NumberFormatException e) {
-            Log.w(TAG, "getMetadataRetrieverLong: key (" +key+ ") is null");
+            log.warn("getMetadataRetrieverLong: key (" +key+ ") is null");
         }
         return 0;
     }
