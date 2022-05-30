@@ -164,6 +164,8 @@ public class VideoInfoCommonClass {
 
                 if (audioTrackNb > 1) {  // number and name of the track only if there are more than one track
                     sb.append(Integer.toString(i + 1)).append('.').append(SEP).append(VideoUtils.getLanguageString(c, audio.name)).append(SEP);
+                }else{
+                    sb.append(SEP).append(VideoUtils.getLanguageString(c, audio.name)).append(SEP);
                 }
                 sb.append(audio.format).append(SEP);
                 sb.append(audio.channels).append(SEP);
