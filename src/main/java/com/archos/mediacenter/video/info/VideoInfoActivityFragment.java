@@ -1028,7 +1028,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     break;
                 // definition is SD
                 case 4:
-                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/480.png"));
+                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/sd.png"));
                     break;
                 // definition is not known
                 case 0:
