@@ -1024,7 +1024,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     break;
                 // definition is 4K/2160p
                 case 3:
-                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/4k.png"));
+                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/4k_new.png"));
                     break;
                 // definition is SD
                 case 4:
