@@ -1314,35 +1314,36 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }
 
             // set video codec flags
-            assert videoMetadata.getVideoTrack() != null;
-            String format = videoMetadata.getVideoTrack().format;
-            if (format != null){
-                mVideoCodec.setVisibility(View.VISIBLE);
-                switch (format) {
-                    case "H.264":
-                        mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/h264.png"));
-                        break;
-                    case "HEVC/H.265":
-                        mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/hevc.png"));
-                        break;
-                    case "MPEG-2":
-                        mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg2.png"));
-                        break;
-                    case "MPEG-4":
-                        mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg4.png"));
-                        break;
-                    case "mpeg1video":
-                        mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg1video.png"));
-                        break;
-                    case "AV1":
-                        mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/av1.png"));
-                        break;
-                    case "wmv2":
-                        mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/wmv2.png"));
-                        break;
-                    default:
-                        mVideoCodec.setVisibility(View.GONE);
-                        break;
+            if(videoMetadata.getVideoTrack() != null) {
+                String format = videoMetadata.getVideoTrack().format;
+                if (format != null) {
+                    mVideoCodec.setVisibility(View.VISIBLE);
+                    switch (format) {
+                        case "H.264":
+                            mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/h264.png"));
+                            break;
+                        case "HEVC/H.265":
+                            mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/hevc.png"));
+                            break;
+                        case "MPEG-2":
+                            mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg2.png"));
+                            break;
+                        case "MPEG-4":
+                            mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg4.png"));
+                            break;
+                        case "mpeg1video":
+                            mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg1video.png"));
+                            break;
+                        case "AV1":
+                            mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/av1.png"));
+                            break;
+                        case "wmv2":
+                            mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/wmv2.png"));
+                            break;
+                        default:
+                            mVideoCodec.setVisibility(View.GONE);
+                            break;
+                    }
                 }
             }
 
