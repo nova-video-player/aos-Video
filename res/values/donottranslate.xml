@@ -33,9 +33,12 @@
     <string name="tha">tha</string>
     <string name="tur">tur</string>
     <string name="zho">zho</string>
+    <string name="chi">chi</string>
     <string name="hrv">hrv</string>
     <string name="vie">vie</string>
     <string name="lit">lit</string>
+    <string name="ukr">ukr</string>
+    <string name="kur">kur</string>
 
     <string name="unknown_video_name">@string/unknown_track_name</string>
 

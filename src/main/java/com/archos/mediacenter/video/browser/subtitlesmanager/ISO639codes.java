@@ -97,6 +97,7 @@ public class ISO639codes {
 
         sMap.put("pt",  R.string.s_portuguese);
         sMap.put("por", R.string.s_portuguese);
+        sMap.put("pob", R.string.s_brazilian);
 
         sMap.put("ru",  R.string.s_russian);
         sMap.put("rus", R.string.s_russian);
@@ -124,8 +125,9 @@ public class ISO639codes {
         sMap.put("tur", R.string.s_turkish);
 
         sMap.put("zh",  R.string.s_chinese);
+        sMap.put("zt",  R.string.s_traditional_chinese);
         sMap.put("zho", R.string.s_chinese);
-        sMap.put("chi", R.string.s_chinese);
+        sMap.put("chi", R.string.s_traditional_chinese);
 
         sMap.put("vie", R.string.s_vietnamese);
 
@@ -133,6 +135,13 @@ public class ISO639codes {
         sMap.put("lit", R.string.s_lithuanian);
 
         sMap.put("ind", R.string.s_indonesian);
+
+        sMap.put("uk", R.string.s_ukrainian);
+        sMap.put("ukr", R.string.s_ukrainian);
+
+        sMap.put("ku", R.string.s_kurdish);
+        sMap.put("kur", R.string.s_kurdish);
+
     }
 
     /**

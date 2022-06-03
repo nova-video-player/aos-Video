@@ -391,10 +391,13 @@
     <string name="s_thai">Thai</string>
     <string name="s_turkish">Turkish</string>
     <string name="s_chinese">Chinese</string>
+    <string name="s_traditional_chinese">Traditional Chinese</string>
     <string name="s_vietnamese">Vietnamese</string>
     <string name="s_lithuanian">Lithuanian</string>
     <string name="s_indonesian">Indonesian</string>
     <string name="s_malay">Malay</string>
+    <string name="s_ukrainian">Ukrainian</string>
+    <string name="s_kurdish">Kurdish</string>
     <string name="s_none">None</string>
 
     <!-- Player errors -->

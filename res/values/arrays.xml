@@ -103,10 +103,14 @@
         <item>@string/s_thai</item>
         <item>@string/s_turkish</item>
         <item>@string/s_chinese</item>
+        <item>@string/s_traditional_chinese</item>
         <item>@string/Croatian</item>
         <item>@string/s_vietnamese</item>
         <item>@string/s_lithuanian</item>
+        <item>@string/s_ukrainian</item>
+        <item>@string/s_kurdish</item>
     </string-array>
+    <!-- NEED TO BE SAME ORDER THAN ABOVE -->
     <string-array name="entryvalues_list_preference">
         <item>system</item>
         <item>@string/eng</item>
@@ -137,9 +141,12 @@
         <item>@string/tha</item>
         <item>@string/tur</item>
         <item>@string/zho</item>
+        <item>@string/chi</item>
         <item>@string/hrv</item>
         <item>@string/vie</item>
         <item>@string/lit</item>
+        <item>@string/ukr</item>
+        <item>@string/kur</item>
     </string-array>
 
     <string-array name="dec_choice_entries">
