@@ -18,7 +18,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -31,10 +30,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.archos.mediacenter.video.R;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class WebViewActivity extends AppCompatActivity {
 
-    private static final String TAG = "WebViewActivity";
-    private static final boolean DBG = false;
+    private static final Logger log = LoggerFactory.getLogger(WebViewActivity.class);
 
     private Uri mUri;
     private WebView mWebView;
@@ -67,7 +68,7 @@ public class WebViewActivity extends AppCompatActivity {
             @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (DBG) Log.d(TAG, "shouldOverrideUrlLoading " + url);
+                log.debug("shouldOverrideUrlLoading " + url);
                 return false;
             }
             // this one is for Android API 24+
@@ -75,7 +76,7 @@ public class WebViewActivity extends AppCompatActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
-                if (DBG) Log.d(TAG, "shouldOverrideUrlLoading API24+ for url " + url);
+                log.debug("shouldOverrideUrlLoading API24+ for url " + url);
                 return false;
             }
         });
