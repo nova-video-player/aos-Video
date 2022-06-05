@@ -1,6 +1,6 @@
+- Fix youtube trailers not opening on youtube app on Android TV
+- Add traditional chinese, brazilian, ukrainian, kurdish scrape/subs support
 - Add possibility to exclude network shortcuts from automatic/scheduled/manual global rescans on Android TV
 - Fix trakt multi-devices last played synchronization
-- jcifs-ng upstep
-- Make animation row optional on AndroidTV
-- Add more blacklisted local storage directories to speed up media import
+- jcifs-ng SMB upstep
 - Stability enhancements
