@@ -510,7 +510,7 @@
 
     <!-- Shortcuts -->
     <string name="add_to_shortcuts">Create a shortcut</string>
-    <string name="add_ssh_server">Browse a FTP server</string>
+    <string name="add_ssh_server">Browse an FTP server</string>
     <string name="add_ssh_shortcut">Add as shortcut</string>
     <string name="ssh_prompt">FTP type</string>
     <string name="ssh_empty_view"> "You can browse and play from your own ftp server"</string>
