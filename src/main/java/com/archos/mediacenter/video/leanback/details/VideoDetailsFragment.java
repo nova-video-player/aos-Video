@@ -408,13 +408,16 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     // Breaks AndroidTV acceptance but needed to launch scraper in Youtube app instead of browser
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, ((ScraperTrailer)item).getUrl());
                     ActivityInfo activityInfo = browserIntent.resolveActivityInfo(getActivity().getPackageManager(), browserIntent.getFlags());
-                    
-                    if (activityInfo != null && !activityInfo.processName.equals("com.google.android.tv.frameworkpackagestubs")) {
+                    if (activityInfo == null) log.debug("onCreate.onItemClicked: activity identified null");
+                    else log.debug("onCreate.onItemClicked: activity identified " + activityInfo.processName);
+                    if (activityInfo != null) {
+                        // not used to exclude !activityInfo.processName.equals("com.google.android.tv.frameworkpackagestubs") but was preventing opening youtube on ADTV
+                        log.debug("onCreate.onItemClicked: browserintent on " + ((ScraperTrailer)item).getUrl() + " with activityInfo " + activityInfo.processName);
                         startActivity(browserIntent);
                     }
                     else {
                         String url = ((ScraperTrailer)item).getUrl().toString().replace("https://www.youtube.com/watch", "https://www.youtube.com/tv#/watch");
-
+                        log.debug("onCreate.onItemClicked: open url " + url);
                         WebUtils.openWebLink(getActivity(), url);
                     }
                 }
