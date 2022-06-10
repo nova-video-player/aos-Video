@@ -1,4 +1,4 @@
-// Copyright 2017 Archos SA
+// Copyright 2022 Courville Software
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.archos.mediacenter.video.leanback.network.ftp;
+package com.archos.mediacenter.video.leanback.network;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -22,6 +22,7 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -36,7 +37,7 @@ import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase.Credential;
 import com.archos.mediacenter.video.R;
 
-public class FtpServerCredentialsDialog extends DialogFragment {
+public class NetworkServerCredentialsDialog extends DialogFragment {
     private AlertDialog mDialog;
     private SharedPreferences mPreferences;
     private String mUsername="";
@@ -45,10 +46,10 @@ public class FtpServerCredentialsDialog extends DialogFragment {
     private int mType=-1;
     private String mRemote="";
     private onConnectClickListener mOnConnectClick;
-    final private static String FTP_LATEST_TYPE = "FTP_LATEST_TYPE";
-    final private static String FTP_LATEST_ADDRESS = "FTP_LATEST_ADDRESS";
-    final private static String FTP_LATEST_PORT = "FTP_LATEST_PORT";
-    final private static String FTP_LATEST_USERNAME = "FTP_LATEST_USERNAME";
+    final private static String NET_LATEST_TYPE = "NET_LATEST_TYPE";
+    final private static String NET_LATEST_ADDRESS = "NET_LATEST_ADDRESS";
+    final private static String NET_LATEST_PORT = "NET_LATEST_PORT";
+    final private static String NET_LATEST_USERNAME = "NET_LATEST_USERNAME";
 
     final public static String USERNAME = "username";
     final public static String REMOTE = "remote_address";
@@ -64,7 +65,7 @@ public class FtpServerCredentialsDialog extends DialogFragment {
     public interface onConnectClickListener{
         public void onConnectClick(String username, String path, String password, int port, int type, String remote);
     }
-    public FtpServerCredentialsDialog(){ }
+    public NetworkServerCredentialsDialog(){ }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle args  = getArguments();
@@ -79,10 +80,10 @@ public class FtpServerCredentialsDialog extends DialogFragment {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         // Get latest values from preference
         if(mUsername.isEmpty()&&mPassword.isEmpty()&&mPort==-1&&mType==-1&&mRemote.isEmpty()){
-            mRemote = mPreferences.getString(FTP_LATEST_ADDRESS, "");
-            mUsername = mPreferences.getString(FTP_LATEST_USERNAME, "");
-            mType = mPreferences.getInt(FTP_LATEST_TYPE, 0);
-            mPort = mPreferences.getInt(FTP_LATEST_PORT, -1);
+            mRemote = mPreferences.getString(NET_LATEST_ADDRESS, "");
+            mUsername = mPreferences.getString(NET_LATEST_USERNAME, "");
+            mType = mPreferences.getInt(NET_LATEST_TYPE, 0);
+            mPort = mPreferences.getInt(NET_LATEST_PORT, -1);
         }
         if(mPassword.isEmpty()&&!mRemote.isEmpty()){
             NetworkCredentialsDatabase database = NetworkCredentialsDatabase.getInstance();
@@ -91,6 +92,7 @@ public class FtpServerCredentialsDialog extends DialogFragment {
                 case 0: uriToBuild = "ftp"; break;
                 case 1: uriToBuild = "sftp"; break;
                 case 2: uriToBuild = "ftps"; break;
+                case 3: uriToBuild = "smb"; break;
                 default:
                     throw new IllegalArgumentException("Invalid FTP type "+mType);
             }
@@ -100,8 +102,18 @@ public class FtpServerCredentialsDialog extends DialogFragment {
                 mPassword= cred.getPassword();
             }
         }
-        final View v = getActivity().getLayoutInflater().inflate(R.layout.ssh_credential_layout, null);
+        final View v = getActivity().getLayoutInflater().inflate(R.layout.network_credential_layout, null);
         final Spinner typeSp = (Spinner)v.findViewById(R.id.ssh_spinner);
+        typeSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if (position == 3) v.findViewById(R.id.domain).setVisibility(View.VISIBLE);
+                else v.findViewById(R.id.domain).setVisibility(View.GONE);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+        });
         addressEt = (EditText)v.findViewById(R.id.remote);
         portEt = (EditText)v.findViewById(R.id.port);
         final EditText usernameEt = (EditText)v.findViewById(R.id.username);
@@ -120,7 +132,7 @@ public class FtpServerCredentialsDialog extends DialogFragment {
             }
         });
         int type = mType;
-        if (type==0 || type==1 || type==2) { // better safe than sorry
+        if (type > 0 && type < 4) { // better safe than sorry
             typeSp.setSelection(type);
         }
         addressEt.setText(mRemote);
@@ -154,11 +166,13 @@ public class FtpServerCredentialsDialog extends DialogFragment {
 
                     // get default port if it's wrong
                     switch(type){
-                        case 0: if (port == -1)  port=21; break;
-                        case 1: if (port == -1)  port=22; break;
-                        case 2: if (port == -1)  port=21; break;
+                        case 0:
+                        case 2:
+                            if (port == -1) port = 21; break;
+                        case 1: if (port == -1) port = 22; break;
+                        case 3: if (port == -1) port = 445; break;
                         default:
-                            throw new IllegalArgumentException("Invalid FTP type "+type);
+                            throw new IllegalArgumentException("Invalid protocol type "+type);
                     }
 
                     final String username = usernameEt.getText().toString();
@@ -166,18 +180,19 @@ public class FtpServerCredentialsDialog extends DialogFragment {
 
                     // Store new values to preferences
                     mPreferences.edit()
-                    .putInt(FTP_LATEST_TYPE, type)
-                    .putString(FTP_LATEST_ADDRESS, address)
-                    .putInt(FTP_LATEST_PORT, port)
-                    .putString(FTP_LATEST_USERNAME, username)
+                    .putInt(NET_LATEST_TYPE, type)
+                    .putString(NET_LATEST_ADDRESS, address)
+                    .putInt(NET_LATEST_PORT, port)
+                    .putString(NET_LATEST_USERNAME, username)
                     .apply();
                     String uriToBuild = "";
                     switch(type){
                         case 0: uriToBuild = "ftp"; break;
                         case 1: uriToBuild = "sftp"; break;
                         case 2: uriToBuild = "ftps"; break;
+                        case 3: uriToBuild = "smb"; break;
                         default:
-                            throw new IllegalArgumentException("Invalid FTP type "+type);
+                            throw new IllegalArgumentException("Invalid protocol type "+type);
                     }
                     //path needs to start by a "/"
                     if(path.isEmpty()||!path.startsWith("/"))

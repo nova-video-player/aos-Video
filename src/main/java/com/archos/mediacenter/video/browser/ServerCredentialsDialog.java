@@ -93,6 +93,7 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
 
         if(mUri!=null){
             mPort = mUri.getPort();
+            // TODO MARC change because 3... ftps and smb
             mType = "ftp".equals(mUri.getScheme())?0:"sftp".equals(mUri.getScheme())?1:2;
             mPath = mUri.getPath();
             mRemote = mUri.getHost();

@@ -19,8 +19,10 @@ import androidx.leanback.widget.Action;
 import androidx.leanback.widget.DetailsOverviewRow;
 import androidx.leanback.widget.SparseArrayObjectAdapter;
 
+import android.net.Uri;
 import android.widget.Toast;
 
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.ShortcutDb;
@@ -32,8 +34,6 @@ import com.archos.mediaprovider.NetworkScanner;
 public class FtpShortcutDetailsFragment extends NetworkShortcutDetailsFragment {
 
     private static final String TAG = "FtpShortcutDetailsFragment";
-
-
 
     private static final int ACTION_REINDEX = 0;
     private static final int ACTION_ADD_INDEX = 4;
@@ -56,7 +56,14 @@ public class FtpShortcutDetailsFragment extends NetworkShortcutDetailsFragment {
                 }
             }
         });
-        detailRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_server));
+        if ("ftp".equalsIgnoreCase(mShortcut.getUri().getScheme())) {
+            detailRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_folder_ftp));
+        } else if ("ftps".equalsIgnoreCase(mShortcut.getUri().getScheme())) {
+            detailRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_folder_ftps));
+        } else if ("sftp".equalsIgnoreCase(mShortcut.getUri().getScheme())) {
+            detailRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_folder_sftp));
+        } else
+            detailRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_folder));
     }
 
     @Override

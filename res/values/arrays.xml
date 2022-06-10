@@ -225,4 +225,11 @@
         <item>932</item>
         <item>949</item>
     </string-array>
+
+    <string-array name="protocol_types">
+        <item>FTP</item>
+        <item>SFTP</item>
+        <item>FTPS</item>
+        <item>SMB</item>
+    </string-array>
 </resources>

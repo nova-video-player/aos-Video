@@ -20,7 +20,6 @@ import androidx.loader.app.LoaderManager;
 import android.content.Intent;
 import androidx.loader.content.Loader;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -37,7 +36,6 @@ import androidx.leanback.widget.Row;
 import androidx.leanback.widget.RowPresenter;
 import androidx.leanback.widget.VerticalGridPresenter;
 import androidx.core.app.ActivityOptionsCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +70,9 @@ import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -80,7 +81,7 @@ import java.util.List;
  */
 public abstract class ListingFragment extends MyVerticalGridFragment implements ListingEngine.Listener, LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String TAG = "ListingFragment";
+    private static final Logger log = LoggerFactory.getLogger(ListingFragment.class);
 
     private static final String PREF_LISTING_DISPLAY_MODE = "PREF_LISTING_DISPLAY_MODE";
 
@@ -124,7 +125,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate " + savedInstanceState);
+        log.debug("onCreate " + savedInstanceState);
         super.onCreate(savedInstanceState);
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -146,7 +147,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView " + this + "   " + savedInstanceState);
+        log.debug("onCreateView " + this + "   " + savedInstanceState);
         View v = super.onCreateView(inflater, container, savedInstanceState);
         // CAUTION: using a non public viewgroup ID here!
         // May be broken if leanback team changes it!
@@ -167,10 +168,9 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
             mLongConnectionMessage.setVisibility(View.GONE);
 
         } else {
-            Log.e(TAG, "no more R.id.browse_grid_dock FrameLayout in the VerticalGridFragment!");
+            log.error("no more R.id.browse_grid_dock FrameLayout in the VerticalGridFragment!");
             // caution mEmptyView and mProgressView will be null!
         }
-
 
         // Update the display mode if needed (i.e. if it has been changed in a child fragment)
         // (Note: onCreateView is called when back from backstack, hence we can update here)
@@ -356,7 +356,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
     }
 
     protected void startListing(Uri uri) {
-        Log.d(TAG, "startListing " + uri);
+        log.debug("startListing " + uri);
         // abort previous engine (in theory not needed)
         if (mListingEngine!=null) {
             mListingEngine.abort();

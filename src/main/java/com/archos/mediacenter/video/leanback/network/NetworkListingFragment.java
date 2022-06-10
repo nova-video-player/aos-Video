@@ -14,23 +14,31 @@
 
 package com.archos.mediacenter.video.leanback.network;
 
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.archos.customizedleanback.widget.MyTitleView;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.ShortcutDb;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingFragment;
 import com.archos.mediaprovider.NetworkScanner;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by vapillon on 17/04/15.
  */
 public class NetworkListingFragment extends ListingFragment {
 
-    private static final String TAG = "NetworkListingFragment";
+    private static final Logger log = LoggerFactory.getLogger(NetworkListingFragment.class);
 
     private long mShorcutId;
     private boolean mAnAncestorIsShortcut;
@@ -56,13 +64,20 @@ public class NetworkListingFragment extends ListingFragment {
     private final View.OnClickListener mOrbClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            //checkIfIsShortcut();
             if (isShortcut()) {
                 deleteShortcut();
             } else {
                 createShortcut();
+                //askForIndexing();
             }
         }
     };
+
+    private void checkIfIsShortcut() {
+        mShorcutId = ShortcutDb.STATIC.isShortcut(getActivity(), mUri.toString());
+        //Log.d(TAG, "shorcutId = " + mShorcutId + "\t (" + mUri.toString() + ")");
+    }
 
     /**
      * Check if the current folder is a shortcut or if one of his ancestor is.
@@ -145,8 +160,9 @@ public class NetworkListingFragment extends ListingFragment {
     /** Add current Uri to the shortcut list */
     protected void createShortcut() {
 
+        log.debug("createShortcut: ARG_TITLE=" + ARG_TITLE);
         String shortcutPath = mUri.toString();
-        String shortcutName = getArguments().getString(ARG_TITLE)!=null?getArguments().getString(ARG_TITLE):mUri.getLastPathSegment(); //to avoid name like "33" in upnp
+        String shortcutName = (getArguments().getString(ARG_TITLE)!=null||getArguments().getString(ARG_TITLE).equals("TITLE"))?getArguments().getString(ARG_TITLE):mUri.getLastPathSegment(); //to avoid name like "33" in upnp
         boolean result = ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), new ShortcutDbAdapter.Shortcut(shortcutName, shortcutPath));
 
         if (result) {
@@ -159,6 +175,16 @@ public class NetworkListingFragment extends ListingFragment {
             Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
         }
         updateShortcutState();
+    }
+
+    private void askForIndexing() {
+        new AlertDialog.Builder(getActivity()).setMessage(R.string.add_all_items_to_library).setTitle(mUri.getLastPathSegment()).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), new ShortcutDbAdapter.Shortcut(FileUtils.getName(mUri), mUri.toString()));
+                NetworkScanner.scanVideos(getActivity(), mUri);
+            }
+        }).setNegativeButton(R.string.no, null).show();
     }
 
     /** Remove current Uri from the shortcut list */

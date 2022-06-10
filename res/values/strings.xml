@@ -509,10 +509,14 @@
     <string name="torrent_buy_premium">Buy premium version</string>
 
     <!-- Shortcuts -->
+    <string name="browse_net_server">Browse a network share</string>
+    <string name="add_smb_server">Browse an SMB server</string>
+    <string name="add_network_server">Add a network share</string>
     <string name="add_to_shortcuts">Create a shortcut</string>
     <string name="add_ssh_server">Browse an FTP server</string>
     <string name="add_ssh_shortcut">Add as shortcut</string>
     <string name="ssh_prompt">FTP type</string>
+    <string name="protocol_prompt">Protocol type</string>
     <string name="ssh_empty_view"> "You can browse and play from your own ftp server"</string>
     <string-array name="ssh_types">
         <item>FTP</item>

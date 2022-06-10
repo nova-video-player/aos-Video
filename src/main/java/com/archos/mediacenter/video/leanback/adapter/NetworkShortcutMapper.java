@@ -25,6 +25,7 @@ import com.archos.mediacenter.video.leanback.adapter.object.NetworkShortcut;
  * Created by vapillon on 10/04/15.
  */
 public class NetworkShortcutMapper extends CursorMapper {
+    // mapper intended for indexed folder shortcut (not network shortcut)
 
     private static final String TAG = "NetworkShortcutMapper";
 
@@ -48,6 +49,6 @@ public class NetworkShortcutMapper extends CursorMapper {
         Uri uri = Uri.parse(path);
         if(name==null||name.isEmpty())
             name = uri.getLastPathSegment();
-        return new NetworkShortcut(id, path, name,friendlyUri);
+        return new NetworkShortcut(id, path, name, friendlyUri);
     }
 }

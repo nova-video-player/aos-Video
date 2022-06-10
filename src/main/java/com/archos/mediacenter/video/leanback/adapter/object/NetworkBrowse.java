@@ -1,4 +1,4 @@
-// Copyright 2017 Archos SA
+// Copyright 2022 Courville Software
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,20 +20,18 @@ import com.archos.mediacenter.video.R;
 
 import java.io.Serializable;
 
-/**
- * Created by vapillon on 10/04/15.
- */
-public class FtpShortcut extends Shortcut implements Serializable {
+public class NetworkBrowse extends Shortcut implements Serializable {
 
-    public FtpShortcut(long id, String fullPath, String name) {
-       super(id, fullPath, fullPath, name);
+    public NetworkBrowse(String name) {
+       super(-1,"","",name);
     }
 
     public Uri getUri() {
-        return Uri.parse(mFullPath);
+        return null;
     }
+
     @Override
     public int getImage() {
-        return R.drawable.filetype_new_server;
+        return R.drawable.filetype_new_world;
     }
 }

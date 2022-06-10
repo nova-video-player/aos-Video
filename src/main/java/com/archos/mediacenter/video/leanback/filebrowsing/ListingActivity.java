@@ -65,8 +65,6 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
      */
     public static final int REQUEST_INFO_ACTIVITY = 1;
 
-
-
     /**
      * Return the best Activity class ofr a given Uri
      * @param uri

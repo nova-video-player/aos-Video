@@ -38,7 +38,6 @@ public class FTPServerCredentialsDialog extends ServerCredentialsDialog {
                 .apply();
     }
 
-
     @Override
     public String createUri() {
         final int type = mTypeSp.getSelectedItemPosition();
