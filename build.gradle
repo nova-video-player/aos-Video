@@ -130,8 +130,8 @@ android {
         // below version tracks the one from F-Droid or universal package when generated with ./gradlew -Puniversal
         // this is overridden when using split apk and normal split apk generation or oneapk amazon generation
         // amazon apk is generated with ./gradlew -Poneapk
-        versionName = '6.0.67'
-        versionCode = 600067
+        versionName = '6.0.68'
+        versionCode = 600068
         if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
         applicationId "org.courville.nova"
         if (project.hasProperty("sponsor")) {
@@ -285,17 +285,17 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
     implementation 'androidx.media:media:1.6.0'
-    implementation 'androidx.core:core:1.7.0'
+    implementation 'androidx.core:core:1.8.0'
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
     implementation 'androidx.fragment:fragment:1.4.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'androidx.preference:preference:1.2.0'
     implementation 'com.github.ksoichiro:android-observablescrollview:1.6.0'
-    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.leanback:leanback:1.2.0-alpha02'
     implementation 'androidx.leanback:leanback-preference:1.2.0-alpha02'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
