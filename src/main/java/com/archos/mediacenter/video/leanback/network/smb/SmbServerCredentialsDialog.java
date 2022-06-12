@@ -104,6 +104,7 @@ public class SmbServerCredentialsDialog extends DialogFragment {
         });
         usernameEt.setText(mUsername);
         passwordEt.setText(mPassword);
+        domainEt.setText(mDomain);
         
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
         .setTitle(R.string.browse_ftp_server)
