@@ -356,10 +356,13 @@
     <string name="s_thai">Thaï</string>
     <string name="s_turkish">Turque</string>
     <string name="s_chinese">Chinois</string>
+    <string name="s_traditional_chinese">Chinois traditionnel</string>
     <string name="s_vietnamese">Vietnamien</string>
     <string name="s_lithuanian">Lithuanien</string>
     <string name="s_indonesian">Indonésien</string>
     <string name="s_malay">Malais</string>
+    <string name="s_ukrainian">Ukrainien</string>
+    <string name="s_kurdish">Kurde</string>
     <string name="s_none">Aucun</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Impossible de lire la vidéo</string>
@@ -462,10 +465,14 @@
     <string name="torrent_buy_premium_message">Torrent n\'est disponible que sur la version payante</string>
     <string name="torrent_buy_premium">Acheter version premium</string>
     <!-- Shortcuts -->
+    <string name="browse_net_server">Parcourir un partage réseau</string>
+    <string name="add_smb_server">Parcourir un serveur SMB</string>
+    <string name="add_network_server">Ajouter un partage réseau</string>
     <string name="add_to_shortcuts">Créer un raccourci</string>
     <string name="add_ssh_server">Parcourir un serveur FTP</string>
     <string name="add_ssh_shortcut">Créer un raccourci</string>
     <string name="ssh_prompt">Type</string>
+    <string name="protocol_prompt">Type de protocole</string>
     <string name="ssh_empty_view">Parcourez votre propre serveur FTP</string>
     <string-array name="ssh_types">
         <item>FTP</item>

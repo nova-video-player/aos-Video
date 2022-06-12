@@ -353,7 +353,15 @@
     <string name="player_plugin_video_msg">Αυτό το αρχείο περιέχει μια <xliff:g id="video">%1$s</xliff:g> μορφή βίντεο.</string>
     <string name="player_plugin_audio_msg">Αυτό το αρχείο περιέχει μια <xliff:g id="audio">%1$s</xliff:g> μορφή ήχου.</string>
     <string name="player_plugin_video_audio_msg">Αυτό το αρχείο περιέχει μια <xliff:g id="video">%1$s</xliff:g> μορφή βίντεο και μια <xliff:g id="audio">%2$s</xliff:g> μορφή ήχου.</string>
+    <string name="player_plugin_purchase_archos_msg">Μπορείτε να αγοράσετε επιπλέον codec plug-ins στο www.archos.com.</string>
+    <string name="player_plugin_purchase_google_play_msg">Μπορείτε να αγοράσετε επιπλέον codec plug-ins στο Google Play.</string>
+    <string name="player_plugin_purchase_google_play_button">Μετάβαση στο Google Play</string>
+    <string name="plugin_update_required_title">Απαιτείται ενημέρωση Codec</string>
     <!-- Subtitles wizard -->
+    <string name="get_subtitles_on_drive">Επιλέξτε υπότιτλους στον αποθηκευτικό χώρο</string>
+    <string name="subtitles_wizard_no_files">Δεν βρέθηκαν υπότιτλοι</string>
+    <string name="subtitles_wizard_current_files">Τρέχοντα αρχεία υποτίτλων</string>
+    <string name="subtitles_wizard_available_files">Διαθέσιμοι Υπότιτλοι</string>
     <!-- Subloader -->
     <string name="dialog_subloader_credentials_empty">Πρέπει να εισαγάγετε έγκυρο όνομα χρήστη και κωδικό πρόσβασης!</string>
     <string name="toast_subloader_credentials_empty">Παρέχετε τα διαπιστευτήρια opensubtitles σας στις ρυθμίσεις για να μπορείτε να κατεβάσετε υπότιτλους</string>

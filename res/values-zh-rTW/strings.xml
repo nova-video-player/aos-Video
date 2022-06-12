@@ -657,6 +657,8 @@
     <string name="preferences_display_resume_box_summary">在主螢幕上顯示或隱藏續播最近撥放影片的按鈕</string>
     <string name="preferences_display_resume_box">顯示續播視窗</string>
     <string name="preferences_leanback_user_interface">電視使用者介面</string>
+    <string name="preferences_separate_animation_from_movies_summary">如要在主畫面將動畫影片從電影和電視劇裡獨立顯示請勾選</string>
+    <string name="preferences_separate_animation_from_movies">將動畫從電影和電視劇裡分開</string>
     <string name="preferences_show_watching_up_next_row_summary">如要在選單中顯示目前和接下來要觀看影片的選項請勾選</string>
     <string name="preferences_show_watching_up_next_row">顯示「正在觀看 / 稍後觀看」</string>
     <string name="preferences_show_last_added_row_summary">如要在選單中顯示最近新增影片的選項請勾選</string>
@@ -798,6 +800,8 @@
     <string name="rescan_description">重新掃描索引資料夾以新增內容至媒體庫</string>
     <string name="rescan_now">立刻重新掃描</string>
     <string name="rescan_now_description">手動重新掃描</string>
+    <string name="rescan_select_shares">選擇捷徑</string>
+    <string name="rescan_select_shares_description">選擇要自動重新掃描的網路捷徑</string>
     <string name="rescan_error_wifi_info_standby">WiFi 似乎在待機時被停用。為了確保自動重新掃描成功，請設定待機狀態仍保持 WiFi 連線。</string>
     <string name="rescan_error_wifi">錯誤：WiFi 在重新掃描時被關閉。</string>
     <string name="rescan_error_wifi_click_for_more_info">點擊獲取更多資訊</string>
