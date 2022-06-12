@@ -160,9 +160,10 @@ public class NetworkListingFragment extends ListingFragment {
     /** Add current Uri to the shortcut list */
     protected void createShortcut() {
 
-        log.debug("createShortcut: ARG_TITLE=" + ARG_TITLE);
+        log.debug("createShortcut: ARG_TITLE=" + ARG_TITLE + ", argument ARG_TITLE=" + getArguments().getString(ARG_TITLE));
         String shortcutPath = mUri.toString();
-        String shortcutName = (getArguments().getString(ARG_TITLE)!=null||getArguments().getString(ARG_TITLE).equals("TITLE"))?getArguments().getString(ARG_TITLE):mUri.getLastPathSegment(); //to avoid name like "33" in upnp
+        String shortcutName = getArguments().getString(ARG_TITLE)!=null?getArguments().getString(ARG_TITLE):mUri.getLastPathSegment(); //to avoid name like "33" in upnp
+        log.debug("createShortcut: shorcutName=" + shortcutName + ", shortcutPath=" + shortcutPath + ", lastPathSegment=" + mUri.getLastPathSegment());
         boolean result = ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), new ShortcutDbAdapter.Shortcut(shortcutName, shortcutPath));
 
         if (result) {
