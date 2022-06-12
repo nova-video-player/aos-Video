@@ -271,7 +271,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                     NetworkServerCredentialsDialog dialog = new NetworkServerCredentialsDialog();
                     dialog.setOnConnectClickListener(new NetworkServerCredentialsDialog.onConnectClickListener() {
                         @Override
-                        public void onConnectClick(String username, String path, String password, int port, int type, String remote) {
+                        public void onConnectClick(String username, String path, String password, int port, int type, String remote, String domain) {
                             String uriToBuild = "";
                             switch (type) {
                                 case 0:
@@ -298,7 +298,8 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                             Intent intent = new Intent(getActivity(), ListingActivity.getActivityForUri(uri));
                             log.debug("onItemClicked: NetworkBrowse ListingActivity root uri=" + uri + ", root name=" + uri.getHost());
                             intent.putExtra(ListingActivity.EXTRA_ROOT_URI, uri);
-                            intent.putExtra(ListingActivity.EXTRA_ROOT_NAME, uri.getHost());
+                            String shareName = uri.getLastPathSegment();
+                            intent.putExtra(ListingActivity.EXTRA_ROOT_NAME, shareName.isEmpty()?uri.getHost():shareName);
                             startActivityForResult(intent, REQUEST_CODE_BROWSING);
                         }
                     });

@@ -37,7 +37,13 @@ import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase.Credential;
 import com.archos.mediacenter.video.R;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class NetworkServerCredentialsDialog extends DialogFragment {
+
+    private static final Logger log = LoggerFactory.getLogger(NetworkServerCredentialsDialog.class);
+
     private AlertDialog mDialog;
     private SharedPreferences mPreferences;
     private String mUsername="";
@@ -50,6 +56,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
     final private static String NET_LATEST_ADDRESS = "NET_LATEST_ADDRESS";
     final private static String NET_LATEST_PORT = "NET_LATEST_PORT";
     final private static String NET_LATEST_USERNAME = "NET_LATEST_USERNAME";
+    final private static String NET_LATEST_DOMAIN = "NET_LATEST_DOMAIN";
 
     final public static String USERNAME = "username";
     final public static String REMOTE = "remote_address";
@@ -57,25 +64,29 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
     final public static String PASSWORD = "password";
     final public static String TYPE = "type";
     final public static String PATH = "path";
+    final public static String DOMAIN = "domain";
     private OnClickListener mOnCancelClickListener;
-    private String mPath;
+    private String mPath = "";
+    private String mDomain = "";
     private EditText portEt;
     private EditText addressEt;
+    private EditText domainEt;
 
-    public interface onConnectClickListener{
-        public void onConnectClick(String username, String path, String password, int port, int type, String remote);
+    public interface onConnectClickListener {
+        public void onConnectClick(String username, String path, String password, int port, int type, String remote, String domain);
     }
     public NetworkServerCredentialsDialog(){ }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle args  = getArguments();
         if(args != null){
-            mUsername = args.getString(USERNAME,"");
-            mPassword = args.getString(PASSWORD,"");
+            mUsername = args.getString(USERNAME, "");
+            mPassword = args.getString(PASSWORD, "");
             mPort = args.getInt(PORT, -1);
             mType = args.getInt(TYPE, 0);
             mPath = args.getString(PATH, "");
-            mRemote = args.getString(REMOTE,"");
+            mRemote = args.getString(REMOTE, "");
+            mDomain = args.getString(DOMAIN, "");
         }
         mPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         // Get latest values from preference
@@ -97,31 +108,40 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
                     throw new IllegalArgumentException("Invalid FTP type "+mType);
             }
             uriToBuild +="://"+mRemote+":"+mPort+"/";
+            log.debug("onCreateDialog: uriToBuild=" + uriToBuild);
+
             Credential cred = database.getCredential(uriToBuild);
             if(cred!=null){
                 mPassword= cred.getPassword();
+                mDomain = cred.getDomain();
             }
         }
         final View v = getActivity().getLayoutInflater().inflate(R.layout.network_credential_layout, null);
         final Spinner typeSp = (Spinner)v.findViewById(R.id.ssh_spinner);
-        typeSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if (position == 3) v.findViewById(R.id.domain).setVisibility(View.VISIBLE);
-                else v.findViewById(R.id.domain).setVisibility(View.GONE);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-            }
-        });
         addressEt = (EditText)v.findViewById(R.id.remote);
         portEt = (EditText)v.findViewById(R.id.port);
         final EditText usernameEt = (EditText)v.findViewById(R.id.username);
         final EditText passwordEt = (EditText)v.findViewById(R.id.password);
         final EditText pathEt = (EditText)v.findViewById(R.id.path);
+        final EditText domainEt = (EditText)v.findViewById(R.id.domain);
         final CheckBox savePassword = (CheckBox)v.findViewById(R.id.save_password);
         final CheckBox showPassword = (CheckBox)v.findViewById(R.id.show_password_checkbox);
         v.findViewById(R.id.domain).setVisibility(View.GONE);
+
+        typeSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if (position == 3) v.findViewById(R.id.domain).setVisibility(View.VISIBLE);
+                else {
+                    ((EditText) v.findViewById(R.id.domain)).setText("");
+                    v.findViewById(R.id.domain).setVisibility(View.GONE);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+        });
+
         showPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -140,9 +160,11 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
         int portInt =  mPort;
         String portString = (portInt!=-1) ? Integer.toString(portInt) : "";
         portEt.setText(portString);
+        log.debug("onCreateDialog: username=" + mUsername + ", domain=" + mDomain + ", port=" + mPort + ", remote=" + mRemote + ", path=" + mPath + "; type=" + mType);
         usernameEt.setText(mUsername);
         passwordEt.setText(mPassword);
-        
+        if (type == 3) domainEt.setText(mDomain);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
         .setTitle(R.string.browse_ftp_server)
         .setView(v)
@@ -177,14 +199,16 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
 
                     final String username = usernameEt.getText().toString();
                     final String password = passwordEt.getText().toString();
+                    final String domain = domainEt.getText().toString();
 
                     // Store new values to preferences
                     mPreferences.edit()
-                    .putInt(NET_LATEST_TYPE, type)
-                    .putString(NET_LATEST_ADDRESS, address)
-                    .putInt(NET_LATEST_PORT, port)
-                    .putString(NET_LATEST_USERNAME, username)
-                    .apply();
+                            .putInt(NET_LATEST_TYPE, type)
+                            .putString(NET_LATEST_ADDRESS, address)
+                            .putInt(NET_LATEST_PORT, port)
+                            .putString(NET_LATEST_USERNAME, username)
+                            .putString(NET_LATEST_DOMAIN, domain)
+                            .apply();
                     String uriToBuild = "";
                     switch(type){
                         case 0: uriToBuild = "ftp"; break;
@@ -194,18 +218,18 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
                         default:
                             throw new IllegalArgumentException("Invalid protocol type "+type);
                     }
-                    //path needs to start by a "/"
+                    // path needs to start by a "/"
                     if(path.isEmpty()||!path.startsWith("/"))
                         path = "/"+path;
                     uriToBuild +="://"+(!address.isEmpty()?address+(port!=-1?":"+port:""):"")+path;
+                    log.debug("onCreateDialog: username=" + mUsername + ", domain=" + mDomain + ", port=" + mPort + ", remote=" + mRemote + ", path=" + mPath + "; type=" + mType);
                     if(savePassword.isChecked())
-                        NetworkCredentialsDatabase.getInstance().saveCredential(new Credential(username, password, uriToBuild,"",true));
+                        NetworkCredentialsDatabase.getInstance().saveCredential(new Credential(username, password, uriToBuild, domain, true));
                     else
-                        NetworkCredentialsDatabase.getInstance().addCredential(new Credential(username, password, uriToBuild, "",true));
+                        NetworkCredentialsDatabase.getInstance().addCredential(new Credential(username, password, uriToBuild, domain, true));
                     if(mOnConnectClick!=null){
-                        mOnConnectClick.onConnectClick(username, path, password, port, type, address);
+                        mOnConnectClick.onConnectClick(username, path, password, port, type, address, domain);
                     }
-
                 }
                 else
                     Toast.makeText(getActivity(), getString(R.string.ssh_remote_address_error), Toast.LENGTH_SHORT).show();
