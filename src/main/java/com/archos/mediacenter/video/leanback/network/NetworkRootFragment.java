@@ -412,6 +412,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                         mNetworkShortcutsAdapter.add(shortcutMapper.bind(cursor));
                     } while (cursor.moveToNext());
                 }
+                if (cursor != null) cursor.close();
             }
         }
     }
