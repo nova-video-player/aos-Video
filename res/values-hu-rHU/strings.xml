@@ -356,10 +356,13 @@
     <string name="s_thai">Thai</string>
     <string name="s_turkish">Török</string>
     <string name="s_chinese">Kínai</string>
+    <string name="s_traditional_chinese">Hagyományos kínai</string>
     <string name="s_vietnamese">Vietnámi</string>
     <string name="s_lithuanian">Litván</string>
     <string name="s_indonesian">Indonéz</string>
     <string name="s_malay">Maláj</string>
+    <string name="s_ukrainian">Ukrán</string>
+    <string name="s_kurdish">Kurd</string>
     <string name="s_none">Egyik sem</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Nem lehet lejátszani a videót</string>
@@ -461,10 +464,14 @@
     <string name="torrent_buy_premium_message">Torrent-lejátszás csak a fizetett verzíóban elérhető</string>
     <string name="torrent_buy_premium">Prémium verzió megvásárlása</string>
     <!-- Shortcuts -->
+    <string name="browse_net_server">Hálózati megosztás tallózása</string>
+    <string name="add_smb_server">SMB szerver tallózása</string>
+    <string name="add_network_server">Hálózati megosztás hozzáadása</string>
     <string name="add_to_shortcuts">Parancsikon létrehozása</string>
     <string name="add_ssh_server">FTP szerver tallózása</string>
     <string name="add_ssh_shortcut">Parancsikon hozzáadása</string>
     <string name="ssh_prompt">FTP típusa</string>
+    <string name="protocol_prompt">Protokoll típus</string>
     <string name="ssh_empty_view"> \"Tallózhat és lejátszhat tartalmat saját FTP szerverről\"</string>
     <string-array name="ssh_types">
         <item>FTP</item>

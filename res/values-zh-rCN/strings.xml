@@ -351,10 +351,13 @@
     <string name="s_thai">泰语</string>
     <string name="s_turkish">土耳其语</string>
     <string name="s_chinese">中文</string>
+    <string name="s_traditional_chinese">繁体中文</string>
     <string name="s_vietnamese">越南语</string>
     <string name="s_lithuanian">立陶宛语</string>
     <string name="s_indonesian">印尼语</string>
     <string name="s_malay">马来语</string>
+    <string name="s_ukrainian">乌克兰语</string>
+    <string name="s_kurdish">库尔德语</string>
     <string name="s_none">无</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">无法播放视频</string>
@@ -457,10 +460,14 @@
     <string name="torrent_buy_premium_message">只有付费版本才能使用BT流媒体播放</string>
     <string name="torrent_buy_premium">购买高级版本</string>
     <!-- Shortcuts -->
+    <string name="browse_net_server">浏览网络共享</string>
+    <string name="add_smb_server">浏览SMB服务器</string>
+    <string name="add_network_server">添加网络共享</string>
     <string name="add_to_shortcuts">创建快捷方式</string>
     <string name="add_ssh_server">浏览FTP服务器</string>
     <string name="add_ssh_shortcut">添加为快捷方式</string>
     <string name="ssh_prompt">FTP 类型</string>
+    <string name="protocol_prompt">协议类型</string>
     <string name="ssh_empty_view"> \"您可以浏览您的 ftp 服务器并进行播放\"</string>
     <string-array name="ssh_types">
         <item>FTP</item>

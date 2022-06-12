@@ -356,10 +356,13 @@
     <string name="s_thai">Tailandés</string>
     <string name="s_turkish">Turco</string>
     <string name="s_chinese">Chino</string>
+    <string name="s_traditional_chinese">Chino tradicional</string>
     <string name="s_vietnamese">Vietnamita</string>
     <string name="s_lithuanian">Lituano</string>
     <string name="s_indonesian">Indonesio</string>
     <string name="s_malay">Malayo</string>
+    <string name="s_ukrainian">Ucraniano</string>
+    <string name="s_kurdish">Kurdo</string>
     <string name="s_none">Ninguno</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">No se puede reproducir el vídeo</string>
@@ -462,10 +465,14 @@
     <string name="torrent_buy_premium_message">El streaming de torrents sólo está disponible en la versión de pago</string>
     <string name="torrent_buy_premium">Comprar versión premium</string>
     <!-- Shortcuts -->
+    <string name="browse_net_server">Explorar una red compartida</string>
+    <string name="add_smb_server">Explorar un servidor SMB</string>
+    <string name="add_network_server">Añadir un recurso de red compartido</string>
     <string name="add_to_shortcuts">Crear acceso directo</string>
     <string name="add_ssh_server">Explorar un servidor FTP</string>
     <string name="add_ssh_shortcut">Añadir como acceso directo</string>
     <string name="ssh_prompt">Tipo FTP</string>
+    <string name="protocol_prompt">Tipo de protocolo</string>
     <string name="ssh_empty_view"> \"Puedes navegar y reproducir desde tu propio servidor ftp\"</string>
     <string-array name="ssh_types">
         <item>FTP</item>
@@ -520,6 +527,7 @@
     <string name="preferences_force_audio_passthrough_summary">Transmite audio comprimido a través de HDMI o S/PDIF. ⚠ Experimental puede resultar en A/V desincronizado</string>
     <string name="preferences_disable_downmix_title">Desactivar audio stereo downmix</string>
     <string name="preferences_disable_downmix_summary">Decodifica siempre todos los canales y permite que Android realize downmix dependiendo de la capacidades de salida de audio (puede provocar la pérdida de canales de voz)</string>
+    <string name="preferences_enable_downmix_androidtv_title">Forzar el audio en estéreo</string>
     <string name="preferences_allow_3rd_party_player">Permitir usar otro reproductor de vídeo</string>
     <string name="preferences_allow_3rd_party_player_summary">Otras aplicaciones compatibles de reproductor de vídeo serán propuestas por Android al lanzar una reproducción de vídeo. Tenga en cuenta que algunas características no funcionarán (reanudar, marcadores, etc.)</string>
     <string name="preference_tv_3d_automatic_switch">Activar el conmutador automático de TV 3D</string>
