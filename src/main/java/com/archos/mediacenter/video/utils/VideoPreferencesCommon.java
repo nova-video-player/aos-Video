@@ -274,6 +274,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         PreferenceCategory aboutCategory = (PreferenceCategory) findPreference(KEY_ABOUT_CATEGORY);
         if (!ArchosFeatures.isAndroidTV(getActivity())) { // not a TV
             prefCategory.removePreference(mActivate3DTVSwitch);
+            prefCategory.removePreference(mEnableDownmixATV); // on TV downmix is disabled: show the option to enable it for harmonyOS
             if (REFRESHRATE_FORALL) prefCategory.addPreference(mActivateRefreshrateTVSwitch);
             else prefCategory.removePreference(mActivateRefreshrateTVSwitch);
             prefCategory.addPreference(mActivateRefreshrateTVSwitch);
