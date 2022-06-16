@@ -127,7 +127,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.archos.mediacenter.video.utils.VideoUtils.getFilePathFromContentUri;
+import static com.archos.mediacenter.video.utils.VideoUtils.getFileUriStringFromContentUri;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -470,8 +470,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mScrapContentRating = mRoot.findViewById(R.id.content_rating);
         mScrapContentRatingContainer = mRoot.findViewById(R.id.content_rating_container);
 
-
-
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
         if(getActivity().getIntent()!=null){
@@ -504,7 +502,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 mVideoIdFromPlayer = bundle.getLong(EXTRA_VIDEO_ID, -1);
                 if (mVideoIdFromPlayer == -1) {
                     mPath = bundle.getString(EXTRA_VIDEO_PATH);
-                    String nPath = getFilePathFromContentUri(mContext, mPath);
+                    String nPath = getFileUriStringFromContentUri(mContext, mPath);
                     if (nPath != null) mPath = nPath;
                 }
 

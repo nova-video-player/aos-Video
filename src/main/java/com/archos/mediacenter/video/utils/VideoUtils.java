@@ -180,7 +180,7 @@ public class VideoUtils {
     }
 
     // provide path for file like content://com.archos.media/external/video/media/51
-    public static String getFilePathFromContentUri(Context context, String path) {
+    public static String getFileUriStringFromContentUri(Context context, String path) {
         if (path == null) return null;
         Uri mPath = Uri.parse(path);
         if (mPath.getScheme() != null && mPath.getScheme().equals("content")) {
@@ -189,15 +189,14 @@ public class VideoUtils {
                 id = Integer.parseInt(mPath.getLastPathSegment());
                 ContentResolver cr = context.getContentResolver();
                 VideoDbInfo videoDbInfo = VideoDbInfo.fromId(cr, id);
-                if (DBG) Log.d(TAG, "getFilePathFromContentUri content translated from " + mPath + " to " + ((videoDbInfo != null) ? videoDbInfo.uri : null));
-                if (videoDbInfo != null)
-                    return videoDbInfo.uri.getPath();
+                if (DBG) Log.d(TAG, "getFileUriFromContentUri content translated from " + mPath + " to " + ((videoDbInfo != null) ? videoDbInfo.uri : null));
+                if (videoDbInfo.uri != null)
+                    return videoDbInfo.uri.toString();
                 else {
-                    Log.w(TAG, "getFilePathFromContentUri: videoDbInfo is null for " + path);
+                    Log.w(TAG, "getFileUriFromContentUri: videoDbInfo is null for " + path);
                     return null;
                 }
-            } catch (NumberFormatException e)
-            {
+            } catch (NumberFormatException e) {
                 id = -1;
                 return null;
             }
