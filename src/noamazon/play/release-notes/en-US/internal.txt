@@ -1,6 +1,7 @@
-- Fix youtube trailers not opening on youtube app on Android TV
-- Add traditional chinese, brazilian, ukrainian, kurdish scrape/subs support
-- Add possibility to exclude network shortcuts from automatic/scheduled/manual global rescans on Android TV
-- Fix trakt multi-devices last played synchronization
-- jcifs-ng SMB upstep
+- SMB3 enabled by default (please test and report regressions!)
+- Play button is first on tvshow all episodes view on ADTV
+- Remove duplicate downmixing setting on phone/tablet UI
+- Capability to add manual SMB shortcuts on ADTV
+- Fix cannot play SMB file resulting from search result
+- 2022 year banners on ADTV
 - Stability enhancements
