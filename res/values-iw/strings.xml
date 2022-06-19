@@ -366,10 +366,13 @@
     <string name="s_thai">תאילנדית</string>
     <string name="s_turkish">טורקית</string>
     <string name="s_chinese">סינית</string>
+    <string name="s_traditional_chinese">סינית מסורתית</string>
     <string name="s_vietnamese">ווייטנאמית</string>
     <string name="s_lithuanian">ליטאית</string>
     <string name="s_indonesian">אינדונזית</string>
     <string name="s_malay">מלאית</string>
+    <string name="s_ukrainian">אוקראינית</string>
+    <string name="s_kurdish">כורדית</string>
     <string name="s_none">ללא</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">לא ניתן להפעיל וידאו</string>
@@ -474,10 +477,14 @@
     <string name="torrent_buy_premium_message">הזרמת טורנט זמינה רק בגירסה בתשלום</string>
     <string name="torrent_buy_premium">קנה את גרסת הפרימיום</string>
     <!-- Shortcuts -->
+    <string name="browse_net_server">דפדף בשיתוף רשת</string>
+    <string name="add_smb_server">דפדף בשרת SMB</string>
+    <string name="add_network_server">הוסף שיתוף רשת</string>
     <string name="add_to_shortcuts">צור קיצור דרך</string>
     <string name="add_ssh_server">דפדף בשרת FTP</string>
     <string name="add_ssh_shortcut">הוסף כקיצור דרך</string>
     <string name="ssh_prompt">סוג FTP</string>
+    <string name="protocol_prompt">סוג פרוטוקול</string>
     <string name="ssh_empty_view"> \"אתה יכול לדפדף ולנגן משרת ה-FTP שלך\"</string>
     <string-array name="ssh_types">
         <item>FTP</item>
@@ -533,7 +540,7 @@
     <string name="preferences_disable_downmix_title">השבת שנמוך אודיו לסטריאו</string>
     <string name="preferences_disable_downmix_summary">פענח תמיד את כל הערוצים ותן לאנדרואיד לבצע שנמוך כתלות ביכולות פלט האודיו (יכול לגרום לאיבוד ערוצי קול)</string>
     <string name="preferences_enable_downmix_androidtv_title">כפה שנמוך אודיו לסטריאו</string>
-    <string name="preferences_enable_downmix_androidtv_summary">תמיד שנמך אטדיו רב ערוצי לסטריאו (יש לבחור אם ערוצי קול לא נשמעים)</string>
+    <string name="preferences_enable_downmix_androidtv_summary">תמיד שנמך אודיו רב ערוצי לסטריאו (יש לבחור אם ערוצי קול לא נשמעים)</string>
     <string name="preferences_allow_3rd_party_player">אפשר שימוש בנגן וידאו אחר</string>
     <string name="preferences_allow_3rd_party_player_summary">נגני וידאו תואמים אחרים יוצעו על ידי אנדרואיד כשמפעילים ניגון וידאו. שים לב שחלק מהתכונות לא יעבדו (חזרה לנקודה, סימניות וכו\')</string>
     <string name="preference_tv_3d_automatic_switch">אפשר מעבר אוטומטי של הטלוויזיה ל-3D</string>

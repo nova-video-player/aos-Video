@@ -366,10 +366,13 @@
     <string name="s_thai">Тайский</string>
     <string name="s_turkish">Турецкий</string>
     <string name="s_chinese">Китайский</string>
+    <string name="s_traditional_chinese">Китайский традиционный</string>
     <string name="s_vietnamese">Вьетнамский</string>
     <string name="s_lithuanian">Литовский</string>
     <string name="s_indonesian">Индонезийский</string>
     <string name="s_malay">Малайский</string>
+    <string name="s_ukrainian">Украинский</string>
+    <string name="s_kurdish">Курдский</string>
     <string name="s_none">Нет</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Воспроизведение видео невозможно</string>
@@ -472,10 +475,14 @@
     <string name="torrent_buy_premium_message">Торрент-стриминг доступен только в платной версии</string>
     <string name="torrent_buy_premium">Купить премиум-версию</string>
     <!-- Shortcuts -->
+    <string name="browse_net_server">Просмотр сетевого ресурса</string>
+    <string name="add_smb_server">Просмотр SMB сервера</string>
+    <string name="add_network_server">Добавить сетевой ресурс</string>
     <string name="add_to_shortcuts">Сделать выборку</string>
     <string name="add_ssh_server">Просмотр FTP-сервера</string>
     <string name="add_ssh_shortcut">Добавить как ярлык</string>
     <string name="ssh_prompt">Тип FTP</string>
+    <string name="protocol_prompt">Тип протокола</string>
     <string name="ssh_empty_view"> \"Вы можете просматривать с собственного ftp сервера\"</string>
     <string-array name="ssh_types">
         <item>FTP</item>

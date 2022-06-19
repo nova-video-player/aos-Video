@@ -340,10 +340,13 @@
     <string name="s_thai">Thajština</string>
     <string name="s_turkish">Turečtina</string>
     <string name="s_chinese">Čínština</string>
+    <string name="s_traditional_chinese">Tradiční čínština</string>
     <string name="s_vietnamese">Vietnamština</string>
     <string name="s_lithuanian">Litevština</string>
     <string name="s_indonesian">Indonéština</string>
     <string name="s_malay">Malajština</string>
+    <string name="s_ukrainian">Ukrajinština</string>
+    <string name="s_kurdish">Kurdština</string>
     <string name="s_none">Žádný</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Video nelze přehrát</string>
@@ -446,10 +449,14 @@
     <string name="torrent_buy_premium_message">Streamování torrentů je dostupné pouze v placené verzi</string>
     <string name="torrent_buy_premium">Koupit prémiovou verzi</string>
     <!-- Shortcuts -->
+    <string name="browse_net_server">Procházet síťová sdílení</string>
+    <string name="add_smb_server">Procházet SMB server</string>
+    <string name="add_network_server">Přidat síťové sdílení</string>
     <string name="add_to_shortcuts">Vytvořit zástupce</string>
     <string name="add_ssh_server">Procházet FTP server</string>
     <string name="add_ssh_shortcut">Přidat jako zástupce</string>
     <string name="ssh_prompt">Typ FTP</string>
+    <string name="protocol_prompt">Typ protokolu</string>
     <string name="ssh_empty_view"> \"Můžete procházet a přehrávat z vašeho ftp serveru\"</string>
     <string-array name="ssh_types">
         <item>FTP</item>

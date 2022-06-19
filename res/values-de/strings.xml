@@ -356,10 +356,13 @@
     <string name="s_thai">Thailändisch</string>
     <string name="s_turkish">Türkisch</string>
     <string name="s_chinese">Chinesisch</string>
+    <string name="s_traditional_chinese">Traditionelles Chinesisch</string>
     <string name="s_vietnamese">Vietnamesisch</string>
     <string name="s_lithuanian">Litauisch</string>
     <string name="s_indonesian">Indonesisch</string>
     <string name="s_malay">Malaiisch</string>
+    <string name="s_ukrainian">Ukrainisch</string>
+    <string name="s_kurdish">Kurdisch</string>
     <string name="s_none">Kein</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Video kann nicht abgespielt werden</string>
@@ -462,10 +465,14 @@
     <string name="torrent_buy_premium_message">Torrent-Streaming ist in der bezahlten Version verfügbar</string>
     <string name="torrent_buy_premium">Premium-Version kaufen</string>
     <!-- Shortcuts -->
+    <string name="browse_net_server">Netzwerkfreigabe durchsuchen</string>
+    <string name="add_smb_server">SMB-Server durchsuchen</string>
+    <string name="add_network_server">Netzwerkfreigabe hinzufügen</string>
     <string name="add_to_shortcuts">Verknüpfung erstellen</string>
     <string name="add_ssh_server">FTP-Server durchsuchen</string>
     <string name="add_ssh_shortcut">Als Verknüpfung hinzufügen</string>
     <string name="ssh_prompt">FTP-Typ</string>
+    <string name="protocol_prompt">Protokolltyp</string>
     <string name="ssh_empty_view"> \"Du kannst deinen eigenen FTP-Server durchsuchen und von dort abspielen\"</string>
     <string-array name="ssh_types">
         <item>FTP</item>
