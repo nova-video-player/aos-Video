@@ -812,6 +812,8 @@
     <string name="rescan_description">Re-Scannen von indizierten Ordnern um neue Inhalte in die Bibliothek aufnehmen</string>
     <string name="rescan_now">Jetzt re-scannen</string>
     <string name="rescan_now_description">Manueller Re-Scan</string>
+    <string name="rescan_select_shares">Netzwerkverknüpfungen auswählen</string>
+    <string name="rescan_select_shares_description">Wählen Sie die Netzwerkverknüpfungen, die automatisch erneut durchsucht werden sollen</string>
     <string name="rescan_error_wifi_info_standby">WiFi scheint im Standby-Modus deaktiviert werden. Um den Erfolg von Auto-Rescan zu gewährleisten, aktivieren Sie WiFi im Standby-Modus.</string>
     <string name="rescan_error_wifi">Fehler: W-Lan war während des Scans deaktiviert</string>
     <string name="rescan_error_wifi_click_for_more_info">Klicke für mehr Informationen</string>
