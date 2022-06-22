@@ -299,7 +299,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                             log.debug("onItemClicked: NetworkBrowse ListingActivity root uri=" + uri + ", root name=" + uri.getHost());
                             intent.putExtra(ListingActivity.EXTRA_ROOT_URI, uri);
                             String shareName = uri.getLastPathSegment();
-                            intent.putExtra(ListingActivity.EXTRA_ROOT_NAME, shareName.isEmpty()?uri.getHost():shareName);
+                            intent.putExtra(ListingActivity.EXTRA_ROOT_NAME, (shareName==null || shareName.isEmpty())?uri.getHost():shareName);
                             startActivityForResult(intent, REQUEST_CODE_BROWSING);
                         }
                     });
