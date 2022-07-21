@@ -1056,7 +1056,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             height = layoutHeight;
         }
 
-        log.debug("updateSizes: trueFullscreen size WxH=" + width+"x"+height);
+        log.debug("CONFIG updateSizes: trueFullscreen size WxH=" + width+"x"+height);
         if(!isChromeOS(mContext)) { //keeping things as it was on other devices
             ViewGroup.LayoutParams lp = mRootView.getLayoutParams();
             lp.width = width;
@@ -1066,7 +1066,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mSurfaceController.setScreenSize(width, height);
         mSubtitleManager.setScreenSize(width, height);
         if(!isInPictureInPictureMode) {
-            log.debug("CONFIG updateSizes: mPlayerController.setSizes layout WxH=" + layoutWidth + "x" + layoutHeight + ", display WxH=" + displayWidth + "x" + displayHeight );
+            log.debug("CONFIG updateSizes: mPlayerController.setSizes layout WxH=" + layoutWidth + "x" + layoutHeight + ", display WxH=" + displayWidth + "x" + displayHeight);
             mPlayerController.setSizes(displayWidth, displayHeight, layoutWidth, layoutHeight);
             // Close the menus if needed
             mAudioInfoController.resetPopup();
@@ -2847,7 +2847,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         Resources r = mResources;
         StringBuilder msgBuilder = new StringBuilder();
         final VideoMetadata vMetadata = mPlayer.getVideoMetadata();
-
         if (mUri == null) {
             /* File doesn't exist */
             msgBuilder.append(r.getText(R.string.player_err_file));
