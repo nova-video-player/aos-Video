@@ -20,6 +20,7 @@ import static com.archos.filecorelibrary.FileUtils.hasPermission;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +28,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -64,7 +67,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,6 +82,11 @@ public class CustomApplication extends Application {
     private static boolean isAppStateListenerAdded = false;
     private static boolean isVideStoreImportReceiverRegistered = false;
     private static boolean isNetworkStateListenerAdded = false;
+    private static boolean isHDMIPlugReceiverRegistered = false;
+    private static long hdmiAudioEncodingFlag = 0;
+    private static long maxAudioChannelCount = 0;
+    private static boolean hasHdmi = false;
+    private static boolean isAudioPlugged = false;
 
     private static int [] novaVersionArray;
     private static int [] novaPreviousVersionArray;
@@ -94,6 +104,41 @@ public class CustomApplication extends Application {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPreferences.edit().putBoolean("app_updated", false).commit();
         novaUpdated = false;
+    }
+
+    // make the array android constant independent not to main sync with avos
+    private final int AVOS_ENCODING_INVALID = 0;
+    private final int AVOS_ENCODING_DEFAULT = 1;
+    private final int AVOS_ENCODING_PCM_16BIT = 2;
+    private final int AVOS_ENCODING_PCM_8BIT = 3;
+    private final int AVOS_ENCODING_PCM_FLOAT = 4;
+    private final int AVOS_ENCODING_AC3 = 5;
+    private final int AVOS_ENCODING_E_AC3 = 6;
+    private final int AVOS_ENCODING_DTS = 7;
+    private final int AVOS_ENCODING_DTS_HD = 8;
+    private final int AVOS_ENCODING_MP3 = 9;
+    private final int AVOS_ENCODING_AAC_LC = 10;
+    private final int AVOS_ENCODING_AAC_HE_V1= 11;
+    private final int AVOS_ENCODING_AAC_HE_V2= 12;
+    private final int AVOS_ENCODING_IEC61937 = 13;
+    private final int AVOS_ENCODING_DOLBY_TRUEHD = 14;
+    private final int AVOS_ENCODING_AAC_ELD = 15;
+    private final int AVOS_ENCODING_AAC_XHE = 16;
+    private final int AVOS_ENCODING_AC4 = 17;
+    private final int AVOS_ENCODING_E_AC3_JOC = 18;
+    private final int AVOS_ENCODING_DOLBY_MAT = 19;
+    private final int AVOS_ENCODING_OPUS = 20;
+    private final int AVOS_ENCODING_PCM_24BIT_PACKED = 21;
+    private final int AVOS_ENCODING_PCM_32BIT = 22;
+    private final int AVOS_ENCODING_MPEGH_BL_L3 = 23;
+    private final int AVOS_ENCODING_MPEGH_BL_L4 = 24;
+    private final int AVOS_ENCODING_MPEGH_LC_L3 = 25;
+    private final int AVOS_ENCODING_MPEGH_LC_L4 = 26;
+    private final int AVOS_ENCODING_DTS_UHD = 27;
+    private final int AVOS_ENCODING_DRA = 28;
+
+    public static long getHdmiAudioCodecsFlag() {
+        return hdmiAudioEncodingFlag;
     }
 
     private static SambaDiscovery mSambaDiscovery = null;
@@ -294,6 +339,7 @@ public class CustomApplication extends Application {
         log.debug("handleForeGround: is app foreground " + foreground);
         if (networkState == null ) networkState = NetworkState.instance(mContext);
         if (foreground) {
+            registerHdmiAudioPlugReceiver();
             if (!isVideStoreImportReceiverRegistered) {
                 log.debug("handleForeGround: app now in ForeGround registerReceiver for videoStoreImportReceiver");
                 ArchosUtils.addBreadcrumb(SentryLevel.INFO, "CustomApplication.handleForeGround", "app now in ForeGround registerReceiver for videoStoreImportReceiver");
@@ -311,6 +357,7 @@ public class CustomApplication extends Application {
             addNetworkListener();
             launchSambaDiscovery();
         } else {
+            unRegisterHdmiAudioPlugReceiver();
             if (isVideStoreImportReceiverRegistered) {
                 log.debug("handleForeGround: app now in BackGround unregisterReceiver for videoStoreImportReceiver");
                 ArchosUtils.addBreadcrumb(SentryLevel.INFO, "CustomApplication.handleForeGround", "app now in Background unregister videoStoreImportReceiver");
@@ -327,6 +374,112 @@ public class CustomApplication extends Application {
             }
             removeNetworkListener();
         }
+    }
+
+    private void registerHdmiAudioPlugReceiver() {
+        final IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_HDMI_AUDIO_PLUG);
+        registerReceiver(mHdmiAudioPlugReceiver, intentFilter);
+        isHDMIPlugReceiverRegistered = true;
+    }
+
+    private void unRegisterHdmiAudioPlugReceiver() {
+        if (isHDMIPlugReceiverRegistered) unregisterReceiver(mHdmiAudioPlugReceiver);
+        isHDMIPlugReceiverRegistered = false;
+    }
+
+    private final BroadcastReceiver mHdmiAudioPlugReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (action == null)
+                return;
+            if (action.equalsIgnoreCase(AudioManager.ACTION_HDMI_AUDIO_PLUG)) {
+                hasHdmi = intent.getIntExtra(AudioManager.EXTRA_AUDIO_PLUG_STATE, 0) == 1;
+                hdmiAudioEncodingFlag = !hasHdmi ? 0 : getEncodingFlags(intent.getIntArrayExtra(AudioManager.EXTRA_ENCODINGS));
+                final Integer isAudioPlugged = intent.getIntExtra(AudioManager.EXTRA_AUDIO_PLUG_STATE, 0);
+                if (isAudioPlugged != null) {
+                    // maxAudioChannelCount not exploited for now
+                    if (isAudioPlugged == 1) {
+                        maxAudioChannelCount = intent.getIntExtra(AudioManager.EXTRA_MAX_CHANNEL_COUNT, 2);
+                    }
+                }
+                log.debug("mHdmiAudioPlugReceiver: received ACTION_HDMI_AUDIO_PLUG, isAudioPlugged=" + isAudioPlugged + ", hasHdmi=" + hasHdmi + ", maxAudioChannelCount=" + maxAudioChannelCount + ", hdmiAudioEncodingFlag=" + hdmiAudioEncodingFlag);
+            }
+        }
+    };
+
+    public static String[] audioEncodings = new String[] {"INVALID", "DEFAULT", "PCM_16BIT", "PCM_8BIT", "PCM_FLOAT",
+            "AC3", "E_AC3", "DTS", "DTS_HD",
+            "MP3", "AAC_LC", "AAC_HE_V1", "AAC_HE_V2",
+            "IEC61937", "DOLBY_TRUEHD", "AAC_ELD", "AAC_XHE",
+            "AC4", "E_AC3_JOC", "DOLBY_MAT", "OPUS",
+            "PCM_24BIT_PACKED", "PCM_32BIT", "MPEGH_BL_L3", "MPEGH_BL_L4",
+            "MPEGH_LC_L3", "MPEGH_LC_L4", "DTS_UHD", "DRA"
+    };
+
+    // provides correspondence between avos codec index and android one and yields to android independent reference and code sync inssues with native part
+    public static List<Integer> convertAudioEncodings = new ArrayList<Integer>(Arrays.asList(
+            AudioFormat.ENCODING_INVALID, AudioFormat.ENCODING_DEFAULT, AudioFormat.ENCODING_PCM_16BIT,
+            AudioFormat.ENCODING_PCM_8BIT, AudioFormat.ENCODING_PCM_FLOAT, AudioFormat.ENCODING_AC3,
+            AudioFormat.ENCODING_E_AC3, AudioFormat.ENCODING_DTS, AudioFormat.ENCODING_DTS_HD,
+            AudioFormat.ENCODING_MP3, AudioFormat.ENCODING_AAC_LC, AudioFormat.ENCODING_AAC_HE_V1,
+            AudioFormat.ENCODING_AAC_HE_V2, AudioFormat.ENCODING_IEC61937, AudioFormat.ENCODING_DOLBY_TRUEHD,
+            AudioFormat.ENCODING_AAC_ELD, AudioFormat.ENCODING_AAC_XHE, AudioFormat.ENCODING_AC4,
+            AudioFormat.ENCODING_E_AC3_JOC, AudioFormat.ENCODING_DOLBY_MAT, AudioFormat.ENCODING_OPUS,
+            AudioFormat.ENCODING_PCM_24BIT_PACKED, AudioFormat.ENCODING_PCM_32BIT, AudioFormat.ENCODING_MPEGH_BL_L3,
+            AudioFormat.ENCODING_MPEGH_BL_L4, AudioFormat.ENCODING_MPEGH_LC_L3, AudioFormat.ENCODING_MPEGH_LC_L4,
+            AudioFormat.ENCODING_DTS_UHD, AudioFormat.ENCODING_DRA));
+
+    private boolean isEncoded(int encoding) {
+        switch (encoding) {
+            case AVOS_ENCODING_PCM_16BIT:        // 2
+            case AVOS_ENCODING_PCM_8BIT:         // 3
+            case AVOS_ENCODING_PCM_FLOAT:        // 4
+            case AVOS_ENCODING_AC3:              // 5
+            case AVOS_ENCODING_E_AC3:            // 6
+            case AVOS_ENCODING_DTS:              // 7
+            case AVOS_ENCODING_DTS_HD:           // 8
+            case AVOS_ENCODING_MP3:              // 9
+            case AVOS_ENCODING_AAC_LC:           // 10
+            case AVOS_ENCODING_AAC_HE_V1:        // 11
+            case AVOS_ENCODING_AAC_HE_V2:        // 12
+            case AVOS_ENCODING_IEC61937:         // 13
+            case AVOS_ENCODING_DOLBY_TRUEHD:     // 14
+            case AVOS_ENCODING_AAC_ELD:          // 15
+            case AVOS_ENCODING_AAC_XHE:          // 16
+            case AVOS_ENCODING_AC4:              // 17
+            case AVOS_ENCODING_E_AC3_JOC:        // 18
+            case AVOS_ENCODING_DOLBY_MAT:        // 19
+            case AVOS_ENCODING_OPUS:             // 20
+            case AVOS_ENCODING_PCM_24BIT_PACKED: // 21
+            case AVOS_ENCODING_PCM_32BIT:        // 22
+            case AVOS_ENCODING_MPEGH_BL_L3:      // 23
+            case AVOS_ENCODING_MPEGH_BL_L4:      // 24
+            case AVOS_ENCODING_MPEGH_LC_L3:      // 25
+            case AVOS_ENCODING_MPEGH_LC_L4:      // 26
+            case AVOS_ENCODING_DTS_UHD:          // 27
+            case AVOS_ENCODING_DRA:              // 28
+                log.debug("isEncoded: hdmi RX supports " + audioEncodings[encoding]);
+                return true;
+            default:
+                log.warn("isEncoded: not identified audio encoding " + encoding + "!!!");
+                return false;
+        }
+    }
+
+    private long getEncodingFlags(int encodings[]) {
+        log.debug("getEncodingFlags: encodings=" + Arrays.toString(encodings) + ", convertAudioEncodings=" + Arrays.toString(convertAudioEncodings.toArray()));
+        if (encodings == null)
+            return 0;
+        long encodingFlags = 0;
+        for (int encoding : encodings) {
+            // convert android codec index to android avos independent one (should be the same though)
+            int avosEncoding = convertAudioEncodings.indexOf(encoding);
+            log.debug("getEncodingFlags: android domain " + encoding + ", avos domain " + avosEncoding);
+            if (isEncoded(avosEncoding))
+                encodingFlags |= 1 << avosEncoding;
+        }
+        return encodingFlags;
     }
 
     private void addNetworkListener() {

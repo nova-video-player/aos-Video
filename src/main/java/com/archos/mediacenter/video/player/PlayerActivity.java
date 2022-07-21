@@ -80,6 +80,7 @@ import com.archos.environment.NetworkState;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.UiChoiceDialog;
 import com.archos.mediacenter.video.browser.MainActivity;
@@ -814,6 +815,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         if (LibAvos.isAvailable()) {
             VideoPreferencesCommon.resetPassthroughPref(mPreferences);
             LibAvos.setPassthrough(Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")));
+            LibAvos.setHdmiSupportedAudioCodecs(CustomApplication.getHdmiAudioCodecsFlag());
             mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             // note enable_downmix_androidtv and disable_downmix are the opposite same settings but only one applies to androidTV
             // this is done on purpose to respect logic of presentation and default value
