@@ -172,6 +172,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private Intent mIntent;
     public int mPlayMode=0;
     private int mAudioDelay;
+    private float mAudioSpeed = 1.0f;
     private int mNewAudioTrack;
     public int mAudioFilt;
     public boolean mNightModeOn;
@@ -1451,6 +1452,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         return mAudioDelay;
     }
 
+    public float getAudioSpeed() {
+        return mAudioSpeed;
+    }
 
     public void setAudioFilt(int which) {
         int newAudioFilt = which; // Caution here, audiofilt values must be [0,n[
