@@ -92,6 +92,7 @@ import com.archos.mediacenter.video.leanback.settings.VideoSettingsActivity;
 import com.archos.mediacenter.video.leanback.wizard.SubtitlesWizardActivity;
 import com.archos.mediacenter.video.player.TrackInfoController.TrackInfoListener;
 import com.archos.mediacenter.video.player.tvmenu.AudioDelayTVPicker;
+import com.archos.mediacenter.video.player.tvmenu.AudioSpeedTVPicker;
 import com.archos.mediacenter.video.player.tvmenu.SubtitleDelayTVPicker;
 import com.archos.mediacenter.video.player.tvmenu.TVCardDialog;
 import com.archos.mediacenter.video.player.tvmenu.TVCardView;
@@ -134,9 +135,10 @@ import static com.archos.mediacenter.video.utils.MiscUtils.isEmulator;
 
 
 public class PlayerActivity extends AppCompatActivity implements PlayerController.Settings,
-SubtitleDelayPickerDialog.OnDelayChangeListener, AudioDelayPickerDialog.OnAudioDelayChangeListener,
-DialogInterface.OnDismissListener, TrackInfoListener,
-IndexHelper.Listener, PermissionChecker.PermissionListener {
+        SubtitleDelayPickerDialog.OnDelayChangeListener, AudioDelayPickerDialog.OnAudioDelayChangeListener,
+        AudioSpeedPickerDialog.OnAudioSpeedChangeListener,
+        DialogInterface.OnDismissListener, TrackInfoListener,
+        IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     private static final Logger log = LoggerFactory.getLogger(PlayerActivity.class);
 
@@ -161,6 +163,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private static final int DIALOG_WRONG_DEVICE_KINDLE = 7;
     private static final int DIALOG_AUDIO_DELAY = 8;
     private static final int DIALOG_NOT_ENOUGHT_SPACE = 9;
+    private static final int DIALOG_AUDIO_SPEED = 10;
 
     // accessed from SubtitleSettingsDialog
     /* package */ public static final String KEY_SUBTITLE_SIZE = "pref_play_subtitle_size_key";
@@ -209,6 +212,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private static final int MENU_WINDOW_MODE = 304;
     private static final int MENU_PREFERENCES = 305;
     private static final int MENU_AUDIO_DELAY_ID = 306;
+    private static final int MENU_AUDIO_SPEED_ID = 307;
 
     // Notification types (keep in sync with res/values/arrays.xml:pref_notification_mode_entries)
     private static final int NOTIFICATION_MODE_ALL = 0;
@@ -813,12 +817,21 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mSurfaceController.setVideoFormat(Integer.parseInt(mPreferences.getString(KEY_PLAYER_FORMAT, "-1")),
                 Integer.parseInt(mPreferences.getString(KEY_PLAYER_AUTO_FORMAT, "-1")));
         if (LibAvos.isAvailable()) {
-            VideoPreferencesCommon.resetPassthroughPref(mPreferences);
+            VideoPreferencesCommon.resetPassthroughPref(mPreferences); // note this resets the audio_speed if in passthrough to 1.0f in prefs
             LibAvos.setPassthrough(Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")));
             LibAvos.setHdmiSupportedAudioCodecs(CustomApplication.getHdmiAudioCodecsFlag());
             mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             // note enable_downmix_androidtv and disable_downmix are the opposite same settings but only one applies to androidTV
             // this is done on purpose to respect logic of presentation and default value
+            float audioSpeed;
+            if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
+                audioSpeed = mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f);
+                log.debug("MARC onStart: " + audioSpeed);
+            } else {
+                log.debug("MARC onStart: " + 1.0f);
+                audioSpeed = 1.0f;
+            }
+            LibAvos.setAudioSpeed(audioSpeed); // set audio speed playback
             if (ArchosFeatures.isAndroidTV(this)) {
                 if (mPreferences.getBoolean("enable_downmix_androidtv", false))
                     LibAvos.setDownmix(1);
@@ -1573,8 +1586,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             @Override
             public void onAudioDelayChanged(AudioDelayPickerAbstract view, int delay) {
                 PlayerActivity.this.onAudioDelayChange(null, delay);
-
-
             }
         });
         ((TVCardDialog)dialogView).addOtherView(tvmenu);
@@ -1584,10 +1595,60 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 mPlayerController.getTVMenuAdapter().setDiscrete(false);
                 if(saveSettingCB.isChecked()){
                     mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), PlayerService.sPlayerService.getAudioDelay()).apply();
-                    ;
                 }
                 else {
                     mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), 0).apply();
+                }
+            }
+        });
+
+        mPlayerController.getTVMenuAdapter().setDiscrete(true);
+        mPlayerController.addToMenuContainer(dialogContainer);
+        tvPicker.requestFocus();
+    }
+
+    private void createTVAudioSpeedDialog() {
+        View dialogContainer = (View)LayoutInflater.from(mContext).inflate(R.layout.card_dialog_layout, null);
+        View dialogView = dialogContainer.findViewById(R.id.card_view);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) dialogView.getLayoutParams();
+        params.gravity = Gravity.CENTER_HORIZONTAL;
+        dialogView.setLayoutParams(params);
+        ((TVCardDialog) dialogView).setText((String) getText(R.string.player_pref_audio_speed_title));
+
+        mPlayerController.getTVMenuAdapter().setDiscrete(true);
+        final TVMenu tvmenu = mPlayerController.getTVMenuAdapter().createTVMenu();
+
+        // TODO MARC add tvpicker only if passthrough disabled Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0"))
+        // TODO MARC if passthrough selected reset audioSpeed to 1.0f
+        // adding tv picker
+        AudioSpeedTVPicker tvPicker = (AudioSpeedTVPicker)LayoutInflater.from(mContext)
+                .inflate(R.layout.audio_speed_tv_picker, null);
+        tvmenu.addTVMenuItem(tvPicker);
+        final TVMenuItem saveSettingCB = tvmenu.createAndAddTVSwitchableMenuItem(getString(R.string.keep_setting), PlayerService.sPlayerService.getAudioSpeedFromPreferences() != 1.0f);
+        saveSettingCB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveSettingCB.toggle();
+            }
+        });
+        tvPicker.init(PlayerService.sPlayerService.getAudioSpeed(), new AudioSpeedPickerAbstract.OnAudioSpeedChangedListener() {
+            @Override
+            public void onAudioSpeedChanged(AudioSpeedPickerAbstract view, float speed) {
+                PlayerActivity.this.onAudioSpeedChange(null, speed);
+            }
+        });
+        ((TVCardDialog)dialogView).addOtherView(tvmenu);
+        ((TVCardDialog)dialogView).setOnDialogResultListener(new TVCardDialog.OnDialogResultListener() {
+            @Override
+            public void onResult(int code) {
+                mPlayerController.getTVMenuAdapter().setDiscrete(false);
+                if(saveSettingCB.isChecked()){
+                    log.debug("MARC createTVAudioSpeedDialog:onResult save audio speed=" + PlayerService.sPlayerService.getAudioSpeed() + " in prefs");
+                    mPreferences.edit().putFloat(getString(R.string.save_audio_speed_setting_pref_key), PlayerService.sPlayerService.getAudioSpeed()).apply();
+                }
+                else {
+                    log.debug("MARC createTVAudioSpeedDialog:onResult do not save audio speed and carve 1.0f in prefs");
+                    mPreferences.edit().putFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f).apply();
                 }
             }
         });
@@ -1690,6 +1751,14 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     @Override
                     public void onClick(View v) {
                         createTVAudioDelayDialog();
+                    }
+                });
+
+                final TVMenuItem tvmi4 = mAudioTracksTVMenu.createAndAddTVMenuItem(getText(R.string.player_pref_audio_speed_title).toString(), false, false);
+                tvmi4.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        createTVAudioSpeedDialog();
                     }
                 });
             } else {
@@ -2021,6 +2090,11 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 menuItem.setIcon(R.drawable.ic_menu_delay);
                 menuItem.setShowAsAction(!isPluggedOnTv() ? MenuItem.SHOW_AS_ACTION_NEVER : MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
+            menuItem = menu.add(MENU_OTHER_GROUP, MENU_AUDIO_SPEED_ID, Menu.NONE, R.string.player_pref_audio_speed_title);
+            if (menuItem != null) {
+                menuItem.setIcon(R.drawable.ic_baseline_speed_24);
+                menuItem.setShowAsAction(!isPluggedOnTv() ? MenuItem.SHOW_AS_ACTION_NEVER : MenuItem.SHOW_AS_ACTION_ALWAYS);
+            }
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_S3D_ID, Menu.NONE, R.string.pref_s3d_mode_title);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_3d);
@@ -2184,6 +2258,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             }
             case MENU_AUDIO_DELAY_ID: {
                 myShowDialog(DIALOG_AUDIO_DELAY);
+                return true;
+            }
+            case MENU_AUDIO_SPEED_ID: {
+                myShowDialog(DIALOG_AUDIO_SPEED);
                 return true;
             }
             case MENU_S3D_ID: {
@@ -2408,6 +2486,18 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     audioPickerDialog.updateDelay(PlayerService.sPlayerService.getAudioDelay());
                 else
                     audioPickerDialog.updateDelay(mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0));
+                mPlayerController.hide();
+                break;
+            case DIALOG_AUDIO_SPEED:
+                if(PlayerService.sPlayerService!=null)
+                    mDialog = new AudioSpeedPickerDialog(this, this, PlayerService.sPlayerService.getAudioSpeed());
+                else
+                    mDialog = new AudioSpeedPickerDialog(this, this, mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f));
+                AudioSpeedPickerDialog audioSpeedPickerDialog = (AudioSpeedPickerDialog) mDialog;
+                if(PlayerService.sPlayerService!=null)
+                    audioSpeedPickerDialog.updateSpeed(PlayerService.sPlayerService.getAudioSpeed());
+                else
+                    audioSpeedPickerDialog.updateSpeed(mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f));
                 mPlayerController.hide();
                 break;
             case DIALOG_NOT_ENOUGHT_SPACE:
@@ -3034,6 +3124,16 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     /* AudioDelayPickerDialog.OnAudioDelayChangeListener */
     public void onAudioDelayChange(AudioDelayPickerAbstract delayPicker, int delay) {
        PlayerService.sPlayerService.setAudioDelay(delay,false);
+    }
+
+    /* AudioSpeedPickerDialog.OnAudioSpeedChangeListener */
+    public void onAudioSpeedChange(AudioSpeedPickerAbstract speedPicker, float speed) {
+        if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
+            log.debug("MARC onAudioSpeedChange: setAudioSpeed " + speed);
+             PlayerService.sPlayerService.setAudioSpeed(speed, false);
+        } else {
+            log.debug("MARC onAudioSpeedChange: DO NOT setAudioSpeed coz passthrough");
+        }
     }
 
     private void sendVideoStateChanged() {

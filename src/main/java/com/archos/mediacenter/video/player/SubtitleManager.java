@@ -19,35 +19,31 @@ import com.archos.medialib.Subtitle;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SubtitleManager {
-    private static final String TAG = "SubtitleManager";
-    private static final boolean DBG = false;
+
+    private static final Logger log = LoggerFactory.getLogger(SubtitleManager.class);
 
     private Context             mContext;
     private ViewGroup           mPlayerView;
@@ -68,6 +64,7 @@ public class SubtitleManager {
     private int                 mSubtitleEvadedVPos;
     SpannableStringBuilder      mSpannableStringBuilder = null;
     TextShadowSpan              mTextShadowSpan = null;
+    private float               mAudioSpeed = 1.0f;
     
     Surface                     mUiSurface;
     private boolean mForbidWindow ;
@@ -120,7 +117,7 @@ public class SubtitleManager {
         }
 
         private void removeView(Subtitle subtitle) {
-            if (DBG) Log.d(TAG, "removeView");
+            log.debug("removeView");
             if (subtitle.isText()) {
                 mSubtitleTxtView.setText("");
                 mSubtitleTxtView.setVisibility(View.GONE);
@@ -132,7 +129,7 @@ public class SubtitleManager {
         }
 
         private void displayView(Subtitle subtitle) {
-            if (DBG) Log.d(TAG, "displayView");
+            log.debug("displayView");
 
             if (subtitle.isText()) {
                 mSubtitleTxtView.setVisibility(View.VISIBLE);
@@ -192,7 +189,7 @@ public class SubtitleManager {
             displayText = replaceAll(displayText, SSA_COLOR_TAG, HTML_COLOR_TAG, sb);
             displayText = replaceAll(displayText, SSA_ANY_TAG, "", sb);
         }
-        if (DBG) Log.d(TAG, String.format("cleaned Text [%s]", displayText));
+        log.debug(String.format("cleaned Text [%s]", displayText));
         return displayText;
     }
 
@@ -240,7 +237,7 @@ public class SubtitleManager {
         private Subtitle mNextSubtitle = null;
 
         void quit() {
-            if (DBG) Log.d(TAG, "DispSubtitleThread quit");
+            log.debug("DispSubtitleThread quit");
             mRunning = false;
             mDispSubtitleThread = null;
             interrupt();
@@ -253,13 +250,13 @@ public class SubtitleManager {
 
         @Override
         public void run() {
-            if (DBG) Log.d(TAG, "DispSubtitleThread started");
+            log.debug("DispSubtitleThread started");
             long displayTimeLeft = 0;
             while (mRunning) {
                 synchronized (this) {
                     // wait() until we get a new Subtitle via addSubtitle() / player continues
                     while (mSuspended) {
-                        if (DBG) Log.d(TAG, "DispSubtitleThread wait()");
+                        log.debug("DispSubtitleThread wait()");
                         try {
                             wait();
                         } catch (InterruptedException e) {
@@ -267,42 +264,42 @@ public class SubtitleManager {
                                 clear();
                                 return;
                             }
-                            if (DBG) Log.d(TAG, "DispSubtitleThread wait() - interrupted");
+                            log.debug("DispSubtitleThread wait() - interrupted");
                         }
                     }
                 }
                 synchronized (this) {
                     // we don't have a subtitle, go back to wait()
                     if (mCurrentSubtitle == null && mNextSubtitle == null) {
-                        if (DBG) Log.d(TAG, "DispSubtitleThread no Subtitle");
+                        log.debug("DispSubtitleThread no Subtitle");
                         mSuspended = true;
                         continue;
                     }
 
                     // we have a subtitle that is not displayed yet
                     if (mCurrentSubtitle == null) {
-                        if (DBG) Log.d(TAG, "DispSubtitleThread displaying new Subtitle");
                         mCurrentSubtitle = mNextSubtitle;
                         mNextSubtitle = null;
                         displaySubtitle(mCurrentSubtitle);
                         displayTimeLeft = mCurrentSubtitle.getDuration();
+                        log.debug("DispSubtitleThread displaying new Subtitle: duration=" + displayTimeLeft);
                     }
                 }
                 // outside of synchronized since sleep does NOT release the lock
                 // go to sleep if we have still have displaytime
                 if (displayTimeLeft > 0) {
-                    if (DBG) Log.d(TAG, "DispSubtitleThread sleep after displaying");
+                    log.debug("DispSubtitleThread sleep after displaying");
                     long sleepStart = System.currentTimeMillis();
                     try {
                         sleep(displayTimeLeft);
                     } catch (InterruptedException e) {
-                        if (DBG) Log.d(TAG, "DispSubtitleThread sleep - interrupted");
+                        log.debug("DispSubtitleThread sleep - interrupted");
                     }
                     displayTimeLeft-= System.currentTimeMillis()-sleepStart;
                 }
                 // if we sleeped without interrupt or no displaytime is left remove the subtitle
                 if (displayTimeLeft <= 0) {
-                    if (DBG) Log.d(TAG, "DispSubtitleThread removing subtitle");
+                    log.debug("DispSubtitleThread removing subtitle");
                     synchronized (this) {
                         if (mCurrentSubtitle != null) {
                             removeSubtitle(mCurrentSubtitle);
@@ -312,11 +309,11 @@ public class SubtitleManager {
                 }
             }
             clear();
-            if (DBG) Log.d(TAG, "DispSubtitleThread exited");
+            log.debug("DispSubtitleThread exited");
         }
 
         synchronized void addSubtitle(Subtitle subtitle) {
-            if (DBG) Log.d(TAG, "DispSubtitleThread addSubtitle");
+            log.debug("DispSubtitleThread addSubtitle");
             mSuspended = false;
 
             if (subtitle.isTimed()) {
@@ -340,12 +337,12 @@ public class SubtitleManager {
         }
 
         synchronized void show() {
-            if (DBG) Log.d(TAG, "DispSubtitleThread show");
+            log.debug("DispSubtitleThread show");
             // could setVisibility here
         }
 
         synchronized void clear() {
-            if (DBG) Log.d(TAG, "DispSubtitleThread clear");
+            log.debug("DispSubtitleThread clear");
             mSuspended = true;
             if (mCurrentSubtitle != null) {
                 removeSubtitle(mCurrentSubtitle);
@@ -356,7 +353,7 @@ public class SubtitleManager {
         }
 
         synchronized void setSuspended(boolean suspended) {
-            if (DBG) Log.d(TAG, "DispSubtitleThread setSuspended");
+            log.debug("DispSubtitleThread setSuspended");
             if (mSuspended == suspended)
                 return;
             mSuspended = suspended;
@@ -424,13 +421,13 @@ public class SubtitleManager {
     private void detachWindow() {
         if (mSubtitleLayout == null)
             return;
-        if (DBG) Log.d(TAG, "detachWindow");
+        log.debug("detachWindow");
         mPlayerView.removeView(mSubtitleLayout);
         mSubtitleLayout = null;
     }
 
     public void start() {
-        if (DBG) Log.d(TAG, "start");
+        log.debug("start");
 
         attachWindow();
 
@@ -447,7 +444,7 @@ public class SubtitleManager {
     }
 
     public void stop() {
-        if (DBG) Log.d(TAG, "stop");
+        log.debug("stop");
 
         if (mDispSubtitleThread != null) {
             mDispSubtitleThread.quit();
@@ -598,7 +595,7 @@ public class SubtitleManager {
         if (mSubtitleSpacer == null)
             return;
         mSubtitleSpacerParams.height = pos;
-        if (DBG) Log.d(TAG, "New Height: " + mSubtitleSpacerParams.height);
+        log.debug("New Height: " + mSubtitleSpacerParams.height);
         mSubtitleSpacer.setLayoutParams(mSubtitleSpacerParams);
         mSubtitleSpacer.requestLayout();
         mSubtitleSpacer.postInvalidate();

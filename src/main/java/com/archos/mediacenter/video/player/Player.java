@@ -238,6 +238,7 @@ public class Player implements IPlayerControl,
         private int     mAudioFilter;
         private int     mNightModeOn;
         private int     mAvDelay;
+        private float   mAvSpeed;
 
         public ResumeCtx() {}
 
@@ -251,6 +252,7 @@ public class Player implements IPlayerControl,
             mAudioFilter = 0;
             mNightModeOn = 0;
             mAvDelay = 0;
+            mAvSpeed = 1.0f;
         }
         public void onPrepared() {
             if (mSeek != -1)
@@ -265,6 +267,9 @@ public class Player implements IPlayerControl,
                 mMediaPlayer.setAudioFilter(mAudioFilter, mNightModeOn);
             if (mAvDelay != 0)
                 mMediaPlayer.setAvDelay(mAvDelay);
+            // TODO MARC check
+            if (mAvSpeed != 1.0f)
+                mMediaPlayer.setAvSpeed(mAvSpeed);
             if (mAudioTrack != -1)
                 mMediaPlayer.setAudioTrack(mAudioTrack);
             reset();
@@ -294,6 +299,9 @@ public class Player implements IPlayerControl,
         }
         public void setAvDelay(int delay) {
             mAvDelay = delay;
+        }
+        public void setAvSpeed(float speed) {
+            mAvSpeed = speed;
         }
     }
 
@@ -722,7 +730,9 @@ public class Player implements IPlayerControl,
 
     public int getCurrentPosition() {
         if (isInPlaybackState()) {
-            return mMediaPlayer.getCurrentPosition();
+            int currentPos = mMediaPlayer.getCurrentPosition();
+            log.debug("MARC getCurrentPosition: " + currentPos);
+            return currentPos;
         } else if (mStopPosition != -1) {
             return mStopPosition;
         }
@@ -738,7 +748,7 @@ public class Player implements IPlayerControl,
     }
     
     public void seekTo(int msec) {
-        log.debug("seekTo");
+        log.debug("seekTo: " + msec + " ms");
         if (isInPlaybackState()) {
             if (mPlayerListener != null) {
                 mPlayerListener.onSeekStart(msec);
@@ -894,6 +904,14 @@ public class Player implements IPlayerControl,
             mMediaPlayer.setAvDelay(delay);
         } else {
             mResumeCtx.setAvDelay(delay);
+        }
+    };
+
+    public void setAvSpeed(float speed) {
+        if (isInPlaybackState()) {
+            mMediaPlayer.setAvSpeed(speed);
+        } else {
+            mResumeCtx.setAvSpeed(speed);
         }
     };
 

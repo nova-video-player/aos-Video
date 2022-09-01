@@ -1255,6 +1255,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             position = 0;
         }
         int duration = Player.sPlayer.getDuration();
+        log.debug("setProgress player position/duration=" + position + "/" + duration);
         CharSequence endText = "";
         CharSequence currentText = "";
 
@@ -1266,6 +1267,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 if(mProgress2!=null)
                     mProgress2.setProgress((int) pos);
                 currentText = stringForTime(position);
+                log.debug("setProgress player currentText=" + currentText);
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
                 boolean makeTimeNegative = prefs.getBoolean(VideoPreferencesCommon.KEY_MAKE_TIME_NEGATIVE, VideoPreferencesCommon.MAKE_TIME_NEGATIVE_DEFAULT);
@@ -1484,6 +1486,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     private void setNextSeekPos(int way) {
+        log.debug("setNextSeekPos " + way);
         mSeekDir = way;
         if (mLastRelativePosition == -1) {
             if (mNextSeek == -1) {
@@ -1505,7 +1508,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     private void onSeek(int way, boolean longPress) {
-        log.debug("onSeek");
+        log.debug("onSeek " + way);
         cancelFadeOut();
         mHandler.removeMessages(MSG_SHOW_PROGRESS);
         mHandler.removeMessages(MSG_SEEK_RESUME);

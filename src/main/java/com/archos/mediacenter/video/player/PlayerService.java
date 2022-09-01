@@ -63,6 +63,7 @@ import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoUtils;
+import com.archos.medialib.LibAvos;
 import com.archos.medialib.Subtitle;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
@@ -110,6 +111,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private static final Logger log = LoggerFactory.getLogger(PlayerService.class);
 
     public static final String PLAYER_SERVICE_STARTED = "PLAYER_SERVICE_STARTED";
+
+    public static final boolean AUDIO_SPEED_ON_THE_FLY = false;
 
     public static final int RESUME_NO = 0;
     public static final int RESUME_FROM_LAST_POS = 1;
@@ -450,6 +453,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mVideoInfo = null; //reset info
             mDatabaseInfoHasBeenRetrieved = false;
             mAudioDelay = mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0);
+            mAudioSpeed = getAudioSpeedFromPreferences();
+            log.debug("MARC onStart: mAudioSpeed=" + mAudioSpeed);
         }
         if(mTorrentFilePosition>=0){
             mCallOnDataUriOKWhenVideoInfoIsSet = false;
@@ -1040,6 +1045,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             Player.sPlayer.seekTo(mLastPosition); //mLastPosition = mVideoInfo.resume when first start of service OR position on stop when switching player
             log.debug("seek to "+mLastPosition);
             setAudioDelay(mAudioDelay, true);
+            // TODO MARC to check
+            // no audio_speed if in passthrough
+            log.debug("MARC postPreparedAndVideoDb: setAudioSpeed force " + mAudioSpeed);
+            setAudioSpeed(mAudioSpeed, true);
             if(mPlayOnResume) {
                 mPlayerFrontend.onFirstPlay();
                 log.debug("postPreparedAndVideoDb: player start PlayerController.STATE_NORMAL");
@@ -1448,12 +1457,44 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
     }
 
+    public void setAudioSpeed(float speed, boolean force) {
+        boolean speedChanged = speed != mAudioSpeed||force;
+        if (speedChanged && (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0)) {
+            log.debug("MARC setAudioSpeed: audio speed changed from " + mAudioSpeed + " to " + speed);
+            mAudioSpeed = speed;
+            if (AUDIO_SPEED_ON_THE_FLY || force) {
+                LibAvos.setAudioSpeed(mAudioSpeed);
+                mPlayer.setAvSpeed(mAudioSpeed);
+            }
+        }
+        if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) != 0) {
+            log.debug("MARC setAudioSpeed does nothing coz passthrough");
+            mAudioSpeed = 1.0f;
+        }
+    }
+
     public int getAudioDelay() {
         return mAudioDelay;
     }
 
-    public float getAudioSpeed() {
-        return mAudioSpeed;
+    public float getAudioSpeed() { // no audio_speed if in passthrough
+        if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
+            log.debug("MARC getAudioSpeed: " + mAudioSpeed);
+            return mAudioSpeed;
+        } else {
+            log.debug("MARC getAudioSpeed: " + 1.0f);
+            return 1.0f;
+        }
+    }
+
+    public float getAudioSpeedFromPreferences() { // no audio_speed if in passthrough
+        if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
+            log.debug("MARC getAudioSpeedFromPreferences: " + mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f));
+            return mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f);
+        } else {
+            log.debug("MARC getAudioSpeedFromPreferences: " + 1.0f);
+            return 1.0f;
+        }
     }
 
     public void setAudioFilt(int which) {

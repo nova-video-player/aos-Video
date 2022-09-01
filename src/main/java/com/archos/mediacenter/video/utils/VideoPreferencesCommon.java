@@ -86,7 +86,7 @@ import static com.archos.filecorelibrary.FileUtils.backupDatabase;
 
 public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener {
     private static final String TAG = VideoPreferencesCommon.class.getSimpleName();
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
 
     // should we provide adaptive refresh rate for all (not only on TV)
     private static final boolean REFRESHRATE_FORALL = true;
@@ -339,6 +339,11 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         if(Integer.valueOf(preferences.getString("force_audio_passthrough_multiple","-1"))==-1&&preferences.getBoolean("force_audio_passthrough",false)){ //has never been set
             //has never been set with new mode but was set with old mode
             preferences.edit().putString("force_audio_passthrough_multiple","1").apply(); //set pref
+        }
+        if(Integer.valueOf(preferences.getString("force_audio_passthrough_multiple","-1"))!=0){ // passthrough is set, reset audio_speed
+            // if passthrough is set audio_speed is reset to 1.0f
+            if (DBG) Log.d(TAG, "MARC resetPassthroughPref: audio_spped to 1.0f");
+            preferences.edit().putFloat("save_audio_speed_setting_pref_key", 1.0f).apply();
         }
     }
 
