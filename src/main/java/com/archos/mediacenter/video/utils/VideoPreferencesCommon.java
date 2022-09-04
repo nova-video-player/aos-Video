@@ -336,13 +336,13 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     }
 
     public static void resetPassthroughPref(SharedPreferences preferences){
-        if(Integer.valueOf(preferences.getString("force_audio_passthrough_multiple","-1"))==-1&&preferences.getBoolean("force_audio_passthrough",false)){ //has never been set
+        if(Integer.parseInt(preferences.getString("force_audio_passthrough_multiple","-1"))==-1&&preferences.getBoolean("force_audio_passthrough",false)){ //has never been set
             //has never been set with new mode but was set with old mode
             preferences.edit().putString("force_audio_passthrough_multiple","1").apply(); //set pref
         }
-        if(Integer.valueOf(preferences.getString("force_audio_passthrough_multiple","-1"))!=0){ // passthrough is set, reset audio_speed
+        if(Integer.parseInt(preferences.getString("force_audio_passthrough_multiple","-1"))>0){ // passthrough is set, reset audio_speed
             // if passthrough is set audio_speed is reset to 1.0f
-            if (DBG) Log.d(TAG, "MARC resetPassthroughPref: audio_spped to 1.0f");
+            if (DBG) Log.d(TAG, "MARC resetPassthroughPref: audio_speed to 1.0f since passthrough is " + Integer.parseInt(preferences.getString("force_audio_passthrough_multiple","-1")));
             preferences.edit().putFloat("save_audio_speed_setting_pref_key", 1.0f).apply();
         }
     }
