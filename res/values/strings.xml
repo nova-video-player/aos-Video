@@ -323,7 +323,7 @@
 
     <string name="player_pref_subtitle_delay_title">Delay</string>
 
-    <string name="player_pref_audio_speed_title">Speed</string>
+    <string name="player_pref_audio_speed_title">Playback speed</string>
 
     <string name="floating_player_restore">Restore</string>
     <string name="floating_player_play">Play</string>
