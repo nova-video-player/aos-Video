@@ -826,9 +826,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             float audioSpeed;
             if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
                 audioSpeed = mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f);
-                log.debug("MARC onStart: " + audioSpeed);
+                log.debug("onStart: " + audioSpeed);
             } else {
-                log.debug("MARC onStart: " + 1.0f);
+                log.debug("onStart: " + 1.0f);
                 audioSpeed = 1.0f;
             }
             LibAvos.setAudioSpeed(audioSpeed); // set audio speed playback
@@ -3132,10 +3132,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     /* AudioSpeedPickerDialog.OnAudioSpeedChangeListener */
     public void onAudioSpeedChange(AudioSpeedPickerAbstract speedPicker, float speed) {
         if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
-            log.debug("MARC onAudioSpeedChange: setAudioSpeed " + speed);
+            log.debug("onAudioSpeedChange: setAudioSpeed " + speed);
              PlayerService.sPlayerService.setAudioSpeed(speed, false);
         } else {
-            log.debug("MARC onAudioSpeedChange: DO NOT setAudioSpeed coz passthrough");
+            log.debug("onAudioSpeedChange: DO NOT setAudioSpeed coz passthrough");
         }
     }
 

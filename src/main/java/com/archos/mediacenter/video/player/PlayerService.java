@@ -454,7 +454,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mDatabaseInfoHasBeenRetrieved = false;
             mAudioDelay = mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0);
             mAudioSpeed = getAudioSpeedFromPreferences();
-            log.debug("MARC onStart: mAudioSpeed=" + mAudioSpeed);
+            log.debug("onStart: mAudioSpeed=" + mAudioSpeed);
         }
         if(mTorrentFilePosition>=0){
             mCallOnDataUriOKWhenVideoInfoIsSet = false;
@@ -1045,9 +1045,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             Player.sPlayer.seekTo(mLastPosition); //mLastPosition = mVideoInfo.resume when first start of service OR position on stop when switching player
             log.debug("seek to "+mLastPosition);
             setAudioDelay(mAudioDelay, true);
-            // TODO MARC to check
             // no audio_speed if in passthrough
-            log.debug("MARC postPreparedAndVideoDb: setAudioSpeed force " + mAudioSpeed);
+            log.debug("postPreparedAndVideoDb: setAudioSpeed force " + mAudioSpeed);
             setAudioSpeed(mAudioSpeed, true);
             if(mPlayOnResume) {
                 mPlayerFrontend.onFirstPlay();
@@ -1460,7 +1459,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void setAudioSpeed(float speed, boolean force) {
         boolean speedChanged = speed != mAudioSpeed||force;
         if (speedChanged && (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0)) {
-            log.debug("MARC setAudioSpeed: audio speed changed from " + mAudioSpeed + " to " + speed);
+            log.debug("setAudioSpeed: audio speed changed from " + mAudioSpeed + " to " + speed);
             mAudioSpeed = speed;
             if (AUDIO_SPEED_ON_THE_FLY || force) {
                 LibAvos.setAudioSpeed(mAudioSpeed);
@@ -1468,7 +1467,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             }
         }
         if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) != 0) {
-            log.debug("MARC setAudioSpeed does nothing coz passthrough");
+            log.debug("setAudioSpeed does nothing coz passthrough");
             mAudioSpeed = 1.0f;
         }
     }
@@ -1479,20 +1478,20 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     public float getAudioSpeed() { // no audio_speed if in passthrough
         if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
-            log.debug("MARC getAudioSpeed: " + mAudioSpeed);
+            log.debug("getAudioSpeed: " + mAudioSpeed);
             return mAudioSpeed;
         } else {
-            log.debug("MARC getAudioSpeed: " + 1.0f);
+            log.debug("getAudioSpeed: " + 1.0f);
             return 1.0f;
         }
     }
 
     public float getAudioSpeedFromPreferences() { // no audio_speed if in passthrough
         if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
-            log.debug("MARC getAudioSpeedFromPreferences: " + mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f));
+            log.debug("getAudioSpeedFromPreferences: " + mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f));
             return mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f);
         } else {
-            log.debug("MARC getAudioSpeedFromPreferences: " + 1.0f);
+            log.debug("getAudioSpeedFromPreferences: " + 1.0f);
             return 1.0f;
         }
     }
