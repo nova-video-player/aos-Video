@@ -1618,8 +1618,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mPlayerController.getTVMenuAdapter().setDiscrete(true);
         final TVMenu tvmenu = mPlayerController.getTVMenuAdapter().createTVMenu();
 
-        // TODO MARC add tvpicker only if passthrough disabled Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0"))
-        // TODO MARC if passthrough selected reset audioSpeed to 1.0f
         // adding tv picker
         AudioSpeedTVPicker tvPicker = (AudioSpeedTVPicker)LayoutInflater.from(mContext)
                 .inflate(R.layout.audio_speed_tv_picker, null);
@@ -1753,14 +1751,17 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         createTVAudioDelayDialog();
                     }
                 });
-
-                final TVMenuItem tvmi4 = mAudioTracksTVMenu.createAndAddTVMenuItem(getText(R.string.player_pref_audio_speed_title).toString(), false, false);
-                tvmi4.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        createTVAudioSpeedDialog();
-                    }
-                });
+                // disable playback speed if passthrough is enabled
+                //menuItem.setEnabled(Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0);
+                if(Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0) {
+                    final TVMenuItem tvmi4 = mAudioTracksTVMenu.createAndAddTVMenuItem(getText(R.string.player_pref_audio_speed_title).toString(), false, false);
+                    tvmi4.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            createTVAudioSpeedDialog();
+                        }
+                    });
+                }
             } else {
                 mPlayerController.getTVMenuAdapter().setCardViewVisibility(View.GONE, mAudioTracksTVCardView);
             }
@@ -2095,6 +2096,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 menuItem.setIcon(R.drawable.ic_baseline_speed_24);
                 menuItem.setShowAsAction(!isPluggedOnTv() ? MenuItem.SHOW_AS_ACTION_NEVER : MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
+            // disable playback speed if passthrough is enabled
+            menuItem.setEnabled(Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0);
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_S3D_ID, Menu.NONE, R.string.pref_s3d_mode_title);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_3d);
