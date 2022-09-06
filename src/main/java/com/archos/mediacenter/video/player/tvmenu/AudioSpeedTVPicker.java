@@ -33,7 +33,7 @@ import com.archos.mediacenter.video.player.AudioSpeedPickerAbstract;
 public class AudioSpeedTVPicker extends AudioSpeedPickerAbstract implements TVSlaveView {
 
     private final String TAG = "AudioSpeedTVPicker";
-    private final boolean DBG = true;
+    private final boolean DBG = false;
 
     private AudioSpeedTVPicker slaveView;
     private float mSpeed = 1.0f;
