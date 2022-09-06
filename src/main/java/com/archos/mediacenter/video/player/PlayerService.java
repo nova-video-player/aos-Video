@@ -1462,8 +1462,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             log.debug("setAudioSpeed: audio speed changed from " + mAudioSpeed + " to " + speed);
             mAudioSpeed = speed;
             if (AUDIO_SPEED_ON_THE_FLY || force) {
-                LibAvos.setAudioSpeed(mAudioSpeed);
                 mPlayer.setAvSpeed(mAudioSpeed);
+                LibAvos.setAudioSpeed(mAudioSpeed);
             }
         }
         if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) != 0) {
