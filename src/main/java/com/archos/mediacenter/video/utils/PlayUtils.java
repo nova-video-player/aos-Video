@@ -46,7 +46,7 @@ import java.io.IOException;
  */
 public class PlayUtils implements IndexHelper.Listener {
     private final static String TAG = "PlayUtils";
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
 
     private IndexHelper mIndexHelper;
     private VideoDbInfo mVideoDbInfo;

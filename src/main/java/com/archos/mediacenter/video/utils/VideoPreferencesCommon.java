@@ -86,7 +86,7 @@ import static com.archos.filecorelibrary.FileUtils.backupDatabase;
 
 public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener {
     private static final String TAG = VideoPreferencesCommon.class.getSimpleName();
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
 
     // should we provide adaptive refresh rate for all (not only on TV)
     private static final boolean REFRESHRATE_FORALL = true;
