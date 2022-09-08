@@ -64,8 +64,7 @@ public class SubtitleManager {
     private int                 mSubtitleEvadedVPos;
     SpannableStringBuilder      mSpannableStringBuilder = null;
     TextShadowSpan              mTextShadowSpan = null;
-    private float               mAudioSpeed = 1.0f;
-    
+
     Surface                     mUiSurface;
     private boolean mForbidWindow ;
     DispSubtitleThread mDispSubtitleThread = null;
