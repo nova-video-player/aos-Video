@@ -831,7 +831,7 @@
     <string name="rescan_error_wifi_click_for_more_info">הקלק למידע נוסף</string>
     <string name="rescan_error_server">שגיאה: לא ניתן לגשת לשרת</string>
     <string name="scan_running">סריקה מתבצעת</string>
-    <string name="scheduled_rescan">תוזמנה סריקה מחדש</string>
+    <string name="scheduled_rescan">תזמון סריקה מחדש</string>
     <string name="scheduled_rescan_period">מחזור סריקה מחדש</string>
     <string name="scheduled_rescan_period_no">ללא</string>
     <string name="scheduled_rescan_period_once_a_day">פעם ביום</string>

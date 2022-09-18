@@ -21,58 +21,165 @@
     <string name="goto_start">Бібліотека</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
     <!-- Menu item to refresh servers list -->
+    <string name="refresh_servers_list">Оновити список серверів</string>
     <!-- Menu item to enable network shares -->
+    <string name="enable_network_shares">Увімкнути спільні мережеві сховища</string>
+    <string name="initial_scan">Початкове сканування</string>
     <!-- Library screen, menu item -->
+    <string name="search_title">Пошук</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
+    <string name="unknown_track_name">Невідомо</string>
     <!-- Toast after turning shuffle on -->
     <!-- Toast after turning shuffle off -->
     <!-- Toast after turning single repeat on -->
     <!-- Context menu item -->
+    <string name="info">Інформація</string>
     <!-- Context menu item -->
+    <string name="play_selection">Відтворити</string>
     <!-- Context menu item -->
+    <string name="multiple_selection">Множинний вибір</string>
     <!-- Context menu item -->
+    <string name="play_from_beginning">Відтворити з початку</string>
     <!-- Dialog box button -->
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <string name="fast_scroll_alphabet">\u0020АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ</string>
     <!-- The string used in file/folder infos dialog. -->
+    <string name="info_duration">Тривалість</string>
+    <string name="video_sources">Джерела</string>
     <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">Фільм</string>
+    <string name="info_tab_show">Серіал</string>
+    <string name="info_tab_episode">Епізод</string>
+    <string name="info_tab_video">Відео</string>
+    <string name="info_tab_file">Відомості про файл</string>
+    <string name="info_tab_backdrop_chooser">Вибір фону</string>
+    <string name="info_tab_poster_chooser">Вибір постеру</string>
+    <string name="info_menu_backdrop_select">Фон</string>
+    <string name="info_menu_series_backdrop_select">Фон серіалу</string>
+    <string name="info_menu_poster_select">Обрати інший постер</string>
+    <string name="info_menu_series_poster_select">Обрати інший постер</string>
     <!-- COVER ROLL -->
+    <string name="watching_up_next">Дивлюся/Наступне</string>
     <string name="recently_added">Недавно додані</string>
     <string name="recently_added_videos">Недавно додані</string>
-    <string name="recently_played">Недавно відтворювані</string>
-    <string name="recently_played_videos">Недавно відтворювані</string>
+    <string name="recently_played">Недавно відтворені</string>
+    <string name="recently_played_videos">Недавно відтворені</string>
+    <string name="video_lists">Добірки</string>
     <!-- The string used in main storage list -->
+    <string name="external_storage">Зовнішнє</string>
+    <string name="internal_storage">Внутрішнє</string>
+    <string name="network_storage">Мережеве</string>
+    <string name="sd_card_storage">SD-картка</string>
+    <string name="usb_host_storage">Зовнішній носій</string>
+    <string name="other_storage">Диск</string>
+    <string name="network_media_servers">Медіа-сервери (UPnP)</string>
     <string name="network_shared_folders">Спільні теки (SMB)</string>
+    <string name="network_connected_as">Підключено як %s</string>
+    <string name="network_guest">гість</string>
     <string name="sftp_folders">FTP</string>
+    <string name="network_jcifs">Samba (експериментально)</string>
+    <string name="network_cling">UPNP (експериментально)</string>
+    <string name="recordings_storage">Записи</string>
     <string name="root_storage">Внутрішнє сховище</string>
+    <string name="cannot_list">Неможливо показати вміст</string>
     <!-- VIDEO -->
     <string name="videos">Відеозаписи</string>
     <string name="all_videos">Усі відеозаписи</string>
+    <string name="not_played_yet_videos">Ще не відтворювалося</string>
     <string name="video_folder">Теки</string>
     <string name="movies">Фільми</string>
+    <string name="animes">Мультфільми</string>
     <string name="all_movies">Усі фільми</string>
     <string name="all_movies_format">Усі фільми - %d</string>
+    <string name="all_animes_format">Анімаційні фільми - %d</string>
+    <string name="all_collections">Усі колекції</string>
+    <string name="all_collections_format">Усі колекції -  %d</string>
+    <string name="all_collection_watched">Усю колекцію переглянуто</string>
+    <string name="all_collection_unwatched">Колекцію не переглянуто</string>
+    <plurals name="n_movies_watched">
+        <item quantity="one">Переглянуто %d фільм</item>
+        <item quantity="few">Переглянуто %d фільми</item>
+        <item quantity="many">Переглянуто %d фільмів</item>
+        <item quantity="other">Переглянуто %d фільмів</item>
+    </plurals>
+    <string name="not_watched_movies_format">Не переглянуто - %d</string>
+    <string name="not_watched_animes_format">Не переглянуто - %d</string>
+    <string name="no_movie_watched">Немає фільмів що переглянуто</string>
     <string name="all_movies_watched">Усі переглянуті фільми</string>
     <string name="movies_by_alpha">Фільми за алфавітом</string>
     <string name="movies_by_genre">Фільми за жанром</string>
     <string name="movies_by_rating">Фільми за оцінкою</string>
+    <string name="movie_collections">Колекції</string>
+    <string name="anime_collections">Колекції аніме</string>
     <string name="movies_by_year">Фільми за роком</string>
+    <string name="all_tv_shows">Серіали</string>
+    <string name="all_tvshows">Усі серіали</string>
+    <string name="all_animes">Усі анімаційні фільми</string>
+    <string name="all_animes_row">Усі мультфільми</string>
+    <string name="all_animeshows">Усі мультсеріали</string>
+    <string name="animes_by_alpha">Анімаційні фільми за алфавітом</string>
+    <string name="animes_by_genre">Анімаційні фільми за жанрами</string>
+    <string name="animes_by_rating">Анімаційні фільми за рейтингом</string>
+    <string name="animes_by_year">Анімаційні фільми по роках</string>
+    <string name="all_tvshows_format">Усі серіали - %d</string>
+    <string name="not_watched_tvshows_format">Не переглянуто - %d</string>
+    <string name="all_animeshows_format">Мультсеріали - %d</string>
+    <string name="not_watched_animeshows_format">Не переглянуто - %d</string>
+    <string name="all_seasons">Усі сезони</string>
+    <string name="tvshows_by_alpha">Серіали за алфавітом</string>
+    <string name="tvshows_by_genre">Телепередачі за жанром</string>
+    <string name="episodes_by_date">Серії за датою</string>
     <string name="date_view_week">Тиждень</string>
     <string name="date_view_month">Місяць</string>
     <string name="date_view_year">Рік</string>
+    <string name="all_movies_and_tv_shows">Фільми і телепередачі</string>
+    <string name="cannot_open_video">Неможливо відкрити цей відеозапис</string>
+    <string name="cannot_delete_directory">Неможливо видалити теку</string>
+    <string name="cannot_delete_file">Неможливо видалити файл</string>
+    <string name="bookmark">Закладка</string>
     <string name="delete">Видалити</string>
+    <string name="confirm_delete_short">Підтвердити видалення</string>
+    <string name="delete_bookmark">Видалити закладку</string>
+    <string name="mark_as_watched">Позначити переглянутим</string>
+    <string name="mark_as_not_watched">Позначити не переглянутим</string>
+    <string name="scrap_remove">Вилучити інформацію</string>
     <string name="scrap_remove_short">Вилучити</string>
     <!-- for small screens -->
+    <string name="scrap_change">Змінити інформацію для всіх серій</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_year">Рік</string>
     <string name="scrap_year_format">Рік: %d</string>
+    <string name="scrap_genre">Жанр</string>
+    <string name="scrap_genre_format">Жанри: %s</string>
+    <string name="scrap_genre_title">Жанри</string>
     <!-- Specific strings for TV shows -->
     <string name="show_network">Мережа</string>
+    <string name="episode_name">Серія</string>
     <string name="episode_season">Сезон</string>
+    <string name="episode_specials">Спеціальні епізоди</string>
+    <string name="episode_identification">Сезон %1$d, серія %2$d</string>
+    <string name="season_identification">Сезон %1$d</string>
+    <string name="next_episode">Наступна серія</string>
+    <string name="list_episodes">Список серій</string>
+    <string name="how_to_mark_season_watched">Натисніть на сезон, щоб позначити усі серії як переглянуто або не переглянуто</string>
+    <string name="how_to_unindex_season">Натисніть на сезон, щоб видалити усі серії з бібліотеки</string>
+    <string name="delete_show">Видалити всі серії</string>
+    <string name="start_auto_scraper_activity">Шукати дані в мережі</string>
     <string name="scrap_status_success">Оновлено</string>
+    <string name="scraper_no_files">Нема файлів для обробки</string>
+    <string name="scraper_no_new_files">Нема нових файлів для обробки</string>
+    <string name="scraper_no_new_files_in_folder">Нема нових файлів для обробки в цій теці</string>
+    <string name="scraper_notification_title">Пошук даних в мережі</string>
+    <string name="scraper_no_movie_text">Ваші фільми не мають постерів і описів</string>
+    <string name="scraper_no_tv_show_text">Ваші серіяли не мають постерів і описів</string>
     <string name="imdb_title_url">https://www.imdb.com/title/</string>
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="storage">Сховище</string>
+    <string name="preference_display_all_files">Показувати всі файли в оглядачі</string>
+    <string name="preference_display_all_files_summary">Показувати не відеофайли також</string>
     <!-- VIDEO COVER ROLL -->
+    <string name="you_have_no_recently_added_video">Недавно додані відео відсутні</string>
+    <string name="you_have_no_recently_played_video">Недавно відтворені відео відсутні</string>
     <plurals name="Nmovies">
         <item quantity="one">1 фільм</item>
         <item quantity="few"><xliff:g id="count">%d</xliff:g> фільми</item>
@@ -87,10 +194,18 @@
     </plurals>
     <!-- Media Center -->
     <!-- VideoPlayer -->
+    <string name="player_window_mode">Віконний режим</string>
+    <string name="pref_play_mode_title">Режим відтворення</string>
     <string name="pref_play_mode_entry_folder">Тека</string>
     <string name="pref_audio_parameters_title">Звук</string>
+    <string name="pref_audio_filt_night_mode">Нічний режим</string>
+    <string name="ui_mode_tv">ТБ</string>
     <string name="ui_mode_normal">Планшет/телефон</string>
     <string name="pref_s3d_mode_title">3D-режим</string>
+    <string name="menu_subtitles">Доріжки субтитрів</string>
+    <string name="menu_brightness_settings">Яскравість</string>
+    <string name="menu_player_settings">Налаштування</string>
+    <string name="menu_change_folder">Змінити теку</string>
     <!-- Subtitles/Audio languages -->
     <string name="s_arabic">Арабська</string>
     <string name="s_bulgarian">Болгарська</string>
@@ -107,17 +222,47 @@
     <string name="s_italian">Італійська</string>
     <string name="s_japanese">Японська</string>
     <string name="s_korean">Корейська</string>
+    <string name="s_norwegian">Норвезька</string>
+    <string name="s_polish">Польська</string>
+    <string name="s_brazilian">Бразильська</string>
+    <string name="s_portuguese">Португальська</string>
+    <string name="s_russian">Російська</string>
+    <string name="Romanian">Румунська</string>
+    <string name="Serbo_Croatian">Сербо-хорватська</string>
+    <string name="Croatian">Хорватська</string>
+    <string name="Serbian">Сербська</string>
+    <string name="Slovenian">Словенська</string>
+    <string name="s_swedish">Шведська</string>
+    <string name="s_thai">Тайська</string>
+    <string name="s_turkish">Турецька</string>
+    <string name="s_chinese">Китайська</string>
+    <string name="s_traditional_chinese">Традиційна китайська</string>
+    <string name="s_vietnamese">Вʼєтнамська</string>
     <string name="s_lithuanian">Литовська</string>
     <string name="s_indonesian">Індонезійська</string>
     <string name="s_malay">Малайська</string>
+    <string name="s_ukrainian">Українська</string>
+    <string name="s_kurdish">Курдська</string>
     <!-- Player errors -->
+    <string name="player_err_cantplayvideo">Неможливо відтворити відеозапис</string>
+    <string name="player_err_cantplaysound">Неможливо відтворити звукову доріжку</string>
+    <string name="player_err_sizetoobig">Розмір відеозапису завеликий</string>
     <string name="player_err_unknown">Невідома помилка.</string>
+    <string name="player_err_critical">Помилка медія-програвача.</string>
     <string name="player_err_codec">Кодек</string>
+    <string name="player_err_fileNoLicense">Не знайдено ліцензії для цього файла.</string>
     <!-- Player plug-in -->
+    <string name="player_plugin_ac3_title">Втулка AC3</string>
+    <string name="player_plugin_ac3">Втулка AC3</string>
+    <string name="player_plugin_mpeg2_title">Втулка MPEG-2</string>
+    <string name="player_plugin_mpeg2">Втулка MPEG-2 (DVD)</string>
     <!-- Subtitles wizard -->
+    <string name="subtitles_wizard_delete">Видалити цей файл</string>
+    <string name="subtitles_wizard_empty_list">Файл не знайдено</string>
     <string name="subtitles_wizard_cache">Кеш</string>
     <!-- Subloader -->
     <string name="dialog_subloader_copying">Копіювання субтитрів…</string>
+    <string name="dialog_subloader_downloading">Завантаження субтитрів…</string>
     <!-- Subtitle Settings Dialog -->
     <!-- Subtitle Delay Dialog -->
     <!-- Browser.CommonDetailsView -->
@@ -126,25 +271,109 @@
     not visible otherwise -->
     <!-- torrent -->
     <!-- Shortcuts -->
+    <string-array name="ssh_types">
+        <item>FTP</item>
+        <item>SFTP</item>
+        <item>FTPS</item>
+    </string-array>
     <string name="indexed_folders">Індексовані теки</string>
     <string name="remove_from_indexed_folders">Вилучити з бібліотеки</string>
+    <string name="open_indexed_folder">"Відкрити"</string>
     <string name="rescan_indexed_folders">Пересканувати всі індексовані теки</string>
+    <string name="ssh_port">Порт</string>
+    <string name="ssh_password">Пароль</string>
+    <string name="ssh_username">Імʼя користувача</string>
     <!-- Preferences -->
     <string name="preferences">Налаштування</string>
     <string name="preferences_about">Про застосунок</string>
     <string name="preferences_category_complete">Повна версія</string>
     <string name="preferences_category_video">Відео</string>
+    <string name="preferences_force_software_decoding">Примусове програмне розкодування</string>
+    <string name="preferences_force_software_decoding_summary">Можете спробувати цей параметр, якщо деякі відеозаписи не відтворюються коректно</string>
+    <string name="preferences_allow_3rd_party_player">Дозволити використання іншого відеопрогравача</string>
+    <string name="category_languages">Субтитри</string>
+    <string name="subtitles_hide_default">Ховати субтитри за замовчуванням</string>
+    <string name="subtitles_hide_default_summary">Перевіряти, чи хочете Ви ховати субтитри за замовчуванням</string>
+    <string name="preferences_languages">Мови завантаження субтитрів</string>
+    <string name="summary_list_preference_primary">Виберіть мови для завантаження субтитрів</string>
+    <string name="favSubLang_title">Мова читання субтитрів</string>
+    <string name="favSubLang_summary">Оберіть улюблену мову для читання субтитрів</string>
+    <string name="ui_mode_title">Режим користувацького інтерфейсу</string>
+    <string name="ui_mode_summary">Обрати КІ між ТБ і Планшет/телефон</string>
     <string name="preferences_video_about">Про</string>
     <string name="preferences_video_os_text">Субтитри надає</string>
+    <string name="preferences_video_tmdb_text">Інформацію про фільми/телепередачі надає</string>
     <string name="preferences_video_licenses">Ліцензії</string>
+    <string name="locale">Системна мова</string>
+    <string name="yes">Так</string>
+    <string name="no">Ні</string>
     <!--  Title of the video picker activity. -->
     <!-- Archos File Info -->
+    <string name="video_info_backdrop_remove">Вилучити</string>
+    <string name="notification_mode">Сповіщення</string>
+    <string name="notifications_all">Усі сповіщення</string>
+    <string name="notifications_none">Без сповіщень</string>
+    <string name="pref_format_mode_title">Формат</string>
+    <string name="format_fullscreen">Повний екран</string>
+    <string name="network_reindex">Пересканувати вміст</string>
     <!-- Help overlay -->
     <string name="share_folders_smbv2">Дозволити підтримку SMBv2</string>
+    <string name="connection_abnormally_long">Підʼєднання здається надто затягнутим. Бажаєте скинути його?</string>
     <!-- Info dialog, not indexed file -->
     <!-- Brightness -->
+    <string name="auto_brightness_message">Яскравість неможливо змінити, тому що ввімкнено режим автоматичної яскравості.</string>
     <!--  Nfo File parsing -->
+    <string name="sort_mode">Режим сортування</string>
+    <string name="sort_by_name_asc">Сортувати за назвою (a - z)</string>
+    <string name="sort_by_name_desc">Сортувати за назвою (z - a)</string>
+    <string name="sort_by_year_asc">Сортувати за роком (спочатку старі)</string>
+    <string name="sort_by_year_desc">Сортувати за роком (спочатку нові)</string>
+    <string name="sort_by_date_asc">Сортувати за датою (спочатку старі)</string>
+    <string name="sort_by_date_desc">Сортувати за датою (спочатку нові)</string>
+    <string name="sort_by_duration_asc">Сортувати за тривалістю (спочатку короткі)</string>
+    <string name="sort_by_duration_desc">Сортувати за тривалістю (спочатку довгі)</string>
+    <string name="sort_by_genre_asc">Сортувати за жанром (a &gt; z)</string>
+    <string name="sort_by_genre_desc">Сортувати за жанром (z &gt; a)</string>
+    <string name="sort_by_rating_asc">Сортувати за оцінкою (спочатку кращі)</string>
+    <string name="sort_by_date_added_desc">Сортувати за датою додавання (спочатку новіші)</string>
+    <string name="sort_by_date_added_asc">Сортувати за датою додавання (спочатку старіші)</string>
+    <string name="sort_by_date_played_desc">Сортувати за датою відтворення (спочатку новіші)</string>
+    <string name="dec_hw_omx">Апаратне розкодування (IOMX w/ swbuf)</string>
+    <string name="dec_hw_omxplus">Апаратне розкодування (IOMX w/ hwbuf)</string>
+    <string name="dec_hw_omxcodec">Апаратне розкодування (OMXCodec)</string>
+    <string name="dec_hw_mediacodec">Апаратне розкодування (MediaCodec)</string>
+    <string name="dec_sw">Програмне розкодування</string>
+    <string name="dec_hw">Апаратне розкодування</string>
+    <string name="dec_unknown">Невідоме розкодування</string>
+    <string name="dec_any">Типово</string>
     <string name="preferences_user_interface">Користувацький інтерфейс</string>
+    <string name="codepage_title">Кодування субтитрів</string>
+    <string name="codepage_summary">Вказати кодування тексту субтитрів</string>
+    <string name="codepage_874">Тайське (CP874)</string>
+    <string name="codepage_936">Спрощена китайська (CP936, GB2312)</string>
+    <string name="codepage_949">Корейська (CP949, EUC-KR)</string>
+    <string name="codepage_1250">Східноєвропейське (CP1250)</string>
+    <string name="codepage_1251">Кирилиця (CP1251)</string>
+    <string name="codepage_1252">Західноєвропейське (CP1252)</string>
+    <string name="codepage_28606">Південноєвропейське (CP28606)</string>
+    <string name="codepage_1253">Грецьке (CP1253)</string>
+    <string name="codepage_1254">Турецьке (CP1254)</string>
+    <string name="codepage_1255">Єврейське (CP1255)</string>
+    <string name="codepage_1256">Арабська (CP1256)</string>
+    <string name="codepage_1257">Балтійське (CP1257)</string>
+    <string name="codepage_1258">Вʼєтнамське (CP1258)</string>
+    <string name="codepage_extra_874">(CP874)</string>
+    <string name="codepage_extra_936">(CP936, GB231)</string>
+    <string name="codepage_extra_949">(CP949, EUC-KR)</string>
+    <string name="codepage_extra_1250">(CP1250)</string>
+    <string name="codepage_extra_1251">(CP1251)</string>
+    <string name="codepage_extra_1252">(CP1252)</string>
+    <string name="codepage_extra_1253">(CP1253)</string>
+    <string name="codepage_extra_1254">(CP1254)</string>
+    <string name="codepage_extra_1255">(CP1255)</string>
+    <string name="codepage_extra_1256">(CP1256)</string>
+    <string name="codepage_extra_1257">(CP1257)</string>
+    <string name="codepage_extra_1258">(CP1258)</string>
     <string name="torrent_category">Торент</string>
     <string name="torrent_path">Шлях завантаження</string>
     <string name="torrent_blocklist">Список блокування</string>
@@ -152,6 +381,23 @@
     <string name="blocklist_file_not_found">Файл не знайдено</string>
     <string name="blocklist_not_loaded">Не завантажено</string>
     <string name="torrent_blocklist_url">Url списку блокування</string>
+    <string name="category_trakt">Trakt</string>
+    <string name="trakt_user">Імʼя користувача</string>
+    <string name="trakt_password">Пароль</string>
+    <string name="trakt_signin_summary_logged_error">Помилка автентифікації</string>
     <string name="show_all">Усі відеозаписи</string>
+    <string name="activate_private_mode">Активувати приватний режим</string>
+    <string name="deactivate_private_mode">Деактивувати приватний режим</string>
+    <string name="private_mode_is_on">Приватний режим УВІМКНЕНО</string>
+    <string name="private_mode_is_off">Приватний режим ВИМКНЕНО</string>
+    <string name="private_mode">Приватний режим</string>
+    <string name="private_mode_description">Під час приватного режиму, наступні функції вимкнено:
+        - Автоіндексування та автопрокручування відтворюваних відео
+        - Недавно відтворені
+        - Продовжити з точки
+        - Синхронізація Trakt</string>
+    <string name="dont_show_again">Більше не показувати</string>
+    <string name="cast_stream_mode_description">Оптимальна якість, але не підтримуються деякі формати</string>
+    <string name="help_faq">Довідка / ЧаП</string>
     <string name="provider_folders">Хмара</string>
 </resources>

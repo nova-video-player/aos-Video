@@ -290,6 +290,7 @@
     <string name="player_subtitle_track_toast">Piste de sous-titres:</string>
     <string name="player_bookmark_set">Marque-page placé à</string>
     <string name="player_pref_subtitle_delay_title">Décalage</string>
+    <string name="player_pref_audio_speed_title">Vitesse de lecture</string>
     <string name="floating_player_restore">Restaurer</string>
     <string name="floating_player_play">Lire</string>
     <string name="floating_player_pause">Pause</string>

@@ -302,6 +302,7 @@
     <string name="s_finnish">Φινλανδικά</string>
     <string name="s_french">Γαλλικά</string>
     <string name="s_hebrew">Εβραϊκά</string>
+    <string name="s_hungarian">Ουγγαρικά</string>
     <string name="s_italian">Ιταλικά</string>
     <string name="s_japanese">Ιαπωνικά</string>
     <string name="s_korean">Κορεάτικα</string>
@@ -320,10 +321,13 @@
     <string name="s_thai">Ταϊλανδέζικα</string>
     <string name="s_turkish">Τούρκικα</string>
     <string name="s_chinese">Κινέζικα</string>
+    <string name="s_traditional_chinese">Παραδοσιακά Kινέζικα</string>
     <string name="s_vietnamese">Βιετναμέζικα</string>
     <string name="s_lithuanian">Λιθουανικά</string>
     <string name="s_indonesian">Ινδονησιακά</string>
     <string name="s_malay">Μαλαισιανά</string>
+    <string name="s_ukrainian">Ουκρανικά</string>
+    <string name="s_kurdish">Κουρδικά</string>
     <string name="s_none">Κανένα</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Αδυναμία αναπαραγωγής βίντεο</string>
@@ -362,12 +366,31 @@
     <string name="subtitles_wizard_no_files">Δεν βρέθηκαν υπότιτλοι</string>
     <string name="subtitles_wizard_current_files">Τρέχοντα αρχεία υποτίτλων</string>
     <string name="subtitles_wizard_available_files">Διαθέσιμοι Υπότιτλοι</string>
+    <string name="subtitles_wizard_delete">Διαγραφή αυτού του αρχείου</string>
+    <string name="subtitles_wizard_empty_list">Δεν βρέθηκε αρχείο</string>
+    <string name="subtitles_wizard_add_files">Μπορείτε να αντιγράψετε περισσότερα αρχεία υποτίτλων σε αυτόν το φάκελο για να τα συσχετίσετε με αυτό το βίντεο.</string>
     <!-- Subloader -->
+    <string name="get_subtitles_online">Λήψη υποτίτλων από το διαδίκτυο</string>
+    <string name="toast_subloader_sub_found">Βρέθηκαν υπότιτλοι για αυτή τη γλώσσα</string>
+    <string name="toast_subloader_sub_not_found">Δε βρέθηκαν υπότιτλοι για αυτή τη γλώσσα</string>
+    <string name="menu_subloader_allfolder">Λήψη ελλειπόντων υπότιτλων</string>
+    <string name="dialog_subloader_copying">Αντιγραφή υποτίτλων…</string>
+    <string name="dialog_subloader_downloading">Λήψη υποτίτλων…</string>
+    <string name="dialog_subloader_sumup">Η λήψη ολοκληρώθηκε</string>
+    <string name="dialog_subloader_success">Βρέθηκαν υπότιτλοι για:</string>
+    <string name="dialog_subloader_fails">Δεν βρέθηκαν υπότιτλοι για:</string>
+    <string name="sub_force_all_title">Εξαναγκασμός λήψης υποτίτλων</string>
+    <string name="sub_force_all">Όλα τα βίντεο σας έχουν ήδη τουλάχιστον ένα υπότιτλο. Θέλετε να κάνετε λήψη νέων υποτίτλων;</string>
+    <string name="dialog_subloader_nonetwork_title">Δεν υπάρχει σύνδεση στο διαδίκτυο</string>
+    <string name="dialog_subloader_nonetwork_message">Απαιτείται σύνδεση στο διαδίκτυο για τη λήψη υποτίτλων</string>
+    <string name="dialog_subloader_connecting">Σύνδεση στο www.opensubtitles.org…</string>
+    <string name="dialog_subloader_credentials">Πιστοποιητικά Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">Πρέπει να εισαγάγετε έγκυρο όνομα χρήστη και κωδικό πρόσβασης!</string>
     <string name="toast_subloader_credentials_empty">Παρέχετε τα διαπιστευτήρια opensubtitles σας στις ρυθμίσεις για να μπορείτε να κατεβάσετε υπότιτλους</string>
     <string name="toast_subloader_login_failed">Εσφαλμένα διαπιστευτήρια opensubtitles ή μη διαθέσιμη υπηρεσία</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Ρυθμίσεις υποτίτλων</string>
+    <string name="subtitle_sample_text">\"δείγμα\"</string>
     <string name="subtitle_size_text">Μέγεθος:</string>
     <string name="subtitle_outline">Περίγραμμα υποτίτλων</string>
     <!-- Subtitle Delay Dialog -->

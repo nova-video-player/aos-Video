@@ -351,10 +351,13 @@
     <string name="s_thai">泰文</string>
     <string name="s_turkish">土耳其文</string>
     <string name="s_chinese">中文</string>
+    <string name="s_traditional_chinese">繁體中文</string>
     <string name="s_vietnamese">越南文</string>
     <string name="s_lithuanian">立陶宛文</string>
     <string name="s_indonesian">印尼文</string>
     <string name="s_malay">馬來文</string>
+    <string name="s_ukrainian">烏克蘭文</string>
+    <string name="s_kurdish">庫德文</string>
     <string name="s_none">無</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">無法播放影片</string>
@@ -457,10 +460,14 @@
     <string name="torrent_buy_premium_message">僅付費版才提供 BT 串流播放</string>
     <string name="torrent_buy_premium">購買付費版本</string>
     <!-- Shortcuts -->
+    <string name="browse_net_server">瀏覽網路分享</string>
+    <string name="add_smb_server">瀏覽 SMB 伺服器</string>
+    <string name="add_network_server">新增網路分享</string>
     <string name="add_to_shortcuts">新增捷徑</string>
     <string name="add_ssh_server">瀏覽 FTP 伺服器</string>
     <string name="add_ssh_shortcut">新增為捷徑</string>
     <string name="ssh_prompt">FTP 類型</string>
+    <string name="protocol_prompt">協定類型</string>
     <string name="ssh_empty_view"> 「您可以瀏覽自己的 FTP 伺服器並播放」</string>
     <string-array name="ssh_types">
         <item>FTP</item>
@@ -723,7 +730,7 @@
     <string name="blocklist_not_loaded">未載入</string>
     <string name="torrent_blocklist_url">黑名單網址</string>
     <string name="sdk_not_supported">尚未支援安卓 4.3 版。\n我們正在努力修復它，希望很快有新版本推出。</string>
-    <string name="manually_create_share">利用網址加入索引資料夾</string>
+    <string name="manually_create_share">利用網址新增索引資料夾</string>
     <string name="share_infos_incomplete">必須填寫路徑</string>
     <string name="share_path">路徑</string>
     <string name="category_trakt">Trakt</string>

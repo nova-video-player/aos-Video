@@ -631,6 +631,7 @@ desteklenmiyor.</string>
     <string name="preferences_display_resume_box_summary">Ana ekranda en son videoyu yeniden gösteren düğmeyi görüntüle veya gizle</string>
     <string name="preferences_display_resume_box">Devam et box\'u görüntüle</string>
     <string name="preferences_leanback_user_interface">TV Kullanıcı Arayüzü</string>
+    <string name="preferences_separate_animation_from_movies">Animasyonları filmlerden ve televizyon dizilerinden ayır</string>
     <string name="preferences_show_watching_up_next_row_summary">Şu anda izlediğiniz ve sonraki videolarınızla bir satır göstermek için işaretleyin</string>
     <string name="preferences_show_watching_up_next_row">İzleyen/yukarı sonraki satırı göster</string>
     <string name="preferences_show_last_added_row_summary">Son eklenen medyanızla bir satır göstermek için işaretleyin</string>
