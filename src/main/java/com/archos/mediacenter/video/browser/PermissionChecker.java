@@ -81,6 +81,9 @@ public class PermissionChecker {
             return;
 
         mActivity= activity;
+
+        log.debug("checkAndRequestPermission: hasManageExternalStoragePermission=" + hasManageExternalStoragePermission);
+
         if(Build.VERSION.SDK_INT>29 && hasManageExternalStoragePermission) {
             log.debug("checkAndRequestPermission: is MANAGE_EXTERNAL_STORAGE granted? " + Environment.isExternalStorageManager());
             if (!isDialogDisplayed && !Environment.isExternalStorageManager()) {
@@ -167,9 +170,8 @@ public class PermissionChecker {
                 log.debug("configuring PERM_REQ_MANAGE");
                 if(Build.VERSION.SDK_INT>29 && hasManageExternalStoragePermission) {
                     permissionToRequest = android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
-                    action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION;
+                    action = Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION;
                     errorMessage = R.string.error_permission_all_file_access;
-                    intent = new Intent();
                 }
                 ;;
         }
@@ -181,16 +183,13 @@ public class PermissionChecker {
                             // finish();
                             isDialogDisplayed = false;
                             if (!ActivityCompat.shouldShowRequestPermissionRationale(mActivity, permissionToRequest)) {
-                                intent.setAction(action);
-                                intent.putExtra("android.intent.extra.PACKAGE_NAME", mActivity.getPackageName());
+                                log.debug("onRequestPermissionsResult: packageName=" + mActivity.getPackageName());
                                 try {
-                                    mActivity.startActivity(intent);
+                                    mActivity.startActivity(new Intent(action, Uri.parse("package:" + mActivity.getPackageName())));
                                 } catch (SecurityException | ActivityNotFoundException e) {
-                                    // Create intent to start new activity
-                                    intent.setData(Uri.parse("package:" + mActivity.getPackageName()));
-                                    intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                    if (log.isDebugEnabled()) log.warn("onRequestPermissionsResult: caught exception", e);
                                     // start new activity to display extended information
-                                    mActivity.startActivity(intent);
+                                    mActivity.startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + mActivity.getPackageName())));
                                 }
                             } else checkAndRequestPermission(mActivity);
                         }
