@@ -931,10 +931,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     private class VideoObserver extends ContentObserver implements IndexHelper.ScraperTask.Listener {
 
-
         public VideoObserver(Handler handler) {
             super(handler);
-
         }
 
         @Override
@@ -1004,6 +1002,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     @Override
     public void onDestroy(){
         super.onDestroy();
+        saveVideoStateIfReady();
         log.debug("onDestroy: release mediaSessionCompat");
         if (mSession != null) mSession.release();
         if(mIndexHelper!=null)
@@ -1017,7 +1016,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 unbindService(mTorrentObserverServiceConnection);
             }catch(java.lang.IllegalArgumentException e) {}
         log.debug("onDestroy");
-
     }
 
     /**
@@ -1189,6 +1187,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     @Override
     public void onPause(int state) {
         log.debug("onPause");
+        saveVideoStateIfReady();
         if (state == PlayerController.STATE_NORMAL) {
             log.debug("onPause: normal state thus pauseTrakt()!");
             pauseTrakt();
