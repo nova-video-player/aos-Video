@@ -1641,11 +1641,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             public void onResult(int code) {
                 mPlayerController.getTVMenuAdapter().setDiscrete(false);
                 if(saveSettingCB.isChecked()){
-                    log.debug("MARC createTVAudioSpeedDialog:onResult save audio speed=" + PlayerService.sPlayerService.getAudioSpeed() + " in prefs");
+                    log.debug("createTVAudioSpeedDialog:onResult save audio speed=" + PlayerService.sPlayerService.getAudioSpeed() + " in prefs");
                     mPreferences.edit().putFloat(getString(R.string.save_audio_speed_setting_pref_key), PlayerService.sPlayerService.getAudioSpeed()).apply();
                 }
                 else {
-                    log.debug("MARC createTVAudioSpeedDialog:onResult do not save audio speed and carve 1.0f in prefs");
+                    log.debug("createTVAudioSpeedDialog:onResult do not save audio speed and carve 1.0f in prefs");
                     mPreferences.edit().putFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f).apply();
                 }
             }
