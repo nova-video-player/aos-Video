@@ -1,7 +1,4 @@
-- SMB3 enabled by default (please test and report regressions!)
-- Play button is first on tvshow all episodes view on ADTV
-- Remove duplicate downmixing setting on phone/tablet UI
-- Capability to add manual SMB shortcuts on ADTV
-- Fix cannot play SMB file resulting from search result
-- 2022 year banners on ADTV
+- Target Android API33
+- Experimental playback speed control
+- Do not apply audio passthrough if receiver does not support codec use and revert to PCM multichannel decoding instead
 - Stability enhancements
