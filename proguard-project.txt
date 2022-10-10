@@ -116,14 +116,6 @@
 
 -dontwarn com.squareup.picasso.OkHttpDownloader
 
-## trakt-java
--keep class com.uwetrottmann.trakt5.entities.** { *; }
--keep class com.uwetrottmann.trakt5.enums.** { *; }
-
-## tmdb-java
--keep class com.uwetrottmann.tmdb2.entities.** { *; }
--keep class com.uwetrottmann.tmdb2.enumerations.** { *; }
-
 #joda time
 -dontwarn org.joda.convert.**
 -dontwarn org.joda.time.**
