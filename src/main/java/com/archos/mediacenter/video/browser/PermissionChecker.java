@@ -92,7 +92,8 @@ public class PermissionChecker {
                         activity,
                         new String[] { // MANAGE_EXTERNAL_STORAGE provides READ thus no need to ask both except for legacy code?
                                 //Manifest.permission.READ_EXTERNAL_STORAGE,
-                                Manifest.permission.MANAGE_EXTERNAL_STORAGE
+                                Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+                                Manifest.permission.RECORD_AUDIO
                         },
                         PERM_REQ_MANAGE
                 );
@@ -105,7 +106,8 @@ public class PermissionChecker {
                         activity,
                         new String[] {
                                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.RECORD_AUDIO
                         },
                         PERM_REQ_RW
                 );
