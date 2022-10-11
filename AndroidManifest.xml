@@ -50,7 +50,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
-    <!-- Used to for scanning and trakt -->
+    <!-- Used for scanning and trakt -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <!--<uses-permission android:name="android.permission.WRITE_SETTINGS" />-->
