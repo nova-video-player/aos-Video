@@ -1,4 +1,5 @@
-- Target Android API33
+- Target Android API32
 - Experimental playback speed control
 - Do not apply audio passthrough if receiver does not support codec use and revert to PCM multichannel decoding instead
+- Fix some local video files not indexed on recent Android
 - Stability enhancements
