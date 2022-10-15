@@ -264,6 +264,7 @@
     <string name="player_subtitle_track_toast">Ścieżka napisów:</string>
     <string name="player_bookmark_set">Zakładka na</string>
     <string name="player_pref_subtitle_delay_title">Opóźnienie</string>
+    <string name="player_pref_audio_speed_title">Szybkość odtwarzania</string>
     <string name="floating_player_restore">Przywróć</string>
     <string name="floating_player_play">Odtwórz</string>
     <string name="floating_player_pause">Wstrzymaj</string>

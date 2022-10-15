@@ -300,6 +300,7 @@
     <string name="player_subtitle_track_toast">רצועת כתוביות:</string>
     <string name="player_bookmark_set">הגדרת סימניה ב- </string>
     <string name="player_pref_subtitle_delay_title">רווח</string>
+    <string name="player_pref_audio_speed_title">מהירות ניגון</string>
     <string name="floating_player_restore">שחזר</string>
     <string name="floating_player_play">נגן</string>
     <string name="floating_player_pause">השהה</string>

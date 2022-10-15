@@ -285,6 +285,7 @@
     <string name="player_subtitle_track_toast">字幕轨：</string>
     <string name="player_bookmark_set">书签设置于</string>
     <string name="player_pref_subtitle_delay_title">延迟</string>
+    <string name="player_pref_audio_speed_title">播放速度</string>
     <string name="floating_player_restore">恢复</string>
     <string name="floating_player_play">播放</string>
     <string name="floating_player_pause">暂停</string>

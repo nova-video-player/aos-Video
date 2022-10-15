@@ -290,6 +290,7 @@
     <string name="player_subtitle_track_toast">Feliratsáv:</string>
     <string name="player_bookmark_set">Könyvjelző beállítva itt:</string>
     <string name="player_pref_subtitle_delay_title">Késleltetés</string>
+    <string name="player_pref_audio_speed_title">Lejátszási sebesség</string>
     <string name="floating_player_restore">Visszaállítás</string>
     <string name="floating_player_play">Lejátszás</string>
     <string name="floating_player_pause">Szünet</string>

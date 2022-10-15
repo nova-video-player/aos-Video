@@ -290,6 +290,7 @@
     <string name="player_subtitle_track_toast">Untertitel:</string>
     <string name="player_bookmark_set">Lesezeichen gesetzt bei</string>
     <string name="player_pref_subtitle_delay_title">Verzögerung</string>
+    <string name="player_pref_audio_speed_title">Wiedergabegeschwindigkeit</string>
     <string name="floating_player_restore">Wiederherstellen</string>
     <string name="floating_player_play">Wiedergabe</string>
     <string name="floating_player_pause">Pause</string>

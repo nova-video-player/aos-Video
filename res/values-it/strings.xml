@@ -273,6 +273,7 @@ Copertina (rotolo di copertina)</string>
     <string name="player_subtitle_track_toast">Traccia dei sottotitoli:</string>
     <string name="player_bookmark_set">Segnalibro impostato su</string>
     <string name="player_pref_subtitle_delay_title">Ritardo</string>
+    <string name="player_pref_audio_speed_title">Velocità di riproduzione</string>
     <string name="floating_player_restore">Ripristina</string>
     <string name="floating_player_play">Riproduci</string>
     <string name="floating_player_pause">Pausa</string>

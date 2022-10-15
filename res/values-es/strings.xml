@@ -290,6 +290,7 @@
     <string name="player_subtitle_track_toast">Pista de subtítulos:</string>
     <string name="player_bookmark_set">Marcador establecido en</string>
     <string name="player_pref_subtitle_delay_title">Retardo</string>
+    <string name="player_pref_audio_speed_title">Velocidad de reproducción</string>
     <string name="floating_player_restore">Restaurar</string>
     <string name="floating_player_play">Reproducir</string>
     <string name="floating_player_pause">Pausa</string>

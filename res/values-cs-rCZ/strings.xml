@@ -274,6 +274,7 @@
     <string name="player_subtitle_track_toast">Stopa titulků:</string>
     <string name="player_bookmark_set">Záložka nastavena na</string>
     <string name="player_pref_subtitle_delay_title">Zpoždění</string>
+    <string name="player_pref_audio_speed_title">Rychlost přehrávání</string>
     <string name="floating_player_restore">Obnovit</string>
     <string name="floating_player_play">Přehrát</string>
     <string name="floating_player_pause">Pozastavit</string>

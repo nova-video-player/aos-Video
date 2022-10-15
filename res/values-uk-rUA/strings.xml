@@ -194,6 +194,7 @@
     </plurals>
     <!-- Media Center -->
     <!-- VideoPlayer -->
+    <string name="player_pref_audio_speed_title">Швидкість відтворення</string>
     <string name="player_window_mode">Віконний режим</string>
     <string name="pref_play_mode_title">Режим відтворення</string>
     <string name="pref_play_mode_entry_folder">Тека</string>
