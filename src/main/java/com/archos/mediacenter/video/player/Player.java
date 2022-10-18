@@ -733,7 +733,7 @@ public class Player implements IPlayerControl,
     public int getCurrentPosition() {
         if (isInPlaybackState()) {
             int currentPos = mMediaPlayer.getCurrentPosition();
-            log.debug("MARC getCurrentPosition: " + currentPos);
+            log.debug("getCurrentPosition: " + currentPos);
             return currentPos;
         } else if (mStopPosition != -1) {
             return mStopPosition;
