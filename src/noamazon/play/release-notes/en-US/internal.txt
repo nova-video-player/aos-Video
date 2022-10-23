@@ -1,5 +1,5 @@
 - Target Android API32
-- Experimental playback speed control
+- Experimental playback speed control (only when not using audio passthrough)
 - Do not apply audio passthrough if receiver does not support codec use and revert to PCM multichannel decoding instead
 - Fix some local video files not indexed on recent Android
 - ffmpeg 4.4.3, openssl 1.1.1r, androidx library updates
