@@ -2099,7 +2099,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 menuItem.setShowAsAction(!isPluggedOnTv() ? MenuItem.SHOW_AS_ACTION_NEVER : MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
             // disable playback speed if passthrough is enabled
-            menuItem.setEnabled(ENABLE_PLAYBACK_SPEED && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0);
+            menuItem.setVisible(ENABLE_PLAYBACK_SPEED && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0);
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_S3D_ID, Menu.NONE, R.string.pref_s3d_mode_title);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_3d);
