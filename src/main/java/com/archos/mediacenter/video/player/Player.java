@@ -267,7 +267,6 @@ public class Player implements IPlayerControl,
                 mMediaPlayer.setAudioFilter(mAudioFilter, mNightModeOn);
             if (mAvDelay != 0)
                 mMediaPlayer.setAvDelay(mAvDelay);
-            // TODO MARC check
             if (mAvSpeed != 1.0f)
                 mMediaPlayer.setAvSpeed(mAvSpeed);
             if (mAudioTrack != -1)
