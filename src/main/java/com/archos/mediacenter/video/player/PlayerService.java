@@ -112,7 +112,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     public static final String PLAYER_SERVICE_STARTED = "PLAYER_SERVICE_STARTED";
 
-    public static final boolean AUDIO_SPEED_ON_THE_FLY = true;
+    public static final boolean AUDIO_SPEED_ON_THE_FLY = true && PlayerActivity.ENABLE_PLAYBACK_SPEED;
 
     public static final int RESUME_NO = 0;
     public static final int RESUME_FROM_LAST_POS = 1;
