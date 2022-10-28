@@ -142,7 +142,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     private static final Logger log = LoggerFactory.getLogger(PlayerActivity.class);
 
-    public static final boolean ENABLE_PLAYBACK_SPEED = false;
+    public static final boolean ENABLE_PLAYBACK_SPEED = true;
 
     public static final int RESUME_NO = 0;
     public static final int RESUME_FROM_LAST_POS = 1;
@@ -1753,9 +1753,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         createTVAudioDelayDialog();
                     }
                 });
-                // disable playback speed if passthrough is enabled
-                //menuItem.setEnabled(Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0);
-                if(ENABLE_PLAYBACK_SPEED && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0) {
+                // disable playback speed if passthrough is enabled and Android M (API23+)
+                if(ENABLE_PLAYBACK_SPEED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0) {
                     final TVMenuItem tvmi4 = mAudioTracksTVMenu.createAndAddTVMenuItem(getText(R.string.player_pref_audio_speed_title).toString(), false, false);
                     tvmi4.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -2098,8 +2097,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 menuItem.setIcon(R.drawable.ic_baseline_speed_24);
                 menuItem.setShowAsAction(!isPluggedOnTv() ? MenuItem.SHOW_AS_ACTION_NEVER : MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
-            // disable playback speed if passthrough is enabled
-            menuItem.setVisible(ENABLE_PLAYBACK_SPEED && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0);
+            // disable playback speed if passthrough is enabled and Android M+ (API23+)
+            menuItem.setVisible(ENABLE_PLAYBACK_SPEED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0);
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_S3D_ID, Menu.NONE, R.string.pref_s3d_mode_title);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_3d);

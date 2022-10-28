@@ -1456,7 +1456,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     public void setAudioSpeed(float speed, boolean force) {
-        boolean speedChanged = speed != mAudioSpeed||force;
+        boolean speedChanged = speed != mAudioSpeed || force;
         if (speedChanged && (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0)) {
             log.debug("setAudioSpeed: audio speed changed from " + mAudioSpeed + " to " + speed);
             mAudioSpeed = speed;
