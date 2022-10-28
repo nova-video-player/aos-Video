@@ -1,7 +1,8 @@
 - Target Android API32
-- Disable experimental playback speed control (only when not using audio passthrough) for now since causes regressions
+- Re-enable experimental playback speed control (only when not using audio passthrough). Note that this is not universally compatible with devices
 - Do not apply audio passthrough if receiver does not support codec use and revert to PCM multichannel decoding instead
 - Fix some local video files not indexed on recent Android
+- Fix network share videos staying in movie collection after deletion regression
 - ffmpeg 4.4.3, openssl 1.1.1r, androidx library updates
 - Allow microphone permission for voice search
 - Stability enhancements
