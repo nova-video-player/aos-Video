@@ -65,6 +65,13 @@
             android:title="@string/preferences_force_audio_passthrough"
             app:iconSpaceReserved="false"/>
         <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="force_passthrough"
+            android:persistent="true"
+            android:summary="@string/preferences_force_passthrough_summary"
+            android:title="@string/preferences_force_passthrough"
+            app:iconSpaceReserved="false"/>
+        <CheckBoxPreference
             android:defaultValue="false"
             android:key="disable_downmix"
             android:persistent="true"

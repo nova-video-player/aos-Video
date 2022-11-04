@@ -87,6 +87,7 @@ public class CustomApplication extends Application {
     private static long maxAudioChannelCount = 0;
     private static boolean hasHdmi = false;
     private static boolean isAudioPlugged = false;
+    public static final long allHdmiAudioCodecs = 0b11111111111111111111111111111;
 
     private static int [] novaVersionArray;
     private static int [] novaPreviousVersionArray;
@@ -468,7 +469,6 @@ public class CustomApplication extends Application {
     }
 
     private long getEncodingFlags(int encodings[]) {
-        log.debug("getEncodingFlags: encodings=" + Arrays.toString(encodings) + ", convertAudioEncodings=" + Arrays.toString(convertAudioEncodings.toArray()));
         if (encodings == null)
             return 0;
         long encodingFlags = 0;
@@ -479,6 +479,7 @@ public class CustomApplication extends Application {
             if (isEncoded(avosEncoding))
                 encodingFlags |= 1 << avosEncoding;
         }
+        log.debug("getEncodingFlags: encodings=" + Arrays.toString(encodings) + ", convertAudioEncodings=" + Arrays.toString(convertAudioEncodings.toArray()) + ", encodingFlags=" + encodingFlags + ", allHdmiAudioCodecs=" + allHdmiAudioCodecs);
         return encodingFlags;
     }
 
