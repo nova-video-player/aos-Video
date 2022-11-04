@@ -821,7 +821,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         if (LibAvos.isAvailable()) {
             VideoPreferencesCommon.resetPassthroughPref(mPreferences); // note this resets the audio_speed if in passthrough to 1.0f in prefs
             LibAvos.setPassthrough(Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")));
-            LibAvos.setHdmiSupportedAudioCodecs(CustomApplication.getHdmiAudioCodecsFlag());
+            if (mPreferences.getBoolean(VideoPreferencesCommon.KEY_FORCE_AUDIO_PASSTHROUGH, true)) {
+                LibAvos.setHdmiSupportedAudioCodecs(CustomApplication.allHdmiAudioCodecs);
+            } else {
+                LibAvos.setHdmiSupportedAudioCodecs(CustomApplication.getHdmiAudioCodecsFlag());
+            }
             mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             // note enable_downmix_androidtv and disable_downmix are the opposite same settings but only one applies to androidTV
             // this is done on purpose to respect logic of presentation and default value
