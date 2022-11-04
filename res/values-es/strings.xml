@@ -61,10 +61,10 @@
     <string name="info_menu_series_poster_select">Seleccionar otro cartel</string>
     <!-- COVER ROLL -->
     <string name="watching_up_next">Viendo/Siguiente</string>
-    <string name="recently_added">Recién añadidos</string>
-    <string name="recently_added_videos">Recién añadidos</string>
-    <string name="recently_played">Recién vistos</string>
-    <string name="recently_played_videos">Recién vistos</string>
+    <string name="recently_added">Recién añadido</string>
+    <string name="recently_added_videos">Recién añadido</string>
+    <string name="recently_played">Recién visto</string>
+    <string name="recently_played_videos">Recién visto</string>
     <string name="video_lists">Listas de reproducción</string>
     <!-- The string used in main storage list -->
     <string name="external_storage">Externo</string>
@@ -133,7 +133,7 @@
     <string name="date_view_month">Mes</string>
     <string name="date_view_year">Año</string>
     <string name="all_movies_and_tv_shows">Películas y series</string>
-    <string name="non_scraped_videos">Vídeos sin analizar</string>
+    <string name="non_scraped_videos">Videos sin indexar</string>
     <string name="no_server">No se encontró ningún servidor multimedia</string>
     <string name="cannot_open_video">No se puede abrir este vídeo</string>
     <string name="confirm_delete">¿Realmente quieres eliminarlo?</string>
@@ -157,7 +157,7 @@
     <string name="scrap_remove_short">Eliminar</string>
     <!-- for small screens -->
     <string name="scrap_change">Cambiar información de todos los episodios</string>
-    <string name="scrap_series_change">Recuperar información de las series</string>
+    <string name="scrap_series_change">Cambiar información de las series</string>
     <string name="scrap_change_confirmation">Cambiar todos los episodios de\n\t\"%1$s\"\na\n\t\"%2$s\"?</string>
     <string name="scrap_change_title">Modificando todos los episodios</string>
     <string name="scrap_change_initializing">Inicializando…</string>
@@ -218,20 +218,20 @@
     <string name="scrap_status_rejected">Información eliminada</string>
     <string name="scrap_status_unknown">Desconocido</string>
     <string name="scraper_abort_request">¿Realmente desea cancelar la búsqueda?</string>
-    <string name="scraper_no_files">No hay archivos para procesar</string>
-    <string name="scraper_no_new_files">No hay archivos nuevos para procesar</string>
-    <string name="scraper_no_new_files_in_folder">No hay archivos nuevos para procesar en esta carpeta</string>
+    <string name="scraper_no_files">No hay archivos para indexar</string>
+    <string name="scraper_no_new_files">No hay archivos nuevos para indexar</string>
+    <string name="scraper_no_new_files_in_folder">No hay archivos nuevos para indexar en esta carpeta</string>
     <string name="scraper_folder_no_files">Sin embargo, sigue habiendo %d vídeos para los que no se ha encontrado información.</string>
     <string name="scraper_folder_no_file">Sin embargo, sigue habiendo un vídeo para el que no se ha encontrado información.</string>
     <string name="scraper_folder_try_again">¿Quieres intentarlo de nuevo?</string>
     <string name="scraper_notification_title">Buscando información online</string>
-    <string name="scraper_notification_progress">\"%1$d de %2$d archivos procesados</string>
+    <string name="scraper_notification_progress">\"%1$d de %2$d archivos indexados</string>
     <string name="scraper_no_episode_found">No se encontró ningún episodio</string>
     <string name="scraper_suggest_message">Puede buscar carteles e información para sus vídeos mediante el menú \'Buscar información online\'.</string>
     <string name="scraper_no_movie_text">Actualmente no tienes cartel y descripción para tus películas</string>
     <string name="scraper_no_movie_button_label">Buscar información online de la película</string>
     <string name="scraper_no_tv_show_text">Actualmente no tiene cartel e información para sus series</string>
-    <string name="scraper_no_tv_show_button_label">Buscar información online de su serie</string>
+    <string name="scraper_no_tv_show_button_label">Buscar información online de la serie</string>
     <string name="imdb_title_url">https://www.imdb.es/title/</string>
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="storage">Almacenamiento</string>
@@ -261,7 +261,7 @@
     <string name="you_have_no_anime_collections">No hay colecciones de anime</string>
     <string name="you_have_no_tv_shows">No hay series</string>
     <string name="you_have_no_anime_shows">No hay series de animación</string>
-    <string name="you_have_no_non_scraped_videos">Vídeos sin analizar</string>
+    <string name="you_have_no_non_scraped_videos">No hay videos sin indexar</string>
     <plurals name="Nmovies">
         <item quantity="one">1 película</item>
         <item quantity="other"><xliff:g id="count">%d</xliff:g> películas</item>
@@ -566,8 +566,8 @@
     <string name="tv_scraper">Series</string>
     <string name="movie_scraper">Películas</string>
     <string name="enable_auto_scrap">Obtener información automáticamente para nuevos vídeos</string>
-    <string name="enable_adult_scrap_title">Escaneo de vídeo para adultos</string>
-    <string name="enable_adult_scrap_summary">Activar el escaneo de vídeo para adultos (deshabilitado por defecto)</string>
+    <string name="enable_adult_scrap_title">Indexar vídeo para adultos</string>
+    <string name="enable_adult_scrap_summary">Activar el indexado de vídeo para adultos (deshabilitado por defecto)</string>
     <string name="locale">Idioma del sistema</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
@@ -643,7 +643,7 @@
     <string name="sort_by_genre_asc">Ordenar por género (a - z)</string>
     <string name="sort_by_genre_desc">Ordenar por género (z - a)</string>
     <string name="sort_by_rating_asc">Ordenar por calificación (mejor primero)</string>
-    <string name="sort_by_date_added_desc">Ordenar por fecha adición (más reciente primero)</string>
+    <string name="sort_by_date_added_desc">Ordenar por fecha de adición (más reciente primero)</string>
     <string name="sort_by_date_added_asc">Ordenar por fecha de adición (más antiguo primero)</string>
     <string name="sort_by_date_played_desc">Ordenar por fecha de reproducción (más reciente primero)</string>
     <string name="sort_by_date_premiered_desc">Ordenar por fecha de estreno (más nueva primera)</string>
@@ -837,16 +837,16 @@
     <string name="drawer_close">cerrar panel de navegación</string>
     <string name="view_more">Ver más</string>
     <string name="nfo_export_in_progress">Exportación NFO en progreso</string>
-    <string name="rescrap_in_progress">Recuperando toda la biblioteca</string>
-    <string name="rescrap_movies_in_progress">Restaurando datos de todas las películas</string>
-    <string name="rescrap_collections_in_progress">Recuperando todas las colecciones</string>
+    <string name="rescrap_in_progress">Reindexando toda la biblioteca</string>
+    <string name="rescrap_movies_in_progress">Reindexando todas las películas</string>
+    <string name="rescrap_collections_in_progress">Reindexando todas las colecciones</string>
     <string name="acquire_external_usb_permission">Nova Video necesita permiso especial para acceder al almacenamiento externo. Por favor, seleccione su almacenamiento en la siguiente pantalla</string>
-    <string name="rescrap_not_found">Rescanear videos sin descripción</string>
-    <string name="rescrap_all_title">Re-analizar todo</string>
-    <string name="rescrap_all_movies_title">Restaurar datos de todas las películas</string>
-    <string name="rescrap_all_collections_title">Recuperar todas las colecciones</string>
-    <string name="nfo_export_manual_title">Exportar vídeos ya escaneados</string>
-    <string name="nfo_export_manual_summary">Exportar archivos .nfo de todos los vídeos ya analizados</string>
+    <string name="rescrap_not_found">Reindexar videos sin descripción</string>
+    <string name="rescrap_all_title">Reindexar todo</string>
+    <string name="rescrap_all_movies_title">Reindexar todas las películas</string>
+    <string name="rescrap_all_collections_title">Reindexar todas las colecciones</string>
+    <string name="nfo_export_manual_title">Exportar vídeos ya indexados</string>
+    <string name="nfo_export_manual_summary">Exportar archivos .nfo de los vídeos ya indexados</string>
     <string name="db_export_manual_title">Exportar base de datos</string>
     <string name="db_export_manual_summary">Exportar archivo media.db a /sdcard para propósitos de depuración</string>
     <string name="db_export_in_progress">Exportación de base de datos en curso</string>

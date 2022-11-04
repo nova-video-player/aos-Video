@@ -93,10 +93,10 @@
     <string name="all_movies">所有电影</string>
     <string name="all_movies_format">所有电影 -  %d</string>
     <string name="all_animes_format">动画电影 -  %d</string>
-    <string name="all_collections">所有收藏</string>
-    <string name="all_collections_format">所有收藏 -  %d</string>
-    <string name="all_collection_watched">已观看所有收藏</string>
-    <string name="all_collection_unwatched">未观看的收藏</string>
+    <string name="all_collections">所有合集</string>
+    <string name="all_collections_format">所有合集 -  %d</string>
+    <string name="all_collection_watched">已观看所有合集</string>
+    <string name="all_collection_unwatched">未观看的合集</string>
     <plurals name="n_movies_watched">
         <item quantity="other">已观看电影 %d</item>
     </plurals>
@@ -107,7 +107,7 @@
     <string name="movies_by_alpha">电影：按名称字母排序</string>
     <string name="movies_by_genre">电影：按分类排序</string>
     <string name="movies_by_rating">电影：按评分排序</string>
-    <string name="movie_collections">收藏</string>
+    <string name="movie_collections">合集</string>
     <string name="anime_collections">动漫合集</string>
     <string name="movies_by_year">电影：按年份排序</string>
     <string name="all_tv_shows">电视节目</string>
@@ -255,7 +255,7 @@
     <string name="you_have_no_video_yet">搜索视频&#8230;</string>
     <string name="you_have_no_movies">没有电影</string>
     <string name="you_have_no_animes">没有动画电影</string>
-    <string name="you_have_no_movie_collections">暂无收藏</string>
+    <string name="you_have_no_movie_collections">暂无合集</string>
     <string name="you_have_no_anime_collections">无动漫合集</string>
     <string name="you_have_no_tv_shows">没有电视节目</string>
     <string name="you_have_no_anime_shows">没有动画电视节目</string>
@@ -751,10 +751,10 @@
     <string name="trakt_live_scrobbling_title">直播偏好收藏</string>
     <string name="trakt_live_scrobbling_summary">分享正在 Trakt 上观看的视频</string>
     <string name="trakt_getfull_summary">只有付费版本才能使用 Trakt 偏好收藏</string>
-    <string name="trakt_sync_collection_title">同步电视节目和电影收藏</string>
+    <string name="trakt_sync_collection_title">同步电视节目和电影合集</string>
     <string name="trakt_sync_trakt_resume_title">同步 trakt 播放进度</string>
     <string name="trakt_sync_trakt_resume">如果比本地进度播放得更多，则使用trakt 的播放进度</string>
-    <string name="trakt_sync_collection_summary">自动将您 Nova 库中的所有视频添加到您的Trakt 收藏</string>
+    <string name="trakt_sync_collection_summary">自动将您 Nova 库中的所有视频添加到您的Trakt 合集</string>
     <string name="trakt_toast_syncing">正在与 Trakt&#8230; 同步</string>
     <string name="show_all">所有视频</string>
     <string name="hide_seen">未观看</string>
@@ -834,12 +834,12 @@
     <string name="nfo_export_in_progress">正在导出 NFO</string>
     <string name="rescrap_in_progress">重新扫描整个媒体库</string>
     <string name="rescrap_movies_in_progress">正在重新整理所有电影</string>
-    <string name="rescrap_collections_in_progress">正在重新整理所有收藏</string>
+    <string name="rescrap_collections_in_progress">正在重新整理所有合集</string>
     <string name="acquire_external_usb_permission">Nova 视频需要特殊权限才能访问外部存储。请在下一个屏幕上选择您的存储</string>
     <string name="rescrap_not_found">重新扫描没有说明的视频</string>
     <string name="rescrap_all_title">重新扫描所有文件</string>
     <string name="rescrap_all_movies_title">重新整理所有电影</string>
-    <string name="rescrap_all_collections_title">重新整理所有收藏</string>
+    <string name="rescrap_all_collections_title">重新整理所有合集</string>
     <string name="nfo_export_manual_title">导出已扫描的视频</string>
     <string name="nfo_export_manual_summary">导出已经扫描过的每个视频的 .nfo 文件</string>
     <string name="db_export_manual_title">导出媒体数据库</string>
@@ -893,7 +893,7 @@
     <string name="enable_sponsor_title">启用 Nova 赞助链接</string>
     <string name="enable_sponsor_summary">启用捐赠赞助链接：每个捐赠都有帮助。</string>
     <string name="upgrade_info">升级信息</string>
-    <string name="v5_v6_upgrade_info">警告：此版本 Nova 有重大更新，需要重新扫描所有视频收藏库以重新获取多媒体信息。
+    <string name="v5_v6_upgrade_info">警告：此版本 Nova 有重大更新，需要重新扫描所有视频合集库以重新获取多媒体信息。
         强烈建议重新安装后重新启动，以避免出现问题。详情请参阅“常见问题”。</string>
     <string name="networks">网络：</string>
     <string name="premiered">首映:</string>
