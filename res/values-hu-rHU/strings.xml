@@ -525,8 +525,10 @@
     <string name="preferences_force_audio_passthrough_enable">Mód 1 (elavult)</string>
     <string name="preferences_force_audio_passthrough_enable2">Mód 2</string>
     <string name="preferences_force_audio_passthrough_summary">Tömörített hang továbbítása HDMI vagy S/PDIF csatlakozókra. ⚠ Kísérleti, A/V szinkronizációs hiba lehetséges</string>
+    <string name="preferences_force_passthrough">Hangtovábbítás kényszerítése</string>
     <string name="preferences_disable_downmix_title">Hang sztereólekeverés kikapcsolása</string>
     <string name="preferences_disable_downmix_summary">Mindig dekódolja az összes csatornát, és az Android kezelje a lekeverést az audio kimenettől függően (a beszéd-hangsáv elvesztését eredményezheti)</string>
+    <string name="preferences_enable_downmix_androidtv_title">Sztereólekeverés kényszerítése</string>
     <string name="preferences_allow_3rd_party_player">Másik videó lejátszó használatának engedélyezése</string>
     <string name="preferences_allow_3rd_party_player_summary">Más kompatibilis videolejátszó alkalmazásokat fog javasolni az Android a video elindításakor. Ne feledje, hogy egyes funkciók nem fognak működni (folytatás, könyvjelzők, stb.)</string>
     <string name="preference_tv_3d_automatic_switch">Automatikus 3D TV átkapcsolás engedélyezése</string>
@@ -808,6 +810,7 @@
     <string name="rescan_description">Az indexelt mappák újrafeldolgozása új tartalom hozzáadásához</string>
     <string name="rescan_now">Újrafeldolgozás most</string>
     <string name="rescan_now_description">Kézi újrafeldolgozás</string>
+    <string name="rescan_select_shares">Parancsikonok kiválasztása</string>
     <string name="rescan_error_wifi_info_standby">Úgy tűnik, hogy a WiFi készenléti állapotban le van tiltva. Az automatikus újrakeresés sikerességének biztosítása érdekében állítsa be készenléti állapotban is a WiFi engedélyezését.</string>
     <string name="rescan_error_wifi">Hiba: a WiFi ki volt kapcsolva az újrafeldolgozás során</string>
     <string name="rescan_error_wifi_click_for_more_info">kattintson ide a részletekért</string>
