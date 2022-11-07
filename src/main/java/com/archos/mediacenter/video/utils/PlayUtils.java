@@ -20,7 +20,6 @@ import android.content.Intent;
 import android.net.Uri;
 import androidx.core.content.FileProvider;
 import androidx.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.archos.filecorelibrary.MetaFile2;
@@ -38,6 +37,9 @@ import com.archos.mediacenter.video.player.PlayerService;
 import com.archos.mediacenter.video.player.TorrentLoaderActivity;
 import com.archos.mediascraper.ScrapeDetailResult;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -45,8 +47,7 @@ import java.io.IOException;
  * Created by vapillon on 15/04/15.
  */
 public class PlayUtils implements IndexHelper.Listener {
-    private final static String TAG = "PlayUtils";
-    private static final boolean DBG = false;
+    private static final Logger log = LoggerFactory.getLogger(PlayUtils.class);
 
     private IndexHelper mIndexHelper;
     private VideoDbInfo mVideoDbInfo;
@@ -100,11 +101,11 @@ public class PlayUtils implements IndexHelper.Listener {
         if(sPlayUtils==null)
             sPlayUtils = new PlayUtils();
         if (video == null) {
-            Log.w(TAG, "video is null!");
+            log.warn("startVideo: video is null!");
             Toast.makeText(context, "Error video is null", Toast.LENGTH_SHORT).show();
             return;
         } else {
-            Log.d(TAG, "startVideo from resume=" + resume + ", streamingUri " + (video.getStreamingUri() == null ? "null" : video.getStreamingUri()));
+            log.debug("startVideo from resume=" + resume + ", streamingUri " + (video.getStreamingUri() == null ? "null" : video.getStreamingUri()));
         }
         // try to find extension when none has been set
         String mimeType = video.getMimeType();
@@ -230,7 +231,7 @@ public class PlayUtils implements IndexHelper.Listener {
                         StreamOverHttp stream = new StreamOverHttp(video.getFileUri(), mimeType);
                         dataUri = stream.getUri(video.getFileUri().getLastPathSegment());
                     } catch (IOException e) {
-                        Log.e(TAG, "Failed to start " + video.getFileUri() + e);
+                        log.error("onResumeReady: failed to start " + video.getFileUri() + e);
                     }
                 } else if (video.getStreamingUri() != null && !"upnp".equals(video.getStreamingUri().getScheme())) { //when upnp, try to open streamingUri
                     dataUri = video.getStreamingUri();
@@ -257,7 +258,7 @@ public class PlayUtils implements IndexHelper.Listener {
                         sub = videoMetadata.getSubtitleTrack(n);
                         if (sub.isExternal) {
                             subFound = true;
-                            if (DBG) Log.d(TAG, "onResumeReady: adding external subtitle name=" + sub.name + ", path=" + sub.path);
+                            log.debug("onResumeReady: adding external subtitle name=" + sub.name + ", path=" + sub.path);
                             // vlc
                             intent.putExtra("subtitles_location", sub.path);
                         }
@@ -313,8 +314,8 @@ public class PlayUtils implements IndexHelper.Listener {
             fileUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", localFile);
             intent.setDataAndType(fileUri, mimeType);
         }
-        Log.d(TAG, "data=" + uri);
-        Log.d(TAG, "type=" + mimeType);
+        log.debug("openAnyFile: data=" + uri);
+        log.debug("openAnyFile: type=" + mimeType);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         try {
             context.startActivity(intent);
