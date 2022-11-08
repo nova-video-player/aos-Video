@@ -1,5 +1,5 @@
 - Target Android API32
-- Enable experimental playback speed control (when not using passthrough)
+- Re-disable experimental playback speed control due to instabilities
 - Add option to not apply audio passthrough if AV receiver does not support codec
 - Fix some local video files not indexed on recent Android or on external storage
 - Fix network share videos not suppressed after deletion regression
