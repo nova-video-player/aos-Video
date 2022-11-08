@@ -142,7 +142,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     private static final Logger log = LoggerFactory.getLogger(PlayerActivity.class);
 
-    public static final boolean ENABLE_PLAYBACK_SPEED = true;
+    public static final boolean ENABLE_PLAYBACK_SPEED = false;
 
     public static final int RESUME_NO = 0;
     public static final int RESUME_FROM_LAST_POS = 1;
