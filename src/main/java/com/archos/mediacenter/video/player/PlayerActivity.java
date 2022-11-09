@@ -132,7 +132,7 @@ import java.util.Map;
 import static com.archos.environment.ArchosFeatures.isChromeOS;
 import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermission;
 import static com.archos.mediacenter.video.utils.MiscUtils.isEmulator;
-
+import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PLAYBACK_SPEED;
 
 public class PlayerActivity extends AppCompatActivity implements PlayerController.Settings,
         SubtitleDelayPickerDialog.OnDelayChangeListener, AudioDelayPickerDialog.OnAudioDelayChangeListener,
@@ -141,8 +141,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     private static final Logger log = LoggerFactory.getLogger(PlayerActivity.class);
-
-    public static final boolean ENABLE_PLAYBACK_SPEED = false;
 
     public static final int RESUME_NO = 0;
     public static final int RESUME_FROM_LAST_POS = 1;
@@ -837,7 +835,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 log.debug("onStart: " + 1.0f);
                 audioSpeed = 1.0f;
             }
-            LibAvos.setAudioSpeed(audioSpeed); // set audio speed playback
+            LibAvos.enableAudioSpeed(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false));
+            LibAvos.setAudioSpeed(audioSpeed); // set audio speed playback (does nothing if audio speed not enabled)
             if (ArchosFeatures.isAndroidTV(this)) {
                 if (mPreferences.getBoolean("enable_downmix_androidtv", false))
                     LibAvos.setDownmix(1);
@@ -1757,8 +1756,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         createTVAudioDelayDialog();
                     }
                 });
+
                 // disable playback speed if passthrough is enabled and Android M (API23+)
-                if(ENABLE_PLAYBACK_SPEED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0) {
+                if(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0) {
                     final TVMenuItem tvmi4 = mAudioTracksTVMenu.createAndAddTVMenuItem(getText(R.string.player_pref_audio_speed_title).toString(), false, false);
                     tvmi4.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -2102,7 +2102,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 menuItem.setShowAsAction(!isPluggedOnTv() ? MenuItem.SHOW_AS_ACTION_NEVER : MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
             // disable playback speed if passthrough is enabled and Android M+ (API23+)
-            menuItem.setVisible(ENABLE_PLAYBACK_SPEED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0);
+            menuItem.setVisible(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0);
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_S3D_ID, Menu.NONE, R.string.pref_s3d_mode_title);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_3d);

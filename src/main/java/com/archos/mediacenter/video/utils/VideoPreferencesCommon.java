@@ -102,6 +102,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_SUBTITILES_CREDENTIALS= "subtitles_credentials";
     public static final String KEY_FORCE_SW = "force_software_decoding";
     public static final String KEY_FORCE_AUDIO_PASSTHROUGH = "force_passthrough";
+    public static final String KEY_PLAYBACK_SPEED = "playback_speed";
     public static final String KEY_ACTIVATE_REFRESHRATE_SWITCH = "enable_tv_refreshrate_switch";
     public static final String KEY_ACTIVATE_3D_SWITCH = "activate_tv_switch";
     public static final String KEY_ADULT_SCRAPE = "enable_adult_scrap_key";
@@ -180,6 +181,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private ListPreference mAudioInterfaceChoicePreferences = null;
     private CheckBoxPreference mForceSwDecPreferences = null;
     private CheckBoxPreference mForceAudioPassthrough = null;
+    private CheckBoxPreference mPlaybackSpeed = null;
     private CheckBoxPreference mDisableDownmix = null;
     private CheckBoxPreference mEnableDownmixATV = null;
     private CheckBoxPreference mActivateRefreshrateTVSwitch = null;
@@ -385,6 +387,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mEnableSponsor = (CheckBoxPreference) findPreference(KEY_ENABLE_SPONSOR);
         mWatchingUpNext = (CheckBoxPreference) findPreference(KEY_SHOW_WATCHING_UP_NEXT_ROW);
         mForceAudioPassthrough = (CheckBoxPreference) findPreference(KEY_FORCE_AUDIO_PASSTHROUGH);
+        mPlaybackSpeed = (CheckBoxPreference) findPreference(KEY_PLAYBACK_SPEED);
         mDisableDownmix = (CheckBoxPreference) findPreference("disable_downmix");
         mEnableDownmixATV = (CheckBoxPreference) findPreference("enable_downmix_androidtv");
         mActivate3DTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_3D_SWITCH);

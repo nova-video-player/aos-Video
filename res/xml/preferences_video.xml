@@ -73,6 +73,13 @@
             app:iconSpaceReserved="false"/>
         <CheckBoxPreference
             android:defaultValue="false"
+            android:key="playback_speed"
+            android:persistent="true"
+            android:summary="@string/preferences_playback_speed_summary"
+            android:title="@string/preferences_playback_speed"
+            app:iconSpaceReserved="false"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
             android:key="disable_downmix"
             android:persistent="true"
             android:summary="@string/preferences_disable_downmix_summary"

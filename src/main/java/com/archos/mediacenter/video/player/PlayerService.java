@@ -76,6 +76,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
+import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PLAYBACK_SPEED;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,7 +113,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     public static final String PLAYER_SERVICE_STARTED = "PLAYER_SERVICE_STARTED";
 
-    public static final boolean AUDIO_SPEED_ON_THE_FLY = true && PlayerActivity.ENABLE_PLAYBACK_SPEED;
+    public static final boolean AUDIO_SPEED_ON_THE_FLY = true;
 
     public static final int RESUME_NO = 0;
     public static final int RESUME_FROM_LAST_POS = 1;
@@ -1460,7 +1461,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (speedChanged && (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0)) {
             log.debug("setAudioSpeed: audio speed changed from " + mAudioSpeed + " to " + speed);
             mAudioSpeed = speed;
-            if (AUDIO_SPEED_ON_THE_FLY || force) {
+            if ((AUDIO_SPEED_ON_THE_FLY && mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false)) || force) {
                 mPlayer.setAvSpeed(mAudioSpeed);
             }
         }

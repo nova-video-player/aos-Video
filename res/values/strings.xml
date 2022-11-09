@@ -576,6 +576,8 @@
     <string name="preferences_force_audio_passthrough_summary">Transmit compressed audio over HDMI or S/PDIF. ⚠ Experimental may result in A/V out of sync</string>
     <string name="preferences_force_passthrough">Force audio passthrough</string>
     <string name="preferences_force_passthrough_summary">If passthrough is enabled, enforce it even if audio codec is not claimed supported by AV receiver instead of checking AV receiver capabilities</string>
+    <string name="preferences_playback_speed">Enable playback speed</string>
+    <string name="preferences_playback_speed_summary">Enable possibility to change playback speed. ⚠ Experimental may result in choppy video</string>
     <string name="preferences_disable_downmix_title">Disable audio stereo downmix</string>
     <string name="preferences_disable_downmix_summary">Always decode all channels and let Android downmix depending on audio output capability (can result in loosing voice channels)</string>
     <string name="preferences_enable_downmix_androidtv_title">Force audio stereo downmix</string>
