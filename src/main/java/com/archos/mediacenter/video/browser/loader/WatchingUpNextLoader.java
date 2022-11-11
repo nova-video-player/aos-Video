@@ -62,7 +62,7 @@ public class WatchingUpNextLoader extends VideoLoader {
                         "        FROM video WHERE (m_coll_id NOT NULL OR s_id NOT NULL) AND Archos_lastTimePlayed=0 AND archos_hiddenbyuser = 0 GROUP BY video_online_id),\n" +
                         "    l AS \n" +
                         "      (SELECT m_coll_id, s_id, MAX(e_season) AS e_season, max(e_episode) AS e_episode, archos_lasttimeplayed, MAX(m_year) AS m_year \n" +
-                        "        FROM video WHERE Archos_lastTimePlayed!=0 AND (m_coll_id NOT NULL OR s_id NOT NULL) AND archos_hiddenbyuser = 0 GROUP BY m_coll_id, s_id LIMIT 100)\n" +
+                        "        FROM video WHERE Archos_lastTimePlayed > 1 AND (m_coll_id NOT NULL OR s_id NOT NULL) AND archos_hiddenbyuser = 0 GROUP BY m_coll_id, s_id LIMIT 100)\n" +
                         "    SELECT v.video_online_id, v.scraper_name, v.e_season, v.e_episode, l.archos_lasttimeplayed \n" +
                         "      FROM v INNER JOIN l ON v.s_id = l.s_id AND\n" +
                         "        (CASE WHEN l.e_episode = (SELECT MAX(e_episode) FROM v WHERE s_id = l.s_id AND e_season = l.e_season)\n" +
