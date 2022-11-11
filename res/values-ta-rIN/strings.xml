@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
+    <!-- Menu item that takes the user back to the top level screen of the music player -->
+    <string name="goto_start">கானொளி தொகுப்பு</string>
+    <!-- Menu item that takes the user to the "now playing" screen of the music player -->
+    <!-- Menu item to refresh servers list -->
+    <!-- Menu item to enable network shares -->
+    <!-- Library screen, menu item -->
+    <string name="search_title">தேடு</string>
+    <!-- Default name of track that doesn't have a name in the metadata -->
+    <string name="unknown_track_name">தேடு</string>
+    <!-- Toast after turning shuffle on -->
+    <!-- Toast after turning shuffle off -->
+    <!-- Toast after turning single repeat on -->
+    <!-- Context menu item -->
+    <string name="info">தகவல்</string>
+    <!-- Context menu item -->
+    <!-- Context menu item -->
+    <string name="multiple_selection">பலவகை தேர்ந்தெடுப்பு</string>
+    <!-- Context menu item -->
+    <!-- Dialog box button -->
+    <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <!-- The string used in file/folder infos dialog. -->
+    <!-- Infos dialog tabs -->
+    <string name="info_tab_episode">அத்தியாயம்</string>
+    <string name="info_tab_video">காணொளி</string>
+    <string name="info_tab_file">கோப்பு விவரம்</string>
+    <string name="info_tab_share">பகிர்</string>
+    <!-- COVER ROLL -->
+    <string name="video_lists">இசைப்பட்டியல்கள்</string>
+    <!-- The string used in main storage list -->
+    <string name="network_storage">பிணையம்</string>
+    <string name="sd_card_storage">SD கார்டு</string>
+    <string name="network_connected_as">%s உடன் இணையவும்</string>
+    <string name="network_guest">விருந்தாளி</string>
+    <string name="root_storage">அகச் சேமிப்பகம்</string>
+    <string name="cannot_list">பட்டியலிட இயலாத தகவு</string>
+    <!-- VIDEO -->
+    <string name="videos">காணொளிகள்</string>
+    <string name="all_videos">அனைத்து காணொளிகள்</string>
+    <string name="not_played_yet_videos">பார்க்காத காணொளிகள்</string>
+    <string name="movie_collections">குழுமங்கள்</string>
+    <string name="movies_by_year">வருட வாரியான படங்கள்</string>
+    <string name="all_tv_shows">டிவி நிகழ்ச்சிகள்</string>
+    <string name="all_tvshows">அனைத்து டிவி நிகழ்ச்சிகள்</string>
+    <string name="resume">தொடரவும்</string>
+    <string name="bookmark">புத்தகக்குறிகள்</string>
+    <string name="delete">நீக்கு</string>
+    <string name="confirm_delete_short">அழித்தலை உறுதிசெய்</string>
+    <string name="delete_bookmark">\"%s\" புக்மார்க்கை நீக்கவா</string>
+    <string name="scrap_remove">தகவலை நீக்கு</string>
+    <string name="scrap_remove_short">நீக்கு</string>
+    <!-- for small screens -->
+    <string name="scrap_change">எல்லா அத்தியாயங்களின் தகவலை மாற்று</string>
+    <string name="scrap_change_title">எல்லா அத்தியாயங்களின் தகவல் மாற்றம்</string>
+    <!-- Generic strings for Movies or TV shows -->
+    <string name="scrap_director">இயக்குனர்</string>
+    <string name="scrap_writer">எழுத்தாளர்</string>
+    <string name="scrap_director_format">இயக்குனர்: %s</string>
+    <string name="scrap_writer_format">எழுத்தாளர்: %s</string>
+    <string name="scrap_rating">மதிப்பீடு</string>
+    <string name="scrap_rating_format">மதிப்பீடு: %s</string>
+    <string name="scrap_year">வருடம்</string>
+    <string name="scrap_year_format">ஆண்டு %d</string>
+    <string name="scrap_studio">ஸ்டுடியோ</string>
+    <string name="scrap_plot">கதைக்களம்</string>
+    <string name="scrap_trailer">முன்னோட்டம்</string>
+    <string name="scrap_cast">நடிகர்கள்</string>
+    <string name="scrap_cast_format">நடிகர்கள்: %s</string>
+    <string name="scrap_genre">வகை</string>
+    <string name="scrap_genre_format">வகைகள்: %s</string>
+    <string name="scrap_genre_title">வகைகள்</string>
+    <string name="scrap_guests">விருந்தினர்கள்</string>
+    <!-- Specific strings for TV shows -->
+    <string name="show_network">பிணையம்</string>
+    <string name="episode_name">அத்தியாயம்</string>
+    <string name="next_episode">அடுத்த அத்தியாயம்</string>
+    <string name="list_episodes">அத்தியாயங்களைப் பட்டியலிடு</string>
+    <string name="scrap_status_initial">வரிசையில் சேர்க்கப்பட்டது</string>
+    <string name="scrap_status_busy">தேடுகிறது…</string>
+    <string name="scrap_status_success">புதுப்பிக்கப்பட்டது</string>
+    <string name="scrap_status_failed">தகவல் கிடைக்கவில்லை</string>
+    <string name="scrap_status_rejected">தகவல் நீக்கப்பட்டது</string>
+    <string name="scrap_status_unknown">தெரியவில்லை</string>
+    <string name="scraper_abort_request">தேடலை நிறுத்த வேண்டுமா?</string>
+    <string name="scraper_no_episode_found">இல்லை அடுத்த சம்பவம் காணப்படவில்லை</string>
+    <!-- To be translated only in case there is a localized IMDB -->
+    <string name="storage">சேமிப்பகம்</string>
+    <string name="info_video">காணொளி</string>
+    <string name="info_audio">பாடல்</string>
+    <string name="info_subtitle">வசனவரி</string>
+    <!-- VIDEO COVER ROLL -->
+    <string name="you_have_no_video">வீடியோக்கள் இல்லை</string>
+    <!-- Media Center -->
+    <string name="view_mode_list">பட்டியல்</string>
+    <string name="view_mode_grid">சுவரோட்டிகள்</string>
+    <string name="view_mode_details">விவரங்கள்</string>
+    <string name="switch_to_list">பட்டியல்</string>
+    <string name="switch_to_grid">கட்டம்</string>
+    <!-- VideoPlayer -->
+    <string name="player_audio_track_toast">ஆடியோ டிராக்:</string>
+    <string name="pref_audio_parameters_title">ஒலி</string>
+    <string name="ui_mode_auto">தானியங்கு</string>
+    <string name="ui_mode_tv">தொலைக்காட்சி</string>
+    <string name="ui_mode_normal">கைப்பேசி</string>
+    <string name="menu_player_settings">அமைப்புகள்</string>
+    <string name="menu_change_folder">கோப்புறையை மாற்று</string>
+    <!-- Subtitles/Audio languages -->
+    <string name="s_arabic">அரபிக்</string>
+    <string name="s_bulgarian">பல்கேரிய</string>
+    <string name="s_dutch">டச்சு</string>
+    <string name="s_norwegian">நார்வேஜியன்</string>
+    <string name="s_polish">போலிஷ்</string>
+    <!-- Player errors -->
+    <!-- Player plug-in -->
+    <!-- Subtitles wizard -->
+    <!-- Subloader -->
+    <!-- Subtitle Settings Dialog -->
+    <!-- Subtitle Delay Dialog -->
+    <!-- Browser.CommonDetailsView -->
+    <!-- Add a space after the right quote
+    because the right part of the quote is
+    not visible otherwise -->
+    <!-- torrent -->
+    <!-- Shortcuts -->
+    <!-- Preferences -->
+    <!--  Title of the video picker activity. -->
+    <!-- Archos File Info -->
+    <!-- Help overlay -->
+    <!-- Info dialog, not indexed file -->
+    <!-- Brightness -->
+    <!--  Nfo File parsing -->
+</resources>

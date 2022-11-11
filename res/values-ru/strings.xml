@@ -300,6 +300,7 @@
     <string name="player_subtitle_track_toast">Дорожка субтитров:</string>
     <string name="player_bookmark_set">Установка закладки в</string>
     <string name="player_pref_subtitle_delay_title">Задержка</string>
+    <string name="player_pref_audio_speed_title">Скорость воспроизведения</string>
     <string name="floating_player_restore">Восстановить</string>
     <string name="floating_player_play">Воспроизвести</string>
     <string name="floating_player_pause">Пауза</string>
@@ -535,6 +536,8 @@
     <string name="preferences_force_audio_passthrough_enable">Режим 1 (устаревший)</string>
     <string name="preferences_force_audio_passthrough_enable2">Режим 2</string>
     <string name="preferences_force_audio_passthrough_summary">Передача сжатого аудио через HDMI или S/PDIF. ⚠ Может привести к рассинхронизации звука и видео</string>
+    <string name="preferences_force_passthrough">Принудительная сквозная передача звука</string>
+    <string name="preferences_force_passthrough_summary">Если включена, переопределяет настройки AV ресивера для текущего аудиокодека</string>
     <string name="preferences_disable_downmix_title">Запретить даунмикс звука в стерео</string>
     <string name="preferences_disable_downmix_summary">Всегда декодировать все каналы, микширование производится средствами ОС в зависимости от характеристик аудиовыхода (может привести к потери голосовых каналов)</string>
     <string name="preferences_enable_downmix_androidtv_title">Принудительный вывод в стерео</string>

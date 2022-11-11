@@ -526,6 +526,8 @@
     <string name="preferences_force_audio_passthrough_enable">Modus 1 (veraltet)</string>
     <string name="preferences_force_audio_passthrough_enable2">Modus 2</string>
     <string name="preferences_force_audio_passthrough_summary">Übertrage komprimiertes Audio über HDMI oder S/PDIF. ⚠Experimentell, kann dazu führen, dass A/V nicht synchron sind</string>
+    <string name="preferences_force_passthrough">Audio-Passthrough erzwingen</string>
+    <string name="preferences_force_passthrough_summary">Wenn Passthrough aktiviert ist, erzwingen, auch wenn Audio-Codec nicht vom AV-Empfänger unterstützt wird, anstatt die AV-Receiver-Funktionen zu überprüfen</string>
     <string name="preferences_disable_downmix_title">Audio Stereo-Downmix deaktivieren</string>
     <string name="preferences_disable_downmix_summary">Immer alle Kanäle dekodieren und Android den Downmix abhängig von der Audio-Ausgabefähigkeit durchführen lassen (kann zu verlorenen Sprachkanälen führen)</string>
     <string name="preferences_enable_downmix_androidtv_title">Audio-Stereo-Downmix erzwingen</string>

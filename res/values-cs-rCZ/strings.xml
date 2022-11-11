@@ -510,6 +510,8 @@
     <string name="preferences_force_audio_passthrough_enable">Režim 1 (zastaralý)</string>
     <string name="preferences_force_audio_passthrough_enable2">Režim 2</string>
     <string name="preferences_force_audio_passthrough_summary">Posílat komprimovaný zvuk přes HDMI nebo S/PDIF. ⚠ Experimentální funkce může mít za následek chybnou A/V synchronizaci</string>
+    <string name="preferences_force_passthrough">Vynutit průchod audia</string>
+    <string name="preferences_force_passthrough_summary">Pokud je průchod zapnutý, vynutit jej i v případě, že audio kodek není podporován AV receiverem namísto kontroly možností AV receiveru</string>
     <string name="preferences_disable_downmix_title">Vypnout stereo down-mix</string>
     <string name="preferences_disable_downmix_summary">Vždy dekódovat všechny kanály a nechat Android provést down-mix v závislosti na schopnostech audio výstupu (může vyústit ve ztrátu hlasových kanálů)</string>
     <string name="preferences_enable_downmix_androidtv_title">Vynutit stereo downmix</string>

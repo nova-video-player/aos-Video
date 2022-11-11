@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
+    <!-- Menu item that takes the user back to the top level screen of the music player -->
+    <string name="goto_start">Biblioteca</string>
+    <!-- Menu item that takes the user to the "now playing" screen of the music player -->
+    <!-- Menu item to refresh servers list -->
+    <string name="refresh_servers_list">Recarregar lista de servidores</string>
+    <!-- Menu item to enable network shares -->
+    <string name="enable_network_shares">Ativar partilhas de rede</string>
+    <string name="initial_scan">Análise inicial</string>
+    <!-- Library screen, menu item -->
+    <string name="search_title">Pesquisar</string>
+    <!-- Default name of track that doesn't have a name in the metadata -->
+    <string name="unknown_track_name">Desconhecido</string>
+    <!-- Toast after turning shuffle on -->
+    <!-- Toast after turning shuffle off -->
+    <!-- Toast after turning single repeat on -->
+    <!-- Context menu item -->
+    <string name="info">Informação</string>
+    <!-- Context menu item -->
+    <string name="play_selection">Reproduzir</string>
+    <!-- Context menu item -->
+    <string name="multiple_selection">Seleção múltipla</string>
+    <!-- Context menu item -->
+    <string name="play_from_beginning">Reproduzir do início</string>
+    <!-- Dialog box button -->
+    <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <!-- The string used in file/folder infos dialog. -->
+    <string name="info_duration">Duração</string>
+    <string name="video_sources">Fontes</string>
+    <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">Filme</string>
+    <string name="info_tab_show">Programa</string>
+    <string name="info_tab_episode">Espisódio</string>
+    <string name="info_tab_video">Vídeo</string>
+    <string name="info_tab_file">Info do ficheiro</string>
+    <string name="info_tab_backdrop_chooser">Seletor de fundo</string>
+    <string name="info_tab_poster_chooser">Seletor de imagem</string>
+    <string name="info_tab_share">Partilhar</string>
+    <string name="info_menu_backdrop_select">Fundo</string>
+    <string name="info_menu_series_backdrop_select">Fundo da série</string>
+    <string name="info_menu_poster_select">Selecione outra imagem</string>
+    <string name="info_menu_series_poster_select">Selecione outra imagem</string>
+    <!-- COVER ROLL -->
+    <string name="recently_added">Adicionados recentemente</string>
+    <string name="recently_added_videos">Adicionados recentemente</string>
+    <string name="recently_played">Reproduzidos recentemente</string>
+    <string name="recently_played_videos">Reproduzidos recentemente</string>
+    <string name="video_lists">Listas de reprodução</string>
+    <!-- The string used in main storage list -->
+    <string name="external_storage">Externo</string>
+    <string name="internal_storage">Interno</string>
+    <string name="network_storage">Rede</string>
+    <string name="sd_card_storage">Cartão SD</string>
+    <string name="usb_host_storage">Unidade externa</string>
+    <string name="other_storage">Unidade</string>
+    <string name="network_media_servers">Servidores multimédia (UpnP)</string>
+    <string name="network_shared_folders">Pastas partilhadas (SMB)</string>
+    <string name="network_connected_as">Conectado como %s</string>
+    <string name="network_guest">convidado</string>
+    <string name="sftp_folders">FTP</string>
+    <string name="network_jcifs">Samba (Experimental)</string>
+    <string name="network_cling">UPNP (Experimental)</string>
+    <string name="recordings_storage">Gravações</string>
+    <string name="root_storage">Armazenamento interno</string>
+    <string name="cannot_list">Não foi possivel listar o conteúdo</string>
+    <!-- VIDEO -->
+    <string name="videos">Vídeos</string>
+    <string name="all_videos">Todos os vídeos</string>
+    <string name="not_played_yet_videos">Não reproduzido</string>
+    <string name="video_folder">Pastas</string>
+    <string name="movies">Filmes</string>
+    <string name="animes">Animações</string>
+    <string name="all_movies">Todos os filmes</string>
+    <string name="all_movies_format">Todos os filmes - %d</string>
+    <string name="all_animes_format">Filmes de animação - %d</string>
+    <string name="all_collections">Todas as coleções</string>
+    <string name="all_collections_format">Todas as coleções - %d</string>
+    <string name="all_collection_watched">Todas as coleções reproduzidas</string>
+    <string name="all_collection_unwatched">Coleção não reproduzida</string>
+    <plurals name="n_movies_watched">
+        <item quantity="one">%d filme reproduzido</item>
+        <item quantity="other">%d filmes reproduzidos</item>
+    </plurals>
+    <string name="not_watched_movies_format">Não visto - %d</string>
+    <string name="not_watched_animes_format">Não visto - %d</string>
+    <string name="all_movies_watched">Todos os filmes vistos</string>
+    <string name="movies_by_alpha">Filmes por ordem alfabética</string>
+    <string name="movies_by_genre">Filmes por género </string>
+    <string name="movies_by_rating">Filmes por avaliação</string>
+    <string name="movie_collections">Coleções</string>
+    <string name="anime_collections">Coleções \'anime\'</string>
+    <string name="movies_by_year">Filmes por ano</string>
+    <string name="all_tv_shows">Programas de TV</string>
+    <string name="all_tvshows">Todos os programas de TV</string>
+    <string name="all_animes">Todos os filmes de animação</string>
+    <string name="all_animes_row">Todas as animações</string>
+    <string name="all_seasons">Todas as temporadas</string>
+    <string name="date_view_week">Semana</string>
+    <string name="date_view_month">Mês</string>
+    <string name="date_view_year">Ano</string>
+    <string name="all_movies_and_tv_shows">Filmes e programas de TV</string>
+    <string name="directory_deleted">A pasta foi eliminada</string>
+    <string name="file_deleted">O ficheiro foi eliminado</string>
+    <string name="resume">Continuar</string>
+    <string name="remote_resume">Continuar remotamente</string>
+    <string name="bookmark">Marcador</string>
+    <string name="delete">Eliminar</string>
+    <string name="scrap_remove_short">Remover</string>
+    <!-- for small screens -->
+    <string name="scrap_change_initializing">A iniciar…</string>
+    <string name="scrap_change_finalizing">A finalizar...</string>
+    <string name="scrap_get_title">A obter informação</string>
+    <!-- Generic strings for Movies or TV shows -->
+    <string name="scrap_director">Realizador</string>
+    <string name="scrap_writer">Argumentista</string>
+    <string name="scrap_director_format">Realizador: %s</string>
+    <string name="scrap_writer_format">Argumentista: %s</string>
+    <string name="scrap_rating">Avaliação</string>
+    <string name="scrap_rating_format">Avaliação: %s</string>
+    <string name="scrap_year">Ano</string>
+    <string name="scrap_year_format">Ano: %d</string>
+    <string name="scrap_studio">Estúdio</string>
+    <string name="scrap_plot">Argumento</string>
+    <string name="scrap_trailer">Trailers</string>
+    <string name="scrap_genre">Género</string>
+    <string name="scrap_genre_format">Géneros: %s</string>
+    <string name="scrap_genre_title">Géneros</string>
+    <string name="scrap_guests">Convidados</string>
+    <!-- Specific strings for TV shows -->
+    <string name="show_network">Rede</string>
+    <string name="episode_name">Episódio</string>
+    <string name="episode_season">Temporada</string>
+    <string name="episode_specials">Especiais</string>
+    <string name="episode_identification">Temporada %1$d, episódio %2$d</string>
+    <string name="season_identification">Temporada %1$d</string>
+    <string name="next_episode">Episódio seguinte</string>
+    <string name="list_episodes">Listar episódios</string>
+    <string name="scrap_status_unknown">Desconhecido</string>
+    <string name="scraper_notification_progress">%1$d de %2$d ficheiros processados</string>
+    <!-- To be translated only in case there is a localized IMDB -->
+    <string name="info_video">Vídeo</string>
+    <string name="info_audio">Áudio</string>
+    <string name="info_audio_vbr">VBR</string>
+    <!-- VIDEO COVER ROLL -->
+    <plurals name="Nmovies">
+        <item quantity="one">1 filme</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> filmes</item>
+    </plurals>
+    <plurals name="Nepisodes">
+        <!-- number of episodes is one -->
+        <item quantity="one">1 episódio</item>
+        <!-- number of episodes is not equal to one -->
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> episódios</item>
+    </plurals>
+    <plurals name="Nseasons">
+        <item quantity="one">1 temporada</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> temporadas</item>
+    </plurals>
+    <!-- Media Center -->
+    <string name="mediacenterlabel">Centro multimédia</string>
+    <string name="view_mode">Modo de exibição</string>
+    <string name="view_mode_list">Lista</string>
+    <string name="view_mode_details">Detalhes</string>
+    <string name="switch_to_list">Lista</string>
+    <string name="switch_to_grid">Grelha</string>
+    <!-- VideoPlayer -->
+    <string name="player_loading_video">A carregar vídeo\u2026</string>
+    <string name="player_audio_track_toast">Faixa de áudio:</string>
+    <string name="player_pref_subtitle_delay_title">Atraso</string>
+    <string name="floating_player_restore">Restaurar</string>
+    <string name="floating_player_play">Reproduzir</string>
+    <string name="floating_player_pause">Pausa</string>
+    <string name="player_pref_audio_delay_title">Atraso de áudio</string>
+    <string name="now_playing">A reproduzir</string>
+    <string name="player_window_mode">Modo de janela</string>
+    <string name="pref_play_mode_title">Modo de reprodução</string>
+    <string name="ui_mode_tv">TV</string>
+    <string name="ui_mode_normal">Tablet/Telefone</string>
+    <string name="pref_s3d_mode_title">Modo 3D</string>
+    <string name="pref_s3d_mode_entry_sbs">Lado a lado</string>
+    <string name="pref_s3d_mode_entry_topbottom">Cima e baixo</string>
+    <string name="menu_player_settings">Definições</string>
+    <string name="menu_change_folder">Alterar pasta</string>
+    <!-- Subtitles/Audio languages -->
+    <string name="s_arabic">Árabe</string>
+    <string name="s_bulgarian">Búlgaro</string>
+    <string name="Bosnian">Bósnio</string>
+    <string name="s_czech">Checo</string>
+    <string name="s_danish">Dinamarquês</string>
+    <string name="s_german">Alemão</string>
+    <string name="s_english">Inglês</string>
+    <string name="s_greek">Grego</string>
+    <string name="s_spanish">Espanhol</string>
+    <string name="s_finnish">Finlandês</string>
+    <string name="s_french">Francês</string>
+    <string name="s_hebrew">Hebreu</string>
+    <string name="s_hungarian">Húngaro</string>
+    <string name="s_italian">Italiano</string>
+    <string name="s_japanese">﻿Japonês</string>
+    <string name="s_korean">Coreano</string>
+    <string name="s_dutch">Neerlandês</string>
+    <string name="s_norwegian">Norueguês</string>
+    <string name="s_polish">Polaco</string>
+    <string name="s_brazilian">Português (Brasil)</string>
+    <string name="s_portuguese">Português</string>
+    <string name="s_russian">Russo</string>
+    <string name="Romanian">Romeno</string>
+    <string name="Croatian">Croata</string>
+    <string name="Serbian">Sérvio</string>
+    <string name="Slovenian">Esloveno</string>
+    <string name="s_swedish">Sueco</string>
+    <string name="s_thai">Tailandês</string>
+    <string name="s_turkish">Turco</string>
+    <string name="s_chinese">Chinês</string>
+    <string name="s_traditional_chinese">Chinês tradicional</string>
+    <string name="s_vietnamese">Vietnamita</string>
+    <string name="s_lithuanian">Lituano</string>
+    <string name="s_indonesian">Indonésio</string>
+    <string name="s_malay">Malaio</string>
+    <string name="s_ukrainian">Ucraniano</string>
+    <string name="s_kurdish">Curdo</string>
+    <!-- Player errors -->
+    <string name="player_err_unknown">Erro desconhecido.</string>
+    <!-- Player plug-in -->
+    <!-- Subtitles wizard -->
+    <string name="subtitles_wizard_delete">Eliminar este ficheiro</string>
+    <string name="subtitles_wizard_cache">Cache</string>
+    <!-- Subloader -->
+    <string name="get_subtitles_online">Obter legendas online</string>
+    <!-- Subtitle Settings Dialog -->
+    <string name="subtitle_size_text">Tamanho:</string>
+    <string name="subtitle_style_text">Estilo:</string>
+    <!-- Subtitle Delay Dialog -->
+    <!-- Browser.CommonDetailsView -->
+    <!-- Add a space after the right quote
+    because the right part of the quote is
+    not visible otherwise -->
+    <string name="allow">Permitir</string>
+    <string name="exit">Sair</string>
+    <!-- torrent -->
+    <string name="error">Ocorreu um erro</string>
+    <!-- Shortcuts -->
+    <!-- Preferences -->
+    <!--  Title of the video picker activity. -->
+    <!-- Archos File Info -->
+    <!-- Help overlay -->
+    <!-- Info dialog, not indexed file -->
+    <!-- Brightness -->
+    <!--  Nfo File parsing -->
+</resources>
