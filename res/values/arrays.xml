@@ -22,7 +22,6 @@
         <item>tv</item>
     </string-array>
 
-
     <string-array name="pref_passthrough_mode_entries" translatable="false">
         <item>@string/preferences_force_audio_passthrough_disabled</item>
         <item>@string/preferences_force_audio_passthrough_enable</item>
@@ -34,6 +33,17 @@
         <item>1</item>
         <item>2</item>
     </string-array>
+
+    <string-array name="pref_parser_sync_mode_entries" translatable="false">
+        <item>@string/preferences_parser_sync_mode_cdata</item>
+        <item>@string/preferences_parser_sync_mode_sample</item>
+    </string-array>
+
+    <string-array name="pref_parser_sync_mode_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
     <string-array name="pref_notification_mode_entries" translatable="false">
         <item>@string/notifications_all</item>
         <item>@string/notifications_alerts</item>

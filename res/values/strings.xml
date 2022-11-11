@@ -574,6 +574,10 @@
     <string name="preferences_force_audio_passthrough_enable">Mode 1 (deprecated)</string>
     <string name="preferences_force_audio_passthrough_enable2">Mode 2</string>
     <string name="preferences_force_audio_passthrough_summary">Transmit compressed audio over HDMI or S/PDIF. ⚠ Experimental may result in A/V out of sync</string>
+    <string name="preferences_parser_sync_mode">Parser synchronisation mode</string>
+    <string name="preferences_parser_sync_mode_cdata">PTS based (recommended)</string>
+    <string name="preferences_parser_sync_mode_sample">sample based </string>
+    <string name="preferences_parser_sync_mode_summary">Synchronization mode in lavc parser. ⚠ Experimental may result in A/V accumulated delay</string>
     <string name="preferences_force_passthrough">Force audio passthrough</string>
     <string name="preferences_force_passthrough_summary">If passthrough is enabled, enforce it even if audio codec is not claimed supported by AV receiver instead of checking AV receiver capabilities</string>
     <string name="preferences_playback_speed">Enable playback speed</string>

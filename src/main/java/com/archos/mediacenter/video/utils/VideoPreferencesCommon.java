@@ -102,6 +102,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_SUBTITILES_CREDENTIALS= "subtitles_credentials";
     public static final String KEY_FORCE_SW = "force_software_decoding";
     public static final String KEY_FORCE_AUDIO_PASSTHROUGH = "force_passthrough";
+    public static final String KEY_PARSER_SYNC_MODE = "parser_sync_mode";
     public static final String KEY_PLAYBACK_SPEED = "playback_speed";
     public static final String KEY_ACTIVATE_REFRESHRATE_SWITCH = "enable_tv_refreshrate_switch";
     public static final String KEY_ACTIVATE_3D_SWITCH = "activate_tv_switch";
@@ -178,6 +179,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private int mMoreLeanbackPrefsClickCount = 0;
     private long mMoreLeanbackPrefsClickLastTime = 0;
     private ListPreference mDecChoicePreferences = null;
+    private ListPreference mParserSyncMode = null;
     private ListPreference mAudioInterfaceChoicePreferences = null;
     private CheckBoxPreference mForceSwDecPreferences = null;
     private CheckBoxPreference mForceAudioPassthrough = null;
@@ -317,6 +319,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             prefCategory.removePreference(mForceSwDecPreferences);
             prefCategory.addPreference(mDecChoicePreferences);
             prefCategory.addPreference(mAudioInterfaceChoicePreferences);
+            prefCategory.addPreference(mParserSyncMode);
             prefScraperCategory.addPreference(mDbExportManualPreference);
             getPreferenceScreen().addPreference(mAdvancedPreferences);
             if (BuildConfig.ADULT_SCRAPE) prefScraperCategory.addPreference(mAdultScrape);
@@ -330,6 +333,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             aboutCategory.removePreference(mEnableSponsor);
             prefCategory.removePreference(mDecChoicePreferences);
             prefCategory.removePreference(mAudioInterfaceChoicePreferences);
+            prefCategory.removePreference(mParserSyncMode);
             prefCategory.addPreference(mForceSwDecPreferences);
             prefScraperCategory.removePreference(mDbExportManualPreference);
             getPreferenceScreen().removePreference(mAdvancedPreferences);
@@ -383,6 +387,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         mDecChoicePreferences = (ListPreference) findPreference(KEY_DEC_CHOICE);
         mAudioInterfaceChoicePreferences = (ListPreference) findPreference(KEY_AUDIO_INTERFACE_CHOICE);
+        mParserSyncMode = (ListPreference) findPreference(KEY_PARSER_SYNC_MODE);
         mForceSwDecPreferences = (CheckBoxPreference) findPreference(KEY_FORCE_SW);
         mEnableSponsor = (CheckBoxPreference) findPreference(KEY_ENABLE_SPONSOR);
         mWatchingUpNext = (CheckBoxPreference) findPreference(KEY_SHOW_WATCHING_UP_NEXT_ROW);

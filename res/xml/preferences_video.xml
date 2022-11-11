@@ -85,6 +85,16 @@
             android:summary="@string/preferences_disable_downmix_summary"
             android:title="@string/preferences_disable_downmix_title"
             app:iconSpaceReserved="false"/>
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="@string/preferences_parser_sync_mode"
+            android:entries="@array/pref_parser_sync_mode_entries"
+            android:entryValues="@array/pref_parser_sync_mode_values"
+            android:key="parser_sync_mode"
+            android:persistent="true"
+            android:summary="@string/preferences_parser_sync_mode_summary"
+            android:title="@string/preferences_parser_sync_mode"
+            app:iconSpaceReserved="false"/>
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="enable_downmix_androidtv"
