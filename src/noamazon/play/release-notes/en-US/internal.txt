@@ -1,8 +1,6 @@
-- Target Android API32
-- Re-disable experimental playback speed control due to instabilities
+- Experimental playback speed option disabled by default (could cause choppy video)
 - Add option to not apply audio passthrough if AV receiver does not support codec
 - Fix some local video files not indexed on recent Android or on external storage
-- Fix network share videos not suppressed after deletion regression
 - ffmpeg 4.4.3, openssl 1.1.1r, androidx library updates
-- Allow microphone permission for voice search
+- Better movie scrape results
 - Stability enhancements
