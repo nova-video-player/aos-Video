@@ -132,6 +132,7 @@ import java.util.Map;
 import static com.archos.environment.ArchosFeatures.isChromeOS;
 import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermission;
 import static com.archos.mediacenter.video.utils.MiscUtils.isEmulator;
+import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PARSER_SYNC_MODE;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PLAYBACK_SPEED;
 
 public class PlayerActivity extends AppCompatActivity implements PlayerController.Settings,
@@ -837,6 +838,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             }
             LibAvos.enableAudioSpeed(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false));
             LibAvos.setAudioSpeed(audioSpeed); // set audio speed playback (does nothing if audio speed not enabled)
+            LibAvos.parserSyncMode(mPreferences.getInt(KEY_PARSER_SYNC_MODE,0)); // set lavc parser sync mode (0: PTS, 1 samples)
             if (ArchosFeatures.isAndroidTV(this)) {
                 if (mPreferences.getBoolean("enable_downmix_androidtv", false))
                     LibAvos.setDownmix(1);
