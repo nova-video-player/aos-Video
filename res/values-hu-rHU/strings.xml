@@ -525,7 +525,13 @@
     <string name="preferences_force_audio_passthrough_enable">Mód 1 (elavult)</string>
     <string name="preferences_force_audio_passthrough_enable2">Mód 2</string>
     <string name="preferences_force_audio_passthrough_summary">Tömörített hang továbbítása HDMI vagy S/PDIF csatlakozókra. ⚠ Kísérleti, A/V szinkronizációs hiba lehetséges</string>
+    <string name="preferences_parser_sync_mode">Szinkronizálási mód</string>
+    <string name="preferences_parser_sync_mode_cdata">PTS alapú (ajánlott)</string>
+    <string name="preferences_parser_sync_mode_sample">mintavétel alapú </string>
+    <string name="preferences_parser_sync_mode_summary">A lavc elemző szinkronizálási módja. ⚠ Kísérleti! Felhalmozódott A/V késleltetést okozhat</string>
     <string name="preferences_force_passthrough">Hangtovábbítás kényszerítése</string>
+    <string name="preferences_playback_speed">Lejátszási sebesség be</string>
+    <string name="preferences_playback_speed_summary">A lejátszási sebesség módosításának engedélyezése. ⚠ Kísérleti! Szaggatott lejátszást okozhat.</string>
     <string name="preferences_disable_downmix_title">Hang sztereólekeverés kikapcsolása</string>
     <string name="preferences_disable_downmix_summary">Mindig dekódolja az összes csatornát, és az Android kezelje a lekeverést az audio kimenettől függően (a beszéd-hangsáv elvesztését eredményezheti)</string>
     <string name="preferences_enable_downmix_androidtv_title">Sztereólekeverés kényszerítése</string>

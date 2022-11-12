@@ -521,8 +521,14 @@
     <string name="preferences_force_audio_passthrough_enable">模式1(已弃用)</string>
     <string name="preferences_force_audio_passthrough_enable2">模式2</string>
     <string name="preferences_force_audio_passthrough_summary">通过 HDMI 或 S/PDIF 传输压缩音频。⚠实验性功能，可能导致 A/V不同步</string>
+    <string name="preferences_parser_sync_mode">解析器同步模式</string>
+    <string name="preferences_parser_sync_mode_cdata">基于 PTS (推荐)</string>
+    <string name="preferences_parser_sync_mode_sample">基于采样 </string>
+    <string name="preferences_parser_sync_mode_summary">Lavc 解析器中的同步模式。⚠ 实验性功能，可能会导致 A/V 累积延迟</string>
     <string name="preferences_force_passthrough">强制音频直通</string>
     <string name="preferences_force_passthrough_summary">如果启用了直通，即使 AV 接收器不支持音频编解码器，也强制执行它，而不检查 AV 接收器功能</string>
+    <string name="preferences_playback_speed">启用回放速度</string>
+    <string name="preferences_playback_speed_summary">允许改变回放速度。⚠ 实验性功能，可能导致视频断断续续</string>
     <string name="preferences_disable_downmix_title">禁用混音至立体声</string>
     <string name="preferences_disable_downmix_summary">总是解码所有声道，并根据音频输出能力让安卓混音(可能导致声道丢失)</string>
     <string name="preferences_enable_downmix_androidtv_title">强制音频立体声降低混频</string>

@@ -526,8 +526,14 @@
     <string name="preferences_force_audio_passthrough_enable">Mode 1 (obsolète)</string>
     <string name="preferences_force_audio_passthrough_enable2">Mode 2</string>
     <string name="preferences_force_audio_passthrough_summary">Transmission du signal audio compressé via HDMI ou S/PDIF. ⚠ Expérimental, peut occasionner une désynchronisation A/V</string>
+    <string name="preferences_parser_sync_mode">Mode de synchronisation du parser</string>
+    <string name="preferences_parser_sync_mode_cdata">basé sur les PTS (recommandé)</string>
+    <string name="preferences_parser_sync_mode_sample">basé sur les échantillons </string>
+    <string name="preferences_parser_sync_mode_summary">Mode de synchronisation dans le parser lavc. ⚠ Expérimental : peut entraîner un retard A/V</string>
     <string name="preferences_force_passthrough">Forcer audio passthrough</string>
     <string name="preferences_force_passthrough_summary">Si le passthrough est activé, force son utilisation même si le codec audio n\'est pas reporté supporté par le récepteur AV au lieu de vérifier sa compatibilité</string>
+    <string name="preferences_playback_speed">Choisir la vitesse de lecture</string>
+    <string name="preferences_playback_speed_summary">Activer la possibilité de changer la vitesse de lecture. ⚠ Expérimental : peut conduire à une vidéo hachée</string>
     <string name="preferences_disable_downmix_title">Désactiver le mixage audio stéréo</string>
     <string name="preferences_disable_downmix_summary">Toujours décoder tous les canaux et laisser Android remixer l\'audio en fonction des capacités du récepteur (peut résulter dans la perte du canal voix)</string>
     <string name="preferences_enable_downmix_androidtv_title">Forcer le mixage audio stéréo</string>
