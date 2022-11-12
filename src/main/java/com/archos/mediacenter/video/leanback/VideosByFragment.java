@@ -37,7 +37,6 @@ import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.loader.MoviesByLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesSelectionLoader;
-import com.archos.mediacenter.video.browser.loader.SequentialMoviesSelectionLoader;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.player.PrivateMode;
@@ -46,7 +45,7 @@ import java.util.ArrayList;
 
 public abstract class VideosByFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String TAG = "MoviesByFragment";
+    private static final String TAG = "VideosByFragment";
     private static boolean DBG = false;
 
     private ArrayObjectAdapter mRowsAdapter;
@@ -194,7 +193,7 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
             return getSubsetLoader(getActivity());
         } else {
             // One of the row
-            return new SequentialMoviesSelectionLoader(getActivity(), args.getString("ids"), args.getString("sort"));
+            return new MoviesSelectionLoader(getActivity(), args.getString("ids"), args.getString("sort"));
         }
     }
 
