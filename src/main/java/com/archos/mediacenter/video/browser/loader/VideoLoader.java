@@ -167,7 +167,7 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
     // Note that now it is handled by androidx and should be "bug free" --> remove this hack for now
     // For ref sake currently cursorLoader executor by default is ThreadPoolExecutor(5, 128, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10), tocheck)
     private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS,
-            new LinkedBlockingQueue<Runnable>(5200));
+            new LinkedBlockingQueue<Runnable>());
     public VideoLoader(Context context) {
         super(context);
         // self introspection to use another Executor than AsyncTaskLoader which has 128 threads but a total queue of 10... cf. https://github.com/nova-video-player/aos-AVP/issues/141
