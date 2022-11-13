@@ -1,6 +1,7 @@
 - Experimental playback speed option disabled by default (could cause choppy video)
 - Add option to not apply audio passthrough if AV receiver does not support codec
 - Fix some local video files not indexed on recent Android or on external storage
-- ffmpeg 4.4.3, openssl 1.1.1r, androidx library updates
 - Better movie scrape results
+- Increase number of subtitles track supported to 64
+- Fix video playback on external display with motorola ready for
 - Stability enhancements
