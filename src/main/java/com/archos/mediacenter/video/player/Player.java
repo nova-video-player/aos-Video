@@ -163,7 +163,7 @@ public class Player implements IPlayerControl,
         }
     };
 
-    private Runnable mRefreshRateCheckerAsync =  new Runnable() {
+    private Runnable mRefreshRateCheckerAsync = new Runnable() {
         public void run() {
             log.debug("mRefreshRateCheckerAsync");
             if (mCurrentState == STATE_PREPARED) {
@@ -1005,21 +1005,24 @@ public class Player implements IPlayerControl,
                     if (log.isDebugEnabled() && Build.VERSION.SDK_INT >= 24) {
                         if (Build.VERSION.SDK_INT >= 26)
                             if (d.isHdr()) log.debug("CONFIG HDR display detected");
-                        int[] hdrSupportedTypes = d.getHdrCapabilities().getSupportedHdrTypes();
-                        for (int i =0; i < hdrSupportedTypes.length; i++) {
-                            switch (hdrSupportedTypes[i]) {
-                                case Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION:
-                                    log.debug("CONFIG HDR dolby vision supported");
-                                    break;
-                                case Display.HdrCapabilities.HDR_TYPE_HDR10:
-                                    log.debug("CONFIG HDR10 supported");
-                                    break;
-                                case Display.HdrCapabilities.HDR_TYPE_HLG:
-                                    log.debug("CONFIG HDR HLG supported");
-                                    break;
-                                case Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS:
-                                    log.debug("CONFIG HDR10+ supported");
-                                    break;
+                        Display.HdrCapabilities hdrCapabilities = d.getHdrCapabilities();
+                        if (hdrCapabilities != null) {
+                            int[] hdrSupportedTypes = hdrCapabilities.getSupportedHdrTypes();
+                            for (int i = 0; i < hdrSupportedTypes.length; i++) {
+                                switch (hdrSupportedTypes[i]) {
+                                    case Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION:
+                                        log.debug("CONFIG HDR dolby vision supported");
+                                        break;
+                                    case Display.HdrCapabilities.HDR_TYPE_HDR10:
+                                        log.debug("CONFIG HDR10 supported");
+                                        break;
+                                    case Display.HdrCapabilities.HDR_TYPE_HLG:
+                                        log.debug("CONFIG HDR HLG supported");
+                                        break;
+                                    case Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS:
+                                        log.debug("CONFIG HDR10+ supported");
+                                        break;
+                                }
                             }
                         }
                     }
