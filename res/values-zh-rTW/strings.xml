@@ -521,8 +521,14 @@
     <string name="preferences_force_audio_passthrough_enable">Mode 1 (不推薦)</string>
     <string name="preferences_force_audio_passthrough_enable2">Mode 2</string>
     <string name="preferences_force_audio_passthrough_summary">藉由 HDMI 或 S/PDIF 傳送壓縮音訊 (⚠ 實驗性功能，可能會導致影音的不同步)</string>
+    <string name="preferences_parser_sync_mode">剖析器同步模式</string>
+    <string name="preferences_parser_sync_mode_cdata">PTS 式 (推薦)</string>
+    <string name="preferences_parser_sync_mode_sample">採樣式</string>
+    <string name="preferences_parser_sync_mode_summary">Lavc 剖析器中的同步模式 (⚠ 實驗性功能，可能會導致影音的不同步)</string>
     <string name="preferences_force_passthrough">強制使用原始音訊傳遞</string>
     <string name="preferences_force_passthrough_summary">假使傳遞模式被啟用，即使影音接受器不支援該音訊解碼也會強制執行，而不檢查影音接受器的能力</string>
+    <string name="preferences_playback_speed">開啟播放速度</string>
+    <string name="preferences_playback_speed_summary">允許改變播放速度 (⚠ 實驗性功能，可能會導致影片的不連續)</string>
     <string name="preferences_disable_downmix_title">關閉立體聲降混</string>
     <string name="preferences_disable_downmix_summary">總是解碼所有聲道，並讓安卓系統依據音訊輸出的性能來降混 (可能會導致失去部分聲道)</string>
     <string name="preferences_enable_downmix_androidtv_title">強制立體聲降混</string>

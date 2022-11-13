@@ -536,8 +536,14 @@
     <string name="preferences_force_audio_passthrough_enable">Режим 1 (устаревший)</string>
     <string name="preferences_force_audio_passthrough_enable2">Режим 2</string>
     <string name="preferences_force_audio_passthrough_summary">Передача сжатого аудио через HDMI или S/PDIF. ⚠ Может привести к рассинхронизации звука и видео</string>
+    <string name="preferences_parser_sync_mode">Режим синхронизации анализатора</string>
+    <string name="preferences_parser_sync_mode_cdata">PTS (рекомендуется)</string>
+    <string name="preferences_parser_sync_mode_sample">Образец</string>
+    <string name="preferences_parser_sync_mode_summary">Режим синхронизации анализатора lavc. Экспериментальная настройка, может приводить к задержке вывода</string>
     <string name="preferences_force_passthrough">Принудительная сквозная передача звука</string>
     <string name="preferences_force_passthrough_summary">Если включена, переопределяет настройки AV ресивера для текущего аудиокодека</string>
+    <string name="preferences_playback_speed">Включить изменение скорости</string>
+    <string name="preferences_playback_speed_summary">Включить возможность изменения скорости воспроизведения. Экспериментальная настройка, может привести к рывкам</string>
     <string name="preferences_disable_downmix_title">Запретить даунмикс звука в стерео</string>
     <string name="preferences_disable_downmix_summary">Всегда декодировать все каналы, микширование производится средствами ОС в зависимости от характеристик аудиовыхода (может привести к потери голосовых каналов)</string>
     <string name="preferences_enable_downmix_androidtv_title">Принудительный вывод в стерео</string>

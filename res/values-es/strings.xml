@@ -526,8 +526,14 @@
     <string name="preferences_force_audio_passthrough_enable">Modo 1 (obsoleto)</string>
     <string name="preferences_force_audio_passthrough_enable2">Modo 2</string>
     <string name="preferences_force_audio_passthrough_summary">Transmite audio comprimido a través de HDMI o S/PDIF. ⚠ Experimental puede resultar en A/V desincronizado</string>
+    <string name="preferences_parser_sync_mode">Modo de sincronización del analizador</string>
+    <string name="preferences_parser_sync_mode_cdata">Basado en PTS (recomendado)</string>
+    <string name="preferences_parser_sync_mode_sample">basado en muestra </string>
+    <string name="preferences_parser_sync_mode_summary">Modo de sincronización en analizador lavc</string>
     <string name="preferences_force_passthrough">Forzar paso de audio</string>
     <string name="preferences_force_passthrough_summary">Si el paso (passthrough) está activo, fuerza su uso incluso si el receptor AV no asegura soportar el códec</string>
+    <string name="preferences_playback_speed">Activar velocidad de reproducción</string>
+    <string name="preferences_playback_speed_summary">Habilita la posibilidad de cambiar la velocidad de reproducción. ⚠ Experimental. Puede estropear el vídeo</string>
     <string name="preferences_disable_downmix_title">Desactivar reducción a estéreo</string>
     <string name="preferences_disable_downmix_summary">Decodifica siempre todos los canales y permite que Android realice una reducción a estéreo dependiendo de las capacidades de salida de audio (puede provocar la pérdida de canales de voz)</string>
     <string name="preferences_enable_downmix_androidtv_title">Activar reducción a estéreo</string>

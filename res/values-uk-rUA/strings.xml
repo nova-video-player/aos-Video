@@ -164,6 +164,15 @@
     <string name="how_to_mark_season_watched">Натисніть на сезон, щоб позначити усі серії як переглянуто або не переглянуто</string>
     <string name="how_to_unindex_season">Натисніть на сезон, щоб видалити усі серії з бібліотеки</string>
     <string name="delete_show">Видалити всі серії</string>
+    <string name="no_episode_watched">Нема переглянутих серій</string>
+    <string name="all_episodes_watched">Усі серії переглянуто</string>
+    <plurals name="n_episodes_watched">
+        <item quantity="one">%d серію переглянуто</item>
+        <item quantity="few">%d серії переглянуто</item>
+        <item quantity="many">%d серій переглянуто</item>
+        <item quantity="other">%d серій переглянуто</item>
+    </plurals>
+    <string name="scrap_no_network">Нема зʼєднання з мережею.</string>
     <string name="start_auto_scraper_activity">Шукати дані в мережі</string>
     <string name="scrap_status_success">Оновлено</string>
     <string name="scraper_no_files">Нема файлів для обробки</string>
