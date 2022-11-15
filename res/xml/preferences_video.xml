@@ -95,6 +95,28 @@
             android:summary="@string/preferences_parser_sync_mode_summary"
             android:title="@string/preferences_parser_sync_mode"
             app:iconSpaceReserved="false"/>
+        <EditTextPreference
+            android:defaultValue="24"
+            android:title="@string/preferences_stream_buffer_size_title"
+            android:summary="@string/preferences_stream_buffer_size_summary"
+            android:dialogTitle="@string/preferences_stream_buffer_size_title"
+            android:dialogMessage="@string/preferences_stream_buffer_size_summary"
+            android:key="stream_buffer_size"
+            android:persistent="true"
+            android:inputType="numberDecimal"
+            android:digits="0123456789"
+            app:iconSpaceReserved="false"/>
+        <EditTextPreference
+            android:defaultValue="6"
+            android:title="@string/preferences_stream_max_iframe_size_title"
+            android:summary="@string/preferences_stream_max_iframe_size_summary"
+            android:dialogTitle="@string/preferences_stream_max_iframe_size_title"
+            android:dialogMessage="@string/preferences_stream_max_iframe_size_summary"
+            android:key="stream_max_iframe_size"
+            android:persistent="true"
+            android:inputType="numberDecimal"
+            android:digits="0123456789"
+            app:iconSpaceReserved="false"/>
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="enable_downmix_androidtv"

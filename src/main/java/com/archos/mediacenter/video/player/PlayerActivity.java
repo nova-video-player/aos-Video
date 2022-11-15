@@ -134,6 +134,8 @@ import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermi
 import static com.archos.mediacenter.video.utils.MiscUtils.isEmulator;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PARSER_SYNC_MODE;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PLAYBACK_SPEED;
+import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_STREAM_BUFFER_SIZE;
+import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_STREAM_MAX_IFRAME_SIZE;
 
 public class PlayerActivity extends AppCompatActivity implements PlayerController.Settings,
         SubtitleDelayPickerDialog.OnDelayChangeListener, AudioDelayPickerDialog.OnAudioDelayChangeListener,
@@ -836,6 +838,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 log.debug("onStart: " + 1.0f);
                 audioSpeed = 1.0f;
             }
+            LibAvos.setStreamBufferSize(Integer.parseInt(mPreferences.getString(KEY_STREAM_BUFFER_SIZE,"24")));
+            LibAvos.setStreamMaxIframeSize(Integer.parseInt(mPreferences.getString(KEY_STREAM_MAX_IFRAME_SIZE,"6")));
             LibAvos.enableAudioSpeed(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false));
             LibAvos.setAudioSpeed(audioSpeed); // set audio speed playback (does nothing if audio speed not enabled)
             LibAvos.parserSyncMode(Integer.parseInt(mPreferences.getString(KEY_PARSER_SYNC_MODE,"0"))); // set lavc parser sync mode (0: PTS, 1 samples)

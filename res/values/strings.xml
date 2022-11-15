@@ -576,8 +576,12 @@
     <string name="preferences_force_audio_passthrough_summary">Transmit compressed audio over HDMI or S/PDIF. ⚠ Experimental may result in A/V out of sync</string>
     <string name="preferences_parser_sync_mode">Parser synchronisation mode</string>
     <string name="preferences_parser_sync_mode_cdata">PTS based (recommended)</string>
-    <string name="preferences_parser_sync_mode_sample">sample based </string>
+    <string name="preferences_parser_sync_mode_sample">sample based</string>
     <string name="preferences_parser_sync_mode_summary">Synchronization mode in lavc parser. ⚠ Experimental may result in A/V accumulated delay</string>
+    <string name="preferences_stream_buffer_size_title">Stream buffer size</string>
+    <string name="preferences_stream_buffer_size_summary">Amount of cache used before parser to tackle buffering issues in MB</string>
+    <string name="preferences_stream_max_iframe_size_title">Max i-frame size</string>
+    <string name="preferences_stream_max_iframe_size_summary">Maximum compressed i-frame size in MB</string>
     <string name="preferences_force_passthrough">Force audio passthrough</string>
     <string name="preferences_force_passthrough_summary">If passthrough is enabled, enforce it even if audio codec is not claimed supported by AV receiver instead of checking AV receiver capabilities</string>
     <string name="preferences_playback_speed">Enable playback speed</string>
