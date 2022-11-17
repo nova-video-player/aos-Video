@@ -190,7 +190,7 @@ public class VideoUtils {
                 ContentResolver cr = context.getContentResolver();
                 VideoDbInfo videoDbInfo = VideoDbInfo.fromId(cr, id);
                 if (DBG) Log.d(TAG, "getFileUriFromContentUri content translated from " + mPath + " to " + ((videoDbInfo != null) ? videoDbInfo.uri : null));
-                if (videoDbInfo.uri != null)
+                if (videoDbInfo !=null && videoDbInfo.uri != null)
                     return videoDbInfo.uri.toString();
                 else {
                     Log.w(TAG, "getFileUriFromContentUri: videoDbInfo is null for " + path);
