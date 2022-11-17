@@ -132,6 +132,8 @@ import java.util.Map;
 import static com.archos.environment.ArchosFeatures.isChromeOS;
 import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermission;
 import static com.archos.mediacenter.video.utils.MiscUtils.isEmulator;
+import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.DEFAULT_MAX_IFRAME_SIZE;
+import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.DEFAULT_STREAM_BUFFER_SIZE;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PARSER_SYNC_MODE;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PLAYBACK_SPEED;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_STREAM_BUFFER_SIZE;
@@ -838,8 +840,21 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 log.debug("onStart: " + 1.0f);
                 audioSpeed = 1.0f;
             }
-            LibAvos.setStreamBufferSize(Integer.parseInt(mPreferences.getString(KEY_STREAM_BUFFER_SIZE,"24")));
-            LibAvos.setStreamMaxIframeSize(Integer.parseInt(mPreferences.getString(KEY_STREAM_MAX_IFRAME_SIZE,"6")));
+            String size = mPreferences.getString(KEY_STREAM_BUFFER_SIZE, String.valueOf(DEFAULT_STREAM_BUFFER_SIZE));
+            int finalSize;
+            try {
+                finalSize = Integer.parseInt(size);
+            } catch(NumberFormatException | NullPointerException e) {
+                finalSize = DEFAULT_STREAM_BUFFER_SIZE;
+            }
+            LibAvos.setStreamBufferSize(finalSize);
+            size = mPreferences.getString(KEY_STREAM_MAX_IFRAME_SIZE, String.valueOf(DEFAULT_MAX_IFRAME_SIZE));
+            try {
+                finalSize = Integer.parseInt(size);
+            } catch(NumberFormatException | NullPointerException e) {
+                finalSize = DEFAULT_MAX_IFRAME_SIZE;
+            }
+            LibAvos.setStreamMaxIframeSize(finalSize);
             LibAvos.enableAudioSpeed(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false));
             LibAvos.setAudioSpeed(audioSpeed); // set audio speed playback (does nothing if audio speed not enabled)
             LibAvos.parserSyncMode(Integer.parseInt(mPreferences.getString(KEY_PARSER_SYNC_MODE,"0"))); // set lavc parser sync mode (0: PTS, 1 samples)
