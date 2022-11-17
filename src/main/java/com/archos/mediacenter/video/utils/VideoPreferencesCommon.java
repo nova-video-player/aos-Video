@@ -91,6 +91,11 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     // should we provide adaptive refresh rate for all (not only on TV)
     private static final boolean REFRESHRATE_FORALL = true;
 
+    // default stream buffer size in MB before parser
+    public static final int DEFAULT_STREAM_BUFFER_SIZE = 24;
+    // default max iframe compressed frame size in MB
+    public static final int DEFAULT_MAX_IFRAME_SIZE = 6;
+
     public static final String KEY_ADVANCED_VIDEO_ENABLED = "preferences_advanced_video_enabled";
     public static final String KEY_ADVANCED_VIDEO_CATEGORY = "preferences_category_advanced_video";
     public static final String KEY_ABOUT_CATEGORY = "about_category";
