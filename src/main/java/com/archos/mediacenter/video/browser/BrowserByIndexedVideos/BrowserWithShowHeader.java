@@ -355,8 +355,14 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             TextView Premiered = (TextView) mHeaderView.findViewById(R.id.premiered);
             String pattern = "yyyy-MM-dd";
             DateFormat df = new SimpleDateFormat(pattern);
-            Date today = showTags.getPremiered();
-            String todayAsString = df.format(today);
+            String todayAsString = "";
+            Date today = null;
+            if (showTags != null) {
+                today = showTags.getPremiered();
+                todayAsString = df.format(today);
+            } else {
+                Premiered.setVisibility(View.INVISIBLE);
+            }
             Premiered.setText(todayAsString);
 
             ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));
