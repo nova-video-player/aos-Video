@@ -1171,7 +1171,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 if (! scanningOnGoing && mShowWatchingUpNextRow) updateWatchingUpNextRow(cursor);
                 break;
             case LOADER_ID_LAST_ADDED:
-                if (mShowMoviesRow && mLastAddedInitFocus == InitFocus.NOT_FOCUSED)
+                if (mShowLastAddedRow && mLastAddedInitFocus == InitFocus.NOT_FOCUSED)
                     mLastAddedInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
                 log.debug("onLoadFinished: LastAdded cursor ready with " + cursor.getCount() + " entries and " + mLastAddedInitFocus + ", updating row");
                 if (mShowLastAddedRow) updateLastAddedRow(cursor);
@@ -1224,8 +1224,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         // Check if we have WatchingUpNext, LastAdded and LastPlayed loader results
         log.debug("checkInitFocus: mLastAddedInitFocus="+ mLastAddedInitFocus +
                 ", mLastPlayedInitFocus="+ mLastPlayedInitFocus+
-                ", mWatchingUpNextInitFocus=" + mWatchingUpNextInitFocus);
-        log.debug("checkInitFocus: mShowWatchingUpNextRow="+ mShowWatchingUpNextRow +
+                ", mWatchingUpNextInitFocus=" + mWatchingUpNextInitFocus +
+                ", mShowWatchingUpNextRow="+ mShowWatchingUpNextRow +
                 ", mShowLastAddedRow="+ mShowLastAddedRow+
                 ", mShowLastPlayedRow=" + mShowLastPlayedRow);
         if (mWatchingUpNextInitFocus == InitFocus.NEED_FOCUS) {
