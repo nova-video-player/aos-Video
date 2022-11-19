@@ -245,7 +245,6 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
     }
 
-
     private boolean isCategoriesListModified(Cursor oldCursor, Cursor newCursor) {
 
         // Modified for sure if has different length
