@@ -140,17 +140,16 @@ public class ScraperResultsAdapter extends BaseAdapter {
 
         ItemData itemData = mItems.get(position);
 
-        mImgSetter.set(holder.poster, mFileLoader, itemData.posterPath);
-
+        // itemData can be null according to sentry
+        if (itemData != null) {
+            mImgSetter.set(holder.poster, mFileLoader, itemData.posterPath);
+            holder.name.setText(itemData.name);
+            holder.date.setText(itemData.date);
+            holder.directors.setText(itemData.directors);
+        }
         holder.spinbar.setVisibility((mItemsUpdated == position) ? View.VISIBLE : View.GONE);
-
-        holder.name.setText(itemData.name);
-
-        holder.date.setText(itemData.date);
-        holder.date.setVisibility((itemData.date.length() > 0) ? View.VISIBLE : View.INVISIBLE);
-
-        holder.directors.setText(itemData.directors);
-        holder.directors.setVisibility((itemData.directors.length() > 0) ? View.VISIBLE : View.INVISIBLE);
+        holder.date.setVisibility((itemData != null & itemData.date.length() > 0) ? View.VISIBLE : View.INVISIBLE);
+        holder.directors.setVisibility((itemData != null & itemData.directors.length() > 0) ? View.VISIBLE : View.INVISIBLE);
 
         return convertView;
     }
