@@ -297,13 +297,15 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         log.debug("onDestroyView");
         mOverlay.destroy();
         super.onDestroyView();
+        mActivity = null;
     }
 
     @Override
     public void onResume() {
         log.debug("onResume");
         super.onResume();
-        if (mActivity == null) mActivity = getActivity();
+        // be sure activity is not null and static variable does not refer to a destroyed one
+        mActivity = getActivity();
         mOverlay.resume();
         updateBackground();
 
