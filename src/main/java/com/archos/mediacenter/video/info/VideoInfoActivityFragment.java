@@ -993,7 +993,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private void  setFileInfo(VideoMetadata videoMetadata){
         log.debug("setFileInfo");
         // Special error case (99.9% of the time it happens when the specified file is not reachable)
-        if (videoMetadata.getFileSize()==0 && videoMetadata.getVideoTrack()==null && videoMetadata.getAudioTrackNb()==0) {
+        if (videoMetadata == null || (videoMetadata.getFileSize()==0 && videoMetadata.getVideoTrack()==null && videoMetadata.getAudioTrackNb()==0)) {
             // sometimes metadata are set to zero but the file is there, can be due to libavosjni not loaded
             mFileError.setVisibility(View.VISIBLE);
             mFileInfoContainerLoading.setVisibility(View.GONE);
