@@ -946,7 +946,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static class PreferenceHelper{
 
         public static boolean shouldDisplayAllFiles(Context context){
-            return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(KEY_DISPLAY_ALL_FILE, false);
+            if (context != null)
+                return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(KEY_DISPLAY_ALL_FILE, false);
+            else return false;
         }
     }
 
