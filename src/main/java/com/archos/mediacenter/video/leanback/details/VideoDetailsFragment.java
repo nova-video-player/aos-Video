@@ -972,8 +972,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         // Update if needed
         if (needToUpdateDetailsOverview) {
             requestIndexAndScrap();
+            // mDetailsOverviewRow can be null and need to be initialized but perhaps should call fullyReloadVideo instead
+            if (mDetailsOverviewRow == null) mDetailsOverviewRow = new DetailsOverviewRow(currentVideo);
             // First check if we can do a smooth/smart update (when unscrapping and/or unindexing)
-
             // smooth update when unscrapping
             if (oldVideoObject!=null && oldVideoObject.hasScraperData() && !currentVideo.hasScraperData()) {
                 // remove scraper related rows
