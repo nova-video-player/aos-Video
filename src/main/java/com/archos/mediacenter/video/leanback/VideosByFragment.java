@@ -202,10 +202,8 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
         if (getActivity() == null) return;
         // List of categories
         if (cursorLoader.getId() == -1) {
-
             // Empty view visibility
             mEmptyView.setVisibility(c.getCount() > 0 ? View.GONE : View.VISIBLE);
-
             if (mCurrentCategoriesCursor != null) {
                 if (!isCategoriesListModified(mCurrentCategoriesCursor, c)) {
                     // no actual modification, no need to rebuild all the rows
@@ -215,12 +213,17 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
             }
             mCurrentCategoriesCursor = c;
             loadCategoriesRows(c);
+            // do not get any other update because complex views should not be updated while scanning to prevent crash
+            // cf. https://stackoverflow.com/questions/21149917/is-it-actually-unsafe-to-call-stoploading-on-a-loader-that-is-being-managed
+            cursorLoader.stopLoading();
         }
         // One of the row
         else {
             CursorObjectAdapter adapter = mAdaptersMap.get(cursorLoader.getId());
             if (adapter != null) {
                 adapter.changeCursor(c);
+                // do not get any other update because complex views should not be updated while scanning to prevent crash
+                cursorLoader.stopLoading();
             }
         }
     }
