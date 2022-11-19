@@ -1832,34 +1832,37 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onVideoFileRemoved(final Uri videoFile,boolean askForFolderRemoval, final Uri folder) {
         log.debug("onVideoFileRemoved: " + videoFile);
-        Toast.makeText(getActivity(),R.string.delete_done, Toast.LENGTH_SHORT).show();
-        if(askForFolderRemoval) {
-            AlertDialog.Builder b = new AlertDialog.Builder(getActivity()).setTitle("");
-            b.setIcon(R.drawable.filetype_new_folder);
-            b.setMessage(R.string.confirm_delete_parent_folder);
-            b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    sendDeleteResult(videoFile);
-                }
-            })
-                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            delete = new Delete(VideoDetailsFragment.this, getActivity());
-                            deleteUrisList = Collections.singletonList(folder);
-                            delete.deleteFolder(folder);
-                        }
-                    });
-            b.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialogInterface) {
-                    sendDeleteResult(videoFile);
-                }
-            });
-            b.create().show();
-        }
-        else {
+        if (getActivity() != null) {
+            Toast.makeText(getActivity(), R.string.delete_done, Toast.LENGTH_SHORT).show();
+            if (askForFolderRemoval) {
+                AlertDialog.Builder b = new AlertDialog.Builder(getActivity()).setTitle("");
+                b.setIcon(R.drawable.filetype_new_folder);
+                b.setMessage(R.string.confirm_delete_parent_folder);
+                b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                sendDeleteResult(videoFile);
+                            }
+                        })
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                delete = new Delete(VideoDetailsFragment.this, getActivity());
+                                deleteUrisList = Collections.singletonList(folder);
+                                delete.deleteFolder(folder);
+                            }
+                        });
+                b.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        sendDeleteResult(videoFile);
+                    }
+                });
+                b.create().show();
+            } else {
+                sendDeleteResult(videoFile);
+            }
+        } else {
             sendDeleteResult(videoFile);
         }
 
@@ -1878,7 +1881,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onDeleteVideoFailed(Uri videoFile) {
         log.debug("onDeleteVideoFailed: " + videoFile);
-        Toast.makeText(getActivity(),R.string.delete_error, Toast.LENGTH_SHORT).show();
+        if (getActivity() != null) Toast.makeText(getActivity(),R.string.delete_error, Toast.LENGTH_SHORT).show();
 
         // close the fragment anyway because the un-indexing may work even if the actual delete fails
         slightlyDelayedFinish();
@@ -1887,7 +1890,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onFolderRemoved(Uri folder) {
         log.debug("onFolderRemoved: " + folder);
-        Toast.makeText(getActivity(), R.string.delete_done, Toast.LENGTH_SHORT).show();
+        if (getActivity() != null) Toast.makeText(getActivity(), R.string.delete_done, Toast.LENGTH_SHORT).show();
         sendDeleteResult(folder);
     }
 
@@ -1935,7 +1938,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             } else
                 ChannelManager.refreshChannels(getContext());
         if (numberDeleted!=1) {
-            Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+            if (getActivity() != null) Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
         }
     }
 
