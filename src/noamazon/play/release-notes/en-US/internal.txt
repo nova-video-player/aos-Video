@@ -4,4 +4,5 @@
 - Better movie scrape results
 - Increase number of subtitles track supported to 64
 - Fix video playback on external display with motorola ready for
+- Fix infinite loop in refreshrate negotiation
 - Stability enhancements
