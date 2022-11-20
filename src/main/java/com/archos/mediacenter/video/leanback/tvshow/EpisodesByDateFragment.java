@@ -32,8 +32,6 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.EpisodesByDateLoader;
 import com.archos.mediacenter.video.browser.loader.EpisodesNoAnimeByDateLoader;
 import com.archos.mediacenter.video.browser.loader.EpisodesSelectionLoader;
-import com.archos.mediacenter.video.browser.loader.TvshowsByRatingLoader;
-import com.archos.mediacenter.video.browser.loader.TvshowsNoAnimeByRatingLoader;
 import com.archos.mediacenter.video.leanback.VideosByFragment;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
