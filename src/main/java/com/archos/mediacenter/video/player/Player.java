@@ -172,7 +172,6 @@ public class Player implements IPlayerControl,
                     Display d = v.getDisplay();
                     if (Build.VERSION.SDK_INT >= 23) {
                         int currentModeId = d.getMode().getModeId();
-                        numberRetries = NUMBER_RETRIES;
                         if (numberRetries > 0) { // only try NUMBER_RETRIES
                             if (currentModeId != wantedModeId) {
                                 log.debug("CONFIG current modeId rate is " + currentModeId + " trying to switch to " + wantedModeId + ", number of retries=" + numberRetries);
@@ -187,7 +186,6 @@ public class Player implements IPlayerControl,
                         }
                     } else {
                         float currentRefreshRate = d.getRefreshRate();
-                        numberRetries = NUMBER_RETRIES;
                         if (numberRetries > 0) { // only try NUMBER_RETRIES
                             if (Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
                                 log.debug("CONFIG current refresh rate is " + currentRefreshRate + " trying to switch to " + mRefreshRate + ", number of retries=" + numberRetries);
