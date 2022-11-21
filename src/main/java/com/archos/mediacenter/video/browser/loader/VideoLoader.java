@@ -42,7 +42,8 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
     private static final String TAG = "VideoLoader";
 
     public static final boolean THROTTLE = true;
-    public static final int THROTTLE_DELAY = 5000;
+    public static final int THROTTLE_DELAY = 5000; // 5s
+    public static final int THROTTLE_DELAY_LONG = 3600000; // 1h
 
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_COUNT = "count";
