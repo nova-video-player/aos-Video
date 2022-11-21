@@ -204,7 +204,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mWatchingUpNext = null;
     private PreferenceCategory mAboutPreferences = null;
     private CheckBoxPreference mAdultScrape = null;
-
+    private EditTextPreference mStreamBufferSize = null;
+    private EditTextPreference mStreamMaxIFrameSize = null;
     private String mLastTraktUser = null;
     private Trakt.Status mTraktStatus = Trakt.Status.SUCCESS;
     private TraktSigninDialogPreference mTraktSigninPreference = null;
@@ -324,6 +325,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 else aboutCategory.removePreference(mEnableSponsor);
             }
             prefCategory.removePreference(mForceSwDecPreferences);
+            prefCategory.addPreference(mStreamBufferSize);
+            prefCategory.addPreference(mStreamMaxIFrameSize);
             prefCategory.addPreference(mDecChoicePreferences);
             prefCategory.addPreference(mAudioInterfaceChoicePreferences);
             prefCategory.addPreference(mParserSyncMode);
@@ -345,6 +348,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             prefScraperCategory.removePreference(mDbExportManualPreference);
             getPreferenceScreen().removePreference(mAdvancedPreferences);
             prefScraperCategory.removePreference(mAdultScrape);
+            prefCategory.removePreference(mStreamBufferSize);
+            prefCategory.removePreference(mStreamMaxIFrameSize);
         }
     }
 
@@ -399,6 +404,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mEnableSponsor = (CheckBoxPreference) findPreference(KEY_ENABLE_SPONSOR);
         mWatchingUpNext = (CheckBoxPreference) findPreference(KEY_SHOW_WATCHING_UP_NEXT_ROW);
         mForceAudioPassthrough = (CheckBoxPreference) findPreference(KEY_FORCE_AUDIO_PASSTHROUGH);
+        mStreamBufferSize = (EditTextPreference) findPreference(KEY_STREAM_BUFFER_SIZE);
+        mStreamMaxIFrameSize = (EditTextPreference) findPreference(KEY_STREAM_MAX_IFRAME_SIZE);
         mPlaybackSpeed = (CheckBoxPreference) findPreference(KEY_PLAYBACK_SPEED);
         mDisableDownmix = (CheckBoxPreference) findPreference("disable_downmix");
         mEnableDownmixATV = (CheckBoxPreference) findPreference("enable_downmix_androidtv");
