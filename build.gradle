@@ -164,6 +164,17 @@ android {
         resValue "string", "APPLICATION_ID", applicationId
         resValue "string", "APP_INFO", "Nova v" + versionName + " (" + applicationId + ")"
     }
+    bundle {
+        language {
+            enableSplit = true
+        }
+        density {
+            enableSplit = true
+        }
+        abi {
+            enableSplit = true
+        }
+    }
     splits {
         abi {
             if (project.hasProperty("universal")) {
