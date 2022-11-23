@@ -467,8 +467,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             log.debug("onPause: unregisterReceiver mUpdateReceiver and mExternalStorageReceiver");
             mActivity.unregisterReceiver(mExternalStorageReceiver);
             mActivity.unregisterReceiver(mUpdateReceiver);
-        } catch(IllegalArgumentException e) {
-            log.warn("onDetach: trying to unregister mUpdateReceiver or mExternalStorageReceiver which is not registered!");
+        } catch(IllegalArgumentException | NullPointerException e) { // EntryActivity could have been destroyed
+            log.warn("onDetach: trying to unregister mUpdateReceiver or mExternalStorageReceiver which is not registered or EntryActivity destroyed!");
         }
     }
 
