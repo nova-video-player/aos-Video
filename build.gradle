@@ -92,6 +92,7 @@ amazon {
 ext.abiCodes = ['universal': 0, 'armeabi-v7a': 1, 'arm64-v8a': 2, 'x86': 3, 'x86_64': 4]
 
 android {
+    namespace 'com.archos.mediacenter.video'
     signingConfigs {
         release {
             if (keystorePropertiesFile.exists()) {
