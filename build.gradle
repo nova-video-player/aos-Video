@@ -135,7 +135,7 @@ android {
         // this is overridden when using split apk and normal split apk generation or oneapk amazon generation
         // amazon apk is generated with ./gradlew -Poneapk
         versionName = '6.0.87'
-	versionCode = 600087
+        versionCode = 600087
         if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
         applicationId "org.courville.nova"
         if (project.hasProperty("sponsor")) {
@@ -174,7 +174,7 @@ android {
                 // universal if for fdroid now with specific version(Name|Code) and oneapk for amazon
                 enable true
                 universalApk true
-            }else {
+            } else {
                 enable true
                 universalApk false
             }
