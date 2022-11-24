@@ -21,7 +21,6 @@
     android:installLocation="auto"
     android:sharedUserId="archos.openmediacenter">
 
-    <dist:module dist:instant="true" />
     <supports-screens android:largeScreens="true" />
 
     <original-package android:name="${applicationId}" />
