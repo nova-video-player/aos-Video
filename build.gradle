@@ -57,7 +57,8 @@ allprojects {
 static def getDate() {
     // we increment version number every 1000 seconds,
     // we started on 31/08/2016, and introduced splits on 06/02/2020
-    def date = new Date().getTime() / 1000L - 1472637600L - 108380000L
+    // update 2022/11/25 to reset getDate offset (- 88364898L)
+    def date = new Date().getTime() / 1000L - 1472637600L - 108380000L - 88364898L;
     return (int) (date / 1000L)
 }
 
@@ -134,8 +135,17 @@ android {
         // below version tracks the one from F-Droid or universal package when generated with ./gradlew -Puniversal
         // this is overridden when using split apk and normal split apk generation or oneapk amazon generation
         // amazon apk is generated with ./gradlew -Poneapk
-        versionName = '6.0.87'
-        versionCode = 600087
+        def novaVersionName = '6.0.87'
+        def novaVersionCode = 600087
+        if (project.hasProperty("universal")) {
+            versionName = novaVersionName
+            versionCode = novaVersionCode
+        } else {
+            // override versionName and versionCode to get it dependent on the date
+            versionName = novaVersionName + '-' + getFormattedDate()
+            // 2549909 is 20221124 last Google play release to reset counter
+            versionCode = 2549909 + getDate()
+        }
         if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
         applicationId "org.courville.nova"
         if (project.hasProperty("sponsor")) {
@@ -258,24 +268,6 @@ android {
     }
 
     applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            def baseAbiVersionCode =
-                    project.ext.abiCodes.get(output.getFilter(com.android.build.OutputFile.ABI))
-            if (!project.hasProperty("universal")) {
-                // override versionName and versionCode to get it dependent on the date
-                output.versionNameOverride = variant.versionName + '-' + getFormattedDate()
-                // getDate() was original versionCode
-                output.versionCodeOverride = 2108380 + 5 * getDate()
-                if (baseAbiVersionCode != null) {
-                    // 2000000 is there because before there was a distinction between noleanback 1000000 and leanback 2000000 with different API levels
-                    // 2108380 was the value at apk splits introduction
-                    output.versionCodeOverride = output.versionCodeOverride + baseAbiVersionCode
-                }
-            }
-        }
-    }
-
-    applicationVariants.all { variant ->
         variant.outputs.all { output ->
             def api = defaultConfig.minSdkVersion.apiLevel
             if (project.hasProperty("universal")) { // only one apk
@@ -287,7 +279,7 @@ android {
                     .replace("-debug.apk", "-API_${api}+-debug.apk")
             variant.getAssembleProvider().configure() {
                 it.doLast {
-                    println("generated: " + outputFileName + " (" + output.versionNameOverride + ", " + output.versionCodeOverride + ")");
+                    println("generated: " + outputFileName + " (" + versionName + ", " + versionCode + ")");
                 }
             }
         }
