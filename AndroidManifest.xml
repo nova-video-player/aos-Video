@@ -264,6 +264,7 @@
                 <data android:mimeType="audio/mpegurl" />
                 <data android:mimeType="audio/x-mpegurl" />
                 <data android:mimeType="application/x-shockwave-flash" />
+                <data android:mimeType="application/x-bittorrent"/>
             </intent-filter>
             <!--
             such ugly explicit matching is required because Android primitive PatternMatcher where <data android:pathPattern=".*\\.mkv" />
@@ -281,9 +282,11 @@
                 <data android:scheme="http" />
                 <data android:scheme="https" />
                 <data android:scheme="ftp" />
+                <data android:scheme="magnet"/>
                 <data android:host="*" />
                 <data android:mimeType="video/*" />
                 <data android:mimeType="application/*" />
+                <data android:mimeType="application/x-bittorrent" />
                 <data android:pathPattern=".*\\.3g2" />
                 <data android:pathPattern=".*\\..*\\.3g2" />
                 <data android:pathPattern=".*\\..*\\..*\\.3g2" />
