@@ -100,19 +100,36 @@ public class PermissionChecker {
                 isDialogDisplayed = true;
             }
         } else {
-            if (!isDialogDisplayed && ContextCompat.checkSelfPermission(mActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                log.debug("checkAndRequestPermission: requesting WRITE_EXTERNAL_STORAGE");
-                ActivityCompat.requestPermissions(
-                        activity,
-                        new String[] {
-                                Manifest.permission.READ_EXTERNAL_STORAGE,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.RECORD_AUDIO
-                        },
-                        PERM_REQ_RW
-                );
-                isDialogDisplayed = true;
+            if (Build.VERSION.SDK_INT<33) {
+                if (!isDialogDisplayed && ContextCompat.checkSelfPermission(mActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    log.debug("checkAndRequestPermission: API<33 requesting WRITE_EXTERNAL_STORAGE");
+                    ActivityCompat.requestPermissions(
+                            activity,
+                            new String[]{
+                                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                    Manifest.permission.RECORD_AUDIO
+                            },
+                            PERM_REQ_RW
+                    );
+                }
+            } else { // API>33 no WRITE_EXTERNAL_STORAGE and READ_EXTERNAL_STORAGE needs extra media granularity
+                if (!isDialogDisplayed && ContextCompat.checkSelfPermission(mActivity, android.Manifest.permission.READ_MEDIA_VIDEO) != PackageManager.PERMISSION_GRANTED) {
+                    log.debug("checkAndRequestPermission: API>32 requesting READ_MEDIA_VIDEO");
+                    ActivityCompat.requestPermissions(
+                            activity,
+                            new String[]{
+                                    Manifest.permission.READ_MEDIA_VIDEO,
+                                    Manifest.permission.READ_MEDIA_AUDIO,
+                                    Manifest.permission.READ_MEDIA_IMAGES,
+                                    Manifest.permission.POST_NOTIFICATIONS,
+                                    Manifest.permission.RECORD_AUDIO
+                            },
+                            PERM_REQ_RW
+                    );
+                }
             }
+            isDialogDisplayed = true;
         }
     }
 
@@ -125,11 +142,14 @@ public class PermissionChecker {
         } else {
             if (Build.VERSION.SDK_INT>29 && hasManageExternalStoragePermission) { // this is already the case
                 result = Environment.isExternalStorageManager();
-                log.debug("hasExternalPermission: API>29 -> " + result);
+                log.debug("hasExternalPermission: API>29 and hasManagedExternalStoragePermission -> " + result);
                 return result;
             } else {
-                result = ContextCompat.checkSelfPermission(mActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-                log.debug("hasExternalPermission: 22<API<30 -> " + result);
+                if(Build.VERSION.SDK_INT<33)
+                    result = ContextCompat.checkSelfPermission(mActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+                else
+                    result = ContextCompat.checkSelfPermission(mActivity, Manifest.permission.READ_MEDIA_VIDEO) == PackageManager.PERMISSION_GRANTED;
+                log.debug("hasExternalPermission: 22<API -> " + result);
                 return result;
             }
         }
@@ -159,15 +179,20 @@ public class PermissionChecker {
         }
 
         log.debug("onRequestPermissionsResult: isGranted " + isGranted);
-
         switch (requestCode) {
             case PERM_REQ_RW:
                 log.debug("configuring PERM_REQ_RW");
-                permissionToRequest = android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-                action = "android.intent.action.MANAGE_APP_PERMISSIONS";
-                errorMessage = R.string.error_permission_storage;
-                intent = new Intent();
-                ;;
+                if(Build.VERSION.SDK_INT<33) {
+                    permissionToRequest = android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+                    action = "android.intent.action.MANAGE_APP_PERMISSIONS";
+                    errorMessage = R.string.error_permission_storage;
+                } else {
+                    // do not break code logic but this one should be autogranted
+                    permissionToRequest = Manifest.permission.READ_MEDIA_VIDEO;
+                    action = "android.intent.action.MANAGE_APP_PERMISSIONS";
+                    errorMessage = R.string.error_permission_storage;
+                }
+                break;
             case PERM_REQ_MANAGE:
                 log.debug("configuring PERM_REQ_MANAGE");
                 if(Build.VERSION.SDK_INT>29 && hasManageExternalStoragePermission) {
@@ -175,7 +200,7 @@ public class PermissionChecker {
                     action = Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION;
                     errorMessage = R.string.error_permission_all_file_access;
                 }
-                ;;
+                break;
         }
         if (! isGranted) {
             // launch activity dialog to request
