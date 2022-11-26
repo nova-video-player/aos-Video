@@ -32,25 +32,6 @@ allprojects {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
         }
         // check tasks to add via ./gradlew tasks --all | grep DuplicateClasses
-        checkNoamazonReleaseDuplicateClasses.dependsOn(preBuild)
-        checkNoamazonDebugDuplicateClasses.dependsOn(preBuild)
-        checkAmazonDebugDuplicateClasses.dependsOn(preBuild)
-        checkAmazonReleaseDuplicateClasses.dependsOn(preBuild)
-        checkAmazonDebugAndroidTestDuplicateClasses.dependsOn(preBuild)
-        checkNoamazonDebugAndroidTestDuplicateClasses.dependsOn(preBuild)
-        checkManageexternalstorageReleaseDuplicateClasses.dependsOn(preBuild)
-        checkManageexternalstorageDebugDuplicateClasses.dependsOn(preBuild)
-
-        desugarNoamazonDebugFileDependencies.dependsOn(preBuild)
-        compileNoamazonDebugJavaWithJavac.dependsOn(preBuild)
-        desugarAmazonDebugFileDependencies.dependsOn(preBuild)
-        compileAmazonDebugJavaWithJavac.dependsOn(preBuild)
-        desugarManageexternalstorageDebugFileDependencies.dependsOn(preBuild)
-        compileManageexternalstorageDebugJavaWithJavac.dependsOn(preBuild)
-
-        collectNoamazonReleaseDependencies.dependsOn(preBuild)
-        collectAmazonReleaseDependencies.dependsOn(preBuild)
-        collectManageexternalstorageReleaseDependencies.dependsOn(preBuild)
     }
 }
 
