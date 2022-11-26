@@ -1,8 +1,8 @@
+- Target API33
 - Experimental playback speed option disabled by default (could cause choppy video)
 - Add option to not apply audio passthrough if AV receiver does not support codec
-- Fix some local video files not indexed on recent Android or on external storage
 - Better movie scrape results
 - Increase number of subtitles track supported to 64
-- Fix video playback on external display with motorola ready for
-- Fix infinite loop in refreshrate negotiation
+- boost/libtorrent 1.80.0/2.0.8 upstep
+- Bundle delivery to Google Play
 - Stability enhancements
