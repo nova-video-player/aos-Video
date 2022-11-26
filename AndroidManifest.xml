@@ -787,6 +787,13 @@
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.webm" />
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.webm" />
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.webm" />
+                <data android:pathPattern=".*\\.torrent" />
+                <data android:pathPattern=".*\\..*\\.torrent" />
+                <data android:pathPattern=".*\\..*\\..*\\.torrent" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.torrent" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.torrent" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.torrent" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.torrent" />
                 <data android:pathPattern=".*\\.3G2" />
                 <data android:pathPattern=".*\\..*\\.3G2" />
                 <data android:pathPattern=".*\\..*\\..*\\.3G2" />
@@ -941,6 +948,13 @@
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.WEBM" />
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.WEBM" />
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.WEBM" />
+                <data android:pathPattern=".*\\.TORRENT" />
+                <data android:pathPattern=".*\\..*\\.TORRENT" />
+                <data android:pathPattern=".*\\..*\\..*\\.TORRENT" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.TORRENT" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.TORRENT" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.TORRENT" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.TORRENT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="archos.intent.action.RESUME_VIDEOPLAYER" />
