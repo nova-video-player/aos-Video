@@ -112,6 +112,7 @@ public class PermissionChecker {
                             },
                             PERM_REQ_RW
                     );
+                    isDialogDisplayed = true;
                 }
             } else { // API>33 no WRITE_EXTERNAL_STORAGE and READ_EXTERNAL_STORAGE needs extra media granularity
                 if (!isDialogDisplayed && ContextCompat.checkSelfPermission(mActivity, android.Manifest.permission.READ_MEDIA_VIDEO) != PackageManager.PERMISSION_GRANTED) {
@@ -127,9 +128,9 @@ public class PermissionChecker {
                             },
                             PERM_REQ_RW
                     );
+                    isDialogDisplayed = true;
                 }
             }
-            isDialogDisplayed = true;
         }
     }
 
@@ -145,6 +146,8 @@ public class PermissionChecker {
                 log.debug("hasExternalPermission: API>29 and hasManagedExternalStoragePermission -> " + result);
                 return result;
             } else {
+                // TODO MARC see https://stackoverflow.com/questions/64221188/write-external-storage-when-targeting-android-10
+                // android.Manifest.permission.WRITE_EXTERNAL_STORAGE should not be used on android 30+ and 
                 if(Build.VERSION.SDK_INT<33)
                     result = ContextCompat.checkSelfPermission(mActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
                 else
