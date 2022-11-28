@@ -40,7 +40,12 @@ import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediascraper.AutoScrapeService;
 import com.archos.environment.ArchosUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MainActivityLeanback extends LeanbackActivity {
+
+    private static final Logger log = LoggerFactory.getLogger(MainActivityLeanback.class);
 
     public static final int ACTIVITY_REQUEST_CODE_PREFERENCES = 101;
 
@@ -54,6 +59,7 @@ public class MainActivityLeanback extends LeanbackActivity {
     }
     @Override
     public void onResumeFragments(){
+        log.debug("onResumeFragments");
         super.onResumeFragments();
         new DensityTweak(this)
                 .applyUserDensity();
