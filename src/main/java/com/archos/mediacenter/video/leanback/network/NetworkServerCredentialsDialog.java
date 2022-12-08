@@ -178,7 +178,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
         .setPositiveButton(android.R.string.ok,new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int id) {
                 // username can be empty with samba guest shares
-                if(!usernameEt.getText().toString().isEmpty() && type != 3){
+                if(!usernameEt.getText().toString().isEmpty() || type == 3){
                     final int type = typeSp.getSelectedItemPosition();
                     final String address = addressEt.getText().toString();
                     String path = pathEt.getText().toString();
