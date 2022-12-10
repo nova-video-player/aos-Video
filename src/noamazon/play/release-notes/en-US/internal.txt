@@ -6,3 +6,4 @@
 - boost/libtorrent 1.80.0/2.0.8 upstep
 - Bundle delivery to Google Play
 - Stability enhancements
+- Support more ssa subtitle style formats
