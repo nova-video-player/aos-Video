@@ -83,13 +83,13 @@ public class SubtitleManager {
     private static final int TXT_SIZE_MAX = 64;
     private static final float TXT_SIZE_RANGE = TXT_SIZE_MAX - TXT_SIZE_MIN;
 
+    // some ssa syntax https://sweetkaraoke.pagesperso-orange.fr/Tutoriels/Tutoriel4_1b.html#Chapitre_1_:_les_styles_ASS_et_SSA_:
     // matches a single "{\ ... }"
     private static final Pattern SSA_ANY_TAG = Pattern.compile("\\{\\\\.*?\\}");
-    // matches "{\c&Hcolor&}text" until end of input or next color tag
-    private static final Pattern SSA_COLOR_TAG = Pattern.compile("\\{\\\\c&[h,H]([0-9,A-F,a-f]+)&\\}(.*?)(?=\\{\\\\c|$)");
+    // matches "{\c&Hcolor&}text" until end of input or next color tag, matches also "\<1/2/3/4>c&H<hex code>&" and "*c&H<hex code>&"
+    private static final Pattern SSA_COLOR_TAG = Pattern.compile("\\{\\\\?[1-4\\*]?\\\\c&[h,H]([0-9A-Fa-f]+)&\\}(.*?)(?=\\{\\\\c|$)");
     // replacement for SSA_COLOR_TAG $1=color and $2=text
     private static final String HTML_COLOR_TAG = "<font color=\"#$1\">$2</font>";
-
     final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
