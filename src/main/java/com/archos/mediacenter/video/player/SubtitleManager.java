@@ -90,6 +90,16 @@ public class SubtitleManager {
     private static final Pattern SSA_COLOR_TAG = Pattern.compile("\\{\\\\?[1-4\\*]?\\\\c&[h,H]([0-9A-Fa-f]+)&\\}(.*?)(?=\\{\\\\c|$)");
     // replacement for SSA_COLOR_TAG $1=color and $2=text
     private static final String HTML_COLOR_TAG = "<font color=\"#$1\">$2</font>";
+    // bold, italic, underline, slanted ssa tags
+    private static final Pattern SSA_BOLD_TAG = Pattern.compile("\\{\\\\b1\\}(.*?)(?=\\{\\\\b0|$)");
+    private static final String HTML_BOLD_TAG = "<b>$1</b>";
+    private static final Pattern SSA_ITALIC_TAG = Pattern.compile("\\{\\\\i1\\}(.*?)(?=\\{\\\\i0|$)");
+    private static final String HTML_ITALIC_TAG = "<i>$1</i>";
+    private static final Pattern SSA_UNDERLINE_TAG = Pattern.compile("\\{\\\\u1\\}(.*?)(?=\\{\\\\u0|$)");
+    private static final String HTML_UNDERLINE_TAG = "<u>$1</u>";
+    private static final Pattern SSA_STRIKETHROUGH_TAG = Pattern.compile("\\{\\\\s1\\}(.*?)(?=\\{\\\\s0|$)");
+    private static final String HTML_STRIKETHROUGH_TAG = "<s>$1</s>";
+
     final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -186,6 +196,10 @@ public class SubtitleManager {
             // convert color Tag = {\c&H0F0F0F&} ......{\ to html tag
             StringBuffer sb = new StringBuffer(displayText.length());
             displayText = replaceAll(displayText, SSA_COLOR_TAG, HTML_COLOR_TAG, sb);
+            displayText = replaceAll(displayText, SSA_ITALIC_TAG, HTML_ITALIC_TAG, sb);
+            displayText = replaceAll(displayText, SSA_BOLD_TAG, HTML_BOLD_TAG, sb);
+            displayText = replaceAll(displayText, SSA_UNDERLINE_TAG, HTML_UNDERLINE_TAG, sb);
+            displayText = replaceAll(displayText, SSA_STRIKETHROUGH_TAG, HTML_STRIKETHROUGH_TAG, sb);
             displayText = replaceAll(displayText, SSA_ANY_TAG, "", sb);
         }
         log.debug(String.format("cleaned Text [%s]", displayText));
