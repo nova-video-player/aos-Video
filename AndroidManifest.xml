@@ -93,6 +93,7 @@
         android:label="@string/nova"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
+        android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:usesCleartextTraffic="true"
         android:networkSecurityConfig="@xml/network_security_config">
@@ -1172,7 +1173,6 @@
             <!-- Triggers metadata update -->
             <intent-filter>
                 <action android:name="archos.media.intent.action.VIDEO_SCANNER_METADATA_UPDATE" />
-
                 <data android:scheme="sftp" />
                 <data android:scheme="ftp" />
                 <data android:scheme="ftps" />
