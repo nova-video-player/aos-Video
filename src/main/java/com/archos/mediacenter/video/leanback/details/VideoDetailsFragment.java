@@ -1869,7 +1869,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         log.debug("sendDeleteResult: " + file);
         Intent intent = new Intent();
         intent.setData(file);
-        getActivity().setResult(ListingActivity.RESULT_FILE_DELETED, intent);
+        if (getActivity() != null) getActivity().setResult(ListingActivity.RESULT_FILE_DELETED, intent);
         // TODO: do not finish if there are multiple videos under same name check counter
         // TODO: do the same for phoneUI
         slightlyDelayedFinish();
@@ -1970,12 +1970,13 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     private void slightlyDelayedFinish() {
         log.debug("slightlyDelayedFinish");
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getActivity().finish();
-            }
-        }, 200);
+        if (getActivity() != null)
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getActivity().finish();
+                }
+            }, 200);
     }
 
     public void onKeyDown(int keyCode) {
