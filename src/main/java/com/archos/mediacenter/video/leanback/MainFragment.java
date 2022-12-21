@@ -474,6 +474,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     private void updateBackground() {
         Resources r = getResources();
+        if (mActivity == null) return; // do not update background when activity has been destroyed
         bgMngr = BackgroundManager.getInstance(mActivity);
         if(!bgMngr.isAttached())
             bgMngr.attach(mActivity.getWindow());
