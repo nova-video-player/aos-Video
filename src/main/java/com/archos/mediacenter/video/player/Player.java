@@ -418,7 +418,6 @@ public class Player implements IPlayerControl,
 
     synchronized public void stopPlayback() {
         log.debug("stopPlayback");
-        if (PlayerService.sPlayerService != null) PlayerService.sPlayerService.saveVideoStateIfReady();
         mHandler.removeCallbacks(mPreparedAsync);
         stayAwake(false);
         if (mEffectRenderer != null) {
@@ -698,7 +697,6 @@ public class Player implements IPlayerControl,
 
     public void pause(int state) {
         log.debug("pause");
-        if (PlayerService.sPlayerService != null) PlayerService.sPlayerService.saveVideoStateIfReady();
         if (isInPlaybackState()) {
             if (mMediaPlayer.isPlaying()) {
                 mMediaPlayer.pause();
