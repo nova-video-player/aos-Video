@@ -443,6 +443,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if(mPlayerFrontend!=null)
             mPlayerFrontend.setUri(mUri, mStreamingUri);
         mVideoId = intent.getIntExtra("id", -1);
+        log.debug("onStart mVideoId=" + mVideoId);
         mTorrentFilePosition = mIntent.getIntExtra(PlayerActivity.KEY_TORRENT, -1);
 
         // when mVideoInfo uri is the same as intent uri -> info has already been retrieved !
@@ -717,7 +718,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     if (duration > 0)
                         mVideoInfo.duration = duration;
                     mVideoInfo.lastTimePlayed = Long.valueOf(System.currentTimeMillis() / 1000L);
-                    log.info("saveVideoStateIfReady: save bookmark at " + mVideoInfo.lastTimePlayed);
+                    log.info("saveVideoStateIfReady: save bookmark at " + mVideoInfo.lastTimePlayed + " for videoId " + mVideoInfo.id);
                     mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
                     // disable periodic trakt save this should be done with pauseTrakt() anyway
                     //stopTrakt(); //this writes mVideoInfo.traktResume
@@ -861,12 +862,15 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         // We now use the DB flag ARCHOS_TRAKT_SEEN even if there is no sync with trakt
         else {
             log.debug("stopTrakt: mTraktClient == null, not sending watchStop");
-            if (mVideoId>=0 && Trakt.shouldMarkAsSeen(getPlayerProgress()) && !PrivateMode.isActive()) {
+            if (mVideoInfo.id>=0 && Trakt.shouldMarkAsSeen(getPlayerProgress()) && !PrivateMode.isActive()) {
+                log.debug("stopTrakt: marking video " + mVideoInfo.id + " as seen in VideoStore");
                 final ContentValues cv = new ContentValues(1);
                 cv.put(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN, Trakt.TRAKT_DB_MARKED);
                 String where = VideoStore.Video.VideoColumns._ID + " = ?";
-                String[] whereArgs = new String[] {Long.toString(mVideoId)};
+                String[] whereArgs = new String[] {Long.toString(mVideoInfo.id)};
                 getContentResolver().update(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, cv, where, whereArgs);
+            } else {
+                log.debug("stopTrakt: not marking video mVideoInfo.id=" + mVideoInfo.id + " any resume");
             }
         }
     }
@@ -1003,6 +1007,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     @Override
     public void onDestroy(){
         super.onDestroy();
+        log.debug("onDestroy");
         saveVideoStateIfReady();
         log.debug("onDestroy: release mediaSessionCompat");
         if (mSession != null) mSession.release();
@@ -1128,7 +1133,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mLastPosition = 0;
             onStart(mIntent);
         } else {
-            log.debug("onCompletion: we have no new video");
+            log.debug("onCompletion: we have no new video after " + mVideoId + " mVideoInfo.id " + mVideoInfo.id);
             if(mPlayerFrontend!=null) {
                 mPlayerFrontend.onEnd();
             }
