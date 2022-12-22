@@ -148,8 +148,8 @@ public class ScraperResultsAdapter extends BaseAdapter {
             holder.directors.setText(itemData.directors);
         }
         holder.spinbar.setVisibility((mItemsUpdated == position) ? View.VISIBLE : View.GONE);
-        holder.date.setVisibility((itemData != null & itemData.date.length() > 0) ? View.VISIBLE : View.INVISIBLE);
-        holder.directors.setVisibility((itemData != null & itemData.directors.length() > 0) ? View.VISIBLE : View.INVISIBLE);
+        holder.date.setVisibility((itemData != null && itemData.date.length() > 0) ? View.VISIBLE : View.INVISIBLE);
+        holder.directors.setVisibility((itemData != null && itemData.directors.length() > 0) ? View.VISIBLE : View.INVISIBLE);
 
         return convertView;
     }
