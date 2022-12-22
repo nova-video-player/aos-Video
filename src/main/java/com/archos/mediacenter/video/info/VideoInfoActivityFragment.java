@@ -990,32 +990,39 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         addMenu(0, R.string.scrap_remove, DELETE_GROUP, R.string.scrap_remove);
     }
 
-    private void  setFileInfo(VideoMetadata videoMetadata){
+    private void setVisibilityFileError() {
+        mFileError.setVisibility(View.VISIBLE);
+        mFileInfoContainerLoading.setVisibility(View.GONE);
+        mFileInfoAudioVideoContainer.setVisibility(View.GONE);
+        mDuration.setVisibility(View.GONE);
+        mFileSize.setVisibility(View.GONE);
+    }
+
+    private void setFileInfo(VideoMetadata videoMetadata){
         log.debug("setFileInfo");
         // Special error case (99.9% of the time it happens when the specified file is not reachable)
-        if (videoMetadata == null || (videoMetadata.getFileSize()==0 && videoMetadata.getVideoTrack()==null && videoMetadata.getAudioTrackNb()==0)) {
-            // sometimes metadata are set to zero but the file is there, can be due to libavosjni not loaded
-            mFileError.setVisibility(View.VISIBLE);
-            mFileInfoContainerLoading.setVisibility(View.GONE);
-            mFileInfoAudioVideoContainer.setVisibility(View.GONE);
-            mDuration.setVisibility(View.GONE);
-            mFileSize.setVisibility(View.GONE);
-        }
-        else {
-            mFileError.setVisibility(View.GONE);
-            if (videoMetadata.getVideoTrack() != null) {
-                mVideoTrackTextView.setText(VideoInfoCommonClass.getVideoTrackString(videoMetadata, getResources()));
+        if (videoMetadata == null) {
+            setVisibilityFileError();
+        } else {
+            if (videoMetadata.getFileSize()==0 && videoMetadata.getVideoTrack()==null && videoMetadata.getAudioTrackNb()==0) {
+                // sometimes metadata are set to zero but the file is there, can be due to libavosjni not loaded
+                setVisibilityFileError();
+            } else {
+                mFileError.setVisibility(View.GONE);
+                if (videoMetadata.getVideoTrack() != null) {
+                    mVideoTrackTextView.setText(VideoInfoCommonClass.getVideoTrackString(videoMetadata, getResources()));
+                }
+                mFileInfoAudioVideoContainer.setVisibility(View.VISIBLE);
+                mFileInfoContainerLoading.setVisibility(View.GONE);
+                mDuration.setVisibility(View.VISIBLE);
+                mFileSize.setVisibility(View.VISIBLE);
+                mFileSize.setText(Formatter.formatFileSize(getActivity(), videoMetadata.getFileSize()));
+                mDuration.setText(MediaUtils.formatTime(videoMetadata.getDuration()));
+                String decoder = VideoInfoCommonClass.getDecoder(videoMetadata, getResources(), mPlayerType);
+                setTextOrHideContainer(mDecoderTextView, decoder, mDecoderTextView);
+                String audiotrack = VideoInfoCommonClass.getAudioTrackString(videoMetadata, getResources(), getActivity());
+                setTextOrHideContainer(mAudioTrackTextView, audiotrack, mRoot.findViewById(R.id.audio_row));
             }
-            mFileInfoAudioVideoContainer.setVisibility(View.VISIBLE);
-            mFileInfoContainerLoading.setVisibility(View.GONE);
-            mDuration.setVisibility(View.VISIBLE);
-            mFileSize.setVisibility(View.VISIBLE);
-            mFileSize.setText(Formatter.formatFileSize(getActivity(), videoMetadata.getFileSize()));
-            mDuration.setText(MediaUtils.formatTime(videoMetadata.getDuration()));
-            String decoder = VideoInfoCommonClass.getDecoder(videoMetadata, getResources(), mPlayerType);
-            setTextOrHideContainer(mDecoderTextView, decoder, mDecoderTextView);
-            String audiotrack = VideoInfoCommonClass.getAudioTrackString(videoMetadata, getResources(), getActivity());
-            setTextOrHideContainer(mAudioTrackTextView, audiotrack, mRoot.findViewById(R.id.audio_row));
         }
     }
 
