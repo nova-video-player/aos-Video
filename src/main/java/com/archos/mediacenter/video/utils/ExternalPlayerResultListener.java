@@ -136,7 +136,8 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
                     mDuration = (int) data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_duration, -1);
                 }
                 boolean isFinished = false;
-                if (data.getStringExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_end_by).equals("playback_completion")) { // justplayer video completion by playback complete has duration 0
+                String externalPositionExtra = data.getStringExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_end_by);
+                if (externalPositionExtra != null && externalPositionExtra.equals("playback_completion")) { // justplayer video completion by playback complete has duration 0
                     if (DBG) Log.d(TAG, "onActivityResult: video finished until the end");
                     isFinished = true;
                     position = mDuration;
