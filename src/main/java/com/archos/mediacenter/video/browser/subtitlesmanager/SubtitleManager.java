@@ -372,6 +372,8 @@ public class SubtitleManager {
             Log.e(TAG, "recursiveSubListing: caught SftpException", e);
         } catch (JSchException e) {
             Log.e(TAG, "recursiveSubListing: caught JSchException", e);
+        } catch (NullPointerException e) {
+            Log.e(TAG, "recursiveSubListing: caught NullPointerException", e);
         }
 
         return subs;
