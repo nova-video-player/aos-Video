@@ -253,12 +253,35 @@ public class PermissionChecker {
                             isDialogDisplayed = false;
                             if (!ActivityCompat.shouldShowRequestPermissionRationale(mActivity, permissionToRequest)) {
                                 log.debug("onRequestPermissionsResult: packageName=" + mActivity.getPackageName());
+                                // try/catch dance: android dev documentation says these intents/activities are there since dawn of age but
+                                // "In some cases, a matching Activity may not exist, so ensure you safeguard against this."
                                 try {
                                     mActivity.startActivity(new Intent(action, Uri.parse("package:" + mActivity.getPackageName())));
                                 } catch (SecurityException | ActivityNotFoundException e) {
-                                    if (log.isDebugEnabled()) log.warn("onRequestPermissionsResult: caught exception", e);
-                                    // start new activity to display extended information
-                                    mActivity.startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + mActivity.getPackageName())));
+                                    if (log.isDebugEnabled()) log.warn("onRequestPermissionsResult: caught exception trying ACTION_APPLICATION_DETAILS_SETTINGS", e);
+                                    try {
+                                        // start new activity to display extended information
+                                        mActivity.startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + mActivity.getPackageName()))); // since API9
+                                    } catch (ActivityNotFoundException eanf) {
+                                        // ACTION_APPLICATION_DETAILS_SETTINGS does not exist on Android 6 TCL/SMART_TV or Android 7 MiTV4A and other obscure RK
+                                        // cf. https://sentry.io/organizations/nova-video-player/issues/3697512720
+                                        log.warn("onRequestPermissionsResult: caught exception, no Activity found to handle intent ACTION_APPLICATION_DETAILS_SETTINGS trying ACTION_MANAGE_APPLICATIONS_SETTINGS", eanf);
+                                        try {
+                                            mActivity.startActivity(new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS)); // since API3
+                                        } catch (ActivityNotFoundException eanf2) {
+                                            log.warn("onRequestPermissionsResult: caught exception, no Activity found to handle intent ACTION_MANAGE_APPLICATIONS_SETTINGS trying ACTION_MANAGE_ALL_APPLICATIONS_SETTINGS", eanf2);
+                                            try {
+                                                mActivity.startActivity(new Intent(android.provider.Settings.ACTION_MANAGE_ALL_APPLICATIONS_SETTINGS)); // since API9
+                                            } catch (ActivityNotFoundException eanf3) {
+                                                log.warn("onRequestPermissionsResult: caught exception, no Activity found to handle intent ACTION_MANAGE_ALL_APPLICATIONS_SETTINGS trying ACTION_APPLICATION_SETTINGS", eanf3);
+                                                try {
+                                                    mActivity.startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_SETTINGS)); // since API1
+                                                } catch (ActivityNotFoundException eanf4) {
+                                                    log.warn("onRequestPermissionsResult: caught exception, no Activity found to handle intent ACTION_APPLICATION_SETTINGS: we are out of option...", eanf4);
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             } else checkAndRequestPermission(mActivity);
                         }
