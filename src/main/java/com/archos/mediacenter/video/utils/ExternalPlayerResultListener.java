@@ -105,16 +105,16 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
         if (DBG) Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
         if (DBG) Log.d(TAG, "onActivityResult: mVideoDbInfo!=null " + (mVideoDbInfo!=null));
         if (DBG) Log.d(TAG, "onActivityResult: mPlayerUri " + mPlayerUri);
-        Bundle bundle = data.getExtras();
-        if (DBG) {
-            if (bundle != null) {
-                for (String key : bundle.keySet()) {
-                    Log.d(TAG, "onActivityResult: data " + key + " : " + (bundle.get(key) != null ? bundle.get(key) : "NULL"));
+        if (data != null) {
+            Bundle bundle = data.getExtras();
+            if (DBG) {
+                if (bundle != null) {
+                    for (String key : bundle.keySet()) {
+                        Log.d(TAG, "onActivityResult: data " + key + " : " + (bundle.get(key) != null ? bundle.get(key) : "NULL"));
+                    }
                 }
             }
-        }
-        if (data != null) {
-            if (DBG) Log.d(TAG, "onActivityResult: data.getData()=" + data.getData());
+            if (DBG) Log.d(TAG, "onActivityResult: data.getData()=" + bundle);
             // for vlc data.getData() is null
             // for mxplayer mPlayerUri is content://com.archos.media.videocommunity/external/video/media/xxxx and data.getData() is content://org.courville.nova.provider/external_files/emulated/0/path/file.mkv
             //if(!PrivateMode.isActive() && resultCode== Activity.RESULT_OK && mVideoDbInfo!=null && data.getData()!= null && data.getData().equals(mPlayerUri)){
