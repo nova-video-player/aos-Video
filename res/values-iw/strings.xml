@@ -538,8 +538,14 @@
     <string name="preferences_force_audio_passthrough_enable">מוד 1 (מיושן)</string>
     <string name="preferences_force_audio_passthrough_enable2">מוד 2</string>
     <string name="preferences_force_audio_passthrough_summary">העברת אודיו דחוס דרך HDMI או S/PDIF. ⚠ ניסיוני, יתכן חוסר סינכרון אודיו/וידאו</string>
+    <string name="preferences_parser_sync_mode">מצב סנכרון מנתח</string>
+    <string name="preferences_parser_sync_mode_cdata">מבוסס PTS (מומלץ)</string>
+    <string name="preferences_parser_sync_mode_sample">מבוסס דגימות</string>
+    <string name="preferences_parser_sync_mode_summary">מצב סנכרון במנתח LAVC. ⚠ ניסיוני, עלול לגרום להשהייה מצטברת של אודיו/וידאו</string>
     <string name="preferences_force_passthrough">כפה העברת אודיו ישירה</string>
     <string name="preferences_force_passthrough_summary">אם העברה ישירה מופעלת, כפה אותה למרות שלא אושרה כנתמכת על ידי הרסיבר, במקום לבדוק את יכולות הרסיבר</string>
+    <string name="preferences_playback_speed">אפשר מהירות ניגון</string>
+    <string name="preferences_playback_speed_summary">אפשר יכולת שינוי מהירות ניגון. ⚠ ניסיוני, עלול לגרום לקפיצות בניגון</string>
     <string name="preferences_disable_downmix_title">השבת שנמוך אודיו לסטריאו</string>
     <string name="preferences_disable_downmix_summary">פענח תמיד את כל הערוצים ותן לאנדרואיד לבצע שנמוך כתלות ביכולות פלט האודיו (יכול לגרום לאיבוד ערוצי קול)</string>
     <string name="preferences_enable_downmix_androidtv_title">כפה שנמוך אודיו לסטריאו</string>
