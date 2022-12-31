@@ -147,7 +147,6 @@ public class CustomApplication extends Application {
     private PropertyChangeListener propertyChangeListener = null;
 
     private static VideoStoreImportReceiver videoStoreImportReceiver = new VideoStoreImportReceiver();
-    final static IntentFilter intentFilter = new IntentFilter();
 
     private JcifsUtils jcifsUtils = null;
     private FileUtilsQ fileUtilsQ = null;
@@ -266,10 +265,6 @@ public class CustomApplication extends Application {
 
         BASEDIR = Environment.getExternalStorageDirectory().getPath()+"Android/data/"+getPackageName();
 
-        // programmatically register android scanner finished, lifecycle is handled in handleForeGround
-        intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
-        intentFilter.addDataScheme("file");
-
         // Class that keeps track of activities so we can tell is we are foreground
         log.debug("onCreate: registerActivityLifecycleCallbacks AppState");
         registerActivityLifecycleCallbacks(AppState.sCallbackHandler);
@@ -344,6 +339,10 @@ public class CustomApplication extends Application {
             if (!isVideStoreImportReceiverRegistered) {
                 log.debug("handleForeGround: app now in ForeGround registerReceiver for videoStoreImportReceiver");
                 ArchosUtils.addBreadcrumb(SentryLevel.INFO, "CustomApplication.handleForeGround", "app now in ForeGround registerReceiver for videoStoreImportReceiver");
+                // programmatically register android scanner finished, lifecycle is handled in handleForeGround
+                final IntentFilter intentFilter = new IntentFilter();
+                intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
+                intentFilter.addDataScheme("file");
                 registerReceiver(videoStoreImportReceiver, intentFilter);
                 isVideStoreImportReceiverRegistered = true;
             } else {
