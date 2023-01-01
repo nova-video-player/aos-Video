@@ -31,6 +31,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediaprovider.ArchosMediaIntent;
 import com.archos.mediaprovider.video.VideoStoreImportService;
@@ -39,6 +40,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+
+import io.sentry.SentryLevel;
 
 /**
  * Created by alexandre on 16/09/15.
@@ -302,6 +305,8 @@ public class PermissionChecker {
         log.debug("launchScan: launching scan");
         // inform import service about the event
         Intent serviceIntent = new Intent(mActivity, VideoStoreImportService.class);
+        ArchosUtils.addBreadcrumb(SentryLevel.INFO, "PermissionChecker.launchScan", "intent VideoStoreImportService action ACTION_VIDEO_SCANNER_STORAGE_PERMISSION_GRANTED");
+        log.debug("launchScan: PermissionChecker.launchScan intent VideoStoreImportService action ACTION_VIDEO_SCANNER_STORAGE_PERMISSION_GRANTED");
         serviceIntent.setAction(ArchosMediaIntent.ACTION_VIDEO_SCANNER_STORAGE_PERMISSION_GRANTED);
         mActivity.startService(serviceIntent);
         if (mListener != null)
