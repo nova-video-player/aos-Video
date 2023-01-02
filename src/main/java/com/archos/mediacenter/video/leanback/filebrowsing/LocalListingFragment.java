@@ -21,11 +21,14 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.archos.customizedleanback.widget.MyTitleView;
+import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.utils.BlacklistedDbAdapter;
 import com.archos.mediacenter.video.R;
 import com.archos.mediaprovider.ArchosMediaIntent;
 import com.archos.mediaprovider.video.Blacklist;
 import com.archos.mediaprovider.video.VideoStoreImportService;
+
+import io.sentry.SentryLevel;
 
 /**
  * Created by vapillon on 17/04/15.
@@ -133,6 +136,7 @@ public class LocalListingFragment extends ListingFragment {
             Toast.makeText(getActivity(), getString(R.string.indexed_folder_removed, blacklistedName), Toast.LENGTH_SHORT).show();
             // Send a scan request to MediaScanner
             Intent serviceIntent = new Intent(getActivity(), VideoStoreImportService.class);
+            ArchosUtils.addBreadcrumb(SentryLevel.INFO, "LocalListingFragment.createBlacklisted", "scan request VideoStoreImportService intent action ACTION_VIDEO_SCANNER_METADATA_UPDATE");
             serviceIntent.setAction(ArchosMediaIntent.ACTION_VIDEO_SCANNER_METADATA_UPDATE);
             serviceIntent.setData(mUri);
             getActivity().startService(serviceIntent);
@@ -153,6 +157,7 @@ public class LocalListingFragment extends ListingFragment {
         boolean result = BlacklistedDbAdapter.VIDEO.deleteBlacklisted(getActivity(), mUri.toString());
         if (result) {
             Toast.makeText(getActivity(), getString(R.string.indexed_folder_added, blacklistedName), Toast.LENGTH_SHORT).show();
+            ArchosUtils.addBreadcrumb(SentryLevel.INFO, "LocalListingFragment.deleteBlacklisted", "remove video from this directoty VideoStoreImportService intent action ACTION_VIDEO_SCANNER_METADATA_UPDATE");
             // Tell MediaScanner to remove the videos from this directory
             Intent serviceIntent = new Intent(getActivity(), VideoStoreImportService.class);
             serviceIntent.setAction(ArchosMediaIntent.ACTION_VIDEO_SCANNER_METADATA_UPDATE);
