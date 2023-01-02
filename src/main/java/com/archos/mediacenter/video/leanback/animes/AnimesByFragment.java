@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.archos.mediacenter.video.leanback.movies;
+package com.archos.mediacenter.video.leanback.animes;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -58,7 +58,6 @@ import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.player.PrivateMode;
 
 import java.util.ArrayList;
-
 
 public abstract class AnimesByFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
