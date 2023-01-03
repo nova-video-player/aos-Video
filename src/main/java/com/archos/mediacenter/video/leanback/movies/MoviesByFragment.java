@@ -283,6 +283,7 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
     }
 
     private void loadCategoriesRows(Cursor c) {
+        if (c == null) return;
         int subsetIdColumn, subsetNameColumn, listOfMovieIdsColumn;
         if (mSeparateAnimeFromShowMovie) {
             subsetIdColumn = c.getColumnIndex(FilmsByLoader.COLUMN_SUBSET_ID);

@@ -258,6 +258,7 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
     }
 
     private void loadCategoriesRows(Cursor c) {
+        if (c == null) return;
         int subsetIdColumn = c.getColumnIndex(MoviesByLoader.COLUMN_SUBSET_ID);
         int subsetNameColumn = c.getColumnIndex(MoviesByLoader.COLUMN_SUBSET_NAME);
         int listOfMovieIdsColumn = c.getColumnIndex(MoviesByLoader.COLUMN_LIST_OF_MOVIE_IDS);

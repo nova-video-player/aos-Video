@@ -265,6 +265,7 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
     }
 
     private void loadCategoriesRows(Cursor c) {
+        if (c == null) return;
         int subsetIdColumn = c.getColumnIndex(TvshowsByAlphaLoader.COLUMN_SUBSET_ID);
         int subsetNameColumn = c.getColumnIndex(TvshowsByAlphaLoader.COLUMN_SUBSET_NAME);
         int listOfTvshowIdsColumn = c.getColumnIndex(TvshowsByAlphaLoader.COLUMN_LIST_OF_TVSHOWS_IDS);

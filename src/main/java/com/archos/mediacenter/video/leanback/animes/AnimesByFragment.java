@@ -274,6 +274,7 @@ public abstract class AnimesByFragment extends BrowseSupportFragment implements 
     }
 
     private void loadCategoriesRows(Cursor c) {
+        if (c == null) return;
         int subsetIdColumn = c.getColumnIndex(AnimesByLoader.COLUMN_SUBSET_ID);
         int subsetNameColumn = c.getColumnIndex(AnimesByLoader.COLUMN_SUBSET_NAME);
         int listOfAnimeIdsColumn = c.getColumnIndex(AnimesByLoader.COLUMN_LIST_OF_MOVIE_IDS);
