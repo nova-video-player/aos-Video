@@ -473,8 +473,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     }
 
     private void updateBackground() {
-        Resources r = getResources();
         if (mActivity == null) return; // do not update background when activity has been destroyed
+        Resources r = getResources();
         bgMngr = BackgroundManager.getInstance(mActivity);
         if(!bgMngr.isAttached())
             bgMngr.attach(mActivity.getWindow());
@@ -499,7 +499,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     }
 
     private void loadRows() {
-        log.debug("loadRows()");
+        log.debug("loadRows");
+        if (mActivity == null) {
+            log.debug("loadRows: activity is null do nothing");
+            return;
+        }
         // Two different row presenters, one standard for regular cards, one special for the icon items
         ListRowPresenter listRowPresenter = new ListRowPresenter();
         IconItemRowPresenter iconItemRowPresenter = new IconItemRowPresenter();
@@ -620,6 +624,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     }
 
     private void refreshAllBoxes() {
+        if (mActivity != null) return;
         refreshAllMoviesBox();
         refreshAllCollectionsBox();
         refreshAllTvshowsBox();
@@ -1287,7 +1292,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private final BroadcastReceiver mUpdateReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             log.debug("mUpdateReceiver: received intent!!!");
-            if (intent != null && intent.getAction().equals(ArchosMediaIntent.ACTION_VIDEO_SCANNER_SCAN_FINISHED)) {
+            if (context != null && intent != null && intent.getAction().equals(ArchosMediaIntent.ACTION_VIDEO_SCANNER_SCAN_FINISHED)) {
                 log.debug("mUpdateReceiver: update all boxes");
                 refreshAllBoxes();
             }
