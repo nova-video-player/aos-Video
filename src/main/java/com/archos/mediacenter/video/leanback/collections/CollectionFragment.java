@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.collections;
 
+import static com.archos.mediacenter.video.leanback.LoaderIds.CollectionLoaderId;
+
 import android.app.Activity;
 import android.app.ActivityOptions;
 
@@ -116,7 +118,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     public static final String EXTRA_COLLECTION_ID = "collection_id";
     public static final String SHARED_ELEMENT_NAME = "hero";
 
-    public static final int COLLECTION_LOADER_ID = -43;
+    public static final int COLLECTION_LOADER_ID = CollectionLoaderId;
 
     public static final int REQUEST_CODE_VIDEO = 8576;
     public static final int REQUEST_CODE_MARK_WATCHED = 8577;
@@ -632,6 +634,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     }
 
     private void refreshCollection() {
+        // TODO MARC
         if (mCollectionId != -1) {
             // CollectionLoader is a CursorLoader
             CollectionLoader collectionLoader = new CollectionLoader(getActivity(), mCollectionId);

@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.animes;
 
+import static com.archos.mediacenter.video.leanback.LoaderIds.AnimesByLoaderId;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -174,7 +176,7 @@ public abstract class AnimesByFragment extends BrowseSupportFragment implements 
         mVideoPresenter = new PosterImageCardPresenter(getActivity());
         mVideoMapper = new CompatibleCursorMapperConverter(new VideoCursorMapper());
 
-        LoaderManager.getInstance(this).initLoader(-1, null, this);
+        LoaderManager.getInstance(this).initLoader(AnimesByLoaderId, null, this);
     }
 
     private void setupEventListeners() {
@@ -200,7 +202,7 @@ public abstract class AnimesByFragment extends BrowseSupportFragment implements 
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (id == -1) {
+        if (id == AnimesByLoaderId) {
             // List of categories
             return getSubsetLoader(getActivity());
         } else {
@@ -213,7 +215,7 @@ public abstract class AnimesByFragment extends BrowseSupportFragment implements 
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor c) {
         if (getActivity() == null) return;
         // List of categories
-        if (cursorLoader.getId() == -1) {
+        if (cursorLoader.getId() == AnimesByLoaderId) {
 
             // Empty view visibility
             mEmptyView.setVisibility(c.getCount() > 0 ? View.GONE : View.VISIBLE);
@@ -301,15 +303,15 @@ public abstract class AnimesByFragment extends BrowseSupportFragment implements 
             // Build the row
             CursorObjectAdapter subsetAdapter = new CursorObjectAdapter(mVideoPresenter);
             subsetAdapter.setMapper(mVideoMapper);
-            rows.add(new ListRow(new HeaderItem(subsetName), subsetAdapter));
-            mAdaptersMap.append(subsetId, subsetAdapter);
+            rows.add(new ListRow(AnimesByLoaderId + 500 + subsetId, new HeaderItem(subsetName), subsetAdapter));
+            mAdaptersMap.append(AnimesByLoaderId + 500 + subsetId, subsetAdapter);
 
             // Start the loader manager for this row
             Bundle args = new Bundle();
             args.putString("ids", listOfAnimeIds);
             args.putString("sort", mSortOrder);
             try {
-                LoaderManager.getInstance(this).restartLoader(subsetId, args, this);
+                LoaderManager.getInstance(this).restartLoader(AnimesByLoaderId + 500 + subsetId, args, this);
             } catch (Exception e) {
                 Log.w(TAG, "caught exception in loadCategoriesRows ",e);
             }

@@ -14,6 +14,9 @@
 
 package com.archos.mediacenter.video.leanback.tvshow;
 
+import static com.archos.mediacenter.video.leanback.LoaderIds.EpisodesByDateLoaderId;
+import static com.archos.mediacenter.video.leanback.LoaderIds.VideosByLoaderId;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -72,7 +75,7 @@ public class EpisodesByDateFragment extends VideosByFragment {
                                     mDateView = which;
                                     // Save the view mode
                                     mPrefs.edit().putInt(VIEW_PARAM_KEY, mDateView).commit();
-                                    LoaderManager.getInstance(EpisodesByDateFragment.this).restartLoader(-1, null, EpisodesByDateFragment.this);
+                                    LoaderManager.getInstance(EpisodesByDateFragment.this).restartLoader(EpisodesByDateLoaderId, null, EpisodesByDateFragment.this);
                                 }
                                 dialog.dismiss();
                             }
@@ -84,7 +87,7 @@ public class EpisodesByDateFragment extends VideosByFragment {
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (id == -1) {
+        if (id == VideosByLoaderId) { // not EpisodesByDateLoaderId since initLoader is in VideoByFragment
             // List of categories
             return getSubsetLoader(getActivity());
         } else {

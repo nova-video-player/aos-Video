@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.tvshow;
 
+import static com.archos.mediacenter.video.leanback.LoaderIds.TvshowLoaderId;
+
 import android.app.Activity;
 import android.app.ActivityOptions;
 import androidx.loader.app.LoaderManager;
@@ -27,7 +29,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -66,7 +67,6 @@ import androidx.loader.content.CursorLoader;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
-import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
@@ -78,8 +78,6 @@ import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
-import com.archos.mediacenter.video.leanback.collections.CollectionActionAdapter;
-import com.archos.mediacenter.video.leanback.collections.CollectionFragment;
 import com.archos.mediacenter.video.leanback.details.ArchosDetailsOverviewRowPresenter;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
@@ -94,7 +92,6 @@ import com.archos.mediascraper.ShowTags;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.nio.channels.AsynchronousChannel;
 
 public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -105,7 +102,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     public static final String EXTRA_TV_SHOW_ID = "tv_show_id";
     public static final String SHARED_ELEMENT_NAME = "hero";
 
-    public static final int SEASONS_LOADER_ID = -42;
+    public static final int SEASONS_LOADER_ID = TvshowLoaderId;
 
     public static final int REQUEST_CODE_MORE_DETAILS = 8574; // some random integer may be useful for grep/debug...
     public static final int REQUEST_CODE_CHANGE_TVSHOW = 8575; // some random integer may be useful for grep/debug...
@@ -140,7 +137,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
     private void setmTvshow(long id) {
         if (DBG) Log.d(TAG, "setTvshow: for id=" + id);
-        if (id != -1) {
+        if (id != -1) { // this is not the cursorId
             // TvshowLoader is a CursorLoader
             TvshowLoader tvshowLoader = new TvshowLoader(getActivity(), id);
             Cursor cursor = tvshowLoader.loadInBackground();
@@ -456,8 +453,9 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
             // Clear all the loader managers because they need to be recreated with the new ID
             LoaderManager.getInstance(this).destroyLoader(SEASONS_LOADER_ID);
+            // TODO MARC not clear about these loaders and IDs... TvshowLoaderId + 500 +
             if (mSeasonAdapters != null){
-                for (int i = 0; i < mSeasonAdapters.size(); i++) {
+                for (int i = 0; i < mSeasonAdapters.size(); i++) { // TODO MARC SHIFT TvshowLoaderId + 500 +
                     LoaderManager.getInstance(this).destroyLoader(mSeasonAdapters.keyAt(i));
                 }
             }
@@ -581,6 +579,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 slightlyDelayedFinish();
             }
             else {
+                // TODO MARC should we offset this? TvshowLoaderId + 500 +
                 for (int k = 0; k < mSeasonAdapters.size(); k++)
                     LoaderManager.getInstance(this).restartLoader(mSeasonAdapters.keyAt(k), null, this);
             }  
@@ -592,7 +591,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
                 if (seasonAdapter != null)
                     seasonAdapter.changeCursor(cursor);
-                else
+                else // TODO MARC shift TvshowLoaderId + 500 + --> not it is already in the ID
                     LoaderManager.getInstance(this).destroyLoader(cursorLoader.getId());
             }
         }

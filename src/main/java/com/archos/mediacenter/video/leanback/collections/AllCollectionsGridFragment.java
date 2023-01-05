@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.collections;
 
+import static com.archos.mediacenter.video.leanback.LoaderIds.AllCollectionsGridLoaderId;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -67,7 +69,7 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
     private static final String TAG = AllCollectionsGridFragment.class.getSimpleName();
     private static final boolean DBG = false;
 
-    public static final int ALL_COLLECTIONS_LOADER_ID = -44;
+    public static final int ALL_COLLECTIONS_LOADER_ID = AllCollectionsGridLoaderId;
 
     private static final String PREF_MOVIE_COLLECTION_DISPLAY_MODE = "PREF_MOVIE_COLLECTION_DISPLAY_MODE";
 

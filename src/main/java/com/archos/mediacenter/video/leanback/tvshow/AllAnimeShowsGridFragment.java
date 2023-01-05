@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.tvshow;
 
+import static com.archos.mediacenter.video.leanback.LoaderIds.AllAnimeShowsGridLoaderId;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -130,7 +132,7 @@ public class AllAnimeShowsGridFragment extends MyVerticalGridFragment implements
                         Bundle args = new Bundle();
                         args.putString("sort", mSortOrder);
                         args.putBoolean("showWatched", mShowWatched);
-                        LoaderManager.getInstance(AllAnimeShowsGridFragment.this).restartLoader(0, args, AllAnimeShowsGridFragment.this);
+                        LoaderManager.getInstance(AllAnimeShowsGridFragment.this).restartLoader(AllAnimeShowsGridLoaderId, args, AllAnimeShowsGridFragment.this);
                     }
                 }
 
@@ -159,7 +161,7 @@ public class AllAnimeShowsGridFragment extends MyVerticalGridFragment implements
         Bundle args = new Bundle();
         args.putString("sort", mSortOrder);
         args.putBoolean("showWatched", mShowWatched);
-        LoaderManager.getInstance(this).restartLoader(0, args, AllAnimeShowsGridFragment.this);
+        LoaderManager.getInstance(this).restartLoader(AllAnimeShowsGridLoaderId, args, AllAnimeShowsGridFragment.this);
     }
 
     @Override
@@ -234,7 +236,7 @@ public class AllAnimeShowsGridFragment extends MyVerticalGridFragment implements
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
                                     args.putBoolean("showWatched", mShowWatched);
-                                    LoaderManager.getInstance(AllAnimeShowsGridFragment.this).restartLoader(0, args, AllAnimeShowsGridFragment.this);
+                                    LoaderManager.getInstance(AllAnimeShowsGridFragment.this).restartLoader(AllAnimeShowsGridLoaderId, args, AllAnimeShowsGridFragment.this);
                                 }
                                 dialog.dismiss();
                             }
@@ -260,7 +262,7 @@ public class AllAnimeShowsGridFragment extends MyVerticalGridFragment implements
                 Bundle args = new Bundle();
                 args.putString("sort", mSortOrder);
                 args.putBoolean("showWatched", mShowWatched);
-                LoaderManager.getInstance(AllAnimeShowsGridFragment.this).restartLoader(0, args, AllAnimeShowsGridFragment.this);
+                LoaderManager.getInstance(AllAnimeShowsGridFragment.this).restartLoader(AllAnimeShowsGridLoaderId, args, AllAnimeShowsGridFragment.this);
             }
         });
 
@@ -295,7 +297,7 @@ public class AllAnimeShowsGridFragment extends MyVerticalGridFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (id == 0) {
+        if (id == AllAnimeShowsGridLoaderId) {
             if (args == null) {
                 return new AllAnimeShowsLoader(getActivity());
             } else {
@@ -308,7 +310,7 @@ public class AllAnimeShowsGridFragment extends MyVerticalGridFragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         if (getActivity() == null) return;
-        if (cursorLoader.getId()==0) {
+        if (cursorLoader.getId()==AllAnimeShowsGridLoaderId) {
             mTvshowsAdapter.swapCursor(cursor);
             setEmptyViewVisiblity(cursor.getCount()<1);
 

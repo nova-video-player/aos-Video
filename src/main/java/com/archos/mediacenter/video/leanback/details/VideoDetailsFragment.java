@@ -15,6 +15,8 @@
 
 package com.archos.mediacenter.video.leanback.details;
 
+import static com.archos.mediacenter.video.leanback.LoaderIds.VideoDetailsLoaderId;
+
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.Dialog;
@@ -445,8 +447,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                             fullyReloadVideo(mVideo,mPoster);
 
                         }
-                        LoaderManager.getInstance(VideoDetailsFragment.this).restartLoader(1, null, VideoDetailsFragment.this);
-
+                        LoaderManager.getInstance(VideoDetailsFragment.this).restartLoader(VideoDetailsLoaderId, null, VideoDetailsFragment.this);
                     }
                 }
                 else if (item instanceof WebPageLink) {
@@ -581,11 +582,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 mDetailRowBuilderTask = new DetailRowBuilderTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,mVideo);
             }
             // We start the loader in all cases to get DB updates
-            LoaderManager.getInstance(this).restartLoader(1, null, this);
+            LoaderManager.getInstance(this).restartLoader(VideoDetailsLoaderId, null, this);
         }
         // Update the details when back from player (we may have miss some DB updates while in background)
         else if (mResumeFromPlayer) {
-            LoaderManager.getInstance(this).restartLoader(1, null, this);
+            LoaderManager.getInstance(this).restartLoader(VideoDetailsLoaderId, null, this);
 
             if (mSubtitleFilesListerTask !=null) {
                 mSubtitleFilesListerTask.cancel(true);
@@ -850,7 +851,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 // It is not indexed anymore hence we need to change our query and have it based on the path now
                 // (else a new indexing would need to no cursor loader update callback)
                 if (oldVideoObject.isIndexed()) {
-                    LoaderManager.getInstance(this).restartLoader(1, null, this);
+                    LoaderManager.getInstance(this).restartLoader(VideoDetailsLoaderId, null, this);
                 }
             }
             // If we have no Video object (case it's launched from player with path only)
@@ -975,7 +976,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             // smooth update when unscrapping
             if (oldVideoObject!=null && oldVideoObject.hasScraperData() && !currentVideo.hasScraperData()) {
                 // remove scraper related rows
-                if(mAdapter.indexOf(mFileListRow)>=0) {
+                if(mAdapter.indexOf(mFileListRow)>=0) { // TODO MARC NPE
                     mAdapter.remove(mFileListRow);
                     INDEX_SUBTITLES--;
                     INDEX_FILEDETAILS--;

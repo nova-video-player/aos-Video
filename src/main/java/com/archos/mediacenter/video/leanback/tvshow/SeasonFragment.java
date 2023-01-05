@@ -14,6 +14,9 @@
 
 package com.archos.mediacenter.video.leanback.tvshow;
 
+import static com.archos.mediacenter.video.leanback.LoaderIds.SeasonLoaderId;
+import static com.archos.mediacenter.video.leanback.LoaderIds.TvshowsByLoaderId;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -266,7 +269,7 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
         mOverlay.resume();
 
         // Start loading the list of seasons
-        LoaderManager.getInstance(this).restartLoader(1, null, this);
+        LoaderManager.getInstance(this).restartLoader(SeasonLoaderId, null, this);
     }
 
     @Override
@@ -288,8 +291,9 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
             desc = getString(R.string.how_to_unindex_season);
         else if (mActionId == TvshowActionAdapter.ACTION_DELETE)
             desc = getString(R.string.how_to_delete_season);
-        mSeasonsListRow = new ListRow(new HeaderItem(desc), mSeasonsAdapter);
-        mRowsAdapter.add(mSeasonsListRow);
+        // TODO ADD OFFSET???
+        mSeasonsListRow = new ListRow(TvshowsByLoaderId, new HeaderItem(desc), mSeasonsAdapter);
+        mRowsAdapter.add(TvshowsByLoaderId, mSeasonsListRow);
 
         setAdapter(mRowsAdapter);
     }

@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.nonscraped;
 
+import static com.archos.mediacenter.video.leanback.LoaderIds.NonScrapedVideosLoaderId;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -130,7 +132,7 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
         setGridPresenter(vgp);
         Bundle args = new Bundle();
         args.putString("sort", mSortOrder);
-        LoaderManager.getInstance(this).restartLoader(0, args, NonScrapedVideosFragment.this);
+        LoaderManager.getInstance(this).restartLoader(NonScrapedVideosLoaderId, args, NonScrapedVideosFragment.this);
     }
 
     @Override
@@ -196,7 +198,7 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
                                     mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).commit();
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
-                                    LoaderManager.getInstance(NonScrapedVideosFragment.this).restartLoader(0, args, NonScrapedVideosFragment.this);
+                                    LoaderManager.getInstance(NonScrapedVideosFragment.this).restartLoader(NonScrapedVideosLoaderId, args, NonScrapedVideosFragment.this);
                                 }
                                 dialog.dismiss();
                             }
@@ -239,7 +241,7 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (id == 0) {
+        if (id == NonScrapedVideosLoaderId) {
             if (args == null) {
                 return new NonScrapedVideosLoader(getActivity());
             } else {
@@ -252,7 +254,7 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         if (getActivity() == null) return;
-        if (cursorLoader.getId()==0) {
+        if (cursorLoader.getId()==NonScrapedVideosLoaderId) {
             mNonScrapedAdapter.swapCursor(cursor);
             setEmptyViewVisiblity(cursor.getCount()<1);
         }

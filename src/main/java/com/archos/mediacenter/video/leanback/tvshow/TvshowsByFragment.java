@@ -1,5 +1,7 @@
 package com.archos.mediacenter.video.leanback.tvshow;
 
+import static com.archos.mediacenter.video.leanback.LoaderIds.TvshowsByLoaderId;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -42,12 +44,11 @@ import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
-import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 
 import java.util.ArrayList;
 
 
-public abstract class TvshowsByFragment extends BrowseSupportFragment  implements  LoaderManager.LoaderCallbacks<Cursor> {
+public abstract class TvshowsByFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "TvshowsByFragment";
 
@@ -163,7 +164,7 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
         mTvshowPresenter = new PosterImageCardPresenter(getActivity());
         mTvshowMapper = new CompatibleCursorMapperConverter(new TvshowCursorMapper());
 
-        LoaderManager.getInstance(this).initLoader(-1, null, this);
+        LoaderManager.getInstance(this).initLoader(TvshowsByLoaderId, null, this);
     }
 
     private void setupEventListeners() {
@@ -191,7 +192,7 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (id == -1) {
+        if (id == TvshowsByLoaderId) {
             // List of categories
             return getSubsetLoader(getActivity());
         } else {
@@ -204,7 +205,7 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor c) {
         if (getActivity() == null) return;
         // List of categories
-        if (cursorLoader.getId() == -1) {
+        if (cursorLoader.getId() == TvshowsByLoaderId) {
 
             // Empty view visibility
             mEmptyView.setVisibility(c.getCount() > 0 ? View.GONE : View.VISIBLE);
@@ -292,8 +293,8 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
             // Build the row
             CursorObjectAdapter subsetAdapter = new CursorObjectAdapter(mTvshowPresenter);
             subsetAdapter.setMapper(mTvshowMapper);
-            rows.add(new ListRow(subsetId, new HeaderItem(subsetName), subsetAdapter));
-            mAdaptersMap.append(subsetId, subsetAdapter);
+            rows.add(new ListRow(TvshowsByLoaderId + 500 + subsetId, new HeaderItem(subsetName), subsetAdapter));
+            mAdaptersMap.append(TvshowsByLoaderId + 500 + subsetId, subsetAdapter);
 
             // Start the loader manager for this row
             Bundle args = new Bundle();
@@ -301,7 +302,7 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
             args.putString("sort", mSortOrder);
             // cf. https://github.com/nova-video-player/aos-AVP/issues/141
             try {
-                LoaderManager.getInstance(this).restartLoader(subsetId, args, this);
+                LoaderManager.getInstance(this).restartLoader(TvshowsByLoaderId + 500 + subsetId, args, this);
             } catch (Exception e) {
                 Log.w(TAG, "caught exception in loadCategoriesRows ",e);
             }

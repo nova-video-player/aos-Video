@@ -14,6 +14,14 @@
 
 package com.archos.mediacenter.video.leanback;
 
+import static com.archos.mediacenter.video.leanback.LoaderIds.MainFragmentAllAnimesLoaderId;
+import static com.archos.mediacenter.video.leanback.LoaderIds.MainFragmentAllMoviesLoaderId;
+import static com.archos.mediacenter.video.leanback.LoaderIds.MainFragmentAllTvShowsLoaderId;
+import static com.archos.mediacenter.video.leanback.LoaderIds.MainFragmentLastAddedLoaderId;
+import static com.archos.mediacenter.video.leanback.LoaderIds.MainFragmentLastPlayerLoaderId;
+import static com.archos.mediacenter.video.leanback.LoaderIds.MainFragmentNonScrapedVideosCountLoaderId;
+import static com.archos.mediacenter.video.leanback.LoaderIds.MainFragmentWatchingUpNextLoaderId;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -67,6 +75,7 @@ import com.archos.mediacenter.video.browser.loader.LastPlayedLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.browser.loader.NonScrapedVideosCountLoader;
 import com.archos.mediacenter.video.browser.loader.WatchingUpNextLoader;
+import com.archos.mediacenter.video.leanback.LoaderIds;
 import com.archos.mediacenter.video.leanback.adapter.object.Box;
 import com.archos.mediacenter.video.leanback.adapter.object.EmptyView;
 import com.archos.mediacenter.video.leanback.adapter.object.Icon;
@@ -126,13 +135,13 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     private static final String PREF_PRIVATE_MODE = "PREF_PRIVATE_MODE";
 
-    final static int LOADER_ID_LAST_ADDED = 42;
-    final static int LOADER_ID_LAST_PLAYED = 43;
-    final static int LOADER_ID_ALL_TV_SHOWS = 44;
-    final static int LOADER_ID_NON_SCRAPED_VIDEOS_COUNT = 45;
-    final static int LOADER_ID_ALL_MOVIES = 46;
-    final static int LOADER_ID_WATCHING_UP_NEXT = 47;
-    final static int LOADER_ID_ALL_ANIMES = 48;
+    final static int LOADER_ID_LAST_ADDED = MainFragmentLastAddedLoaderId;
+    final static int LOADER_ID_LAST_PLAYED = MainFragmentLastPlayerLoaderId;
+    final static int LOADER_ID_ALL_TV_SHOWS = MainFragmentAllTvShowsLoaderId;
+    final static int LOADER_ID_NON_SCRAPED_VIDEOS_COUNT = MainFragmentNonScrapedVideosCountLoaderId;
+    final static int LOADER_ID_ALL_MOVIES = MainFragmentAllMoviesLoaderId;
+    final static int LOADER_ID_WATCHING_UP_NEXT = MainFragmentWatchingUpNextLoaderId;
+    final static int LOADER_ID_ALL_ANIMES = MainFragmentAllAnimesLoaderId;
 
     final static int ROW_ID_LAST_ADDED = 1000;
     final static int ROW_ID_LAST_PLAYED = 1001;

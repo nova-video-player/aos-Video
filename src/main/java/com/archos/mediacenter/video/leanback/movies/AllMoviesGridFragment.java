@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.movies;
 
+import static com.archos.mediacenter.video.leanback.LoaderIds.AllMoviesGridLoaderId;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -148,7 +150,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
                         Bundle args = new Bundle();
                         args.putString("sort", mSortOrder);
                         args.putBoolean("showWatched", mShowWatched);
-                        LoaderManager.getInstance(AllMoviesGridFragment.this).restartLoader(0, args, AllMoviesGridFragment.this);
+                        LoaderManager.getInstance(AllMoviesGridFragment.this).restartLoader(AllMoviesGridLoaderId, args, AllMoviesGridFragment.this);
                     }
                 }
 
@@ -177,7 +179,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         Bundle args = new Bundle();
         args.putString("sort", mSortOrder);
         args.putBoolean("showWatched", mShowWatched);
-        LoaderManager.getInstance(this).restartLoader(0, args, AllMoviesGridFragment.this);
+        LoaderManager.getInstance(this).restartLoader(AllMoviesGridLoaderId, args, AllMoviesGridFragment.this);
     }
 
     @Override
@@ -251,7 +253,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
                                     args.putBoolean("showWatched", mShowWatched);
-                                    LoaderManager.getInstance(AllMoviesGridFragment.this).restartLoader(0, args, AllMoviesGridFragment.this);
+                                    LoaderManager.getInstance(AllMoviesGridFragment.this).restartLoader(AllMoviesGridLoaderId, args, AllMoviesGridFragment.this);
                                 }
                                 dialog.dismiss();
                             }
@@ -277,7 +279,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
                 Bundle args = new Bundle();
                 args.putString("sort", mSortOrder);
                 args.putBoolean("showWatched", mShowWatched);
-                LoaderManager.getInstance(AllMoviesGridFragment.this).restartLoader(0, args, AllMoviesGridFragment.this);
+                LoaderManager.getInstance(AllMoviesGridFragment.this).restartLoader(AllMoviesGridLoaderId, args, AllMoviesGridFragment.this);
             }
         });
 
@@ -312,7 +314,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (id == 0) {
+        if (id == AllMoviesGridLoaderId) {
             if (args == null) {
                 if (mSeparateAnimeFromShowMovie)
                     return new FilmsLoader(getActivity(), true);
@@ -329,7 +331,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         if (getActivity() == null) return;
-        if (cursorLoader.getId()==0) {
+        if (cursorLoader.getId()==AllMoviesGridLoaderId) {
             mMoviesAdapter.swapCursor(cursor);
             setEmptyViewVisiblity(cursor.getCount()<1);
 

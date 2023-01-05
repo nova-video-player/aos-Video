@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.filebrowsing;
 
+import static com.archos.mediacenter.video.leanback.LoaderIds.ListingLoaderId;
+
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.loader.app.LoaderManager;
@@ -373,7 +375,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
 
         // 2 - Get DB data for the indexed videos that may be in this folder
         mDbQueryReady = false;
-        LoaderManager.getInstance(this).restartLoader(0, null, this);
+        LoaderManager.getInstance(this).restartLoader(ListingLoaderId, null, this);
     }
 
     /**

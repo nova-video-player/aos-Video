@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.tvshow;
 
+import static com.archos.mediacenter.video.leanback.LoaderIds.AllTvshowsGridLoaderId;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,8 +46,6 @@ import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsNoAnimeLoader;
-import com.archos.mediacenter.video.browser.loader.FilmsLoader;
-import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.DisplayMode;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
@@ -135,7 +135,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
                         Bundle args = new Bundle();
                         args.putString("sort", mSortOrder);
                         args.putBoolean("showWatched", mShowWatched);
-                        LoaderManager.getInstance(AllTvshowsGridFragment.this).restartLoader(0, args, AllTvshowsGridFragment.this);
+                        LoaderManager.getInstance(AllTvshowsGridFragment.this).restartLoader(AllTvshowsGridLoaderId, args, AllTvshowsGridFragment.this);
                     }
                 }
 
@@ -164,7 +164,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
         Bundle args = new Bundle();
         args.putString("sort", mSortOrder);
         args.putBoolean("showWatched", mShowWatched);
-        LoaderManager.getInstance(this).restartLoader(0, args, AllTvshowsGridFragment.this);
+        LoaderManager.getInstance(this).restartLoader(AllTvshowsGridLoaderId, args, AllTvshowsGridFragment.this);
     }
 
     @Override
@@ -239,7 +239,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
                                     args.putBoolean("showWatched", mShowWatched);
-                                    LoaderManager.getInstance(AllTvshowsGridFragment.this).restartLoader(0, args, AllTvshowsGridFragment.this);
+                                    LoaderManager.getInstance(AllTvshowsGridFragment.this).restartLoader(AllTvshowsGridLoaderId, args, AllTvshowsGridFragment.this);
                                 }
                                 dialog.dismiss();
                             }
@@ -265,7 +265,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
                 Bundle args = new Bundle();
                 args.putString("sort", mSortOrder);
                 args.putBoolean("showWatched", mShowWatched);
-                LoaderManager.getInstance(AllTvshowsGridFragment.this).restartLoader(0, args, AllTvshowsGridFragment.this);
+                LoaderManager.getInstance(AllTvshowsGridFragment.this).restartLoader(AllTvshowsGridLoaderId, args, AllTvshowsGridFragment.this);
             }
         });
 
@@ -300,7 +300,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (id == 0) {
+        if (id == AllTvshowsGridLoaderId) {
             if (args == null) {
                 if (mSeparateAnimeFromShowMovie)
                     return new AllTvshowsNoAnimeLoader(getActivity());
@@ -317,7 +317,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         if (getActivity() == null) return;
-        if (cursorLoader.getId()==0) {
+        if (cursorLoader.getId()==AllTvshowsGridLoaderId) {
             mTvshowsAdapter.swapCursor(cursor);
             setEmptyViewVisiblity(cursor.getCount()<1);
 
