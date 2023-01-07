@@ -48,7 +48,8 @@ public abstract class MoviesByLoader extends CursorLoader implements CompatAndSD
                         "END"
         ).build());
         setSelectionArgs(null);
-        if (VideoLoader.THROTTLE) setUpdateThrottle(VideoLoader.THROTTLE_DELAY_LONG);
+        // before VideoLoader.THROTTLE_DELAY_LONG but caused EpisodesByDateFragment/MoviesBy*Fragment to display no content (for long time?)
+        if (VideoLoader.THROTTLE) setUpdateThrottle(VideoLoader.THROTTLE_DELAY);
     }
 
     abstract protected String getSelection(Context context);

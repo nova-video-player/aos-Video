@@ -41,8 +41,10 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
 
     private static final String TAG = "VideoLoader";
 
-    public static final boolean THROTTLE = true;
+    // disabling cursorLoader throttling for now
+    public static final boolean THROTTLE = false;
     public static final int THROTTLE_DELAY = 5000; // 5s
+    // causes videos not to load in EpisodesByDate/MoviesBy(Year|Genre)
     public static final int THROTTLE_DELAY_LONG = 3600000; // 1h
 
     public static final String COLUMN_NAME = "name";
