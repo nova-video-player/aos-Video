@@ -36,8 +36,12 @@ import com.archos.mediacenter.video.leanback.VideosByFragment;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EpisodesByDateFragment extends VideosByFragment {
+
+    private static final Logger log = LoggerFactory.getLogger(EpisodesByDateFragment.class);
 
     private static final String SORT_PARAM_KEY = EpisodesByDateFragment.class.getName() + "_SORT";
     private static final String VIEW_PARAM_KEY = EpisodesByDateFragment.class.getName() + "_VIEW";
@@ -52,6 +56,7 @@ public class EpisodesByDateFragment extends VideosByFragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        log.debug("onActivityCreated");
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mDateView = mPrefs.getInt(VIEW_PARAM_KEY, 0);
         mSeparateAnimeFromShowMovie = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
@@ -84,6 +89,7 @@ public class EpisodesByDateFragment extends VideosByFragment {
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        log.debug("onCreateLoader id=", id);
         if (id == -1) {
             // List of categories
             return getSubsetLoader(getActivity());

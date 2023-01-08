@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,12 +40,19 @@ import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import com.archos.mediacenter.video.player.PrivateMode;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 
 public abstract class VideosByFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String TAG = "VideosByFragment";
-    private static boolean DBG = false;
+    private static final Logger log = LoggerFactory.getLogger(VideosByFragment.class);
+
+    // attempts to not have refresh of categories/list while scanning but both causes crashes
+    private static boolean STOP_LOADING = false;
+    // causes crashes AndroidRuntime: java.lang.RuntimeException: Unable to destroy activity {org.courville.nova/com.archos.mediacenter.video.leanback.tvshow.EpisodesByDateActivity}: java.lang.IllegalStateException: Observer androidx.leanback.app.ListRowDataAdapter$SimpleDataObserver@e52e40c was not registered.
+    private static boolean UNREGISTER_OBSERVERS = false;
 
     private ArrayObjectAdapter mRowsAdapter;
     private Overlay mOverlay;
@@ -93,6 +99,7 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        log.debug("onViewCreated");
         super.onViewCreated(view, savedInstanceState);
         mOverlay = new Overlay(this);
 
@@ -115,24 +122,28 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
 
     @Override
     public void onDestroyView() {
+        log.debug("onDestroyView");
         mOverlay.destroy();
         super.onDestroyView();
     }
 
     @Override
     public void onResume() {
+        log.debug("onResume");
         super.onResume();
         mOverlay.resume();
     }
 
     @Override
     public void onPause() {
+        log.debug("onPause");
         super.onPause();
         mOverlay.pause();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        log.debug("onActivityCreated");
         super.onActivityCreated(savedInstanceState);
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -188,6 +199,7 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        log.debug("onCreateLoader id=", id);
         if (id == -1) {
             // List of categories
             return getSubsetLoader(getActivity());
@@ -199,7 +211,11 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor c) {
-        if (getActivity() == null) return;
+        log.debug("onLoadFinished id=", cursorLoader.getId());
+        if (getActivity() == null) {
+            log.debug("onLoadFinished: activity null exiting");
+            return;
+        }
         // List of categories
         if (cursorLoader.getId() == -1) {
             // Empty view visibility
@@ -213,24 +229,29 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
             }
             mCurrentCategoriesCursor = c;
             loadCategoriesRows(c);
+            if (STOP_LOADING) cursorLoader.stopLoading();
         }
         // One of the row
         else {
             CursorObjectAdapter adapter = mAdaptersMap.get(cursorLoader.getId());
             if (adapter != null) {
                 adapter.changeCursor(c);
+                // do not get any other update because complex views should not be updated while scanning to prevent crash
+                if (STOP_LOADING) cursorLoader.stopLoading();
             }
         }
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) { }
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        log.debug("onLoaderReset");
+    }
 
     private boolean isCategoriesListModified(Cursor oldCursor, Cursor newCursor) {
 
         // Modified for sure if has different length
         if (oldCursor.getCount() != newCursor.getCount()) {
-            if (DBG) Log.d(TAG, "Difference found in the category list (size changed)");
+            log.debug("Difference found in the category list (size changed)");
             return true;
         }
 
@@ -246,26 +267,29 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
             final String newName = newCursor.getString(newSubsetNameColumn);
             if (oldName != null && !oldName.equals(newName)) {
                 // difference found
-                if (DBG) Log.d(TAG, "Difference found in the category list (" + oldName + " vs " + newName + ")");
+                log.debug("Difference found in the category list (" + oldName + " vs " + newName + ")");
                 return true;
             }
             oldCursor.moveToNext();
             newCursor.moveToNext();
         }
         // no difference found
-        if (DBG) Log.d(TAG, "No difference found in the category list");
+        log.debug("No difference found in the category list");
         return false;
     }
 
     private void loadCategoriesRows(Cursor c) {
-        if (c == null) return;
+        if (c == null) {
+            log.debug("loadCategoriesRows: cursor null exiting");
+            return;
+        }
         int subsetIdColumn = c.getColumnIndex(MoviesByLoader.COLUMN_SUBSET_ID);
         int subsetNameColumn = c.getColumnIndex(MoviesByLoader.COLUMN_SUBSET_NAME);
         int listOfMovieIdsColumn = c.getColumnIndex(MoviesByLoader.COLUMN_LIST_OF_MOVIE_IDS);
 
         mRowsAdapter.clear();
         mAdaptersMap.clear();
-
+        
         // NOTE: A first version was using a CursorObjectAdapter for the rows.
         // The problem was that when any DB update occurred (resume point...) I found no way
         // to not update all the rows. Hence the selection position on the current row was lost.
@@ -297,17 +321,19 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
             try {
                 LoaderManager.getInstance(this).restartLoader(subsetId, args, this);
             } catch (Exception e) {
-                Log.w(TAG, "caught exception in loadCategoriesRows ",e);
+                log.warn("caught exception in loadCategoriesRows ",e);
             }
 
             c.moveToNext();
         }
 
         mRowsAdapter.addAll(0,rows);
+        // unregister observer to not get notifications of content change
+        if (UNREGISTER_OBSERVERS) mRowsAdapter.unregisterAllObservers();
     }
 
     private void updateBackground() {
-        if (DBG) Log.d(TAG, "updateBackground");
+        log.debug("updateBackground");
         bgMngr = BackgroundManager.getInstance(getActivity());
         if(!bgMngr.isAttached())
             bgMngr.attach(getActivity().getWindow());
