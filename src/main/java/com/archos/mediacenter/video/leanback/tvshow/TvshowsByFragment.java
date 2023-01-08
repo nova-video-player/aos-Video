@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,12 +43,17 @@ import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 
 
-public abstract class TvshowsByFragment extends BrowseSupportFragment  implements  LoaderManager.LoaderCallbacks<Cursor> {
+public abstract class TvshowsByFragment extends BrowseSupportFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String TAG = "TvshowsByFragment";
+    private static final Logger log = LoggerFactory.getLogger(TvshowsByFragment.class);
+
+    public boolean mSeparateAnimeFromShowMovie;
 
     private ArrayObjectAdapter mRowsAdapter;
     private Overlay mOverlay;
@@ -97,6 +101,7 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         mOverlay = new Overlay(this);
 
         SearchOrbView searchOrbView = (SearchOrbView) getView().findViewById(R.id.title_orb);
@@ -139,6 +144,9 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
         super.onActivityCreated(savedInstanceState);
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mSeparateAnimeFromShowMovie = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
+        log.debug("onActivityCreated: mSeparateAnimeFromShowMovie=" + mSeparateAnimeFromShowMovie);
+
         mSortOrder = mPrefs.getString(getSortOrderParamKey(), mDefaultSort);
 
         Resources r = getResources();
@@ -237,7 +245,7 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
 
         // Modified for sure if has different length
         if (oldCursor.getCount() != newCursor.getCount()) {
-            Log.d(TAG, "Difference found in the category list (size changed)");
+            log.debug("Difference found in the category list (size changed)");
             return true;
         }
 
@@ -253,14 +261,14 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
             final String newName = newCursor.getString(newSubsetNameColumn);
             if (oldName != null && !oldName.equals(newName)) {
                 // difference found
-                Log.d(TAG, "Difference found in the category list (" + oldName + " vs " + newName + ")");
+                log.debug("Difference found in the category list (" + oldName + " vs " + newName + ")");
                 return true;
             }
             oldCursor.moveToNext();
             newCursor.moveToNext();
         }
         // no difference found
-        Log.d(TAG, "No difference found in the category list");
+        log.debug("No difference found in the category list");
         return false;
     }
 
@@ -303,7 +311,7 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment  implement
             try {
                 LoaderManager.getInstance(this).restartLoader(subsetId, args, this);
             } catch (Exception e) {
-                Log.w(TAG, "caught exception in loadCategoriesRows ",e);
+                log.warn("caught exception in loadCategoriesRows ",e);
             }
 
             c.moveToNext();
