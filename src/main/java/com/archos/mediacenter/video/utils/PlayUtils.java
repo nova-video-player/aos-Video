@@ -42,6 +42,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by vapillon on 15/04/15.
@@ -59,6 +61,8 @@ public class PlayUtils implements IndexHelper.Listener {
     private Context mContext;
     private long mPlaylistId;
     private Video mVideo;
+
+    private List<String> listOfSubtitles;
 
     @Override
     public void onScraped(ScrapeDetailResult result) {
@@ -165,13 +169,59 @@ public class PlayUtils implements IndexHelper.Listener {
         mResumePosition = resumePosition;
         mPlaylistId = playlistId;
         if (allow3rdPartyPlayer(context)&&resume!=PlayerService.RESUME_NO&&resumePosition==-1) {
+            // prepare subs only for external player to provide list to 3rd party player
+            // subs are fetched in /storage/emulated/0/Android/data/org.courville.nova/cache/subtitles/ during preFetchHTTPSubtitlesAndPrepareUpnpSubs
+            prepareSubs();
+            /*
             if(mIndexHelper==null)
                 mIndexHelper = new IndexHelper(context, null, 0);
             mIndexHelper.requestVideoDb(video.getUri(), -1,null, this, false, true);
+             */
         }else {
             if (resume == PlayerService.RESUME_NO)
                 resumePosition = 0;
             onResumeReady(context, mVideo, mimeType, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, playlistId);
+        }
+    }
+
+    public void requestVideoDb() {
+        listOfSubtitles = SubtitleManager.getPreFetchedListOfSubs();
+        if(mIndexHelper==null)
+            mIndexHelper = new IndexHelper(mContext, null, 0);
+        mIndexHelper.requestVideoDb(mVideo.getUri(), -1,null, this, false, true);
+    }
+
+    private Boolean mIsPreparingSubs = false;
+    private void prepareSubs() {
+        log.debug("prepareSubs");
+        if(!mIsPreparingSubs) {
+            mIsPreparingSubs = true;
+            com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager subtitleManager =
+                    new com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager(mContext, new SubtitleManager.Listener() {
+                        @Override
+                        public void onAbort() {
+                            mIsPreparingSubs = false;
+                            requestVideoDb();
+                        }
+                        @Override
+                        public void onError(Uri uri, Exception e) {
+                            mIsPreparingSubs = false;
+                            requestVideoDb();
+                        }
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            log.debug("prepareSubs.onSuccess " + uri);
+                            mIsPreparingSubs = false;
+                            requestVideoDb();
+                        }
+                        @Override
+                        public void onNoSubtitlesFound(Uri uri) {
+                            mIsPreparingSubs = false;
+                            requestVideoDb();
+                        }
+                    });
+            // this copies subs locally to /storage/emulated/0/Android/data/org.courville.nova/cache/subtitles/
+            subtitleManager.preFetchHTTPSubtitlesAndPrepareUpnpSubs(mVideo.getFileUri(), mVideo.getFileUri());
         }
     }
 
@@ -217,6 +267,7 @@ public class PlayUtils implements IndexHelper.Listener {
         Uri dataUri = video.getUri();
         Uri fileUri = null;
         if (!allow3rdPartyPlayer(context)) {
+            log.debug("onResumeReady: nova player");
             intent.putExtra(PlayerService.VIDEO, video);
             intent.setClass(context, PlayerActivity.class);
             intent.setDataAndType(dataUri, mimeType);
@@ -236,36 +287,98 @@ public class PlayUtils implements IndexHelper.Listener {
                 } else if (video.getStreamingUri() != null && !"upnp".equals(video.getStreamingUri().getScheme())) { //when upnp, try to open streamingUri
                     dataUri = video.getStreamingUri();
                 }
+                log.debug("onResumeReady: 3rd party player, non local file, streaming uri:" + dataUri);
                 intent.setDataAndType(dataUri, mimeType);
-
             }
             else {
                 // in case of a local file, need to rely on FileProvider since API24+ to avoid android.os.FileUriExposedException
                 File localFile = new File(video.getFileUri().getPath());
                 fileUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", localFile);
+                log.debug("onResumeReady: 3rd party player, local file, file uri:" + fileUri);
                 intent.setDataAndType(fileUri, mimeType);
-                // TODO: add support for 3rd party player subs here /!\ will only work for local files
-                // for vlc https://wiki.videolan.org/Android_Player_Intents/ subtitles_location path
-                // for mxplayer http://mx.j2inter.com/api subs android.net.Uri[], subs.name String[], subs.filename String[]
-                // mxplayer is clever enough for local files to find local subs, thus no need to implement it
-                final VideoMetadata videoMetadata = video.getMetadata();
-                if (videoMetadata!=null) {
-                    Boolean subFound = false;
-                    VideoMetadata.SubtitleTrack sub;
-                    int n = 0;
-                    // find first external subtitle file and pass it to vlc
-                    while (n < videoMetadata.getSubtitleTrackNb() && ! subFound) {
-                        sub = videoMetadata.getSubtitleTrack(n);
-                        if (sub.isExternal) {
-                            subFound = true;
-                            log.debug("onResumeReady: adding external subtitle name=" + sub.name + ", path=" + sub.path);
+            }
+            // add support for 3rd party player subs both for local and remote
+            // for vlc https://wiki.videolan.org/Android_Player_Intents/ subtitles_location path
+            // for mxplayer/justplayer http://mx.j2inter.com/api subs android.net.Uri[], subs.name String[], subs.filename String[]
+            final VideoMetadata videoMetadata = video.getMetadata();
+            if (videoMetadata!=null) { // videoMetaData is null here... -> code is useless
+                Boolean subFound = false;
+                VideoMetadata.SubtitleTrack sub;
+                int n = 0;
+                List<Uri> MxSubPaths = new ArrayList<>();
+                List<String> MxSubNames = new ArrayList<>();
+                Uri subUri;
+                log.debug("onResumeReady: videoMetadata not null, number of sub tracks to inspect:" + videoMetadata.getSubtitleTrackNb());
+                // find first external subtitle file and pass it to vlc
+                while (n < videoMetadata.getSubtitleTrackNb()) {
+                    // getSubtitleTrack only provides embedded subs thus isExternal is false
+                    sub = videoMetadata.getSubtitleTrack(n);
+                    log.debug("onResumeReady: inspecting: " + sub.name + ", " + sub.path + ", isExternal:" + sub.isExternal);
+                    if (sub.isExternal) { // only if sub not embedded
+                        subUri = Uri.parse(sub.path);
+                        log.debug("onResumeReady: adding external subtitle name=" + sub.name + ", path=" + sub.path);
+                        if (!FileUtils.isLocal(subUri)) {
+                            if (!"upnp".equals(subUri.getScheme())) {
+                                // Http proxy to allow 3rd party players to play remote files
+                                try {
+                                    StreamOverHttp stream = new StreamOverHttp(subUri, mimeType);
+                                    dataUri = stream.getUri(subUri.getLastPathSegment());
+                                } catch (IOException e) {
+                                    log.error("onResumeReady: failed to start " + subUri + e);
+                                }
+                            } else if (subUri != null && !"upnp".equals(subUri.getScheme())) { //when upnp, try to open streamingUri
+                                dataUri = subUri;
+                            }
+                            log.debug("onResumeReady: adding external remote subtitle dataUri=" + dataUri);
                             // vlc
-                            intent.putExtra("subtitles_location", sub.path);
+                            if (! subFound) intent.putExtra("subtitles_location", dataUri);
+                            subFound = true;
+                            // mxplayer/justplayer
+                            MxSubPaths.add(dataUri);
+                            MxSubNames.add(sub.name);
+                        } else { // local file
+                            log.debug("onResumeReady: adding external local subtitle " + sub.path);
+                            // vlc
+                            if (! subFound) intent.putExtra("subtitles_location", sub.path);
+                            subFound = true;
+                            // mxplayer/justplayer
+                            MxSubPaths.add(Uri.parse(sub.path));
+                            MxSubNames.add(sub.name);
                         }
-                        n++;
                     }
+                    n++;
+                }
+                if (MxSubPaths.size() != 0) intent.putExtra("subs", MxSubPaths.toArray(new Uri[] {}));
+                if (MxSubNames.size() != 0) intent.putExtra("subs.name", MxSubNames.toArray(new String[] {}));
+            }
+            // this code is executed not the one above
+            Boolean subFound = false;
+            String subPath;
+            int n = 0;
+            List<Uri> MxSubPaths = new ArrayList<>();
+            Uri subUri;
+            log.debug("onResumeReady: videoMetadata not null, number of sub files to inspect:" + listOfSubtitles.size());
+            if (listOfSubtitles != null) {
+                // find first external subtitle file and pass it to vlc
+                while (n < listOfSubtitles.size()) {
+                    subPath = listOfSubtitles.get(n);
+                    subUri = Uri.parse(subPath); // these files are in local nova cache not accessible from 3rd party players
+                    try {
+                        StreamOverHttp stream = new StreamOverHttp(subUri, mimeType);
+                        dataUri = stream.getUri(subUri.getLastPathSegment());
+                        // vlc
+                        if (!subFound) intent.putExtra("subtitles_location", dataUri);
+                        subFound = true;
+                        // mxplayer/justplayer
+                        MxSubPaths.add(dataUri);
+                        log.debug("onResumeReady: adding external subtitle " + dataUri);
+                    } catch (IOException e) {
+                        log.error("onResumeReady: failed to start " + subUri + e);
+                    }
+                    n++;
                 }
             }
+            if (MxSubPaths.size() != 0) intent.putExtra("subs", MxSubPaths.toArray(new Uri[] {}));
         }
         //this differs from the file uri for upnp
         intent.putExtra(PlayerActivity.KEY_STREAMING_URI, video.getStreamingUri());
