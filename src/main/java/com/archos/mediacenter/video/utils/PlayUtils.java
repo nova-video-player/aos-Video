@@ -300,58 +300,6 @@ public class PlayUtils implements IndexHelper.Listener {
             // add support for 3rd party player subs both for local and remote
             // for vlc https://wiki.videolan.org/Android_Player_Intents/ subtitles_location path
             // for mxplayer/justplayer http://mx.j2inter.com/api subs android.net.Uri[], subs.name String[], subs.filename String[]
-            final VideoMetadata videoMetadata = video.getMetadata();
-            if (videoMetadata!=null) { // videoMetaData is null here... -> code is useless
-                Boolean subFound = false;
-                VideoMetadata.SubtitleTrack sub;
-                int n = 0;
-                List<Uri> MxSubPaths = new ArrayList<>();
-                List<String> MxSubNames = new ArrayList<>();
-                Uri subUri;
-                log.debug("onResumeReady: videoMetadata not null, number of sub tracks to inspect:" + videoMetadata.getSubtitleTrackNb());
-                // find first external subtitle file and pass it to vlc
-                while (n < videoMetadata.getSubtitleTrackNb()) {
-                    // getSubtitleTrack only provides embedded subs thus isExternal is false
-                    sub = videoMetadata.getSubtitleTrack(n);
-                    log.debug("onResumeReady: inspecting: " + sub.name + ", " + sub.path + ", isExternal:" + sub.isExternal);
-                    if (sub.isExternal) { // only if sub not embedded
-                        subUri = Uri.parse(sub.path);
-                        log.debug("onResumeReady: adding external subtitle name=" + sub.name + ", path=" + sub.path);
-                        if (!FileUtils.isLocal(subUri)) {
-                            if (!"upnp".equals(subUri.getScheme())) {
-                                // Http proxy to allow 3rd party players to play remote files
-                                try {
-                                    StreamOverHttp stream = new StreamOverHttp(subUri, mimeType);
-                                    dataUri = stream.getUri(subUri.getLastPathSegment());
-                                } catch (IOException e) {
-                                    log.error("onResumeReady: failed to start " + subUri + e);
-                                }
-                            } else if (subUri != null && !"upnp".equals(subUri.getScheme())) { //when upnp, try to open streamingUri
-                                dataUri = subUri;
-                            }
-                            log.debug("onResumeReady: adding external remote subtitle dataUri=" + dataUri);
-                            // vlc
-                            if (! subFound) intent.putExtra("subtitles_location", dataUri);
-                            subFound = true;
-                            // mxplayer/justplayer
-                            MxSubPaths.add(dataUri);
-                            MxSubNames.add(sub.name);
-                        } else { // local file
-                            log.debug("onResumeReady: adding external local subtitle " + sub.path);
-                            // vlc
-                            if (! subFound) intent.putExtra("subtitles_location", sub.path);
-                            subFound = true;
-                            // mxplayer/justplayer
-                            MxSubPaths.add(Uri.parse(sub.path));
-                            MxSubNames.add(sub.name);
-                        }
-                    }
-                    n++;
-                }
-                if (MxSubPaths.size() != 0) intent.putExtra("subs", MxSubPaths.toArray(new Uri[] {}));
-                if (MxSubNames.size() != 0) intent.putExtra("subs.name", MxSubNames.toArray(new String[] {}));
-            }
-            // this code is executed not the one above
             Boolean subFound = false;
             String subPath;
             int n = 0;
