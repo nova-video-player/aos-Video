@@ -601,6 +601,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     private void prepareSubs() {
+        log.debug("prepareSubs");
         if(!mIsPreparingSubs) {
             mIsPreparingSubs = true;
             com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager subtitleManager =
@@ -632,7 +633,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     private void onStreamingUriOK() {
-        log.debug("onStreamingUriOK " + mStreamingUri);
+        log.debug("onStreamingUriOK mUri=" + mUri + ", mStreamingUri=" + mStreamingUri);
         if(mTorrentFilePosition==-1)
             prepareSubs();
         if(mPlayerFrontend!=null)
