@@ -18,7 +18,6 @@ package com.archos.mediacenter.video.player;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
-import android.hardware.display.DisplayManager;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
@@ -36,6 +35,7 @@ import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.utils.CodecDiscovery;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.medialib.IMediaPlayer;
@@ -107,6 +107,8 @@ public class Player implements IPlayerControl,
          //| WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
          //| WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
     );
+
+    private static boolean dolbyVisionDisplay = false;
 
     // All the stuff we need for playing and showing a video
     private Context     mContext = null;
@@ -567,7 +569,7 @@ public class Player implements IPlayerControl,
         mVideoTexture = null;
         stopPlayback();
         if(mContext instanceof PlayerActivity)
-        ((PlayerActivity) mContext).setUIExternalSurface(null);
+            ((PlayerActivity) mContext).setUIExternalSurface(null);
         if(mContext instanceof FloatingPlayerService)
             ((FloatingPlayerService) mContext).setUIExternalSurface(null);
         if(mEffectRenderer!=null){
@@ -586,7 +588,7 @@ public class Player implements IPlayerControl,
         mVideoTexture = mEffectRenderer.getVideoTexture();
         mUISurface = mEffectRenderer.getUISurface();
         if(mContext instanceof PlayerActivity)
-        ((PlayerActivity) mContext).setUIExternalSurface(mUISurface);
+            ((PlayerActivity) mContext).setUIExternalSurface(mUISurface);
         if(mContext instanceof FloatingPlayerService)
             ((FloatingPlayerService) mContext).setUIExternalSurface(mUISurface);
         mSurfaceWidth = width;
@@ -978,6 +980,9 @@ public class Player implements IPlayerControl,
         mResumeCtx.onPrepared();
 
         boolean refreshRateSwitchEnabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_ACTIVATE_REFRESHRATE_SWITCH, false);
+        boolean isDoViDisabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_DISABLE_DOLBY_VISION, false);
+        CodecDiscovery.disableDoVi(isDoViDisabled); // could be an autoswitch based on HDR DoVi screen capability
+        CodecDiscovery.displaySupportsDoVi(dolbyVisionDisplay);
         if (mWindow != null && refreshRateSwitchEnabled) {
             VideoMetadata.VideoTrack video = mVideoMetadata.getVideoTrack();
 
@@ -1008,6 +1013,7 @@ public class Player implements IPlayerControl,
                                 switch (hdrSupportedTypes[i]) {
                                     case Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION:
                                         log.debug("CONFIG HDR dolby vision supported");
+                                        dolbyVisionDisplay = true;
                                         break;
                                     case Display.HdrCapabilities.HDR_TYPE_HDR10:
                                         log.debug("CONFIG HDR10 supported");

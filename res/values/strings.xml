@@ -596,6 +596,8 @@
     <string name="preference_tv_3d_automatic_switch_summary">Use this feature only if your 3D TV supports it</string>
     <string name="preference_tv_refreshrate_switch">Enable automatic refresh rate switch</string>
     <string name="preference_tv_refreshrate_switch_summary">Remove judder effect by adapting best screen refresh rate to video frame rate (device support may vary)</string>
+    <string name="preference_remove_dolby_vision">Disable dolby vision</string>
+    <string name="preference_remove_dolby_vision_summary">Use standard video codecs over dolby vision ones</string>
     <string name="preference_cutout_short_edges">Fullscreen video with display cutouts</string>
     <string name="preference_cutout_short_edges_summary">Allow landscape fullscreen video on display with cutouts</string>
     <string name="category_languages">Subtitles</string>
