@@ -4,6 +4,7 @@
 - Better movie scrape results
 - Increase number of subtitles track supported to 64
 - boost/libtorrent 1.80.0/2.0.8 upstep
-- Bundle delivery to Google Play
-- Stability enhancements
+- Google Play Bundle delivery
 - Support more ssa subtitle style formats
+- Pass list of subtitles to external video players
+- Stability enhancements
