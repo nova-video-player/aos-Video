@@ -20,7 +20,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.NetworkOnMainThreadException;
-import android.util.Log;
 
 import com.archos.filecorelibrary.CopyCutEngine;
 import com.archos.filecorelibrary.FileEditorFactory;
@@ -37,6 +36,8 @@ import com.archos.mediaprovider.ArchosMediaIntent;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,6 +47,7 @@ import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -55,8 +57,7 @@ import java.util.Locale;
  */
 public class SubtitleManager {
 
-    private static final String TAG = SubtitleManager.class.getSimpleName();
-    private static final boolean DBG = false;
+    private static final Logger log = LoggerFactory.getLogger(SubtitleManager.class);
 
     private static final int MAX_SUB_SIZE = 61644800; //not more than 50mo (subs can be really large)
     private CopyCutEngine engine;
@@ -100,7 +101,7 @@ public class SubtitleManager {
                 sub.getFileEditorInstance(context).delete();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("deleteAssociatedSubs: caught Exception", e);
         }
 
     }
@@ -122,11 +123,18 @@ public class SubtitleManager {
         mHandler = new Handler(Looper.getMainLooper());
     }
 
-    public void preFetchHTTPSubtitlesAndPrepareUpnpSubs(final Uri upnpNiceUri, final Uri fileUri){
+    private static List<String> prefetchedListOfSubs;
 
+    public static List<String> getPreFetchedListOfSubs() {
+        log.debug("getPreFetchedListOfSubs: " + Arrays.toString(prefetchedListOfSubs.toArray()));
+        return prefetchedListOfSubs;
+    }
+
+    public void preFetchHTTPSubtitlesAndPrepareUpnpSubs(final Uri upnpNiceUri, final Uri fileUri){
+        log.debug("preFetchHTTPSubtitlesAndPrepareUpnpSubs on " + upnpNiceUri + ", " + fileUri);
         new Thread() {
             public void run() {
-
+                prefetchedListOfSubs = new ArrayList<>();
                 //preparing upnp
                 if ("upnp".equalsIgnoreCase(upnpNiceUri.getScheme())) {
                     File subsDir = MediaUtils.getSubsDir(mContext);
@@ -147,11 +155,13 @@ public class SubtitleManager {
                                     try {
                                         FileEditorFactory.getFileEditorForUrl(destFile, mContext).delete();
                                     } catch (Exception e) {
-                                        e.printStackTrace();
+                                        log.error("preFetchHTTPSubtitlesAndPrepareUpnpSubs: caught exception", e);
                                     }
                                     FileEditorFactory.getFileEditorForUrl(Uri.fromFile(file), mContext).copyFileTo(destFile, mContext);
+                                    prefetchedListOfSubs.add(destFile.getPath());
+                                    log.trace("preFetchHTTPSubtitlesAndPrepareUpnpSubs: copy " + Uri.fromFile(file) + " -> " + destFile.getPath());
                                 } catch (Exception e) {
-                                    e.printStackTrace();
+                                    log.error("preFetchHTTPSubtitlesAndPrepareUpnpSubs: caught exception", e);
                                 }
                             }
                         }
@@ -183,11 +193,11 @@ public class SubtitleManager {
                                 }
                                 in = con.getInputStream();
                                 File subFile = new File(MediaUtils.getSubsDir(mContext), name);
+                                log.trace("preFetchHTTPSubtitlesAndPrepareUpnpSubs: copy " + name + " -> " + subFile.getPath());
+                                prefetchedListOfSubs.add(subFile.getPath());
                                 fos = new FileOutputStream(subFile);
                                 l = 0;
                                 buffer = new byte[1024];
-
-
                                 while ((l = in.read(buffer)) != -1) {
                                     total+=l;
                                     if(total >= MAX_SUB_SIZE)
@@ -204,7 +214,7 @@ public class SubtitleManager {
 
                             }
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            log.error("preFetchHTTPSubtitlesAndPrepareUpnpSubs: caught IOException", e);
                         } finally {
                             if (con != null)
                                 con.disconnect();
@@ -238,6 +248,7 @@ public class SubtitleManager {
     }
 
     private void privatePrefetchSub(final Uri videoUri) {
+        log.debug("privatePrefetchSub");
         try {
             MediaUtils.removeLastSubs(mContext);List<MetaFile2> subs = getSubtitleList(videoUri);
             if (!subs.isEmpty()){
@@ -251,6 +262,8 @@ public class SubtitleManager {
                     public void onProgress(int currentFile, long currentFileProgress,int currentRootFile, long currentRootFileProgress, long totalProgress, double currentSpeed) {}
                     @Override
                     public void onSuccess(Uri target) {
+                        log.trace("privatePrefetchSub: copy " + videoUri + " -> " + target);
+                        prefetchedListOfSubs.add(target.getPath());
                         if(FileUtils.isLocal(target)){
                             try {
                                 Intent intent = new Intent(ArchosMediaIntent.ACTION_VIDEO_SCANNER_METADATA_UPDATE, target);
@@ -317,13 +330,12 @@ public class SubtitleManager {
      * @throws IOException
      */
     public static List<MetaFile2> getSubtitleList(Uri video) throws SftpException, AuthenticationException, JSchException, IOException {
+        log.debug("getSubtitleList");
         return getSubtitleList(video, false);
     }
 
     public static List<MetaFile2> getSubtitleList(Uri video, boolean addAllSubs) throws SftpException, AuthenticationException, JSchException, IOException {
         final Uri parentUri = FileUtils.getParentUrl(video);
-
-
         ArrayList<MetaFile2> subs = new ArrayList<>();
         subs.addAll(recursiveSubListing(parentUri,stripExtension(video), addAllSubs));
         return subs;
@@ -333,7 +345,7 @@ public class SubtitleManager {
         ArrayList<MetaFile2> subs = new ArrayList<>();
         List<MetaFile2> metaFile2List = null;
         try {
-            if (DBG) Log.d(TAG, "recursiveSubListing: " + parentUri.toString());
+            log.debug("recursiveSubListing: " + parentUri.toString());
             metaFile2List = RawListerFactoryWithUpnp.getRawListerForUrl(parentUri).getFileList();
             List<String> subtitlesExtensions = VideoUtils.getSubtitleExtensions();
             String name;
@@ -365,15 +377,15 @@ public class SubtitleManager {
                     }
                 }
         } catch (IOException e) {
-            Log.e(TAG, "recursiveSubListing: caught IOException", e);
+            log.error("recursiveSubListing: caught IOException", e);
         } catch (AuthenticationException e) {
-            Log.e(TAG, "recursiveSubListing: caught AuthenticationException", e);
+            log.error("recursiveSubListing: caught AuthenticationException", e);
         } catch (SftpException e) {
-            Log.e(TAG, "recursiveSubListing: caught SftpException", e);
+            log.error("recursiveSubListing: caught SftpException", e);
         } catch (JSchException e) {
-            Log.e(TAG, "recursiveSubListing: caught JSchException", e);
+            log.error("recursiveSubListing: caught JSchException", e);
         } catch (NullPointerException e) {
-            Log.e(TAG, "recursiveSubListing: caught NullPointerException", e);
+            log.error("recursiveSubListing: caught NullPointerException", e);
         }
 
         return subs;
@@ -397,13 +409,13 @@ public class SubtitleManager {
         if(UriUtils.isImplementedByFileCore(video)) try {
             allFiles.addAll(getSubtitleList(video, addAllSubs));
         } catch (IOException e) {
-            Log.e(TAG, "listLocalAndRemotesSubtitles: caught IOException", e);
+            log.error("listLocalAndRemotesSubtitles: caught IOException", e);
         } catch (AuthenticationException e) {
-            Log.e(TAG, "listLocalAndRemotesSubtitles: caught AuthenticationException", e);
+            log.error("listLocalAndRemotesSubtitles: caught AuthenticationException", e);
         } catch (SftpException e) {
-            Log.e(TAG, "listLocalAndRemotesSubtitles: caught SftpException", e);
+            log.error("listLocalAndRemotesSubtitles: caught SftpException", e);
         } catch (JSchException e) {
-            Log.e(TAG, "listLocalAndRemotesSubtitles: caught JSchException", e);
+            log.error("listLocalAndRemotesSubtitles: caught JSchException", e);
         }
 
         // addCache controls whether subs in /sdcard/Android/data/org.courville.nova/cache/subtitles (cache online sub download dir) are taken into account
@@ -416,8 +428,10 @@ public class SubtitleManager {
                 try {
                     List<MetaFile2> files = RawListerFactoryWithUpnp.getRawListerForUrl(localSubsDirUri).getFileList();
                     for (MetaFile2 file : files) {
-                        if (file.getName().startsWith(filenameWithoutExtension) || addAllSubs)
+                        if (file.getName().startsWith(filenameWithoutExtension) || addAllSubs) {
                             allFiles.add(file);
+                            log.trace("listLocalAndRemotesSubtitles: cache add " + file.getName());
+                        }
                     }
                 } catch (Exception e) {
                 }
@@ -435,7 +449,7 @@ public class SubtitleManager {
                 if (fileExtension != null) {
                     String subtitleName = null;
                     if (SubtitleExtensions.contains(fileExtension.toLowerCase(Locale.US))&&(!fileExtension.toLowerCase(Locale.US).equals("idx") || includeIdx)) {
-                        //Log.d(TAG, "Found external subtitle file: " + file.getUri().toString());
+                        //log.debug("Found external subtitle file: " + file.getUri().toString());
                         // Check if there is    a language extension
                         String language = "";
                         final String subFilename = file.getName();
@@ -452,6 +466,7 @@ public class SubtitleManager {
                             subtitleName = subFilename;
                         }
                         subList.add(new SubtitleFile(file, subtitleName));
+                        log.trace("listLocalAndRemotesSubtitles: add external " + file.getUri().toString() + "(" + subtitleName +")");
                     }
                 }
             } catch (Exception e) {
