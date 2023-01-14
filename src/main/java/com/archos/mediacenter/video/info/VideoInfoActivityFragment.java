@@ -1465,6 +1465,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             if(mSubtitleListCache.containsKey(video.getFilePath()))
                 return mSubtitleListCache.get(video.getFilePath());
             SubtitleManager lister = new SubtitleManager(mActivity,null );
+            log.debug("SubtitleFilesListerTask:doInBackground listLocalAndRemotesSubtitles");
             List<SubtitleManager.SubtitleFile> list = lister.listLocalAndRemotesSubtitles(video.getFileUri(), true);
             mSubtitleListCache.put(video.getFilePath(), list);
             return list;
