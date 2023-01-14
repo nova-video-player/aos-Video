@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.preference.PreferenceManager;
 
@@ -35,13 +34,15 @@ import com.archos.mediascraper.ScrapeDetailResult;
 
 import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by alexandre on 19/09/16.
  */
 public class ExternalPlayerResultListener implements ExternalPlayerWithResultStarter.ResultListener, IndexHelper.Listener {
 
-    private static String TAG = "ExternalPlayerResultListener";
-    private static final boolean DBG = false;
+    private static final Logger log = LoggerFactory.getLogger(ExternalPlayerResultListener.class);
 
     private static ExternalPlayerResultListener sExternalPlayerResultListener;
     private Context mContext;
@@ -82,7 +83,7 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
         mContext = context;
         mContentUri = contentUri;
         mPlayerUri = playerUri;
-        if (DBG) Log.d(TAG, "init: playerUri=" + playerUri + ", contentUri=" + contentUri);
+        log.debug("init: playerUri=" + playerUri + ", contentUri=" + contentUri);
         mContentUri = Uri.parse(removeFileSlashSlash(mContentUri.toString())); // we need to remove "file://"
         if (!PrivateMode.isActive() && Trakt.isTraktV2Enabled(mContext, PreferenceManager.getDefaultSharedPreferences(mContext)))
             mTraktClient = new TraktService.Client(mContext, mTraktListener, false);
@@ -102,29 +103,30 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (DBG) Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
-        if (DBG) Log.d(TAG, "onActivityResult: mVideoDbInfo!=null " + (mVideoDbInfo!=null));
-        if (DBG) Log.d(TAG, "onActivityResult: mPlayerUri " + mPlayerUri);
+        log.debug("onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode +
+                ", mVideoDbInfo!=null " + (mVideoDbInfo!=null) +
+                ", mPlayerUri " + mPlayerUri
+        );
         if (data != null) {
             Bundle bundle = data.getExtras();
-            if (DBG) {
+            if (log.isDebugEnabled()) {
                 if (bundle != null) {
                     for (String key : bundle.keySet()) {
-                        Log.d(TAG, "onActivityResult: data " + key + " : " + (bundle.get(key) != null ? bundle.get(key) : "NULL"));
+                        log.debug("onActivityResult: data " + key + " : " + (bundle.get(key) != null ? bundle.get(key) : "NULL"));
                     }
                 }
             }
-            if (DBG) Log.d(TAG, "onActivityResult: data.getData()=" + bundle);
+            log.debug("onActivityResult: data.getData()=" + bundle);
             // for vlc data.getData() is null
             // for mxplayer mPlayerUri is content://com.archos.media.videocommunity/external/video/media/xxxx and data.getData() is content://org.courville.nova.provider/external_files/emulated/0/path/file.mkv
             //if(!PrivateMode.isActive() && resultCode== Activity.RESULT_OK && mVideoDbInfo!=null && data.getData()!= null && data.getData().equals(mPlayerUri)){
             if (!PrivateMode.isActive() && resultCode == Activity.RESULT_OK && mVideoDbInfo != null) {
                 int position = 0;
-                if (DBG) Log.d(TAG, "onActivityResult: JUSTPLAYER_RESULT_EXTRA_end_by=" + data.getStringExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_end_by));
-                if (DBG) Log.d(TAG, "onActivityResult: VLC_RESULT_EXTRA_position=" + data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_position, -1));
-                if (DBG) Log.d(TAG, "onActivityResult: JUSTPLAYER_RESULT_EXTRA_duration=" + data.getIntExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_duration, -1));
-                if (DBG) Log.d(TAG, "onActivityResult: VLC_RESULT_EXTRA_duration=" + data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_duration, -1));
-                if (DBG) Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+                log.debug("onActivityResult: JUSTPLAYER_RESULT_EXTRA_end_by=" + data.getStringExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_end_by) +
+                    ", VLC_RESULT_EXTRA_position=" + data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_position, -1) +
+                    ", JUSTPLAYER_RESULT_EXTRA_duration=" + data.getIntExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_duration, -1) +
+                    ", VLC_RESULT_EXTRA_duration=" + data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_duration, -1) +
+                    ", requestCode=" + requestCode + ", resultCode=" + resultCode);
                 if (data.getIntExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_position, -1) != -1) {// justplayer/mxplayer
                     position = data.getIntExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_position, -1);
                 } else if (data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_position, -1) != -1) {// vlc
@@ -138,11 +140,11 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
                 boolean isFinished = false;
                 String externalPositionExtra = data.getStringExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_end_by);
                 if (externalPositionExtra != null && externalPositionExtra.equals("playback_completion")) { // justplayer video completion by playback complete has duration 0
-                    if (DBG) Log.d(TAG, "onActivityResult: video finished until the end");
+                    log.debug("onActivityResult: video finished until the end");
                     isFinished = true;
                     position = mDuration;
                 }
-                if (DBG) Log.d(TAG, "onActivityResult: position=" + position + ", duration=" + mDuration);
+                log.debug("onActivityResult: position=" + position + ", duration=" + mDuration);
                 mVideoDbInfo.lastTimePlayed = Long.valueOf(System.currentTimeMillis() / 1000L);
                 if (position != -1) {
                     mVideoDbInfo.resume = position;
@@ -155,7 +157,7 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
             }
         } else {
             // happens when hitting back before selecting the player
-            if (DBG) Log.d(TAG, "onActivityResult: data is null!");
+            log.debug("onActivityResult: data is null!");
         }
     }
 
