@@ -305,8 +305,8 @@ public class PlayUtils implements IndexHelper.Listener {
             int n = 0;
             List<Uri> MxSubPaths = new ArrayList<>();
             Uri subUri;
-            log.debug("onResumeReady: videoMetadata not null, number of sub files to inspect:" + listOfSubtitles.size());
             if (listOfSubtitles != null) {
+                log.debug("onResumeReady: videoMetadata not null, number of sub files to inspect:" + listOfSubtitles.size());
                 // find first external subtitle file and pass it to vlc
                 while (n < listOfSubtitles.size()) {
                     subPath = listOfSubtitles.get(n);
