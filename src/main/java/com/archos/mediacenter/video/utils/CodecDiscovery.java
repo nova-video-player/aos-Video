@@ -17,16 +17,16 @@ package com.archos.mediacenter.video.utils;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.os.Build;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import android.util.Log;
 
 import java.util.Arrays;
 
 public class CodecDiscovery {
 
-	private static final Logger log = LoggerFactory.getLogger(CodecDiscovery.class);
-
+	// log4j/logback not possible since used from native it seems
+	private final static boolean DBG = true;
+	private final static boolean DBG2 = false;
+	private final static String TAG = "CodecDiscovery";
 	private static boolean isDoViDisabled = false;
 	private static boolean displaySupportsDovi = false; // could be used to auto disable DoVi codecs
 
@@ -39,6 +39,7 @@ public class CodecDiscovery {
 	}
 
 	public static void disableDoVi(boolean isDisabled) {
+		if (DBG) Log.d(TAG,"disableDovi=" + isDisabled);
 		isDoViDisabled = isDisabled;
 	}
 
@@ -48,10 +49,10 @@ public class CodecDiscovery {
 
 		for (MediaCodecInfo codecInfo : codecInfos) {
 			if (isCodecInfoSupported(codecInfo, codecType, allowSwCodec)) {
-				log.debug("isCodecTypeSupported: codecInfo.getName " + codecInfo.getName() + "supported");
+				if (DBG2) Log.d(TAG, "isCodecTypeSupported2: codecInfo.getName " + codecInfo.getName() + " supported");
 				return true;
 			} else {
-				log.debug("isCodecTypeSupported: codecInfo.getName " + codecInfo.getName() + "not supported");
+				if (DBG2) Log.d(TAG,"isCodecTypeSupported2: codecInfo.getName " + codecInfo.getName() + " not supported");
 			}
 		}
 		return false;
@@ -68,20 +69,21 @@ public class CodecDiscovery {
 	}
 
 	private static boolean isCodecInfoSupported(MediaCodecInfo codecInfo, String codecType, boolean allowSwCodec) {
+		if (DBG2) Log.d(TAG,"isCodecInfoSupported: isDoViDisabled=" + isDoViDisabled + " allowSwCodec=" + allowSwCodec + " isEncoder=" + codecInfo.isEncoder());
 		if (codecInfo.isEncoder() || (!allowSwCodec && isSwCodec(codecInfo))) {
-			log.debug("isCodecTypeSupported: codecInfo.getName " + codecInfo.getName() + " not supported");
+			if (DBG2) Log.d(TAG,"isCodecTypeSupported: codecInfo.getName " + codecInfo.getName() + " not supported (isEncoder,swCodecs)");
 			return false;
 		}
 		String[] types = codecInfo.getSupportedTypes();
-		log.trace("isCodecTypeSupported: looking for codecType " + codecType + ", codecInfo.getName " + codecInfo.getName() + ", supported types " + Arrays.toString(types));
+		if (DBG2) Log.d(TAG,"isCodecTypeSupported: looking for codecType " + codecType + ", codecInfo.getName " + codecInfo.getName() + ", supported types " + Arrays.toString(types));
 		for (String type : types) {
 			if (type.equalsIgnoreCase(codecType)) {
-				log.debug("isCodecTypeSupported: codecInfo.getName " + codecInfo.getName() + " not supported");
+				if (DBG2) Log.d(TAG,"isCodecTypeSupported: codecInfo.getName " + codecInfo.getName() + " matching " + codecType);
 				if (type.equalsIgnoreCase("video/dolby-vision") && isDoViDisabled) {
-					log.debug("isCodecTypeSupported: rejecting codecInfo.getName " + codecInfo.getName() + " because dolby vision disabled");
+					if (DBG) Log.d(TAG,"isCodecTypeSupported: rejecting codecInfo.getName " + codecInfo.getName() + " because dolby vision disabled");
 					return false;
 				} else {
-					log.debug("isCodecTypeSupported: validating codecInfo.getName " + codecInfo.getName());
+					if (DBG) Log.d(TAG,"isCodecTypeSupported: validating codecInfo.getName " + codecInfo.getName());
 					return true;
 				}
 			}
