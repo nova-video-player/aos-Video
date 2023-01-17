@@ -322,7 +322,7 @@ public class Player implements IPlayerControl,
     }
 
     public Player(Context context, Window window, SurfaceController surfaceController, boolean forceSoftwareDecoding) { //force software decoding is specific for floating player
-        sPlayer =this;
+        sPlayer = this;
         log.debug("Player");
         reset();
         mSurfaceHolder = null;
@@ -477,6 +477,9 @@ public class Player implements IPlayerControl,
             // not ready for playback just yet, will try again later
             return;
         }
+
+        boolean isDoViDisabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_DISABLE_DOLBY_VISION, false);
+        CodecDiscovery.disableDoVi(isDoViDisabled); // could be an autoswitch based on HDR DoVi screen capability
 
         // we shouldn't clear the target state, because somebody might have
         // called start() previously
@@ -980,9 +983,6 @@ public class Player implements IPlayerControl,
         mResumeCtx.onPrepared();
 
         boolean refreshRateSwitchEnabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_ACTIVATE_REFRESHRATE_SWITCH, false);
-        boolean isDoViDisabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_DISABLE_DOLBY_VISION, false);
-        CodecDiscovery.disableDoVi(isDoViDisabled); // could be an autoswitch based on HDR DoVi screen capability
-        CodecDiscovery.displaySupportsDoVi(dolbyVisionDisplay);
         if (mWindow != null && refreshRateSwitchEnabled) {
             VideoMetadata.VideoTrack video = mVideoMetadata.getVideoTrack();
 
@@ -1014,6 +1014,7 @@ public class Player implements IPlayerControl,
                                     case Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION:
                                         log.debug("CONFIG HDR dolby vision supported");
                                         dolbyVisionDisplay = true;
+                                        CodecDiscovery.displaySupportsDoVi(dolbyVisionDisplay); // TODO this is sent too late for capability checking
                                         break;
                                     case Display.HdrCapabilities.HDR_TYPE_HDR10:
                                         log.debug("CONFIG HDR10 supported");
