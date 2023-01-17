@@ -35,6 +35,7 @@ public class CodecDiscovery {
 	}
 
 	public static void displaySupportsDoVi(boolean isSupported) {
+		if (DBG) Log.d(TAG,"displaySupportsDoVi=" + isSupported);
 		displaySupportsDovi = isSupported;
 	}
 
