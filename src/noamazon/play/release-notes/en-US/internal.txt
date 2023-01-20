@@ -1,10 +1,9 @@
-- Target API33
-- Experimental playback speed option disabled by default (could cause choppy video)
-- Add option to not apply audio passthrough if AV receiver does not support codec
 - Better movie scrape results
 - Increase number of subtitles track supported to 64
-- boost/libtorrent 1.80.0/2.0.8 upstep
-- Google Play Bundle delivery
-- Support more ssa subtitle style formats
 - Pass list of subtitles to external video players
+- Support more ssa subtitle style formats
+- Option to disable Dolby Vision decoder
+- Option to not apply audio passthrough if AV receiver does not support codec
+- Experimental playback speed option
+- Target API33 & Google Play Bundle delivery
 - Stability enhancements
