@@ -525,6 +525,10 @@
     <string name="preferences_parser_sync_mode_cdata">基于 PTS (推荐)</string>
     <string name="preferences_parser_sync_mode_sample">基于采样 </string>
     <string name="preferences_parser_sync_mode_summary">Lavc 解析器中的同步模式。⚠ 实验性功能，可能会导致 A/V 累积延迟</string>
+    <string name="preferences_stream_buffer_size_title">在线播放缓冲区大小</string>
+    <string name="preferences_stream_buffer_size_summary">解析器处理缓存问题前使用的缓存大小，单位MB</string>
+    <string name="preferences_stream_max_iframe_size_title">最大 i-frame 大小</string>
+    <string name="preferences_stream_max_iframe_size_summary">最大压缩的 i-frame 大小，单位MB</string>
     <string name="preferences_force_passthrough">强制音频直通</string>
     <string name="preferences_force_passthrough_summary">如果启用了直通，即使 AV 接收器不支持音频编解码器，也强制执行它，而不检查 AV 接收器功能</string>
     <string name="preferences_playback_speed">启用回放速度</string>
@@ -539,6 +543,8 @@
     <string name="preference_tv_3d_automatic_switch_summary">仅在您的 3D 电视支持的情况下使用此功能</string>
     <string name="preference_tv_refreshrate_switch">启用自动刷新率切换</string>
     <string name="preference_tv_refreshrate_switch_summary">通过匹配最佳屏幕刷新率与视频帧率去除抖动效果(可能受设备支持限制)</string>
+    <string name="preference_remove_dolby_vision">禁用杜比视界</string>
+    <string name="preference_remove_dolby_vision_summary">使用标准视频编解码器而不是杜比视界</string>
     <string name="preference_cutout_short_edges">异形屏视频全屏</string>
     <string name="preference_cutout_short_edges_summary">允许在异形屏上进行视频横屏全屏播放</string>
     <string name="category_languages">字幕</string>

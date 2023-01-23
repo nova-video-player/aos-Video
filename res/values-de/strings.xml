@@ -530,6 +530,10 @@
     <string name="preferences_parser_sync_mode_cdata">PTS basiert (empfohlen)</string>
     <string name="preferences_parser_sync_mode_sample">beispielbasiert </string>
     <string name="preferences_parser_sync_mode_summary">Synchronisierungsmodus im LAVC-Parser. ⚠ Experimentell - kann bei A/V zu kumulierter Verzögerung führen</string>
+    <string name="preferences_stream_buffer_size_title">Stream-Puffergröße</string>
+    <string name="preferences_stream_buffer_size_summary">Größe des Caches in MB, der von dem Parser verwendet wird, um Pufferprobleme zu lösen</string>
+    <string name="preferences_stream_max_iframe_size_title">Max. i-Frame Größe</string>
+    <string name="preferences_stream_max_iframe_size_summary">Maximale komprimierte i-frame-Größe in MB</string>
     <string name="preferences_force_passthrough">Audio-Passthrough erzwingen</string>
     <string name="preferences_force_passthrough_summary">Wenn Passthrough aktiviert ist, erzwingen, auch wenn Audio-Codec nicht vom AV-Empfänger unterstützt wird, anstatt die AV-Receiver-Funktionen zu überprüfen</string>
     <string name="preferences_playback_speed">Wiedergabegeschwindigkeit aktivieren</string>
@@ -544,6 +548,8 @@
     <string name="preference_tv_3d_automatic_switch_summary">Nur für TV-Geräte mit 3D-Wiedergabe\"</string>
     <string name="preference_tv_refreshrate_switch">Automatische Aktualisierungsrate aktivieren</string>
     <string name="preference_tv_refreshrate_switch_summary">Entferne den Richtereffekt, indem du die beste Bildschirmwiederholungsrate an die Bildwiederholrate anpassst (Geräteunterstützung kann variieren)</string>
+    <string name="preference_remove_dolby_vision">Deaktiviere Dolby-Vision</string>
+    <string name="preference_remove_dolby_vision_summary">Bevorzuge Standard-Video-Codecs gegenüber Dolby Vision</string>
     <string name="preference_cutout_short_edges">Vollbild mit Beschnitt</string>
     <string name="preference_cutout_short_edges_summary">Erlaube horizontales Vollbild mit Beschnitt</string>
     <string name="category_languages">Untertitel</string>

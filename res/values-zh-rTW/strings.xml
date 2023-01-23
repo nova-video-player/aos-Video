@@ -525,6 +525,10 @@
     <string name="preferences_parser_sync_mode_cdata">PTS 式 (推薦)</string>
     <string name="preferences_parser_sync_mode_sample">採樣式</string>
     <string name="preferences_parser_sync_mode_summary">Lavc 剖析器中的同步模式 (⚠ 實驗性功能，可能會導致影音的不同步)</string>
+    <string name="preferences_stream_buffer_size_title">串流緩衝區大小</string>
+    <string name="preferences_stream_buffer_size_summary">在剖析器解決緩衝問題前使用的快取量 (MB)</string>
+    <string name="preferences_stream_max_iframe_size_title">最大內影格大小</string>
+    <string name="preferences_stream_max_iframe_size_summary">最大壓縮內影格大小 (MB)</string>
     <string name="preferences_force_passthrough">強制使用原始音訊傳遞</string>
     <string name="preferences_force_passthrough_summary">假使傳遞模式被啟用，即使影音接受器不支援該音訊解碼也會強制執行，而不檢查影音接受器的能力</string>
     <string name="preferences_playback_speed">開啟播放速度</string>
@@ -539,6 +543,8 @@
     <string name="preference_tv_3d_automatic_switch_summary">只有在您的 3D 電視支援的情況下使用此功能</string>
     <string name="preference_tv_refreshrate_switch">開啟自動重新整理頻率開關</string>
     <string name="preference_tv_refreshrate_switch_summary">藉由調適最佳重新整理頻率及影片播放速率來去除抖動效應 (部分裝置可能不支援)</string>
+    <string name="preference_remove_dolby_vision">關閉杜比視域</string>
+    <string name="preference_remove_dolby_vision_summary">使用標準視訊編碼而不是杜比視域編碼</string>
     <string name="preference_cutout_short_edges">強制全螢幕</string>
     <string name="preference_cutout_short_edges_summary">允許截短畫面讓橫擺畫面全螢幕</string>
     <string name="category_languages">字幕</string>

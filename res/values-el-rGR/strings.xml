@@ -42,6 +42,7 @@
     <string name="play_from_beginning">Αναπαραγωγή από την αρχή</string>
     <!-- Dialog box button -->
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <string name="fast_scroll_alphabet">\u0020ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ</string>
     <!-- The string used in file/folder infos dialog. -->
     <string name="info_duration">Διάρκεια</string>
     <string name="video_sources">Πηγές</string>
@@ -104,6 +105,7 @@
     <string name="movies_by_genre">Ταινίες ανά είδος</string>
     <string name="movies_by_rating">Ταινίες ανά αξιολόγηση</string>
     <string name="movie_collections">Συλλογές</string>
+    <string name="anime_collections">Συλλογές anime</string>
     <string name="movies_by_year">Ταινίες ανά έτος</string>
     <string name="all_tv_shows">Τηλεοπτικές σειρές</string>
     <string name="all_tvshows">Όλες οι τηλεοπτικές σειρές</string>
@@ -230,6 +232,7 @@
     <string name="rescan_storage_summary">Επανασάρωση εσωτερικού, SD κάρτας και USB αποθήκευσης συσκευών</string>
     <string name="preference_display_all_files">Εμφάνιση όλων των αρχείων στον περιηγητή</string>
     <string name="preference_display_all_files_summary">Εμφάνιση επίσης και αρχείων που δεν είναι βίντεο</string>
+    <string name="info_processing">Έλεγχος ιδιοτήτων πολυμέσων…</string>
     <string name="info_video">Βίντεο</string>
     <string name="info_audio">Ήχος</string>
     <string name="info_audio_vbr">VBR</string>
@@ -247,7 +250,9 @@
     <string name="you_have_no_movies">Δεν υπάρχουν ταινίες</string>
     <string name="you_have_no_animes">Δεν υπάρχουν ταινίες κινουμένων σχεδίων</string>
     <string name="you_have_no_movie_collections">Καμία συλλογή</string>
+    <string name="you_have_no_anime_collections">Δεν υπάρχουν συλλογές anime</string>
     <string name="you_have_no_tv_shows">Δεν υπάρχουν τηλεοπτικές σειρές</string>
+    <string name="you_have_no_anime_shows">Δεν υπάρχουν τηλεοπτικές εκπομπές κινουμένων σχεδίων</string>
     <string name="you_have_no_non_scraped_videos">Βίντεο απο τα οποία δεν έχουν ανακτηθεί πληροφορίες</string>
     <!-- Media Center -->
     <string name="mediacenterlabel">Κέντρο Πολυμέσων</string>
@@ -258,8 +263,12 @@
     <string name="switch_to_list">Λίστα</string>
     <string name="switch_to_grid">Πλέγμα</string>
     <!-- VideoPlayer -->
+    <string name="player_loading_video">Φόρτωση βίντεο\u2026</string>
+    <string name="player_audio_track_toast">Κομμάτι ήχου:</string>
+    <string name="player_subtitle_track_toast">Κομμάτι υποτίτλων:</string>
     <string name="player_bookmark_set">Ο σελιδοδείκτης ορίστηκε στο</string>
     <string name="player_pref_subtitle_delay_title">Καθυστέρηση</string>
+    <string name="player_pref_audio_speed_title">Ταχύτητα αναπαραγωγής</string>
     <string name="floating_player_restore">Επαναφορά</string>
     <string name="floating_player_play">Αναπαραγωγή</string>
     <string name="floating_player_pause">Παύση</string>
@@ -267,6 +276,7 @@
     <string name="now_playing">Αναπαραγωγή σε εξέλιξη</string>
     <string name="player_window_mode">Λειτουργία παραθύρου</string>
     <string name="pref_play_mode_title">Λειτουργία αναπαραγωγής</string>
+    <string name="pref_play_mode_entry_single">Μονό</string>
     <string name="pref_play_mode_entry_folder">Φάκελος</string>
     <string name="pref_play_mode_entry_repeat_folder">Επανάληψη φακέλου</string>
     <string name="pref_play_mode_entry_repeat_single">Επανάληψη ενός</string>
@@ -280,8 +290,11 @@
     <string name="pref_s3d_mode_title">Λειτουργία 3D</string>
     <string name="pref_s3d_mode_entry_sbs">Σε παράθεση</string>
     <string name="pref_s3d_mode_entry_topbottom">Πάνω και Κάτω</string>
+    <string name="pref_s3d_mode_entry_anaglyph">Ανάγλυφο</string>
     <string name="pref_s3d_mode_entry_off">Ανενεργό</string>
     <string name="menu_info">Πληροφορίες</string>
+    <string name="menu_subtitles">Κομμάτια υποτίτλων</string>
+    <string name="menu_audio">Κομμάτια ήχου</string>
     <string name="menu_lock_player">Κλείδωμα αναπαραγωγής</string>
     <string name="menu_bookmark">Ορισμός σελιδοδείκτη</string>
     <string name="menu_brightness_settings">Φωτεινότητα</string>
@@ -289,6 +302,7 @@
     <string name="menu_change_folder">Αλλαγή φακέλου</string>
     <string name="menu_change_folder_details">Επιλέξτε το φάκελο εκκίνησης</string>
     <string name="unlock_instructions">Πατήστε παρατεταμένα στο εικονίδιο για ξεκλείδωμα</string>
+    <string name="seek_to_percentage">\"Αναζητώντας το %s%%</string>
     <!-- Subtitles/Audio languages -->
     <string name="s_arabic">Αραβικά</string>
     <string name="s_bulgarian">Βουλγαρικά</string>
@@ -337,6 +351,7 @@
     <string name="player_err_file">Το αρχείο βίντεο δεν υπάρχει.</string>
     <string name="player_err_sizetoobig">Πολύ μεγάλο μέγεθος βίντεο</string>
     <string name="player_err_unknown">Άγνωστο σφάλμα.</string>
+    <string name="player_err_critical">Σφάλμα προγράμματος αναπαραγωγής πολυμέσων.</string>
     <string name="player_err_forcodec">για κωδικοποιητή</string>
     <string name="player_err_codec">Κωδικοποιητής</string>
     <string name="player_err_isnotsupported">δεν υποστηρίζεται.</string>
@@ -357,18 +372,25 @@
     <string name="player_plugin_video_msg">Αυτό το αρχείο περιέχει μια <xliff:g id="video">%1$s</xliff:g> μορφή βίντεο.</string>
     <string name="player_plugin_audio_msg">Αυτό το αρχείο περιέχει μια <xliff:g id="audio">%1$s</xliff:g> μορφή ήχου.</string>
     <string name="player_plugin_video_audio_msg">Αυτό το αρχείο περιέχει μια <xliff:g id="video">%1$s</xliff:g> μορφή βίντεο και μια <xliff:g id="audio">%2$s</xliff:g> μορφή ήχου.</string>
+    <string name="player_plugin_purchase_msg">Πρέπει να αγοράσετε το <xliff:g id="plugin">%1$s</xliff:g></string>
+    <string name="player_plugin_purchase">Μετάβαση στο Κατάστημα</string>
     <string name="player_plugin_purchase_archos_msg">Μπορείτε να αγοράσετε επιπλέον codec plug-ins στο www.archos.com.</string>
     <string name="player_plugin_purchase_google_play_msg">Μπορείτε να αγοράσετε επιπλέον codec plug-ins στο Google Play.</string>
     <string name="player_plugin_purchase_google_play_button">Μετάβαση στο Google Play</string>
     <string name="plugin_update_required_title">Απαιτείται ενημέρωση Codec</string>
+    <string name="plugin_update_required_message">Φαίνεται ότι έχετε ήδη εγκατεστημένους επιπλέον κωδικοποιητές για το Nova Video Player.\n\nΑυτή η νέα έκδοση του Nova Video Player απαιτεί ενημέρωση αυτών των κωδικοποιητών.\n\nΠαρακαλώ πηγαίνετε στο Google Play για να ενημερώσετε και να επανεγκαταστήσετε τους κωδικοποιητές.</string>
     <!-- Subtitles wizard -->
     <string name="get_subtitles_on_drive">Επιλέξτε υπότιτλους στον αποθηκευτικό χώρο</string>
     <string name="subtitles_wizard_no_files">Δεν βρέθηκαν υπότιτλοι</string>
     <string name="subtitles_wizard_current_files">Τρέχοντα αρχεία υποτίτλων</string>
     <string name="subtitles_wizard_available_files">Διαθέσιμοι Υπότιτλοι</string>
+    <string name="subtitles_wizard_associate">Συσχέτιση αυτού του αρχείου με το βίντεο</string>
     <string name="subtitles_wizard_delete">Διαγραφή αυτού του αρχείου</string>
     <string name="subtitles_wizard_empty_list">Δεν βρέθηκε αρχείο</string>
     <string name="subtitles_wizard_add_files">Μπορείτε να αντιγράψετε περισσότερα αρχεία υποτίτλων σε αυτόν το φάκελο για να τα συσχετίσετε με αυτό το βίντεο.</string>
+    <string name="subtitles_wizard_help">Επιλέξτε οποιοδήποτε από τα διαθέσιμα αρχεία υποτίτλων για να το συσχετίσετε με το βίντεο %s. Το αρχείο θα μετονομαστεί για να ταιριάζει με το όνομα του βίντεο.</string>
+    <string name="subtitles_wizard_empty_list_help">Δε βρέθηκαν αρχεία υποτίτλων. Πρέπει να αντιγράψετε πρώτα ένα ή περισσότερα αρχεία υποτίτλων σε αυτόν το φάκελο για να τα συσχετίσετε με το βίντεο %s.</string>
+    <string name="subtitles_wizard_cache">Κρυφή μνήμη</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Λήψη υποτίτλων από το διαδίκτυο</string>
     <string name="toast_subloader_sub_found">Βρέθηκαν υπότιτλοι για αυτή τη γλώσσα</string>
@@ -392,6 +414,7 @@
     <string name="subtitle_settings_title">Ρυθμίσεις υποτίτλων</string>
     <string name="subtitle_sample_text">\"δείγμα\"</string>
     <string name="subtitle_size_text">Μέγεθος:</string>
+    <string name="subtitle_style_text">Στυλ:</string>
     <string name="subtitle_outline">Περίγραμμα υποτίτλων</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Ρύθμιση Ταχύτητας</string>
@@ -402,24 +425,162 @@
     <!-- Add a space after the right quote
     because the right part of the quote is
     not visible otherwise -->
+    <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
     <string name="error_permission">Δεν υπάρχουν αρκετά δικαιώματα</string>
     <string name="error_permission_storage">Το Nova Video Player χρειάζεται άδεια προσβασης στον αποθηκευτικό χώρο για να διαβάσει τοπικά βίντεο, παρακαλώ, παραχωρήστε αυτό το δικαίωμα.</string>
     <string name="error_permission_all_file_access">Το Nova Video Player χρειάζεται όλα τα δικαιώματα διαχείρισης εξωτερικού χώρου αποθήκευσης για τη σωστή διαχείριση τοπικών βίντεο/αρχείων NFO, παρακαλώ, παραχωρήστε αυτό το δικαίωμα.</string>
     <string name="allow">Να επιτρέπεται</string>
     <string name="exit">Έξοδος</string>
     <!-- torrent -->
+    <string name="error">Παρουσιάστηκε ένα σφάλμα</string>
+    <string name="error_loading_torrent">Σφάλμα κατά τη φόρτωση του torrent</string>
+    <string name="error_downloading_not_enough_space">Σφάλμα κατά τη λήψη του torrent : δεν υπάρχει αρκετός χώρος</string>
+    <string name="loading_torrent">Φόρτωση torrent…</string>
+    <string name="error_no_video_file">Δεν υπάρχουν αρχεία βίντεο</string>
+    <string name="torrent_file_to_play">Επιλέξτε ένα αρχείο για αναπαραγωγή</string>
+    <string name="torrent_buy_premium_message">Η ροή torrent είναι διαθέσιμη μόνο στην πληρωμένη έκδοση</string>
+    <string name="torrent_buy_premium">Αγοράστε την έκδοση premium</string>
     <!-- Shortcuts -->
+    <string name="add_to_shortcuts">Δημιουργία συντόμευσης</string>
+    <string name="add_ssh_shortcut">Προσθήκη ως συντόμευση</string>
+    <string name="ssh_prompt">Τύπος FTP</string>
+    <string name="protocol_prompt">Τύπος πρωτοκόλλου</string>
+    <string-array name="ssh_types">
+        <item>FTP</item>
+        <item>SFTP</item>
+        <item>FTPS</item>
+    </string-array>
+    <string name="remove_from_shortcuts">Αφαίρεση συντόμευσης</string>
+    <string name="shortcut_added">Η συντόμευση %s δημιουργήθηκε</string>
+    <string name="shortcut_removed">Η συντόμευση %s αφαιρέθηκε</string>
+    <string name="ftp_shortcuts">Συντομεύσεις FTP</string>
+    <string name="add_to_indexed_folders">Φάκελος ευρετηρίου</string>
+    <string name="add_to_library">Προσθήκη στη βιβλιοθήκη</string>
+    <string name="add_all_items_to_library">Προσθήκη όλων των βίντεο στη βιβλιοθήκη αμέσως;</string>
+    <string name="indexed_folder_added">Ο φάκελος %s προστέθηκε στη βιβλιοθήκη</string>
+    <string name="remove_from_indexed_folders">Αφαίρεση από τη βιβλιοθήκη</string>
+    <string name="indexed_folder_removed">Ο φάκελος %s αφαιρέθηκε από τη βιβλιοθήκη</string>
+    <string name="open_indexed_folder">"Άνοιγμα"</string>
+    <string name="rescan_indexed_folders">Επανασάρωση όλων των φακέλων ευρετηρίου</string>
+    <string name="last_rescan_never">Ποτέ</string>
+    <string name="ssh_port">Port</string>
+    <string name="ssh_password">Κωδικόs Πρόσβασης</string>
+    <string name="ssh_username">Όνομα Χρήστη</string>
+    <string name="ssh_shortcut_name">Όνομα συντόμευσης</string>
     <!-- Preferences -->
+    <string name="preferences_about">Σχετικά</string>
+    <string name="preferences_category_complete">Πλήρης έκδοση</string>
+    <string name="preferences_category_video">Βίντεο</string>
     <string name="category_languages">Υπότιτλοι</string>
     <string name="preferences_video_about">Σχετικά</string>
     <string name="preferences_video_os_text">Υπότιτλοι παρέχονται από</string>
     <string name="preferences_video_tmdb_text">Πληροφορίες Ταινίας/Τηλεοπτικής σειράς παρέχονται από</string>
+    <string name="tv_scraper">Τηλεοπτικές Εκπομπές</string>
+    <string name="movie_scraper">Ταινίες</string>
+    <string name="enable_auto_scrap">Αυτόματη λήψη πληροφοριών για νέα βίντεο</string>
     <!--  Title of the video picker activity. -->
     <!-- Archos File Info -->
     <!-- Help overlay -->
     <!-- Info dialog, not indexed file -->
     <!-- Brightness -->
     <!--  Nfo File parsing -->
+    <string name="sort_mode">Λειτουργία ταξινόμησης</string>
+    <string name="sort_by_name_asc">Ταξινόμηση κατά όνομα (α - ω)</string>
+    <string name="sort_by_name_desc">Ταξινόμηση κατά όνομα (ω - α)</string>
+    <string name="sort_by_year_asc">Ταξινόμηση ανά έτος (πρώτα το παλαιότερο)</string>
+    <string name="sort_by_year_desc">Ταξινόμηση ανά έτος (πρώτα τα νεότερα)</string>
+    <string name="sort_by_date_asc">Ταξινόμηση κατά ημερομηνία (πρώτα τα παλαιότερα)</string>
+    <string name="sort_by_date_desc">Ταξινόμηση κατά ημερομηνία (πρώτα το νεότερο)</string>
+    <string name="sort_by_duration_asc">Ταξινόμηση κατά διάρκεια (πρώτα η μικρότερη)</string>
+    <string name="sort_by_duration_desc">Ταξινόμηση κατά διάρκεια (πρώτα η μεγαλύτερη)</string>
+    <string name="sort_by_genre_asc">Ταξινόμηση ανά είδος (α &gt; ω)</string>
+    <string name="sort_by_genre_desc">Ταξινόμηση ανά είδος (ω &gt; α)</string>
+    <string name="sort_by_rating_asc">Ταξινόμηση κατά βαθμολογία (πρώτα το καλύτερο)</string>
+    <string name="sort_by_date_added_desc">Ταξινόμηση κατά ημερομηνία προσθήκης (πρώτα το νεότερο)</string>
+    <string name="sort_by_date_added_asc">Ταξινόμηση κατά ημερομηνία προσθήκης (πρώτα η παλαιότερη)</string>
+    <string name="sort_by_date_played_desc">Ταξινόμηση κατά ημερομηνία αναπαραγωγής (πρώτα το νεότερο)</string>
+    <string name="sort_by_date_premiered_desc">Ταξινόμηση κατά ημερομηνία πρεμιέρας (πρώτα τα νεότερα)</string>
+    <string name="sort_by_date_premiered_asc">Ταξινόμηση κατά ημερομηνία πρεμιέρας (πρώτα η παλαιότερη)</string>
+    <string name="sort_by_date_aired_desc">Ταξινόμηση κατά ημερομηνία προβολής (πρώτα το νεότερο)</string>
+    <string name="sort_by_recently_added_episode_desc">Πρώτα τα επεισόδια που προστέθηκαν πρόσφατα</string>
+    <string name="dec_choice_title">Επιλογή αποκωδικοποιητή</string>
+    <string name="dec_any">Προεπιλογή</string>
     <string name="preferences_separate_animation_from_movies_summary">Επιλέξτε για να διαχωρίσετε τα βίντεο κινούμενων σχεδίων από ταινίες και τηλεόραση σε χωριστή σειρά</string>
     <string name="preferences_separate_animation_from_movies">Διαχωρίσετε τα βίντεο κινούμενων σχεδίων από ταινίες και τηλεόραση</string>
+    <string name="codepage_default">Γλώσσα συσκευής %s</string>
+    <string name="codepage_874">Ταϊλανδικά (CP874)</string>
+    <string name="codepage_932">Ιαπωνικά (Shift-JIS, EUC-JP)</string>
+    <string name="codepage_936">Απλοποιημένα Κινέζικα (CP936, GB2312)</string>
+    <string name="codepage_949">Κορεατικά (CP949, EUC-KR)</string>
+    <string name="codepage_950">Παραδοσιακά Κινέζικα (Big5)</string>
+    <string name="codepage_1250">Ανατολική Ευρώπη (CP1250)</string>
+    <string name="codepage_1251">Κυριλλικό (CP1251)</string>
+    <string name="codepage_1252">Δυτική Ευρώπη (CP1252)</string>
+    <string name="codepage_28606">Νότια Ευρώπη (CP28606)</string>
+    <string name="codepage_1253">Ελληνικά (CP1253)</string>
+    <string name="codepage_1254">Τουρκικά (CP1254)</string>
+    <string name="codepage_1255">Εβραϊκά (CP1255)</string>
+    <string name="codepage_1256">Αραβικά (CP1256)</string>
+    <string name="codepage_1257">Βαλτική (CP1257)</string>
+    <string name="codepage_1258">Βιετναμέζικα (CP1258)</string>
+    <string name="codepage_extra_874">(CP874)</string>
+    <string name="codepage_extra_932">(Shift-JIS, EUC-JP)</string>
+    <string name="codepage_extra_936">(CP936, GB231)</string>
+    <string name="codepage_extra_949">(CP949, EUC-KR)</string>
+    <string name="codepage_extra_950">(Big5)</string>
+    <string name="codepage_extra_1250">(CP1250)</string>
+    <string name="codepage_extra_1251">(CP1251)</string>
+    <string name="codepage_extra_1252">(CP1252)</string>
+    <string name="codepage_extra_1253">(CP1253)</string>
+    <string name="codepage_extra_1254">(CP1254)</string>
+    <string name="codepage_extra_1255">(CP1255)</string>
+    <string name="codepage_extra_1256">(CP1256)</string>
+    <string name="codepage_extra_1257">(CP1257)</string>
+    <string name="codepage_extra_1258">(CP1258)</string>
+    <string name="torrent_category">Torrent</string>
+    <string name="torrent_path">Διαδρομή λήψεων</string>
+    <string name="torrent_blocklist">Λίστα αποκλεισμού</string>
+    <string name="show_all">Όλα τα βίντεο</string>
+    <string name="leanback_episode_SXEX_code">"Σ%1$02dΕ%2$02d"</string>
+    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"Σ%1$02dΕ%2$02d  -  %3$s"</string>
+    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
+    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  Σ%2$02dΕ%3$02d  -  %4$s"</string>
+    <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Δίκτυο &amp; Αρχεία</string>
+    <string name="leanback_subtitles_integrated">Ενσωματωμένοι</string>
+    <string name="leanback_subtitles_external">Εξωτερικοί</string>
+    <string name="leanback_posters_header">Αφίσες</string>
+    <string name="leanback_season_posters_header">Αφίσες της σεζόν</string>
+    <string name="leanback_weblinks_header">Σύνδεσμοι</string>
+    <string name="leanback_action_more_details">Περισσότερες λεπτομέρειες</string>
+    <string name="rescan_now">Επανασάρωση τώρα</string>
+    <string name="rescan_now_description">Χειροκίνητη επανασάρωση</string>
+    <string name="rescan_select_shares">Επιλογή συντομεύσεων</string>
+    <string name="scan_running">Η σάρωση εκτελείται</string>
+    <string name="scheduled_rescan">Προγραμματισμένη επανασάρωση</string>
+    <string name="scheduled_rescan_period">Περίοδος επανασάρωσης</string>
+    <string name="scheduled_rescan_period_no">Καμία</string>
+    <string name="scheduled_rescan_period_once_a_day">Μία φορά την ημέρα</string>
+    <string name="scheduled_rescan_period_twice_a_day">Δύο φορές την ημέρα</string>
+    <string name="scheduled_rescan_period_every_six_hours">Κάθε 6 ώρες</string>
+    <string name="scheduled_rescan_period_every_two_hours">Κάθε 2 ώρες</string>
+    <string name="scheduled_rescan_period_every_hour">Κάθε ώρα</string>
+    <string name="scheduled_rescan_time">Χρόνος επανασάρωσης</string>
+    <string name="rescan_when_opening_application">Επανασάρωση κατά το άνοιγμα της εφαρμογής</string>
+    <string name="last_rescan_occured">Τελευταία επανασάρωση πραγματοποιήθηκε:</string>
+    <string name="drawer_open">draweropen</string>
+    <string name="drawer_close">drawer_close</string>
+    <string name="help_faq">Βοήθεια / Συχνές Ερωτήσεις</string>
+    <string name="provider_folders">Cloud</string>
+    <string name="learn_more">Μάθετε περισσότερα</string>
+    <string name="rate_us_title">☆ Υποστηρίξτε μας</string>
+    <string name="create_new_list">Δημιουργία νέας λίστας</string>
+    <string name="add_to_list">Προσθήκη σε λίστα</string>
+    <string name="remove_from_list">Αφαίρεση από τη λίστα</string>
+    <string name="list_title">Τίτλος λίστας</string>
+    <string name="loading">Φόρτωση…</string>
+    <string name="connecting">Σύνδεση…</string>
+    <string name="app_id">08FEA4DD</string>
+    <string name="app_id_surface">C44FB232</string>
+    <string name="refreshrate_failed">Αποτυχία ορισμού επιθυμητού ρυθμού ανανέωσης</string>
+    <string name="networks">Δίκτυα:</string>
 </resources>
