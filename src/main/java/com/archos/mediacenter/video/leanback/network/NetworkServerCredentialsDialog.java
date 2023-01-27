@@ -57,6 +57,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
     final private static String NET_LATEST_PORT = "NET_LATEST_PORT";
     final private static String NET_LATEST_USERNAME = "NET_LATEST_USERNAME";
     final private static String NET_LATEST_DOMAIN = "NET_LATEST_DOMAIN";
+    final private static String NET_LATEST_PATH = "NET_LATEST_PATH";
 
     final public static String USERNAME = "username";
     final public static String REMOTE = "remote_address";
@@ -95,6 +96,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
             mUsername = mPreferences.getString(NET_LATEST_USERNAME, "");
             mType = mPreferences.getInt(NET_LATEST_TYPE, 0);
             mPort = mPreferences.getInt(NET_LATEST_PORT, -1);
+            mPath = mPreferences.getString(NET_LATEST_PATH, "");
         }
         if(mPassword.isEmpty()&&!mRemote.isEmpty()){
             NetworkCredentialsDatabase database = NetworkCredentialsDatabase.getInstance();
@@ -209,6 +211,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
                             .putInt(NET_LATEST_PORT, port)
                             .putString(NET_LATEST_USERNAME, username)
                             .putString(NET_LATEST_DOMAIN, domain)
+                            .putString(NET_LATEST_PATH, path)
                             .apply();
                     String uriToBuild = "";
                     switch(type){
