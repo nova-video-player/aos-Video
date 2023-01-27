@@ -34,6 +34,7 @@ import androidx.preference.PreferenceManager;
 
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase.Credential;
+import com.archos.filecorelibrary.MetaFile2Factory;
 import com.archos.mediacenter.video.R;
 
 public class FtpServerCredentialsDialog extends DialogFragment {
@@ -151,14 +152,18 @@ public class FtpServerCredentialsDialog extends DialogFragment {
                         port = Integer.parseInt(portEt.getText().toString());
                     } catch(NumberFormatException e){ }
 
-                    // get default port if it's wrong
+                    String scheme = "";
                     switch(type){
-                        case 0: if (port == -1)  port=21; break;
-                        case 1: if (port == -1)  port=22; break;
-                        case 2: if (port == -1)  port=21; break;
-                        case 3: if (port == -1)  port=80; break;
+                        case 0: scheme = "ftp"; break;
+                        case 1: scheme = "sftp"; break;
+                        case 2: scheme = "ftps"; break;
+                        case 3: scheme = "webdav"; break;
                         default:
                             throw new IllegalArgumentException("Invalid FTP type "+type);
+                    }
+
+                    if (port == -1) {
+                        port = MetaFile2Factory.defaultPortForProtocol(scheme);
                     }
 
                     final String username = usernameEt.getText().toString();
@@ -171,15 +176,8 @@ public class FtpServerCredentialsDialog extends DialogFragment {
                     .putInt(FTP_LATEST_PORT, port)
                     .putString(FTP_LATEST_USERNAME, username)
                     .apply();
-                    String uriToBuild = "";
-                    switch(type){
-                        case 0: uriToBuild = "ftp"; break;
-                        case 1: uriToBuild = "sftp"; break;
-                        case 2: uriToBuild = "ftps"; break;
-                        case 3: uriToBuild = "webdav"; break;
-                        default:
-                            throw new IllegalArgumentException("Invalid FTP type "+type);
-                    }
+
+                    String uriToBuild = scheme;
                     //path needs to start by a "/"
                     if(path.isEmpty()||!path.startsWith("/"))
                         path = "/"+path;

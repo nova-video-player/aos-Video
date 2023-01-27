@@ -35,6 +35,7 @@ import androidx.preference.PreferenceManager;
 
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase.Credential;
+import com.archos.filecorelibrary.MetaFile2Factory;
 import com.archos.mediacenter.video.R;
 
 import org.slf4j.Logger;
@@ -188,16 +189,19 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
                         port = Integer.parseInt(portEt.getText().toString());
                     } catch(NumberFormatException e){ }
 
-                    // get default port if it's wrong
+                    String scheme = "";
                     switch(type){
-                        case 0:
-                        case 2:
-                            if (port == -1) port = 21; break;
-                        case 1: if (port == -1) port = 22; break;
-                        case 3: if (port == -1) port = 445; break;
-                        case 4: if (port == -1) port = 80; break;
+                        case 0: scheme = "ftp"; break;
+                        case 1: scheme = "sftp"; break;
+                        case 2: scheme = "ftps"; break;
+                        case 3: scheme = "smb"; break;
+                        case 4: scheme = "webdav"; break;
                         default:
                             throw new IllegalArgumentException("Invalid protocol type "+type);
+                    }
+
+                    if (port == -1) {
+                        port = MetaFile2Factory.defaultPortForProtocol(scheme);
                     }
 
                     final String username = usernameEt.getText().toString();
@@ -213,16 +217,8 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
                             .putString(NET_LATEST_DOMAIN, domain)
                             .putString(NET_LATEST_PATH, path)
                             .apply();
-                    String uriToBuild = "";
-                    switch(type){
-                        case 0: uriToBuild = "ftp"; break;
-                        case 1: uriToBuild = "sftp"; break;
-                        case 2: uriToBuild = "ftps"; break;
-                        case 3: uriToBuild = "smb"; break;
-                        case 4: uriToBuild = "webdav"; break;
-                        default:
-                            throw new IllegalArgumentException("Invalid protocol type "+type);
-                    }
+
+                    String uriToBuild = scheme;
                     // path needs to start by a "/"
                     if(path.isEmpty()||!path.startsWith("/"))
                         path = "/"+path;
