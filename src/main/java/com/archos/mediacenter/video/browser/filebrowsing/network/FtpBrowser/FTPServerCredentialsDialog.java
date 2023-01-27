@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser;
 import android.net.Uri;
 
 import com.archos.mediacenter.video.browser.ServerCredentialsDialog;
+import com.archos.filecorelibrary.MetaFile2Factory;
 
 public class FTPServerCredentialsDialog extends ServerCredentialsDialog {
 
@@ -48,33 +49,34 @@ public class FTPServerCredentialsDialog extends ServerCredentialsDialog {
             port = Integer.parseInt(mPortEt.getText().toString());
         } catch(NumberFormatException e){ }
 
-        // get default port if it's wrong
+        var uriB = new Uri.Builder();
+
+        String scheme = "";
         switch(type){
-            case 0: if (port == -1)  port=21; break;
-            case 1: if (port == -1)  port=22; break;
-            case 2: if (port == -1)  port=21; break;
-            case 3: if (port == -1)  port=80; break;
+            case 0: scheme = "ftp"; break;
+            case 1: scheme = "sftp"; break;
+            case 2: scheme = "ftps"; break;
+            case 3: scheme = "webdav"; break;
             default:
                 throw new IllegalArgumentException("Invalid FTP type "+type);
         }
-        String uriToBuild = "";
-        switch(type){
-            case 0: uriToBuild = "ftp"; break;
-            case 1: uriToBuild = "sftp"; break;
-            case 2: uriToBuild = "ftps"; break;
-            case 3: uriToBuild = "webdav"; break;
-            default:
-                throw new IllegalArgumentException("Invalid FTP type "+type);
+
+        uriB.scheme(scheme);
+
+        //TODO: Do we need a default port or not...? URI could not have a port included
+        if(port == -1) {
+            port = MetaFile2Factory.defaultPortForProtocol(scheme);
         }
-        //path needs to start by a "/"
-        if(path.isEmpty()||!path.startsWith("/"))
-            path = "/"+path;
-        uriToBuild +="://"+(!address.isEmpty()?address+(port!=-1?":"+port:""):"")+path;
 
-        return uriToBuild;
+        if (!address.isEmpty()) {
+            if(port == -1)
+                uriB.authority(address);
+            else
+                uriB.authority(address + ":" + port);
+        }
 
+        uriB.path(path);
+
+        return uriB.toString();
     }
-
-
-
 }
