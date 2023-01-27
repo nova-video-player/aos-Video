@@ -24,12 +24,12 @@ import android.util.Log;
 import androidx.loader.content.CursorLoader;
 
 import com.archos.environment.ArchosUtils;
+import com.archos.filecorelibrary.AuthenticationException;
 import com.archos.filecorelibrary.FileComparator;
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.ListingEngine;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.RawLister;
-import com.archos.filecorelibrary.ftp.AuthenticationException;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.RawListerFactoryWithUpnp;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserMoviesBy;

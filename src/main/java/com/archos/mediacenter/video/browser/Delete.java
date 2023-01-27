@@ -24,6 +24,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.archos.filecorelibrary.AuthenticationException;
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.FileEditor;
 import com.archos.filecorelibrary.FileEditorFactory;
@@ -31,7 +32,6 @@ import com.archos.filecorelibrary.FileUtilsQ;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.RawLister;
 import com.archos.filecorelibrary.FileUtils;
-import com.archos.filecorelibrary.ftp.AuthenticationException;
 import com.archos.filecorelibrary.localstorage.ExternalSDFileWriter;
 import com.archos.filecorelibrary.localstorage.LocalStorageFileEditor;
 import com.archos.mediacenter.filecoreextension.UriUtils;

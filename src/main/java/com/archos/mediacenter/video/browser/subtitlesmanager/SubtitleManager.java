@@ -21,12 +21,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.NetworkOnMainThreadException;
 
+import com.archos.filecorelibrary.AuthenticationException;
 import com.archos.filecorelibrary.CopyCutEngine;
 import com.archos.filecorelibrary.FileEditorFactory;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.MimeUtils;
 import com.archos.filecorelibrary.OperationEngineListener;
-import com.archos.filecorelibrary.ftp.AuthenticationException;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.RawListerFactoryWithUpnp;
 import com.archos.mediacenter.utils.MediaUtils;
