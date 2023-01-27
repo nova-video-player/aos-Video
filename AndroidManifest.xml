@@ -1152,6 +1152,7 @@
                 <data android:scheme="ftps" />
                 <data android:scheme="content" />
                 <data android:scheme="file" />
+                <data android:scheme="webdav" />
             </intent-filter>
             <!-- Starts incremental local storage import -->
             <intent-filter>
@@ -1544,6 +1545,10 @@
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.network.upnp.UpnpListingActivity"
+            android:theme="@style/MyLeanbackTheme" />
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.network.webdav.WebdavListingActivity"
             android:theme="@style/MyLeanbackTheme" />
 
         <activity

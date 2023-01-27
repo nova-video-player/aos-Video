@@ -285,6 +285,9 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                                 case 3:
                                     uriToBuild = "smb";
                                     break;
+                                case 4:
+                                    uriToBuild = "webdav";
+                                    break;
                                 default:
                                     throw new IllegalArgumentException("Invalid network protocol type " + type);
                             }

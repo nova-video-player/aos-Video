@@ -26,6 +26,7 @@ allprojects {
         google()
         mavenCentral()
         mavenLocal()
+        maven { url 'https://jitpack.io' }
     }
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
@@ -234,7 +235,9 @@ android {
                          'META-INF/LICENSE',
                          'META-INF/NOTICE',
                          'META-INF/LICENSE.txt',
+                         'META-INF/LICENSE.md',
                          'META-INF/NOTICE.txt',
+                         'META-INF/NOTICE.md',
                          'META-INF/beans.xml',
                          'META-INF/maven',
                          'META-INF/services/**',

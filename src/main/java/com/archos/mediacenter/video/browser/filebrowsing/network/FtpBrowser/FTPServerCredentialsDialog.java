@@ -53,6 +53,7 @@ public class FTPServerCredentialsDialog extends ServerCredentialsDialog {
             case 0: if (port == -1)  port=21; break;
             case 1: if (port == -1)  port=22; break;
             case 2: if (port == -1)  port=21; break;
+            case 3: if (port == -1)  port=80; break;
             default:
                 throw new IllegalArgumentException("Invalid FTP type "+type);
         }
@@ -61,6 +62,7 @@ public class FTPServerCredentialsDialog extends ServerCredentialsDialog {
             case 0: uriToBuild = "ftp"; break;
             case 1: uriToBuild = "sftp"; break;
             case 2: uriToBuild = "ftps"; break;
+            case 3: uriToBuild = "webdav"; break;
             default:
                 throw new IllegalArgumentException("Invalid FTP type "+type);
         }

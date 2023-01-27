@@ -106,6 +106,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
                 case 1: uriToBuild = "sftp"; break;
                 case 2: uriToBuild = "ftps"; break;
                 case 3: uriToBuild = "smb"; break;
+                case 4: uriToBuild = "webdav"; break;
                 default:
                     throw new IllegalArgumentException("Invalid FTP type "+mType);
             }
@@ -154,9 +155,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
             }
         });
         int type = mType;
-        if (type > 0 && type < 4) { // better safe than sorry
-            typeSp.setSelection(type);
-        }
+        typeSp.setSelection(type);
         addressEt.setText(mRemote);
         pathEt.setText(mPath);
         int portInt =  mPort;
@@ -196,6 +195,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
                             if (port == -1) port = 21; break;
                         case 1: if (port == -1) port = 22; break;
                         case 3: if (port == -1) port = 445; break;
+                        case 4: if (port == -1) port = 80; break;
                         default:
                             throw new IllegalArgumentException("Invalid protocol type "+type);
                     }
@@ -219,6 +219,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
                         case 1: uriToBuild = "sftp"; break;
                         case 2: uriToBuild = "ftps"; break;
                         case 3: uriToBuild = "smb"; break;
+                        case 4: uriToBuild = "webdav"; break;
                         default:
                             throw new IllegalArgumentException("Invalid protocol type "+type);
                     }
