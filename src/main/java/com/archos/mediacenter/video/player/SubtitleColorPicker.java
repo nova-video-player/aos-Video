@@ -40,7 +40,7 @@ public class SubtitleColorPicker extends LinearLayout  {
     private ColorPickListener mColorPickListener;
     private int mColor;
     private int mSize;
-    private static final int ITEM_PER_LINE = 6;
+    private static final int ITEM_PER_LINE = 8;
     private int mCurrentlySelectedColor = 0;
     private ArrayList<View> colorBoxes = new ArrayList<>();
     private ArrayList<Integer> colors = new ArrayList<>();
