@@ -80,4 +80,12 @@
     <string name="audio_5_1">5.1</string>
     <string name="audio_2_0">2.0</string>
 
+    <string name="app_id">08FEA4DD</string>
+    <string name="app_id_surface">C44FB232</string>
+
+    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
+    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
+    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
+    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
+
 </resources>
