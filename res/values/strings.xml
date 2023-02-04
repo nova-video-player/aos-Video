@@ -520,11 +520,6 @@
     <string name="ssh_prompt">FTP type</string>
     <string name="protocol_prompt">Protocol type</string>
     <string name="ssh_empty_view"> "You can browse and play from your own ftp server"</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">Remove the shortcut</string>
     <string name="shortcut_added">Shortcut %s created</string>
     <string name="shortcut_removed">Shortcut %s removed</string>
