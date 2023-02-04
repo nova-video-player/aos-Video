@@ -297,7 +297,7 @@ dependencies {
     // needed to avoid duplicate class issue
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation 'com.github.ksoichiro:android-observablescrollview:1.6.0'
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.leanback:leanback:1.2.0-alpha02'
     implementation 'androidx.leanback:leanback-preference:1.2.0-alpha02'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
