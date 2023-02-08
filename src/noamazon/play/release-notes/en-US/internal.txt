@@ -1,3 +1,4 @@
+src/noamazon/play/release-notes/en-US/internal.txt
 - Better movie scrape results
 - Increase number of subtitles track supported to 64
 - Pass list of subtitles to external video players
@@ -6,4 +7,5 @@
 - Option to not apply audio passthrough if AV receiver does not support codec
 - Experimental playback speed option
 - Target API33 & Google Play Bundle delivery
+- Fix SMB1 regression on some NAS
 - Stability enhancements
