@@ -1,4 +1,3 @@
-src/noamazon/play/release-notes/en-US/internal.txt
 - Better movie scrape results
 - Increase number of subtitles track supported to 64
 - Pass list of subtitles to external video players
