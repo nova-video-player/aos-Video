@@ -863,15 +863,19 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         // We now use the DB flag ARCHOS_TRAKT_SEEN even if there is no sync with trakt
         else {
             log.debug("stopTrakt: mTraktClient == null, not sending watchStop");
-            if (mVideoInfo.id>=0 && Trakt.shouldMarkAsSeen(getPlayerProgress()) && !PrivateMode.isActive()) {
-                log.debug("stopTrakt: marking video " + mVideoInfo.id + " as seen in VideoStore");
-                final ContentValues cv = new ContentValues(1);
-                cv.put(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN, Trakt.TRAKT_DB_MARKED);
-                String where = VideoStore.Video.VideoColumns._ID + " = ?";
-                String[] whereArgs = new String[] {Long.toString(mVideoInfo.id)};
-                getContentResolver().update(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, cv, where, whereArgs);
+            if (mVideoInfo != null) {
+                if (mVideoInfo.id >= 0 && Trakt.shouldMarkAsSeen(getPlayerProgress()) && !PrivateMode.isActive()) {
+                    log.debug("stopTrakt: marking video " + mVideoInfo.id + " as seen in VideoStore");
+                    final ContentValues cv = new ContentValues(1);
+                    cv.put(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN, Trakt.TRAKT_DB_MARKED);
+                    String where = VideoStore.Video.VideoColumns._ID + " = ?";
+                    String[] whereArgs = new String[]{Long.toString(mVideoInfo.id)};
+                    getContentResolver().update(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, cv, where, whereArgs);
+                } else {
+                    log.debug("stopTrakt: not marking video mVideoInfo.id=" + mVideoInfo.id + " any resume");
+                }
             } else {
-                log.debug("stopTrakt: not marking video mVideoInfo.id=" + mVideoInfo.id + " any resume");
+                log.warn("stopTrakt: mVideoInfo is null");
             }
         }
     }
