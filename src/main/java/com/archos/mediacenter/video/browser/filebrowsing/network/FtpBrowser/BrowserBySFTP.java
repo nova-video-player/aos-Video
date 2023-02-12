@@ -62,7 +62,8 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
 
     private static final int LONG_CONNECTION = 9;
     private static final String SSH_SHORTCUT_HELP_OVERLAY_KEY = "ssh_shortcut_help_overlay";
-    protected static final String CURRENT_DIRECTORY = "currentDirectory";
+    // was protected before...
+    public static final String CURRENT_DIRECTORY = "currentDirectory";
 
     protected final Handler mHandler = new Handler() {
         @Override
@@ -121,7 +122,6 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
 
         Bundle arg = getArguments();
         mShortcuts = ShortcutDb.STATIC.getAllShortcuts(getActivity());
-
     }
 
     public void onPause(){
@@ -130,9 +130,7 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
             mHandler.removeMessages(LONG_CONNECTION);
 
         }
-
     }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
@@ -154,7 +152,6 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
             mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 boolean isFirstEntryTextChange = true;
 
-
                 @Override
                 public boolean onQueryTextChange(String newText) {
                     if (!isFirstEntryTextChange)
@@ -165,7 +162,6 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
 
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-
                     return true;
                 }
             });
@@ -174,9 +170,7 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        
-        
-        
+
         if(item.getItemId()==R.string.add_ssh_server){
             askForCredentials();
             return true;
@@ -227,16 +221,10 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
         ShortcutDb.STATIC.insertShortcut(getContext(), mCurrentDirectory, shortcutName);
     }
 
-    private void addIndexedFolder(Uri currentDirectory, String name) {
-        ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), new ShortcutDbAdapter.Shortcut(name, currentDirectory.toString()));
-    }
-
     @Override
     protected void refresh() {
         listFiles(true);
     }
-
-
 
     private boolean helpOverlayAlreadyActivated() {
         return mPreferences.getBoolean(SSH_SHORTCUT_HELP_OVERLAY_KEY, false);
@@ -299,8 +287,6 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
             askForCredentials();
     }
 
-    
-    
     private void askForCredentials(){
         if(getParentFragmentManager().findFragmentByTag(FTPServerCredentialsDialog.class.getCanonicalName())==null){
             FTPServerCredentialsDialog dialog = new FTPServerCredentialsDialog();
@@ -356,16 +342,12 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
         }
     }
 
-
-
     protected void listFiles(boolean discrete) {
 
         mHandler.removeMessages(LONG_CONNECTION);
         if(!discrete)
-        mHandler.sendEmptyMessageDelayed(LONG_CONNECTION, LONG_CONNECTION_DELAY);
+            mHandler.sendEmptyMessageDelayed(LONG_CONNECTION, LONG_CONNECTION_DELAY);
        super.listFiles(discrete);
     }
-
-
 
 }

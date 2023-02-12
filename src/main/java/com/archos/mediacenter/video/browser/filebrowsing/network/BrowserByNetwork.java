@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.browser.filebrowsing.network;
 
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
@@ -30,9 +31,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.core.view.MenuItemCompat;
+import androidx.appcompat.app.AlertDialog;
 
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.MetaFile2;
@@ -40,6 +43,7 @@ import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.utils.HelpOverlayActivity;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.ShortcutDb;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.filebrowsing.BrowserByFolder;
 import com.archos.mediacenter.video.browser.filebrowsing.ListingAdapter;
@@ -114,6 +118,10 @@ public class BrowserByNetwork extends BrowserByFolder {
         getActivity().invalidateOptionsMenu();
     }
 
+    public void addIndexedFolder(Uri currentDirectory, String name) {
+        ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), new ShortcutDbAdapter.Shortcut(name, currentDirectory.toString()));
+    }
+
     @Override
     protected void setupAdapter(boolean createNewAdapter) {
         if (createNewAdapter || mBrowserAdapter == null) {
@@ -123,7 +131,6 @@ public class BrowserByNetwork extends BrowserByFolder {
             mBrowserAdapter = mFilesAdapter;
         }
     }
-
 
     private void removeShortcut(String shortcutPath) {
         // Remove the shortcut from the list
@@ -219,7 +226,6 @@ public class BrowserByNetwork extends BrowserByFolder {
         return super.onContextItemSelected(menuItem);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean ret;
@@ -230,7 +236,39 @@ public class BrowserByNetwork extends BrowserByFolder {
                 ret = true;
                 break;
             case R.string.remove_from_indexed_folders:
+            case R.string.remove_from_shortcuts:
                 removeShortcut(mCurrentDirectory.toString());
+                ret = true;
+                break;
+            case R.string.add_ssh_shortcut:
+                // have a dialog where shortcut name can be specified and add to library option too
+                final View v = getActivity().getLayoutInflater().inflate(R.layout.ssh_shortcut_dialog_layout, null);
+                ((EditText)v.findViewById(R.id.shortcut_name)).setText(mCurrentDirectory.getLastPathSegment());
+                new AlertDialog.Builder(getActivity())
+                        .setCancelable(false)
+                        .setView(v)
+                        .setTitle(R.string.ssh_shortcut_name)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                                if (((CheckBox) v.findViewById(R.id.checkBox)).isChecked()) {
+                                    NetworkScanner.scanVideos(getActivity(), mCurrentDirectory);
+                                    addIndexedFolder(mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString());
+                                }
+                                ShortcutDb.STATIC.insertShortcut(getContext(), mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString());
+                                getActivity().invalidateOptionsMenu();
+                            }
+                        })
+                        .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel,new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                dialog.cancel();
+                            }
+                        }).create().show();
                 ret = true;
                 break;
             case R.string.manually_create_share:
@@ -309,6 +347,15 @@ public class BrowserByNetwork extends BrowserByFolder {
         MenuItem IndexFolderMenuItem = menu.add(0, R.string.add_to_indexed_folders, Menu.NONE, R.string.add_to_indexed_folders);
         IndexFolderMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
         IndexFolderMenuItem.setActionView(mIndexFolderActionView);
+
+        if(mCurrentDirectory != null){
+            MenuItem ShortcutFolderMenuItem;
+            if(ShortcutDb.STATIC.isShortcut(getActivity(), mCurrentDirectory.toString()) <= 0)
+                ShortcutFolderMenuItem = menu.add(0,R.string.add_ssh_shortcut, 0,R.string.add_ssh_shortcut);
+            else
+                ShortcutFolderMenuItem = menu.add(0,R.string.remove_from_shortcuts, 0,R.string.remove_from_shortcuts);
+            ShortcutFolderMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        }
 
         menu.add(0, R.string.remove_from_indexed_folders, Menu.NONE, R.string.remove_from_indexed_folders).setIcon(R.drawable.ic_menu_video_unindex).setShowAsAction(
                 MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);

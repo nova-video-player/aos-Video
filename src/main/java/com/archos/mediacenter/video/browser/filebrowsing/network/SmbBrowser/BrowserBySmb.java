@@ -16,7 +16,6 @@ package com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser;
 
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -58,8 +57,6 @@ public class BrowserBySmb extends BrowserByNetwork {
         TextViewCompat.setTextAppearance(mButton, android.R.style.TextAppearance_Medium);
         mButton.setVisibility(View.VISIBLE);
         displayConnectionDescription();
-
-
     }
 
     @Override
@@ -122,6 +119,5 @@ public class BrowserBySmb extends BrowserByNetwork {
         sb.setSpan(new StyleSpan(Typeface.BOLD), userStart, userEnd, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         mButton.setText(sb);
     }
-
 
 }
