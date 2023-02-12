@@ -540,6 +540,7 @@
     <string name="indexed_folder_removed">Folder %s removed from library</string>
     <string name="indexed_folders_list_empty">No network folders are currently indexed.\n\nYou can add the content of a network folder to the library by browsing to this folder and selecting \"%s\" in the top action bar.</string>
     <string name="indexed_folders_list_empty_ftp">No ftp folders are currently indexed.</string>
+    <string name="indexed_folders_list_empty_network">No network folders are currently indexed.</string>
     <string name="open_indexed_folder">"Open"</string>
     <string name="rescan_indexed_folders">Re-scan all indexed folders</string>
     <string name="last_rescan_never">Never</string>
