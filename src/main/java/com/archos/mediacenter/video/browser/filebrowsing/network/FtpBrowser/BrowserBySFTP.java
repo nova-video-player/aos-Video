@@ -15,27 +15,18 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser;
 
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewStub;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.view.MenuItemCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.loader.app.LoaderManager;
 
@@ -44,18 +35,14 @@ import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.ftp.Session;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.filecorelibrary.sftp.SFTPSession;
-import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.browser.ShortcutDb;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.filebrowsing.network.AdapterByNetwork;
 import com.archos.mediacenter.video.browser.filebrowsing.network.BrowserByNetwork;
-import com.archos.mediaprovider.NetworkScanner;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Listener,LoaderManager.LoaderCallbacks<Cursor> {
     public static final long LONG_CONNECTION_DELAY = 8000; //delay before proposing to reset connection
@@ -69,7 +56,6 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
         @Override
         public void handleMessage(Message msg) {
             switch(msg.what){
-
                 case LONG_CONNECTION:
                     // Hide content, show message
                     mHandler.removeMessages(LONG_CONNECTION);
@@ -112,6 +98,7 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
             }
         }
     };
+
     private SearchView mSearchView;
     private List<ShortcutDb.Shortcut> mShortcuts;
     private List<Object> mUnfilteredItemList;
@@ -128,97 +115,7 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
         super.onPause();
         if(mHandler != null){
             mHandler.removeMessages(LONG_CONNECTION);
-
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        //super.onCreateOptionsMenu(menu, inflater);
-
-        menu.add(0, R.string.add_ssh_server, 0, R.string.add_ssh_server);
-        if(mCurrentDirectory!=null){
-           MenuItem mi;
-            if(ShortcutDb.STATIC.isShortcut(getActivity(), mCurrentDirectory.toString())<=0)
-                mi= menu.add(0,R.string.add_ssh_shortcut, 0,R.string.add_ssh_shortcut);
-            else
-                mi= menu.add(0,R.string.remove_from_shortcuts, 0,R.string.remove_from_shortcuts);
-            mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        }
-        if(getActivity() instanceof MainActivity) {
-            mSearchView = ((MainActivity) getActivity()).getSearchView();
-            mSearchView.setSearchableInfo(null);
-            mSearchView.setQuery("", true);//resetting query
-            mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                boolean isFirstEntryTextChange = true;
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    if (!isFirstEntryTextChange)
-                        filter(newText);
-                    isFirstEntryTextChange = false;
-                    return true;
-                }
-
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    return true;
-                }
-            });
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if(item.getItemId()==R.string.add_ssh_server){
-            askForCredentials();
-            return true;
-         
-        }
-        else if (item.getItemId()==R.string.remove_from_shortcuts){
-            ShortcutDb.STATIC.removeShortcut(getContext(), mCurrentDirectory);
-            NetworkScanner.removeVideos(getActivity(), mCurrentDirectory);
-            getActivity().invalidateOptionsMenu();
-        }
-        else if(item.getItemId()==R.string.add_ssh_shortcut){
-            
-                final View v = getActivity().getLayoutInflater().inflate(R.layout.ssh_shortcut_dialog_layout, null);
-                ((EditText)v.findViewById(R.id.shortcut_name)).setText(mCurrentDirectory.getLastPathSegment());
-
-                new AlertDialog.Builder(getActivity())
-                .setCancelable(false)
-                .setView(v)
-                .setTitle(R.string.ssh_shortcut_name)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                        if (((CheckBox) v.findViewById(R.id.checkBox)).isChecked()) {
-                            NetworkScanner.scanVideos(getActivity(), mCurrentDirectory);
-                            addIndexedFolder(mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString());
-                        }
-                        ShortcutDb.STATIC.insertShortcut(getContext(), mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString());
-                        getActivity().invalidateOptionsMenu();
-                    }
-                })
-                .setOnCancelListener(new OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel,new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
-                        dialog.cancel();
-                    }
-                }).create().show();
-            }
-        return super.onOptionsItemSelected(item);
-        
-    }
-
-    protected void createShortcut(String shortcutPath, String shortcutName) {
-        super.createShortcut(shortcutPath,shortcutName);
-        ShortcutDb.STATIC.insertShortcut(getContext(), mCurrentDirectory, shortcutName);
     }
 
     @Override
@@ -232,7 +129,6 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
 
     @Override
     public void onListingStart() {
-
     }
 
     @Override
@@ -253,11 +149,11 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
         mHandler.removeMessages(LONG_CONNECTION);
         super.onListingTimeOut();
     }
+
     @Override
     protected void displayFailPage(){
         super.displayFailPage();
         View emptyView = mRootView.findViewById(R.id.empty_view);
-
         if (emptyView != null) {
             emptyView.setVisibility(View.VISIBLE);
 
@@ -270,6 +166,7 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
             });
         }
     }
+
     @Override
     public void onCredentialRequired(Exception e) {
         if (getActivity() == null)
@@ -343,7 +240,6 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
     }
 
     protected void listFiles(boolean discrete) {
-
         mHandler.removeMessages(LONG_CONNECTION);
         if(!discrete)
             mHandler.sendEmptyMessageDelayed(LONG_CONNECTION, LONG_CONNECTION_DELAY);
