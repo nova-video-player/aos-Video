@@ -275,7 +275,7 @@ public abstract class RootFragmentAdapter extends RecyclerView.Adapter<RecyclerV
             return new SeparatorViewHolder(v);
         }
         else if(viewType == TYPE_INDEXED_SHORTCUT){
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.browser_smb_shortcut_item, viewGroup, false);
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.browser_indexed_item, viewGroup, false);
             return new ShortcutViewHolder(v);
         }
         else if(viewType == TYPE_TEXT){

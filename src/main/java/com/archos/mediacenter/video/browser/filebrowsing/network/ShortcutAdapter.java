@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.ShortcutDb;
+import com.archos.mediacenter.video.utils.VideoUtils;
 
 import java.util.List;
 
@@ -102,7 +103,7 @@ public class ShortcutAdapter extends RootFragmentAdapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         if(viewType == TYPE_SHORTCUT){
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.browser_smb_shortcut_item, viewGroup, false);
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.browser_indexed_item, viewGroup, false);
             return new ShortcutViewHolder(v);
         }
         else if (viewType == TYPE_BROWSE) {
@@ -157,6 +158,7 @@ public class ShortcutAdapter extends RootFragmentAdapter {
         }
         public void setUri(Uri uri) {
             mUri = uri;
+            mIcon.setImageResource(VideoUtils.getShortcutImage(mUri));
         }
         public void setName(String name) {
             mName  = name;

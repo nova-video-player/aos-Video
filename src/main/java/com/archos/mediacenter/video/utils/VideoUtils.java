@@ -20,6 +20,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.util.Log;
 
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.video.R;
 
@@ -203,6 +204,46 @@ public class VideoUtils {
         } else {
             return null;
         }
+    }
+
+    public static int getShortcutImage(Uri uri) {
+        if (uri == null) return R.drawable.folder_shortcut_folder;
+        if ("smb".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.folder_shortcut_smb;
+        } else if ("ftp".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.folder_shortcut_ftp;
+        } else if ("ftps".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.folder_shortcut_ftps;
+        } else if ("sftp".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.folder_shortcut_sftp;
+        } else if ("zip".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.folder_shortcut_folder;
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.folder_shortcut_folder;
+        } else if (FileUtils.isLocal(uri)) {
+            return R.drawable.folder_shortcut_folder;
+        } else
+            return R.drawable.folder_shortcut_folder;
+    }
+
+    public static int getShortcutImageLeanback(Uri uri) {
+        if (uri == null) return R.drawable.filetype_new_folder;
+        if ("smb".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.filetype_new_folder_smb;
+        } else if ("ftp".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.filetype_new_folder_ftp;
+        } else if ("ftps".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.filetype_new_folder_ftps;
+        } else if ("sftp".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.filetype_new_folder_sftp;
+        } else if ("zip".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.filetype_new_folder;
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.filetype_new_folder;
+        } else if (FileUtils.isLocal(uri)) {
+            return R.drawable.filetype_new_folder;
+        } else
+            return R.drawable.filetype_new_folder;
     }
 
 }

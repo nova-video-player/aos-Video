@@ -24,6 +24,7 @@ import com.archos.filecorelibrary.localstorage.LocalStorageFileEditor;
 import com.archos.filecorelibrary.sftp.SftpFileEditor;
 import com.archos.filecorelibrary.zip.ZipFileEditor;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.utils.VideoUtils;
 
 import java.io.Serializable;
 
@@ -39,21 +40,6 @@ public class GenericNetworkShortcut extends Shortcut implements Serializable {
     @Override
     public int getImage() {
         Uri uri = getUri();
-        if ("smb".equalsIgnoreCase(uri.getScheme())) {
-            return R.drawable.filetype_new_folder_smb;
-        } else if ("ftp".equalsIgnoreCase(uri.getScheme())) {
-            return R.drawable.filetype_new_folder_ftp;
-        } else if ("ftps".equalsIgnoreCase(uri.getScheme())) {
-            return R.drawable.filetype_new_folder_ftps;
-        } else if ("sftp".equalsIgnoreCase(uri.getScheme())) {
-            return R.drawable.filetype_new_folder_sftp;
-        } else if ("zip".equalsIgnoreCase(uri.getScheme())) {
-            return R.drawable.filetype_new_folder;
-        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            return R.drawable.filetype_new_folder;
-        } else if (FileUtils.isLocal(uri)) {
-            return R.drawable.filetype_new_folder;
-        } else
-            return R.drawable.filetype_new_folder;
+        return VideoUtils.getShortcutImageLeanback(uri);
     }
 }
