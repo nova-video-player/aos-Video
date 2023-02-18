@@ -15,7 +15,6 @@
 package com.archos.mediacenter.video.leanback.network;
 
 import android.content.DialogInterface;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -40,9 +39,13 @@ public class NetworkListingFragment extends ListingFragment {
 
     private static final Logger log = LoggerFactory.getLogger(NetworkListingFragment.class);
 
-    private long mShorcutId;
+    private long mShortcutId;
     private boolean mAnAncestorIsShortcut;
     private boolean mUserHasNoShortcutAtAll = true;
+
+    private boolean isCurrentDirectoryIndexed = false;
+    private boolean isHimselfIndexedFolder = false;
+    private boolean isCurrentDirectoryShortcut = false;
 
     @Override
     protected  ListingFragment instantiateNewFragment() {
@@ -64,19 +67,25 @@ public class NetworkListingFragment extends ListingFragment {
     private final View.OnClickListener mOrbClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            //checkIfIsShortcut();
+            checkIfIsShortcut();
             if (isShortcut()) {
                 deleteShortcut();
             } else {
                 createShortcut();
-                //askForIndexing();
+                // asks if it is to be added immediately (i.e. index folder and not only add shortcut) if an ancestor is not indexed
+                if (! mAnAncestorIsShortcut) askForIndexing();
             }
         }
     };
 
     private void checkIfIsShortcut() {
-        mShorcutId = ShortcutDb.STATIC.isShortcut(getActivity(), mUri.toString());
-        //Log.d(TAG, "shorcutId = " + mShorcutId + "\t (" + mUri.toString() + ")");
+        final String currentUri = mUri.toString();
+        mUserHasNoShortcutAtAll = (ShortcutDb.STATIC.numberOfShortcuts(getActivity()) == 0) && (ShortcutDbAdapter.VIDEO.numberOfShortcuts(getActivity()) == 0);
+        mShortcutId = ShortcutDb.STATIC.isShortcut(getActivity(), currentUri);
+        mAnAncestorIsShortcut = ShortcutDbAdapter.VIDEO.isHimselfOrAncestorShortcut(getActivity(), currentUri);
+        isHimselfIndexedFolder = ShortcutDbAdapter.VIDEO.isShortcut(getActivity(), currentUri) > 0;
+        isCurrentDirectoryShortcut = (ShortcutDb.STATIC.isShortcut(getContext(), currentUri) != -1);
+        log.debug("updateShortcutState: mUri=" + currentUri + " -> mShortcutId=" + mShortcutId + ", isCurrentDirectoryIndexed=" + isCurrentDirectoryIndexed + ", mAnAncestorIsShortcut=" + mAnAncestorIsShortcut + ", isCurrentDirectoryShortcut=" + isCurrentDirectoryShortcut);
     }
 
     /**
@@ -84,58 +93,38 @@ public class NetworkListingFragment extends ListingFragment {
      * Update the available actions (orbs) accordingly
      */
     protected void updateShortcutState() {
-        final String currentUri = mUri.toString();
-
-        Cursor c = ShortcutDbAdapter.VIDEO.queryAllShortcuts(getActivity());
-        final int pathColumn = c.getColumnIndexOrThrow(ShortcutDbAdapter.KEY_PATH);
-        final int idColumn = c.getColumnIndexOrThrow(ShortcutDbAdapter.KEY_ROWID);
-
-        mUserHasNoShortcutAtAll = true; // reset value
-        mAnAncestorIsShortcut = false; // reset value
-        mShorcutId = -1; // reset value
-
-        c.moveToFirst();
-        while (!c.isAfterLast()) {
-            mUserHasNoShortcutAtAll = false;
-            String shortcutPath = c.getString(pathColumn);
-            if (shortcutPath!=null && shortcutPath.equals(mUri.toString())) {
-                mShorcutId = c.getLong(idColumn);
-            }
-            // Check if this shortcut Uri is ancestor of the current Uri
-            if (currentUri.startsWith(shortcutPath)) {
-                mAnAncestorIsShortcut = true;
-                //Log.d(TAG, "mAnAncestorIsShortcut="+mAnAncestorIsShortcut);
-                break;
-            }
-            c.moveToNext();
-        }
-        c.close();
-
+        checkIfIsShortcut();
         updateOrbIcon();
     }
 
     private boolean isShortcut() {
-        return mShorcutId>=0;
+        return mShortcutId>=0;
     }
 
     private void updateOrbIcon() {
         final MyTitleView titleView = getTitleView();
-        if (isShortcut()) {
+        if (isShortcut()) { // shortcut -> remove shortcut (but also add to lib?)
             titleView.setOrb3IconResId(R.drawable.orb_minus);
             titleView.setOnOrb3ClickedListener(mOrbClickListener);
-            titleView.setOnOrb3Description(getString(R.string.remove_from_indexed_folders));
+            titleView.setOnOrb3Description(getString(R.string.remove_from_shortcuts));
             titleView.hideHintMessage();
-        }
-        else {
-            if (!canBeIndexed()) {
-                titleView.setOnOrb3ClickedListener(null); // set null listener to hide the orb
+        } else { // not a shortcut
+            if (isHimselfIndexedFolder) { // indexed folder -> remove from lib
+                titleView.setOrb3IconResId(R.drawable.orb_minus);
+                titleView.setOnOrb3ClickedListener(mOrbClickListener);
+                titleView.setOnOrb3Description(getString(R.string.remove_from_indexed_folders));
                 titleView.hideHintMessage();
             } else {
-                titleView.setOrb3IconResId(R.drawable.orb_plus);
-                titleView.setOnOrb3ClickedListener(mOrbClickListener);
-                titleView.setOnOrb3Description(getString(R.string.add_to_indexed_folders));
-                if (mUserHasNoShortcutAtAll) {
-                    titleView.setAndShowHintMessage(getString(R.string.help_overlay_network_indexing_text1_lb));
+                if (!canBeIndexed()) {
+                    titleView.setOnOrb3ClickedListener(null); // set null listener to hide the orb
+                    titleView.hideHintMessage();
+                } else { // not a shortcut, not indexed -> add shortcut but do not propose index if mAnAncestorIsShortcut
+                    titleView.setOrb3IconResId(R.drawable.orb_plus);
+                    titleView.setOnOrb3ClickedListener(mOrbClickListener);
+                    titleView.setOnOrb3Description(getString(R.string.add_ssh_shortcut));
+                    if (mUserHasNoShortcutAtAll) {
+                        titleView.setAndShowHintMessage(getString(R.string.help_overlay_network_shortcut_text1_lb));
+                    }
                 }
             }
         }
@@ -159,18 +148,16 @@ public class NetworkListingFragment extends ListingFragment {
 
     /** Add current Uri to the shortcut list */
     protected void createShortcut() {
-
         log.debug("createShortcut: ARG_TITLE=" + ARG_TITLE + ", argument ARG_TITLE=" + getArguments().getString(ARG_TITLE));
         String shortcutPath = mUri.toString();
         String shortcutName = getArguments().getString(ARG_TITLE)!=null?getArguments().getString(ARG_TITLE):mUri.getLastPathSegment(); //to avoid name like "33" in upnp
         log.debug("createShortcut: shorcutName=" + shortcutName + ", shortcutPath=" + shortcutPath + ", lastPathSegment=" + mUri.getLastPathSegment());
-        boolean result = ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), new ShortcutDbAdapter.Shortcut(shortcutName, shortcutPath));
-
+        boolean result = ShortcutDb.STATIC.insertShortcut(getContext(), mUri, shortcutName);
         if (result) {
-            Toast.makeText(getActivity(), getString(R.string.indexed_folder_added, shortcutName), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.shortcut_folder_added, shortcutName), Toast.LENGTH_SHORT).show();
             getActivity().setResult(NetworkRootFragment.RESULT_CODE_SHORTCUTS_MODIFIED);
-            // Send a scan request to MediaScanner
-            NetworkScanner.scanVideos(getActivity(), shortcutPath);
+            // Send a scan request to MediaScanner -> not for now because it needs to be confirmed first
+            //NetworkScanner.scanVideos(getActivity(), shortcutPath);
         }
         else {
             Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();

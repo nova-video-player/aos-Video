@@ -116,6 +116,17 @@ public enum ShortcutDb {
         }
     }
 
+    public int numberOfShortcuts(Context context) {
+        Cursor shortcuts = getCursorAllShortcuts(context);
+        if (shortcuts == null)
+            return 0;
+        else {
+            int count = shortcuts.getCount();
+            shortcuts.close();
+            return count;
+        }
+    }
+
     /**
      * get a CursorLoader to get all columns of all shortcuts
      * @param context
