@@ -535,6 +535,7 @@
     <string name="add_to_library">Add to library</string>
     <string name="add_all_items_to_library">Add all videos to library immediately ?</string>
 
+    <string name="shortcut_folder_added">Folder %s added as shortcut</string>
     <string name="indexed_folder_added">Folder %s added to library</string>
     <string name="remove_from_indexed_folders">Remove from library</string>
     <string name="indexed_folder_removed">Folder %s removed from library</string>
@@ -679,7 +680,7 @@
     <string name="help_overlay_network_indexing_text1_lb">Use the + button to integrate the content of this folder and its sub-folders to the Video Library.</string>
     <string name="help_overlay_network_indexing_text2">It will allow you to get posters and descriptions for the movies and TV shows.</string>
     <string name="help_overlay_scraper_text">Press this menu item to search posters and descriptions online for your videos. </string>
-
+    <string name="help_overlay_network_shortcut_text1_lb">Use the + button to add this folder as a network shortcut and have the option to add its content and those of its sub-folders to the Video Library.</string>
     <string name="new_videos_count">New Videos: %d</string>
     <string name="new_videos_scrape_message">You have new videos that don\'t have information and posters yet.</string>
     <string name="network_bookmarks">Resume points and position bookmarks on network</string>
