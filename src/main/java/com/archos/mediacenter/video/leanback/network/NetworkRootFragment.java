@@ -55,8 +55,7 @@ import com.archos.mediacenter.video.leanback.adapter.object.NetworkSource;
 import com.archos.mediacenter.video.leanback.adapter.object.SmbShare;
 import com.archos.mediacenter.video.leanback.adapter.object.UpnpServer;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
-import com.archos.mediacenter.video.leanback.network.ftp.FtpShortcutDetailsActivity;
-import com.archos.mediacenter.video.leanback.network.ftp.FtpShortcutDetailsFragment;
+import com.archos.mediacenter.video.leanback.network.NetworkShortcutDetailsActivity;
 import com.archos.mediacenter.video.leanback.network.rescan.RescanActivity;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.NetworkShortcutPresenter;
@@ -258,11 +257,11 @@ public class NetworkRootFragment extends BrowseSupportFragment {
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
             if (item instanceof GenericNetworkShortcut) { // network shortcuts are for now only *ftp*
                 log.debug("onItemClicked: GenericNetworkShortcut");
-                Intent intent = new Intent(getActivity(), FtpShortcutDetailsActivity.class);
-                intent.putExtra(FtpShortcutDetailsFragment.EXTRA_SHORTCUT, (Serializable) item);
+                Intent intent = new Intent(getActivity(), NetworkShortcutDetailsActivity.class);
+                intent.putExtra(NetworkShortcutDetailsFragment.EXTRA_SHORTCUT, (Serializable) item);
                 Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                         ((NetworkShortcutPresenter.NetworkShortcutViewHolder) itemViewHolder).getImageView(),
-                        FtpShortcutDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
+                        NetworkShortcutDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
                 startActivityForResult(intent, REQUEST_CODE_DETAILS, bundle);
             }
             else if (item instanceof NetworkBrowse) { // browse network

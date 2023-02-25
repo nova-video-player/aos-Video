@@ -71,6 +71,18 @@ public class BrowserByNetwork extends BrowserByFolder {
     private HelpOverlayHandler mHelpOverlayHandler;
     private static final int MSG_START_HELP_OVERLAY = 1;
 
+    boolean isHimselfIndexedFolder = false;
+    boolean isCurrentDirectoryShortcut = false;
+    boolean isCurrentDirectoryIndexed = false;
+
+    private void checkIfIsShortcut() {
+        String uriStringWithoutCred = mCurrentDirectory.toString();
+        isCurrentDirectoryIndexed = ShortcutDbAdapter.VIDEO.isHimselfOrAncestorShortcut(getActivity(), uriStringWithoutCred);
+        isHimselfIndexedFolder = ShortcutDbAdapter.VIDEO.isShortcut(getActivity(), uriStringWithoutCred) > 0;
+        isCurrentDirectoryShortcut = (ShortcutDb.STATIC.isShortcut(getContext(), uriStringWithoutCred) != -1);
+        log.debug("checkIfIsShortcut: isCurrentDirectoryIndexed=" + isCurrentDirectoryIndexed + ", isHimselfIndexedFolder=" + isHimselfIndexedFolder + ", isCurrentDirectoryShortcut=" + isCurrentDirectoryShortcut);
+    }
+
     @Override
     protected Uri getDefaultDirectory() {
         return null;
@@ -109,7 +121,7 @@ public class BrowserByNetwork extends BrowserByFolder {
     }
 
     protected void createShortcut(String shortcutPath, String shortcutName) {
-        // Add the shortcut to the list
+        // Add the shortcut to the list (shortcut means indexed)
         ShortcutDbAdapter.Shortcut shortcut = new ShortcutDbAdapter.Shortcut(shortcutName,shortcutPath);
         ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), shortcut);
 
@@ -146,6 +158,7 @@ public class BrowserByNetwork extends BrowserByFolder {
         // Update the menu items
         getActivity().invalidateOptionsMenu();
     }
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         // Check if the current file requires a context menu
@@ -218,7 +231,6 @@ public class BrowserByNetwork extends BrowserByFolder {
                 shortcutPath = metaFile2.getUri().toString();
                 if (itemId == R.string.add_to_indexed_folders) {
                     createShortcut(shortcutPath, metaFile2.getName());
-
                 } else {
                     removeShortcut(shortcutPath);
                 }
@@ -266,8 +278,9 @@ public class BrowserByNetwork extends BrowserByFolder {
                                 if (((CheckBox) v.findViewById(R.id.checkBox)).isChecked()) {
                                     NetworkScanner.scanVideos(getActivity(), mCurrentDirectory);
                                     addIndexedFolder(mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString());
+                                } else {
+                                    ShortcutDb.STATIC.insertShortcut(getContext(), mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString());
                                 }
-                                ShortcutDb.STATIC.insertShortcut(getContext(), mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString());
                                 getActivity().invalidateOptionsMenu();
                             }
                         })
@@ -340,17 +353,13 @@ public class BrowserByNetwork extends BrowserByFolder {
                 removeShortcutMenuItem.setVisible(false);
             } else {
                 // Check if the current folder or one of its ancestor is indexed
-                boolean isCurrentDirectoryIndexed = false;
-                String currentWithoutCred = mCurrentDirectory.toString();
-                isCurrentDirectoryIndexed = ShortcutDbAdapter.VIDEO.isHimselfOrAncestorShortcut(getActivity(), currentWithoutCred);
+                checkIfIsShortcut();
+                log.debug("onPrepareOptionsMenu: isCurrentDirectoryIndexed=" + isCurrentDirectoryIndexed + ", isHimselfIndexedFolder=" + isHimselfIndexedFolder + ", isCurrentDirectoryShortcut=" + isCurrentDirectoryShortcut);
                 // If the current folder is indexed => show the "unindex folder" item and do not show "remove the shortcut" item
                 // If the current folder is not indexed and none of its ancestors is indexed => show the "add as shortcut" item
                 // If the current folder is not indexed but one of its ancestors is indexed => show "add as shortcut" item and do not propose to index folder in add shortcut dialog
                 // If the current folder is indexed => show the "rescan" item
                 // If the current folder is a shortcut but not indexed => show the "index folder"
-                boolean isHimselfIndexedFolder = ShortcutDbAdapter.VIDEO.isShortcut(getActivity(), currentWithoutCred) > 0;
-                boolean isCurrentDirectoryShortcut = (ShortcutDb.STATIC.isShortcut(getContext(), mCurrentDirectory.toString()) != -1);
-                log.debug("onPrepareOptionsMenu: isCurrentDirectoryIndexed=" + isCurrentDirectoryIndexed + ", isHimselfIndexedFolder=" + isHimselfIndexedFolder + ", isCurrentDirectoryShortcut=" + isCurrentDirectoryShortcut);
                 addFolderMenuItem.setVisible(isCurrentDirectoryShortcut && (! isCurrentDirectoryIndexed));
                 addFolderMenuItem.setVisible(false); // for now addShortcutMenuItem does addFolderMenuItem
                 rescanFolderMenuItem.setVisible(isHimselfIndexedFolder);

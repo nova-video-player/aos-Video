@@ -191,7 +191,6 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
     @Override
     public void onShortcutAdd(View v, final Uri uri, final String name) {
 
-
         mQuickAction = new QuickAction(v);
 
         ActionItem rescanAction = new ActionItem();

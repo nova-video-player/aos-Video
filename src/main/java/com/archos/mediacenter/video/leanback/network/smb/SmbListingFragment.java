@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
 public class SmbListingFragment extends NetworkListingFragment {
 
     private static final Logger log = LoggerFactory.getLogger(SmbListingFragment.class);
@@ -51,7 +50,6 @@ public class SmbListingFragment extends NetworkListingFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         // First orb is for credentials
         getTitleView().setOrb1IconResId(R.drawable.orb_cred);
         getTitleView().setOnOrb1ClickedListener(new View.OnClickListener() {
@@ -114,7 +112,6 @@ public class SmbListingFragment extends NetworkListingFragment {
         mListedFiles.clear();
         ((ArrayList<MetaFile2>) mListedFiles).addAll(newList);
     }
-
 
     private void askForCredentials() {
         if (getParentFragmentManager().findFragmentByTag(SmbServerCredentialsDialog.class.getCanonicalName()) == null) {

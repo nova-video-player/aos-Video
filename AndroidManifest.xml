@@ -1535,10 +1535,6 @@
             android:theme="@style/MyLeanbackTheme" />
 
         <activity
-            android:name="com.archos.mediacenter.video.leanback.network.ftp.FtpShortcutDetailsActivity"
-            android:theme="@style/MyLeanbackTheme" />
-
-        <activity
             android:name="com.archos.mediacenter.video.leanback.network.ftp.FtpListingActivity"
             android:theme="@style/MyLeanbackTheme" />
 
