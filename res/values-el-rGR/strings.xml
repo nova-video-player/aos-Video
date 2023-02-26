@@ -441,18 +441,24 @@
     <string name="torrent_buy_premium_message">Η ροή torrent είναι διαθέσιμη μόνο στην πληρωμένη έκδοση</string>
     <string name="torrent_buy_premium">Αγοράστε την έκδοση premium</string>
     <!-- Shortcuts -->
+    <string name="browse_net_server">Περιήγηση σε μια κοινή χρήση δικτύου</string>
+    <string name="add_smb_server">Περιήγηση σε έναν διακομιστή SMB</string>
+    <string name="add_network_server">Προσθήκη κοινής χρήσης δικτύου</string>
     <string name="add_to_shortcuts">Δημιουργία συντόμευσης</string>
+    <string name="add_ssh_server">Περιήγηση σε έναν διακομιστή FTP</string>
     <string name="add_ssh_shortcut">Προσθήκη ως συντόμευση</string>
     <string name="ssh_prompt">Τύπος FTP</string>
     <string name="protocol_prompt">Τύπος πρωτοκόλλου</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
+    <string name="ssh_empty_view"> \"Μπορείτε να περιηγηθείτε και να αναπαράγετε από το δικό σας FTP server\"</string>
     <string name="remove_from_shortcuts">Αφαίρεση συντόμευσης</string>
     <string name="shortcut_added">Η συντόμευση %s δημιουργήθηκε</string>
     <string name="shortcut_removed">Η συντόμευση %s αφαιρέθηκε</string>
+    <string name="server_not_available">Ο διακομιστής δεν είναι διαθέσιμος αυτή τη στιγμή.</string>
+    <string name="cannot_open_shortcut">Το περιεχόμενο αυτής της συντόμευσης δεν είναι διαθέσιμο προς το παρόν.\nΠαρακαλώ ελέγξτε ότι έχετε τα απαιτούμενα δικαιώματα.</string>
+    <string name="network_shortcuts">Συντομεύσεις δικτύου</string>
+    <string name="media_servers">Διακομιστές πολυμέσων</string>
+    <string name="shortcut_list_empty">Δεν δημιουργήθηκαν συντομεύσεις δικτύου.\n\nΓια να δημιουργήσετε συντομεύσεις στους αγαπημένους σας απομακρυσμένους φακέλους κάντε παρατεταμένο κλικ στους φακέλους στόχων και επιλέξτε \"%s\" στην επάνω γραμμή ενεργειών.</string>
+    <string name="ftp_shortcut_list_empty">Για να δημιουργήσετε συντομεύσεις στους αγαπημένους σας απομακρυσμένους φακέλους, επιλέξτε \"%s\" στην επάνω γραμμή ενεργειών κατά την περιήγηση σε έναν διακομιστή.</string>
     <string name="ftp_shortcuts">Συντομεύσεις FTP</string>
     <string name="add_to_indexed_folders">Φάκελος ευρετηρίου</string>
     <string name="add_to_library">Προσθήκη στη βιβλιοθήκη</string>
@@ -467,23 +473,98 @@
     <string name="ssh_password">Κωδικόs Πρόσβασης</string>
     <string name="ssh_username">Όνομα Χρήστη</string>
     <string name="ssh_shortcut_name">Όνομα συντόμευσης</string>
+    <string name="smb_domain">Τομέας (προαιρετικό)</string>
     <!-- Preferences -->
+    <string name="preferences">Προτιμήσεις</string>
+    <string name="get_the_ad_free_version">Αποκτήστε την έκδοση χωρίς διαφημίσεις στο Google Play</string>
+    <string name="upgrade_to_add_free_version">Αναβάθμιση στην έκδοση χωρίς διαφημίσεις</string>
+    <string name="upgrade_to_add_free_version_description">Αγοράστε άδεια εφαρμογής για να αφαιρέσετε τις διαφημίσεις και να ενεργοποιήσετε όλες τις δυνατότητες</string>
     <string name="preferences_about">Σχετικά</string>
     <string name="preferences_category_complete">Πλήρης έκδοση</string>
     <string name="preferences_category_video">Βίντεο</string>
+    <string name="preferences_force_software_decoding">Εξαναγκασμός αποκωδικοποίησης λογισμικού</string>
+    <string name="preferences_force_software_decoding_summary">Μπορείτε να δοκιμάσετε αυτή την επιλογή αν κάποια βίντεο δεν αναπαράγονται σωστά</string>
+    <string name="preferences_force_audio_passthrough_disabled">Απενεργοποιημένο (συνιστάται)</string>
+    <string name="preferences_force_audio_passthrough_enable">Λειτουργία 1 (παρωχημένη)</string>
+    <string name="preferences_force_audio_passthrough_enable2">Λειτουργία 2</string>
+    <string name="preferences_force_audio_passthrough_summary">Μετάδοση συμπιεσμένου ήχου μέσω HDMI ή S/PDIF. ⚠ Δοκιμαστική μπορεί να οδηγήσει σε αποσυγχρονισμό εικόνας ήχου</string>
+    <string name="preferences_stream_buffer_size_title">Μέγεθος προσωρινής μνήμης ροής</string>
+    <string name="preferences_disable_downmix_title">Απενεργοποίηση μείξης στερεοφωνικού ήχου</string>
+    <string name="preferences_enable_downmix_androidtv_title">Εξαναγκασμός μείξης στερεοφωνικού ήχου</string>
+    <string name="preferences_allow_3rd_party_player">Να επιτρέπεται η χρήση άλλου προγράμματος αναπαραγωγής βίντεο</string>
+    <string name="preference_tv_3d_automatic_switch">Ενεργοποίηση αυτόματης εναλλαγής 3D TV</string>
+    <string name="preference_tv_3d_automatic_switch_summary">Χρησιμοποιήστε αυτή τη δυνατότητα μόνο εάν η 3D TV την υποστηρίζει</string>
+    <string name="preference_tv_refreshrate_switch">Ενεργοποίηση αυτόματου διακόπτη ρυθμού ανανέωσης</string>
+    <string name="preference_remove_dolby_vision">Απενεργοποίηση Dolby Vision</string>
+    <string name="preference_remove_dolby_vision_summary">Χρήση τυποποιημένων κωδικοποιητών βίντεο για Dolby Vision</string>
+    <string name="preference_cutout_short_edges_summary">Να επιτρέπεται η οριζόντια προβολή βίντεο πλήρους οθόνης με αποκοπή</string>
     <string name="category_languages">Υπότιτλοι</string>
+    <string name="subtitles_hide_default">Απόκρυψη υποτίτλων από προεπιλογή</string>
+    <string name="subtitles_hide_default_summary">Επιλέξτε αν θέλετε να αποκρύψετε τους υπότιτλους από προεπιλογή</string>
+    <string name="subtitles_credentials_title">Πιστοποιητικά OpenSubtitles</string>
+    <string name="subtitles_credentials_summary">Παρέχετε τα διαπιστευτήρια σας OpenSubtitles για να μπορείτε να κατεβάσετε υπότιτλους</string>
+    <string name="preferences_languages">Επιλογή γλώσσας υποτίτλων για κατέβασμα</string>
+    <string name="summary_list_preference_primary">Επιλογή επιθυμητών γλωσσών υποτίτλων για κατέβασμα</string>
+    <string name="favSubLang_title">Γλώσσα ανάγνωσης υποτίτλων</string>
+    <string name="favSubLang_summary">Επιλέξτε την αγαπημένη σας γλώσσα για την ανάγνωση υποτίτλων</string>
+    <string name="ui_mode_title">Περιβάλλον χρήστη</string>
+    <string name="ui_mode_summary">Επιλέξτε μεταξύ TV και Tablet/Phone UI</string>
     <string name="preferences_video_about">Σχετικά</string>
     <string name="preferences_video_os_text">Υπότιτλοι παρέχονται από</string>
     <string name="preferences_video_tmdb_text">Πληροφορίες Ταινίας/Τηλεοπτικής σειράς παρέχονται από</string>
+    <string name="preferences_video_tvdb_text">Πληροφορίες Τηλεοπτικής σειράς παρέχονται από</string>
+    <string name="preferences_video_licenses">Άδειες</string>
+    <string name="preferences_video_advanced">Για Προχωρημένους</string>
+    <string name="preferences_video_advanced_quit_title">Κανονικές προτιμήσεις</string>
+    <string name="preferences_video_advanced_quit_summary">Επιστρέψτε στις κανονικές προτιμήσεις</string>
+    <string name="trakt_change">Μια τροποποίηση στο Trakt API απαιτεί επανασύνδεση.</string>
     <string name="tv_scraper">Τηλεοπτικές Εκπομπές</string>
     <string name="movie_scraper">Ταινίες</string>
     <string name="enable_auto_scrap">Αυτόματη λήψη πληροφοριών για νέα βίντεο</string>
+    <string name="enable_adult_scrap_title">Ανάκτησης πληροφοριών βίντεο ενηλίκων</string>
+    <string name="enable_adult_scrap_summary">Ενεργοποίηση ανάκτησης πληροφοριών βίντεο ενηλίκων (εξ ορισμού απενεργοποιημένη)</string>
+    <string name="locale">Γλώσσα συστήματος</string>
+    <string name="yes">Ναί</string>
+    <string name="no">Όχι</string>
+    <string name="abort">Ματαίωση</string>
     <!--  Title of the video picker activity. -->
+    <string name="video_picker_title">Επιλογή βίντεο</string>
     <!-- Archos File Info -->
+    <string name="video_info_custom_search_show_hint">Όνομα της τηλεοπτικής εκπομπής</string>
+    <string name="video_info_backdrop_select">Επιλογή άλλης εικόνας</string>
+    <string name="video_info_backdrop_remove">Αφαίρεση</string>
+    <string name="video_info_backdrop_set_as">Ορισμός εικόνας ως</string>
+    <string name="video_info_share_message">"Έχω παρακολουθήσει το βίντεο \"%1$s\" στο Nova %2$s μου"</string>
+    <string name="notification_mode">Ειδοποιήσεις</string>
+    <string name="notifications_all">Όλες οι ειδοποιήσεις</string>
+    <string name="pref_format_mode_title">Μορφή</string>
+    <string name="format_fullscreen">Πλήρης Οθόνη</string>
+    <string name="format_optimized">Βελτιστοποιημένο</string>
+    <string name="format_original">Αρχικό</string>
+    <string name="format_stretched">Επέκταση</string>
+    <string name="rotation_unlock">Ενεργοποίηση αυτόματης περιστροφής οθόνης</string>
+    <string name="rotation_locked">Αυτόματη περιστροφή οθόνης απενεργοποιημένη</string>
+    <string name="rotation_unlocked">Αυτόματη περιστροφή οθόνης ενεργοποιημένη</string>
+    <string name="network_reindex">Επανασάρωση περιεχομένου</string>
     <!-- Help overlay -->
+    <string name="help_overlay_menu">Πατήστε το πλήκτρο UP βέλους\nγια να εμφανιστεί το μενού της τηλεόρασης</string>
+    <string name="help_overlay_scraper_text">Πατήστε εδώ για να αναζητήσετε αφίσες και περιγραφές online για τα βίντεό σας. </string>
+    <string name="new_videos_count">Νέα βίντεο: %d</string>
+    <string name="new_videos_scrape_message">Έχετε νέα βίντεο για τα οποία δεν υπάρχουν πληροφορίες και αφίσες ακόμα.</string>
+    <string name="network_bookmarks">Συνέχιση σημείων και σελιδοδεικτών θέσης στο δίκτυο</string>
+    <string name="network_thumbnails">Δημιουργία απομακρυσμένων μικρογραφιών</string>
+    <string name="network_thumbnails_summary">Δημιουργία μικρογραφιών από απομακρυσμένα βίντεο όταν δεν υπάρχει διαθέσιμη αφίσα</string>
     <!-- Info dialog, not indexed file -->
+    <string name="video_info_unindexed_message2">Το αρχείο βρίσκεται σε επεξεργασία. Αυτό μπορεί να διαρκέσει λίγο.</string>
+    <string name="video_browser_index_file">Προσθήκη στη βιβλιοθήκη</string>
+    <string name="video_browser_unindex_file">Αφαίρεση από τη βιβλιοθήκη</string>
     <!-- Brightness -->
+    <string name="auto_brightness_message">Η φωτεινότητα δεν μπορεί να αλλάξει επειδή η λειτουργία αυτόματης φωτεινότητας είναι ενεργοποιημένη.</string>
     <!--  Nfo File parsing -->
+    <string name="network_nfo_parse">Επεξεργασία αρχείων \'.nfo\'</string>
+    <string name="network_nfo_parse_summary">Διαβάστε τα αρχεία του Kodi \'.nfo\' κατά τη διάρκεια (επαν)σάρωσης για να συγκεντρώσετε πληροφορίες και αφίσες πολυμέσων.</string>
+    <string name="no_email_installed">Δεν βρέθηκε εφαρμογή email</string>
+    <string name="zipped_library_mail_text">Παρακαλούμε περιγράψτε το πρόβλημα που αντιμετωπίζετε\n\n</string>
     <string name="sort_mode">Λειτουργία ταξινόμησης</string>
     <string name="sort_by_name_asc">Ταξινόμηση κατά όνομα (α - ω)</string>
     <string name="sort_by_name_desc">Ταξινόμηση κατά όνομα (ω - α)</string>
@@ -504,9 +585,22 @@
     <string name="sort_by_date_aired_desc">Ταξινόμηση κατά ημερομηνία προβολής (πρώτα το νεότερο)</string>
     <string name="sort_by_recently_added_episode_desc">Πρώτα τα επεισόδια που προστέθηκαν πρόσφατα</string>
     <string name="dec_choice_title">Επιλογή αποκωδικοποιητή</string>
+    <string name="dec_choice_summary">Προηγμένη προτίμηση, μπορεί να προκαλέσει διακοπες στην αποκωδικοποίηση βίντεο.</string>
+    <string name="dec_hw_omx">Αποκωδικοποίηση υλικού (IOMX w/ swbuf)</string>
+    <string name="dec_hw_omxplus">Αποκωδικοποίηση υλικού (IOMX w/ swbuf)</string>
+    <string name="dec_hw_omxcodec">Αποκωδικοποίηση υλικού (OMXCodec)</string>
+    <string name="dec_hw_mediacodec">Αποκωδικοποίηση υλικού (MediaCodec)</string>
+    <string name="dec_sw">Αποκωδικοποίηση λογισμικού</string>
+    <string name="dec_hw">Αποκωδικοποίηση λογισμικού</string>
     <string name="dec_any">Προεπιλογή</string>
+    <string name="audio_interface_choice_title">Επιλέξτε διεπαφή ήχου</string>
+    <string name="audio_interface_choice_summary">Προχωρημένη προτίμηση, μπορεί να παρουσιάσει διακοπές στην αποκωδικοποίηση ήχου.</string>
+    <string name="preferences_user_interface">Περιβάλλον Χρήστη</string>
+    <string name="preferences_leanback_user_interface">Περιβάλλον Χρήστη Τηλεόρασης</string>
     <string name="preferences_separate_animation_from_movies_summary">Επιλέξτε για να διαχωρίσετε τα βίντεο κινούμενων σχεδίων από ταινίες και τηλεόραση σε χωριστή σειρά</string>
     <string name="preferences_separate_animation_from_movies">Διαχωρίσετε τα βίντεο κινούμενων σχεδίων από ταινίες και τηλεόραση</string>
+    <string name="codepage_title">Κωδικοποίηση υποτίτλων</string>
+    <string name="codepage_summary">Ορίστε την κωδικοποίηση που χρησιμοποιείται στους υπότιτλους κειμένου</string>
     <string name="codepage_default">Γλώσσα συσκευής %s</string>
     <string name="codepage_874">Ταϊλανδικά (CP874)</string>
     <string name="codepage_932">Ιαπωνικά (Shift-JIS, EUC-JP)</string>
@@ -540,21 +634,69 @@
     <string name="torrent_category">Torrent</string>
     <string name="torrent_path">Διαδρομή λήψεων</string>
     <string name="torrent_blocklist">Λίστα αποκλεισμού</string>
+    <string name="blocklist_file_not_found">Το αρχείο δεν βρέθηκε</string>
+    <string name="blocklist_unknown_error">Άγνωστο</string>
+    <string name="sdk_not_supported">Το Android 4.3 δεν υποστηρίζεται ακόμα.\nΕργαζόμαστε σκληρά για να το διορθώσουμε και ελπίζουμε να έχουμε μια νέα έκδοση σύντομα!</string>
+    <string name="share_path">Διαδρομή</string>
+    <string name="trakt_user">Όνομα Χρήστη</string>
+    <string name="trakt_password">Κωδικόs Πρόσβασης</string>
+    <string name="trakt_signin">Σύνδεση</string>
+    <string name="trakt_list_signin">Σύνδεση στο Trakt</string>
+    <string name="trakt_status_login">Γίνεται είσοδος σε&#8230;</string>
+    <string name="trakt_sync_collection_title">Συγχρονισμός συλλογών Τηλεοπτικών εκπομπών και Ταινιών</string>
+    <string name="trakt_sync_collection_summary">Αυτόματη προσθήκη όλων των βίντεο από τη βιβλιοθήκη Nova στη συλλογή σας Trakt</string>
+    <string name="trakt_toast_syncing">Συγχρονισμός με Trakt&#8230;</string>
     <string name="show_all">Όλα τα βίντεο</string>
-    <string name="leanback_episode_SXEX_code">"Σ%1$02dΕ%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"Σ%1$02dΕ%2$02d  -  %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  Σ%2$02dΕ%3$02d  -  %4$s"</string>
+    <string name="hide_seen">Δεν έχει προβληθεί</string>
+    <string name="search_results">Αποτελέσματα αναζήτησης</string>
+    <string name="no_results_found">Δεν βρέθηκαν αποτελέσματα.</string>
+    <string name="no_results_found_show_helper">Για τηλεοπτική εκπομπή, καθορίστε σεζόν και επεισόδιο, όπως \"S01E01\"</string>
+    <string name="leanback_video_info_custom_search_file_hint">"Τίτλος ταινίας ή σειράς S01E01"</string>
+    <string name="activate_private_mode">Ενεργοποίηση ιδιωτικής λειτουργίας</string>
+    <string name="deactivate_private_mode">Απενεργοποίηση ιδιωτικής λειτουργίας</string>
+    <string name="private_mode_is_on">Η ιδιωτική λειτουργία είναι ενεργή</string>
+    <string name="private_mode_is_off">Η ιδιωτική λειτουργία είναι ανενεργή</string>
+    <string name="private_mode">Ιδιωτική λειτουργία</string>
+    <string name="private_mode_description">Όταν βρίσκεστε σε ιδιωτική λειτουργία, τα ακόλουθα χαρακτηριστικά είναι απενεργοποιημένα:\n
+        - Αυτόματο ευρετηρίο και αυτόματη απόσυρση των βίντεο που παίχτηκαν\n
+        - Πρόσφατα\n
+        - Συνέχιση σημείου\n
+        - Συγχρονισμός Trakt</string>
+    <string name="dont_show_again">Να μην εμφανιστεί ξανά</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Δίκτυο &amp; Αρχεία</string>
     <string name="leanback_subtitles_integrated">Ενσωματωμένοι</string>
     <string name="leanback_subtitles_external">Εξωτερικοί</string>
     <string name="leanback_posters_header">Αφίσες</string>
     <string name="leanback_season_posters_header">Αφίσες της σεζόν</string>
+    <string name="leanback_backdrops_header">Φόντο</string>
+    <string name="leanback_tvshow_backdrops_header">Υπόβαθρα της τηλεοπτικής εκπομπής</string>
+    <string name="leanback_poster_changed">Η αφίσα έχει αλλάξει</string>
+    <string name="leanback_backdrop_changed">Το φόντο έχει αλλάξει</string>
     <string name="leanback_weblinks_header">Σύνδεσμοι</string>
     <string name="leanback_action_more_details">Περισσότερες λεπτομέρειες</string>
+    <string name="leanback_scrap">Λήψη πληροφοριών</string>
+    <string name="leanback_scrap_choose_the_description">Επιλογή πληροφοριών</string>
+    <string name="leanback_scrap_choose_the_description_for">"Επιλέξτε πληροφορίες για το \"%s\""</string>
+    <string name="leanback_scrap_searching_general_hint">Όνομα της ταινίας ή της τηλεοπτικής εκπομπής</string>
+    <string name="leanback_scrap_searching_tvshow_hint">Όνομα της τηλεοπτικής εκπομπής</string>
+    <string name="leanback_legacy_ui">Παλαιού τύπου διεπαφή</string>
+    <string name="leanback_hint_long_press_on_back">HINT: παρατεταμένο πάτημα στο πλήκτρο BACK κλείνει το πρόγραμμα περιήγησης αρχείων</string>
+    <string name="leanback_archos_video_webview">Nova Video WebView</string>
+    <string name="file_access_error">Δεν ήταν δυνατή η πρόσβαση στο αρχείο</string>
+    <string name="interface_size_very_small">Πολύ μικρό (mdpi)</string>
+    <string name="interface_size_small">Μικρό (hdpi)</string>
+    <string name="interface_size_standard">Κανονικό (xhdpi)</string>
+    <string name="interface_size_large">Μεγάλο (xxhdpi)</string>
+    <string name="rescan">Επανασάρωση</string>
+    <string name="rescan_description">Επανασάρωση φακέλων ευρετηρίου για προσθήκη νέου περιεχομένου στη βιβλιοθήκη</string>
     <string name="rescan_now">Επανασάρωση τώρα</string>
     <string name="rescan_now_description">Χειροκίνητη επανασάρωση</string>
     <string name="rescan_select_shares">Επιλογή συντομεύσεων</string>
+    <string name="rescan_select_shares_description">Επιλέξτε συντομεύσεις δικτύου που θα επανασαρωθούν αυτόματα</string>
+    <string name="rescan_error_wifi_info_standby">Το WiFi φαίνεται να είναι απενεργοποιημένο σε κατάσταση αναμονής. Για να εξασφαλίσετε την επιτυχία της αυτόματης επανασάρωσης, ορίστε το WiFi ενεργό σε κατάσταση αναμονής.</string>
+    <string name="rescan_error_wifi">Σφάλμα: Το WiFi δεν ήταν ενεργοποιημένο κατά την επανασάρωση</string>
+    <string name="rescan_error_wifi_click_for_more_info">Πατήστε εδώ για περισσότερες πληροφορίες</string>
+    <string name="rescan_error_server">Σφάλμα: αδύνατη η πρόσβαση στο διακομιστή</string>
     <string name="scan_running">Η σάρωση εκτελείται</string>
     <string name="scheduled_rescan">Προγραμματισμένη επανασάρωση</string>
     <string name="scheduled_rescan_period">Περίοδος επανασάρωσης</string>
@@ -567,20 +709,59 @@
     <string name="scheduled_rescan_time">Χρόνος επανασάρωσης</string>
     <string name="rescan_when_opening_application">Επανασάρωση κατά το άνοιγμα της εφαρμογής</string>
     <string name="last_rescan_occured">Τελευταία επανασάρωση πραγματοποιήθηκε:</string>
+    <string name="intro_overlay_text">Αγγίξτε για μετάδοση βίντεο στην τηλεόρασή σας</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
+    <string name="view_more">Προβολή περισσότερων</string>
+    <string name="nfo_export_in_progress">Εξαγωγή NFO σε εξέλιξη</string>
+    <string name="rescrap_in_progress">Ανάκτηση πληροφοριών ολόκληρης της βιβλιοθήκης</string>
+    <string name="rescrap_movies_in_progress">Ανάκτηση πληροφοριών όλων των ταινιών</string>
+    <string name="rescrap_collections_in_progress">Ανάκτηση πληροφοριών όλων των συλλογών</string>
+    <string name="acquire_external_usb_permission">Το Nova Video χρειάζεται ειδική άδεια για πρόσβαση στον εξωτερικό χώρο αποθήκευσης. Παρακαλώ επιλέξτε τον αποθηκευτικό σας χώρο στην επόμενη οθόνη</string>
+    <string name="rescrap_not_found">Ανάκτηση πληροφοριών βίντεο χωρίς περιγραφή</string>
+    <string name="rescrap_all_title">Ανάκτηση πληροφοριών για όλα</string>
+    <string name="rescrap_all_movies_title">Ανάκτηση πληροφοριών όλων των ταινιών</string>
+    <string name="rescrap_all_collections_title">Ανάκτηση πληροφοριών όλων των συλλογών</string>
+    <string name="nfo_export_manual_title">Εξαγωγή βίντεο για τα οποία έχει γίνει ανάκτηση πληροφοριών</string>
+    <string name="nfo_export_manual_summary">Εξαγωγή αρχείων .nfo για κάθε βίντεο στο οποίο έχει γίνει ανάκτηση πληροφοριών</string>
+    <string name="db_export_manual_title">Εξαγωγή βάσης δεδομένων</string>
+    <string name="db_export_manual_summary">Εξαγωγή αρχείου media.db στο /sdcard για σκοπούς αποσφαλμάτωσης</string>
+    <string name="db_export_in_progress">Εξαγωγή της βάσης δεδομένων σε εξέλιξη</string>
+    <string name="system">Σύστημα</string>
+    <string name="keep_setting">Καθολική διατηρήση αυτής της ρύθμισης</string>
+    <string name="select_sub_file"><![CDATA[Ακριβείς υπότιτλοι δε βρέθηκαν για το αρχείο <font color=#29b6f6><i>%s</i></font><br />Παρακαλώ δοκιμάστε μεταξύ αυτών:]]></string>
+    <string name="cast_stream_mode">Λειτουργία ροής</string>
+    <string name="cast_remote_display_mode">Απομακρυσμένη οθόνη</string>
+    <string name="sleep_timer_title">Xρονοδιακόπτης ύπνου</string>
+    <string name="sleep_timer_description">Διακοπή βίντεο μετά: </string>
+    <string name="cast_mode">Λειτουργία μετάδοσης</string>
+    <string name="cast_info">Πληροφορίες</string>
+    <string name="picture_in_picture">Εικόνα σε Εικόνα</string>
+    <string name="cast">Μετάδοση</string>
+    <string name="cast_warning">Η υποστήριξη μετάδωσης είναι περιορισμένη λόγω των περιορισμών κωδικοποιητή του Chromecast. Για να μετριαστούν αυτοί οι περιορισμοί, υλοποιούνται 2 λειτουργίες: Chromecast και Screencast (με αυτόματη επαναφορά). Σημειώστε ότι ζητήματα απόδοσης και ποιότητας μπορούν επίσης να οφείλονται σε περιορισμούς δικτύου ή συσκευής.</string>
+    <string name="cast_warning_title">Πειραματικά χαρακτηριστικά</string>
     <string name="help_faq">Βοήθεια / Συχνές Ερωτήσεις</string>
     <string name="provider_folders">Cloud</string>
     <string name="learn_more">Μάθετε περισσότερα</string>
+    <string name="rate_us">Αν σας αρέσει αυτή η εφαρμογή, παρακαλούμε να μας υποστηρίξετε αξιολογώντας μας 5 αστέρια</string>
     <string name="rate_us_title">☆ Υποστηρίξτε μας</string>
     <string name="create_new_list">Δημιουργία νέας λίστας</string>
     <string name="add_to_list">Προσθήκη σε λίστα</string>
+    <string name="no_resume_available">Επι του παρόντος δεν υπάρχει δυνατότητα συνέχισης</string>
+    <string name="no_list_detected">Δεν εντοπίστηκε καμία λίστα. Η λίστα μπορεί να δημιουργηθεί με την προσθήκη νέων στοιχείων απευθείας από πληροφορίες βίντεο, ή μπορεί να συγχρονιστεί με το λογαριασμό σας στο Trakt.</string>
+    <string name="premium_already_purchased">Το Premium έχει ήδη αγοραστεί</string>
     <string name="remove_from_list">Αφαίρεση από τη λίστα</string>
+    <string name="warning_swdec">Προειδοποίηση: η αποκωδικοποίηση υλικού απενεργοποιήθηκε!</string>
     <string name="list_title">Τίτλος λίστας</string>
     <string name="loading">Φόρτωση…</string>
     <string name="connecting">Σύνδεση…</string>
-    <string name="app_id">08FEA4DD</string>
-    <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Αποτυχία ορισμού επιθυμητού ρυθμού ανανέωσης</string>
+    <string name="sponsor">Χορηγία Nova</string>
+    <string name="enable_sponsor_title">Ενεργοποίηση συνδέσμου χορηγίας Nova</string>
+    <string name="enable_sponsor_summary">Ενεργοποίηση συνδέσμου χορηγίας για δωρεές: κάθε συνεισφορά βοηθά.</string>
+    <string name="upgrade_info">Πληροφορίες αναβάθμισης</string>
+    <string name="v5_v6_upgrade_info">ΠΡΟΕΙΔΟΠΟΙΗΣΗ: αυτή η σημαντική ενημέρωση απαιτεί επανασάρωση όλων των συλλογών βίντεο για την επανασύνδεση πληροφοριών πολυμέσων.
+        Συνιστάται να κάνετε επανεκκίνηση από μια καθαρή εγκατάσταση για να αποφύγετε προβλήματα. Παρακαλούμε ελέγξτε τις Συχνές Ερωτήσεις για λεπτομέρειες.</string>
     <string name="networks">Δίκτυα:</string>
+    <string name="premiered">Πρεμιέρα:</string>
 </resources>

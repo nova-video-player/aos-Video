@@ -485,11 +485,6 @@
     <string name="ssh_prompt">Тип FTP</string>
     <string name="protocol_prompt">Тип протокола</string>
     <string name="ssh_empty_view"> \"Вы можете просматривать с собственного ftp сервера\"</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">Удалить выборку</string>
     <string name="shortcut_added">Ярлык %s создан</string>
     <string name="shortcut_removed">Ярлык %s удален</string>
@@ -802,10 +797,6 @@
         - Воспроизведение с момента остановки\n
         - Синхронизация с Trakt</string>
     <string name="dont_show_again">Не показывать снова</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Сеть и файлы</string>
     <string name="leanback_subtitles_integrated">Встроенные</string>
     <string name="leanback_subtitles_external">Внешние</string>
@@ -915,8 +906,6 @@
     <string name="list_title">Заголовок списка</string>
     <string name="loading">Загрузка…</string>
     <string name="connecting">Подключение…</string>
-    <string name="app_id">08FEA4DD</string>
-    <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Не удалось задать желаемую частоту обновления</string>
     <string name="sponsor">Поддержать Nova</string>
     <string name="enable_sponsor_title">Ссылка для поддержки Nova</string>

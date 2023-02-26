@@ -448,11 +448,6 @@ Copertina (rotolo di copertina)</string>
     <string name="add_ssh_shortcut">Aggiungi un collegamento</string>
     <string name="ssh_prompt">Tipo FTP</string>
     <string name="ssh_empty_view"> \"Puoi caricare e riprodurre dal tuo server FTP\"</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">Rimuovi il collegamento</string>
     <string name="shortcut_added">Collegamento %s aggiunto</string>
     <string name="shortcut_removed">Collegamento %s eliminato</string>
@@ -733,10 +728,6 @@ Copertina (rotolo di copertina)</string>
         - Punti di ripristino\n
         - Sincronizzazione con Trakt</string>
     <string name="dont_show_again">Non mostrare più</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Rete &amp; File</string>
     <string name="leanback_subtitles_integrated">Sottotitoli integrati</string>
     <string name="leanback_subtitles_external">Sottotitoli esterni</string>
@@ -844,8 +835,6 @@ Copertina (rotolo di copertina)</string>
     <string name="list_title">Titolo della lista</string>
     <string name="loading">Caricamento…</string>
     <string name="connecting">Connessione in corso…</string>
-    <string name="app_id">08FEA4DD</string>
-    <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Impossibile impostare la frequenza di aggiornamento desiderata</string>
     <string name="sponsor">Supporta Nova</string>
     <string name="enable_sponsor_title">Abilita il sponsor link di Nova</string>

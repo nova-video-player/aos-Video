@@ -474,11 +474,6 @@
     <string name="ssh_prompt">Tipo do FTP</string>
     <string name="protocol_prompt">Tipo de protocolo</string>
     <string name="ssh_empty_view"> \"Você pode navegar e reproduzir a partir de seu próprio servidor ftp\"</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">Remover o atalho</string>
     <string name="shortcut_added">Atalho \"%s\" criado</string>
     <string name="shortcut_removed">Atalho \"%s\" removido</string>
@@ -777,10 +772,6 @@
         - Ponto de continuação\n
         - Sincronização com Trakt</string>
     <string name="dont_show_again">Não exibir novamente</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Arquivos de rede &amp;</string>
     <string name="leanback_subtitles_integrated">Legendas integradas</string>
     <string name="leanback_subtitles_external">Legendas externas</string>
@@ -890,8 +881,6 @@
     <string name="list_title">Título da lista</string>
     <string name="loading">Carregando…</string>
     <string name="connecting">Conectando…</string>
-    <string name="app_id">08FEA4DD</string>
-    <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Falha ao definir a taxa de atualização desejada</string>
     <string name="sponsor">Patrocinar Nova</string>
     <string name="enable_sponsor_title">Habilitar link de patrocinador Nova</string>

@@ -285,11 +285,6 @@
     not visible otherwise -->
     <!-- torrent -->
     <!-- Shortcuts -->
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">هذف میانبر</string>
     <string name="ftp_shortcuts">میانبرهای FTP</string>
     <string name="ssh_password">گذرواژه</string>

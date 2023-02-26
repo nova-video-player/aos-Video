@@ -344,11 +344,6 @@
     <string name="torrent_file_to_play">Chọn tệp để phát</string>
     <!-- Shortcuts -->
     <string name="ssh_prompt">Kiểu FTP</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">Xóa phím tắt</string>
     <string name="open_indexed_folder">"Mở"</string>
     <string name="ssh_port">Cổng</string>
@@ -440,5 +435,4 @@
     <string name="provider_folders">Đám mây</string>
     <string name="learn_more">Tìm hiểu thêm</string>
     <string name="loading">Đang tải…</string>
-    <string name="app_id_surface">C44FB232</string>
 </resources>

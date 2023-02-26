@@ -369,11 +369,6 @@
     <string name="add_ssh_shortcut">إضافة اختصار</string>
     <string name="ssh_prompt">نوع FTP</string>
     <string name="ssh_empty_view">يمكنك العرض و المشاهدة من مخزن ال FTP الخاص بك</string>
-    <string-array name="ssh_types">
-        <item>بروتوكول نقل الملفات FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">مسح الاختصار</string>
     <string name="shortcut_added">%s تم إنشاء إختصار</string>
     <string name="shortcut_removed">%s تم مسح إختصار</string>

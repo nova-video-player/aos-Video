@@ -428,11 +428,6 @@
     <string name="add_ssh_shortcut">Voeg toe als snelkoppeling</string>
     <string name="ssh_prompt">FTP-type</string>
     <string name="ssh_empty_view"> \"Je kunt bladeren en spelen vanaf je eigen ftp server\"</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">Verwijder de snelkoppeling</string>
     <string name="shortcut_added">Snelkoppeling %s aangemaakt</string>
     <string name="shortcut_removed">Snelkoppeling %s verwijderd</string>
@@ -601,10 +596,6 @@
         - Hervat punt\n
         - Trakt synchronisatie</string>
     <string name="dont_show_again">Niet meer weergeven</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  - S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Netwerk &amp; bestanden</string>
     <string name="leanback_subtitles_integrated">Geïntegreerd</string>
     <string name="leanback_subtitles_external">Extern</string>

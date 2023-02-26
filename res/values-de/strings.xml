@@ -475,11 +475,6 @@
     <string name="ssh_prompt">FTP-Typ</string>
     <string name="protocol_prompt">Protokolltyp</string>
     <string name="ssh_empty_view"> \"Du kannst deinen eigenen FTP-Server durchsuchen und von dort abspielen\"</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">Die Verknüpfung löschen</string>
     <string name="shortcut_added">Verknüpfung %s hinzugefügt</string>
     <string name="shortcut_removed">Verknüpfung %s entfernt</string>
@@ -792,10 +787,6 @@
         - Wiederaufnahmepunkt\n
         - Trakt Synchronisation</string>
     <string name="dont_show_again">Nicht erneut anzeigen</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Netzwerk &amp; Dateien</string>
     <string name="leanback_subtitles_integrated">Integrierte Untertitel</string>
     <string name="leanback_subtitles_external">Externe Untertitel</string>
@@ -905,8 +896,6 @@
     <string name="list_title">Listenname</string>
     <string name="loading">Lade…</string>
     <string name="connecting">Verbinde…</string>
-    <string name="app_id">08FEA4DD</string>
-    <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Fehler beim Festlegen der gewünschten Aktualisierungsrate</string>
     <string name="sponsor">Sponsor Nova</string>
     <string name="enable_sponsor_title">Nova Sponsor-Link aktivieren</string>

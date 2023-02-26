@@ -410,10 +410,10 @@
     <string name="player_plugin_purchase_archos_msg">ניתן לרכוש תוספי פיענוח נוספים ב- www.archos.com</string>
     <string name="player_plugin_purchase_google_play_msg">ניתן לרכוש תוספי פיענוח נוספים ב- Google Play</string>
     <string name="player_plugin_purchase_google_play_button">עבור אל Google Play</string>
-    <string name="plugin_update_required_title">נדרש עדכון קודק</string>
-    <string name="plugin_update_required_message">נראש שכבר מותקנים לך מפענחים נוספים עובר Nova Video Player.\n\n
-גרסה חדשה זו דורשת עדכון של מפענחים אלו.\n\n
-כנס ל-Google Play לעדכון והתקנה מחדש של המפענחים.</string>
+    <string name="plugin_update_required_title">נדרש עדכון מקודד</string>
+    <string name="plugin_update_required_message">נראש שכבר מותקנים לך מקודדים נוספים עובר Nova Video Player.\n\n
+גרסה חדשה זו דורשת עדכון של מקודדים אלו.\n\n
+כנס ל-Google Play לעדכון והתקנה מחדש של המקודדים.</string>
     <!-- Subtitles wizard -->
     <string name="get_subtitles_on_drive">בחר כתוביות באחסון</string>
     <string name="subtitles_wizard_no_files">לא נמצאו קבצי כתוביות</string>
@@ -487,11 +487,6 @@
     <string name="ssh_prompt">סוג FTP</string>
     <string name="protocol_prompt">סוג פרוטוקול</string>
     <string name="ssh_empty_view"> \"אתה יכול לדפדף ולנגן משרת ה-FTP שלך\"</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">הסר קיצור דרך</string>
     <string name="shortcut_added">קיצור דרך %s נוצר</string>
     <string name="shortcut_removed">קיצור דרך %s הוסר</string>
@@ -542,6 +537,10 @@
     <string name="preferences_parser_sync_mode_cdata">מבוסס PTS (מומלץ)</string>
     <string name="preferences_parser_sync_mode_sample">מבוסס דגימות</string>
     <string name="preferences_parser_sync_mode_summary">מצב סנכרון במנתח LAVC. ⚠ ניסיוני, עלול לגרום להשהייה מצטברת של אודיו/וידאו</string>
+    <string name="preferences_stream_buffer_size_title">גודל מאגר הזרמה</string>
+    <string name="preferences_stream_buffer_size_summary">גודל זכרון מטמון בשימוש לפני שהמנתח יתמודד עם בעיות אגירה ב-MB</string>
+    <string name="preferences_stream_max_iframe_size_title">גודל i-frame מקסימלי</string>
+    <string name="preferences_stream_max_iframe_size_summary">גודל מקסימלי ל i-frame דחוס ב-MB</string>
     <string name="preferences_force_passthrough">כפה העברת אודיו ישירה</string>
     <string name="preferences_force_passthrough_summary">אם העברה ישירה מופעלת, כפה אותה למרות שלא אושרה כנתמכת על ידי הרסיבר, במקום לבדוק את יכולות הרסיבר</string>
     <string name="preferences_playback_speed">אפשר מהירות ניגון</string>
@@ -556,6 +555,8 @@
     <string name="preference_tv_3d_automatic_switch_summary">השתמש בתכונה זו רק אם האלויזיה שלך תומכת ב-3D</string>
     <string name="preference_tv_refreshrate_switch">אפשר שינוי אוטומטי של קצב הרענון</string>
     <string name="preference_tv_refreshrate_switch_summary">הסר את אפקט הרעידה על ידי התאמת קצב רענון המסך לקצב הפריימים של הוידאו (תלוי בתמיכת המכשיר)</string>
+    <string name="preference_remove_dolby_vision">השבת Dolby vision</string>
+    <string name="preference_remove_dolby_vision_summary">השתמש במקודדים סטנדרטיים במקום Dolby vision</string>
     <string name="preference_cutout_short_edges">וידאו על מסך מלא עם חורים במסך</string>
     <string name="preference_cutout_short_edges_summary">אפשר תצוגה על מסך מלא במכשיר עם חורים במסך</string>
     <string name="category_languages">כתוביות</string>
@@ -798,10 +799,6 @@
         - נקודת חזרה\n
         - סנכרון עם Trakt</string>
     <string name="dont_show_again">אל תציג שוב</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">רשת וקבצים</string>
     <string name="leanback_subtitles_integrated">מובנות</string>
     <string name="leanback_subtitles_external">חיצוניות</string>
@@ -912,8 +909,6 @@ Google cast</string>
     <string name="list_title">כותרת רשימה</string>
     <string name="loading">טוען…</string>
     <string name="connecting">מתחבר…</string>
-    <string name="app_id">08FEA4DD</string>
-    <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">קביעת קצב הרענון המבוקש נכשלה</string>
     <string name="sponsor">תן חסות</string>
     <string name="enable_sponsor_title">אפשר קישור מתן חסות</string>

@@ -449,11 +449,6 @@ desteklenmiyor.</string>
     <string name="add_ssh_shortcut">Kısayol olarak ekle</string>
     <string name="ssh_prompt">FTP türü</string>
     <string name="ssh_empty_view"> \"Kendi ftp sunucunuza göz atabilir ve oynatabilirsiniz\"</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">Kısayolu kaldır</string>
     <string name="shortcut_added">%s kısayol oluşturuldu</string>
     <string name="shortcut_removed">%s kısayol kaldırıldı</string>
@@ -733,10 +728,6 @@ desteklenmiyor.</string>
 -Son oynatılan\n
 -Trakt senkronizasyonu</string>
     <string name="dont_show_again">Tekrar gösterme</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Ağ ve Dosyalar</string>
     <string name="leanback_subtitles_integrated">Eklendi</string>
     <string name="leanback_subtitles_external">Harici</string>
@@ -840,8 +831,6 @@ desteklenmiyor.</string>
     <string name="list_title">Liste başlığı</string>
     <string name="loading">Yükleniyor…</string>
     <string name="connecting">Bağlanıyor…</string>
-    <string name="app_id">08FEA4DD</string>
-    <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">İstenen yenileme hızı ayarlanamadı</string>
     <string name="sponsor">Nova Sponsoru</string>
     <string name="enable_sponsor_title">Nova sponsor bağlantısını etkinleştir</string>

@@ -470,11 +470,6 @@
     <string name="ssh_prompt">FTP 類型</string>
     <string name="protocol_prompt">協定類型</string>
     <string name="ssh_empty_view"> 「您可以瀏覽自己的 FTP 伺服器並播放」</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">刪除捷徑</string>
     <string name="shortcut_added">捷徑 %s 已建立</string>
     <string name="shortcut_removed">捷徑 %s 已刪除</string>
@@ -787,10 +782,6 @@
         - 續播進度\n
         - Trakt 同步</string>
     <string name="dont_show_again">不再提示</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">網路和檔案</string>
     <string name="leanback_subtitles_integrated">內建</string>
     <string name="leanback_subtitles_external">外部</string>
@@ -900,8 +891,6 @@
     <string name="list_title">清單標題</string>
     <string name="loading">載入中...</string>
     <string name="connecting">連線中...</string>
-    <string name="app_id">08FEA4DD</string>
-    <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">設定重新整理頻率失敗</string>
     <string name="sponsor">贊助 Nova</string>
     <string name="enable_sponsor_title">開啟 Nova 贊助連結</string>

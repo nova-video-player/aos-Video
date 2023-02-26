@@ -475,11 +475,6 @@
     <string name="ssh_prompt">Type</string>
     <string name="protocol_prompt">Type de protocole</string>
     <string name="ssh_empty_view">Parcourez votre propre serveur FTP</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">Supprimer le raccourci</string>
     <string name="shortcut_added">Raccourci %s créé</string>
     <string name="shortcut_removed">Raccourci %s supprimé</string>
@@ -494,11 +489,13 @@
     <string name="add_to_indexed_folders">Indexer ce dossier</string>
     <string name="add_to_library">Ajouter à la bibliothèque</string>
     <string name="add_all_items_to_library">Ajouter toutes les vidéos à ma bibliothèque ?</string>
+    <string name="shortcut_folder_added">Le dossier %s a été ajouté comme raccourci</string>
     <string name="indexed_folder_added">Le dossier %s a été ajouté à la bibliothèque</string>
     <string name="remove_from_indexed_folders">Désindexer le dossier</string>
     <string name="indexed_folder_removed">Le dossier %s a été retiré des dossiers indexés</string>
     <string name="indexed_folders_list_empty">Pas de dossiers actuellement indexés.\n\nVous pouvez ajouter le contenu d\'un dossier réseau à la bibliothèque en ouvrant le dossier et en sélectionnant \"%s\" dans la barre du haut.</string>
     <string name="indexed_folders_list_empty_ftp">Aucun dossier FTP indexé.</string>
+    <string name="indexed_folders_list_empty_network">Aucun dossier réseau indexé.</string>
     <string name="open_indexed_folder">"Ouvrir"</string>
     <string name="rescan_indexed_folders">Recharger tous les dossiers indexés</string>
     <string name="last_rescan_never">Jamais</string>
@@ -618,6 +615,7 @@
     <string name="help_overlay_network_indexing_text1_lb">Utilisez le bouton + pour ajouter le contenu de ce dossier et de ses sous-dossiers à la bibliothèque vidéo.</string>
     <string name="help_overlay_network_indexing_text2">Cela vous permettra d\'obtenir des affiches et des informations pour vos films et vos séries.</string>
     <string name="help_overlay_scraper_text">Sélectionnez cette action pour rechercher des affiches et des informations en ligne pour vos vidéos. </string>
+    <string name="help_overlay_network_shortcut_text1_lb">Utilisez le bouton + pour ajouter ce dossier comme raccourci réseau et ayez la possibilité d\'ajouter son contenu et celui de ses sous-dossiers à la bibliothèque vidéo.</string>
     <string name="new_videos_count">Nouvelles vidéos: %d</string>
     <string name="new_videos_scrape_message">Vous avez des nouvelles vidéos qui n\'ont pas encore d\'affiches et d\'informations.</string>
     <string name="network_bookmarks">Points de reprises et marque-pages sur le réseau</string>
@@ -792,10 +790,6 @@
         - Point de reprise\n
         - Synchronisation Trakt</string>
     <string name="dont_show_again">Ne plus afficher</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Réseau &amp; fichiers</string>
     <string name="leanback_subtitles_integrated">Sous-titres intégrés</string>
     <string name="leanback_subtitles_external">Sous-titres externes</string>
@@ -905,8 +899,6 @@
     <string name="list_title">Liste de titres</string>
     <string name="loading">Chargement en cours…</string>
     <string name="connecting">Connexion en cours…</string>
-    <string name="app_id">08FEA4DD</string>
-    <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Impossible de définir le taux de rafraîchissement désiré</string>
     <string name="sponsor">Sponsoriser Nova</string>
     <string name="enable_sponsor_title">Activer le lien de sponsor Nova</string>

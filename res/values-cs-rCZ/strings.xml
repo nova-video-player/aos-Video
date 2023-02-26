@@ -459,11 +459,6 @@
     <string name="ssh_prompt">Typ FTP</string>
     <string name="protocol_prompt">Typ protokolu</string>
     <string name="ssh_empty_view"> \"Můžete procházet a přehrávat z vašeho ftp serveru\"</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">Odstranit zástupce</string>
     <string name="shortcut_added">Zástupce %s vytvořen</string>
     <string name="shortcut_removed">Zástupce %s odstraněn</string>
@@ -772,10 +767,6 @@
         - pozice obnovení přehrávání\n
         - synchronizace s Trakt</string>
     <string name="dont_show_again">Příště již nezobrazovat</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d - %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Síť &amp; soubory</string>
     <string name="leanback_subtitles_integrated">Integrované titulky</string>
     <string name="leanback_subtitles_external">Externí titulky</string>
@@ -885,8 +876,6 @@
     <string name="list_title">Název</string>
     <string name="loading">Načítání…</string>
     <string name="connecting">Připojování…</string>
-    <string name="app_id">08FEA4DD</string>
-    <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Nepodařilo se nastavit požadovanou obnovovací frekvenci</string>
     <string name="sponsor">Podpořte aplikaci Nova</string>
     <string name="enable_sponsor_title">Aktivovat odkaz na sponzorské dary pro aplikaci Nova</string>
