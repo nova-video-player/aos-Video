@@ -125,7 +125,8 @@ public class NetworkListingFragment extends ListingFragment {
                     }
                     else titleView.setOnOrb3Description(getString(R.string.remove_from_shortcuts));
                 } else titleView.setOnOrb3Description(getString(R.string.remove_from_shortcuts));
-            }
+            } else
+                titleView.setOnOrb3Description(getString(R.string.remove_from_shortcuts));
         } else {
             if (isCurrentDirectoryIndexed) {
                 titleView.setOrb3IconResId(R.drawable.orb_minus);
