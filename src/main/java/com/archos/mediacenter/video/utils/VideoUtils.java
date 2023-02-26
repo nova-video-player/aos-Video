@@ -218,6 +218,8 @@ public class VideoUtils {
             return R.drawable.folder_shortcut_ftps;
         } else if ("sftp".equalsIgnoreCase(uri.getScheme())) {
             return R.drawable.folder_shortcut_sftp;
+        } else if ("webdav".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.folder_shortcut_webdav;
         } else if ("zip".equalsIgnoreCase(uri.getScheme())) {
             return R.drawable.folder_shortcut_folder;
         } else if ("content".equalsIgnoreCase(uri.getScheme())) {
@@ -240,6 +242,8 @@ public class VideoUtils {
             return R.drawable.filetype_new_folder_ftps;
         } else if ("sftp".equalsIgnoreCase(uri.getScheme())) {
             return R.drawable.filetype_new_folder_sftp;
+        } else if ("webdav".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.filetype_new_folder_webdav;
         } else if ("zip".equalsIgnoreCase(uri.getScheme())) {
             return R.drawable.filetype_new_folder;
         } else if ("content".equalsIgnoreCase(uri.getScheme())) {
