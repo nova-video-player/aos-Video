@@ -31,7 +31,6 @@ import androidx.leanback.widget.OnActionClickedListener;
 import androidx.leanback.widget.RowPresenter;
 import androidx.leanback.widget.SparseArrayObjectAdapter;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -43,12 +42,15 @@ import com.archos.mediacenter.video.leanback.adapter.object.Shortcut;
 import com.archos.mediacenter.video.leanback.details.ArchosDetailsOverviewRowPresenter;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
 import com.archos.mediacenter.video.leanback.presenter.ShortcutDetailsPresenter;
+import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.NetworkScanner;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NetworkShortcutDetailsFragment extends DetailsSupportFragment implements OnActionClickedListener {
 
-    private static final String TAG = "NetworkShortcutDetailsFragment";
-    private static final boolean DBG = true;
+    private static final Logger log = LoggerFactory.getLogger(NetworkShortcutDetailsFragment.class);
 
     public static final String SHARED_ELEMENT_NAME = "hero";
 
@@ -70,7 +72,7 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
         isCurrentDirectoryIndexed = ShortcutDbAdapter.VIDEO.isHimselfOrAncestorShortcut(getActivity(), uriStringWithoutCred);
         isHimselfIndexedFolder = ShortcutDbAdapter.VIDEO.isShortcut(getActivity(), uriStringWithoutCred) > 0;
         isCurrentDirectoryShortcut = (ShortcutDb.STATIC.isShortcut(getContext(), uriStringWithoutCred) != -1);
-        if (DBG) Log.d(TAG, "checkIfIsShortcut: isCurrentDirectoryIndexed=" + isCurrentDirectoryIndexed + ", isHimselfIndexedFolder=" + isHimselfIndexedFolder + ", isCurrentDirectoryShortcut=" + isCurrentDirectoryShortcut);
+        log.debug("checkIfIsShortcut: isCurrentDirectoryIndexed=" + isCurrentDirectoryIndexed + ", isHimselfIndexedFolder=" + isHimselfIndexedFolder + ", isCurrentDirectoryShortcut=" + isCurrentDirectoryShortcut);
     }
 
     private ArchosDetailsOverviewRowPresenter mDetailsRowPresenter;
@@ -158,7 +160,7 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
                     case 0: return new Action(ACTION_OPEN, getResources().getString(R.string.open_indexed_folder));
                     case 1: // add or rescan
                         if (isCurrentDirectoryShortcut) {
-                            if (isCurrentDirectoryShortcut) { // ancestor or current indexed -> rescan folder
+                            if (isCurrentDirectoryIndexed) { // ancestor or current indexed -> rescan folder
                                 return new Action(ACTION_REINDEX, getResources().getString(R.string.network_reindex));
                             } else { // ancestor or current not indexed -> index folder
                                 return new Action(ACTION_ADD_INDEX, getResources().getString(R.string.add_to_indexed_folders));
@@ -168,7 +170,7 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
                         }
                     case 2: // remove
                         if (isCurrentDirectoryShortcut) {
-                            if (isCurrentDirectoryShortcut) { // ancestor or current indexed
+                            if (isCurrentDirectoryIndexed) { // ancestor or current indexed
                                 if (isHimselfIndexedFolder) // indexed folder -> remove from library
                                     return new Action(ACTION_REMOVE, getResources().getString(R.string.remove_from_indexed_folders));
                                 else // shortcut and not indexed folder -> remove shortcut
@@ -183,8 +185,12 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
                 }
             }
         });
-        detailRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_folder_indexed));
+        detailRow.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                (isHimselfIndexedFolder) ?
+                        R.drawable.filetype_new_folder_indexed :
+                        VideoUtils.getShortcutImageLeanback(mShortcut.getUri())));
     }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
