@@ -30,13 +30,14 @@ import java.io.Serializable;
 
 public class GenericNetworkShortcut extends Shortcut implements Serializable {
 
-    public GenericNetworkShortcut(long id, String fullPath, String name) {
-       super(id, fullPath, fullPath, name);
+    public GenericNetworkShortcut(long id, String fullPath, String name, String friendlyUri) {
+        super(id, fullPath, friendlyUri, name);
     }
 
     public Uri getUri() {
         return Uri.parse(mFullPath);
     }
+
     @Override
     public int getImage() {
         Uri uri = getUri();

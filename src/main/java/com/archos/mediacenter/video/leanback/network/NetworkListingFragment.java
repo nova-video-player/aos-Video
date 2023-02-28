@@ -166,9 +166,8 @@ public class NetworkListingFragment extends ListingFragment {
         // thus only add STATIC shortcut and then propose to index in askForIndexing
         log.debug("createShortcut: ARG_TITLE=" + ARG_TITLE + ", argument ARG_TITLE=" + getArguments().getString(ARG_TITLE));
         String shortcutName = getArguments().getString(ARG_TITLE)!=null?getArguments().getString(ARG_TITLE):mUri.getLastPathSegment(); //to avoid name like "33" in upnp
-        log.debug("createShortcut: shorcutName=" + shortcutName + ", shortcutPath=" + mUri.toString() + ", lastPathSegment=" + mUri.getLastPathSegment());
-        // TODO friendlyUri missing in ShortcutDb.STATIC
-        boolean result = ShortcutDb.STATIC.insertShortcut(getContext(), mUri, shortcutName);
+        log.debug("createShortcut: shorcutName=" + shortcutName + ", shortcutPath=" + mUri.toString() + ", lastPathSegment=" + mUri.getLastPathSegment() + ", friendlyUri=" + getFriendlyUri());
+        boolean result = ShortcutDb.STATIC.insertShortcut(getContext(), mUri, shortcutName, getFriendlyUri());
         if (result) {
             Toast.makeText(getActivity(), getString(R.string.shortcut_folder_added, shortcutName), Toast.LENGTH_SHORT).show();
             getActivity().setResult(NetworkRootFragment.RESULT_CODE_SHORTCUTS_MODIFIED);

@@ -279,7 +279,7 @@ public class BrowserByNetwork extends BrowserByFolder {
                                     NetworkScanner.scanVideos(getActivity(), mCurrentDirectory);
                                     addIndexedFolder(mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString());
                                 } else {
-                                    ShortcutDb.STATIC.insertShortcut(getContext(), mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString());
+                                    ShortcutDb.STATIC.insertShortcut(getContext(), mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString(), getFriendlyUri());
                                 }
                                 getActivity().invalidateOptionsMenu();
                             }
@@ -308,6 +308,11 @@ public class BrowserByNetwork extends BrowserByFolder {
                 break;
         }
         return ret;
+    }
+
+    protected String getFriendlyUri() {
+        log.debug("getFriendlyUri=" + mCurrentDirectory.toString());
+        return mCurrentDirectory.toString();
     }
 
     private View.OnClickListener mIndexFolderActionClickListener = new View.OnClickListener() {

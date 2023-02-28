@@ -25,7 +25,8 @@ import android.provider.BaseColumns;
 
 import androidx.loader.content.CursorLoader;
 
-import android.util.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -35,18 +36,18 @@ public enum ShortcutDb {
 
     STATIC();
 
-    private static final String TAG = "ShortcutDb";
-    protected final static boolean DBG = false;
+    private static final Logger log = LoggerFactory.getLogger(ShortcutDb.class);
 
     private static final String DATABASE_NAME = "shortcuts2_db";
     private static final String TABLE_NAME = "shortcuts";
 
     // To be incremented each time the architecture of the database is changed
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public static final String KEY_URI = "uri";
     public static final String KEY_SHORTCUT_NAME = "shortcut_name";
-    private static final String[] SHORTCUT_COLS = { BaseColumns._ID, KEY_URI, KEY_SHORTCUT_NAME };
+    public static final String KEY_FRIENDLY_URI = "friendly_uri";
+    private static final String[] SHORTCUT_COLS = { BaseColumns._ID, KEY_URI, KEY_SHORTCUT_NAME, KEY_FRIENDLY_URI };
 
     private DatabaseHelper mDbHelper;
     private synchronized SQLiteDatabase getDb(Context context) {
@@ -91,6 +92,7 @@ public enum ShortcutDb {
     public class Shortcut implements Serializable{
         public String name;
         public String uri;
+        public String friendlyUri;
     }
     /**
      * get Cursor with all columns of all shortcuts
@@ -111,7 +113,7 @@ public enum ShortcutDb {
         }
         catch (SQLiteException e) {
             // The table corresponding to this type does not exist yet
-            Log.w(TAG, e);
+            log.warn("getCursorAllShortcuts: caught SQLiteException", e);
             return null;
         }
     }
@@ -139,12 +141,14 @@ public enum ShortcutDb {
             return shortcuts;
         int nameColumn = shortcutsCursor.getColumnIndex(KEY_SHORTCUT_NAME);
         int uriColumn = shortcutsCursor.getColumnIndex(KEY_URI);
+        int friendlyUriColumn = shortcutsCursor.getColumnIndex(KEY_FRIENDLY_URI);
         if (shortcutsCursor.getCount()>0){
             shortcutsCursor.moveToFirst();
             do {
                 Shortcut shortcut = new Shortcut();
                 shortcut.uri = shortcutsCursor.getString(uriColumn);
                 shortcut.name = shortcutsCursor.getString(nameColumn);
+                shortcut.friendlyUri = shortcutsCursor.getString(friendlyUriColumn);
                 shortcuts.add(shortcut);
             } while(shortcutsCursor.moveToNext());
         }
@@ -158,12 +162,13 @@ public enum ShortcutDb {
      * @param name
      * @return true if the insert succeeded
      */
-    public boolean insertShortcut(Context context, Uri uri, String name) {
-        if (DBG) Log.d(TAG, "insertShortcut "+uri+" "+name);
+    public boolean insertShortcut(Context context, Uri uri, String name, String friendlyUri) {
+        log.debug("insertShortcut "+uri+" "+name);
         if (name == null) name = uri.toString();
         ContentValues initialValues = new ContentValues(2);
         initialValues.put(KEY_URI, uri.toString());
         initialValues.put(KEY_SHORTCUT_NAME, name);
+        initialValues.put(KEY_FRIENDLY_URI, friendlyUri);
 
         SQLiteDatabase db = getDb(context);
         return (db.insert(TABLE_NAME, null, initialValues)!=-1);
@@ -181,7 +186,7 @@ public enum ShortcutDb {
 
         SQLiteDatabase db = getDb(context);
         int result = db.delete(TABLE_NAME, selection, selectionArgs);
-        if (DBG) Log.d(TAG, "removeShortcut "+uri.toString()+" mDb.delete returns "+result);
+        log.debug("removeShortcut "+uri.toString()+" mDb.delete returns "+result);
 
         return result;
     }
@@ -196,7 +201,7 @@ public enum ShortcutDb {
 
         SQLiteDatabase db = getDb(context);
         int result = db.delete(TABLE_NAME, selection, selectionArgs);
-        if (DBG) Log.d(TAG, "removeShortcut "+id+" mDb.delete returns "+result);
+        log.debug("removeShortcut "+id+" mDb.delete returns "+result);
 
         return result>0;
     }
@@ -213,11 +218,15 @@ public enum ShortcutDb {
             db.execSQL("create table " + TABLE_NAME + "( "
                     + BaseColumns._ID + " integer primary key autoincrement, "
                     + KEY_URI + " text not null, "
-                    + KEY_SHORTCUT_NAME + " text not null );");
+                    + KEY_SHORTCUT_NAME + " text );");
         }
 
         @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {            
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            log.info("onUpgrade: upgrading database from version " + oldVersion + " to " + newVersion);
+            if (oldVersion < 2) {
+                db.execSQL("ALTER TABLE "+TABLE_NAME+" ADD COLUMN " + KEY_FRIENDLY_URI + " TEXT");
+            }
         }
     }
 }

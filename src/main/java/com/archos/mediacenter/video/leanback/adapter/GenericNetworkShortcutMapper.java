@@ -24,18 +24,23 @@ public class GenericNetworkShortcutMapper  {
 
     private static final String TAG = "GenericNetworkShortcutMapper";
 
-    int mIdColumn, mPathColumn, mNameColumn;
+    int mIdColumn, mPathColumn, mNameColumn, mFriendlyUriColumn;
 
     public void bindColumns(Cursor c) {
         mIdColumn = c.getColumnIndex(BaseColumns._ID);
         mPathColumn = c.getColumnIndex(ShortcutDb.KEY_URI);
         mNameColumn = c.getColumnIndex(ShortcutDb.KEY_SHORTCUT_NAME);
+        mFriendlyUriColumn = c.getColumnIndex(ShortcutDb.KEY_FRIENDLY_URI);
     }
 
     public Object bind(Cursor c) {
         final long id = c.getLong(mIdColumn);
         String path = c.getString(mPathColumn);
         String name = c.getString(mNameColumn);
-        return new GenericNetworkShortcut(id, path, name);
+        String friendlyUri = c.getString(mFriendlyUriColumn);
+        if (friendlyUri == null)
+            return new GenericNetworkShortcut(id, path, path, name);
+        else
+            return new GenericNetworkShortcut(id, path, friendlyUri, name);
     }
 }

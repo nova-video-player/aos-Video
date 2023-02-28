@@ -21,8 +21,7 @@ import java.io.Serializable;
 /**
  * Created by alexandre on 18/05/15.
  */
-public abstract class Shortcut implements  Serializable{
-
+public abstract class Shortcut implements Serializable {
 
     final protected long mId;
     final protected String mFullPath;
