@@ -39,8 +39,8 @@ public class GenericNetworkShortcutMapper  {
         String name = c.getString(mNameColumn);
         String friendlyUri = c.getString(mFriendlyUriColumn);
         if (friendlyUri == null)
-            return new GenericNetworkShortcut(id, path, path, name);
+            return new GenericNetworkShortcut(id, path, name, path);
         else
-            return new GenericNetworkShortcut(id, path, friendlyUri, name);
+            return new GenericNetworkShortcut(id, path, name, friendlyUri);
     }
 }
