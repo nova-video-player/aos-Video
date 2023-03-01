@@ -75,6 +75,9 @@ public class BrowserByNetwork extends BrowserByFolder {
     boolean isCurrentDirectoryShortcut = false;
     boolean isCurrentDirectoryIndexed = false;
 
+    protected String mShortcutPath;
+    protected String mShortcutName;
+
     private void checkIfIsShortcut() {
         String uriStringWithoutCred = mCurrentDirectory.toString();
         isCurrentDirectoryIndexed = ShortcutDbAdapter.VIDEO.isHimselfOrAncestorShortcut(getActivity(), uriStringWithoutCred);
@@ -135,7 +138,7 @@ public class BrowserByNetwork extends BrowserByFolder {
     }
 
     public void addIndexedFolder(Uri currentDirectory, String name) {
-        ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), new ShortcutDbAdapter.Shortcut(name, currentDirectory.toString()));
+        ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), new ShortcutDbAdapter.Shortcut(name, currentDirectory.toString(), getFriendlyUri()));
     }
 
     @Override
@@ -227,12 +230,13 @@ public class BrowserByNetwork extends BrowserByFolder {
         switch (itemId) {
             case R.string.add_to_indexed_folders:
             case R.string.remove_from_indexed_folders:
-                String shortcutPath;
-                shortcutPath = metaFile2.getUri().toString();
+                mShortcutPath = metaFile2.getUri().toString();
+                mShortcutName = metaFile2.getName();
+                log.debug("onContextItemSelected: mShortcutPath=" + mShortcutPath + ", mShortcutName=" + mShortcutName);
                 if (itemId == R.string.add_to_indexed_folders) {
-                    createShortcut(shortcutPath, metaFile2.getName());
+                    createShortcut(mShortcutPath, mShortcutName);
                 } else {
-                    removeShortcut(shortcutPath);
+                    removeShortcut(mShortcutPath);
                 }
                 // The indexed status of the selected folder has changed => redraw the list
                 // in order to update the indexed symbol
@@ -248,7 +252,10 @@ public class BrowserByNetwork extends BrowserByFolder {
         switch (item.getItemId()) {
             case R.string.add_to_indexed_folders:
                 // Handle this item when it is in the options menu
-                createShortcut(mCurrentDirectory.toString(), FileUtils.getName(mCurrentDirectory));
+                mShortcutPath = mCurrentDirectory.toString();
+                mShortcutName = FileUtils.getName(mCurrentDirectory);
+                log.debug("onOptionsItemSelected: index folder mShortcutPath=" + mShortcutPath + ", mShortcutName=" + mShortcutName);
+                createShortcut(mShortcutPath, mShortcutName);
                 ret = true;
                 break;
             case R.string.remove_from_indexed_folders:
@@ -257,9 +264,12 @@ public class BrowserByNetwork extends BrowserByFolder {
                 ret = true;
                 break;
             case R.string.add_ssh_shortcut:
+                mShortcutPath = mCurrentDirectory.toString();
+                mShortcutName = getActionBarTitle();
+                log.debug("onOptionsItemSelected: add as shortcut mShortcutPath=" + mShortcutPath + ", mShortcutName=" + mShortcutName);
                 // have a dialog where shortcut name can be specified and add to library option too
                 final View v = getActivity().getLayoutInflater().inflate(R.layout.ssh_shortcut_dialog_layout, null);
-                ((EditText)v.findViewById(R.id.shortcut_name)).setText(mCurrentDirectory.getLastPathSegment());
+                ((EditText)v.findViewById(R.id.shortcut_name)).setText(Uri.parse(getFriendlyUri()).getLastPathSegment());
                 boolean isCurrentDirectoryIndexed = ShortcutDbAdapter.VIDEO.isHimselfOrAncestorShortcut(getActivity(), mCurrentDirectory.toString());
                 // if current folder is already indexed do not propose to index it in the dialog
                 if (isCurrentDirectoryIndexed) {
@@ -318,7 +328,10 @@ public class BrowserByNetwork extends BrowserByFolder {
     private View.OnClickListener mIndexFolderActionClickListener = new View.OnClickListener() {
         // Handle clicks on the "indexed folder" item when it is in displayed the action bar
         public void onClick(View v) {
-            createShortcut(mCurrentDirectory.toString(), getActionBarTitle());
+            mShortcutPath = mCurrentDirectory.toString();
+            mShortcutName = getActionBarTitle();
+            log.debug("mIndexFolderActionClickListener: mShortcutPath=" + mShortcutPath + ", mShortcutName=" + mShortcutName);
+            createShortcut(mShortcutPath, mShortcutName);
         }
     };
     @Override

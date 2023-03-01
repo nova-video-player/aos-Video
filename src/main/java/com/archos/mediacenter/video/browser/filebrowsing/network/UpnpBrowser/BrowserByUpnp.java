@@ -33,9 +33,6 @@ public class BrowserByUpnp extends BrowserByNetwork {
 
     private static final Logger log = LoggerFactory.getLogger(BrowserByUpnp.class);
 
-    protected String mShortcutPath;
-    protected String mShortcutName;
-
     @Override
     protected boolean isIndexable(Uri folder) {
         // allows only indexing for shares as in upnp://[user:pass@]server/share/
@@ -78,6 +75,7 @@ public class BrowserByUpnp extends BrowserByNetwork {
         if(friendlyName != null) friendlyUri += friendlyName;
         else friendlyUri += Uri.parse(mShortcutPath).getHost();
         friendlyUri += "/" + mShortcutName;
+        log.debug("getFriendlyUri: mShortcutPath=" + mShortcutPath + ", mShortcutName=" + mShortcutName + " -> friendlyName=" + friendlyName + ", friendlyUri=" + friendlyUri);
         return friendlyUri;
     }
 
