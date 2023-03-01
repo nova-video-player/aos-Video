@@ -218,7 +218,8 @@ public enum ShortcutDb {
             db.execSQL("create table " + TABLE_NAME + "( "
                     + BaseColumns._ID + " integer primary key autoincrement, "
                     + KEY_URI + " text not null, "
-                    + KEY_SHORTCUT_NAME + " text );");
+                    + KEY_SHORTCUT_NAME + " text not null, "
+                    + KEY_FRIENDLY_URI + " text );");
         }
 
         @Override
