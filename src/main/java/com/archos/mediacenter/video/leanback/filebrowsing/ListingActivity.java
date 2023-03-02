@@ -86,6 +86,9 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
         else if ("webdav".equals(scheme)) {
             return WebdavListingActivity.class;
         }
+        else if ("webdavs".equals(scheme)) {
+            return WebdavListingActivity.class;
+        }
         else if (scheme!=null && scheme.contains("ftp")) { // ftp, sftp, ftps
             return FtpListingActivity.class;
         }

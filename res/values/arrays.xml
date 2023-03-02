@@ -246,5 +246,6 @@
         <item>FTPS</item>
         <item>SMB</item>
         <item>WebDAV</item>
+        <item>WebDAVS</item>
     </string-array>
 </resources>

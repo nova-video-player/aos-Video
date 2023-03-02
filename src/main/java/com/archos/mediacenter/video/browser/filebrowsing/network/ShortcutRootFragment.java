@@ -144,6 +144,12 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
                         case 3:
                             uriToBuild = "smb";
                             break;
+                        case 4:
+                            uriToBuild = "webdav";
+                            break;
+                        case 5:
+                            uriToBuild = "webdavs";
+                            break;
                         default:
                             throw new IllegalArgumentException("Invalid network protocol type " + type);
                     }

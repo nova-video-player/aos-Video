@@ -108,8 +108,9 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
                 case 2: uriToBuild = "ftps"; break;
                 case 3: uriToBuild = "smb"; break;
                 case 4: uriToBuild = "webdav"; break;
+                case 5: uriToBuild = "webdavs"; break;
                 default:
-                    throw new IllegalArgumentException("Invalid FTP type "+mType);
+                    throw new IllegalArgumentException("Invalid network type "+mType);
             }
             uriToBuild +="://"+mRemote+":"+mPort+"/";
             log.debug("onCreateDialog: uriToBuild=" + uriToBuild);
@@ -196,6 +197,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
                         case 2: scheme = "ftps"; break;
                         case 3: scheme = "smb"; break;
                         case 4: scheme = "webdav"; break;
+                        case 5: scheme = "webdavs"; break;
                         default:
                             throw new IllegalArgumentException("Invalid protocol type "+type);
                     }
