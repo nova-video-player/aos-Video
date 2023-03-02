@@ -56,7 +56,6 @@ public class FTPServerCredentialsDialog extends ServerCredentialsDialog {
             case 0: scheme = "ftp"; break;
             case 1: scheme = "sftp"; break;
             case 2: scheme = "ftps"; break;
-            case 3: scheme = "webdav"; break;
             default:
                 throw new IllegalArgumentException("Invalid FTP type "+type);
         }
