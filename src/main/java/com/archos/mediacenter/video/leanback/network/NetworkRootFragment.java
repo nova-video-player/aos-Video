@@ -288,6 +288,9 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                                 case 4:
                                     uriToBuild = "webdav";
                                     break;
+                                case 5:
+                                    uriToBuild = "webdavs";
+                                    break;
                                 default:
                                     throw new IllegalArgumentException("Invalid network protocol type " + type);
                             }
