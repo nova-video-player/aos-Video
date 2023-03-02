@@ -92,7 +92,6 @@ public class FtpServerCredentialsDialog extends DialogFragment {
                 case 0: uriToBuild = "ftp"; break;
                 case 1: uriToBuild = "sftp"; break;
                 case 2: uriToBuild = "ftps"; break;
-                case 3: uriToBuild = "webdav"; break;
                 default:
                     throw new IllegalArgumentException("Invalid FTP type "+mType);
             }
@@ -157,7 +156,6 @@ public class FtpServerCredentialsDialog extends DialogFragment {
                         case 0: scheme = "ftp"; break;
                         case 1: scheme = "sftp"; break;
                         case 2: scheme = "ftps"; break;
-                        case 3: scheme = "webdav"; break;
                         default:
                             throw new IllegalArgumentException("Invalid FTP type "+type);
                     }
