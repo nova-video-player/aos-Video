@@ -107,6 +107,9 @@ public class BrowserByNetwork extends BrowserByFolder {
 
     protected void createShortcut(String shortcutPath, String shortcutName) {
         // Add the shortcut to the list (shortcut means indexed)
+        // createShortcut called only when there is already a shortcut and indexing is selected thus static shortcut needs to be removed
+
+        ShortcutDb.STATIC.removeShortcut(getActivity(), mCurrentDirectory);
         ShortcutDbAdapter.Shortcut shortcut = new ShortcutDbAdapter.Shortcut(shortcutName,shortcutPath);
         ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), shortcut);
 
@@ -134,12 +137,34 @@ public class BrowserByNetwork extends BrowserByFolder {
     }
 
     private void removeShortcut(String shortcutPath) {
-        // Remove the shortcut from the list
-        ShortcutDbAdapter.VIDEO.deleteShortcut(getActivity(), shortcutPath);
+        // if shortcut
+        // -> if himself indexed: i) remove shortcut, ii) deindex
+        // -> else: remove shortcut
+        // else (not shortcut)
+        // -> if himself indexed: deindex
+        // -> else: do nothing
         String text = getString(R.string.indexed_folder_removed, shortcutPath);
+        if (isCurrentDirectoryShortcut) {
+            if (isHimselfIndexedFolder) {
+                // Deindex folder
+                ShortcutDbAdapter.VIDEO.deleteShortcut(getActivity(), shortcutPath);
+                // Send a delete request to MediaScanner
+                NetworkScanner.removeVideos(mContext, shortcutPath);
+            } else {
+                text = getString(R.string.shortcut_removed, shortcutPath);
+            }
+            // Remove the shortcut from the list
+            ShortcutDb.STATIC.removeShortcut(getActivity(), mCurrentDirectory);
+        } else { // not a shortcut
+            if (isHimselfIndexedFolder) {
+                ShortcutDbAdapter.VIDEO.deleteShortcut(getActivity(), shortcutPath);
+                // Send a delete request to MediaScanner
+                NetworkScanner.removeVideos(mContext, shortcutPath);
+            } else {
+                return;
+            }
+        }
         Toast.makeText(mContext, text, Toast.LENGTH_SHORT).show();
-        // Send a delete request to MediaScanner
-        NetworkScanner.removeVideos(mContext, shortcutPath);
         // Update the menu items
         getActivity().invalidateOptionsMenu();
     }
@@ -198,6 +223,7 @@ public class BrowserByNetwork extends BrowserByFolder {
 
     @Override
     public boolean onContextItemSelected(MenuItem menuItem) {
+        log.debug("onContextItemSelected");
         int itemId = menuItem.getItemId();
         AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) menuItem.getMenuInfo();
         Video video = null;
@@ -230,6 +256,7 @@ public class BrowserByNetwork extends BrowserByFolder {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        log.debug("onOptionsItemSelected");
         boolean ret;
         switch (item.getItemId()) {
             case R.string.add_to_indexed_folders:
