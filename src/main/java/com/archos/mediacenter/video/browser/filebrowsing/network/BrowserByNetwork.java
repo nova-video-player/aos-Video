@@ -255,10 +255,10 @@ public class BrowserByNetwork extends BrowserByFolder {
                 boolean isCurrentDirectoryIndexed = ShortcutDbAdapter.VIDEO.isHimselfOrAncestorShortcut(getActivity(), mCurrentDirectory.toString());
                 // if current folder is already indexed do not propose to index it in the dialog
                 if (isCurrentDirectoryIndexed) {
-                    v.findViewById(R.id.checkBox).setVisibility(View.VISIBLE);
+                    v.findViewById(R.id.checkBox).setVisibility(View.INVISIBLE);
                 } else {
                     ((CheckBox) v.findViewById(R.id.checkBox)).setChecked(false);
-                    v.findViewById(R.id.checkBox).setVisibility(View.INVISIBLE);
+                    v.findViewById(R.id.checkBox).setVisibility(View.VISIBLE);
                 }
                 new AlertDialog.Builder(getActivity())
                         .setCancelable(false)
@@ -361,7 +361,6 @@ public class BrowserByNetwork extends BrowserByFolder {
                 // If the current folder is indexed => show the "rescan" item
                 // If the current folder is a shortcut but not indexed => show the "index folder"
                 addFolderMenuItem.setVisible(isCurrentDirectoryShortcut && (! isCurrentDirectoryIndexed));
-                addFolderMenuItem.setVisible(false); // for now addShortcutMenuItem does addFolderMenuItem
                 rescanFolderMenuItem.setVisible(isHimselfIndexedFolder);
                 removeFolderMenuItem.setVisible(isHimselfIndexedFolder);
                 addShortcutMenuItem.setVisible((!isCurrentDirectoryShortcut) && (! isCurrentDirectoryIndexed));
