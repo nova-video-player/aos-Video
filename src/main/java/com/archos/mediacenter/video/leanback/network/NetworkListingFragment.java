@@ -98,10 +98,6 @@ public class NetworkListingFragment extends ListingFragment {
         updateOrbIcon();
     }
 
-    private boolean isShortcut() {
-        return mShortcutId>=0;
-    }
-
     protected void updateOrbIcon() {
         removeFromLibrary = false;
         // if shortcut
@@ -150,6 +146,7 @@ public class NetworkListingFragment extends ListingFragment {
      * @return
      */
     protected boolean canBeIndexed() {
+        log.debug("canBeIndexed: mAnAncestorIsShortcut=" + mAnAncestorIsShortcut + "->" + (!isEmpty() && !mAnAncestorIsShortcut));
         return (!isEmpty() && !mAnAncestorIsShortcut);
     }
 
