@@ -19,7 +19,6 @@ import android.content.res.Resources;
 import androidx.leanback.widget.RowHeaderPresenter;
 import androidx.leanback.widget.RowPresenter;
 import android.text.format.Formatter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,13 +30,15 @@ import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by vapillon on 16/04/15.
  */
 public class FileDetailsRowPresenter extends FullWidthRowPresenter implements BackgroundColorPresenter {
 
-    private static final boolean DBG = false;
-    private static final String TAG = "FileDetailsRowPresenter";
+    private static final Logger log = LoggerFactory.getLogger(FileDetailsRowPresenter.class);
 
     private int mColor;
     Resources mR;
@@ -141,7 +142,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
 
         // Special error case (99.9% of the time it happens when the specified file is not reachable)
         if (videoMetadata.getFileSize()==0 && videoMetadata.getVideoTrack()==null && videoMetadata.getAudioTrackNb()==0) {
-            Log.w(TAG, "file not reacheable? fileSize=" + videoMetadata.getFileSize() + ", videoTrack=" + videoMetadata.getVideoTrack() + ", audioTrackNb=" + videoMetadata.getAudioTrackNb());
+            log.warn("file not reacheable? fileSize=" + videoMetadata.getFileSize() + ", videoTrack=" + videoMetadata.getVideoTrack() + ", audioTrackNb=" + videoMetadata.getAudioTrackNb());
             // sometimes metadata are set to zero but the file is there, can be due to libavosjni not loaded
             hideAudioVideoSubs(vh);
             vh.mFileErrorTv.setVisibility(View.VISIBLE);
