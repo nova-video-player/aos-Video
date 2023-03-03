@@ -91,23 +91,6 @@ public class BrowserByNetwork extends BrowserByFolder {
         return null;
     }
 
-    protected boolean isIndexable(Uri folder) {
-        // allows only indexing for shares as in smb://[user:pass@]server/share/
-        String path = folder != null ? folder.toString() : null;
-        if (path == null || !UriUtils.isIndexable(folder))
-            return false;
-        // valid paths contain at least 4x'/' e.g. "smb://server/share/"
-        int len = path.length();
-        int slashCount = 0;
-        for (int i = 0; i < len; i++) {
-            if (path.charAt(i) == '/') {
-                slashCount++;
-            }
-        }
-        return slashCount >= 4;
-
-    }
-
     @Override
     public void onListingUpdate(List<? extends MetaFile2>  list){
         super.onListingUpdate(list);
@@ -115,12 +98,11 @@ public class BrowserByNetwork extends BrowserByFolder {
             mHelpOverlayHandler = new HelpOverlayHandler();
         }
         // Check if we need to display the help overlay
-        if (isIndexable(mCurrentDirectory) &&
+        if (UriUtils.isIndexable(mCurrentDirectory) &&
                 !helpOverlayAlreadyActivated() && !mHelpOverlayHandler.hasMessages(MSG_START_HELP_OVERLAY)) {
             // Help overlay is suitable for the current folder and has never been requested yet => show help overlay
             mHelpOverlayHandler.sendEmptyMessageDelayed(MSG_START_HELP_OVERLAY, 200);
         }
-
     }
 
     protected void createShortcut(String shortcutPath, String shortcutName) {
@@ -198,7 +180,7 @@ public class BrowserByNetwork extends BrowserByFolder {
             metaFile2 = (MetaFile2) item;
             menu.setHeaderTitle(metaFile2.getName());
         }
-        if (metaFile2!=null&&metaFile2.isDirectory() && isIndexable(metaFile2.getUri())) {
+        if (metaFile2!=null&&metaFile2.isDirectory() && UriUtils.isIndexable(metaFile2.getUri())) {
             // Contextual menu for folders which do not correspond to a workgroup
             long id = ShortcutDbAdapter.VIDEO.isShortcut(getActivity(), metaFile2.getUri().toString());
 
@@ -362,7 +344,7 @@ public class BrowserByNetwork extends BrowserByFolder {
         MenuItem removeShortcutMenuItem = menu.findItem(R.string.remove_from_shortcuts);
         MenuItem rescanFolderMenuItem = menu.findItem(R.string.rescan);
         if(removeFolderMenuItem!=null&&addFolderMenuItem!=null) {
-            if (!isIndexable(mCurrentDirectory)) {
+            if (!UriUtils.isIndexable(mCurrentDirectory)) {
                 // No possible actions at the root and workgroup levels
                 addFolderMenuItem.setVisible(false);
                 removeFolderMenuItem.setVisible(false);

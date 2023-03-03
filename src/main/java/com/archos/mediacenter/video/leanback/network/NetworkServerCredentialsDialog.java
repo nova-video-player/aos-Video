@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.network;
 
+import static com.archos.mediacenter.filecoreextension.UriUtils.getTypeUri;
+
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -36,6 +38,7 @@ import androidx.preference.PreferenceManager;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase.Credential;
 import com.archos.filecorelibrary.MetaFile2Factory;
+import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.video.R;
 
 import org.slf4j.Logger;
@@ -102,16 +105,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
         if(mPassword.isEmpty()&&!mRemote.isEmpty()){
             NetworkCredentialsDatabase database = NetworkCredentialsDatabase.getInstance();
             String uriToBuild = "";
-            switch(mType){
-                case 0: uriToBuild = "ftp"; break;
-                case 1: uriToBuild = "sftp"; break;
-                case 2: uriToBuild = "ftps"; break;
-                case 3: uriToBuild = "smb"; break;
-                case 4: uriToBuild = "webdav"; break;
-                case 5: uriToBuild = "webdavs"; break;
-                default:
-                    throw new IllegalArgumentException("Invalid network type "+mType);
-            }
+            uriToBuild = getTypeUri(mType);
             uriToBuild +="://"+mRemote+":"+mPort+"/";
             log.debug("onCreateDialog: uriToBuild=" + uriToBuild);
 
@@ -166,7 +160,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
         log.debug("onCreateDialog: username=" + mUsername + ", domain=" + mDomain + ", port=" + mPort + ", remote=" + mRemote + ", path=" + mPath + "; type=" + mType);
         usernameEt.setText(mUsername);
         passwordEt.setText(mPassword);
-        if (type == 3) domainEt.setText(mDomain);
+        if (UriUtils.doesUriTypeRequiresDomain(type)) domainEt.setText(mDomain);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
         .setTitle(R.string.browse_ftp_server)
@@ -181,7 +175,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
         .setPositiveButton(android.R.string.ok,new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int id) {
                 // username can be empty with samba guest shares
-                if(!usernameEt.getText().toString().isEmpty() || type == 3){
+                if(!usernameEt.getText().toString().isEmpty() || UriUtils.doesUriTypeRequiresDomain(type)){
                     final int type = typeSp.getSelectedItemPosition();
                     final String address = addressEt.getText().toString();
                     String path = pathEt.getText().toString();
@@ -191,16 +185,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
                     } catch(NumberFormatException e){ }
 
                     String scheme = "";
-                    switch(type){
-                        case 0: scheme = "ftp"; break;
-                        case 1: scheme = "sftp"; break;
-                        case 2: scheme = "ftps"; break;
-                        case 3: scheme = "smb"; break;
-                        case 4: scheme = "webdav"; break;
-                        case 5: scheme = "webdavs"; break;
-                        default:
-                            throw new IllegalArgumentException("Invalid protocol type "+type);
-                    }
+                    scheme = getTypeUri(type);
 
                     if (port == -1) {
                         port = MetaFile2Factory.defaultPortForProtocol(scheme);

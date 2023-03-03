@@ -14,19 +14,24 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser;
 
+import static com.archos.mediacenter.filecoreextension.UriUtils.getTypeUri;
+
 import android.net.Uri;
 
 import com.archos.mediacenter.video.browser.ServerCredentialsDialog;
 import com.archos.filecorelibrary.MetaFile2Factory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class FTPServerCredentialsDialog extends ServerCredentialsDialog {
 
+    private static final Logger log = LoggerFactory.getLogger(FTPServerCredentialsDialog.class);
 
     final private static String FTP_LATEST_USERNAME = "FTP_LATEST_USERNAME";
     final private static String FTP_LATEST_URI = "FTP_LATEST_URI";
     final public static String USERNAME = "username";
     final public static String PASSWORD = "password";
-
 
     public FTPServerCredentialsDialog(){ }
 
@@ -52,14 +57,7 @@ public class FTPServerCredentialsDialog extends ServerCredentialsDialog {
         var uriB = new Uri.Builder();
 
         String scheme = "";
-        switch(type){
-            case 0: scheme = "ftp"; break;
-            case 1: scheme = "sftp"; break;
-            case 2: scheme = "ftps"; break;
-            default:
-                throw new IllegalArgumentException("Invalid FTP type "+type);
-        }
-
+        scheme = getTypeUri(type);
         uriB.scheme(scheme);
 
         //TODO: Do we need a default port or not...? URI could not have a port included
@@ -75,7 +73,7 @@ public class FTPServerCredentialsDialog extends ServerCredentialsDialog {
         }
 
         uriB.path(path);
-
+        log.debug("createUri: -> " + uriB);
         return uriB.toString();
     }
 }

@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.browser;
 
+import static com.archos.mediacenter.filecoreextension.UriUtils.getUriType;
+
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -35,9 +37,16 @@ import androidx.preference.PreferenceManager;
 
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase.Credential;
+import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.video.R;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public abstract class ServerCredentialsDialog extends DialogFragment {
+
+    private static final Logger log = LoggerFactory.getLogger(ServerCredentialsDialog.class);
+
     private AlertDialog mDialog;
     protected SharedPreferences mPreferences;
     private String mUsername="";
@@ -93,8 +102,7 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
 
         if(mUri!=null){
             mPort = mUri.getPort();
-            // TODO MARC change because 3... ftps and smb
-            mType = "ftp".equals(mUri.getScheme())?0:"sftp".equals(mUri.getScheme())?1:2;
+            mType = getUriType(mUri);
             mPath = mUri.getPath();
             mRemote = mUri.getHost();
         }
@@ -134,7 +142,7 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
             }
         });
         int type = mType;
-        if (type==0 || type==1 || type==2) { // better safe than sorry
+        if (UriUtils.isValidUriType(type)) { // better safe than sorry
             mTypeSp.setSelection(type);
         }
         mAddressEt.setText(mRemote);

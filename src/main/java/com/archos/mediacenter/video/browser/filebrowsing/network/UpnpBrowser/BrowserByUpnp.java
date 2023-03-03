@@ -34,23 +34,6 @@ public class BrowserByUpnp extends BrowserByNetwork {
     private static final Logger log = LoggerFactory.getLogger(BrowserByUpnp.class);
 
     @Override
-    protected boolean isIndexable(Uri folder) {
-        // allows only indexing for shares as in upnp://[user:pass@]server/share/
-        String path = folder != null ? folder.toString() : null;
-        if (path == null || !path.startsWith("upnp://"))
-            return false;
-        // valid paths contain at least 4x'/' e.g. "upnp://server/share/"
-        int len = path.length();
-        int slashCount = 0;
-        for (int i = 0; i < len; i++) {
-            if (path.charAt(i) == '/') {
-                slashCount++;
-            }
-        }
-        return slashCount >= 4;
-    }
-
-    @Override
     protected void createShortcut(String shortcutPath, String shortcutName) {
         mShortcutPath = shortcutPath;
         mShortcutName = shortcutName;
