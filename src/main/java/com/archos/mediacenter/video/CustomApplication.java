@@ -45,6 +45,7 @@ import com.archos.filecorelibrary.FileUtilsQ;
 import com.archos.filecorelibrary.jcifs.JcifsUtils;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.filecorelibrary.samba.SambaDiscovery;
+import com.archos.filecorelibrary.webdav.WebdavUtils;
 import com.archos.mediacenter.utils.AppState;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
@@ -148,8 +149,9 @@ public class CustomApplication extends Application {
 
     private static VideoStoreImportReceiver videoStoreImportReceiver = new VideoStoreImportReceiver();
 
-    private JcifsUtils jcifsUtils = null;
-    private FileUtilsQ fileUtilsQ = null;
+    private static JcifsUtils jcifsUtils = null;
+    private static WebdavUtils webdavUtils = null;
+    private static FileUtilsQ fileUtilsQ = null;
 
     private static Context mContext = null;
 
@@ -239,6 +241,7 @@ public class CustomApplication extends Application {
             // create instance of jcifsUtils in order to pass context and initial preference
             if (mContext == null) log.warn("onCreate: mContext null!!!");
             if (jcifsUtils == null) jcifsUtils = JcifsUtils.getInstance(mContext);
+            if (webdavUtils == null) webdavUtils = WebdavUtils.getInstance(mContext);
             if (fileUtilsQ == null) fileUtilsQ = FileUtilsQ.getInstance(mContext);
         }).start();
 
