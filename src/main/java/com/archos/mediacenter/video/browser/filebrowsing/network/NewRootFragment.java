@@ -37,6 +37,7 @@ import com.archos.mediacenter.utils.QuickAction;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.BrowserCategory;
+import com.archos.mediacenter.video.browser.ShortcutDb;
 import com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser.BrowserBySFTP;
 import com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser.BrowserBySmb;
 import com.archos.mediacenter.video.browser.filebrowsing.network.UpnpBrowser.BrowserByUpnp;
@@ -109,8 +110,11 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
             public void onClick(View v) {
                 // Rescan the contents of the folder
                 NetworkScanner.scanVideos(getActivity(), uri);
+                log.debug("onRefreshClickListener: MARC");
                 if(ShortcutDbAdapter.VIDEO.isShortcut(getActivity(), uri.toString())<0){
-                    //if not a shortcut, add as shortcut
+                    //if not a shortcut = indexed folder, add as indexed folder and remove static shortcut
+                    if(ShortcutDb.STATIC.isShortcut(getContext(), uri.toString()) != -1)
+                        ShortcutDb.STATIC.removeShortcut(getActivity(), uri);
                     ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), new ShortcutDbAdapter.Shortcut(uri.getLastPathSegment(), uri.toString()));
                     loadIndexedShortcuts();
                 }

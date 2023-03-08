@@ -50,28 +50,28 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
     public ShortcutRootFragment(){
         super();
     }
-    @Override
-    public void onViewCreated (View v, Bundle saved){
 
-    }
+    @Override
+    public void onViewCreated (View v, Bundle saved){}
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
     }
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-
         if(v.getTag() instanceof ShortcutAdapter.ShortcutViewHolder){
             mSelectedUri =((ShortcutAdapter.ShortcutViewHolder) v.getTag()).getUri();
             mSelectedName =((ShortcutAdapter.ShortcutViewHolder) v.getTag()).getName();
@@ -81,8 +81,8 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
                 menu.add(0, R.string.add_to_library, 0, R.string.add_to_library);
         }
         else super.onCreateContextMenu(menu, v, menuInfo);
-
     }
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         int itemId = item.getItemId();
@@ -94,6 +94,7 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
             case R.string.remove_from_shortcuts:
                 ShortcutDb.STATIC.removeShortcut(getContext(), mSelectedUri);
                 ((ShortcutAdapter)mAdapter).updateShortcuts(ShortcutDb.STATIC.getAllShortcuts(getActivity()));
+                loadIndexedShortcuts();
                 return true;
         }
 
@@ -107,9 +108,7 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
     }
 
     @Override
-    protected void rescanAvailableShortcuts() {
-    }
-
+    protected void rescanAvailableShortcuts() {}
 
     @Override
     protected void loadIndexedShortcuts() {
@@ -121,7 +120,6 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
         }
         mAdapter.notifyDataSetChanged();
     }
-
 
     @Override
     public void onClick(View view) {
@@ -186,19 +184,20 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
             dialog.show(getParentFragmentManager(),NetworkServerCredentialsDialog.class.getCanonicalName());
         }
     }
+
     public void addToIndexed(Uri uri, String name){
-        NetworkScanner.scanVideos(getActivity(), uri);
+        ShortcutDb.STATIC.removeShortcut(getActivity(), uri);
         if (ShortcutDbAdapter.VIDEO.isShortcut(getActivity(), uri.toString()) < 0) {
             //if not a shortcut, add as shortcut
             ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), new ShortcutDbAdapter.Shortcut(name, uri.toString()));
-            loadIndexedShortcuts();
+            NetworkScanner.scanVideos(getActivity(), uri);
         }
+        loadIndexedShortcuts();
     }
+
     @Override
     public void onShortcutAdd(View v, final Uri uri, final String name) {
-
         mQuickAction = new QuickAction(v);
-
         ActionItem rescanAction = new ActionItem();
         rescanAction.setTitle(getString(R.string.add_to_library));
         rescanAction.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_menu_refresh));
@@ -218,6 +217,5 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
                 mQuickAction.onClose();
             }
         });
-
     }
 }
