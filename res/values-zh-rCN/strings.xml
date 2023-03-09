@@ -484,11 +484,13 @@
     <string name="add_to_indexed_folders">索引文件夹</string>
     <string name="add_to_library">添加到库中</string>
     <string name="add_all_items_to_library">立即将所有视频添加到库中？</string>
+    <string name="shortcut_folder_added">已为文件夹 %s 添加快捷方式</string>
     <string name="indexed_folder_added">文件夹 %s 已添加到库中</string>
     <string name="remove_from_indexed_folders">从库中删除</string>
     <string name="indexed_folder_removed">文件夹 %s 已从库中删除</string>
     <string name="indexed_folders_list_empty">当前没有对网络文件夹内容进行索引。\n\n您可以通过浏览此文件夹并在顶部操作栏中选择\"%s\"来将网络文件夹的内容添加到库中。</string>
     <string name="indexed_folders_list_empty_ftp">目前没有已索引的 ftp 文件夹。</string>
+    <string name="indexed_folders_list_empty_network">当前无网络文件夹被索引</string>
     <string name="open_indexed_folder">"打开"</string>
     <string name="rescan_indexed_folders">重新扫描所有已索引的文件夹</string>
     <string name="last_rescan_never">从不</string>
@@ -608,6 +610,7 @@
     <string name="help_overlay_network_indexing_text1_lb">使用 + 按钮将此文件夹及其子文件夹的内容整合到视频库。</string>
     <string name="help_overlay_network_indexing_text2">这将允许您获取电影和电视节目的海报和说明。</string>
     <string name="help_overlay_scraper_text">按此菜单项以在线搜索您视频的海报和说明。 </string>
+    <string name="help_overlay_network_shortcut_text1_lb">使用 + 按钮将此文件夹添加为网络快捷方式，并且有将其内容及其子文件夹的内容添加到视频库的选项。</string>
     <string name="new_videos_count">新视频： %d</string>
     <string name="new_videos_scrape_message">您还有尚无信息和海报的新视频。</string>
     <string name="network_bookmarks">网络上的播放进度和位置书签</string>

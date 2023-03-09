@@ -489,11 +489,13 @@
     <string name="add_to_indexed_folders">Ordner in Bibliothek aufnehmen</string>
     <string name="add_to_library">Zur Bibliothek hinzufügen</string>
     <string name="add_all_items_to_library">Alle Videos sofort zur Bibliothek hinzufügen?</string>
+    <string name="shortcut_folder_added">Ordner %s als Verknüpfung hinzugefügt</string>
     <string name="indexed_folder_added">%s wurde zur Bibliothek hinzugefügt</string>
     <string name="remove_from_indexed_folders">Ordner aus Bibliothek entfernen</string>
     <string name="indexed_folder_removed">%s aus Bibliothek entfernt</string>
     <string name="indexed_folders_list_empty">Es sind derzeit keine Netzwerk-Ordner indiziert.\n\nSie können den jeweils aktuellen Ordner zur Bibliothek hinzufügen indem Sie \"%s\" in der Aktionsleiste am oberen Bildschirmrand auswählen.</string>
     <string name="indexed_folders_list_empty_ftp">Derzeit sind keine FTP-Ordner indiziert.</string>
+    <string name="indexed_folders_list_empty_network">Derzeit sind keine Netzwerkordner indiziert.</string>
     <string name="open_indexed_folder">"Öffnen"</string>
     <string name="rescan_indexed_folders">Alle indizierten Ordner aktualisieren</string>
     <string name="last_rescan_never">Niemals</string>
@@ -613,6 +615,7 @@
     <string name="help_overlay_network_indexing_text1_lb">Benutzen Sie die \"+\"-Taste, um den Inhalt dieses Verzeichnis und dessen Unterverzeichnis zur Video-Bibliothek hinzuzufügen.</string>
     <string name="help_overlay_network_indexing_text2">Dies ermöglicht ihnen dann auch Poster und Beschreibungen für Filme und Serien online zu suchen.</string>
     <string name="help_overlay_scraper_text">Mit diesem Knopf können Sie die Suche nach Postern und Beschreibungen für Ihre Videos in einer Online-Datenbank starten. </string>
+    <string name="help_overlay_network_shortcut_text1_lb">Benutzen Sie die + Schaltfläche, um diesen Ordner als Netzwerkverknüpfung hinzuzufügen und haben Sie die Möglichkeit, dessen Inhalt und die seiner Unterordner zur Video-Bibliothek hinzuzufügen.</string>
     <string name="new_videos_count">Neue Videos: %d</string>
     <string name="new_videos_scrape_message">Es gibt neue Videos für die noch keine Informationen und Poster vorhanden sind.</string>
     <string name="network_bookmarks">Fortsetzungspunkte und Lesezeichen</string>

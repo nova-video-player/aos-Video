@@ -484,11 +484,13 @@
     <string name="add_to_indexed_folders">索引資料夾</string>
     <string name="add_to_library">新增至媒體庫</string>
     <string name="add_all_items_to_library">立刻將所有影片新增至媒體庫嗎？</string>
+    <string name="shortcut_folder_added">資料夾 %s 已新增為捷徑</string>
     <string name="indexed_folder_added">資料夾 %s 已新增至媒體庫</string>
     <string name="remove_from_indexed_folders">從媒體庫中移除</string>
     <string name="indexed_folder_removed">資料夾 %s 已從媒體庫中移除</string>
     <string name="indexed_folders_list_empty">目前沒有網路資料夾已被索引。\n\n瀏覽網路資料夾並在指令工具列上方選擇「%s」，即可新增此資料夾內容至媒體庫。</string>
     <string name="indexed_folders_list_empty_ftp">目前沒有 ftp 資料夾已被索引。</string>
+    <string name="indexed_folders_list_empty_network">目前沒有網路資料夾已被索引。</string>
     <string name="open_indexed_folder">"開啟"</string>
     <string name="rescan_indexed_folders">重新掃描所有已索引的資料夾</string>
     <string name="last_rescan_never">永不</string>
@@ -605,9 +607,10 @@
     <string name="help_overlay_menu">按「上」箭頭鍵\n顯示電視選單</string>
     <string name="help_overlay_ssh_indexing_text">選擇「新增為捷徑」選項以快速返回您的伺服器。</string>
     <string name="help_overlay_network_indexing_text1">按此選單項目將該資料夾和子資料夾的內容給合至影片媒體庫。</string>
-    <string name="help_overlay_network_indexing_text1_lb">使用「+」按鈕將該資料夾和子資料夾的內容給合至影片媒體庫。</string>
+    <string name="help_overlay_network_indexing_text1_lb">使用「+」按鈕將該資料夾和子資料夾的內容結合至影片媒體庫。</string>
     <string name="help_overlay_network_indexing_text2">這將使您取得電影和電視劇的海報及說明。</string>
     <string name="help_overlay_scraper_text">按此選單項目將於網路上搜尋影片的海報和說明。 </string>
+    <string name="help_overlay_network_shortcut_text1_lb">使用「+」按鈕將此資料夾新增為網路捷徑，您可以選擇將該資料夾和子資料夾的內容加入至影片媒體庫中。</string>
     <string name="new_videos_count">新增影片：%d</string>
     <string name="new_videos_scrape_message">您尚有無資訊及海報的新增影片。</string>
     <string name="network_bookmarks">網路上的續播進度和位置書籤</string>

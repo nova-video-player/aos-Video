@@ -489,11 +489,13 @@
     <string name="add_to_indexed_folders">Indexar carpeta</string>
     <string name="add_to_library">Agregar a la biblioteca</string>
     <string name="add_all_items_to_library">¿Añadir todos los vídeos a la biblioteca inmediatamente?</string>
+    <string name="shortcut_folder_added">Carpeta %s añadida como acceso directo</string>
     <string name="indexed_folder_added">Carpeta %s añadida a la biblioteca</string>
     <string name="remove_from_indexed_folders">Eliminar de la biblioteca</string>
     <string name="indexed_folder_removed">Carpeta %s eliminada de la biblioteca</string>
     <string name="indexed_folders_list_empty">No hay carpetas de red indexadas actualmente.\n\nPuedes añadir el contenido de una carpeta de red a la biblioteca navegando a esta carpeta y seleccionando \"%s\" en la barra de acción superior.</string>
     <string name="indexed_folders_list_empty_ftp">No hay carpetas ftp indexadas actualmente.</string>
+    <string name="indexed_folders_list_empty_network">No hay carpetas de red indexadas.</string>
     <string name="open_indexed_folder">"Abrir"</string>
     <string name="rescan_indexed_folders">Volver a escanear todas las carpetas indexadas</string>
     <string name="last_rescan_never">Nunca</string>
@@ -613,6 +615,7 @@
     <string name="help_overlay_network_indexing_text1_lb">Utilice el botón + para integrar el contenido de esta carpeta y sus subcarpetas a la Biblioteca de Vídeos.</string>
     <string name="help_overlay_network_indexing_text2">Le permitirá obtener carteles y descripciones para las películas y series.</string>
     <string name="help_overlay_scraper_text">Presione este elemento de menú para buscar online carteles y descripciones para sus vídeos. </string>
+    <string name="help_overlay_network_shortcut_text1_lb">Utilice el botón + para añadir esta carpeta como un acceso directo de red y tener la opción de añadir su contenido y el de sus subcarpetas a la videoteca.</string>
     <string name="new_videos_count">Nuevos vídeos: %d</string>
     <string name="new_videos_scrape_message">Tiene nuevos vídeos para los que aún no dispone de información y carteles.</string>
     <string name="network_bookmarks">Reanudar puntos y posición de marcadores en red</string>

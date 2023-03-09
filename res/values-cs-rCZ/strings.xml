@@ -473,11 +473,13 @@
     <string name="add_to_indexed_folders">Indexovat složku</string>
     <string name="add_to_library">Přidat do knihovny</string>
     <string name="add_all_items_to_library">Přidat nyní všechny soubory do knihovny?</string>
+    <string name="shortcut_folder_added">Složka %s byla přidána jako zástupce</string>
     <string name="indexed_folder_added">Složka %s byla přidána do knihovny</string>
     <string name="remove_from_indexed_folders">Odebrat z knihovny</string>
     <string name="indexed_folder_removed">Složka %s byla odebrána z knihovny</string>
     <string name="indexed_folders_list_empty">Zatím nejsou indexovány žádné síťové složky.\n\nObsah síťové složky můžete přidat do knihovny tak, že přejdete do této složky a vyberete položku \"%s\" na panelu akcí v horní části.</string>
     <string name="indexed_folders_list_empty_ftp">Zatím nejsou indexovány žádné ftp složky.</string>
+    <string name="indexed_folders_list_empty_network">Zatím nejsou indexovány žádné síťové složky.</string>
     <string name="open_indexed_folder">"Otevřít"</string>
     <string name="rescan_indexed_folders">Znova naskenovat všechny indexované složky</string>
     <string name="last_rescan_never">Nikdy</string>
@@ -593,6 +595,7 @@
     <string name="help_overlay_network_indexing_text1_lb">Použijte tlačítko + pro zahrnutí obsahu této složky a jejích podsložek to knihovny videí.</string>
     <string name="help_overlay_network_indexing_text2">Tato funkce vám umožní získat plakáty a popisy k filmům a seriálům.</string>
     <string name="help_overlay_scraper_text">Zvolte tuto položku menu pro online vyhledání plakátů a informací k vašim videím. </string>
+    <string name="help_overlay_network_shortcut_text1_lb">Použijte tlačítko + pro přidání této síťové složky jako zástupce a máte možnost přidat její obsah včetně podsložek do Knihovny videí.</string>
     <string name="new_videos_count">Nová videa: %d</string>
     <string name="new_videos_scrape_message">Máte nová videa, ke kterým zatím nejsou k dispozici informace a plakáty.</string>
     <string name="network_bookmarks">Obnovení pozic a záložek na síťových připojeních</string>
