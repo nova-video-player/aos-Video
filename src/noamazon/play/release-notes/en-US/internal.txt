@@ -1,11 +1,2 @@
-- Fix ftp regression on some firesticks
-- Fix SMB1 regression on some NAS
-- Better movie scrape results
-- Increase number of subtitles track supported to 64
-- Pass list of subtitles to external video players
-- Support more ssa subtitle style formats
-- Option to disable Dolby Vision decoder
-- Option to not apply audio passthrough if AV receiver does not support codec
-- Experimental playback speed option
-- Target API33 & Google Play Bundle delivery
-- Stability enhancements
+- Add webdav network share support
+- Add network shortcuts support for all network shares
