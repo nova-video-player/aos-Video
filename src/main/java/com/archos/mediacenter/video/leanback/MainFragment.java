@@ -624,7 +624,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     }
 
     private void refreshAllBoxes() {
-        if (mActivity != null) return;
+        if (mActivity == null) return;
         refreshAllMoviesBox();
         refreshAllCollectionsBox();
         refreshAllTvshowsBox();
