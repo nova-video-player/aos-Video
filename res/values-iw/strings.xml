@@ -501,11 +501,13 @@
     <string name="add_to_indexed_folders">הוסף לקטלוג התיקיות</string>
     <string name="add_to_library">הוסף לספרייה</string>
     <string name="add_all_items_to_library">להוסיף מייד את כל קבצי הוידאו לסיפרייה?</string>
+    <string name="shortcut_folder_added">תיקייה %s נוספה כקיצור דרך</string>
     <string name="indexed_folder_added">התיקייה %s התווספה לקטלוג התיקיות</string>
     <string name="remove_from_indexed_folders">הסר מקטלוג התיקיות</string>
     <string name="indexed_folder_removed">התיקייה %s הוסרה מקטלוג התיקיות</string>
     <string name="indexed_folders_list_empty">אין תיקיות רשתיות בקטלוג התיקיות.\n\nבאפשרותך להוסיף את תוכנה של תיקייה רשתית לספרייה באמצעות כניסה לתיקייה זו ובחירת \"%s\" בסרגל הכלים העליון.</string>
     <string name="indexed_folders_list_empty_ftp">אין כרגע תיקיות FTP מקוטלגות.</string>
+    <string name="indexed_folders_list_empty_network">אין כרגע תיקיות רשת מקוטלגות.</string>
     <string name="open_indexed_folder">"פתח"</string>
     <string name="rescan_indexed_folders">סרוק מחדש את כל התיקיות המקוטלגות</string>
     <string name="last_rescan_never">אף פעם</string>
@@ -625,6 +627,7 @@
     <string name="help_overlay_network_indexing_text1_lb">השתמש בכפתור + כדי לשלב את תוכן תיקייה זו ותת-התיקיות שלה לספרית הוידאו.</string>
     <string name="help_overlay_network_indexing_text2">יאפשר לך להשיג פוסטרים ותיאורים לסרטים וסדרות.</string>
     <string name="help_overlay_scraper_text">לחץ על תפריט זה כדי לחפש פוסטרים ותיאורים לוידאו שלך ברשת.</string>
+    <string name="help_overlay_network_shortcut_text1_lb">השתמש בכפתור + כדי להוסיף תיקייה זו כקיצור דרך לרשת, כך שתהיה אפשרות להוסיף את התוכן שלה ושל תת-התיקיות שלה לספרית הוידאו.</string>
     <string name="new_videos_count">וידאו חדש: %d</string>
     <string name="new_videos_scrape_message">יש לך קבצי וידאו חדשים ללא תיאורים ופוסטרים.</string>
     <string name="network_bookmarks">נקודות המשך וסימניות מיקום ברשת</string>

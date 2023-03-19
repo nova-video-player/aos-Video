@@ -499,11 +499,13 @@
     <string name="add_to_indexed_folders">Индексировать папку</string>
     <string name="add_to_library">Добавить в библиотеку</string>
     <string name="add_all_items_to_library">Добавить все видео в библиотеку сейчас?</string>
+    <string name="shortcut_folder_added">Папка %s добавлена как ярлык</string>
     <string name="indexed_folder_added">Папка %s добавлена в библиотеку</string>
     <string name="remove_from_indexed_folders">Удалить из библиотеки</string>
     <string name="indexed_folder_removed">Папка %s удалена из библиотеки</string>
     <string name="indexed_folders_list_empty">Нет индексированных сетевых папок.\n\nВы можете добавить содержимое сетевой папки в библиотеку, просматривая эту папку и выбрав \"%s\" в верхней панели действий.</string>
     <string name="indexed_folders_list_empty_ftp">Нет индексированных папок ftp.</string>
+    <string name="indexed_folders_list_empty_network">Нет индексированных сетевых папок.</string>
     <string name="open_indexed_folder">"Открыть"</string>
     <string name="rescan_indexed_folders">Пересканировать все индексированные папки</string>
     <string name="last_rescan_never">Никогда</string>
@@ -623,6 +625,7 @@
     <string name="help_overlay_network_indexing_text1_lb">Используйте кнопку +, чтобы добавить содержимое этой папки и всех вложенных подпапок в библиотеку.</string>
     <string name="help_overlay_network_indexing_text2">Это позволит вам получить постеры и описания для фильмов и сериалов.</string>
     <string name="help_overlay_scraper_text">Нажмите на этот пункт для онлайн-поиска постеров и описания видео. </string>
+    <string name="help_overlay_network_shortcut_text1_lb">Используйте кнопку +, чтобы добавить эту папку в качестве сетевого ярлыка и иметь возможность добавить ее содержимое и содержимое ее вложенных папок в библиотеку видео.</string>
     <string name="new_videos_count">Новые видео: %d</string>
     <string name="new_videos_scrape_message">У вас есть новые видео, которые пока не имеют описания и постеров.</string>
     <string name="network_bookmarks">Возобновление воспроизведения и закладки по сети</string>
