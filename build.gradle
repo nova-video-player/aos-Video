@@ -299,7 +299,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.preference:preference:1.2.0'
     // needed to avoid duplicate class issue
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation 'com.github.ksoichiro:android-observablescrollview:1.6.0'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.leanback:leanback:1.2.0-alpha02'
