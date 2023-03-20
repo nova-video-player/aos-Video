@@ -41,7 +41,7 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
 
     private static final String TAG = "VideoLoader";
 
-    // disabling cursorLoader throttling for now
+    public static final boolean CUSTOM_EXECUTOR = false;
     public static final boolean THROTTLE = false;
     public static final int THROTTLE_DELAY = 5000; // 5s
     // causes videos not to load in EpisodesByDate/MoviesBy(Year|Genre)
@@ -166,23 +166,28 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
     }
 
     // cf. https://github.com/nova-video-player/aos-AVP/issues/141
-    // limit to 1 thread for less epileptic visual effect and a queue of 5200 = 100 years of 52 weeks
-    // Note that now it is handled by androidx and should be "bug free" --> remove this hack for now
-    // For ref sake currently cursorLoader executor by default is ThreadPoolExecutor(5, 128, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10), tocheck)
-    private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(5, 128, 10, TimeUnit.SECONDS,
-            new LinkedBlockingQueue<Runnable>());
+    // For ref sake currently ModernAsyncTask default cursorLoader executor is ThreadPoolExecutor(5, 128, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10), tocheck)
+    // In the past used to be ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(5200));
+
+    // history of changes
+    //private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(5200));
+    //private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(5, 128, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(5200));
+    //private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(5, 128, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+    private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(5, 128, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10));
 
     public VideoLoader(Context context) {
         super(context);
-        // self introspection to use another Executor than AsyncTaskLoader which has 128 threads but a total queue of 10... cf. https://github.com/nova-video-player/aos-AVP/issues/141
-        try {
-            Field f = AsyncTaskLoader.class.getDeclaredField("mExecutor");
-            f.setAccessible(true);
-            f.set(this, videoLoaderExecutor);
-        }  catch (NoSuchFieldException e) {
-            Log.w(TAG, "VideoLoader caught NoSuchFieldException ", e);
-        } catch (IllegalAccessException e) {
-            Log.w(TAG, "VideoLoader caught IllegalAccessException ", e);
+        // self introspection to use another Executor than AsyncTaskLoader/ModernAsyncTaskLoader cf. https://github.com/nova-video-player/aos-AVP/issues/141
+        if (CUSTOM_EXECUTOR) {
+            try {
+                Field f = AsyncTaskLoader.class.getDeclaredField("mExecutor");
+                f.setAccessible(true);
+                f.set(this, videoLoaderExecutor);
+            } catch (NoSuchFieldException e) {
+                Log.w(TAG, "VideoLoader caught NoSuchFieldException ", e);
+            } catch (IllegalAccessException e) {
+                Log.w(TAG, "VideoLoader caught IllegalAccessException ", e);
+            }
         }
     }
 
