@@ -2,15 +2,18 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.3.1'
+        //classpath 'app.brant:amazonappstorepublisher:0.1.0'
+        classpath 'com.github.BrantApps.gradle-amazon-app-store-publisher:amazonappstorepublisher:master-SNAPSHOT'
     }
 }
 
 plugins {
     id "com.github.triplet.play" version "3.7.0"
-    id "app.brant.amazonappstorepublisher" version "0.1.0"
+    //id "app.brant.amazonappstorepublisher" version "0.1.0"
 }
 
 def keystorePropertiesFile = rootProject.file("keystore.properties");
@@ -28,6 +31,7 @@ allprojects {
         mavenLocal()
         maven { url 'https://jitpack.io' }
     }
+    apply plugin: 'app.brant.amazonappstorepublisher'
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
@@ -126,8 +130,8 @@ android {
         // below version tracks the one from F-Droid or universal package when generated with ./gradlew -Puniversal
         // this is overridden when using split apk and normal split apk generation or oneapk amazon generation
         // amazon apk is generated with ./gradlew -Poneapk
-        versionName = '6.1.1'
-        versionCode = 601001
+        versionName = '6.1.2'
+        versionCode = 601002
         if (! project.hasProperty("universal")) {
             // override versionName and versionCode to get it dependent on the date
             versionName = versionName + '-' + getFormattedDate()
