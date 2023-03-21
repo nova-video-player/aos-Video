@@ -312,10 +312,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         log.debug("onResume");
         super.onResume();
         // be sure activity is not null and static variable does not refer to a destroyed one
-        if (mActivity == null) {
-            mActivity = getActivity();
-            log.warn("onResume: mActivity was null and now is it true? " + (mActivity == null));
-        }
+        mActivity = getActivity();
+        if (mActivity == null) log.warn("onResume: mActivity is null!");
         mOverlay.resume();
         updateBackground();
 
@@ -473,10 +471,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     public void onPause() {
         super.onPause();
         mOverlay.pause();
-        if (mActivity == null) {
-            mActivity = getActivity();
-            log.warn("onPause: mActivity was null and now is it true? " + (mActivity == null));
-        }
+        mActivity = getActivity();
+        if (mActivity == null) log.warn("onPause: mActivity is null!");
         try {
             log.debug("onPause: unregisterReceiver mUpdateReceiver and mExternalStorageReceiver");
             mActivity.unregisterReceiver(mExternalStorageReceiver);
@@ -1138,10 +1134,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (mActivity == null) {
-            mActivity = getActivity();
-            log.warn("onCreateLoader: mActivity was null and now is it true? " + (mActivity == null));
-        }
+        mActivity = getActivity();
+        if (mActivity == null) log.warn("onCreateLoader: mActivity is null!");
         switch (id) {
             case LOADER_ID_WATCHING_UP_NEXT:
                 log.debug("onCreateLoader WATCHING_UP_NEXT");
