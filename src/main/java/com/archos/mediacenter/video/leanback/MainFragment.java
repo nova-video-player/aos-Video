@@ -212,11 +212,18 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     private boolean firstTimeLoad = true;
 
+    private Activity updateActivity(String callingMethod) {
+        mActivity = getActivity();
+        if (mActivity == null) log.warn("updateActivity: " + callingMethod + " -> activity is null!");
+        return mActivity;
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         log.debug("onViewCreated");
         super.onViewCreated(view, savedInstanceState);
         mActivity = getActivity();
+
         mOverlay = new Overlay(this);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
         mSeparateAnimeFromShowMovie = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
@@ -305,7 +312,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         log.debug("onResume");
         super.onResume();
         // be sure activity is not null and static variable does not refer to a destroyed one
-        mActivity = getActivity();
+        if (mActivity == null) {
+            mActivity = getActivity();
+            log.warn("onResume: mActivity was null and now is it true? " + (mActivity == null));
+        }
         mOverlay.resume();
         updateBackground();
 
@@ -463,6 +473,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     public void onPause() {
         super.onPause();
         mOverlay.pause();
+        if (mActivity == null) {
+            mActivity = getActivity();
+            log.warn("onPause: mActivity was null and now is it true? " + (mActivity == null));
+        }
         try {
             log.debug("onPause: unregisterReceiver mUpdateReceiver and mExternalStorageReceiver");
             mActivity.unregisterReceiver(mExternalStorageReceiver);
@@ -473,7 +487,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     }
 
     private void updateBackground() {
-        if (mActivity == null) return; // do not update background when activity has been destroyed
+        if (updateActivity("updateBackground") == null) return; // do not update background when activity has been destroyed
         Resources r = getResources();
         bgMngr = BackgroundManager.getInstance(mActivity);
         if(!bgMngr.isAttached())
@@ -500,10 +514,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     private void loadRows() {
         log.debug("loadRows");
-        if (mActivity == null) {
-            log.debug("loadRows: activity is null do nothing");
-            return;
-        }
+        if (updateActivity("loadRows") == null) return;
+
         // Two different row presenters, one standard for regular cards, one special for the icon items
         ListRowPresenter listRowPresenter = new ListRowPresenter();
         IconItemRowPresenter iconItemRowPresenter = new IconItemRowPresenter();
@@ -624,7 +636,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     }
 
     private void refreshAllBoxes() {
-        if (mActivity == null) return;
+        if (updateActivity("refreshAllBoxes") == null) return;
         refreshAllMoviesBox();
         refreshAllCollectionsBox();
         refreshAllTvshowsBox();
@@ -651,6 +663,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         @Override
         protected Bitmap doInBackground(Void... params) {
             Bitmap iconBitmap;
+            if (mActivity == null) log.warn("buildAllMoviesBoxTask: mActivity is null!");
             if (mSeparateAnimeFromShowMovie) iconBitmap = new AllFilmsIconBuilder(mActivity).buildNewBitmap();
             else iconBitmap = new AllMoviesIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
@@ -682,6 +695,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         @Override
         protected Bitmap doInBackground(Void... params) {
             Bitmap iconBitmap;
+            if (mActivity == null) log.warn("buildAllCollectionsBoxTask: mActivity is null!");
             if (mSeparateAnimeFromShowMovie) iconBitmap = new CollectionsIconBuilder(mActivity).buildNewBitmap();
             else iconBitmap = new CollectionsMoviesIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
@@ -713,6 +727,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private static class buildAllAnimeCollectionsBoxTask extends AsyncTask<Void, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(Void... params) {
+            if (mActivity == null) log.warn("buildAllAnimeCollectionsBoxTask: mActivity is null!");
             Bitmap iconBitmap = new AnimeCollectionsIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
         }
@@ -742,6 +757,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private static class buildAllAnimesBoxTask extends AsyncTask<Void, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(Void... params) {
+            if (mActivity == null) log.warn("buildAllAnimesBoxTask: mActivity is null!");
             Bitmap iconBitmap = new AllAnimesIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
         }
@@ -771,6 +787,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private static class buildAllAnimeShowsBoxTask extends AsyncTask<Void, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(Void... params) {
+            if (mActivity == null) log.warn("buildAllAnimeShowsBoxTask: mActivity is null!");
             Bitmap iconBitmap = new AllAnimeShowsIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
         }
@@ -801,6 +818,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         @Override
         protected Bitmap doInBackground(Void... params) {
             Bitmap iconBitmap;
+            if (mActivity == null) log.warn("buildAllTvshowsBoxTask: mActivity is null!");
             if (mSeparateAnimeFromShowMovie) iconBitmap = new AllTvshowNoAmimeIconBuilder(mActivity).buildNewBitmap();
             else iconBitmap = new AllTvshowsIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
@@ -1120,6 +1138,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        if (mActivity == null) {
+            mActivity = getActivity();
+            log.warn("onCreateLoader: mActivity was null and now is it true? " + (mActivity == null));
+        }
         switch (id) {
             case LOADER_ID_WATCHING_UP_NEXT:
                 log.debug("onCreateLoader WATCHING_UP_NEXT");
@@ -1167,7 +1189,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        if (mActivity == null) return;
+        if (updateActivity("onLoadFinished") == null) return;
         boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking() || AutoScrapeService.isScraping() || ImportState.VIDEO.isInitialImport();
         log.debug("onLoadFinished: cursor id=" + cursorLoader.getId() + ", scanningOnGoing=" + scanningOnGoing);
         switch (cursorLoader.getId()) {
@@ -1362,11 +1384,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     public class MainViewClickedListener extends VideoViewClickedListener {
 
-        final private Activity mActivity;
+        final private Activity vActivity;
 
         public MainViewClickedListener(Activity activity) {
             super(activity);
-            mActivity = activity;
+            vActivity = activity;
         }
 
         @Override
@@ -1376,72 +1398,72 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 Box box = (Box)item;
                 switch (box.getBoxId()) {
                     case ALL_MOVIES:
-                        mActivity.startActivity(new Intent(mActivity, AllMoviesGridActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, AllMoviesGridActivity.class));
                         break;
                     case MOVIES_BY_ALPHA:
-                        mActivity.startActivity(new Intent(mActivity, MoviesByAlphaActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, MoviesByAlphaActivity.class));
                         break;
                     case MOVIES_BY_GENRE:
-                        mActivity.startActivity(new Intent(mActivity, MoviesByGenreActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, MoviesByGenreActivity.class));
                         break;
                     case MOVIES_BY_RATING:
-                        mActivity.startActivity(new Intent(mActivity, MoviesByRatingActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, MoviesByRatingActivity.class));
                         break;
                     case MOVIES_BY_YEAR:
-                        mActivity.startActivity(new Intent(mActivity, MoviesByYearActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, MoviesByYearActivity.class));
                         break;
                     case ALL_ANIMES:
-                        mActivity.startActivity(new Intent(mActivity, AllAnimesGridActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, AllAnimesGridActivity.class));
                         break;
                     case ANIMES_BY_GENRE:
-                        mActivity.startActivity(new Intent(mActivity, AnimesByGenreActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, AnimesByGenreActivity.class));
                         break;
                     case ANIMES_BY_YEAR:
-                        mActivity.startActivity(new Intent(mActivity, AnimesByYearActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, AnimesByYearActivity.class));
                         break;
                     case ALL_ANIMESHOWS:
-                        mActivity.startActivity(new Intent(mActivity, AllAnimeShowsGridActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, AllAnimeShowsGridActivity.class));
                         break;
                     case VIDEOS_BY_LISTS:
-                        mActivity.startActivity(new Intent(mActivity, VideosByListActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, VideosByListActivity.class));
                         break;
                     case FOLDERS:
-                        mActivity.startActivity(new Intent(mActivity, LocalListingActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, LocalListingActivity.class));
                         break;
                     case SDCARD:
                     case USB:
                     case OTHER:
-                        Intent i = new Intent(mActivity, ExtStorageListingActivity.class);
+                        Intent i = new Intent(vActivity, ExtStorageListingActivity.class);
                         i.putExtra(ExtStorageListingActivity.MOUNT_POINT, box.getPath());
                         i.putExtra(ExtStorageListingActivity.STORAGE_NAME, box.getName());
-                        mActivity.startActivity(i);
+                        vActivity.startActivity(i);
                         break;
                     case NETWORK:
-                        mActivity.startActivity(new Intent(mActivity, NetworkRootActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, NetworkRootActivity.class));
                         break;
                     case NON_SCRAPED_VIDEOS:
-                        mActivity.startActivity(new Intent(mActivity, NonScrapedVideosActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, NonScrapedVideosActivity.class));
                         break;
                     case ALL_TVSHOWS:
-                        mActivity.startActivity(new Intent(mActivity, AllTvshowsGridActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, AllTvshowsGridActivity.class));
                         break;
                     case TVSHOWS_BY_ALPHA:
-                        mActivity.startActivity(new Intent(mActivity, TvshowsByAlphaActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, TvshowsByAlphaActivity.class));
                         break;
                     case TVSHOWS_BY_GENRE:
-                        mActivity.startActivity(new Intent(mActivity, TvshowsByGenreActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, TvshowsByGenreActivity.class));
                         break;
                     case TVSHOWS_BY_RATING:
-                        mActivity.startActivity(new Intent(mActivity, TvshowsByRatingActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, TvshowsByRatingActivity.class));
                         break;
                     case EPISODES_BY_DATE:
-                        mActivity.startActivity(new Intent(mActivity, EpisodesByDateActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, EpisodesByDateActivity.class));
                         break;
                     case COLLECTIONS:
-                        mActivity.startActivity(new Intent(mActivity, AllCollectionsGridActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, AllCollectionsGridActivity.class));
                         break;
                     case ANIME_COLLECTIONS:
-                        mActivity.startActivity(new Intent(mActivity, AllAnimeCollectionsGridActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, AllAnimeCollectionsGridActivity.class));
                         break;
                 }
             }
@@ -1449,28 +1471,28 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 Icon icon = (Icon)item;
                 switch (icon.getId()) {
                     case PREFERENCES:
-                        if (mActivity instanceof MainActivityLeanback)
-                            ((MainActivityLeanback)mActivity).startPreferencesActivity(); // I know this is ugly (and i'm ashamed...)
+                        if (vActivity instanceof MainActivityLeanback)
+                            ((MainActivityLeanback)vActivity).startPreferencesActivity(); // I know this is ugly (and i'm ashamed...)
                         else
                             throw new IllegalStateException("Sorry developer, this ugly code can work with a MainActivityLeanback only for now!");
                         break;
                     case PRIVATE_MODE:
-                        if (!PrivateMode.isActive() && PrivateMode.canShowDialog(mActivity))
-                            PrivateMode.showDialog(mActivity);
+                        if (!PrivateMode.isActive() && PrivateMode.canShowDialog(vActivity))
+                            PrivateMode.showDialog(vActivity);
                         PrivateMode.toggle();
                         mPrefs.edit().putBoolean(PREF_PRIVATE_MODE, PrivateMode.isActive()).apply();
                         updatePrivateMode(icon);
                         break;
                     case LEGACY_UI:
-                        new DensityTweak(mActivity)
+                        new DensityTweak(vActivity)
                                 .temporaryRestoreDefaultDensity();
-                        mActivity.startActivity(new Intent(mActivity, MainActivity.class));
+                        vActivity.startActivity(new Intent(vActivity, MainActivity.class));
                         break;
                     case HELP_FAQ:
-                        WebUtils.openWebLink(mActivity,getString(R.string.faq_url));
+                        WebUtils.openWebLink(vActivity,getString(R.string.faq_url));
                         break;
                     case SPONSOR:
-                        WebUtils.openWebLink(mActivity,getString(R.string.sponsor_url));
+                        WebUtils.openWebLink(vActivity,getString(R.string.sponsor_url));
                         break;
                 }
             }
