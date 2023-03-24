@@ -37,8 +37,11 @@ public class VideosSelectionLoader extends MoviesLoader {
     // In the past used to be ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(5200));
     // i.e. limit to 1 thread for less epileptic visual effect and a queue of 5200 = 100 years of 52 weeks
 
-    private final static Executor loaderExecutor = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS,
-            new LinkedBlockingQueue<Runnable>(5200));
+    //private final static Executor loaderExecutor = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS,
+    //        new LinkedBlockingQueue<Runnable>(5200));
+    //private final static Executor loaderExecutor = new ThreadPoolExecutor(1, 100, 20, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(256));
+    private final static Executor loaderExecutor = new ThreadPoolExecutor(1, 4, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(256));
+
 
     public VideosSelectionLoader(Context context, String listOfIds, String SortOrder) {
         super(context, true);
