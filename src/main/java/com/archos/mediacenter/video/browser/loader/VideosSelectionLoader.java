@@ -20,7 +20,7 @@ public class VideosSelectionLoader extends MoviesLoader {
 
     private static final String TAG = "VideosSelectionLoader";
 
-    public static final boolean CUSTOM_EXECUTOR = true;
+    public static final boolean CUSTOM_EXECUTOR = false;
     public static final boolean THROTTLE = false;
     public static final int THROTTLE_DELAY = 5000; // 5s
 
@@ -40,12 +40,12 @@ public class VideosSelectionLoader extends MoviesLoader {
     //private final static Executor loaderExecutor = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS,
     //        new LinkedBlockingQueue<Runnable>(5200));
     //private final static Executor loaderExecutor = new ThreadPoolExecutor(1, 100, 20, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(256));
-    private final static Executor loaderExecutor = new ThreadPoolExecutor(1, 4, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(256));
-
+    //private final static Executor loaderExecutor = new ThreadPoolExecutor(1, 4, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(256));
 
     public VideosSelectionLoader(Context context, String listOfIds, String SortOrder) {
         super(context, true);
         // self introspection to use another Executor than AsyncTaskLoader which has 128 threads but a total queue of 10... cf. https://github.com/nova-video-player/aos-AVP/issues/141
+        /*
         if (CUSTOM_EXECUTOR) {
             try {
                 Field f = AsyncTaskLoader.class.getDeclaredField("mExecutor");
@@ -57,6 +57,7 @@ public class VideosSelectionLoader extends MoviesLoader {
                 Log.w(TAG, "VideoLoader caught IllegalAccessException ", e);
             }
         }
+         */
         if (THROTTLE) setUpdateThrottle(THROTTLE_DELAY);
         mListOfIds = listOfIds;
         mSortOrder = SortOrder;
