@@ -210,6 +210,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     private static Activity mActivity;
 
+    private static boolean wasInPause = false;
+
     private boolean firstTimeLoad = true;
 
     private Activity updateActivity(String callingMethod) {
@@ -471,6 +473,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     public void onPause() {
         super.onPause();
         mOverlay.pause();
+        wasInPause = true;
         mActivity = getActivity();
         if (mActivity == null) log.warn("onPause: mActivity is null!");
         try {
@@ -543,7 +546,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         boolean showByRating = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_BY_RATING, VideoPreferencesCommon.SHOW_BY_RATING_DEFAULT);
 
         mMoviesRowsAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
-        buildAllMoviesBox(false);
+        buildAllMoviesBox(wasInPause);
         mMoviesRowsAdapter.add(mAllMoviesBox);
         //mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_ALPHA, getString(R.string.movies_by_alpha), R.drawable.alpha_banner));
         mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_GENRE, getString(R.string.movies_by_genre), R.drawable.genres_banner));
@@ -551,11 +554,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_RATING, getString(R.string.movies_by_rating), R.drawable.ratings_banner));
         mMoviesRowsAdapter.add(new Box(Box.ID.MOVIES_BY_YEAR, getString(R.string.movies_by_year), R.drawable.years_banner_2023));
         mMovieRow = new ListRow(ROW_ID_MOVIES, new HeaderItem(getString(R.string.movies)), mMoviesRowsAdapter);
-        buildAllCollectionsBox(false);
+        buildAllCollectionsBox(wasInPause);
         mMoviesRowsAdapter.add(mAllCollectionsBox);
 
         mTvshowRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
-        buildAllTvshowsBox(false);
+        buildAllTvshowsBox(wasInPause);
         mTvshowRowAdapter.add(mAllTvshowsBox);
         //tvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_ALPHA, getString(R.string.tvshows_by_alpha), R.drawable.alpha_banner));
         mTvshowRowAdapter.add(new Box(Box.ID.TVSHOWS_BY_GENRE, getString(R.string.tvshows_by_genre), R.drawable.genres_banner));
@@ -566,15 +569,18 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         mAnimeRowAdapter = new ArrayObjectAdapter(new BoxItemPresenter());
         mAnimeRow = new ListRow(ROW_ID_ANIMES, new HeaderItem(getString(R.string.animes)), mAnimeRowAdapter);
-        buildAllAnimesBox(false);
+        buildAllAnimesBox(wasInPause);
         mAnimeRowAdapter.add(mAllAnimesBox);
         mAnimeRowAdapter.add(new Box(Box.ID.ANIMES_BY_GENRE, getString(R.string.animes_by_genre), R.drawable.genres_banner));
         mAnimeRowAdapter.add(new Box(Box.ID.ANIMES_BY_YEAR, getString(R.string.animes_by_year), R.drawable.years_banner_2023));
-        buildAllAnimeShowsBox(false);
+        buildAllAnimeShowsBox(wasInPause);
         mAnimeRowAdapter.add(mAllAnimeShowsBox);
 
-        buildAllAnimeCollectionsBox(false);
+        buildAllAnimeCollectionsBox(wasInPause);
         mAnimeRowAdapter.add(mAllAnimeCollectionsBox);
+
+        wasInPause = false;
+
 
         // initialize adapters even the ones not used but do not launch the loaders yet for performance considerations
 
