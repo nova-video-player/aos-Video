@@ -660,7 +660,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         @Override
         protected Bitmap doInBackground(Void... params) {
             Bitmap iconBitmap;
-            if (mActivity == null) log.warn("buildAllMoviesBoxTask: mActivity is null!");
+            if (mActivity == null) {
+                log.warn("buildAllMoviesBoxTask: mActivity is null!");
+                return null;
+            }
             if (mSeparateAnimeFromShowMovie) iconBitmap = new AllFilmsIconBuilder(mActivity).buildNewBitmap();
             else iconBitmap = new AllMoviesIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
@@ -692,7 +695,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         @Override
         protected Bitmap doInBackground(Void... params) {
             Bitmap iconBitmap;
-            if (mActivity == null) log.warn("buildAllCollectionsBoxTask: mActivity is null!");
+            if (mActivity == null) {
+                log.warn("buildAllCollectionsBoxTask: mActivity is null!");
+                return null;
+            }
             if (mSeparateAnimeFromShowMovie) iconBitmap = new CollectionsIconBuilder(mActivity).buildNewBitmap();
             else iconBitmap = new CollectionsMoviesIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
@@ -724,7 +730,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private static class buildAllAnimeCollectionsBoxTask extends AsyncTask<Void, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(Void... params) {
-            if (mActivity == null) log.warn("buildAllAnimeCollectionsBoxTask: mActivity is null!");
+            if (mActivity == null) {
+                log.warn("buildAllAnimeCollectionsBoxTask: mActivity is null!");
+                return null;
+            }
             Bitmap iconBitmap = new AnimeCollectionsIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
         }
@@ -754,7 +763,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private static class buildAllAnimesBoxTask extends AsyncTask<Void, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(Void... params) {
-            if (mActivity == null) log.warn("buildAllAnimesBoxTask: mActivity is null!");
+            if (mActivity == null) {
+                log.warn("buildAllAnimesBoxTask: mActivity is null!");
+                return null;
+            }
             Bitmap iconBitmap = new AllAnimesIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
         }
@@ -784,7 +796,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private static class buildAllAnimeShowsBoxTask extends AsyncTask<Void, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(Void... params) {
-            if (mActivity == null) log.warn("buildAllAnimeShowsBoxTask: mActivity is null!");
+            if (mActivity == null) {
+                log.warn("buildAllAnimeShowsBoxTask: mActivity is null!");
+                return null;
+            }
             Bitmap iconBitmap = new AllAnimeShowsIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
         }
@@ -815,7 +830,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         @Override
         protected Bitmap doInBackground(Void... params) {
             Bitmap iconBitmap;
-            if (mActivity == null) log.warn("buildAllTvshowsBoxTask: mActivity is null!");
+            if (mActivity == null) {
+                log.warn("buildAllTvshowsBoxTask: mActivity is null!");
+                return null;
+            }
             if (mSeparateAnimeFromShowMovie) iconBitmap = new AllTvshowNoAmimeIconBuilder(mActivity).buildNewBitmap();
             else iconBitmap = new AllTvshowsIconBuilder(mActivity).buildNewBitmap();
             return iconBitmap;
