@@ -269,7 +269,7 @@
         <item quantity="other"><xliff:g id="count">%d</xliff:g> 集</item>
     </plurals>
     <plurals name="Nseasons">
-        <item quantity="other">第 <xliff:g id="count">%d</xliff:g> 季</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> 季</item>
     </plurals>
     <!-- Media Center -->
     <string name="mediacenterlabel">媒体中心</string>
