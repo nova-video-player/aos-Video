@@ -473,7 +473,15 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     public void onPause() {
         super.onPause();
         mOverlay.pause();
+
+        // be sure to reload loaders and iconBoxes in onResume after an onPause
         wasInPause = true;
+        if (mShowLastAddedRow) restartLastAddedLoader = true;
+        if (mShowLastPlayedRow) restartLastPlayedLoader = true;
+        if (mShowLastPlayedRow) restartMoviesLoader = true;
+        if (mShowTvshowsRow) restartTvshowsLoader = true;
+        if (mShowAnimesRow) restartAnimesLoader = true;
+
         mActivity = getActivity();
         if (mActivity == null) log.warn("onPause: mActivity is null!");
         try {
