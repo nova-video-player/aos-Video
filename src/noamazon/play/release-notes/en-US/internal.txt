@@ -1,5 +1,5 @@
 - Add webdav network share support
 - Add network shortcuts support for all network shares
 - Enhance webdav stabillity
+- Be sure to process year provided in movie files to increase scrape accuracy
 - Fix all videos icon boxes not getting updated on AndroidTV
-- Fix loss of video database content after exiting/re-entering the app on AndroidTV
