@@ -130,8 +130,8 @@ android {
         // below version tracks the one from F-Droid or universal package when generated with ./gradlew -Puniversal
         // this is overridden when using split apk and normal split apk generation or oneapk amazon generation
         // amazon apk is generated with ./gradlew -Poneapk
-        versionName = '6.1.3'
-        versionCode = 601003
+        versionName = '6.1.4'
+        versionCode = 601004
         if (! project.hasProperty("universal")) {
             // override versionName and versionCode to get it dependent on the date
             versionName = versionName + '-' + getFormattedDate()
