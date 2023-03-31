@@ -174,9 +174,9 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
     //private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(5, 128, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(5200));
     //private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(5, 128, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
     //private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(5, 128, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10));
-    //private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(5200));
+    private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(5200));
     //private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(1, 100, 20, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(256));
-    private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(1, 4, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(256));
+    //private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(1, 4, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(256));
 
     public VideoLoader(Context context) {
         super(context);
