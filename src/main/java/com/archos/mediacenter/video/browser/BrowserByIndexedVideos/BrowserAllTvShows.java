@@ -41,6 +41,7 @@ import com.archos.mediacenter.video.browser.adapters.AllTvShowsAdapter;
 import com.archos.mediacenter.video.browser.adapters.PresenterAdapterByCursor;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
+import com.archos.mediacenter.video.browser.loader.VideoLoader;
 import com.archos.mediacenter.video.browser.presenter.TvshowDetailedPresenter;
 import com.archos.mediacenter.video.browser.presenter.TvshowGridPresenter;
 import com.archos.mediacenter.video.browser.presenter.TvshowGridShortPresenter;
@@ -372,9 +373,7 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		return new AllTvshowsLoader(getContext(), mSortOrder, true).getV4CursorLoader(false, mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
+		return new AllTvshowsLoader(getContext(), mSortOrder, true, VideoLoader.GRIDVIDEO_THROTTLE, VideoLoader.GRIDVIDEO_THROTTLE_DELAY).getV4CursorLoader(false, mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
 	}
-
-
 
 }

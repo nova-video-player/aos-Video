@@ -96,6 +96,7 @@ import com.archos.mediacenter.video.browser.loader.EpisodesLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.browser.loader.NextEpisodeLoader;
 import com.archos.mediacenter.video.browser.loader.TvshowLoader;
+import com.archos.mediacenter.video.browser.loader.VideoLoader;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.info.MultipleVideoLoader;
 import com.archos.mediacenter.video.info.SortByFavoriteSources;
@@ -2020,7 +2021,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 String sortOrder = prefs.getString(AllMoviesGridFragment.SORT_PARAM_KEY, MoviesLoader.DEFAULT_SORT);
                 boolean showWatched = prefs.getBoolean(AllMoviesGridFragment.SHOW_WATCHED_KEY, true);
-                loader = new MoviesLoader(getActivity(), sortOrder, showWatched, true);
+                loader = new MoviesLoader(getActivity(), sortOrder, showWatched, true, VideoLoader.GRIDVIDEO_THROTTLE, VideoLoader.GRIDVIDEO_THROTTLE_DELAY);
             }
             else if (mVideo instanceof Episode) {
                 EpisodeTags tags = (EpisodeTags)mVideo.getFullScraperTags(getActivity());

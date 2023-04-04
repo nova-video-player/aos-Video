@@ -47,7 +47,7 @@ public class AllAnimesLoader extends VideoLoader {
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
         mGroupByOnlineId = groupByOnlineId;
-        if (VideoLoader.THROTTLE) setUpdateThrottle(VideoLoader.THROTTLE_DELAY);
+        if (VideoLoader.ALLVIDEO_THROTTLE) setUpdateThrottle(VideoLoader.ALLVIDEO_THROTTLE_DELAY);
         init();
     }
 
