@@ -66,7 +66,6 @@ import com.archos.mediacenter.video.browser.loader.LastAddedLoader;
 import com.archos.mediacenter.video.browser.loader.LastPlayedLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.browser.loader.NonScrapedVideosCountLoader;
-import com.archos.mediacenter.video.browser.loader.VideoLoader;
 import com.archos.mediacenter.video.browser.loader.WatchingUpNextLoader;
 import com.archos.mediacenter.video.leanback.adapter.object.Box;
 import com.archos.mediacenter.video.leanback.adapter.object.EmptyView;
@@ -1183,29 +1182,29 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             case LOADER_ID_ALL_MOVIES:
                 log.debug("onCreateLoader ALL_MOVIES");
                 if (mSeparateAnimeFromShowMovie) {
-                    if (args == null) return new FilmsLoader(mActivity, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
-                    else return new FilmsLoader(mActivity, args.getString("sort"), true, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+                    if (args == null) return new FilmsLoader(mActivity, true);
+                    else return new FilmsLoader(mActivity, args.getString("sort"), true, true);
                 } else {
-                    if (args == null) return new MoviesLoader(mActivity, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
-                    else return new MoviesLoader(mActivity, args.getString("sort"), true, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+                    if (args == null) return new MoviesLoader(mActivity, true);
+                    else return new MoviesLoader(mActivity, args.getString("sort"), true, true);
                 }
             case LOADER_ID_ALL_TV_SHOWS:
                 log.debug("onCreateLoader ALL_TV_SHOWS");
                 if (mSeparateAnimeFromShowMovie) {
-                    if (args == null) return new AllTvshowsNoAnimeLoader(mActivity, TvshowSortOrderEntries.DEFAULT_SORT, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
-                    else return new AllTvshowsNoAnimeLoader(mActivity, args.getString("sort"), true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+                    if (args == null) return new AllTvshowsNoAnimeLoader(mActivity);
+                    else return new AllTvshowsNoAnimeLoader(mActivity, args.getString("sort"), true);
                 } else {
-                    if (args == null) return new AllTvshowsLoader(mActivity, TvshowSortOrderEntries.DEFAULT_SORT, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
-                    else return new AllTvshowsLoader(mActivity, args.getString("sort"), true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+                    if (args == null) return new AllTvshowsLoader(mActivity);
+                    else return new AllTvshowsLoader(mActivity, args.getString("sort"), true);
                 }
             case LOADER_ID_ALL_ANIMES:
                 log.debug("onCreateLoader ALL_ANIMES");
                 if (mSeparateAnimeFromShowMovie) {
-                    if (args == null) return new AnimesNShowsLoader(mActivity, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
-                    else return new AnimesNShowsLoader(mActivity, args.getString("sort"), true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+                    if (args == null) return new AnimesNShowsLoader(mActivity);
+                    else return new AnimesNShowsLoader(mActivity, args.getString("sort"), true);
                 } else {
                     if (args == null) return new AnimesLoader(mActivity, true);
-                    else return new AnimesLoader(mActivity, args.getString("sort"), true, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+                    else return new AnimesLoader(mActivity, args.getString("sort"), true, true);
                 }
             case LOADER_ID_NON_SCRAPED_VIDEOS_COUNT:
                 log.debug("onCreateLoader NON_SCRAPED");

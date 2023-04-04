@@ -320,11 +320,12 @@ public class ChannelManager {
             if (MainFragment.FEATURE_WATCH_UP_NEXT) mChannels.get(mWatchingUpNext).setLoader(new WatchingUpNextLoader(mContext));
             mChannels.get(mRecentlyAdded).setLoader(new LastAddedLoader(mContext));
             mChannels.get(mRecentlyPlayed).setLoader(new LastPlayedLoader(mContext));
-            mChannels.get(mAllMovies).setLoader(new MoviesLoader(mContext, allMoviesSortOrder, true, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
-            mChannels.get(mAllTvShows).setLoader(new AllTvshowsLoader(mContext, allTvShowsSortOrder, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
+            mChannels.get(mAllMovies).setLoader(new MoviesLoader(mContext, allMoviesSortOrder, true, true));
+            mChannels.get(mAllTvShows).setLoader(new AllTvshowsLoader(mContext, allTvShowsSortOrder, true));
+            // TODO MARC to check
             if  (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT))
-                mChannels.get(mAllAnimes).setLoader(new AnimesNShowsLoader(mContext, allAnimesSortOrder, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
-            else mChannels.get(mAllAnimes).setLoader(new AnimesLoader(mContext, allAnimesSortOrder, true, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
+                mChannels.get(mAllAnimes).setLoader(new AnimesNShowsLoader(mContext, allAnimesSortOrder, true));
+            else mChannels.get(mAllAnimes).setLoader(new AnimesLoader(mContext, allAnimesSortOrder, true, true));
 
             for(ChannelData channel : mChannels.values()) {
                 if (channel.getListVideoIds() != null)

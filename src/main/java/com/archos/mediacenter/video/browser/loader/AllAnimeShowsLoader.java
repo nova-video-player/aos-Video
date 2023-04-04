@@ -49,7 +49,7 @@ public class AllAnimeShowsLoader extends VideoLoader {
         mContext = context;
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
-        if (VideoLoader.ALLVIDEO_THROTTLE) setUpdateThrottle(VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+        if (VideoLoader.THROTTLE) setUpdateThrottle(VideoLoader.THROTTLE_DELAY);
         init();
     }
 

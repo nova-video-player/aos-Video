@@ -30,20 +30,15 @@ public class MoviesLoader extends VideoLoader {
     private boolean mShowWatched;
 
     public MoviesLoader(Context context, boolean groupbyOnlineId) {
-        this(context, DEFAULT_SORT, true, groupbyOnlineId, false, 0);
+        this(context, DEFAULT_SORT, true, groupbyOnlineId);
     }
 
-    public MoviesLoader(Context context, boolean groupbyOnlineId, boolean applyThrottleDelay, int throttleDelay) {
-        this(context, DEFAULT_SORT, true, groupbyOnlineId, applyThrottleDelay, throttleDelay);
-    }
-
-    public MoviesLoader(Context context, String SortOrder, boolean showWatched, boolean groupByOnlineId, boolean applyThrottleDelay, int throttleDelay) {
+    public MoviesLoader(Context context, String SortOrder, boolean showWatched, boolean groupByOnlineId) {
         super(context);
         mGroupByOnlineId = groupByOnlineId;
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
         init();
-        if (applyThrottleDelay) setUpdateThrottle(throttleDelay);
     }
 
     @Override

@@ -44,7 +44,8 @@ import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsNoAnimeLoader;
-import com.archos.mediacenter.video.browser.loader.VideoLoader;
+import com.archos.mediacenter.video.browser.loader.FilmsLoader;
+import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.DisplayMode;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
@@ -302,12 +303,12 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
         if (id == 0) {
             if (args == null) {
                 if (mSeparateAnimeFromShowMovie)
-                    return new AllTvshowsNoAnimeLoader(getActivity(), VideoLoader.GRIDVIDEO_THROTTLE, VideoLoader.GRIDVIDEO_THROTTLE_DELAY);
-                else return new AllTvshowsLoader(getActivity(), VideoLoader.GRIDVIDEO_THROTTLE, VideoLoader.GRIDVIDEO_THROTTLE_DELAY);
+                    return new AllTvshowsNoAnimeLoader(getActivity());
+                else return new AllTvshowsLoader(getActivity());
             } else {
                 if (mSeparateAnimeFromShowMovie)
-                    return new AllTvshowsNoAnimeLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"), VideoLoader.GRIDVIDEO_THROTTLE, VideoLoader.GRIDVIDEO_THROTTLE_DELAY);
-                else return new AllTvshowsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"), VideoLoader.GRIDVIDEO_THROTTLE, VideoLoader.GRIDVIDEO_THROTTLE_DELAY);
+                    return new AllTvshowsNoAnimeLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"));
+                else return new AllTvshowsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"));
             }
         }
         else return null;

@@ -201,7 +201,7 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         log.debug("onCreateLoader id=", id);
         if (id == -1) {
-            // List of categories with video ids per category
+            // List of categories
             return getSubsetLoader(getActivity());
         } else {
             // One of the row

@@ -72,7 +72,6 @@ import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.EpisodesLoader;
 import com.archos.mediacenter.video.browser.loader.SeasonsLoader;
 import com.archos.mediacenter.video.browser.loader.TvshowLoader;
-import com.archos.mediacenter.video.browser.loader.VideoLoader;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
@@ -675,7 +674,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 String sortOrder = prefs.getString(AllTvshowsGridFragment.SORT_PARAM_KEY, TvshowSortOrderEntries.DEFAULT_SORT);
                 boolean showWatched = prefs.getBoolean(AllTvshowsGridFragment.SHOW_WATCHED_KEY, true);
-                loader = new AllTvshowsLoader(getActivity(), sortOrder, showWatched, VideoLoader.GRIDVIDEO_THROTTLE, VideoLoader.GRIDVIDEO_THROTTLE_DELAY);
+                loader = new AllTvshowsLoader(getActivity(), sortOrder, showWatched);
             }
             if (loader != null) {
                 // Using a CursorLoader but outside of the LoaderManager : need to make sure the Looper is ready

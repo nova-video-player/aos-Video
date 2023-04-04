@@ -43,23 +43,15 @@ public class AllTvshowsLoader extends VideoLoader {
      * @param context
      */
     public AllTvshowsLoader(Context context) {
-        this(context, TvshowSortOrderEntries.DEFAULT_SORT, true, false, 0);
+        this(context, TvshowSortOrderEntries.DEFAULT_SORT, true);
     }
 
-    public AllTvshowsLoader(Context context, boolean applyThrottleDelay, int throttleDelay) {
-        this(context, TvshowSortOrderEntries.DEFAULT_SORT, true, applyThrottleDelay, throttleDelay);
-    }
-
-    public AllTvshowsLoader(Context context, boolean groupbyOnlineId, boolean applyThrottleDelay, int throttleDelay) {
-        this(context, TvshowSortOrderEntries.DEFAULT_SORT, true, applyThrottleDelay, throttleDelay);
-    }
-
-    public AllTvshowsLoader(Context context, String SortOrder, boolean showWatched, boolean applyThrottleDelay, int throttleDelay) {
+    public AllTvshowsLoader(Context context, String SortOrder, boolean showWatched) {
         super(context);
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
         mContext = context;
-        if (applyThrottleDelay) setUpdateThrottle(throttleDelay);
+        if (VideoLoader.THROTTLE) setUpdateThrottle(VideoLoader.THROTTLE_DELAY);
         init();
     }
 
