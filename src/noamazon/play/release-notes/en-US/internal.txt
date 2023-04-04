@@ -1,4 +1,5 @@
 - Add webdav network share support
+- Add tx3g (mov_text) subtitles support
 - Add network shortcuts support for all network shares
 - Enhance webdav stabillity
 - Be sure to process year provided in movie files to increase scrape accuracy
