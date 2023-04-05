@@ -212,7 +212,7 @@ public class NetworkListingFragment extends ListingFragment {
                         ShortcutDb.STATIC.removeShortcut(getActivity(), mUri);
                         NetworkScanner.scanVideos(getActivity(), mUri);
                     }
-                }).setNegativeButton(getNegativeForAskForIndexing(), null).show();
+                }).setNegativeButton(getNegativeForAskForIndexing(), null).show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus();
     }
 
     /** Remove current Uri from the shortcut list */
