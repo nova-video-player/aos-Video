@@ -31,14 +31,14 @@ public class AllVideosLoader extends VideoLoader {
 
     public AllVideosLoader(Context context) {
         super(context);
-        if (VideoLoader.THROTTLE) setUpdateThrottle(VideoLoader.THROTTLE_DELAY);
+        if (VideoLoader.ALLVIDEO_THROTTLE) setUpdateThrottle(VideoLoader.ALLVIDEO_THROTTLE_DELAY);
         init();
     }
 
     public AllVideosLoader(Context context, String sortOrder) {
         super(context);
         mSortOrder = sortOrder;
-        if (VideoLoader.THROTTLE) setUpdateThrottle(VideoLoader.THROTTLE_DELAY);
+        if (VideoLoader.ALLVIDEO_THROTTLE) setUpdateThrottle(VideoLoader.ALLVIDEO_THROTTLE_DELAY);
         init();
     }
 

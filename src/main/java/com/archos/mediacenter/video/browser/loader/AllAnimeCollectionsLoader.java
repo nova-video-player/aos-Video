@@ -59,7 +59,7 @@ public class AllAnimeCollectionsLoader extends VideoLoader {
             Log.d(TAG, "getSelection " + getSelection());
             Log.d(TAG, "getSortOrder " + getSortOrder());
         }
-        if (VideoLoader.THROTTLE) setUpdateThrottle(VideoLoader.THROTTLE_DELAY);
+        if (VideoLoader.ALLVIDEO_THROTTLE) setUpdateThrottle(VideoLoader.ALLVIDEO_THROTTLE_DELAY);
         init();
     }
 

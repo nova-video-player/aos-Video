@@ -46,10 +46,9 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
-import com.archos.mediacenter.video.browser.loader.FilmsByRatingLoader;
 import com.archos.mediacenter.video.browser.loader.FilmsLoader;
-import com.archos.mediacenter.video.browser.loader.MoviesByRatingLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
+import com.archos.mediacenter.video.browser.loader.VideoLoader;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.DisplayMode;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
@@ -315,12 +314,12 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         if (id == 0) {
             if (args == null) {
                 if (mSeparateAnimeFromShowMovie)
-                    return new FilmsLoader(getActivity(), true);
-                else return new MoviesLoader(getActivity(), true);
+                    return new FilmsLoader(getActivity(), true, VideoLoader.GRIDVIDEO_THROTTLE, VideoLoader.GRIDVIDEO_THROTTLE_DELAY);
+                else return new MoviesLoader(getActivity(), true, VideoLoader.GRIDVIDEO_THROTTLE, VideoLoader.GRIDVIDEO_THROTTLE_DELAY);
             } else {
                 if (mSeparateAnimeFromShowMovie)
-                    return new FilmsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"), true);
-                else return new MoviesLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"), true);
+                    return new FilmsLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"), true, VideoLoader.GRIDVIDEO_THROTTLE, VideoLoader.GRIDVIDEO_THROTTLE_DELAY);
+                else return new MoviesLoader(getActivity(), VideoStore.Video.VideoColumns.NOVA_PINNED + " DESC, " + args.getString("sort"), args.getBoolean("showWatched"), true, VideoLoader.GRIDVIDEO_THROTTLE, VideoLoader.GRIDVIDEO_THROTTLE_DELAY);
             }
         }
         else return null;

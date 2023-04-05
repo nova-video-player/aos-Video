@@ -31,17 +31,23 @@ public class AnimesLoader extends VideoLoader {
     private static Context mContext;
 
     public AnimesLoader(Context context, boolean groupbyOnlineId) {
-        this(context, DEFAULT_SORT, true, groupbyOnlineId);
+        this(context, DEFAULT_SORT, true, groupbyOnlineId, false, 0);
     }
 
-    public AnimesLoader(Context context, String SortOrder, boolean showWatched, boolean groupByOnlineId) {
+    public AnimesLoader(Context context, boolean groupbyOnlineId, boolean applyThrottleDelay, int throttleDelay) {
+        this(context, DEFAULT_SORT, true, groupbyOnlineId, applyThrottleDelay, throttleDelay);
+    }
+
+    public AnimesLoader(Context context, String SortOrder, boolean showWatched, boolean groupByOnlineId, boolean applyThrottleDelay, int throttleDelay) {
         super(context);
         mContext = context;
         mGroupByOnlineId = groupByOnlineId;
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
         init();
+        if (applyThrottleDelay) setUpdateThrottle(throttleDelay);
     }
+
     @Override
     protected void init() {
         super.init();

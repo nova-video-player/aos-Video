@@ -23,7 +23,6 @@ import com.archos.mediaprovider.video.VideoStore;
  */
 public class MoviesSelectionLoader extends VideosSelectionLoader {
 
-
     public MoviesSelectionLoader(Context context, String listOfMoviesIds) {
         super(context, listOfMoviesIds);
     }
