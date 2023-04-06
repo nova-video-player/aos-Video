@@ -74,6 +74,7 @@ amazon {
     applicationId = "amzn1.devportal.mobileapp.c59461247b6a4806b4f30cd80076133e"
     pathToApks = [ file("build/outputs/apk/amazon/release/Video-amazon-universal-API_21+-release.apk") ]
     replaceEdit = true
+    replaceApks = true
 }
 
 ext.abiCodes = ['universal': 0, 'armeabi-v7a': 1, 'arm64-v8a': 2, 'x86': 3, 'x86_64': 4]
