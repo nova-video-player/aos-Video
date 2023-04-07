@@ -286,9 +286,12 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                                     uriToBuild = "smb";
                                     break;
                                 case 4:
-                                    uriToBuild = "webdav";
+                                    uriToBuild = "smbj";
                                     break;
                                 case 5:
+                                    uriToBuild = "webdav";
+                                    break;
+                                case 6:
                                     uriToBuild = "webdavs";
                                     break;
                                 default:

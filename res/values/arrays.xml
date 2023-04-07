@@ -245,6 +245,7 @@
         <item>SFTP</item>
         <item>FTPS</item>
         <item>SMB</item>
+        <item>SMBJ</item>
         <item>WebDAV</item>
         <item>WebDAVS</item>
     </string-array>

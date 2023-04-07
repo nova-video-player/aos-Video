@@ -1154,6 +1154,7 @@
                 <data android:scheme="file" />
                 <data android:scheme="webdav" />
                 <data android:scheme="webdavs" />
+                <data android:scheme="smbj" />
             </intent-filter>
             <!-- Starts incremental local storage import -->
             <intent-filter>
@@ -1173,6 +1174,7 @@
                 <data android:scheme="content" />
                 <data android:scheme="webdav" />
                 <data android:scheme="webdavs" />
+                <data android:scheme="smbj" />
             </intent-filter>
             <!-- Triggers metadata update -->
             <intent-filter>
@@ -1186,6 +1188,7 @@
                 <data android:scheme="content" />
                 <data android:scheme="webdav" />
                 <data android:scheme="webdavs" />
+                <data android:scheme="smbj" />
             </intent-filter>
         </receiver>
 
@@ -1358,6 +1361,7 @@
                 <data android:scheme="smb" />
                 <data android:scheme="webdav" />
                 <data android:scheme="webdavs" />
+                <data android:scheme="smbj" />
             </intent-filter>
             <intent-filter>
                 <action android:name="archos.media.intent.action.VIDEO_SCANNER_SCAN_FINISHED" />
@@ -1371,6 +1375,7 @@
                 <data android:scheme="smb" />
                 <data android:scheme="webdav" />
                 <data android:scheme="webdavs" />
+                <data android:scheme="smbj" />
             </intent-filter>
         </receiver>
 
