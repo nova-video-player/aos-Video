@@ -50,8 +50,9 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
     // categories by *ByFragment
     public static final boolean VIDEOSELECTION_THROTTLE = true;
     public static final int VIDEOSELECTION_THROTTLE_DELAY = 600000; // 10m
-    // for *ByLoader used by *ByFragment (EpisodesByDate/MoviesBy(Year|Genre))
-    public static final boolean VIDEOBY_THROTTLE = true;
+    // for *ByLoader used by *ByFragment (EpisodesByDate/MoviesBy(Year|Genre)) used for categories
+    // note cannot be true for now otherwise *ByFragment are empty
+    public static final boolean VIDEOBY_THROTTLE = false;
     public static final int VIDEOBY_THROTTLE_DELAY = 600000; // 10m
     // for all All*GridFragment and BrowserAll* and *Fragment
     public static final boolean GRIDVIDEO_THROTTLE = true;
