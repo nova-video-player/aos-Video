@@ -45,6 +45,7 @@ import com.archos.filecorelibrary.FileUtilsQ;
 import com.archos.filecorelibrary.jcifs.JcifsUtils;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.filecorelibrary.samba.SambaDiscovery;
+import com.archos.filecorelibrary.smbj.SmbjUtils;
 import com.archos.filecorelibrary.webdav.WebdavUtils;
 import com.archos.mediacenter.utils.AppState;
 import com.archos.mediacenter.utils.trakt.Trakt;
@@ -151,6 +152,7 @@ public class CustomApplication extends Application {
 
     private static JcifsUtils jcifsUtils = null;
     private static WebdavUtils webdavUtils = null;
+    private static SmbjUtils smbjUtils = null;
     private static FileUtilsQ fileUtilsQ = null;
 
     private static Context mContext = null;
@@ -242,6 +244,7 @@ public class CustomApplication extends Application {
             if (mContext == null) log.warn("onCreate: mContext null!!!");
             if (jcifsUtils == null) jcifsUtils = JcifsUtils.getInstance(mContext);
             if (webdavUtils == null) webdavUtils = WebdavUtils.getInstance(mContext);
+            if (smbjUtils == null) smbjUtils = smbjUtils.getInstance(mContext);
             if (fileUtilsQ == null) fileUtilsQ = FileUtilsQ.getInstance(mContext);
         }).start();
 
