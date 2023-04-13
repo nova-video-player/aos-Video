@@ -1566,6 +1566,10 @@
             android:theme="@style/MyLeanbackTheme" />
 
         <activity
+            android:name="com.archos.mediacenter.video.leanback.network.smbj.SmbjListingActivity"
+            android:theme="@style/MyLeanbackTheme" />
+
+        <activity
             android:name="com.archos.mediacenter.video.leanback.nonscraped.NonScrapedVideosActivity"
             android:theme="@style/MyLeanbackTheme" />
 

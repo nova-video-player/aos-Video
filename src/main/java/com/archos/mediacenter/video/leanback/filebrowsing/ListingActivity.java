@@ -24,6 +24,7 @@ import android.view.KeyEvent;
 import com.archos.mediacenter.video.leanback.SingleFragmentActivity;
 import com.archos.mediacenter.video.leanback.network.ftp.FtpListingActivity;
 import com.archos.mediacenter.video.leanback.network.smb.SmbListingActivity;
+import com.archos.mediacenter.video.leanback.network.smbj.SmbjListingActivity;
 import com.archos.mediacenter.video.leanback.network.upnp.UpnpListingActivity;
 import com.archos.mediacenter.video.leanback.network.webdav.WebdavListingActivity;
 
@@ -88,6 +89,9 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
         }
         else if ("webdavs".equals(scheme)) {
             return WebdavListingActivity.class;
+        }
+        else if (scheme.contains("smbj")) {
+            return SmbjListingActivity.class;
         }
         else if (scheme!=null && scheme.contains("ftp")) { // ftp, sftp, ftps
             return FtpListingActivity.class;
