@@ -1,3 +1,5 @@
+- Add webdav write support
+- Add smbj SMB2+ implementation as smbj network shortcuts
 - Add webdav network share support
 - Add tx3g (mov_text) subtitles support
 - Add network shortcuts support for all network shares
