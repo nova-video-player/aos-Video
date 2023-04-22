@@ -73,4 +73,20 @@
             android:action="android.intent.action.VIEW"
             android:data="https://github.com/UweTrottmann/tmdb-java" />
     </PreferenceScreen>
+    <PreferenceScreen
+        android:summary="Apache License, Version 2.0"
+        android:title="smbj"
+        app:iconSpaceReserved="false">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/hierynomus/smbj" />
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:summary="Apache License, Version 2.0"
+        android:title="sardine-android"
+        app:iconSpaceReserved="false">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/thegrizzlylabs/sardine-android" />
+    </PreferenceScreen>
 </PreferenceScreen>
