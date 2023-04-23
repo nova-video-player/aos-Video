@@ -622,6 +622,8 @@
     <string name="network_thumbnails">Miniatures des stockages distants</string>
     <string name="network_thumbnails_summary">Créer les miniatures des stockages distants</string>
     <string name="network_bookmarks_summary">Sauvegarde et lit les points de reprise et marque-pages sur le réseau lorsque cela est possible</string>
+    <string name="share_folders_smbj">Utiliser une implémentation SMB plus rapide (SMB2+)</string>
+    <string name="share_folders_smbj_summary">Active un débit SMB plus rapide, mais limite la prise en charge à un protocole supérieur à la version 2.</string>
     <string name="share_folders_smbv2">Activer le support SMBv2</string>
     <string name="share_folders_smbv2_summary">Activer la prise en charge du protocole SMB version 2.</string>
     <string name="share_folders_smb_resolv">Ordre de résolution SMB</string>

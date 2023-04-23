@@ -100,6 +100,7 @@
     <string name="not_watched_movies_format">Nieobejrzane - %d</string>
     <string name="not_watched_animes_format">Nieobejrzane - %d</string>
     <string name="no_movie_watched">Żaden film nie został obejrzany</string>
+    <string name="all_movies_watched">Wszystkie filmy obejrzane</string>
     <string name="movies_by_alpha">Filmy alfabetycznie</string>
     <string name="movies_by_genre">Filmy według gatunku</string>
     <string name="movies_by_rating">Filmy według ocen</string>
