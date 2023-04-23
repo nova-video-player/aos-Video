@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.filebrowsing;
 
+import static com.archos.filecorelibrary.smbj.SmbjUtils.isSMBjEnabled;
+
 import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -79,7 +81,8 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
             return LocalListingActivity.class;
         }
         else if ("smb".equals(scheme)) {
-            return SmbListingActivity.class;
+            if (isSMBjEnabled()) return SmbjListingActivity.class;
+            else return SmbListingActivity.class;
         }
         else if ("upnp".equals(scheme)) {
             return UpnpListingActivity.class;
@@ -90,7 +93,7 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
         else if ("webdavs".equals(scheme)) {
             return WebdavListingActivity.class;
         }
-        else if (scheme.contains("smbj")) {
+        else if ("smbj".equals(scheme)) {
             return SmbjListingActivity.class;
         }
         else if (scheme!=null && scheme.contains("ftp")) { // ftp, sftp, ftps
