@@ -1,5 +1,6 @@
+- Add an option to use smbj instead of jcifs-ng (not compatible with SMB1) for higher SMB throughput
+- Add smbj network shortcuts support as another SMB2+ implementation
 - Add webdav write support
-- Add smbj SMB2+ implementation as smbj network shortcuts
 - Add webdav network share support
 - Add tx3g (mov_text) subtitles support
 - Add network shortcuts support for all network shares
