@@ -48,7 +48,7 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
     public static final boolean VIDEO_THROTTLE = false;
     public static final int VIDEO_THROTTLE_DELAY = 2000; // 2s
     // categories by *ByFragment
-    public static final boolean VIDEOSELECTION_THROTTLE = true;
+    public static final boolean VIDEOSELECTION_THROTTLE = false;
     public static final int VIDEOSELECTION_THROTTLE_DELAY = 600000; // 10m
     // for *ByLoader used by *ByFragment (EpisodesByDate/MoviesBy(Year|Genre)) used for categories
     // note cannot be true for now otherwise *ByFragment are empty
@@ -58,10 +58,10 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
     public static final boolean GRIDVIDEO_THROTTLE = true;
     public static final int GRIDVIDEO_THROTTLE_DELAY = 60000; // 1m
     // for MainFragment line
-    public static final boolean ALLVIDEO_THROTTLE = true;
+    public static final boolean ALLVIDEO_THROTTLE = false;
     public static final int ALLVIDEO_THROTTLE_DELAY = 5000; // 5s
     // for channels
-    public static final boolean CHANNEL_THROTTLE = true;
+    public static final boolean CHANNEL_THROTTLE = false;
     public static final int CHANNEL_THROTTLE_DELAY = 60000; // 1m
 
     // cf. https://github.com/nova-video-player/aos-AVP/issues/141
