@@ -283,15 +283,18 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                                     uriToBuild = "ftps";
                                     break;
                                 case 3:
-                                    uriToBuild = "smb";
+                                    uriToBuild = "sshj";
                                     break;
                                 case 4:
-                                    uriToBuild = "smbj";
+                                    uriToBuild = "smb";
                                     break;
                                 case 5:
-                                    uriToBuild = "webdav";
+                                    uriToBuild = "smbj";
                                     break;
                                 case 6:
+                                    uriToBuild = "webdav";
+                                    break;
+                                case 7:
                                     uriToBuild = "webdavs";
                                     break;
                                 default:

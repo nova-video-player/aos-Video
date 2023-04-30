@@ -244,6 +244,7 @@
         <item>FTP</item>
         <item>SFTP</item>
         <item>FTPS</item>
+        <item>SSHJ</item>
         <item>SMB</item>
         <item>SMBJ</item>
         <item>WebDAV</item>

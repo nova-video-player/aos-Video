@@ -46,6 +46,7 @@ import com.archos.filecorelibrary.jcifs.JcifsUtils;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.filecorelibrary.samba.SambaDiscovery;
 import com.archos.filecorelibrary.smbj.SmbjUtils;
+import com.archos.filecorelibrary.sshj.SshjUtils;
 import com.archos.filecorelibrary.webdav.WebdavUtils;
 import com.archos.mediacenter.utils.AppState;
 import com.archos.mediacenter.utils.trakt.Trakt;
@@ -65,10 +66,13 @@ import io.sentry.Sentry;
 import io.sentry.SentryLevel;
 import io.sentry.android.core.SentryAndroid;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyChangeListener;
+import java.security.Provider;
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -153,6 +157,7 @@ public class CustomApplication extends Application {
     private static JcifsUtils jcifsUtils = null;
     private static WebdavUtils webdavUtils = null;
     private static SmbjUtils smbjUtils = null;
+    private static SshjUtils sshjUtils = null;
     private static FileUtilsQ fileUtilsQ = null;
 
     private static Context mContext = null;
@@ -238,6 +243,8 @@ public class CustomApplication extends Application {
         // must be done after context is available
         log = LoggerFactory.getLogger(CustomApplication.class);
 
+        setupBouncyCastle();
+
         // must be done before sambaDiscovery otherwise no context for jcifs
         new Thread(() -> {
             // create instance of jcifsUtils in order to pass context and initial preference
@@ -245,6 +252,7 @@ public class CustomApplication extends Application {
             if (jcifsUtils == null) jcifsUtils = JcifsUtils.getInstance(mContext);
             if (webdavUtils == null) webdavUtils = WebdavUtils.getInstance(mContext);
             if (smbjUtils == null) smbjUtils = smbjUtils.getInstance(mContext);
+            if (sshjUtils == null) sshjUtils = sshjUtils.getInstance(mContext);
             if (fileUtilsQ == null) fileUtilsQ = FileUtilsQ.getInstance(mContext);
         }).start();
 
@@ -605,5 +613,22 @@ public class CustomApplication extends Application {
                 }
             })
             .show();
+    }
+
+    private void setupBouncyCastle() {
+        final Provider provider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME);
+        if (provider == null) {
+            return;
+        }
+        if (provider.getClass().equals(BouncyCastleProvider.class)) {
+            // BC with same package name, shouldn't happen in real life.
+            return;
+        }
+        // Android registers its own BC provider. As it might be outdated and might not include
+        // all needed ciphers, we substitute it with a known BC bundled in the app.
+        // Android's BC has its package rewritten to "com.android.org.bouncycastle" and because
+        // of that it's possible to have another BC implementation loaded in VM.
+        Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
+        Security.insertProviderAt(new BouncyCastleProvider(), 1);
     }
 }

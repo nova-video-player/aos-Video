@@ -1156,6 +1156,7 @@
                 <data android:scheme="webdav" />
                 <data android:scheme="webdavs" />
                 <data android:scheme="smbj" />
+                <data android:scheme="sshj" />
             </intent-filter>
             <!-- Starts incremental local storage import -->
             <intent-filter>
@@ -1176,6 +1177,8 @@
                 <data android:scheme="webdav" />
                 <data android:scheme="webdavs" />
                 <data android:scheme="smbj" />
+                <data android:scheme="sshj" />
+
             </intent-filter>
             <!-- Triggers metadata update -->
             <intent-filter>
@@ -1190,6 +1193,8 @@
                 <data android:scheme="webdav" />
                 <data android:scheme="webdavs" />
                 <data android:scheme="smbj" />
+                <data android:scheme="sshj" />
+
             </intent-filter>
         </receiver>
 
@@ -1363,6 +1368,8 @@
                 <data android:scheme="webdav" />
                 <data android:scheme="webdavs" />
                 <data android:scheme="smbj" />
+                <data android:scheme="sshj" />
+
             </intent-filter>
             <intent-filter>
                 <action android:name="archos.media.intent.action.VIDEO_SCANNER_SCAN_FINISHED" />
@@ -1377,6 +1384,8 @@
                 <data android:scheme="webdav" />
                 <data android:scheme="webdavs" />
                 <data android:scheme="smbj" />
+                <data android:scheme="sshj" />
+
             </intent-filter>
         </receiver>
 
@@ -1568,6 +1577,10 @@
 
         <activity
             android:name="com.archos.mediacenter.video.leanback.network.smbj.SmbjListingActivity"
+            android:theme="@style/MyLeanbackTheme" />
+
+        <activity
+            android:name="com.archos.mediacenter.video.leanback.network.sshj.SshjListingActivity"
             android:theme="@style/MyLeanbackTheme" />
 
         <activity
