@@ -64,7 +64,7 @@ import com.archos.mediacenter.video.leanback.presenter.SmbSharePresenter;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediaprovider.video.NetworkScannerReceiver;
 
-import org.fourthline.cling.model.meta.Device;
+import org.jupnp.model.meta.Device;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

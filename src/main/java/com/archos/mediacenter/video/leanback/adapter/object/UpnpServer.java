@@ -15,7 +15,7 @@
 package com.archos.mediacenter.video.leanback.adapter.object;
 
 
-import org.fourthline.cling.model.meta.Device;
+import org.jupnp.model.meta.Device;
 
 /**
  * Created by vapillon on 10/04/15.
