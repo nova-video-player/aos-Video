@@ -622,6 +622,8 @@
     <string name="network_thumbnails">Remote Thumbnails erstellen</string>
     <string name="network_thumbnails_summary">Erstellen Sie Thumbnails von Remote-Videos, wenn kein Poster zur Verfügung steht</string>
     <string name="network_bookmarks_summary">Wenn möglich Fortsetzungspunkte und Lesezeichen auf Netzwerkfreigaben speichern</string>
+    <string name="share_folders_smbj">Schnellere SMB-Implementierung verwenden (SMB2+)</string>
+    <string name="share_folders_smbj_summary">Schnelleren SMB-Durchsatz aktivieren, aber begrenzt die Unterstützung auf Protokoll oberhalb der Version 2.</string>
     <string name="share_folders_smbv2">SMBv2 Unterstützung aktivieren</string>
     <string name="share_folders_smbv2_summary">Netzwerk-Sharing SMB-Version 2 Protokollunterstützung aktivieren.</string>
     <string name="share_folders_smb_resolv">Reihenfolge SMB Namensauflösung</string>

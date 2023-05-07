@@ -617,6 +617,8 @@
     <string name="network_thumbnails">创建远程缩略图</string>
     <string name="network_thumbnails_summary">在没有海报可用时从远程视频创建缩略图</string>
     <string name="network_bookmarks_summary">尽可能在网络上保存并检查播放进度和位置书签</string>
+    <string name="share_folders_smbj">使用更快的 SMB 实现 (SMB2+)</string>
+    <string name="share_folders_smbj_summary">启用更快的 SMB 吞吐，但将支持限制为SMB 2以上的协议。</string>
     <string name="share_folders_smbv2">启用 SMBv2 支持</string>
     <string name="share_folders_smbv2_summary">启用网络共享 SMB 版本 2 协议支持。</string>
     <string name="share_folders_smb_resolv">SMB 解析器顺序</string>

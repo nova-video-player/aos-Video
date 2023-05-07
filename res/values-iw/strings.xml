@@ -634,6 +634,8 @@
     <string name="network_thumbnails">צור תמונות ממוזערות מרוחקות</string>
     <string name="network_thumbnails_summary">צור תמונות ממוזערות מקבצי וידאו מרוחקים כשאין פוסטר זמין</string>
     <string name="network_bookmarks_summary">שמור ובדוק נקודות המשך וסימניות מיקום ברשת אם מתאפשר</string>
+    <string name="share_folders_smbj">השתמש בישום SMB מהיר יותר (+SMB2)</string>
+    <string name="share_folders_smbj_summary">מאפשר תפוקת SMB מהירה יותר אבל מגביל את התמיכה לפרוטוקול מעל גרסה 2.</string>
     <string name="share_folders_smbv2">אפשר תמיכה ב-SMBv2</string>
     <string name="share_folders_smbv2_summary">אפשר תמיכה בפרוטוקול שיתוף רשת SMB גרסה 2.</string>
     <string name="share_folders_smb_resolv">סדר חיפוש SMB</string>
