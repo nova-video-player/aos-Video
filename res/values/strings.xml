@@ -688,11 +688,11 @@
     <string name="network_thumbnails_summary">Create thumbnails from remote videos when no poster available</string>
     <string name="network_bookmarks_summary">Save and check for resume point and position bookmarks on network when possible</string>
     <string name="share_folders_smbj">Use faster SMB implementation (SMB2+)</string>
-    <string name="share_folders_smbj_summary">Enable faster SMB throughput but limits support to protocol above version 2.</string>
+    <string name="share_folders_smbj_summary">Enable faster SMB throughput but limits support to protocol above version 2</string>
     <string name="share_folders_sshj">Use newer SFTP implementation</string>
-    <string name="share_folders_sshj_summary">Enable new SFTP implementation for SFTP links.</string>
+    <string name="share_folders_sshj_summary">Enable new SFTP implementation for SFTP links</string>
     <string name="share_folders_smbv2">Enable SMBv2 support</string>
-    <string name="share_folders_smbv2_summary">Enable network share SMB version 2 protocol support.</string>
+    <string name="share_folders_smbv2_summary">Enable network share SMB version 2 protocol support</string>
     <string name="share_folders_smb_resolv">SMB resolver order</string>
     <string name="share_folders_smb_resolv_summary">Enable BCAST, DNS (default: DNS, BCAST). Change this if your server fails to resolve or you experience slow SMB.</string>
     <string name="connection_abnormally_long">Connection seems abnormally long. Would you like to reset it?</string>
