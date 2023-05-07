@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.leanback.filebrowsing;
 
 import static com.archos.filecorelibrary.smbj.SmbjUtils.isSMBjEnabled;
+import static com.archos.filecorelibrary.sshj.SshjUtils.isSSHjEnabled;
 
 import androidx.fragment.app.Fragment;
 import android.content.Intent;
@@ -27,6 +28,7 @@ import com.archos.mediacenter.video.leanback.SingleFragmentActivity;
 import com.archos.mediacenter.video.leanback.network.ftp.FtpListingActivity;
 import com.archos.mediacenter.video.leanback.network.smb.SmbListingActivity;
 import com.archos.mediacenter.video.leanback.network.smbj.SmbjListingActivity;
+import com.archos.mediacenter.video.leanback.network.sshj.SshjListingActivity;
 import com.archos.mediacenter.video.leanback.network.upnp.UpnpListingActivity;
 import com.archos.mediacenter.video.leanback.network.webdav.WebdavListingActivity;
 
@@ -95,6 +97,10 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
         }
         else if ("smbj".equals(scheme)) {
             return SmbjListingActivity.class;
+        }
+        else if ("sftp".equals(scheme)) {
+            if (isSSHjEnabled()) return SshjListingActivity.class;
+            else return FtpListingActivity.class;
         }
         else if (scheme!=null && scheme.contains("ftp")) { // ftp, sftp, ftps
             return FtpListingActivity.class;

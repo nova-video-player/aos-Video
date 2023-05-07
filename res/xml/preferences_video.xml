@@ -379,6 +379,13 @@
             android:summary="@string/share_folders_smb_resolv_summary"
             app:iconSpaceReserved="false"/>
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_sshj"
+            android:title="@string/share_folders_sshj"
+            android:summary="@string/share_folders_sshj_summary"
+            app:iconSpaceReserved="false"/>
+
         <PreferenceScreen
             android:summary="@string/samba_settings_summary"
             android:title="@string/samba_settings_title"
