@@ -102,6 +102,9 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
             if (isSSHjEnabled()) return SshjListingActivity.class;
             else return FtpListingActivity.class;
         }
+        else if ("sshj".equals(scheme)) {
+            return SshjListingActivity.class;
+        }
         else if (scheme!=null && scheme.contains("ftp")) { // ftp, sftp, ftps
             return FtpListingActivity.class;
         }
