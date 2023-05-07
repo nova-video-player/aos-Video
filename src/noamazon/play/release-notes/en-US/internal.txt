@@ -1,9 +1,6 @@
-- Add an option to use smbj instead of jcifs-ng (not compatible with SMB1) for higher SMB throughput
-- Add smbj network shortcuts support as another SMB2+ implementation
-- Add webdav write support
-- Add webdav network share support
+- Add new network shares support: sshj (alternate SFTP), smbj (higher throughput SMB2+ implementation), webdav (webdav(s) for http(s))
+- Add an option to use smbj by default instead of jcifs-ng (not SMB1 compatible)
 - Add tx3g (mov_text) subtitles support
-- Add network shortcuts support for all network shares
-- Enhance webdav stabillity
-- Be sure to process year provided in movie files to increase scrape accuracy
-- Fix all videos icon boxes not getting updated on AndroidTV
+- Add network shortcuts support for all network shares protocols
+- Webdav write support
+- Improve scrape accuracy: be sure to process year provided in movie files
