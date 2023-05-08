@@ -49,13 +49,12 @@
 
     <!-- Debug permissions -->
     <logger name="com.archos.mediacenter.video.browser.PermissionChecker" level="DEBUG"/>
-    <logger name="com.archos.filecorelibrary.FileUtils" level="DEBUG"/>
+    <!--<logger name="com.archos.filecorelibrary.FileUtils" level="DEBUG"/>-->
     <!--<logger name="com.archos.filecorelibrary.FileUtilsQ" level="DEBUG"/>-->
 
     <!-- Debug network shares -->
     <logger name="com.archos.filecorelibrary.sshj" level="DEBUG"/>
     <logger name="com.archos.filecorelibrary.smbj" level="DEBUG"/>
-    <logger name="com.archos.filecorelibrary.sshj.SshjUtils" level="TRACE"/>
     <logger name="com.archos.filecorelibrary.webdav" level="DEBUG"/>
     <!--<logger name="com.archos.mediacenter.filecoreextension.upnp2" level="DEBUG"/>-->
     <!--<logger name="com.archos.mediacenter.upnp" level="DEBUG"/>-->
