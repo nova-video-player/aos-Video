@@ -34,77 +34,76 @@
         </rollingPolicy>
     </appender>
 
+    <!-- Debug first activity -->
     <logger name="com.archos.mediacenter.video.browser.MainActivity" level="DEBUG"/>
     <logger name="com.archos.mediacenter.video.browser.MainFragment" level="DEBUG"/>
     <logger name="com.archos.mediacenter.video.leanback.MainFragment" level="DEBUG"/>
     <logger name="com.archos.mediacenter.video.CustomApplication" level="TRACE"/>
 
-    <logger name="com.archos.mediacenter.video.browser.PermissionChecker" level="DEBUG"/>
-
-    <!--<logger name="jcifs.netbios.UdpDiscovery" level="TRACE"/>
-    <logger name="com.archos.filecorelibrary.jcifs" level="DEBUG"/>
-    <logger name="com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser" level="DEBUG"/>
-    <logger name="jcifs.netbios.UdpDiscovery" level="DEBUG"/>
-    <logger name="jcifs.netbios.NameServiceClientImpl" level="TRACE"/>
-    <logger name="jcifs.smb.SmbSessionImpl" level="TRACE"/>
-    <logger name="jcifs.util.transport.Transport" level="TRACE"/>
-    <logger name="jcifs.smb.SmbTransportImpl" level="TRACE"/>
-    <logger name="com.archos.filecorelibrary.samba" level="DEBUG"/>-->
-
+    <!-- Debug player -->
     <logger name="com.archos.mediacenter.video.player.Player" level="DEBUG"/>
-    <!--<logger name="com.archos.mediacenter.video.player.PlayerActivity" level="DEBUG"/>
+    <logger name="com.archos.mediacenter.video.player.PlayerActivity" level="DEBUG"/>
     <logger name="com.archos.mediacenter.video.player.PlayerController" level="DEBUG"/>
     <logger name="com.archos.mediacenter.video.player.PlayerService" level="DEBUG"/>
-    <logger name="com.archos.mediacenter.video.player.MediaButtonService" level="DEBUG"/>-->
+    <logger name="com.archos.mediacenter.video.player.MediaButtonService" level="DEBUG"/>
 
-    <!--<logger name="com.archos.mediacenter.video.leanback.details.VideoDetailsFragment" level="DEBUG"/>-->
-
-    <!--<logger name="com.archos.mediacenter.video.leanback.details" level="DEBUG"/>
-    <logger name="com.archos.mediacenter.video.info" level="DEBUG"/>-->
-
-    <!--<logger name="com.archos.mediascraper.xml" level="DEBUG"/>
-    <logger name="com.archos.mediascraper.themoviedb3" level="DEBUG"/>-->
-
-    <!--<logger name="com.archos.filecorelibrary.FileUtils" level="DEBUG"/>
-    <logger name="com.archos.mediascraper.NfoWriter" level="TRACE"/>
-    <logger name="com.archos.mediascraper.NfoParser" level="DEBUG"/>
-    <logger name="com.archos.mediaprovider.video.NetworkScannerServiceVideo" level="DEBUG"/>-->
-
-    <!--<logger name="com.archos.mediacenter.video.widget.RemoteViewsFactoryAllVideos" level="DEBUG"/>
-    <logger name="com.archos.mediacenter.video.widget.RemoteViewsFactoryBase" level="DEBUG"/>
-    <logger name="com.archos.mediacenter.video.widget.AppWidgetProvider" level="DEBUG"/>-->
-
-    <!--<logger name="com.archos.mediascraper.LocalImages" level="DEBUG"/>
-    <logger name="com.archos.mediacenter.video.browser.Delete" level="DEBUG"/>-->
+    <!-- Debug permissions -->
+    <logger name="com.archos.mediacenter.video.browser.PermissionChecker" level="DEBUG"/>
+    <logger name="com.archos.filecorelibrary.FileUtils" level="DEBUG"/>
     <!--<logger name="com.archos.filecorelibrary.FileUtilsQ" level="DEBUG"/>-->
-    <!--<logger name="com.archos.filecorelibrary.localstorage.LocalStorageFileEditor" level="DEBUG"/>
-    <logger name="com.archos.mediacenter.video.browser.Browser" level="DEBUG"/>
-    <logger name="com.archos.mediacenter.video.browser.Delete" level="DEBUG"/>
-    <logger name="com.archos.mediacenter.video.info.VideoInfoActivityFragment" level="DEBUG"/>
-    <logger name="com.archos.mediacenter.video.leanback.tvshow.SeasonFragment" level="DEBUG"/>
-    <logger name="com.archos.mediacenter.video.leanback.collections.CollectionFragment" level="DEBUG"/>-->
-    <!--<logger name="com.archos.mediacenter.video.leanback.details.VideoDetailsFragment" level="DEBUG"/>
-    <logger name="com.archos.mediacenter.video.leanback.details.VideoActionAdapter" level="DEBUG"/>-->
-    <!--<logger name="com.archos.mediascraper.preprocess.TvShowMatcher" level="DEBUG"/>
-    <logger name="com.archos.mediascraper.themoviedb3.ShowIdEpisodes" level="DEBUG"/>
-    <logger name="com.archos.mediascraper.EpisodeTags" level="DEBUG"/>
-    <logger name="com.archos.mediascraper.ScraperImage" level="DEBUG"/>-->
-    <!--<logger name="com.archos.mediascraper.ShowTags" level="DEBUG"/>-->
 
-    <!--<logger name="com.archos.mediascraper.AutoScrapeService" level="DEBUG"/>-->
+    <!-- Debug network shares -->
+    <logger name="com.archos.filecorelibrary.sshj" level="DEBUG"/>
+    <logger name="com.archos.filecorelibrary.smbj" level="DEBUG"/>
+    <logger name="com.archos.filecorelibrary.sshj.SshjUtils" level="TRACE"/>
+    <logger name="com.archos.filecorelibrary.webdav" level="DEBUG"/>
+    <!--<logger name="com.archos.mediacenter.filecoreextension.upnp2" level="DEBUG"/>-->
+    <!--<logger name="com.archos.mediacenter.upnp" level="DEBUG"/>-->
+    <!--<logger name="com.archos.filecorelibrary.samba.NetworkCredentialsDatabase" level="TRACE"/>-->
+    <!--<logger name="com.archos.mediacenter.video.leanback.network.NetworkServerCredentialsDialog" level="TRACE"/>-->
+
+    <!--<logger name="com.archos.mediacenter.utils.videodb.XmlDb" level="TRACE"/>-->
+
+    <!--<logger name="com.archos.mediaprovider.video.VideoStoreImportReceiver" level="DEBUG"/>-->
+    <!--<logger name="com.archos.mediaprovider.video.VideoStoreImportService" level="DEBUG"/>-->
     <!--<<logger name="com.archos.mediaprovider.video.VideoStoreImportImpl" level="DEBUG"/>-->
-    <!--<logger name="com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserWithShowHeader" level="DEBUG"/>-->
+    <!--<logger name="com.archos.mediaprovider.video.NetworkScannerServiceVideo" level="DEBUG"/>-->
+    <!--<logger name="com.archos.mediascraper.AutoScrapeService" level="DEBUG"/>-->
 
-    <logger name="com.archos.mediaprovider.video.VideoStoreImportReceiver" level="DEBUG"/>
-    <logger name="com.archos.mediaprovider.video.VideoStoreImportService" level="DEBUG"/>
-    <!--<logger name="com.archos.mediaprovider.video.VideoProvider" level="DEBUG"/>-->
+    <!-- Debug: Did not manage to access the file -->
+    <!--<logger name="com.archos.mediacenter.video.info.VideoInfoActivityFragment" level="TRACE"/>-->
+    <!--<logger name="com.archos.mediacenter.video.leanback.details.FileDetailsRowPresenter" level="TRACE"/>-->
+    <!--<logger name="com.archos.mediacenter.video.info.VideoInfoCommonClass" level="TRACE"/>-->
+    <!--<logger name="com.archos.mediacenter.video.utils.VideoMetadata" level="TRACE"/>-->
+    <!--<logger name="com.archos.medialib.AvosMediaMetadataRetriever" level="TRACE"/>-->
+    <!--<logger name="com.archos.medialib.AndroidMediaMetadataRetriever" level="TRACE"/>-->
 
-    <!--<logger name="com.archos.mediacenter.video.widget.WidgetProviderVideo" level="DEBUG"/>-->
+    <!--<logger name="com.archos.medialib.SmbProxy" level="TRACE"/>-->
+    <!--<logger name="com.archos.filecorelibrary.StreamOverHttp" level="TRACE"/>-->
 
-    <!--<logger name="com.archos.mediaprovider.video.NetworkAutoRefresh" level="DEBUG"/>
-    <logger name="com.archos.mediaprovider.video.NetworkScannerUtil" level="DEBUG"/>
-    <logger name="com.archos.mediaprovider.video.NetworkScannerServiceVideo" level="DEBUG"/>
-    <logger name="com.archos.mediaprovider.video.NetworkRefreshJob" level="DEBUG"/>-->
+    <!-- Debug jcifs -->
+    <!--<logger name="jcifs.netbios.UdpDiscovery" level="TRACE"/>-->
+    <!--<logger name="com.archos.filecorelibrary.jcifs" level="DEBUG"/>-->
+    <!--<logger name="com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser" level="DEBUG"/>-->
+    <!--<logger name="jcifs.netbios.UdpDiscovery" level="DEBUG"/>-->
+    <!--<logger name="jcifs.netbios.NameServiceClientImpl" level="TRACE"/>-->
+    <!--<logger name="jcifs.smb.SmbSessionImpl" level="TRACE"/>-->
+    <!--<logger name="jcifs.util.transport.Transport" level="TRACE"/>-->
+    <!--<logger name="jcifs.smb.SmbTransportImpl" level="TRACE"/>-->
+    <!--<logger name="com.archos.filecorelibrary.samba" level="DEBUG"/>-->
+
+    <!-- Debug scraper -->
+    <!--<logger name="com.archos.mediascraper.themoviedb3" level="DEBUG"/>-->
+    <!--<logger name="com.archos.mediascraper.preprocess" level="DEBUG"/>-->
+    <!--<logger name="com.archos.mediascraper.xml" level="DEBUG"/>-->
+    <!--<logger name="com.archos.mediascraper.NfoWriter" level="TRACE"/>-->
+    <!--<logger name="com.archos.mediascraper.NfoParser" level="DEBUG"/>-->
+
+    <!-- Debug auto-scan refresh -->
+    <!--<logger name="com.archos.mediaprovider.video.NetworkAutoRefresh" level="DEBUG"/>-->
+    <!--<logger name="com.archos.mediaprovider.video.NetworkScannerUtil" level="DEBUG"/>-->
+    <!--<logger name="com.archos.mediaprovider.video.NetworkScannerServiceVideo" level="DEBUG"/>-->
+    <!--<logger name="com.archos.mediaprovider.video.NetworkRefreshJob" level="DEBUG"/>-->
 
     <includes>
         <include file="${LOG_DIR}/logback.xml" optional="true" />
