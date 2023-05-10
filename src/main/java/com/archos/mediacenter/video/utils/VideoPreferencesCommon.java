@@ -477,8 +477,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         // disable jcifs-ng options if smbj SMB implementation is selected
         mSmbj.setOnPreferenceChangeListener((preference, newValue) -> {
-            mSmb2.setEnabled(!(boolean)newValue);;
-            mSmbResolver.setEnabled(!(boolean)newValue);
+            mSmb2.setEnabled(!(boolean)newValue);
+            // do not disable SMB resolver since jcifs-ng is used for address resolution even with smbj
+            //mSmbResolver.setEnabled(!(boolean)newValue);
             return true;
         });
 
