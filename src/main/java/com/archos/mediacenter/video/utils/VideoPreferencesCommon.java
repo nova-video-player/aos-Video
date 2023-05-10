@@ -154,6 +154,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     public static final String KEY_SMB2 = "pref_smbv2";
     public static final String KEY_SMB_RESOLV = "pref_smb_resolv";
+    public static final String KEY_SMBJ = "pref_smbj";
 
     public static final boolean SEPARATE_ANIME_MOVIE_SHOW_DEFAULT = true;
     // TODO: disabled until issue #186 is fixed
@@ -226,6 +227,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     private CheckBoxPreference mSmb2 = null;
     private CheckBoxPreference mSmbResolver = null;
+    private CheckBoxPreference mSmbj = null;
 
     final public static int ACTIVITY_RESULT_UI_MODE_CHANGED = 665;
     final public static int ACTIVITY_RESULT_UI_ZOOM_CHANGED = 667;
@@ -361,7 +363,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         }
         if(Integer.parseInt(preferences.getString("force_audio_passthrough_multiple","-1"))>0){ // passthrough is set, reset audio_speed
             // if passthrough is set audio_speed is reset to 1.0f
-            if (DBG) Log.d(TAG, "MARC resetPassthroughPref: audio_speed to 1.0f since passthrough is " + Integer.parseInt(preferences.getString("force_audio_passthrough_multiple","-1")));
+            if (DBG) Log.d(TAG, "resetPassthroughPref: audio_speed to 1.0f since passthrough is " + Integer.parseInt(preferences.getString("force_audio_passthrough_multiple","-1")));
             preferences.edit().putFloat("save_audio_speed_setting_pref_key", 1.0f).apply();
         }
     }
@@ -425,6 +427,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         mSmb2 = (CheckBoxPreference) findPreference(KEY_SMB2);
         mSmbResolver = (CheckBoxPreference) findPreference(KEY_SMB_RESOLV);
+        mSmbj = (CheckBoxPreference) findPreference(KEY_SMBJ);
 
         mScraperCategory = (PreferenceCategory) findPreference(KEY_SCRAPER_CATEGORY);
         mExportManualPreference = findPreference(getString(R.string.nfo_export_manual_prefkey));
@@ -469,6 +472,13 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mSmbResolver.setOnPreferenceChangeListener((preference, newValue) -> {
             Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
             JcifsUtils.notifyPrefChange();
+            return true;
+        });
+
+        // disable jcifs-ng options if smbj SMB implementation is selected
+        mSmbj.setOnPreferenceChangeListener((preference, newValue) -> {
+            mSmb2.setEnabled(!(boolean)newValue);;
+            mSmbResolver.setEnabled(!(boolean)newValue);
             return true;
         });
 
@@ -626,7 +636,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             }
             i++;
         }
-
 
         mSubtitlesDownloadLanguagePreferences = (MultiSelectListPreference) findPreference("languages_list");
         mSubtitlesDownloadLanguagePreferences.setEntries(newEntries);
