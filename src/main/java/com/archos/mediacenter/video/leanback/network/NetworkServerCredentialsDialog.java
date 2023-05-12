@@ -191,9 +191,13 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
                         port = MetaFile2Factory.defaultPortForProtocol(scheme);
                     }
 
-                    final String username = usernameEt.getText().toString();
+                    String username = usernameEt.getText().toString();
                     final String password = passwordEt.getText().toString();
                     final String domain = domainEt.getText().toString();
+
+                    // webdav(s) empty user means anonymous
+                    if (scheme.startsWith("webdav") && username.equals(""))
+                        username = "anonymous";
 
                     // Store new values to preferences
                     mPreferences.edit()
