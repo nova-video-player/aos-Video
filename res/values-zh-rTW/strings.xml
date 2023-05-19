@@ -619,6 +619,8 @@
     <string name="network_bookmarks_summary">盡可能的在網路上儲存並檢查續播進度和位置書籤</string>
     <string name="share_folders_smbj">使用更快的 SMB 執行程序 (SMBv2+)</string>
     <string name="share_folders_smbj_summary">開啟更快的 SMB 流通量，但僅支援 SMBv2 以上的通訊協定 。</string>
+    <string name="share_folders_sshj">使用較新的 SFTP 執行程序</string>
+    <string name="share_folders_sshj_summary">開啟新的 SFTP 執行程序以支援 SFTP 連線</string>
     <string name="share_folders_smbv2">開啟 SMBv2 支援</string>
     <string name="share_folders_smbv2_summary">開啟網路分享 SMB 通訊協定第二版的支援</string>
     <string name="share_folders_smb_resolv">SMB 解析器順序</string>

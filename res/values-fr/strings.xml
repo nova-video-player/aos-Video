@@ -666,6 +666,8 @@
     <string name="sort_by_date_premiered_asc">Trier par date de 1ère diff. (ancien en premier)</string>
     <string name="sort_by_date_aired_desc">Trier par date de 1ère diff. (récent en premier)</string>
     <string name="sort_by_recently_added_episode_desc">Episodes ajoutés récemment en premier</string>
+    <string name="sort_by_size_asc">Trier par taille (croissante)</string>
+    <string name="sort_by_size_desc">Trier par taille (décroissante)</string>
     <string name="dec_choice_title">Choix du décodeur</string>
     <string name="dec_choice_summary">Préférence avancée, peut interférer avec le décodage vidéo.</string>
     <string name="dec_hw_omx">Décodage matériel (IOMX w / swbuf)</string>

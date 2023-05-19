@@ -604,6 +604,8 @@
     <string name="network_bookmarks_summary">Uložit a zkontrolovat pozice obnovení a záložky na síťových připojeních pokud je to možné</string>
     <string name="share_folders_smbj">Použít rychlejší implementaci SMB (SMB2+)</string>
     <string name="share_folders_smbj_summary">Povolí rychlejší a propustnější SMB, ale omezuje podporu protokolu na verzi 2 a vyšší.</string>
+    <string name="share_folders_sshj">Použít novější implementaci SFTP</string>
+    <string name="share_folders_sshj_summary">Povolit novou implementaci SFTP pro SFTP odkazy</string>
     <string name="share_folders_smbv2">Aktivovat podporu pro SMBv2</string>
     <string name="share_folders_smbv2_summary">Povolit podporu síťového protokolu SMB verze 2.</string>
     <string name="share_folders_smb_resolv">Pořadí resolvingu SMB</string>

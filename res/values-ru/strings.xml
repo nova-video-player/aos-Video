@@ -634,6 +634,8 @@
     <string name="network_bookmarks_summary">Сохранять точки возобновления просмотра и позиции закладок по сети, когда доступно</string>
     <string name="share_folders_smbj">Использовать ускоренную реализацию SMB (SMB2+)</string>
     <string name="share_folders_smbj_summary">Включает более быструю пропускную способность SMB, но поддерживает только протокол выше 2 версии.</string>
+    <string name="share_folders_sshj">Использовать новую реализацию SFTP</string>
+    <string name="share_folders_sshj_summary">Включает новую реализацию SFTP для SFTP ссылок</string>
     <string name="share_folders_smbv2">Включить поддержку SMBv2</string>
     <string name="share_folders_smbv2_summary">Включить поддержку протокола SMB версии 2.</string>
     <string name="share_folders_smb_resolv">Порядок использования сервисов имен</string>

@@ -622,6 +622,8 @@
     <string name="network_thumbnails">Crear miniaturas remotas</string>
     <string name="network_thumbnails_summary">Crea miniaturas de vídeos remotos cuando no hay carteles disponibles</string>
     <string name="network_bookmarks_summary">Guardar y comprobar si es posible el punto de reanudación y posición de los marcadores en la red</string>
+    <string name="share_folders_sshj">Usar la nueva implementación de SFTP</string>
+    <string name="share_folders_sshj_summary">Habilita la nueva implementación para enlaces SFTP</string>
     <string name="share_folders_smbv2">Habilitar soporte para SMBv2</string>
     <string name="share_folders_smbv2_summary">Habilitar el soporte para el protocolo de red SMBv2.</string>
     <string name="share_folders_smb_resolv">Orden de resolución SMB</string>
