@@ -1,3 +1,4 @@
+- Add sort video option when browsing by folders
 - Add new network shares support: sshj (alternate SFTP), smbj (higher throughput SMB2+ implementation), webdav (webdav(s) for http(s))
 - Add an option to use smbj by default instead of jcifs-ng (not SMB1 compatible)
 - Add tx3g (mov_text) subtitles support
