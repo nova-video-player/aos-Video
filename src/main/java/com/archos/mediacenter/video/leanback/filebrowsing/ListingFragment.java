@@ -14,9 +14,11 @@
 
 package com.archos.mediacenter.video.leanback.filebrowsing;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.loader.app.LoaderManager;
+
 import android.content.Intent;
 import androidx.loader.content.Loader;
 import android.content.SharedPreferences;
@@ -36,6 +38,7 @@ import androidx.leanback.widget.Row;
 import androidx.leanback.widget.RowPresenter;
 import androidx.leanback.widget.VerticalGridPresenter;
 import androidx.core.app.ActivityOptionsCompat;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,6 +97,29 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
     private boolean mIsRoot;
     private Overlay mOverlay;
 
+    public static final String SORT_PARAM_KEY = ListingFragment.class.getSimpleName() + "_SORT";
+    private int mSortOrderItem;
+
+    // Sort constants
+    protected final static String SORT_BY_NAME_ASC = "name_asc";
+    protected final static String SORT_BY_NAME_DESC = "name_desc";
+    protected final static String SORT_BY_DATE_ASC = "date_asc";
+    protected final static String SORT_BY_DATE_DESC = "date_desc";
+    protected final static String SORT_BY_SIZE_ASC = "size_asc";
+    protected final static String SORT_BY_SIZE_DESC = "size_desc";
+    protected final static List<String> sortOrders = List.of(SORT_BY_NAME_ASC, SORT_BY_NAME_DESC, SORT_BY_DATE_ASC, SORT_BY_DATE_DESC, SORT_BY_SIZE_ASC, SORT_BY_SIZE_DESC);
+    protected final static List<ListingEngine.SortOrder> sortOrdersListingEngine = List.of(
+            ListingEngine.SortOrder.SORT_BY_NAME_ASC,
+            ListingEngine.SortOrder.SORT_BY_NAME_DESC,
+            ListingEngine.SortOrder.SORT_BY_DATE_ASC,
+            ListingEngine.SortOrder.SORT_BY_DATE_DESC,
+            ListingEngine.SortOrder.SORT_BY_SIZE_ASC,
+            ListingEngine.SortOrder.SORT_BY_SIZE_DESC
+    );
+    static final public String DEFAULT_SORT = SORT_BY_NAME_ASC;
+    private String mSortOrder = DEFAULT_SORT;
+    protected static CharSequence[] mSortOrderEntries;
+
     private ArrayObjectAdapter mFilesAdapter;
     private ListingEngine mListingEngine;
     private View mEmptyView;
@@ -131,6 +157,10 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mDisplayMode = readDisplayModePref(mPrefs);
 
+        mSortOrder = mPrefs.getString(SORT_PARAM_KEY, DEFAULT_SORT);
+        mSortOrderItem = sortorder2itemid(mSortOrder);
+        log.debug("onCreate: mSortOrder={} mSortOrderItem={}", mSortOrder, mSortOrderItem);
+
         updateBackground();
 
         setTitle(getArguments().getString(ARG_TITLE));
@@ -147,11 +177,20 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        log.debug("onCreateView " + this + "   " + savedInstanceState);
+        log.debug("onCreateView " + this + " " + savedInstanceState);
         View v = super.onCreateView(inflater, container, savedInstanceState);
+
+        mSortOrderEntries = new CharSequence[]{
+                getResources().getString(R.string.sort_by_name_asc),
+                getResources().getString(R.string.sort_by_name_desc),
+                getResources().getString(R.string.sort_by_date_asc),
+                getResources().getString(R.string.sort_by_date_desc),
+                getResources().getString(R.string.sort_by_size_asc),
+                getResources().getString(R.string.sort_by_size_desc),
+        };
+
         // CAUTION: using a non public viewgroup ID here!
         // May be broken if leanback team changes it!
-
         FrameLayout browseFrame = (FrameLayout) v.findViewById(R.id.browse_grid_dock);
         if (browseFrame != null) {
             LayoutInflater.from(container.getContext()).inflate(R.layout.leanback_emptyview_and_progressview, browseFrame, true);
@@ -185,6 +224,8 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        log.debug("onViewCreated");
+
         super.onViewCreated(view, savedInstanceState);
 
         mOverlay = new Overlay(this);
@@ -201,16 +242,44 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         // set null listener to hide the third orb
         getTitleView().setOnOrb3ClickedListener(null);
         getTitleView().setOnOrb4ClickedListener(null);
+
+        // Set third orb action for sort
+        getTitleView().setOnOrb4Description(getString(R.string.sort_mode));
+        getTitleView().setOrb4IconResId(R.drawable.orb_sort);
+        log.debug("onViewCreated: mSortOrder={} mSortOrderItem={}", mSortOrder, mSortOrderItem);
+
+        getTitleView().setOnOrb4ClickedListener(view1 -> new AlertDialog.Builder(getActivity())
+                .setSingleChoiceItems(mSortOrderEntries, mSortOrderItem, (dialog, which) -> {
+                    log.debug("onViewCreated:onClick mSortOrderItem {} -> {}", mSortOrderItem, which);
+                    if (mSortOrderItem != which) {
+                        mSortOrderItem = which;
+                        mSortOrder = itemid2sortorder(mSortOrderItem);
+                        // Save the sort mode
+                        mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).apply();
+                        Bundle args = new Bundle();
+                        args.putString("sort", mSortOrder);
+                        initGridOrList(); // reinit all mFilesAdapter too
+                        startListing(mUri);
+                        //LoaderManager.getInstance(ListingFragment.this).restartLoader(0, args, ListingFragment.this);
+                    }
+                    dialog.dismiss();
+                })
+                .create().show());
     }
 
     @Override
     public void onDestroyView() {
+        log.debug("onDestroyView");
         mOverlay.destroy();
         super.onDestroyView();
     }
 
     @Override
     public void onDestroy() {
+        log.debug("onDestroy");
+        mPrefs.edit()
+                .putString(SORT_PARAM_KEY, mSortOrder)
+                .apply();
         if (mListingEngine != null) {
             mListingEngine.setListener(null);
             mListingEngine.abort();
@@ -220,6 +289,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
 
     @Override
     public void onResume() {
+        log.debug("onResume");
         super.onResume();
         mOverlay.resume();
         if (mRefreshOnNextResume) {
@@ -232,6 +302,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
 
     @Override
     public void onPause() {
+        log.debug("onPause");
         super.onPause();
         mOverlay.pause();
     }
@@ -366,6 +437,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         // 1 - Get the list of files
         mFileListReady = false;
         mListingEngine = ListingEngineFactoryWithUpnp.getListingEngineForUrl(getActivity(), mUri);
+        mListingEngine.setSortOrder(getSortOrder(mSortOrder));
         mListingEngine.setListener(this);
         setListingEngineOptions(mListingEngine);
         mListingEngine.setListingTimeOut(getListingTimeout()); // 15 seconds timeout
@@ -440,13 +512,13 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         // used by smblistingfragmnet
     }
 
-
     /**
      * Fill the adapter once both the file listing and the DB query are done
      * (both are launched in parallel)
      * This method also handle updates from the DB: file list is not updated, but we update the items with (new) data from the DB
      */
     private void updateAdapterIfReady() {
+        log.debug("updateAdapterIfReady: mFileListReady={}, mDbQueryReady={}", mFileListReady, mDbQueryReady);
         if (mFileListReady && mDbQueryReady) {
             VideoCursorMapper cursorMapper = new VideoCursorMapper();
             cursorMapper.publicBindColumns(mCursor);
@@ -473,6 +545,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
                     existingObjectInAdapter = mFilesAdapter.get(positionInAdapter);
                 }
                 boolean doReplace = areTheseTheSameFile(existingObjectInAdapter, file);
+                log.debug("updateAdapterIfReady: processing {}, existingObjectInAdapter={}", file.getName(), doReplace);
 
                 if (file.isDirectory()){
                     if (!doReplace) {
@@ -513,8 +586,10 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
                     }
                     if (newObject!=null) {
                         if (doReplace) {
+                            log.debug("updateAdapterIfReady: replace " + positionInAdapter);
                             mFilesAdapter.replace(positionInAdapter, newObject);
                         } else {
+                            log.debug("updateAdapterIfReady: remove {} and add {}", positionInAdapter, ((Video)newObject).getName());
                             mFilesAdapter.removeItems(positionInAdapter,1);
                             mFilesAdapter.add(newObject);
                         }
@@ -524,6 +599,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
             }
             //remove items
             if(mFilesAdapter.size()>mListedFiles.size()){
+                log.debug("updateAdapterIfReady: mFilesAdapter.size()={}>mListedFiles.size()={}, remove above", mFilesAdapter.size(), mListedFiles.size());
                 mFilesAdapter.removeItems(mListedFiles.size(), mFilesAdapter.size()-mListedFiles.size());
             }
 
@@ -555,6 +631,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
 
     @Override
     public void onListingStart() {
+        log.debug("onListingStart:");
         // Delay the loading view to have it not show when the loading is quick
         mProgressView.setAlpha(0);
         mProgressView.setVisibility(View.VISIBLE);
@@ -566,6 +643,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
 
     @Override
     public void onListingUpdate(List<? extends MetaFile2> files) {
+        log.debug("onListingUpdate: mFileListReady->true");
         mListedFiles = files;
         mFileListReady = true;
         updateAdapterIfReady();
@@ -573,6 +651,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
 
     @Override
     public void onListingEnd() {
+        log.debug("onListingEnd:");
         mProgressView.setVisibility(View.INVISIBLE);
         if (isEmpty() && (mErrorMessage.getVisibility()!=View.VISIBLE)) { // do not show empty view when there is an error displayed
             mEmptyView.setVisibility(View.VISIBLE);
@@ -626,6 +705,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor c) {
+        log.debug("onLoadFinished: mDbQueryReady->true");
         mCursor = c;
         mDbQueryReady = true;
         updateAdapterIfReady();
@@ -686,5 +766,27 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
             bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.leanback_background));
             bgMngr.setDrawable(new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.leanback_background)));
         }
+    }
+
+    private static String itemid2sortorder(int itemid) {
+        String sortOrder = DEFAULT_SORT;
+        if (itemid >= 0 && itemid < sortOrders.size()) sortOrder = sortOrders.get(itemid);
+        log.debug("itemid2sortorder: sortOrder="+sortOrder);
+        return sortOrder;
+    }
+
+    /**
+     * Returns -1 if given sortOrder can't be found in the menuid list
+     * @param sortOrder
+     * @return
+     */
+    private static int sortorder2itemid(String sortOrder) {
+        return sortOrders.indexOf(sortOrder);
+    }
+
+    protected static ListingEngine.SortOrder getSortOrder(String sortOrder) {
+        final int index = sortOrders.indexOf(sortOrder);
+        if (index <0) return ListingEngine.SortOrder.SORT_BY_NAME_ASC;
+        else return sortOrdersListingEngine.get(index);
     }
 }

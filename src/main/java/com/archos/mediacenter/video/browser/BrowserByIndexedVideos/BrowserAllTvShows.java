@@ -233,6 +233,7 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 		mCursor.moveToPosition(position);
 		return Uri.parse(mCursor.getString(mCursor.getColumnIndex(VideoStore.MediaColumns.DATA)));
 	}
+
 	private static String itemid2sortorder(int itemid) {
 
 		String sortOrder = DEFAULT_SORT;

@@ -735,6 +735,8 @@
     <string name="sort_by_date_premiered_asc">Sort by date premiered (oldest first)</string>
     <string name="sort_by_date_aired_desc">Sort by date aired (newest first)</string>
     <string name="sort_by_recently_added_episode_desc">Recently added episodes first</string>
+    <string name="sort_by_size_asc">Sort by size (smallest first)</string>
+    <string name="sort_by_size_desc">Sort by size (largest first)</string>
 
     <string name="dec_choice_title">Choose decoder</string>
     <string name="dec_choice_summary">Advanced preference, may break video decoding.</string>

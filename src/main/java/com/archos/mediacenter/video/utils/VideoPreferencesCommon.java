@@ -220,6 +220,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mSeparateAnimeMoviePreference = null;
     private CheckBoxPreference mShowAllAnimesRowPreference = null;
     private ListPreference mAnimesSortOrderPreference = null;
+    private ListPreference mDefaultVideoSortOrderPreference = null;
 
     private Handler mHanlder = null;
 

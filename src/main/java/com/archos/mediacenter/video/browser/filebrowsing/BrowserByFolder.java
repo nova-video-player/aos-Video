@@ -27,9 +27,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.AdapterView;
@@ -50,10 +51,12 @@ import com.archos.filecorelibrary.ListingEngine;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.mediacenter.filecoreextension.upnp2.ListingEngineFactoryWithUpnp;
 import com.archos.mediacenter.filecoreextension.upnp2.UpnpFile2;
+import com.archos.mediacenter.utils.ActionBarSubmenu;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.utils.videodb.XmlDb;
 import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.Browser;
 import com.archos.mediacenter.video.browser.BrowserByVideoObjects;
 import com.archos.mediacenter.video.browser.BrowserCategory;
 import com.archos.mediacenter.video.browser.ThumbnailRequesterVideo;
@@ -71,6 +74,9 @@ import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,8 +86,7 @@ import java.util.Observer;
 abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         Observer, LoaderManager.LoaderCallbacks<Cursor>, ListingEngine.Listener, VideoPresenter.ExtendedClickListener {
 
-    private static final String TAG = "BrowserByFolder";
-    private static final boolean DBG = false;
+    private static final Logger log = LoggerFactory.getLogger(BrowserByFolder.class);
 
     private static final int DIALOG_LISTING = 4;
 
@@ -89,6 +94,30 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     public static final String TITLE = "title";
     protected static final String SHORTCUT_SELECTED = "shortcutSelected";
     protected static final String FILTER = "video||application/x-bittorrent";
+
+    // Sort constants
+    protected static final int MENU_ITEM_SORT = 0x2000;
+    protected static final int MENU_ITEM_SORT_MASK = 0xF000;
+
+    protected final static String SORT_BY_NAME_ASC = "name_asc";
+    protected final static String SORT_BY_NAME_DESC = "name_desc";
+    protected final static String SORT_BY_DATE_ASC = "date_asc";
+    protected final static String SORT_BY_DATE_DESC = "date_desc";
+    protected final static String SORT_BY_SIZE_ASC = "size_asc";
+    protected final static String SORT_BY_SIZE_DESC = "size_desc";
+    protected final static List<String> sortOrders = List.of(SORT_BY_NAME_ASC, SORT_BY_NAME_DESC, SORT_BY_DATE_ASC, SORT_BY_DATE_DESC, SORT_BY_SIZE_ASC, SORT_BY_SIZE_DESC);
+    protected final static List<ListingEngine.SortOrder> sortOrdersListingEngine = List.of(
+            ListingEngine.SortOrder.SORT_BY_NAME_ASC,
+            ListingEngine.SortOrder.SORT_BY_NAME_DESC,
+            ListingEngine.SortOrder.SORT_BY_DATE_ASC,
+            ListingEngine.SortOrder.SORT_BY_DATE_DESC,
+            ListingEngine.SortOrder.SORT_BY_SIZE_ASC,
+            ListingEngine.SortOrder.SORT_BY_SIZE_DESC
+    );
+
+    static final public String DEFAULT_SORT = SORT_BY_NAME_ASC;
+    static final String SORT_PARAM_KEY = BrowserByFolder.class.getSimpleName() + "_SORT";
+    private String mSortOrder = DEFAULT_SORT;
 
     /**
      * Synchronization between the CursorLoader (thread) and the FileManagerCore
@@ -99,7 +128,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     public static final int RESULT_FILE_DELETED = 300;
     int mReady = 0;
     protected ListingEngine mListingEngine;
-
 
     protected final Handler mHandler = new Handler() {
         @Override
@@ -112,7 +140,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             }
         }
     };
-
 
     protected List<MetaFile2> mFileList;
     protected List<MetaFile2> mFullFileList;
@@ -128,7 +155,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     private String mTitle;
     protected int mFirstFileIndex;
 
-
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -138,6 +164,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             mTitle = b.getString(TITLE, null);
             mShortcutSelected = b.getBoolean(SHORTCUT_SELECTED);
         }
+        mSortOrder = mPreferences.getString(SORT_PARAM_KEY, DEFAULT_SORT);
         if (mCurrentDirectory == null)
             mCurrentDirectory = getDefaultDirectory();
         mFileList = new ArrayList();
@@ -154,7 +181,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     public void onResume() {
         mIsActive = true;
         super.onResume();
-
         if (mFileList.isEmpty()) {
             listFiles(false);
         } else {
@@ -173,6 +199,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
                 getActivity().onBackPressed();
         }
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -193,13 +220,15 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         if (mDialogListing != null) {
             mDialogListing.dismissAllowingStateLoss();
         }
-
         super.onStop();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mPreferences.edit()
+                .putString(SORT_PARAM_KEY, mSortOrder)
+                .apply();
         if(mListingEngine!=null)
             mListingEngine.abort();
         // close mCursor before destroyLoader
@@ -216,6 +245,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         state.putParcelable(CURRENT_DIRECTORY, mCurrentDirectory);
         state.putString(TITLE, mTitle);
         state.putBoolean(SHORTCUT_SELECTED, mShortcutSelected);
+        state.putString(SORT_PARAM_KEY, mSortOrder);
     }
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -269,6 +299,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         if(mListingEngine != null)
             mListingEngine.abort();
         mListingEngine = ListingEngineFactoryWithUpnp.getListingEngineForUrl(getActivity(), mCurrentDirectory);
+        mListingEngine.setSortOrder(getSortOrder(mSortOrder));
         ArrayList<String>ext = new ArrayList<>(VideoUtils.getSubtitleExtensions());
         ext.add(XmlDb.FILE_EXTENSION);
         mListingEngine.setKeepHiddenFiles(true);
@@ -280,7 +311,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
 
     @Override
     public void onListingStart() {
-
     }
 
     @Override
@@ -375,10 +405,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
      * update data.
      */
     protected void updateVideoDB() {
-
     }
-
-
 
     // The user clicked on an item of the list
     @Override
@@ -413,7 +440,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         return FileExtendedInfo.FileType.File;
     }
 
-
     @Override
     public int getFileAndFolderSize() {
         return mItemList.size();
@@ -423,7 +449,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     public int getFirstFilePosition() {
         return mFirstFileIndex;
     }
-
 
     @Override
     public Uri getRealPathUriFromPosition(int position) {
@@ -437,7 +462,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         else if(obj instanceof Video)
             return super.getFilePath(position);
         return null;
-
     }
 
     @Override
@@ -450,8 +474,8 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         mThumbnailEngine.setThumbnailType(getThumbnailsType());
         mThumbnailRequester = new ThumbnailRequesterVideo(mThumbnailEngine, (ListingAdapter) mBrowserAdapter);
     }
-    public static void setPresenters(Activity activity, CommonPresenter.ExtendedClickListener listener, PresenterAdapterInterface adapterInterface, int viewMode){
 
+    public static void setPresenters(Activity activity, CommonPresenter.ExtendedClickListener listener, PresenterAdapterInterface adapterInterface, int viewMode){
         BrowserByVideoObjects.setPresenters(activity, listener, adapterInterface, viewMode);
         CustomApplication application = (CustomApplication) activity.getApplication();
         if(viewMode==VideoUtils.VIEW_MODE_LIST) {
@@ -459,7 +483,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         }
         else if (viewMode == VideoUtils.VIEW_MODE_GRID_SHORT){
             adapterInterface.setPresenter(MetaFile2.class, new Metafile2GridPresenter(activity));
-
         }
         else if(viewMode==VideoUtils.VIEW_MODE_DETAILS){
             adapterInterface.setPresenter(MetaFile2.class, new Metafile2ListPresenter(activity));
@@ -468,6 +491,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             adapterInterface.setPresenter(MetaFile2.class, new Metafile2GridPresenter(activity));
         }
     }
+
     @Override
     protected void setupAdapter(boolean createNewAdapter) {
         if (createNewAdapter || mBrowserAdapter == null) {
@@ -475,7 +499,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
                     mItemList, mFullFileList) ;
             mBrowserAdapter = mFilesAdapter;
            setPresenters(getActivity(),this,mFilesAdapter, mViewMode);
-
         }
     }
 
@@ -486,12 +509,12 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         try {
             info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         } catch (ClassCastException e) {
-            Log.e(TAG, "bad menuInfo", e);
+            log.error("bad menuInfo", e);
             return;
         }
         // This can be null sometimes, don't crash...
         if (info == null) {
-            Log.e(TAG, "bad menuInfo");
+            log.error("bad menuInfo");
             return;
         }
         Object item = mFilesAdapter.getItem(info.position);
@@ -546,7 +569,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             }
             // Must not close the cursor here, else it fails when recreating the fragment from backstack (i.e. when back from a sub-directory)
 
-
             int positionInAdapter = 0;
             mFirstFileIndex = -1;
             List<String>subList = new ArrayList<>();
@@ -557,7 +579,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
                     mItemList.add(item); // Add a regular folder
                     positionInAdapter++;
                     continue;
-
                 }
                 // not a directory case
                 if (VideoUtils.getSubtitleExtensions().contains(item.getExtension())) {
@@ -573,7 +594,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
                         VideoDbInfo info = XmlDb.extractBasicVideoInfoFromXmlFileName(item.getUri());
                         if (info != null && info.resume > 0) {
                             resumes.put(info.uri, info);
-
                         }
                     }
                 }
@@ -602,7 +622,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
                         else {
                             newObject = file; // Add a regular MetaFile2 object for now, maybe later we'll create a dedicated torrent object?
                         }
-
                     }
                     else {
                         // not adding file for which we have no mimetype
@@ -625,7 +644,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
                         } else {
                             video.setRemoteResumeMs(info.resume);
                         }
-
                     }
                     if (!video.hasSubs()) {
                         for (String sub : subList) {
@@ -638,7 +656,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
                     }
                 }
             }
-
 
             if(mIsFirst) {
                 mIsFirst = false;
@@ -672,7 +689,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
                     VideoDbInfo info = XmlDb.extractBasicVideoInfoFromXmlFileName(item.getUri());
                     if (info!=null && info.resume > 0 ) {
                         resumes.put(info.uri, info);
-
                     }
                 }
             }
@@ -693,11 +709,9 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
                     video.setDuration(info.duration<0?100:info.duration); //percent or complete duration
 
                 }
-
             }
             if(!video.hasSubs()) {
                 for (String sub : subList){
-
                     if(sub.startsWith(item.getNameWithoutExtension())) {
                         video.setHasSubs(true);
                         break;
@@ -705,17 +719,12 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
                 }
             }
         }
-
     }
 
     /**
      * @return the default directory when no one is specified in the intent.
      */
     abstract protected Uri getDefaultDirectory();
-
-
-
-
 
     @SuppressLint("ValidFragment") // XXX
     private class DialogListing extends DialogFragment {
@@ -764,7 +773,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             BrowserCategory category = (BrowserCategory) getParentFragmentManager().findFragmentById(R.id.category);
             category.startContent(f);
         } catch (Exception e) {
-            Log.w(TAG, "enterDirectory: caught exception", e);
+            log.warn("enterDirectory: caught exception", e);
         }
     }
     @Override
@@ -798,6 +807,80 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         } else {
             return FileUtils.getName(mCurrentDirectory);
         }
+    }
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu!=null) {
+            // Add the "sort mode" item
+            MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
+            sortMenuItem.setIcon(R.drawable.ic_menu_sort);
+            sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            mSortModeSubmenu.attachMenuItem(sortMenuItem);
+
+            mSortModeSubmenu.clear();
+            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_asc,MENU_ITEM_SORT+0);
+            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_desc,MENU_ITEM_SORT+1);
+            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_asc,MENU_ITEM_SORT+2);
+            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_desc,MENU_ITEM_SORT+3);
+            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_size_asc,MENU_ITEM_SORT+4);
+            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_size_desc,MENU_ITEM_SORT+5);
+            // Init with the current value
+            int initId = sortorder2itemid(mSortOrder);
+            if (initId==-1) { // not found
+                mSortModeSubmenu.selectSubmenuItem(0);
+            }
+            else {
+                int position = mSortModeSubmenu.getPosition(initId);
+                if (position<0) { // not found
+                    position=0;
+                }
+                mSortModeSubmenu.selectSubmenuItem(position);
+            }
+        }
+    }
+
+    @Override
+    public void onSubmenuItemSelected(ActionBarSubmenu submenu, int position, long itemId) {
+        if (submenu==mSortModeSubmenu) {
+            if ((itemId & MENU_ITEM_SORT_MASK)==MENU_ITEM_SORT) {
+                mSortOrder = itemid2sortorder((int)itemId);
+                log.debug("onSubmenuItemSelected: mSortOrder=" +mSortOrder + " setting listingEngine sortOrder");
+                mListingEngine.setSortOrder(getSortOrder(mSortOrder));
+                mPreferences.edit()
+                        .putString(SORT_PARAM_KEY, mSortOrder)
+                        .apply();
+                // It's not enough to call notifyDataSetChanged() here to have the sort mode changed, must reset at Loader level.
+                listFiles(false);
+                LoaderManager.getInstance(this).restartLoader(0, null, this);
+            }
+        }
+        else {
+            super.onSubmenuItemSelected(submenu, position, itemId);
+        }
+    }
+
+    private static String itemid2sortorder(int itemid) {
+        String sortOrder = DEFAULT_SORT;
+        itemid = itemid - MENU_ITEM_SORT;
+        if (itemid >= 0 && itemid < sortOrders.size()) sortOrder = sortOrders.get(itemid);
+        log.debug("itemid2sortorder: sortOrder="+sortOrder);
+        return sortOrder;
+    }
+
+    /**
+     * Returns -1 if given sortOrder can't be found in the menuid list
+     * @param sortOrder
+     * @return
+     */
+    private static int sortorder2itemid(String sortOrder) {
+        return MENU_ITEM_SORT + sortOrders.indexOf(sortOrder);
+    }
+
+    protected static ListingEngine.SortOrder getSortOrder(String sortOrder) {
+        final int index = sortOrders.indexOf(sortOrder);
+        if (index <0) return ListingEngine.SortOrder.SORT_BY_NAME_ASC;
+        else return sortOrdersListingEngine.get(index);
     }
 
 }

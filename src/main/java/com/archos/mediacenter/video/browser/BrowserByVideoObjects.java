@@ -36,6 +36,7 @@ import androidx.core.view.MenuItemCompat;
 import com.archos.environment.ArchosIntents;
 import com.archos.environment.ArchosSettings;
 import com.archos.filecorelibrary.FileUtils;
+import com.archos.filecorelibrary.ListingEngine;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
@@ -94,8 +95,6 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
     public String getFilePath(int pos){
         return mAdapterByVideoObjects.getVideoItem(pos).getFilePath();
     }
-
-
 
     public void displayInfo(int position){
         Video video = mAdapterByVideoObjects.getVideoItem(position);
