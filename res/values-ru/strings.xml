@@ -676,6 +676,8 @@
     <string name="sort_by_date_premiered_asc">Сортировать по дате премьеры (сначала старые)</string>
     <string name="sort_by_date_aired_desc">Сортировать по дате показа (сначала новые)</string>
     <string name="sort_by_recently_added_episode_desc">Сначала недавно добавленные эпизоды</string>
+    <string name="sort_by_size_asc">Сортировать по размеру (сначала наименьшие)</string>
+    <string name="sort_by_size_desc">Сортировать по размеру (сначала наибольшие)</string>
     <string name="dec_choice_title">Выбор декодера</string>
     <string name="dec_choice_summary">Расширенные настройки могут нарушить декодирование видео.</string>
     <string name="dec_hw_omx">Аппаратное декодирование (IOMX w/ swbuf)</string>

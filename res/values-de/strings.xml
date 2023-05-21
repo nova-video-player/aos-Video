@@ -664,6 +664,8 @@
     <string name="sort_by_date_premiered_asc">Sortierung: Erstausstrahlung (älteste zuerst)</string>
     <string name="sort_by_date_aired_desc">Sortierung: Erstausstrahlung (neueste zuerst)</string>
     <string name="sort_by_recently_added_episode_desc">Zuletzt hinzugefügtr Episoden zuerst</string>
+    <string name="sort_by_size_asc">Sortierung: Datum (älteste zuerst)</string>
+    <string name="sort_by_size_desc">Sortierung: Größe (größte zuerst)</string>
     <string name="dec_choice_title">Decoder auswählen</string>
     <string name="dec_choice_summary">Erweiterte Einstellungen, kann Video-Decoding stören.</string>
     <string name="dec_hw_omx">Hardware-Decodierung (IOMX w/ swbuf)</string>
