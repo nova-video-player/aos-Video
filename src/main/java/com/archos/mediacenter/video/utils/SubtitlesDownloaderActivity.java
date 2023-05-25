@@ -257,6 +257,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
         log.debug("getSubLangValue: langDefault=" + languageDefault.toString());
         langDefault = null;
         languages = null;
+        if (langDefault != null) log.debug("getSubLangValue: " + String.join(",", langDefault));
         return languageDefault;
     }
 
@@ -950,6 +951,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 sb.append(fileUrl.substring(0,fileUrl.lastIndexOf('.')+1)).append(language).append('.').append(subFormat);
                 /* Check we can really create the file */
                 try {
+                    log.debug("downloadSubtitles: test we can write to " + sb);
                     FileEditor editor = FileEditorFactory.getFileEditorForUrl(Uri.parse(sb.toString()), SubtitlesDownloaderActivity.this);
                     OutputStream tmp = editor.getOutputStream();
                     tmp.close();
@@ -978,8 +980,10 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 urlConnection = (HttpURLConnection) url.openConnection();
                 // We get the first matching subtitle
                 FileEditor editor = FileEditorFactory.getFileEditorForUrl(Uri.parse(srtURl), SubtitlesDownloaderActivity.this);
-                if(editor.exists())
-                        editor.delete();//delete first
+                if(editor.exists()) {
+                    log.debug("downloadSubtitles: delete first " + srtURl);
+                    editor.delete();//delete first
+                }
                 f = editor.getOutputStream();
 
                 //Base64 then gunzip uncompression
@@ -1005,6 +1009,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 }
                 try {
                     //catching all exceptions for now for quick release
+                    log.debug("downloadSubtitles: index " + path);
                     Intent intent = new Intent(ArchosMediaIntent.ACTION_VIDEO_SCANNER_METADATA_UPDATE, Uri.parse(path));
                     intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
                     sendBroadcast(intent);
@@ -1014,6 +1019,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 // Update the media database
                 if (canWrite) {
                     if(!FileUtils.isLocal(Uri.parse(path))){ // when not local, we need to copy our file
+                        log.debug("downloadSubtitles: copy file {}->{}", path, localSb);
                         editor.copyFileTo(Uri.parse(localSb.toString()),SubtitlesDownloaderActivity.this);
                     }
                 }
