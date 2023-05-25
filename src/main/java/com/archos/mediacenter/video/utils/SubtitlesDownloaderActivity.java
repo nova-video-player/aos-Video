@@ -989,6 +989,8 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 while ((l = gzIS.read(buffer)) != -1) {
                     f.write(buffer, 0, l);
                 }
+                // f needs to be closed before the copy otherwise STATUS_SHARING_VIOLATION with smbj
+                f.close();
                 if(indexableUri!=null) {
                     ContentResolver resolver = getContentResolver();
                     VideoDbInfo videoDbInfo = VideoDbInfo.fromUri(resolver, Uri.parse(indexableUri));
