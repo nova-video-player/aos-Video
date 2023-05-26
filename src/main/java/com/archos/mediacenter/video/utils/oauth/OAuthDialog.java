@@ -22,18 +22,18 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.RequiresApi;
 
-import android.util.Log;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.CookieManager;
@@ -48,6 +48,7 @@ import android.widget.Toast;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.ui.NovaProgressDialog;
+import com.archos.mediacenter.video.utils.NovaWebView;
 
 /**
  * A full screen OAuth dialog which contains a webview. This takes an authorize url
@@ -55,12 +56,11 @@ import com.archos.mediacenter.video.ui.NovaProgressDialog;
  */
 public class OAuthDialog extends Dialog {
 
-    private final static boolean DBG = false;
-	private static final String TAG = OAuthDialog.class.getSimpleName();
+	private static final Logger log = LoggerFactory.getLogger(OAuthDialog.class);
 
 	private NovaProgressDialog mProgress;
 	private LinearLayout mLayout;
-	private WebView mWebView;
+	private NovaWebView mWebView;
 	private OAuthCallback mListener;
 	private OAuthClientRequest mReq;
 	private OAuthData mdata;
@@ -75,7 +75,7 @@ public class OAuthDialog extends Dialog {
 	 */
 	public OAuthDialog(Context context, OAuthCallback o,OAuthData oa, OAuthClientRequest req) {
 		super(context);
-        if (DBG) Log.d(TAG, "OAuthDialog");
+        log.debug("OAuthDialog");
         mdata = oa;
 		mReq = req;
 		mListener=o;
@@ -86,7 +86,7 @@ public class OAuthDialog extends Dialog {
 	 * @return The used OAuthData
 	 */
 	public OAuthData getData() {
-		if (DBG) Log.d(TAG, "getData");
+		log.debug("getData");
 		return mdata;
 	}
 	
@@ -98,7 +98,7 @@ public class OAuthDialog extends Dialog {
 	 */
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        if (DBG) Log.d(TAG, "onCreate");
+		log.debug("onCreate");
 
         // get another progress dialog while loading the page in this dialog
         mProgress = NovaProgressDialog.show(getContext(), "", getContext().getResources().getString(R.string.loading), true);
@@ -109,7 +109,7 @@ public class OAuthDialog extends Dialog {
 
 		getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
 
-		mWebView = (WebView) findViewById(R.id.webview);
+		mWebView = (NovaWebView) findViewById(R.id.webview);
 		mWebView.getSettings().setJavaScriptEnabled(true);
 		//mWebView.setVerticalScrollBarEnabled(false);
 		//mWebView.setHorizontalScrollBarEnabled(false);
@@ -125,8 +125,8 @@ public class OAuthDialog extends Dialog {
 
 	}
 
-	public WebView getWebView(){
-		if (DBG) Log.d(TAG, "getWebView");
+	public NovaWebView getWebView(){
+		log.debug("getWebView");
 		return mWebView;
 	}
 	
@@ -150,16 +150,16 @@ public class OAuthDialog extends Dialog {
         @SuppressWarnings("deprecation")
         @Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			if (DBG) Log.d(TAG, "shouldOverrideUrlLoading API21-23 for url " + url);
+			log.debug("shouldOverrideUrlLoading API21-23 for url " + url);
 			String urldecode = null;
 			try {
 				urldecode = URLDecoder.decode(url, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
-				Log.w(TAG, "OAuthWebViewClient:shouldOverrideUrlLoading: caught UnsupportedEncodingException");
+				log.warn("OAuthWebViewClient:shouldOverrideUrlLoading: caught UnsupportedEncodingException");
 			}
 			Uri uri = Uri.parse(urldecode);
 			if (!"localhost".equals(uri.getHost()) || !urldecode.contains("code=")) {
-				if (DBG) Log.d(TAG, "shouldOverrideUrlLoading: shouldOverrideUrlLoading false for host " + uri.getHost() + " and urldecode is " + urldecode);
+				log.debug("shouldOverrideUrlLoading: shouldOverrideUrlLoading false for host " + uri.getHost() + " and urldecode is " + urldecode);
 				return false;
 			}
 			mdata.code = uri.getQueryParameter("code");
@@ -174,16 +174,16 @@ public class OAuthDialog extends Dialog {
         @Override
 		public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 			String url = request.getUrl().toString();
-			if (DBG) Log.d(TAG, "shouldOverrideUrlLoading API24+ for url " + url);
+			log.debug("shouldOverrideUrlLoading API24+ for url " + url);
 			String urldecode = null;
 			try {
 				urldecode = URLDecoder.decode(url, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
-				Log.w(TAG, "OAuthWebViewClient:shouldOverrideUrlLoading: caught UnsupportedEncodingException");
+				log.warn("OAuthWebViewClient:shouldOverrideUrlLoading: caught UnsupportedEncodingException");
 			}
 			Uri uri = Uri.parse(urldecode);
 			if (!"localhost".equals(uri.getHost()) || !urldecode.contains("code=")) {
-				if (DBG) Log.d(TAG, "shouldOverrideUrlLoading: shouldOverrideUrlLoading false for host " + uri.getHost() + " and urldecode is " + urldecode);
+				log.debug("shouldOverrideUrlLoading: shouldOverrideUrlLoading false for host " + uri.getHost() + " and urldecode is " + urldecode);
 				return false;
 			}
 			mdata.code = uri.getQueryParameter("code");
@@ -204,11 +204,11 @@ public class OAuthDialog extends Dialog {
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
         {
             super.onReceivedError(view, errorCode, description, failingUrl);
-            if (DBG) Log.d(TAG, "onReceivedError API21,22 for url " + failingUrl);
+			log.debug("onReceivedError API21,22 for url " + failingUrl);
         	if(mListener!=null)
         		mListener.onFinished(mdata);
             OAuthDialog.this.dismiss();
-			Log.w(TAG, "onReceivedError: error code=" + errorCode + ", meaning " + description);
+			log.warn("onReceivedError: error code=" + errorCode + ", meaning " + description);
 			Toast.makeText(getContext(), "No Internet or " + description , Toast.LENGTH_LONG).show();
 		}
 
@@ -217,12 +217,12 @@ public class OAuthDialog extends Dialog {
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request,  WebResourceError error)
         {
-			if (DBG) Log.d(TAG, "onReceivedError API23+");
+			log.debug("onReceivedError API23+");
 			super.onReceivedError(view, request, error);
             if(mListener!=null)
                 mListener.onFinished(mdata);
-            OAuthDialog.this.dismiss();
-            Log.w(TAG, "onReceivedError: error code is " + error.getErrorCode() + ", description " + error.getDescription());
+			OAuthDialog.this.dismiss();
+			log.warn("onReceivedError: error code is " + error.getErrorCode() + ", description " + error.getDescription());
 			Toast.makeText(getContext(), "No Internet or code " + + error.getErrorCode() + ", description " + error.getDescription() , Toast.LENGTH_LONG).show();
 		}
 
@@ -233,7 +233,7 @@ public class OAuthDialog extends Dialog {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon)
         {
-			if (DBG) Log.d(TAG, "onPageStarted for url " + url);
+			log.debug("onPageStarted for url " + url);
 			super.onPageStarted(view, url, favicon);
             mProgress.show();
         }
@@ -245,16 +245,17 @@ public class OAuthDialog extends Dialog {
 		@Override
 		public void onPageFinished(WebView view, String url)
 		{
-			if (DBG) Log.d(TAG, "onPageFinished for url " + url);
+			log.debug("onPageFinished for url " + url);
 			super.onPageFinished(view, url);
-            mProgress.dismiss();
+			mWebView.resetDoItOnce();
+			mProgress.dismiss();
 			injectCSS();
 		}
 	}
 
 	//workaround to be accepted on amazon store
 	private void injectCSS() {
-		if (DBG) Log.d(TAG, "injectCSS");
+		log.debug("injectCSS");
 		try {
 			String css = ".col-xs-4 a:focus .btn{ background-color:blue !important; }";
 			getWebView().loadUrl("javascript:(function() {" +
@@ -265,7 +266,7 @@ public class OAuthDialog extends Dialog {
 					"parent.appendChild(style);" +
 					"})()");
 		} catch (Exception e) {
-			Log.w(TAG, "injectCSS: caught Exception", e);
+			log.warn("injectCSS: caught Exception", e);
 		}
 	}
 

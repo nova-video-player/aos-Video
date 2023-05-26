@@ -28,7 +28,7 @@
         style="?android:attr/progressBarStyleSmall"
         android:layout_width="12dip"
         android:layout_height="12dip"
-        android:layout_gravity="top|right"
+        android:layout_gravity="top|end"
         android:layout_margin="4dip" />
 
 </FrameLayout>
