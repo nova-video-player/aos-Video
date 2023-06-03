@@ -107,8 +107,15 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
                 ", mVideoDbInfo!=null " + (mVideoDbInfo!=null) +
                 ", mPlayerUri " + mPlayerUri
         );
+        // Some external video player api specs:
+        // vlc https://wiki.videolan.org/Android_Player_Intents/
+        // justplayer https://github.com/moneytoo/Player/issues/203
+        // mxplayer https://mx.j2inter.com/api
+        // mpv http://mpv-android.github.io/mpv-android/intent.html
+        // vimu https://www.vimu.tv/player-api
         if (data != null) {
             Bundle bundle = data.getExtras();
+            log.debug("onActivityResult: data.getData()=" + bundle);
             if (log.isDebugEnabled()) {
                 if (bundle != null) {
                     for (String key : bundle.keySet()) {
@@ -116,33 +123,42 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
                     }
                 }
             }
-            log.debug("onActivityResult: data.getData()=" + bundle);
-            // for vlc data.getData() is null
-            // for mxplayer mPlayerUri is content://com.archos.media.videocommunity/external/video/media/xxxx and data.getData() is content://org.courville.nova.provider/external_files/emulated/0/path/file.mkv
-            //if(!PrivateMode.isActive() && resultCode== Activity.RESULT_OK && mVideoDbInfo!=null && data.getData()!= null && data.getData().equals(mPlayerUri)){
-            if (!PrivateMode.isActive() && resultCode == Activity.RESULT_OK && mVideoDbInfo != null) {
-                int position = 0;
-                log.debug("onActivityResult: JUSTPLAYER_RESULT_EXTRA_end_by=" + data.getStringExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_end_by) +
-                    ", VLC_RESULT_EXTRA_position=" + data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_position, -1) +
-                    ", JUSTPLAYER_RESULT_EXTRA_duration=" + data.getIntExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_duration, -1) +
-                    ", VLC_RESULT_EXTRA_duration=" + data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_duration, -1) +
-                    ", requestCode=" + requestCode + ", resultCode=" + resultCode);
-                if (data.getIntExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_position, -1) != -1) {// justplayer/mxplayer
-                    position = data.getIntExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_position, -1);
-                } else if (data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_position, -1) != -1) {// vlc
-                    position = (int) data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_position, -1);
-                }
-                if (data.getIntExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_duration, -1) > 0) {
-                    mDuration = data.getIntExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_duration, -1);
-                } else if (data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_duration, -1) > 0) {
-                    mDuration = (int) data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_duration, -1);
-                }
-                boolean isFinished = false;
-                String externalPositionExtra = data.getStringExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_end_by);
-                if (externalPositionExtra != null && externalPositionExtra.equals("playback_completion")) { // justplayer video completion by playback complete has duration 0
-                    log.debug("onActivityResult: video finished until the end");
+        } else {
+            // data = null, could be vlc (not following its spec) or hitting back before selecting external player
+            log.debug("onActivityResult: data is null!");
+            // do nothing
+            return;
+        }
+        if (!PrivateMode.isActive() && resultCode == Activity.RESULT_OK && mVideoDbInfo != null) {
+            int position = 0;
+            boolean isFinished = false;
+            if (data != null) {
+                if (data.getExtras() != null) {
+                    log.debug("onActivityResult: JUSTPLAYER_RESULT_EXTRA_end_by=" + data.getStringExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_end_by) +
+                            ", VLC_RESULT_EXTRA_position=" + data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_position, -1) +
+                            ", JUSTPLAYER_RESULT_EXTRA_duration=" + data.getIntExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_duration, -1) +
+                            ", VLC_RESULT_EXTRA_duration=" + data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_duration, -1) +
+                            ", requestCode=" + requestCode + ", resultCode=" + resultCode);
+                    if (data.getIntExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_position, -1) != -1) {// justplayer/mxplayer
+                        position = data.getIntExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_position, -1);
+                    } else if (data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_position, -1) != -1) {// vlc
+                        position = (int) data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_position, -1);
+                    }
+                    if (data.getIntExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_duration, -1) > 0) {
+                        mDuration = data.getIntExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_duration, -1);
+                    } else if (data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_duration, -1) > 0) {
+                        mDuration = (int) data.getLongExtra(ExternalPositionExtra.VLC_RESULT_EXTRA_duration, -1);
+                    }
+                    String externalPositionExtra = data.getStringExtra(ExternalPositionExtra.JUSTPLAYER_RESULT_EXTRA_end_by);
+                    if (externalPositionExtra != null && externalPositionExtra.equals("playback_completion")) { // justplayer video completion by playback complete has duration 0
+                        log.debug("onActivityResult: video finished until the end");
+                        isFinished = true;
+                        position = mDuration;
+                    }
+                } else {
+                    // data.getExtra() null means for mpv-android video watched completely when played till the end
                     isFinished = true;
-                    position = mDuration;
+                    position = mVideoDbInfo.duration;
                 }
                 log.debug("onActivityResult: position=" + position + ", duration=" + mDuration);
                 mVideoDbInfo.lastTimePlayed = Long.valueOf(System.currentTimeMillis() / 1000L);
@@ -154,10 +170,10 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
                 TorrentObserverService.killProcess();
                 if (isFinished) stopTrakt(100);
                 else stopTrakt(getPercentProgress(position));
+            } else { // case already treated by return
+                // data = null, could be vlc (not following its spec) or hitting back before selecting external player
+                log.debug("onActivityResult: data is null!");
             }
-        } else {
-            // happens when hitting back before selecting the player
-            log.debug("onActivityResult: data is null!");
         }
     }
 
