@@ -63,6 +63,7 @@ import com.archos.mediacenter.video.player.tvmenu.TVCardView;
 import com.archos.mediacenter.video.player.tvmenu.TVMenuAdapter;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
+import com.archos.medialib.LibAvos;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -70,6 +71,7 @@ import java.util.Formatter;
 import java.util.Locale;
 
 import static com.archos.environment.ArchosFeatures.isChromeOS;
+import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PLAYBACK_SPEED;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1929,6 +1931,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 }
             }
 
+            SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
             if (!mIsStopped && Player.sPlayer.isInPlaybackState()) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
                     switch(keyCode) {
@@ -1955,6 +1958,19 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                             log.debug("onKey: dpad down");
                             return true;
                         case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
+                            if (mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false) && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
+                                log.debug("onKey: audioSpeed++");
+                                float audioSpeed = mPreferences.getFloat(mContext.getResources().getString(R.string.save_audio_speed_setting_pref_key), 1.0f);
+                                PlayerService.sPlayerService.setAudioSpeed(audioSpeed + 0.25f, false);
+                            } else {
+                                log.debug("onKey: next");
+                                if (Player.sPlayer.canSeekForward() && mSeekKeyDirection != 1) {
+                                    show(FLAG_SIDE_CONTROL_BAR|FLAG_SIDE_ACTION_BAR|FLAG_SIDE_SYSTEM_BAR, 0);
+                                    mSeekKeyDirection = 1;
+                                    onSeek(1, true);
+                                }
+                            }
+                            return true;
                         case KeyEvent.KEYCODE_DPAD_RIGHT:
                         case KeyEvent.KEYCODE_MEDIA_NEXT:
                             log.debug("onKey: next");
@@ -1965,6 +1981,19 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                             }
                             return true;
                         case KeyEvent.KEYCODE_MEDIA_REWIND:
+                            if (mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false) && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
+                                log.debug("onKey: audioSpeed--");
+                                float audioSpeed = mPreferences.getFloat(mContext.getResources().getString(R.string.save_audio_speed_setting_pref_key), 1.0f);
+                                PlayerService.sPlayerService.setAudioSpeed(audioSpeed - 0.25f, false);
+                            } else {
+                                log.debug("onKey: previous");
+                                if (Player.sPlayer.canSeekBackward() && mSeekKeyDirection != -1) {
+                                    show(FLAG_SIDE_CONTROL_BAR|FLAG_SIDE_ACTION_BAR|FLAG_SIDE_SYSTEM_BAR, 0);
+                                    mSeekKeyDirection = -1;
+                                    onSeek(-1, true);
+                                }
+                            }
+                            return true;
                         case KeyEvent.KEYCODE_DPAD_LEFT:
                         case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
                             log.debug("onKey: previous");
