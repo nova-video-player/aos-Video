@@ -2,9 +2,9 @@
 name: NOVA CI
 on:
   push:
-    branches: [ v6_1 ]
+    branches: [ v6.1 ]
   pull_request:
-    branches: [ v6_1 ]
+    branches: [ v6.1 ]
 jobs:
   build:
     runs-on: ubuntu-latest
