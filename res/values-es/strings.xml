@@ -664,6 +664,8 @@
     <string name="sort_by_date_premiered_asc">Ordenar por fecha de estreno (más antiguo primero)</string>
     <string name="sort_by_date_aired_desc">Ordenar por fecha emisión (más nuevos primero)</string>
     <string name="sort_by_recently_added_episode_desc">Ordenar por fecha de adición (más nuevo primero)</string>
+    <string name="sort_by_size_asc">Ordenar por fecha (más antiguo primero)</string>
+    <string name="sort_by_size_desc">Ordenar por fecha (más nuevo primero)</string>
     <string name="dec_choice_title">Seleccione descodificador</string>
     <string name="dec_choice_summary">Preferencias avanzadas, puede romper la descodificación de vídeo.</string>
     <string name="dec_hw_omx">Descodificación por hardware (IOMX w/ swbuf)</string>
