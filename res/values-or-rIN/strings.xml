@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
+    <!-- Menu item that takes the user back to the top level screen of the music player -->
+    <string name="goto_start">ଲାଇବ୍ରେରୀ</string>
+    <!-- Menu item that takes the user to the "now playing" screen of the music player -->
+    <!-- Menu item to refresh servers list -->
+    <!-- Menu item to enable network shares -->
+    <!-- Library screen, menu item -->
+    <string name="search_title">ସନ୍ଧାନ</string>
+    <!-- Default name of track that doesn't have a name in the metadata -->
+    <string name="unknown_track_name">ଅଜଣା</string>
+    <!-- Toast after turning shuffle on -->
+    <!-- Toast after turning shuffle off -->
+    <!-- Toast after turning single repeat on -->
+    <!-- Context menu item -->
+    <string name="info">ସୂଚନା</string>
+    <!-- Context menu item -->
+    <string name="play_selection">ଚଲାଅ</string>
+    <!-- Context menu item -->
+    <!-- Context menu item -->
+    <!-- Dialog box button -->
+    <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <!-- The string used in file/folder infos dialog. -->
+    <string name="info_duration">ଅଵଧି</string>
+    <string name="video_sources">ଉତ୍ସ</string>
+    <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">ଚଳଚ୍ଚିତ୍ର</string>
+    <string name="info_tab_show">ପ୍ରଦର୍ଶନୀ</string>
+    <string name="info_tab_episode">ଅଧ୍ୟାୟ</string>
+    <string name="info_tab_video">ଵିଡ଼ିଓ</string>
+    <string name="info_tab_file">ଫାଇଲ୍ ସୂଚନା</string>
+    <string name="info_tab_poster_chooser">ପୋଷ୍ଟର୍ ଚୟକ</string>
+    <string name="info_menu_poster_select">ଅନ୍ୟ ଏକ ପୋଷ୍ଟର୍ ଚୟନ କରନ୍ତୁ</string>
+    <string name="info_menu_series_poster_select">ଅନ୍ୟ ଏକ ପୋଷ୍ଟର୍ ଚୟନ କରନ୍ତୁ</string>
+    <!-- COVER ROLL -->
+    <string name="video_lists">ଚାଳନତାଲିକା</string>
+    <!-- The string used in main storage list -->
+    <string name="external_storage">ବହିଃସ୍ଥ</string>
+    <string name="internal_storage">ଅନ୍ତଃସ୍ଥ</string>
+    <string name="network_guest">ଅତିଥି</string>
+    <string name="root_storage">ଅନ୍ତଃ ଷ୍ଟୋରେଜ୍</string>
+    <!-- VIDEO -->
+    <string name="videos">ଵିଡ଼ିଓ</string>
+    <string name="all_videos">ସବୁ ଵିଡ଼ିଓ</string>
+    <string name="video_folder">ଫୋଲ୍ଡର୍</string>
+    <string name="movies">ଚଳଚ୍ଚିତ୍ର</string>
+    <string name="all_movies">ସବୁ ଚଳଚ୍ଚିତ୍ର</string>
+    <string name="all_movies_format">ସବୁ ଚଳଚ୍ଚିତ୍ର  -  %d</string>
+    <string name="all_collections">ସବୁ ସଂଗ୍ରହ</string>
+    <string name="all_collections_format">ସବୁ ସଂଗ୍ରହ  -  %d</string>
+    <string name="all_collection_watched">ସବୁ ସଂଗ୍ରହ ଦେଖି ସାରିଛନ୍ତି</string>
+    <string name="all_collection_unwatched">ସଂଗ୍ରହ ଦେଖି ନାହାଁନ୍ତି</string>
+    <plurals name="n_movies_watched">
+        <item quantity="one">%dଟିଏ ଚଳଚ୍ଚିତ୍ର ଦେଖିଛନ୍ତି</item>
+        <item quantity="other">%dଟି ଚଳଚ୍ଚିତ୍ର ଦେଖିଛନ୍ତି</item>
+    </plurals>
+    <string name="not_watched_movies_format">ଦେଖି ନାହାଁନ୍ତି  -  %d</string>
+    <string name="not_watched_animes_format">ଦେଖି ନାହାଁନ୍ତି  -  %d</string>
+    <string name="no_movie_watched">କୌଣସି ଚଳଚ୍ଚିତ୍ର ଦେଖି ନାହାଁନ୍ତି</string>
+    <string name="all_movies_watched">ସବୁ ଚଳଚ୍ଚିତ୍ର ଦେଖି ସାରିଛନ୍ତି</string>
+    <string name="movie_collections">ସଂଗ୍ରହ</string>
+    <string name="anime_collections">ଅନିମେ ସଂଗ୍ରହ</string>
+    <string name="not_watched_tvshows_format">ଦେଖି ନାହାଁନ୍ତି  -  %d</string>
+    <string name="not_watched_animeshows_format">ଦେଖି ନାହାଁନ୍ତି  -  %d</string>
+    <string name="all_seasons">ସବୁ ଋତୁ</string>
+    <string name="date_view_week">ସପ୍ତାହ</string>
+    <string name="date_view_month">ମାସ</string>
+    <string name="date_view_year">ଵର୍ଷ</string>
+    <string name="mark_as_watched">ଦେଖିସାରିଥିବା ପରି ଚିହ୍ନିତ କର</string>
+    <string name="mark_as_not_watched">ଦେଖିନଥିବା ପରି ଚିହ୍ନିତ କର</string>
+    <!-- for small screens -->
+    <!-- Generic strings for Movies or TV shows -->
+    <string name="scrap_director">ନିର୍ଦେଶକ</string>
+    <string name="scrap_writer">ଲେଖକ</string>
+    <string name="scrap_director_format">ନିର୍ଦେଶକ: %s</string>
+    <string name="scrap_writer_format">ଲେଖକ: %s</string>
+    <string name="scrap_year">ଵର୍ଷ</string>
+    <string name="scrap_year_format">ଵର୍ଷ: %d</string>
+    <string name="scrap_cast">ପାତ୍ର</string>
+    <string name="scrap_cast_format">ପାତ୍ର: %s</string>
+    <string name="scrap_genre">ଧରଣ</string>
+    <string name="scrap_genre_format">ଧରଣ: %s</string>
+    <string name="scrap_genre_title">ଧରଣ</string>
+    <string name="scrap_aired">ପ୍ରସାରଣ ହୋଇଛି</string>
+    <string name="scrap_aired_format">ପ୍ରସାରିତ: %s</string>
+    <string name="scrap_guests">ଅତିଥି</string>
+    <!-- Specific strings for TV shows -->
+    <string name="episode_name">ଅଧ୍ୟାୟ</string>
+    <string name="episode_season">ଋତୁ</string>
+    <string name="episode_specials">ଵିଶେଷ</string>
+    <string name="episode_identification">ଋତୁ %1$d ଅଧ୍ୟାୟ %2$d</string>
+    <string name="season_identification">ଋତୁ %1$d</string>
+    <string name="how_to_mark_season_watched">ଏକ ଋତୁର ସମସ୍ତ ଅଧ୍ୟାୟ ଦେଖିଛନ୍ତି କି ଦେଖିନାହାନ୍ତି ଚିହ୍ନିତ କରିବାକୁ ହେଲେ ତା\' ଉପରେ କ୍ଲିକ୍ କରନ୍ତୁ</string>
+    <string name="how_to_unindex_season">ଏକ ଋତୁର ସମସ୍ତ ଅଧ୍ୟାୟ କାଢ଼ିବାକୁ ହେଲେ ତା\' ଉପରେ କ୍ଲିକ୍ କରନ୍ତୁ</string>
+    <string name="how_to_delete_season">ଏକ ଋତୁର ସମସ୍ତ ଅଧ୍ୟାୟ ଵିଲୋପ କରିବାକୁ ହେଲେ ତା\' ଉପରେ କ୍ଲିକ୍ କରନ୍ତୁ</string>
+    <string name="no_episode_watched">କୌଣସି ଅଧ୍ୟାୟ ଦେଖି ନାହାଁନ୍ତି</string>
+    <string name="all_episodes_watched">ସବୁ ଅଧ୍ୟାୟ ଦେଖି ସାରିଛନ୍ତି</string>
+    <plurals name="n_episodes_watched">
+        <item quantity="one">%dଟିଏ ଅଧ୍ୟାୟ ଦେଖିଛନ୍ତି</item>
+        <item quantity="other">%dଟି ଅଧ୍ୟାୟ ଦେଖିଛନ୍ତି</item>
+    </plurals>
+    <string name="scraper_settigns">ପୋଷ୍ଟର୍ ଓ ସୂଚନା</string>
+    <string name="scrap_status_busy">ଖୋଜାଚାଲିଛି…</string>
+    <string name="scraper_suggest_message">\'ଅନଲାଇନ୍ ସୂଚନା ସନ୍ଧାନ\' ମେନୁ ମାଧ୍ୟମରେ ଆପଣଙ୍କ ଵିଡ଼ିଓଗୁଡ଼ିକ ପାଇଁ ପୋଷ୍ଟର୍ ଏଵଂ ସୂଚନା ଅନଲାଇନ୍ ଖୋଜି ପାରିବେ।</string>
+    <string name="scraper_no_movie_text">ଆପଣଙ୍କ ପାଖରେ ଵର୍ତ୍ତମାନ ଆପଣଙ୍କ ଚଳଚ୍ଚିତ୍ର ପାଇଁ କୌଣସି ପୋଷ୍ଟର୍ ଏଵଂ ଵର୍ଣ୍ଣନା ନାହିଁ</string>
+    <string name="scraper_no_tv_show_text">ଆପଣଙ୍କ ପାଖରେ ଵର୍ତ୍ତମାନ ଆପଣଙ୍କ ଟିଵି ଶୋ\' ପାଇଁ କୌଣସି ପୋଷ୍ଟର୍ ଏଵଂ ଵର୍ଣ୍ଣନା ନାହିଁ</string>
+    <!-- To be translated only in case there is a localized IMDB -->
+    <string name="info_video">ଵିଡ଼ିଓ</string>
+    <string name="info_audio">ଅଡ଼ିଓ</string>
+    <string name="info_file">ଫାଇଲ୍ ସୂଚନା</string>
+    <!-- VIDEO COVER ROLL -->
+    <plurals name="Nseasons">
+        <item quantity="one">ଗୋଟେ ଋତୁ</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g>ଟି ଋତୁ</item>
+    </plurals>
+    <!-- Media Center -->
+    <string name="view_mode_grid">ପୋଷ୍ଟର୍</string>
+    <!-- VideoPlayer -->
+    <string name="pref_play_mode_entry_folder">ଫୋଲ୍ଡର୍</string>
+    <string name="ui_mode_auto">ସ୍ୱତଃ</string>
+    <string name="ui_mode_tv">ଦୂରଦର୍ଶନ</string>
+    <string name="pref_s3d_mode_entry_off">ବନ୍ଦ</string>
+    <string name="menu_info">ସୂଚନା</string>
+    <string name="menu_brightness_settings">ଉଜ୍ଜ୍ୱଳତା</string>
+    <string name="menu_player_settings">ସେଟିଂ</string>
+    <!-- Subtitles/Audio languages -->
+    <string name="s_arabic">ଆରବୀ</string>
+    <string name="s_bulgarian">ବୁଲଗେରି</string>
+    <string name="s_german">ଜର୍ମନ</string>
+    <string name="s_english">ଇଂରାଜୀ</string>
+    <string name="s_french">ଫରାସୀ</string>
+    <string name="s_japanese">ଜାପାନୀ</string>
+    <string name="s_korean">କୋରିଆଈ</string>
+    <string name="s_thai">ଥାଈ</string>
+    <string name="s_chinese">ଚୀନୀ</string>
+    <string name="s_traditional_chinese">ପାରମ୍ପାରିକ ଚୀନୀ</string>
+    <!-- Player errors -->
+    <string name="player_err_sizetoobig">ଵିଡ଼ିଓ ଆକାର ଅତ୍ୟଧିକ ବଡ଼ ଅଟେ</string>
+    <!-- Player plug-in -->
+    <!-- Subtitles wizard -->
+    <!-- Subloader -->
+    <!-- Subtitle Settings Dialog -->
+    <string name="subtitle_size_text">ଆକାର:</string>
+    <string name="subtitle_style_text">ଶୈଳୀ:</string>
+    <!-- Subtitle Delay Dialog -->
+    <!-- Browser.CommonDetailsView -->
+    <!-- Add a space after the right quote
+    because the right part of the quote is
+    not visible otherwise -->
+    <!-- torrent -->
+    <!-- Shortcuts -->
+    <string name="ssh_password">ପାସ୍‌ୱର୍ଡ଼</string>
+    <string name="ssh_username">ଉପଭୋକ୍ତା ନାମ</string>
+    <!-- Preferences -->
+    <string name="preferences_about">ଵିଷୟରେ</string>
+    <string name="preferences_category_complete">ପୁରା ସଂସ୍କରଣ</string>
+    <string name="preferences_category_video">ଵିଡ଼ିଓ</string>
+    <string name="preferences_video_about">ଵିଷୟରେ</string>
+    <string name="preferences_video_advanced">ଵିକଶିତ</string>
+    <string name="movie_scraper">ଚଳଚ୍ଚିତ୍ର</string>
+    <string name="locale">ସିଷ୍ଟମ୍ ଭାଷା</string>
+    <string name="yes">ହଁ</string>
+    <string name="no">ନାହିଁ</string>
+    <!--  Title of the video picker activity. -->
+    <!-- Archos File Info -->
+    <string name="format_fullscreen">ପୂର୍ଣ୍ଣସ୍କ୍ରୀନ୍</string>
+    <!-- Help overlay -->
+    <!-- Info dialog, not indexed file -->
+    <!-- Brightness -->
+    <!--  Nfo File parsing -->
+    <string name="dec_any">ଡିଫଲ୍ଟ</string>
+    <string name="codepage_default">ଡିଵାଇସ୍ ଭାଷା %s</string>
+    <string name="codepage_874">ଥାଈ (CP୮୭୪)</string>
+    <string name="codepage_932">ଜାପାନୀ (Shift-JIS, EUC-JP)</string>
+    <string name="codepage_936">ସରଳୀକୃତ ଚୀନୀ (CP୯୩୬, GB୨୩୧୨)</string>
+    <string name="codepage_949">କୋରିଆଈ (CP୯୪୯, EUC-KR)</string>
+    <string name="codepage_950">ପାରମ୍ପାରିକ ଚୀନୀ (Big୫)</string>
+    <string name="codepage_1250">ପୂର୍ଵୀୟ ୟୂରୋପୀୟ (CP୧୨୫୦)</string>
+    <string name="codepage_1251">ସିରିଲିକ (CP୧୨୫୧)</string>
+    <string name="codepage_1252">ପଶ୍ଚିମୀ ୟୂରୋପୀୟ (CP୧୨୫୨)</string>
+    <string name="codepage_28606">ଦକ୍ଷିଣୀ ୟୂରୋପୀୟ (CP୨୮୬୦୬)</string>
+    <string name="codepage_1253">ୟୁନାନୀ (CP୧୨୫୩)</string>
+    <string name="codepage_1254">ତୁର୍କୀ (CP୧୨୫୪)</string>
+    <string name="codepage_1255">ହିବ୍ରୁ (CP୧୨୫୫)</string>
+    <string name="codepage_1256">ଆରବୀ (CP୧୨୫୬)</string>
+    <string name="codepage_1257">ବାଲ୍ଟିକ (CP୧୨୫୭)</string>
+    <string name="codepage_1258">ଵିଏତନାମୀ (CP୧୨୫୮)</string>
+    <string name="codepage_extra_874">(CP୮୭୪)</string>
+    <string name="codepage_extra_936">(CP୯୩୬, GB୨୩୧)</string>
+    <string name="codepage_extra_949">(CP୯୪୯, EUC-KR)</string>
+    <string name="codepage_extra_950">(Big୫)</string>
+    <string name="codepage_extra_1250">(CP୧୨୫୦)</string>
+    <string name="codepage_extra_1251">(CP୧୨୫୧)</string>
+    <string name="codepage_extra_1252">(CP୧୨୫୨)</string>
+    <string name="codepage_extra_1253">(CP୧୨୫୩)</string>
+    <string name="codepage_extra_1254">(CP୧୨୫୪)</string>
+    <string name="codepage_extra_1255">(CP୧୨୫୫)</string>
+    <string name="codepage_extra_1256">(CP୧୨୫୬)</string>
+    <string name="codepage_extra_1257">(CP୧୨୫୭)</string>
+    <string name="codepage_extra_1258">(CP୧୨୫୮)</string>
+    <string name="blocklist_unknown_error">ଅଜ୍ଞାତ</string>
+    <string name="share_path">ପଥ</string>
+    <string name="trakt_user">ଉପଭୋକ୍ତା ନାମ</string>
+    <string name="trakt_password">ପାସ୍‌ୱର୍ଡ଼</string>
+    <string name="show_all">ସବୁ ଵିଡ଼ିଓ</string>
+    <string name="hide_seen">ଦେଖି ନାହାଁନ୍ତି</string>
+    <string name="search_results">ସନ୍ଧାନ ଫଳାଫଳ</string>
+    <string name="no_results_found">କୌଣସି ଫଳାଫଳ ମିଳିଲାନି।</string>
+    <string name="no_results_found_show_helper">ଟିଵି ଶୋ\' ପାଇଁ, \"S01E01\" ପରି ଋତୁ ଓ ଅଧ୍ୟାୟ ଉଲ୍ଲେଖ କରନ୍ତୁ</string>
+    <string name="activate_private_mode">ଘରୋଇ ମୋଡ୍ ସକ୍ରିୟ କରିବା</string>
+    <string name="deactivate_private_mode">ଘରୋଇ ମୋଡ୍ ନିଷ୍କ୍ରିୟ କରିବା</string>
+    <string name="private_mode_is_on">ଘରୋଇ ମୋଡ୍ ଚାଲୁ ଅଛି</string>
+    <string name="private_mode_is_off">ଘରୋଇ ମୋଡ୍ ବନ୍ଦ ଅଛି</string>
+    <string name="private_mode">ଘରୋଇ ମୋଡ୍</string>
+    <string name="dont_show_again">ପୁନଃ ଦେଖାନ୍ତୁନି</string>
+    <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">ନେଟୱର୍କ୍ ଓ ଫାଇଲ୍</string>
+    <string name="leanback_subtitles_external">ବହିଃସ୍ଥ</string>
+    <string name="leanback_posters_header">ପୋଷ୍ଟର୍</string>
+    <string name="leanback_season_posters_header">ଋତୁଟିର ପୋଷ୍ଟର୍‌ଗୁଡ଼ା</string>
+    <string name="leanback_poster_changed">ପୋଷ୍ଟର୍ ପରିଵର୍ତ୍ତନ କରାଯାଇଛି</string>
+    <string name="leanback_action_more_details">ଅଧିକ ଵିଵରଣୀ</string>
+    <string name="scheduled_rescan_period_once_a_day">ଦିନରେ ଥରେ</string>
+    <string name="scheduled_rescan_period_twice_a_day">ଦିନରେ ଦୁଇଥର</string>
+    <string name="scheduled_rescan_period_every_six_hours">ପ୍ରତି ୬ ଘଣ୍ଟାରେ</string>
+    <string name="scheduled_rescan_period_every_two_hours">ପ୍ରତି ୨ ଘଣ୍ଟାରେ</string>
+    <string name="scheduled_rescan_period_every_hour">ପ୍ରତି ଘଣ୍ଟାରେ</string>
+    <string name="view_more">ଆହୁରି ଦେଖନ୍ତୁ</string>
+    <string name="cast_info">ସୂଚନା</string>
+</resources>

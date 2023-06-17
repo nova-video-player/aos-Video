@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
+    <!-- Menu item that takes the user back to the top level screen of the music player -->
+    <string name="goto_start">Kitapxana</string>
+    <!-- Menu item that takes the user to the "now playing" screen of the music player -->
+    <!-- Menu item to refresh servers list -->
+    <string name="refresh_servers_list">Serverler dizimin jańalaw</string>
+    <!-- Menu item to enable network shares -->
+    <!-- Library screen, menu item -->
+    <string name="search_title">Izlew</string>
+    <!-- Default name of track that doesn't have a name in the metadata -->
+    <string name="unknown_track_name">Belgisiz</string>
+    <!-- Toast after turning shuffle on -->
+    <!-- Toast after turning shuffle off -->
+    <!-- Toast after turning single repeat on -->
+    <!-- Context menu item -->
+    <string name="info">Maǵlıwmat</string>
+    <!-- Context menu item -->
+    <string name="play_selection">Qoyıw</string>
+    <!-- Context menu item -->
+    <!-- Context menu item -->
+    <!-- Dialog box button -->
+    <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <!-- The string used in file/folder infos dialog. -->
+    <string name="video_sources">Derekler</string>
+    <!-- Infos dialog tabs -->
+    <string name="info_tab_video">Video</string>
+    <string name="info_tab_file">Fayl haqqında maǵlıwmat</string>
+    <string name="info_tab_share">Bólisiw</string>
+    <!-- COVER ROLL -->
+    <!-- The string used in main storage list -->
+    <string name="network_storage">Tarmaq</string>
+    <string name="sftp_folders">FTP</string>
+    <!-- VIDEO -->
+    <string name="videos">Videolar</string>
+    <string name="all_videos">Barlıq videolar</string>
+    <string name="video_folder">Papkalar</string>
+    <string name="all_collections">Barlıq toplamlar</string>
+    <string name="all_collections_format">Barlıq toplamlar - %d</string>
+    <string name="all_collection_watched">Barlıq toplamlar kórildi</string>
+    <string name="all_collection_unwatched">Toplam kórilmedi</string>
+    <string name="not_watched_movies_format">Kórilmedi - %d</string>
+    <string name="not_watched_animes_format">Kórilmedi - %d</string>
+    <string name="movie_collections">Toplamlar</string>
+    <string name="not_watched_tvshows_format">Kórilmedi - %d</string>
+    <string name="date_view_week">Hápte</string>
+    <string name="date_view_month">Ay</string>
+    <string name="date_view_year">Jıl</string>
+    <string name="resume">Dawam etiw</string>
+    <string name="bookmark">Saylandı</string>
+    <string name="delete">Óshiriw</string>
+    <string name="confirm_delete_short">Óshiriw tastıyıqlaw</string>
+    <string name="delete_resume">Óshiriw biykarlaw</string>
+    <string name="delete_bookmark">Saylandını óshiriw</string>
+    <string name="scrap_remove">Maǵlıwmattı óshiriw</string>
+    <string name="scrap_remove_short">Óshiriw</string>
+    <!-- for small screens -->
+    <!-- Generic strings for Movies or TV shows -->
+    <string name="scrap_year">Jıl</string>
+    <string name="scrap_year_format">Jıl: %d</string>
+    <!-- Specific strings for TV shows -->
+    <string name="scrap_status_success">Jańalandı</string>
+    <string name="scrap_status_failed">Maǵlıwmat tabılmadı</string>
+    <string name="scrap_status_rejected">Maǵlıwmat óshirildi</string>
+    <string name="scrap_status_unknown">Belgisiz</string>
+    <string name="imdb_title_url">https://www.imdb.com/title/</string>
+    <!-- To be translated only in case there is a localized IMDB -->
+    <string name="preference_display_all_files">Barlıq fayllardı brauzerde kórsetiw</string>
+    <string name="info_video">Video</string>
+    <string name="info_audio">Audio</string>
+    <string name="info_audio_vbr">VBR</string>
+    <string name="info_file">Fayl haqqında maǵlıwmat</string>
+    <!-- VIDEO COVER ROLL -->
+    <string name="you_have_no_video">Videolar joq</string>
+    <!-- Media Center -->
+    <string name="view_mode_list">Dizim</string>
+    <string name="switch_to_list">Dizim</string>
+    <!-- VideoPlayer -->
+    <string name="floating_player_play">Qoyıw</string>
+    <string name="floating_player_pause">Pauza</string>
+    <string name="player_window_mode">Ayna rejimi</string>
+    <string name="pref_play_mode_title">Qoyıw rejimi</string>
+    <string name="pref_play_mode_entry_single">Bir fayl</string>
+    <string name="pref_play_mode_entry_folder">Papka</string>
+    <string name="pref_play_mode_entry_repeat_folder">Papkanı qaytalaw</string>
+    <string name="pref_play_mode_entry_repeat_single">Bir fayldı qaytalaw</string>
+    <string name="pref_audio_parameters_title">Dawıs</string>
+    <string name="pref_audio_filt_night_mode">Túngi rejim</string>
+    <string name="ui_mode_tv">TV</string>
+    <string name="pref_s3d_mode_title">3D rejim</string>
+    <string name="menu_info">Maǵlıwmat</string>
+    <string name="menu_player_settings">Sazlawlar</string>
+    <string name="menu_change_folder">Papkanı ózgertiw</string>
+    <!-- Subtitles/Audio languages -->
+    <!-- Player errors -->
+    <string name="player_err_cantplayvideo">Videonı qoyıw múmkin emes</string>
+    <string name="player_err_unknown">Belgisiz qátelik.</string>
+    <!-- Player plug-in -->
+    <string name="player_plugin_purchase">Dúkánǵa ótiw</string>
+    <!-- Subtitles wizard -->
+    <string name="subtitles_wizard_delete">Bul fayldı óshiriw</string>
+    <string name="subtitles_wizard_empty_list">Fayl tabılmadı</string>
+    <!-- Subloader -->
+    <!-- Subtitle Settings Dialog -->
+    <!-- Subtitle Delay Dialog -->
+    <!-- Browser.CommonDetailsView -->
+    <!-- Add a space after the right quote
+    because the right part of the quote is
+    not visible otherwise -->
+    <string name="exit">Shıǵıw</string>
+    <!-- torrent -->
+    <string name="error_no_video_file">Video fayllar joq</string>
+    <!-- Shortcuts -->
+    <string name="ssh_prompt">FTP túri</string>
+    <string name="add_to_library">Kitapxanaǵa qosıw</string>
+    <string name="remove_from_indexed_folders">Kitapxanadan alıp taslaw</string>
+    <string name="open_indexed_folder">"Ashıw"</string>
+    <string name="last_rescan_never">Heshqashan</string>
+    <string name="ssh_password">Parol</string>
+    <string name="ssh_username">Paydalanıwshı atı</string>
+    <!-- Preferences -->
+    <string name="preferences">Sazlawlar</string>
+    <string name="preferences_about">Baǵdarlama haqqında</string>
+    <string name="preferences_category_complete">Tolıq versiya</string>
+    <string name="preferences_category_video">Video</string>
+    <string name="preferences_video_about">Baǵdarlama haqqında</string>
+    <string name="yes">Awa</string>
+    <string name="no">Yaq</string>
+    <!--  Title of the video picker activity. -->
+    <!-- Archos File Info -->
+    <string name="video_info_backdrop_select">Basqa súwret tańlaw</string>
+    <string name="video_info_backdrop_remove">Óshiriw</string>
+    <string name="notification_mode">Xabarlamalar</string>
+    <string name="format_fullscreen">Tolıq ekran</string>
+    <!-- Help overlay -->
+    <!-- Info dialog, not indexed file -->
+    <!-- Brightness -->
+    <!--  Nfo File parsing -->
+    <string name="codepage_extra_874">(CP874)</string>
+    <string name="codepage_extra_936">(CP936, GB231)</string>
+    <string name="codepage_extra_949">(CP949, EUC-KR)</string>
+    <string name="codepage_extra_950">(Big5)</string>
+    <string name="codepage_extra_1250">(CP1250)</string>
+    <string name="codepage_extra_1251">(CP1251)</string>
+    <string name="codepage_extra_1252">(CP1252)</string>
+    <string name="codepage_extra_1253">(CP1253)</string>
+    <string name="codepage_extra_1254">(CP1254)</string>
+    <string name="codepage_extra_1255">(CP1255)</string>
+    <string name="codepage_extra_1256">(CP1256)</string>
+    <string name="codepage_extra_1257">(CP1257)</string>
+    <string name="codepage_extra_1258">(CP1258)</string>
+    <string name="torrent_category">Torrent</string>
+    <string name="trakt_password">Parol</string>
+    <string name="trakt_signin">Kiriw</string>
+    <string name="trakt_signin_dialog_title">Kiriw</string>
+    <string name="trakt_signin_title">Kiriw</string>
+    <string name="leanback_weblinks_header">Siltemeler</string>
+    <string name="leanback_action_more_details">Kóbirek maǵlıwmat</string>
+    <string name="leanback_scrap">Maǵlıwmattı alıw</string>
+    <string name="leanback_scrap_choose_the_description">Maǵlıwmattı tańlaw</string>
+    <string name="view_more">Kóbirek kóriw</string>
+    <string name="cast_info">Maǵlıwmat</string>
+    <string name="rate_us_title">☆ Bizdi qollap-quwatlań</string>
+    <string name="create_new_list">Jańa dizim jaratıw</string>
+    <string name="add_to_list">Dizimge qosıw</string>
+    <string name="remove_from_list">Dizimnen alıp taslaw</string>
+    <string name="loading">Júklenbekte…</string>
+    <string name="networks">Tarmaqlar:</string>
+</resources>
