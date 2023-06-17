@@ -204,3 +204,17 @@
 -dontwarn org.openjsse.javax.net.ssl.SSLParameters
 -dontwarn org.openjsse.javax.net.ssl.SSLSocket
 -dontwarn org.openjsse.net.ssl.OpenJSSE
+
+-dontwarn org.xmlpull.v1.**
+-dontwarn org.kxml2.io.**
+-dontwarn android.content.res.**
+-dontwarn org.slf4j.impl.StaticLoggerBinder
+
+#-keep class org.xmlpull.** { *; }
+#-keepclassmembers class org.xmlpull.** { *; }
+
+-dontwarn io.sentry.compose.viewhierarchy.ComposeViewHierarchyExporter
+-dontwarn org.newsclub.net.unix.AFUNIXServerSocketChannel
+-dontwarn org.newsclub.net.unix.AFUNIXSocketAddress
+-dontwarn org.newsclub.net.unix.AFUNIXSocketChannel
+-dontwarn sun.security.x509.X509Key
