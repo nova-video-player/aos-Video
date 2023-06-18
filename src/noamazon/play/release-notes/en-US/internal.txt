@@ -1,7 +1,9 @@
+- Fix A/V desync using playback speed
+- Switched to jsch-mwiede fork for SFTP
 - Add sort video option when browsing by folders
-- Add new network shares support: sshj (alternate SFTP), smbj (higher throughput SMB2+ implementation), webdav (webdav(s) for http(s))
-- Add an option to use smbj by default instead of jcifs-ng (not SMB1 compatible)
-- Add tx3g (mov_text) subtitles support
+- New network shares: sshj (alternate SFTP), smbj (higher throughput SMB2+ implementation), webdav(s) for http(s)
+- Add tx3g/mov_text subs support
 - Add network shortcuts support for all network shares protocols
 - Webdav write support
-- Improve scrape accuracy: be sure to process year provided in movie files
+- Improve scrape accuracy: process year in movie files
+- Fix trakt login on leanback
