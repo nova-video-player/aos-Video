@@ -19,7 +19,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.archos.mediacenter.video"
     android:installLocation="auto"
-    android:sharedUserId="archos.openmediacenter">
+    android:sharedUserId="archos.openmediacenter"
+    android:sharedUserMaxSdkVersion="32">
 
     <supports-screens android:largeScreens="true" />
 
@@ -85,6 +86,13 @@
 
     <!-- Required for SpeechRecognition -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <queries>
+        <intent>
+            <action
+                android:name="android.speech.RecognitionService" />
+        </intent>
+    </queries>
 
     <application
         android:name=".CustomApplication"
