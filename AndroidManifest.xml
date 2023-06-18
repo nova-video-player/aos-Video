@@ -619,6 +619,20 @@
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.WEBM" />
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.WEBM" />
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.WEBM" />
+                <data android:pathPattern=".*\\.m3u" />
+                <data android:pathPattern=".*\\..*\\.m3u" />
+                <data android:pathPattern=".*\\..*\\..*\\.m3u" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.m3u" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.m3u" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.m3u" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.m3u" />
+                <data android:pathPattern=".*\\.M3U" />
+                <data android:pathPattern=".*\\..*\\.M3U" />
+                <data android:pathPattern=".*\\..*\\..*\\.M3U" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.M3U" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.M3U" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.M3U" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.M3U" />
             </intent-filter>
             <!--
             Need to repeat it all over again for the applications not declaring any mimeType
@@ -971,6 +985,20 @@
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.TORRENT" />
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.TORRENT" />
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.TORRENT" />
+                <data android:pathPattern=".*\\.m3u" />
+                <data android:pathPattern=".*\\..*\\.m3u" />
+                <data android:pathPattern=".*\\..*\\..*\\.m3u" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.m3u" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.m3u" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.m3u" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.m3u" />
+                <data android:pathPattern=".*\\.M3U" />
+                <data android:pathPattern=".*\\..*\\.M3U" />
+                <data android:pathPattern=".*\\..*\\..*\\.M3U" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.M3U" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.M3U" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.M3U" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.M3U" />
             </intent-filter>
             <intent-filter>
                 <action android:name="archos.intent.action.RESUME_VIDEOPLAYER" />
