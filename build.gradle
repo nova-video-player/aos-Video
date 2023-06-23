@@ -7,7 +7,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:8.0.2'
         //classpath 'app.brant:amazonappstorepublisher:0.1.0'
-        classpath 'com.github.BrantApps.gradle-amazon-app-store-publisher:amazonappstorepublisher:master-SNAPSHOT'
+        //classpath 'com.github.BrantApps.gradle-amazon-app-store-publisher:amazonappstorepublisher:master-SNAPSHOT'
     }
 }
 
@@ -31,7 +31,7 @@ allprojects {
         mavenLocal()
         maven { url 'https://jitpack.io' }
     }
-    apply plugin: 'app.brant.amazonappstorepublisher'
+    //apply plugin: 'app.brant.amazonappstorepublisher'
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
@@ -69,13 +69,13 @@ play {
     releaseStatus.set(ReleaseStatus.COMPLETED)
 }
 
-amazon {
-    securityProfile = file("nova-amazon.json")
-    applicationId = "amzn1.devportal.mobileapp.c59461247b6a4806b4f30cd80076133e"
-    pathToApks = [ file("build/outputs/apk/amazon/release/Video-amazon-universal-API_21+-release.apk") ]
-    replaceEdit = true
-    replaceApks = true
-}
+//amazon {
+//    securityProfile = file("nova-amazon.json")
+//    applicationId = "amzn1.devportal.mobileapp.c59461247b6a4806b4f30cd80076133e"
+//    pathToApks = [ file("build/outputs/apk/amazon/release/Video-amazon-universal-API_21+-release.apk") ]
+//    replaceEdit = true
+//    replaceApks = true
+//}
 
 ext.abiCodes = ['universal': 0, 'armeabi-v7a': 1, 'arm64-v8a': 2, 'x86': 3, 'x86_64': 4]
 
