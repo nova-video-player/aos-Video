@@ -41,6 +41,8 @@ public class AudioSpeedTVPicker extends AudioSpeedPickerAbstract implements TVSl
     private Context mContext;
     private int textSize = -1;
 
+    private final float epsilon = 1e-5f;
+
     private static final int CHANGE_SPEED = 1;
     private static final int CHANGE_SPEED_TIMEOUT = 750; // msec
 
@@ -143,7 +145,10 @@ public class AudioSpeedTVPicker extends AudioSpeedPickerAbstract implements TVSl
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch(keyCode) {
             case KeyEvent.KEYCODE_DPAD_RIGHT:
-                float speed = (float) (getSpeed() + mStep - (getSpeed() + mStep) % mStep);
+                float modulo = (getSpeed() + mStep) % mStep;
+                if (Math.abs(Math.abs(modulo) - mStep) < epsilon)
+                    modulo = 0;
+                float speed = (float) (getSpeed() + mStep - modulo);
                 if (DBG) Log.d(TAG,"(+) pressed old speed=" + getSpeed() + ", new speed=" + (hasMax && speed > mMax ? mMax : speed));
                 updateNextDrawable(hasMax && speed >= mMax ? -1 : R.drawable.arrow_right_pressed);
                 updatePreviousDrawable(hasMin && speed < mMin ? -1 : R.drawable.arrow_left);
@@ -151,7 +156,10 @@ public class AudioSpeedTVPicker extends AudioSpeedPickerAbstract implements TVSl
                 changeAudioSpeed();
                 return true;
             case KeyEvent.KEYCODE_DPAD_LEFT:
-                speed = (float) (getSpeed() - mStep - (getSpeed() - mStep) % mStep);
+                modulo = (getSpeed() - mStep) % mStep;
+                if (Math.abs(Math.abs(modulo) - mStep) < epsilon)
+                    modulo = 0;
+                speed = (float) (getSpeed() - mStep - modulo);
                 if (DBG) Log.d(TAG, "(-) pressed old speed=" + getSpeed() + ", new speed=" + (hasMin && speed < mMin ? mMin : speed));
                 updatePreviousDrawable(hasMin && speed <= mMin ? -1 : R.drawable.arrow_left_pressed);
                 updateNextDrawable(hasMax && speed > mMax ? -1 : R.drawable.arrow_right);

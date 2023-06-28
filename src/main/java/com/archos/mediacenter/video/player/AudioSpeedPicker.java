@@ -31,6 +31,8 @@ public class AudioSpeedPicker extends AudioSpeedPickerAbstract {
     private final String TAG = "AudioSpeedPicker";
     private final boolean DBG = false;
 
+    private final float epsilon = 1e-5f;
+
     private final long initialRepeatDelay = 350;
     private final long repeatIntervalInMilliseconds = 150;
 
@@ -59,7 +61,10 @@ public class AudioSpeedPicker extends AudioSpeedPickerAbstract {
         mMinusButton.setText("-");
         mMinusButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                float speed = (float) (getSpeed() - mStep - (getSpeed() - mStep) % mStep);
+                float modulo = (getSpeed() - mStep) % mStep;
+                if (Math.abs(Math.abs(modulo) - mStep) < epsilon)
+                    modulo = 0;
+                float speed = (float)(getSpeed() - mStep - modulo);
                 if (DBG) Log.d(TAG, "(-) pressed old speed=" + getSpeed() + ", new speed=" + (hasMin && speed < mMin ? mMin : speed));
                 updateSpeed(hasMin && speed < mMin ? mMin : speed);
                 if (mOnSpeedChangedListener != null) {
@@ -85,7 +90,10 @@ public class AudioSpeedPicker extends AudioSpeedPickerAbstract {
         mPlusButton.setText("+");
         mPlusButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                float speed = (float) (getSpeed() + mStep - (getSpeed() + mStep) % mStep);
+                float modulo = (getSpeed() + mStep) % mStep;
+                if (Math.abs(Math.abs(modulo) - mStep) < epsilon)
+                    modulo = 0;
+                float speed = (float)(getSpeed() + mStep - modulo);
                 if (DBG) Log.d(TAG,"(+) pressed old speed=" + getSpeed() + ", new speed=" + (hasMax && speed > mMax ? mMax : speed));
                 updateSpeed(hasMax && speed > mMax ? mMax : speed);
                 if (mOnSpeedChangedListener != null) {
