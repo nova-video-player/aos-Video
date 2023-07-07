@@ -50,6 +50,7 @@ import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.StreamUriFinder;
 import com.archos.mediacenter.utils.AppState;
+import com.archos.mediacenter.utils.ISO639codes;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
@@ -62,7 +63,6 @@ import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediacenter.video.utils.VideoMetadata;
-import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.medialib.LibAvos;
 import com.archos.medialib.Subtitle;
 import com.archos.mediaprovider.video.VideoStore;
@@ -1288,8 +1288,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 else {
                     Locale locale = new Locale(mSubsFavoriteLanguage);
                     for (int i = 0; i < nbTrack; ++i) {
-                        if (VideoUtils.getLanguageString(this,vMetadata.getSubtitleTrack(i).name).toString().equalsIgnoreCase(locale.getDisplayLanguage())){
-                                mVideoInfo.subtitleTrack = i;
+                        if (ISO639codes.getISO6393ForLetterCode(vMetadata.getSubtitleTrack(i).name).equalsIgnoreCase(locale.getDisplayLanguage())){
+                            mVideoInfo.subtitleTrack = i;
                             break;
                         }
                     }

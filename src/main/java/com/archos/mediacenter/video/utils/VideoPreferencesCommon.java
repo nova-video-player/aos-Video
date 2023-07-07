@@ -30,7 +30,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -58,6 +57,7 @@ import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.UiChoiceDialog;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
+import com.archos.mediacenter.utils.ISO639codes;
 import com.archos.mediacenter.video.leanback.MainFragment;
 import com.archos.mediacenter.video.leanback.animes.AllAnimesGridFragment;
 import com.archos.mediacenter.video.leanback.animes.AnimesSortOrderEntry;
@@ -77,16 +77,27 @@ import com.archos.mediascraper.AutoScrapeService;
 import com.archos.mediascraper.settings.ScraperPreferences;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import static com.archos.filecorelibrary.FileUtils.backupDatabase;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener {
-    private static final String TAG = VideoPreferencesCommon.class.getSimpleName();
-    private static final boolean DBG = false;
+
+    private static final Logger log = LoggerFactory.getLogger(VideoPreferencesCommon.class);
+
+    // subtitles download languages
+    // update with: `curl --request GET --url 'https://www.opensubtitles.org/addons/export_languages.php' | gsed -e "s/[[:space:]]\+/ /g" | grep "1 1" | cut -d' ' -f2 | sort -u | paste -sd "|" -`
+
+    private static final String SUBS_LANGUAGES = "an|ar|at|bg|br|ca|cs|da|de|el|en|eo|es|et|eu|fa|fi|fr|gl|he|hi|hr|hu|hy|id|is|it|ja|ka|km|ko|mk|ms|nl|no|oc|pb|pl|pt|ro|ru|si|sk|sl|sq|sr|sv|th|tl|tr|tt|uk|vi|zh|zt";
 
     // should we provide adaptive refresh rate for all (not only on TV)
     private static final boolean REFRESHRATE_FORALL = true;
@@ -364,7 +375,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         }
         if(Integer.parseInt(preferences.getString("force_audio_passthrough_multiple","-1"))>0){ // passthrough is set, reset audio_speed
             // if passthrough is set audio_speed is reset to 1.0f
-            if (DBG) Log.d(TAG, "resetPassthroughPref: audio_speed to 1.0f since passthrough is " + Integer.parseInt(preferences.getString("force_audio_passthrough_multiple","-1")));
+            log.debug("resetPassthroughPref: audio_speed to 1.0f since passthrough is " + Integer.parseInt(preferences.getString("force_audio_passthrough_multiple","-1")));
             preferences.edit().putFloat("save_audio_speed_setting_pref_key", 1.0f).apply();
         }
     }
@@ -608,21 +619,102 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         mSubtitlesFavLangPreferences = (ListPreference) findPreference(KEY_SUBTITLES_FAV_LANG);
         mSubtitlesFavLangPreferences.setEnabled(!doHide);
+
+        String[] languageCodeArray = SUBS_LANGUAGES.split("\\|"); // contains 2 letters language codes
+
+        // TODO MARC use hashtable like in ScraperPreferencesFragment and easier for sorting too
+
+        // TODO MARC remove unused entries if need be?
+        // create empty mutable arrays
+        List<String> entries = new ArrayList<>();
+        List<String> entryValues = new ArrayList<>();
+        for (int i = 0; i < languageCodeArray.length; i++) {
+            entries.add("");
+            entryValues.add("");
+        }
+
         Locale defaultLocale = Locale.getDefault();
-        String locale = defaultLocale.getISO3Language();
+        String defaultLocaleISO3Language = defaultLocale.getISO3Language();
+        String defaultLocaleLanguage = defaultLocale.getDisplayLanguage();
+        Locale englishLocale = new Locale("en");
+        String englishLocaleISO3Language = englishLocale.getISO3Language();
+        String englishLocaleLanguage = englishLocale.getDisplayLanguage();
 
-        List<String> entries = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.entries_list_preference)));
-        List<String> entryValues = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.entryvalues_list_preference)));
+        int imin = 0;
+        // default system language first
+        entries.set(0, defaultLocaleLanguage);
+        entryValues.set(0, defaultLocaleISO3Language);
 
-        entries.set(0, defaultLocale.getDisplayLanguage()) ;
-        Locale currentLocale;
-        for (int i = 1; i < entryValues.size(); ++i){
-            currentLocale = new Locale(entryValues.get(i));
-            //entries.set(i, currentLocale.getDisplayLanguage()); // better use our translations, Android ones are not very consistant
-            if (entryValues.get(i).equalsIgnoreCase(locale)){
-                entries.remove(0);
-                entryValues.remove(0);
-            }
+        imin++;
+        // if default system language is not english set it second
+        if (! defaultLocaleLanguage.equals(englishLocaleLanguage)) {
+            entries.set(1, englishLocaleLanguage);
+            entryValues.set(1, englishLocaleISO3Language);
+            imin++;
+        }
+
+        String currentLocaleLanguage;
+        String currentLocaleISO3Language;
+        int index = 0;
+        for (String s : languageCodeArray) {
+            currentLocaleLanguage = com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.getLanguageNameFor2LetterCode(getActivity(), s);
+            // opensubtitles wants ISO639-2B and not ISO639-3
+            currentLocaleISO3Language = ISO639codes.convertISO6391ToISO6392(s);
+            log.debug("onCreatePreferences: code {} -> currentLocaleLanguage={}", s, currentLocaleLanguage);
+            if (currentLocaleLanguage.equals(defaultLocaleLanguage) || currentLocaleLanguage.equals(englishLocaleLanguage))
+                continue;
+            entries.set(index + imin, currentLocaleLanguage);
+            entryValues.set(index + imin, currentLocaleISO3Language);
+            index++;
+        }
+
+        // below entryValues is sorted alphabetically starting at index imin and same sorting is applied to entries
+
+        /*
+        // Sort entries starting above index imin.
+        List<String> sortedEntries = new ArrayList<>(entries.subList(imin, entries.size()));
+        Collections.sort(sortedEntries);
+
+        // Create a new list sortedEntryValues and iterate through sortedEntries.
+        List<String> sortedEntryValues = new ArrayList<>();
+        for (String sortedEntry : sortedEntries) {
+            index = entries.indexOf(sortedEntry);
+            sortedEntryValues.add(entryValues.get(index));
+        }
+
+        final CharSequence[] newEntries = new CharSequence[sortedEntries.size()];
+        final CharSequence[] newEntryValues = new CharSequence[sortedEntryValues.size()];
+
+         */
+
+        // Create a temporary list of indices for the entries that need to be sorted
+        List<Integer> indicesToSort = new ArrayList<>();
+        for (int i = imin; i < entryValues.size(); i++) {
+            indicesToSort.add(i);
+        }
+
+        // Sort the indices based on the corresponding entries using a custom comparator
+        Collections.sort(indicesToSort, (i1, i2) -> entries.get(i1).compareTo(entries.get(i2)));
+
+        // Create a new list for sorted entryValues and entries
+        List<String> sortedEntryValues = new ArrayList<>();
+        List<String> sortedEntries = new ArrayList<>();
+
+        // Sort the required portion of the entryValues and entries lists
+        for (int i = 0; i < imin; i++) {
+            sortedEntryValues.add(entryValues.get(i));
+            sortedEntries.add(entries.get(i));
+        }
+        for (int i = 0; i < indicesToSort.size(); i++) {
+            int originalIndex = indicesToSort.get(i);
+            sortedEntryValues.add(entryValues.get(originalIndex));
+            sortedEntries.add(entries.get(originalIndex));
+        }
+
+        // Update the original entryValues and entries lists with the sorted values
+        for (int i = imin; i < entryValues.size(); i++) {
+            entryValues.set(i, sortedEntryValues.get(i));
+            entries.set(i, sortedEntries.get(i));
         }
 
         final CharSequence[] newEntries = new CharSequence[entries.size()];
@@ -659,7 +751,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mHanlder = new Handler();
         mTraktSigninPreference = (TraktSigninDialogPreference) findPreference(KEY_TRAKT_SIGNIN);
         if(mTraktSigninPreference!= null && savedInstanceState!=null) {
-            if (DBG) Log.d(TAG, "onCreatePreferences: closing mTraktSigninPreference dialog to prevent leaked window");
+            log.debug("onCreatePreferences: closing mTraktSigninPreference dialog to prevent leaked window");
             // close dialog to prevent leaked window
             mTraktSigninPreference.showDialog(savedInstanceState.getBoolean(LOGIN_DIALOG, false));
         }

@@ -85,78 +85,10 @@
     </string-array>
     <string-array name="entries_list_preference">
         <item>@string/locale</item>
-        <item>@string/s_english</item>
-        <item>@string/s_french</item>
-        <item>@string/s_german</item>
-        <item>@string/s_italian</item>
-        <item>@string/s_dutch</item>
-        <item>@string/s_spanish</item>
-        <item>@string/s_swedish</item>
-        <item>@string/s_arabic</item>
-        <item>@string/s_bulgarian</item>
-        <item>@string/s_czech</item>
-        <item>@string/s_danish</item>
-        <item>@string/s_greek</item>
-        <item>@string/s_finnish</item>
-        <item>@string/s_hebrew</item>
-        <item>@string/s_hungarian</item>
-        <item>@string/s_japanese</item>
-        <item>@string/s_korean</item>
-        <item>@string/s_norwegian</item>
-        <item>@string/s_polish</item>
-        <item>@string/s_brazilian</item>
-        <item>@string/s_portuguese</item>
-        <item>@string/s_russian</item>
-        <item>@string/Romanian</item>
-        <item>@string/Serbian</item>
-        <item>@string/Slovenian</item>
-        <item>@string/s_thai</item>
-        <item>@string/s_turkish</item>
-        <item>@string/s_chinese</item>
-        <item>@string/s_traditional_chinese</item>
-        <item>@string/Croatian</item>
-        <item>@string/s_vietnamese</item>
-        <item>@string/s_lithuanian</item>
-        <item>@string/s_ukrainian</item>
-        <item>@string/s_kurdish</item>
     </string-array>
     <!-- NEED TO BE SAME ORDER THAN ABOVE -->
     <string-array name="entryvalues_list_preference">
         <item>system</item>
-        <item>@string/eng</item>
-        <item>@string/fre</item>
-        <item>@string/ger</item>
-        <item>@string/ita</item>
-        <item>@string/nld</item>
-        <item>@string/spa</item>
-        <item>@string/swe</item>
-        <item>@string/ara</item>
-        <item>@string/bul</item>
-        <item>@string/ces</item>
-        <item>@string/dan</item>
-        <item>@string/ell</item>
-        <item>@string/fin</item>
-        <item>@string/heb</item>
-        <item>@string/hun</item>
-        <item>@string/jpn</item>
-        <item>@string/kor</item>
-        <item>@string/nor</item>
-        <item>@string/pol</item>
-        <item>@string/pob</item>
-        <item>@string/por</item>
-        <item>@string/rus</item>
-        <item>@string/ron</item>
-        <item>@string/srp</item>
-        <item>@string/slv</item>
-        <item>@string/tha</item>
-        <item>@string/tur</item>
-        <item>@string/zho</item>
-        <item>@string/chi</item>
-        <item>@string/hrv</item>
-        <item>@string/vie</item>
-        <item>@string/lit</item>
-        <item>@string/ukr</item>
-        <item>@string/kur</item>
     </string-array>
 
     <string-array name="dec_choice_entries">

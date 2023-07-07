@@ -1151,6 +1151,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
     // e.g. French ID can be 'fra' or 'fre', OpenSubtitles considers 'fre' but Android Java Locale provides 'fra'
     // languages supported are available here http://www.opensubtitles.org/addons/export_languages.php
     // check correspondance with donottranslate.xml
+    // This converts ISO 639-3 to ISO 639-2B
     public String getCompliantLanguageID(String language){
         if (language.equals("system"))
             return getCompliantLanguageID(Locale.getDefault().getISO3Language());

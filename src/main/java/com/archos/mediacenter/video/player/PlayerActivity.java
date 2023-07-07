@@ -77,6 +77,7 @@ import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosIntents;
 import com.archos.environment.ArchosUtils;
 import com.archos.environment.NetworkState;
+import com.archos.mediacenter.utils.ISO639codes;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
@@ -3511,10 +3512,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
             mAudioInfoController.clear();
             for (int i = 0; i < nbTrack; ++i) {
-            	VideoMetadata.AudioTrack audio = vMetadata.getAudioTrack(i);
-            	CharSequence name = VideoUtils.getLanguageString(PlayerActivity.this, audio.name);
-            	CharSequence summary = VideoUtils.getLanguageString(PlayerActivity.this, audio.format);
-            	mAudioInfoController.addTrack(name, summary);
+                VideoMetadata.AudioTrack audio = vMetadata.getAudioTrack(i);
+                CharSequence name = ISO639codes.getLanguageNameForLetterCode(audio.name);
+                CharSequence summary = audio.format;
+                mAudioInfoController.addTrack(name, summary);
             }
 
             mAudioInfoController.setTrack(mVideoInfo.audioTrack);
@@ -3539,7 +3540,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mVideoInfo.nbSubtitles = nbTrack;
 
                 for (int i = 0; i < nbTrack; ++i) {
-                    mSubtitleInfoController.addTrack(VideoUtils.getLanguageString(PlayerActivity.this, vMetadata.getSubtitleTrack(i).name));
+                    mSubtitleInfoController.addTrack(ISO639codes.getLanguageNameForLetterCode(vMetadata.getSubtitleTrack(i).name));
                 }
 
                 // none track

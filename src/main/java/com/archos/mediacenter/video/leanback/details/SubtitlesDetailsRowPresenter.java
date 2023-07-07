@@ -18,17 +18,18 @@ import android.content.Context;
 import android.net.Uri;
 import androidx.leanback.widget.RowHeaderPresenter;
 import androidx.leanback.widget.RowPresenter;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.archos.mediacenter.utils.ISO639codes;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.utils.VideoMetadata;
-import com.archos.mediacenter.video.utils.VideoUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -208,7 +209,7 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
             }
             int index = i + offset;
             sb.append(Integer.toString(index + 1)).append(".").append(SEP)
-              .append(VideoUtils.getLanguageString(c, list.get(index).name)).append(SEP);
+              .append(ISO639codes.getISO6393ForLetterCode(list.get(index).name)).append(SEP);
         }
         return sb.toString();
     }

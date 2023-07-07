@@ -362,44 +362,9 @@
     <string name="unlock_instructions">Long press on icon to unlock</string>
     <string name="seek_to_percentage">"Seeking to %s%%</string>
     <!-- Subtitles/Audio languages -->
-    <string name="s_arabic">Arabic</string>
-    <string name="s_bulgarian">Bulgarian</string>
-    <string name="Bosnian">Bosnian</string>
-    <string name="s_czech">Czech</string>
-    <string name="s_danish">Danish</string>
-    <string name="s_german">German</string>
-    <string name="s_english">English</string>
-    <string name="s_greek">Greek</string>
-    <string name="s_spanish">Spanish</string>
-    <string name="s_finnish">Finnish</string>
-    <string name="s_french">French</string>
-    <string name="s_hebrew">Hebrew</string>
-    <string name="s_hungarian">Hungarian</string>
-    <string name="s_italian">Italian</string>
-    <string name="s_japanese">Japanese</string>
-    <string name="s_korean">Korean</string>
-    <string name="s_dutch">Dutch</string>
-    <string name="s_norwegian">Norwegian</string>
-    <string name="s_polish">Polish</string>
     <string name="s_brazilian">Brazilian</string>
-    <string name="s_portuguese">Portuguese</string>
-    <string name="s_russian">Russian</string>
-    <string name="Romanian">Romanian</string>
-    <string name="Serbo_Croatian">Serbo-Croatian</string>
-    <string name="Croatian">Croatian</string>
-    <string name="Serbian">Serbian</string>
-    <string name="Slovenian">Slovenian</string>
-    <string name="s_swedish">Swedish</string>
-    <string name="s_thai">Thai</string>
-    <string name="s_turkish">Turkish</string>
     <string name="s_chinese">Chinese</string>
     <string name="s_traditional_chinese">Traditional Chinese</string>
-    <string name="s_vietnamese">Vietnamese</string>
-    <string name="s_lithuanian">Lithuanian</string>
-    <string name="s_indonesian">Indonesian</string>
-    <string name="s_malay">Malay</string>
-    <string name="s_ukrainian">Ukrainian</string>
-    <string name="s_kurdish">Kurdish</string>
     <string name="s_none">None</string>
 
     <!-- Player errors -->

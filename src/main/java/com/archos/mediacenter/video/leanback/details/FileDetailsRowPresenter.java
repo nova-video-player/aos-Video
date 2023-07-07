@@ -24,11 +24,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.archos.mediacenter.utils.ISO639codes;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.utils.VideoMetadata;
-import com.archos.mediacenter.video.utils.VideoUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -198,7 +198,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
             }
             int index = i + offset;
             sb.append(Integer.toString(index + 1)).append(".").append(separator)
-              .append(VideoUtils.getLanguageString(context, videoMetadata.getSubtitleTrack(index).name))
+              .append(ISO639codes.getISO6393ForLetterCode(videoMetadata.getSubtitleTrack(index).name))
               .append(separator);
         }
         return sb.toString();

@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.browser.subtitlesmanager;
 import android.content.Context;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.utils.VideoUtils;
 
 import java.util.HashMap;
 
@@ -25,137 +26,24 @@ import java.util.HashMap;
  */
 public class ISO639codes {
 
-    static private HashMap<String, Integer> sMap = new HashMap<>();
-    static {
-        sMap.put("ar",  R.string.s_arabic);
-        sMap.put("ara",  R.string.s_arabic);
-
-        sMap.put("bg",  R.string.s_bulgarian);
-        sMap.put("bul", R.string.s_bulgarian);
-
-        sMap.put("bs",  R.string.Bosnian);
-        sMap.put("bos", R.string.Bosnian);
-
-        sMap.put("cs",  R.string.s_czech);
-        sMap.put("ces", R.string.s_czech);
-        sMap.put("cze", R.string.s_czech);
-
-        sMap.put("da",  R.string.s_danish);
-        sMap.put("dan", R.string.s_danish);
-
-        sMap.put("de",  R.string.s_german);
-        sMap.put("deu", R.string.s_german);
-        sMap.put("ger", R.string.s_german);
-
-        sMap.put("en",  R.string.s_english);
-        sMap.put("eng", R.string.s_english);
-
-        sMap.put("el",  R.string.s_greek);
-        sMap.put("gre", R.string.s_greek);
-        sMap.put("ell", R.string.s_greek);
-
-        sMap.put("es",  R.string.s_spanish);
-        sMap.put("esl", R.string.s_spanish);
-        sMap.put("spa", R.string.s_spanish);
-
-        sMap.put("fi",  R.string.s_finnish);
-        sMap.put("fin", R.string.s_finnish);
-
-        sMap.put("fr",  R.string.s_french);
-        sMap.put("fre", R.string.s_french);
-        sMap.put("fra", R.string.s_french);
-
-        sMap.put("he",  R.string.s_hebrew);
-        sMap.put("heb", R.string.s_hebrew);
-        sMap.put("iw",  R.string.s_hebrew);
-
-        sMap.put("hu",  R.string.s_hungarian);
-        sMap.put("hun", R.string.s_hungarian);
-
-        sMap.put("it",  R.string.s_italian);
-        sMap.put("ita", R.string.s_italian);
-
-        sMap.put("ja",  R.string.s_japanese);
-        sMap.put("jpn", R.string.s_japanese);
-
-        sMap.put("ko",  R.string.s_korean);
-        sMap.put("kor", R.string.s_korean);
-
-        sMap.put("nl",  R.string.s_dutch);
-        sMap.put("nld", R.string.s_dutch);
-        sMap.put("dut", R.string.s_dutch);
-
-        sMap.put("no",  R.string.s_norwegian);
-        sMap.put("nor", R.string.s_norwegian);
-        sMap.put("nob", R.string.s_norwegian);
-
-        sMap.put("may", R.string.s_malay);
-        sMap.put("msa", R.string.s_malay);
-
-        sMap.put("pl",  R.string.s_polish);
-        sMap.put("pol", R.string.s_polish);
-
-        sMap.put("pt",  R.string.s_portuguese);
-        sMap.put("por", R.string.s_portuguese);
-        sMap.put("pob", R.string.s_brazilian);
-
-        sMap.put("ru",  R.string.s_russian);
-        sMap.put("rus", R.string.s_russian);
-
-        sMap.put("ro",  R.string.Romanian);
-        sMap.put("ron", R.string.Romanian);
-        sMap.put("rum", R.string.Romanian);
-
-        sMap.put("scr",  R.string.Serbo_Croatian);
-
-        sMap.put("hr",  R.string.Croatian);
-        sMap.put("hrv",  R.string.Croatian);
-
-        sMap.put("sr",  R.string.Serbian);
-        sMap.put("srp", R.string.Serbian);
-
-        sMap.put("sv",  R.string.s_swedish);
-        sMap.put("sve", R.string.s_swedish);
-        sMap.put("swe", R.string.s_swedish);
-
-        sMap.put("th",  R.string.s_thai);
-        sMap.put("tha", R.string.s_thai);
-
-        sMap.put("tr",  R.string.s_turkish);
-        sMap.put("tur", R.string.s_turkish);
-
-        sMap.put("zh",  R.string.s_chinese);
-        sMap.put("zt",  R.string.s_traditional_chinese);
-        sMap.put("zho", R.string.s_chinese);
-        sMap.put("chi", R.string.s_traditional_chinese);
-
-        sMap.put("vie", R.string.s_vietnamese);
-
-        sMap.put("lt", R.string.s_lithuanian);
-        sMap.put("lit", R.string.s_lithuanian);
-
-        sMap.put("ind", R.string.s_indonesian);
-
-        sMap.put("uk", R.string.s_ukrainian);
-        sMap.put("ukr", R.string.s_ukrainian);
-
-        sMap.put("ku", R.string.s_kurdish);
-        sMap.put("kur", R.string.s_kurdish);
-
+    static public String getLanguageNameForLetterCode(Context context, String code) {
+        String result = com.archos.mediacenter.utils.ISO639codes.getLanguageNameForLetterCode(code);
+        if (result.startsWith("s_"))
+            return VideoUtils.getLanguageString(context, result).toString();
+        else return result;
     }
 
-    /**
-     *
-     * @param context
-     * @param code
-     * @return a user-readable language name matching this code. Returns the code itself if no language string is found
-     */
-    static public String getLanguageNameForCode(Context context, String code) {
-        Integer integer = sMap.get(code);
-        if (integer==null) {
-            return null;
-        } else {
-            return context.getString(integer.intValue());
-        }
+    static public String getLanguageNameFor2LetterCode(Context context, String code) {
+        String result = com.archos.mediacenter.utils.ISO639codes.getLanguageNameFor2LetterCode(code);
+        if (result.startsWith("s_"))
+            return VideoUtils.getLanguageString(context, result).toString();
+        else return result;
+    }
+
+    static public String getLanguageNameFor3LetterCode(Context context, String code) {
+        String result = com.archos.mediacenter.utils.ISO639codes.getLanguageNameFor3LetterCode(code);
+        if (result.startsWith("s_"))
+            return VideoUtils.getLanguageString(context, result).toString();
+        else return result;
     }
 }

@@ -70,6 +70,7 @@ import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.FileUtilsQ;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.utils.MediaUtils;
+import com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes;
 import com.archos.mediacenter.utils.imageview.ImageProcessor;
 import com.archos.mediacenter.utils.imageview.ImageViewSetter;
 import com.archos.mediacenter.utils.imageview.ImageViewSetterConfiguration;
@@ -100,7 +101,6 @@ import com.archos.mediacenter.video.utils.StoreRatingDialogBuilder;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
 import com.archos.mediacenter.video.utils.TrailerServiceIconFactory;
 import com.archos.mediacenter.video.utils.VideoMetadata;
-import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
 import com.archos.mediascraper.BaseTags;
@@ -1038,14 +1038,14 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             if(videoMetadata!=null) {
                 for (int i = 0; i < subtitleTrackNb; ++i) {
                     if (!videoMetadata.getSubtitleTrack(i).isExternal) { //manage external subs with sub manager
-                        lines.add((totSubs + 1) + ": " + VideoUtils.getLanguageString(getActivity(), videoMetadata.getSubtitleTrack(i).name));
+                        lines.add((totSubs + 1) + ": " + ISO639codes.getLanguageNameForLetterCode(getActivity(), videoMetadata.getSubtitleTrack(i).name));
                         totSubs++;
                     }
                 }
             }
             if(externalSubs!=null) {
                 for (SubtitleManager.SubtitleFile sub : externalSubs) {
-                    lines.add((totSubs + 1) + ": " + VideoUtils.getLanguageString(getActivity(), sub.mName));
+                    lines.add((totSubs + 1) + ": " + ISO639codes.getLanguageNameForLetterCode(getActivity(), sub.mName));
                     totSubs++;
                 }
             }
