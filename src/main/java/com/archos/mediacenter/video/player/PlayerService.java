@@ -1470,7 +1470,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         boolean speedChanged = speed != mAudioSpeed || force;
         if (speedChanged &&
                 (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) &&
-                speed > 0.0f && speed < 2.25f) {
+                speed > 0.20f && speed < 2.05f) { // min granularity is 0.05
             log.debug("setAudioSpeed: audio speed changed from " + mAudioSpeed + " to " + speed);
             mAudioSpeed = speed;
             if ((AUDIO_SPEED_ON_THE_FLY && mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false)) || force) {
