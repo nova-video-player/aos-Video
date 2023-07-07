@@ -1,3 +1,4 @@
+- Handle more scrape and subtitle languages
 - Fix A/V desync using playback speed
 - Switched to jsch-mwiede fork for SFTP
 - Add sort video option when browsing by folders
