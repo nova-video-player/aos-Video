@@ -667,10 +667,13 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         // below entryValues is sorted alphabetically starting at index imin and same sorting is applied to entries
 
-        /*
+        List<String> firstElements = entries.subList(0, imin);
         // Sort entries starting above index imin.
-        List<String> sortedEntries = new ArrayList<>(entries.subList(imin, entries.size()));
-        Collections.sort(sortedEntries);
+        List<String> lastElements = new ArrayList<>(entries.subList(imin, entries.size()));
+        Collections.sort(lastElements);
+        List<String> sortedEntries = new ArrayList<>();
+        sortedEntries.addAll(firstElements);
+        sortedEntries.addAll(lastElements);
 
         // Create a new list sortedEntryValues and iterate through sortedEntries.
         List<String> sortedEntryValues = new ArrayList<>();
@@ -681,44 +684,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         final CharSequence[] newEntries = new CharSequence[sortedEntries.size()];
         final CharSequence[] newEntryValues = new CharSequence[sortedEntryValues.size()];
-         */
-
-        ///*
-
-        // Create a temporary list of indices for the entries that need to be sorted
-        List<Integer> indicesToSort = new ArrayList<>();
-        for (int i = imin; i < entryValues.size(); i++) {
-            indicesToSort.add(i);
-        }
-
-        // Sort the indices based on the corresponding entries using a custom comparator
-        Collections.sort(indicesToSort, (i1, i2) -> entries.get(i1).compareTo(entries.get(i2)));
-
-        // Create a new list for sorted entryValues and entries
-        List<String> sortedEntryValues = new ArrayList<>();
-        List<String> sortedEntries = new ArrayList<>();
-
-        // Sort the required portion of the entryValues and entries lists
-        for (int i = 0; i < imin; i++) {
-            sortedEntryValues.add(entryValues.get(i));
-            sortedEntries.add(entries.get(i));
-        }
-        for (int i = 0; i < indicesToSort.size(); i++) {
-            int originalIndex = indicesToSort.get(i);
-            sortedEntryValues.add(entryValues.get(originalIndex));
-            sortedEntries.add(entries.get(originalIndex));
-        }
-
-        // Update the original entryValues and entries lists with the sorted values
-        for (int i = imin; i < entryValues.size(); i++) {
-            entryValues.set(i, sortedEntryValues.get(i));
-            entries.set(i, sortedEntries.get(i));
-        }
-
-        final CharSequence[] newEntries = new CharSequence[entries.size()];
-        final CharSequence[] newEntryValues = new CharSequence[entryValues.size()];
-
-         //*/
 
         entries.toArray(newEntries);
         entryValues.toArray(newEntryValues);
