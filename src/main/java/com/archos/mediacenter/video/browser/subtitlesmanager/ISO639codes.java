@@ -40,6 +40,10 @@ public class ISO639codes {
         else return result;
     }
 
+    static public String getLanguageNameOrStringFor2LetterCode(Context context, String code) {
+        return  com.archos.mediacenter.utils.ISO639codes.getLanguageNameFor2LetterCode(code);
+    }
+
     static public String getLanguageNameFor3LetterCode(Context context, String code) {
         String result = com.archos.mediacenter.utils.ISO639codes.getLanguageNameFor3LetterCode(code);
         if (result.startsWith("s_"))

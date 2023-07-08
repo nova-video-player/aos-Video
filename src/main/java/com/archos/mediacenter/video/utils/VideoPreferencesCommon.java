@@ -622,9 +622,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         String[] languageCodeArray = SUBS_LANGUAGES.split("\\|"); // contains 2 letters language codes
 
-        // TODO MARC use hashtable like in ScraperPreferencesFragment and easier for sorting too
-
-        // TODO MARC remove unused entries if need be?
         // create empty mutable arrays
         List<String> entries = new ArrayList<>();
         List<String> entryValues = new ArrayList<>();
@@ -660,7 +657,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             currentLocaleLanguage = com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.getLanguageNameFor2LetterCode(getActivity(), s);
             // opensubtitles wants ISO639-2B and not ISO639-3
             currentLocaleISO3Language = ISO639codes.convertISO6391ToISO6392(s);
-            log.debug("onCreatePreferences: code {} -> currentLocaleLanguage={}", s, currentLocaleLanguage);
+            log.debug("onCreatePreferences: code {} -> currentLocaleLanguage={}, currentLocaleISO3Language={}", s, currentLocaleLanguage, currentLocaleISO3Language);
             if (currentLocaleLanguage.equals(defaultLocaleLanguage) || currentLocaleLanguage.equals(englishLocaleLanguage))
                 continue;
             entries.set(index + imin, currentLocaleLanguage);
@@ -684,8 +681,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         final CharSequence[] newEntries = new CharSequence[sortedEntries.size()];
         final CharSequence[] newEntryValues = new CharSequence[sortedEntryValues.size()];
-
          */
+
+        ///*
 
         // Create a temporary list of indices for the entries that need to be sorted
         List<Integer> indicesToSort = new ArrayList<>();
@@ -719,6 +717,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         final CharSequence[] newEntries = new CharSequence[entries.size()];
         final CharSequence[] newEntryValues = new CharSequence[entryValues.size()];
+
+         //*/
 
         entries.toArray(newEntries);
         entryValues.toArray(newEntryValues);
