@@ -111,7 +111,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
-    compileSdkVersion 31
+    compileSdkVersion 33
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -125,7 +125,7 @@ android {
     defaultConfig {
         generatedDensities = []
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 33
         multiDexEnabled true
         // below version tracks the one from F-Droid or universal package when generated with ./gradlew -Puniversal
         // this is overridden when using split apk and normal split apk generation or oneapk amazon generation
