@@ -1700,7 +1700,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
             if(mSubtitleInfoController.getTrackCount()>0) {
                 for (int i = 0; i < mSubtitleInfoController.getTrackCount(); i++) {
-                    mSubtitleTVMenu.createAndAddTVMenuItem(mSubtitleInfoController.getTrackNameAt(i).toString(), true, mSubtitleInfoController.getTrack() == i);
+                    mSubtitleTVMenu.createAndAddTVMenuItem(mSubtitleInfoController.getTrackNameAt(i).toString(), true, mSubtitleInfoController.getTrack() == i + 1); // track 0 is for no subs
                 }
                 mSubtitleTVMenu.createAndAddSeparator();
                 mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.player_pref_subtitle_delay_title).toString(), false, false).setOnClickListener(new View.OnClickListener() {
@@ -3248,7 +3248,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         if (mSubtitleInfoController.getTrackCount() > 1) {
             int newSubtitleTrack = (mVideoInfo.subtitleTrack + 1) % mSubtitleInfoController.getTrackCount();
             if (mPlayer.setSubtitleTrack(newSubtitleTrack)) {
-                mVideoInfo.subtitleTrack = newSubtitleTrack;
+                mVideoInfo.subtitleTrack = newSubtitleTrack + 1;
                 mSubtitleManager.clear();
                 mSubtitleInfoController.setTrack(mVideoInfo.subtitleTrack);
 
@@ -3535,18 +3535,17 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             log.debug("onSubtitleMetadataUpdated: newSubtitle: " + newSubtitleTrack + ", mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack + ", firstTimeCalled: " + firstTimeCalled);
 
             mSubtitleInfoController.clear();
-            int noneTrack = nbTrack+1;
+            int noneTrack = 1;
+            // none track
             if (nbTrack != 0) {
+                mSubtitleInfoController.addTrack(getText(R.string.s_none)); // first track is none
                 mVideoInfo.nbSubtitles = nbTrack;
 
                 for (int i = 0; i < nbTrack; ++i) {
                     mSubtitleInfoController.addTrack(ISO639codes.getLanguageNameForLetterCode(vMetadata.getSubtitleTrack(i).name));
                 }
 
-                // none track
-
-                mSubtitleInfoController.addTrack(getText(R.string.s_none));
-                nbTrack++;
+                nbTrack++; // one more track to capture the none track
                 mSubtitleInfoController.addSeparator();
 
                 mSubtitleInfoController.addSettings(getText(R.string.player_pref_subtitle_delay_title), R.drawable.ic_menu_delay, SUBTITLE_MENU_DELAY);
@@ -3579,7 +3578,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
                 if (mVideoInfo.subtitleTrack >= 0 && mVideoInfo.subtitleTrack < nbTrack) {
                     //mVideoInfo.subtitleTrack has been changed by playerservice
-                    mSubtitleInfoController.setTrack(mVideoInfo.subtitleTrack);
+                    mSubtitleInfoController.setTrack(mVideoInfo.subtitleTrack + 1); // +1 since no track is at position 0
                 }
 
                 if (mSubtitleInfoController.getTrack() == noneTrack) {
