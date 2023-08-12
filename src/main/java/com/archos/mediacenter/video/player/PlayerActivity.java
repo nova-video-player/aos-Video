@@ -132,6 +132,7 @@ import java.util.Map;
 
 import static com.archos.environment.ArchosFeatures.isChromeOS;
 import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermission;
+import static com.archos.mediacenter.utils.ISO639codes.replaceLanguageCodeInString;
 import static com.archos.mediacenter.video.utils.MiscUtils.isEmulator;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.DEFAULT_MAX_IFRAME_SIZE;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.DEFAULT_STREAM_BUFFER_SIZE;
@@ -3513,7 +3514,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mAudioInfoController.clear();
             for (int i = 0; i < nbTrack; ++i) {
                 VideoMetadata.AudioTrack audio = vMetadata.getAudioTrack(i);
-                CharSequence name = ISO639codes.getLanguageNameForLetterCode(audio.name);
+                CharSequence name = replaceLanguageCodeInString(audio.name);
                 CharSequence summary = audio.format;
                 mAudioInfoController.addTrack(name, summary);
             }
@@ -3542,7 +3543,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mVideoInfo.nbSubtitles = nbTrack;
 
                 for (int i = 0; i < nbTrack; ++i) {
-                    mSubtitleInfoController.addTrack(ISO639codes.getLanguageNameForLetterCode(vMetadata.getSubtitleTrack(i).name));
+                    mSubtitleInfoController.addTrack(replaceLanguageCodeInString(vMetadata.getSubtitleTrack(i).name));
                 }
 
                 nbTrack++; // one more track to capture the none track

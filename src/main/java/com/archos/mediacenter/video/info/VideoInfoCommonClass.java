@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.info;
 
+import static com.archos.mediacenter.utils.ISO639codes.replaceLanguageCodeInString;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -162,9 +164,11 @@ public class VideoInfoCommonClass {
                     sb.append("\n");
                 }
                 VideoMetadata.AudioTrack audio = videoMetadata.getAudioTrack(i);
-
+                if (audioTrackNb == 1) {  // name of the track only if there is only one
+                    sb.append(replaceLanguageCodeInString(audio.name)).append(SEP);
+                }
                 if (audioTrackNb > 1) {  // number and name of the track only if there are more than one track
-                    sb.append(Integer.toString(i + 1)).append('.').append(SEP).append(ISO639codes.getISO6393ForLetterCode(audio.name)).append(SEP);
+                    sb.append(Integer.toString(i + 1)).append('.').append(SEP).append(replaceLanguageCodeInString(audio.name)).append(SEP);
                 }
                 sb.append(audio.format).append(SEP);
                 sb.append(audio.channels).append(SEP);

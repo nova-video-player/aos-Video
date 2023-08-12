@@ -209,7 +209,7 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
             }
             int index = i + offset;
             sb.append(Integer.toString(index + 1)).append(".").append(SEP)
-              .append(ISO639codes.getISO6393ForLetterCode(list.get(index).name)).append(SEP);
+              .append(ISO639codes.replaceLanguageCodeInString(list.get(index).name) + SEP);
         }
         return sb.toString();
     }

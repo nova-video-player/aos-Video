@@ -198,8 +198,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
             }
             int index = i + offset;
             sb.append(Integer.toString(index + 1)).append(".").append(separator)
-              .append(ISO639codes.getISO6393ForLetterCode(videoMetadata.getSubtitleTrack(index).name))
-              .append(separator);
+                    .append(ISO639codes.replaceLanguageCodeInString(videoMetadata.getSubtitleTrack(index).name) + separator);
         }
         return sb.toString();
     }

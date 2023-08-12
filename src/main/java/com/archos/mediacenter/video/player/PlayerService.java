@@ -76,6 +76,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
+import static com.archos.mediacenter.utils.ISO639codes.findLanguageInString;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PLAYBACK_SPEED;
 
 import org.slf4j.Logger;
@@ -1288,7 +1289,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 else {
                     Locale locale = new Locale(mSubsFavoriteLanguage);
                     for (int i = 0; i < nbTrack; ++i) {
-                        if (ISO639codes.getISO6393ForLetterCode(vMetadata.getSubtitleTrack(i).name).equalsIgnoreCase(locale.getDisplayLanguage())){
+                        // vMetadata.getSubtitleTrack(i).name is either "XYZ" or "title (XYZ)"
+                        if (locale.getDisplayLanguage().equalsIgnoreCase(findLanguageInString(vMetadata.getSubtitleTrack(i).name))){
                             mVideoInfo.subtitleTrack = i;
                             break;
                         }
