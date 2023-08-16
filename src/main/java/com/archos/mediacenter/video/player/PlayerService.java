@@ -49,8 +49,6 @@ import com.archos.environment.ArchosFeatures;
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.StreamUriFinder;
-import com.archos.mediacenter.utils.AppState;
-import com.archos.mediacenter.utils.ISO639codes;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
@@ -63,7 +61,6 @@ import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediacenter.video.utils.VideoMetadata;
-import com.archos.medialib.LibAvos;
 import com.archos.medialib.Subtitle;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
@@ -78,6 +75,7 @@ import java.util.concurrent.ExecutionException;
 import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
 import static com.archos.mediacenter.utils.ISO639codes.findLanguageInString;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PLAYBACK_SPEED;
+import static com.archos.mediascraper.StringUtils.stringContainsForced;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -963,7 +961,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     }
 
                     if (ArchosFeatures.isAndroidTV(PlayerService.this) && !PrivateMode.isActive())
-                    updateNowPlayingMetadata();
+                        updateNowPlayingMetadata();
                     // check if it has been scraped
                 }
             }
@@ -1278,10 +1276,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mAudioSubtitleNeedUpdate = true;
             return;
         }
+        log.debug("onSubtitleMetadataUpdated: newSubtitleTrack=" + newSubtitleTrack + " mVideoInfo.subtitleTrack=" + mVideoInfo.subtitleTrack + " mHideSubtitles=" + mHideSubtitles + " mSubsFavoriteLanguage=" + mSubsFavoriteLanguage + " mVideoInfo.subtitleTrack=" + mVideoInfo.subtitleTrack);
         int nbTrack = vMetadata.getSubtitleTrackNb();
         if (nbTrack != 0) {
             // none track
-            int noneTrack = nbTrack;
+            int noneTrack = 0;
     
             if (mVideoInfo.subtitleTrack == -1) {
                 if (mHideSubtitles)
@@ -1290,17 +1289,17 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     Locale locale = new Locale(mSubsFavoriteLanguage);
                     for (int i = 0; i < nbTrack; ++i) {
                         // vMetadata.getSubtitleTrack(i).name is either "XYZ" or "title (XYZ)"
-                        if (locale.getDisplayLanguage().equalsIgnoreCase(findLanguageInString(vMetadata.getSubtitleTrack(i).name))){
+                        log.debug("onSubtitleMetadataUpdated: subtitle track " + i + " name=" + vMetadata.getSubtitleTrack(i).name + " displayLanguage=" + locale.getDisplayLanguage() + " findLanguageInString=" + findLanguageInString(vMetadata.getSubtitleTrack(i).name));
+                        if (locale.getDisplayLanguage().equalsIgnoreCase(findLanguageInString(vMetadata.getSubtitleTrack(i).name)) && ! stringContainsForced(vMetadata.getSubtitleTrack(i).name)) {
+                            log.debug("onSubtitleMetadataUpdated: selected default track: " + vMetadata.getSubtitleTrack(i).name + " matching locale language " + locale.getDisplayLanguage());
                             mVideoInfo.subtitleTrack = i;
                             break;
                         }
                     }
                     if (mVideoInfo.subtitleTrack == -1)
                         mVideoInfo.subtitleTrack = newSubtitleTrack;
-
                 }
             }
-
             if (mVideoInfo.subtitleTrack >= 0 && mVideoInfo.subtitleTrack < nbTrack+1) {
                 if (newSubtitleTrack != mVideoInfo.subtitleTrack &&
                         !mPlayer.setSubtitleTrack(mVideoInfo.subtitleTrack))
@@ -1309,7 +1308,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     mPlayer.setSubtitleDelay(mVideoInfo.subtitleDelay);
                     if (mVideoInfo.subtitleRatio >= 0) {
                         mPlayer.setSubtitleRatio(mVideoInfo.subtitleRatio);
-
                 }
             }
 

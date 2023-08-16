@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.browser.subtitlesmanager;
 
 import static com.archos.mediacenter.utils.ISO639codes.getLanguageNameForLetterCode;
 import static com.archos.mediacenter.utils.ISO639codes.is3letterCode;
+import static com.archos.mediacenter.utils.ISO639codes.isletterCode;
 
 import android.content.Context;
 import android.content.Intent;
@@ -459,13 +460,13 @@ public class SubtitleManager {
                         final String subFilenameWithoutExtension = subFilename.substring(0, subFilename.length() - (fileExtension.length() + 1));
                         final String languageExtension = getLanguage(subFilenameWithoutExtension);
                         // if this is not a 3 letter code use the full file name
-                        if (languageExtension != null && is3letterCode(languageExtension)) subtitleName = getLanguageNameForLetterCode(languageExtension);
+                        if (languageExtension != null && isletterCode(languageExtension)) subtitleName = getLanguageNameForLetterCode(languageExtension);
                         // In case we don't have the subtitle language we put the full file name
                         if (subtitleName==null || subtitleName.isEmpty()) {
                             subtitleName = subFilename;
                         }
                         subList.add(new SubtitleFile(file, subtitleName));
-                        log.trace("listLocalAndRemotesSubtitles: add external " + file.getUri().toString() + "(" + subtitleName +")");
+                        log.trace("listLocalAndRemotesSubtitles: add external " + file.getUri().toString() + " (" + subtitleName +")");
                     }
                 }
             } catch (Exception e) {

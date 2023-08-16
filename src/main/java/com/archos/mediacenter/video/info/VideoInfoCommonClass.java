@@ -20,13 +20,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
-import android.util.Log;
 
 import com.archos.filecorelibrary.FileEditor;
 import com.archos.mediacenter.filecoreextension.upnp2.FileEditorFactoryWithUpnp;
 import com.archos.mediacenter.filecoreextension.upnp2.StreamUriFinder;
 import com.archos.mediacenter.filecoreextension.upnp2.UpnpServiceManager;
-import com.archos.mediacenter.utils.ISO639codes;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.utils.VideoMetadata;
@@ -165,10 +163,13 @@ public class VideoInfoCommonClass {
                 }
                 VideoMetadata.AudioTrack audio = videoMetadata.getAudioTrack(i);
                 if (audioTrackNb == 1) {  // name of the track only if there is only one
-                    sb.append(replaceLanguageCodeInString(audio.name)).append(SEP);
+                    String language = replaceLanguageCodeInString(audio.name);
+                    if (! language.equals("")) sb.append(language).append(SEP); // avoid adding space if language is unknown
                 }
                 if (audioTrackNb > 1) {  // number and name of the track only if there are more than one track
-                    sb.append(Integer.toString(i + 1)).append('.').append(SEP).append(replaceLanguageCodeInString(audio.name)).append(SEP);
+                    sb.append(Integer.toString(i + 1)).append('.').append(SEP);
+                    String language = replaceLanguageCodeInString(audio.name);
+                    if (! language.equals("")) sb.append(language).append(SEP); // avoid adding space if language is unknown
                 }
                 sb.append(audio.format).append(SEP);
                 sb.append(audio.channels).append(SEP);

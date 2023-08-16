@@ -16,10 +16,7 @@ package com.archos.mediacenter.video.browser.subtitlesmanager;
 
 import android.content.Context;
 
-import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.VideoUtils;
-
-import java.util.HashMap;
 
 /**
  * Created by vapillon on 18/05/15.
@@ -41,7 +38,7 @@ public class ISO639codes {
     }
 
     static public String getLanguageNameOrStringFor2LetterCode(Context context, String code) {
-        return  com.archos.mediacenter.utils.ISO639codes.getLanguageNameFor2LetterCode(code);
+        return com.archos.mediacenter.utils.ISO639codes.getLanguageNameFor2LetterCode(code);
     }
 
     static public String getLanguageNameFor3LetterCode(Context context, String code) {

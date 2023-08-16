@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.details;
 
+import static com.archos.mediascraper.StringUtils.capitalizeFirstLetter;
+
 import android.content.Context;
 import android.net.Uri;
 import androidx.leanback.widget.RowHeaderPresenter;
@@ -209,7 +211,7 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
             }
             int index = i + offset;
             sb.append(Integer.toString(index + 1)).append(".").append(SEP)
-              .append(ISO639codes.replaceLanguageCodeInString(list.get(index).name) + SEP);
+              .append(ISO639codes.replaceLanguageCodeInString(list.get(index).name)).append(SEP);
         }
         return sb.toString();
     }
@@ -223,7 +225,7 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
             }
             int index = i + offset;
             sb.append(Integer.toString(index + 1)).append(".").append(SEP)
-              .append(list.get(index).mName).append(SEP);
+              .append(capitalizeFirstLetter(list.get(index).mName)).append(SEP);
         }
         return sb.toString();
     }
