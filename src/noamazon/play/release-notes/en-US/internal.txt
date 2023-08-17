@@ -1,8 +1,9 @@
 - Handle more scrape and subtitle languages
-- Fix A/V desync using playback speed
-- Switched to jsch-mwiede fork for SFTP
+- Display audio/sub track titles
+- Fix A/V playback speed desync
+- Switched to jsch-mwiede for SFTP
 - Add sort video option when browsing by folders
-- New network shares: sshj (alternate SFTP), smbj (higher throughput SMB2+ implementation), webdav(s) for http(s)
+- New network shares: sshj (alternate SFTP), smbj (higher throughput SMB2+), webdav(s) for http(s)
 - Add tx3g/mov_text subs support
 - Add network shortcuts support for all network shares protocols
 - Webdav write support
