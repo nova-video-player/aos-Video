@@ -1,11 +1,11 @@
-- Handle more scrape and subtitle languages
+- Support more scrape and subtitle languages
 - Display audio/sub track titles
-- Fix A/V playback speed desync
-- Switched to jsch-mwiede for SFTP
+- Fix hdd subtitles download
+- Fix playback speed A/V desync
+- Use jsch-mwiede for SFTP
 - Add sort video option when browsing by folders
 - New network shares: sshj (alternate SFTP), smbj (higher throughput SMB2+), webdav(s) for http(s)
 - Add tx3g/mov_text subs support
-- Add network shortcuts support for all network shares protocols
-- Webdav write support
+- Network shortcuts support for all network shares protocols
 - Improve scrape accuracy: process year in movie files
 - Fix trakt login on leanback
