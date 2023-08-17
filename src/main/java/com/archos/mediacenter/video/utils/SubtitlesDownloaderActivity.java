@@ -941,6 +941,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                     }
                 }
             }
+            log.debug("downloadSubtitles: canWrite=" + canWrite + " for " + parentUri);
             String fileUrl;
             StringBuilder localSb = null;
             StringBuilder sb = null;
@@ -955,19 +956,27 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                     FileEditor editor = FileEditorFactory.getFileEditorForUrl(Uri.parse(sb.toString()), SubtitlesDownloaderActivity.this);
                     OutputStream tmp = editor.getOutputStream();
                     tmp.close();
+                    if (! editor.exists()) {
+                        log.debug("downloadSubtitles: file does not exist after close");
+                        canWrite = false;
+                    }
                 } catch (FileNotFoundException e) {
                     /* Fallback to subsDir */
                     canWrite = false;
+                    log.warn("downloadSubtitles: caught exception -> canWrite=" + canWrite + " for " + parentUri);
                 } catch (Exception e) {
                     canWrite = false;
+                    log.warn("downloadSubtitles: caught exception -> canWrite=" + canWrite + " for " + parentUri);
                 }
             }
             if (name == null || name.isEmpty())
                 name = FileUtils.getFileNameWithoutExtension(Uri.parse(path));
             localSb = new StringBuilder();
             localSb.append(subsDir.getPath()).append('/').append(name).append('.').append(language).append('.').append(subFormat);
-            if(!canWrite)
+            if(!canWrite) {
                 sb = localSb;
+                log.debug("downloadSubtitles: reverting to " + sb);
+            }
             String srtURl = sb.toString();
             sb = null;
             OutputStream f =null;
