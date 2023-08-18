@@ -2580,7 +2580,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                     // setting Studio Logo RecyclerView
                     List<String> StudioLogoPaths = new ArrayList<>();
-                    for (int i = 0; i < showTags.getStudioLogosLargeFileF().size(); i++) {
+                    for (int i = showTags.getStudioLogosLargeFileF().size() - 1; i>=0; i--) {
                         String studioLogoPath = showTags.getStudioLogosLargeFileF().get(i).getPath();
                         StudioLogoPaths.add(studioLogoPath);}
                     // if no Studio file found locally hide studios
