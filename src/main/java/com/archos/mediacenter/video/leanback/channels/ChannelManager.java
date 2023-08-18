@@ -1,5 +1,7 @@
 package com.archos.mediacenter.video.leanback.channels;
 
+import static com.archos.mediacenter.utils.MediaUtils.getExternalCacheDir;
+
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -172,7 +174,7 @@ public class ChannelManager {
 
         @Override
         protected Void doInBackground(Void... params) {
-            String path = new File(mContext.getExternalCacheDir(), "empty_poster.png").getAbsolutePath();
+            String path = new File(getExternalCacheDir(mContext), "empty_poster.png").getAbsolutePath();
 
             createEmptyPosterFile(path);
             createEmptyPosterRow(path);
