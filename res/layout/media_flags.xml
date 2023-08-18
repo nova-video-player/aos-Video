@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<GridLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/media_flags_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:columnCount="6"
+    android:rowCount="2"
     android:orientation="horizontal" >
 
     <ImageView
@@ -52,15 +54,6 @@
         android:scaleType="centerInside"/>
 
     <ImageView
-        android:id="@+id/flag_3d"
-        android:layout_width="60dp"
-        android:layout_height="48dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="@drawable/transparent_ripple"
-        android:scaleType="centerInside"/>
-
-    <ImageView
         android:id="@+id/color_depth"
         android:layout_width="60dp"
         android:layout_height="48dp"
@@ -78,4 +71,13 @@
         android:background="@drawable/transparent_ripple"
         android:scaleType="centerInside"/>
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/flag_3d"
+        android:layout_width="60dp"
+        android:layout_height="48dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/transparent_ripple"
+        android:scaleType="centerInside"/>
+
+</GridLayout>
