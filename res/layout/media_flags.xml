@@ -60,4 +60,22 @@
         android:background="@drawable/transparent_ripple"
         android:scaleType="centerInside"/>
 
+    <ImageView
+        android:id="@+id/color_depth"
+        android:layout_width="60dp"
+        android:layout_height="48dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/transparent_ripple"
+        android:scaleType="centerInside"/>
+
+    <ImageView
+        android:id="@+id/color_range"
+        android:layout_width="60dp"
+        android:layout_height="48dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/transparent_ripple"
+        android:scaleType="centerInside"/>
+
 </LinearLayout>

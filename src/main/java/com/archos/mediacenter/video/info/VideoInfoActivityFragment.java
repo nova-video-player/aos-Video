@@ -355,6 +355,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private ImageView mAudioChannels;
     private ImageView m3Dflag;
     private ImageView mMediaType;
+    private ImageView mColorDepth;
+    private ImageView mColorRange;
     private TextView mEpisodeResolution;
     private View mEpisodeResolutionContainer;
     private TextView mMovieResolution;
@@ -587,6 +589,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mAudioChannels = mRoot.findViewById(R.id.audio_channels);
         m3Dflag = mRoot.findViewById(R.id.flag_3d);
         mMediaType = mRoot.findViewById(R.id.media_type);
+        mColorDepth = mRoot.findViewById(R.id.color_depth);
+        mColorRange = mRoot.findViewById(R.id.color_range);
         mEpisodeResolution = mRoot.findViewById(R.id.episode_resolution);
         mEpisodeResolutionContainer = mRoot.findViewById(R.id.episode_resolution_container);
         mMovieResolution = mRoot.findViewById(R.id.movie_resolution);
@@ -1118,6 +1122,38 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }else{
                 mMediaType.setVisibility(View.GONE);
             }
+
+            // set Media Color depth (10bit, 8bit, 12bit)
+            String color1 = "8bit";
+            String color2 = "10bit";
+            String color3 = "12bit";
+            if(Pattern.compile(Pattern.quote(color1), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mColorDepth.setImageBitmap(getBitmapFromAsset("color/8bit.png"));
+                mColorDepth.setVisibility(View.VISIBLE);
+            }else if(Pattern.compile(Pattern.quote(color2), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mColorDepth.setImageBitmap(getBitmapFromAsset("color/10bit.png"));
+                mColorDepth.setVisibility(View.VISIBLE);
+            }else if(Pattern.compile(Pattern.quote(color3), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mColorDepth.setImageBitmap(getBitmapFromAsset("color/12bit.png"));
+                mColorDepth.setVisibility(View.VISIBLE);
+            }else{
+                mColorDepth.setVisibility(View.GONE);
+            }
+
+
+            // set Media Color dynamic range (hdr, sdr)
+            String hdr = "hdr";
+            String sdr = "sdr";
+            if(Pattern.compile(Pattern.quote(hdr), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mColorRange.setImageBitmap(getBitmapFromAsset("color/hdr.png"));
+                mColorRange.setVisibility(View.VISIBLE);
+            }else if(Pattern.compile(Pattern.quote(sdr), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mColorRange.setImageBitmap(getBitmapFromAsset("color/sdr.png"));
+                mColorRange.setVisibility(View.VISIBLE);
+            }else{
+                mColorRange.setVisibility(View.GONE);
+            }
+
 
             //hide tags if not movie or episode
             if (!(video instanceof Episode ) && !(video instanceof Movie)){
