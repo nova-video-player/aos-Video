@@ -438,7 +438,7 @@
 
     <string name="dialog_subloader_credentials">Opensubtitles credentials</string>
     <string name="dialog_subloader_credentials_empty">You must specify a valid username and password!</string>
-    <string name="toast_subloader_credentials_empty">Provide your opensubtitles credentials in settings to be able to download subtitles</string>
+    <string name="toast_subloader_credentials_empty">Provide your opensubtitles credentials in settings to be able to download more subtitles</string>
     <string name="toast_subloader_login_failed">Incorrect opensubtitles credentials or service not available</string>
 
     <!-- Subtitle Settings Dialog -->
