@@ -231,8 +231,10 @@ public class PermissionChecker {
         boolean isGranted = false;
         if (grantResults != null) {
             isGranted = true;
-            for (int result:grantResults)
-                isGranted = isGranted && (result == PackageManager.PERMISSION_GRANTED);
+            // do not take into account the last permission RECORD_AUDIO in determining isGranted
+            //for (int result:grantResults)
+            for (int i = 0; i < permissions.length - 1; i++)
+                isGranted = isGranted && (grantResults[i] == PackageManager.PERMISSION_GRANTED);
         }
         log.debug("onRequestPermissionsResult: isGranted " + isGranted);
         switch (requestCode) {
