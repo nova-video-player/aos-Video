@@ -21,6 +21,7 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -40,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.List;
 
 import io.sentry.SentryLevel;
 
@@ -50,7 +52,7 @@ public class PermissionChecker {
 
     private static final Logger log = LoggerFactory.getLogger(PermissionChecker.class);
 
-    private static boolean hasManageExternalStoragePermission = false;
+    private static boolean hasManageExternalStoragePermission = true;
 
     private static final int PERM_REQ_RW = 1;
     private static final int PERM_REQ_MANAGE = 2;
@@ -63,6 +65,9 @@ public class PermissionChecker {
     public PermissionChecker(boolean hasPermission) {
         hasManageExternalStoragePermission = hasPermission;
     }
+
+    // Note: this activity exists on API>=31 for phones and API>=32 for TVs
+    static boolean activityToRequestManageStorageExists = false;
 
     public interface PermissionListener{
         public void onPermissionGranted();
@@ -87,11 +92,24 @@ public class PermissionChecker {
 
         log.debug("checkAndRequestPermission: hasManageExternalStoragePermission=" + hasManageExternalStoragePermission + ", isDialogDisplayed=" + isDialogDisplayed);
 
-        if(Build.VERSION.SDK_INT > 29 && hasManageExternalStoragePermission) { // MANAGE_EXTERNAL_STORAGE has it all
+        // MANAGE_EXTERNAL_STORAGE is supported for API>=30, needs to be granted by user on API>=31 via android.settings.MANAGE_APP_ALL_FILES_ACCESS_PERMISSION that does not exist on Android TV until API>=34
+        // WRITE_EXTERNAL_STORAGE is maxSdkVersion 29, auto-granted API<=22, requires explicit user permission 23<=API<=32, i.e. not required to be in manifest 30<=API<=32 but programmatically requested
+        // READ_EXTERNAL_STORAGE is maxSdkVersion 32, auto-granted API<=22, requires explicit user permission 23<=API<=32
+        // for API>=33 instead of using WRITE_EXTERNAL_STORAGE and READ_EXTERNAL_STORAGE, more granularity is required and READ_MEDIA_(VIDEO|AUDIO|IMAGE) need to be requested when MANAGE_EXTERNAL_STORAGE is not used
+        // for API>=33, POST_NOTIFICATIONS permission is also required
+        // Environment.isExternalStorageManager() used to check MANAGE_EXTERNAL_STORAGE is for API>=30
+
+        boolean canManageStorage = Environment.isExternalStorageManager();
+        log.debug("checkAndRequestPermission: canManageStorage=" + canManageStorage);
+
+        Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:" + mActivity.getPackageName()));
+        activityToRequestManageStorageExists = intent.resolveActivity(mActivity.getPackageManager()) != null;
+
+        if(Build.VERSION.SDK_INT >= 30 && hasManageExternalStoragePermission && activityToRequestManageStorageExists) { // MANAGE_EXTERNAL_STORAGE has it all and is introduced in API>=31 except for TV
             log.debug("checkAndRequestPermission: is MANAGE_EXTERNAL_STORAGE granted? " + Environment.isExternalStorageManager());
             if (!isDialogDisplayed && !Environment.isExternalStorageManager()) {
                 log.debug("checkAndRequestPermission: requesting MANAGE_EXTERNAL_STORAGE");
-                if(Build.VERSION.SDK_INT > 32) { // Need POST_NOTIFICATIONS too
+                if(Build.VERSION.SDK_INT >= 33) { // Need POST_NOTIFICATIONS too
                     ActivityCompat.requestPermissions(
                             activity,
                             new String[]{ // MANAGE_EXTERNAL_STORAGE provides READ thus no need to ask both except for legacy code?
@@ -115,7 +133,7 @@ public class PermissionChecker {
                 }
             }
         } else {
-            if (Build.VERSION.SDK_INT > 32) { // API>=33 no WRITE_EXTERNAL_STORAGE and READ_EXTERNAL_STORAGE needs extra media granularity
+            if (Build.VERSION.SDK_INT >= 33) { // API>=33 no WRITE_EXTERNAL_STORAGE and READ_EXTERNAL_STORAGE needs extra media granularity
                 if (!isDialogDisplayed && ContextCompat.checkSelfPermission(mActivity, android.Manifest.permission.READ_MEDIA_VIDEO) != PackageManager.PERMISSION_GRANTED) {
                     log.debug("checkAndRequestPermission: API>=33 requesting READ_MEDIA_VIDEO");
                     ActivityCompat.requestPermissions(
@@ -132,7 +150,7 @@ public class PermissionChecker {
                     isDialogDisplayed = true;
                 }
             } else {
-                if (Build.VERSION.SDK_INT < 30) { // 23<=API<30 WRITE_EXTERNAL_STORAGE and READ_EXTERNAL_STORAGE (READ should be auto-granted via WRITE)
+                if (Build.VERSION.SDK_INT <= 29) { // 23<=API<=29 WRITE_EXTERNAL_STORAGE and READ_EXTERNAL_STORAGE auto-granted (READ should be auto-granted via WRITE)
                     if (!isDialogDisplayed && ContextCompat.checkSelfPermission(mActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                         log.debug("checkAndRequestPermission: 23<=API<30 requesting (READ|WRITE)_EXTERNAL_STORAGE");
                         ActivityCompat.requestPermissions(
@@ -167,28 +185,28 @@ public class PermissionChecker {
     public boolean hasExternalPermission(AppCompatActivity activity){
         mActivity = activity;
         boolean result = false;
-        if(Build.VERSION.SDK_INT < 23) {
-            log.debug("hasExternalPermission: API<23 -> true");
+        if(Build.VERSION.SDK_INT <= 22) { // API<=22
+            log.debug("hasExternalPermission: API<=22 -> true");
             return true;
         } else {
-            if (Build.VERSION.SDK_INT > 29 && hasManageExternalStoragePermission) { // this is already the case
+            if (Build.VERSION.SDK_INT >= 30 && hasManageExternalStoragePermission) { // this is already the case
                 result = Environment.isExternalStorageManager();
                 log.debug("hasExternalPermission: API>=30 and hasManagedExternalStoragePermission -> " + result);
                 return result;
             } else {
                 // Good reading https://stackoverflow.com/questions/64221188/write-external-storage-when-targeting-android-10
-                if (Build.VERSION.SDK_INT > 32) {
+                if (Build.VERSION.SDK_INT >= 33) { // API>=33
                     result = ContextCompat.checkSelfPermission(mActivity, Manifest.permission.READ_MEDIA_VIDEO) == PackageManager.PERMISSION_GRANTED;
                     log.debug("hasExternalPermission: API>=33 READ_MEDIA_VIDEO -> " + result);
                     return result;
                 } else {
-                    if (Build.VERSION.SDK_INT < 30) {
+                    if (Build.VERSION.SDK_INT <= 29) { // 23<=API<=29
                         result = ContextCompat.checkSelfPermission(mActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-                        log.debug("hasExternalPermission: 23<=API<30 WRITE_EXTERNAL_STORAGE -> " + result);
+                        log.debug("hasExternalPermission: 23<=API<=29 WRITE_EXTERNAL_STORAGE -> " + result);
                         return result;
-                    } else {
+                    } else { // API 30<=API<=32
                         result = ContextCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-                        log.debug("hasExternalPermission: 30<=API<33 READ_EXTERNAL_STORAGE -> " + result);
+                        log.debug("hasExternalPermission: 30<=API<=32 READ_EXTERNAL_STORAGE -> " + result);
                         return result;
                     }
                 }
@@ -219,18 +237,20 @@ public class PermissionChecker {
         log.debug("onRequestPermissionsResult: isGranted " + isGranted);
         switch (requestCode) {
             case PERM_REQ_RW:
-                if (Build.VERSION.SDK_INT > 32) {
+                if (Build.VERSION.SDK_INT >= 33) { // API>=33
                     log.debug("onRequestPermissionsResult: PERM_REQ_RW API>=33 request READ_MEDIA_VIDEO");
                     permissionToRequest = Manifest.permission.READ_MEDIA_VIDEO;
                     action = "android.intent.action.MANAGE_APP_PERMISSIONS";
                     errorMessage = R.string.error_permission_storage;
                 } else {
-                    if (Build.VERSION.SDK_INT < 30) {
+                    if (Build.VERSION.SDK_INT <= 29) { // API<=29
+                        // between 23<=API<=29 WRITE_EXTERNAL_STORAGE grants READ_EXTERNAL_STORAGE
                         log.debug("onRequestPermissionsResult: PERM_REQ_RW 23<=API<30 request WRITE_EXTERNAL_STORAGE");
                         permissionToRequest = android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
                         action = "android.intent.action.MANAGE_APP_PERMISSIONS";
                         errorMessage = R.string.error_permission_storage;
-                    } else {
+                    } else { // 30<=API<=32
+                        // between 30<=API<=32 only READ_EXTERNAL_STORAGE is possible
                         log.debug("onRequestPermissionsResult: PERM_REQ_RW 30<=API<33 request READ_EXTERNAL_STORAGE");
                         permissionToRequest = android.Manifest.permission.READ_EXTERNAL_STORAGE;
                         action = "android.intent.action.MANAGE_APP_PERMISSIONS";
@@ -240,7 +260,7 @@ public class PermissionChecker {
                 break;
             case PERM_REQ_MANAGE:
                 log.debug("configuring PERM_REQ_MANAGE");
-                if(Build.VERSION.SDK_INT>29 && hasManageExternalStoragePermission) {
+                if(Build.VERSION.SDK_INT>=31 && hasManageExternalStoragePermission && activityToRequestManageStorageExists) {
                     permissionToRequest = android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
                     action = Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION;
                     errorMessage = R.string.error_permission_all_file_access;
@@ -254,12 +274,29 @@ public class PermissionChecker {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             // finish();
                             isDialogDisplayed = false;
+                            log.debug("onRequestPermissionsResult: requesting permission " + permissionToRequest + " with intent action " + action);
                             if (!ActivityCompat.shouldShowRequestPermissionRationale(mActivity, permissionToRequest)) {
                                 log.debug("onRequestPermissionsResult: packageName=" + mActivity.getPackageName());
                                 // try/catch dance: android dev documentation says these intents/activities are there since dawn of age but
                                 // "In some cases, a matching Activity may not exist, so ensure you safeguard against this."
                                 try {
-                                    mActivity.startActivity(new Intent(action, Uri.parse("package:" + mActivity.getPackageName())));
+                                    Intent intent = new Intent(action, Uri.parse("package:" + mActivity.getPackageName()));
+                                    boolean isCallable = intent.resolveActivity(mActivity.getPackageManager()) != null;
+                                    log.debug("onRequestPermissionsResult: intent isCallable=" + isCallable);
+
+                                    PackageManager packageManager = mActivity.getPackageManager();
+                                    List<ResolveInfo> list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+                                    for (ResolveInfo resolveInfo : list) {
+                                        String activityName = resolveInfo.activityInfo.name;
+                                        String packageName = resolveInfo.activityInfo.packageName;
+                                        log.debug("onRequestPermissionsResult: Activity name: " + activityName);
+                                        log.debug("onRequestPermissionsResult: Package name: " + packageName);
+                                    }
+
+                                    System.out.println("The intent is callable: " + isCallable);
+
+                                    //mActivity.startActivity(new Intent(action, Uri.parse("package:" + mActivity.getPackageName())));
+                                    mActivity.startActivity(intent);
                                 } catch (SecurityException | ActivityNotFoundException e) {
                                     if (log.isDebugEnabled()) log.warn("onRequestPermissionsResult: caught exception trying ACTION_APPLICATION_DETAILS_SETTINGS", e);
                                     try {
