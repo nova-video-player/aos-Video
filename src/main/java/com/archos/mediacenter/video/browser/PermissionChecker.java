@@ -99,9 +99,6 @@ public class PermissionChecker {
         // for API>=33, POST_NOTIFICATIONS permission is also required
         // Environment.isExternalStorageManager() used to check MANAGE_EXTERNAL_STORAGE is for API>=30
 
-        boolean canManageStorage = Environment.isExternalStorageManager();
-        log.debug("checkAndRequestPermission: canManageStorage=" + canManageStorage);
-
         Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:" + mActivity.getPackageName()));
         activityToRequestManageStorageExists = intent.resolveActivity(mActivity.getPackageManager()) != null;
 
