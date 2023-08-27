@@ -101,6 +101,7 @@ public class PermissionChecker {
 
         Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:" + mActivity.getPackageName()));
         activityToRequestManageStorageExists = intent.resolveActivity(mActivity.getPackageManager()) != null;
+        log.debug("checkAndRequestPermission: activityToRequestManageStorageExists=" + activityToRequestManageStorageExists);
 
         if(Build.VERSION.SDK_INT >= 30 && hasManageExternalStoragePermission && activityToRequestManageStorageExists) { // MANAGE_EXTERNAL_STORAGE has it all and is introduced in API>=31 except for TV
             log.debug("checkAndRequestPermission: is MANAGE_EXTERNAL_STORAGE granted? " + Environment.isExternalStorageManager());
@@ -259,7 +260,7 @@ public class PermissionChecker {
                 break;
             case PERM_REQ_MANAGE:
                 log.debug("configuring PERM_REQ_MANAGE");
-                if(Build.VERSION.SDK_INT>=31 && hasManageExternalStoragePermission && activityToRequestManageStorageExists) {
+                if(Build.VERSION.SDK_INT>=31 && hasManageExternalStoragePermission && activityToRequestManageStorageExists) { // no need to request MANAGE_EXTERNAL_STORAGE on API=30 it is auto-granted when declared in AndroidManifest
                     permissionToRequest = android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
                     action = Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION;
                     errorMessage = R.string.error_permission_all_file_access;
@@ -280,21 +281,8 @@ public class PermissionChecker {
                                 // "In some cases, a matching Activity may not exist, so ensure you safeguard against this."
                                 try {
                                     Intent intent = new Intent(action, Uri.parse("package:" + mActivity.getPackageName()));
-                                    boolean isCallable = intent.resolveActivity(mActivity.getPackageManager()) != null;
-                                    log.debug("onRequestPermissionsResult: intent isCallable=" + isCallable);
-
-                                    PackageManager packageManager = mActivity.getPackageManager();
-                                    List<ResolveInfo> list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-                                    for (ResolveInfo resolveInfo : list) {
-                                        String activityName = resolveInfo.activityInfo.name;
-                                        String packageName = resolveInfo.activityInfo.packageName;
-                                        log.debug("onRequestPermissionsResult: Activity name: " + activityName);
-                                        log.debug("onRequestPermissionsResult: Package name: " + packageName);
-                                    }
-
-                                    System.out.println("The intent is callable: " + isCallable);
-
-                                    //mActivity.startActivity(new Intent(action, Uri.parse("package:" + mActivity.getPackageName())));
+                                    if (intent.resolveActivity(mActivity.getPackageManager()) == null)
+                                        log.warn("onRequestPermissionsResult: intent not callable for action=" + action);
                                     mActivity.startActivity(intent);
                                 } catch (SecurityException | ActivityNotFoundException e) {
                                     if (log.isDebugEnabled()) log.warn("onRequestPermissionsResult: caught exception trying ACTION_APPLICATION_DETAILS_SETTINGS", e);
