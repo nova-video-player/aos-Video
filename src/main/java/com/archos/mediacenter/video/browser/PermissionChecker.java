@@ -215,7 +215,6 @@ public class PermissionChecker {
     static String permissionToRequest = "";
     static int errorMessage = 0;
     static String action = "";
-    static Intent intent;
 
     @TargetApi(Build.VERSION_CODES.M)
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults, Activity activity) {
@@ -229,12 +228,17 @@ public class PermissionChecker {
         boolean isGranted = false;
         if (grantResults != null) {
             isGranted = true;
-            // do not take into account the last permission RECORD_AUDIO in determining isGranted
-            //for (int result:grantResults)
-            for (int i = 0; i < permissions.length - 1; i++)
-                isGranted = isGranted && (grantResults[i] == PackageManager.PERMISSION_GRANTED);
+        }
+        for (int i = 0; i < permissions.length; i++) {
+            // RECORD_AUDIO is optional
+            isGranted = isGranted && (grantResults[i] == PackageManager.PERMISSION_GRANTED || permissions[i].equals(Manifest.permission.RECORD_AUDIO));
+            if (grantResults[i] == PackageManager.PERMISSION_DENIED)
+                log.warn("onRequestPermissionsResult: permission " + permissions[i] + " not granted");
+            if (grantResults[i] == PackageManager.PERMISSION_GRANTED)
+                log.debug("onRequestPermissionsResult: permission " + permissions[i] + " granted");
         }
         log.debug("onRequestPermissionsResult: isGranted " + isGranted);
+        errorMessage = R.string.error; // be sure it is initialized
         switch (requestCode) {
             case PERM_REQ_RW:
                 if (Build.VERSION.SDK_INT >= 33) { // API>=33
@@ -260,7 +264,7 @@ public class PermissionChecker {
                 break;
             case PERM_REQ_MANAGE:
                 log.debug("configuring PERM_REQ_MANAGE");
-                if(Build.VERSION.SDK_INT>=31 && hasManageExternalStoragePermission && activityToRequestManageStorageExists) { // no need to request MANAGE_EXTERNAL_STORAGE on API=30 it is auto-granted when declared in AndroidManifest
+                if(Build.VERSION.SDK_INT>=30 && hasManageExternalStoragePermission && activityToRequestManageStorageExists) { // no need to request MANAGE_EXTERNAL_STORAGE on API=30 it is auto-granted when declared in AndroidManifest but do it for consistency
                     permissionToRequest = android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
                     action = Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION;
                     errorMessage = R.string.error_permission_all_file_access;
