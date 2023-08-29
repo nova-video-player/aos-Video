@@ -58,10 +58,16 @@ public class MiscUtils {
     }
 
     public static boolean isAndroidTV(Context context) {
-        UiModeManager uiModeManager = (UiModeManager) context.getSystemService(UI_MODE_SERVICE);
-        return (uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION);
+        UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
+        // Check if the UiModeManager object is null
+        if (uiModeManager != null) {
+            return (uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION);
+        } else {
+            // UiModeManager is not available on this device
+            return false;
+        }
     }
-
+    
     public static boolean isEmulator() {
         return (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
                 || Build.FINGERPRINT.startsWith("generic")
