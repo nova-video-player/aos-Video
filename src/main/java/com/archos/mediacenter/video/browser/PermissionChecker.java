@@ -101,7 +101,7 @@ public class PermissionChecker {
 
         Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:" + mActivity.getPackageName()));
         activityToRequestManageStorageExists = intent.resolveActivity(mActivity.getPackageManager()) != null;
-        log.debug("checkAndRequestPermission: activityToRequestManageStorageExists=" + activityToRequestManageStorageExists);
+        log.debug("checkAndRequestPermission: hasManageExternalStoragePermissionactivityToRequestManageStorageExists=" + activityToRequestManageStorageExists);
 
         if(Build.VERSION.SDK_INT >= 30 && hasManageExternalStoragePermission && activityToRequestManageStorageExists) { // MANAGE_EXTERNAL_STORAGE has it all and is introduced in API>=31 except for TV
             log.debug("checkAndRequestPermission: is MANAGE_EXTERNAL_STORAGE granted? " + Environment.isExternalStorageManager());
@@ -181,13 +181,13 @@ public class PermissionChecker {
     }
 
     public boolean hasExternalPermission(AppCompatActivity activity){
-        mActivity = activity;
+          mActivity = activity;
         boolean result = false;
         if(Build.VERSION.SDK_INT <= 22) { // API<=22
             log.debug("hasExternalPermission: API<=22 -> true");
             return true;
         } else {
-            if (Build.VERSION.SDK_INT >= 30 && hasManageExternalStoragePermission) { // this is already the case
+            if (Build.VERSION.SDK_INT >= 30 && hasManageExternalStoragePermission && activityToRequestManageStorageExists) { // this is already the case
                 result = Environment.isExternalStorageManager();
                 log.debug("hasExternalPermission: API>=30 and hasManagedExternalStoragePermission -> " + result);
                 return result;
@@ -325,6 +325,7 @@ public class PermissionChecker {
                     }
             ).setCancelable(false).show();
         } else {
+            log.debug("onRequestPermissionsResult: permission granted, launch scan");
             launchScan();
         }
     }

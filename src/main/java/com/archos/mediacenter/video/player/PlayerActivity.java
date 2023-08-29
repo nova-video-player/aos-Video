@@ -916,7 +916,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         Player.sPlayer = mPlayer;
         PlayerService.sPlayerService.setPlayer();
         if(mPermissionChecker.hasExternalPermission(this)) {
-            log.debug("hasExternalPermission ");
+            log.debug("postOnPlayerServiceBind: hasExternalPermission");
             PlayerService.sPlayerService.onStart(intent);
             PlayerService.sPlayerService.setIndexHelper(mIndexHelper);
             start();
