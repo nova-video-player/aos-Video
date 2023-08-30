@@ -589,7 +589,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
                             log.debug("updateAdapterIfReady: replace " + positionInAdapter);
                             mFilesAdapter.replace(positionInAdapter, newObject);
                         } else {
-                            log.debug("updateAdapterIfReady: remove {} and add {}", positionInAdapter, ((Video)newObject).getName());
+                            log.debug("updateAdapterIfReady: remove {} and add", positionInAdapter);
                             mFilesAdapter.removeItems(positionInAdapter,1);
                             mFilesAdapter.add(newObject);
                         }
