@@ -32,7 +32,6 @@ allprojects {
         mavenLocal()
         maven { url 'https://jitpack.io' }
     }
-    //apply plugin: 'app.brant.amazonappstorepublisher'
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
@@ -57,8 +56,8 @@ static def getFormattedDate() {
 
 ext {
     myApplicationId = "org.courville.nova"
-    myVersionCode = 602022
-    myVersionName = '6.2.22'
+    myVersionCode = 602023
+    myVersionName = '6.2.23'
     if (! project.hasProperty("universal")) {
         // override versionName and versionCode to get it dependent on the date
         myVersionName = myVersionName + "-" + getFormattedDate()
@@ -71,6 +70,8 @@ ext {
 apply {
     plugin("com.android.application")
     plugin("com.github.triplet.play")
+    //plugin("app.brant.amazonappstorepublisher")
+    plugin("io.sentry.android.gradle")
 }
 
 import com.github.triplet.gradle.androidpublisher.ReleaseStatus
