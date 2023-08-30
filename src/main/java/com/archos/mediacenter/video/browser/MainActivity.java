@@ -525,15 +525,19 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean ret = super.onCreateOptionsMenu(menu);
         /// /setHomeButtonsetHomeButton();
-        MenuItem item = menu.add(MENU_SEARCH_GROUP, MENU_SEARCH_ITEM, Menu.NONE, R.string.search_title);
-        item.setIcon(R.drawable.android29_ic_menu_search_mtrl_alpha);
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        mSearchView = new SearchView(this);
-        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        item.setActionView(mSearchView);
-        mSearchItem = item;
+        if (searchManager == null) {
+            log.error("onCreateOptionsMenu: searchManager is null");
+        } else {
+            mSearchView = new SearchView(this);
+            mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            MenuItem item = menu.add(MENU_SEARCH_GROUP, MENU_SEARCH_ITEM, Menu.NONE, R.string.search_title);
+            item.setIcon(R.drawable.android29_ic_menu_search_mtrl_alpha);
+            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+            item.setActionView(mSearchView);
+            mSearchItem = item;
+        }
         MenuItem menuItem = menu.add(MENU_SCRAPER_GROUP, MENU_START_AUTO_SCRAPER_ACTIVITY, Menu.NONE,
                 R.string.start_auto_scraper_activity);
         menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
