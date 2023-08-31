@@ -74,10 +74,10 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
         args.putString(BrowserByNetwork.SHARE_NAME, uri.getLastPathSegment());
 
         Fragment f;
-        if (uri.getScheme().equals("smb")) {
+        if ("smb".equals(uri.getScheme())) {
             f = new BrowserBySmb();
             f.setArguments(args);
-        } else if (uri.getScheme().equals("upnp")) {
+        } else if ("upnp".equals(uri.getScheme())) {
             f = new BrowserByUpnp();
             f.setArguments(args);
         } else {
@@ -110,7 +110,7 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
             public void onClick(View v) {
                 // Rescan the contents of the folder
                 NetworkScanner.scanVideos(getActivity(), uri);
-                log.debug("onRefreshClickListener: MARC");
+                log.debug("onRefreshClickListener: scanVideos " + uri);
                 if(ShortcutDbAdapter.VIDEO.isShortcut(getActivity(), uri.toString())<0){
                     //if not a shortcut = indexed folder, add as indexed folder and remove static shortcut
                     if(ShortcutDb.STATIC.isShortcut(getContext(), uri.toString()) != -1)
