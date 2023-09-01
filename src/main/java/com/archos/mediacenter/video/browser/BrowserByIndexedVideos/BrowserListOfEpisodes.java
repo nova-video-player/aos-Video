@@ -243,7 +243,7 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
 
     @Override
     protected Uri getPosterUri() {
-        if(mBrowserAdapter.getCount()>0)
+        if(mBrowserAdapter != null && mBrowserAdapter.getCount()>0)
             return ((Video)mBrowserAdapter.getItem(0)).getPosterUri();
         return null;
     }
