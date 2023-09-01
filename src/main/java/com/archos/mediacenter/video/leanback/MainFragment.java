@@ -510,6 +510,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     }
 
     private void setupEventListeners() {
+        if (mActivity == null) return;
         setOnSearchClickedListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent intent = new Intent(mActivity, VideoSearchActivity.class);
