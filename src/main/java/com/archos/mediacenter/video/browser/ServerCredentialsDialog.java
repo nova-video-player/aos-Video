@@ -206,8 +206,11 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
 
                 boolean validUri = true;
 
-                // username can be empty with samba guest shares
-                if (username.equals("") || UriUtils.requiresDomain(type)) validUri = false;
+                // username can be empty with samba guest shares (UriUtils.requiresDomain(type))
+                if (username.equals("") && ! UriUtils.requiresDomain(type)) {
+                    log.debug("onClick: invalid credential, username empty and not smb protocol");
+                    validUri = false;
+                }
 
                 // path needs to start by a "/"
                 if(path.isEmpty()||!path.startsWith("/"))
@@ -215,12 +218,15 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
 
                 if (! UriUtils.isValidHost(address)) {
                     Toast.makeText(getActivity(), getString(R.string.invalid_host), Toast.LENGTH_SHORT).show();
+                    log.warn("onClick: invalid host: " + address);
                     validUri = false;
                 } else if (! UriUtils.isValidPort(port)) {
                     Toast.makeText(getActivity(), getString(R.string.invalid_port), Toast.LENGTH_SHORT).show();
+                    log.warn("onClick: invalid port: " + port);
                     validUri = false;
                 } else if (! UriUtils.isValidPath(path)) {
                     Toast.makeText(getActivity(), getString(R.string.invalid_path), Toast.LENGTH_SHORT).show();
+                    log.warn("onClick: invalid path: " + path);
                     validUri = false;
                 }
 
