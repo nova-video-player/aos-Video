@@ -14,8 +14,6 @@
 
 package com.archos.mediacenter.video.leanback.network;
 
-import static com.archos.mediacenter.filecoreextension.UriUtils.getTypeUri;
-
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -45,6 +43,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class NetworkServerCredentialsDialog extends DialogFragment {
+
+    // Note: this is both used in the leanback and the mobile interface in network shortcuts
 
     private static final Logger log = LoggerFactory.getLogger(NetworkServerCredentialsDialog.class);
 
@@ -101,11 +101,12 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
             mType = mPreferences.getInt(NET_LATEST_TYPE, 0);
             mPort = mPreferences.getInt(NET_LATEST_PORT, -1);
             mPath = mPreferences.getString(NET_LATEST_PATH, "");
+            mDomain = mPreferences.getString(NET_LATEST_DOMAIN, "");
         }
         if(mPassword.isEmpty()&&!mRemote.isEmpty()){
             NetworkCredentialsDatabase database = NetworkCredentialsDatabase.getInstance();
             String uriToBuild = "";
-            uriToBuild = getTypeUri(mType);
+            uriToBuild = UriUtils.getTypeUri(mType);
             uriToBuild +="://"+mRemote+":"+mPort+"/";
             log.debug("onCreateDialog: uriToBuild=" + uriToBuild);
 
@@ -130,14 +131,18 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
         typeSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if (position == 3) v.findViewById(R.id.domain).setVisibility(View.VISIBLE);
+                if (UriUtils.requiresDomain(position)) v.findViewById(R.id.domain).setVisibility(View.VISIBLE);
                 else {
                     ((EditText) v.findViewById(R.id.domain)).setText("");
                     v.findViewById(R.id.domain).setVisibility(View.GONE);
                 }
+                ((EditText) v.findViewById(R.id.port)).setText("");
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
+                if (UriUtils.requiresDomain(mType))
+                    v.findViewById(R.id.domain).setVisibility(View.VISIBLE);
+                else v.findViewById(R.id.domain).setVisibility(View.GONE);
             }
         });
 
@@ -160,7 +165,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
         log.debug("onCreateDialog: username=" + mUsername + ", domain=" + mDomain + ", port=" + mPort + ", remote=" + mRemote + ", path=" + mPath + "; type=" + mType);
         usernameEt.setText(mUsername);
         passwordEt.setText(mPassword);
-        if (UriUtils.doesUriTypeRequiresDomain(type)) domainEt.setText(mDomain);
+        if (UriUtils.requiresDomain(type)) domainEt.setText(mDomain);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
         .setTitle(R.string.browse_ftp_server)
@@ -174,30 +179,58 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
         })
         .setPositiveButton(android.R.string.ok,new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int id) {
-                // username can be empty with samba guest shares
-                if(!usernameEt.getText().toString().isEmpty() || UriUtils.doesUriTypeRequiresDomain(type)){
-                    final int type = typeSp.getSelectedItemPosition();
-                    final String address = addressEt.getText().toString();
-                    String path = pathEt.getText().toString();
-                    int port = -1;
-                    try{
-                        port = Integer.parseInt(portEt.getText().toString());
-                    } catch(NumberFormatException e){ }
 
-                    String scheme = "";
-                    scheme = getTypeUri(type);
+                String username = usernameEt.getText().toString();
+                final String password = passwordEt.getText().toString();
+                final String domain = domainEt.getText().toString();
+
+                final int type = typeSp.getSelectedItemPosition();
+                final String address = addressEt.getText().toString();
+                String path = pathEt.getText().toString();
+
+                int port = -1;
+                if (! portEt.getText().toString().isEmpty()) {
+                    try {
+                        port = Integer.parseInt(portEt.getText().toString());
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(getActivity(), getString(R.string.invalid_port), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                String scheme = "";
+                scheme = UriUtils.getTypeUri(type);
+
+                // webdav(s) empty user means anonymous
+                if (username.equals("") && UriUtils.emptyCredentialMeansAnonymous(scheme))
+                    username = "anonymous";
+
+                boolean validUri = true;
+
+                // username can be empty with samba guest shares
+                if (username.equals("") || UriUtils.requiresDomain(type)) validUri = false;
+
+                // path needs to start by a "/"
+                if(path.isEmpty()||!path.startsWith("/"))
+                    path = "/"+path;
+
+                if (! UriUtils.isValidHost(address)) {
+                    Toast.makeText(getActivity(), getString(R.string.invalid_host), Toast.LENGTH_SHORT).show();
+                    validUri = false;
+                } else if (! UriUtils.isValidPort(port)) {
+                    Toast.makeText(getActivity(), getString(R.string.invalid_port), Toast.LENGTH_SHORT).show();
+                    validUri = false;
+                } else if (! UriUtils.isValidPath(path)) {
+                    Toast.makeText(getActivity(), getString(R.string.invalid_path), Toast.LENGTH_SHORT).show();
+                    validUri = false;
+                }
+
+                log.debug("onClick: scheme=" + scheme + ", username=" + username + ", domain=" + domain + ", port=" + port + ", remote=" + address + ", path=" + path + "; type=" + type + ", validUri=" + validUri);
+
+                if(validUri){
 
                     if (port == -1) {
                         port = MetaFile2Factory.defaultPortForProtocol(scheme);
                     }
-
-                    String username = usernameEt.getText().toString();
-                    final String password = passwordEt.getText().toString();
-                    final String domain = domainEt.getText().toString();
-
-                    // webdav(s) empty user means anonymous
-                    if (scheme.startsWith("webdav") && username.equals(""))
-                        username = "anonymous";
 
                     // Store new values to preferences
                     mPreferences.edit()
@@ -210,9 +243,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
                             .apply();
 
                     String uriToBuild = scheme;
-                    // path needs to start by a "/"
-                    if(path.isEmpty()||!path.startsWith("/"))
-                        path = "/"+path;
+
                     uriToBuild +="://"+(!address.isEmpty()?address+(port!=-1?":"+port:""):"")+path;
                     log.debug("onCreateDialog: username=" + mUsername + ", domain=" + mDomain + ", port=" + mPort + ", remote=" + mRemote + ", path=" + mPath + "; type=" + mType);
                     if(savePassword.isChecked())

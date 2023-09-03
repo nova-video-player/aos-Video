@@ -35,9 +35,16 @@ import androidx.preference.PreferenceManager;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase.Credential;
 import com.archos.filecorelibrary.MetaFile2Factory;
+import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.video.R;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class FtpServerCredentialsDialog extends DialogFragment {
+
+    private static final Logger log = LoggerFactory.getLogger(FtpServerCredentialsDialog.class);
+
     private AlertDialog mDialog;
     private SharedPreferences mPreferences;
     private String mUsername="";
@@ -142,30 +149,53 @@ public class FtpServerCredentialsDialog extends DialogFragment {
         })
         .setPositiveButton(android.R.string.ok,new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int id) {
-                if(!usernameEt.getText().toString().isEmpty()){
-                    final int type = typeSp.getSelectedItemPosition();
-                    final String address = addressEt.getText().toString();
-                    String path = pathEt.getText().toString();
-                    int port = -1;
-                    try{
-                        port = Integer.parseInt(portEt.getText().toString());
-                    } catch(NumberFormatException e){ }
+                final int type = typeSp.getSelectedItemPosition();
+                final String address = addressEt.getText().toString();
+                String path = pathEt.getText().toString();
+                //path needs to start by a "/"
+                if(path.isEmpty()||!path.startsWith("/"))
+                    path = "/"+path;
+                int port = -1;
+                try{
+                    port = Integer.parseInt(portEt.getText().toString());
+                } catch(NumberFormatException e){
+                    Toast.makeText(getActivity(), getString(R.string.invalid_port), Toast.LENGTH_SHORT).show();
+                }
+                String username = usernameEt.getText().toString();
+                final String password = passwordEt.getText().toString();
 
-                    String scheme = "";
-                    switch(type){
-                        case 0: scheme = "ftp"; break;
-                        case 1: scheme = "sftp"; break;
-                        case 2: scheme = "ftps"; break;
-                        default:
-                            throw new IllegalArgumentException("Invalid FTP type "+type);
-                    }
+                String scheme = "";
+                scheme = UriUtils.getTypeUri(type);
+                if (! UriUtils.isFtpBasedProtocol(type))
+                    throw new IllegalArgumentException("Invalid FTP type "+type);
+
+                // ftp/ftps empty user means anonymous
+                if (username.equals("") && UriUtils.emptyCredentialMeansAnonymous(scheme))
+                    username = "anonymous";
+
+                boolean validUri = true;
+
+                // username can be empty with samba guest shares
+                if (username.equals("") || UriUtils.requiresDomain(type)) validUri = false;
+
+                if (! UriUtils.isValidHost(address)) {
+                    Toast.makeText(getActivity(), getString(R.string.invalid_host), Toast.LENGTH_SHORT).show();
+                    validUri = false;
+                } else if (! UriUtils.isValidPort(port)) {
+                    Toast.makeText(getActivity(), getString(R.string.invalid_port), Toast.LENGTH_SHORT).show();
+                    validUri = false;
+                } else if (! UriUtils.isValidPath(path)) {
+                    Toast.makeText(getActivity(), getString(R.string.invalid_path), Toast.LENGTH_SHORT).show();
+                    validUri = false;
+                }
+
+                log.debug("onClick: scheme= " + scheme + ", username=" + username + ", port=" + port + ", remote=" + address + ", path=" + path + "; type=" + type + ", validUri=" + validUri);
+
+                if (validUri) {
 
                     if (port == -1) {
                         port = MetaFile2Factory.defaultPortForProtocol(scheme);
                     }
-
-                    final String username = usernameEt.getText().toString();
-                    final String password = passwordEt.getText().toString();
 
                     // Store new values to preferences
                     mPreferences.edit()
@@ -176,9 +206,6 @@ public class FtpServerCredentialsDialog extends DialogFragment {
                     .apply();
 
                     String uriToBuild = scheme;
-                    //path needs to start by a "/"
-                    if(path.isEmpty()||!path.startsWith("/"))
-                        path = "/"+path;
                     uriToBuild +="://"+(!address.isEmpty()?address+(port!=-1?":"+port:""):"")+path;
                     if(savePassword.isChecked())
                         NetworkCredentialsDatabase.getInstance().saveCredential(new Credential(username, password, uriToBuild,"",true));
@@ -188,8 +215,7 @@ public class FtpServerCredentialsDialog extends DialogFragment {
                         mOnConnectClick.onConnectClick(username, path, password, port, type, address);
                     }
 
-                }
-                else
+                } else
                     Toast.makeText(getActivity(), getString(R.string.ssh_remote_address_error), Toast.LENGTH_SHORT).show();
             }});
         mDialog = builder.create();

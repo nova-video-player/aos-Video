@@ -14,8 +14,6 @@
 
 package com.archos.mediacenter.video.browser;
 
-import static com.archos.mediacenter.filecoreextension.UriUtils.getUriType;
-
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -25,6 +23,7 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -87,7 +86,6 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
             mUsername = args.getString(USERNAME,"");
             mPassword = args.getString(PASSWORD,"");
             mUri = args.getParcelable(URI);
-
         }
         mPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         // Get latest values from preference
@@ -102,7 +100,7 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
 
         if(mUri!=null){
             mPort = mUri.getPort();
-            mType = getUriType(mUri);
+            mType = UriUtils.getUriType(mUri);
             mPath = mUri.getPath();
             mRemote = mUri.getHost();
         }
@@ -121,14 +119,31 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
             }
         }
         final View v = getActivity().getLayoutInflater().inflate(R.layout.ssh_credential_layout, null);
+
+        mDomainEt = (EditText)v.findViewById(R.id.domain);
+
         mTypeSp = (Spinner)v.findViewById(R.id.ssh_spinner);
+        mTypeSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if (UriUtils.requiresDomain(position)) v.findViewById(R.id.domain).setVisibility(View.VISIBLE);
+                else {
+                    ((EditText) v.findViewById(R.id.domain)).setText("");
+                    v.findViewById(R.id.domain).setVisibility(View.GONE);
+                }
+                ((EditText) v.findViewById(R.id.port)).setText("");
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                if (UriUtils.requiresDomain(mType))
+                    v.findViewById(R.id.domain).setVisibility(View.VISIBLE);
+                else v.findViewById(R.id.domain).setVisibility(View.GONE);
+            }
+        });
         mAddressEt = (EditText)v.findViewById(R.id.remote);
         mPortEt = (EditText)v.findViewById(R.id.port);
         mUsernameEt = (EditText)v.findViewById(R.id.username);
         mPasswordEt = (EditText)v.findViewById(R.id.password);
-        mDomainEt = (EditText)v.findViewById(R.id.domain);
-        // by default since it is only for samba make it invisible
-        mDomainEt.setVisibility(View.GONE);
         mPathEt = (EditText)v.findViewById(R.id.path);
         mSavePassword = (CheckBox)v.findViewById(R.id.save_password);
         mShowPassword = (CheckBox)v.findViewById(R.id.show_password_checkbox);
@@ -152,7 +167,7 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
         mPortEt.setText(portString);
         mUsernameEt.setText(mUsername);
         mPasswordEt.setText(mPassword);
-        mDomainEt.setText(mDomain);
+        if (UriUtils.requiresDomain(type)) mDomainEt.setText(mDomain);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
         .setTitle(R.string.browse_ftp_server)
         .setView(v)
@@ -165,10 +180,53 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
         })
         .setPositiveButton(android.R.string.ok,new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int id) {
-                if(!mUsernameEt.getText().toString().isEmpty()){
-                    final String username = mUsernameEt.getText().toString();
-                    final String password = mPasswordEt.getText().toString();
-                    final String domain = mDomainEt.getText().toString();
+                String username = mUsernameEt.getText().toString();
+                final String password = mPasswordEt.getText().toString();
+                final String domain = mDomainEt.getText().toString();
+
+                final int type = mTypeSp.getSelectedItemPosition();
+                final String address = mAddressEt.getText().toString();
+                String path = mPathEt.getText().toString();
+
+                int port = -1;
+                if (! mPortEt.getText().toString().isEmpty()) {
+                    try {
+                        port = Integer.parseInt(mPortEt.getText().toString());
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(getActivity(), getString(R.string.invalid_port), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                String scheme = "";
+                scheme = UriUtils.getTypeUri(type);
+
+                // webdav(s) empty user means anonymous
+                if (username.equals("") && UriUtils.emptyCredentialMeansAnonymous(scheme))
+                    username = "anonymous";
+
+                boolean validUri = true;
+
+                // username can be empty with samba guest shares
+                if (username.equals("") || UriUtils.requiresDomain(type)) validUri = false;
+
+                // path needs to start by a "/"
+                if(path.isEmpty()||!path.startsWith("/"))
+                    path = "/"+path;
+
+                if (! UriUtils.isValidHost(address)) {
+                    Toast.makeText(getActivity(), getString(R.string.invalid_host), Toast.LENGTH_SHORT).show();
+                    validUri = false;
+                } else if (! UriUtils.isValidPort(port)) {
+                    Toast.makeText(getActivity(), getString(R.string.invalid_port), Toast.LENGTH_SHORT).show();
+                    validUri = false;
+                } else if (! UriUtils.isValidPath(path)) {
+                    Toast.makeText(getActivity(), getString(R.string.invalid_path), Toast.LENGTH_SHORT).show();
+                    validUri = false;
+                }
+
+                log.debug("onClick: scheme=" + scheme + ", username=" + username + ", domain=" + domain + ", port=" + port + ", remote=" + address + ", path=" + path + "; type=" + type + ", validUri=" + validUri);
+
+                if(validUri){
 
                     String uriToBuild = createUri();
                     onConnectClick(username, Uri.parse(uriToBuild), password);
