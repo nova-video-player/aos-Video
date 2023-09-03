@@ -500,6 +500,10 @@
     <string name="add_to_library">Add to library</string>
     <string name="add_all_items_to_library">Add all videos to library immediately ?</string>
 
+    <string name="invalid_host">Not a valid host address format</string>
+    <string name="invalid_port">Not a valid port format</string>
+    <string name="invalid_path">Not a valid path format</string>
+
     <string name="shortcut_folder_added">Folder %s added as shortcut</string>
     <string name="indexed_folder_added">Folder %s added to library</string>
     <string name="remove_from_indexed_folders">Remove from library</string>
