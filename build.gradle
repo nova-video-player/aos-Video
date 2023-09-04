@@ -11,18 +11,16 @@ buildscript {
     }
 }
 
-// no need to apply if plugins is present
 plugins {
+    id "com.android.application"
     id "com.github.triplet.play" version "3.7.0"
+    id "io.sentry.android.gradle" version "3.12.0" apply false
     //id "app.brant.amazonappstorepublisher" version "0.1.0"
 }
 
-apply {
-    plugin("com.android.application")
+if (hasProperty('bugReport')) {
+    apply plugin: 'io.sentry.android.gradle'
 }
-
-if (project.hasProperty("bugReport"))
-    apply plugin: "io.sentry.android.gradle" version "3.12.0"
 
 def keystorePropertiesFile = rootProject.file("keystore.properties");
 def keystoreProperties = new Properties()
