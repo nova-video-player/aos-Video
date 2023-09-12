@@ -218,3 +218,7 @@
 -dontwarn org.newsclub.net.unix.AFUNIXSocketAddress
 -dontwarn org.newsclub.net.unix.AFUNIXSocketChannel
 -dontwarn sun.security.x509.X509Key
+
+-dontwarn org.bouncycastle.crypto.DefaultBufferedBlockCipher
+-dontwarn org.bouncycastle.crypto.modes.CBCModeCipher
+-dontwarn org.bouncycastle.crypto.modes.CTRModeCipher
