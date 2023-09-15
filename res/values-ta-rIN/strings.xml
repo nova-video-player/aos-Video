@@ -123,11 +123,6 @@
     <string name="menu_player_settings">அமைப்புகள்</string>
     <string name="menu_change_folder">கோப்புறையை மாற்று</string>
     <!-- Subtitles/Audio languages -->
-    <string name="s_arabic">அரபிக்</string>
-    <string name="s_bulgarian">பல்கேரிய</string>
-    <string name="s_dutch">டச்சு</string>
-    <string name="s_norwegian">நார்வேஜியன்</string>
-    <string name="s_polish">போலிஷ்</string>
     <!-- Player errors -->
     <!-- Player plug-in -->
     <!-- Subtitles wizard -->

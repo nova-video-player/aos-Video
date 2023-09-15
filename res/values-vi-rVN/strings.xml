@@ -262,33 +262,8 @@
     <string name="unlock_instructions">Nhấn giữ biểu tượng để mở khóa</string>
     <string name="seek_to_percentage">\"Đang tua đến %s%%</string>
     <!-- Subtitles/Audio languages -->
-    <string name="s_arabic">Tiếng Ả rập</string>
-    <string name="s_bulgarian">Tiếng Bulgaria</string>
-    <string name="s_czech">Tiếng Séc</string>
-    <string name="s_danish">Tiếng Đan Mạch</string>
-    <string name="s_german">Tiếng Đức</string>
-    <string name="s_english">Tiếng Anh</string>
-    <string name="s_greek">Tiếng Hy Lạp</string>
-    <string name="s_spanish">Tiếng Tây Ban Nha</string>
-    <string name="s_finnish">Tiếng Phần Lan</string>
-    <string name="s_french">Tiếng Pháp</string>
-    <string name="s_hebrew">Tiếng Do Thái</string>
-    <string name="s_hungarian">Tiếng Hungari</string>
-    <string name="s_italian">Tiếng Ý</string>
-    <string name="s_japanese">Tiếng Nhật</string>
-    <string name="s_korean">Tiếng Hàn</string>
-    <string name="s_dutch">Tiếng Hà Lan</string>
-    <string name="s_norwegian">Tiếng Na Uy</string>
-    <string name="s_polish">Tiếng Ba Lan</string>
     <string name="s_brazilian">Tiếng Brazil</string>
-    <string name="s_portuguese">Tiếng Bồ Đào Nha</string>
-    <string name="s_russian">Tiếng Nga</string>
-    <string name="s_thai">Tiếng Thái</string>
-    <string name="s_turkish">Tiếng Thổ Nhĩ Kỳ</string>
     <string name="s_chinese">Tiếng Trung</string>
-    <string name="s_vietnamese">Tiếng Việt</string>
-    <string name="s_indonesian">Tiếng Indonesia</string>
-    <string name="s_malay">Tiếng Malay</string>
     <string name="s_none">Không có</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Không thể phát video</string>

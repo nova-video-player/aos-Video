@@ -326,44 +326,9 @@
     <string name="unlock_instructions">Appui long sur l\'icône pour déverrouiller</string>
     <string name="seek_to_percentage">\"Aller à %s%%</string>
     <!-- Subtitles/Audio languages -->
-    <string name="s_arabic">Arabe</string>
-    <string name="s_bulgarian">Bulgare</string>
-    <string name="Bosnian">Bosniaque</string>
-    <string name="s_czech">Tchèque</string>
-    <string name="s_danish">Danois</string>
-    <string name="s_german">Allemand</string>
-    <string name="s_english">Anglais</string>
-    <string name="s_greek">Grecque</string>
-    <string name="s_spanish">Espagnol</string>
-    <string name="s_finnish">Finlandais</string>
-    <string name="s_french">Français</string>
-    <string name="s_hebrew">Hébreux</string>
-    <string name="s_hungarian">Hongrois</string>
-    <string name="s_italian">Italien</string>
-    <string name="s_japanese">Japonais</string>
-    <string name="s_korean">Coréen</string>
-    <string name="s_dutch">Néerlandais</string>
-    <string name="s_norwegian">Norvégien</string>
-    <string name="s_polish">Polonais</string>
     <string name="s_brazilian">Brésilien</string>
-    <string name="s_portuguese">Portugais</string>
-    <string name="s_russian">Russe</string>
-    <string name="Romanian">Roumain</string>
-    <string name="Serbo_Croatian">Serbo-Croate</string>
-    <string name="Croatian">Croate</string>
-    <string name="Serbian">Serbe</string>
-    <string name="Slovenian">Slovène</string>
-    <string name="s_swedish">Suédois</string>
-    <string name="s_thai">Thaï</string>
-    <string name="s_turkish">Turque</string>
     <string name="s_chinese">Chinois</string>
     <string name="s_traditional_chinese">Chinois traditionnel</string>
-    <string name="s_vietnamese">Vietnamien</string>
-    <string name="s_lithuanian">Lithuanien</string>
-    <string name="s_indonesian">Indonésien</string>
-    <string name="s_malay">Malais</string>
-    <string name="s_ukrainian">Ukrainien</string>
-    <string name="s_kurdish">Kurde</string>
     <string name="s_none">Aucun</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Impossible de lire la vidéo</string>
@@ -432,7 +397,7 @@
     <string name="dialog_subloader_connecting">Connexion au site www.opensubtitles.org…</string>
     <string name="dialog_subloader_credentials">Identifiants opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">Vous devrez entrer un mot de passe et un nom d\'utilisateur valide!</string>
-    <string name="toast_subloader_credentials_empty">Fournissez vos identifiants opensubtitles dans les paramètres pour pouvoir télécharger les sous-titres</string>
+    <string name="toast_subloader_credentials_empty">Fournissez vos identifiants opensubtitles dans les paramètres pour pouvoir télécharger plus de sous-titres</string>
     <string name="toast_subloader_login_failed">Identifiants opensubtitles incorrects ou service non disponible</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Réglages des sous-titres</string>
@@ -489,6 +454,9 @@
     <string name="add_to_indexed_folders">Indexer ce dossier</string>
     <string name="add_to_library">Ajouter à la bibliothèque</string>
     <string name="add_all_items_to_library">Ajouter toutes les vidéos à ma bibliothèque ?</string>
+    <string name="invalid_host">Format d\'adresse d\'hôte non valide</string>
+    <string name="invalid_port">Format de port non valide</string>
+    <string name="invalid_path">Format de chemin non valide</string>
     <string name="shortcut_folder_added">Le dossier %s a été ajouté comme raccourci</string>
     <string name="indexed_folder_added">Le dossier %s a été ajouté à la bibliothèque</string>
     <string name="remove_from_indexed_folders">Désindexer le dossier</string>

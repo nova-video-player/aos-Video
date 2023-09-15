@@ -141,14 +141,6 @@
     <string name="menu_brightness_settings">ଉଜ୍ଜ୍ୱଳତା</string>
     <string name="menu_player_settings">ସେଟିଂ</string>
     <!-- Subtitles/Audio languages -->
-    <string name="s_arabic">ଆରବୀ</string>
-    <string name="s_bulgarian">ବୁଲଗେରି</string>
-    <string name="s_german">ଜର୍ମନ</string>
-    <string name="s_english">ଇଂରାଜୀ</string>
-    <string name="s_french">ଫରାସୀ</string>
-    <string name="s_japanese">ଜାପାନୀ</string>
-    <string name="s_korean">କୋରିଆଈ</string>
-    <string name="s_thai">ଥାଈ</string>
     <string name="s_chinese">ଚୀନୀ</string>
     <string name="s_traditional_chinese">ପାରମ୍ପାରିକ ଚୀନୀ</string>
     <!-- Player errors -->

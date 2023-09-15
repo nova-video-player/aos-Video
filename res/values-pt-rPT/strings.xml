@@ -201,43 +201,9 @@
     <string name="menu_player_settings">Definições</string>
     <string name="menu_change_folder">Alterar pasta</string>
     <!-- Subtitles/Audio languages -->
-    <string name="s_arabic">Árabe</string>
-    <string name="s_bulgarian">Búlgaro</string>
-    <string name="Bosnian">Bósnio</string>
-    <string name="s_czech">Checo</string>
-    <string name="s_danish">Dinamarquês</string>
-    <string name="s_german">Alemão</string>
-    <string name="s_english">Inglês</string>
-    <string name="s_greek">Grego</string>
-    <string name="s_spanish">Espanhol</string>
-    <string name="s_finnish">Finlandês</string>
-    <string name="s_french">Francês</string>
-    <string name="s_hebrew">Hebreu</string>
-    <string name="s_hungarian">Húngaro</string>
-    <string name="s_italian">Italiano</string>
-    <string name="s_japanese">﻿Japonês</string>
-    <string name="s_korean">Coreano</string>
-    <string name="s_dutch">Neerlandês</string>
-    <string name="s_norwegian">Norueguês</string>
-    <string name="s_polish">Polaco</string>
     <string name="s_brazilian">Português (Brasil)</string>
-    <string name="s_portuguese">Português</string>
-    <string name="s_russian">Russo</string>
-    <string name="Romanian">Romeno</string>
-    <string name="Croatian">Croata</string>
-    <string name="Serbian">Sérvio</string>
-    <string name="Slovenian">Esloveno</string>
-    <string name="s_swedish">Sueco</string>
-    <string name="s_thai">Tailandês</string>
-    <string name="s_turkish">Turco</string>
     <string name="s_chinese">Chinês</string>
     <string name="s_traditional_chinese">Chinês tradicional</string>
-    <string name="s_vietnamese">Vietnamita</string>
-    <string name="s_lithuanian">Lituano</string>
-    <string name="s_indonesian">Indonésio</string>
-    <string name="s_malay">Malaio</string>
-    <string name="s_ukrainian">Ucraniano</string>
-    <string name="s_kurdish">Curdo</string>
     <!-- Player errors -->
     <string name="player_err_unknown">Erro desconhecido.</string>
     <!-- Player plug-in -->

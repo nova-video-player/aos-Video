@@ -211,34 +211,8 @@
     <string name="pref_s3d_mode_entry_off">خاموش</string>
     <string name="menu_player_settings">ساماندهی</string>
     <!-- Subtitles/Audio languages -->
-    <string name="s_arabic">عربی</string>
-    <string name="s_english">انگلیسی</string>
-    <string name="s_spanish">اسپانیایی</string>
-    <string name="s_french">فرانسوی</string>
-    <string name="s_hebrew">عبری</string>
-    <string name="s_hungarian">مجارستانی</string>
-    <string name="s_italian">ایتالیایی</string>
-    <string name="s_japanese">ژاپنی</string>
-    <string name="s_korean">کره‌ای</string>
-    <string name="s_dutch">هلندی</string>
-    <string name="s_norwegian">نروژی</string>
-    <string name="s_polish">لهستانی</string>
     <string name="s_brazilian">برزیلی</string>
-    <string name="s_portuguese">پرتغالی</string>
-    <string name="s_russian">روسی</string>
-    <string name="Romanian">رومانیایی</string>
-    <string name="Serbo_Croatian">صربی‌کرواتی</string>
-    <string name="Croatian">کرواتی</string>
-    <string name="Serbian">صربی</string>
-    <string name="Slovenian">اسلونیایی</string>
-    <string name="s_swedish">سوئدی</string>
-    <string name="s_thai">تایلندی</string>
-    <string name="s_turkish">ترکی</string>
     <string name="s_chinese">چینی</string>
-    <string name="s_vietnamese">ویتنامی</string>
-    <string name="s_lithuanian">لیتوانیایی</string>
-    <string name="s_indonesian">اندونزیایی</string>
-    <string name="s_malay">مالایی</string>
     <string name="s_none">هیچ کدام</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">نمی‌توان ویدئو را پخش نمود</string>
