@@ -2,7 +2,7 @@ N.O.V.A. je open source přehrávač videa určený pro tablety, telefony a zař
 Je dostupná na https://github.com/nova-video-player/aos-AVP.
 
 Univerzální přehrávač: 
-- přehrávání videí z vašeho počítače, serveru (FTP, SFTP), NAS (SMB, UPnP)
+- přehrávání videí z vašeho počítače, serveru (FTP, SFTP, WebDAV), NAS (SMB, UPnP)
 - přehrávání videí z USB úložišť
 - videa ze všech zdrojů jsou dostupná v unifikované knihovně multimédií
 - automatické získávání informací o filmech a seriálech z online zdrojů včetně plakátů a pozadí

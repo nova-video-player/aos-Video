@@ -1,7 +1,7 @@
 Nova, https://github.com/nova-video-player/aos-AVP adresinde bulunan tabletler, telefonlar ve AndroidTV cihazları için tasarlanmış bir Video Player'dir.
 
 Evrensel oynatıcı:
-Bilgisayarınızdan, sunucunuzdan (FTP, SFTP), NAS'dan (SMB, UPnP) video oynatın
+Bilgisayarınızdan, sunucunuzdan (FTP, SFTP, WebDAV), NAS'dan (SMB, UPnP) video oynatın
 - Harici USB depolama biriminden video oynatma
 - Tüm kaynaklardan gelen videolar birleştirilmiş bir multimedya koleksiyonuna entegre edilmiştir
 - Film ve TV şovu açıklamalarının posterler ve arka planlarla otomatik olarak çevrimiçi alınması

@@ -1,7 +1,7 @@
 Nova to opeN sOurcowy Video odtwArzacz zaprojektowany dla tabletów, telefonów i urządzeń AndroidTV dostępna pod adresem https://github.com/nova-video-player/aos-AVP
 
 Uniwersalny odtwarzacz:
-- Odtwarza filmy z komputera, serwera (FTP, SFTP), NAS (SMB, UPnP)
+- Odtwarza filmy z komputera, serwera (FTP, SFTP, WebDAV), NAS (SMB, UPnP)
 - Odtwarza filmy z zewnętrznej pamięci USB
 - Filmy ze wszystkich źródeł zintegrowane w jednolitej bibliotece multimediów
 - Automatyczne pobieranie filmów online i programów telewizyjnych z plakatami i zwiastunami

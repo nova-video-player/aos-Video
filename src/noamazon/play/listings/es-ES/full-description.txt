@@ -1,7 +1,7 @@
 Nova es un reproductor de vídeo de código abierto diseñado para tabletas, teléfonos y dispositivos AndroidTV, disponible en https://github.com/nova-video-player/aos-AVP
 
 Reproductor Universal:
-- Reproduce vídeos desde su ordenador, servidor (FTP, SFTP), NAS (SMB, UPnP)
+- Reproduce vídeos desde su ordenador, servidor (FTP, SFTP, WebDAV), NAS (SMB, UPnP)
 - Reproduce vídeos desde un almacenamiento USB externo
 - Integra todas las fuentes de vídeos en una colección multimedia unificada
 - Obtiene automáticacemente las descripciones, carteles y fondos online de películas y programas de televisión

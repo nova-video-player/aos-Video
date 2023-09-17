@@ -1,7 +1,7 @@
 N.O.V.A. é um reprodutor de vídeo open source (opeN sOurce Video plAyer) projetado para tablets, smartphones e dispositivos Android TV acessível em https://github.com/nova-video-player/aos-AVP
 
 Reprodutor universal:
-- Reproduza vídeos do seu computador, servidor (FTP, SFTP), NAS (SMB, UPnP)
+- Reproduza vídeos do seu computador, servidor (FTP, SFTP, WebDAV), NAS (SMB, UPnP)
 - Reproduza vídeos do armazenamento USB externo
 - Vídeos de todas as fontes configuradas em uma coleção de mídia unificada
 - Pesquisa online automática de descrições de filmes e programas de TV com cartazes e panos de fundo
