@@ -15,20 +15,25 @@
 package com.archos.mediacenter.video.utils;
 
 import android.media.MediaCodecInfo;
+import android.media.MediaCodec;
 import android.media.MediaCodecList;
 import android.os.Build;
 import android.util.Log;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class CodecDiscovery {
 
 	// log4j/logback not possible since used from native it seems
 	private final static boolean DBG = true;
-	private final static boolean DBG2 = false;
+	private final static boolean DBG2 = true;
 	private final static String TAG = "CodecDiscovery";
 	private static boolean isDoViDisabled = false;
 	private static boolean displaySupportsDovi = false; // could be used to auto disable DoVi codecs
+	private static boolean displaySupportsHdr10 = false; // could be used to auto disable DoVi codecs
+	private static boolean displaySupportsHdrHlg = false; // could be used to auto disable DoVi codecs
+	private static boolean displaySupportsHdr10Plus = false; // could be used to auto disable DoVi codecs
 
 	public static boolean isCodecTypeSupported(String codecType, boolean allowSwCodec) {
 		return isCodecTypeSupported(codecType, allowSwCodec, MediaCodecList.REGULAR_CODECS);
@@ -37,6 +42,21 @@ public class CodecDiscovery {
 	public static void displaySupportsDoVi(boolean isSupported) {
 		if (DBG) Log.d(TAG,"displaySupportsDoVi=" + isSupported);
 		displaySupportsDovi = isSupported;
+	}
+
+	public static void displaySupportsHdr10(boolean isSupported) {
+		if (DBG) Log.d(TAG,"displaySupportsHdr10=" + isSupported);
+		displaySupportsHdr10 = isSupported;
+	}
+
+	public static void displaySupportsHdrHLG(boolean isSupported) {
+		if (DBG) Log.d(TAG,"displaySupportsHdrHLG=" + isSupported);
+		displaySupportsHdrHlg = isSupported;
+	}
+
+	public static void displaySupportsHdr10Plus(boolean isSupported) {
+		if (DBG) Log.d(TAG,"displaySupportsHdr10Plus=" + isSupported);
+		displaySupportsHdr10Plus = isSupported;
 	}
 
 	public static void disableDoVi(boolean isDisabled) {
