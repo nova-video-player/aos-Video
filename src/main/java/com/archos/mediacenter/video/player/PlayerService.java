@@ -1473,20 +1473,18 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private final float epsilon = 1e-5f;
 
     public void incrementAudioSpeed() {
-        float speedFromPrefs = getAudioSpeedFromPreferences();
-        float modulo = (speedFromPrefs + mAudioSpeedStep) % mAudioSpeedStep;
+        float modulo = (mAudioSpeed + mAudioSpeedStep) % mAudioSpeedStep;
         if (Math.abs(Math.abs(modulo) - mAudioSpeedStep) < epsilon)
             modulo = 0;
-        float speed = (float)(speedFromPrefs + mAudioSpeedStep - modulo);
+        float speed = (float)(mAudioSpeed + mAudioSpeedStep - modulo);
         setAudioSpeed(speed > mAudioSpeedMax ? mAudioSpeedMax : speed, false);
     }
 
     public void decrementAudioSpeed() {
-        float speedFromPrefs = getAudioSpeedFromPreferences();
-        float modulo = (speedFromPrefs - mAudioSpeedStep) % mAudioSpeedStep;
+        float modulo = (mAudioSpeed - mAudioSpeedStep) % mAudioSpeedStep;
         if (Math.abs(Math.abs(modulo) - mAudioSpeedStep) < epsilon)
             modulo = 0;
-        float speed = (float)(speedFromPrefs - mAudioSpeedStep - modulo);
+        float speed = (float)(mAudioSpeed - mAudioSpeedStep - modulo);
         setAudioSpeed(speed < mAudioSpeedMin ? mAudioSpeedMin : speed, false);
     }
 
