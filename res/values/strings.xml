@@ -361,6 +361,7 @@
 
     <string name="unlock_instructions">Long press on icon to unlock</string>
     <string name="seek_to_percentage">"Seeking to %s%%</string>
+    <string name="set_audio_speed_to">"Audio speed %s</string>
     <!-- Subtitles/Audio languages -->
     <string name="s_brazilian">Brazilian</string>
     <string name="s_chinese">Chinese</string>

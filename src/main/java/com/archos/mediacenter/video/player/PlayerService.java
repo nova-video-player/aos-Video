@@ -44,6 +44,7 @@ import androidx.preference.PreferenceManager;
 import androidx.core.app.NotificationCompat;
 
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import com.archos.environment.ArchosFeatures;
 import com.archos.filecorelibrary.FileUtils;
@@ -1464,6 +1465,29 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mAudioDelay = delay;
             mPlayer.setAvDelay(mAudioDelay * -1); // change sign because we want an audio delay
         }
+    }
+
+    protected float mAudioSpeedStep = 0.05f;
+    protected float mAudioSpeedMin = 0.25f;
+    protected float mAudioSpeedMax = 2.0f;
+    private final float epsilon = 1e-5f;
+
+    public void incrementAudioSpeed() {
+        float speedFromPrefs = getAudioSpeedFromPreferences();
+        float modulo = (speedFromPrefs + mAudioSpeedStep) % mAudioSpeedStep;
+        if (Math.abs(Math.abs(modulo) - mAudioSpeedStep) < epsilon)
+            modulo = 0;
+        float speed = (float)(speedFromPrefs + mAudioSpeedStep - modulo);
+        setAudioSpeed(speed > mAudioSpeedMax ? mAudioSpeedMax : speed, false);
+    }
+
+    public void decrementAudioSpeed() {
+        float speedFromPrefs = getAudioSpeedFromPreferences();
+        float modulo = (speedFromPrefs - mAudioSpeedStep) % mAudioSpeedStep;
+        if (Math.abs(Math.abs(modulo) - mAudioSpeedStep) < epsilon)
+            modulo = 0;
+        float speed = (float)(speedFromPrefs - mAudioSpeedStep - modulo);
+        setAudioSpeed(speed < mAudioSpeedMin ? mAudioSpeedMin : speed, false);
     }
 
     public void setAudioSpeed(float speed, boolean force) {
