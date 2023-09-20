@@ -52,7 +52,7 @@ public class PermissionChecker {
 
     private static final Logger log = LoggerFactory.getLogger(PermissionChecker.class);
 
-    private static boolean hasManageExternalStoragePermission = true;
+    private static boolean hasManageExternalStoragePermission = false;
 
     private static final int PERM_REQ_RW = 1;
     private static final int PERM_REQ_MANAGE = 2;
