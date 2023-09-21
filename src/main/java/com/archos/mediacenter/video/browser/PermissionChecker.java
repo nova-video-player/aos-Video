@@ -33,6 +33,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.archos.environment.ArchosUtils;
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediaprovider.ArchosMediaIntent;
 import com.archos.mediaprovider.video.VideoStoreImportService;
@@ -52,7 +53,7 @@ public class PermissionChecker {
 
     private static final Logger log = LoggerFactory.getLogger(PermissionChecker.class);
 
-    private static boolean hasManageExternalStoragePermission = false;
+    private static boolean hasManageExternalStoragePermission = CustomApplication.isManageExternalStoragePermissionInManifest();
 
     private static final int PERM_REQ_RW = 1;
     private static final int PERM_REQ_MANAGE = 2;

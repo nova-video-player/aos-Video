@@ -94,6 +94,8 @@ public class CustomApplication extends Application {
     private static boolean hasHdmi = false;
     private static boolean isAudioPlugged = false;
     public static final long allHdmiAudioCodecs = 0b11111111111111111111111111111;
+    private static boolean hasManageExternalStoragePermissionInManifest = false;
+    public static boolean isManageExternalStoragePermissionInManifest() { return hasManageExternalStoragePermissionInManifest; }
 
     private static int [] novaVersionArray;
     private static int [] novaPreviousVersionArray;
@@ -320,7 +322,8 @@ public class CustomApplication extends Application {
             BootupRecommandationService.init();
 
         log.trace("onCreate: manifest permissions " + Arrays.toString(getPermissions(mContext)));
-        log.trace("onCreate: has permission android.permission.MANAGE_EXTERNAL_STORAGE " + hasPermission("android.permission.MANAGE_EXTERNAL_STORAGE", mContext));
+        hasManageExternalStoragePermissionInManifest = hasPermission("android.permission.MANAGE_EXTERNAL_STORAGE", mContext);
+        log.trace("onCreate: has permission android.permission.MANAGE_EXTERNAL_STORAGE " + hasManageExternalStoragePermissionInManifest);
 
         updateVersionState(this);
     }
