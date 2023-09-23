@@ -320,6 +320,7 @@
     <string name="menu_change_folder_details">選擇起始資料夾</string>
     <string name="unlock_instructions">長按圖示來解鎖</string>
     <string name="seek_to_percentage">快轉至 %s%%</string>
+    <string name="set_audio_speed_to">\"音訊速度 %s</string>
     <!-- Subtitles/Audio languages -->
     <string name="s_brazilian">巴西文</string>
     <string name="s_chinese">中文</string>

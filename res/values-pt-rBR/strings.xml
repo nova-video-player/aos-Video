@@ -86,7 +86,7 @@
     <!-- VIDEO -->
     <string name="videos">Vídeos</string>
     <string name="all_videos">Todos os vídeos</string>
-    <string name="not_played_yet_videos">Não reproduzido</string>
+    <string name="not_played_yet_videos">Ainda não iniciado</string>
     <string name="video_folder">Pastas</string>
     <string name="movies">Filmes</string>
     <string name="animes">Animações</string>
@@ -290,6 +290,7 @@
     <string name="player_subtitle_track_toast">Faixa de legenda:</string>
     <string name="player_bookmark_set">Marcador definido em</string>
     <string name="player_pref_subtitle_delay_title">Atraso</string>
+    <string name="player_pref_audio_speed_title">Velocidade de reprodução</string>
     <string name="floating_player_restore">Restaurar</string>
     <string name="floating_player_play">Reproduzir</string>
     <string name="floating_player_pause">Pausar</string>
@@ -324,6 +325,7 @@
     <string name="menu_change_folder_details">Escolha a pasta para começar</string>
     <string name="unlock_instructions">Toque longo no ícone para desbloquear</string>
     <string name="seek_to_percentage">\"Procurando para %s%%</string>
+    <string name="set_audio_speed_to">\"Velocidade de áudio %s</string>
     <!-- Subtitles/Audio languages -->
     <string name="s_brazilian">Português Brasileiro</string>
     <string name="s_chinese">Chinês</string>
@@ -453,11 +455,16 @@
     <string name="add_to_indexed_folders">Pasta de índice</string>
     <string name="add_to_library">Adicionar à biblioteca</string>
     <string name="add_all_items_to_library">Adicionar todos os vídeos à biblioteca imediatamente?</string>
+    <string name="invalid_host">Não é um formato de endereço de host válido</string>
+    <string name="invalid_port">Não é um formato de porta válido</string>
+    <string name="invalid_path">Não é um formato de caminho válido</string>
+    <string name="shortcut_folder_added">Pasta %s adicionada como atalho</string>
     <string name="indexed_folder_added">Pasta %s adicionada à biblioteca</string>
     <string name="remove_from_indexed_folders">Remover da biblioteca</string>
     <string name="indexed_folder_removed">Pasta %s removida da biblioteca</string>
     <string name="indexed_folders_list_empty">Nenhuma pasta de rede está indexada.\n\nVocê pode adicionar o conteúdo de uma pasta de rede à biblioteca navegando para esta pasta e selecionando \"%s\" na barra de ação superior.</string>
     <string name="indexed_folders_list_empty_ftp">Nenhuma pasta ftp está indexada no momento.</string>
+    <string name="indexed_folders_list_empty_network">Não há pastas de rede indexadas no momento.</string>
     <string name="open_indexed_folder">"Abrir"</string>
     <string name="rescan_indexed_folders">Verificar todas as pastas indexadas novamente</string>
     <string name="last_rescan_never">Nunca</string>
@@ -485,6 +492,18 @@
     <string name="preferences_force_audio_passthrough_enable">Modo 1 (descontinuado)</string>
     <string name="preferences_force_audio_passthrough_enable2">Modo 2</string>
     <string name="preferences_force_audio_passthrough_summary">Transmitir audio comprimido via HDMI or S/PDIF. ⚠ Experimental e talvez resulte em falta de sincronia de A/V</string>
+    <string name="preferences_parser_sync_mode">Modo de sincronização do parser</string>
+    <string name="preferences_parser_sync_mode_cdata">Baseado em PTS (recomendado)</string>
+    <string name="preferences_parser_sync_mode_sample">baseado em amostras</string>
+    <string name="preferences_parser_sync_mode_summary">Modo de sincronização do analisador LAVC. ⚠️ Experimental pode resultar em atraso cumulativo de A/V</string>
+    <string name="preferences_stream_buffer_size_title">Tamanho do buffer de stream</string>
+    <string name="preferences_stream_buffer_size_summary">Quantidade de cache em MB usada no pré-analisador para resolver problemas de buffer</string>
+    <string name="preferences_stream_max_iframe_size_title">Tamanho máximo do i-frame</string>
+    <string name="preferences_stream_max_iframe_size_summary">Tamanho máximo em MB do i-frame comprimido</string>
+    <string name="preferences_force_passthrough">Forçar pass-through de áudio</string>
+    <string name="preferences_force_passthrough_summary">Se a opção de pass-through estiver habilitada, força-lá mesmo se o receiver não reporte compatibilidade com o codec ao invés de verificar a compatibilidade</string>
+    <string name="preferences_playback_speed">Habilitar velocidade de reprodução</string>
+    <string name="preferences_playback_speed_summary">Habilitar a opção de alterar a velocidade de reprodução. ⚠️ Experimental pode resultar em vídeo irregular</string>
     <string name="preferences_disable_downmix_title">Desativar downmix de áudio estéreo</string>
     <string name="preferences_disable_downmix_summary">Sempre decodificar todos os canais e deixar o downmix do Android dependendo da capacidade de saída de áudio (pode resultar na perda de canais de voz)</string>
     <string name="preferences_enable_downmix_androidtv_title">Desativar downmix de áudio estéreo</string>
@@ -495,6 +514,8 @@
     <string name="preference_tv_3d_automatic_switch_summary">Use este recurso apenas se sua TV 3D o suporta</string>
     <string name="preference_tv_refreshrate_switch">Habilitar mudança automática da taxa de atualização</string>
     <string name="preference_tv_refreshrate_switch_summary">Remova o efeito \"judder\" (trepidação) adaptando a melhor taxa de atualização da tela à taxa de quadros de vídeo (o suporte ao dispositivo pode variar)</string>
+    <string name="preference_remove_dolby_vision">Desabilitar dolby vision</string>
+    <string name="preference_remove_dolby_vision_summary">Dar preferência aos codecs de video padrão ao invés dos codecs dolby vision</string>
     <string name="preference_cutout_short_edges">Vídeo em tela cheia com cortamentos de tela</string>
     <string name="preference_cutout_short_edges_summary">Permitir vídeo em tela cheia em modo paisagem com cortes de tela</string>
     <string name="category_languages">Legendas</string>
@@ -563,12 +584,17 @@
     <string name="help_overlay_network_indexing_text1_lb">Use o botão + para integrar o conteúdo desta pasta e suas subpastas na Biblioteca de Vídeo.</string>
     <string name="help_overlay_network_indexing_text2">Isso permitirá que você obtenha cartazes e descrições para os filmes e séries de TV.</string>
     <string name="help_overlay_scraper_text">Pressione este item de menu para pesquisar cartazes e descrições online para seus vídeos. </string>
+    <string name="help_overlay_network_shortcut_text1_lb">Use o botão + para adicionar esta pasta como um atalho na rede e tenha a opção de adicionar seu conteúdo e de suas subpastas à Biblioteca de Vídeos.</string>
     <string name="new_videos_count">Novos vídeos: %d</string>
     <string name="new_videos_scrape_message">Você tem novos vídeos que ainda não têm informações e cartazes.</string>
     <string name="network_bookmarks">Retomar pontos e posicionar favoritos na rede</string>
     <string name="network_thumbnails">Criar miniaturas remotas</string>
     <string name="network_thumbnails_summary">Criar miniaturas de vídeos remotos quando um cartaz não estiver disponível</string>
     <string name="network_bookmarks_summary">Salvar e verificar o ponto de retorno e posicionar favoritos na rede quando possível</string>
+    <string name="share_folders_smbj">Usar implementação SMB mais rápida (SMB2+)</string>
+    <string name="share_folders_smbj_summary">Permite transferência mais rápida via SMB, mas limita o suporte ao protocolo à versão 2 ou superior</string>
+    <string name="share_folders_sshj">Usar implementação mais recente de SFTP</string>
+    <string name="share_folders_sshj_summary">Habilitar implementação mais recente para links SFTP</string>
     <string name="share_folders_smbv2">Habilitar suporte a SMBv2</string>
     <string name="share_folders_smbv2_summary">Habilitar suporte a comparilhamento via Protocolo SMB Versão 2.</string>
     <string name="share_folders_smb_resolv">Ordem de resolução SMB</string>
@@ -609,6 +635,8 @@
     <string name="sort_by_date_premiered_asc">Ordenar pela estréia (mais antigo primeiro)</string>
     <string name="sort_by_date_aired_desc">Ordenar por data adicionada (mais recente primeiro)</string>
     <string name="sort_by_recently_added_episode_desc">Episódios adicionados recentemente primeiro</string>
+    <string name="sort_by_size_asc">Ordenar por tamanho (menor primeiro)</string>
+    <string name="sort_by_size_desc">Ordenar por tamanho (maior primeiro)</string>
     <string name="dec_choice_title">Escolher decodificador</string>
     <string name="dec_choice_summary">Preferência avançada, pode quebrar a decodificação de vídeo.</string>
     <string name="dec_hw_omx">Decodificação de hardware (IOMX w/ swbuf)</string>
