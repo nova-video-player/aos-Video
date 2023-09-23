@@ -449,6 +449,9 @@
     <string name="add_to_indexed_folders">索引資料夾</string>
     <string name="add_to_library">新增至媒體庫</string>
     <string name="add_all_items_to_library">立刻將所有影片新增至媒體庫嗎？</string>
+    <string name="invalid_host">無效的主機位址格式</string>
+    <string name="invalid_port">無效的通訊埠格式</string>
+    <string name="invalid_path">無效的路徑格式</string>
     <string name="shortcut_folder_added">資料夾 %s 已新增為捷徑</string>
     <string name="indexed_folder_added">資料夾 %s 已新增至媒體庫</string>
     <string name="remove_from_indexed_folders">從媒體庫中移除</string>

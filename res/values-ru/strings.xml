@@ -464,6 +464,9 @@
     <string name="add_to_indexed_folders">Индексировать папку</string>
     <string name="add_to_library">Добавить в библиотеку</string>
     <string name="add_all_items_to_library">Добавить все видео в библиотеку сейчас?</string>
+    <string name="invalid_host">Неверный формат адреса хоста</string>
+    <string name="invalid_port">Неверный формат порта</string>
+    <string name="invalid_path">Неверный формат пути</string>
     <string name="shortcut_folder_added">Папка %s добавлена как ярлык</string>
     <string name="indexed_folder_added">Папка %s добавлена в библиотеку</string>
     <string name="remove_from_indexed_folders">Удалить из библиотеки</string>

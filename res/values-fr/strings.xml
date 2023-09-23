@@ -325,6 +325,7 @@
     <string name="menu_change_folder_details">Choisissez le dossier à ouvrir</string>
     <string name="unlock_instructions">Appui long sur l\'icône pour déverrouiller</string>
     <string name="seek_to_percentage">\"Aller à %s%%</string>
+    <string name="set_audio_speed_to">Vitesse audio %s</string>
     <!-- Subtitles/Audio languages -->
     <string name="s_brazilian">Brésilien</string>
     <string name="s_chinese">Chinois</string>
@@ -598,6 +599,12 @@
     <string name="share_folders_smbv2_summary">Activer la prise en charge du protocole SMB version 2.</string>
     <string name="share_folders_smb_resolv">Ordre de résolution SMB</string>
     <string name="share_folders_smb_resolv_summary">Sélectionne BCAST, DNS (par défaut: DNS, BCAST). Modifier cette option si votre serveur n\'est pas correctement résolu ou si vous rencontrez des lenteurs SMB.</string>
+    <string name="share_folders_smb_disable_tcp_discovery">Désactiver la découverte SMB TCP</string>
+    <string name="share_folders_smb_disable_tcp_discovery_summary">Désactiver la découverte TCP si vous rencontrez une connexion Wi-Fi instable sur certains appareils.</string>
+    <string name="share_folders_smb_disable_udp_discovery">Désactiver la découverte SMB UPD</string>
+    <string name="share_folders_smb_disable_udp_discovery_summary">Désactivez la découverte UDP si vous rencontrez une connexion Wi-Fi instable sur certains périphériques (par exemple Fire 10 HD).</string>
+    <string name="share_folders_smb_disable_mdns_discovery">Désactiver la découverte SMB mDNS</string>
+    <string name="share_folders_smb_disable_mdns_discovery_summary">Désactiver la découverte mDNS si vous rencontrez une connexion Wi-Fi instable sur certains appareils.</string>
     <string name="connection_abnormally_long">La connexion semble anormalement longue. Souhaitez-vous la réinitialiser ?</string>
     <string name="connection_reset">Réinitialiser</string>
     <!-- Info dialog, not indexed file -->
