@@ -166,9 +166,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     public static final String KEY_SMB2 = "pref_smbv2";
     public static final String KEY_SMB_RESOLV = "pref_smb_resolv";
-    public static final String KEY_SMB_DISABLE_TCP_DISCOVERY = "pref_smb_disable_tcp_discovery";
-    public static final String KEY_SMB_DISABLE_UDP_DISCOVERY = "pref_smb_disable_udp_discovery";
-    public static final String KEY_SMB_DISABLE_MDNS_DISCOVERY = "pref_smb_disable_mdns_discovery";
+    public static final String KEY_SMB_LIMIT_TO_MDNS_DISCOVERY = "pref_smb_limit_to_mdns_discovery";
     public static final String KEY_SMBJ = "pref_smbj";
 
     public static final boolean SEPARATE_ANIME_MOVIE_SHOW_DEFAULT = true;
@@ -243,9 +241,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     private CheckBoxPreference mSmb2 = null;
     private CheckBoxPreference mSmbResolver = null;
-    private CheckBoxPreference mSmbDisableTcpDiscovery = null;
-    private CheckBoxPreference mSmbDisableUdpDiscovery = null;
-    private CheckBoxPreference mSmbDisableMdnsDiscovery = null;
+    private CheckBoxPreference mSmbLimitToMdnsDiscovery = null;
     private CheckBoxPreference mSmbj = null;
 
     final public static int ACTIVITY_RESULT_UI_MODE_CHANGED = 665;
@@ -354,9 +350,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             prefCategory.addPreference(mAudioInterfaceChoicePreferences);
             prefCategory.addPreference(mParserSyncMode);
             prefScraperCategory.addPreference(mDbExportManualPreference);
-            // more smb discovery disabling options in advanced mode
-            netShareCategory.addPreference(mSmbDisableTcpDiscovery);
-            netShareCategory.addPreference(mSmbDisableMdnsDiscovery);
             getPreferenceScreen().addPreference(mAdvancedPreferences);
             if (BuildConfig.ADULT_SCRAPE) prefScraperCategory.addPreference(mAdultScrape);
         } else {
@@ -376,9 +369,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             prefScraperCategory.removePreference(mAdultScrape);
             prefCategory.removePreference(mStreamBufferSize);
             prefCategory.removePreference(mStreamMaxIFrameSize);
-            // not needed since for fire10hd only UDP discovery is upsetting wifi drivers
-            netShareCategory.removePreference(mSmbDisableTcpDiscovery);
-            netShareCategory.removePreference(mSmbDisableMdnsDiscovery);
         }
     }
 
@@ -453,9 +443,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         mSmb2 = (CheckBoxPreference) findPreference(KEY_SMB2);
         mSmbResolver = (CheckBoxPreference) findPreference(KEY_SMB_RESOLV);
-        mSmbDisableTcpDiscovery = (CheckBoxPreference) findPreference(KEY_SMB_DISABLE_TCP_DISCOVERY);
-        mSmbDisableUdpDiscovery = (CheckBoxPreference) findPreference(KEY_SMB_DISABLE_UDP_DISCOVERY);
-        mSmbDisableMdnsDiscovery = (CheckBoxPreference) findPreference(KEY_SMB_DISABLE_MDNS_DISCOVERY);
+        mSmbLimitToMdnsDiscovery = (CheckBoxPreference) findPreference(KEY_SMB_LIMIT_TO_MDNS_DISCOVERY);
         mSmbj = (CheckBoxPreference) findPreference(KEY_SMBJ);
 
         mScraperCategory = (PreferenceCategory) findPreference(KEY_SCRAPER_CATEGORY);
@@ -504,19 +492,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             return true;
         });
 
-        mSmbDisableTcpDiscovery.setOnPreferenceChangeListener((preference, newValue) -> {
-            Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
-            CustomApplication.getSambaDiscovery().notifyPrefChange();
-            return true;
-        });
-
-        mSmbDisableUdpDiscovery.setOnPreferenceChangeListener((preference, newValue) -> {
-            Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
-            CustomApplication.getSambaDiscovery().notifyPrefChange();
-            return true;
-        });
-
-        mSmbDisableMdnsDiscovery.setOnPreferenceChangeListener((preference, newValue) -> {
+        mSmbLimitToMdnsDiscovery.setOnPreferenceChangeListener((preference, newValue) -> {
             Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
             CustomApplication.getSambaDiscovery().notifyPrefChange();
             return true;

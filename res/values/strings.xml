@@ -665,12 +665,8 @@
     <string name="share_folders_smbv2_summary">Enable network share SMB version 2 protocol support</string>
     <string name="share_folders_smb_resolv">SMB resolver order</string>
     <string name="share_folders_smb_resolv_summary">Enable BCAST, DNS (default: DNS, BCAST). Change this if your server fails to resolve or you experience slow SMB.</string>
-    <string name="share_folders_smb_disable_tcp_discovery">Disable SMB TCP discovery</string>
-    <string name="share_folders_smb_disable_tcp_discovery_summary">Disable TCP discovery if you experience unstable Wi-Fi on some devices.</string>
-    <string name="share_folders_smb_disable_udp_discovery">Disable SMB UDP discovery</string>
-    <string name="share_folders_smb_disable_udp_discovery_summary">Disable UDP discovery if you experience unstable Wi-Fi on some devices (e.g Fire 10 HD).</string>
-    <string name="share_folders_smb_disable_mdns_discovery">Disable SMB mDNS discovery</string>
-    <string name="share_folders_smb_disable_mdns_discovery_summary">Disable mDNS discovery if you experience unstable Wi-Fi on some devices.</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn">Limit SMB discovery to mDNS</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Disable UDP/TCP discovery if you experience unstable Wi-Fi on some devices (e.g Fire 10 HD). ⚠ Will prevent proper discovery on ChromeOS.</string>
     <string name="connection_abnormally_long">Connection seems abnormally long. Would you like to reset it?</string>
     <string name="connection_reset">Reset</string>
 
