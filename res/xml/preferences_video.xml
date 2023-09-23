@@ -356,6 +356,7 @@
             app:iconSpaceReserved="false"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/network_shared_folders"
+        android:key="netshare_category"
         app:iconSpaceReserved="false" >
 
         <CheckBoxPreference
@@ -377,6 +378,27 @@
             android:key="pref_smb_resolv"
             android:title="@string/share_folders_smb_resolv"
             android:summary="@string/share_folders_smb_resolv_summary"
+            app:iconSpaceReserved="false"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_smb_disable_tcp_discovery"
+            android:title="@string/share_folders_smb_disable_tcp_discovery"
+            android:summary="@string/share_folders_smb_disable_tcp_discovery_summary"
+            app:iconSpaceReserved="false"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_smb_disable_udp_discovery"
+            android:title="@string/share_folders_smb_disable_udp_discovery"
+            android:summary="@string/share_folders_smb_disable_udp_discovery_summary"
+            app:iconSpaceReserved="false"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_smb_disable_mdns_discovery"
+            android:title="@string/share_folders_smb_disable_mdns_discovery"
+            android:summary="@string/share_folders_smb_disable_mdns_discovery_summary"
             app:iconSpaceReserved="false"/>
 
         <CheckBoxPreference
