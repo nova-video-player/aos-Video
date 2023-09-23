@@ -343,6 +343,10 @@ public class CustomApplication extends Application {
             log.debug("launchSambaDiscovery: no local connection, doing nothing");
     }
 
+    public static SambaDiscovery getSambaDiscovery() {
+        return mSambaDiscovery;
+    }
+
     // link networkState register/unregister networkCallback linked to app foreground/background lifecycle
     private final AppState.OnForeGroundListener sForeGroundListener = (applicationContext, foreground) -> {
         handleForeGround(foreground);
