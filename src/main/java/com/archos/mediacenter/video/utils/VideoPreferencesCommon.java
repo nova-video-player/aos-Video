@@ -110,6 +110,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_ADVANCED_VIDEO_ENABLED = "preferences_advanced_video_enabled";
     public static final String KEY_ADVANCED_VIDEO_CATEGORY = "preferences_category_advanced_video";
     public static final String KEY_ABOUT_CATEGORY = "about_category";
+    public static final String KEY_NETSHARE_CATEGORY = "netshare_category";
     public static final String KEY_ADVANCED_3D_TV_SWITCH_SUPPORTED = "preferences_tv_switch_supported";
     public static final String KEY_ADVANCED_VIDEO_QUIT = "preferences_video_advanced_quit";
     public static final String KEY_TORRENT_BLOCKLIST = "preferences_torrent_blocklist";
@@ -143,10 +144,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_SHOW_BY_RATING = "show_by_rating";
 
     public static final String KEY_VIDEO_OS = "preferences_video_os";
-    public static final String KEY_TMDB="preferences_video_tmdb";
-    public static final String KEY_TRAKT="preferences_video_trakt";
-    public static final String KEY_TRAKT_SYNC_PROGRESS ="trakt_sync_resume";
-    public static final String KEY_LICENCES="preferences_video_licences";
+    public static final String KEY_TMDB = "preferences_video_tmdb";
+    public static final String KEY_TRAKT = "preferences_video_trakt";
+    public static final String KEY_TRAKT_SYNC_PROGRESS = "trakt_sync_resume";
+    public static final String KEY_LICENCES = "preferences_video_licences";
 
     public static final String KEY_DEC_CHOICE = "dec_choice";
     public static final String KEY_AUDIO_INTERFACE_CHOICE = "audio_interface_choice";
@@ -165,6 +166,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     public static final String KEY_SMB2 = "pref_smbv2";
     public static final String KEY_SMB_RESOLV = "pref_smb_resolv";
+    public static final String KEY_SMB_DISABLE_TCP_DISCOVERY = "pref_smb_disable_tcp_discovery";
+    public static final String KEY_SMB_DISABLE_UDP_DISCOVERY = "pref_smb_disable_udp_discovery";
+    public static final String KEY_SMB_DISABLE_MDNS_DISCOVERY = "pref_smb_disable_mdns_discovery";
     public static final String KEY_SMBJ = "pref_smbj";
 
     public static final boolean SEPARATE_ANIME_MOVIE_SHOW_DEFAULT = true;
@@ -239,6 +243,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     private CheckBoxPreference mSmb2 = null;
     private CheckBoxPreference mSmbResolver = null;
+    private CheckBoxPreference mSmbDisableTcpDiscovery = null;
+    private CheckBoxPreference mSmbDisableUdpDiscovery = null;
+    private CheckBoxPreference mSmbDisableMdnsDiscovery = null;
     private CheckBoxPreference mSmbj = null;
 
     final public static int ACTIVITY_RESULT_UI_MODE_CHANGED = 665;
@@ -299,6 +306,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private void switchAdvancedPreferences() {
         PreferenceCategory prefCategory = (PreferenceCategory) findPreference("preferences_category_video");
         PreferenceCategory aboutCategory = (PreferenceCategory) findPreference(KEY_ABOUT_CATEGORY);
+        PreferenceCategory netShareCategory = (PreferenceCategory) findPreference(KEY_NETSHARE_CATEGORY);
         if (!ArchosFeatures.isAndroidTV(getActivity())) { // not a TV
             prefCategory.removePreference(mActivate3DTVSwitch);
             prefCategory.removePreference(mEnableDownmixATV); // on TV downmix is disabled: show the option to enable it for harmonyOS
@@ -346,6 +354,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             prefCategory.addPreference(mAudioInterfaceChoicePreferences);
             prefCategory.addPreference(mParserSyncMode);
             prefScraperCategory.addPreference(mDbExportManualPreference);
+            // more smb discovery disabling options in advanced mode
+            netShareCategory.addPreference(mSmbDisableTcpDiscovery);
+            netShareCategory.addPreference(mSmbDisableMdnsDiscovery);
             getPreferenceScreen().addPreference(mAdvancedPreferences);
             if (BuildConfig.ADULT_SCRAPE) prefScraperCategory.addPreference(mAdultScrape);
         } else {
@@ -365,6 +376,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             prefScraperCategory.removePreference(mAdultScrape);
             prefCategory.removePreference(mStreamBufferSize);
             prefCategory.removePreference(mStreamMaxIFrameSize);
+            // not needed since for fire10hd only UDP discovery is upsetting wifi drivers
+            netShareCategory.removePreference(mSmbDisableTcpDiscovery);
+            netShareCategory.removePreference(mSmbDisableMdnsDiscovery);
         }
     }
 
@@ -439,6 +453,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         mSmb2 = (CheckBoxPreference) findPreference(KEY_SMB2);
         mSmbResolver = (CheckBoxPreference) findPreference(KEY_SMB_RESOLV);
+        mSmbDisableTcpDiscovery = (CheckBoxPreference) findPreference(KEY_SMB_DISABLE_TCP_DISCOVERY);
+        mSmbDisableUdpDiscovery = (CheckBoxPreference) findPreference(KEY_SMB_DISABLE_UDP_DISCOVERY);
+        mSmbDisableMdnsDiscovery = (CheckBoxPreference) findPreference(KEY_SMB_DISABLE_MDNS_DISCOVERY);
         mSmbj = (CheckBoxPreference) findPreference(KEY_SMBJ);
 
         mScraperCategory = (PreferenceCategory) findPreference(KEY_SCRAPER_CATEGORY);
@@ -484,6 +501,24 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mSmbResolver.setOnPreferenceChangeListener((preference, newValue) -> {
             Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
             JcifsUtils.notifyPrefChange();
+            return true;
+        });
+
+        mSmbDisableTcpDiscovery.setOnPreferenceChangeListener((preference, newValue) -> {
+            Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
+            CustomApplication.getSambaDiscovery().notifyPrefChange();
+            return true;
+        });
+
+        mSmbDisableUdpDiscovery.setOnPreferenceChangeListener((preference, newValue) -> {
+            Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
+            CustomApplication.getSambaDiscovery().notifyPrefChange();
+            return true;
+        });
+
+        mSmbDisableMdnsDiscovery.setOnPreferenceChangeListener((preference, newValue) -> {
+            Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
+            CustomApplication.getSambaDiscovery().notifyPrefChange();
             return true;
         });
 
