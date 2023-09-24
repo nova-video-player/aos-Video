@@ -679,6 +679,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
     @Override
     public void onCredentialRequired(Exception e) {
         Toast.makeText(getActivity(), "TODO: Credential Required", Toast.LENGTH_SHORT).show();
+        log.error("TODO: Credential Required", e);
     }
 
     @Override

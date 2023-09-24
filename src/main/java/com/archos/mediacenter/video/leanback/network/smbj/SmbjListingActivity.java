@@ -17,13 +17,13 @@ package com.archos.mediacenter.video.leanback.network.smbj;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingFragment;
 
-import com.archos.mediacenter.video.leanback.network.NetworkListingFragment;
+import com.archos.mediacenter.video.leanback.network.smb.SmbListingFragment;
 
 public class SmbjListingActivity extends ListingActivity {
 
     @Override
     protected ListingFragment getStartingFragment() {
-        return new NetworkListingFragment();
+        return new SmbListingFragment();
     }
 
 }
