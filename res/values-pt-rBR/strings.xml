@@ -599,6 +599,8 @@
     <string name="share_folders_smbv2_summary">Habilitar suporte a comparilhamento via Protocolo SMB Versão 2.</string>
     <string name="share_folders_smb_resolv">Ordem de resolução SMB</string>
     <string name="share_folders_smb_resolv_summary">Habilitar BCAST, DNS (Padrão: DNS, BCAST). Modifique esta opção se tiver problemas de resolucão de nome ou experimentar lentidão com SMB.</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn">Limitar a descoberta SMB à mDNS</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Desative a descoberta UDP/TCP se você experimentar Wi-Fi instável em alguns dispositivos (por exemplo, Fire 10 HD). ⚠️ Irá impedir a descoberta de funcionar no ChromeOS.</string>
     <string name="connection_abnormally_long">A conexão parece anormalmente longa. Gostaria de redefini-la?</string>
     <string name="connection_reset">Redefinir</string>
     <!-- Info dialog, not indexed file -->

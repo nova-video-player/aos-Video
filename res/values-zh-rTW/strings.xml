@@ -594,6 +594,8 @@
     <string name="share_folders_smbv2_summary">開啟網路分享 SMB 通訊協定第二版的支援</string>
     <string name="share_folders_smb_resolv">SMB 解析器順序</string>
     <string name="share_folders_smb_resolv_summary">開啟 BCAST, DNS (預設：DNS, BCAST)。假如您的伺服器解析失敗或是 SMB 過慢，請變更此選項</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn">限制 SMB 探索為 mDNS</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">如果您遭遇到 Wi-Fi 不穩定的情形 (例如 Fire 10 HD)，請關閉 UDP/TCP 探索 (⚠ 會導致 ChromeOS 無法正常探索)</string>
     <string name="connection_abnormally_long">連線似乎異常緩慢，要重啟嗎？</string>
     <string name="connection_reset">重啟</string>
     <!-- Info dialog, not indexed file -->

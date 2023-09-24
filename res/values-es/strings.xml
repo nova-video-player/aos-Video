@@ -325,6 +325,7 @@
     <string name="menu_change_folder_details">Seleccione la carpeta desde la que iniciar</string>
     <string name="unlock_instructions">Pulsación larga en el icono para desbloquear</string>
     <string name="seek_to_percentage">\"Buscando a %s%%</string>
+    <string name="set_audio_speed_to">\"Velocidad de audio %s</string>
     <!-- Subtitles/Audio languages -->
     <string name="s_brazilian">Brasileño</string>
     <string name="s_chinese">Chino</string>
@@ -454,6 +455,9 @@
     <string name="add_to_indexed_folders">Indexar carpeta</string>
     <string name="add_to_library">Agregar a la biblioteca</string>
     <string name="add_all_items_to_library">¿Añadir todos los vídeos a la biblioteca inmediatamente?</string>
+    <string name="invalid_host">Formato de dirección de host no válido</string>
+    <string name="invalid_port">Formato de puerto no válido</string>
+    <string name="invalid_path">Formato de ruta no válido</string>
     <string name="shortcut_folder_added">Carpeta %s añadida como acceso directo</string>
     <string name="indexed_folder_added">Carpeta %s añadida a la biblioteca</string>
     <string name="remove_from_indexed_folders">Eliminar de la biblioteca</string>
@@ -587,12 +591,16 @@
     <string name="network_thumbnails">Crear miniaturas remotas</string>
     <string name="network_thumbnails_summary">Crea miniaturas de vídeos remotos cuando no hay carteles disponibles</string>
     <string name="network_bookmarks_summary">Guardar y comprobar si es posible el punto de reanudación y posición de los marcadores en la red</string>
+    <string name="share_folders_smbj">Usar implementación SMB más rápida (SMB2+)</string>
+    <string name="share_folders_smbj_summary">Activar SMB más rápido, pero limita el soporte al protocolo anterior a la versión 2</string>
     <string name="share_folders_sshj">Usar la nueva implementación de SFTP</string>
     <string name="share_folders_sshj_summary">Habilita la nueva implementación para enlaces SFTP</string>
     <string name="share_folders_smbv2">Habilitar soporte para SMBv2</string>
     <string name="share_folders_smbv2_summary">Habilitar el soporte para el protocolo de red SMBv2.</string>
     <string name="share_folders_smb_resolv">Orden de resolución SMB</string>
     <string name="share_folders_smb_resolv_summary">Habilitar BCAST, DNS (por defecto: DNS, BCAST). Cambie esto si su servidor no logra resolver o experimenta SMB lento.</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn">Limitar descubrimiento de SMB a mDNS</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Deshabilita el descubrimiento UDP/TCP si experimenta Wi-Fi inestable en algunos dispositivos (por ejemplo, Fire 10 HD). ⚠️ prevendrá el descubrimiento correcto en ChromeOS.</string>
     <string name="connection_abnormally_long">La conexión parece anormalmente larga. ¿Quieres restablecerla?</string>
     <string name="connection_reset">Restablecer</string>
     <!-- Info dialog, not indexed file -->

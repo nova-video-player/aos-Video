@@ -325,6 +325,7 @@
     <string name="menu_change_folder_details">Válassza ki az induló mappát</string>
     <string name="unlock_instructions">Nyomja hosszan az ikont a feloldáshoz</string>
     <string name="seek_to_percentage">\"Keresés alatt %s%%</string>
+    <string name="set_audio_speed_to">\"Hangsebesség %s</string>
     <!-- Subtitles/Audio languages -->
     <string name="s_brazilian">Brazil</string>
     <string name="s_chinese">Kínai</string>
@@ -582,6 +583,8 @@
     <string name="share_folders_smbv2_summary">Az SMB hálózati megosztás 2. verziójának engedélyezése.</string>
     <string name="share_folders_smb_resolv">SMB feloldási sorrend</string>
     <string name="share_folders_smb_resolv_summary">BCAST, DNS bekpcsolása (alapértelmezett: DNS, BCAST). Ezt kapcsolja be, ha a szerver nem található, vagy lassú az SMB.</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn">SMB felderítés korlátozása mDNS-re</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Kapcsolja ki az UDP/TCP felderítést, ha bizonyos eszközökön ingatag Wi-Fi kapcsolatot tapasztal (pl. Fire 10 HD). ⚠ Meggátolja a megfelelő felderítást ChromeOS alatt.</string>
     <string name="connection_abnormally_long">A kapcsolódás szokatlanul hosszúnak tűnik. Szeretnéd visszaállítani?</string>
     <string name="connection_reset">Visszaállítás</string>
     <!-- Info dialog, not indexed file -->

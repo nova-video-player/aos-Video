@@ -325,6 +325,7 @@
     <string name="menu_change_folder_details">Wählen Sie den Start-Ordner</string>
     <string name="unlock_instructions">Zum entsperren lange auf das Icon drücken</string>
     <string name="seek_to_percentage">Vorwärtssuche bis %s%%</string>
+    <string name="set_audio_speed_to">\"Audio-Geschwindigkeit %s</string>
     <!-- Subtitles/Audio languages -->
     <string name="s_brazilian">Brasilianisch</string>
     <string name="s_chinese">Chinesisch</string>
@@ -454,6 +455,9 @@
     <string name="add_to_indexed_folders">Ordner in Bibliothek aufnehmen</string>
     <string name="add_to_library">Zur Bibliothek hinzufügen</string>
     <string name="add_all_items_to_library">Alle Videos sofort zur Bibliothek hinzufügen?</string>
+    <string name="invalid_host">Kein gültiges Hostadressenformat</string>
+    <string name="invalid_port">Kein gültiges Port-Format</string>
+    <string name="invalid_path">Kein gültiges Pfad-Format</string>
     <string name="shortcut_folder_added">Ordner %s als Verknüpfung hinzugefügt</string>
     <string name="indexed_folder_added">%s wurde zur Bibliothek hinzugefügt</string>
     <string name="remove_from_indexed_folders">Ordner aus Bibliothek entfernen</string>
@@ -589,10 +593,14 @@
     <string name="network_bookmarks_summary">Wenn möglich Fortsetzungspunkte und Lesezeichen auf Netzwerkfreigaben speichern</string>
     <string name="share_folders_smbj">Schnellere SMB-Implementierung verwenden (SMB2+)</string>
     <string name="share_folders_smbj_summary">Schnelleren SMB-Durchsatz aktivieren, aber begrenzt die Unterstützung auf Protokoll oberhalb der Version 2.</string>
+    <string name="share_folders_sshj">Neuere SFTP-Implementierung verwenden</string>
+    <string name="share_folders_sshj_summary">Neue SFTP-Implementierung für SFTP-Links aktivieren</string>
     <string name="share_folders_smbv2">SMBv2 Unterstützung aktivieren</string>
     <string name="share_folders_smbv2_summary">Netzwerk-Sharing SMB-Version 2 Protokollunterstützung aktivieren.</string>
     <string name="share_folders_smb_resolv">Reihenfolge SMB Namensauflösung</string>
     <string name="share_folders_smb_resolv_summary">Aktiviere BCAST, DNS (Standard: DNS, BCAST). Ändere dies, wenn Server nicht aufgelöst wird oder du langsames SMB hast.</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn">SMB-Erkennung auf mDNS beschränken</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">UDP/TCP-Erkennung deaktivieren, wenn auf einigen Geräten (z.B. Fire 10 HD) instabiles Wi-Fi vorhanden ist. :Warnung: Wird ein ordnungsgemäßes Erkennen auf ChromeOS verhindern.</string>
     <string name="connection_abnormally_long">Die Verbindung dauert ungewöhnlich lange. Möchtest Du sie zurücksetzen?</string>
     <string name="connection_reset">Zurücksetzen</string>
     <!-- Info dialog, not indexed file -->

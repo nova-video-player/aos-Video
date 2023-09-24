@@ -335,6 +335,7 @@
     <string name="menu_change_folder_details">Выберите папку для начала</string>
     <string name="unlock_instructions">Долгое нажатие на иконку для разблокировки</string>
     <string name="seek_to_percentage">Поиск %s%%</string>
+    <string name="set_audio_speed_to">\"Скорость аудио %s</string>
     <!-- Subtitles/Audio languages -->
     <string name="s_brazilian">Бразильский</string>
     <string name="s_chinese">Китайский</string>
@@ -608,6 +609,8 @@
     <string name="share_folders_smbv2_summary">Включить поддержку протокола SMB версии 2.</string>
     <string name="share_folders_smb_resolv">Порядок использования сервисов имен</string>
     <string name="share_folders_smb_resolv_summary">Включить BCAST, DNS (по умолчанию: DNS, BCAST). Измените, если не удается разрешить имена в сети, или SMB работает медленно.</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn">Ограничить обнаружение SMB в mDNS</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Отключите обнаружение UDP/TCP, если Wi-Fi работает нестабильно на некоторых устройствах (например, Fire 10 HD). ⚠️ Предотвратит правильное обнаружение на ChromeOS.</string>
     <string name="connection_abnormally_long">Соединение слишком долгое. Хотите прервать его?</string>
     <string name="connection_reset">Сброс</string>
     <!-- Info dialog, not indexed file -->
