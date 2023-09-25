@@ -335,6 +335,7 @@
     <string name="menu_change_folder_details">Vyberte priečinok, z ktorého sa má začať</string>
     <string name="unlock_instructions">Dlhým stlačením ikony odomknite</string>
     <string name="seek_to_percentage">\"Vyhľadávam %%</string>
+    <string name="set_audio_speed_to">\"Rýchlosť zvuku %s</string>
     <!-- Subtitles/Audio languages -->
     <string name="s_brazilian">Brazílčina</string>
     <string name="s_chinese">Čínština</string>
@@ -608,6 +609,8 @@
     <string name="share_folders_smbv2_summary">Povolenie podpory sieťového zdieľania protokolu SMB verzie 2</string>
     <string name="share_folders_smb_resolv">Poradie resolveru SMB</string>
     <string name="share_folders_smb_resolv_summary">Povolenie BCAST, DNS (predvolené: DNS, BCAST). Túto možnosť zmeňte, ak sa vášmu serveru nedarí vyriešiť problém alebo sa vám SMB pomaly rozbieha.</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn">Obmedziť zisťovanie SMB na mDNS</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Ak sa na niektorých zariadeniach (napr. Fire 10 HD) vyskytuje nestabilné Wi-Fi, vypnite zisťovanie UDP/TCP. ⚠ Zabráni správnemu zisťovaniu v systéme ChromeOS.</string>
     <string name="connection_abnormally_long">Pripojenie sa zdá byť neobvykle dlhé. Chcete ho obnoviť?</string>
     <string name="connection_reset">Obnovenie</string>
     <!-- Info dialog, not indexed file -->
