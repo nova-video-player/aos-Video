@@ -671,6 +671,8 @@
     <string name="share_folders_smb_disable_udp_discovery_summary">Disable UDP discovery if you experience unstable Wi-Fi on some devices (e.g Fire 10 HD).</string>
     <string name="share_folders_smb_disable_mdns_discovery">Disable SMB mDNS discovery</string>
     <string name="share_folders_smb_disable_mdns_discovery_summary">Disable mDNS discovery if you experience unstable Wi-Fi on some devices.</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn">Limit SMB discovery to mDNS</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Disable UDP/TCP discovery if you experience unstable Wi-Fi on some devices (e.g Fire 10 HD). ⚠ Will prevent proper discovery on ChromeOS.</string>
     <string name="connection_abnormally_long">Connection seems abnormally long. Would you like to reset it?</string>
     <string name="connection_reset">Reset</string>
 
