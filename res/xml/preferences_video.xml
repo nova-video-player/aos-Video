@@ -382,9 +382,23 @@
 
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="pref_smb_limit_to_mdns_discovery"
-            android:title="@string/share_folders_smb_discovery_limited_to_mdsn"
-            android:summary="@string/share_folders_smb_discovery_limited_to_mdsn_summary"
+            android:key="pref_smb_disable_tcp_discovery"
+            android:title="@string/share_folders_smb_disable_tcp_discovery"
+            android:summary="@string/share_folders_smb_disable_tcp_discovery_summary"
+            app:iconSpaceReserved="false"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_smb_disable_udp_discovery"
+            android:title="@string/share_folders_smb_disable_udp_discovery"
+            android:summary="@string/share_folders_smb_disable_udp_discovery_summary"
+            app:iconSpaceReserved="false"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_smb_disable_mdns_discovery"
+            android:title="@string/share_folders_smb_disable_mdns_discovery"
+            android:summary="@string/share_folders_smb_disable_mdns_discovery_summary"
             app:iconSpaceReserved="false"/>
 
         <CheckBoxPreference
