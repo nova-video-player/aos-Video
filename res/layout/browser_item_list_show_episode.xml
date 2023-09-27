@@ -21,6 +21,7 @@ for informations (duration for files, number of files for directories).
         card_view:cardCornerRadius="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/transparent"
         android:layout_gravity="center_horizontal"	>
         <RelativeLayout
             android:layout_width="wrap_content"
