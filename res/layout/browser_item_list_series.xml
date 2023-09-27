@@ -24,48 +24,61 @@ for informations (duration for files, number of files for directories).
 
         <!-- Left area = thumbnail/poster -->
 
-        <ImageView
-            android:id="@+id/thumbnail"
-            android:layout_width="150dip"
-            android:layout_height="90dip"
-            android:scaleType="centerCrop"
-
+        <androidx.cardview.widget.CardView
+            android:id="@+id/thumbnail_cardview"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            card_view:cardCornerRadius="4dp"
+            android:layout_width="wrap_content"
             android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name"
-            android:background="@drawable/rounded_corners" />
-
-
-
-        <ImageView
-            android:id="@+id/flag_3d"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/thumbnail"
-            android:layout_alignRight="@id/thumbnail"
-            android:layout_marginBottom="@dimen/video_3d_label_margin_list"
-            android:layout_marginRight="@dimen/video_3d_label_margin_list"
-            app:srcCompat="@drawable/label_3d_small"
-            android:visibility="gone" />
+            android:layout_gravity="center_horizontal"	>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:orientation="vertical" >
 
-        <ImageView
-            android:id="@+id/trakt_watched"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@id/thumbnail"
-            android:layout_alignTop="@id/thumbnail"
-            android:layout_marginRight="-2px"
-            android:layout_marginTop="-2px"
-            app:srcCompat="@drawable/watched_icon_corner"
-            android:visibility="gone" />
+                <ImageView
+                    android:id="@+id/thumbnail"
+                    android:layout_width="150dip"
+                    android:layout_height="90dip"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/rounded_corners" />
 
-        <ImageView
-            android:id="@+id/trakt_library"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/thumbnail"
-            android:layout_alignTop="@id/thumbnail"
-            android:layout_marginLeft="@dimen/video_list_trakt_library_margin_left"
-            app:srcCompat="@drawable/label_trakt_library_small"
-            android:visibility="gone" />
+                <ImageView
+                    android:id="@+id/flag_3d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/thumbnail"
+                    android:layout_alignRight="@id/thumbnail"
+                    android:layout_marginBottom="@dimen/video_3d_label_margin_list"
+                    android:layout_marginRight="@dimen/video_3d_label_margin_list"
+                    app:srcCompat="@drawable/label_3d_small"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/trakt_watched"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/thumbnail"
+                    android:layout_alignTop="@id/thumbnail"
+                    android:layout_marginRight="-2px"
+                    android:layout_marginTop="-2px"
+                    app:srcCompat="@drawable/watched_icon_corner"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/trakt_library"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/thumbnail"
+                    android:layout_alignTop="@id/thumbnail"
+                    android:layout_marginLeft="@dimen/video_list_trakt_library_margin_left"
+                    app:srcCompat="@drawable/label_trakt_library_small"
+                    android:visibility="gone" />
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
     </RelativeLayout>
 
     <include layout="@layout/browser_item_list_common"
