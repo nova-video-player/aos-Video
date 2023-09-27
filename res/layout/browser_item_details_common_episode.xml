@@ -138,6 +138,7 @@
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentRight="true"
 		android:layout_toLeftOf="@id/expanded"
+		android:layout_marginEnd="4dip"
 		android:orientation="horizontal" >
 
 		<ProgressBar
