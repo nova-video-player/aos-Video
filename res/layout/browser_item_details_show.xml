@@ -15,53 +15,69 @@ for informations (duration for files, number of files for directories).
     android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical" >
 
-    <RelativeLayout
-        android:id="@+id/left_area"
-        android:layout_marginLeft="142dip"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/thumbnail_cardview"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        card_view:cardCornerRadius="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true">
-
-        <!-- Number on the left side -->
-
-        <TextView
-            android:id="@+id/number"
-            style="@style/BrowserText.Number.Video"
-            android:layout_width="@dimen/video_details_number_width"
-            android:layout_height="match_parent" />
-
-        <ImageView
-            android:id="@+id/flag_3d"
+        android:background="@color/transparent"
+        android:layout_gravity="center_horizontal"	>
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/number"
-            android:layout_alignRight="@id/number"
-            android:layout_marginBottom="@dimen/video_3d_label_margin_grid"
-            android:layout_marginRight="@dimen/video_3d_label_margin_grid"
-            app:srcCompat="@drawable/label_3d"
-            android:visibility="gone" />
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:orientation="vertical" >
 
-        <ImageView
-            android:id="@+id/trakt_library"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/number"
-            android:layout_alignTop="@id/number"
-            android:layout_marginLeft="@dimen/video_list_show_trakt_library_margin_left"
-            app:srcCompat="@drawable/label_trakt_library_small"
-            android:visibility="gone" />
-    </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/left_area"
+                android:layout_marginLeft="142dip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true">
 
-    <ImageView
-        android:id="@+id/trakt_watched"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        app:srcCompat="@drawable/watched_icon_corner"
-        android:visibility="gone" />
+                <!-- Number on the left side -->
 
-    <include layout="@layout/browser_item_details_common_episode" />
+                <TextView
+                    android:id="@+id/number"
+                    style="@style/BrowserText.Number.Video"
+                    android:layout_width="@dimen/video_details_number_width"
+                    android:layout_height="match_parent" />
 
+                <ImageView
+                    android:id="@+id/flag_3d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/number"
+                    android:layout_alignRight="@id/number"
+                    android:layout_marginBottom="@dimen/video_3d_label_margin_grid"
+                    android:layout_marginRight="@dimen/video_3d_label_margin_grid"
+                    app:srcCompat="@drawable/label_3d"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/trakt_library"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/number"
+                    android:layout_alignTop="@id/number"
+                    android:layout_marginLeft="@dimen/video_list_show_trakt_library_margin_left"
+                    app:srcCompat="@drawable/label_trakt_library_small"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/trakt_watched"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                app:srcCompat="@drawable/watched_icon_corner"
+                android:visibility="gone" />
+
+            <include layout="@layout/browser_item_details_common_episode" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 </RelativeLayout>
