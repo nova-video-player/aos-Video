@@ -130,7 +130,7 @@ android {
         renderScript true
         aidl true
     }
-    compileSdkVersion 33
+    compileSdkVersion 34
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -300,7 +300,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
     implementation 'androidx.media:media:1.6.0'
-    implementation 'androidx.core:core:1.10.1'
+    implementation 'androidx.core:core:1.12.0'
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
     implementation 'androidx.fragment:fragment:1.6.1'
@@ -310,9 +310,9 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'com.github.ksoichiro:android-observablescrollview:1.6.0'
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.leanback:leanback:1.2.0-alpha02'
-    implementation 'androidx.leanback:leanback-preference:1.2.0-alpha02'
+    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'androidx.leanback:leanback:1.2.0-alpha03'
+    implementation 'androidx.leanback:leanback-preference:1.2.0-alpha03'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
     implementation 'fr.turri:aXMLRPC:1.13.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
