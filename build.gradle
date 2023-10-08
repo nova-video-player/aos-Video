@@ -297,7 +297,7 @@ android {
 dependencies {
     implementation project(':FileCoreLibrary')
     implementation project(':MediaLib')
-    implementation 'com.squareup.picasso:picasso:2.8'
+    implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
     implementation 'androidx.media:media:1.6.0'
     implementation 'androidx.core:core:1.12.0'
