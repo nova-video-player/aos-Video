@@ -3544,7 +3544,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             log.debug("onSubtitleMetadataUpdated: newSubtitle: " + newSubtitleTrack + ", mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack + ", firstTimeCalled: " + firstTimeCalled);
 
             mSubtitleInfoController.clear();
-            int noneTrack = 0;
+            int noneTrack = 0; // hereit tracks the mSubtitleInfoController tracks containing the none track at position 0
+
             if (nbTrack != 0) {
                 mSubtitleInfoController.addTrack(getText(R.string.s_none)); // first track is none
                 mVideoInfo.nbSubtitles = nbTrack;
@@ -3573,6 +3574,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mSubtitleManager.setVerticalPosition(vpos);
                 mSubtitleManager.setOutlineState(outline);
 
+                // mVideoInfo.subtitleTrack is the track number without the none track 0<=mVideoInfo.subtitleTrack<nbTrack
+                // but mSubtitleInfoController is the track number with the none track (i.e. nbTrack + 1)
+
                 // If no language set for subs, set the user favorite. Or system language if none.
                 if (!mHideSubtitles && mVideoInfo.subtitleTrack == -1) {
                     Locale locale = new Locale(mSubsFavoriteLanguage);
@@ -3586,13 +3590,18 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     }
                 }
 
+                log.debug("onSubtitleMetadataUpdated: mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack + " nbTrack: " + nbTrack);
                 if (mVideoInfo.subtitleTrack >= 0 && mVideoInfo.subtitleTrack < nbTrack) {
                     //mVideoInfo.subtitleTrack has been changed by playerservice
                     log.debug("onSubtitleMetadataUpdated: mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack);
                     mSubtitleInfoController.setTrack(mVideoInfo.subtitleTrack + 1); // +1 since no track is at position 0
                 }
-
+                if (mVideoInfo.subtitleTrack == -1) { // selects none track in this case
+                    log.debug("onSubtitleMetadataUpdated: mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack + " -> setting none track");
+                    mSubtitleInfoController.setTrack(0);
+                }
                 if (mSubtitleInfoController.getTrack() == noneTrack) {
+                    log.debug("onSubtitleMetadataUpdated: none track selected, disabling delay menu");
                     mSubtitleInfoController.enableSettings(SUBTITLE_MENU_DELAY, false, false);
                 }
             }

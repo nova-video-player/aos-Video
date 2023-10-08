@@ -1277,17 +1277,19 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mAudioSubtitleNeedUpdate = true;
             return;
         }
-        log.debug("onSubtitleMetadataUpdated: newSubtitleTrack=" + newSubtitleTrack + " mVideoInfo.subtitleTrack=" + mVideoInfo.subtitleTrack + " mHideSubtitles=" + mHideSubtitles + " mSubsFavoriteLanguage=" + mSubsFavoriteLanguage + " mVideoInfo.subtitleTrack=" + mVideoInfo.subtitleTrack);
         int nbTrack = vMetadata.getSubtitleTrackNb();
+        log.debug("onSubtitleMetadataUpdated: nbTrack=" + nbTrack + " newSubtitleTrack=" + newSubtitleTrack + " mVideoInfo.subtitleTrack=" + mVideoInfo.subtitleTrack + " mHideSubtitles=" + mHideSubtitles + " mSubsFavoriteLanguage=" + mSubsFavoriteLanguage + " mVideoInfo.subtitleTrack=" + mVideoInfo.subtitleTrack);
         if (nbTrack != 0) {
             // none track
-            int noneTrack = 0;
+            int noneTrack = -1; // here it tracks mVideoInfo.subtitleTrack that are the tracks of the video (not the none from menu)
     
-            if (mVideoInfo.subtitleTrack == -1) {
-                if (mHideSubtitles)
+            if (mVideoInfo.subtitleTrack == noneTrack) {
+                if (mHideSubtitles) {
+                    log.debug("onSubtitleMetadataUpdated: hide subs -> selected none track");
                     mVideoInfo.subtitleTrack = noneTrack;
-                else {
+                } else {
                     Locale locale = new Locale(mSubsFavoriteLanguage);
+                    log.debug("onSubtitleMetadataUpdated: favorite locale " + locale.getDisplayLanguage() + ", current locale " + Locale.getDefault().getDisplayLanguage());
                     for (int i = 0; i < nbTrack; ++i) {
                         // vMetadata.getSubtitleTrack(i).name is either "XYZ" or "title (XYZ)"
                         log.debug("onSubtitleMetadataUpdated: subtitle track " + i + " name=" + vMetadata.getSubtitleTrack(i).name + " displayLanguage=" + locale.getDisplayLanguage() + " findLanguageInString=" + findLanguageInString(vMetadata.getSubtitleTrack(i).name));
@@ -1297,19 +1299,23 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                             break;
                         }
                     }
-                    if (mVideoInfo.subtitleTrack == -1)
+                    if (mVideoInfo.subtitleTrack == noneTrack)
                         mVideoInfo.subtitleTrack = newSubtitleTrack;
                 }
             }
-            if (mVideoInfo.subtitleTrack >= 0 && mVideoInfo.subtitleTrack < nbTrack+1) {
+            // mVideoInfo.subtitleTrack is the track number without the none track 0<=mVideoInfo.subtitleTrack<nbTrack
+            if (mVideoInfo.subtitleTrack >= 0 && mVideoInfo.subtitleTrack < nbTrack) {
                 if (newSubtitleTrack != mVideoInfo.subtitleTrack &&
                         !mPlayer.setSubtitleTrack(mVideoInfo.subtitleTrack))
                     mVideoInfo.subtitleTrack = noneTrack;
                 log.debug("SubtitleDelay = "+String.valueOf(mVideoInfo.subtitleDelay));
-                    mPlayer.setSubtitleDelay(mVideoInfo.subtitleDelay);
-                    if (mVideoInfo.subtitleRatio >= 0) {
-                        mPlayer.setSubtitleRatio(mVideoInfo.subtitleRatio);
+                mPlayer.setSubtitleDelay(mVideoInfo.subtitleDelay);
+                if (mVideoInfo.subtitleRatio >= 0) {
+                    mPlayer.setSubtitleRatio(mVideoInfo.subtitleRatio);
                 }
+            }
+            if (mVideoInfo.subtitleTrack == noneTrack) {
+                mPlayer.setSubtitleTrack(mVideoInfo.subtitleTrack);
             }
 
             firstTimeCalled=false;
