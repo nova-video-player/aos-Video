@@ -64,8 +64,8 @@ static def getFormattedDate() {
 
 ext {
     myApplicationId = "org.courville.nova"
-    myVersionCode = 602031
-    myVersionName = '6.2.31'
+    myVersionCode = 602032
+    myVersionName = '6.2.32'
     if (! project.hasProperty("universal")) {
         // override versionName and versionCode to get it dependent on the date
         myVersionName = myVersionName + "-" + getFormattedDate()
