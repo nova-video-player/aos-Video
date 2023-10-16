@@ -317,7 +317,7 @@ dependencies {
     implementation 'fr.turri:aXMLRPC:1.13.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
     implementation 'io.sentry:sentry-android:6.29.0'
-    implementation 'io.sentry:sentry:6.29.0'
+    implementation 'io.sentry:sentry:6.31.0'
 }
 
 // to avoid dupplicate classes
