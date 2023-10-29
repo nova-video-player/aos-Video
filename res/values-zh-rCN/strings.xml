@@ -594,6 +594,14 @@
     <string name="share_folders_smbv2_summary">启用网络共享 SMB 版本 2 协议支持。</string>
     <string name="share_folders_smb_resolv">SMB 解析器顺序</string>
     <string name="share_folders_smb_resolv_summary">启用 BCAST, DNS (默认: DNS, BCAST)。如果您的服务器无法解析或经历了慢速SMB, 请更改此选项。</string>
+    <string name="share_folders_smb_disable_tcp_discovery">禁用 SMB TCP 发现</string>
+    <string name="share_folders_smb_disable_tcp_discovery_summary">如果您在某些设备上遇到不稳定的 Wi-Fi，请禁用 TCP 发现。</string>
+    <string name="share_folders_smb_disable_udp_discovery">禁用 SMB UDP 发现</string>
+    <string name="share_folders_smb_disable_udp_discovery_summary">如果您在某些设备上遇到不稳定的 Wi-Fi (例如 Fire 10 HD)，禁用 UDP 发现。</string>
+    <string name="share_folders_smb_disable_mdns_discovery">禁用 SMB mDNS 发现</string>
+    <string name="share_folders_smb_disable_mdns_discovery_summary">如果您在某些设备上遇到不稳定的 Wi-Fi，请禁用 mDNS 发现。</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn">将 SMB 发现限制为 mDNS</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">如果您在某些设备上遇到不稳定的 Wi-Fi，请禁用 UDP/TCP 发现 (如 Fire 10 HD).: ⚠警告：禁用选项将阻止在 ChromeOS 上正确发现。</string>
     <string name="connection_abnormally_long">连接似乎花了太长时间。要重置吗？</string>
     <string name="connection_reset">重置</string>
     <!-- Info dialog, not indexed file -->

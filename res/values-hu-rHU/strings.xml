@@ -583,6 +583,12 @@
     <string name="share_folders_smbv2_summary">Az SMB hálózati megosztás 2. verziójának engedélyezése.</string>
     <string name="share_folders_smb_resolv">SMB feloldási sorrend</string>
     <string name="share_folders_smb_resolv_summary">BCAST, DNS bekpcsolása (alapértelmezett: DNS, BCAST). Ezt kapcsolja be, ha a szerver nem található, vagy lassú az SMB.</string>
+    <string name="share_folders_smb_disable_tcp_discovery">Az SMB TCP felderítés kikapcsolása</string>
+    <string name="share_folders_smb_disable_tcp_discovery_summary">Kapcsolja ki a TCP felderítést, ha egyes készülékeken ingatag Wi-Fi-t tapasztal.</string>
+    <string name="share_folders_smb_disable_udp_discovery">Az SMB UDP felderítés kikapcsolása</string>
+    <string name="share_folders_smb_disable_udp_discovery_summary">Kapcsolja ki az UDP felderítést, ha egyes készülékeken ingatag Wi-Fi-t tapasztal (pl. Fire 10 HD).</string>
+    <string name="share_folders_smb_disable_mdns_discovery">Az SMB mDNS felderítés kikapcsolása</string>
+    <string name="share_folders_smb_disable_mdns_discovery_summary">Kapcsolja ki az mDNS felderítést, ha egyes készülékeken ingatag Wi-Fi-t tapasztal.</string>
     <string name="share_folders_smb_discovery_limited_to_mdsn">SMB felderítés korlátozása mDNS-re</string>
     <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Kapcsolja ki az UDP/TCP felderítést, ha bizonyos eszközökön ingatag Wi-Fi kapcsolatot tapasztal (pl. Fire 10 HD). ⚠ Meggátolja a megfelelő felderítást ChromeOS alatt.</string>
     <string name="connection_abnormally_long">A kapcsolódás szokatlanul hosszúnak tűnik. Szeretnéd visszaállítani?</string>

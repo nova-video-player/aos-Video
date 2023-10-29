@@ -67,8 +67,8 @@
     <string name="recently_played_videos">Nedávno prehrávané</string>
     <string name="video_lists">Zoznamy prehrávania</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">Externé</string>
-    <string name="internal_storage">Vnútorné</string>
+    <string name="external_storage">Externé úložisko</string>
+    <string name="internal_storage">Vnútorné úložisko</string>
     <string name="network_storage">Sieť</string>
     <string name="sd_card_storage">SD karta</string>
     <string name="usb_host_storage">Externý disk</string>
@@ -81,7 +81,7 @@
     <string name="network_jcifs">Samba (Experimentálne)</string>
     <string name="network_cling">UPnP (Experimentálne)</string>
     <string name="recordings_storage">Nahrávky</string>
-    <string name="root_storage">Vnútorné úložisko</string>
+    <string name="root_storage">Root úložisko</string>
     <string name="cannot_list">Nie je možné zobraziť obsah</string>
     <!-- VIDEO -->
     <string name="videos">Videá</string>
@@ -609,6 +609,12 @@
     <string name="share_folders_smbv2_summary">Povolenie podpory sieťového zdieľania protokolu SMB verzie 2</string>
     <string name="share_folders_smb_resolv">Poradie resolveru SMB</string>
     <string name="share_folders_smb_resolv_summary">Povolenie BCAST, DNS (predvolené: DNS, BCAST). Túto možnosť zmeňte, ak sa vášmu serveru nedarí vyriešiť problém alebo sa vám SMB pomaly rozbieha.</string>
+    <string name="share_folders_smb_disable_tcp_discovery">Zakázanie zisťovania SMB TCP</string>
+    <string name="share_folders_smb_disable_tcp_discovery_summary">Ak sa na niektorých zariadeniach vyskytuje nestabilné pripojenie Wi-Fi, vypnite zisťovanie TCP.</string>
+    <string name="share_folders_smb_disable_udp_discovery">Zakázanie zisťovania SMB UDP</string>
+    <string name="share_folders_smb_disable_udp_discovery_summary">Ak sa na niektorých zariadeniach (napr. Fire 10 HD) vyskytuje nestabilné Wi-Fi, vypnite zisťovanie UDP.</string>
+    <string name="share_folders_smb_disable_mdns_discovery">Zakázanie zisťovania SMB mDNS</string>
+    <string name="share_folders_smb_disable_mdns_discovery_summary">Ak sa na niektorých zariadeniach vyskytuje nestabilné Wi-Fi, vypnite zisťovanie mDNS.</string>
     <string name="share_folders_smb_discovery_limited_to_mdsn">Obmedziť zisťovanie SMB na mDNS</string>
     <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Ak sa na niektorých zariadeniach (napr. Fire 10 HD) vyskytuje nestabilné Wi-Fi, vypnite zisťovanie UDP/TCP. ⚠ Zabráni správnemu zisťovaniu v systéme ChromeOS.</string>
     <string name="connection_abnormally_long">Pripojenie sa zdá byť neobvykle dlhé. Chcete ho obnoviť?</string>

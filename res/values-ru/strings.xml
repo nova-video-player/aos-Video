@@ -609,6 +609,12 @@
     <string name="share_folders_smbv2_summary">Включить поддержку протокола SMB версии 2.</string>
     <string name="share_folders_smb_resolv">Порядок использования сервисов имен</string>
     <string name="share_folders_smb_resolv_summary">Включить BCAST, DNS (по умолчанию: DNS, BCAST). Измените, если не удается разрешить имена в сети, или SMB работает медленно.</string>
+    <string name="share_folders_smb_disable_tcp_discovery">Отключить обнаружение SMB TCP</string>
+    <string name="share_folders_smb_disable_tcp_discovery_summary">Отключите обнаружение TCP в случае нестабильной работы Wi-Fi на некоторых устройствах.</string>
+    <string name="share_folders_smb_disable_udp_discovery">Отключить обнаружение SMB UDP</string>
+    <string name="share_folders_smb_disable_udp_discovery_summary">Отключите обнаружение UDP в случае нестабильной работы Wi-Fi на некоторых устройствах (например, Fire 10 HD).</string>
+    <string name="share_folders_smb_disable_mdns_discovery">Отключить обнаружение SMB mDNS</string>
+    <string name="share_folders_smb_disable_mdns_discovery_summary">Отключите обнаружение mDNS в случае нестабильной работы Wi-Fi на некоторых устройствах.</string>
     <string name="share_folders_smb_discovery_limited_to_mdsn">Ограничить обнаружение SMB в mDNS</string>
     <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Отключите обнаружение UDP/TCP, если Wi-Fi работает нестабильно на некоторых устройствах (например, Fire 10 HD). ⚠️ Предотвратит правильное обнаружение на ChromeOS.</string>
     <string name="connection_abnormally_long">Соединение слишком долгое. Хотите прервать его?</string>

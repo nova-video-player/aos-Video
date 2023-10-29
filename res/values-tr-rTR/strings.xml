@@ -538,6 +538,7 @@ desteklenmiyor.</string>
     <string name="network_thumbnails_summary">Poster yokken uzak videolardan küçük resimler oluşturun</string>
     <string name="network_bookmarks_summary">Mümkün olduğunda ağdaki devam noktası ve konum yer işaretlerini kaydedin ve kontrol edin</string>
     <string name="share_folders_smbv2">SMBv2 desteğini etkinleştir</string>
+    <string name="share_folders_smb_disable_tcp_discovery">SMB TCP bulmayı devre dışı bırak</string>
     <string name="connection_abnormally_long">Bağlantı anormal derecede uzun görünüyor. Sıfırlamak ister misiniz?</string>
     <string name="connection_reset">Sıfırla</string>
     <!-- Info dialog, not indexed file -->

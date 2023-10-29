@@ -599,6 +599,12 @@
     <string name="share_folders_smbv2_summary">Netzwerk-Sharing SMB-Version 2 Protokollunterstützung aktivieren.</string>
     <string name="share_folders_smb_resolv">Reihenfolge SMB Namensauflösung</string>
     <string name="share_folders_smb_resolv_summary">Aktiviere BCAST, DNS (Standard: DNS, BCAST). Ändere dies, wenn Server nicht aufgelöst wird oder du langsames SMB hast.</string>
+    <string name="share_folders_smb_disable_tcp_discovery">SMB TCP-Erkennung deaktivieren</string>
+    <string name="share_folders_smb_disable_tcp_discovery_summary">TCP-Erkennung deaktivieren, wenn instabiles Wi-Fi auf einigen Geräten besteht.</string>
+    <string name="share_folders_smb_disable_udp_discovery">SMB UDP-Erkennung deaktivieren</string>
+    <string name="share_folders_smb_disable_udp_discovery_summary">UDP-Erkennung deaktivieren, wenn instabiles Wi-Fi auf einigen Geräten (z.B. Fire 10 HD) besteht.</string>
+    <string name="share_folders_smb_disable_mdns_discovery">SMB mDNS-Erkennung deaktivieren</string>
+    <string name="share_folders_smb_disable_mdns_discovery_summary">mDNS-Erkennung deaktivieren, wenn instabiles Wi-Fi auf einigen Geräten besteht.</string>
     <string name="share_folders_smb_discovery_limited_to_mdsn">SMB-Erkennung auf mDNS beschränken</string>
     <string name="share_folders_smb_discovery_limited_to_mdsn_summary">UDP/TCP-Erkennung deaktivieren, wenn auf einigen Geräten (z.B. Fire 10 HD) instabiles Wi-Fi vorhanden ist. :Warnung: Wird ein ordnungsgemäßes Erkennen auf ChromeOS verhindern.</string>
     <string name="connection_abnormally_long">Die Verbindung dauert ungewöhnlich lange. Möchtest Du sie zurücksetzen?</string>
