@@ -311,7 +311,7 @@ dependencies {
     implementation 'androidx.leanback:leanback-preference:1.2.0-alpha03'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
     implementation 'fr.turri:aXMLRPC:1.13.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
     implementation 'io.sentry:sentry-android:6.29.0'
     implementation 'io.sentry:sentry:6.32.0'
 }
