@@ -144,6 +144,7 @@
     <string name="tvshows_by_alpha">TV shows alphabetical</string>
     <string name="tvshows_by_genre">TV shows by genre</string>
     <string name="tvshows_by_rating">TV shows by rating</string>
+    <string name="animation_shows_by_alpha">Animation shows alphabetical</string>
     <string name="episodes_by_date">Episodes by date</string>
     <string name="date_view_week">Week</string>
     <string name="date_view_month">Month</string>

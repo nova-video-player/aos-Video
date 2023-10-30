@@ -1492,6 +1492,10 @@
             android:theme="@style/MyLeanbackTheme" />
 
         <activity
+            android:name="com.archos.mediacenter.video.leanback.tvshow.AnimeShowsByAlphaActivity"
+            android:theme="@style/MyLeanbackTheme" />
+
+        <activity
             android:name="com.archos.mediacenter.video.leanback.collections.CollectionActivity"
             android:exported="true"
             android:theme="@style/MyLeanbackTheme" />

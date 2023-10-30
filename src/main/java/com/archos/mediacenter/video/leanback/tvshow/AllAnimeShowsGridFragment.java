@@ -268,7 +268,7 @@ public class AllAnimeShowsGridFragment extends MyVerticalGridFragment implements
         getTitleView().setOnOrb5ClickedListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), TvshowsByAlphaActivity.class);
+                Intent intent = new Intent(getActivity(), AnimeShowsByAlphaActivity.class);
                 startActivity(intent);
             }
         });
