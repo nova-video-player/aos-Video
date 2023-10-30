@@ -303,6 +303,7 @@
     <string name="menu_change_folder_details">Επιλέξτε το φάκελο εκκίνησης</string>
     <string name="unlock_instructions">Πατήστε παρατεταμένα στο εικονίδιο για ξεκλείδωμα</string>
     <string name="seek_to_percentage">\"Αναζητώντας το %s%%</string>
+    <string name="set_audio_speed_to">\"Ταχύτητα ήχου %s</string>
     <!-- Subtitles/Audio languages -->
     <string name="s_brazilian">Βραζιλιάνικα</string>
     <string name="s_chinese">Κινέζικα</string>
@@ -318,6 +319,7 @@
     <string name="player_err_unknown">Άγνωστο σφάλμα.</string>
     <string name="player_err_critical">Σφάλμα προγράμματος αναπαραγωγής πολυμέσων.</string>
     <string name="player_err_forcodec">για κωδικοποιητή</string>
+    <string name="player_err_notinterleaved">Οι ροές βίντεο και ήχου δεν παρεμβάλλονται.</string>
     <string name="player_err_codec">Κωδικοποιητής</string>
     <string name="player_err_isnotsupported">δεν υποστηρίζεται.</string>
     <string name="player_err_fileNoLicense">Δεν βρέθηκε άδεια για αυτό το αρχείο.</string>
@@ -360,6 +362,7 @@
     <string name="get_subtitles_online">Λήψη υποτίτλων από το διαδίκτυο</string>
     <string name="toast_subloader_sub_found">Βρέθηκαν υπότιτλοι για αυτή τη γλώσσα</string>
     <string name="toast_subloader_sub_not_found">Δε βρέθηκαν υπότιτλοι για αυτή τη γλώσσα</string>
+    <string name="toast_subloader_service_unreachable">διακοπή της υπηρεσίας web υπότιτλων</string>
     <string name="menu_subloader_allfolder">Λήψη ελλειπόντων υπότιτλων</string>
     <string name="dialog_subloader_copying">Αντιγραφή υποτίτλων…</string>
     <string name="dialog_subloader_downloading">Λήψη υποτίτλων…</string>
@@ -380,6 +383,7 @@
     <string name="subtitle_sample_text">\"δείγμα\"</string>
     <string name="subtitle_size_text">Μέγεθος:</string>
     <string name="subtitle_style_text">Στυλ:</string>
+    <string name="subtitle_vert_text">Κατακόρυφη Θέση:</string>
     <string name="subtitle_outline">Περίγραμμα υποτίτλων</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Ρύθμιση Ταχύτητας</string>
@@ -424,16 +428,28 @@
     <string name="media_servers">Διακομιστές πολυμέσων</string>
     <string name="shortcut_list_empty">Δεν δημιουργήθηκαν συντομεύσεις δικτύου.\n\nΓια να δημιουργήσετε συντομεύσεις στους αγαπημένους σας απομακρυσμένους φακέλους κάντε παρατεταμένο κλικ στους φακέλους στόχων και επιλέξτε \"%s\" στην επάνω γραμμή ενεργειών.</string>
     <string name="ftp_shortcut_list_empty">Για να δημιουργήσετε συντομεύσεις στους αγαπημένους σας απομακρυσμένους φακέλους, επιλέξτε \"%s\" στην επάνω γραμμή ενεργειών κατά την περιήγηση σε έναν διακομιστή.</string>
+    <string name="indexed_folders">Ευρετήριο φακέλων</string>
     <string name="ftp_shortcuts">Συντομεύσεις FTP</string>
     <string name="add_to_indexed_folders">Φάκελος ευρετηρίου</string>
     <string name="add_to_library">Προσθήκη στη βιβλιοθήκη</string>
     <string name="add_all_items_to_library">Προσθήκη όλων των βίντεο στη βιβλιοθήκη αμέσως;</string>
+    <string name="invalid_host">Μη έγκυρη μορφή διεύθυνσης κεντρικού υπολογιστή</string>
+    <string name="invalid_port">Μη έγκυρη μορφή θύρας</string>
+    <string name="invalid_path">Μη έγκυρη μορφή διαδρομής</string>
+    <string name="shortcut_folder_added">Ο φάκελος %s προστέθηκε ως συντόμευση</string>
     <string name="indexed_folder_added">Ο φάκελος %s προστέθηκε στη βιβλιοθήκη</string>
     <string name="remove_from_indexed_folders">Αφαίρεση από τη βιβλιοθήκη</string>
     <string name="indexed_folder_removed">Ο φάκελος %s αφαιρέθηκε από τη βιβλιοθήκη</string>
+    <string name="indexed_folders_list_empty">Δεν υπάρχουν φάκελοι δικτύου προς το παρόν στο ευρετήριο.\n\nΜπορείτε να προσθέσετε το περιεχόμενο ενός φακέλου δικτύου στη βιβλιοθήκη περιηγούμενοι σε αυτόν το φάκελο και επιλέγοντας το \"%s\" στην επάνω γραμμή ενεργειών.</string>
+    <string name="indexed_folders_list_empty_ftp">Δεν υπάρχουν φάκελοι ftp προς το παρόν ευρετηριασμένοι.</string>
+    <string name="indexed_folders_list_empty_network">Δεν υπάρχουν φάκελοι δικτύου προς το παρόν ευρετηριασμένοι.</string>
     <string name="open_indexed_folder">"Άνοιγμα"</string>
     <string name="rescan_indexed_folders">Επανασάρωση όλων των φακέλων ευρετηρίου</string>
     <string name="last_rescan_never">Ποτέ</string>
+    <string name="upnp_indexing_warning_title">Ευρετήριο UPnP</string>
+    <string name="upnp_indexing_warning_message">Η ευρετηρίαση UPnP δεν επιτρέπει τόσες λειτουργίες όσες η ευρετηρίαση SMB.\nΣυνιστάται η ευρετηρίαση ενός φακέλου SMB, εάν το υποστηρίζει ο διακομιστής ή ο υπολογιστής σας.\n</string>
+    <string name="ssh_error">Αδυναμία σύνδεσης: παρακαλούμε ελέγξτε τη σύνδεσή σας και τα διαπιστευτήριά σας</string>
+    <string name="ssh_remote_address">Απομακρυσμένη διεύθυνση</string>
     <string name="ssh_port">Port</string>
     <string name="ssh_password">Κωδικόs Πρόσβασης</string>
     <string name="ssh_username">Όνομα Χρήστη</string>
@@ -449,6 +465,7 @@
     <string name="preferences_category_video">Βίντεο</string>
     <string name="preferences_force_software_decoding">Εξαναγκασμός αποκωδικοποίησης λογισμικού</string>
     <string name="preferences_force_software_decoding_summary">Μπορείτε να δοκιμάσετε αυτή την επιλογή αν κάποια βίντεο δεν αναπαράγονται σωστά</string>
+    <string name="preferences_force_audio_passthrough">Διέλευση ήχου</string>
     <string name="preferences_force_audio_passthrough_disabled">Απενεργοποιημένο (συνιστάται)</string>
     <string name="preferences_force_audio_passthrough_enable">Λειτουργία 1 (παρωχημένη)</string>
     <string name="preferences_force_audio_passthrough_enable2">Λειτουργία 2</string>
@@ -519,6 +536,7 @@
     <string name="network_bookmarks">Συνέχιση σημείων και σελιδοδεικτών θέσης στο δίκτυο</string>
     <string name="network_thumbnails">Δημιουργία απομακρυσμένων μικρογραφιών</string>
     <string name="network_thumbnails_summary">Δημιουργία μικρογραφιών από απομακρυσμένα βίντεο όταν δεν υπάρχει διαθέσιμη αφίσα</string>
+    <string name="network_bookmarks_summary">Αποθήκευση και έλεγχος για συνέχιση σημείου και θέσης σελιδοδεικτών στο δίκτυο όταν είναι εφικτό</string>
     <!-- Info dialog, not indexed file -->
     <string name="video_info_unindexed_message2">Το αρχείο βρίσκεται σε επεξεργασία. Αυτό μπορεί να διαρκέσει λίγο.</string>
     <string name="video_browser_index_file">Προσθήκη στη βιβλιοθήκη</string>
@@ -603,12 +621,23 @@
     <string name="blocklist_unknown_error">Άγνωστο</string>
     <string name="sdk_not_supported">Το Android 4.3 δεν υποστηρίζεται ακόμα.\nΕργαζόμαστε σκληρά για να το διορθώσουμε και ελπίζουμε να έχουμε μια νέα έκδοση σύντομα!</string>
     <string name="share_path">Διαδρομή</string>
+    <string name="category_trakt">Trakt</string>
     <string name="trakt_user">Όνομα Χρήστη</string>
     <string name="trakt_password">Κωδικόs Πρόσβασης</string>
     <string name="trakt_signin">Σύνδεση</string>
     <string name="trakt_list_signin">Σύνδεση στο Trakt</string>
     <string name="trakt_status_login">Γίνεται είσοδος σε&#8230;</string>
+    <string name="trakt_signin_summary_logged_error">Σφάλμα ελέγχου ταυτότητας</string>
+    <string name="trakt_signin_summary">Δεν έγινε σύνδεση</string>
+    <string name="trakt_relog_description">Εντοπίστηκε πρόβλημα με το Trakt και πρέπει να γίνει επαναφορά των διαπιστευτηρίων. Συνδεθείτε ξανά.</string>
+    <string name="trakt_signin_dialog_title">Σύνδεση</string>
+    <string name="trakt_signin_title">Είσοδος</string>
+    <string name="trakt_wipe_dialog_title">Αποσύνδεση από το Trakt.tv;</string>
+    <string name="trakt_wipe_title">Αποσύνδεση από το Trakt.tv</string>
+    <string name="trakt_live_scrobbling_title">Ζωντανό scrobbler</string>
     <string name="trakt_sync_collection_title">Συγχρονισμός συλλογών Τηλεοπτικών εκπομπών και Ταινιών</string>
+    <string name="trakt_sync_trakt_resume_title">Συγχρονισμός θέσης συνέχισης trakt</string>
+    <string name="trakt_sync_trakt_resume">Χρήση της θέσης συνέχισης του trakt όταν είναι πιο προχωρημένο από το τοπικό</string>
     <string name="trakt_sync_collection_summary">Αυτόματη προσθήκη όλων των βίντεο από τη βιβλιοθήκη Nova στη συλλογή σας Trakt</string>
     <string name="trakt_toast_syncing">Συγχρονισμός με Trakt&#8230;</string>
     <string name="show_all">Όλα τα βίντεο</string>

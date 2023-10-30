@@ -53,12 +53,12 @@
     <string name="info_tab_video">Video</string>
     <string name="info_tab_file">Thông tin tập tin</string>
     <string name="info_tab_backdrop_chooser">Trình chọn phông nền</string>
-    <string name="info_tab_poster_chooser">Chọn Áp Phích</string>
+    <string name="info_tab_poster_chooser">Trình chọn áp phích</string>
     <string name="info_tab_share">Chia sẻ</string>
-    <string name="info_menu_backdrop_select">Phông Nền</string>
-    <string name="info_menu_series_backdrop_select">Phông Nền Series</string>
+    <string name="info_menu_backdrop_select">Phông nền</string>
+    <string name="info_menu_series_backdrop_select">Phông nền loạt phim</string>
     <string name="info_menu_poster_select">Chọn Áp Phích Khác</string>
-    <string name="info_menu_series_poster_select">Chọn Áp Phích series Khác</string>
+    <string name="info_menu_series_poster_select">Chọn áp phích khác</string>
     <!-- COVER ROLL -->
     <string name="watching_up_next">Đang xem/Tiếp theo</string>
     <string name="recently_added">Đã thêm gần đây</string>
@@ -127,7 +127,7 @@
     <string name="tvshows_by_alpha">Chương trình TV theo thứ tự bảng chữ cái</string>
     <string name="tvshows_by_genre">Chương trình TV theo thể loại</string>
     <string name="tvshows_by_rating">Chương trình TV theo xếp hạng</string>
-    <string name="episodes_by_date">Tập Phim theo ngày</string>
+    <string name="episodes_by_date">Các tập theo ngày</string>
     <string name="date_view_week">Tuần</string>
     <string name="date_view_month">Tháng</string>
     <string name="date_view_year">Năm</string>
@@ -158,7 +158,7 @@
     <string name="scrap_change">Thay đổi thông tin của tất cả các tập</string>
     <string name="scrap_series_change">Thay đổi thông tin loạt phim</string>
     <string name="scrap_change_confirmation">Thay đổi tất cả tập từ\n\t\"%1$s\"\nđến\n\t\"%2$s\"?</string>
-    <string name="scrap_change_title">Đang sửa đổi tất cả tập</string>
+    <string name="scrap_change_title">Đang sửa mọi tập</string>
     <string name="scrap_change_initializing">Đang khởi tạo…</string>
     <string name="scrap_change_finalizing">Đang hoàn thiện…</string>
     <string name="scrap_get_title">Đang nhận thông tin</string>
@@ -197,9 +197,9 @@
     <string name="how_to_delete_season">Nhấp vào một mùa để xóa tất cả các tập của nó</string>
     <string name="mark_show_watched">Đánh dấu tất cả các tập đã xem hoặc chưa xem</string>
     <string name="unindex_show">Loại bỏ tất cả các tập khỏi thư viện</string>
-    <string name="delete_show">Xóa tất cả tập</string>
-    <string name="no_episode_watched">Không có tập đã xem</string>
-    <string name="all_episodes_watched">Tất cả tập đã xem</string>
+    <string name="delete_show">Xóa mọi tập</string>
+    <string name="no_episode_watched">Chưa xem tập nào</string>
+    <string name="all_episodes_watched">Tất cả các tập đã xem</string>
     <plurals name="n_episodes_watched">
         <item quantity="other">%d tập đã xem</item>
     </plurals>
@@ -347,6 +347,7 @@
     <string name="player_plugin_purchase">Đi đến cửa hàng</string>
     <string name="player_plugin_purchase_google_play_msg">Bạn có thể mua thêm các plug-in codec trên Google Play.</string>
     <string name="player_plugin_purchase_google_play_button">Đi đến Google Play</string>
+    <string name="plugin_update_required_title">Yêu cầu cập nhật codec</string>
     <string name="plugin_update_required_message">Có vẻ như bạn đã cài đặt thêm codec cho Trình phát video Nova.\n\nPhiên bản mới này của Trình phát video Nova yêu cầu cập nhật các codec này.\n\nHãy vào Google Play để cập nhật và cài đặt lại codec.</string>
     <!-- Subtitles wizard -->
     <string name="get_subtitles_on_drive">Chọn phụ đề trên bộ nhớ</string>
@@ -438,6 +439,7 @@
     <string name="upgrade_to_add_free_version_description">Mua giấy phép ứng dụng để xóa quảng cáo và bật tất cả các tính năng</string>
     <string name="preferences_category_complete">Phiên bản đầy đủ</string>
     <string name="preferences_category_video">Video</string>
+    <string name="preferences_force_software_decoding">Buộc giải mã phần mềm</string>
     <string name="preferences_force_software_decoding_summary">Bạn có thể thử tùy chọn này nếu một số video phát không chính xác</string>
     <string name="preferences_force_audio_passthrough">Âm thanh passthrough</string>
     <string name="preferences_force_audio_passthrough_disabled">Tắt (khuyến nghị)</string>

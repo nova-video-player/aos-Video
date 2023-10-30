@@ -128,6 +128,7 @@
     <string name="tvshows_by_alpha">Séries ordre alphabétique</string>
     <string name="tvshows_by_genre">Séries par genre</string>
     <string name="tvshows_by_rating">Séries TV par note</string>
+    <string name="animation_shows_by_alpha">Séries d\'animation alphabétique</string>
     <string name="episodes_by_date">Épisodes par date</string>
     <string name="date_view_week">Semaine</string>
     <string name="date_view_month">Mois</string>
