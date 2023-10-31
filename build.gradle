@@ -41,8 +41,10 @@ allprojects {
         maven { url 'https://jitpack.io' }
     }
     gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
-            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        tasks.withType(JavaCompile).tap {
+            configureEach {
+                options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+            }
         }
         // check tasks to add via ./gradlew tasks --all | grep DuplicateClasses
     }
@@ -117,7 +119,7 @@ android {
         renderScript true
         aidl true
     }
-    compileSdkVersion 34
+    compileSdk 34
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -203,7 +205,7 @@ android {
             }
         }
     }
-    flavorDimensions "amazon"
+    flavorDimensions = ['amazon']
     productFlavors {
         amazon {
             dimension "amazon"
@@ -214,6 +216,9 @@ android {
         manageexternalstorage {
             dimension "amazon"
         }
+    }
+    aaptOptions {
+        additionalParameters "--no-version-vectors"
     }
     buildTypes {
         println("buildTypes archivesBaseName : " + archivesBaseName)
@@ -263,16 +268,13 @@ android {
                          '**/*.xml']
         }
     }
-    androidResources {
-        additionalParameters '--no-version-vectors'
-    }
     lint {
         abortOnError false
         checkReleaseBuilds false
         disable 'MissingTranslation'
     }
 
-    applicationVariants.all { variant ->
+    applicationVariants.configureEach { variant ->
         variant.outputs.all { output ->
             def api = defaultConfig.minSdkVersion.apiLevel
             if (project.hasProperty("universal")) { // only one apk
