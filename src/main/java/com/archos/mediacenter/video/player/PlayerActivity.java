@@ -603,7 +603,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
          * (hide black bars on TVOUT)
          */
         // needed on Bravia for HDR content to avoid grey bars cf. issue #270
-        if (isEmulator() || isChromeOS(mContext)) // avoid emulator UI glitch
+        if (isEmulator()) // avoid emulator UI glitch
             getWindow().setBackgroundDrawable(new ColorDrawable(0xFF000000));
         else getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setContentView(R.layout.player);
@@ -620,7 +620,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
                     // needed on Bravia for HDR content to avoid grey bars cf. issue #270
                     // avoid emulator UI glitch
-                    if (!(isEmulator() || isChromeOS(mContext))) getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    if (!isEmulator()) getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     return view.onApplyWindowInsets(insets);
                 }
             });
