@@ -297,8 +297,6 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
 
             try {
                 if (mUsername.isEmpty() || mPassword.isEmpty()) {
-                    // TODO MARC change message to say limited number of subtitles
-                    // TODO MARC add toast with number remaining
                     displayToast(getString(R.string.toast_subloader_credentials_empty));
                  }
                 OpenSubtitlesApiHelper.login(getApplicationContext().getString(R.string.tmdb_api_key), mUsername, mPassword);
@@ -493,6 +491,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                                     String subUrl;
                                     try {
                                         subUrl = OpenSubtitlesApiHelper.getDownloadSubtitleLink(searchResults.get(i).getFileId());
+                                        displayToast(getString(R.string.opensubtitles_quota_download_remaining, OpenSubtitlesApiHelper.getRemaningDownloads(), OpenSubtitlesApiHelper.getAllowedDownloads()));
                                     } catch (IOException e) {
                                         log.error("askSubChoice: caught IOException", e);
                                         finish();
