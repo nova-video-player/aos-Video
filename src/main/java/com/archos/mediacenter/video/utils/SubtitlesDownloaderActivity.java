@@ -86,6 +86,7 @@ import de.timroes.axmlrpc.XMLRPCClient;
 import de.timroes.axmlrpc.XMLRPCException;
 
 import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
+import static com.archos.mediacenter.utils.ISO639codes.convertIso6393ToIsa6392b;
 
 public class SubtitlesDownloaderActivity extends AppCompatActivity {
 
@@ -176,6 +177,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                     mIndexableUri.put(uri, uri);
                 mOpenSubtitlesTask.execute(fileUrls, getSubLangValue());
                 subsDir = MediaUtils.getSubsDir(this);
+                log.debug("onStart: subsDir=" + subsDir);
             } else {
                 log.debug("onStart: no network");
                 Builder dialogNoNetwork;
@@ -672,13 +674,13 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 if (!success.containsKey(fileName)){
                     ArrayList<String> langs = new ArrayList<String>();
                     for (String language : languages) {
-                        langs.add(getCompliantLanguageID(language));
+                        langs.add(convertIso6393ToIsa6392b(language));
                     }
                     fails.put(fileName, langs);
                 } else { // here we get the subs missing only
                     ArrayList<String> langs = new ArrayList<String>();
                     for (String language : languages) {
-                        String langID = getCompliantLanguageID(language);
+                        String langID = convertIso6393ToIsa6392b(language);
                         if (!success.get(fileName).contains(langID)){
                             langs.add(langID);
                         }
@@ -779,7 +781,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 HashMap<String, Object> video = new HashMap<String, Object>();
                 // sublanguageid contains concatenated comma separated list of languages
                 ArrayList<String> subLanguageId = new ArrayList<String>();
-                for (String item : languages) subLanguageId.add(getCompliantLanguageID(item));
+                for (String item : languages) subLanguageId.add(convertIso6393ToIsa6392b(item));
                 video.put("sublanguageid", TextUtils.join(",",  subLanguageId));
                 log.debug("prepareRequestList: search for sublanguageid " + TextUtils.join(",",  subLanguageId));
                 if (stop) break;
@@ -1154,34 +1156,5 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
 
     private void stop(){
         stop = true;
-    }
-
-    // Locale ID Control, because of OpenSubtitle support of ISO639-2 codes
-    // e.g. French ID can be 'fra' or 'fre', OpenSubtitles considers 'fre' but Android Java Locale provides 'fra'
-    // languages supported are available here http://www.opensubtitles.org/addons/export_languages.php
-    // check correspondance with donottranslate.xml
-    // This converts ISO 639-3 to ISO 639-2B
-    public String getCompliantLanguageID(String language){
-        if (language.equals("system"))
-            return getCompliantLanguageID(Locale.getDefault().getISO3Language());
-        if (language.equals("fra"))
-            return "fre";
-        if (language.equals("deu"))
-            return "ger";
-        if (language.equals("zho"))
-            return "chi";
-        if (language.equals("ces"))
-            return "cze";
-        if (language.equals("fas"))
-            return "per";
-        if (language.equals("nld"))
-            return "dut";
-        if (language.equals("ron"))
-            return "rum";
-        if (language.equals("slk"))
-            return "slo";
-        if (language.equals("srp"))
-            return "scc";
-        return language;
     }
 }
