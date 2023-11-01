@@ -261,7 +261,7 @@ public class OpenSubtitlesApiHelper {
         return LAST_QUERY_RESULT;
     }
 
-    private ArrayList<String[]> searchSubtitle(String tmdbId, String videoHash, String fileName, String languages) throws IOException {
+    public static ArrayList<OpenSubtitlesSearchResult> searchSubtitle(String tmdbId, String videoHash, String fileName, String languages) throws IOException {
         // Note: only the first result page is queried because it is assumed that it should be enough with order_by criteria
         // input: languages is a comma separated list of languages (e.g. "en,fr")
         // output: an arrayList of {id, release, language} for each subtitle found
@@ -298,7 +298,7 @@ public class OpenSubtitlesApiHelper {
                                 JSONArray dataArray = jsonResponse.getJSONArray("data");
 
                                 int numSubtitles = dataArray.length();
-                                ArrayList<String[]> subtitleRefs = new ArrayList<>();
+                                ArrayList<OpenSubtitlesSearchResult> subtitleRefs = new ArrayList<>();
 
                                 log.debug("searchSubtitle: found {} subtitles", numSubtitles);
 
@@ -319,9 +319,9 @@ public class OpenSubtitlesApiHelper {
                                         file_id = subtitleFiles.getString("file_id");
                                         file_name = subtitleFiles.getString("file_name");
                                     }
-                                    String[] subtitleResult = {file_id, file_name, language};
+                                    OpenSubtitlesSearchResult subtitleResult = new OpenSubtitlesSearchResult(file_id, file_name, language);
                                     subtitleRefs.add(subtitleResult);
-                                    log.debug("searchSubtitle: found ", String.join(",", subtitleResult));
+                                    log.debug("searchSubtitle: found " + subtitleResult);
                                     // Check if "moviehash_match" is present and true in the response
                                     if (jsonResponse.has("moviehash_match") && jsonResponse.getBoolean("moviehash_match")) {
                                         log.debug("searchSubtitle: hash match, focus on first match");
@@ -351,7 +351,7 @@ public class OpenSubtitlesApiHelper {
         return null;
     }
 
-    public String getDownloadSubtitleLink(String file_id) throws IOException {
+    public static String getDownloadSubtitleLink(String file_id) throws IOException {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + "download").newBuilder();
         urlBuilder.addQueryParameter("file_id", file_id);
 
