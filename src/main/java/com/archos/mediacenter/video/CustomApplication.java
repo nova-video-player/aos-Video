@@ -54,6 +54,7 @@ import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.browser.BootupRecommandationService;
 import com.archos.mediacenter.video.picasso.SmbRequestHandler;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
+import com.archos.mediacenter.video.utils.OpenSubtitlesApiHelper;
 import com.archos.medialib.LibAvos;
 import com.archos.mediaprovider.video.NetworkAutoRefresh;
 import com.archos.mediaprovider.video.VideoStoreImportReceiver;
@@ -172,6 +173,8 @@ public class CustomApplication extends Application {
     private static SshjUtils sshjUtils = null;
     private static FileUtilsQ fileUtilsQ = null;
 
+    private static OpenSubtitlesApiHelper openSubtitlesApiHelper = null;
+
     private static Context mContext = null;
 
     public static Context getAppContext() {
@@ -256,6 +259,8 @@ public class CustomApplication extends Application {
         log = LoggerFactory.getLogger(CustomApplication.class);
 
         setupBouncyCastle();
+
+        if (openSubtitlesApiHelper == null) openSubtitlesApiHelper = OpenSubtitlesApiHelper.getInstance();
 
         // must be done before sambaDiscovery otherwise no context for jcifs
         new Thread(() -> {

@@ -30,6 +30,8 @@ public class OpenSubtitlesApiHelper {
 
     private static final Logger log = LoggerFactory.getLogger(OpenSubtitlesApiHelper.class);
 
+    private static volatile OpenSubtitlesApiHelper sInstance;
+
     private static final String API_BASE_URL = "https://api.opensubtitles.com/api/v1";
     private static final String USER_AGENT = "User-Agent";
     private static final String USER_AGENT_VALUE = "nova video player";
@@ -74,12 +76,23 @@ public class OpenSubtitlesApiHelper {
         setBaseUrl(API_BASE_URL);
     }
 
+    // get the instance
+    public static OpenSubtitlesApiHelper getInstance() {
+        if (sInstance == null) {
+            synchronized(OpenSubtitlesApiHelper.class) {
+                if (sInstance == null) sInstance = new OpenSubtitlesApiHelper();
+            }
+        }
+        return sInstance;
+    }
+
     public static void setAuthToken(String token) {
         authToken = token;
         authTokenValid = true;
     }
 
     public static void setBaseUrl(String url) {
+        log.debug("setBaseUrl: " + url);
         baseUrl = url;
     }
 
