@@ -103,6 +103,7 @@ import com.archos.mediacenter.video.player.tvmenu.TVMenuItem;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
 import com.archos.mediacenter.video.player.tvmenu.TimerDelayTVPicker;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
+import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoMetadata.AudioTrack;
 import com.archos.mediacenter.video.utils.VideoMetadata.SubtitleTrack;
@@ -3343,8 +3344,14 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     private void downloadSubtitles() {
         Intent subIntent = new Intent(Intent.ACTION_MAIN);
-        subIntent.setClass(mContext, SubtitlesDownloaderActivity.class);
-        subIntent.putExtra(SubtitlesDownloaderActivity.FILE_URL, PlayerService.sPlayerService.getStreamingUri().toString());
+        if (CustomApplication.useOpenSubtitlesRestApi()) {
+            subIntent.setClass(mContext, SubtitlesDownloaderActivity2.class);
+            subIntent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, PlayerService.sPlayerService.getStreamingUri().toString());
+
+        } else {
+            subIntent.setClass(mContext, SubtitlesDownloaderActivity.class);
+            subIntent.putExtra(SubtitlesDownloaderActivity.FILE_URL, PlayerService.sPlayerService.getStreamingUri().toString());
+        }
         startActivityForResult(subIntent, SUBTITLE_REQUEST);
     }
 

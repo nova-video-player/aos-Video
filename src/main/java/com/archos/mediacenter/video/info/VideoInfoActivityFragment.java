@@ -99,6 +99,7 @@ import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.StoreRatingDialogBuilder;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
+import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2;
 import com.archos.mediacenter.video.utils.TrailerServiceIconFactory;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediaprovider.video.VideoStore;
@@ -1117,8 +1118,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         }else if(view == mSubtitleDownloadButton){
 
             Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.setClass(getActivity(), SubtitlesDownloaderActivity.class);
-            intent.putExtra(SubtitlesDownloaderActivity.FILE_URL, mCurrentVideo.getFilePath());
+            if (CustomApplication.useOpenSubtitlesRestApi()) {
+                intent.setClass(getActivity(), SubtitlesDownloaderActivity2.class);
+                intent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, mCurrentVideo.getFilePath());
+            } else {
+                intent.setClass(getActivity(), SubtitlesDownloaderActivity.class);
+                intent.putExtra(SubtitlesDownloaderActivity.FILE_URL, mCurrentVideo.getFilePath());
+            }
             startActivityForResult(intent, REQUEST_CODE_SUBTITLES_DOWNLOADER_ACTIVITY);
         }else if(view == mTMDBIcon){
             // Format TMDB URL with movie ID and preferred language

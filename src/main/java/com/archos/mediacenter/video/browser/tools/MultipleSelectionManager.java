@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.browser.tools;
 
+import static com.archos.mediacenter.video.CustomApplication.hasOpenSubtitlesQuota;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -70,7 +72,7 @@ public class MultipleSelectionManager implements ActionMode.Callback {
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         menu.add(0, R.string.delete, 0,R.string.delete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         menu.add(0,R.string.copy_on_device_multi, 0,R.string.copy_on_device_multi).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menu.add(0, R.string.menu_subloader_allfolder, Menu.NONE, R.string.menu_subloader_allfolder).setIcon(R.drawable.ic_menu_subtitles).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        if (hasOpenSubtitlesQuota()) menu.add(0, R.string.menu_subloader_allfolder, Menu.NONE, R.string.menu_subloader_allfolder).setIcon(R.drawable.ic_menu_subtitles).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         menu.add(0, R.string.video_browser_unindex_file, 0, R.string.video_browser_unindex_file).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         menu.add(0, R.string.video_browser_index_file, 0, R.string.video_browser_index_file).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         menu.add(0, R.string.mark_as_watched, 0, R.string.mark_as_watched).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
@@ -190,13 +192,11 @@ public class MultipleSelectionManager implements ActionMode.Callback {
                 }
                 mBrowser.startDownloadingVideo(toCopy);
                 return true;
-
             case R.string.menu_subloader_allfolder:
                 ArrayList<String> videoPaths = new ArrayList<String>();
                 for (int i = 0; i < mArchosGridView.getCount(); i++) {
                     if (mArchosGridView.getCheckedItemPositions().get(i)) {
                         videoPaths.add(mBrowser.getRealPathUriFromPosition(i-firstPosition).toString());
-
                     }
                 }
                 Intent intent = new Intent(Intent.ACTION_MAIN);

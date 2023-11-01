@@ -15,6 +15,8 @@
 
 package com.archos.mediacenter.video.browser;
 
+import static com.archos.mediacenter.video.CustomApplication.hasOpenSubtitlesQuota;
+
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -63,6 +65,7 @@ import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
+import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2;
 import com.archos.mediacenter.video.utils.SubtitlesWizardActivity;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.VideoStore;
@@ -268,9 +271,9 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-
         super.onCreateOptionsMenu(menu, inflater);
-        if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty()) {
+        // no download all subs with opensubtitles having quotas
+        if (! hasOpenSubtitlesQuota()  && mBrowserAdapter != null && !mBrowserAdapter.isEmpty()) {
             // Add the "load subtitles" item
             menu.add(MENU_SUBLOADER_GROUP, MENU_SUBLOADER_ALL_FOLDER, Menu.NONE, R.string.menu_subloader_allfolder).setIcon(R.drawable.ic_menu_subtitles).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         }
@@ -360,8 +363,10 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
 
             case R.string.get_subtitles_online:
                 Intent subIntent = new Intent(Intent.ACTION_MAIN);
-                subIntent.setClass(mContext, SubtitlesDownloaderActivity.class);
-                subIntent.putExtra(SubtitlesDownloaderActivity.FILE_URL,video.getFilePath());
+                if (CustomApplication.useOpenSubtitlesRestApi())
+                    subIntent.setClass(mContext, SubtitlesDownloaderActivity2.class);
+                else
+                    subIntent.setClass(mContext, SubtitlesDownloaderActivity.class);
                 getActivity().startActivity(subIntent);
                 break;
 

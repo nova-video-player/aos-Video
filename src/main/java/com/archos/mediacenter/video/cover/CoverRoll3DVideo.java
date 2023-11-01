@@ -41,12 +41,14 @@ import com.archos.mediacenter.cover.CoverRoll3D;
 import com.archos.mediacenter.cover.CoverRollLayout;
 import com.archos.mediacenter.cover.LibraryUtils;
 import com.archos.mediacenter.utils.MediaUtils;
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.Delete;
 import com.archos.mediacenter.video.browser.dialogs.DeleteDialog;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
+import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2;
 import com.archos.mediacenter.video.utils.SubtitlesWizardActivity;
 
 import java.io.File;
@@ -370,8 +372,11 @@ public class CoverRoll3DVideo extends CoverRoll3D {
                 new OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
                         Intent intent = new Intent(Intent.ACTION_MAIN);
-                        intent.setClass(getContext(), SubtitlesDownloaderActivity.class);
-                        intent.putExtra("fileUrl", videoPath);
+						if (CustomApplication.useOpenSubtitlesRestApi())
+							intent.setClass(getContext(), SubtitlesDownloaderActivity2.class);
+						else
+							intent.setClass(getContext(), SubtitlesDownloaderActivity.class);
+						intent.putExtra("fileUrl", videoPath);
                         mActivity.startActivity(intent);
                         return true;
                     }
