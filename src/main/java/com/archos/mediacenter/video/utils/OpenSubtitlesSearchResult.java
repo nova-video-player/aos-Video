@@ -19,8 +19,6 @@ public class OpenSubtitlesSearchResult {
     private String fileName;
     private String language;
 
-    public OpenSubtitlesSearchResult() {}
-
     public OpenSubtitlesSearchResult(String fileId, String fileName, String language) {
         this.fileId = fileId;
         this.fileName = fileName;
