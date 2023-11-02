@@ -567,8 +567,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     protected void onCreate(Bundle icicle) {
         log.debug("onCreate");
 
+        mContext = this;
+
         super.onCreate(icicle);
-        mIndexHelper = new IndexHelper(this, LoaderManager.getInstance(this), LOADER_INDEX);
+        mIndexHelper = new IndexHelper(mContext, LoaderManager.getInstance(this), LOADER_INDEX);
 
         mPermissionChecker = new PermissionChecker(hasManageExternalStoragePermission(getApplicationContext()));
         mPermissionChecker.setListener(this);
@@ -583,7 +585,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
         WindowManager.LayoutParams attributes = getWindow().getAttributes();
 
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         // cutout mode: display below cutout
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             if(mPreferences.getBoolean("enable_cutout_mode_short_edges", true)) {
@@ -669,23 +671,19 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mProgressView = mRootView.findViewById(R.id.progress_indicator);
         mBufferView = (TextView) mRootView.findViewById(R.id.buffer_percentage);
 
-        mPlayerController = new PlayerController(this, getWindow(), (ViewGroup)mRootView, mSurfaceController, this, actionBar);
+        mPlayerController = new PlayerController(mContext, getWindow(), (ViewGroup)mRootView, mSurfaceController, this, actionBar);
         mPlayerController.setVideoTitleEnabled(true);
         mPlayerController.setOnShowHideListener(mOnShowHideListener);
 
-        mAudioInfoController = new TrackInfoController(this, getLayoutInflater(), menuAnchor, actionBar);
+        mAudioInfoController = new TrackInfoController(mContext, getLayoutInflater(), menuAnchor, actionBar);
         mAudioInfoController.setListener(this);
-        mSubtitleManager = new SubtitleManager(this, (ViewGroup)mRootView, getWindow().getWindowManager(),false);
-        mSubtitleInfoController = new TrackInfoController(this, getLayoutInflater(), menuAnchor, actionBar);
+        mSubtitleManager = new SubtitleManager(mContext, (ViewGroup)mRootView, getWindow().getWindowManager(),false);
+        mSubtitleInfoController = new TrackInfoController(mContext, getLayoutInflater(), menuAnchor, actionBar);
         mSubtitleInfoController.setListener(this);
         mSubtitleInfoController.setAlwayDisplay(true);
         mResumeFromLast = false;
 
-        // Set the specific player behaviour if playing the demo video
-        Intent intent = getIntent();
-        mContext = this;
-
-        mPlayer = new Player(this, getWindow(), mSurfaceController, false);
+        mPlayer = new Player(mContext, getWindow(), mSurfaceController, false);
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N_MR1){ //detect any kind of rotation, even from 270 to 90°
             DisplayManager.DisplayListener mDisplayListener = new DisplayManager.DisplayListener() {
