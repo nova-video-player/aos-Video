@@ -141,6 +141,7 @@ android {
         // amazon apk is generated with ./gradlew -Poneapk
         versionCode = 602033
         versionName = '6.2.33'
+        def novaVersionName = versionName
         if (! project.hasProperty("universal")) {
             // override versionName and versionCode to get it dependent on the date
             versionName = versionName + "-" + getFormattedDate()
@@ -177,6 +178,7 @@ android {
         resValue "string", "VERSION_NAME", versionName
         resValue "string", "APPLICATION_ID", applicationId
         resValue "string", "APP_INFO", "Nova v" + versionName + " (" + applicationId + ")"
+        resValue "string", "APP_VERSION", novaVersionName
     }
     bundle {
         language {

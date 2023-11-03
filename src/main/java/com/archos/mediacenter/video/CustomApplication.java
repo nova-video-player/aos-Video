@@ -101,12 +101,14 @@ public class CustomApplication extends Application {
     private static int [] novaVersionArray;
     private static int [] novaPreviousVersionArray;
     private static String novaLongVersion;
+    private static String novaShortVersion;
     private static int novaVersionCode = -1;
     private static String novaVersionName;
     private static boolean novaUpdated = false;
 
     public static int[] getNovaVersionArray() { return novaVersionArray; }
     public static String getNovaLongVersion() { return novaLongVersion; }
+    public static String getNovaShortVersion() { return novaShortVersion; }
     public static int getNovaVersionCode() { return novaVersionCode; }
     public static String getNovaVersionName() { return novaVersionName; }
     public static boolean isNovaUpdated() { return novaUpdated; }
@@ -260,8 +262,6 @@ public class CustomApplication extends Application {
 
         setupBouncyCastle();
 
-        if (openSubtitlesApiHelper == null) openSubtitlesApiHelper = OpenSubtitlesApiHelper.getInstance();
-
         // must be done before sambaDiscovery otherwise no context for jcifs
         new Thread(() -> {
             // create instance of jcifsUtils in order to pass context and initial preference
@@ -341,6 +341,7 @@ public class CustomApplication extends Application {
         log.trace("onCreate: has permission android.permission.MANAGE_EXTERNAL_STORAGE " + hasManageExternalStoragePermissionInManifest);
 
         updateVersionState(this);
+        if (openSubtitlesApiHelper == null) openSubtitlesApiHelper = OpenSubtitlesApiHelper.getInstance();
     }
 
     private void launchSambaDiscovery() {
@@ -551,6 +552,7 @@ public class CustomApplication extends Application {
                 novaLongVersion = "Nova v" + novaVersionArray[0] + "." + novaVersionArray[1] + "." + novaVersionArray[2] +
                         " (" + novaVersionArray[3] + String.format("%02d", novaVersionArray[4]) + String.format("%02d", novaVersionArray[5]) +
                         "." + String.format("%02d", novaVersionArray[6]) + String.format("%02d", novaVersionArray[7]) + ")";
+                novaShortVersion = "v" + novaVersionArray[0] + "." + novaVersionArray[1] + "." + novaVersionArray[2];
             } catch (IllegalArgumentException ie) {
                 novaVersionArray = new int[] { 0, 0, 0, 0, 0, 0, 0, 0};
                 log.error("updateVersionState: cannot split application version "+ novaVersionName);

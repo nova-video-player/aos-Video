@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.utils;
 
+import com.archos.mediacenter.video.CustomApplication;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -32,9 +34,9 @@ public class OpenSubtitlesApiHelper {
 
     private static volatile OpenSubtitlesApiHelper sInstance;
 
-    private static final String API_BASE_URL = "https://api.opensubtitles.com/api/v1";
+    private static final String API_BASE_URL = "https://api.opensubtitles.com/api/v1/";
     private static final String USER_AGENT = "User-Agent";
-    private static final String USER_AGENT_VALUE = "nova video player";
+    private static String USER_AGENT_VALUE = "novavideoplayer v6.2.31";
     private static final String AUTHORIZATION = "Authorization";
     private static final String API_KEY = "Api-Key";
     public static final int RESULT_CODE_OK = 0;
@@ -64,6 +66,8 @@ public class OpenSubtitlesApiHelper {
     private static boolean authenticated = false;
 
     public OpenSubtitlesApiHelper() {
+        USER_AGENT_VALUE = "novavideoplayer " + CustomApplication.getNovaShortVersion();
+        log.debug("OpenSubtitlesApiHelper: USER_AGENT_VALUE = " + USER_AGENT_VALUE);
         if (log.isTraceEnabled()) {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
