@@ -364,9 +364,23 @@
     <string name="seek_to_percentage">"Seeking to %s%%</string>
     <string name="set_audio_speed_to">"Audio speed %s</string>
     <!-- Subtitles/Audio languages -->
+
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brazilian</string>
     <string name="s_chinese">Chinese</string>
+    <string name="s_chinese_simplified">Simplified Chinese</string>
     <string name="s_traditional_chinese">Traditional Chinese</string>
+    <string name="s_spanish_la">Spanish (LA)</string>
+    <string name="s_extremaduran">Extremaduran</string>
+    <string name="s_montenegrin">Montenegrin</string>
+    <string name="s_manipuri">Manipuri</string>
+    <string name="s_dari">Dari</string>
+    <string name="s_portuguese_mz">Portuguese (MZ)</string>
+    <string name="s_spanish_eu">Spanish (EU)</string>
+    <string name="s_santali">Santali</string>
+    <string name="s_syriac">Syriac</string>
+    <string name="s_toki_pona">Toki Pona</string>
+    <string name="s_chinese_bilingual">Chinese bilingual</string>
     <string name="s_none">None</string>
 
     <!-- Player errors -->

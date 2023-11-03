@@ -96,8 +96,11 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     // subtitles download languages
     // update with: `curl --request GET --url 'https://www.opensubtitles.org/addons/export_languages.php' | gsed -e "s/[[:space:]]\+/ /g" | grep "1 1" | cut -d' ' -f2 | sort -u | paste -sd "|" -`
+    private static final String SUBS_LANGUAGES_XML_RPC = "an|ar|at|bg|br|ca|cs|da|de|el|en|eo|es|et|eu|fa|fi|fr|gl|he|hi|hr|hu|hy|id|is|it|ja|ka|km|ko|mk|ms|nl|no|oc|pb|pl|pt|ro|ru|si|sk|sl|sq|sr|sv|th|tl|tr|tt|uk|vi|zh|zt";
 
-    private static final String SUBS_LANGUAGES = "an|ar|at|bg|br|ca|cs|da|de|el|en|eo|es|et|eu|fa|fi|fr|gl|he|hi|hr|hu|hy|id|is|it|ja|ka|km|ko|mk|ms|nl|no|oc|pb|pl|pt|ro|ru|si|sk|sl|sq|sr|sv|th|tl|tr|tt|uk|vi|zh|zt";
+    // update with: `curl --request GET --url https://api.opensubtitles.com/api/v1/infos/languages | jq -r '.data[].language_code' | sort -u | gpaste -sd "|"`
+    // list exceptions via `| grep -E '.{3,}' | gpaste -sd "|"` "zh-cn|pt-pt|pt-br|zh-tw"
+    private static final String SUB_LANGUAGES_REST_API = "ab|af|an|ar|as|at|az|be|bg|bn|br|bs|ca|cs|cy|da|de|ea|el|en|eo|es|et|eu|ex|fa|fi|fr|ga|gd|gl|he|hi|hr|hu|hy|ia|id|ig|is|it|ja|ka|kk|km|kn|ko|ku|lb|lt|lv|ma|me|mk|ml|mn|mr|ms|my|ne|nl|no|nv|oc|or|pl|pm|pr|ps|pt-br|pt-pt|ro|ru|sd|se|si|sk|sl|so|sp|sq|sr|sv|sw|sx|sy|ta|te|th|tk|tl|tp|tr|tt|uk|ur|uz|vi|ze|zh-cn|zh-tw";
 
     // should we provide adaptive refresh rate for all (not only on TV)
     private static final boolean REFRESHRATE_FORALL = true;
@@ -655,7 +658,11 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mSubtitlesFavLangPreferences = (ListPreference) findPreference(KEY_SUBTITLES_FAV_LANG);
         mSubtitlesFavLangPreferences.setEnabled(!doHide);
 
-        String[] languageCodeArray = SUBS_LANGUAGES.split("\\|"); // contains 2 letters language codes
+        String[] languageCodeArray;
+        if (CustomApplication.useOpenSubtitlesRestApi())
+            languageCodeArray = SUB_LANGUAGES_REST_API.split("\\|"); // contains 2 letters language codes
+        else
+            languageCodeArray = SUBS_LANGUAGES_XML_RPC.split("\\|"); // contains 2 letters language codes
 
         // create empty mutable arrays
         List<String> entries = new ArrayList<>();
@@ -690,8 +697,12 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         int index = 0;
         for (String s : languageCodeArray) {
             currentLocaleLanguage = com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.getLanguageNameFor2LetterCode(getActivity(), s);
-            // opensubtitles wants ISO639-2B and not ISO639-3
-            currentLocaleISO3Language = ISO639codes.convertISO6391ToISO6392(s);
+            // opensubtitles XML-RPC wants 3 letters code ISO639-2B and not ISO639-3
+            // opensubtitles REST-API wants 2 letters code ISO639-1 with zh-cn|pt-pt|pt-br|zh-tw exceptions
+            if (CustomApplication.useOpenSubtitlesRestApi())
+                currentLocaleISO3Language = s;
+            else
+                currentLocaleISO3Language = ISO639codes.convertISO6391ToISO6392(s);
             log.debug("onCreatePreferences: code {} -> currentLocaleLanguage={}, currentLocaleISO3Language={}", s, currentLocaleLanguage, currentLocaleISO3Language);
             if (currentLocaleLanguage.equals(defaultLocaleLanguage) || currentLocaleLanguage.equals(englishLocaleLanguage))
                 continue;
@@ -723,7 +734,11 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         entries.toArray(newEntries);
         entryValues.toArray(newEntryValues);
         int systemLanguageIndex = -1;
-        final String currentFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getISO3Language());
+        final String currentFavoriteLang;
+        if (CustomApplication.useOpenSubtitlesRestApi())
+            currentFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getLanguage());
+        else
+            currentFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getISO3Language());
         int i = 0;
         for(CharSequence value : newEntryValues){
             if(value.toString().equalsIgnoreCase(currentFavoriteLang)) {
