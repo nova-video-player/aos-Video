@@ -75,7 +75,6 @@ import java.util.Set;
 
 
 import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
-import static com.archos.mediacenter.utils.ISO639codes.convertIso6393ToIsa6392b;
 
 public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
 
@@ -299,7 +298,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 if (mUsername.isEmpty() || mPassword.isEmpty()) {
                     displayToast(getString(R.string.toast_subloader_credentials_empty));
                  }
-                OpenSubtitlesApiHelper.login(getApplicationContext().getString(R.string.tmdb_api_key), mUsername, mPassword);
+                OpenSubtitlesApiHelper.login(getApplicationContext().getString(R.string.opensubtitles_api_key), mUsername, mPassword);
             } catch (IOException e) {
                 log.warn("logIn error message: result=" + OpenSubtitlesApiHelper.getLastQueryResult() + " message:" + e.getMessage() + "; localizedMessage:" + e.getLocalizedMessage() + ", cause: " + e.getCause());
                 displayToast(getString(R.string.toast_subloader_login_failed) + " (ERR " + OpenSubtitlesApiHelper.getLastQueryResult() + ")");
@@ -345,6 +344,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
 
         @SuppressWarnings("unchecked")
         public void getSubtitle(final String fileUrl, final ArrayList<String> languages) {
+            log.debug("getSubtitle: fileUrl " +  fileUrl + ", language=" + String.join(",", languages));
             if (fileUrl == null || fileUrl.isEmpty() || languages == null || languages.isEmpty()){
                 stop = true;
                 return;
@@ -352,10 +352,11 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             stop = false;
 
             ArrayList<String> subLanguageId = new ArrayList<String>();
-            for (String item : languages) subLanguageId.add(convertIso6393ToIsa6392b(item));
+            // REST-API takes ISO639-1 2 letter code languages: no need to convert
+            for (String item : languages) subLanguageId.add(item);
             String languagesString = TextUtils.join(",", subLanguageId);
             OpenSubtitlesQueryParams fileInfo = getFileInfo(fileUrl);
-            log.debug("getSubtitle: tmdbId=" + fileInfo.getImdbId() + ", videoHash=" + fileInfo.getFileHash() + ", fileName=" + fileInfo.getFileName() + ", languages=" + languagesString);
+            log.debug("getSubtitle: tmdbId=" + fileInfo.getTmdbId() + ", imdbId=" + fileInfo.getImdbId() + ", videoHash=" + fileInfo.getFileHash() + ", fileName=" + fileInfo.getFileName() + ", languages=" + languagesString);
 
             try {
                 searchResults = OpenSubtitlesApiHelper.searchSubtitle(fileInfo.getTmdbId(), fileInfo.getFileHash(), fileInfo.getFileName(), languagesString);
