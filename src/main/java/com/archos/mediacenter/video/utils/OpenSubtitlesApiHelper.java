@@ -282,12 +282,13 @@ public class OpenSubtitlesApiHelper {
         // Note: only the first result page is queried because it is assumed that it should be enough with order_by criteria
         // input: languages is a comma separated list of languages (e.g. "en,fr")
         // output: an arrayList of {id, release, language} for each subtitle found
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + "search").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + "subtitles").newBuilder();
+        urlBuilder.addQueryParameter("languages", languages);
+        // TODO MARC see if it is not only for movies... --> pass if show
         if (videoHash != null) urlBuilder.addQueryParameter("moviehash", videoHash);
-        if (tmdbId != null) urlBuilder.addQueryParameter("tmdb_id", tmdbId);
-        if (fileName != null) urlBuilder.addQueryParameter("query", fileName);
         urlBuilder.addQueryParameter("order_by", "from_trusted,ratings,download_count");
-        urlBuilder.addQueryParameter("sublanguageid", languages);
+        if (fileName != null) urlBuilder.addQueryParameter("query", fileName);
+        if (tmdbId != null) urlBuilder.addQueryParameter("tmdb_id", tmdbId);
 
         String url = urlBuilder.build().toString();
 
@@ -320,27 +321,29 @@ public class OpenSubtitlesApiHelper {
                                 log.debug("searchSubtitle: found {} subtitles", numSubtitles);
 
                                 for (int i = 0; i < numSubtitles; i++) {
-                                    JSONObject subtitleInfo = dataArray.getJSONObject(0);
+                                    JSONObject subtitleInfo = dataArray.getJSONObject(i);
                                     String id = subtitleInfo.getString("id");
                                     String language = "";
                                     //String release = "";
                                     String file_id = "";
                                     String file_name = "";
                                     if (subtitleInfo.has("attributes")) {
-                                        JSONObject subtitleAttribute = jsonResponse.getJSONObject("attributes");
+                                        JSONObject subtitleAttribute = subtitleInfo.getJSONObject("attributes");
                                         language = subtitleAttribute.getString("language");
                                         //release = subtitleAttribute.getString("release");
-                                    }
-                                    if (subtitleInfo.has("files")) {
-                                        JSONObject subtitleFiles = jsonResponse.getJSONArray("files").getJSONObject(0);
-                                        file_id = subtitleFiles.getString("file_id");
-                                        file_name = subtitleFiles.getString("file_name");
+                                        if (subtitleAttribute.has("files")) {
+                                            log.debug("searchSubtitle: it has files");
+                                            JSONObject subtitleFiles = subtitleAttribute.getJSONArray("files").getJSONObject(0);
+                                            file_id = subtitleFiles.getString("file_id");
+                                            file_name = subtitleFiles.getString("file_name");
+                                            log.debug("searchSubtitle: file_id={}, file_name={}", file_id, file_name);
+                                        }
                                     }
                                     OpenSubtitlesSearchResult subtitleResult = new OpenSubtitlesSearchResult(file_id, file_name, language);
                                     subtitleRefs.add(subtitleResult);
                                     log.debug("searchSubtitle: found " + subtitleResult);
                                     // Check if "moviehash_match" is present and true in the response
-                                    if (jsonResponse.has("moviehash_match") && jsonResponse.getBoolean("moviehash_match")) {
+                                    if (jsonResponse.has("moviehash_match") && subtitleInfo.getBoolean("moviehash_match")) {
                                         log.debug("searchSubtitle: hash match, focus on first match");
                                         break;
                                     }
