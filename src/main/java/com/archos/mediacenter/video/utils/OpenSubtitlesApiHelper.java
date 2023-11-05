@@ -57,9 +57,10 @@ public class OpenSubtitlesApiHelper {
     private static String username = null;
     private static String password = null;
     private static String authToken = null;
-    private static int allowedDownloads = 0;
+    private static int allowedDownloads = 5; // default when no user is logged in
     private static String level = "";
-    private static int remaningDownloads = 10;
+    private static int remainingDownloads = 10;
+    private static int numberDownloads = 0;
     private static boolean vip = false;
 
     private static boolean authTokenValid = false;
@@ -105,7 +106,7 @@ public class OpenSubtitlesApiHelper {
     }
 
     public static int getAllowedDownloads() {
-        return allowedDownloads;
+        return remainingDownloads + numberDownloads;
     }
 
     public static boolean isVip() {
@@ -113,7 +114,7 @@ public class OpenSubtitlesApiHelper {
     }
 
     public static int getRemaningDownloads() {
-        return remaningDownloads;
+        return remainingDownloads;
     }
 
     public static boolean login(String openSubtitlesApiKey, String u, String p) throws IOException {
@@ -236,8 +237,8 @@ public class OpenSubtitlesApiHelper {
             }
             log.warn("parseResult: error code={}, message={}", code, message);
             try {
-                remaningDownloads = errorObject.getInt("remaining");
-                log.debug("parseResult: remaining downloads={}", remaningDownloads);
+                remainingDownloads = errorObject.getInt("remaining");
+                log.debug("parseResult: remaining downloads={}", remainingDownloads);
             } catch (JSONException e) {
                 log.error("parseResult: caught JSONException trying to determine message", e);
             }
@@ -270,7 +271,7 @@ public class OpenSubtitlesApiHelper {
                     log.warn("parseResult: throttle limit reached, try later");
                     return LAST_QUERY_RESULT;
             }
-            if (remaningDownloads == -1) {
+            if (remainingDownloads == -1) {
                 LAST_QUERY_RESULT = RESULT_CODE_QUOTA_EXCEEDED;
                 log.warn("parseResult: quota exceeded");
                 return LAST_QUERY_RESULT;
@@ -416,7 +417,10 @@ public class OpenSubtitlesApiHelper {
                         switch (result) {
                             case RESULT_CODE_OK:
                                 if (jsonResponse.has("remaining")) {
-                                    remaningDownloads = jsonResponse.getInt("remaining");
+                                    remainingDownloads = jsonResponse.getInt("remaining");
+                                }
+                                if (jsonResponse.has("requests")) {
+                                    numberDownloads = jsonResponse.getInt("requests");
                                 }
                                 if (jsonResponse.has("link")) {
                                     String subtitleLink = jsonResponse.getString("link");
