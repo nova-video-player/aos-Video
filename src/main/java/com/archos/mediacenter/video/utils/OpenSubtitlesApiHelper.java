@@ -144,35 +144,37 @@ public class OpenSubtitlesApiHelper {
                 if (response.isSuccessful()) {
                     String responseBody = response.body().string();
                     JSONObject jsonResponse = new JSONObject(responseBody);
-                    parseResult(jsonResponse);
-                    if (jsonResponse.has("error")) {
+                    Integer status = parseResult(jsonResponse);
+                    if (status != RESULT_CODE_OK) {
                         // Handle authentication error
+                        log.warn("login: jsonResponse error");
                         return false;
-                    } else if (jsonResponse.has("data")) {
+                    } else {
                         // Authentication successful
-                        JSONObject dataObject = jsonResponse.getJSONObject("data");
-                        String authToken = dataObject.getString("token");
+                        String authToken = jsonResponse.getString("token");
                         log.debug("auth: token = " + authToken);
                         // Check if "base_url" is present in the response
-                        if (dataObject.has("base_url")) {
-                            String baseUrl = dataObject.getString("base_url");
+                        if (jsonResponse.has("base_url")) {
+                            String baseUrl = jsonResponse.getString("base_url");
                             // Store the base URL for future requests
                             log.debug("auth: base_url = " + baseUrl);
                             setBaseUrl(baseUrl);
                         }
                         // Check if "user" object is present in the response
-                        if (dataObject.has("user")) {
-                            JSONObject userObject = dataObject.getJSONObject("user");
+                        if (jsonResponse.has("user")) {
+                            JSONObject userObject = jsonResponse.getJSONObject("user");
                             allowedDownloads = userObject.getInt("allowed_downloads");
                             level = userObject.getString("level");
                             vip = userObject.getBoolean("vip");
                             log.debug("auth: allowed_downloads={}, level={}, vip={}", allowedDownloads, level, vip);
                         }
-
                         if (authToken != null) {
+                            log.debug("auth: authentication successful token={}", authToken);
                             setAuthToken(authToken);
                             authenticated = true;
                             return true;
+                        } else {
+                            log.warn("auth: authentication unsuccessful!");
                         }
                     }
                 } else {
@@ -223,71 +225,63 @@ public class OpenSubtitlesApiHelper {
     }
 
     private static int parseResult(JSONObject jsonResponse) throws IOException {
-        int code = 0;
+        Integer status = 200;
         String message = "";
-
-        if (jsonResponse.has("error")) {
-            JSONObject errorObject = null;
-            try {
-                errorObject = jsonResponse.getJSONObject("error");
-            } catch (JSONException e) {
-                log.error("parseResult: caught JSONException extracting errorObject", e);
+        try {
+            if (jsonResponse.has("status")) {
+                status = jsonResponse.getInt("status");
             }
-            try {
-                code = errorObject.getInt("code");
-            } catch (JSONException e) {
-                log.error("parseResult: caught JSONException trying to determine code", e);
+            if (jsonResponse.has("message")) {
+                message = jsonResponse.getString("message");
             }
-            try {
-                message = errorObject.getString("message");
-            } catch (JSONException e) {
-                log.error("parseResult: caught JSONException trying to determine message", e);
-            }
-            log.warn("parseResult: error code={}, message={}", code, message);
-            try {
-                remainingDownloads = errorObject.getInt("remaining");
-                log.debug("parseResult: remaining downloads={}", remainingDownloads);
-            } catch (JSONException e) {
-                log.error("parseResult: caught JSONException trying to determine message", e);
-            }
-            if (message.equals("invalid token")) {
-                // Handle invalid token error
-                authTokenValid = false;
-                LAST_QUERY_RESULT = RESULT_CODE_TOKEN_EXPIRED;
-                log.warn("parseResult: invalid token");
-                return LAST_QUERY_RESULT;
-            }
-            switch (code) {
-                case 401:
-                    LAST_QUERY_RESULT = RESULT_CODE_BAD_CREDENTIALS;
-                    log.warn("parseResult: bad credentials");
-                    return LAST_QUERY_RESULT;
-                case 403:
-                    LAST_QUERY_RESULT = RESULT_CODE_BAD_API_KEY;
-                    log.warn("parseResult: bad API key");
-                    return LAST_QUERY_RESULT;
-                case 406:
-                    LAST_QUERY_RESULT = RESULT_CODE_INVALID_FILE_ID;
-                    log.warn("parseResult: invalid file ID");
-                    return LAST_QUERY_RESULT;
-                case 410:
-                    LAST_QUERY_RESULT = RESULT_CODE_LINK_GONE;
-                    log.warn("parseResult: invalid or expired link");
-                    return LAST_QUERY_RESULT;
-                case 429:
-                    LAST_QUERY_RESULT = RESULT_CODE_TOO_MANY_REQUESTS;
-                    log.warn("parseResult: throttle limit reached, try later");
-                    return LAST_QUERY_RESULT;
-            }
-            if (remainingDownloads == -1) {
-                LAST_QUERY_RESULT = RESULT_CODE_QUOTA_EXCEEDED;
-                log.warn("parseResult: quota exceeded");
-                return LAST_QUERY_RESULT;
-            }
-        } else {
-            LAST_QUERY_RESULT = RESULT_CODE_OK;
-            return RESULT_CODE_OK;
+            log.debug("parseResult: status={}, message={}", status, message);
+        } catch (JSONException e) {
+            log.error("parseResult: caught JSONException trying to determine status/message", e);
         }
+        if (status != 200) {
+            // Handle authentication error
+            log.warn("parseResult: status={}, message={}", status, message);
+        }
+        if (message.equals("invalid token")) {
+            // Handle invalid token error
+            authTokenValid = false;
+            LAST_QUERY_RESULT = RESULT_CODE_TOKEN_EXPIRED;
+            log.warn("parseResult: invalid token");
+            return LAST_QUERY_RESULT;
+        }
+        switch (status) {
+            case 401:
+                LAST_QUERY_RESULT = RESULT_CODE_BAD_CREDENTIALS;
+                log.warn("parseResult: bad credentials");
+                return LAST_QUERY_RESULT;
+            case 403:
+                LAST_QUERY_RESULT = RESULT_CODE_BAD_API_KEY;
+                log.warn("parseResult: bad API key");
+                return LAST_QUERY_RESULT;
+            case 406:
+                LAST_QUERY_RESULT = RESULT_CODE_INVALID_FILE_ID;
+                log.warn("parseResult: invalid file ID");
+                return LAST_QUERY_RESULT;
+            case 410:
+                LAST_QUERY_RESULT = RESULT_CODE_LINK_GONE;
+                log.warn("parseResult: invalid or expired link");
+                return LAST_QUERY_RESULT;
+            case 429:
+                LAST_QUERY_RESULT = RESULT_CODE_TOO_MANY_REQUESTS;
+                log.warn("parseResult: throttle limit reached, try later");
+                return LAST_QUERY_RESULT;
+        }
+        try {
+            remainingDownloads = jsonResponse.getInt("remaining");
+            log.debug("parseResult: remaining downloads={}", remainingDownloads);
+        } catch (JSONException e) {
+        }
+        if (remainingDownloads == -1) {
+            LAST_QUERY_RESULT = RESULT_CODE_QUOTA_EXCEEDED;
+            log.warn("parseResult: quota exceeded");
+            return LAST_QUERY_RESULT;
+        }
+        LAST_QUERY_RESULT = RESULT_CODE_OK;
         return LAST_QUERY_RESULT;
     }
 
