@@ -149,15 +149,19 @@ public class CustomApplication extends Application {
     private final int AVOS_ENCODING_DTS_UHD = 27;
     private final int AVOS_ENCODING_DRA = 28;
 
-    private static final boolean OPENSUBITLES_HAS_QUOTA = false;
+    private static boolean OPENSUBITLES_HAS_QUOTA = false;
     public final static boolean hasOpenSubtitlesQuota() {
         return OPENSUBITLES_HAS_QUOTA;
     }
 
-    private static final boolean USE_OPENSUBTITLES_REST_API = false;
-    public final static boolean useOpenSubtitlesRestApi() {
-        return USE_OPENSUBTITLES_REST_API;
-    }
+    private static boolean USE_OPENSUBTITLES_REST_API = false;
+    public final static boolean useOpenSubtitlesRestApi() { return USE_OPENSUBTITLES_REST_API;}
+
+    public final static void makeUseOpenSubtitlesRestApi(boolean use) {
+        USE_OPENSUBTITLES_REST_API = use;
+        OPENSUBITLES_HAS_QUOTA = use;
+    ;}
+
 
     public static long getHdmiAudioCodecsFlag() {
         return hdmiAudioEncodingFlag;

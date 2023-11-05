@@ -120,6 +120,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_TORRENT_PATH = "preferences_torrent_path";
     public static final String KEY_SHARED_FOLDERS= "share_folders";
     public static final String KEY_SUBTITILES_CREDENTIALS= "subtitles_credentials";
+    public static final String KEY_OPENSUBTITILES_REST_API= "subtitles_new_api";
     public static final String KEY_FORCE_SW = "force_software_decoding";
     public static final String KEY_FORCE_AUDIO_PASSTHROUGH = "force_passthrough";
     public static final String KEY_PARSER_SYNC_MODE = "parser_sync_mode";
@@ -654,6 +655,15 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             return true;
         });
         boolean doHide = mSharedPreferences.getBoolean(KEY_SUBTITLES_HIDE, false);
+
+        CheckBoxPreference cbpOpenSubtitlesRestAPi = (CheckBoxPreference)findPreference(KEY_OPENSUBTITILES_REST_API);
+        cbpOpenSubtitlesRestAPi.setOnPreferenceChangeListener((preference, newValue) -> {
+            boolean useOpenSubtitlesRestAPi = ((Boolean) newValue);
+            CustomApplication.makeUseOpenSubtitlesRestApi(useOpenSubtitlesRestAPi);
+            return true;
+        });
+        boolean useOpenSubtitlesRestAPi = mSharedPreferences.getBoolean(KEY_OPENSUBTITILES_REST_API, false);
+        CustomApplication.makeUseOpenSubtitlesRestApi(useOpenSubtitlesRestAPi);
 
         mSubtitlesFavLangPreferences = (ListPreference) findPreference(KEY_SUBTITLES_FAV_LANG);
         mSubtitlesFavLangPreferences.setEnabled(!doHide);

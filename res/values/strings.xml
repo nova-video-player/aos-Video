@@ -585,7 +585,8 @@
     <string name="category_languages">Subtitles</string>
     <string name="subtitles_hide_default">Hide subtitles by default</string>
     <string name="subtitles_hide_default_summary">Check if you want to hide subtitles by default</string>
-
+    <string name="subtitles_use_rest_api">Use new OpenSubtitles API</string>
+    <string name="subtitles_use_rest_api_summary">Use new REST-API instead of XML-RPC with quotas that will be enforced start of 2024</string>
     <string name="subtitles_credentials_title">OpenSubtitles credentials</string>
     <string name="subtitles_credentials_summary">Provide your opensubtitles credentials to be able to download subtitles</string>
 
