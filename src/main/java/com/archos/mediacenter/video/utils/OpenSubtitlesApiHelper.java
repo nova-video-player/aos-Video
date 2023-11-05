@@ -282,18 +282,21 @@ public class OpenSubtitlesApiHelper {
         return LAST_QUERY_RESULT;
     }
 
-    public static ArrayList<OpenSubtitlesSearchResult> searchSubtitle(String tmdbId, String videoHash, String fileName, String languages) throws IOException {
+    public static ArrayList<OpenSubtitlesSearchResult> searchSubtitle(OpenSubtitlesQueryParams fileInfo, String languages) throws IOException {
         // Note: only the first result page is queried because it is assumed that it should be enough with order_by criteria
         // input: languages is a comma separated list of languages (e.g. "en,fr")
-        // output: an arrayList of {id, release, language} for each subtitle found
+        // output: an arrayList of OpenSubtitlesSearchResult for each subtitle found
         HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + "subtitles").newBuilder();
         urlBuilder.addQueryParameter("languages", languages);
-        // TODO MARC see if it is not only for movies... --> pass if show
-        if (videoHash != null) urlBuilder.addQueryParameter("moviehash", videoHash);
         urlBuilder.addQueryParameter("order_by", "from_trusted,ratings,download_count");
-        if (fileName != null) urlBuilder.addQueryParameter("query", fileName);
-        if (tmdbId != null) urlBuilder.addQueryParameter("tmdb_id", tmdbId);
-
+        if (fileInfo.getTmdbId() != null) urlBuilder.addQueryParameter("tmdb_id", fileInfo.getTmdbId());
+        else if (fileInfo.getImdbId() != null) urlBuilder.addQueryParameter("imdb_id", fileInfo.getImdbId());
+        if (fileInfo.getFileHash() != null) urlBuilder.addQueryParameter("moviehash", fileInfo.getFileHash());
+        if (fileInfo.getFileName() != null) urlBuilder.addQueryParameter("query", fileInfo.getFileName());
+        if (fileInfo.isShow()) {
+            if (fileInfo.getSeasonNumber() != null) urlBuilder.addQueryParameter("season_number", fileInfo.getSeasonNumber().toString());
+            if (fileInfo.getEpisodeNumber() != null) urlBuilder.addQueryParameter("episode_number", fileInfo.getEpisodeNumber().toString());
+        }
         String url = urlBuilder.build().toString();
 
         Request.Builder requestBuilder = new Request.Builder()
@@ -358,7 +361,7 @@ public class OpenSubtitlesApiHelper {
                                 if (! authTokenValid) { // one retry in case of invalid token
                                     log.warn("searchSubtitle: invalid token, retrying");
                                     login(apiKey, username, password);
-                                    return searchSubtitle(tmdbId, videoHash, fileName, languages);
+                                    return searchSubtitle(fileInfo, languages);
                                 } else {
                                     return null;
                                 }

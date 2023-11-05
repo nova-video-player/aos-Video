@@ -229,60 +229,6 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             // Exit the activity if processing is done/aborted and the SumUp dialog is not visible
             //if (stop) finish();
         }
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            log.debug("onProgressUpdate");
-            if (values == null || values.length != 2 || isCancelled()) return;
-            int progress = values[0];
-            int filesNumber = values[1];
-            if (progress == 0) {
-                log.debug("onProgressUpdate: progress=" + progress);
-                if (mDialog != null && mDialog.isShowing()) {
-                    log.debug("onProgressUpdate: progress=0 and mDialog.isShowing() dismissing dialog!!!");
-                    mDoNotFinish = true;
-                    mDialog.dismiss();
-                }
-                mDialog = new NovaProgressDialog(SubtitlesDownloaderActivity2.this);
-                mDialog.setMessage(getString(R.string.dialog_subloader_downloading));
-                mDialog.setCancelable(true);
-                mDialog.setCanceledOnTouchOutside(false);
-                mDialog.setOnCancelListener(dialog -> {
-                    dialog.cancel();
-                    stop();
-                    finish();
-                });
-                mDialog.setOnDismissListener(dialog -> {
-                    if(!mDoNotFinish) {
-                        dialog.cancel();
-                        stop();
-                        finish();
-                    }
-                    mDoNotFinish = false;
-                });
-                log.debug("onProgressUpdate: setMessage " + getString(R.string.dialog_subloader_downloading));
-                if (filesNumber > 1){
-                    log.debug("onProgressUpdate: progressbar filesNumber=" + filesNumber);
-                    mDialog.setProgressStyle(NovaProgressDialog.STYLE_HORIZONTAL);
-                    mDialog.setProgress(progress);
-                    mDialog.setMax(filesNumber);
-                } else {
-                    log.debug("onProgressUpdate: spinner filesNumber=" + filesNumber);
-                    mDialog.setProgressStyle(NovaProgressDialog.STYLE_SPINNER);
-                    mDialog.setIndeterminate(true);
-                    //mDialog.setProgress(progress);
-                    //mDialog.setMax(filesNumber);
-                }
-                mDialog.show();
-            } else {
-                if (mDialog != null) {
-                    log.debug("onProgressUpdate: mDialog not null");
-                    mDialog.setProgress(progress);
-                    mDialog.setMax(filesNumber);
-                } else {
-                    log.warn("onProgressUpdate: mDialog is null!!!");
-                }
-            }
-        }
 
         /**************************************************
          *        OpenSubtitles framework
@@ -358,7 +304,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             log.debug("getSubtitle: tmdbId=" + fileInfo.getTmdbId() + ", imdbId=" + fileInfo.getImdbId() + ", videoHash=" + fileInfo.getFileHash() + ", fileName=" + fileInfo.getFileName() + ", languages=" + languagesString);
 
             try {
-                searchResults = OpenSubtitlesApiHelper.searchSubtitle(fileInfo.getTmdbId(), fileInfo.getFileHash(), fileInfo.getFileName(), languagesString);
+                searchResults = OpenSubtitlesApiHelper.searchSubtitle(fileInfo, languagesString );
             } catch (Throwable e) { //for various service outages
                 log.error("getSubtitles: caught Throwable ", e);
                 stop = true;
@@ -483,8 +429,6 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                         }
                     }, (dialogInterface, i) -> new Thread() {
                         public void run() {
-                            // TODO MARC remove publishProgress
-                            //publishProgress(0, 1);
                             String subUrl;
                             try {
                                 subUrl = OpenSubtitlesApiHelper.getDownloadSubtitleLink(searchResults.get(i).getFileId());
