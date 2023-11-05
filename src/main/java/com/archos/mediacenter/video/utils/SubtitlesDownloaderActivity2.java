@@ -71,6 +71,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 
@@ -194,7 +195,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
     private ArrayList<String> getSubLangValue() {
         // always add default system language in the list of languages
         Set<String> langDefault = new HashSet<String>();
-        langDefault.add("system");
+        langDefault.add(Locale.getDefault().getLanguage()); // add system default language
         Set<String> languages = sharedPreferences.getStringSet("languages_list", langDefault);
         final ArrayList<String> languageDefault = new ArrayList<String>(languages);
         log.debug("getSubLangValue: langDefault=" + languageDefault.toString());
