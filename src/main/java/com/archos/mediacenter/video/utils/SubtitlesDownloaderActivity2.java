@@ -326,7 +326,6 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 stop = true;
                 if (!searchResults.isEmpty()) setResult(AppCompatActivity.RESULT_OK);
             }
-            logOut();
         }
 
         private OpenSubtitlesQueryParams getFileInfo(String fileUrl) {
