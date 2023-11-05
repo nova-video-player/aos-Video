@@ -682,13 +682,19 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         int imin = 0;
         // default system language first
         entries.set(0, defaultLocaleLanguage);
-        entryValues.set(0, defaultLocaleISO3Language);
+        if (CustomApplication.useOpenSubtitlesRestApi())
+            entryValues.set(0, defaultLocale.getLanguage());
+        else
+            entryValues.set(0, defaultLocaleISO3Language);
 
         imin++;
         // if default system language is not english set it second
         if (! defaultLocaleLanguage.equals(englishLocaleLanguage)) {
             entries.set(1, englishLocaleLanguage);
-            entryValues.set(1, englishLocaleISO3Language);
+            if (CustomApplication.useOpenSubtitlesRestApi())
+                entryValues.set(1, englishLocale.getLanguage());
+            else
+                entryValues.set(1, englishLocaleISO3Language);
             imin++;
         }
 
@@ -739,6 +745,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             currentFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getLanguage());
         else
             currentFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getISO3Language());
+        log.debug("onCreatePreferences: currentFavoriteLang={}", currentFavoriteLang);
         int i = 0;
         for(CharSequence value : newEntryValues){
             if(value.toString().equalsIgnoreCase(currentFavoriteLang)) {
