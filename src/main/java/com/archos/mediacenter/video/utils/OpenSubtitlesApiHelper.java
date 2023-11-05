@@ -170,10 +170,12 @@ public class OpenSubtitlesApiHelper {
                             return true;
                         }
                     }
+                } else {
+                    log.error("login: response is not successful, error code={}, error message={}", response.code(), response.message());
                 }
             }
         } catch (JSONException e) {
-            log.error("auth: caught JSONException", e);
+            log.error("login: caught JSONException", e);
         }
         authTokenValid = false;
         return false;
@@ -198,6 +200,8 @@ public class OpenSubtitlesApiHelper {
                         if (jsonResponse.has("error")) {
                             log.warn("logout: error in response, code=" + LAST_QUERY_RESULT);
                         }
+                    } else {
+                        log.error("logout: response is not successful, error code={}, error message={}", response.code(), response.message());
                     }
                 }
             } catch (JSONException e) {
@@ -366,6 +370,8 @@ public class OpenSubtitlesApiHelper {
                 } catch (JSONException e) {
                     log.error("searchSubtitle: caught JSONException", e);
                 }
+            } else {
+                log.error("searchSubtitle: response is not successful, error code={}, error message={}", response.code(), response.message());
             }
         }
         return null;
@@ -423,6 +429,8 @@ public class OpenSubtitlesApiHelper {
                 } catch (JSONException e) {
                     log.error("getDownloadSubtitleLink: caught JSONException", e);
                 }
+            } else {
+                log.error("getDownloadSubtitleLink: response is not successful, error code={}, error message={}", response.code(), response.message());
             }
         }
         return null;
