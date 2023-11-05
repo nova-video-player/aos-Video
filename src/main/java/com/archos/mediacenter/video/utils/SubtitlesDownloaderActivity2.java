@@ -19,8 +19,6 @@ import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -31,7 +29,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -228,8 +225,9 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 mDoNotFinish = true;
                 mDialog.dismiss();
             }
+            // TODO MARC this ends the dialog before selecting
             // Exit the activity if processing is done/aborted and the SumUp dialog is not visible
-            if (stop) finish();
+            //if (stop) finish();
         }
         @Override
         protected void onProgressUpdate(Integer... values) {
@@ -483,29 +481,24 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                             else view.findViewById(R.id.lang).setVisibility(View.GONE);
                             return view;
                         }
-                    }, new OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, final int i) {
-                            new Thread() {
-                                public void run() {
-                                    // TODO MARC remove publishProgress
-                                    publishProgress(0, 1);
-                                    String subUrl;
-                                    try {
-                                        subUrl = OpenSubtitlesApiHelper.getDownloadSubtitleLink(searchResults.get(i).getFileId());
-                                        displayToast(getString(R.string.opensubtitles_quota_download_remaining, OpenSubtitlesApiHelper.getRemaningDownloads(), OpenSubtitlesApiHelper.getAllowedDownloads()));
-                                    } catch (IOException e) {
-                                        log.error("askSubChoice: caught IOException", e);
-                                        finish();
-                                        return;
-                                    };
-                                    downloadSubtitles(subUrl, videoFilePath, getFriendlyFilename(videoFilePath), searchResults.get(i).getLanguage());
-                                    setResult(Activity.RESULT_OK);
-                                    finish();
-                                }
-                            }.start();
+                    }, (dialogInterface, i) -> new Thread() {
+                        public void run() {
+                            // TODO MARC remove publishProgress
+                            //publishProgress(0, 1);
+                            String subUrl;
+                            try {
+                                subUrl = OpenSubtitlesApiHelper.getDownloadSubtitleLink(searchResults.get(i).getFileId());
+                                displayToast(getString(R.string.opensubtitles_quota_download_remaining, OpenSubtitlesApiHelper.getRemaningDownloads(), OpenSubtitlesApiHelper.getAllowedDownloads()));
+                            } catch (IOException e) {
+                                log.error("askSubChoice: caught IOException", e);
+                                finish();
+                                return;
+                            };
+                            downloadSubtitles(subUrl, videoFilePath, getFriendlyFilename(videoFilePath), searchResults.get(i).getLanguage());
+                            setResult(Activity.RESULT_OK);
+                            finish();
                         }
-                    })
+                    }.start())
                     .setCancelable(true)
                     .setOnCancelListener(dialog -> finish())
                     .show().getListView().setDividerHeight(10);
