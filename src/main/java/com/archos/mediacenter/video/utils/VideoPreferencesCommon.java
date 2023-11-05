@@ -81,8 +81,10 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.archos.filecorelibrary.FileUtils.backupDatabase;
@@ -258,6 +260,12 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private Preference mDbExportManualPreference = null;
 
     private PreferenceFragmentCompat mPreferencesFragment;
+
+    List<String> languageListEntries;
+    List<String> languageListEntryValues;
+    CharSequence[] languageListNewEntries;
+    CharSequence[] languageListNewEntryValues;
+    int systemLanguageIndex;
 
     public VideoPreferencesCommon(PreferenceFragmentCompat preferencesFragment) {
         mPreferencesFragment = preferencesFragment;
@@ -656,119 +664,55 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         });
         boolean doHide = mSharedPreferences.getBoolean(KEY_SUBTITLES_HIDE, false);
 
-        CheckBoxPreference cbpOpenSubtitlesRestAPi = (CheckBoxPreference)findPreference(KEY_OPENSUBTITILES_REST_API);
-        cbpOpenSubtitlesRestAPi.setOnPreferenceChangeListener((preference, newValue) -> {
-            boolean useOpenSubtitlesRestAPi = ((Boolean) newValue);
-            CustomApplication.makeUseOpenSubtitlesRestApi(useOpenSubtitlesRestAPi);
-            return true;
-        });
         boolean useOpenSubtitlesRestAPi = mSharedPreferences.getBoolean(KEY_OPENSUBTITILES_REST_API, false);
         CustomApplication.makeUseOpenSubtitlesRestApi(useOpenSubtitlesRestAPi);
 
         mSubtitlesFavLangPreferences = (ListPreference) findPreference(KEY_SUBTITLES_FAV_LANG);
-        mSubtitlesFavLangPreferences.setEnabled(!doHide);
-
-        String[] languageCodeArray;
-        if (CustomApplication.useOpenSubtitlesRestApi())
-            languageCodeArray = SUB_LANGUAGES_REST_API.split("\\|"); // contains 2 letters language codes
-        else
-            languageCodeArray = SUBS_LANGUAGES_XML_RPC.split("\\|"); // contains 2 letters language codes
-
-        // create empty mutable arrays
-        List<String> entries = new ArrayList<>();
-        List<String> entryValues = new ArrayList<>();
-        for (int i = 0; i < languageCodeArray.length; i++) {
-            entries.add("");
-            entryValues.add("");
-        }
-
-        Locale defaultLocale = Locale.getDefault();
-        String defaultLocaleISO3Language = defaultLocale.getISO3Language();
-        String defaultLocaleLanguage = defaultLocale.getDisplayLanguage();
-        Locale englishLocale = new Locale("en");
-        String englishLocaleISO3Language = englishLocale.getISO3Language();
-        String englishLocaleLanguage = englishLocale.getDisplayLanguage();
-
-        int imin = 0;
-        // default system language first
-        entries.set(0, defaultLocaleLanguage);
-        if (CustomApplication.useOpenSubtitlesRestApi())
-            entryValues.set(0, defaultLocale.getLanguage());
-        else
-            entryValues.set(0, defaultLocaleISO3Language);
-
-        imin++;
-        // if default system language is not english set it second
-        if (! defaultLocaleLanguage.equals(englishLocaleLanguage)) {
-            entries.set(1, englishLocaleLanguage);
-            if (CustomApplication.useOpenSubtitlesRestApi())
-                entryValues.set(1, englishLocale.getLanguage());
-            else
-                entryValues.set(1, englishLocaleISO3Language);
-            imin++;
-        }
-
-        String currentLocaleLanguage;
-        String currentLocaleISO3Language;
-        int index = 0;
-        for (String s : languageCodeArray) {
-            currentLocaleLanguage = com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.getLanguageNameFor2LetterCode(getActivity(), s);
-            // opensubtitles XML-RPC wants 3 letters code ISO639-2B and not ISO639-3
-            // opensubtitles REST-API wants 2 letters code ISO639-1 with zh-cn|pt-pt|pt-br|zh-tw exceptions
-            if (CustomApplication.useOpenSubtitlesRestApi())
-                currentLocaleISO3Language = s;
-            else
-                currentLocaleISO3Language = ISO639codes.convertISO6391ToISO6392(s);
-            log.debug("onCreatePreferences: code {} -> currentLocaleLanguage={}, currentLocaleISO3Language={}", s, currentLocaleLanguage, currentLocaleISO3Language);
-            if (currentLocaleLanguage.equals(defaultLocaleLanguage) || currentLocaleLanguage.equals(englishLocaleLanguage))
-                continue;
-            entries.set(index + imin, currentLocaleLanguage);
-            entryValues.set(index + imin, currentLocaleISO3Language);
-            index++;
-        }
-
-        // below entryValues is sorted alphabetically starting at index imin and same sorting is applied to entries
-
-        List<String> firstElements = entries.subList(0, imin);
-        // Sort entries starting above index imin.
-        List<String> lastElements = new ArrayList<>(entries.subList(imin, entries.size()));
-        Collections.sort(lastElements);
-        List<String> sortedEntries = new ArrayList<>();
-        sortedEntries.addAll(firstElements);
-        sortedEntries.addAll(lastElements);
-
-        // Create a new list sortedEntryValues and iterate through sortedEntries.
-        List<String> sortedEntryValues = new ArrayList<>();
-        for (String sortedEntry : sortedEntries) {
-            index = entries.indexOf(sortedEntry);
-            sortedEntryValues.add(entryValues.get(index));
-        }
-
-        final CharSequence[] newEntries = new CharSequence[sortedEntries.size()];
-        final CharSequence[] newEntryValues = new CharSequence[sortedEntryValues.size()];
-
-        entries.toArray(newEntries);
-        entryValues.toArray(newEntryValues);
-        int systemLanguageIndex = -1;
-        final String currentFavoriteLang;
-        if (CustomApplication.useOpenSubtitlesRestApi())
-            currentFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getLanguage());
-        else
-            currentFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getISO3Language());
-        log.debug("onCreatePreferences: currentFavoriteLang={}", currentFavoriteLang);
-        int i = 0;
-        for(CharSequence value : newEntryValues){
-            if(value.toString().equalsIgnoreCase(currentFavoriteLang)) {
-                systemLanguageIndex = i;
+        // properly set the default value
+        if (mSubtitlesFavLangPreferences == null || mSubtitlesFavLangPreferences.getValue() == null || mSubtitlesFavLangPreferences.getValue().isEmpty()) {
+            if (useOpenSubtitlesRestAPi) {
+                mSubtitlesFavLangPreferences.setValue(Locale.getDefault().getLanguage());
+            } else {
+                mSubtitlesFavLangPreferences.setValue(Locale.getDefault().getISO3Language());
             }
-            i++;
+        }
+        mSubtitlesFavLangPreferences.setEnabled(!doHide);
+        mSubtitlesDownloadLanguagePreferences = (MultiSelectListPreference) findPreference("languages_list");
+        // properly set the default value
+        if (mSubtitlesDownloadLanguagePreferences == null || mSubtitlesDownloadLanguagePreferences.getValues().isEmpty()) {
+            if (useOpenSubtitlesRestAPi) {
+                mSubtitlesDownloadLanguagePreferences.setValues(new HashSet<>(Collections.singleton(Locale.getDefault().getLanguage())));
+            } else {
+                mSubtitlesDownloadLanguagePreferences.setValues(new HashSet<>(Collections.singleton(Locale.getDefault().getISO3Language())));
+            }
         }
 
+        CheckBoxPreference cbpOpenSubtitlesRestAPi = (CheckBoxPreference)findPreference(KEY_OPENSUBTITILES_REST_API);
+        cbpOpenSubtitlesRestAPi.setOnPreferenceChangeListener((preference, newValue) -> {
+            boolean newUseOpenSubtitlesRestAPi = ((Boolean) newValue);
+            CustomApplication.makeUseOpenSubtitlesRestApi(newUseOpenSubtitlesRestAPi);
+            // reset when changing checkbox state
+            if (newUseOpenSubtitlesRestAPi) {
+                mSubtitlesDownloadLanguagePreferences.setValues(new HashSet<>(Collections.singleton(Locale.getDefault().getLanguage())));
+                mSubtitlesFavLangPreferences.setValue(Locale.getDefault().getLanguage());
+            } else {
+                mSubtitlesDownloadLanguagePreferences.setValues(new HashSet<>(Collections.singleton(Locale.getDefault().getISO3Language())));
+                mSubtitlesFavLangPreferences.setValue(Locale.getDefault().getISO3Language());
+            }
+            buildLanguageList();
+            mSubtitlesDownloadLanguagePreferences.setEntries(languageListNewEntries);
+            mSubtitlesDownloadLanguagePreferences.setEntryValues(languageListNewEntryValues);
+            mSubtitlesFavLangPreferences.setEntries(languageListNewEntries);
+            mSubtitlesFavLangPreferences.setEntryValues(languageListNewEntryValues);
+            if(systemLanguageIndex>=0) mSubtitlesFavLangPreferences.setValueIndex(systemLanguageIndex);
+            return true;
+        });
+        buildLanguageList();
         mSubtitlesDownloadLanguagePreferences = (MultiSelectListPreference) findPreference("languages_list");
-        mSubtitlesDownloadLanguagePreferences.setEntries(newEntries);
-        mSubtitlesDownloadLanguagePreferences.setEntryValues(newEntryValues);
-        mSubtitlesFavLangPreferences.setEntries(newEntries);
-        mSubtitlesFavLangPreferences.setEntryValues(newEntryValues);
+        mSubtitlesDownloadLanguagePreferences.setEntries(languageListNewEntries);
+        mSubtitlesDownloadLanguagePreferences.setEntryValues(languageListNewEntryValues);
+        mSubtitlesFavLangPreferences.setEntries(languageListNewEntries);
+        mSubtitlesFavLangPreferences.setEntryValues(languageListNewEntryValues);
         if(systemLanguageIndex>=0) mSubtitlesFavLangPreferences.setValueIndex(systemLanguageIndex);
 
         ListPreference lp = (ListPreference) findPreference("codepage");
@@ -954,6 +898,104 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                     });
                 }
             });
+        }
+    }
+
+    private void buildLanguageList() {
+        String[] languageCodeArray;
+        if (CustomApplication.useOpenSubtitlesRestApi())
+            languageCodeArray = SUB_LANGUAGES_REST_API.split("\\|"); // contains 2 letters language codes
+        else
+            languageCodeArray = SUBS_LANGUAGES_XML_RPC.split("\\|"); // contains 2 letters language codes
+
+        // create empty mutable arrays
+        languageListEntries = new ArrayList<>();
+        languageListEntryValues = new ArrayList<>();
+        for (int i = 0; i < languageCodeArray.length; i++) {
+            languageListEntries.add("");
+            languageListEntryValues.add("");
+        }
+
+        Locale defaultLocale = Locale.getDefault();
+        String defaultLocaleISO3Language = defaultLocale.getISO3Language();
+        String defaultLocaleLanguage = defaultLocale.getDisplayLanguage();
+        Locale englishLocale = new Locale("en");
+        String englishLocaleISO3Language = englishLocale.getISO3Language();
+        String englishLocaleLanguage = englishLocale.getDisplayLanguage();
+
+        int imin = 0;
+        // default system language first
+        languageListEntries.set(0, defaultLocaleLanguage);
+        if (CustomApplication.useOpenSubtitlesRestApi())
+            languageListEntryValues.set(0, defaultLocale.getLanguage());
+        else
+            languageListEntryValues.set(0, defaultLocaleISO3Language);
+
+        imin++;
+        // if default system language is not english set it second
+        if (! defaultLocaleLanguage.equals(englishLocaleLanguage)) {
+            languageListEntries.set(1, englishLocaleLanguage);
+            if (CustomApplication.useOpenSubtitlesRestApi())
+                languageListEntryValues.set(1, englishLocale.getLanguage());
+            else
+                languageListEntryValues.set(1, englishLocaleISO3Language);
+            imin++;
+        }
+
+        String currentLocaleLanguage;
+        String currentLocaleISO3Language;
+        int index = 0;
+        for (String s : languageCodeArray) {
+            currentLocaleLanguage = com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.getLanguageNameFor2LetterCode(getActivity(), s);
+            // opensubtitles XML-RPC wants 3 letters code ISO639-2B and not ISO639-3
+            // opensubtitles REST-API wants 2 letters code ISO639-1 with zh-cn|pt-pt|pt-br|zh-tw exceptions
+            if (CustomApplication.useOpenSubtitlesRestApi())
+                currentLocaleISO3Language = s;
+            else
+                currentLocaleISO3Language = ISO639codes.convertISO6391ToISO6392(s);
+            log.debug("onCreatePreferences: code {} -> currentLocaleLanguage={}, currentLocaleISO3Language={}", s, currentLocaleLanguage, currentLocaleISO3Language);
+            if (currentLocaleLanguage.equals(defaultLocaleLanguage) || currentLocaleLanguage.equals(englishLocaleLanguage))
+                continue;
+            languageListEntries.set(index + imin, currentLocaleLanguage);
+            languageListEntryValues.set(index + imin, currentLocaleISO3Language);
+            index++;
+        }
+
+        // below entryValues is sorted alphabetically starting at index imin and same sorting is applied to entries
+
+        List<String> firstElements = languageListEntries.subList(0, imin);
+        // Sort entries starting above index imin.
+        List<String> lastElements = new ArrayList<>(languageListEntries.subList(imin, languageListEntries.size()));
+        Collections.sort(lastElements);
+        List<String> sortedEntries = new ArrayList<>();
+        sortedEntries.addAll(firstElements);
+        sortedEntries.addAll(lastElements);
+
+        // Create a new list sortedEntryValues and iterate through sortedEntries.
+        List<String> sortedEntryValues = new ArrayList<>();
+        for (String sortedEntry : sortedEntries) {
+            index = languageListEntries.indexOf(sortedEntry);
+            sortedEntryValues.add(languageListEntryValues.get(index));
+        }
+
+        languageListNewEntries = new CharSequence[sortedEntries.size()];
+        languageListNewEntryValues = new CharSequence[sortedEntryValues.size()];
+
+        languageListEntries.toArray(languageListNewEntries);
+        languageListEntryValues.toArray(languageListNewEntryValues);
+        systemLanguageIndex = -1;
+        final String currentFavoriteLang;
+        if (CustomApplication.useOpenSubtitlesRestApi())
+            currentFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getLanguage());
+        else
+            currentFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getISO3Language());
+        log.debug("onCreatePreferences: currentFavoriteLang={}", currentFavoriteLang);
+        int i = 0;
+        for(CharSequence value : languageListNewEntryValues){
+            if(value.toString().equalsIgnoreCase(currentFavoriteLang)) {
+                systemLanguageIndex = i;
+            }
+            i++;
         }
     }
 

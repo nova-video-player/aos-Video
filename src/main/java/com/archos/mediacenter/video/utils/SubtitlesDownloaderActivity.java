@@ -260,6 +260,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
         langDefault = null;
         languages = null;
         if (langDefault != null) log.debug("getSubLangValue: " + String.join(",", langDefault));
+        log.debug("getSubLangValue: " + String.join(",", languageDefault));
         return languageDefault;
     }
 

@@ -55,6 +55,7 @@ import com.archos.mediacenter.video.browser.BootupRecommandationService;
 import com.archos.mediacenter.video.picasso.SmbRequestHandler;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
 import com.archos.mediacenter.video.utils.OpenSubtitlesApiHelper;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.medialib.LibAvos;
 import com.archos.mediaprovider.video.NetworkAutoRefresh;
 import com.archos.mediaprovider.video.VideoStoreImportReceiver;
@@ -149,9 +150,9 @@ public class CustomApplication extends Application {
     private final int AVOS_ENCODING_DTS_UHD = 27;
     private final int AVOS_ENCODING_DRA = 28;
 
-    private static boolean OPENSUBITLES_HAS_QUOTA = false;
+    private static boolean OPENSUBTITLES_HAS_QUOTA = false;
     public final static boolean hasOpenSubtitlesQuota() {
-        return OPENSUBITLES_HAS_QUOTA;
+        return OPENSUBTITLES_HAS_QUOTA;
     }
 
     private static boolean USE_OPENSUBTITLES_REST_API = false;
@@ -159,9 +160,9 @@ public class CustomApplication extends Application {
 
     public final static void makeUseOpenSubtitlesRestApi(boolean use) {
         USE_OPENSUBTITLES_REST_API = use;
-        OPENSUBITLES_HAS_QUOTA = use;
-    ;}
-
+        OPENSUBTITLES_HAS_QUOTA = use;
+        log.debug("makeUseOpenSubtitlesRestApi: use " + use + ", OPENSUBTITLES_HAS_QUOTA " + OPENSUBTITLES_HAS_QUOTA + ", USE_OPENSUBTITLES_REST_API " + USE_OPENSUBTITLES_REST_API);
+    }
 
     public static long getHdmiAudioCodecsFlag() {
         return hdmiAudioEncodingFlag;
@@ -346,6 +347,7 @@ public class CustomApplication extends Application {
 
         updateVersionState(this);
         if (openSubtitlesApiHelper == null) openSubtitlesApiHelper = OpenSubtitlesApiHelper.getInstance();
+        makeUseOpenSubtitlesRestApi(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(VideoPreferencesCommon.KEY_OPENSUBTITILES_REST_API, false));
     }
 
     private void launchSambaDiscovery() {
