@@ -130,12 +130,16 @@ public class OpenSubtitlesApiHelper {
             JSONObject authRequest = new JSONObject();
             authRequest.put("username", username);
             authRequest.put("password", password);
-            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), authRequest.toString());
-            Request request = new Request.Builder()
+            MediaType JSON = MediaType.get("application/json; charset=utf-8");
+            RequestBody requestBody = RequestBody.create(authRequest.toString(), JSON);
+            Request.Builder requestBuilder = new Request.Builder()
                     .url(baseUrl + "login")
                     .post(requestBody)
+                    .addHeader("Accept", "application/json")
+                    .addHeader("Content-Type", "application/json")
                     .addHeader(USER_AGENT, USER_AGENT_VALUE)
-                    .build();
+                    .addHeader(API_KEY, apiKey);
+            Request request = requestBuilder.build();
             try (Response response = httpClient.newCall(request).execute()) {
                 if (response.isSuccessful()) {
                     String responseBody = response.body().string();
@@ -187,12 +191,16 @@ public class OpenSubtitlesApiHelper {
             try {
                 JSONObject authRequest = new JSONObject();
                 authRequest.put(AUTHORIZATION, "Bearer " + authToken);
-                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), authRequest.toString());
-                Request request = new Request.Builder()
+                MediaType JSON = MediaType.get("application/json; charset=utf-8");
+                RequestBody requestBody = RequestBody.create(authRequest.toString(), JSON);
+                Request.Builder requestBuilder = new Request.Builder()
                         .url(baseUrl + "logout")
                         .post(requestBody)
+                        .addHeader("Accept", "application/json")
+                        .addHeader("Content-Type", "application/json")
                         .addHeader(USER_AGENT, USER_AGENT_VALUE)
-                        .build();
+                        .addHeader(API_KEY, apiKey);
+                Request request = requestBuilder.build();
                 try (Response response = httpClient.newCall(request).execute()) {
                     if (response.isSuccessful()) {
                         String responseBody = response.body().string();
