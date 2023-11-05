@@ -379,14 +379,22 @@ public class OpenSubtitlesApiHelper {
 
     public static String getDownloadSubtitleLink(String file_id) throws IOException {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + "download").newBuilder();
-        urlBuilder.addQueryParameter("file_id", file_id);
-
         String url = urlBuilder.build().toString();
+        JSONObject requestData = new JSONObject();
+        try {
+            requestData.put("file_id", Integer.parseInt(file_id));
+        } catch (JSONException e) {
+            log.error("getDownloadSubtitleLink: caught JSONException", e);
+        }
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        RequestBody requestBody = RequestBody.create(requestData.toString(), JSON);
 
         Request.Builder requestBuilder = new Request.Builder()
                 .url(url)
-                .get()
+                .post(requestBody)
                 .addHeader(USER_AGENT, USER_AGENT_VALUE)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
                 .addHeader(API_KEY, apiKey);
 
         if (authenticated) requestBuilder.addHeader(AUTHORIZATION, "Bearer " + authToken);
