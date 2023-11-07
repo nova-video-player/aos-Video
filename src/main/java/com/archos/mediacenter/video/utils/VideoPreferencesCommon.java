@@ -77,15 +77,12 @@ import com.archos.mediascraper.AutoScrapeService;
 import com.archos.mediascraper.settings.ScraperPreferences;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.archos.filecorelibrary.FileUtils.backupDatabase;
 
@@ -668,37 +665,17 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         CustomApplication.makeUseOpenSubtitlesRestApi(useOpenSubtitlesRestAPi);
 
         mSubtitlesFavLangPreferences = (ListPreference) findPreference(KEY_SUBTITLES_FAV_LANG);
-        // properly set the default value
-        if (mSubtitlesFavLangPreferences == null || mSubtitlesFavLangPreferences.getValue() == null || mSubtitlesFavLangPreferences.getValue().isEmpty()) {
-            if (useOpenSubtitlesRestAPi) {
-                mSubtitlesFavLangPreferences.setValue(Locale.getDefault().getLanguage());
-            } else {
-                mSubtitlesFavLangPreferences.setValue(Locale.getDefault().getISO3Language());
-            }
-        }
         mSubtitlesFavLangPreferences.setEnabled(!doHide);
         mSubtitlesDownloadLanguagePreferences = (MultiSelectListPreference) findPreference("languages_list");
-        // properly set the default value
-        if (mSubtitlesDownloadLanguagePreferences == null || mSubtitlesDownloadLanguagePreferences.getValues().isEmpty()) {
-            if (useOpenSubtitlesRestAPi) {
-                mSubtitlesDownloadLanguagePreferences.setValues(new HashSet<>(Collections.singleton(Locale.getDefault().getLanguage())));
-            } else {
-                mSubtitlesDownloadLanguagePreferences.setValues(new HashSet<>(Collections.singleton(Locale.getDefault().getISO3Language())));
-            }
-        }
+        if (mSubtitlesDownloadLanguagePreferences.getValues().isEmpty()) resetSubtitlesLanguage(useOpenSubtitlesRestAPi); // reset if no default values
+        //convertOrResetSubtitlesLanguage(useOpenSubtitlesRestAPi);
 
         CheckBoxPreference cbpOpenSubtitlesRestAPi = (CheckBoxPreference)findPreference(KEY_OPENSUBTITILES_REST_API);
         cbpOpenSubtitlesRestAPi.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean newUseOpenSubtitlesRestAPi = ((Boolean) newValue);
             CustomApplication.makeUseOpenSubtitlesRestApi(newUseOpenSubtitlesRestAPi);
-            // reset when changing checkbox state
-            if (newUseOpenSubtitlesRestAPi) {
-                mSubtitlesDownloadLanguagePreferences.setValues(new HashSet<>(Collections.singleton(Locale.getDefault().getLanguage())));
-                mSubtitlesFavLangPreferences.setValue(Locale.getDefault().getLanguage());
-            } else {
-                mSubtitlesDownloadLanguagePreferences.setValues(new HashSet<>(Collections.singleton(Locale.getDefault().getISO3Language())));
-                mSubtitlesFavLangPreferences.setValue(Locale.getDefault().getISO3Language());
-            }
+            resetSubtitlesLanguage(newUseOpenSubtitlesRestAPi);
+            //convertOrResetSubtitlesLanguage(newUseOpenSubtitlesRestAPi);
             buildLanguageList();
             mSubtitlesDownloadLanguagePreferences.setEntries(languageListNewEntries);
             mSubtitlesDownloadLanguagePreferences.setEntryValues(languageListNewEntryValues);
@@ -899,6 +876,52 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 }
             });
         }
+    }
+
+    private String getLanguage(boolean shouldUseOpenSubtitlesRestAPi, String language) {
+        if (shouldUseOpenSubtitlesRestAPi) return Locale.forLanguageTag(language).getLanguage(); // 3 letters code to 2 letters code
+        else return Locale.forLanguageTag(language).getISO3Language(); // 2 letters code to 3 letters code
+    }
+
+    private String getDefaultLanguage(boolean shouldUseOpenSubtitlesRestAPi) {
+        if (shouldUseOpenSubtitlesRestAPi) return Locale.getDefault().getLanguage(); // 2 letters code
+        else return Locale.getDefault().getISO3Language(); // 3 letters code
+    }
+
+    private void convertOrResetSubtitlesLanguage(boolean shouldUseOpenSubtitlesRestAPi) {
+        // TODO not working: returns "eng" for "eng" instead of "en" when selecting REST-API
+        log.debug("convertOrResetSubtitlesLanguage: shouldUseOpenSubtitlesRestAPi {}", shouldUseOpenSubtitlesRestAPi);
+        // convert language codes to new format or reset if empty
+        Set<String> subtitlesDownloadLanguages = mSubtitlesDownloadLanguagePreferences.getValues();
+        log.debug("convertOrResetSubtitlesLanguage: input subtitlesDownloadLanguages {}", subtitlesDownloadLanguages.toString());
+        String favLang = mSubtitlesFavLangPreferences.getValue();
+        log.debug("convertOrResetSubtitlesLanguage: input favLang {}", favLang);
+        Set<String> newSubtitlesDownloadLanguages = new HashSet<>();
+        String tmpStr;
+        for (String lang : subtitlesDownloadLanguages) {
+            tmpStr = getLanguage(shouldUseOpenSubtitlesRestAPi, lang);
+            log.debug("convertOrResetSubtitlesLanguage: subtitlesDownloadLanguages convert lang {} -> {}", lang, tmpStr);
+            if (!tmpStr.isEmpty() && !newSubtitlesDownloadLanguages.contains(tmpStr)) {
+                newSubtitlesDownloadLanguages.add(tmpStr);
+            }
+        }
+        if (newSubtitlesDownloadLanguages.isEmpty()) { // if empty reset
+            log.debug("convertOrResetSubtitlesLanguage: mSubtitlesDownloadLanguagePreferences reset to default language");
+            mSubtitlesDownloadLanguagePreferences.setValues(new HashSet<>(Collections.singleton(getDefaultLanguage(shouldUseOpenSubtitlesRestAPi))));
+        } else mSubtitlesDownloadLanguagePreferences.setValues(newSubtitlesDownloadLanguages);
+        if (favLang != null) tmpStr = getLanguage(shouldUseOpenSubtitlesRestAPi, favLang);
+        else tmpStr = null;
+        log.debug("convertOrResetSubtitlesLanguage: mSubtitlesDownloadLanguagePreferences convert lang {} -> {}", favLang, tmpStr);
+        if (tmpStr == null || tmpStr.isEmpty()) { // if empty reset
+            log.debug("convertOrResetSubtitlesLanguage: mSubtitlesFavLangPreferences reset to default language");
+            mSubtitlesFavLangPreferences.setValue(getDefaultLanguage(shouldUseOpenSubtitlesRestAPi));
+        } else mSubtitlesFavLangPreferences.setValue(tmpStr);
+    }
+
+    private void resetSubtitlesLanguage(boolean shouldUseOpenSubtitlesRestAPi) {
+        // properly set the default value
+        mSubtitlesFavLangPreferences.setValue(getDefaultLanguage(shouldUseOpenSubtitlesRestAPi));
+        mSubtitlesDownloadLanguagePreferences.setValues(new HashSet<>(Collections.singleton(getDefaultLanguage(shouldUseOpenSubtitlesRestAPi))));
     }
 
     private void buildLanguageList() {
@@ -1125,7 +1148,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     }
 
     /*
-
         preference helper
      */
 
