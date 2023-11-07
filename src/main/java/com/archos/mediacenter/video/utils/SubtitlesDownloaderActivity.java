@@ -86,7 +86,7 @@ import de.timroes.axmlrpc.XMLRPCClient;
 import de.timroes.axmlrpc.XMLRPCException;
 
 import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
-import static com.archos.mediacenter.utils.ISO639codes.convertIso6393ToIsa6392b;
+import static com.archos.mediacenter.utils.ISO639codes.convertIso6393ToIso6392b;
 
 public class SubtitlesDownloaderActivity extends AppCompatActivity {
 
@@ -675,13 +675,13 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 if (!success.containsKey(fileName)){
                     ArrayList<String> langs = new ArrayList<String>();
                     for (String language : languages) {
-                        langs.add(convertIso6393ToIsa6392b(language));
+                        langs.add(convertIso6393ToIso6392b(language));
                     }
                     fails.put(fileName, langs);
                 } else { // here we get the subs missing only
                     ArrayList<String> langs = new ArrayList<String>();
                     for (String language : languages) {
-                        String langID = convertIso6393ToIsa6392b(language);
+                        String langID = convertIso6393ToIso6392b(language);
                         if (!success.get(fileName).contains(langID)){
                             langs.add(langID);
                         }
@@ -782,7 +782,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 HashMap<String, Object> video = new HashMap<String, Object>();
                 // sublanguageid contains concatenated comma separated list of languages
                 ArrayList<String> subLanguageId = new ArrayList<String>();
-                for (String item : languages) subLanguageId.add(convertIso6393ToIsa6392b(item));
+                for (String item : languages) subLanguageId.add(convertIso6393ToIso6392b(item));
                 video.put("sublanguageid", TextUtils.join(",",  subLanguageId));
                 log.debug("prepareRequestList: search for sublanguageid " + TextUtils.join(",",  subLanguageId));
                 if (stop) break;
