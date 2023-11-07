@@ -303,7 +303,7 @@ dependencies {
     implementation 'androidx.core:core:1.12.0'
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
-    implementation 'androidx.fragment:fragment:1.6.1'
+    implementation 'androidx.fragment:fragment:1.6.2'
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.palette:palette:1.0.0'
@@ -317,7 +317,7 @@ dependencies {
     implementation 'fr.turri:aXMLRPC:1.13.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
     implementation 'io.sentry:sentry-android:6.32.0'
-    implementation 'io.sentry:sentry:6.32.0'
+    implementation 'io.sentry:sentry:6.33.0'
 }
 
 // to avoid dupplicate classes
