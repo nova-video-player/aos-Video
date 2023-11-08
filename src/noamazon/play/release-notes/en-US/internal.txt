@@ -1,3 +1,4 @@
+- Add possibility to use new opensubtitles REST-API instead of XML-RPC that will be enforced in January
 - Update jcifs-ng to 2.1.10, commons-net to 3.10.0, sshj to 0.37.0
 - Add missing anime shows by alpha on Android TV
 - Avoid top/bottom grey bars on chromebooks while playing videos
