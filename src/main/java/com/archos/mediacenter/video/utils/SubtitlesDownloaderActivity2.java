@@ -21,6 +21,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -311,13 +312,12 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 displayToast(getString(R.string.toast_subloader_service_unreachable));
                 return;
             }
-            if (searchResults != null && searchResults.size() >1) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        askSubChoice(fileUrl, searchResults,languages.size()>1, !searchResults.isEmpty());
-                    }
-                });
+            // when there is one sub only directly download it
+            if (searchResults != null && searchResults.size() == 1) {
+                getSub(fileUrl, searchResults.get(0));
+            }
+            if (searchResults != null && searchResults.size() > 1) {
+                mHandler.post(() -> askSubChoice(fileUrl, searchResults,languages.size()>1, !searchResults.isEmpty()));
             } else {
                 log.warn("getSubtitles: no subs found on opensubtitles for " + fileUrl);
             }
@@ -326,6 +326,21 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 stop = true;
                 if (!searchResults.isEmpty()) setResult(AppCompatActivity.RESULT_OK);
             }
+        }
+
+        private void getSub(String fileUrl, OpenSubtitlesSearchResult searchResult) {
+            String subUrl;
+            try {
+                subUrl = OpenSubtitlesApiHelper.getDownloadSubtitleLink(searchResults.get(0).getFileId());
+                displayToast(getString(R.string.opensubtitles_quota_download_remaining, OpenSubtitlesApiHelper.getRemainingDownloads(), OpenSubtitlesApiHelper.getAllowedDownloads()));
+            } catch (IOException e) {
+                log.error("getSub: caught IOException", e);
+                finish();
+                return;
+            }
+            downloadSubtitles(subUrl, fileUrl, getFriendlyFilename(fileUrl), searchResult.getLanguage());
+            setResult(Activity.RESULT_OK);
+            finish();
         }
 
         private OpenSubtitlesQueryParams getFileInfo(String fileUrl) {
@@ -399,52 +414,50 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         }
 
         private void askSubChoice(final String videoFilePath, final ArrayList<OpenSubtitlesSearchResult> searchResults, final boolean displayLang, final boolean hasSuccess) {
-            View view = LayoutInflater.from(SubtitlesDownloaderActivity2.this).inflate(R.layout.subtitle_chooser_title_layout, null);
-            ((TextView) view.findViewById(R.id.video_name)).setText(HtmlCompat.fromHtml(getString(R.string.select_sub_file, getFriendlyFilename(videoFilePath)), HtmlCompat.FROM_HTML_MODE_LEGACY));
-            new AlertDialog.Builder(SubtitlesDownloaderActivity2.this)
-                    .setCustomTitle(view)
-                    .setAdapter(new BaseAdapter() {
-                        @Override
-                        public int getCount() {
-                            return searchResults.size() ;
-                        }
-                        @Override
-                        public Object getItem(int i) {
-                            return null;
-                        }
-                        @Override
-                        public long getItemId(int i) {
-                            return 0;
-                        }
-                        @Override
-                        public View getView(int i, View view, ViewGroup viewGroup) {
-                            if (view == null ) {
-                                view = LayoutInflater.from(SubtitlesDownloaderActivity2.this).inflate(R.layout.subtitle_item_layout, null);
+                View view = LayoutInflater.from(SubtitlesDownloaderActivity2.this).inflate(R.layout.subtitle_chooser_title_layout, null);
+                ((TextView) view.findViewById(R.id.video_name)).setText(HtmlCompat.fromHtml(getString(R.string.select_sub_file, getFriendlyFilename(videoFilePath)), HtmlCompat.FROM_HTML_MODE_LEGACY));
+                new AlertDialog.Builder(SubtitlesDownloaderActivity2.this)
+                        .setCustomTitle(view)
+                        .setAdapter(new BaseAdapter() {
+                            @Override
+                            public int getCount() {
+                                return searchResults.size();
                             }
-                            ((TextView) view.findViewById(R.id.video_name)).setText(searchResults.get(i).getFileName());
-                            if (displayLang) ((TextView) view.findViewById(R.id.lang)).setText(searchResults.get(i).getLanguage());
-                            else view.findViewById(R.id.lang).setVisibility(View.GONE);
-                            return view;
-                        }
-                    }, (dialogInterface, i) -> new Thread() {
-                        public void run() {
-                            String subUrl;
-                            try {
-                                subUrl = OpenSubtitlesApiHelper.getDownloadSubtitleLink(searchResults.get(i).getFileId());
-                                displayToast(getString(R.string.opensubtitles_quota_download_remaining, OpenSubtitlesApiHelper.getRemaningDownloads(), OpenSubtitlesApiHelper.getAllowedDownloads()));
-                            } catch (IOException e) {
-                                log.error("askSubChoice: caught IOException", e);
-                                finish();
-                                return;
-                            };
-                            downloadSubtitles(subUrl, videoFilePath, getFriendlyFilename(videoFilePath), searchResults.get(i).getLanguage());
-                            setResult(Activity.RESULT_OK);
-                            finish();
-                        }
-                    }.start())
-                    .setCancelable(true)
-                    .setOnCancelListener(dialog -> finish())
-                    .show().getListView().setDividerHeight(10);
+
+                            @Override
+                            public Object getItem(int i) {
+                                return null;
+                            }
+
+                            @Override
+                            public long getItemId(int i) {
+                                return 0;
+                            }
+
+                            @Override
+                            public View getView(int i, View view, ViewGroup viewGroup) {
+                                if (view == null) {
+                                    view = LayoutInflater.from(SubtitlesDownloaderActivity2.this).inflate(R.layout.subtitle_item_layout, null);
+                                }
+                                ((TextView) view.findViewById(R.id.video_name)).setText(searchResults.get(i).getFileName());
+                                // use bold font for subs with hash match
+                                if (searchResults.get(i).getMoviehashMatch() == true)
+                                    ((TextView) view.findViewById(R.id.video_name)).setTypeface(null, Typeface.BOLD);
+                                else
+                                    ((TextView) view.findViewById(R.id.video_name)).setTypeface(null, Typeface.NORMAL);
+                                if (displayLang)
+                                    ((TextView) view.findViewById(R.id.lang)).setText(searchResults.get(i).getLanguage());
+                                else view.findViewById(R.id.lang).setVisibility(View.GONE);
+                                return view;
+                            }
+                        }, (dialogInterface, i) -> new Thread() {
+                            public void run() {
+                                getSub(videoFilePath, searchResults.get(i));
+                            }
+                        }.start())
+                        .setCancelable(true)
+                        .setOnCancelListener(dialog -> finish())
+                        .show().getListView().setDividerHeight(10);
         }
 
         // TODO MARC check issue webdav cannot download subtitles is this linked to slowRemote?
