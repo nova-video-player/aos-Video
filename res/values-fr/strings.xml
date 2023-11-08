@@ -328,9 +328,22 @@
     <string name="seek_to_percentage">\"Aller à %s%%</string>
     <string name="set_audio_speed_to">Vitesse audio %s</string>
     <!-- Subtitles/Audio languages -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brésilien</string>
     <string name="s_chinese">Chinois</string>
+    <string name="s_chinese_simplified">Chinois simplifié</string>
     <string name="s_traditional_chinese">Chinois traditionnel</string>
+    <string name="s_spanish_la">Espagnol (LA)</string>
+    <string name="s_extremaduran">Estremègne</string>
+    <string name="s_montenegrin">Monténégrin</string>
+    <string name="s_manipuri">Manipuri</string>
+    <string name="s_dari">Dari</string>
+    <string name="s_portuguese_mz">Portugais (MZ)</string>
+    <string name="s_spanish_eu">Espagnol (UE)</string>
+    <string name="s_santali">Santali</string>
+    <string name="s_syriac">Syriaque</string>
+    <string name="s_toki_pona">Toki Pona</string>
+    <string name="s_chinese_bilingual">Chinois bilingue</string>
     <string name="s_none">Aucun</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Impossible de lire la vidéo</string>
@@ -397,6 +410,7 @@
     <string name="dialog_subloader_nonetwork_title">Aucune connection à Internet</string>
     <string name="dialog_subloader_nonetwork_message">Une connection Internet est requise pour le téléchargement de sous-titres</string>
     <string name="dialog_subloader_connecting">Connexion au site www.opensubtitles.org…</string>
+    <string name="opensubtitles_quota_download_remaining">Quota de téléchargement OpenSubtitles: %d/%d restant</string>
     <string name="dialog_subloader_credentials">Identifiants opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">Vous devrez entrer un mot de passe et un nom d\'utilisateur valide!</string>
     <string name="toast_subloader_credentials_empty">Fournissez vos identifiants opensubtitles dans les paramètres pour pouvoir télécharger plus de sous-titres</string>

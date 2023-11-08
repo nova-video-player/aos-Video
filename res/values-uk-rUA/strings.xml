@@ -251,6 +251,7 @@
     <string name="menu_player_settings">Налаштування</string>
     <string name="menu_change_folder">Змінити теку</string>
     <!-- Subtitles/Audio languages -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Бразильська</string>
     <string name="s_chinese">Китайська</string>
     <string name="s_traditional_chinese">Традиційна китайська</string>

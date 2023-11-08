@@ -63,8 +63,8 @@
     <string name="watching_up_next">Most nézett/Következő</string>
     <string name="recently_added">Mostanában hozzáadva</string>
     <string name="recently_added_videos">Mostanában hozzáadva</string>
-    <string name="recently_played">Mostanában lejátzott</string>
-    <string name="recently_played_videos">Mostanában lejátzott</string>
+    <string name="recently_played">Mostanában lejátszott</string>
+    <string name="recently_played_videos">Mostanában lejátszott</string>
     <string name="video_lists">Lejátszólisták</string>
     <!-- The string used in main storage list -->
     <string name="external_storage">Külső</string>
@@ -128,6 +128,7 @@
     <string name="tvshows_by_alpha">Sorozatok ABC sorrendben</string>
     <string name="tvshows_by_genre">Sorozatok műfaj szerint</string>
     <string name="tvshows_by_rating">Sorozatok értékelés szerint</string>
+    <string name="animation_shows_by_alpha">Animációs sorozatok betűrendben</string>
     <string name="episodes_by_date">Epizódok értékelés szerint</string>
     <string name="date_view_week">Hét</string>
     <string name="date_view_month">Hónap</string>
@@ -327,6 +328,7 @@
     <string name="seek_to_percentage">\"Keresés alatt %s%%</string>
     <string name="set_audio_speed_to">\"Hangsebesség %s</string>
     <!-- Subtitles/Audio languages -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brazil</string>
     <string name="s_chinese">Kínai</string>
     <string name="s_traditional_chinese">Hagyományos kínai</string>
@@ -579,6 +581,10 @@
     <string name="network_thumbnails">Távoli miniatűrök létrehozása</string>
     <string name="network_thumbnails_summary">Hozzon létre miniatűröket távoli videókból, ha nincs elérhető plakát</string>
     <string name="network_bookmarks_summary">Mentse és ellenőrizze a folytatási pontokat és a helyzetjelzőket a hálózaton, amennyiben lehetséges</string>
+    <string name="share_folders_smbj">Gyorsabb SMB alkalmazás használata (SMB2+)</string>
+    <string name="share_folders_smbj_summary">Gyorsabb SMB átvitelt engedélyez, viszont a legrégebbi használható protokolverzíót 2-re korlátozza</string>
+    <string name="share_folders_sshj">Újabb SFTP alkalmazások használata</string>
+    <string name="share_folders_sshj_summary">Az új SFTP alkalmazások használata SFTP hivatkozásoknál</string>
     <string name="share_folders_smbv2">SMBv2 támogatás engedélyezése</string>
     <string name="share_folders_smbv2_summary">Az SMB hálózati megosztás 2. verziójának engedélyezése.</string>
     <string name="share_folders_smb_resolv">SMB feloldási sorrend</string>
@@ -627,6 +633,8 @@
     <string name="sort_by_date_premiered_asc">Rendezés premier dátuma szerint (legrégebbi előbb)</string>
     <string name="sort_by_date_aired_desc">Rendezés sugárzási dátum szerint (legújabb előbb)</string>
     <string name="sort_by_recently_added_episode_desc">Mostanában hozzáadott epizódok előbb</string>
+    <string name="sort_by_size_asc">Méret szerint (kisebb előbb)</string>
+    <string name="sort_by_size_desc">Méret szerint (nagyobb előbb)</string>
     <string name="dec_choice_title">Dekóder választása</string>
     <string name="dec_choice_summary">Speciális beállítás, megszakíthatja a videó dekódolását.</string>
     <string name="dec_hw_omx">Hardveres dekódolás (IOMX w/ swbuf)</string>

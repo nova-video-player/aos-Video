@@ -296,6 +296,7 @@
     <string name="unlock_instructions">Druk lang op icoon om te ontgrendelen</string>
     <string name="seek_to_percentage">\"Zoeken tot %s%%</string>
     <!-- Subtitles/Audio languages -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Braziliaans</string>
     <string name="s_chinese">Chinees</string>
     <string name="s_none">Geen</string>

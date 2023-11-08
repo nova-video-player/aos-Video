@@ -237,6 +237,7 @@
     <string name="unlock_instructions">اضغط مطولا لفتح الشاشة</string>
     <string name="seek_to_percentage">إنتقل إلى</string>
     <!-- Subtitles/Audio languages -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">البرازيلية</string>
     <string name="s_chinese">الصينية</string>
     <string name="s_none">لا شيء</string>

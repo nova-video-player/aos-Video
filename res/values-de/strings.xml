@@ -327,6 +327,7 @@
     <string name="seek_to_percentage">Vorwärtssuche bis %s%%</string>
     <string name="set_audio_speed_to">\"Audio-Geschwindigkeit %s</string>
     <!-- Subtitles/Audio languages -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brasilianisch</string>
     <string name="s_chinese">Chinesisch</string>
     <string name="s_traditional_chinese">Traditionelles Chinesisch</string>

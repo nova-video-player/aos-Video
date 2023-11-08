@@ -113,7 +113,7 @@
     <string name="movies_by_year">Filmes por ano</string>
     <string name="all_tv_shows">Séries de TV</string>
     <string name="all_tvshows">Todas as séries de TV</string>
-    <string name="all_animes">Todos os filmes animados</string>
+    <string name="all_animes">Todas as animações</string>
     <string name="all_animes_row">Todas animações</string>
     <string name="all_animeshows">Todas as séries de animação</string>
     <string name="animes_by_alpha">Filmes de animação - alfabético</string>
@@ -128,6 +128,7 @@
     <string name="tvshows_by_alpha">Séries de TV alfabeticamente</string>
     <string name="tvshows_by_genre">Séries de TV por gênero</string>
     <string name="tvshows_by_rating">Séries de TV por avaliação</string>
+    <string name="animation_shows_by_alpha">Filmes de animação - alfabético</string>
     <string name="episodes_by_date">Episódios por data</string>
     <string name="date_view_week">Semana</string>
     <string name="date_view_month">Mês</string>
@@ -327,9 +328,22 @@
     <string name="seek_to_percentage">\"Procurando para %s%%</string>
     <string name="set_audio_speed_to">\"Velocidade de áudio %s</string>
     <!-- Subtitles/Audio languages -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Português Brasileiro</string>
     <string name="s_chinese">Chinês</string>
+    <string name="s_chinese_simplified">Chinês Simplificado</string>
     <string name="s_traditional_chinese">Chinês Tradicional</string>
+    <string name="s_spanish_la">Espanhol (latin american)</string>
+    <string name="s_extremaduran">Estremenha</string>
+    <string name="s_montenegrin">Montenegrino</string>
+    <string name="s_manipuri">Manipuri</string>
+    <string name="s_dari">Dari</string>
+    <string name="s_portuguese_mz">Portugues Mozambique</string>
+    <string name="s_spanish_eu">Espanhol Europeu</string>
+    <string name="s_santali">Santali</string>
+    <string name="s_syriac">Sírio</string>
+    <string name="s_toki_pona">Toki Pona</string>
+    <string name="s_chinese_bilingual">Chinês bilingual</string>
     <string name="s_none">Nenhum</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Não é possível reproduzir vídeo</string>
@@ -396,6 +410,7 @@
     <string name="dialog_subloader_nonetwork_title">Sem conexão com a Internet</string>
     <string name="dialog_subloader_nonetwork_message">Uma conexão com a internet é necessária para baixar legendas</string>
     <string name="dialog_subloader_connecting">Conectando-se a www.opensubtitle.org…</string>
+    <string name="opensubtitles_quota_download_remaining">OpenSubtitles cota de download: %d/%d restante</string>
     <string name="dialog_subloader_credentials">Credenciais do Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">Você deve especificar um nome de usuário e senha válidos!</string>
     <string name="toast_subloader_credentials_empty">Forneça suas credenciais do opensubtitles nas configurações para poder baixar legendas</string>

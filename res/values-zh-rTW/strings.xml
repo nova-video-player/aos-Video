@@ -127,6 +127,7 @@
     <string name="tvshows_by_alpha">電視劇：按名稱排列</string>
     <string name="tvshows_by_genre">電視劇：按分類排列</string>
     <string name="tvshows_by_rating">電視劇：按評分排列</string>
+    <string name="animation_shows_by_alpha">卡通：按名稱排列</string>
     <string name="episodes_by_date">依日期排序劇集</string>
     <string name="date_view_week">週</string>
     <string name="date_view_month">月</string>
@@ -322,6 +323,7 @@
     <string name="seek_to_percentage">快轉至 %s%%</string>
     <string name="set_audio_speed_to">\"音訊速度 %s</string>
     <!-- Subtitles/Audio languages -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">巴西文</string>
     <string name="s_chinese">中文</string>
     <string name="s_traditional_chinese">繁體中文</string>

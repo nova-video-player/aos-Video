@@ -337,6 +337,7 @@
     <string name="seek_to_percentage">\"Vyhľadávam %%</string>
     <string name="set_audio_speed_to">\"Rýchlosť zvuku %s</string>
     <!-- Subtitles/Audio languages -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brazílčina</string>
     <string name="s_chinese">Čínština</string>
     <string name="s_traditional_chinese">Tradičná čínština</string>

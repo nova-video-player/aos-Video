@@ -83,6 +83,7 @@
     <string name="menu_brightness_settings">밝기</string>
     <string name="menu_player_settings">설정</string>
     <!-- Subtitles/Audio languages -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">비디오를 재생할 수 없습니다.</string>
     <string name="player_err_file">비디오 파일이 존재하지 않습니다.</string>

@@ -127,6 +127,7 @@
     <string name="tvshows_by_alpha">电视节目：按名称字母排序</string>
     <string name="tvshows_by_genre">电视节目：按分类排序</string>
     <string name="tvshows_by_rating">电视节目：按评分排序</string>
+    <string name="animation_shows_by_alpha">按字母顺序显示动画电影</string>
     <string name="episodes_by_date">剧集：按日期排序</string>
     <string name="date_view_week">周</string>
     <string name="date_view_month">月</string>
@@ -322,9 +323,22 @@
     <string name="seek_to_percentage">\"跳转至 %s%%</string>
     <string name="set_audio_speed_to">\" 音频速度 %s</string>
     <!-- Subtitles/Audio languages -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">巴西语</string>
     <string name="s_chinese">中文</string>
+    <string name="s_chinese_simplified">简体中文</string>
     <string name="s_traditional_chinese">繁体中文</string>
+    <string name="s_spanish_la">西班牙语 (LA)</string>
+    <string name="s_extremaduran">埃斯特雷马杜拉语</string>
+    <string name="s_montenegrin">黑山语</string>
+    <string name="s_manipuri">曼尼普尔语</string>
+    <string name="s_dari">达里语</string>
+    <string name="s_portuguese_mz">葡萄牙语 (MZ)</string>
+    <string name="s_spanish_eu">西班牙语(EU)</string>
+    <string name="s_santali">桑塔利语</string>
+    <string name="s_syriac">叙利亚语</string>
+    <string name="s_toki_pona">道本语</string>
+    <string name="s_chinese_bilingual">中英双语</string>
     <string name="s_none">无</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">无法播放视频</string>
@@ -391,6 +405,7 @@
     <string name="dialog_subloader_nonetwork_title">没有网络连接</string>
     <string name="dialog_subloader_nonetwork_message">下载字幕需要互联网连接</string>
     <string name="dialog_subloader_connecting">正在连接到 www.opensubtitles.org…</string>
+    <string name="opensubtitles_quota_download_remaining">OpenSubtitles下载配额: %d/%d剩余</string>
     <string name="dialog_subloader_credentials">Opensubtitles 用户凭据</string>
     <string name="dialog_subloader_credentials_empty">你必须指定一个有效的用户名和密码！</string>
     <string name="toast_subloader_credentials_empty">在设置中提供你的 opensubtitles 用户凭据以下载字幕</string>

@@ -123,6 +123,7 @@
     <string name="menu_player_settings">அமைப்புகள்</string>
     <string name="menu_change_folder">கோப்புறையை மாற்று</string>
     <!-- Subtitles/Audio languages -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <!-- Player errors -->
     <!-- Player plug-in -->
     <!-- Subtitles wizard -->

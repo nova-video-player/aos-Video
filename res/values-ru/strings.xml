@@ -130,6 +130,7 @@
     <string name="tvshows_by_alpha">Сериалы по алфавиту</string>
     <string name="tvshows_by_genre">Сериалы по жанру</string>
     <string name="tvshows_by_rating">Сериалы по рейтингу</string>
+    <string name="animation_shows_by_alpha">Мультсериалы по алфавитному порядку</string>
     <string name="episodes_by_date">Серии по дате</string>
     <string name="date_view_week">Неделя</string>
     <string name="date_view_month">Месяц</string>
@@ -337,9 +338,22 @@
     <string name="seek_to_percentage">Поиск %s%%</string>
     <string name="set_audio_speed_to">\"Скорость аудио %s</string>
     <!-- Subtitles/Audio languages -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Бразильский</string>
     <string name="s_chinese">Китайский</string>
+    <string name="s_chinese_simplified">Упрощенный китайский</string>
     <string name="s_traditional_chinese">Китайский традиционный</string>
+    <string name="s_spanish_la">Испанский (LA)</string>
+    <string name="s_extremaduran">Эстремадурский</string>
+    <string name="s_montenegrin">Черногорский</string>
+    <string name="s_manipuri">Манипурский</string>
+    <string name="s_dari">Дари</string>
+    <string name="s_portuguese_mz">Португальский (MZ)</string>
+    <string name="s_spanish_eu">Испанский (ЕС)</string>
+    <string name="s_santali">Сантали</string>
+    <string name="s_syriac">Сирийский</string>
+    <string name="s_toki_pona">Токи Пона</string>
+    <string name="s_chinese_bilingual">Китайский двуязычный</string>
     <string name="s_none">Нет</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Воспроизведение видео невозможно</string>
@@ -406,6 +420,7 @@
     <string name="dialog_subloader_nonetwork_title">Нет подключения к Интернету</string>
     <string name="dialog_subloader_nonetwork_message">Для загрузки субтитров требуется подключение к Интернету</string>
     <string name="dialog_subloader_connecting">Подключение к www.opensubtitles.org…</string>
+    <string name="opensubtitles_quota_download_remaining">Ограничение на скачивание OpenSubtitles: %d/%d осталось</string>
     <string name="dialog_subloader_credentials">Учётные данные Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">Вы должны указать правильное имя пользователя и пароль!</string>
     <string name="toast_subloader_credentials_empty">Предоставьте учетные данные Opensubtitles в настройках, чтобы иметь возможность загружать субтитры</string>
