@@ -332,6 +332,13 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             String subUrl;
             try {
                 subUrl = OpenSubtitlesApiHelper.getDownloadSubtitleLink(searchResults.get(0).getFileId());
+                if (OpenSubtitlesApiHelper.getLastQueryResult() == OpenSubtitlesApiHelper.RESULT_CODE_QUOTA_EXCEEDED) {
+                    log.warn("getSub: quota exceeded, quota resets in " + OpenSubtitlesApiHelper.getTimeRemaining());
+                    displayToast(getString(R.string.toast_subloader_quota_exceeded));
+                    displayToast(getString(R.string.opensubtitles_quota_reset_time_remaining, OpenSubtitlesApiHelper.getTimeRemaining()));
+                    finish();
+                    return;
+                }
                 displayToast(getString(R.string.opensubtitles_quota_download_remaining, OpenSubtitlesApiHelper.getRemainingDownloads(), OpenSubtitlesApiHelper.getAllowedDownloads()));
             } catch (IOException e) {
                 log.error("getSub: caught IOException", e);
