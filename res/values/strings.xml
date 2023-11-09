@@ -456,6 +456,8 @@
     <string name="dialog_subloader_credentials_empty">You must specify a valid username and password!</string>
     <string name="toast_subloader_credentials_empty">Provide your opensubtitles credentials in settings to be able to download more subtitles</string>
     <string name="toast_subloader_login_failed">Incorrect opensubtitles credentials or service not available</string>
+    <string name="toast_subloader_quota_exceeded">OpenSubtitles download quota exceeded</string>
+    <string name="opensubtitles_quota_reset_time_remaining">Quota resets in %s</string>
 
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Subtitle Settings</string>
