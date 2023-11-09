@@ -14,6 +14,9 @@
 
 package com.archos.mediacenter.video.utils;
 
+import android.content.Context;
+import android.text.format.DateUtils;
+
 import com.archos.mediacenter.video.CustomApplication;
 
 import org.json.JSONException;
@@ -26,8 +29,13 @@ import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class OpenSubtitlesApiHelper {
 
@@ -66,6 +74,8 @@ public class OpenSubtitlesApiHelper {
     private static int remainingDownloads = 10;
     private static int allowedTranslations = 5;
     private static int numberDownloads = 0;
+    private static String resetTimeRemaining = "";
+    private static String resetTimeUTC = "";
     private static boolean vip = false;
     private static int userId = 0;
     private static boolean extInstalled = false;
@@ -423,6 +433,8 @@ public class OpenSubtitlesApiHelper {
                             case RESULT_CODE_OK:
                                 remainingDownloads = jsonResponse.optInt("remaining", remainingDownloads);
                                 numberDownloads = jsonResponse.optInt("requests", numberDownloads);
+                                resetTimeRemaining = jsonResponse.optString("reset_time", "");
+                                resetTimeUTC = jsonResponse.optString("reset_time_utc", "");
                                 log.debug("getDownloadSubtitleLink: remaining downloads={}, number of downloads={}", remainingDownloads, numberDownloads);
                                 String subtitleLink = jsonResponse.optString("link", null);
                                 log.debug("getDownloadSubtitleLink: found link {}", subtitleLink);
@@ -450,5 +462,19 @@ public class OpenSubtitlesApiHelper {
         }
         return null;
     }
-    
+
+    public static String getTimeRemaining() {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date resetTime = dateFormat.parse(resetTimeUTC);
+            Date currentTime = new Date();
+            long timeDifference = resetTime.getTime() - currentTime.getTime();
+            String formattedTimeRemaining = DateUtils.formatElapsedTime(timeDifference / 1000);
+            return formattedTimeRemaining;
+        } catch (ParseException e) {
+            log.error("getTimeRemaining: caught ParseException", e);
+            return "";
+        }
+    }
 }
