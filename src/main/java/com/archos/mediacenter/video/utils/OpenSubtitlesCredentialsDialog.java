@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.utils;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -29,15 +30,23 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+
 public class OpenSubtitlesCredentialsDialog extends DialogFragment {
+
+    private static final Logger log = LoggerFactory.getLogger(OpenSubtitlesCredentialsDialog.class);
 
     final public static String OPENSUBTITLES_USERNAME = "OPENSUBTITLES_USERNAME";
     final public static String OPENSUBTITLES_PASSWORD = "OPENSUBTITLES_PASSWORD";
 
-    final public static String USERNAME = "username";
-    final public static String PASSWORD = "password";
+    final private static String USERNAME = "username";
+    final private static String PASSWORD = "password";
 
     private AlertDialog mDialog;
     private SharedPreferences mPreferences;
@@ -85,13 +94,9 @@ public class OpenSubtitlesCredentialsDialog extends DialogFragment {
                     if (!usernameEt.getText().toString().isEmpty()) {
                         final String username = usernameEt.getText().toString();
                         final String password = passwordEt.getText().toString();
-                        // Store new values to preferences
-                        mPreferences.edit()
-                                .putString(OPENSUBTITLES_USERNAME, username)
-                                .apply();
-                        mPreferences.edit()
-                                .putString(OPENSUBTITLES_PASSWORD, password)
-                                .apply();
+                        if (CustomApplication.useOpenSubtitlesRestApi())
+                            new ValidateCredentialsTask(getActivity().getString(R.string.opensubtitles_api_key), username, password).execute();
+                        else storeCredentials(username, password);
                     }
                     if (usernameEt.getText().toString().isEmpty() || passwordEt.getText().toString().isEmpty())
                         Toast.makeText(getActivity(), getString(R.string.dialog_subloader_credentials_empty), Toast.LENGTH_SHORT).show();
@@ -99,4 +104,45 @@ public class OpenSubtitlesCredentialsDialog extends DialogFragment {
         mDialog = builder.create();
         return mDialog;
     }
+
+    private void storeCredentials(String username, String password) {
+        mPreferences.edit().putString(OPENSUBTITLES_USERNAME, username).apply();
+        mPreferences.edit().putString(OPENSUBTITLES_PASSWORD, password).apply();
+    }
+
+    private class ValidateCredentialsTask extends AsyncTask<Void, Void, Boolean> {
+        private final String apiKey;
+        private final String username;
+        private final String password;
+
+        ValidateCredentialsTask(String apiKey, String username, String password) {
+            this.apiKey = apiKey;
+            this.username = username;
+            this.password = password;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            try {
+                return OpenSubtitlesApiHelper.login(apiKey, username, password);
+            } catch (IOException e) {
+                log.error("ValidateCredentialsTask: caught IOException");
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean credentialsValid) {
+            if (credentialsValid) {
+                // Store new values to preferences
+                storeCredentials(username, password);
+            } else {
+                // Clear preferences
+                storeCredentials("", "");
+                if (credentialsValid) Toast.makeText(CustomApplication.getAppContext(), R.string.toast_subloader_login_failed, Toast.LENGTH_SHORT).show();
+                else Toast.makeText(CustomApplication.getAppContext(), R.string.toast_subloader_login_failed, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 }
