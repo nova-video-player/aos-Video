@@ -302,10 +302,16 @@ public class OpenSubtitlesApiHelper {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + "subtitles").newBuilder();
         urlBuilder.addQueryParameter("languages", languages);
         urlBuilder.addQueryParameter("order_by", "from_trusted,ratings,download_count");
-        if (fileInfo.getTmdbId() != null) urlBuilder.addQueryParameter("tmdb_id", fileInfo.getTmdbId());
-        else if (fileInfo.getImdbId() != null) urlBuilder.addQueryParameter("imdb_id", fileInfo.getImdbId());
+        if (fileInfo.getTmdbId() != null) {
+            urlBuilder.addQueryParameter("tmdb_id", fileInfo.getTmdbId());
+        } else {
+            if (fileInfo.getImdbId() != null)
+                urlBuilder.addQueryParameter("imdb_id", fileInfo.getImdbId());
+            else {
+                if (fileInfo.getFileName() != null) urlBuilder.addQueryParameter("query", fileInfo.getFileName());
+            }
+        }
         if (fileInfo.getFileHash() != null) urlBuilder.addQueryParameter("moviehash", fileInfo.getFileHash());
-        if (fileInfo.getFileName() != null) urlBuilder.addQueryParameter("query", fileInfo.getFileName());
         if (fileInfo.isShow()) {
             if (fileInfo.getSeasonNumber() != null) urlBuilder.addQueryParameter("season_number", fileInfo.getSeasonNumber().toString());
             if (fileInfo.getEpisodeNumber() != null) urlBuilder.addQueryParameter("episode_number", fileInfo.getEpisodeNumber().toString());
