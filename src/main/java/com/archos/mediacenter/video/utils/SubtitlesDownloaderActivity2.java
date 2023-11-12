@@ -166,6 +166,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             mOpenSubtitlesTask.cancel(false);
             mOpenSubtitlesTask = null;
         }
+        logOut();
         finish();
         super.onStop();
     }
@@ -226,9 +227,6 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 mDoNotFinish = true;
                 mDialog.dismiss();
             }
-            // TODO MARC this ends the dialog before selecting
-            // Exit the activity if processing is done/aborted and the SumUp dialog is not visible
-            //if (stop) finish();
         }
 
         /**************************************************
@@ -265,17 +263,6 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 return false;
             }
             return true;
-        }
-
-        @SuppressWarnings("unchecked")
-        public void logOut() {
-            try {
-                OpenSubtitlesApiHelper.logout();
-            } catch (IOException e1) {
-                log.error("logOut: caught IOException", e1);
-            } catch (Throwable e){ //for various service outages
-                log.error("logOut: caught Exception", e);
-            }
         }
 
         /**
@@ -600,6 +587,17 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             mHandler.post(() -> Toast.makeText(SubtitlesDownloaderActivity2.this, message, Toast.LENGTH_SHORT).show());
         }
 
+    }
+
+    @SuppressWarnings("unchecked")
+    public void logOut() {
+        try {
+            OpenSubtitlesApiHelper.logout();
+        } catch (IOException e1) {
+            log.error("logOut: caught IOException", e1);
+        } catch (Throwable e){ //for various service outages
+            log.error("logOut: caught Exception", e);
+        }
     }
 
     private void stop(){
