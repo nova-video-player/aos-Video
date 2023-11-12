@@ -334,6 +334,7 @@
     <string name="s_portuguese_mz">Tiếng Bồ Đào Nha (MZ)</string>
     <string name="s_spanish_eu">Tiếng Tây Ban Nha (EU)</string>
     <string name="s_syriac">Tiếng Syriac</string>
+    <string name="s_chinese_bilingual">Song ngữ tiếng Trung</string>
     <string name="s_none">Không có</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Không thể phát video</string>
@@ -355,6 +356,8 @@
     <string name="player_err_profile_and_level">\"Hồ sơ\" và \"Cấp độ\"</string>
     <string name="player_err_interlaced">Quét xen kẽ</string>
     <!-- Player plug-in -->
+    <string name="player_plugin_video_msg">Tệp này chứa định dạng video <xliff:g id="video">%1$s</xliff:g>.</string>
+    <string name="player_plugin_audio_msg">Tệp này chứa định dạng âm thanh <xliff:g id="audio">%1$s</xliff:g>.</string>
     <string name="player_plugin_purchase_msg">Bạn cần mua các <xliff:g id="plugin">%1$s</xliff:g></string>
     <string name="player_plugin_purchase">Đi đến cửa hàng</string>
     <string name="player_plugin_purchase_archos_msg">Bạn có thể mua thêm các plug-in codec trên www.archos.com.</string>
@@ -554,6 +557,7 @@
     <string name="video_info_backdrop_select">Chọn ảnh khác</string>
     <string name="video_info_backdrop_remove">Loại bỏ</string>
     <string name="video_info_backdrop_set_as">Đặt ảnh làm</string>
+    <string name="video_info_share_message">"Tôi đang xem video \"%1$s\" trên Nova %2$s của mình"</string>
     <string name="notification_mode">Thông báo</string>
     <string name="notifications_all">Tất cả thông báo</string>
     <string name="notifications_alerts">Chỉ cảnh báo thông báo</string>
@@ -695,6 +699,7 @@
     <string name="codepage_1254">Tiếng Thổ Nhĩ Kỳ (CP1254)</string>
     <string name="codepage_1255">Tiếng Do Thái (CP1255)</string>
     <string name="codepage_1256">Tiếng Ả-rập (CP1256)</string>
+    <string name="codepage_1257">Vùng Baltic (CP1257)</string>
     <string name="codepage_1258">Tiếng Việt (CP1258)</string>
     <string name="codepage_extra_932">(Shift-JIS, EUC-JP)</string>
     <string name="codepage_extra_936">(CP936, GB231)</string>

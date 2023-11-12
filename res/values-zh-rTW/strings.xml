@@ -326,7 +326,19 @@
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">巴西文</string>
     <string name="s_chinese">中文</string>
+    <string name="s_chinese_simplified">簡體中文</string>
     <string name="s_traditional_chinese">繁體中文</string>
+    <string name="s_spanish_la">西班牙文 (LA)</string>
+    <string name="s_extremaduran">埃斯特雷馬杜拉文</string>
+    <string name="s_montenegrin">蒙特內哥羅文</string>
+    <string name="s_manipuri">曼尼普爾文</string>
+    <string name="s_dari">達利文</string>
+    <string name="s_portuguese_mz">葡萄牙文 (MZ)</string>
+    <string name="s_spanish_eu">西班牙文 (EU)</string>
+    <string name="s_santali">桑塔利文</string>
+    <string name="s_syriac">敘利亞文</string>
+    <string name="s_toki_pona">道本文</string>
+    <string name="s_chinese_bilingual">中文雙語</string>
     <string name="s_none">無</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">無法播放影片</string>
@@ -393,6 +405,7 @@
     <string name="dialog_subloader_nonetwork_title">沒有網際網路連線</string>
     <string name="dialog_subloader_nonetwork_message">必須有網路連線才能下載字幕</string>
     <string name="dialog_subloader_connecting">正在連結至 www.opensubtitles.org…</string>
+    <string name="opensubtitles_quota_download_remaining">OpenSubtitles 下載剩餘配額: %d/%d</string>
     <string name="dialog_subloader_credentials">Opensubtitles 憑證</string>
     <string name="dialog_subloader_credentials_empty">您必須提供一組有效的使用者名稱及密碼！</string>
     <string name="toast_subloader_credentials_empty">請在設定選項中提供您的 opensubtitles 憑證以下載字幕</string>

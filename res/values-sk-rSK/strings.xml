@@ -130,6 +130,7 @@
     <string name="tvshows_by_alpha">Seriály podľa abecedy</string>
     <string name="tvshows_by_genre">Seriály podľa žánru</string>
     <string name="tvshows_by_rating">Seriály podľa hodnotenia</string>
+    <string name="animation_shows_by_alpha">Animované zobrazovať v abecednom poradí</string>
     <string name="episodes_by_date">Epizódy podľa dátumu</string>
     <string name="date_view_week">Týždeň</string>
     <string name="date_view_month">Mesiac</string>
@@ -340,7 +341,19 @@
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brazílčina</string>
     <string name="s_chinese">Čínština</string>
+    <string name="s_chinese_simplified">Zjednodušená čínština</string>
     <string name="s_traditional_chinese">Tradičná čínština</string>
+    <string name="s_spanish_la">Španielčina (LA)</string>
+    <string name="s_extremaduran">Extremaduran</string>
+    <string name="s_montenegrin">Čiernohorčina</string>
+    <string name="s_manipuri">Manipuri</string>
+    <string name="s_dari">Dari</string>
+    <string name="s_portuguese_mz">Portugalčina (MZ)</string>
+    <string name="s_spanish_eu">Španielčina (EÚ)</string>
+    <string name="s_santali">Santali</string>
+    <string name="s_syriac">Sýrčina</string>
+    <string name="s_toki_pona">Toki Pona</string>
+    <string name="s_chinese_bilingual">Dvojjazyčná čínština</string>
     <string name="s_none">Žiadny</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Nie je možné prehrať video</string>
@@ -407,6 +420,7 @@
     <string name="dialog_subloader_nonetwork_title">Žiadne internetové pripojenie</string>
     <string name="dialog_subloader_nonetwork_message">Na stiahnutie titulkov je potrebné internetové pripojenie</string>
     <string name="dialog_subloader_connecting">Pripojenie na www.opensubtitles.org...</string>
+    <string name="opensubtitles_quota_download_remaining">Kvóta na stiahnutie z OpenSubtitles: Zostávajúce %d/%d</string>
     <string name="dialog_subloader_credentials">Prihlasovacie údaje k titulkom Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">Musíte zadať platné meno používateľa a heslo!</string>
     <string name="toast_subloader_credentials_empty">Zadajte svoje poverenia Opensubtitles v nastaveniach, aby ste mohli sťahovať titulky</string>

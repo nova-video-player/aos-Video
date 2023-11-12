@@ -331,7 +331,19 @@
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brasileño</string>
     <string name="s_chinese">Chino</string>
+    <string name="s_chinese_simplified">Chino simplificado</string>
     <string name="s_traditional_chinese">Chino tradicional</string>
+    <string name="s_spanish_la">Español (LA)</string>
+    <string name="s_extremaduran">Extremeño</string>
+    <string name="s_montenegrin">Montenegrino</string>
+    <string name="s_manipuri">Manipurí</string>
+    <string name="s_dari">Darí</string>
+    <string name="s_portuguese_mz">Portugués (MZ)</string>
+    <string name="s_spanish_eu">Español (UE)</string>
+    <string name="s_santali">Santalí</string>
+    <string name="s_syriac">Asirio</string>
+    <string name="s_toki_pona">Toki Pona</string>
+    <string name="s_chinese_bilingual">Chino bilingual</string>
     <string name="s_none">Ninguno</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">No se puede reproducir el vídeo</string>
@@ -398,6 +410,7 @@
     <string name="dialog_subloader_nonetwork_title">Sin conexión a Internet</string>
     <string name="dialog_subloader_nonetwork_message">Hace falta una conexión a Internet para descargar subtítulos</string>
     <string name="dialog_subloader_connecting">Conectando a www.opensubtitles.org…</string>
+    <string name="opensubtitles_quota_download_remaining">Cuota de descarga de OpenSubtitles: %d/%d restante</string>
     <string name="dialog_subloader_credentials">Credenciales de Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">¡Debe introducir un nombre de usuario y contraseña válidos!</string>
     <string name="toast_subloader_credentials_empty">Proporcione sus credenciales de opensubtitles en la configuración para poder descargar subtítulos</string>
