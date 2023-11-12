@@ -5,7 +5,7 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.2'
+        classpath 'com.android.tools.build:gradle:8.1.3'
         //classpath 'app.brant:amazonappstorepublisher:0.1.0'
         //classpath 'com.github.BrantApps.gradle-amazon-app-store-publisher:amazonappstorepublisher:master-SNAPSHOT'
     }
@@ -219,9 +219,6 @@ android {
             dimension "amazon"
         }
     }
-    aaptOptions {
-        additionalParameters "--no-version-vectors"
-    }
     buildTypes {
         println("buildTypes archivesBaseName : " + archivesBaseName)
         release {
@@ -274,6 +271,9 @@ android {
         abortOnError false
         checkReleaseBuilds false
         disable 'MissingTranslation'
+    }
+    androidResources {
+        additionalParameters '--no-version-vectors'
     }
 
     applicationVariants.configureEach { variant ->
