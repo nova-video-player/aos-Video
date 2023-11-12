@@ -1,4 +1,4 @@
-Nova 是一个专为平板、手机和安卓电视设计的开源视频播放器。 https://github.com/nova-video-player/aos-AVP
+NOVA 是一个专为平板、手机和安卓电视设计的开源视频播放器。 https://github.com/nova-video-player/aos-AVP
 
 全功能播放器：
 - 从您的电脑、服务器(FTP、SFTP、WebDAV)、NAS(SMB、UPnP)上播放视频
