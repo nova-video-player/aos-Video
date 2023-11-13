@@ -72,7 +72,7 @@ public class MultipleSelectionManager implements ActionMode.Callback {
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         menu.add(0, R.string.delete, 0,R.string.delete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         menu.add(0,R.string.copy_on_device_multi, 0,R.string.copy_on_device_multi).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        if (hasOpenSubtitlesQuota()) menu.add(0, R.string.menu_subloader_allfolder, Menu.NONE, R.string.menu_subloader_allfolder).setIcon(R.drawable.ic_menu_subtitles).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        if (! hasOpenSubtitlesQuota()) menu.add(0, R.string.menu_subloader_allfolder, Menu.NONE, R.string.menu_subloader_allfolder).setIcon(R.drawable.ic_menu_subtitles).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         menu.add(0, R.string.video_browser_unindex_file, 0, R.string.video_browser_unindex_file).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         menu.add(0, R.string.video_browser_index_file, 0, R.string.video_browser_index_file).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         menu.add(0, R.string.mark_as_watched, 0, R.string.mark_as_watched).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
@@ -158,7 +158,7 @@ public class MultipleSelectionManager implements ActionMode.Callback {
         menu.findItem(R.string.video_browser_unindex_file).setVisible(areAllIndexed&&mArchosGridView.getCheckedItemCount() > 0);
         menu.findItem(R.string.video_browser_index_file).setVisible(!areAllIndexed && areFiles && areNotLocal);
         menu.findItem(R.string.copy_on_device_multi).setVisible(areNotLocal);
-        menu.findItem(R.string.menu_subloader_allfolder).setVisible(areFiles);
+        if (! hasOpenSubtitlesQuota()) menu.findItem(R.string.menu_subloader_allfolder).setVisible(areFiles);
         menu.findItem(R.string.mark_as_not_watched).setVisible(markAsUnWatched);
         menu.findItem(R.string.mark_as_watched).setVisible(markAsWatched);
         return true;
