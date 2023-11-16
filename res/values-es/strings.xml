@@ -326,7 +326,7 @@
     <string name="menu_change_folder_details">Seleccione la carpeta desde la que iniciar</string>
     <string name="unlock_instructions">Pulsación larga en el icono para desbloquear</string>
     <string name="seek_to_percentage">\"Buscando a %s%%</string>
-    <string name="set_audio_speed_to">\"Velocidad de audio %s</string>
+    <string name="set_audio_speed_to">Velocidad de audio %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brasileño</string>
@@ -415,6 +415,8 @@
     <string name="dialog_subloader_credentials_empty">¡Debe introducir un nombre de usuario y contraseña válidos!</string>
     <string name="toast_subloader_credentials_empty">Proporcione sus credenciales de opensubtitles en la configuración para poder descargar subtítulos</string>
     <string name="toast_subloader_login_failed">Credenciales incorrectas de opensubtitles o servicio no disponible</string>
+    <string name="toast_subloader_quota_exceeded">Se ha excedido la cuota de descarga de OpenSubtitles</string>
+    <string name="opensubtitles_quota_reset_time_remaining">La cuota se reinicia en %s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Ajustes de subtítulos</string>
     <string name="subtitle_sample_text">\"muestra\"</string>
@@ -536,6 +538,8 @@
     <string name="category_languages">Subtítulos</string>
     <string name="subtitles_hide_default">Ocultar subtítulos por defecto</string>
     <string name="subtitles_hide_default_summary">Marcar si desea ocultar los subtítulos por defecto</string>
+    <string name="subtitles_use_rest_api">Usar la nueva API de OpenSubtitles</string>
+    <string name="subtitles_use_rest_api_summary">Usar la nueva REST-API en lugar de XML-RPC con cuotas que se aplicarán a principios de 2024</string>
     <string name="subtitles_credentials_title">Credenciales de Opensubtitles</string>
     <string name="subtitles_credentials_summary">Proporcione sus credenciales de opensubtitles para poder descargar subtítulos</string>
     <string name="preferences_languages">Idiomas de descarga de subtítulos</string>

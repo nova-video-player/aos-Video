@@ -303,8 +303,8 @@
     <string name="menu_change_folder">Αλλαγή φακέλου</string>
     <string name="menu_change_folder_details">Επιλέξτε το φάκελο εκκίνησης</string>
     <string name="unlock_instructions">Πατήστε παρατεταμένα στο εικονίδιο για ξεκλείδωμα</string>
-    <string name="seek_to_percentage">\"Αναζητώντας το %s%%</string>
-    <string name="set_audio_speed_to">\"Ταχύτητα ήχου %s</string>
+    <string name="seek_to_percentage">Αναζητώντας το %s%%</string>
+    <string name="set_audio_speed_to">Ταχύτητα ήχου %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Βραζιλιάνικα</string>
@@ -390,6 +390,8 @@
     <string name="dialog_subloader_credentials_empty">Πρέπει να εισαγάγετε έγκυρο όνομα χρήστη και κωδικό πρόσβασης!</string>
     <string name="toast_subloader_credentials_empty">Παρέχετε τα διαπιστευτήρια opensubtitles σας στις ρυθμίσεις για να μπορείτε να κατεβάσετε υπότιτλους</string>
     <string name="toast_subloader_login_failed">Εσφαλμένα διαπιστευτήρια opensubtitles ή μη διαθέσιμη υπηρεσία</string>
+    <string name="toast_subloader_quota_exceeded">Υπέρβαση του ορίου λήψης OpenSubtitles</string>
+    <string name="opensubtitles_quota_reset_time_remaining">Θα γίνει επαναφορά ορίου σε %s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Ρυθμίσεις υποτίτλων</string>
     <string name="subtitle_sample_text">\"δείγμα\"</string>
@@ -505,6 +507,8 @@
     <string name="category_languages">Υπότιτλοι</string>
     <string name="subtitles_hide_default">Απόκρυψη υποτίτλων από προεπιλογή</string>
     <string name="subtitles_hide_default_summary">Επιλέξτε αν θέλετε να αποκρύψετε τους υπότιτλους από προεπιλογή</string>
+    <string name="subtitles_use_rest_api">Χρησιμοποιήστε το νέο OpenSubtitles API</string>
+    <string name="subtitles_use_rest_api_summary">Χρησιμοποιήστε νέο REST-API αντί για XML-RPC με όρια που θα επιβληθούν από το 2024</string>
     <string name="subtitles_credentials_title">Πιστοποιητικά OpenSubtitles</string>
     <string name="subtitles_credentials_summary">Παρέχετε τα διαπιστευτήρια σας OpenSubtitles για να μπορείτε να κατεβάσετε υπότιτλους</string>
     <string name="preferences_languages">Επιλογή γλώσσας υποτίτλων για κατέβασμα</string>

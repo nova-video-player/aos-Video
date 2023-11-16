@@ -130,6 +130,7 @@
     <string name="tvshows_by_alpha">סדרות לפי א\"ב</string>
     <string name="tvshows_by_genre">סדרות לפי ז\'אנר</string>
     <string name="tvshows_by_rating">סדרות לפי דירוג</string>
+    <string name="animation_shows_by_alpha">סדרות אנימציה לפי א\"ב</string>
     <string name="episodes_by_date">פרקים לפי תאריך</string>
     <string name="date_view_week">שבוע</string>
     <string name="date_view_month">חודש</string>
@@ -335,11 +336,24 @@
     <string name="menu_change_folder_details">בחר תיקייה שממנה יש להתחיל</string>
     <string name="unlock_instructions">לחיצה ארוכה על הסמל כדי לשחרר נעילה</string>
     <string name="seek_to_percentage">סורק ל-%%%s</string>
+    <string name="set_audio_speed_to">מהירות אודיו %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">ברזילאית</string>
     <string name="s_chinese">סינית</string>
+    <string name="s_chinese_simplified">סינית פשוטה</string>
     <string name="s_traditional_chinese">סינית מסורתית</string>
+    <string name="s_spanish_la">ספרדית (LA)</string>
+    <string name="s_extremaduran">אקסטרמדורית</string>
+    <string name="s_montenegrin">מונטנגרית</string>
+    <string name="s_manipuri">מניפורי</string>
+    <string name="s_dari">דארי</string>
+    <string name="s_portuguese_mz">פורטוגזית (MZ)</string>
+    <string name="s_spanish_eu">ספרדית (EU)</string>
+    <string name="s_santali">סנטלית</string>
+    <string name="s_syriac">סורית</string>
+    <string name="s_toki_pona">טוקי פונה</string>
+    <string name="s_chinese_bilingual">סינית דו לשונית</string>
     <string name="s_none">ללא</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">לא ניתן להפעיל וידאו</string>
@@ -408,10 +422,13 @@
     <string name="dialog_subloader_nonetwork_title">אין חיבור אינטרנט</string>
     <string name="dialog_subloader_nonetwork_message">חיבור אינטרנט נדרש ע\"מ להוריד כתוביות</string>
     <string name="dialog_subloader_connecting">מתחבר אל www.opensubtitles.org…</string>
+    <string name="opensubtitles_quota_download_remaining">מכסת הורדה של OpenSubtitles: נותר %d/%d</string>
     <string name="dialog_subloader_credentials">פרטי משתמש Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">עליך לציין שם משתמש וסיסמה תקפים!</string>
     <string name="toast_subloader_credentials_empty">הזן את פרטי משתמש ה-opensubtitles שלך בהגדרות, על מנת שתוכל להוריד כתוביות</string>
     <string name="toast_subloader_login_failed">פרטי משתמש opensubtitles לא נכונים, או שהשרות לא זמין</string>
+    <string name="toast_subloader_quota_exceeded">חריגה ממכסת ההורדה של OpenSubtitles</string>
+    <string name="opensubtitles_quota_reset_time_remaining">מכסה מתאפסת תוך %s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">הגדרות כתוביות</string>
     <string name="subtitle_sample_text">\"דוגמא\"</string>
@@ -467,6 +484,9 @@
     <string name="add_to_indexed_folders">הוסף לקטלוג התיקיות</string>
     <string name="add_to_library">הוסף לספרייה</string>
     <string name="add_all_items_to_library">להוסיף מייד את כל קבצי הוידאו לסיפרייה?</string>
+    <string name="invalid_host">מבנה לא תקין של כתובת שרת</string>
+    <string name="invalid_port">מבנה לא תקין של ערוץ</string>
+    <string name="invalid_path">מבנה לא תקין של נתיב</string>
     <string name="shortcut_folder_added">תיקייה %s נוספה כקיצור דרך</string>
     <string name="indexed_folder_added">התיקייה %s התווספה לקטלוג התיקיות</string>
     <string name="remove_from_indexed_folders">הסר מקטלוג התיקיות</string>
@@ -530,6 +550,8 @@
     <string name="category_languages">כתוביות</string>
     <string name="subtitles_hide_default">הסתר כתוביות כברירת מחדל</string>
     <string name="subtitles_hide_default_summary">סמן אם להסתיר כתוביות כברירת מחדל</string>
+    <string name="subtitles_use_rest_api">השתמש בממשק OpenSubtitles חדש</string>
+    <string name="subtitles_use_rest_api_summary">השתמש בממשק REST במקום XML-RPC עם מכסות שייאכפו בתחילת 2024</string>
     <string name="subtitles_credentials_title">פרטי משתמש OpenSubtitles</string>
     <string name="subtitles_credentials_summary">הזן את פרטי משתמש ה-opensubtitles שלך על מנת שתוכל להוריד כתוביות</string>
     <string name="preferences_languages">הורדת שפות כתוביות</string>
@@ -602,10 +624,20 @@
     <string name="network_bookmarks_summary">שמור ובדוק נקודות המשך וסימניות מיקום ברשת אם מתאפשר</string>
     <string name="share_folders_smbj">השתמש בישום SMB מהיר יותר (+SMB2)</string>
     <string name="share_folders_smbj_summary">מאפשר תפוקת SMB מהירה יותר אבל מגביל את התמיכה לפרוטוקול מעל גרסה 2.</string>
+    <string name="share_folders_sshj">השתמש בישום SFTP חדש יותר</string>
+    <string name="share_folders_sshj_summary">אפשר ישום SFTP חדש יותר עבור קישורי SFTP</string>
     <string name="share_folders_smbv2">אפשר תמיכה ב-SMBv2</string>
     <string name="share_folders_smbv2_summary">אפשר תמיכה בפרוטוקול שיתוף רשת SMB גרסה 2.</string>
     <string name="share_folders_smb_resolv">סדר חיפוש SMB</string>
     <string name="share_folders_smb_resolv_summary">אפשר BCAST, DNS (ברירת מחדל DNS, BCAST). שנה זאת אם יש כשלונות בגישה לשרת או שחיבור SMB איטי.</string>
+    <string name="share_folders_smb_disable_tcp_discovery">השבת גילוי SMB דרך TCP</string>
+    <string name="share_folders_smb_disable_tcp_discovery_summary">השבת גילוי דרך TCP במקרה של Wi-Fi לא יציב במכשירים מסוימים.</string>
+    <string name="share_folders_smb_disable_udp_discovery">השבת גילוי SMB דרך UDP</string>
+    <string name="share_folders_smb_disable_udp_discovery_summary">השבת גילוי דרך UDP במקרה של Wi-Fi לא יציב במכשירים מסוימים (למשל Fire 10 HD).</string>
+    <string name="share_folders_smb_disable_mdns_discovery">השבת גילוי SMB דרך mDNS</string>
+    <string name="share_folders_smb_disable_mdns_discovery_summary">השבת גילוי דרך mDNS במקרה של Wi-Fi לא יציב במכשירים מסוימים.</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn">הגבל גילוי SMB ל-mDNS</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">השבת גילוי דרך UDP/TCP במקרה של Wi-Fi לא יציב במכשירים מסוימים (למשל Fire 10 HD). ⚠ ימנע גילוי תקין ב-ChromeOS.</string>
     <string name="connection_abnormally_long">ההתחברות נמשכת זמן רב מאד. האם תרצה לאתחל את התהליך?</string>
     <string name="connection_reset">איפוס</string>
     <!-- Info dialog, not indexed file -->

@@ -325,8 +325,8 @@
     <string name="menu_change_folder">Alterar pasta</string>
     <string name="menu_change_folder_details">Escolha a pasta para começar</string>
     <string name="unlock_instructions">Toque longo no ícone para desbloquear</string>
-    <string name="seek_to_percentage">\"Procurando para %s%%</string>
-    <string name="set_audio_speed_to">\"Velocidade de áudio %s</string>
+    <string name="seek_to_percentage">Procurando para %s%%</string>
+    <string name="set_audio_speed_to">Velocidade de áudio %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Português Brasileiro</string>
@@ -415,6 +415,8 @@
     <string name="dialog_subloader_credentials_empty">Você deve especificar um nome de usuário e senha válidos!</string>
     <string name="toast_subloader_credentials_empty">Forneça suas credenciais do opensubtitles nas configurações para poder baixar legendas</string>
     <string name="toast_subloader_login_failed">Credênciais do opensubtitles são invalidas ou o serviço não está disponível</string>
+    <string name="toast_subloader_quota_exceeded">Cota de Downloads do OpenSubtitles excedida</string>
+    <string name="opensubtitles_quota_reset_time_remaining">Cota reseta em %s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Configurações de legenda</string>
     <string name="subtitle_sample_text">\"exemplo\"</string>
@@ -536,6 +538,8 @@
     <string name="category_languages">Legendas</string>
     <string name="subtitles_hide_default">Ocultar legendas por padrão</string>
     <string name="subtitles_hide_default_summary">Marque se você deseja ocultar legendas por padrão</string>
+    <string name="subtitles_use_rest_api">Use a nova API do OpenSubtitles</string>
+    <string name="subtitles_use_rest_api_summary">Use a nova REST-API invés de XML-RPC com cotas que serão reforçadas em 2024</string>
     <string name="subtitles_credentials_title">Credenciais do Opensubtitles</string>
     <string name="subtitles_credentials_summary">Forneça suas credenciais do opensubtitles para poder baixar legendas</string>
     <string name="preferences_languages">Idiomas de download de legendas</string>

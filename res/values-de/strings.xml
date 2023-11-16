@@ -128,6 +128,7 @@
     <string name="tvshows_by_alpha">Serien alphabetisch</string>
     <string name="tvshows_by_genre">Serien nach Genre</string>
     <string name="tvshows_by_rating">TV-Serien nach Bewertung</string>
+    <string name="animation_shows_by_alpha">Animationsserien alphabetisch</string>
     <string name="episodes_by_date">Folgen nach Datum</string>
     <string name="date_view_week">Woche</string>
     <string name="date_view_month">Monat</string>
@@ -330,7 +331,19 @@
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brasilianisch</string>
     <string name="s_chinese">Chinesisch</string>
+    <string name="s_chinese_simplified">Chinesisch, vereinfacht</string>
     <string name="s_traditional_chinese">Traditionelles Chinesisch</string>
+    <string name="s_spanish_la">Spanisch (LA)</string>
+    <string name="s_extremaduran">Extremadurisch</string>
+    <string name="s_montenegrin">Montenegrinisch</string>
+    <string name="s_manipuri">Meithei-Sprache</string>
+    <string name="s_dari">Dari</string>
+    <string name="s_portuguese_mz">Portugiesisch (MZ)</string>
+    <string name="s_spanish_eu">Spanisch (EU)</string>
+    <string name="s_santali">Santali</string>
+    <string name="s_syriac">Syrisch</string>
+    <string name="s_toki_pona">Toki Pona</string>
+    <string name="s_chinese_bilingual">Chinesisch zweisprachig</string>
     <string name="s_none">Kein</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Video kann nicht abgespielt werden</string>
@@ -397,10 +410,13 @@
     <string name="dialog_subloader_nonetwork_title">Keine Internetverbindung</string>
     <string name="dialog_subloader_nonetwork_message">Eine Internetverbindung ist für das Herunterladen von Untertiteln notwendig</string>
     <string name="dialog_subloader_connecting">Verbinde mit www.opensubtitles.org…</string>
+    <string name="opensubtitles_quota_download_remaining">OpenSubtitles Download-Quote: %d/%d verbleibend</string>
     <string name="dialog_subloader_credentials">Opensubtitles.org Anmeldedaten</string>
     <string name="dialog_subloader_credentials_empty">Sie müssen einen gültigen Benutzernamen und Passwort angeben!</string>
     <string name="toast_subloader_credentials_empty">Geben Sie Ihre Zugangsdaten für opensubtitles.org in den Einstellungen an, um Untertitel herunterladen zu können</string>
     <string name="toast_subloader_login_failed">Falsche Anmeldedaten für opensubtitles.org oder Dienst nicht verfügbar</string>
+    <string name="toast_subloader_quota_exceeded">OpenUntertitel Download-Quota überschritten</string>
+    <string name="opensubtitles_quota_reset_time_remaining">Quota Rücksetzung in %s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Untertitel-Einstellungen</string>
     <string name="subtitle_sample_text">\"Beispiel\"</string>
@@ -522,6 +538,8 @@
     <string name="category_languages">Untertitel</string>
     <string name="subtitles_hide_default">Untertitel standardmäßig ausblenden</string>
     <string name="subtitles_hide_default_summary">Überprüfen Sie, ob Sie Untertitel standardmäßig ausblenden möchten</string>
+    <string name="subtitles_use_rest_api">Neue OpenSubtitles-API verwenden</string>
+    <string name="subtitles_use_rest_api_summary">Neue REST-API anstelle von XML-RPC mit Quota verwenden, ab 2024 Pflicht</string>
     <string name="subtitles_credentials_title">Anmeldeinformationen für opensubtitles.org</string>
     <string name="subtitles_credentials_summary">Geben Sie Ihre Zugangsdaten für opensubtitles.org in den Einstellungen an, um Untertitel herunterladen zu können</string>
     <string name="preferences_languages">Untertitel Sprachen</string>

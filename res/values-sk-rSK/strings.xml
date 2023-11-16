@@ -335,8 +335,8 @@
     <string name="menu_change_folder">Zmeniť priečinok</string>
     <string name="menu_change_folder_details">Vyberte priečinok, z ktorého sa má začať</string>
     <string name="unlock_instructions">Dlhým stlačením ikony odomknite</string>
-    <string name="seek_to_percentage">\"Vyhľadávam %%</string>
-    <string name="set_audio_speed_to">\"Rýchlosť zvuku %s</string>
+    <string name="seek_to_percentage">Vyhľadávam %s%%</string>
+    <string name="set_audio_speed_to">Rýchlosť zvuku %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brazílčina</string>
@@ -425,6 +425,8 @@
     <string name="dialog_subloader_credentials_empty">Musíte zadať platné meno používateľa a heslo!</string>
     <string name="toast_subloader_credentials_empty">Zadajte svoje poverenia Opensubtitles v nastaveniach, aby ste mohli sťahovať titulky</string>
     <string name="toast_subloader_login_failed">Nesprávne poverenia Opensubtitles alebo služba nie je k dispozícii</string>
+    <string name="toast_subloader_quota_exceeded">Kvóta na sťahovanie z OpenSubtitles bola prekročená</string>
+    <string name="opensubtitles_quota_reset_time_remaining">Kvóta sa obnoví v %s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Nastavenia titulkov</string>
     <string name="subtitle_sample_text">\"príklad\"</string>
@@ -546,6 +548,8 @@
     <string name="category_languages">Titulky</string>
     <string name="subtitles_hide_default">Skryť predvolené titulky</string>
     <string name="subtitles_hide_default_summary">Označte, či chcete skryť predvolené titulky</string>
+    <string name="subtitles_use_rest_api">Použitie nového rozhrania API OpenSubtitles</string>
+    <string name="subtitles_use_rest_api_summary">Použitie nového REST-API namiesto XML-RPC s kvótami, ktoré sa budú uplatňovať od roku 2024</string>
     <string name="subtitles_credentials_title">Prihlasovacie údaje k službe OpenSubtitles</string>
     <string name="subtitles_credentials_summary">Poskytnite svoje prihlasovacie údaje Opensubtitles, aby ste mohli sťahovať titulky</string>
     <string name="preferences_languages">Jazyky sťahovania titulkov</string>

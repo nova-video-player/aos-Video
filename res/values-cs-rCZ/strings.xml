@@ -309,8 +309,8 @@
     <string name="menu_change_folder">Změnit složku</string>
     <string name="menu_change_folder_details">Vyberte složku, kterou chcete začít</string>
     <string name="unlock_instructions">Dlouze stiskněte ikonu pro odemknutí</string>
-    <string name="seek_to_percentage">\"Vyhledávám %s%%</string>
-    <string name="set_audio_speed_to">\"Rychlost zvuku %s</string>
+    <string name="seek_to_percentage">Vyhledávám %s%%</string>
+    <string name="set_audio_speed_to">Rychlost zvuku %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brazilská portugalština</string>
@@ -396,6 +396,8 @@
     <string name="dialog_subloader_credentials_empty">Musíte zadat platné uživatelské jméno a heslo!</string>
     <string name="toast_subloader_credentials_empty">Zadejte vaše uživatelské jméno a heslo pro OpenSubtitles v nastavení pro možnost stahování titulků</string>
     <string name="toast_subloader_login_failed">Nesprávné uživatelské jméno a heslo k OpenSubtitles nebo služba není dostupná</string>
+    <string name="toast_subloader_quota_exceeded">Kvóta stahování na OpenSubtitles překročena</string>
+    <string name="opensubtitles_quota_reset_time_remaining">Kvóta se resetuje za %s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Nastavení titulků</string>
     <string name="subtitle_sample_text">\"příklad\"</string>
@@ -513,6 +515,8 @@
     <string name="category_languages">Titulky</string>
     <string name="subtitles_hide_default">Ve výchozím stavu skrýt titulky</string>
     <string name="subtitles_hide_default_summary">Zvolte, zda chcete ve výchozím stavu skrýt titulky</string>
+    <string name="subtitles_use_rest_api">Použít nové API OpenSubtitles</string>
+    <string name="subtitles_use_rest_api_summary">Použít nové REST-API namísto XML-RPC s kvótami, které budou povinné od roku 2024</string>
     <string name="subtitles_credentials_title">Přihlašovací údaje k OpenSubtitles</string>
     <string name="subtitles_credentials_summary">Zadejte vaše uživatelské jméno a heslo pro OpenSubtitles pro možnost stahování titulků</string>
     <string name="preferences_languages">Jazyky pro stahované titulky</string>

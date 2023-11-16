@@ -327,7 +327,7 @@
     <string name="menu_change_folder">Keisti aplanka</string>
     <string name="menu_change_folder_details">Pasirinkite pradinį aplanką</string>
     <string name="unlock_instructions">Atrakinimui ilgai palaikykite ant ikonos</string>
-    <string name="seek_to_percentage">\"Pereinama į %s%%</string>
+    <string name="seek_to_percentage">Pereinama į %s%%</string>
     <!-- Subtitles/Audio languages -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brazilų</string>

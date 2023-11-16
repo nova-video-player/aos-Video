@@ -259,7 +259,7 @@
     <string name="you_have_no_movies">Nincsenek filmek</string>
     <string name="you_have_no_animes">Nincs animációs film</string>
     <string name="you_have_no_movie_collections">Nincsenek gyűjtemények</string>
-    <string name="you_have_no_anime_collections">Nem anime gyűjtemény</string>
+    <string name="you_have_no_anime_collections">Nincs anime gyűjtemény</string>
     <string name="you_have_no_tv_shows">Nincsenek sorozatok</string>
     <string name="you_have_no_anime_shows">Nincs animációs sorozat</string>
     <string name="you_have_no_non_scraped_videos">Feldolgozatlan videók kivételével</string>
@@ -325,12 +325,13 @@
     <string name="menu_change_folder">Mappaváltás</string>
     <string name="menu_change_folder_details">Válassza ki az induló mappát</string>
     <string name="unlock_instructions">Nyomja hosszan az ikont a feloldáshoz</string>
-    <string name="seek_to_percentage">\"Keresés alatt %s%%</string>
-    <string name="set_audio_speed_to">\"Hangsebesség %s</string>
+    <string name="seek_to_percentage">Keresés alatt %s%%</string>
+    <string name="set_audio_speed_to">Hangsebesség %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brazil</string>
     <string name="s_chinese">Kínai</string>
+    <string name="s_chinese_simplified">Egyszerűsített kínai</string>
     <string name="s_traditional_chinese">Hagyományos kínai</string>
     <string name="s_none">Egyik sem</string>
     <!-- Player errors -->
@@ -402,6 +403,8 @@
     <string name="dialog_subloader_credentials_empty">Érvényes felhasználónév és jelszó megadása szükséges!</string>
     <string name="toast_subloader_credentials_empty">Adja meg az opensubtitles belépési adatait a beállításokban, feliratok letöltéséhez</string>
     <string name="toast_subloader_login_failed">Helytelen opensubtitles belépési adatok, vagy szolgáltatás kiesés</string>
+    <string name="toast_subloader_quota_exceeded">Túllépte az OpenSubtitles felirat-letöltési kvótát</string>
+    <string name="opensubtitles_quota_reset_time_remaining">Kvóta visszaállítása %s múlva</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Feliratok Beállításai</string>
     <string name="subtitle_sample_text">\"minta\"</string>
@@ -512,6 +515,8 @@
     <string name="category_languages">Feliratok</string>
     <string name="subtitles_hide_default">Feliratok elrejtése alapértelmezetten</string>
     <string name="subtitles_hide_default_summary">Jelőlje be, ha alapértelmezetten szeretné elrejteni a feliratokat</string>
+    <string name="subtitles_use_rest_api">Használja az új OpenSubtitle API-t</string>
+    <string name="subtitles_use_rest_api_summary">Az új REST-API használata az XML-RPC helyett a 2024 elején bevezetendő kvótáknál</string>
     <string name="subtitles_credentials_title">OpenSubtitles bejelentkezési adatok</string>
     <string name="subtitles_credentials_summary">Adja meg az OpenSubtitles bejelentkezési adatait feliratok letöltéséhez</string>
     <string name="preferences_languages">Letöltött feliratok nyelve</string>
@@ -655,6 +660,8 @@
     <string name="preferences_display_resume_box_summary">Megjeleníti vagy elrejti a gombot a legújabb videó lejátszásának folytatásához a főképernyőn</string>
     <string name="preferences_display_resume_box">Folytatás gomb megjelenítése</string>
     <string name="preferences_leanback_user_interface">TV felhasználói felület</string>
+    <string name="preferences_separate_animation_from_movies_summary">Jelölje ki az animációk elkülönítéséhez a filmektől és sorozatoktól, valamint egy animációk sor létrehozásához</string>
+    <string name="preferences_separate_animation_from_movies">Animációk elkülönítése a filmektől és sorozatoktól</string>
     <string name="preferences_show_watching_up_next_row_summary">Egy polc megjelenítése a jelenleg nézett, és a következő videókkal</string>
     <string name="preferences_show_watching_up_next_row">Épp nézett/Következő polc megjelenítése</string>
     <string name="preferences_show_last_added_row_summary">Egy polc megjelenítése az utoljára hozzáadott médiával</string>
@@ -793,6 +800,7 @@
     <string name="rescan_now">Újrafeldolgozás most</string>
     <string name="rescan_now_description">Kézi újrafeldolgozás</string>
     <string name="rescan_select_shares">Parancsikonok kiválasztása</string>
+    <string name="rescan_select_shares_description">Válassza ki az automatikusan újravizsgálandó hálózati parancsikonokat</string>
     <string name="rescan_error_wifi_info_standby">Úgy tűnik, hogy a WiFi készenléti állapotban le van tiltva. Az automatikus újrakeresés sikerességének biztosítása érdekében állítsa be készenléti állapotban is a WiFi engedélyezését.</string>
     <string name="rescan_error_wifi">Hiba: a WiFi ki volt kapcsolva az újrafeldolgozás során</string>
     <string name="rescan_error_wifi_click_for_more_info">kattintson ide a részletekért</string>

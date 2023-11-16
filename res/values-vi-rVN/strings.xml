@@ -51,7 +51,7 @@
     <string name="info_tab_show">Chương trình</string>
     <string name="info_tab_episode">Tập</string>
     <string name="info_tab_video">Video</string>
-    <string name="info_tab_file">Thông tin tập tin</string>
+    <string name="info_tab_file">Thông tin tệp</string>
     <string name="info_tab_backdrop_chooser">Trình chọn phông nền</string>
     <string name="info_tab_poster_chooser">Trình chọn áp phích</string>
     <string name="info_tab_share">Chia sẻ</string>
@@ -224,7 +224,7 @@
     <string name="scraper_folder_no_file">Tuy nhiên vẫn còn một video mà trước đây không tìm thấy thông tin nào.</string>
     <string name="scraper_folder_try_again">Bạn có muốn thử lại không?</string>
     <string name="scraper_notification_title">Tìm kiếm thông tin trực tuyến</string>
-    <string name="scraper_notification_progress">\"%1$d trong số %2$d tập tin đã được xử lý</string>
+    <string name="scraper_notification_progress">\"%1$d trong số %2$d tệp đã được xử lý</string>
     <string name="scraper_no_episode_found">Không tìm thấy tập nào</string>
     <string name="scraper_suggest_message">Bạn có thể tìm kiếm áp phích và thông tin trực tuyến cho video của bạn bằng menu \'Tìm kiếm thông tin trực tuyến\'.</string>
     <string name="scraper_no_movie_text">Hiện tại bạn không có áp phích và mô tả cho phim của bạn</string>
@@ -238,7 +238,7 @@
     <string name="rescanning">Đang quét lại bộ nhớ thiết bị</string>
     <string name="rescan_storage_summary">Quét lại các thiết bị lưu trữ nội bộ, thẻ SD và USB</string>
     <string name="preference_display_all_files">Hiển thị tất cả tập tin trong trình duyệt</string>
-    <string name="preference_display_all_files_summary">Cũng hiện những tập tin không phải video</string>
+    <string name="preference_display_all_files_summary">Cũng hiện những tệp không phải video</string>
     <string name="info_processing">Đang kiểm tra thuộc tính phương tiện…</string>
     <string name="info_video">Video</string>
     <string name="info_audio">Âm thanh</string>
@@ -247,7 +247,7 @@
     <string name="info_subtitle">Phụ đề</string>
     <string name="info_resume">Vị trí tiếp tục xem</string>
     <string name="info_bookmark">Vị trí dấu trang</string>
-    <string name="info_file">Thông tin tập tin</string>
+    <string name="info_file">Thông tin tệp</string>
     <string name="use_remote_resume">Sử dụng vị trí tiếp tục mạng?</string>
     <!-- VIDEO COVER ROLL -->
     <string name="you_have_no_recently_added_video">Không có video nào được thêm gần đây</string>
@@ -320,8 +320,8 @@
     <string name="menu_change_folder">Thay đổi thư mục</string>
     <string name="menu_change_folder_details">Chọn thư mục để bắt đầu</string>
     <string name="unlock_instructions">Nhấn giữ biểu tượng để mở khóa</string>
-    <string name="seek_to_percentage">\"Đang tua đến %s%%</string>
-    <string name="set_audio_speed_to">\"Tốc độ âm thanh %s</string>
+    <string name="seek_to_percentage">Đang tua đến %s%%</string>
+    <string name="set_audio_speed_to">Tốc độ âm thanh %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Tiếng Brasil</string>
@@ -329,11 +329,15 @@
     <string name="s_chinese_simplified">Tiếng Trung giản thể</string>
     <string name="s_traditional_chinese">Chữ Hán phồn thể</string>
     <string name="s_spanish_la">Tiếng Tây Ban Nha (LA)</string>
+    <string name="s_extremaduran">Extremaduran</string>
+    <string name="s_montenegrin">Montenegrin</string>
     <string name="s_manipuri">Tiếng Manipuri</string>
     <string name="s_dari">Tiếng Dari</string>
     <string name="s_portuguese_mz">Tiếng Bồ Đào Nha (MZ)</string>
     <string name="s_spanish_eu">Tiếng Tây Ban Nha (EU)</string>
+    <string name="s_santali">Tiếng Santali</string>
     <string name="s_syriac">Tiếng Syriac</string>
+    <string name="s_toki_pona">Toki Pona</string>
     <string name="s_chinese_bilingual">Song ngữ tiếng Trung</string>
     <string name="s_none">Không có</string>
     <!-- Player errors -->
@@ -341,7 +345,7 @@
     <string name="player_err_cantplaysound">Không thể phát luồng âm thanh</string>
     <string name="audiocodec_not_supported">Định dạng âm thanh (<xliff:g id="codec">%s</xliff:g>) không được hổ trợ.</string>
     <string name="videocodec_not_supported">Định dạng video (<xliff:g id="codec">%s</xliff:g>) không được hổ trợ.</string>
-    <string name="player_err_file">Tập tin Video không tồn tại.</string>
+    <string name="player_err_file">Tệp Video không tồn tại.</string>
     <string name="player_err_sizetoobig">Kích thước video quá lớn</string>
     <string name="player_err_unknown">Lỗi không rõ.</string>
     <string name="player_err_critical">Lỗi trình phát phương tiện.</string>
@@ -349,15 +353,23 @@
     <string name="player_err_notinterleaved">Các luồng video và âm thanh không BỊ XEN KẼ.</string>
     <string name="player_err_codec">Code</string>
     <string name="player_err_isnotsupported">không được hỗ trợ.</string>
-    <string name="player_err_fileNoLicense">Không tìm thấy giấy phép cho tập tin này.</string>
-    <string name="player_err_fileerror">Tập tin bị hỏng hoặc không đầy đủ.</string>
+    <string name="player_err_fileNoLicense">Không tìm thấy giấy phép cho tệp này.</string>
+    <string name="player_err_fileerror">Tệp bị hỏng hoặc không đầy đủ.</string>
     <string name="player_err_connection_failed">Kết nối thất bại.</string>
     <string name="player_err_video_decoder_error">Lỗi giải mã video:</string>
+    <string name="player_err_qpel_and_gmc">\"Quarter Pixel\" và \"GMC\"</string>
     <string name="player_err_profile_and_level">\"Hồ sơ\" và \"Cấp độ\"</string>
     <string name="player_err_interlaced">Quét xen kẽ</string>
     <!-- Player plug-in -->
+    <string name="player_plugin_cinema_title">Plug-in rạp chiếu phim</string>
+    <string name="player_plugin_cinema">Plug-in rạp chiếu phim (DVD, MPEG-2, AC3)</string>
+    <string name="player_plugin_ac3_title">Plug-in AC3</string>
+    <string name="player_plugin_ac3">Plug-in AC3</string>
+    <string name="player_plugin_mpeg2_title">Plug-in MPEG-2</string>
+    <string name="player_plugin_mpeg2">Plug-in MPEG-2 (DVD)</string>
     <string name="player_plugin_video_msg">Tệp này chứa định dạng video <xliff:g id="video">%1$s</xliff:g>.</string>
     <string name="player_plugin_audio_msg">Tệp này chứa định dạng âm thanh <xliff:g id="audio">%1$s</xliff:g>.</string>
+    <string name="player_plugin_video_audio_msg">Tệp này chứa một định dạng video <xliff:g id="video">%1$s</xliff:g> và một định dạng âm thanh <xliff:g id="audio">%2$s</xliff:g>.</string>
     <string name="player_plugin_purchase_msg">Bạn cần mua các <xliff:g id="plugin">%1$s</xliff:g></string>
     <string name="player_plugin_purchase">Đi đến cửa hàng</string>
     <string name="player_plugin_purchase_archos_msg">Bạn có thể mua thêm các plug-in codec trên www.archos.com.</string>
@@ -367,15 +379,15 @@
     <string name="plugin_update_required_message">Có vẻ như bạn đã cài đặt thêm codec cho Trình phát video Nova.\n\nPhiên bản mới này của Trình phát video Nova yêu cầu cập nhật các codec này.\n\nHãy vào Google Play để cập nhật và cài đặt lại codec.</string>
     <!-- Subtitles wizard -->
     <string name="get_subtitles_on_drive">Chọn phụ đề trên bộ nhớ</string>
-    <string name="subtitles_wizard_no_files">Không tìm thấy tập tin phụ đề</string>
-    <string name="subtitles_wizard_current_files">Tập tin phụ đề hiện tại</string>
-    <string name="subtitles_wizard_available_files">Tập tin phụ đề có sẵn</string>
-    <string name="subtitles_wizard_associate">Liên kết tập tin này với video</string>
-    <string name="subtitles_wizard_delete">Xóa tập tin này</string>
-    <string name="subtitles_wizard_empty_list">Không tìm thấy tập tin</string>
-    <string name="subtitles_wizard_add_files">Bạn có thể sao chép thêm tập tin phụ đề vào thư mục này để liên kết chúng với video này.</string>
-    <string name="subtitles_wizard_help">Chọn bất kỳ tập tin phụ đề có sẵn nào để liên kết nó với video %s. Tập tin sẽ được đổi tên để khớp với tên của video.</string>
-    <string name="subtitles_wizard_empty_list_help">Không tìm thấy tập tin phụ đề. Bạn phải sao chép cái đầu tiên hoặc nhiều tập tin phụ đề vào thư mục này để liên kết chúng với video %s.</string>
+    <string name="subtitles_wizard_no_files">Không tìm thấy tệp phụ đề</string>
+    <string name="subtitles_wizard_current_files">Tệp phụ đề hiện tại</string>
+    <string name="subtitles_wizard_available_files">Tệp phụ đề có sẵn</string>
+    <string name="subtitles_wizard_associate">Liên kết tệp này với video</string>
+    <string name="subtitles_wizard_delete">Xóa tệp này</string>
+    <string name="subtitles_wizard_empty_list">Không tìm thấy tệp</string>
+    <string name="subtitles_wizard_add_files">Bạn có thể sao chép thêm tệp phụ đề vào thư mục này để liên kết chúng với video này.</string>
+    <string name="subtitles_wizard_help">Chọn bất kỳ tệp phụ đề có sẵn nào để liên kết nó với video %s. Tệp sẽ được đổi tên để khớp với tên của video.</string>
+    <string name="subtitles_wizard_empty_list_help">Không tìm thấy tệp phụ đề. Bạn phải sao chép cái đầu tiên hoặc nhiều tệp phụ đề vào thư mục này để liên kết chúng với video %s.</string>
     <string name="subtitles_wizard_cache">Bộ đệm</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Nhận phụ đề trực tuyến</string>
@@ -398,6 +410,8 @@
     <string name="dialog_subloader_credentials_empty">Bạn phải chỉ định tên người dùng và mật khẩu hợp lệ!</string>
     <string name="toast_subloader_credentials_empty">Cung cấp thông tin đăng nhập opensubtitles của bạn trong cài đặt để có thể tải xuống thêm phụ đề</string>
     <string name="toast_subloader_login_failed">Thông tin đăng nhập opensubtitles không chính xác hoặc dịch vụ không có sẵn</string>
+    <string name="toast_subloader_quota_exceeded">Đã vượt quá hạn ngạch tải xuống OpenSubtitles</string>
+    <string name="opensubtitles_quota_reset_time_remaining">Đặt lại hạn ngạch sau %s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Cài đặt phụ đề</string>
     <string name="subtitle_sample_text">\"mẫu\"</string>
@@ -414,6 +428,7 @@
     <!-- Add a space after the right quote
     because the right part of the quote is
     not visible otherwise -->
+    <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
     <string name="error_permission">Không đủ quyền</string>
     <string name="error_permission_storage">Trình phát video Nova cần có quyền lưu trữ để đọc video cục bộ, vui lòng cấp quyền này.</string>
     <string name="error_permission_all_file_access">Trình phát video Nova cần tất cả quyền quản lý bộ nhớ ngoài để quản lý đúng cách các tệp video/NFO cục bộ, vui lòng cấp quyền này.</string>
@@ -425,7 +440,7 @@
     <string name="error_downloading_not_enough_space">Lỗi khi tải xuống torrent : không đủ dung lượng</string>
     <string name="loading_torrent">Đang tải torrent…</string>
     <string name="error_no_video_file">Không có tập tin video</string>
-    <string name="torrent_file_to_play">Chọn một tập tin để phát</string>
+    <string name="torrent_file_to_play">Chọn một tệp để phát</string>
     <string name="torrent_buy_premium_message">Phát trực tuyến torrent chỉ khả dụng trên phiên bản trả phí</string>
     <string name="torrent_buy_premium">Mua phiên bản cao cấp</string>
     <!-- Shortcuts -->
@@ -449,6 +464,7 @@
     <string name="ftp_shortcut_list_empty">Để tạo lối tắt đến các thư mục từ xa yêu thích của bạn, hãy chọn \"%s\" trong thanh tác vụ trên cùng khi duyệt máy chủ.</string>
     <string name="indexed_folders">Đã lập chỉ mục các thư mục</string>
     <string name="ftp_shortcuts">Các lối tắt FTP</string>
+    <string name="add_to_indexed_folders">Thư mục chỉ mục</string>
     <string name="add_to_library">Thêm vào thư viện</string>
     <string name="add_all_items_to_library">Thêm tất cả cuộn băng vào thư viện ngay lập tức?</string>
     <string name="invalid_host">Không phải là định dạng địa chỉ máy chủ hợp lệ</string>
@@ -517,6 +533,8 @@
     <string name="category_languages">Phụ đề</string>
     <string name="subtitles_hide_default">Ẩn phụ đề theo mặc định</string>
     <string name="subtitles_hide_default_summary">Chọn nếu bạn muốn ẩn phụ đề theo mặc định</string>
+    <string name="subtitles_use_rest_api">Sử dụng API OpenSubtitles mới</string>
+    <string name="subtitles_use_rest_api_summary">Sử dụng REST-API mới thay vì XML-RPC với hạn ngạch sẽ được thực thi từ năm 2024</string>
     <string name="subtitles_credentials_title">Thông tin xác thực OpenSubtitles</string>
     <string name="subtitles_credentials_summary">Cung cấp thông tin xác thực opensubtitles của bạn để có thể tải xuống phụ đề</string>
     <string name="preferences_languages">Ngôn ngữ tải xuống phụ đề</string>
@@ -606,15 +624,15 @@
     <string name="connection_abnormally_long">Kết nối có vẻ lâu bất thường. Bạn có muốn đặt lại nó không?</string>
     <string name="connection_reset">Đặt lại</string>
     <!-- Info dialog, not indexed file -->
-    <string name="video_info_unindexed_message">Tập tin này hiện không được lập chỉ mục trong thư viện video của bạn.\nTìm kiếm áp phích và thông tin chỉ có sẵn cho các tập tin đã lập chỉ mục.\nBạn có muốn lập chỉ mục nó ngay bây giờ không?</string>
+    <string name="video_info_unindexed_message">Tệp này hiện không được lập chỉ mục trong thư viện video của bạn.\nTìm kiếm áp phích và thông tin chỉ có sẵn cho các tệp đã lập chỉ mục.\nBạn có muốn lập chỉ mục nó ngay bây giờ không?</string>
     <string name="video_info_unindexed_message2">Tệp đang được xử lý. Quá trình này có thể mất một lúc.</string>
     <string name="video_browser_index_file">Thêm vào thư viện</string>
     <string name="video_browser_unindex_file">Loại bỏ khỏi thư viện</string>
     <!-- Brightness -->
     <string name="auto_brightness_message">Không thể thay đổi độ sáng vì chế độ sáng tự động hiện đang được bật.</string>
     <!--  Nfo File parsing -->
-    <string name="network_nfo_parse">Xử lý các tập tin \'.nfo\'</string>
-    <string name="network_nfo_parse_summary">Đọc các tập tin \'.nfo\' của Kodi trong quá trình quét (lại) để thu thập thông tin phương tiện và áp phích.</string>
+    <string name="network_nfo_parse">Xử lý các tệp \'.nfo\'</string>
+    <string name="network_nfo_parse_summary">Đọc các tệp \'.nfo\' của Kodi trong quá trình quét (lại) để thu thập thông tin phương tiện và áp phích.</string>
     <string name="ask_to_mail_media_DB">Bạn có muốn gửi cơ sở dữ liệu băng hình của mình đến nhóm phát triển Nova để giúp họ kiểm tra lỗi không? \n\nCác tệp băng hình (tất nhiên) không được gửi qua thư, nhưng danh sách đầy đủ các tên tệp thì có.</string>
     <string name="no_email_installed">Không tìm thấy ứng dụng email nào</string>
     <string name="zipping_library_before_mailing">Nén một bản sao của thư viện trước khi gửi qua thư…</string>
@@ -701,6 +719,7 @@
     <string name="codepage_1256">Tiếng Ả-rập (CP1256)</string>
     <string name="codepage_1257">Vùng Baltic (CP1257)</string>
     <string name="codepage_1258">Tiếng Việt (CP1258)</string>
+    <string name="codepage_extra_874">(CP874)</string>
     <string name="codepage_extra_932">(Shift-JIS, EUC-JP)</string>
     <string name="codepage_extra_936">(CP936, GB231)</string>
     <string name="codepage_extra_949">(CP949, EUC-KR)</string>
@@ -787,6 +806,7 @@
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Giao diện cũ</string>
     <string name="leanback_hint_long_press_on_back">GỢI Ý: nhấn và giữ phím QUAY LẠI để đóng trình duyệt tệp</string>
+    <string name="leanback_archos_video_webview">Chế độ xem web video Nova</string>
     <string name="file_access_error">Không quản lý để truy cập tệp</string>
     <string name="interface_size">Kích thước giao diện</string>
     <string name="interface_size_summary">Thay đổi điều này trong trường hợp giao diện người dùng quá nhỏ hoặc quá lớn</string>
@@ -831,13 +851,13 @@
     <string name="rescrap_all_movies_title">Thu thập lại tất cả phim</string>
     <string name="rescrap_all_collections_title">Thu thập lại tất cả các bộ sưu tập</string>
     <string name="nfo_export_manual_title">Xuất các video đã thu thập thông tin</string>
-    <string name="nfo_export_manual_summary">Xuất tập tin .nfo của mọi video đã được thu thập</string>
+    <string name="nfo_export_manual_summary">Xuất tệp .nfo của mọi video đã được thu thập</string>
     <string name="db_export_manual_title">Xuất cơ sở dữ liệu phương tiện</string>
-    <string name="db_export_manual_summary">Xuất tập tin media.db sang /thẻ sd cho mục đích gỡ lỗi</string>
+    <string name="db_export_manual_summary">Xuất tệp media.db sang /thẻ sd cho mục đích gỡ lỗi</string>
     <string name="db_export_in_progress">Đang xuất cơ sở dữ liệu</string>
     <string name="system">Hệ thống</string>
     <string name="keep_setting">Giữ thiết đặt này một cách tổng thể</string>
-    <string name="select_sub_file"><![CDATA[Không tìm thấy phụ đề chính xác cho tập tin <font color=#29b6f6><i>%s</i></font><br /> Vui lòng thử trong danh sách này:]]></string>
+    <string name="select_sub_file"><![CDATA[Không tìm thấy phụ đề chính xác cho tệp <font color=#29b6f6><i>%s</i></font><br /> Vui lòng thử trong danh sách này:]]></string>
     <string name="switch_remote_empty_message">Chuyển sang chế độ hiển thị từ xa có thể cung cấp nhiều tùy chọn theo dõi hơn</string>
     <string name="cast_stream_mode">Chế độ phát trực tiếp</string>
     <string name="cast_remote_display_mode">Màn hình từ xa</string>

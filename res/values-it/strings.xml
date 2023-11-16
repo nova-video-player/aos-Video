@@ -306,7 +306,7 @@ Copertina (rotolo di copertina)</string>
     <string name="menu_change_folder">Cambia cartella</string>
     <string name="menu_change_folder_details">Scegli la cartella per iniziare da</string>
     <string name="unlock_instructions">Pressione prolungata sull\'icona per sbloccare</string>
-    <string name="seek_to_percentage">\"Ricerca al %s%%</string>
+    <string name="seek_to_percentage">Ricerca al %s%%</string>
     <!-- Subtitles/Audio languages -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brasiliano</string>

@@ -405,11 +405,13 @@
     <string name="dialog_subloader_nonetwork_title">沒有網際網路連線</string>
     <string name="dialog_subloader_nonetwork_message">必須有網路連線才能下載字幕</string>
     <string name="dialog_subloader_connecting">正在連結至 www.opensubtitles.org…</string>
-    <string name="opensubtitles_quota_download_remaining">OpenSubtitles 下載剩餘配額: %d/%d</string>
+    <string name="opensubtitles_quota_download_remaining">OpenSubtitles 下載剩餘額度: %d/%d</string>
     <string name="dialog_subloader_credentials">Opensubtitles 憑證</string>
     <string name="dialog_subloader_credentials_empty">您必須提供一組有效的使用者名稱及密碼！</string>
     <string name="toast_subloader_credentials_empty">請在設定選項中提供您的 opensubtitles 憑證以下載字幕</string>
     <string name="toast_subloader_login_failed">不正確的 opensubtitles 憑證或伺服器無法連線</string>
+    <string name="toast_subloader_quota_exceeded">OpenSubtitles 下載額度已達上限</string>
+    <string name="opensubtitles_quota_reset_time_remaining">額度重設... %s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">字幕設定</string>
     <string name="subtitle_sample_text">「範例」</string>
@@ -531,6 +533,8 @@
     <string name="category_languages">字幕</string>
     <string name="subtitles_hide_default">預設隱藏字幕</string>
     <string name="subtitles_hide_default_summary">如要預設隱藏字幕請勾選</string>
+    <string name="subtitles_use_rest_api">使用新的 OpenSubtitles API</string>
+    <string name="subtitles_use_rest_api_summary">2024年開始將強制使用新額度的 REST-API 取代 XML-RPC</string>
     <string name="subtitles_credentials_title">Opensubtitles 憑證</string>
     <string name="subtitles_credentials_summary">請提供您的 opensubtitles 憑證以下載字幕</string>
     <string name="preferences_languages">下載字幕的語言</string>
