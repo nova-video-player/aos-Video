@@ -198,9 +198,6 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         Set<String> languages = sharedPreferences.getStringSet("languages_list", langDefault);
         final ArrayList<String> languageDefault = new ArrayList<String>(languages);
         log.debug("getSubLangValue: langDefault=" + languageDefault.toString());
-        langDefault = null;
-        languages = null;
-        if (langDefault != null) log.debug("getSubLangValue: " + String.join(",", langDefault));
         return languageDefault;
     }
 
