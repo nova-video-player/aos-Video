@@ -538,9 +538,10 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                     Intent intent = new Intent(ArchosMediaIntent.ACTION_VIDEO_SCANNER_METADATA_UPDATE, Uri.parse(fileUrl));
                     intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
                     sendBroadcast(intent);
+                } catch (Exception e){
                 }
-                catch (Exception e){
-                }
+                // results in duplicate subs in the list: no need to copy for now
+                /*
                 // Update the media database
                 if (canWrite) {
                     if(!FileUtils.isLocal(Uri.parse(fileUrl))){ // when not local, we need to copy our file
@@ -548,6 +549,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                         editor.copyFileTo(Uri.parse(localSb.toString()),SubtitlesDownloaderActivity2.this);
                     }
                 }
+                 */
             } catch (FileNotFoundException e) {
                 log.error("downloadSubtitles: caught FileNotFoundException", e);
             } catch (IOException e) {
