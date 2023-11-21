@@ -411,58 +411,57 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         }
 
         private void askSubChoice(final String videoFilePath, final ArrayList<OpenSubtitlesSearchResult> searchResults, final boolean displayLang, final boolean hasSuccess) {
-                View view = LayoutInflater.from(SubtitlesDownloaderActivity2.this).inflate(R.layout.subtitle_chooser_title_layout, null);
-                ((TextView) view.findViewById(R.id.video_name)).setText(HtmlCompat.fromHtml(getString(R.string.select_sub_file, getFriendlyFilename(videoFilePath)), HtmlCompat.FROM_HTML_MODE_LEGACY));
-                new AlertDialog.Builder(SubtitlesDownloaderActivity2.this)
-                        .setCustomTitle(view)
-                        .setAdapter(new BaseAdapter() {
-                            @Override
-                            public int getCount() {
-                                return searchResults.size();
-                            }
+            View view = LayoutInflater.from(SubtitlesDownloaderActivity2.this).inflate(R.layout.subtitle_chooser_title_layout, null);
+            ((TextView) view.findViewById(R.id.video_name)).setText(HtmlCompat.fromHtml(getString(R.string.select_sub_file, getFriendlyFilename(videoFilePath)), HtmlCompat.FROM_HTML_MODE_LEGACY));
+            new AlertDialog.Builder(SubtitlesDownloaderActivity2.this)
+                    .setCustomTitle(view)
+                    .setAdapter(new BaseAdapter() {
+                        @Override
+                        public int getCount() {
+                            return searchResults.size();
+                        }
 
-                            @Override
-                            public Object getItem(int i) {
-                                return null;
-                            }
+                        @Override
+                        public Object getItem(int i) {
+                            return null;
+                        }
 
-                            @Override
-                            public long getItemId(int i) {
-                                return 0;
-                            }
+                        @Override
+                        public long getItemId(int i) {
+                            return 0;
+                        }
 
-                            @Override
-                            public View getView(int i, View view, ViewGroup viewGroup) {
-                                if (view == null) {
-                                    view = LayoutInflater.from(SubtitlesDownloaderActivity2.this).inflate(R.layout.subtitle_item_layout, null);
-                                }
-                                ((TextView) view.findViewById(R.id.video_name)).setText(searchResults.get(i).getFileName());
-                                // use bold font for subs with hash match
-                                if (searchResults.get(i).getMoviehashMatch() == true)
-                                    ((TextView) view.findViewById(R.id.video_name)).setTypeface(null, Typeface.BOLD);
-                                else
-                                    ((TextView) view.findViewById(R.id.video_name)).setTypeface(null, Typeface.NORMAL);
-                                if (displayLang)
-                                    ((TextView) view.findViewById(R.id.lang)).setText(searchResults.get(i).getLanguage());
-                                else view.findViewById(R.id.lang).setVisibility(View.GONE);
-                                return view;
+                        @Override
+                        public View getView(int i, View view, ViewGroup viewGroup) {
+                            if (view == null) {
+                                view = LayoutInflater.from(SubtitlesDownloaderActivity2.this).inflate(R.layout.subtitle_item_layout, null);
                             }
-                        }, (dialogInterface, i) -> new Thread() {
-                            public void run() {
-                                getSub(videoFilePath, searchResults.get(i));
-                            }
-                        }.start())
-                        .setCancelable(true)
-                        .setOnCancelListener(dialog -> finish())
-                        .show().getListView().setDividerHeight(10);
+                            ((TextView) view.findViewById(R.id.video_name)).setText(searchResults.get(i).getFileName());
+                            // use bold font for subs with hash match
+                            if (searchResults.get(i).getMoviehashMatch())
+                                ((TextView) view.findViewById(R.id.video_name)).setTypeface(null, Typeface.BOLD);
+                            else
+                                ((TextView) view.findViewById(R.id.video_name)).setTypeface(null, Typeface.NORMAL);
+                            if (displayLang)
+                                ((TextView) view.findViewById(R.id.lang)).setText(searchResults.get(i).getLanguage());
+                            else view.findViewById(R.id.lang).setVisibility(View.GONE);
+                            return view;
+                        }
+                    }, (dialogInterface, i) -> new Thread() {
+                        public void run() {
+                            getSub(videoFilePath, searchResults.get(i));
+                        }
+                    }.start())
+                    .setCancelable(true)
+                    .setOnCancelListener(dialog -> finish())
+                    .show().getListView().setDividerHeight(10);
         }
 
-        // TODO MARC check issue webdav cannot download subtitles is this linked to slowRemote?
         public void downloadSubtitles(String subUrl, String fileUrl, String name, String language){
             if (fileUrl == null) return;
             boolean canWrite = false;
             Uri parentUri = null;
-            if(UriUtils.isImplementedByFileCore(Uri.parse(fileUrl))&&!FileUtils.isSlowRemote(Uri.parse(fileUrl))){
+            if(UriUtils.isImplementedByFileCore(Uri.parse(fileUrl))&&!FileUtils.isSlowRemote(Uri.parse(fileUrl))){ // do not write subs on slow remote when downloading
                 parentUri = FileUtils.getParentUrl(Uri.parse(fileUrl));
                 if(parentUri!=null){
                     try {
