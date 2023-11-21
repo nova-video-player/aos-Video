@@ -224,7 +224,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             // Close the progress dialog
             if (mDialog != null) {
-                mDoNotFinish = true;
+                mDoNotFinish = false;
                 mDialog.dismiss();
             }
         }
@@ -307,6 +307,9 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 mHandler.post(() -> askSubChoice(fileUrl, searchResults,languages.size()>1, !searchResults.isEmpty()));
             } else {
                 log.warn("getSubtitles: no subs found on opensubtitles for " + fileUrl);
+                stop = true;
+                displayToast(getString(R.string.dialog_subloader_fails) + " " + fileUrl);
+                return;
             }
             MediaUtils.removeLastSubs(SubtitlesDownloaderActivity2.this);
             if (!isCancelled()) {
