@@ -91,7 +91,6 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
     Long mFileSize = null;
     String mFriendlyFileName = null; // they need to have an extension
 
-    boolean stop = false;
     private NovaProgressDialog mDialog;
 
     private OpenSubtitlesTask mOpenSubtitlesTask = null;
@@ -247,7 +246,6 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                     mDoNotFinish = true;
                     mDialog.dismiss();
                 }
-                stop = true;
                 return false;
             } catch (Throwable e) { //for various service outages
                 log.error("logIn: caught exception result=" + OpenSubtitlesApiHelper.getLastQueryResult(),e);
@@ -256,7 +254,6 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                     mDoNotFinish = true;
                     mDialog.dismiss();
                 }
-                stop = true;
                 return false;
             }
             return true;
@@ -276,10 +273,8 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         public void getSubtitle(final String fileUrl, final ArrayList<String> languages) {
             log.debug("getSubtitle: fileUrl " +  fileUrl + ", language=" + String.join(",", languages));
             if (fileUrl == null || fileUrl.isEmpty() || languages == null || languages.isEmpty()){
-                stop = true;
                 return;
             }
-            stop = false;
 
             ArrayList<String> subLanguageId = new ArrayList<String>();
             // REST-API takes ISO639-1 2 letter code languages: no need to convert
@@ -292,7 +287,6 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 searchResults = OpenSubtitlesApiHelper.searchSubtitle(fileInfo, languagesString );
             } catch (Throwable e) { //for various service outages
                 log.error("getSubtitles: caught Throwable ", e);
-                stop = true;
                 displayToast(getString(R.string.toast_subloader_service_unreachable));
                 return;
             }
@@ -304,15 +298,11 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 mHandler.post(() -> askSubChoice(fileUrl, searchResults,languages.size()>1, !searchResults.isEmpty()));
             } else {
                 log.warn("getSubtitles: no subs found on opensubtitles for " + fileUrl);
-                stop = true;
                 displayToast(getString(R.string.dialog_subloader_fails) + " " + fileUrl);
                 return;
             }
             MediaUtils.removeLastSubs(SubtitlesDownloaderActivity2.this);
-            if (!isCancelled()) {
-                stop = true;
-                if (!searchResults.isEmpty()) setResult(AppCompatActivity.RESULT_OK);
-            }
+            if (!isCancelled() && !searchResults.isEmpty()) setResult(AppCompatActivity.RESULT_OK);
         }
 
         private void getSub(String fileUrl, OpenSubtitlesSearchResult searchResult) {
@@ -568,14 +558,12 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             mHandler.post(() -> {
                 mDialog = NovaProgressDialog.show(SubtitlesDownloaderActivity2.this, "", getString(R.string.dialog_subloader_connecting), true, true, dialog -> {
                     dialog.cancel();
-                    stop();
                     finish();
                 });
                 mDialog.setCanceledOnTouchOutside(false); // to not cancel when tapping the screen out of dialog zone
                 mDialog.setOnDismissListener(dialog -> {
                     if(!mDoNotFinish) {
                         dialog.cancel();
-                        stop();
                         finish();
                     }
                     mDoNotFinish = false;
@@ -601,7 +589,4 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         }
     }
 
-    private void stop(){
-        stop = true;
-    }
 }
