@@ -2018,6 +2018,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mOsdLeftTextView.setCompoundDrawablesWithIntrinsicBounds(volumeIcon, null, null, null);
         hideOsdHandler.removeCallbacks(hideOsdRunnable);
         hideOsdHandler.postDelayed(hideOsdRunnable, 300);
+        updateVolumeBar();
     }
 
     private float getBrightness() { // get screen brightness float value between 0 and 1
