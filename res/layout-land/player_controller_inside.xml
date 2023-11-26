@@ -134,6 +134,46 @@
             ads:srcCompat="@drawable/video_format_original_selector" />
     </LinearLayout>
 
+    <TextView android:id="@+id/osd_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="84dp"
+        android:drawableStart="@drawable/ic_volume"
+        android:text="15"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:lineSpacingMultiplier="1.1"
+        android:background="@drawable/rounded_rectangle"
+        android:visibility="invisible"
+        android:layout_marginTop="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="30dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="6sp"
+        android:paddingBottom="6sp"/>
+
+    <TextView android:id="@+id/osd_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="84dp"
+        android:drawableStart="@drawable/ic_brightness"
+        android:text="15"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:lineSpacingMultiplier="1.1"
+        android:background="@drawable/rounded_rectangle"
+        android:visibility="invisible"
+        android:layout_marginTop="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="30dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="6sp"
+        android:paddingBottom="6sp"/>
+
     <include
         android:layout_width="match_parent"
         android:layout_height="match_parent"

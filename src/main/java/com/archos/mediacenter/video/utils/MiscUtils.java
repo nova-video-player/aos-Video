@@ -14,23 +14,20 @@
 
 package com.archos.mediacenter.video.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.app.UiModeManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.DisplayCutout;
 
 import static android.content.Context.UI_MODE_SERVICE;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -100,5 +97,13 @@ public class MiscUtils {
                 log.info(TAG + " bundle dump stop");
             }
         }
+    }
+
+    public static int dp2Px(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public static float px2Dp(float px) {
+        return px / Resources.getSystem().getDisplayMetrics().density;
     }
 }
