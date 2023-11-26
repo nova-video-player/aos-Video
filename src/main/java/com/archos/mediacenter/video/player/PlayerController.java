@@ -30,13 +30,13 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.Icon;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import androidx.preference.PreferenceManager;
 import androidx.appcompat.app.ActionBar;
+
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -1904,15 +1904,14 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         scrollGestureHorizontal += distanceX;
         scrollGestureVertical += distanceY;
 
-        log.debug("onScroll: scrollGestureHorizontal=" + scrollGestureHorizontal + ", scrollGestureVertical=" + scrollGestureVertical);
-
         float halfWidth = screenWidth / 2f;
 
         if (Math.abs(scrollGestureVertical) > SCROLL_THRESHOLD) {
             if (e1.getX() < halfWidth) { // left screen part
+                log.debug("onScroll: left screen part, direction=" + (scrollGestureVertical > 0 ? "up" : "down"));
                 scrollIncrementalBrightnessUpdate(scrollGestureVertical > 0);
-            }
-            else { // right screen part
+            } else { // right screen part
+                log.debug("onScroll: left screen part, direction=" + (scrollGestureVertical > 0 ? "up" : "down"));
                 scrollIncrementalVolumeUpdate(scrollGestureVertical > 0);
             }
             scrollGestureVertical = 0.0001f;
@@ -2021,15 +2020,40 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         hideOsdHandler.postDelayed(hideOsdRunnable, 300);
     }
 
-    private int getLinearBrightness() { // get the brightness value between 0 and 30
-        return brightnessToLevelGamma(mWindow.getAttributes().screenBrightness);
+    private float getBrightness() { // get screen brightness float value between 0 and 1
+        log.debug("getBrightness: " + mWindow.getAttributes().screenBrightness);
+        return mWindow.getAttributes().screenBrightness;
     }
 
-    private void setLinearBrightness(int level) {
+    private int getLinearBrightness() { // get the brightness value between 0 and 30
+        float currentBrightness = getBrightness();
+        if (currentBrightness == -1) return 10; // when brightness is set to auto, return a default value
+        else return brightnessToLevelGamma(currentBrightness);
+    }
+
+    private void setLinearBrightness(int level, boolean direction) {
+        float newBrightness = levelToBrightnessGamma(level);
+        float curBrightness = getBrightness();
+        log.debug("setLinearBrightness: level=" + level + ", direction=" + direction + ", curBrightness=" + curBrightness + ", newBrightness=" + newBrightness);
         WindowManager.LayoutParams layoutParams = mWindow.getAttributes();
-        layoutParams.screenBrightness = levelToBrightnessGamma(level);
-        mWindow.setAttributes(layoutParams);
-        mWindow.addFlags(WindowManager.LayoutParams.FLAGS_CHANGED);
+        // only apply change is it goes into the right increase/decrease direction to avoid glitch
+        if (direction) {
+            if (newBrightness > curBrightness) {
+                layoutParams.screenBrightness = newBrightness;
+                mWindow.setAttributes(layoutParams);
+                mWindow.addFlags(WindowManager.LayoutParams.FLAGS_CHANGED);
+            } else {
+                log.debug("setLinearBrightness: not applying change, because increasing newBrightness=" + newBrightness + " < curBrightness=" + curBrightness);
+            }
+        } else {
+            if (newBrightness < curBrightness) {
+                layoutParams.screenBrightness = newBrightness;
+                mWindow.setAttributes(layoutParams);
+                mWindow.addFlags(WindowManager.LayoutParams.FLAGS_CHANGED);
+            } else {
+                log.debug("setLinearBrightness: not applying change, because decreasing newBrightness=" + newBrightness + " > curBrightness=" + curBrightness);
+            }
+        }
     }
 
     float levelToBrightness(final int level) {
@@ -2052,10 +2076,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     int brightnessToLevelGamma(final float brightness) {
         final float gamma = 2.2f; // Gamma value for brightness correction
         final int brightnessLevel = Math.round(30f * (float) Math.pow(brightness, 1 / gamma));
-        return (int) Math.max(0, Math.min(brightnessLevel, 30));
+        return Math.max(0, Math.min(brightnessLevel, 30));
     }
 
     private void scrollIncrementalBrightnessUpdate(boolean increase) {
+        float currentBrightness = getBrightness();
         int currentIntBrightness= getLinearBrightness();
         int newIntBrightness;
         Drawable brightnessIcon = getDrawable(mContext, R.drawable.ic_brightness);
@@ -2065,7 +2090,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         if (increase) newIntBrightness = currentIntBrightness + 1;
         else newIntBrightness = currentIntBrightness - 1;
         newIntBrightness = Math.max(0, Math.min(newIntBrightness, 30)); // Constrain the brightness between 0 and maxBrightness
-        setLinearBrightness(newIntBrightness);
+        setLinearBrightness(newIntBrightness, increase);
         mOsdRightTextView.setCompoundDrawablesWithIntrinsicBounds(brightnessIcon, null, null, null);
         log.debug("scrollIncrementalBrightnessUpdate: increase=" + increase + ", currentBrightness=" + currentBrightness + ", maxBrightness=" + 30 + ", newBrightness=" + newIntBrightness);
         hideOsdHandler.removeCallbacks(hideOsdRunnable);
