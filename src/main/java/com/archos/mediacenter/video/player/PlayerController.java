@@ -617,8 +617,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         // twice for sidebyside and topbottom view
         mControllerViewLeft= inflater.inflate(R.layout.player_controller_inside, null);
         if (mControllerViewLeft != null) {
+            mOsdLeftTextView = mControllerViewLeft.findViewById(R.id.osd_left);
+            mOsdRightTextView = mControllerViewLeft.findViewById(R.id.osd_right);
             mControllerViewLeft.setOnKeyListener(new View.OnKeyListener() {
-                
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     // TODO Auto-generated method stub
@@ -626,9 +627,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 }
             });
         }
-
-        mOsdLeftTextView = mControllerViewLeft.findViewById(R.id.osd_left);
-        mOsdRightTextView = mControllerViewLeft.findViewById(R.id.osd_right);
 
         initControllerView(mControllerViewLeft, true);
         if (mControllerViewLeft != null) {
@@ -2004,18 +2002,20 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         Drawable volumeIcon;
         if (currentVolume == 0) volumeIcon = getDrawable(mContext, R.drawable.ic_volume_off);
         else volumeIcon = getDrawable(mContext, R.drawable.ic_volume);
-        mOsdLeftTextView.setCompoundDrawablesWithIntrinsicBounds(volumeIcon, null, null, null);
-        mOsdLeftTextView.setText(String.valueOf(currentVolume));
-        mOsdLeftTextView.setVisibility(View.VISIBLE);
+        if (mOsdLeftTextView != null) {
+            mOsdLeftTextView.setCompoundDrawablesWithIntrinsicBounds(volumeIcon, null, null, null);
+            mOsdLeftTextView.setText(String.valueOf(currentVolume));
+            mOsdLeftTextView.setVisibility(View.VISIBLE);
+        }
         if (increase) newVolume = currentVolume + 1;
         else newVolume = currentVolume - 1;
         newVolume = Math.max(0, Math.min(newVolume, maxVolume)); // Constrain the value between 0 and maxVolume
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, newVolume, 0);
-        mOsdLeftTextView.setText(String.valueOf(newVolume));
+        if (mOsdLeftTextView != null) mOsdLeftTextView.setText(String.valueOf(newVolume));
         log.debug("scrollIncrementalVolumeUpdate: increase=" + increase + ", currentVolume=" + currentVolume + ", maxVolume=" + maxVolume + ", newVolume=" + newVolume);
         if (newVolume == 0) volumeIcon = getDrawable(mContext, R.drawable.ic_volume_off);
         else volumeIcon = getDrawable(mContext, R.drawable.ic_volume);
-        mOsdLeftTextView.setCompoundDrawablesWithIntrinsicBounds(volumeIcon, null, null, null);
+        if (mOsdLeftTextView != null) mOsdLeftTextView.setCompoundDrawablesWithIntrinsicBounds(volumeIcon, null, null, null);
         hideOsdHandler.removeCallbacks(hideOsdRunnable);
         hideOsdHandler.postDelayed(hideOsdRunnable, 300);
         updateVolumeBar();
@@ -2085,14 +2085,16 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         int currentIntBrightness= getLinearBrightness();
         int newIntBrightness;
         Drawable brightnessIcon = getDrawable(mContext, R.drawable.ic_brightness);
-        mOsdRightTextView.setCompoundDrawablesWithIntrinsicBounds(brightnessIcon, null, null, null);
-        mOsdRightTextView.setText(String.valueOf(currentIntBrightness));
-        mOsdRightTextView.setVisibility(View.VISIBLE);
+        if (mOsdRightTextView != null) {
+            mOsdRightTextView.setCompoundDrawablesWithIntrinsicBounds(brightnessIcon, null, null, null);
+            mOsdRightTextView.setText(String.valueOf(currentIntBrightness));
+            mOsdRightTextView.setVisibility(View.VISIBLE);
+        }
         if (increase) newIntBrightness = currentIntBrightness + 1;
         else newIntBrightness = currentIntBrightness - 1;
         newIntBrightness = Math.max(0, Math.min(newIntBrightness, 30)); // Constrain the brightness between 0 and maxBrightness
         setLinearBrightness(newIntBrightness, increase);
-        mOsdRightTextView.setCompoundDrawablesWithIntrinsicBounds(brightnessIcon, null, null, null);
+        if (mOsdRightTextView != null) mOsdRightTextView.setCompoundDrawablesWithIntrinsicBounds(brightnessIcon, null, null, null);
         log.debug("scrollIncrementalBrightnessUpdate: increase=" + increase + ", currentBrightness=" + currentBrightness + ", maxBrightness=" + 30 + ", newBrightness=" + newIntBrightness);
         hideOsdHandler.removeCallbacks(hideOsdRunnable);
         hideOsdHandler.postDelayed(hideOsdRunnable, 300);
