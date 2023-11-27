@@ -99,7 +99,7 @@ public class WebViewActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mWebView != null && (mWebView.getUrl().startsWith("https://www.youtube.com/tv#/watch/ads/control")
+        if (mWebView != null && mWebView.getUrl() != null && (mWebView.getUrl().startsWith("https://www.youtube.com/tv#/watch/ads/control")
                 || mWebView.getUrl().startsWith("https://www.youtube.com/tv#/watch/video/control"))) {
             mWebView.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ESCAPE));
         }
