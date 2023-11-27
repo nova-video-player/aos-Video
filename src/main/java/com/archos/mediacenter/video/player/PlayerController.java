@@ -1934,7 +1934,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         if (e.getAction() == MotionEvent.ACTION_UP) {
             log.debug("onDoubleTapEvent");
             float x = e.getX();
-            float viewWidth = mControllerView.getWidth();
+            if (mControllerView == null) return false;
+            float viewWidth = (float) mControllerView.getWidth();
             if (x < viewWidth / 2) { // left region fast rewind
                 if (Player.sPlayer.canSeekBackward() && mSeekKeyDirection != -1) {
                     if (mOsdLeftTextView != null) {
