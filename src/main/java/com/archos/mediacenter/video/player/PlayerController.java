@@ -2022,68 +2022,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         updateVolumeBar();
     }
 
-    private float getBrightness() { // get screen brightness float value between 0 and 1
-        log.debug("getBrightness: " + mWindow.getAttributes().screenBrightness);
-        return mWindow.getAttributes().screenBrightness;
-    }
-
-    private int getLinearBrightness() { // get the brightness value between 0 and 30
-        float currentBrightness = getBrightness();
-        if (currentBrightness == -1) return 10; // when brightness is set to auto, return a default value
-        else return brightnessToLevelGamma(currentBrightness);
-    }
-
-    private void setLinearBrightness(int level, boolean direction) {
-        float newBrightness = levelToBrightnessGamma(level);
-        float curBrightness = getBrightness();
-        log.debug("setLinearBrightness: level=" + level + ", direction=" + direction + ", curBrightness=" + curBrightness + ", newBrightness=" + newBrightness);
-        WindowManager.LayoutParams layoutParams = mWindow.getAttributes();
-        // only apply change is it goes into the right increase/decrease direction to avoid glitch
-        if (direction) {
-            if (newBrightness > curBrightness) {
-                layoutParams.screenBrightness = newBrightness;
-                mWindow.setAttributes(layoutParams);
-                mWindow.addFlags(WindowManager.LayoutParams.FLAGS_CHANGED);
-            } else {
-                log.debug("setLinearBrightness: not applying change, because increasing newBrightness=" + newBrightness + " < curBrightness=" + curBrightness);
-            }
-        } else {
-            if (newBrightness < curBrightness) {
-                layoutParams.screenBrightness = newBrightness;
-                mWindow.setAttributes(layoutParams);
-                mWindow.addFlags(WindowManager.LayoutParams.FLAGS_CHANGED);
-            } else {
-                log.debug("setLinearBrightness: not applying change, because decreasing newBrightness=" + newBrightness + " > curBrightness=" + curBrightness);
-            }
-        }
-    }
-
-    float levelToBrightness(final int level) {
-        final double d = 0.064 + 0.936 / (double) 30 * (double) level;
-        return Math.max(0f, Math.min((float) (d * d), 1f));
-    }
-
-    int brightnessToLevel(final float brightness) {
-        double d = Math.sqrt(brightness);
-        double level = (d - 0.064) * 30 / 0.936;
-        return (int) Math.max(0, Math.min((int) Math.round(level), 30));
-    }
-
-    float levelToBrightnessGamma(final int level) {
-        float gamma = 2.2f; // Gamma value for brightness correction
-        final float brightness = (float) Math.pow((float) level / 30f, gamma);
-        return Math.max(0f, Math.min(brightness, 1f));
-    }
-
-    int brightnessToLevelGamma(final float brightness) {
-        final float gamma = 2.2f; // Gamma value for brightness correction
-        final int brightnessLevel = Math.round(30f * (float) Math.pow(brightness, 1 / gamma));
-        return Math.max(0, Math.min(brightnessLevel, 30));
-    }
-
     private void scrollIncrementalBrightnessUpdate(boolean increase) {
-        float currentBrightness = getBrightness();
-        int currentIntBrightness= getLinearBrightness();
+        float currentBrightness = PlayerBrightnessManager.getBrightness(mWindow);
+        int currentIntBrightness= PlayerBrightnessManager.getLinearBrightness(mWindow);
         int newIntBrightness;
         Drawable brightnessIcon = getDrawable(mContext, R.drawable.ic_brightness);
         if (mOsdRightTextView != null) {
@@ -2094,7 +2035,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         if (increase) newIntBrightness = currentIntBrightness + 1;
         else newIntBrightness = currentIntBrightness - 1;
         newIntBrightness = Math.max(0, Math.min(newIntBrightness, 30)); // Constrain the brightness between 0 and maxBrightness
-        setLinearBrightness(newIntBrightness, increase);
+        PlayerBrightnessManager.setLinearBrightness(newIntBrightness, increase, mWindow);
         if (mOsdRightTextView != null) mOsdRightTextView.setCompoundDrawablesWithIntrinsicBounds(brightnessIcon, null, null, null);
         log.debug("scrollIncrementalBrightnessUpdate: increase=" + increase + ", currentBrightness=" + currentBrightness + ", maxBrightness=" + 30 + ", newBrightness=" + newIntBrightness);
         hideOsdHandler.removeCallbacks(hideOsdRunnable);
