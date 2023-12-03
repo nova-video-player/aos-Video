@@ -67,6 +67,8 @@
             style="@style/PlayerControlButton"
             android:paddingLeft="@dimen/player_button_padding_small"
             android:paddingRight="@dimen/player_button_padding_half"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
             ads:srcCompat="@drawable/video_play" />
 
         <ImageButton
@@ -74,6 +76,8 @@
             style="@style/PlayerControlButton"
             android:paddingLeft="@dimen/player_button_padding_half"
             android:paddingRight="@dimen/player_button_padding_small"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
             ads:srcCompat="@drawable/video_backward_selector" />
 
         <RelativeLayout
@@ -131,6 +135,8 @@
             style="@style/PlayerControlButton"
             android:paddingLeft="@dimen/player_button_padding_small"
             android:paddingRight="@dimen/player_button_padding_half"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
             ads:srcCompat="@drawable/video_forward_selector" />
 
         <ImageButton
@@ -138,6 +144,8 @@
             style="@style/PlayerControlButton"
             android:paddingLeft="@dimen/player_button_padding_half"
             android:paddingRight="@dimen/player_button_padding_full"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
             ads:srcCompat="@drawable/video_format_original_selector" />
     </LinearLayout>
 

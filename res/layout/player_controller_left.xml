@@ -25,6 +25,7 @@
         android:layout_marginTop="@dimen/volume_button_vertical_margin"
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
         android:src="@drawable/volume_up" />
 
     <com.archos.mediacenter.utils.seekbar.ArchosProgressSlider
@@ -47,6 +48,6 @@
         android:layout_marginTop="0dip"
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
         android:src="@drawable/volume_down" />
-
 </LinearLayout>

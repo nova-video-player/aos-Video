@@ -116,6 +116,8 @@
                 android:paddingBottom="10dip"
                 android:paddingLeft="5dip"
                 android:paddingRight="5dip"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
                 ads:srcCompat="@drawable/video_play_selector" />
 
             <ImageButton
@@ -126,6 +128,8 @@
                 android:paddingBottom="10dip"
                 android:paddingLeft="5dip"
                 android:paddingRight="5dip"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
                 ads:srcCompat="@drawable/video_backward_selector" />
 
             <ImageButton
@@ -135,6 +139,8 @@
                 android:paddingBottom="10dip"
                 android:paddingLeft="5dip"
                 android:paddingRight="5dip"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
                 ads:srcCompat="@drawable/video_forward_selector" />
 
             <ImageButton
@@ -145,6 +151,8 @@
                 android:paddingBottom="10dip"
                 android:paddingLeft="10dip"
                 android:paddingRight="0dip"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
                 ads:srcCompat="@drawable/video_format_original_selector" />
         </RelativeLayout>
     </LinearLayout>
