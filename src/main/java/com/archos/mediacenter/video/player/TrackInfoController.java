@@ -337,7 +337,11 @@ public class TrackInfoController implements OnMenuItemClickListener, OnItemClick
     
     public CharSequence getTrackNameAt(int position) {
         TrackItem item = mTrackItemList.get(position);
-        return ((TrackInfo)item).name;
+        if (item instanceof TrackInfo) {
+            return ((TrackInfo)item).name;
+        } else {
+            return "";
+        }
     }
 
     public void addTrack(CharSequence name) {
