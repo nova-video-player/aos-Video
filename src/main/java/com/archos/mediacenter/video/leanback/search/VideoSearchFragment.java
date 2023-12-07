@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 import androidx.leanback.app.BackgroundManager;
@@ -111,7 +112,9 @@ public class VideoSearchFragment extends SearchSupportFragment implements Search
         super.onActivityCreated(savedInstanceState);
         Resources r = getResources();
         BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
-        bgMngr.attach(getActivity().getWindow());
+        try {
+            bgMngr.attach(getActivity().getWindow());
+        } catch (IllegalStateException e) {}
         bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.leanback_background));
     }
 
