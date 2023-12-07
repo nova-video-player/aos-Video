@@ -543,15 +543,18 @@ public class Player implements IPlayerControl,
     public void stayAwake(boolean awake) {
         if(mWindow==null)
             return;
-        LayoutParams lp = mWindow.getAttributes();
-        if (awake) {
-            lp.flags |= SCREEN_ON_FLAGS;
-        } else {
-
-            lp.flags &= ~SCREEN_ON_FLAGS;
-
-        }
-        mWindow.setAttributes(lp);
+        mWindow.getDecorView().post(new Runnable() {
+            @Override
+            public void run() {
+                LayoutParams lp = mWindow.getAttributes();
+                if (awake) {
+                    lp.flags |= SCREEN_ON_FLAGS;
+                } else {
+                    lp.flags &= ~SCREEN_ON_FLAGS;
+                }
+                mWindow.setAttributes(lp);
+            }
+        });
     }
     public void setIsTorrent(boolean isTorrent){
         mIsTorrent = isTorrent;
