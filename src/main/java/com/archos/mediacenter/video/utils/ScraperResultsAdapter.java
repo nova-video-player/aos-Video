@@ -24,6 +24,7 @@ import com.archos.mediascraper.MovieTags;
 import com.archos.mediascraper.SearchResult;
 import com.archos.mediascraper.ShowTags;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import androidx.core.content.ContextCompat;
@@ -179,23 +180,29 @@ public class ScraperResultsAdapter extends BaseAdapter {
         // Replace the data of the item at the provided position
         if (position >= mItems.size())
             return;
-        ItemData itemData = mItems.get(position);
+        ((Activity) mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ItemData itemData = mItems.get(position);
 
-        File posterFile = movieTags.getCover();
-        if (posterFile != null) {
-            itemData.posterPath = posterFile.getPath();
-        }
+                File posterFile = movieTags.getCover();
+                if (posterFile != null) {
+                    itemData.posterPath = posterFile.getPath();
+                }
 
-        if (movieTags.getYear() != 0) {
-            itemData.date = String.valueOf(movieTags.getYear());
-        }
+                if (movieTags.getYear() != 0) {
+                    itemData.date = String.valueOf(movieTags.getYear());
+                }
 
-        if (movieTags.getDirectors().size() > 0) {
-            // Append all the directors as a single string
-            itemData.directors = TextUtils.join(", ", movieTags.getDirectors());
-        }
+                if (movieTags.getDirectors().size() > 0) {
+                    // Append all the directors as a single string
+                    itemData.directors = TextUtils.join(", ", movieTags.getDirectors());
+                }
 
-        mItems.set(position, itemData);
+                mItems.set(position, itemData);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     public void addItemData(MovieTags movieTags) {
