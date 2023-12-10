@@ -220,7 +220,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             // Close the progress dialog
             if (mDialog != null) {
-                mDoNotFinish = false;
+                mDoNotFinish = true;
                 mDialog.dismiss();
             }
         }
