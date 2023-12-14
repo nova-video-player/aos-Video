@@ -350,7 +350,8 @@ public class CustomApplication extends Application {
 
         updateVersionState(this);
         if (openSubtitlesApiHelper == null) openSubtitlesApiHelper = OpenSubtitlesApiHelper.getInstance();
-        makeUseOpenSubtitlesRestApi(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(VideoPreferencesCommon.KEY_OPENSUBTITILES_REST_API, true));
+        //makeUseOpenSubtitlesRestApi(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(VideoPreferencesCommon.KEY_OPENSUBTITILES_REST_API, true));
+        makeUseOpenSubtitlesRestApi(true);
     }
 
     private void launchSambaDiscovery() {

@@ -283,7 +283,8 @@
             android:key="subtitles_new_api"
             android:summary="@string/subtitles_use_rest_api_summary"
             android:title="@string/subtitles_use_rest_api"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false"
+            android:visibility="gone"/>
 
         <CheckBoxPreference
             android:defaultValue="false"
