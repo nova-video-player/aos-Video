@@ -661,7 +661,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         });
         boolean doHide = mSharedPreferences.getBoolean(KEY_SUBTITLES_HIDE, false);
 
-        boolean useOpenSubtitlesRestAPi = mSharedPreferences.getBoolean(KEY_OPENSUBTITILES_REST_API, false);
+        boolean useOpenSubtitlesRestAPi = mSharedPreferences.getBoolean(KEY_OPENSUBTITILES_REST_API, true);
         CustomApplication.makeUseOpenSubtitlesRestApi(useOpenSubtitlesRestAPi);
 
         mSubtitlesFavLangPreferences = (ListPreference) findPreference(KEY_SUBTITLES_FAV_LANG);
