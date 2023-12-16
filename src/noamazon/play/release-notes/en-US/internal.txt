@@ -1,7 +1,7 @@
+- Enforce new opensubtitles REST-API with quotas becoming mandatory in in January
 - Add player gesture control
 - New nova icon
-- use new opensubtitles REST-API with quotas to be enforced in January
-- Update jcifs-ng to 2.1.10, sshj to 0.37.0, smbj to 0.13.0, ffmpeg to 6.1, dav1d to 1.3.0, boot to 1.84.0, libtorrent to 2.9.0
+- Update jcifs-ng to 2.1.10, sshj to 0.37.0, smbj to 0.13.0, ffmpeg to 6.1, dav1d to 1.3.0, boost to 1.84.0, libtorrent to 2.9.0
 - Add missing anime shows by alpha on Android TV
 - Avoid top/bottom grey bars on chromebooks while playing videos
 - Fix AV1 decoding regression
