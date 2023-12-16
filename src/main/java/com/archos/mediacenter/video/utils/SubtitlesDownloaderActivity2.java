@@ -269,7 +269,6 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             else return FileUtils.getFileNameWithoutExtension(Uri.parse(fileUrl));
         }
 
-        @SuppressWarnings("unchecked")
         public void getSubtitle(final String fileUrl, final ArrayList<String> languages) {
             log.debug("getSubtitle: fileUrl " +  fileUrl + ", language=" + String.join(",", languages));
             if (fileUrl == null || fileUrl.isEmpty() || languages == null || languages.isEmpty()){
@@ -298,7 +297,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 mHandler.post(() -> askSubChoice(fileUrl, searchResults,languages.size()>1, !searchResults.isEmpty()));
             } else {
                 log.warn("getSubtitles: no subs found on opensubtitles for " + fileUrl);
-                displayToast(getString(R.string.dialog_subloader_fails) + " " + fileUrl);
+                displayToast(getString(R.string.dialog_subloader_fails) + " " + fileInfo.getFileName());
                 return;
             }
             MediaUtils.removeLastSubs(SubtitlesDownloaderActivity2.this);
