@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -267,9 +268,11 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
                 this.finish();
             } catch (FileNotFoundException e) {
                 log.error("caught FileNotFoundException", e);
+                Toast.makeText(this,  getString(R.string.blocklist_file_not_found) + " " + mTorrentURL, Toast.LENGTH_SHORT).show();
                 this.finish();
             } catch (IOException e) {
-                log.error("caught IoException", e);
+                log.error("IoException", e);
+                Toast.makeText(this, "IOException error", Toast.LENGTH_SHORT).show();
                 this.finish();
             }
             try {
