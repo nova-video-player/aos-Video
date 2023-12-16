@@ -264,10 +264,13 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
                 }
             } catch (ZipException z) {
                 log.error("caught ZipException: reverting to filestream");
+                this.finish();
             } catch (FileNotFoundException e) {
                 log.error("caught FileNotFoundException", e);
+                this.finish();
             } catch (IOException e) {
                 log.error("caught IoException", e);
+                this.finish();
             }
             try {
                 if (is != null) is.close();
@@ -286,6 +289,9 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
     @Override
     public void onStop(){
         super.onStop();
+        if (mProgress != null && mProgress.isShowing()) {
+            mProgress.dismiss();
+        }
         if(isChangingConfigurations())
             return;
         isClosingService=true;
