@@ -425,6 +425,8 @@
     <string name="dialog_subloader_credentials_empty">Вы должны указать правильное имя пользователя и пароль!</string>
     <string name="toast_subloader_credentials_empty">Предоставьте учетные данные Opensubtitles в настройках, чтобы иметь возможность загружать субтитры</string>
     <string name="toast_subloader_login_failed">Неверные учетные данные Opensubtitles или служба недоступна</string>
+    <string name="toast_subloader_quota_exceeded">Превышена квота загрузок OpenSubtitles</string>
+    <string name="opensubtitles_quota_reset_time_remaining">Квота сбросится через %s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Параметры субтитры</string>
     <string name="subtitle_sample_text">«образец»</string>
@@ -546,6 +548,8 @@
     <string name="category_languages">Субтитры</string>
     <string name="subtitles_hide_default">Скрыть субтитры по умолчанию</string>
     <string name="subtitles_hide_default_summary">Отметьте, если желаете скрывать субтитры по умолчанию</string>
+    <string name="subtitles_use_rest_api">Использовать новый OpenSubtitles API</string>
+    <string name="subtitles_use_rest_api_summary">Использовать новый REST-API, который будет принудительно запущен с 2024 г., вместо XML-RPC с квотами</string>
     <string name="subtitles_credentials_title">Учётные данные Opensubtitles</string>
     <string name="subtitles_credentials_summary">Предоставьте учетные данные Opensubtitles в настройках, чтобы иметь возможность загружать субтитры</string>
     <string name="preferences_languages">Язык загружаемых субтитров</string>
