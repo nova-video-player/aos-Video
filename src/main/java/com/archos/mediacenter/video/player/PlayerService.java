@@ -1064,6 +1064,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 PlayerService.sPlayerService.mPlayerState = PlayerService.PlayerState.PLAYING;
             }
             if(mAudioSubtitleNeedUpdate){ // when we have info about subs or audio track BEFORE mVideoInfo is set
+                log.debug("postPreparedAndVideoDb: subtitletrack onSubtitleMetadataUpdated " + mNewSubtitleTrack);
                 onSubtitleMetadataUpdated(mPlayer.getVideoMetadata(), mNewSubtitleTrack);
                 onAudioMetadataUpdated(mPlayer.getVideoMetadata(), mNewAudioTrack);
                 mAudioSubtitleNeedUpdate = false;
@@ -1277,29 +1278,28 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mAudioSubtitleNeedUpdate = true;
             return;
         }
-        int nbTrack = vMetadata.getSubtitleTrackNb();
+        int nbTrack = vMetadata.getSubtitleTrackNb(); // this contains the number of subtitlesTracks not including the none track
         log.debug("onSubtitleMetadataUpdated: nbTrack=" + nbTrack + " newSubtitleTrack=" + newSubtitleTrack + " mVideoInfo.subtitleTrack=" + mVideoInfo.subtitleTrack + " mHideSubtitles=" + mHideSubtitles + " mSubsFavoriteLanguage=" + mSubsFavoriteLanguage + " mVideoInfo.subtitleTrack=" + mVideoInfo.subtitleTrack);
         if (nbTrack != 0) {
-            // none track
-            int noneTrack = -1; // here it tracks mVideoInfo.subtitleTrack that are the tracks of the video (not the none from menu)
-    
-            if (mVideoInfo.subtitleTrack == noneTrack) {
+            int noneTrack = nbTrack; // here it tracks mVideoInfo.subtitleTrack that are the tracks of the video (not the none from menu)
+            if (mVideoInfo.subtitleTrack == -1) { // means no track has been selected before
                 if (mHideSubtitles) {
                     log.debug("onSubtitleMetadataUpdated: hide subs -> selected none track");
                     mVideoInfo.subtitleTrack = noneTrack;
                 } else {
                     Locale locale = new Locale(mSubsFavoriteLanguage);
                     log.debug("onSubtitleMetadataUpdated: favorite locale " + locale.getDisplayLanguage() + ", current locale " + Locale.getDefault().getDisplayLanguage());
-                    for (int i = 0; i < nbTrack; ++i) {
+                    for (int i = 0; i < nbTrack; ++i) { // select default track
                         // vMetadata.getSubtitleTrack(i).name is either "XYZ" or "title (XYZ)"
                         log.debug("onSubtitleMetadataUpdated: subtitle track " + i + " name=" + vMetadata.getSubtitleTrack(i).name + " displayLanguage=" + locale.getDisplayLanguage() + " findLanguageInString=" + findLanguageInString(vMetadata.getSubtitleTrack(i).name));
-                        if (locale.getDisplayLanguage().equalsIgnoreCase(findLanguageInString(vMetadata.getSubtitleTrack(i).name)) && ! stringContainsForced(vMetadata.getSubtitleTrack(i).name)) {
+                        if (locale.getDisplayLanguage().equalsIgnoreCase(findLanguageInString(vMetadata.getSubtitleTrack(i).name))
+                                && ! stringContainsForced(vMetadata.getSubtitleTrack(i).name)) {
                             log.debug("onSubtitleMetadataUpdated: selected default track: " + vMetadata.getSubtitleTrack(i).name + " matching locale language " + locale.getDisplayLanguage());
                             mVideoInfo.subtitleTrack = i;
                             break;
                         }
                     }
-                    if (mVideoInfo.subtitleTrack == noneTrack)
+                    if (mVideoInfo.subtitleTrack == -1)
                         mVideoInfo.subtitleTrack = newSubtitleTrack;
                 }
             }
@@ -1314,16 +1314,16 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     mPlayer.setSubtitleRatio(mVideoInfo.subtitleRatio);
                 }
             }
-            if (mVideoInfo.subtitleTrack == noneTrack) {
-                mPlayer.setSubtitleTrack(mVideoInfo.subtitleTrack);
+            if (mVideoInfo.subtitleTrack == noneTrack) { // if none track selected, player gets -1 track
+                mPlayer.setSubtitleTrack(-1);
             }
 
             firstTimeCalled=false;
-        }
-        else
+        } else
             firstTimeCalled = true;
         
         if(mPlayerFrontend!=null) {
+            log.debug("onSubtitleMetadataUpdated: subtitletrack onSubtitleMetadataUpdated " + newSubtitleTrack);
             mPlayerFrontend.onSubtitleMetadataUpdated(vMetadata, newSubtitleTrack);
         }
     }

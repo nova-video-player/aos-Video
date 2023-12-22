@@ -2711,6 +2711,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         int viewMode = VideoEffect.getDefaultMode();
         int viewType = VideoEffect.getDefaultType();
         if (mVideoInfo != null) {
+
+            log.debug("setVideoInfo: mVideoInfo.subtitleTrack " + mVideoInfo.subtitleTrack);
+
             // one of them is already known, don't care and overwrite both
 
             mVideoId = mVideoInfo.id;
@@ -2820,8 +2823,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             if(mBookmarkMenuItem!=null) {
                 mBookmarkMenuItem.setVisible(canSetBookmark());
             }
-                mPlayerListener.onAudioMetadataUpdated(mPlayer.getVideoMetadata(), mNewAudioTrack);
-                mPlayerListener.onSubtitleMetadataUpdated(mPlayer.getVideoMetadata(), mNewSubtitleTrack);
+            mPlayerListener.onAudioMetadataUpdated(mPlayer.getVideoMetadata(), mNewAudioTrack);
+            log.debug("postVideoInfoAndPrepared: subtitletrack onSubtitleMetadataUpdated " + mNewSubtitleTrack);
+            mPlayerListener.onSubtitleMetadataUpdated(mPlayer.getVideoMetadata(), mNewSubtitleTrack);
         }
     }
 
@@ -2834,7 +2838,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     }
 
     public void showTraktResumeDialog(final int localTraktPosition, VideoDbInfo localVideoInfo) {
-    	mVideoInfo = localVideoInfo;
+        mVideoInfo = localVideoInfo;
         if(PlayerService.sPlayerService!=null){
             PlayerService.sPlayerService.setVideoInfo(mVideoInfo);
             PlayerService.sPlayerService.requestIndexAndScrap();
@@ -3245,19 +3249,51 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
     }
 
+    int positionToSubtitleTrack(int position, int nbTracks) { // nbTracks does not count none track
+        // subtitleTracks are between 0<=track<=nbTrack and none track is nbTrack
+        if (position == 0) return nbTracks; // position 0 is none track thus return nbTracks
+        else return (position - 1) % (nbTracks + 1);
+    }
+
+    int positionToPlayerSubtitleTrack(int position, int nbTracks) { // nbTracks does not count none track
+        if (position == 0) return -1; // position 0 is none track thus return -1 for the player
+        else return (position - 1) % nbTracks;
+    }
+
+    int subtitleTrackToPosition(int subtitleTrack, int nbTracks) { // nbTracks does not count none track
+        // position is between 0<=position<=nbTrack with 0 is none track
+        return (subtitleTrack + 1) % (nbTracks + 1);
+    }
+
+    int nextSubtitleTrack(int subtitleTrack, int nbTracks) { // nbTracks does not count none track
+        // subtitleTracks are between 0<=track<=nbTrack-1 and none track is -1
+        // none track is covered in nextSubtitleTrack
+        if (subtitleTrack == nbTracks) return -1; // none track
+        else return (subtitleTrack + 1) % nbTracks;
+    }
+
+    int nextPosition(int subtitleTrack, int nbTracks) { // nbTracks does not count none track
+        // position is between 0<=position<=nbTrack with 0 is none track
+        return (subtitleTrack + 1) % (nbTracks + 1);
+    }
+
+    // 0<=subtitleTrack<=nbTracks and noneTrack=nbTracks
+    // 0<=subtitlepostion<=nbTracks and noneTrack=0
+    // warning: when addressing mPlayer.setSubtitleTrack none track is -1
+
     /* PlayerController.Settings */
     public void switchSubtitleTrack() { // switch to next subtitle track avoiding none
         if (mSubtitleInfoController.getTrackCount() > 1) {
-            log.debug("switchSubtitleTrack: " + mVideoInfo.subtitleTrack + " mSubtitleInfoController.getTrackCount(): " + mSubtitleInfoController.getTrackCount());
-            int newSubtitleTrack = (mVideoInfo.subtitleTrack + 1) % mSubtitleInfoController.getTrackCount();
-            if (newSubtitleTrack == mSubtitleInfoController.getTrackCount() -1) newSubtitleTrack = -1; // to capture noneTrack
-            if (mPlayer.setSubtitleTrack(newSubtitleTrack)) {
+            log.debug("switchSubtitleTrack: " + mVideoInfo.subtitleTrack + " mVideoInfo.nbSubtitles: " + mVideoInfo.nbSubtitles);
+            int newSubtitlePosition = nextPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles);
+            int newSubtitleTrack = positionToSubtitleTrack(newSubtitlePosition, mVideoInfo.nbSubtitles);
+            if (mPlayer.setSubtitleTrack(positionToPlayerSubtitleTrack(newSubtitlePosition, mVideoInfo.nbSubtitles))) {
                 mVideoInfo.subtitleTrack = newSubtitleTrack;
                 mSubtitleManager.clear();
-                mSubtitleInfoController.setTrack(mVideoInfo.subtitleTrack + 1);
+                mSubtitleInfoController.setTrack(mVideoInfo.subtitleTrack);
 
                 mPlayerController.updateToast(getResources().getText(R.string.player_subtitle_track_toast) + " " +
-                        mSubtitleInfoController.getTrackNameAt(mVideoInfo.subtitleTrack + 1));
+                        mSubtitleInfoController.getTrackNameAt(mVideoInfo.subtitleTrack));
             }
         }
         log.info("switchSubtitleTrack: " + mVideoInfo.subtitleTrack);
@@ -3301,19 +3337,22 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 myShowDialog(DIALOG_CODEC_NOT_SUPPORTED);
             }
         } else if (trackInfoController == mSubtitleInfoController) {
-            if (position != mVideoInfo.subtitleTrack + 1) {
-                log.debug("onTrackSelected: position={}, mVideoInfo.subtitleTrack={}", position, mVideoInfo.subtitleTrack);
-                ret = mPlayer.setSubtitleTrack(position - 1);
+            if (position != subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles)) {
+                log.debug("onTrackSelected: position={}, old mVideoInfo.subtitleTrack={}", position, mVideoInfo.subtitleTrack);
+                ret = mPlayer.setSubtitleTrack(positionToPlayerSubtitleTrack(position, mVideoInfo.nbSubtitles));
                 if (ret) {
                     mSubtitleManager.clear();
-                    mVideoInfo.subtitleTrack = position - 1;
+                    mVideoInfo.subtitleTrack = positionToSubtitleTrack(position, mVideoInfo.nbSubtitles);
+                    log.debug("onTrackSelected: -> mVideoInfo.subtitleTrack={}", mVideoInfo.subtitleTrack);
                 } else {
-                    log.debug("onTrackSelected: player failed to get to subtitletrack {}", position - 1);
+                    log.debug("onTrackSelected: player failed to get to subtitletrack {}", positionToSubtitleTrack(position, mVideoInfo.nbSubtitles));
                 }
                 if (mVideoInfo.subtitleTrack >= 0) {
-                    String trackName = mSubtitleInfoController.getTrackNameAt(mVideoInfo.subtitleTrack + 1).toString();
+                    String trackName = mSubtitleInfoController.getTrackNameAt(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles)).toString();
                     mSubtitleInfoController.enableSettings(SUBTITLE_MENU_DELAY, !trackName.equals(getText(R.string.s_none)), true);
-                    log.debug("onTrackSelected: position={}, mSubtitleInfoController.getTrackNameAt({})={} mVideoInfo.subtitleTrack={}", position, trackName, mVideoInfo.subtitleTrack + 1, mVideoInfo.subtitleTrack);
+                    log.debug("onTrackSelected: position={}, mSubtitleInfoController.getTrackNameAt({}) mVideoInfo.subtitleTrack={}", position, trackName, mVideoInfo.subtitleTrack);
+                } else {
+                    log.debug("onTrackSelected: position={}, None mVideoInfo.subtitleTrack={}", position, mVideoInfo.subtitleTrack);
                 }
             }
         }
@@ -3542,24 +3581,25 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mAudioSubtitleNeedUpdate = true;
                 return;
             }
-            int nbTrack = vMetadata.getSubtitleTrackNb();
+            int nbTrack = vMetadata.getSubtitleTrackNb(); // it does not include none track
 
             final boolean firstTimeCalled = mSubtitleInfoController.getTrackCount() == 0;
 
-            log.debug("onSubtitleMetadataUpdated: newSubtitle: " + newSubtitleTrack + ", mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack + ", firstTimeCalled: " + firstTimeCalled);
+            log.debug("onSubtitleMetadataUpdated: newSubtitle: " + newSubtitleTrack + ", mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack + ", firstTimeCalled: " + firstTimeCalled + ", nbTrack: " + nbTrack);
 
             mSubtitleInfoController.clear();
-            int noneTrack = 0; // hereit tracks the mSubtitleInfoController tracks containing the none track at position 0
+
+            int noneTrack = nbTrack; // none track is at position nbTrack even if displayed in menu as track 0
+            int nonePosition = 0;
 
             if (nbTrack != 0) {
-                mSubtitleInfoController.addTrack(getText(R.string.s_none)); // first track is none
-                mVideoInfo.nbSubtitles = nbTrack;
+                mSubtitleInfoController.addTrack(getText(R.string.s_none)); // first track displayed is none
+                mVideoInfo.nbSubtitles = nbTrack; // nbSubtitles does not capture none track
 
                 for (int i = 0; i < nbTrack; ++i) {
                     mSubtitleInfoController.addTrack(replaceLanguageCodeInString(vMetadata.getSubtitleTrack(i).name));
                 }
 
-                nbTrack++; // one more track to capture the none track
                 mSubtitleInfoController.addSeparator();
 
                 mSubtitleInfoController.addSettings(getText(R.string.player_pref_subtitle_delay_title), R.drawable.ic_menu_delay, SUBTITLE_MENU_DELAY);
@@ -3579,15 +3619,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mSubtitleManager.setVerticalPosition(vpos);
                 mSubtitleManager.setOutlineState(outline);
 
-                // mVideoInfo.subtitleTrack is the track number without the none track 0<=mVideoInfo.subtitleTrack<nbTrack
-                // but mSubtitleInfoController is the track number with the none track (i.e. nbTrack + 1)
+                // mVideoInfo.subtitleTrack is the track number with the none track 0<=mVideoInfo.subtitleTrack<=nbTrack, nbTrack for none track
+                // but mSubtitleInfoController is the track number with the none track (i.e. nbTrack + 1) at position 0
 
                 // If no language set for subs, set the user favorite. Or system language if none.
                 if (!mHideSubtitles && mVideoInfo.subtitleTrack == -1) {
                     Locale locale = new Locale(mSubsFavoriteLanguage);
-                    for (int i = 0; i < nbTrack; ++i) {
+                    for (int i = 0; i < nbTrack; ++i) { // loop through subtitleTracks to select default one not considering none
                         // select default locale and avoid forced subs
-                        if (locale.getDisplayLanguage().equalsIgnoreCase(findLanguageInString(mSubtitleInfoController.getTrackNameAt(i + 1).toString())) && ! stringContainsForced(mSubtitleInfoController.getTrackNameAt(i + 1).toString())) {
+                        if (locale.getDisplayLanguage().equalsIgnoreCase(findLanguageInString(mSubtitleInfoController.getTrackNameAt(i + 1).toString()))
+                                && ! stringContainsForced(mSubtitleInfoController.getTrackNameAt(i + 1).toString())) {
                             log.debug("onSubtitleMetadataUpdated: selected default track: " + mSubtitleInfoController.getTrackNameAt(i + 1).toString() + " matching locale language " + locale.getDisplayLanguage());
                             mVideoInfo.subtitleTrack = i;
                             break;
@@ -3596,16 +3637,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 }
 
                 log.debug("onSubtitleMetadataUpdated: mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack + " nbTrack: " + nbTrack);
-                if (mVideoInfo.subtitleTrack >= 0 && mVideoInfo.subtitleTrack < nbTrack) {
+                if (mVideoInfo.subtitleTrack >= 0 && mVideoInfo.subtitleTrack <= nbTrack) {
                     //mVideoInfo.subtitleTrack has been changed by playerservice
                     log.debug("onSubtitleMetadataUpdated: mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack);
-                    mSubtitleInfoController.setTrack(mVideoInfo.subtitleTrack + 1); // +1 since no track is at position 0
+                    mSubtitleInfoController.setTrack(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles)); // +1 since none track is at position 0
                 }
-                if (mVideoInfo.subtitleTrack == -1) { // selects none track in this case
-                    log.debug("onSubtitleMetadataUpdated: mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack + " -> setting none track");
-                    mSubtitleInfoController.setTrack(0);
+                if (mVideoInfo.subtitleTrack == -1) { // selects first track in this case to avoid none track
+                    log.debug("onSubtitleMetadataUpdated: mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack + " -> setting first track");
+                    mSubtitleInfoController.setTrack(1);
                 }
-                if (mSubtitleInfoController.getTrack() == noneTrack) {
+                if (mSubtitleInfoController.getTrack() == nonePosition) {
                     log.debug("onSubtitleMetadataUpdated: none track selected, disabling delay menu");
                     mSubtitleInfoController.enableSettings(SUBTITLE_MENU_DELAY, false, false);
                 }
@@ -3637,7 +3678,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
         @Override
         public void onVideoDb(final VideoDbInfo localVideoInfo, final VideoDbInfo remoteVideoInfo) {
-            log.debug("onVideoDb: videoInfo: " + localVideoInfo);
+            log.debug("onVideoDb: localVideoInfo.subtitleTrack={}, remoteVideoInfo.subtitleTrack={}", ((localVideoInfo != null) ? localVideoInfo.subtitleTrack : "none"), ((remoteVideoInfo != null) ? remoteVideoInfo.subtitleTrack : "none"));
             log.debug("onVideoDb: trakt: " + localVideoInfo.traktResume+ " local "+ localVideoInfo.resume);
             if (localVideoInfo != null) {
                 final int localTraktPosition = Math.abs(localVideoInfo.duration>0 ? (int)(localVideoInfo.traktResume * (double) localVideoInfo.duration / 100) : 0);

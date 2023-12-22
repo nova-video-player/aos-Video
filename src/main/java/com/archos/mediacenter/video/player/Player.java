@@ -260,7 +260,8 @@ public class Player implements IPlayerControl,
         public void onPrepared() {
             if (mSeek != -1)
                 seekTo(mSeek);
-            if (mSubtitleTrack != -1) 
+            log.debug("onPrepared: subtitleTrack=" + mSubtitleTrack);
+            if (mSubtitleTrack != -1)
                 mMediaPlayer.setSubtitleTrack(mSubtitleTrack);
             if (mSubtitleDelay != 0)
                 mMediaPlayer.setSubtitleDelay(mSubtitleDelay);
@@ -283,6 +284,7 @@ public class Player implements IPlayerControl,
             return mSeek;
         }
         public void setSubtitleTrack(int subtitleTrack) {
+            log.debug("setSubtitleTrack: " + subtitleTrack);
             mSubtitleTrack = subtitleTrack;
         }
         public void setSubtitleDelay(int subtitleDelay) {
@@ -841,7 +843,7 @@ public class Player implements IPlayerControl,
     }
 
     public boolean setSubtitleTrack(int stream) {
-
+        log.debug("setSubtitleTrack: select stream " + stream);
         if (isInPlaybackState()) {
             return mMediaPlayer.setSubtitleTrack(stream);
         } else {
@@ -969,6 +971,7 @@ public class Player implements IPlayerControl,
                     int currentSubtitle = -1;
                     if (data.has(IMediaPlayer.METADATA_KEY_CURRENT_SUBTITLE_TRACK))
                         currentSubtitle = data.getInt(IMediaPlayer.METADATA_KEY_CURRENT_SUBTITLE_TRACK);
+                    log.debug("handleMetadata: currentSubtitleTrack -1 -> " + currentSubtitle);
                     mPlayerListener.onSubtitleMetadataUpdated(mVideoMetadata, currentSubtitle);
                 }
             }
