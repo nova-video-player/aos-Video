@@ -1879,6 +1879,12 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     public boolean onSingleTapUp(MotionEvent e) { return false; }
 
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+
+        if(mIsLocked){
+            showUnlockInstructions(true);
+            return true;
+        }
+
         float deltaY = e2.getY() - e1.getY();
 
         WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
@@ -1931,6 +1937,12 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     @Override
     public boolean onDoubleTapEvent(MotionEvent e) {
+
+        if(mIsLocked){
+            showUnlockInstructions(true);
+            return true;
+        }
+
         if (e.getAction() == MotionEvent.ACTION_UP) {
             log.debug("onDoubleTapEvent");
             float x = e.getX();
