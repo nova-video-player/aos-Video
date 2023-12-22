@@ -852,7 +852,7 @@
     <string name="rescrap_collections_in_progress">Rescrapen aller Sammlungen</string>
     <string name="acquire_external_usb_permission">Der Datei-Manager benötigt eine spezielle Zugriffs-Berechtigung auf den externen Speicher. Bitte wählen Sie den Speicherplatz auf dem nächsten Bildschirm aus</string>
     <string name="rescrap_not_found">Videos ohne Beschreibung re-scrapen</string>
-    <string name="rescrap_all_title">Re-scrap alles</string>
+    <string name="rescrap_all_title">Re-scrape alles</string>
     <string name="rescrap_all_movies_title">Rescrape alle Filme</string>
     <string name="rescrap_all_collections_title">Rescrape alle Sammlungen</string>
     <string name="nfo_export_manual_title">Bereits gescrapte Videos exportieren</string>
