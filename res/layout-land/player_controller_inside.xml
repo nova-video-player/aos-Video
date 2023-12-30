@@ -85,8 +85,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:paddingBottom="13dip"
-                android:paddingTop="31dip" />
+                android:paddingBottom="9dip"
+                android:paddingTop="20dip" />
 
             <TextView
                 android:id="@+id/time_current"
@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:paddingTop="10dip"
+                android:paddingTop="0dip"
                 android:textSize="@dimen/player_time_text_size"
                 android:textStyle="bold" />
 
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:paddingTop="10dip"
+                android:paddingTop="0dip"
                 android:textSize="@dimen/player_time_text_size"
                 android:textStyle="bold" />
         </RelativeLayout>
@@ -156,7 +156,7 @@
         android:visibility="invisible"
         android:layout_marginTop="60dp"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="46dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:paddingTop="6sp"
