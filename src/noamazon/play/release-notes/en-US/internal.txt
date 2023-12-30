@@ -1,3 +1,4 @@
+- Faster local/USB storage scan at application start
 - Enforce new opensubtitles REST-API with quotas becoming mandatory in in January
 - Add player gesture control
 - New nova icon
