@@ -16,7 +16,7 @@
 
 <resources>
     
-    <dimen name="player2014_bar_width">60dip</dimen>
+    <dimen name="player2014_bar_width">45dip</dimen>
 
     <!-- ============ VIDEO INFO BROWSER ============ -->
     <!-- Needed only for "notouch" but for some reason it is sometimes used in other cases (we see some crashes on Google Play reports)-->

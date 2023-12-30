@@ -36,8 +36,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
         android:paddingBottom="4dip"
-        android:paddingLeft="22dip"
-        android:paddingRight="22dip"
+        android:paddingLeft="17dip"
+        android:paddingRight="17dip"
         android:paddingTop="4dip" />
 
     <com.archos.mediacenter.utils.RepeatingImageButton
