@@ -94,8 +94,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:paddingBottom="13dip"
-                android:paddingTop="31dip" />
+                android:paddingBottom="9dip"
+                android:paddingTop="20dip" />
 
             <TextView
                 android:id="@+id/time_current"
@@ -103,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:paddingTop="10dip"
+                android:paddingTop="0dip"
                 android:textSize="@dimen/player_time_text_size"
                 android:textStyle="bold" />
 
@@ -125,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:paddingTop="10dip"
+                android:paddingTop="0dip"
                 android:textSize="@dimen/player_time_text_size"
                 android:textStyle="bold" />
         </RelativeLayout>
@@ -147,6 +147,47 @@
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             ads:srcCompat="@drawable/video_format_original_selector" />
+
     </LinearLayout>
+
+    <TextView android:id="@+id/osd_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="84dp"
+        android:drawableStart="@drawable/ic_volume"
+        android:text="15"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:lineSpacingMultiplier="1.1"
+        android:background="@drawable/rounded_rectangle"
+        android:visibility="invisible"
+        android:layout_marginTop="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="76dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="6sp"
+        android:paddingBottom="6sp"/>
+
+    <TextView android:id="@+id/osd_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="84dp"
+        android:drawableStart="@drawable/ic_brightness"
+        android:text="15"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:lineSpacingMultiplier="1.1"
+        android:background="@drawable/rounded_rectangle"
+        android:visibility="invisible"
+        android:layout_marginTop="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="30dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="6sp"
+        android:paddingBottom="6sp"/>
 
 </com.archos.mediacenter.video.player.PlayerControlsRelativeLayout>
