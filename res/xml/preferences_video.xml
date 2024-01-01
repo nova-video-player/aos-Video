@@ -279,12 +279,12 @@
         </Preference>
 
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="subtitles_new_api"
             android:summary="@string/subtitles_use_rest_api_summary"
             android:title="@string/subtitles_use_rest_api"
             app:iconSpaceReserved="false"
-            android:visibility="gone"/>
+            android:visibility="invisible"/>
 
         <CheckBoxPreference
             android:defaultValue="false"

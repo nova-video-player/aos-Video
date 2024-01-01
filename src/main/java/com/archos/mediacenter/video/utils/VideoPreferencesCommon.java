@@ -684,6 +684,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             if(systemLanguageIndex>=0) mSubtitlesFavLangPreferences.setValueIndex(systemLanguageIndex);
             return true;
         });
+        // due to a bug in Android support library make it invisible programmatically
+        if (CustomApplication.useOpenSubtitlesRestApi())
+            cbpOpenSubtitlesRestAPi.setVisible(false);
+
         buildLanguageList();
         mSubtitlesDownloadLanguagePreferences = (MultiSelectListPreference) findPreference("languages_list");
         mSubtitlesDownloadLanguagePreferences.setEntries(languageListNewEntries);
