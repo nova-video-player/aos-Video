@@ -334,16 +334,18 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
     }
 
     private void showErrorDialog(String message){
-        new AlertDialog.Builder(TorrentLoaderActivity.this)
-        .setTitle(R.string.error_listing)
-        .setMessage(message)
-        .setOnCancelListener(new OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                TorrentLoaderActivity.this.finish();
-            }
-        })
-        .create().show();
+        if (!isFinishing()) {
+            new AlertDialog.Builder(TorrentLoaderActivity.this)
+                .setTitle(R.string.error_listing)
+                .setMessage(message)
+                .setOnCancelListener(new OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        TorrentLoaderActivity.this.finish();
+                    }
+                })
+                .create().show();
+        }
     }
 
     @Override
