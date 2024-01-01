@@ -70,6 +70,9 @@ import com.archos.mediacenter.video.utils.SubtitlesWizardActivity;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,8 +80,7 @@ import httpimage.HttpImageManager;
 
 public abstract class BrowserByVideoObjects extends Browser implements CommonPresenter.ExtendedClickListener, ExternalPlayerWithResultStarter {
 
-    private static final boolean DBG = false;
-    protected static final String TAG = "BrowserByVideoObjects";
+    private static final Logger log = LoggerFactory.getLogger(BrowserByVideoObjects.class);
 
     private static final int PLAY_ACTIVITY_REQUEST_CODE = 780;
     protected AdapterByVideoObjectsInterface mAdapterByVideoObjects;
@@ -133,12 +135,12 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
         try {
             info = (AdapterContextMenuInfo) menuInfo;
         } catch (ClassCastException e) {
-            Log.e(TAG, "bad menuInfo", e);
+            log.error("onCreateContextMenu: bad menuInfo", e);
             return;
         }
         // This can be null sometimes, don't crash...
         if (info == null) {
-            Log.e(TAG, "bad menuInfo");
+            log.error("onCreateContextMenu: bad menuInfo");
             return;
         }
 
@@ -363,10 +365,13 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
 
             case R.string.get_subtitles_online:
                 Intent subIntent = new Intent(Intent.ACTION_MAIN);
-                if (CustomApplication.useOpenSubtitlesRestApi())
+                log.debug("onContextItemSelected: get_subtitles_online for " + getRealPathUriFromPosition(info.position));
+                if (CustomApplication.useOpenSubtitlesRestApi()) {
                     subIntent.setClass(mContext, SubtitlesDownloaderActivity2.class);
-                else
+                    subIntent.putExtra(SubtitlesDownloaderActivity.FILE_URL, getRealPathUriFromPosition(info.position).toString());
+                } else {
                     subIntent.setClass(mContext, SubtitlesDownloaderActivity.class);
+                }
                 getActivity().startActivity(subIntent);
                 break;
 
@@ -390,7 +395,7 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
                 break;
             default:
                 ret = super.onContextItemSelected(item);
-                Log.e(TAG, "Unexpected default case! " + index);
+                log.error("onContextItemSelected: unexpected default case! " + index);
         }
 
         return ret;
