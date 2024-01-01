@@ -1,6 +1,3 @@
 - Thinner player controller volume/seek bars
 - Faster local/USB storage scan at application start
-- Enforce new opensubtitles REST-API with quotas becoming mandatory in in January
-- Add player gesture control
-- New nova icon
-- Stability enhancements
+- Fix ftp not working due to time dependency
