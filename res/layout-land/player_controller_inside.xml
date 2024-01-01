@@ -64,7 +64,7 @@
         <ImageButton
             android:id="@+id/backward"
             style="@style/PlayerControlButton"
-            android:layout_marginLeft="-12dip"
+            android:layout_marginLeft="0dip"
             android:paddingLeft="0dip"
             android:paddingRight="@dimen/player_button_padding_half"
             android:scaleType="fitCenter"
@@ -133,8 +133,8 @@
         <ImageButton
             android:id="@+id/format"
             style="@style/PlayerControlButton"
-            android:layout_marginLeft="-10dip"
-            android:layout_marginRight="10dip"
+            android:layout_marginLeft="8dip"
+            android:layout_marginRight="2dip"
             android:paddingLeft="@dimen/player_button_padding_full"
             android:paddingRight="@dimen/player_button_padding_full"
             android:scaleType="fitCenter"
