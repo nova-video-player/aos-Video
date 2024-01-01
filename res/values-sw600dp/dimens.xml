@@ -15,7 +15,7 @@
 -->
 
 <resources>
-    <dimen name="player2014_bar_width">70dip</dimen>
+    <dimen name="player2014_bar_width">53dip</dimen>
     
     <!-- ============ COVER ROLL ============ -->
     <dimen name="MessageBox_width">200dip</dimen>
