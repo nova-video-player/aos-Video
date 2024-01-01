@@ -69,7 +69,7 @@
             android:paddingRight="@dimen/player_button_padding_half"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            ads:srcCompat="@drawable/video_play" />
+            ads:srcCompat="@drawable/video_play_selector" />
 
         <ImageButton
             android:id="@+id/backward"
