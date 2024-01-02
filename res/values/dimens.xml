@@ -18,6 +18,25 @@
     
     <dimen name="player2014_bar_width">45dip</dimen>
 
+    <!-- ============ VIDEO PLAYER ============ -->
+    <dimen name="video_title_marginTop">0dip</dimen>
+    <dimen name="volume_bar_marginTop">8dip</dimen>
+    <dimen name="volume_bar_marginBottom">-18dip</dimen> <!-- negative bottom margin to have the volume bar stick to the bottom of the screen in phone mode (while it is floating on tablets) -->
+    <dimen name="volume_button_vertical_margin">0dip</dimen>
+
+    <dimen name="player_time_text_size">14dip</dimen>
+    <dimen name="player_button_padding_full">6dip</dimen>
+    <dimen name="player_button_padding_half">0dip</dimen>
+    <dimen name="player_button_padding_small">0dip</dimen>
+    <dimen name="player_button_margin_small">0dip</dimen>
+    <dimen name="player_button_margin_half">2dip</dimen>
+    <dimen name="player_button_margin_full">4dip</dimen>
+    <dimen name="player_subtitles_popup_width">300dip</dimen>
+
+    <dimen name="control_bar_margin_left">58dip</dimen>
+    <dimen name="control_bar_margin_right">-18dip</dimen>
+    <dimen name="control_bar_margin_bottom">-16dip</dimen> <!-- negative bottom margin to have the control bar stick to the bottom of the screen in phone mode (while it is floating on tablets) -->
+
     <!-- ============ VIDEO INFO BROWSER ============ -->
     <!-- Needed only for "notouch" but for some reason it is sometimes used in other cases (we see some crashes on Google Play reports)-->
     <dimen name="video_list_container_width">110dip</dimen>

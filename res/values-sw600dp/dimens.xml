@@ -124,9 +124,12 @@
     <dimen name="volume_button_vertical_margin">1dip</dimen>
 
     <dimen name="player_time_text_size">14dip</dimen>
-    <dimen name="player_button_padding_full">16dip</dimen>
-    <dimen name="player_button_padding_half">8dip</dimen>
-    <dimen name="player_button_padding_small">2dip</dimen>
+    <dimen name="player_button_padding_full">7dip</dimen>
+    <dimen name="player_button_padding_half">0dip</dimen>
+    <dimen name="player_button_padding_small">0dip</dimen>
+    <dimen name="player_button_margin_small">0dip</dimen>
+    <dimen name="player_button_margin_half">3dip</dimen>
+    <dimen name="player_button_margin_full">5dip</dimen>
 
     <dimen name="control_bar_margin_left">0dip</dimen>
     <dimen name="control_bar_margin_right">0dip</dimen>
