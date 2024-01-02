@@ -55,6 +55,7 @@
         <ImageButton
             android:id="@+id/pause"
             style="@style/PlayerControlButton"
+            android:layout_marginRight="@dimen/player_button_margin_half"
             android:paddingLeft="@dimen/player_button_padding_full"
             android:paddingRight="@dimen/player_button_padding_full"
             android:scaleType="fitCenter"
@@ -64,8 +65,9 @@
         <ImageButton
             android:id="@+id/backward"
             style="@style/PlayerControlButton"
-            android:layout_marginLeft="0dip"
-            android:paddingLeft="0dip"
+            android:layout_marginLeft="@dimen/player_button_margin_half"
+            android:layout_marginRight="@dimen/player_button_margin_half"
+            android:paddingLeft="@dimen/player_button_padding_half"
             android:paddingRight="@dimen/player_button_padding_half"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
@@ -76,8 +78,10 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/player_button_margin_half"
+            android:layout_marginRight="@dimen/player_button_margin_half"
             android:paddingLeft="@dimen/player_button_padding_half"
-            android:paddingRight="@dimen/player_button_padding_half" >
+            android:paddingRight="@dimen/player_button_padding_half">
 
             <com.archos.mediacenter.utils.seekbar.ArchosProgressSlider
                 android:id="@+id/seek_progress"
@@ -124,8 +128,10 @@
         <ImageButton
             android:id="@+id/forward"
             style="@style/PlayerControlButton"
+            android:layout_marginLeft="@dimen/player_button_margin_half"
+            android:layout_marginRight="@dimen/player_button_margin_half"
             android:paddingLeft="@dimen/player_button_padding_half"
-            android:paddingRight="@dimen/player_button_padding_small"
+            android:paddingRight="@dimen/player_button_padding_half"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             ads:srcCompat="@drawable/video_forward_selector" />
@@ -133,8 +139,7 @@
         <ImageButton
             android:id="@+id/format"
             style="@style/PlayerControlButton"
-            android:layout_marginLeft="8dip"
-            android:layout_marginRight="2dip"
+            android:layout_marginLeft="@dimen/player_button_margin_half"
             android:paddingLeft="@dimen/player_button_padding_full"
             android:paddingRight="@dimen/player_button_padding_full"
             android:scaleType="fitCenter"
