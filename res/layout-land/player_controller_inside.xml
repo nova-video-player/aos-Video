@@ -27,7 +27,6 @@
         android:layout_alignParentTop="true"
         layout="@layout/player_controller_left" />
 
-
     <FrameLayout
         android:id="@+id/play_touch_zone"
         android:layout_width="match_parent"
@@ -41,6 +40,7 @@
 
     </FrameLayout>
 
+    <!-- Padding is programmatically for chromebook -->
     <LinearLayout
         android:id="@+id/control_bar"
         android:layout_width="fill_parent"
