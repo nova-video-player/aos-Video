@@ -46,8 +46,6 @@
         android:layout_above="@+id/unlock_instructions"
         layout="@layout/unlock_instructions" />
 
-
-
     <!-- Control Bar (play/pause/seek) -->
 
     <!-- Padding is programmatically for chromebook -->
@@ -65,10 +63,10 @@
         <ImageButton
             android:id="@+id/pause"
             style="@style/PlayerControlButton"
-            android:layout_width="58dp"
-            android:layout_height="58dp"
             android:paddingLeft="@dimen/player_button_padding_small"
             android:paddingRight="@dimen/player_button_padding_half"
+            android:layout_marginLeft="@dimen/player_button_margin_full"
+            android:layout_marginRight="@dimen/player_button_margin_full"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             ads:srcCompat="@drawable/video_play_selector" />
@@ -76,10 +74,10 @@
         <ImageButton
             android:id="@+id/backward"
             style="@style/PlayerControlButton"
-            android:layout_width="58dp"
-            android:layout_height="58dp"
             android:paddingLeft="@dimen/player_button_padding_half"
-            android:paddingRight="@dimen/player_button_padding_small"
+            android:paddingRight="@dimen/player_button_padding_half"
+            android:layout_marginLeft="@dimen/player_button_margin_half"
+            android:layout_marginRight="@dimen/player_button_margin_half"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             ads:srcCompat="@drawable/video_backward_selector" />
@@ -137,10 +135,10 @@
         <ImageButton
             android:id="@+id/forward"
             style="@style/PlayerControlButton"
-            android:layout_width="58dp"
-            android:layout_height="58dp"
-            android:paddingLeft="@dimen/player_button_padding_small"
+            android:paddingLeft="@dimen/player_button_padding_half"
             android:paddingRight="@dimen/player_button_padding_half"
+            android:layout_marginLeft="@dimen/player_button_margin_half"
+            android:layout_marginRight="@dimen/player_button_margin_half"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             ads:srcCompat="@drawable/video_forward_selector" />
@@ -148,8 +146,10 @@
         <ImageButton
             android:id="@+id/format"
             style="@style/PlayerControlButton"
-            android:paddingLeft="@dimen/player_button_padding_half"
+            android:paddingLeft="@dimen/player_button_padding_full"
             android:paddingRight="@dimen/player_button_padding_full"
+            android:layout_marginLeft="@dimen/player_button_margin_half"
+            android:layout_marginRight="@dimen/player_button_margin_small"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             ads:srcCompat="@drawable/video_format_original_selector" />
