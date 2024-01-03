@@ -1,3 +1,5 @@
+- Handle properly gesture navigation screen layout in player UI
 - Thinner player controller volume/seek bars
 - Faster local/USB storage scan at application start
 - Fix ftp not working due to time dependency
+- Stability enhancements
