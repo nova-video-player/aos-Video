@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.player;
 
 import static androidx.core.content.ContextCompat.getDrawable;
+import static androidx.core.content.ContextCompat.getSystemService;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
@@ -26,6 +27,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.Insets;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
@@ -52,7 +54,9 @@ import android.view.View.OnGenericMotionListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowInsets;
 import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -599,11 +603,37 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         return navigationBarHeight;
     }
 
+    public boolean isGestureAreaDisplayed() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+            WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+            if (windowManager != null) {
+                WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
+                Insets insets = windowMetrics.getWindowInsets().getInsetsIgnoringVisibility(WindowInsets.Type.systemGestures());
+                return insets.bottom > 0;
+            }
+        }
+        return false;
+    }
+
+    public int getGestureAreaHeight() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+            WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+            if (windowManager != null) {
+                WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
+                Insets insets = windowMetrics.getWindowInsets().getInsetsIgnoringVisibility(WindowInsets.Type.systemGestures());
+                return insets.bottom;
+            }
+        }
+        return 0;
+    }
+
     private void attachWindow() {
 
         log.debug("CONFIG attachWindow getStatusBarHeight=" + getStatusBarHeight() +
                 ", getNavigationBarHeight=" + getNavigationBarHeight() +
                 ", getActionBarHeight=" + getActionBarHeight() +
+                ", getGestureAreaHeight=" + getGestureAreaHeight() +
+                ", isGestureAreaDisplayed=" + isGestureAreaDisplayed() +
                 ", ");
 
         if (mControllerView != null)
@@ -688,6 +718,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             RelativeLayout.LayoutParams relativeParams = ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams());
             int shiftUp = 0;
             int shiftLeft = 0;
+            log.debug("CONFIG updateOrientation, rotation is " + PlayerActivity.getHumanReadableRotation(rotation) + "(" + rotation + "), isSystemBarOnBottom " + isSystemBarOnBottom(mContext) + ", isChromeOS " + isChromeOS(mContext) + ", isGestureAreaDisplayed " + isGestureAreaDisplayed() + ", getGestureAreaHeight " + getGestureAreaHeight() + ", getNavigationBarHeight " + getNavigationBarHeight() + ", getStatusBarHeight " + getStatusBarHeight() + ", getActionBarHeight " + getActionBarHeight() + ", getSystemBarHeight getSystemBarHeight()");
             switch (rotation) {
                 case Surface.ROTATION_270:
                     log.debug("CONFIG updateOrientation, rotation is 270 shifting right from getNavigationBarHeight=" + getNavigationBarHeight());
@@ -696,42 +727,51 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         log.debug("CONFIG updateOrientation, SystemBarOnBottom shifting up by getNavigationBarHeight=" + getNavigationBarHeight());
                         shiftUp += getNavigationBarHeight();
                     } else {
-                        log.debug("CONFIG updateOrientation, ! SystemBarOnBottom shifting left/right by getNavigationBarHeight=" + getNavigationBarHeight());
+                        log.debug("CONFIG updateOrientation, ! SystemBarOnBottom shifting right by getNavigationBarHeight=" + getNavigationBarHeight());
                         shiftLeft += getNavigationBarHeight();
                     }
+                    log.debug("CONFIG updateOrientation, rotation is 270, shifting, margin (L,T,R,B)=(shiftLeft=" + shiftLeft + ",0,0,shiftUp=" + shiftUp + ")");
                     relativeParams.setMargins(shiftLeft, 0, 0, shiftUp);
                     break;
                 case Surface.ROTATION_90:
-                    log.debug("CONFIG updateOrientation, rotation is 90");
+                    log.debug("CONFIG updateOrientation: rotation is 90");
                     // FIXME: ALIGN_PARENT_RIGHT should have been simpler but results in shifted layout by safeInsetRight+safeInsetLeft+navigationBarHeight
+                    log.debug("CONFIG updateOrientation: ALIGN_PARENT_LEFT");
                     ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                     if(mPreferences.getBoolean("enable_cutout_mode_short_edges", true)) {
-                        log.debug("CONFIG updateOrientation, shifting right PlayerActivity.safeInsetLeft=" + PlayerActivity.safeInset.get(0));
+                        log.debug("CONFIG updateOrientation: cutout_mode_short_edges is enabled, shifting right, margin (L,T,R,B)=(PlayerActivity.safeInsetLeft=" + PlayerActivity.safeInset.get(0) + ",0,0,0)");
                         relativeParams.setMargins(PlayerActivity.safeInset.get(0), 0, 0, 0); // safeInset.get(0) is safeInsetLeft
                     }
                     break;
                 case Surface.ROTATION_0:
-                    log.debug("CONFIG updateOrientation, rotation is 0 shifting up from getNavigationBarHeight=" + getNavigationBarHeight());
                     // FIXME: this is the only way found to get in portrait the seekbar on top of navigationBar
-                    if(mPreferences.getBoolean("enable_cutout_mode_short_edges", true))
+                    if(mPreferences.getBoolean("enable_cutout_mode_short_edges", true)) {
+                        log.debug("CONFIG updateOrientation: rotation is 0, cutout_mode_short_edges is enabled, ALIGN_PARENT_BOTTOM");
                         ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                    else
+                    } else {
+                        log.debug("CONFIG updateOrientation: rotation is 0, cutout_mode_short_edges is enabled, ALIGN_PARENT_TOP");
                         ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                    relativeParams.setMargins(0, 0, 0, getNavigationBarHeight());
+                    }
+                    log.debug("CONFIG updateOrientation, rotation is 0, shifting up, margin (L,T,R,B)=(0,0,0,getNavigationBarHeight()+getGestureAreaHeight()=" + (getNavigationBarHeight() + getGestureAreaHeight()) + ")");
+                    relativeParams.setMargins(0, 0, 0, getNavigationBarHeight() + getGestureAreaHeight());
                     break;
                 case Surface.ROTATION_180:
                     log.debug("CONFIG updateOrientation, rotation is 180");
                     ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                     if(mPreferences.getBoolean("enable_cutout_mode_short_edges", true)) {
-                        log.debug("CONFIG updateOrientation, shifting right PlayerActivity.safeInsetTop=" + PlayerActivity.safeInset.get(1));
+                        log.debug("CONFIG updateOrientation: rotation is 180, cutout_mode_short_edges -> shiftUp=PlayerActivity.safeInsetTop=" + PlayerActivity.safeInset.get(1));
                         shiftUp += PlayerActivity.safeInset.get(1); // safeInset.get(1) is safeInsetTop
                     }
                     if (isSystemBarOnBottom(mContext)) {
-                        log.debug("CONFIG updateOrientation, SystemBarOnBottom shifting up by getNavigationBarHeight=" + getNavigationBarHeight());
-                        shiftUp += getNavigationBarHeight();
+                        log.debug("CONFIG updateOrientation: rotation is 180, SystemBarOnBottom -> shiftUp=getNavigationBarHeight()+getGestureAreaHeight()=" + (getNavigationBarHeight() + getGestureAreaHeight()));
+                        shiftUp += getNavigationBarHeight()+getGestureAreaHeight();
                     }
-                    if (shiftUp>0)
+                    if (shiftUp>0) {
+                        log.debug("CONFIG updateOrientation, rotation is 180, shiftUp>0, margin (L,T,R,B)=(0,0,0,shiftUp=" + shiftUp + ")");
                         relativeParams.setMargins(0, 0, 0, shiftUp);
+                    } else {
+                        log.debug("CONFIG updateOrientation, rotation is 180, shiftUp<=0 -> no setMargins update!");
+                    }
                     break;
             }
             mControllerView.setLayoutParams(relativeParams);

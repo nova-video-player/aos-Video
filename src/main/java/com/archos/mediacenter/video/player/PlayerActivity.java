@@ -632,6 +632,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mRootView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, final int top, int right, final int bottom, int oldLeft, final int oldTop, int oldRight, final int oldBottom) {
+                log.debug("CONFIG addOnLayoutChangeListener: left=" + left + ", top=" + top + ", right=" + right + ", bottom=" + bottom + ", oldLeft=" + oldLeft + ", oldTop=" + oldTop + ", oldRight=" + oldRight + ", oldBottom=" + oldBottom);
                 if(oldBottom!=bottom||oldTop!=top) {
                     runOnUiThread(new Runnable() {
                         @Override
