@@ -307,7 +307,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         private void getSub(String fileUrl, OpenSubtitlesSearchResult searchResult) {
             String subUrl;
             try {
-                subUrl = OpenSubtitlesApiHelper.getDownloadSubtitleLink(searchResults.get(0).getFileId());
+                subUrl = OpenSubtitlesApiHelper.getDownloadSubtitleLink(searchResult.getFileId());
                 if (OpenSubtitlesApiHelper.getLastQueryResult() == OpenSubtitlesApiHelper.RESULT_CODE_QUOTA_EXCEEDED) {
                     log.warn("getSub: quota exceeded, quota resets in " + OpenSubtitlesApiHelper.getTimeRemaining());
                     displayToast(getString(R.string.toast_subloader_quota_exceeded));
