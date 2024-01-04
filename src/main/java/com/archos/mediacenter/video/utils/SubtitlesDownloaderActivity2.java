@@ -579,13 +579,15 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
 
     @SuppressWarnings("unchecked")
     public void logOut() {
-        try {
-            OpenSubtitlesApiHelper.logout();
-        } catch (IOException e1) {
-            log.error("logOut: caught IOException", e1);
-        } catch (Throwable e){ //for various service outages
-            log.error("logOut: caught Exception", e);
-        }
+        new Thread(() -> {
+            try {
+                OpenSubtitlesApiHelper.logout();
+            } catch (IOException e1) {
+                log.error("logOut: caught IOException", e1);
+            } catch (Throwable e) { //for various service outages
+                log.error("logOut: caught Exception", e);
+            }
+        }).start();
     }
 
 }
