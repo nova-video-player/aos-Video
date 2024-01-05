@@ -450,7 +450,7 @@
     <string name="sub_force_all">All your videos already have at least one subtitles track. Do you want to force download of new subtitles tracks?</string>
     <string name="dialog_subloader_nonetwork_title">No Internet connection</string>
     <string name="dialog_subloader_nonetwork_message">An internet connection is required to download subtitles</string>
-    <string name="dialog_subloader_connecting">Connecting to www.opensubtitles.org…</string>
+    <string name="dialog_subloader_connecting">Connecting to opensubtitles service…</string>
     <string name="opensubtitles_quota_download_remaining">OpenSubtitles download quota: %d/%d remaining</string>
     <string name="dialog_subloader_credentials">Opensubtitles credentials</string>
     <string name="dialog_subloader_credentials_empty">You must specify a valid username and password!</string>
