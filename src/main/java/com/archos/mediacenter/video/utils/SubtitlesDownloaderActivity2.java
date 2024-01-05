@@ -291,6 +291,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             }
             // when there is one sub only directly download it
             if (searchResults != null && searchResults.size() == 1) {
+                log.debug("getSubtitles: one sub found for " + fileUrl);
                 getSub(fileUrl, searchResults.get(0));
             }
             if (searchResults != null && searchResults.size() > 1) {
@@ -435,6 +436,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                         }
                     }, (dialogInterface, i) -> new Thread() {
                         public void run() {
+                            log.debug("askSubChoice: entry " + i + " selected -> download sub " + searchResults.get(i).getFileName() + " for " + videoFilePath + " fileID=" + searchResults.get(i).getFileId() + " lang=" + searchResults.get(i).getLanguage());
                             getSub(videoFilePath, searchResults.get(i));
                         }
                     }.start())
@@ -457,6 +459,9 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                         log.error("downloadSubtitles: caught Exception", e);
                     }
                 }
+                log.debug("downloadSubtitles: we are not on slow remote try to write to " + fileUrl + " and canWrite=" + canWrite);
+            } else {
+                log.debug("downloadSubtitles: we are on slow remote or not implemented by filecore, do not try to write sub on remote");
             }
             StringBuilder localSb = null;
             StringBuilder sb = null;
@@ -512,6 +517,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                     ContentResolver resolver = getContentResolver();
                     VideoDbInfo videoDbInfo = VideoDbInfo.fromUri(resolver, Uri.parse(fileUrl));
                     if (videoDbInfo != null) {
+                        log.debug("downloadSubtitles: update subtitle count videoDbInfo for " + videoDbInfo.id);
                         final String where = VideoStore.Video.VideoColumns._ID + " = " + videoDbInfo.id;
                         videoDbInfo.nbSubtitles = videoDbInfo.nbSubtitles == -1 ? 1 : videoDbInfo.nbSubtitles + 1;
                         ContentValues values = new ContentValues(1);
@@ -528,16 +534,12 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                     sendBroadcast(intent);
                 } catch (Exception e){
                 }
-                // results in duplicate subs in the list: no need to copy for now
-                /*
-                // Update the media database
                 if (canWrite) {
                     if(!FileUtils.isLocal(Uri.parse(fileUrl))){ // when not local, we need to copy our file
                         log.debug("downloadSubtitles: copy file {}->{}", fileUrl, localSb);
                         editor.copyFileTo(Uri.parse(localSb.toString()),SubtitlesDownloaderActivity2.this);
                     }
                 }
-                 */
             } catch (FileNotFoundException e) {
                 log.error("downloadSubtitles: caught FileNotFoundException", e);
             } catch (IOException e) {

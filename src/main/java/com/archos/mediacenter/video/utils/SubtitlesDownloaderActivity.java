@@ -1029,7 +1029,7 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                 catch (Exception e){
                 }
                 // results in duplicate subs in the list: no need to copy for now
-                /*
+                // BUT if write is granted on share it does not pick up sub
                 // Update the media database
                 if (canWrite) {
                     if(!FileUtils.isLocal(Uri.parse(path))){ // when not local, we need to copy our file
@@ -1037,7 +1037,6 @@ public class SubtitlesDownloaderActivity extends AppCompatActivity {
                         editor.copyFileTo(Uri.parse(localSb.toString()),SubtitlesDownloaderActivity.this);
                     }
                 }
-                 */
             } catch (FileNotFoundException e) {
                 log.error("downloadSubtitles: caught FileNotFoundException", e);
             } catch (IOException e) {
