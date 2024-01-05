@@ -580,7 +580,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 if(mThumbnailAsyncTask!=null)
                     mThumbnailAsyncTask.cancel(true);
                 // We have enough data to display details right now
-                mDetailRowBuilderTask = new DetailRowBuilderTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,mVideo);
+                // no need to launch this task since it is done onLoadFinished...
+                //mDetailRowBuilderTask = new DetailRowBuilderTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,mVideo);
             }
             // We start the loader in all cases to get DB updates
             LoaderManager.getInstance(this).restartLoader(1, null, this);
