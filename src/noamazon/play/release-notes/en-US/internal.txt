@@ -1,2 +1,3 @@
-- Cleaner Android TV year banners
+- Cleaner Android TV years banner
+- Better detect external subtitle language from filename
 - Faster subtitle check on Android TV
