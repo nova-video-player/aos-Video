@@ -1,7 +1,2 @@
-- Fix various subtitles issues
-- Bump ffmpeg to 6.1.1
-- Handle properly gesture navigation screen layout in player UI
-- Thinner player controller volume/seek bars
-- Faster local/USB storage scan at application start
-- Fix ftp not working due to time dependency
-- Stability enhancements
+- Cleaner Android TV year banners
+- Faster subtitle check on Android TV
