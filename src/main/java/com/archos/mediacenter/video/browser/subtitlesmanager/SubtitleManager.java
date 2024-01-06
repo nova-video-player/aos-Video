@@ -55,6 +55,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by alexandre on 12/05/15.
@@ -94,11 +96,13 @@ public class SubtitleManager {
         @Override
         public boolean equals(Object o) {
             SubtitleFile other = (SubtitleFile)o;
+            log.trace("equals: " + mFile.getName() + " vs " + other.mFile.getName() + " (" + mFile.length() + " vs " + other.mFile.length() + ")");
             return ((mFile.getName().equals(other.mFile.getName())) &&
                     (mFile.length() == other.mFile.length()));
         }
     }
     public static void deleteAssociatedSubs(Uri fileUri, Context context) {
+        log.debug("deleteAssociatedSubs: " + fileUri.toString());
         try {
             List<MetaFile2> subs = getSubtitleList(fileUri);
             for(MetaFile2 sub : subs){
@@ -367,12 +371,12 @@ public class SubtitleManager {
                                     nameNoCase.equals("subtitles")||
                                     nameNoCase.equals("subtitle")
                     )){
+                        log.debug("recursiveSubListing: recursing into " + item.getUri().toString() + " for " + filenameWithoutExtension);
                         subs.addAll(recursiveSubListing(item.getUri(), filenameWithoutExtension, true));
                         continue;
                     }
 
                     if (!name.startsWith(filenameWithoutExtension)&&!addAllSubs || name.lastIndexOf('.') == -1) {
-
                         continue;
                     }
                     extension = item.getExtension();
@@ -391,7 +395,6 @@ public class SubtitleManager {
         } catch (NullPointerException e) {
             log.error("recursiveSubListing: caught NullPointerException", e);
         }
-
         return subs;
     }
 
@@ -406,6 +409,7 @@ public class SubtitleManager {
     }
 
     public List<SubtitleFile> listLocalAndRemotesSubtitles(Uri video, boolean addAllSubs, boolean includeIdx, boolean addCache) {
+        log.debug("listLocalAndRemotesSubtitles: " + video.toString() + " addAllSubs=" + addAllSubs + " includeIdx=" + includeIdx + " addCache=" + addCache);
         List<MetaFile2> allFiles = new ArrayList<MetaFile2>();
         List<SubtitleFile> subList = new LinkedList<SubtitleFile>();
 
@@ -454,12 +458,13 @@ public class SubtitleManager {
                     String subtitleName = null;
                     if (SubtitleExtensions.contains(fileExtension.toLowerCase(Locale.US))&&(!fileExtension.toLowerCase(Locale.US).equals("idx") || includeIdx)) {
                         //log.debug("Found external subtitle file: " + file.getUri().toString());
-                        // Check if there is    a language extension
+                        // Check if there is a language extension
                         String language = "";
                         final String subFilename = file.getName();
                         final String subFilenameWithoutExtension = subFilename.substring(0, subFilename.length() - (fileExtension.length() + 1));
-                        final String languageExtension = getLanguage(subFilenameWithoutExtension);
+                        final String languageExtension = getLanguage3(subFilenameWithoutExtension);
                         // if this is not a 3 letter code use the full file name
+                        log.debug("listLocalAndRemotesSubtitles: subFilename={}, subFilenameWithoutExtension={}, languageExtension={}", subFilename, subFilenameWithoutExtension, languageExtension);
                         if (languageExtension != null && isletterCode(languageExtension)) subtitleName = getLanguageNameForLetterCode(languageExtension);
                         // In case we don't have the subtitle language we put the full file name
                         if (subtitleName==null || subtitleName.isEmpty()) {
@@ -476,15 +481,18 @@ public class SubtitleManager {
         List<SubtitleFile> subListUnique = new LinkedList<SubtitleFile>();
         for (SubtitleFile f : subList) {
             if (!subListUnique.contains(f)) {
+                log.debug("listLocalAndRemotesSubtitles: adding only unique " + f.mFile.getUri().toString() + " (" + f.mName +")");
                 subListUnique.add(f);
+            } else {
+                log.debug("listLocalAndRemotesSubtitles: skipping duplicate " + f.mFile.getUri().toString() + " (" + f.mName +")");
             }
         }
 
         return subListUnique;
     }
 
-
     static public String getLanguage(String filename) {
+        // extract the subtitle language from filename without extension i.e. basename between either the last dot or the last dash and the end of the string
         if (filename == null)
             return null;
         int dotPos = filename.lastIndexOf('.');
@@ -497,8 +505,23 @@ public class SubtitleManager {
             pos = dashPos;
         }
         if (pos >= 0 && pos < filename.length()) {
+            log.debug("getLanguage: " + filename + " -> " + filename.substring(pos + 1).toLowerCase(Locale.ROOT));
             return filename.substring(pos + 1).toLowerCase(Locale.ROOT);
         }
+        log.debug("getLanguage: " + filename + " -> null");
         return null;
     }
+
+    private static String getLanguage3(String basename) {
+        // extract the 2 or 3 letters language code in a string located at after the start of the string or character "_" or "." or "]" till the end of the string or till a closing ".HI"
+        // for some reason, some yts subtitles have a .HI at the end of the filename, and apparently this is not for Hindi but Hearing Impaired, note that they are preceded by SDH for Deaf and hard of Hearing
+        Pattern pattern = Pattern.compile("(?:[_.\\]]|^)([a-zA-Z]{2,3})(\\.HI|$)");
+        Matcher matcher = pattern.matcher(basename);
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            return null;
+        }
+    }
+
 }
