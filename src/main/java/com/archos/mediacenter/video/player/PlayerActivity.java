@@ -37,7 +37,6 @@ import android.os.Message;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.DisplayCutout;
@@ -69,7 +68,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.core.view.MenuItemCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.preference.PreferenceManager;
 
@@ -77,7 +75,6 @@ import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosIntents;
 import com.archos.environment.ArchosUtils;
 import com.archos.environment.NetworkState;
-import com.archos.mediacenter.utils.ISO639codes;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
@@ -132,9 +129,12 @@ import java.util.Locale;
 import java.util.Map;
 
 import static com.archos.environment.ArchosFeatures.isChromeOS;
+import static com.archos.filecorelibrary.FileUtils.getName;
 import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermission;
+import static com.archos.filecorelibrary.FileUtils.stripExtensionFromName;
 import static com.archos.mediacenter.utils.ISO639codes.findLanguageInString;
 import static com.archos.mediacenter.utils.ISO639codes.replaceLanguageCodeInString;
+import static com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager.getLanguage3;
 import static com.archos.mediacenter.video.utils.MiscUtils.isEmulator;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.DEFAULT_MAX_IFRAME_SIZE;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.DEFAULT_STREAM_BUFFER_SIZE;
@@ -1259,7 +1259,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             // Send key event to PlayerController if it (its place-holder actually) has the focus
             // Only keep keys used for focus navigation (because this is not handled by PlayerController)
             if (!handled && mPlayerControllerPlaceholder.hasFocus() && !isKeyUsedForFocusNavigation(keyCode)) {
-
                 handled = mPlayerController.onKey(keyCode, event);
             }
             // Send key event to PlayerController even if it doesn't have the focus, in order to handled special media keys (play, pause, seek, volume, etc.)
@@ -3582,6 +3581,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mAudioSubtitleNeedUpdate = true;
                 return;
             }
+
             int nbTrack = vMetadata.getSubtitleTrackNb(); // it does not include none track
 
             final boolean firstTimeCalled = mSubtitleInfoController.getTrackCount() == 0;
@@ -3596,9 +3596,28 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             if (nbTrack != 0) {
                 mSubtitleInfoController.addTrack(getText(R.string.s_none)); // first track displayed is none
                 mVideoInfo.nbSubtitles = nbTrack; // nbSubtitles does not capture none track
-
+                String lang = null;
                 for (int i = 0; i < nbTrack; ++i) {
-                    mSubtitleInfoController.addTrack(replaceLanguageCodeInString(vMetadata.getSubtitleTrack(i).name));
+                    // name comes from IMediaPlayer (avos) and if not internal it says SRT thus if name="SRT" infer the name from path
+                    // infer language from path if path is provided
+                    // FIXME: vMetadata.getSubtitleTrack(i).name sometimes is "hi" but bad parsing from filename because not Hindi but hearing impaired. Cannot locate where it has been set :-( to fix at source
+                    // hint: probably it is part of privatePrefetchSub that triggers a scraping that puts info in MediaDb
+                    if (vMetadata.getSubtitleTrack(i).name != null && (vMetadata.getSubtitleTrack(i).name.equals("SRT") || vMetadata.getSubtitleTrack(i).name.equals("hi") || vMetadata.getSubtitleTrack(i).name.isEmpty()) && vMetadata.getSubtitleTrack(i).path != null) {
+                        String subFilenameWithoutExtension = stripExtensionFromName(getName(vMetadata.getSubtitleTrack(i).path));
+                        lang = getLanguage3(subFilenameWithoutExtension);
+                        log.debug("onSubtitleMetadataUpdated: name={}, path={}, isExternal={} -> subFilenameWithoutExtension={} -> lang={}", vMetadata.getSubtitleTrack(i).name, vMetadata.getSubtitleTrack(i).path, vMetadata.getSubtitleTrack(i).isExternal, subFilenameWithoutExtension, lang);
+                        if (lang != null) {
+                            // add hearing impaired indication if present
+                            if (vMetadata.getSubtitleTrack(i).name.equals("hi") && !lang.equals("hi")) {
+                                mSubtitleInfoController.addTrack(replaceLanguageCodeInString(lang) + " (HI)");
+                            } else
+                                mSubtitleInfoController.addTrack(replaceLanguageCodeInString(lang));
+                        }
+                        else mSubtitleInfoController.addTrack(replaceLanguageCodeInString(vMetadata.getSubtitleTrack(i).name));
+                    } else {
+                        log.debug("onSubtitleMetadataUpdated: no path, path={}, isExternal={} -> name={}", vMetadata.getSubtitleTrack(i).path, vMetadata.getSubtitleTrack(i).isExternal, replaceLanguageCodeInString(vMetadata.getSubtitleTrack(i).name));
+                        mSubtitleInfoController.addTrack(replaceLanguageCodeInString(vMetadata.getSubtitleTrack(i).name));
+                    }
                 }
 
                 mSubtitleInfoController.addSeparator();

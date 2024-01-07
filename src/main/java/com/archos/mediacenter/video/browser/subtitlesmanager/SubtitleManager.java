@@ -14,8 +14,8 @@
 
 package com.archos.mediacenter.video.browser.subtitlesmanager;
 
+import static com.archos.filecorelibrary.FileUtils.stripExtensionFromName;
 import static com.archos.mediacenter.utils.ISO639codes.getLanguageNameForLetterCode;
-import static com.archos.mediacenter.utils.ISO639codes.is3letterCode;
 import static com.archos.mediacenter.utils.ISO639codes.isletterCode;
 
 import android.content.Context;
@@ -184,7 +184,7 @@ public class SubtitleManager {
                     int l;
                     byte[] buffer;
                     for (String ext : VideoUtils.getSubtitleExtensions()) {
-                        String url = FileUtils.stripExtensionFromName(fileUri.toString()) + "." + ext;
+                        String url = stripExtensionFromName(fileUri.toString()) + "." + ext;
                         String name = FileUtils.getFileNameWithoutExtension(fileUri) + "." + ext;
                         HttpURLConnection con = null;
                         try {
@@ -292,7 +292,8 @@ public class SubtitleManager {
                     @Override
                     public void onCanceled() {}
                 });
-                //force prefixing with video name before copy
+                //force prefixing with video name before copy if this is not the case i.e. Subs/en.srt -> videoName.en.srt,
+                // /!\ it will cause subs duplicates because detection is based on fileName
                 engine.setAllTargetFilesShouldStartWithString(stripExtension(videoUri));
                 engine.copy(subs, target, true);
             } else {
@@ -461,11 +462,13 @@ public class SubtitleManager {
                         // Check if there is a language extension
                         String language = "";
                         final String subFilename = file.getName();
-                        final String subFilenameWithoutExtension = subFilename.substring(0, subFilename.length() - (fileExtension.length() + 1));
+                        final String subFilenameWithoutExtension = stripExtensionFromName(subFilename);
                         final String languageExtension = getLanguage3(subFilenameWithoutExtension);
                         // if this is not a 3 letter code use the full file name
                         log.debug("listLocalAndRemotesSubtitles: subFilename={}, subFilenameWithoutExtension={}, languageExtension={}", subFilename, subFilenameWithoutExtension, languageExtension);
                         if (languageExtension != null && isletterCode(languageExtension)) subtitleName = getLanguageNameForLetterCode(languageExtension);
+                        if (isSubtitleHearingImpaired(subFilenameWithoutExtension) && subtitleName != null)
+                            subtitleName += " (HI)";
                         // In case we don't have the subtitle language we put the full file name
                         if (subtitleName==null || subtitleName.isEmpty()) {
                             subtitleName = subFilename;
@@ -491,37 +494,25 @@ public class SubtitleManager {
         return subListUnique;
     }
 
-    static public String getLanguage(String filename) {
-        // extract the subtitle language from filename without extension i.e. basename between either the last dot or the last dash and the end of the string
-        if (filename == null)
-            return null;
-        int dotPos = filename.lastIndexOf('.');
-        int dashPos = filename.lastIndexOf('_');
-        int pos = -1;
-        if(dotPos>dashPos) {
-            pos = dotPos;
-        }
-        else {
-            pos = dashPos;
-        }
-        if (pos >= 0 && pos < filename.length()) {
-            log.debug("getLanguage: " + filename + " -> " + filename.substring(pos + 1).toLowerCase(Locale.ROOT));
-            return filename.substring(pos + 1).toLowerCase(Locale.ROOT);
-        }
-        log.debug("getLanguage: " + filename + " -> null");
-        return null;
-    }
-
-    private static String getLanguage3(String basename) {
+    public static String getLanguage3(String basename) {
         // extract the 2 or 3 letters language code in a string located at after the start of the string or character "_" or "." or "]" till the end of the string or till a closing ".HI"
         // for some reason, some yts subtitles have a .HI at the end of the filename, and apparently this is not for Hindi but Hearing Impaired, note that they are preceded by SDH for Deaf and hard of Hearing
-        Pattern pattern = Pattern.compile("(?:[_.\\]]|^)([a-zA-Z]{2,3})(\\.HI|$)");
+        Pattern pattern = Pattern.compile("(?:[_\\-.\\]]|^)([a-zA-Z]{2,3})(\\.HI|$)");
         Matcher matcher = pattern.matcher(basename);
         if (matcher.find()) {
             return matcher.group(1);
         } else {
             return null;
         }
+    }
+
+    public static boolean isSubtitleHearingImpaired(String basename) {
+        // extract the 2 or 3 letters language code in a string located at after the start of the string or character "_" or "." or "]" till the end of the string or till a closing ".HI"
+        // for some reason, some yts subtitles have a .HI at the end of the filename, and apparently this is not for Hindi but Hearing Impaired, note that they are preceded by SDH for Deaf and hard of Hearing
+        Pattern pattern = Pattern.compile("(?:[_\\-.\\]]|^)([a-zA-Z]{2,3})\\.HI$");
+        Matcher matcher = pattern.matcher(basename);
+        //log.debug("isSubtitleHearingImpaired: " + basename + " -> " + matcher.group(1));
+        return matcher.find();
     }
 
 }
