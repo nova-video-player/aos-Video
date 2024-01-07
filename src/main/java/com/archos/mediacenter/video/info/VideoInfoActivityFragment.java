@@ -1949,7 +1949,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         else log.debug("onResume: current mVideo is null");
 
         if ((playerVideoId != -42 && mCurrentVideo.getId() != playerVideoId) ||
-                (playerVideoUri != null && mCurrentVideo.getFileUri() != playerVideoUri)) {
+                (playerVideoUri != null && ! mCurrentVideo.getFileUri().equals(playerVideoUri))) {
             Video mNewVideo;
             mVideoPathFromPlayer = playerVideoUri.toString();
             mVideoIdFromPlayer = playerVideoId;

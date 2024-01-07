@@ -477,16 +477,16 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         else if(mVideoId==-1){
             Uri correctedUri = FileUtils.getRealUriFromVideoURI(this,mUri);
             if(correctedUri!=null) {
-                log.debug("correctedUri " + correctedUri);
+                log.debug("onStart: correctedUri " + correctedUri);
                 mUri = correctedUri;
             }
         }
-        log.debug("mIndexHelper != null " + String.valueOf(mIndexHelper != null));
+        log.debug("onStart: mIndexHelper != null " + String.valueOf(mIndexHelper != null));
 
-        // store file that is playing
-        log.debug("onStart videoUri " + mUri + ", videoId " + mVideoId);
-        CustomApplication.setLastVideoPlayedId(mVideoId);
-        CustomApplication.setLastVideoPlayedUri(mUri);
+        // store file that is playing: this is too soon at this point because information is not available do it later in onStreamingUriOK
+        log.debug("onStart videoUri " + mUri + ", videoId " + mVideoId + ", mVideoInfo.id=" + (mVideoInfo != null ? mVideoInfo.id : "null") + ", mVideoInfo.uri=" + (mVideoInfo != null ? mVideoInfo.uri : "null"));
+        //CustomApplication.setLastVideoPlayedId(mVideoId);
+        //CustomApplication.setLastVideoPlayedUri(mUri);
 
         if(mIndexHelper!=null&&mVideoInfo==null)
             requestVideoDb();
@@ -633,7 +633,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     private void onStreamingUriOK() {
-        log.debug("onStreamingUriOK mUri=" + mUri + ", mStreamingUri=" + mStreamingUri);
+        log.debug("onStreamingUriOK mUri=" + mUri + ", mStreamingUri=" + mStreamingUri + ", mVideoId=" + mVideoId+ ", mVideoInfo.id=" + (mVideoInfo != null ? mVideoInfo.id : "null") + ", mVideoInfo.uri=" + (mVideoInfo != null ? mVideoInfo.uri : "null"));
+        if (mVideoInfo != null) {
+            CustomApplication.setLastVideoPlayedId(mVideoInfo.id);
+            CustomApplication.setLastVideoPlayedUri(mVideoInfo.uri);
+        }
         if(mTorrentFilePosition==-1)
             prepareSubs();
         if(mPlayerFrontend!=null)

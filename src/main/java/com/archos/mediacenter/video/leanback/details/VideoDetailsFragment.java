@@ -556,7 +556,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 ", mVideoFromPlayer " + mVideoPathFromPlayer + "(" + mVideoIdFromPlayer + ")");
         else log.debug("onResume: current mVideo is null");
         if ((playerVideoId != -42 && mVideo.getId() != playerVideoId) ||
-            (playerVideoUri != null && mVideo.getFileUri() != playerVideoUri)) {
+            (playerVideoUri != null && ! mVideo.getFileUri().equals(playerVideoUri))) {
+            log.debug("onResume: different playerVideo and mVideo detected!");
             mVideoPathFromPlayer = playerVideoUri.toString();
             mVideoIdFromPlayer = playerVideoId;
             log.debug("onResume: not the same video than before (repeat mode?) target is " + mVideoPathFromPlayer);
