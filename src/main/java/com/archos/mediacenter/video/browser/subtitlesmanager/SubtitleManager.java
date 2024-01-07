@@ -95,10 +95,12 @@ public class SubtitleManager {
          */
         @Override
         public boolean equals(Object o) {
+            // test checks if the file is already in the list via fileSize and fleName
             SubtitleFile other = (SubtitleFile)o;
             log.trace("equals: " + mFile.getName() + " vs " + other.mFile.getName() + " (" + mFile.length() + " vs " + other.mFile.length() + ")");
-            return ((mFile.getName().equals(other.mFile.getName())) &&
-                    (mFile.length() == other.mFile.length()));
+            // do not compare entire fileName but only trailing part (i.e. "en.srt" instead of "videoName.en.srt") to capture copy of Subs/en.srt to videoName.en.srt by privatePrefetchSub
+            //return ((mFile.getName().equals(other.mFile.getName())) && (mFile.length() == other.mFile.length()));
+            return ((mFile.getName().endsWith(other.mFile.getName())) && (mFile.length() == other.mFile.length()));
         }
     }
     public static void deleteAssociatedSubs(Uri fileUri, Context context) {
@@ -483,6 +485,8 @@ public class SubtitleManager {
         // Remove duplicates due to the fact that the remote subtitles may have already been downloaded to the tmp folder
         List<SubtitleFile> subListUnique = new LinkedList<SubtitleFile>();
         for (SubtitleFile f : subList) {
+            // this test checks if the file is already in the list via fileSize and fleName (it captures Subs/en.srt then it is renamed in privatePrefetchSub to videoName.en.srt)
+            // refer to equal() method for this
             if (!subListUnique.contains(f)) {
                 log.debug("listLocalAndRemotesSubtitles: adding only unique " + f.mFile.getUri().toString() + " (" + f.mName +")");
                 subListUnique.add(f);
