@@ -1,3 +1,7 @@
+- Fix F-Droid build
+- Update Video information fragment if subtitles have been downloaded during playback or video has changed
+- Fix play mode
 - Cleaner Android TV years banner
 - Better detect external subtitle language from filename
 - Faster subtitle check on Android TV
+
