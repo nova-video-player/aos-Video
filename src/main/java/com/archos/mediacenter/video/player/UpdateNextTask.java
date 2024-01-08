@@ -31,16 +31,8 @@ import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.RawLister;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.RawListerFactoryWithUpnp;
-import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserMoviesBy;
-import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
-import com.archos.mediacenter.video.browser.adapters.object.Episode;
-import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.loader.NextEpisodeLoader;
-import com.archos.mediacenter.video.browser.loader.VideosByListLoader;
-import com.archos.mediacenter.video.info.MultipleVideoLoader;
-import com.archos.mediacenter.video.info.SingleVideoLoader;
-import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediaprovider.video.ListTables;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
@@ -271,10 +263,11 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
                     if (result != null)
                         return result;
                     else {
-                        result = findEpisode(-1, season + 1, show);
-                        if (result != null)
-                            return result;
-                        else if (repeatFolder) { //when no next episode, look for the first one
+                        if (binge) {
+                            result = findEpisode(-1, season + 1, show);
+                            if (result != null)
+                                return result;
+                        } else if (repeatFolder) { //when no next episode, look for the first one
                             result = findEpisode(-1, season, show);
                             if (result != null)
                                 return result;
