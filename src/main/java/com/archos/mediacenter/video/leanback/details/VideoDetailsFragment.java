@@ -202,6 +202,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     /** given by PlayerActivity when we are launched by it */
     private boolean mLaunchedFromPlayer;
 
+    private boolean mRepeatModeDetected = false;
+
     /** given by PlayerActivity when we are launched by it */
     private VideoMetadata mVideoMetadataFromPlayer;
 
@@ -568,6 +570,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 c.moveToFirst();
                 mVideo = (Video) new CompatibleCursorMapperConverter(new VideoCursorMapper()).convert(c);
                 log.debug("onResume: yay we get a new video " + mVideo.getFilePath());
+                mRepeatModeDetected = true; // to signal smoothUpdateVideo that it should all details since video is different from initial one
             } else {
                 log.debug("onResume: oops no video found");
             }
@@ -577,18 +580,17 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         // Launch the first details task
         if (mFirstOnResume) {
+            log.debug("onResume: mFirstOnResume");
             if (mVideo!=null) {
                 if(mThumbnailAsyncTask!=null)
                     mThumbnailAsyncTask.cancel(true);
-                // We have enough data to display details right now
-                // no need to launch this task since it is done onLoadFinished...
-                //mDetailRowBuilderTask = new DetailRowBuilderTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,mVideo);
             }
-            // We start the loader in all cases to get DB updates
+            // We start the loader in all cases to get DB updates that will trigger details update if need be
             LoaderManager.getInstance(this).restartLoader(1, null, this);
         }
         // Update the details when back from player (we may have miss some DB updates while in background)
         else if (mResumeFromPlayer) {
+            log.debug("onResume: mResumeFromPlayer");
             LoaderManager.getInstance(this).restartLoader(1, null, this);
 
             if (mSubtitleFilesListerTask !=null) {
@@ -845,6 +847,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         // Getting an empty cursor here means that the video is not indexed
         if (cursor.getCount()<1) {
+            log.debug("onLoadFinished: cursor is empty, video is not indexed");
             // we're changing from indexed case to non-indexed case (user probably unindexed file some milliseconds ago)
             if (oldVideoObject!=null) {
                 // building a new unindexed video object using the Uri and name we had in the previous video object
@@ -964,10 +967,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         boolean smoothUpdate = false;
         // Check if we really need to update the fragment
         boolean needToUpdateDetailsOverview;
-        if (mDetailsOverviewRow==null && mDetailRowBuilderTask==null) { // if no row yet and no async task building it yet
-            needToUpdateDetailsOverview = true; // first time
+        if ((mDetailsOverviewRow==null && mDetailRowBuilderTask==null) || mRepeatModeDetected) { // if no row yet and no async task building it yet
+            needToUpdateDetailsOverview = true; // first time or repeat mode detected requiring full update
+            mRepeatModeDetected = false;
         } else {
             needToUpdateDetailsOverview = foundDifferencesRequiringDetailsUpdate(oldVideoObject, currentVideo); // update
+            log.debug("smoothUpdateVideo: needToUpdateDetailsOverview " + needToUpdateDetailsOverview);
         }
 
         // Update if needed
@@ -1561,8 +1566,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         protected void onPostExecute(List<SubtitleManager.SubtitleFile> subtitleFiles) {
             if(isCancelled())
                 return;
+            log.debug("SubtitleFilesListerTask: onPostExecute update subtitle row when ready");
             mExternalSubtitles = subtitleFiles;
-
             updateSubtitleRowWhenReady();
         }
     }
@@ -1572,8 +1577,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
      */
     private void updateSubtitleRowWhenReady() {
         if ((mVideo.getMetadata()!=null) && (mSubtitleListCache.get(mVideo.getFileUri())!=null)) {
+            log.debug("updateSubtitleRowWhenReady: updating row");
             mSubtitlesDetailsRow = new SubtitlesDetailsRow(getActivity(), mVideo, mSubtitleListCache.get(mVideo.getFileUri()));
             mAdapter.replace(INDEX_SUBTITLES, mSubtitlesDetailsRow);
+        } else {
+            log.debug("updateSubtitleRowWhenReady: not updating row");
         }
     }
 
