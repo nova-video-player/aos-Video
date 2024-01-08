@@ -258,7 +258,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     onDataUriOK();
                 }
             });
-            ;
         }
 
         @Override
@@ -349,15 +348,19 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mNextVideoId = mVideoId;
         } else {
             mPlayer.setLooping(false);
-            if (PLAYMODE_SINGLE==newPlaymode) {
+            if (PLAYMODE_SINGLE == newPlaymode) {
+                log.debug("setPlaymode: PLAYMODE_SINGLE");
                 // clear next
                 mNextUri = null;
                 mNextVideoId = -1;
             } else if (PLAYMODE_FOLDER == newPlaymode) {
+                log.debug("setPlaymode: PLAYMODE_FOLDER");
                 updateNextVideo(false, false, wait);
             } else if (PLAYMODE_REPEAT_FOLDER == newPlaymode) {
+                log.debug("setPlaymode: PLAYMODE_REPEAT_FOLDER");
                 updateNextVideo(true, false, wait);
             } else if (PLAYMODE_BINGE == newPlaymode) {
+                log.debug("setPlaymode: PLAYMODE_BINGE");
                 updateNextVideo(false, true, wait);
             } else {
                 log.debug("unknown Playmode: " + newPlaymode);
@@ -633,11 +636,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     private void onStreamingUriOK() {
-        log.debug("onStreamingUriOK mUri=" + mUri + ", mStreamingUri=" + mStreamingUri + ", mVideoId=" + mVideoId+ ", mVideoInfo.id=" + (mVideoInfo != null ? mVideoInfo.id : "null") + ", mVideoInfo.uri=" + (mVideoInfo != null ? mVideoInfo.uri : "null"));
-        if (mVideoInfo != null) {
-            CustomApplication.setLastVideoPlayedId(mVideoInfo.id);
-            CustomApplication.setLastVideoPlayedUri(mVideoInfo.uri);
-        }
         if(mTorrentFilePosition==-1)
             prepareSubs();
         if(mPlayerFrontend!=null)
@@ -952,6 +950,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         @Override
         public void onChange(boolean selfChange) {
             if (mVideoInfo != null && (mVideoInfo.id==-1||mVideoInfo.scraperId <=0)&&!PrivateMode.isActive()){ // if we need to update
+                log.debug("VideoObserver onChange: update from db");
                 VideoDbInfo info = VideoDbInfo.fromUri(getContentResolver(), mVideoInfo.uri);
                 if (info != null) {
                     info.subtitleTrack = mVideoInfo.subtitleTrack;
@@ -969,6 +968,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                         updateNowPlayingMetadata();
                     // check if it has been scraped
                 }
+            } else {
+                log.debug("VideoObserver onChange: no need to update");
             }
         }
 
@@ -997,7 +998,13 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      * @param videoInfo
      */
     public void setVideoInfo(VideoDbInfo videoInfo){
+        log.debug("setVideoInfo: videoInfo.id=" + (videoInfo != null ? videoInfo.id : "null") + ", videoInfo.uri=" + (videoInfo != null ? videoInfo.uri : "null"));
         mVideoInfo = videoInfo;
+        if (mVideoInfo != null) {
+            log.debug("onStreamingUriOK: setLastVideoPlayed");
+            CustomApplication.setLastVideoPlayedId(mVideoInfo.id);
+            CustomApplication.setLastVideoPlayedUri(mVideoInfo.uri);
+        }
         mLastPosition = getLastPosition(mVideoInfo, mResume);
         if (!PrivateMode.isActive()&&mIndexHelper!=null) {
             mVideoInfo.lastTimePlayed = Long.valueOf(System.currentTimeMillis() / 1000L);
@@ -1073,6 +1080,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 onAudioMetadataUpdated(mPlayer.getVideoMetadata(), mNewAudioTrack);
                 mAudioSubtitleNeedUpdate = false;
             }
+            log.debug("postPreparedAndVideoDb: mPlayerFrontend.onPrepared, setPlaMode " + mPlayMode);
             setPlayMode(mPlayMode, false); //look for next uri
             setAudioFilt();
             if (PERIODIC_BOOKMARK_SAVE)
