@@ -15,7 +15,7 @@
         app:iconSpaceReserved="false">
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="http://curl.haxx.se/docs/copyright.html" />
+            android:data="https://curl.haxx.se/docs/copyright.html" />
     </PreferenceScreen>
     <PreferenceScreen
         android:summary="LGPL v2.1"
@@ -39,7 +39,7 @@
         app:iconSpaceReserved="false">
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="http://www.boost.org/users/license.html" />
+            android:data="https://www.boost.org/users/license.html" />
     </PreferenceScreen>
     <PreferenceScreen
         android:summary="BSD"
@@ -47,7 +47,7 @@
         app:iconSpaceReserved="false">
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="http://www.libtorrent.org/" />
+            android:data="https://www.libtorrent.org/" />
     </PreferenceScreen>
     <PreferenceScreen
         android:summary="LGPL v2.1"
