@@ -1,3 +1,5 @@
+- Assume writeable directories on jcifs-ng
+- Stability enhancements
 - Fix F-Droid build
 - Update Video information fragment if subtitles have been downloaded during playback or video has changed
 - Fix play mode
