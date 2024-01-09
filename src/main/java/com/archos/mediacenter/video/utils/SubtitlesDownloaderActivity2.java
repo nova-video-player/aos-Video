@@ -97,7 +97,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
 
     private static class NonConfigurationInstance {
         public NovaProgressDialog progressDialog;
-    };
+    }
 
     @SuppressWarnings({"unchecked", "serial"})
     @Override
@@ -344,7 +344,9 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                     String oldFileUrl = fileUrl;
                     fileUrl = newUri.toString();
                     openSubtitlesQueryParams.setFileName(Uri.parse(oldFileUrl).getLastPathSegment());
-                    openSubtitlesQueryParams.setFileLength(mf2.length());
+                    Long fileLength = mf2.length();
+                    // fileLength can be null (seen on google play console)
+                    openSubtitlesQueryParams.setFileLength(fileLength != null ? fileLength : 0); // Add null check here
                     log.debug("getFileInfo: consider (" + fileUrl + "," + openSubtitlesQueryParams.getFileName() + "), size=" + openSubtitlesQueryParams.getFileLength());
                 }
             }
