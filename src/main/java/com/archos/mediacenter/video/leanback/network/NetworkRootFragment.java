@@ -370,38 +370,46 @@ public class NetworkRootFragment extends BrowseSupportFragment {
         protected Cursor doInBackground(Void... args) {
             return ShortcutDbAdapter.VIDEO.queryAllShortcuts(getActivity());
         }
+
         @Override
         protected void onPostExecute(Cursor cursor) {
             if (isAdded()) {
-                if (cursor.getCount() == 0) {
-                    // remove shortcuts row if empty
-                    mRowsAdapter.remove(mIndexedFoldersListRow);
-                } else {
-                    // Add it back in first row if it is not
-                    if (mRowsAdapter.indexOf(mIndexedFoldersListRow) == -1) {
-                        mRowsAdapter.add(0, mIndexedFoldersListRow);
-                    }
+                if (cursor != null) {
+                    if (!cursor.isClosed()) {
+                        if (cursor.getCount() == 0) {
+                            // remove shortcuts row if empty
+                            mRowsAdapter.remove(mIndexedFoldersListRow);
+                        } else {
+                            // Add it back in first row if it is not
+                            if (mRowsAdapter.indexOf(mIndexedFoldersListRow) == -1) {
+                                mRowsAdapter.add(0, mIndexedFoldersListRow);
+                            }
 
-                    // update content
-                    mIndexedFoldersAdapter.clear();
-                    // First item is not an actual shortcut, it opens the re-scan settings
-                    if (cursor.getCount() > 0) {
-                        Box rescanBox = new Box(Box.ID.INDEXED_FOLDERS_REFRESH, getString(R.string.rescan), R.drawable.filetype_new_rescan);
-                        log.debug("ShortcutsLoaderTask NetworkScannerReceiver.isScannerWorking()=" + NetworkScannerReceiver.isScannerWorking());
-                        mIndexedFoldersAdapter.add(rescanBox);
-                    }
+                            // update content
+                            mIndexedFoldersAdapter.clear();
+                            // First item is not an actual shortcut, it opens the re-scan settings
+                            if (cursor.getCount() > 0) {
+                                Box rescanBox = new Box(Box.ID.INDEXED_FOLDERS_REFRESH, getString(R.string.rescan), R.drawable.filetype_new_rescan);
+                                log.debug("ShortcutsLoaderTask NetworkScannerReceiver.isScannerWorking()=" + NetworkScannerReceiver.isScannerWorking());
+                                mIndexedFoldersAdapter.add(rescanBox);
+                            }
 
-                    // Convert from cursor to array (only because we need to add the "refresh" Box in the list)
-                    cursor.moveToFirst();
-                    NetworkShortcutMapper mapper = new NetworkShortcutMapper();
-                    mapper.bind(cursor);
-                    while (!cursor.isAfterLast()) {
-                        mIndexedFoldersAdapter.add(mapper.convert(cursor));
-                        cursor.moveToNext();
+                            // Convert from cursor to array (only because we need to add the "refresh" Box in the list)
+                            cursor.moveToFirst();
+                            NetworkShortcutMapper mapper = new NetworkShortcutMapper();
+                            mapper.bind(cursor);
+                            while (!cursor.isAfterLast()) {
+                                mIndexedFoldersAdapter.add(mapper.convert(cursor));
+                                cursor.moveToNext();
+                            }
+                        }
+                    } else {
+                        // database seems to have been closed
+                        log.error("onPostExecute: database is closed");
                     }
+                    cursor.close();
                 }
             }
-            if (cursor != null) cursor.close();
         }
     }
 
