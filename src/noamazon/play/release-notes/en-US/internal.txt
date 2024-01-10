@@ -1,3 +1,4 @@
+- Fix duplicate subs listed in VideoInfo for smbj shares
 - Assume writeable directories on jcifs-ng
 - Stability enhancements
 - Fix F-Droid build
