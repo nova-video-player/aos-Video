@@ -394,6 +394,7 @@ public class CustomApplication extends Application {
                 intentFilter.addDataScheme("file");
                 registerReceiver(videoStoreImportReceiver, intentFilter);
                 isVideStoreImportReceiverRegistered = true;
+                ArchosUtils.addBreadcrumb(SentryLevel.INFO, "CustomApplication.handleForeGround", "app now in ForeGround register videoStoreImportReceiver");
             } else {
                 log.debug("handleForeGround: app now in ForeGround registerReceiver videoStoreImportReceiver already registered");
                 ArchosUtils.addBreadcrumb(SentryLevel.INFO, "CustomApplication.handleForeGround", "app now in ForeGround videoStoreImportReceiver already registered");
