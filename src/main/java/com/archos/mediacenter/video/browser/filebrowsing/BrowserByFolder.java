@@ -298,15 +298,28 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         }
         if(mListingEngine != null)
             mListingEngine.abort();
-        mListingEngine = ListingEngineFactoryWithUpnp.getListingEngineForUrl(getActivity(), mCurrentDirectory);
-        mListingEngine.setSortOrder(getSortOrder(mSortOrder));
-        ArrayList<String>ext = new ArrayList<>(VideoUtils.getSubtitleExtensions());
-        ext.add(XmlDb.FILE_EXTENSION);
-        mListingEngine.setKeepHiddenFiles(true);
-        if(!VideoPreferencesCommon.PreferenceHelper.shouldDisplayAllFiles(getActivity()))
-            mListingEngine.setFilter(VideoUtils.getVideoFilterMimeTypes(), ext.toArray(new String[0])); // display video files only but retrieve xml DB + subs
-        mListingEngine.setListener(this);
-        mListingEngine.start();
+        try {
+            mListingEngine = ListingEngineFactoryWithUpnp.getListingEngineForUrl(getActivity(), mCurrentDirectory);
+            mListingEngine.setSortOrder(getSortOrder(mSortOrder));
+            ArrayList<String> ext = new ArrayList<>(VideoUtils.getSubtitleExtensions());
+            ext.add(XmlDb.FILE_EXTENSION);
+            mListingEngine.setKeepHiddenFiles(true);
+            if (!VideoPreferencesCommon.PreferenceHelper.shouldDisplayAllFiles(getActivity()))
+                mListingEngine.setFilter(VideoUtils.getVideoFilterMimeTypes(), ext.toArray(new String[0])); // display video files only but retrieve xml DB + subs
+            mListingEngine.setListener(this);
+            mListingEngine.start();
+        } catch (IllegalArgumentException e) {
+            log.error("listFiles: caught IllegalArgumentException", e);
+            // TODO MARC avoid endless spinning
+            Toast.makeText(getActivity(), R.string.error_protocol_not_supported, Toast.LENGTH_SHORT).show();
+            // call onListingFatalError
+            if (mHandler.hasMessages(DIALOG_LISTING))
+                mHandler.removeMessages(DIALOG_LISTING);
+            displayFailPage();
+            if (mListingEngine != null && mListingEngine.getListener() != null) {
+                mListingEngine.getListener().onListingEnd();
+            }
+        }
     }
 
     @Override
