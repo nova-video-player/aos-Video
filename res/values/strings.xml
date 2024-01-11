@@ -365,6 +365,11 @@
     <string name="set_audio_speed_to">Audio speed %s</string>
     <!-- Subtitles/Audio languages -->
 
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <string name="subs_HI">Hearing Impaired</string>
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <string name="subs_SDH">Subtitles for the Deaf and Hard of Hearing</string>
+
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brazilian</string>
     <string name="s_chinese">Chinese</string>
@@ -485,6 +490,7 @@
     <string name="exit">Exit</string>
     <!-- torrent -->
     <string name="error">An error occurred</string>
+    <string name="error_protocol_not_supported">Error: protocol not supported</string>
     <string name="error_loading_torrent">Error while loading torrent</string>
     <string name="error_downloading_not_enough_space">Error while downloading torrent : not enough space</string>
     <string name="loading_torrent">Loading torrent…</string>
