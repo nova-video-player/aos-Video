@@ -983,17 +983,19 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             // First check if we can do a smooth/smart update (when unscrapping and/or unindexing)
             // smooth update when unscrapping
             if (oldVideoObject!=null && oldVideoObject.hasScraperData() && !currentVideo.hasScraperData()) {
-                // remove scraper related rows
-                if(mAdapter.indexOf(mFileListRow)>=0) {
-                    mAdapter.remove(mFileListRow);
-                    INDEX_SUBTITLES--;
-                    INDEX_FILEDETAILS--;
+                if (mAdapter != null) { // mAdapter can be null (seen on sentry)
+                    // remove scraper related rows
+                    if (mAdapter.indexOf(mFileListRow) >= 0) {
+                        mAdapter.remove(mFileListRow);
+                        INDEX_SUBTITLES--;
+                        INDEX_FILEDETAILS--;
+                    }
+                    mAdapter.remove(mPlotAndGenresRow);
+                    mAdapter.remove(mCastRow);
+                    mAdapter.remove(mTrailersRow);
+                    mAdapter.remove(mPostersRow);
+                    mAdapter.remove(mBackdropsRow);
                 }
-                mAdapter.remove(mPlotAndGenresRow);
-                mAdapter.remove(mCastRow);
-                mAdapter.remove(mTrailersRow);
-                mAdapter.remove(mPostersRow);
-                mAdapter.remove(mBackdropsRow);
                 // update details presenter and actions
                 mDescriptionPresenter.update(currentVideo);
                 if(mDetailsOverviewRow.getActionsAdapter()==null)
@@ -1024,10 +1026,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
                 mOverviewRowPresenter.updateBackgroundColor(mColor);
                 mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
-
-                for (Presenter pres : mAdapter.getPresenterSelector().getPresenters()){
-                    if (pres instanceof BackgroundColorPresenter)
-                        ((BackgroundColorPresenter) pres).setBackgroundColor(mColor);
+                if (mAdapter != null) {
+                    for (Presenter pres : mAdapter.getPresenterSelector().getPresenters()) {
+                        if (pres instanceof BackgroundColorPresenter)
+                            ((BackgroundColorPresenter) pres).setBackgroundColor(mColor);
+                    }
                 }
                 // this is required to remove backdrop after removal of description
                 if (needToUpdateDetailsOverview) mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(currentVideo);
