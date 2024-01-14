@@ -60,7 +60,6 @@ import com.archos.medialib.LibAvos;
 import com.archos.mediaprovider.video.NetworkAutoRefresh;
 import com.archos.mediaprovider.video.VideoStoreImportReceiver;
 import com.archos.mediascraper.ScraperImage;
-import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.squareup.picasso.Picasso;
 
 import httpimage.FileSystemPersistence;
@@ -270,7 +269,6 @@ public class CustomApplication extends Application {
         log = LoggerFactory.getLogger(CustomApplication.class);
 
         setupBouncyCastle();
-        AndroidThreeTen.init(this);
 
         // must be done before sambaDiscovery otherwise no context for jcifs
         new Thread(() -> {
