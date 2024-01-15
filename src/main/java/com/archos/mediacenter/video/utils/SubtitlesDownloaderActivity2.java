@@ -356,7 +356,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 try {
                     url = new URL(fileUrl);
                     urlConnection = (HttpURLConnection) url.openConnection();
-                    if (openSubtitlesQueryParams.getFileLength() > 0 && (urlConnection == null || !"bytes".equalsIgnoreCase(urlConnection.getHeaderField("Accept-Ranges"))))
+                    if (openSubtitlesQueryParams.getFileLength() != null && openSubtitlesQueryParams.getFileLength() > 0 && (urlConnection == null || !"bytes".equalsIgnoreCase(urlConnection.getHeaderField("Accept-Ranges"))))
                         openSubtitlesQueryParams.setFileHash(OpenSubtitlesHasher.computeHash(urlConnection, openSubtitlesQueryParams.getFileLength()));
                 } catch (MalformedURLException e) {
                     log.error("getFileInfo: caught MalformedURLException for fileUrl " + fileUrl, e);
@@ -368,7 +368,8 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 }
             } else {
                 try {
-                    openSubtitlesQueryParams.setFileLength(mf2.length());
+                    Long fileLength = mf2.length();
+                    openSubtitlesQueryParams.setFileLength(fileLength != null ? fileLength : 0);
                     if (openSubtitlesQueryParams.getFileLength() != null && openSubtitlesQueryParams.getFileLength() > 0) openSubtitlesQueryParams.setFileHash(OpenSubtitlesHasher.computeHash(Uri.parse(fileUrl), openSubtitlesQueryParams.getFileLength()));
                 } catch (Exception e) { // failure for this file
                     openSubtitlesQueryParams.setFileHash(null);
