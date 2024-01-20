@@ -293,6 +293,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             if (searchResults != null && searchResults.size() == 1) {
                 log.debug("getSubtitles: one sub found for " + fileUrl);
                 getSub(fileUrl, searchResults.get(0));
+                return;
             }
             if (searchResults != null && searchResults.size() > 1) {
                 mHandler.post(() -> askSubChoice(fileUrl, searchResults,languages.size()>1, !searchResults.isEmpty()));
