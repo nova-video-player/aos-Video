@@ -226,34 +226,41 @@ public class ScraperResultsAdapter extends BaseAdapter {
     }
 
     public void updateItemData(int position, EpisodeTags episodeTags) {
-        // Replace the data of the item at the provided position
-        ShowTags showTags = episodeTags.getShowTags();
-        ItemData itemData = mItems.get(position);
+        if (position >= mItems.size())
+            return;
+        ((Activity) mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // Replace the data of the item at the provided position
+                ShowTags showTags = episodeTags.getShowTags();
+                ItemData itemData = mItems.get(position);
 
-        // returns show cover if no ep cover exists
-        File episodeCover = episodeTags.getCover();
-        if (episodeCover != null) {
-            itemData.posterPath = episodeCover.getPath();
-        }
+                // returns show cover if no ep cover exists
+                File episodeCover = episodeTags.getCover();
+                if (episodeCover != null) {
+                    itemData.posterPath = episodeCover.getPath();
+                }
 
-        String date = "";
-        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
-        if (episodeTags.getAired() != null && episodeTags.getAired().getTime() > 0) {
-            // Display the aired date of the current episode
-            date = df.format(episodeTags.getAired());
-        }
-        else if (showTags != null && showTags.getPremiered() != null && showTags.getPremiered().getTime() > 0) {
-            // Aired date not available => try at least the premiered date
-            date = df.format(showTags.getPremiered());
-        }
-        itemData.date = date;
+                String date = "";
+                DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
+                if (episodeTags.getAired() != null && episodeTags.getAired().getTime() > 0) {
+                    // Display the aired date of the current episode
+                    date = df.format(episodeTags.getAired());
+                } else if (showTags != null && showTags.getPremiered() != null && showTags.getPremiered().getTime() > 0) {
+                    // Aired date not available => try at least the premiered date
+                    date = df.format(showTags.getPremiered());
+                }
+                itemData.date = date;
 
-        if (episodeTags.getDirectors().size() > 0) {
-            // Append all the directors as a single string
-            itemData.directors = TextUtils.join(", ", episodeTags.getDirectors());
-        }
+                if (episodeTags.getDirectors().size() > 0) {
+                    // Append all the directors as a single string
+                    itemData.directors = TextUtils.join(", ", episodeTags.getDirectors());
+                }
 
-        mItems.set(position, itemData);
+                mItems.set(position, itemData);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     public void addItemData(EpisodeTags episodeTags) {
