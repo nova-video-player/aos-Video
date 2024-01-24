@@ -53,14 +53,18 @@ public class OpenSubtitlesApiHelper {
     public static final int RESULT_CODE_OK = 200;
     public static final int RESULT_NOT_ENOUGH_PARAMETERS = 400;
     public static final int RESULT_CODE_BAD_CREDENTIALS = 401;
-    public static final int RESULT_CODE_TOKEN_EXPIRED = 406;
-    public static final int RESULT_CODE_QUOTA_EXCEEDED = 3;
+    public static final int RESULT_CODE_UNACCEPTABLE = 406;
+    // Three 406 error sub-cases
+    public static final int RESULT_CODE_TOKEN_EXPIRED = 4061; // if message="invalid token"
+    public static final int RESULT_CODE_QUOTA_EXCEEDED = 4062; // if "remaining":0
+    public static final int RESULT_CODE_INVALID_FILE_ID = 4063; // if message="Invalid file_id"
     public static final int RESULT_CODE_BAD_API_KEY = 403;
-    public static final int RESULT_CODE_INVALID_FILE_ID = 406;
     public static final int RESULT_CODE_LINK_GONE = 410;
     public static final int RESULT_CODE_TOO_MANY_REQUESTS = 429;
+    public static final int RESULT_CODE_SERVER_ISSUE = 500;
 
     private static int LAST_QUERY_RESULT = RESULT_CODE_OK;
+    private static String LAST_QUERY_MESSAGE = "";
 
     private static OkHttpClient httpClient;
     private static String baseUrl;
@@ -75,7 +79,7 @@ public class OpenSubtitlesApiHelper {
     private static int allowedTranslations = 5;
     private static int numberDownloads = 0;
     private static String resetTimeRemaining = "";
-    private static String resetTimeUTC = "";
+    private static String resetTimeUTC = "2100-04-21T00:00:00Z"; // long live nova video player (I should be dead by then)
     private static boolean vip = false;
     private static int userId = 0;
     private static boolean extInstalled = false;
@@ -163,48 +167,44 @@ public class OpenSubtitlesApiHelper {
                     .addHeader(API_KEY, apiKey);
             Request request = requestBuilder.build();
             try (Response response = httpClient.newCall(request).execute()) {
-                if (response.isSuccessful()) {
+                parseResponse(response);
+                if (! response.isSuccessful()) {
+                    log.error("logout: response is not successful, error code={}, error message={}", LAST_QUERY_RESULT, LAST_QUERY_MESSAGE);
+                    invalidToken();
+                    return false;
+                } else {
+                    log.debug("logout: response successful, error code={}, error message={}", LAST_QUERY_RESULT, LAST_QUERY_MESSAGE);
+                    // Authentication successful
                     String responseBody = response.body().string();
                     JSONObject jsonResponse = new JSONObject(responseBody);
-                    Integer status = parseResult(jsonResponse);
-                    if (status != RESULT_CODE_OK) {
-                        // Handle authentication error
-                        log.warn("login: jsonResponse error");
+                    String authToken = jsonResponse.optString("token", "");
+                    if (authToken.isEmpty()) {
+                        log.warn("login: no token in response");
                         invalidToken();
                         return false;
-                    } else {
-                        // Authentication successful
-                        String authToken = jsonResponse.optString("token", "");
-                        if (authToken.isEmpty()) {
-                            log.warn("login: no token in response");
-                            invalidToken();
-                            return false;
-                        }
-                        log.debug("login: token = " + authToken);
-                        // Check if "base_url" is present in the response
-                        setBaseUrl(jsonResponse.optString("base_url", API_BASE_URL));
-                        // Check if "user" object is present in the response
-                        if (jsonResponse.has("user")) {
-                            JSONObject userObject = jsonResponse.getJSONObject("user");
-                            allowedDownloads = userObject.optInt("allowed_downloads", allowedDownloads);
-                            allowedTranslations = userObject.optInt("allowed_translations", allowedTranslations);
-                            level = userObject.optString("level", "Sub leecher");
-                            vip = userObject.optBoolean("vip", false);
-                            userId = userObject.optInt("user_id", 0);
-                            extInstalled = userObject.optBoolean("ext_installed", false);
-                            log.debug("auth: allowed_downloads={}, level={}, vip={}", allowedDownloads, level, vip);
-                        }
-                        if (authToken != null) {
-                            log.debug("auth: authentication successful token={}", authToken);
-                            setAuthToken(authToken);
-                            authenticated = true;
-                            return true;
-                        } else {
-                            log.warn("auth: authentication unsuccessful!");
-                        }
                     }
-                } else {
-                    log.error("login: response is not successful, error code={}, error message={}", response.code(), response.message());
+                    log.debug("login: token = " + authToken);
+                    // Check if "base_url" is present in the response
+                    setBaseUrl(jsonResponse.optString("base_url", API_BASE_URL));
+                    // Check if "user" object is present in the response
+                    if (jsonResponse.has("user")) {
+                        JSONObject userObject = jsonResponse.getJSONObject("user");
+                        allowedDownloads = userObject.optInt("allowed_downloads", allowedDownloads);
+                        allowedTranslations = userObject.optInt("allowed_translations", allowedTranslations);
+                        level = userObject.optString("level", "Sub leecher");
+                        vip = userObject.optBoolean("vip", false);
+                        userId = userObject.optInt("user_id", 0);
+                        extInstalled = userObject.optBoolean("ext_installed", false);
+                        log.debug("auth: allowed_downloads={}, level={}, vip={}", allowedDownloads, level, vip);
+                    }
+                    if (authToken != null) {
+                        log.debug("auth: authentication successful token={}", authToken);
+                        setAuthToken(authToken);
+                        authenticated = true;
+                        return true;
+                    } else {
+                        log.warn("auth: authentication unsuccessful!");
+                    }
                 }
             }
         } catch (JSONException e) {
@@ -222,17 +222,17 @@ public class OpenSubtitlesApiHelper {
                         .delete()
                         .addHeader(USER_AGENT, USER_AGENT_VALUE)
                         .addHeader(AUTHORIZATION, "Bearer " + authToken);
+                        //.addHeader(API_KEY, apiKey);
                 Request request = requestBuilder.build();
                 try (Response response = httpClient.newCall(request).execute()) {
-                    if (response.isSuccessful()) {
-                        String responseBody = response.body().string();
-                        JSONObject jsonResponse = new JSONObject(responseBody);
-                        Integer status = parseResult(jsonResponse);
-                        if (status != RESULT_CODE_OK) {
-                            log.warn("logout: error in response, code=" + LAST_QUERY_RESULT);
-                        }
+                    parseResponse(response);
+                    String responseBody = response.body().string();
+                    JSONObject jsonResponse = new JSONObject(responseBody);
+                    parseResult(jsonResponse);
+                    if (! response.isSuccessful()) {
+                        log.error("logout: response is not successful, error code={}, error message={}", LAST_QUERY_RESULT, LAST_QUERY_MESSAGE);
                     } else {
-                        log.error("logout: response is not successful, error code={}, error message={}", response.code(), response.message());
+                        log.debug("logout: status={}, message={}", LAST_QUERY_RESULT, LAST_QUERY_MESSAGE);
                     }
                 }
             } catch (JSONException e) {
@@ -244,54 +244,91 @@ public class OpenSubtitlesApiHelper {
         authToken = null;
     }
 
+    private static int parseResponse(Response response) {
+        if (response == null) {
+            log.warn("parseResponse: response is null");
+            return RESULT_CODE_SERVER_ISSUE;
+        }
+        int status = response.code();
+        LAST_QUERY_MESSAGE = response.message();
+        if (status != 200) log.warn("parseResult: status={}, message={}", status, LAST_QUERY_MESSAGE);
+        else log.trace("parseResult: status={}, message={}", status, LAST_QUERY_MESSAGE);
+        switch (status) {
+            case 200 -> {
+                LAST_QUERY_RESULT = RESULT_CODE_OK;
+                return LAST_QUERY_RESULT;
+            }
+            case 400 -> {
+                LAST_QUERY_RESULT = RESULT_NOT_ENOUGH_PARAMETERS;
+                log.warn("parseResult: not enough parameters");
+                return LAST_QUERY_RESULT;
+            }
+            case 401 -> {
+                LAST_QUERY_RESULT = RESULT_CODE_BAD_CREDENTIALS;
+                log.warn("parseResult: bad credentials");
+                return LAST_QUERY_RESULT;
+            }
+            case 403 -> {
+                LAST_QUERY_RESULT = RESULT_CODE_BAD_API_KEY;
+                log.warn("parseResult: bad API key");
+                return LAST_QUERY_RESULT;
+            }
+            case 406 -> {
+                LAST_QUERY_RESULT = RESULT_CODE_UNACCEPTABLE;
+                log.warn("parseResult: not acceptable");
+                return LAST_QUERY_RESULT;
+            }
+            case 410 -> {
+                LAST_QUERY_RESULT = RESULT_CODE_LINK_GONE;
+                log.warn("parseResult: invalid or expired link");
+                return LAST_QUERY_RESULT;
+            }
+            case 429 -> {
+                LAST_QUERY_RESULT = RESULT_CODE_TOO_MANY_REQUESTS;
+                log.warn("parseResult: throttle limit reached, try later");
+                return LAST_QUERY_RESULT;
+            }
+            default -> {
+                if (status >= 500 && status <= 599) {
+                    log.warn("parseResult: server issue");
+                    LAST_QUERY_RESULT = RESULT_CODE_SERVER_ISSUE;
+                    return LAST_QUERY_RESULT;
+                } else {
+                    LAST_QUERY_RESULT = RESULT_CODE_OK;
+                    return LAST_QUERY_RESULT;
+                }
+            }
+        }
+    }
+
     private static int parseResult(JSONObject jsonResponse) throws IOException {
+        if (jsonResponse == null) {
+            log.warn("parseResult: jsonResponse is null");
+            return RESULT_CODE_SERVER_ISSUE;
+        }
         Integer status = jsonResponse.optInt("status", 200);
-        String message = jsonResponse.optString("message", "");
-        try { // json can contain "errors" array
-            JSONArray errorsArray = jsonResponse.getJSONArray("errors");
-            message = message + " " + errorsArray.toString();
-        } catch (JSONException e) {}
-        log.debug("parseResult: status={}, message={}", status, message);
-        if (status != 200) log.warn("parseResult: status={}, message={}", status, message);
-        if (message.equals("invalid token")) {
+        LAST_QUERY_MESSAGE = jsonResponse.optString("message", LAST_QUERY_MESSAGE);
+        if (status != 200) log.warn("parseResult: status={}, message={}", status, LAST_QUERY_MESSAGE);
+        else log.debug("parseResult: status={}, message={}", status, LAST_QUERY_MESSAGE);
+        // refine 406 error sub-cases
+        if (LAST_QUERY_MESSAGE.equals("invalid token")) {
             invalidToken();
             LAST_QUERY_RESULT = RESULT_CODE_TOKEN_EXPIRED;
             log.warn("parseResult: invalid token");
             return LAST_QUERY_RESULT;
         }
-        switch (status) {
-            case 400:
-                LAST_QUERY_RESULT = RESULT_NOT_ENOUGH_PARAMETERS;
-                log.warn("parseResult: not enough parameters");
-                return LAST_QUERY_RESULT;
-            case 401:
-                LAST_QUERY_RESULT = RESULT_CODE_BAD_CREDENTIALS;
-                log.warn("parseResult: bad credentials");
-                return LAST_QUERY_RESULT;
-            case 403:
-                LAST_QUERY_RESULT = RESULT_CODE_BAD_API_KEY;
-                log.warn("parseResult: bad API key");
-                return LAST_QUERY_RESULT;
-            case 406:
-                LAST_QUERY_RESULT = RESULT_CODE_INVALID_FILE_ID;
-                log.warn("parseResult: invalid file ID");
-                return LAST_QUERY_RESULT;
-            case 410:
-                LAST_QUERY_RESULT = RESULT_CODE_LINK_GONE;
-                log.warn("parseResult: invalid or expired link");
-                return LAST_QUERY_RESULT;
-            case 429:
-                LAST_QUERY_RESULT = RESULT_CODE_TOO_MANY_REQUESTS;
-                log.warn("parseResult: throttle limit reached, try later");
-                return LAST_QUERY_RESULT;
+        if (LAST_QUERY_MESSAGE.equals("Invalid file_id")) {
+            LAST_QUERY_RESULT = RESULT_CODE_INVALID_FILE_ID;
+            log.warn("parseResult: invalid file_id");
+            return LAST_QUERY_RESULT;
         }
         remainingDownloads = jsonResponse.optInt("remaining", remainingDownloads);
-        if (remainingDownloads == -1) {
+        log.debug("parseResult: remaining downloads={}", remainingDownloads);
+        if (LAST_QUERY_RESULT == RESULT_CODE_UNACCEPTABLE && remainingDownloads <= 0) {
             LAST_QUERY_RESULT = RESULT_CODE_QUOTA_EXCEEDED;
             log.warn("parseResult: quota exceeded");
             return LAST_QUERY_RESULT;
         }
-        LAST_QUERY_RESULT = RESULT_CODE_OK;
         return LAST_QUERY_RESULT;
     }
 
@@ -328,81 +365,88 @@ public class OpenSubtitlesApiHelper {
         Request request = requestBuilder.build();
 
         try (Response response = httpClient.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                try {
-                    String responseBody = response.body().string();
-                    JSONObject jsonResponse = new JSONObject(responseBody);
-                    int result = parseResult(jsonResponse);
-                    if (result != RESULT_CODE_OK) {
-                        log.warn("searchSubtitle: error in response, code=" + LAST_QUERY_RESULT);
-                        return null;
-                    } else if (jsonResponse.has("data")) {
-                        switch (result) {
-                            case RESULT_CODE_OK:
-                                JSONArray dataArray = jsonResponse.getJSONArray("data");
-                                int numSubtitles = dataArray.length();
-                                ArrayList<OpenSubtitlesSearchResult> subtitleRefs = new ArrayList<>();
-                                log.debug("searchSubtitle: found {} subtitles", numSubtitles);
-                                for (int i = 0; i < numSubtitles; i++) {
-                                    JSONObject subtitleInfo = dataArray.getJSONObject(i);
-                                    OpenSubtitlesSearchResult subtitleResult = new OpenSubtitlesSearchResult();
+            parseResponse(response);
+            String responseBody = response.body().string();
+            try {
+                JSONObject jsonResponse = new JSONObject(responseBody);
+                parseResult(jsonResponse);
+                if (!response.isSuccessful())
+                    log.error("searchSubtitle: response is not successful, error code={}, error message={}", LAST_QUERY_RESULT, LAST_QUERY_MESSAGE);
+                else
+                    log.debug("searchSubtitle: status={}, message={}", LAST_QUERY_RESULT, LAST_QUERY_MESSAGE);
+                switch (LAST_QUERY_RESULT) {
+                    case RESULT_CODE_OK -> {
+                        JSONArray dataArray = jsonResponse.getJSONArray("data");
+                        int numSubtitles = dataArray.length();
+                        ArrayList<OpenSubtitlesSearchResult> subtitleRefs = new ArrayList<>();
+                        log.debug("searchSubtitle: found {} subtitles", numSubtitles);
+                        for (int i = 0; i < numSubtitles; i++) {
+                            JSONObject subtitleInfo = dataArray.getJSONObject(i);
+                            OpenSubtitlesSearchResult subtitleResult = new OpenSubtitlesSearchResult();
 
-                                    subtitleResult.setId(subtitleInfo.optString("id", ""));
-                                    if (subtitleInfo.has("attributes")) {
-                                        JSONObject subtitleAttribute = subtitleInfo.getJSONObject("attributes");
-                                        subtitleResult.setLanguage(subtitleAttribute.optString("language", ""));
-                                        subtitleResult.setMoviehashMatch(subtitleAttribute.optBoolean("moviehash_match", false));
-                                        if (subtitleAttribute.has("features")) {
-                                            log.debug("searchSubtitle: it has features");
-                                            JSONObject subtitleFeatures = subtitleAttribute.getJSONObject("features");
-                                            subtitleResult.setRelease(subtitleFeatures.optString("release", ""));
-                                            subtitleResult.setMovieName(subtitleFeatures.optString("movie_name", ""));
-                                            subtitleResult.setSeasonNumber(subtitleFeatures.optInt("season_number", 0));
-                                            subtitleResult.setEpisodeNumber(subtitleFeatures.optInt("episode_number", 0));
-                                            subtitleResult.setFeatureType(subtitleFeatures.optString("feature_type", ""));
-                                            subtitleResult.setParentTitle(subtitleFeatures.optString("parent_title", ""));
-                                        }
-                                        if (subtitleAttribute.has("files")) {
-                                            log.debug("searchSubtitle: it has files");
-                                            JSONObject subtitleFiles = subtitleAttribute.getJSONArray("files").getJSONObject(0);
-                                            subtitleResult.setFileId(subtitleFiles.optString("file_id", ""));
-                                            subtitleResult.setFileName(subtitleFiles.optString("file_name", ""));
-                                        }
-                                    }
-                                    subtitleRefs.add(subtitleResult);
-                                    log.debug("searchSubtitle: found " + subtitleResult);
-                                    // only return one best match if hash match and single language
-                                    if (subtitleResult.getMoviehashMatch() && languages.split(",").length == 1) {
-                                        log.debug("searchSubtitle: hash match, focus on first match as single result");
-                                        return new ArrayList<>(Arrays.asList(subtitleResult));
-                                    }
+                            subtitleResult.setId(subtitleInfo.optString("id", ""));
+                            if (subtitleInfo.has("attributes")) {
+                                JSONObject subtitleAttribute = subtitleInfo.getJSONObject("attributes");
+                                subtitleResult.setLanguage(subtitleAttribute.optString("language", ""));
+                                subtitleResult.setMoviehashMatch(subtitleAttribute.optBoolean("moviehash_match", false));
+                                if (subtitleAttribute.has("features")) {
+                                    log.debug("searchSubtitle: it has features");
+                                    JSONObject subtitleFeatures = subtitleAttribute.getJSONObject("features");
+                                    subtitleResult.setRelease(subtitleFeatures.optString("release", ""));
+                                    subtitleResult.setMovieName(subtitleFeatures.optString("movie_name", ""));
+                                    subtitleResult.setSeasonNumber(subtitleFeatures.optInt("season_number", 0));
+                                    subtitleResult.setEpisodeNumber(subtitleFeatures.optInt("episode_number", 0));
+                                    subtitleResult.setFeatureType(subtitleFeatures.optString("feature_type", ""));
+                                    subtitleResult.setParentTitle(subtitleFeatures.optString("parent_title", ""));
                                 }
-                                return subtitleRefs;
-                            case RESULT_CODE_TOKEN_EXPIRED:
-                                // Handle invalid token error
-                                if (! authTokenValid) { // one retry in case of invalid token
-                                    log.warn("searchSubtitle: invalid token, retrying");
-                                    login(apiKey, username, password);
-                                    return searchSubtitle(fileInfo, languages);
-                                } else {
-                                    return null;
+                                if (subtitleAttribute.has("files")) {
+                                    log.debug("searchSubtitle: it has files");
+                                    JSONObject subtitleFiles = subtitleAttribute.getJSONArray("files").getJSONObject(0);
+                                    subtitleResult.setFileId(subtitleFiles.optString("file_id", ""));
+                                    subtitleResult.setFileName(subtitleFiles.optString("file_name", ""));
+                                    log.debug("searchSubtitle: file_id={}, file_name={}", subtitleResult.getFileId(), subtitleResult.getFileName());
                                 }
-                            case RESULT_CODE_BAD_CREDENTIALS, RESULT_CODE_QUOTA_EXCEEDED:
-                                // Handle quota error
-                                return null;
+                            }
+                            subtitleRefs.add(subtitleResult);
+                            log.debug("searchSubtitle: found " + subtitleResult);
+                            // only return one best match if hash match and single language
+                            if (subtitleResult.getMoviehashMatch() && languages.split(",").length == 1) {
+                                log.debug("searchSubtitle: hash match, focus on first match as single result");
+                                return new ArrayList<>(Arrays.asList(subtitleResult));
+                            }
                         }
-                    } else return null;
-                } catch (JSONException e) {
-                    log.error("searchSubtitle: caught JSONException", e);
+                        return subtitleRefs;
+                    }
+                    case RESULT_CODE_TOKEN_EXPIRED -> {
+                        // Handle invalid token error
+                        if (!authTokenValid) { // one retry in case of invalid token
+                            log.warn("searchSubtitle: invalid token, retrying");
+                            login(apiKey, username, password);
+                            return searchSubtitle(fileInfo, languages);
+                        } else {
+                            return null;
+                        }
+                    }
+                    default -> { // we are in error
+                        return null;
+                    }
                 }
-            } else {
-                log.error("searchSubtitle: response is not successful, error code={}, error message={}", response.code(), response.message());
+            } catch (JSONException e) {
+                log.error("searchSubtitle: caught JSONException", e);
             }
         }
         return null;
     }
 
     public static String getDownloadSubtitleLink(String file_id) throws IOException {
+        log.debug("getDownloadSubtitleLink: file_id={}", file_id);
+        // do not attempt to download subtitle if quota is 0 and we are not past reset time
+        if (remainingDownloads <= 0 && !isCurrentTimeAfterResetTime()) {
+            log.warn("getDownloadSubtitleLink: quota exceeded, remaining downloads={}, reset time={}", remainingDownloads, resetTimeRemaining);
+            LAST_QUERY_RESULT = RESULT_CODE_QUOTA_EXCEEDED;
+            LAST_QUERY_MESSAGE = "quota exceeded";
+            return null;
+        }
         HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + "download").newBuilder();
         String url = urlBuilder.build().toString();
         JSONObject requestData = new JSONObject();
@@ -426,44 +470,45 @@ public class OpenSubtitlesApiHelper {
         Request request = requestBuilder.build();
 
         try (Response response = httpClient.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                try {
-                    String responseBody = response.body().string();
-                    JSONObject jsonResponse = new JSONObject(responseBody);
-                    int result = parseResult(jsonResponse);
-                    if (result != RESULT_CODE_OK) {
-                        log.warn("getDownloadSubtitleLink: error in response, result={}", result);
-                        return null;
-                    } else {
-                        switch (result) {
-                            case RESULT_CODE_OK:
-                                remainingDownloads = jsonResponse.optInt("remaining", remainingDownloads);
-                                numberDownloads = jsonResponse.optInt("requests", numberDownloads);
-                                resetTimeRemaining = jsonResponse.optString("reset_time", "");
-                                resetTimeUTC = jsonResponse.optString("reset_time_utc", "");
-                                log.debug("getDownloadSubtitleLink: remaining downloads={}, number of downloads={}", remainingDownloads, numberDownloads);
-                                String subtitleLink = jsonResponse.optString("link", null);
-                                log.debug("getDownloadSubtitleLink: found link {}", subtitleLink);
-                                return subtitleLink;
-                            case RESULT_CODE_TOKEN_EXPIRED:
-                                // Handle invalid token error
-                                if (! authTokenValid) { // one retry in case of invalid token
-                                    log.warn("getDownloadSubtitleLink: invalid token, retrying");
-                                    login(apiKey, username, password);
-                                    return getDownloadSubtitleLink(file_id);
-                                } else {
-                                    return null;
-                                }
-                            case RESULT_CODE_BAD_CREDENTIALS, RESULT_CODE_QUOTA_EXCEEDED:
-                                // Handle quota error
-                                return null;
+            parseResponse(response);
+            String responseBody = response.body().string();
+            try {
+                JSONObject jsonResponse = new JSONObject(responseBody);
+                parseResult(jsonResponse);
+                remainingDownloads = jsonResponse.optInt("remaining", remainingDownloads);
+                numberDownloads = jsonResponse.optInt("requests", numberDownloads);
+                resetTimeRemaining = jsonResponse.optString("reset_time", "");
+                resetTimeUTC = jsonResponse.optString("reset_time_utc", "");
+                if (!response.isSuccessful())
+                    log.error("searchSubtitle: response is not successful, error code={}, error message={}", LAST_QUERY_RESULT, LAST_QUERY_MESSAGE);
+                else
+                    log.debug("searchSubtitle: status={}, message={}", LAST_QUERY_RESULT, LAST_QUERY_MESSAGE);
+                switch (LAST_QUERY_RESULT) {
+                    case RESULT_CODE_OK -> {
+                        log.debug("getDownloadSubtitleLink: remaining downloads={}, number of downloads={}", remainingDownloads, numberDownloads);
+                        String subtitleLink = jsonResponse.optString("link", null);
+                        log.debug("getDownloadSubtitleLink: found link {}", subtitleLink);
+                        return subtitleLink;
+                    }
+                    case RESULT_CODE_TOKEN_EXPIRED -> {
+                        // Handle invalid token error
+                        if (!authTokenValid) { // one retry in case of invalid token
+                            log.warn("getDownloadSubtitleLink: invalid token, retrying");
+                            login(apiKey, username, password);
+                            return getDownloadSubtitleLink(file_id);
+                        } else {
+                            return null;
                         }
                     }
-                } catch (JSONException e) {
-                    log.error("getDownloadSubtitleLink: caught JSONException", e);
+                    case RESULT_CODE_BAD_CREDENTIALS, RESULT_CODE_QUOTA_EXCEEDED -> {
+                        return null;
+                    }
                 }
-            } else {
-                log.error("getDownloadSubtitleLink: response is not successful, error code={}, error message={}", response.code(), response.message());
+                // result is not ok
+                log.warn("getDownloadSubtitleLink: error in response, result={}", LAST_QUERY_RESULT);
+                return null;
+            } catch (JSONException e) {
+                log.error("searchSubtitle: caught JSONException", e);
             }
         }
         return null;
@@ -481,6 +526,19 @@ public class OpenSubtitlesApiHelper {
         } catch (ParseException e) {
             log.error("getTimeRemaining: caught ParseException", e);
             return "";
+        }
+    }
+
+    public static boolean isCurrentTimeAfterResetTime() {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date resetTime = dateFormat.parse(resetTimeUTC);
+            Date currentTime = new Date();
+            return currentTime.after(resetTime);
+        } catch (ParseException e) {
+            log.error("isCurrentTimeAfterResetTime: caught ParseException", e);
+            return false;
         }
     }
 }
