@@ -275,9 +275,8 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 return;
             }
 
-            ArrayList<String> subLanguageId = new ArrayList<String>();
             // REST-API takes ISO639-1 2 letter code languages: no need to convert
-            for (String item : languages) subLanguageId.add(item);
+            ArrayList<String> subLanguageId = new ArrayList<String>(languages);
             String languagesString = TextUtils.join(",", subLanguageId);
             OpenSubtitlesQueryParams fileInfo = getFileInfo(fileUrl);
             log.debug("getSubtitle: tmdbId=" + fileInfo.getTmdbId() + ", imdbId=" + fileInfo.getImdbId() + ", videoHash=" + fileInfo.getFileHash() + ", fileName=" + fileInfo.getFileName() + ", languages=" + languagesString);
@@ -310,6 +309,12 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             String subUrl;
             try {
                 subUrl = OpenSubtitlesApiHelper.getDownloadSubtitleLink(searchResult.getFileId());
+                if (subUrl == null) {
+                    log.warn("getSub: subUrl is null for " + fileUrl);
+                    displayToast(getString(R.string.dialog_subloader_fails) + " " + searchResult.getFileName());
+                    finish();
+                    return;
+                }
                 if (OpenSubtitlesApiHelper.getLastQueryResult() == OpenSubtitlesApiHelper.RESULT_CODE_QUOTA_EXCEEDED) {
                     log.warn("getSub: quota exceeded, quota resets in " + OpenSubtitlesApiHelper.getTimeRemaining());
                     displayToast(getString(R.string.toast_subloader_quota_exceeded));
@@ -450,6 +455,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         }
 
         public void downloadSubtitles(String subUrl, String fileUrl, String name, String language){
+            log.debug("downloadSubtitles: subUrl=" + subUrl + ", fileUrl=" + fileUrl + ", name=" + name + ", language=" + language);
             if (fileUrl == null) return;
             boolean canWrite = false;
             Uri parentUri = null;
@@ -492,6 +498,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             localSb.append(subsDir.getPath()).append('/').append(name).append('.').append(language).append('.').append("srt");
             if(!canWrite)
                 sb = localSb;
+            log.debug("downloadSubtitles: download to " + sb.toString() + " from " + subUrl + " because canwrite=" + canWrite);
             String srtURl = sb.toString();
             sb = null;
             OutputStream f =null;
