@@ -3716,12 +3716,21 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         @Override
         public void onVideoDb(final VideoDbInfo localVideoInfo, final VideoDbInfo remoteVideoInfo) {
             log.debug("onVideoDb: localVideoInfo.subtitleTrack={}, remoteVideoInfo.subtitleTrack={}", ((localVideoInfo != null) ? localVideoInfo.subtitleTrack : "none"), ((remoteVideoInfo != null) ? remoteVideoInfo.subtitleTrack : "none"));
-            log.debug("onVideoDb: localVideoInfo.audioTrack={}, remoteVideoInfo.audioTrack={}", ((localVideoInfo != null) ? localVideoInfo.audioTrack : "none"), ((remoteVideoInfo != null) ? remoteVideoInfo.audioTrack : "none"));
             log.debug("onVideoDb: trakt: " + localVideoInfo.traktResume+ " local "+ localVideoInfo.resume);
-            if (localVideoInfo.audioTrack == -1 && remoteVideoInfo.audioTrack == -1) {
-                log.debug("onVideoDb: first play");
-                fileHasAlreadyPlayed = false;
-            } else fileHasAlreadyPlayed = true;
+            log.debug("onVideoDb: localVideoInfo.lastTimePlayed: {}, remoteVideoInfo.lastTimePlayed: {}", ((localVideoInfo != null) ? localVideoInfo.lastTimePlayed : "none"), ((remoteVideoInfo != null) ? remoteVideoInfo.lastTimePlayed : "none"));
+            if (localVideoInfo != null) {
+                if (remoteVideoInfo != null) {
+                    if (localVideoInfo.lastTimePlayed == 0 && remoteVideoInfo.audioTrack == -1) {
+                        log.debug("onVideoDb: first play");
+                        fileHasAlreadyPlayed = false;
+                    } else fileHasAlreadyPlayed = true;
+                } else {
+                    if (localVideoInfo.lastTimePlayed == 0) {
+                        log.debug("onVideoDb: first play");
+                        fileHasAlreadyPlayed = false;
+                    } else fileHasAlreadyPlayed = true;
+                }
+            } else fileHasAlreadyPlayed = false;
             if (localVideoInfo != null) {
                 final int localTraktPosition = Math.abs(localVideoInfo.duration>0 ? (int)(localVideoInfo.traktResume * (double) localVideoInfo.duration / 100) : 0);
                 log.info("onVideoDb: trakt calc: "+ localTraktPosition+ " local "+ localVideoInfo.resume);
