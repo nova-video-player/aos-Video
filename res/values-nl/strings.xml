@@ -89,16 +89,31 @@
     <string name="not_played_yet_videos">Nog niet afgespeeld</string>
     <string name="video_folder">Mappen</string>
     <string name="movies">Films</string>
+    <string name="animes">Animaties</string>
     <string name="all_movies">Alle films</string>
     <string name="all_movies_format">Alle films -  %d</string>
+    <string name="all_animes_format">Animatie films -  %d</string>
+    <string name="all_collections">Alle collecties</string>
+    <string name="all_collections_format">Alle collecties -  %d</string>
+    <string name="all_collection_watched">Alle collecties bekeken</string>
+    <string name="all_collection_unwatched">Collectie niet bekeken</string>
+    <plurals name="n_movies_watched">
+        <item quantity="one">%d film bekeken</item>
+        <item quantity="other">%d films bekeken</item>
+    </plurals>
     <string name="not_watched_movies_format">Niet bekeken -  %d</string>
+    <string name="not_watched_animes_format">Niet bekeken -  %d</string>
+    <string name="no_movie_watched">Geen film bekeken</string>
+    <string name="all_movies_watched">Alle films bekeken</string>
     <string name="movies_by_alpha">Films alfabetisch</string>
     <string name="movies_by_genre">Films op genre</string>
     <string name="movies_by_rating">Films per rating</string>
+    <string name="movie_collections">Collecties</string>
     <string name="anime_collections">Anime collecties</string>
     <string name="movies_by_year">Films per jaar</string>
     <string name="all_tv_shows">Tv-series</string>
     <string name="all_tvshows">Alle TV-series</string>
+    <string name="all_animes">Alle animatiefilms</string>
     <string name="all_tvshows_format">Alle TV-series  -  %d</string>
     <string name="not_watched_tvshows_format">Niet bekeken -  %d</string>
     <string name="all_seasons">Alle seizoenen</string>
@@ -296,6 +311,8 @@
     <string name="unlock_instructions">Druk lang op icoon om te ontgrendelen</string>
     <string name="seek_to_percentage">Zoeken tot %s%%</string>
     <!-- Subtitles/Audio languages -->
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Braziliaans</string>
     <string name="s_chinese">Chinees</string>

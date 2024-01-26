@@ -224,6 +224,8 @@
     <string name="pref_s3d_mode_entry_anaglyph">Anaglyf</string>
     <string name="pref_s3d_mode_entry_off">Av</string>
     <!-- Subtitles/Audio languages -->
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <!-- Player errors -->
     <string name="videocodec_not_supported">Videoformatet (<xliff:g id="codec">%s</xliff:g>) stöds ej.</string>

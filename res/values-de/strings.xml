@@ -328,6 +328,8 @@
     <string name="seek_to_percentage">Vorwärtssuche bis %s%%</string>
     <string name="set_audio_speed_to">\"Audio-Geschwindigkeit %s</string>
     <!-- Subtitles/Audio languages -->
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brasilianisch</string>
     <string name="s_chinese">Chinesisch</string>
@@ -657,11 +659,11 @@
     <string name="sort_by_rating_asc">Sortierung: Bewertung (beste zuerst)</string>
     <string name="sort_by_date_added_desc">Sortierung: Bibliothek hinzugefügt (neueste zuerst)</string>
     <string name="sort_by_date_added_asc">Sortierung: Bibliothek hinzugefügt (älteste zuerst)</string>
-    <string name="sort_by_date_played_desc">Sortierung: zur Bibliothek hinzugefügt (neueste zuerst)</string>
+    <string name="sort_by_date_played_desc">Sortierung: Wiedergabedatum (neueste zuerst)</string>
     <string name="sort_by_date_premiered_desc">Sortierung: Erstausstrahlung (neueste zuerst)</string>
     <string name="sort_by_date_premiered_asc">Sortierung: Erstausstrahlung (älteste zuerst)</string>
     <string name="sort_by_date_aired_desc">Sortierung: Erstausstrahlung (neueste zuerst)</string>
-    <string name="sort_by_recently_added_episode_desc">Zuletzt hinzugefügtr Episoden zuerst</string>
+    <string name="sort_by_recently_added_episode_desc">Zuletzt hinzugefügte Episoden zuerst</string>
     <string name="sort_by_size_asc">Sortierung: Datum (älteste zuerst)</string>
     <string name="sort_by_size_desc">Sortierung: Größe (größte zuerst)</string>
     <string name="dec_choice_title">Decoder auswählen</string>

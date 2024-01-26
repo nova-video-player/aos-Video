@@ -328,6 +328,10 @@
     <string name="seek_to_percentage">Keresés alatt %s%%</string>
     <string name="set_audio_speed_to">Hangsebesség %s</string>
     <!-- Subtitles/Audio languages -->
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <string name="subs_HI">Hallássérült</string>
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <string name="subs_SDH">Feliratok süketek és hallássérültek számára</string>
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brazil</string>
     <string name="s_chinese">Kínai</string>
@@ -441,6 +445,7 @@
     <string name="exit">Kilépés</string>
     <!-- torrent -->
     <string name="error">Hiba történt</string>
+    <string name="error_protocol_not_supported">Hiba: nem támogatott protokoll</string>
     <string name="error_loading_torrent">Hiba a torrent betöltésekor</string>
     <string name="error_downloading_not_enough_space">Hiba a torrent letöltése során : nincs elég tárhely</string>
     <string name="loading_torrent">Torrent betöltése…</string>
@@ -546,6 +551,8 @@
     <string name="summary_list_preference_primary">Válassza ki a letöltendő feliratok nyelveit</string>
     <string name="favSubLang_title">Feliratok nyelve</string>
     <string name="favSubLang_summary">Válassza ki a megjelenítendő feliratok nyelvét</string>
+    <string name="favAudioLang_title">Alapértelmezett hangsáv</string>
+    <string name="favAudioLang_summary">Válassza ki az előnyben részesített hangsávot</string>
     <string name="ui_mode_title">Felhasználói felület módja</string>
     <string name="ui_mode_summary">Válasszon TV vagy Tablet/Telefon felület között</string>
     <string name="preferences_video_about">Névjegy</string>

@@ -109,6 +109,8 @@
     <string name="menu_player_settings">Sazlawlar</string>
     <string name="menu_change_folder">Papkanı ózgertiw</string>
     <!-- Subtitles/Audio languages -->
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Videonı qoyıw múmkin emes</string>

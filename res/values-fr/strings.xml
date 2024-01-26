@@ -328,6 +328,10 @@
     <string name="seek_to_percentage">Aller à %s%%</string>
     <string name="set_audio_speed_to">Vitesse audio %s</string>
     <!-- Subtitles/Audio languages -->
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <string name="subs_HI">Malentendants</string>
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <string name="subs_SDH">Sous-titres pour les sourds et les malentendants</string>
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brésilien</string>
     <string name="s_chinese">Chinois</string>
@@ -409,7 +413,7 @@
     <string name="sub_force_all">Toutes vos vidéos ont déjà au moins une piste de sous-titres. Voulez-vous forcer le téléchargement de nouvelles pistes de sous-titres ?</string>
     <string name="dialog_subloader_nonetwork_title">Aucune connection à Internet</string>
     <string name="dialog_subloader_nonetwork_message">Une connection Internet est requise pour le téléchargement de sous-titres</string>
-    <string name="dialog_subloader_connecting">Connexion au site www.opensubtitles.org…</string>
+    <string name="dialog_subloader_connecting">Connexion au site opensubtitles…</string>
     <string name="opensubtitles_quota_download_remaining">Quota de téléchargement OpenSubtitles: %d/%d restant</string>
     <string name="dialog_subloader_credentials">Identifiants opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">Vous devrez entrer un mot de passe et un nom d\'utilisateur valide!</string>
@@ -441,6 +445,7 @@
     <string name="exit">Quitter</string>
     <!-- torrent -->
     <string name="error">Une erreur est survenue</string>
+    <string name="error_protocol_not_supported">Erreur: protocole non pris en charge</string>
     <string name="error_loading_torrent">Erreur pendant le téléchargement du torrent</string>
     <string name="error_downloading_not_enough_space">Erreur pendant le téléchargement du torrent : pas assez d\'espace disponible</string>
     <string name="loading_torrent">Chargement du torrent…</string>
@@ -546,6 +551,8 @@
     <string name="summary_list_preference_primary">Sélectionnez les langues pour lesquelles télécharger des sous-titres</string>
     <string name="favSubLang_title">Langue de lecture des sous-titres</string>
     <string name="favSubLang_summary">Choisissez la langue de sous-titres par défaut lors de la lecture de vos vidéos</string>
+    <string name="favAudioLang_title">Langue audio préférée</string>
+    <string name="favAudioLang_summary">Choisissez la langue de votre piste audio préférée</string>
     <string name="ui_mode_title">Type d\'interface utilisateur</string>
     <string name="ui_mode_summary">Choisir entre les modes TV et tablette/smartphone</string>
     <string name="preferences_video_about">A propos</string>

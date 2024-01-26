@@ -323,6 +323,10 @@
     <string name="seek_to_percentage">Đang tua đến %s%%</string>
     <string name="set_audio_speed_to">Tốc độ âm thanh %s</string>
     <!-- Subtitles/Audio languages -->
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <string name="subs_HI">Khiếm thính</string>
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <string name="subs_SDH">Phụ đề dành cho người điếc và khiếm thính</string>
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Tiếng Brasil</string>
     <string name="s_chinese">Tiếng Trung</string>
@@ -436,6 +440,7 @@
     <string name="exit">Thoát</string>
     <!-- torrent -->
     <string name="error">Đã xảy ra lỗi</string>
+    <string name="error_protocol_not_supported">Lỗi: giao thức không được hỗ trợ</string>
     <string name="error_loading_torrent">Lỗi khi tải torrent</string>
     <string name="error_downloading_not_enough_space">Lỗi khi tải xuống torrent : không đủ dung lượng</string>
     <string name="loading_torrent">Đang tải torrent…</string>
@@ -541,6 +546,8 @@
     <string name="summary_list_preference_primary">Chọn ngôn ngữ của bạn để tải xuống phụ đề</string>
     <string name="favSubLang_title">Ngôn ngữ đọc phụ đề</string>
     <string name="favSubLang_summary">Chọn ngôn ngữ yêu thích của bạn để đọc phụ đề</string>
+    <string name="favAudioLang_title">Ngôn ngữ âm thanh ưu tiên</string>
+    <string name="favAudioLang_summary">Chọn ngôn ngữ bản âm thanh yêu thích của bạn</string>
     <string name="ui_mode_title">Chế độ giao diện người dùng</string>
     <string name="ui_mode_summary">Chọn giữa UI TV và Máy tính bảng/Điện thoại</string>
     <string name="preferences_video_about">Thông tin</string>

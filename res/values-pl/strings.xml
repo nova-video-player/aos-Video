@@ -304,6 +304,8 @@
     <string name="unlock_instructions">Przytrzymaj na ikonie aby odblokować</string>
     <string name="seek_to_percentage">Przeskakiwanie do %s%%</string>
     <!-- Subtitles/Audio languages -->
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brazylijski</string>
     <string name="s_chinese">chiński</string>
