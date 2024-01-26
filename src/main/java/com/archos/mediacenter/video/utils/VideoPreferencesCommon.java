@@ -156,6 +156,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_AUDIO_INTERFACE_CHOICE = "audio_interface_choice";
     public static final String KEY_SUBTITLES_HIDE = "subtitles_hide_default";
     public static final String KEY_SUBTITLES_FAV_LANG = "favSubLang";
+    public static final String KEY_AUDIO_TRACK_FAV_LANG = "favAudioLang";
     public static final String KEY_TRAKT_CATEGORY = "trakt_category";
     public static final String KEY_TRAKT_GETFULL = "trakt_getfull";
     public static final String KEY_TRAKT_SIGNIN = "trakt_signin";
@@ -220,6 +221,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private PreferenceCategory mScraperCategory = null;
     private ListPreference mSubtitlesFavLangPreferences = null;
     private MultiSelectListPreference mSubtitlesDownloadLanguagePreferences = null;
+    private ListPreference mAudioTrackFavoriteLanguage = null;
     private CheckBoxPreference mEnableSponsor = null;
     private CheckBoxPreference mWatchingUpNext = null;
     private PreferenceCategory mAboutPreferences = null;
@@ -263,6 +265,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     CharSequence[] languageListNewEntries;
     CharSequence[] languageListNewEntryValues;
     int systemLanguageIndex;
+    int systemAudioLanguageIndex;
 
     public VideoPreferencesCommon(PreferenceFragmentCompat preferencesFragment) {
         mPreferencesFragment = preferencesFragment;
@@ -699,6 +702,11 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mSubtitlesFavLangPreferences.setEntryValues(languageListNewEntryValues);
         if(systemLanguageIndex>=0) mSubtitlesFavLangPreferences.setValueIndex(systemLanguageIndex);
 
+        mAudioTrackFavoriteLanguage = (ListPreference) findPreference(KEY_AUDIO_TRACK_FAV_LANG);
+        mAudioTrackFavoriteLanguage.setEntries(languageListNewEntries);
+        mAudioTrackFavoriteLanguage.setEntryValues(languageListNewEntryValues);
+        if(systemLanguageIndex>=0) mAudioTrackFavoriteLanguage.setValueIndex(systemAudioLanguageIndex);
+
         ListPreference lp = (ListPreference) findPreference("codepage");
         int cp = MediaFactory.getCodepage();
         int cpStringID = getResources().getIdentifier("codepage_extra_" + cp, "string", getActivity().getPackageName());
@@ -1015,15 +1023,22 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         languageListEntryValues.toArray(languageListNewEntryValues);
         systemLanguageIndex = -1;
         final String currentFavoriteLang;
+        final String currentAudioFavoriteLang;
         if (CustomApplication.useOpenSubtitlesRestApi())
             currentFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getLanguage());
         else
             currentFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getISO3Language());
-        log.debug("onCreatePreferences: currentFavoriteLang={}", currentFavoriteLang);
+
+        currentAudioFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_AUDIO_TRACK_FAV_LANG, Locale.getDefault().getLanguage());
+
+        log.debug("onCreatePreferences: currentSubFavoriteLang={}, currentAudioFavoriteLang={}", currentFavoriteLang, currentAudioFavoriteLang);
         int i = 0;
         for(CharSequence value : languageListNewEntryValues){
             if(value.toString().equalsIgnoreCase(currentFavoriteLang)) {
                 systemLanguageIndex = i;
+            }
+            if(value.toString().equalsIgnoreCase(currentAudioFavoriteLang)) {
+                systemAudioLanguageIndex = i;
             }
             i++;
         }

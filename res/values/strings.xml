@@ -444,7 +444,7 @@
     <string name="get_subtitles_online">Get subtitles online</string>
     <string name="toast_subloader_sub_found">Subtitles track found for this language</string>
     <string name="toast_subloader_sub_not_found">Subtitles track not found for this language</string>
-    <string name="toast_subloader_service_unreachable">subtitles web service outage</string>
+    <string name="toast_subloader_service_unreachable">Subtitles web service outage</string>
     <string name="menu_subloader_allfolder">Get missing subtitles</string>
     <string name="dialog_subloader_copying">Copying subtitles…</string>
     <string name="dialog_subloader_downloading">Downloading subtitles…</string>
@@ -602,6 +602,8 @@
     <string name="summary_list_preference_primary">Select your languages for downloading subtitles</string>
     <string name="favSubLang_title">Subtitles reading language</string>
     <string name="favSubLang_summary">Choose your favorite language for reading subtitles</string>
+    <string name="favAudioLang_title">Audio preferred language</string>
+    <string name="favAudioLang_summary">Choose your favorite audio track language</string>
     <string name="ui_mode_title">User interface mode</string>
     <string name="ui_mode_summary">Choose between TV and Tablet/Phone UI</string>
     <string name="preferences_video_about">About</string>

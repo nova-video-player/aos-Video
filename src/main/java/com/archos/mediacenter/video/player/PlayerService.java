@@ -1248,14 +1248,19 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (mVideoInfo == null) {
             mNewAudioTrack = newAudioTrack;
             mAudioSubtitleNeedUpdate = true;
+            log.debug("onAudioMetadataUpdated: mVideoInfo == null, mNewAudioTrack=" + mNewAudioTrack + " newAudioTrack=" + newAudioTrack + " mAudioSubtitleNeedUpdate=" + mAudioSubtitleNeedUpdate);
             return;
+        } else {
+            log.debug("onAudioMetadataUpdated: mVideoInfo != null, mVideoInfo.audioTrack=" + mVideoInfo.audioTrack + " newAudioTrack=" + newAudioTrack + " mAudioSubtitleNeedUpdate=" + mAudioSubtitleNeedUpdate);
         }
         int nbTrack = vMetadata.getAudioTrackNb();
         boolean supported = true;
+
         if (mVideoInfo.audioTrack < 0 || mVideoInfo.audioTrack >= nbTrack 
                 || !vMetadata.getAudioTrack(mVideoInfo.audioTrack).supported) {
             for (int i = 0; i < nbTrack; ++i) {
                 if (vMetadata.getAudioTrack(i).supported) {
+                    log.debug("onAudioMetadataUpdated: selected first supported track #{} -> {}", i, vMetadata.getAudioTrack(i).name);
                     mVideoInfo.audioTrack = i;
                     supported = true;
                     break;
@@ -1275,7 +1280,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if(mPlayerFrontend!=null) {
                 mPlayerFrontend.onAudioError(true, at != null ? at.format : "unknown");
             }
-
         }
 
         if(mPlayerFrontend!=null) {
@@ -1317,6 +1321,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             }
             // mVideoInfo.subtitleTrack is the track number without the none track 0<=mVideoInfo.subtitleTrack<nbTrack
             if (mVideoInfo.subtitleTrack >= 0 && mVideoInfo.subtitleTrack < nbTrack) {
+                log.debug("onSubtitleMetadataUpdated: newSubtitleTrack={}, mVideoInfo.subtitleTrack={}", newSubtitleTrack, mVideoInfo.subtitleTrack);
                 if (newSubtitleTrack != mVideoInfo.subtitleTrack &&
                         !mPlayer.setSubtitleTrack(mVideoInfo.subtitleTrack))
                     mVideoInfo.subtitleTrack = noneTrack;

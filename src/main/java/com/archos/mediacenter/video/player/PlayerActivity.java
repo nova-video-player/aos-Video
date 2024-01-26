@@ -133,6 +133,7 @@ import static com.archos.filecorelibrary.FileUtils.getName;
 import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermission;
 import static com.archos.filecorelibrary.FileUtils.stripExtensionFromName;
 import static com.archos.mediacenter.utils.ISO639codes.findLanguageInString;
+import static com.archos.mediacenter.utils.ISO639codes.isLanguageInString;
 import static com.archos.mediacenter.utils.ISO639codes.replaceLanguageCodeInString;
 import static com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager.getLanguage3;
 import static com.archos.mediacenter.video.utils.MiscUtils.isEmulator;
@@ -187,6 +188,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private static final String KEY_NOTIFICATIONS_MODE = "notifications_mode";
     private static final String KEY_NETWORK_BOOKMARKS = "network_bookmarks";
     private static final String KEY_SUBTITLES_FAVORITE_LANGUAGE = "favSubLang";
+    private static final String KEY_AUDIO_TRACK_FAVORITE_LANGUAGE = "favAudioLang";
     private static final String KEY_LOCK_ROTATION = "pref_lock_rotation";
     private static final String KEY_HIDE_SUBTITLES = "subtitles_hide_default";
     public static final String KEY_ADVANCED_VIDEO_ENABLED = "preferences_advanced_video_enabled";
@@ -385,6 +387,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private boolean             mPoster;
     private String              mPosterPath;
 
+    private boolean             fileHasAlreadyPlayed = false;
     private int                 mResume;
     private long                mVideoId;
     private int                 mErrorCode = 0;
@@ -411,6 +414,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private boolean mForceSWDecoding;
     private boolean mHideSubtitles = false;
     private String mSubsFavoriteLanguage;
+    private String mAudioTrackFavoriteLanguage;
     private boolean mStopped;
     private boolean mHdmiPlugged = false;
     private boolean mLudoHmdiPlugged = false;
@@ -820,6 +824,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mHideSubtitles = mPreferences.getBoolean(KEY_HIDE_SUBTITLES, false);
         mNetworkBookmarksEnabled = mPreferences.getBoolean(KEY_NETWORK_BOOKMARKS, true);
         mSubsFavoriteLanguage = mPreferences.getString(KEY_SUBTITLES_FAVORITE_LANGUAGE, Locale.getDefault().getISO3Language());
+        mAudioTrackFavoriteLanguage = mPreferences.getString(KEY_AUDIO_TRACK_FAVORITE_LANGUAGE, Locale.getDefault().getISO3Language());
         mForceSWDecoding = mPreferences.getBoolean(KEY_FORCE_SW, false);
         log.debug("onStart: setLockRotation " + mLockRotation);
         setLockRotation(mLockRotation);
@@ -3558,7 +3563,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             boolean firstTimeUpdated = mAudioInfoController.getTrackCount() == 0;
             int nbTrack = vMetadata.getAudioTrackNb();
 
-            log.info("onAudioMetadataUpdated: newAudio: " + newAudioTrack
+            log.debug("onAudioMetadataUpdated: newAudio: " + newAudioTrack
                     + "  mVideoInfo.audioTrack: " + mVideoInfo.audioTrack
                     + "  firstTimeUpdated: " + firstTimeUpdated
                     + "  nbTrack: " + nbTrack);
@@ -3571,8 +3576,20 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mAudioInfoController.addTrack(name, summary);
             }
 
+            // If no language set for subs, set the user favorite. Or system language if none.
+            log.debug("onAudioMetadataUpdated: fileHasAlreadyPlayed={}, mVideoInfo.audioTrack: {}", fileHasAlreadyPlayed, mVideoInfo.audioTrack);
+            if (! fileHasAlreadyPlayed) {
+                Locale locale = new Locale(mAudioTrackFavoriteLanguage);
+                for (int i = 0; i < nbTrack; ++i) { // loop through subtitleTracks to select default one not considering none
+                    // select default locale and avoid forced subs
+                    if (isLanguageInString(locale.getDisplayLanguage(), mAudioInfoController.getTrackNameAt(i).toString())) {
+                        log.debug("onAudioMetadataUpdated: selected default track: #{} -> {} matching favorite audioTrack language {}", i, mAudioInfoController.getTrackNameAt(i).toString(), locale.getDisplayLanguage());
+                        mVideoInfo.audioTrack = i;
+                        break;
+                    }
+                }
+            }
             mAudioInfoController.setTrack(mVideoInfo.audioTrack);
-
         }
 
         public void onSubtitleMetadataUpdated(VideoMetadata vMetadata, int newSubtitleTrack) {
@@ -3699,7 +3716,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         @Override
         public void onVideoDb(final VideoDbInfo localVideoInfo, final VideoDbInfo remoteVideoInfo) {
             log.debug("onVideoDb: localVideoInfo.subtitleTrack={}, remoteVideoInfo.subtitleTrack={}", ((localVideoInfo != null) ? localVideoInfo.subtitleTrack : "none"), ((remoteVideoInfo != null) ? remoteVideoInfo.subtitleTrack : "none"));
+            log.debug("onVideoDb: localVideoInfo.audioTrack={}, remoteVideoInfo.audioTrack={}", ((localVideoInfo != null) ? localVideoInfo.audioTrack : "none"), ((remoteVideoInfo != null) ? remoteVideoInfo.audioTrack : "none"));
             log.debug("onVideoDb: trakt: " + localVideoInfo.traktResume+ " local "+ localVideoInfo.resume);
+            if (localVideoInfo.audioTrack == -1 && remoteVideoInfo.audioTrack == -1) {
+                log.debug("onVideoDb: first play");
+                fileHasAlreadyPlayed = false;
+            } else fileHasAlreadyPlayed = true;
             if (localVideoInfo != null) {
                 final int localTraktPosition = Math.abs(localVideoInfo.duration>0 ? (int)(localVideoInfo.traktResume * (double) localVideoInfo.duration / 100) : 0);
                 log.info("onVideoDb: trakt calc: "+ localTraktPosition+ " local "+ localVideoInfo.resume);
