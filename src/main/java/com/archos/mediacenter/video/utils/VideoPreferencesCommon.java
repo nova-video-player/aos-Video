@@ -50,6 +50,7 @@ import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.ExtStorageManager;
 import com.archos.filecorelibrary.jcifs.JcifsUtils;
+import com.archos.filecorelibrary.samba.SambaDiscovery;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.BuildConfig;
@@ -518,19 +519,22 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         mSmbDisableTcpDiscovery.setOnPreferenceChangeListener((preference, newValue) -> {
             Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
-            CustomApplication.getSambaDiscovery().notifyPrefChange();
+            SambaDiscovery sambaDiscovery = CustomApplication.getSambaDiscovery();
+            if (sambaDiscovery != null) sambaDiscovery.notifyPrefChange();
             return true;
         });
 
         mSmbDisableUdpDiscovery.setOnPreferenceChangeListener((preference, newValue) -> {
             Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
-            CustomApplication.getSambaDiscovery().notifyPrefChange();
+            SambaDiscovery sambaDiscovery = CustomApplication.getSambaDiscovery();
+            if (sambaDiscovery != null) sambaDiscovery.notifyPrefChange();
             return true;
         });
 
         mSmbDisableMdnsDiscovery.setOnPreferenceChangeListener((preference, newValue) -> {
             Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
-            CustomApplication.getSambaDiscovery().notifyPrefChange();
+            SambaDiscovery sambaDiscovery = CustomApplication.getSambaDiscovery();
+            if (sambaDiscovery != null) sambaDiscovery.notifyPrefChange();
             return true;
         });
 
