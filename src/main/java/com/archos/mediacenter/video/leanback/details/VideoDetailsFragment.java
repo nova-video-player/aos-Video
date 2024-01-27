@@ -60,6 +60,7 @@ import androidx.leanback.widget.FullWidthDetailsOverviewSharedElementHelper;
 import androidx.leanback.widget.HeaderItem;
 import androidx.leanback.widget.ListRow;
 import androidx.leanback.widget.ListRowPresenter;
+import androidx.leanback.widget.ObjectAdapter;
 import androidx.leanback.widget.OnActionClickedListener;
 import androidx.leanback.widget.OnItemViewClickedListener;
 import androidx.leanback.widget.Presenter;
@@ -829,7 +830,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     mVideo.setRemoteResumeMs(videoInfo.resume);
                     // Update the action adapter if there is a network resume
                     if (mDetailsOverviewRow!=null) {
-                        ((VideoActionAdapter) mDetailsOverviewRow.getActionsAdapter()).updateRemoteResume(getActivity(), mVideo);
+                        ObjectAdapter mAdapter = mDetailsOverviewRow.getActionsAdapter();
+                        if (mAdapter instanceof VideoActionAdapter) {
+                            ((VideoActionAdapter) mAdapter).updateRemoteResume(getActivity(), mVideo);
+                        } else {
+                            log.warn("onParseOk: mAdapter is not a VideoActionAdapter it is a " + mAdapter.getClass().getName());
+                        }
                     }
                 }
             }
