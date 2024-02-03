@@ -339,7 +339,9 @@
     <string name="set_audio_speed_to">\"Скорость аудио %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
+    <string name="subs_HI">Для глухих и слабослышащих</string>
     <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <string name="subs_SDH">Субтитры для глухих и слабослышащих</string>
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Бразильский</string>
     <string name="s_chinese">Китайский</string>
@@ -453,6 +455,7 @@
     <string name="exit">Выйти</string>
     <!-- torrent -->
     <string name="error">Произошла ошибка</string>
+    <string name="error_protocol_not_supported">Ошибка: протокол не поддерживается</string>
     <string name="error_loading_torrent">Ошибка при загрузке торрента</string>
     <string name="error_downloading_not_enough_space">Ошибка при загрузке торрента: недостаточно места</string>
     <string name="loading_torrent">Загрузка торрента…</string>
@@ -558,6 +561,8 @@
     <string name="summary_list_preference_primary">Выберите язык для загружаемых субтитров</string>
     <string name="favSubLang_title">Язык субтитров по-умолчанию</string>
     <string name="favSubLang_summary">Выберите предпочтительный язык субтитров</string>
+    <string name="favAudioLang_title">Предпочитаемый язык</string>
+    <string name="favAudioLang_summary">Выберите предпочитаемый язык звуковой дорожки</string>
     <string name="ui_mode_title">Режим пользовательского интерфейса</string>
     <string name="ui_mode_summary">Интерфейс ТВ или Планшета/Телефона</string>
     <string name="preferences_video_about">О программе</string>

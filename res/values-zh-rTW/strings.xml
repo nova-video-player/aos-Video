@@ -324,7 +324,9 @@
     <string name="set_audio_speed_to">\"音訊速度 %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
+    <string name="subs_HI">聽覺障礙</string>
     <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <string name="subs_SDH">為耳聾和重聽者提供的字幕</string>
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">巴西文</string>
     <string name="s_chinese">中文</string>
@@ -438,6 +440,7 @@
     <string name="exit">退出</string>
     <!-- torrent -->
     <string name="error">發生錯誤</string>
+    <string name="error_protocol_not_supported">錯誤：不支援的協定</string>
     <string name="error_loading_torrent">載入種子時出現錯誤</string>
     <string name="error_downloading_not_enough_space">下載種子時出現錯誤：空間不足</string>
     <string name="loading_torrent">正在載入種子...</string>
@@ -462,8 +465,8 @@
     <string name="cannot_open_shortcut">目前無法使用該捷徑的內容，\n請檢查您具有足夠的權限。</string>
     <string name="network_shortcuts">網路捷徑</string>
     <string name="media_servers">媒體伺服器</string>
-    <string name="shortcut_list_empty">網路捷徑未建立。\n\n長按您喜歡的網路資料夾並在指令工具列上方選擇「%s」新增捷徑。</string>
-    <string name="ftp_shortcut_list_empty">請在瀏覽伺服器時，在指令工具列上方選擇「%s」，新增您喜歡的網路資料夾的捷徑。</string>
+    <string name="shortcut_list_empty">網路捷徑未建立。\n\n長按您喜愛的網路資料夾並在指令工具列上方選擇「%s」新增捷徑。</string>
+    <string name="ftp_shortcut_list_empty">請在瀏覽伺服器時，在指令工具列上方選擇「%s」，新增您喜愛的網路資料夾的捷徑。</string>
     <string name="indexed_folders">已索引的資料夾</string>
     <string name="ftp_shortcuts">FTP 捷徑</string>
     <string name="add_to_indexed_folders">索引資料夾</string>
@@ -543,6 +546,8 @@
     <string name="summary_list_preference_primary">選擇您想下載字幕的語言</string>
     <string name="favSubLang_title">影片字幕的語言</string>
     <string name="favSubLang_summary">選擇您觀賞影片字幕的偏好語言</string>
+    <string name="favAudioLang_title">音訊首選語言</string>
+    <string name="favAudioLang_summary">選擇您喜愛的音軌語言</string>
     <string name="ui_mode_title">使用者介面模式</string>
     <string name="ui_mode_summary">選擇使用者介面是電視或平板/手機</string>
     <string name="preferences_video_about">關於</string>

@@ -329,7 +329,9 @@
     <string name="set_audio_speed_to">Velocidad de audio %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
+    <string name="subs_HI">Discapacidad auditiva</string>
     <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <string name="subs_SDH">Subtítulos para personas sordas y con problemas de audición</string>
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brasileño</string>
     <string name="s_chinese">Chino</string>
@@ -443,6 +445,7 @@
     <string name="exit">Salir</string>
     <!-- torrent -->
     <string name="error">Se ha producido un error</string>
+    <string name="error_protocol_not_supported">Error: Protocolo no soportado</string>
     <string name="error_loading_torrent">Error al cargar torrent</string>
     <string name="error_downloading_not_enough_space">Error al descargar torrent: no hay suficiente espacio</string>
     <string name="loading_torrent">Cargando torrent…</string>
@@ -548,6 +551,8 @@
     <string name="summary_list_preference_primary">Seleccione el idioma de la descarga de subtítulos</string>
     <string name="favSubLang_title">Idioma de lectura de subtítulos</string>
     <string name="favSubLang_summary">Seleccione el idioma para la lectura de subtítulos</string>
+    <string name="favAudioLang_title">Idioma preferido de audio</string>
+    <string name="favAudioLang_summary">Elija su idioma favorito de pista de audio</string>
     <string name="ui_mode_title">Modo de interfaz de usuario</string>
     <string name="ui_mode_summary">Elija entre interfaz de usuario TV y Teléfono/Tablet</string>
     <string name="preferences_video_about">Acerca de</string>
@@ -620,6 +625,12 @@
     <string name="share_folders_smbv2_summary">Habilitar el soporte para el protocolo de red SMBv2.</string>
     <string name="share_folders_smb_resolv">Orden de resolución SMB</string>
     <string name="share_folders_smb_resolv_summary">Habilitar BCAST, DNS (por defecto: DNS, BCAST). Cambie esto si su servidor no logra resolver o experimenta SMB lento.</string>
+    <string name="share_folders_smb_disable_tcp_discovery">Desactivar descubrir SMB TCP</string>
+    <string name="share_folders_smb_disable_tcp_discovery_summary">Deshabilite el descubrimiento de TCP si experimenta Wi-Fi inestable en algunos dispositivos.</string>
+    <string name="share_folders_smb_disable_udp_discovery">Desactivar descubrir SMB UDP</string>
+    <string name="share_folders_smb_disable_udp_discovery_summary">Deshabilite el descubrimiento de TCP si experimenta Wi-Fi inestable en algunos dispositivos (Por ejemplo, Fire 10 HD).</string>
+    <string name="share_folders_smb_disable_mdns_discovery">Desactivar descubrir SMB mDNS</string>
+    <string name="share_folders_smb_disable_mdns_discovery_summary">Deshabilite el descubrimiento de mDNS si experimenta Wi-Fi inestable en algunos dispositivos.</string>
     <string name="share_folders_smb_discovery_limited_to_mdsn">Limitar descubrimiento de SMB a mDNS</string>
     <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Deshabilita el descubrimiento UDP/TCP si experimenta Wi-Fi inestable en algunos dispositivos (por ejemplo, Fire 10 HD). ⚠️ prevendrá el descubrimiento correcto en ChromeOS.</string>
     <string name="connection_abnormally_long">La conexión parece anormalmente larga. ¿Quieres restablecerla?</string>

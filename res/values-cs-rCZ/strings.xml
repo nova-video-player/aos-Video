@@ -313,7 +313,9 @@
     <string name="set_audio_speed_to">Rychlost zvuku %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
+    <string name="subs_HI">Sluchově postižení</string>
     <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <string name="subs_SDH">Tituky pro špatně slyšící a neslyšící</string>
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brazilská portugalština</string>
     <string name="s_chinese">Čínština</string>
@@ -424,6 +426,7 @@
     <string name="exit">Ukončit</string>
     <!-- torrent -->
     <string name="error">Došlo k chybě</string>
+    <string name="error_protocol_not_supported">Chyba: protokol není podporován</string>
     <string name="error_loading_torrent">Chyba při načítání torrentu</string>
     <string name="error_downloading_not_enough_space">Chyba při načítání torrentu: nedostatečná volná kapacita</string>
     <string name="loading_torrent">Načítám torrent…</string>
@@ -525,6 +528,8 @@
     <string name="summary_list_preference_primary">Vyberte jazyky pro stahování titulků</string>
     <string name="favSubLang_title">Jazyk pro zobrazované titulky</string>
     <string name="favSubLang_summary">Vyberte preferovaný jazyk pro zobrazované titulky</string>
+    <string name="favAudioLang_title">Preferovaný jazyk zvuku</string>
+    <string name="favAudioLang_summary">Zvote oblíbenou jazykovou audio stopu</string>
     <string name="ui_mode_title">Režim uživatelského rozhraní</string>
     <string name="ui_mode_summary">Vyberte rozhraní pro TV nebo pro tablet/telefon</string>
     <string name="preferences_video_about">O aplikaci</string>
