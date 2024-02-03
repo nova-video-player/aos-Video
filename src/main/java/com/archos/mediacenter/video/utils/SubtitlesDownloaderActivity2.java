@@ -282,8 +282,8 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             ArrayList<String> subLanguageId = new ArrayList<String>(languages);
             String languagesString = TextUtils.join(",", subLanguageId);
             OpenSubtitlesQueryParams fileInfo = getFileInfo(fileUrl);
-            log.debug("getSubtitle: tmdbId=" + fileInfo.getTmdbId() + ", imdbId=" + fileInfo.getImdbId() + ", videoHash=" + fileInfo.getFileHash() + ", fileName=" + fileInfo.getFileName() + ", languages=" + languagesString);
-
+            if (fileInfo != null) log.debug("getSubtitle: tmdbId=" + fileInfo.getTmdbId() + ", imdbId=" + fileInfo.getImdbId() + ", videoHash=" + fileInfo.getFileHash() + ", fileName=" + fileInfo.getFileName() + ", languages=" + languagesString);
+            else log.debug("getSubtitle: fileInfo is null for " + fileUrl);
             try {
                 searchResults = OpenSubtitlesApiHelper.searchSubtitle(fileInfo, languagesString );
             } catch (Throwable e) { //for various service outages
@@ -312,16 +312,16 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             String subUrl;
             try {
                 subUrl = OpenSubtitlesApiHelper.getDownloadSubtitleLink(searchResult.getFileId());
-                if (subUrl == null) {
-                    log.warn("getSub: subUrl is null for " + fileUrl);
-                    displayToast(getString(R.string.dialog_subloader_fails) + " " + searchResult.getFileName());
-                    finish();
-                    return;
-                }
                 if (OpenSubtitlesApiHelper.getLastQueryResult() == OpenSubtitlesApiHelper.RESULT_CODE_QUOTA_EXCEEDED) {
                     log.warn("getSub: quota exceeded, quota resets in " + OpenSubtitlesApiHelper.getTimeRemaining());
                     displayToast(getString(R.string.toast_subloader_quota_exceeded));
                     displayToast(getString(R.string.opensubtitles_quota_reset_time_remaining, OpenSubtitlesApiHelper.getTimeRemaining()));
+                    finish();
+                    return;
+                }
+                if (subUrl == null) {
+                    log.warn("getSub: subUrl is null for " + fileUrl);
+                    displayToast(getString(R.string.dialog_subloader_fails) + " " + searchResult.getFileName());
                     finish();
                     return;
                 }
