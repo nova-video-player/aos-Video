@@ -1,4 +1,1 @@
-- Add preferred audio language option for multi audio track videos
-- Another attempt to fix ftp
-- libyuv upstep aligned on chromium master
-- Stability enhancements
+- Fix subtitles download for videos on UPnP shares
