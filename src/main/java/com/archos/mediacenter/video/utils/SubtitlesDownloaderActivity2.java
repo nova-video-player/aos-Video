@@ -220,7 +220,10 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             // Close the progress dialog
             if (mDialog != null) {
-                mDoNotFinish = searchResults == null || !searchResults.isEmpty();
+                mDoNotFinish = searchResults != null && !searchResults.isEmpty();
+                log.debug("OpenSubtitlesTask: onPostExecute: mDoNotFinish=" + mDoNotFinish);
+                if (searchResults != null) log.debug("OpenSubtitlesTask: onPostExecute: found " +  searchResults.size() + " subs");
+                else log.debug("OpenSubtitlesTask: onPostExecute: searchResults=null");
                 mDialog.dismiss();
             }
         }
@@ -237,13 +240,13 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             try {
                 if (mUsername.isEmpty() || mPassword.isEmpty()) {
                     displayToast(getString(R.string.toast_subloader_credentials_empty));
-                 }
+                }
                 OpenSubtitlesApiHelper.login(getApplicationContext().getString(R.string.opensubtitles_api_key), mUsername, mPassword);
             } catch (IOException e) {
                 log.warn("logIn error message: result=" + OpenSubtitlesApiHelper.getLastQueryResult() + " message:" + e.getMessage() + "; localizedMessage:" + e.getLocalizedMessage() + ", cause: " + e.getCause());
                 displayToast(getString(R.string.toast_subloader_login_failed) + " (ERR " + OpenSubtitlesApiHelper.getLastQueryResult() + ")");
                 if (mDialog != null) {
-                    mDoNotFinish = true;
+                    mDoNotFinish = false;
                     mDialog.dismiss();
                 }
                 return false;
@@ -251,7 +254,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 log.error("logIn: caught exception result=" + OpenSubtitlesApiHelper.getLastQueryResult(),e);
                 displayToast(getString(R.string.toast_subloader_service_unreachable) + " (ERR " + OpenSubtitlesApiHelper.getLastQueryResult() + ")");
                 if (mDialog != null) {
-                    mDoNotFinish = true;
+                    mDoNotFinish = false;
                     mDialog.dismiss();
                 }
                 return false;
