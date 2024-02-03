@@ -339,6 +339,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         private OpenSubtitlesQueryParams getFileInfo(String fileUrl) {
             OpenSubtitlesQueryParams openSubtitlesQueryParams = new OpenSubtitlesQueryParams();
             MetaFile2 mf2 = null;
+            log.debug("getFileInfo: " + fileUrl);
             if (!fileUrl.startsWith("http://")) { // if not http, we will need metafile2 even for upnp (file length + streaming uri)
                 try {
                     mf2 = MetaFileFactoryWithUpnp.getMetaFileForUrl(Uri.parse(fileUrl));
@@ -347,30 +348,31 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 }
                 if (mf2 == null) return null;
             }
-            if (fileUrl.startsWith("upnp://")) { //request streaming uri
+            String newFileUrl = fileUrl;
+            if (newFileUrl.startsWith("upnp://")) { //request streaming uri that will start with http
                 Uri newUri = mf2.getStreamingUri();
                 if (newUri != null) {
-                    String oldFileUrl = fileUrl;
-                    fileUrl = newUri.toString();
-                    openSubtitlesQueryParams.setFileName(Uri.parse(oldFileUrl).getLastPathSegment());
+                    newFileUrl = newUri.toString();
+                    log.debug("getFileInfo: shorten fileUrl to get fileName = " + Uri.parse(fileUrl).getLastPathSegment());
+                    openSubtitlesQueryParams.setFileName(Uri.parse(fileUrl).getLastPathSegment());
                     Long fileLength = mf2.length();
                     // fileLength can be null (seen on google play console)
                     openSubtitlesQueryParams.setFileLength(fileLength != null ? fileLength : 0); // Add null check here
-                    log.debug("getFileInfo: consider (" + fileUrl + "," + openSubtitlesQueryParams.getFileName() + "), size=" + openSubtitlesQueryParams.getFileLength());
+                    log.debug("getFileInfo: consider {} -> openSubtitlesQueryParams =(fileName={}, size={})", fileUrl, openSubtitlesQueryParams.getFileName(), openSubtitlesQueryParams.getFileLength());
                 }
             }
-            if (fileUrl.startsWith("http://")) {
+            if (newFileUrl.startsWith("http://")) {
                 URL url = null;
                 HttpURLConnection urlConnection = null;
                 try {
-                    url = new URL(fileUrl);
+                    url = new URL(newFileUrl);
                     urlConnection = (HttpURLConnection) url.openConnection();
                     if (openSubtitlesQueryParams.getFileLength() != null && openSubtitlesQueryParams.getFileLength() > 0 && (urlConnection == null || !"bytes".equalsIgnoreCase(urlConnection.getHeaderField("Accept-Ranges"))))
                         openSubtitlesQueryParams.setFileHash(OpenSubtitlesHasher.computeHash(urlConnection, openSubtitlesQueryParams.getFileLength()));
                 } catch (MalformedURLException e) {
-                    log.error("getFileInfo: caught MalformedURLException for fileUrl " + fileUrl, e);
+                    log.error("getFileInfo: caught MalformedURLException for fileUrl " + newFileUrl, e);
                 } catch (IOException e) {
-                    log.error("getFileInfo: caught IOException for fileUrl " + fileUrl, e);
+                    log.error("getFileInfo: caught IOException for fileUrl " + newFileUrl, e);
                 } finally {
                     if (urlConnection != null) urlConnection.disconnect();
                     openSubtitlesQueryParams.setFileHash(null);
