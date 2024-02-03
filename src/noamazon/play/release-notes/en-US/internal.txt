@@ -1,1 +1,2 @@
 - Fix subtitles download for videos on UPnP shares
+- proguard cleanup

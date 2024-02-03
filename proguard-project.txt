@@ -23,20 +23,7 @@
 -keepattributes SourceFile,LineNumberTable
 -keepattributes Exceptions,InnerClasses
 
--keep class com.archos.mediacenter.video.browser.BrowserByCling { *; }
--keep class com.archos.mediacenter.video.browser.BrowserBySeason
--keep class com.archos.mediacenter.video.browser.BrowserCategoryVideo
--keep class com.archos.mediacenter.utils.SambaPreferencesFragment
-
--keep class com.archos.mediacenter.utils.BrowserLayout {
-  private void setCoverLeftAnim(int);
-}
-
--keep class com.archos.mediacenter.video.utils.VideoPreferencesFragment
-
 -keep class com.archos.mediacenter.LibAvosReceiver
--keep class com.archos.mediaprovider.LibAvosReceiver
-
 -keep class com.archos.mediacenter.video.utils.CodecDiscovery {*;}
 
 #### MediaLib ####
@@ -58,24 +45,10 @@
   public android.graphics.Bitmap createRGBBitmap(int[], int, int, int, int, int, int);
 }
 
--keep class com.archos.mediacenter.video.browser.Browser** { *; } 
--keep class org.fourthline.** { *; } 
--keep interface org.fourthline.** { *; } 
--keep class org.eclipse.jetty.** { *;}
--keep interface org.eclipse.jetty.** { *;}
--keep interface org.seamless.http.** { *;} 
--keep class com.bubblesoft.** { *;} 
--keep interface com.bubblesoft.** { *;} 
-
--keep interface com.google.vrtoolkit.cardboard.** { *; } 
--dontwarn com.google.vrtoolkit.cardboard.**
--dontnote com.google.vrtoolkit.cardboard.**
-
-#-keepattributes *Annotation*, InnerClasses
-##################
+-keep class com.archos.mediacenter.video.browser.Browser** { *; }
 
 -dontwarn javax.**
--dontwarn java.awt.**
+-dontwarn org.eclipse.jetty.jmx.ObjectMBean
 -dontwarn com.sun.**
 -dontwarn org.seamless.**
 -dontwarn com.bubblesoft.**
@@ -84,22 +57,6 @@
 -dontnote org.fourthline.**
 -dontwarn org.eclipse.jetty.**
 -dontnote org.eclipse.jetty.**
--dontnote com.apple.**
-
-# retrofit
--dontwarn com.google.gson.**
--dontnote com.google.gson.**
--dontwarn rx.*
--keep class com.google.gson.** { *; }
--keep class com.google.inject.** { *; }
--keep class org.apache.http.** { *; }
--keep class org.apache.james.mime4j.** { *; }
--keep class javax.inject.** { *; }
--keep class rx.** { *; }
--keep class com.example.testobfuscation.** { *; }
--keepattributes Signature
--keep class sun.misc.Unsafe { *; }
--keep class com.google.gson.examples.android.model.** { *; }
 
 -keepclassmembers class * implements java.io.Serializable {
     static final long serialVersionUID;
@@ -109,41 +66,10 @@
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
--keepattributes Signature
 
--keep class com.google.android.gms.** { *; }
--dontwarn com.google.android.gms.**
-
--dontwarn com.squareup.picasso.OkHttpDownloader
-
-#joda time
--dontwarn org.joda.convert.**
--dontwarn org.joda.time.**
--keep class org.joda.time.** { *; }
--keep interface org.joda.time.** { *; }
 
 #apache http
--keep class org.apache.http.** { *; }
--keepclassmembers class org.apache.http.** {*;}
 -dontwarn org.apache.**
-
--keep class android.net.http.** { *; }
--keepclassmembers class android.net.http.** {*;}
--dontwarn android.net.*
-
-#jsch
--keep class com.jcraft.jsch.**
--keep interface com.jcraft.jsch.**
-
-# Platform calls Class.forName on types which do not exist on Android to determine platform.
-##-dontnote retrofit2.Platform
-# Platform used when running on Java 8 VMs. Will not be used at runtime.
-##-dontwarn retrofit2.Platform$Java8
-# Retain generic type information for use by reflection by converters and adapters.
--keepattributes Signature
-# Retain declared checked exceptions for use by a Proxy instance.
--keepattributes Exceptions
--dontwarn okio.**
 
 #okhttp3
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
@@ -151,9 +77,12 @@
 -dontwarn org.ietf.**
 -dontwarn java.lang.annotation.Annotation
 
+# Retain generic type information for use by reflection by converters and adapters.
+-keepattributes Signature
+# Retain declared checked exceptions for use by a Proxy instance.
+-keepattributes Exceptions
 
 ## retrofit2 rules https://github.com/square/retrofit/blob/master/retrofit/src/main/resources/META-INF/proguard/retrofit2.pro
-
 # Retrofit does reflection on generic parameters. InnerClasses is required to use Signature and
 # EnclosingMethod is required to use InnerClasses.
 -keepattributes Signature, InnerClasses, EnclosingMethod
@@ -166,17 +95,10 @@
     @retrofit2.http.* <methods>;
 }
 
-# Ignore annotation used for build tooling.
--dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
-
-# Ignore JSR 305 annotations for embedding nullability information.
--dontwarn javax.annotation.**
-
 # Guarded by a NoClassDefFoundError try/catch and only used when on the classpath.
 -dontwarn kotlin.Unit
 
 # Top-level functions that can only be used by Kotlin.
--dontwarn retrofit2.KotlinExtensions
 -dontwarn retrofit2.KotlinExtensions$*
 
 # With R8 full mode, it sees no subtypes of Retrofit interfaces since they are created with a Proxy
@@ -184,36 +106,8 @@
 -if interface * { @retrofit2.http.* <methods>; }
 -keep,allowobfuscation interface <1>
 
-# JSCH
--keep class com.jcraft.jsch.jce.*
--keep class * extends com.jcraft.jsch.KeyExchange
--keep class com.jcraft.jsch.**
--keep class com.jcraft.jzlib.ZStream
--keep class com.jcraft.jsch.Compression
--keep class org.ietf.jgss.*
--dontwarn org.ietf.jgss.**
-
-# Please add these rules to your existing keep rules in order to suppress warnings.
-# This is generated automatically by the Android Gradle plugin.
--dontwarn org.bouncycastle.jsse.BCSSLParameters
--dontwarn org.bouncycastle.jsse.BCSSLSocket
--dontwarn org.bouncycastle.jsse.provider.BouncyCastleJsseProvider
--dontwarn org.conscrypt.Conscrypt$Version
--dontwarn org.conscrypt.Conscrypt
--dontwarn org.conscrypt.ConscryptHostnameVerifier
--dontwarn org.openjsse.javax.net.ssl.SSLParameters
--dontwarn org.openjsse.javax.net.ssl.SSLSocket
--dontwarn org.openjsse.net.ssl.OpenJSSE
-
--dontwarn org.xmlpull.v1.**
--dontwarn org.kxml2.io.**
 -dontwarn android.content.res.**
--dontwarn org.slf4j.impl.StaticLoggerBinder
 
-#-keep class org.xmlpull.** { *; }
-#-keepclassmembers class org.xmlpull.** { *; }
-
--dontwarn io.sentry.compose.viewhierarchy.ComposeViewHierarchyExporter
 -dontwarn org.newsclub.net.unix.AFUNIXServerSocketChannel
 -dontwarn org.newsclub.net.unix.AFUNIXSocketAddress
 -dontwarn org.newsclub.net.unix.AFUNIXSocketChannel
