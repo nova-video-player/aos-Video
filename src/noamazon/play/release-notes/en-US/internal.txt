@@ -1,2 +1,4 @@
+- Propose nova as external player when opening local files
 - Fix subtitles download for videos on UPnP shares
 - proguard cleanup
+- Stability enhancements
