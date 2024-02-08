@@ -99,19 +99,19 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         public NovaProgressDialog progressDialog;
     }
 
-    @SuppressWarnings({"unchecked", "serial"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public void onStart() {
         super.onStart();
         log.debug("onStart");
         mHandler = new Handler(getMainLooper());
         final NonConfigurationInstance nci = (NonConfigurationInstance) getLastNonConfigurationInstance();
+        subsDir = MediaUtils.getSubsDir(this);
         if (nci != null) {
             // The activity is created again after a rotation => just restore the state of the dialogs
             // as the OpenSubtitlesTask is still running in the background
             mDialog = nci.progressDialog;
-        }
-        else {
+        }  else {
             // Normal start of the activity
             if(NetworkState.isNetworkConnected(this)){
                 sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -135,7 +135,6 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 ArrayList<String> fileUrls = new ArrayList<>();
                 fileUrls.add(fileUrl);
                 mOpenSubtitlesTask.execute(fileUrls, getSubLangValue());
-                subsDir = MediaUtils.getSubsDir(this);
             } else {
                 log.debug("onStart: no network");
                 Builder dialogNoNetwork;
