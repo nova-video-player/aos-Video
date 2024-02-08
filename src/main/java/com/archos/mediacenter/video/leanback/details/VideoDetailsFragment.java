@@ -1006,7 +1006,15 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 mDescriptionPresenter.update(currentVideo);
                 if(mDetailsOverviewRow.getActionsAdapter()==null)
                     mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode));
-                else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode);
+                else {
+                    if (mDetailsOverviewRow.getActionsAdapter() instanceof VideoActionAdapter) {
+                        ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode);
+                    } else {
+                        // seen on sentry
+                        log.error("smoothUpdateVideo: cannot cast ArrayObjectAdapter to VideoActionAdapter!");
+                    }
+                }
+
                 // update poster
                 mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
                 mDetailsOverviewRow.setImageScaleUpAllowed(false);
@@ -1018,7 +1026,13 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 mDescriptionPresenter.update(currentVideo);
                 if(mDetailsOverviewRow.getActionsAdapter()==null)
                     mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode));
-                else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode);
+                else {
+                    if (mDetailsOverviewRow.getActionsAdapter() instanceof VideoActionAdapter) {
+                        ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode);
+                    } else {
+                        log.error("smoothUpdateVideo: cannot cast ArrayObjectAdapter to VideoActionAdapter!");
+                    }
+                }
 
                 // update poster
                 mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
