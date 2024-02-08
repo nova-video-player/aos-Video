@@ -1172,47 +1172,66 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         mActivity = getActivity();
         if (mActivity == null) log.warn("onCreateLoader: mActivity is null!");
         switch (id) {
-            case LOADER_ID_WATCHING_UP_NEXT:
+            case LOADER_ID_WATCHING_UP_NEXT -> {
                 log.debug("onCreateLoader WATCHING_UP_NEXT");
                 return new WatchingUpNextLoader(mActivity);
-            case LOADER_ID_LAST_ADDED:
+            }
+            case LOADER_ID_LAST_ADDED -> {
                 log.debug("onCreateLoader LAST_ADDED");
                 return new LastAddedLoader(mActivity);
-            case LOADER_ID_LAST_PLAYED:
+            }
+            case LOADER_ID_LAST_PLAYED -> {
                 log.debug("onCreateLoader LAST_PLAYED");
                 return new LastPlayedLoader(mActivity);
-            case LOADER_ID_ALL_MOVIES:
+            }
+            case LOADER_ID_ALL_MOVIES -> {
                 log.debug("onCreateLoader ALL_MOVIES");
                 if (mSeparateAnimeFromShowMovie) {
-                    if (args == null) return new FilmsLoader(mActivity, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
-                    else return new FilmsLoader(mActivity, args.getString("sort"), true, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+                    if (args == null)
+                        return new FilmsLoader(mActivity, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+                    else
+                        return new FilmsLoader(mActivity, args.getString("sort"), true, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
                 } else {
-                    if (args == null) return new MoviesLoader(mActivity, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
-                    else return new MoviesLoader(mActivity, args.getString("sort"), true, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+                    if (args == null)
+                        return new MoviesLoader(mActivity, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+                    else
+                        return new MoviesLoader(mActivity, args.getString("sort"), true, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
                 }
-            case LOADER_ID_ALL_TV_SHOWS:
+            }
+            case LOADER_ID_ALL_TV_SHOWS -> {
                 log.debug("onCreateLoader ALL_TV_SHOWS");
                 if (mSeparateAnimeFromShowMovie) {
-                    if (args == null) return new AllTvshowsNoAnimeLoader(mActivity, TvshowSortOrderEntries.DEFAULT_SORT, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
-                    else return new AllTvshowsNoAnimeLoader(mActivity, args.getString("sort"), true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+                    if (args == null)
+                        return new AllTvshowsNoAnimeLoader(mActivity, TvshowSortOrderEntries.DEFAULT_SORT, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+                    else
+                        return new AllTvshowsNoAnimeLoader(mActivity, args.getString("sort"), true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
                 } else {
-                    if (args == null) return new AllTvshowsLoader(mActivity, TvshowSortOrderEntries.DEFAULT_SORT, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
-                    else return new AllTvshowsLoader(mActivity, args.getString("sort"), true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+                    if (args == null)
+                        return new AllTvshowsLoader(mActivity, TvshowSortOrderEntries.DEFAULT_SORT, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+                    else
+                        return new AllTvshowsLoader(mActivity, args.getString("sort"), true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
                 }
-            case LOADER_ID_ALL_ANIMES:
+            }
+            case LOADER_ID_ALL_ANIMES -> {
                 log.debug("onCreateLoader ALL_ANIMES");
                 if (mSeparateAnimeFromShowMovie) {
-                    if (args == null) return new AnimesNShowsLoader(mActivity, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
-                    else return new AnimesNShowsLoader(mActivity, args.getString("sort"), true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+                    if (args == null)
+                        return new AnimesNShowsLoader(mActivity, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+                    else
+                        return new AnimesNShowsLoader(mActivity, args.getString("sort"), true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
                 } else {
                     if (args == null) return new AnimesLoader(mActivity, true);
-                    else return new AnimesLoader(mActivity, args.getString("sort"), true, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
+                    else
+                        return new AnimesLoader(mActivity, args.getString("sort"), true, true, VideoLoader.ALLVIDEO_THROTTLE, VideoLoader.ALLVIDEO_THROTTLE_DELAY);
                 }
-            case LOADER_ID_NON_SCRAPED_VIDEOS_COUNT:
+            }
+            case LOADER_ID_NON_SCRAPED_VIDEOS_COUNT -> {
                 log.debug("onCreateLoader NON_SCRAPED");
                 return new NonScrapedVideosCountLoader(mActivity);
-            default:
+            }
+            default -> {
                 return null;
+            }
         }
     }
 
@@ -1221,47 +1240,52 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         if (updateActivity("onLoadFinished") == null) return;
         boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking() || AutoScrapeService.isScraping() || ImportState.VIDEO.isInitialImport();
         log.debug("onLoadFinished: cursor id=" + cursorLoader.getId() + ", scanningOnGoing=" + scanningOnGoing);
-        switch (cursorLoader.getId()) {
-            case LOADER_ID_WATCHING_UP_NEXT:
-                if (mShowWatchingUpNextRow && mWatchingUpNextInitFocus == InitFocus.NOT_FOCUSED)
-                    mWatchingUpNextInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
-                log.debug("onLoadFinished: WatchingUpNext cursor ready with " + cursor.getCount() + " entries and " + mWatchingUpNextInitFocus + ", updating row");
-                // TODO remove scanningOnGoing if efficient
-                if (! scanningOnGoing && mShowWatchingUpNextRow) updateWatchingUpNextRow(cursor);
-                break;
-            case LOADER_ID_LAST_ADDED:
-                if (mShowLastAddedRow && mLastAddedInitFocus == InitFocus.NOT_FOCUSED)
-                    mLastAddedInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
-                log.debug("onLoadFinished: LastAdded cursor ready with " + cursor.getCount() + " entries and " + mLastAddedInitFocus + ", updating row");
-                if (mShowLastAddedRow) updateLastAddedRow(cursor);
-                break;
-            case LOADER_ID_LAST_PLAYED:
-                if (mShowLastPlayedRow && mLastPlayedInitFocus == InitFocus.NOT_FOCUSED)
-                    mLastPlayedInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
-                log.debug("onLoadFinished: LastPlayed cursor ready with " + cursor.getCount() + " entries and " + mLastAddedInitFocus + ", updating row");
-                if (mShowLastPlayedRow) updateLastPlayedRow(cursor);
-                break;
-            case LOADER_ID_ALL_MOVIES:
-                log.debug("onLoadFinished: AllMovies cursor ready with " + cursor.getCount() + " entries, updating row/box");
-                // cannot use if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor)) because when row is full it is 100 always
-                if (mShowMoviesRow) updateMoviesRow(cursor, false);
-                break;
-            case LOADER_ID_ALL_TV_SHOWS:
-                log.debug("onLoadFinished: AllTvShows cursor ready with " + cursor.getCount() + " entries, updating row/box");
-                if (mShowTvshowsRow) updateTvShowsRow(cursor, false);
-                break;
-            case LOADER_ID_ALL_ANIMES:
-                log.debug("onLoadFinished: AllAnimes cursor ready with " + cursor.getCount() + " entries, updating row/box");
-                if (mShowAnimesRow && mSeparateAnimeFromShowMovie) updateAnimesRow(cursor, false);
-                break;
-            case LOADER_ID_NON_SCRAPED_VIDEOS_COUNT:
-                log.debug("onLoadFinished: NonScrapedVideos cursor ready with " + cursor.getCount());
-                // count works here because it lists all
-                if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor))
-                    updateNonScrapedVideosVisibility(cursor);
-                break;
+        if (cursor != null && ! cursor.isClosed()) { // seen on sentry sometimes cursor is already closed
+            switch (cursorLoader.getId()) {
+                case LOADER_ID_WATCHING_UP_NEXT -> {
+                    if (mShowWatchingUpNextRow && mWatchingUpNextInitFocus == InitFocus.NOT_FOCUSED)
+                        mWatchingUpNextInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
+                    log.debug("onLoadFinished: WatchingUpNext cursor ready with " + cursor.getCount() + " entries and " + mWatchingUpNextInitFocus + ", updating row");
+                    // TODO remove scanningOnGoing if efficient
+                    if (!scanningOnGoing && mShowWatchingUpNextRow) updateWatchingUpNextRow(cursor);
+                }
+                case LOADER_ID_LAST_ADDED -> {
+                    if (mShowLastAddedRow && mLastAddedInitFocus == InitFocus.NOT_FOCUSED)
+                        mLastAddedInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
+                    log.debug("onLoadFinished: LastAdded cursor ready with " + cursor.getCount() + " entries and " + mLastAddedInitFocus + ", updating row");
+                    if (mShowLastAddedRow) updateLastAddedRow(cursor);
+                }
+                case LOADER_ID_LAST_PLAYED -> {
+                    if (mShowLastPlayedRow && mLastPlayedInitFocus == InitFocus.NOT_FOCUSED)
+                        mLastPlayedInitFocus = cursor.getCount() > 0 ? InitFocus.NEED_FOCUS : InitFocus.NO_NEED_FOCUS;
+                    log.debug("onLoadFinished: LastPlayed cursor ready with " + cursor.getCount() + " entries and " + mLastAddedInitFocus + ", updating row");
+                    if (mShowLastPlayedRow) updateLastPlayedRow(cursor);
+                }
+                case LOADER_ID_ALL_MOVIES -> {
+                    log.debug("onLoadFinished: AllMovies cursor ready with " + cursor.getCount() + " entries, updating row/box");
+                    // cannot use if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor)) because when row is full it is 100 always
+                    if (mShowMoviesRow) updateMoviesRow(cursor, false);
+                }
+                case LOADER_ID_ALL_TV_SHOWS -> {
+                    log.debug("onLoadFinished: AllTvShows cursor ready with " + cursor.getCount() + " entries, updating row/box");
+                    if (mShowTvshowsRow) updateTvShowsRow(cursor, false);
+                }
+                case LOADER_ID_ALL_ANIMES -> {
+                    log.debug("onLoadFinished: AllAnimes cursor ready with " + cursor.getCount() + " entries, updating row/box");
+                    if (mShowAnimesRow && mSeparateAnimeFromShowMovie)
+                        updateAnimesRow(cursor, false);
+                }
+                case LOADER_ID_NON_SCRAPED_VIDEOS_COUNT -> {
+                    log.debug("onLoadFinished: NonScrapedVideos cursor ready with " + cursor.getCount());
+                    // count works here because it lists all
+                    if (isCursorCountChanged(mLastAddedAdapter.getCursor(), cursor))
+                        updateNonScrapedVideosVisibility(cursor);
+                }
+            }
+            checkInitFocus();
+        } else {
+            log.warn("onLoadFinished: cursor is null or closed!!!");
         }
-        checkInitFocus();
     }
 
     @Override
@@ -1426,74 +1450,52 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             if (item instanceof Box) {
                 Box box = (Box)item;
                 switch (box.getBoxId()) {
-                    case ALL_MOVIES:
-                        vActivity.startActivity(new Intent(vActivity, AllMoviesGridActivity.class));
-                        break;
-                    case MOVIES_BY_ALPHA:
-                        vActivity.startActivity(new Intent(vActivity, MoviesByAlphaActivity.class));
-                        break;
-                    case MOVIES_BY_GENRE:
-                        vActivity.startActivity(new Intent(vActivity, MoviesByGenreActivity.class));
-                        break;
-                    case MOVIES_BY_RATING:
-                        vActivity.startActivity(new Intent(vActivity, MoviesByRatingActivity.class));
-                        break;
-                    case MOVIES_BY_YEAR:
-                        vActivity.startActivity(new Intent(vActivity, MoviesByYearActivity.class));
-                        break;
-                    case ALL_ANIMES:
-                        vActivity.startActivity(new Intent(vActivity, AllAnimesGridActivity.class));
-                        break;
-                    case ANIMES_BY_GENRE:
-                        vActivity.startActivity(new Intent(vActivity, AnimesByGenreActivity.class));
-                        break;
-                    case ANIMES_BY_YEAR:
-                        vActivity.startActivity(new Intent(vActivity, AnimesByYearActivity.class));
-                        break;
-                    case ALL_ANIMESHOWS:
-                        vActivity.startActivity(new Intent(vActivity, AllAnimeShowsGridActivity.class));
-                        break;
-                    case VIDEOS_BY_LISTS:
-                        vActivity.startActivity(new Intent(vActivity, VideosByListActivity.class));
-                        break;
-                    case FOLDERS:
-                        vActivity.startActivity(new Intent(vActivity, LocalListingActivity.class));
-                        break;
-                    case SDCARD:
-                    case USB:
-                    case OTHER:
+                    case ALL_MOVIES ->
+                            vActivity.startActivity(new Intent(vActivity, AllMoviesGridActivity.class));
+                    case MOVIES_BY_ALPHA ->
+                            vActivity.startActivity(new Intent(vActivity, MoviesByAlphaActivity.class));
+                    case MOVIES_BY_GENRE ->
+                            vActivity.startActivity(new Intent(vActivity, MoviesByGenreActivity.class));
+                    case MOVIES_BY_RATING ->
+                            vActivity.startActivity(new Intent(vActivity, MoviesByRatingActivity.class));
+                    case MOVIES_BY_YEAR ->
+                            vActivity.startActivity(new Intent(vActivity, MoviesByYearActivity.class));
+                    case ALL_ANIMES ->
+                            vActivity.startActivity(new Intent(vActivity, AllAnimesGridActivity.class));
+                    case ANIMES_BY_GENRE ->
+                            vActivity.startActivity(new Intent(vActivity, AnimesByGenreActivity.class));
+                    case ANIMES_BY_YEAR ->
+                            vActivity.startActivity(new Intent(vActivity, AnimesByYearActivity.class));
+                    case ALL_ANIMESHOWS ->
+                            vActivity.startActivity(new Intent(vActivity, AllAnimeShowsGridActivity.class));
+                    case VIDEOS_BY_LISTS ->
+                            vActivity.startActivity(new Intent(vActivity, VideosByListActivity.class));
+                    case FOLDERS ->
+                            vActivity.startActivity(new Intent(vActivity, LocalListingActivity.class));
+                    case SDCARD, USB, OTHER -> {
                         Intent i = new Intent(vActivity, ExtStorageListingActivity.class);
                         i.putExtra(ExtStorageListingActivity.MOUNT_POINT, box.getPath());
                         i.putExtra(ExtStorageListingActivity.STORAGE_NAME, box.getName());
                         vActivity.startActivity(i);
-                        break;
-                    case NETWORK:
-                        vActivity.startActivity(new Intent(vActivity, NetworkRootActivity.class));
-                        break;
-                    case NON_SCRAPED_VIDEOS:
-                        vActivity.startActivity(new Intent(vActivity, NonScrapedVideosActivity.class));
-                        break;
-                    case ALL_TVSHOWS:
-                        vActivity.startActivity(new Intent(vActivity, AllTvshowsGridActivity.class));
-                        break;
-                    case TVSHOWS_BY_ALPHA:
-                        vActivity.startActivity(new Intent(vActivity, TvshowsByAlphaActivity.class));
-                        break;
-                    case TVSHOWS_BY_GENRE:
-                        vActivity.startActivity(new Intent(vActivity, TvshowsByGenreActivity.class));
-                        break;
-                    case TVSHOWS_BY_RATING:
-                        vActivity.startActivity(new Intent(vActivity, TvshowsByRatingActivity.class));
-                        break;
-                    case EPISODES_BY_DATE:
-                        vActivity.startActivity(new Intent(vActivity, EpisodesByDateActivity.class));
-                        break;
-                    case COLLECTIONS:
-                        vActivity.startActivity(new Intent(vActivity, AllCollectionsGridActivity.class));
-                        break;
-                    case ANIME_COLLECTIONS:
-                        vActivity.startActivity(new Intent(vActivity, AllAnimeCollectionsGridActivity.class));
-                        break;
+                    }
+                    case NETWORK ->
+                            vActivity.startActivity(new Intent(vActivity, NetworkRootActivity.class));
+                    case NON_SCRAPED_VIDEOS ->
+                            vActivity.startActivity(new Intent(vActivity, NonScrapedVideosActivity.class));
+                    case ALL_TVSHOWS ->
+                            vActivity.startActivity(new Intent(vActivity, AllTvshowsGridActivity.class));
+                    case TVSHOWS_BY_ALPHA ->
+                            vActivity.startActivity(new Intent(vActivity, TvshowsByAlphaActivity.class));
+                    case TVSHOWS_BY_GENRE ->
+                            vActivity.startActivity(new Intent(vActivity, TvshowsByGenreActivity.class));
+                    case TVSHOWS_BY_RATING ->
+                            vActivity.startActivity(new Intent(vActivity, TvshowsByRatingActivity.class));
+                    case EPISODES_BY_DATE ->
+                            vActivity.startActivity(new Intent(vActivity, EpisodesByDateActivity.class));
+                    case COLLECTIONS ->
+                            vActivity.startActivity(new Intent(vActivity, AllCollectionsGridActivity.class));
+                    case ANIME_COLLECTIONS ->
+                            vActivity.startActivity(new Intent(vActivity, AllAnimeCollectionsGridActivity.class));
                 }
             }
             else if (item instanceof Icon) {
