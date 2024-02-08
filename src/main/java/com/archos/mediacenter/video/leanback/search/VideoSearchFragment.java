@@ -50,6 +50,8 @@ import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import androidx.leanback.widget.ShadowLessRowPresenter;
 
 public class VideoSearchFragment extends SearchSupportFragment implements SearchSupportFragment.SearchResultProvider {
+
+    static final String TAG = "VideoSearchFragment";
     public static final int ROW_ID = 2000;
     private static final int SEARCH_DELAY_MS = 300;
 
@@ -148,96 +150,48 @@ public class VideoSearchFragment extends SearchSupportFragment implements Search
         }
     }
 
-    private static class LoadRowsTask implements Callable<ListRow> {
-        private final WeakReference<VideoSearchFragment> fragmentReference;
-        private final String query;
-
-        LoadRowsTask(VideoSearchFragment fragment, String query) {
-            this.fragmentReference = new WeakReference<>(fragment);
-            this.query = query;
-        }
-
-        public ListRow call() {
-            VideoSearchFragment fragment = fragmentReference.get();
-            if (fragment != null && fragment.getActivity() != null && !fragment.getActivity().isFinishing()) {
-                ContentResolver cr = getActivity().getContentResolver();
-                if (mSearchLoader instanceof SearchMovieLoader) {
-                    ((SearchMovieLoader) mSearchLoader).setQuery(query);
-                } else if (mSearchLoader instanceof SearchEpisodeLoader) {
-                    ((SearchEpisodeLoader) mSearchLoader).setQuery(query);
-                } else if (mSearchLoader instanceof SearchNonScrapedVideoLoader) {
-                    ((SearchNonScrapedVideoLoader) mSearchLoader).setQuery(query);
-                } else {
-                    ((SearchVideoLoader) mSearchLoader).setQuery(query);
-                }
-                Cursor cursor = cr.query(mSearchLoader.getUri(), mSearchLoader.getProjection(), mSearchLoader.getSelection(), mSearchLoader.getSelectionArgs(), mSearchLoader.getSortOrder());
-                if (cursor.getCount() > 0) {
-                    CursorObjectAdapter listRowAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
-                    listRowAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
-                    listRowAdapter.changeCursor(cursor);
-                    return new ListRow(ROW_ID, new HeaderItem(getString(R.string.search_results)), listRowAdapter);
-                } else {
-                    ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new EmptyViewPresenter());
-                    listRowAdapter.add(new EmptyView(getString(R.string.no_results_found)));
-                    return new ShadowLessListRow(new HeaderItem(getString(R.string.search_results)), listRowAdapter);
-                }
-            } else {
-                log.error("LoadRowsTask:doInBackground context is null");
-                return null;
-            }
-        }
-    }
-
-    private static class LoadRowsTask extends AsyncTask<String, Void, ListRow> {
-        private final WeakReference<VideoSearchFragment> fragmentReference;
-
-        LoadRowsTask(VideoSearchFragment fragment) {
-            this.fragmentReference = new WeakReference<>(fragment);
-        }
-
-        @Override
-        protected ListRow doInBackground(String... params) {
-            VideoSearchFragment fragment = fragmentReference.get();
-            if (fragment != null && fragment.getActivity() != null && !fragment.getActivity().isFinishing()) {
-                ContentResolver cr = getActivity().getContentResolver();
-                if (mSearchLoader instanceof SearchMovieLoader) {
-                    ((SearchMovieLoader) mSearchLoader).setQuery(query);
-                } else if (mSearchLoader instanceof SearchEpisodeLoader) {
-                    ((SearchEpisodeLoader) mSearchLoader).setQuery(query);
-                } else if (mSearchLoader instanceof SearchNonScrapedVideoLoader) {
-                    ((SearchNonScrapedVideoLoader) mSearchLoader).setQuery(query);
-                } else {
-                    ((SearchVideoLoader) mSearchLoader).setQuery(query);
-                }
-                Cursor cursor = cr.query(mSearchLoader.getUri(), mSearchLoader.getProjection(), mSearchLoader.getSelection(), mSearchLoader.getSelectionArgs(), mSearchLoader.getSortOrder());
-                if (cursor.getCount() > 0) {
-                    CursorObjectAdapter listRowAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
-                    listRowAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
-                    listRowAdapter.changeCursor(cursor);
-                    return new ListRow(ROW_ID, new HeaderItem(getString(R.string.search_results)), listRowAdapter);
-                } else {
-                    ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new EmptyViewPresenter());
-                    listRowAdapter.add(new EmptyView(getString(R.string.no_results_found)));
-                    return new ShadowLessListRow(new HeaderItem(getString(R.string.search_results)), listRowAdapter);
-                }
-            } else {
-                Log.e(TAG, "LoadRowsTask:doInBackground context is null");
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(ListRow listRow) {
-            VideoSearchFragment fragment = fragmentReference.get();
-            if (fragment != null) {
-                if (listRow != null)
-                    fragment.mRowsAdapter.add(listRow);
-            }
-        }
-    }
-
     private void loadRows(final String query) {
-        new LoadRowsTask(this).execute(query);
+        new AsyncTask<String, Void, ListRow>() {
+            @Override
+            protected void onPreExecute() {
+                mRowsAdapter.clear();
+            }
+
+            @Override
+            protected ListRow doInBackground(String... params) {
+                if (getActivity() != null && ! getActivity().isFinishing()) {
+                    ContentResolver cr = getActivity().getContentResolver();
+                    if (mSearchLoader instanceof SearchMovieLoader) {
+                        ((SearchMovieLoader) mSearchLoader).setQuery(query);
+                    } else if (mSearchLoader instanceof SearchEpisodeLoader) {
+                        ((SearchEpisodeLoader) mSearchLoader).setQuery(query);
+                    } else if (mSearchLoader instanceof SearchNonScrapedVideoLoader) {
+                        ((SearchNonScrapedVideoLoader) mSearchLoader).setQuery(query);
+                    } else {
+                        ((SearchVideoLoader) mSearchLoader).setQuery(query);
+                    }
+                    Cursor cursor = cr.query(mSearchLoader.getUri(), mSearchLoader.getProjection(), mSearchLoader.getSelection(), mSearchLoader.getSelectionArgs(), mSearchLoader.getSortOrder());
+                    if (cursor.getCount() > 0) {
+                        CursorObjectAdapter listRowAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
+                        listRowAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
+                        listRowAdapter.changeCursor(cursor);
+                        return new ListRow(ROW_ID, new HeaderItem(getString(R.string.search_results)), listRowAdapter);
+                    } else {
+                        ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new EmptyViewPresenter());
+                        listRowAdapter.add(new EmptyView(getString(R.string.no_results_found)));
+                        return new ShadowLessListRow(new HeaderItem(getString(R.string.search_results)), listRowAdapter);
+                    }
+                } else {
+                    Log.e(TAG, "loadRows: no more activity, aborting search");
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(ListRow listRow) {
+                if (listRow != null) mRowsAdapter.add(listRow);
+            }
+        }.execute();
     }
 
 }
