@@ -97,7 +97,7 @@ public class SubtitleManager {
         public boolean equals(Object o) {
             // test checks if the file is already in the list via fileSize and fleName
             SubtitleFile other = (SubtitleFile)o;
-            log.trace("equals: " + mFile.getName() + " vs " + other.mFile.getName() + " (" + mFile.length() + " vs " + other.mFile.length() + ")");
+            log.debug("equals: " + mFile.getStreamingUri() + " vs " + other.mFile.getStreamingUri() + " (" + mFile.length() + " vs " + other.mFile.length() + ")");
             // do not compare entire fileName but only trailing part (i.e. "en.srt" instead of "videoName.en.srt") to capture copy of Subs/en.srt to videoName.en.srt by privatePrefetchSub
             //return ((mFile.getName().equals(other.mFile.getName())) && (mFile.length() == other.mFile.length()));
             return ((mFile.getName().endsWith(other.mFile.getName())) && (mFile.length() == other.mFile.length()));
