@@ -173,7 +173,7 @@ public class OpenSubtitlesApiHelper {
                     invalidToken();
                     return false;
                 } else {
-                    log.debug("logout: response successful, error code={}, error message={}", LAST_QUERY_RESULT, LAST_QUERY_MESSAGE);
+                    log.debug("login: response successful, error code={}, error message={}", LAST_QUERY_RESULT, LAST_QUERY_MESSAGE);
                     // Authentication successful
                     String responseBody = response.body().string();
                     JSONObject jsonResponse = new JSONObject(responseBody);
@@ -185,7 +185,7 @@ public class OpenSubtitlesApiHelper {
                     }
                     log.debug("login: token = " + authToken);
                     // Check if "base_url" is present in the response
-                    setBaseUrl(jsonResponse.optString("base_url", API_BASE_URL));
+                    setBaseUrl(jsonResponse.optString("https://"+"base_url", API_BASE_URL));
                     // Check if "user" object is present in the response
                     if (jsonResponse.has("user")) {
                         JSONObject userObject = jsonResponse.getJSONObject("user");
