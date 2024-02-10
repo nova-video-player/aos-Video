@@ -144,6 +144,8 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     private int mGlobalResumeId = -1;
     private GlobalResumeContentObserver mGlobalResumeContentObserver = null;
 
+    private SearchManager mSearchManager;
+
     private final static String SCRAPER_SELECTION = ScraperStore.AllVideos.SCRAPER_TYPE + "=? AND "
             + ScraperStore.AllVideos.SCRAPER_ID + "=?";
     private final static String TITLE_FORMAT = "%s  S%dE%d <i> %s </i>";
@@ -211,6 +213,15 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         requestWindowFeature(Window.FEATURE_OPTIONS_PANEL);
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         super.onCreate(savedInstanceState);
+
+        mSearchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        if (mSearchManager == null) {
+            log.error("onCreate: searchManager is null");
+        } else {
+            mSearchView = new SearchView(this);
+            mSearchView.setSearchableInfo(mSearchManager.getSearchableInfo(getComponentName()));
+        }
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
@@ -526,12 +537,9 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         boolean ret = super.onCreateOptionsMenu(menu);
         /// /setHomeButtonsetHomeButton();
 
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        if (searchManager == null) {
+        if (mSearchManager == null) {
             log.error("onCreateOptionsMenu: searchManager is null");
         } else {
-            mSearchView = new SearchView(this);
-            mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
             MenuItem item = menu.add(MENU_SEARCH_GROUP, MENU_SEARCH_ITEM, Menu.NONE, R.string.search_title);
             item.setIcon(R.drawable.android29_ic_menu_search_mtrl_alpha);
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
