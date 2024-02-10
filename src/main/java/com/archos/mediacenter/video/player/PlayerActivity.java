@@ -3590,6 +3590,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 }
             }
             mAudioInfoController.setTrack(mVideoInfo.audioTrack);
+            setPlayerAudioTrack(mVideoInfo.audioTrack);
         }
 
         public void onSubtitleMetadataUpdated(VideoMetadata vMetadata, int newSubtitleTrack) {
