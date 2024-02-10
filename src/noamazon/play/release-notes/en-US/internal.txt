@@ -1,3 +1,5 @@
+- Fix preferred audio language not applied
+- Fix cannot download subs when logged in on opensubtitles.com
 - Propose nova as external player when opening local files
 - Fix subtitles download for videos on UPnP shares
 - proguard cleanup
