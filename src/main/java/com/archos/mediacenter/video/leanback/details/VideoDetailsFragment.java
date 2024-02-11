@@ -1104,9 +1104,15 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if(mDetailsOverviewRow.getActionsAdapter()==null)
+                            if(mDetailsOverviewRow.getActionsAdapter()==null) {
                                 mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), mVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode));
-                            else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode);
+                            } else {
+                                if (mDetailsOverviewRow.getActionsAdapter() instanceof VideoActionAdapter) {
+                                    ((VideoActionAdapter) mDetailsOverviewRow.getActionsAdapter()).update(mVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode);
+                                } else {
+                                    log.error("onResumeChange: cannot cast ArrayObjectAdapter to VideoActionAdapter!");
+                                }
+                            }
                         }
                     });
 
