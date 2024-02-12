@@ -412,7 +412,7 @@ public class SubtitleManager {
     }
 
     public List<SubtitleFile> listLocalAndRemotesSubtitles(Uri video, boolean addAllSubs, boolean includeIdx, boolean addCache) {
-        log.debug("listLocalAndRemotesSubtitles: " + video.toString() + " addAllSubs=" + addAllSubs + " includeIdx=" + includeIdx + " addCache=" + addCache);
+        log.debug("listLocalAndRemotesSubtitles: " + video + " addAllSubs=" + addAllSubs + " includeIdx=" + includeIdx + " addCache=" + addCache);
         List<MetaFile2> allFiles = new ArrayList<MetaFile2>();
         List<SubtitleFile> subList = new LinkedList<SubtitleFile>();
 
