@@ -165,6 +165,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             mOpenSubtitlesTask = null;
         }
         logOut();
+        closeDialog();
         finish();
         super.onStop();
     }
@@ -182,10 +183,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
 
     public void onPause(){
         super.onPause();
-        if (mDialog != null) {
-            mDoNotFinish = true;
-            mDialog.dismiss();
-        }
+        closeDialog();
         TorrentObserverService.paused(this);
     }
 
@@ -219,7 +217,10 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             // Close the progress dialog
             if (mDialog != null) {
-                mDoNotFinish = searchResults != null && !searchResults.isEmpty();
+                mDoNotFinish = mDoNotFinish &&
+                        searchResults != null &&
+                        !searchResults.isEmpty() &&
+                        (OpenSubtitlesApiHelper.getLastQueryResult() == OpenSubtitlesApiHelper.RESULT_CODE_OK);
                 log.debug("OpenSubtitlesTask: onPostExecute: mDoNotFinish=" + mDoNotFinish);
                 if (searchResults != null) log.debug("OpenSubtitlesTask: onPostExecute: found " +  searchResults.size() + " subs");
                 else log.debug("OpenSubtitlesTask: onPostExecute: searchResults=null");
@@ -244,18 +245,12 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             } catch (IOException e) {
                 log.warn("logIn error message: result=" + OpenSubtitlesApiHelper.getLastQueryResult() + " message:" + e.getMessage() + "; localizedMessage:" + e.getLocalizedMessage() + ", cause: " + e.getCause());
                 displayToast(getString(R.string.toast_subloader_login_failed) + " (ERR " + OpenSubtitlesApiHelper.getLastQueryResult() + ")");
-                if (mDialog != null) {
-                    mDoNotFinish = false;
-                    mDialog.dismiss();
-                }
+                closeDialog();
                 return false;
             } catch (Throwable e) { //for various service outages
                 log.error("logIn: caught exception result=" + OpenSubtitlesApiHelper.getLastQueryResult(),e);
                 displayToast(getString(R.string.toast_subloader_service_unreachable) + " (ERR " + OpenSubtitlesApiHelper.getLastQueryResult() + ")");
-                if (mDialog != null) {
-                    mDoNotFinish = false;
-                    mDialog.dismiss();
-                }
+                closeDialog();
                 return false;
             }
             return true;
@@ -276,7 +271,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             if (fileUrl == null || fileUrl.isEmpty() || languages == null || languages.isEmpty()){
                 return;
             }
-
+            mDoNotFinish = true;
             // REST-API takes ISO639-1 2 letter code languages: no need to convert
             ArrayList<String> subLanguageId = new ArrayList<String>(languages);
             String languagesString = TextUtils.join(",", subLanguageId);
@@ -288,19 +283,22 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             } catch (Throwable e) { //for various service outages
                 log.error("getSubtitles: caught Throwable ", e);
                 displayToast(getString(R.string.toast_subloader_service_unreachable));
+                mDoNotFinish = false;
                 return;
             }
             // when there is one sub only directly download it
             if (searchResults != null && searchResults.size() == 1) {
                 log.debug("getSubtitles: one sub found for " + fileUrl);
                 getSub(fileUrl, searchResults.get(0));
+                mDoNotFinish = false; // one sub only, we are done
                 return;
             }
             if (searchResults != null && searchResults.size() > 1) {
                 mHandler.post(() -> askSubChoice(fileUrl, searchResults,languages.size()>1, !searchResults.isEmpty()));
             } else {
                 log.warn("getSubtitles: no subs found on opensubtitles for " + fileUrl);
-                displayToast(getString(R.string.dialog_subloader_fails) + " " + fileInfo.getFileName());
+                displayToast(getString(R.string.dialog_subloader_fails) + " " + ((fileInfo != null) ? fileInfo.getFileName() : null));
+                mDoNotFinish = false;
                 return;
             }
             MediaUtils.removeLastSubs(SubtitlesDownloaderActivity2.this);
@@ -315,18 +313,21 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                     log.warn("getSub: quota exceeded, quota resets in " + OpenSubtitlesApiHelper.getTimeRemaining());
                     displayToast(getString(R.string.toast_subloader_quota_exceeded));
                     displayToast(getString(R.string.opensubtitles_quota_reset_time_remaining, OpenSubtitlesApiHelper.getTimeRemaining()));
+                    mDoNotFinish = false;
                     finish();
                     return;
                 }
                 if (subUrl == null) {
                     log.warn("getSub: subUrl is null for " + fileUrl);
                     displayToast(getString(R.string.dialog_subloader_fails) + " " + searchResult.getFileName());
+                    mDoNotFinish = false;
                     finish();
                     return;
                 }
                 displayToast(getString(R.string.opensubtitles_quota_download_remaining, OpenSubtitlesApiHelper.getRemainingDownloads(), OpenSubtitlesApiHelper.getAllowedDownloads()));
             } catch (IOException e) {
                 log.error("getSub: caught IOException", e);
+                mDoNotFinish = false;
                 finish();
                 return;
             }
@@ -592,6 +593,13 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             mHandler.post(() -> Toast.makeText(SubtitlesDownloaderActivity2.this, message, Toast.LENGTH_SHORT).show());
         }
 
+    }
+
+    private void closeDialog() {
+        if (mDialog != null) {
+            mDoNotFinish = false;
+            mDialog.dismiss();
+        }
     }
 
     @SuppressWarnings("unchecked")
