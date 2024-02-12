@@ -366,10 +366,19 @@ public class NetworkRootFragment extends BrowseSupportFragment {
     };
 
     private class ShortcutsLoaderTask extends AsyncTask<Void, Void, Cursor> {
+        private ShortcutDbAdapter shortcutDbAdapter;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Open the database connection here
+            shortcutDbAdapter = ShortcutDbAdapter.VIDEO;
+        }
+
         @Override
         protected Cursor doInBackground(Void... args) {
             if (getActivity() != null && !getActivity().isFinishing()) {
-                return ShortcutDbAdapter.VIDEO.queryAllShortcuts(getActivity());
+                return shortcutDbAdapter.queryAllShortcuts(getActivity());
             }
             return null;
         }
@@ -378,7 +387,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
         protected void onPostExecute(Cursor cursor) {
             if (getActivity() != null && ! getActivity().isFinishing()) {
                 if (isAdded() && cursor != null) {
-                    if (!cursor.isClosed()) {
+                    if (shortcutDbAdapter != null && shortcutDbAdapter.isDbOpen() && !cursor.isClosed()) {
                         if (cursor.getCount() == 0) {
                             // remove shortcuts row if empty
                             mRowsAdapter.remove(mIndexedFoldersListRow);
