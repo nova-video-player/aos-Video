@@ -210,18 +210,20 @@ public class ChannelManager {
         }
 
         private void createEmptyPosterRow(String path) {
-            Cursor cursor = mContext.getContentResolver().query(Uri.parse(VideoStore.Video.Thumbnails.EXTERNAL_CONTENT_URI.toString() + "/0"), new String[] { VideoStore.Video.Thumbnails._ID }, null, null, null);
-            
-            if (cursor == null || cursor.getCount() == 0) {
-                ContentValues values = new ContentValues(2);
-                values.put(VideoStore.Video.Thumbnails._ID, "0");
-                values.put(VideoStore.Video.Thumbnails.DATA, path);
-
-                mContext.getContentResolver().insert(VideoStore.Video.Thumbnails.EXTERNAL_CONTENT_URI, values);
+            Cursor cursor = null;
+            try {
+                cursor = mContext.getContentResolver().query(Uri.parse(VideoStore.Video.Thumbnails.EXTERNAL_CONTENT_URI.toString() + "/0"), new String[]{VideoStore.Video.Thumbnails._ID}, null, null, null);
+                if (cursor == null || cursor.getCount() == 0) {
+                    ContentValues values = new ContentValues(2);
+                    values.put(VideoStore.Video.Thumbnails._ID, "0");
+                    values.put(VideoStore.Video.Thumbnails.DATA, path);
+                    mContext.getContentResolver().insert(VideoStore.Video.Thumbnails.EXTERNAL_CONTENT_URI, values);
+                }
+            } catch (Exception e) { // seen on sentry IllegalStateException Unable to create new file: /storage/emulated/0/Android/data/org.courville.nova/cache/empty_poster.png
+                Log.e(TAG, "createEmptyPosterRow: caught Exception ", e);
+            } finally {
+                if (cursor != null) cursor.close();
             }
-
-            if (cursor != null)
-                cursor.close();
         }
     }
 
