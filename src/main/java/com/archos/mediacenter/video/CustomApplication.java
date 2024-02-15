@@ -198,7 +198,7 @@ public class CustomApplication extends Application {
             SentryAndroid.init(this, options -> {
                 options.setDsn(BuildConfig.SENTRY_DSN);
                 options.setSampleRate(null);
-                options.setDebug(true);
+                options.setDebug(false);
                 });
         }
     }
