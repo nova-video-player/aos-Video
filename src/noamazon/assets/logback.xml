@@ -86,28 +86,28 @@
     <logger name="com.archos.filecorelibrary.StreamOverHttp" level="INFO"/>
 
     <!-- Debug jcifs -->
-   <logger name="jcifs.netbios.UdpDiscovery" level="INFO"/>
-   <logger name="com.archos.filecorelibrary.jcifs" level="INFO"/>
-   <logger name="com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser" level="INFO"/>
-   <logger name="jcifs.netbios.UdpDiscovery" level="INFO"/>
-   <logger name="jcifs.netbios.NameServiceClientImpl" level="INFO"/>
-   <logger name="jcifs.smb.SmbSessionImpl" level="INFO"/>
-   <logger name="jcifs.util.transport.Transport" level="INFO"/>
-   <logger name="jcifs.smb.SmbTransportImpl" level="INFO"/>
-   <logger name="com.archos.filecorelibrary.samba" level="INFO"/>
+    <logger name="jcifs.netbios.UdpDiscovery" level="INFO"/>
+    <logger name="com.archos.filecorelibrary.jcifs" level="INFO"/>
+    <logger name="com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser" level="INFO"/>
+    <logger name="jcifs.netbios.UdpDiscovery" level="INFO"/>
+    <logger name="jcifs.netbios.NameServiceClientImpl" level="INFO"/>
+    <logger name="jcifs.smb.SmbSessionImpl" level="INFO"/>
+    <logger name="jcifs.util.transport.Transport" level="INFO"/>
+    <logger name="jcifs.smb.SmbTransportImpl" level="INFO"/>
+    <logger name="com.archos.filecorelibrary.samba" level="INFO"/>
 
     <!-- Debug scraper -->
-   <logger name="com.archos.mediascraper.themoviedb3" level="INFO"/>
-   <logger name="com.archos.mediascraper.preprocess" level="INFO"/>
-   <logger name="com.archos.mediascraper.xml" level="INFO"/>
-   <logger name="com.archos.mediascraper.NfoWriter" level="INFO"/>
-   <logger name="com.archos.mediascraper.NfoParser" level="INFO"/>
+    <logger name="com.archos.mediascraper.themoviedb3" level="INFO"/>
+    <logger name="com.archos.mediascraper.preprocess" level="INFO"/>
+    <logger name="com.archos.mediascraper.xml" level="INFO"/>
+    <logger name="com.archos.mediascraper.NfoWriter" level="INFO"/>
+    <logger name="com.archos.mediascraper.NfoParser" level="INFO"/>
 
     <!-- Debug auto-scan refresh -->
-   <logger name="com.archos.mediaprovider.video.NetworkAutoRefresh" level="INFO"/>
-   <logger name="com.archos.mediaprovider.video.NetworkScannerUtil" level="INFO"/>
-   <logger name="com.archos.mediaprovider.video.NetworkScannerServiceVideo" level="INFO"/>
-   <logger name="com.archos.mediaprovider.video.NetworkRefreshJob" level="INFO"/>
+    <logger name="com.archos.mediaprovider.video.NetworkAutoRefresh" level="INFO"/>
+    <logger name="com.archos.mediaprovider.video.NetworkScannerUtil" level="INFO"/>
+    <logger name="com.archos.mediaprovider.video.NetworkScannerServiceVideo" level="INFO"/>
+    <logger name="com.archos.mediaprovider.video.NetworkRefreshJob" level="INFO"/>
 
     <includes>
         <include file="${LOG_DIR}/logback.xml" optional="true" />
