@@ -70,7 +70,7 @@
 
     <logger name="com.archos.mediaprovider.video.VideoStoreImportReceiver" level="INFO"/>
     <logger name="com.archos.mediaprovider.video.VideoStoreImportService" level="INFO"/>
-    <<logger name="com.archos.mediaprovider.video.VideoStoreImportImpl" level="INFO"/>
+    <logger name="com.archos.mediaprovider.video.VideoStoreImportImpl" level="INFO"/>
     <logger name="com.archos.mediaprovider.video.NetworkScannerServiceVideo" level="INFO"/>
     <logger name="com.archos.mediascraper.AutoScrapeService" level="INFO"/>
 
