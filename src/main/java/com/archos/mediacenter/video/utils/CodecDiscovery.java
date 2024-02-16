@@ -26,8 +26,8 @@ import java.util.List;
 public class CodecDiscovery {
 
 	// log4j/logback not possible since used from native it seems
-	private final static boolean DBG = true;
-	private final static boolean DBG2 = true;
+	private final static boolean DBG = false;
+	private final static boolean DBG2 = false;
 	private final static String TAG = "CodecDiscovery";
 	private static boolean isDoViDisabled = false;
 	private static boolean displaySupportsDovi = false; // could be used to auto disable DoVi codecs
