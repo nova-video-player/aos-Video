@@ -1414,7 +1414,9 @@
             android:theme="@style/Theme.TransparentCompat" />
 
         <!-- Shows/hides JCIFS smb:// shares -->
-        <service android:name="com.archos.mediaprovider.video.RemoteStateService" />
+        <service android:name="com.archos.mediaprovider.video.RemoteStateService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync"/>
 
         <!-- keeps track of network scanning state -->
         <receiver
