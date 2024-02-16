@@ -94,9 +94,7 @@ public class OpenSubtitlesCredentialsDialog extends DialogFragment {
                     if (!usernameEt.getText().toString().isEmpty()) {
                         final String username = usernameEt.getText().toString();
                         final String password = passwordEt.getText().toString();
-                        if (CustomApplication.useOpenSubtitlesRestApi())
-                            new ValidateCredentialsTask(getActivity().getString(R.string.opensubtitles_api_key), username, password).execute();
-                        else storeCredentials(username, password);
+                        new ValidateCredentialsTask(getActivity().getString(R.string.opensubtitles_api_key), username, password).execute();
                     }
                     if (usernameEt.getText().toString().isEmpty() || passwordEt.getText().toString().isEmpty())
                         Toast.makeText(getActivity(), getString(R.string.dialog_subloader_credentials_empty), Toast.LENGTH_SHORT).show();

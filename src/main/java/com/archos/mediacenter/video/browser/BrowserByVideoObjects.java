@@ -15,30 +15,22 @@
 
 package com.archos.mediacenter.video.browser;
 
-import static com.archos.mediacenter.video.CustomApplication.hasOpenSubtitlesQuota;
-
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-import androidx.core.view.MenuItemCompat;
-
 import com.archos.environment.ArchosIntents;
 import com.archos.environment.ArchosSettings;
 import com.archos.filecorelibrary.FileUtils;
-import com.archos.filecorelibrary.ListingEngine;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
@@ -64,7 +56,6 @@ import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.PlayUtils;
-import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2;
 import com.archos.mediacenter.video.utils.SubtitlesWizardActivity;
 import com.archos.mediacenter.video.utils.VideoUtils;
@@ -269,44 +260,6 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
                 true, -1, this, -1);
     }
 
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        super.onCreateOptionsMenu(menu, inflater);
-        // no download all subs with opensubtitles having quotas
-        if (! hasOpenSubtitlesQuota()  && mBrowserAdapter != null && !mBrowserAdapter.isEmpty()) {
-            // Add the "load subtitles" item
-            menu.add(MENU_SUBLOADER_GROUP, MENU_SUBLOADER_ALL_FOLDER, Menu.NONE, R.string.menu_subloader_allfolder).setIcon(R.drawable.ic_menu_subtitles).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // NOTE: ignore the MENU_VIEW_MODE item which is
-        // already handled internally in ActionBarSubmenu
-
-        if (item.getItemId() == MENU_SUBLOADER_ALL_FOLDER) {
-            ArrayList<String> videoNoSubs = new ArrayList<>();
-            ArrayList<String> videoPaths = new ArrayList<>();
-
-            Video video;
-            List<Video> videos = new ArrayList<>();
-            for (int i = 0; i<mBrowserAdapter.getCount(); i++){
-                video = mAdapterByVideoObjects.getVideoItem(i);
-                if(video!=null) {
-                    videos.add(video);
-                    if(video.hasSubs())
-                        videoNoSubs.add(video.getFilePath());
-                    videoPaths.add(video.getFilePath());
-                }
-            }
-
-            getMissingSubtitles(false, videoNoSubs, videoPaths);
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         boolean ret = true;
@@ -366,12 +319,8 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
             case R.string.get_subtitles_online:
                 Intent subIntent = new Intent(Intent.ACTION_MAIN);
                 log.debug("onContextItemSelected: get_subtitles_online for " + getRealPathUriFromPosition(info.position));
-                if (CustomApplication.useOpenSubtitlesRestApi()) {
-                    subIntent.setClass(mContext, SubtitlesDownloaderActivity2.class);
-                    subIntent.putExtra(SubtitlesDownloaderActivity.FILE_URL, getRealPathUriFromPosition(info.position).toString());
-                } else {
-                    subIntent.setClass(mContext, SubtitlesDownloaderActivity.class);
-                }
+                subIntent.setClass(mContext, SubtitlesDownloaderActivity2.class);
+                subIntent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, getRealPathUriFromPosition(info.position).toString());
                 getActivity().startActivity(subIntent);
                 break;
 

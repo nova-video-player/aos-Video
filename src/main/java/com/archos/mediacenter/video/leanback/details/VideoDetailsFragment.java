@@ -129,7 +129,6 @@ import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.StoreRatingDialogBuilder;
-import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
@@ -1618,17 +1617,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void performSubtitleDownload() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
-        if (CustomApplication.useOpenSubtitlesRestApi()) {
-            intent.setClass(getActivity(), SubtitlesDownloaderActivity2.class);
-            intent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, mVideo.getFilePath());
-        } else {
-            intent.setClass(getActivity(), SubtitlesDownloaderActivity.class);
-            intent.putExtra(SubtitlesDownloaderActivity.FILE_URL, mVideo.getFilePath());
-            HashMap<String, Long> videoSizes = new HashMap<>();
-            if (mVideo.getMetadata()!=null)
-                videoSizes.put(mVideo.getFilePath(), mVideo.getMetadata().getFileSize());
-            intent.putExtra(SubtitlesDownloaderActivity.FILE_SIZES, videoSizes);
-        }
+        intent.setClass(getActivity(), SubtitlesDownloaderActivity2.class);
+        intent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, mVideo.getFilePath());
         startActivityForResult(intent, REQUEST_CODE_SUBTITLES_ACTIVITY);
     }
 

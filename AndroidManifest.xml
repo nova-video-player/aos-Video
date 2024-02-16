@@ -1114,10 +1114,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".utils.SubtitlesDownloaderActivity"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.Transparent" />
-        <activity
             android:name=".utils.SubtitlesDownloaderActivity2"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Transparent" />

@@ -150,23 +150,6 @@ public class CustomApplication extends Application {
     private final int AVOS_ENCODING_DTS_UHD = 27;
     private final int AVOS_ENCODING_DRA = 28;
 
-    private static boolean OPENSUBTITLES_HAS_QUOTA = false;
-    public final static boolean hasOpenSubtitlesQuota() {
-        return OPENSUBTITLES_HAS_QUOTA;
-    }
-
-    private static boolean USE_OPENSUBTITLES_REST_API = true;
-    public static boolean useOpenSubtitlesRestApi() {
-        log.debug("useOpenSubtitlesRestApi: USE_OPENSUBTITLES_REST_API " + USE_OPENSUBTITLES_REST_API);
-        return USE_OPENSUBTITLES_REST_API;
-    }
-
-    public static void makeUseOpenSubtitlesRestApi(boolean use) {
-        USE_OPENSUBTITLES_REST_API = use;
-        OPENSUBTITLES_HAS_QUOTA = use;
-        log.debug("makeUseOpenSubtitlesRestApi: use " + use + ", OPENSUBTITLES_HAS_QUOTA " + OPENSUBTITLES_HAS_QUOTA + ", USE_OPENSUBTITLES_REST_API " + USE_OPENSUBTITLES_REST_API);
-    }
-
     public static long getHdmiAudioCodecsFlag() {
         return hdmiAudioEncodingFlag;
     }
@@ -351,7 +334,6 @@ public class CustomApplication extends Application {
         updateVersionState(this);
         if (openSubtitlesApiHelper == null) openSubtitlesApiHelper = OpenSubtitlesApiHelper.getInstance();
         //makeUseOpenSubtitlesRestApi(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(VideoPreferencesCommon.KEY_OPENSUBTITILES_REST_API, true));
-        makeUseOpenSubtitlesRestApi(true);
     }
 
     private void launchSambaDiscovery() {
