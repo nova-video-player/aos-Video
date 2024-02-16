@@ -284,7 +284,8 @@ public class BrowserByNetwork extends BrowserByFolder {
                 if (isCurrentDirectoryIndexed) {
                     v.findViewById(R.id.checkBox).setVisibility(View.INVISIBLE);
                 } else {
-                    ((CheckBox) v.findViewById(R.id.checkBox)).setChecked(false);
+                    // by default propose indexing
+                    //((CheckBox) v.findViewById(R.id.checkBox)).setChecked(false);
                     v.findViewById(R.id.checkBox).setVisibility(View.VISIBLE);
                 }
                 new AlertDialog.Builder(getActivity())
