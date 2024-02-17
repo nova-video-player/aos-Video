@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Pair;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -80,6 +81,7 @@ import com.archos.mediascraper.settings.ScraperPreferences;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -960,28 +962,34 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             index++;
         }
 
-        // below entryValues is sorted alphabetically starting at index imin and same sorting is applied to entries
-
-        List<String> firstElements = languageListEntries.subList(0, imin);
-        // Sort entries starting above index imin.
-        List<String> lastElements = new ArrayList<>(languageListEntries.subList(imin, languageListEntries.size()));
-        Collections.sort(lastElements);
-        List<String> sortedEntries = new ArrayList<>();
-        sortedEntries.addAll(firstElements);
-        sortedEntries.addAll(lastElements);
-
-        // Create a new list sortedEntryValues and iterate through sortedEntries.
-        List<String> sortedEntryValues = new ArrayList<>();
-        for (String sortedEntry : sortedEntries) {
-            index = languageListEntries.indexOf(sortedEntry);
-            sortedEntryValues.add(languageListEntryValues.get(index));
+        // Sort alphabetically all languageListEntries starting from imin index to the end
+        // and apply same sorting to languageListEntryValues
+        List<Pair<String, String>> pairs = new ArrayList<>();
+        for (int i = imin; i < languageListEntries.size(); i++) {
+            pairs.add(new Pair<>(languageListEntries.get(i), languageListEntryValues.get(i)));
         }
 
-        languageListNewEntries = new CharSequence[sortedEntries.size()];
-        languageListNewEntryValues = new CharSequence[sortedEntryValues.size()];
+        // Sort the pairs based on the language name
+        Collections.sort(pairs, new Comparator<Pair<String, String>>() {
+            @Override
+            public int compare(Pair<String, String> o1, Pair<String, String> o2) {
+                return o1.first.compareToIgnoreCase(o2.first);
+            }
+        });
+
+        // Update the languageListEntries and languageListEntryValues with the sorted pairs
+        for (int i = 0; i < pairs.size(); i++) {
+            Pair<String, String> pair = pairs.get(i);
+            languageListEntries.set(i + imin, pair.first);
+            languageListEntryValues.set(i + imin, pair.second);
+        }
+
+        languageListNewEntries = new CharSequence[languageListEntries.size()];
+        languageListNewEntryValues = new CharSequence[languageListEntryValues.size()];
 
         languageListEntries.toArray(languageListNewEntries);
         languageListEntryValues.toArray(languageListNewEntryValues);
+
         systemLanguageIndex = -1;
         final String currentFavoriteLang;
         final String currentAudioFavoriteLang;
