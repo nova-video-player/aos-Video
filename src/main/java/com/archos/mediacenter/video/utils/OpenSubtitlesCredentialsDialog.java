@@ -137,8 +137,7 @@ public class OpenSubtitlesCredentialsDialog extends DialogFragment {
             } else {
                 // Clear preferences
                 storeCredentials("", "");
-                if (credentialsValid) Toast.makeText(CustomApplication.getAppContext(), R.string.toast_subloader_login_failed, Toast.LENGTH_SHORT).show();
-                else Toast.makeText(CustomApplication.getAppContext(), R.string.toast_subloader_login_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(CustomApplication.getAppContext(), R.string.toast_subloader_login_failed, Toast.LENGTH_SHORT).show();
             }
         }
     }
