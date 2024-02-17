@@ -103,6 +103,10 @@
     <logger name="com.archos.mediascraper.NfoWriter" level="INFO"/>
     <logger name="com.archos.mediascraper.NfoParser" level="INFO"/>
 
+    <!-- Subtitles -->
+    <logger name="com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2" level="INFO"/>
+    <logger name="com.archos.mediacenter.video.utils.OpenSubtitlesApiHelper" level="INFO"/>
+
     <!-- Debug auto-scan refresh -->
     <logger name="com.archos.mediaprovider.video.NetworkAutoRefresh" level="INFO"/>
     <logger name="com.archos.mediaprovider.video.NetworkScannerUtil" level="INFO"/>
