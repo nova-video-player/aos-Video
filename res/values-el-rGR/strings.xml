@@ -509,8 +509,6 @@
     <string name="category_languages">Υπότιτλοι</string>
     <string name="subtitles_hide_default">Απόκρυψη υποτίτλων από προεπιλογή</string>
     <string name="subtitles_hide_default_summary">Επιλέξτε αν θέλετε να αποκρύψετε τους υπότιτλους από προεπιλογή</string>
-    <string name="subtitles_use_rest_api">Χρησιμοποιήστε το νέο OpenSubtitles API</string>
-    <string name="subtitles_use_rest_api_summary">Χρησιμοποιήστε νέο REST-API αντί για XML-RPC με όρια που θα επιβληθούν από το 2024</string>
     <string name="subtitles_credentials_title">Πιστοποιητικά OpenSubtitles</string>
     <string name="subtitles_credentials_summary">Παρέχετε τα διαπιστευτήρια σας OpenSubtitles για να μπορείτε να κατεβάσετε υπότιτλους</string>
     <string name="preferences_languages">Επιλογή γλώσσας υποτίτλων για κατέβασμα</string>

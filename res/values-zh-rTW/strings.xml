@@ -538,8 +538,6 @@
     <string name="category_languages">字幕</string>
     <string name="subtitles_hide_default">預設隱藏字幕</string>
     <string name="subtitles_hide_default_summary">如要預設隱藏字幕請勾選</string>
-    <string name="subtitles_use_rest_api">使用新的 OpenSubtitles API</string>
-    <string name="subtitles_use_rest_api_summary">2024年開始將強制使用新額度的 REST-API 取代 XML-RPC</string>
     <string name="subtitles_credentials_title">Opensubtitles 憑證</string>
     <string name="subtitles_credentials_summary">請提供您的 opensubtitles 憑證以下載字幕</string>
     <string name="preferences_languages">下載字幕的語言</string>

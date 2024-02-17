@@ -540,8 +540,6 @@
     <string name="category_languages">Legendas</string>
     <string name="subtitles_hide_default">Ocultar legendas por padrão</string>
     <string name="subtitles_hide_default_summary">Marque se você deseja ocultar legendas por padrão</string>
-    <string name="subtitles_use_rest_api">Use a nova API do OpenSubtitles</string>
-    <string name="subtitles_use_rest_api_summary">Use a nova REST-API invés de XML-RPC com cotas que serão reforçadas em 2024</string>
     <string name="subtitles_credentials_title">Credenciais do Opensubtitles</string>
     <string name="subtitles_credentials_summary">Forneça suas credenciais do opensubtitles para poder baixar legendas</string>
     <string name="preferences_languages">Idiomas de download de legendas</string>

@@ -553,8 +553,6 @@
     <string name="category_languages">Titulky</string>
     <string name="subtitles_hide_default">Skryť predvolené titulky</string>
     <string name="subtitles_hide_default_summary">Označte, či chcete skryť predvolené titulky</string>
-    <string name="subtitles_use_rest_api">Použitie nového rozhrania API OpenSubtitles</string>
-    <string name="subtitles_use_rest_api_summary">Použitie nového REST-API namiesto XML-RPC s kvótami, ktoré sa budú uplatňovať od roku 2024</string>
     <string name="subtitles_credentials_title">Prihlasovacie údaje k službe OpenSubtitles</string>
     <string name="subtitles_credentials_summary">Poskytnite svoje prihlasovacie údaje Opensubtitles, aby ste mohli sťahovať titulky</string>
     <string name="preferences_languages">Jazyky sťahovania titulkov</string>

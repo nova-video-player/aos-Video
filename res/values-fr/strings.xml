@@ -333,21 +333,21 @@
     <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
     <string name="subs_SDH">Sous-titres pour les sourds et les malentendants</string>
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
-    <string name="s_brazilian">Brésilien</string>
+    <string name="s_brazilian">brésilien</string>
     <string name="s_chinese">Chinois</string>
-    <string name="s_chinese_simplified">Chinois simplifié</string>
-    <string name="s_traditional_chinese">Chinois traditionnel</string>
-    <string name="s_spanish_la">Espagnol (LA)</string>
-    <string name="s_extremaduran">Estremègne</string>
-    <string name="s_montenegrin">Monténégrin</string>
-    <string name="s_manipuri">Manipuri</string>
-    <string name="s_dari">Dari</string>
-    <string name="s_portuguese_mz">Portugais (MZ)</string>
-    <string name="s_spanish_eu">Espagnol (UE)</string>
-    <string name="s_santali">Santali</string>
-    <string name="s_syriac">Syriaque</string>
-    <string name="s_toki_pona">Toki Pona</string>
-    <string name="s_chinese_bilingual">Chinois bilingue</string>
+    <string name="s_chinese_simplified">chinois simplifié</string>
+    <string name="s_traditional_chinese">chinois traditionnel</string>
+    <string name="s_spanish_la">espagnol (LA)</string>
+    <string name="s_extremaduran">estremègne</string>
+    <string name="s_montenegrin">monténégrin</string>
+    <string name="s_manipuri">manipuri</string>
+    <string name="s_dari">dari</string>
+    <string name="s_portuguese_mz">portugais (MZ)</string>
+    <string name="s_spanish_eu">espagnol (UE)</string>
+    <string name="s_santali">santali</string>
+    <string name="s_syriac">syriaque</string>
+    <string name="s_toki_pona">toki pona</string>
+    <string name="s_chinese_bilingual">chinois bilingue</string>
     <string name="s_none">Aucun</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Impossible de lire la vidéo</string>
@@ -543,8 +543,6 @@
     <string name="category_languages">Sous-titres</string>
     <string name="subtitles_hide_default">Ne pas afficher les sous-titres par défaut</string>
     <string name="subtitles_hide_default_summary">Cochez afin de ne pas afficher les sous-titres par défaut</string>
-    <string name="subtitles_use_rest_api">Utiliser la nouvelle API OpenSubtitles</string>
-    <string name="subtitles_use_rest_api_summary">Utiliser la nouvelle API REST au lieu de XML-RPC avec quotas qui sera requise à partir de 2024</string>
     <string name="subtitles_credentials_title">Identifiants opensubtitles</string>
     <string name="subtitles_credentials_summary">Entrez vos identifiants opensubtitles afin de télécharger des sous-titres</string>
     <string name="preferences_languages">Langues de téléchargement des sous-titres</string>
@@ -575,6 +573,8 @@
     <string name="enable_adult_scrap_title">Descriptions des vidéos pour adultes</string>
     <string name="enable_adult_scrap_summary">Activer la récupération des informations des vidéos pour adultes (désactivé par défaut)</string>
     <string name="locale">Langue du système</string>
+    <string name="scraper_language_title">Langage des descriptions des vidéos</string>
+    <string name="scraper_language_summary">Choisissez la langue des descriptions vidéo téléchargées</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="abort">Interrompre</string>

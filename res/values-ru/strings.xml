@@ -553,8 +553,6 @@
     <string name="category_languages">Субтитры</string>
     <string name="subtitles_hide_default">Скрыть субтитры по умолчанию</string>
     <string name="subtitles_hide_default_summary">Отметьте, если желаете скрывать субтитры по умолчанию</string>
-    <string name="subtitles_use_rest_api">Использовать новый OpenSubtitles API</string>
-    <string name="subtitles_use_rest_api_summary">Использовать новый REST-API, который будет принудительно запущен с 2024 г., вместо XML-RPC с квотами</string>
     <string name="subtitles_credentials_title">Учётные данные Opensubtitles</string>
     <string name="subtitles_credentials_summary">Предоставьте учетные данные Opensubtitles в настройках, чтобы иметь возможность загружать субтитры</string>
     <string name="preferences_languages">Язык загружаемых субтитров</string>

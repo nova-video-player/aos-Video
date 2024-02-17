@@ -543,8 +543,6 @@
     <string name="category_languages">Feliratok</string>
     <string name="subtitles_hide_default">Feliratok elrejtése alapértelmezetten</string>
     <string name="subtitles_hide_default_summary">Jelőlje be, ha alapértelmezetten szeretné elrejteni a feliratokat</string>
-    <string name="subtitles_use_rest_api">Használja az új OpenSubtitle API-t</string>
-    <string name="subtitles_use_rest_api_summary">Az új REST-API használata az XML-RPC helyett a 2024 elején bevezetendő kvótáknál</string>
     <string name="subtitles_credentials_title">OpenSubtitles bejelentkezési adatok</string>
     <string name="subtitles_credentials_summary">Adja meg az OpenSubtitles bejelentkezési adatait feliratok letöltéséhez</string>
     <string name="preferences_languages">Letöltött feliratok nyelve</string>

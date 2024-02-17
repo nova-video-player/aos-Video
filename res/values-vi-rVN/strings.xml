@@ -538,8 +538,6 @@
     <string name="category_languages">Phụ đề</string>
     <string name="subtitles_hide_default">Ẩn phụ đề theo mặc định</string>
     <string name="subtitles_hide_default_summary">Chọn nếu bạn muốn ẩn phụ đề theo mặc định</string>
-    <string name="subtitles_use_rest_api">Sử dụng API OpenSubtitles mới</string>
-    <string name="subtitles_use_rest_api_summary">Sử dụng REST-API mới thay vì XML-RPC với hạn ngạch sẽ được thực thi từ năm 2024</string>
     <string name="subtitles_credentials_title">Thông tin xác thực OpenSubtitles</string>
     <string name="subtitles_credentials_summary">Cung cấp thông tin xác thực opensubtitles của bạn để có thể tải xuống phụ đề</string>
     <string name="preferences_languages">Ngôn ngữ tải xuống phụ đề</string>

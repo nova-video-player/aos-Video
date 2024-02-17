@@ -543,8 +543,6 @@
     <string name="category_languages">Subtítulos</string>
     <string name="subtitles_hide_default">Ocultar subtítulos por defecto</string>
     <string name="subtitles_hide_default_summary">Marcar si desea ocultar los subtítulos por defecto</string>
-    <string name="subtitles_use_rest_api">Usar la nueva API de OpenSubtitles</string>
-    <string name="subtitles_use_rest_api_summary">Usar la nueva REST-API en lugar de XML-RPC con cuotas que se aplicarán a principios de 2024</string>
     <string name="subtitles_credentials_title">Credenciales de Opensubtitles</string>
     <string name="subtitles_credentials_summary">Proporcione sus credenciales de opensubtitles para poder descargar subtítulos</string>
     <string name="preferences_languages">Idiomas de descarga de subtítulos</string>

@@ -540,8 +540,6 @@
     <string name="category_languages">Untertitel</string>
     <string name="subtitles_hide_default">Untertitel standardmäßig ausblenden</string>
     <string name="subtitles_hide_default_summary">Überprüfen Sie, ob Sie Untertitel standardmäßig ausblenden möchten</string>
-    <string name="subtitles_use_rest_api">Neue OpenSubtitles-API verwenden</string>
-    <string name="subtitles_use_rest_api_summary">Neue REST-API anstelle von XML-RPC mit Quota verwenden, ab 2024 Pflicht</string>
     <string name="subtitles_credentials_title">Anmeldeinformationen für opensubtitles.org</string>
     <string name="subtitles_credentials_summary">Geben Sie Ihre Zugangsdaten für opensubtitles.org in den Einstellungen an, um Untertitel herunterladen zu können</string>
     <string name="preferences_languages">Untertitel Sprachen</string>
