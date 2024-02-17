@@ -628,6 +628,9 @@
     <string name="enable_adult_scrap_summary">Enable adult video information retrieval (disabled by default)</string>
     <string name="locale">System language</string>
 
+    <string name="scraper_language_title">Video description language</string>
+    <string name="scraper_language_summary">Set language to be used for video descriptions download</string>
+
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="abort">Abort</string>

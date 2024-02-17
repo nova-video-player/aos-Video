@@ -459,15 +459,16 @@
             android:defaultValue="true" android:title="@string/enable_auto_scrap"
             android:key="enable_auto_scrap_key"
             app:iconSpaceReserved="false"/>
-        <PreferenceScreen android:title="@string/tv_scraper"
-            android:key="tv_shows"
-            app:iconSpaceReserved="false">
-        </PreferenceScreen>
-        <PreferenceScreen android:title="@string/movie_scraper"
-            android:key="movies"
-            app:iconSpaceReserved="false">
 
-        </PreferenceScreen>
+        <ListPreference
+            android:dialogTitle="@string/scraper_language_title"
+            android:entries="@array/entries_list_preference"
+            android:entryValues="@array/entryvalues_list_preference"
+            android:key="favScraperLang"
+            android:summary="@string/scraper_language_summary"
+            android:title="@string/scraper_language_title"
+            app:iconSpaceReserved="false"/>
+
         <CheckBoxPreference
             android:defaultValue="@bool/network_nfo_parse_default"
             android:key="@string/network_nfo_parse_prefkey"
