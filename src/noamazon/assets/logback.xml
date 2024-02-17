@@ -98,6 +98,7 @@
 
     <!-- Debug scraper -->
     <logger name="com.archos.mediascraper.themoviedb3" level="INFO"/>
+    <logger name="com.archos.mediascraper.themoviedb3.MyTmdb" level="INFO"/>
     <logger name="com.archos.mediascraper.preprocess" level="INFO"/>
     <logger name="com.archos.mediascraper.xml" level="INFO"/>
     <logger name="com.archos.mediascraper.NfoWriter" level="INFO"/>
