@@ -44,7 +44,6 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.USB_PERMISSION" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-feature android:name="android.hardware.wifi" android:required="false" />
