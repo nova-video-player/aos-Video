@@ -30,7 +30,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.util.Pair;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -59,7 +58,6 @@ import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.UiChoiceDialog;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
-import com.archos.mediacenter.utils.ISO639codes;
 import com.archos.mediacenter.video.leanback.MainFragment;
 import com.archos.mediacenter.video.leanback.animes.AllAnimesGridFragment;
 import com.archos.mediacenter.video.leanback.animes.AnimesSortOrderEntry;
@@ -81,11 +79,11 @@ import com.archos.mediascraper.settings.ScraperPreferences;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.TreeMap;
 
 import static com.archos.filecorelibrary.FileUtils.backupDatabase;
 
@@ -669,7 +667,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mSubtitlesFavLangPreferences.setEnabled(!doHide);
         mSubtitlesDownloadLanguagePreferences = (MultiSelectListPreference) findPreference("languages_list");
 
-        buildLanguageList();
+        buildOpensubtitlesLanguageList();
         mSubtitlesDownloadLanguagePreferences = (MultiSelectListPreference) findPreference("languages_list");
         mSubtitlesDownloadLanguagePreferences.setEntries(languageListNewEntries);
         mSubtitlesDownloadLanguagePreferences.setEntryValues(languageListNewEntryValues);
@@ -914,97 +912,57 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mSubtitlesDownloadLanguagePreferences.setValues(new HashSet<>(Collections.singleton(getDefaultLanguage(shouldUseOpenSubtitlesRestAPi))));
     }
 
-    private void buildLanguageList() {
-        String[] languageCodeArray;
-        languageCodeArray = SUB_LANGUAGES_REST_API.split("\\|"); // contains 2 letters language codes
+    private void buildOpensubtitlesLanguageList() {
+        String[] languageCodeArray = SUB_LANGUAGES_REST_API.split("\\|"); // contains 2 letters language codes
 
-        // create empty mutable arrays
         languageListEntries = new ArrayList<>();
         languageListEntryValues = new ArrayList<>();
-        for (int i = 0; i < languageCodeArray.length; i++) {
-            languageListEntries.add("");
-            languageListEntryValues.add("");
-        }
 
         Locale defaultLocale = Locale.getDefault();
-        String defaultLocaleISO3Language = defaultLocale.getISO3Language();
         String defaultLocaleLanguage = defaultLocale.getDisplayLanguage();
         Locale englishLocale = new Locale("en");
-        String englishLocaleISO3Language = englishLocale.getISO3Language();
         String englishLocaleLanguage = englishLocale.getDisplayLanguage();
 
-        int imin = 0;
-        // default system language first
-        languageListEntries.set(0, defaultLocaleLanguage);
-        languageListEntryValues.set(0, defaultLocale.getLanguage());
+        // Add default system language first
+        languageListEntries.add(defaultLocaleLanguage);
+        languageListEntryValues.add(defaultLocale.getLanguage());
 
-        imin++;
-        // if default system language is not english set it second
-        if (! defaultLocaleLanguage.equals(englishLocaleLanguage)) {
-            languageListEntries.set(1, englishLocaleLanguage);
-            languageListEntryValues.set(1, englishLocale.getLanguage());
-
-            imin++;
+        // If default system language is not English, add English second
+        if (!defaultLocaleLanguage.equalsIgnoreCase(englishLocaleLanguage)) {
+            languageListEntries.add(englishLocaleLanguage);
+            languageListEntryValues.add(englishLocale.getLanguage());
         }
 
-        String currentLocaleLanguage;
-        String currentLocaleISO3Language;
-        int index = 0;
+        // Use a TreeMap to keep the languages sorted as they are added
+        TreeMap<String, String> sortedLanguages = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
         for (String s : languageCodeArray) {
-            currentLocaleLanguage = com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.getLanguageNameFor2LetterCode(getActivity(), s);
-            // opensubtitles REST-API wants 2 letters code ISO639-1 with zh-cn|pt-pt|pt-br|zh-tw exceptions
-            currentLocaleISO3Language = s;
-            log.debug("onCreatePreferences: code {} -> currentLocaleLanguage={}, currentLocaleISO3Language={}", s, currentLocaleLanguage, currentLocaleISO3Language);
-            if (currentLocaleLanguage.equals(defaultLocaleLanguage) || currentLocaleLanguage.equals(englishLocaleLanguage))
+            String currentLocaleLanguage = com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.getLanguageNameFor2LetterCode(getActivity(), s);
+            log.debug("onCreatePreferences: code {} -> currentLocaleLanguage={}", s, currentLocaleLanguage);
+            if (currentLocaleLanguage.equalsIgnoreCase(defaultLocaleLanguage) || currentLocaleLanguage.equalsIgnoreCase(englishLocaleLanguage))
                 continue;
-            languageListEntries.set(index + imin, currentLocaleLanguage);
-            languageListEntryValues.set(index + imin, currentLocaleISO3Language);
-            index++;
+            sortedLanguages.put(currentLocaleLanguage, s);
         }
 
-        // Sort alphabetically all languageListEntries starting from imin index to the end
-        // and apply same sorting to languageListEntryValues
-        List<Pair<String, String>> pairs = new ArrayList<>();
-        for (int i = imin; i < languageListEntries.size(); i++) {
-            pairs.add(new Pair<>(languageListEntries.get(i), languageListEntryValues.get(i)));
-        }
+        // Add the sorted languages to the languageListEntries and languageListEntryValues
+        languageListEntries.addAll(sortedLanguages.keySet());
+        languageListEntryValues.addAll(sortedLanguages.values());
 
-        // Sort the pairs based on the language name
-        Collections.sort(pairs, new Comparator<Pair<String, String>>() {
-            @Override
-            public int compare(Pair<String, String> o1, Pair<String, String> o2) {
-                return o1.first.compareToIgnoreCase(o2.first);
-            }
-        });
+        // Convert the lists to arrays
+        languageListNewEntries = languageListEntries.toArray(new CharSequence[0]);
+        languageListNewEntryValues = languageListEntryValues.toArray(new CharSequence[0]);
 
-        // Update the languageListEntries and languageListEntryValues with the sorted pairs
-        for (int i = 0; i < pairs.size(); i++) {
-            Pair<String, String> pair = pairs.get(i);
-            languageListEntries.set(i + imin, pair.first);
-            languageListEntryValues.set(i + imin, pair.second);
-        }
-
-        languageListNewEntries = new CharSequence[languageListEntries.size()];
-        languageListNewEntryValues = new CharSequence[languageListEntryValues.size()];
-
-        languageListEntries.toArray(languageListNewEntries);
-        languageListEntryValues.toArray(languageListNewEntryValues);
-
+        // Initialize indices to -1 to indicate not found
         systemLanguageIndex = -1;
-        final String currentFavoriteLang;
-        final String currentAudioFavoriteLang;
-        currentFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getLanguage());
-        currentAudioFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_AUDIO_TRACK_FAV_LANG, Locale.getDefault().getLanguage());
-
+        systemAudioLanguageIndex = -1;
+        final String currentFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getLanguage());
+        final String currentAudioFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_AUDIO_TRACK_FAV_LANG, Locale.getDefault().getLanguage());
         log.debug("onCreatePreferences: currentSubFavoriteLang={}, currentAudioFavoriteLang={}", currentFavoriteLang, currentAudioFavoriteLang);
         int i = 0;
-        for(CharSequence value : languageListNewEntryValues){
-            if(value.toString().equalsIgnoreCase(currentFavoriteLang)) {
-                systemLanguageIndex = i;
-            }
-            if(value.toString().equalsIgnoreCase(currentAudioFavoriteLang)) {
-                systemAudioLanguageIndex = i;
-            }
+        for (CharSequence value : languageListNewEntryValues){
+            if (value.toString().equalsIgnoreCase(currentFavoriteLang)) systemLanguageIndex = i;
+            if (value.toString().equalsIgnoreCase(currentAudioFavoriteLang)) systemAudioLanguageIndex = i;
+            if (systemLanguageIndex != -1 && systemAudioLanguageIndex != -1) break;
             i++;
         }
     }
