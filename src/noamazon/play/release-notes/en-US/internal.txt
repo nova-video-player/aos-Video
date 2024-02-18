@@ -1,3 +1,4 @@
+- UPnP network shares: use jupnp Java library instead of EOL cling
 - Scrape shows and movies without air date reported by TMDB
 - Fix preferred audio language not applied
 - Fix cannot download subs when logged in on opensubtitles.com
