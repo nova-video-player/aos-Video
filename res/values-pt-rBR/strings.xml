@@ -568,6 +568,8 @@
     <string name="enable_adult_scrap_title">Obter informações de vídeos adultos</string>
     <string name="enable_adult_scrap_summary">Habilitar recuperação de informações de vídeo adultos (desativado por padrão)</string>
     <string name="locale">Idioma do sistema</string>
+    <string name="scraper_language_title">Linguagem da descrição do vídeo</string>
+    <string name="scraper_language_summary">Configure a linguagem para downloads das descrições de vídeo</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
     <string name="abort">Abortar</string>
