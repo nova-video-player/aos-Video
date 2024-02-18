@@ -573,6 +573,8 @@
     <string name="enable_adult_scrap_title">Indexar vídeo para adultos</string>
     <string name="enable_adult_scrap_summary">Activar el indexado de vídeo para adultos (deshabilitado por defecto)</string>
     <string name="locale">Idioma del sistema</string>
+    <string name="scraper_language_title">Idioma de descripción de vídeo</string>
+    <string name="scraper_language_summary">Establece el idioma que se utilizará para descargar las descripciones de vídeo</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="abort">Anular</string>
