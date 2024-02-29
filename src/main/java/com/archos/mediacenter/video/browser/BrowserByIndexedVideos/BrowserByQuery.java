@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.FullTextSearch;
 import com.archos.mediacenter.video.browser.loader.SearchVideoLoader;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
@@ -77,13 +78,12 @@ public class BrowserByQuery extends CursorBrowserByVideo {
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args2) {
+        android.util.Log.e("PHH", "Creating SearchVideoLoader from BrowserByQuery");
         String filterString = "";
         Bundle args = getArguments();
         if (args != null) {
             filterString = args.getString("filter_string", "");
         }
-        SearchVideoLoader loader = new SearchVideoLoader(getContext());
-        loader.setQuery(filterString);
-        return loader.getV4CursorLoader(true, mPreferences.getBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, false));
+        return FullTextSearch.INSTANCE.query(filterString);
     }
 }

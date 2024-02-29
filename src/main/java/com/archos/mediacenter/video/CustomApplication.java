@@ -55,7 +55,7 @@ import com.archos.mediacenter.video.browser.BootupRecommandationService;
 import com.archos.mediacenter.video.picasso.SmbRequestHandler;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
 import com.archos.mediacenter.video.utils.OpenSubtitlesApiHelper;
-import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
+import com.archos.mediacenter.video.browser.FullTextSearch;
 import com.archos.medialib.LibAvos;
 import com.archos.mediaprovider.video.NetworkAutoRefresh;
 import com.archos.mediaprovider.video.VideoStoreImportReceiver;
@@ -64,7 +64,6 @@ import com.squareup.picasso.Picasso;
 
 import httpimage.FileSystemPersistence;
 import httpimage.HttpImageManager;
-import io.sentry.Sentry;
 import io.sentry.SentryLevel;
 import io.sentry.android.core.SentryAndroid;
 
@@ -334,6 +333,7 @@ public class CustomApplication extends Application {
         updateVersionState(this);
         if (openSubtitlesApiHelper == null) openSubtitlesApiHelper = OpenSubtitlesApiHelper.getInstance();
         //makeUseOpenSubtitlesRestApi(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(VideoPreferencesCommon.KEY_OPENSUBTITILES_REST_API, true));
+        FullTextSearch.INSTANCE.init(this);
     }
 
     private void launchSambaDiscovery() {

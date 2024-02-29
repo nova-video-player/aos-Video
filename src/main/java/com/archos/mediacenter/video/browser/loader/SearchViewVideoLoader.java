@@ -48,6 +48,7 @@ public class SearchViewVideoLoader extends SearchVideoLoader {
 
     public SearchViewVideoLoader(Context context) {
         super(context);
+        android.util.Log.e("PHH", "Creating SearchVideoLoader from SearchViewVideoLoader");
     }
 
 

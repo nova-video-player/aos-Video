@@ -98,6 +98,7 @@ public class VideoSearchFragment extends SearchSupportFragment implements Search
             setTitle(getString(R.string.non_scraped_videos));
             mSearchLoader = new SearchNonScrapedVideoLoader(getActivity());
         } else {
+            android.util.Log.e("PHH", "Creating SearchVideoLoader from VideoSearchFragment");
             setTitle(getString(R.string.videos));
             mSearchLoader = new SearchVideoLoader(getActivity());
         }

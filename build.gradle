@@ -4,8 +4,11 @@ buildscript {
         mavenCentral()
         maven { url 'https://jitpack.io' }
     }
+        ext.kotlin_version = '1.9.22'
     dependencies {
         classpath 'com.android.tools.build:gradle:8.2.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
         //classpath 'app.brant:amazonappstorepublisher:0.1.0'
         //classpath 'com.github.BrantApps.gradle-amazon-app-store-publisher:amazonappstorepublisher:master-SNAPSHOT'
     }
@@ -19,6 +22,7 @@ plugins {
 
 apply {
     plugin("com.android.application")
+    plugin("kotlin-android")
 }
 
 if (hasProperty('bugReport')) {
@@ -322,6 +326,7 @@ dependencies {
     implementation 'com.github.tony19:logback-android:3.0.0'
     implementation 'io.sentry:sentry-android:7.0.0'
     implementation 'io.sentry:sentry:7.0.0'
+    implementation 'com.github.requery:sqlite-android:3.45.0'
 }
 
 // to avoid duplicate classes
