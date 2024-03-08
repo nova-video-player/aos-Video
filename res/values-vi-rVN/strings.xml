@@ -568,7 +568,8 @@
     <string name="enable_adult_scrap_title">Đang thu thập thông tin video người lớn</string>
     <string name="enable_adult_scrap_summary">Bật truy xuất thông tin video người lớn (bị tắt theo mặc định)</string>
     <string name="locale">Ngôn ngữ hệ thống</string>
-    <string name="scraper_language_title">Ngôn ngữ mô tả video</string>
+    <string name="scraper_language_title">Ngôn ngữ mô tả cuốn băng</string>
+    <string name="scraper_language_summary">Đặt ngôn ngữ được sử dụng để tải xuống mô tả cuốn băng</string>
     <string name="yes">Đồng ý</string>
     <string name="no">Không</string>
     <string name="abort">Hủy bỏ</string>

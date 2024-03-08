@@ -550,6 +550,8 @@
     <string name="enable_adult_scrap_title">Získávání informací pro videa pro dospělé</string>
     <string name="enable_adult_scrap_summary">Povolit načítání informací pro videa pro dospělé (ve výchozím nastavení vypnuto)</string>
     <string name="locale">Jazyk systému</string>
+    <string name="scraper_language_title">Jazyk popisu videa</string>
+    <string name="scraper_language_summary">Nastavte jazyk použitý při stažení popisu videa</string>
     <string name="yes">Ano</string>
     <string name="no">Ne</string>
     <string name="abort">Přerušit</string>

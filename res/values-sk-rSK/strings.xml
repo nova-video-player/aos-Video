@@ -583,6 +583,8 @@
     <string name="enable_adult_scrap_title">Získavanie informácii o videách pre dospelých</string>
     <string name="enable_adult_scrap_summary">Povoliť vyhľadávanie informácií o videách pre dospelých (predvolene vypnuté)</string>
     <string name="locale">Jazyk systému</string>
+    <string name="scraper_language_title">Jazyk popisu videa</string>
+    <string name="scraper_language_summary">Nastavenie jazyka, ktorý sa má používať pri preberaní popisov videí</string>
     <string name="yes">Áno</string>
     <string name="no">Nie</string>
     <string name="abort">Prerušiť</string>

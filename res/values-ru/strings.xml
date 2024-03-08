@@ -583,6 +583,8 @@
     <string name="enable_adult_scrap_title">Распознавание видео для взрослых</string>
     <string name="enable_adult_scrap_summary">Включить поиск информации о фильмах для взрослых (по умолчанию: выкл)</string>
     <string name="locale">Язык системы</string>
+    <string name="scraper_language_title">Язык описания видео</string>
+    <string name="scraper_language_summary">Установить язык используемый для скачивания описаний видео</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="abort">Прервать</string>

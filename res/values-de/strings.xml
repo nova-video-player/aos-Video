@@ -568,6 +568,8 @@
     <string name="enable_adult_scrap_title">Erwachsenen-Video Scraping</string>
     <string name="enable_adult_scrap_summary">Aktiviere das Abrufen von Erwachsenen-Video-Informationen (standardmäßig deaktiviert)</string>
     <string name="locale">System Sprache</string>
+    <string name="scraper_language_title">Sprache für Videobeschreibung</string>
+    <string name="scraper_language_summary">Sprache für Videobeschreibungen die heruntergeladen werden</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="abort">Abbrechen</string>

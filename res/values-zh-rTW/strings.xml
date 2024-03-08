@@ -568,6 +568,8 @@
     <string name="enable_adult_scrap_title">抓取成人影片的資料</string>
     <string name="enable_adult_scrap_summary">開啟成人影片的資訊擷取 (預設停用)</string>
     <string name="locale">系統語言</string>
+    <string name="scraper_language_title">影片說明語言</string>
+    <string name="scraper_language_summary">設定下載影片說明的語言</string>
     <string name="yes">是</string>
     <string name="no">否</string>
     <string name="abort">退出</string>
