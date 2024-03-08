@@ -324,7 +324,9 @@
     <string name="set_audio_speed_to">音频速度 %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
+    <string name="subs_HI">听力障碍</string>
     <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <string name="subs_SDH">适合聋哑和听障人士的字幕</string>
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">巴西语</string>
     <string name="s_chinese">中文</string>
@@ -412,6 +414,8 @@
     <string name="dialog_subloader_credentials_empty">你必须指定一个有效的用户名和密码！</string>
     <string name="toast_subloader_credentials_empty">在设置中提供你的 opensubtitles 用户凭据以下载字幕</string>
     <string name="toast_subloader_login_failed">Opensubtitles 用户凭据不正确或服务不可用</string>
+    <string name="toast_subloader_quota_exceeded">超出 OpenSubtitles 下载字幕的配额</string>
+    <string name="opensubtitles_quota_reset_time_remaining">字幕配额将在%s后重置</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">字幕设置</string>
     <string name="subtitle_sample_text">“示例”</string>
@@ -436,6 +440,7 @@
     <string name="exit">退出</string>
     <!-- torrent -->
     <string name="error">发生错误</string>
+    <string name="error_protocol_not_supported">错误：协议不支持</string>
     <string name="error_loading_torrent">加载种子出错</string>
     <string name="error_downloading_not_enough_space">下载种子时出错：空间不足</string>
     <string name="loading_torrent">正在载入种子文件……</string>
@@ -539,6 +544,8 @@
     <string name="summary_list_preference_primary">选择下载字幕的语言</string>
     <string name="favSubLang_title">字幕阅读语言</string>
     <string name="favSubLang_summary">选择您最喜欢的字幕阅读语言</string>
+    <string name="favAudioLang_title">音频首选语言</string>
+    <string name="favAudioLang_summary">选择您喜欢的音轨语言</string>
     <string name="ui_mode_title">用户界面模式</string>
     <string name="ui_mode_summary">在电视、平板电脑/手机用户界面之间选择</string>
     <string name="preferences_video_about">关于</string>
@@ -561,6 +568,8 @@
     <string name="enable_adult_scrap_title">成人视频抓取</string>
     <string name="enable_adult_scrap_summary">启用成人视频信息检索 (默认禁用)</string>
     <string name="locale">系统语言</string>
+    <string name="scraper_language_title">视频描述语言</string>
+    <string name="scraper_language_summary">设置视频描述的下载语言</string>
     <string name="yes">是</string>
     <string name="no">否</string>
     <string name="abort">中止</string>
