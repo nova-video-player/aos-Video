@@ -586,6 +586,9 @@
     <string name="preference_tv_3d_automatic_switch_summary">Use this feature only if your 3D TV supports it</string>
     <string name="preference_tv_refreshrate_switch">Enable automatic refresh rate switch</string>
     <string name="preference_tv_refreshrate_switch_summary">Remove judder effect by adapting best screen refresh rate to video frame rate (device support may vary)</string>
+    <string name="preferences_tv_refreshrate_switch_disabled">Disabled</string>
+    <string name="preferences_tv_refreshrate_switch_mode_selection">Display mode selection matching video fps</string>
+    <string name="preferences_tv_refreshrate_switch_match_frame_rate">Android 12+ frame rate matching feature</string>
     <string name="preference_remove_dolby_vision">Disable dolby vision</string>
     <string name="preference_remove_dolby_vision_summary">Use standard video codecs over dolby vision ones</string>
     <string name="preference_cutout_short_edges">Fullscreen video with display cutouts</string>

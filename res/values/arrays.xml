@@ -28,6 +28,18 @@
         <item>@string/preferences_force_audio_passthrough_enable2</item>
     </string-array>
 
+    <string-array name="pref_tv_refreshrate_entries" translatable="false">
+        <item>@string/preferences_tv_refreshrate_switch_disabled</item>
+        <item>@string/preferences_tv_refreshrate_switch_mode_selection</item>
+        <item>@string/preferences_tv_refreshrate_switch_match_frame_rate</item>
+    </string-array>
+
+    <string-array name="pref_tv_refreshrate_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
     <string-array name="pref_passthrough_mode_values">
         <item>0</item>
         <item>1</item>
