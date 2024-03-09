@@ -126,7 +126,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_STREAM_BUFFER_SIZE = "stream_buffer_size";
     public static final String KEY_STREAM_MAX_IFRAME_SIZE = "stream_max_iframe_size";
     public static final String KEY_PLAYBACK_SPEED = "playback_speed";
-    public static final String KEY_ACTIVATE_REFRESHRATE_SWITCH = "enable_tv_refreshrate_switch";
+    public static final String KEY_ACTIVATE_REFRESHRATE_SWITCH = "enable_tv_refreshrate_switch_mode";
     public static final String KEY_ACTIVATE_3D_SWITCH = "activate_tv_switch";
     public static final String KEY_ADULT_SCRAPE = "enable_adult_scrap_key";
 
@@ -214,7 +214,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mPlaybackSpeed = null;
     private CheckBoxPreference mDisableDownmix = null;
     private CheckBoxPreference mEnableDownmixATV = null;
-    private CheckBoxPreference mActivateRefreshrateTVSwitch = null;
+    private ListPreference mActivateRefreshrateTVSwitch = null;
     private CheckBoxPreference mEnableCutoutModeShortEdge = null;
     private CheckBoxPreference mActivate3DTVSwitch = null;
     private PreferenceCategory mAdvancedPreferences = null;
@@ -455,7 +455,22 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mEnableDownmixATV = (CheckBoxPreference) findPreference("enable_downmix_androidtv");
         mActivate3DTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_3D_SWITCH);
         mEnableCutoutModeShortEdge = (CheckBoxPreference) findPreference("enable_cutout_mode_short_edges");
-        mActivateRefreshrateTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_REFRESHRATE_SWITCH);
+
+        mActivateRefreshrateTVSwitch = (ListPreference) findPreference(KEY_ACTIVATE_REFRESHRATE_SWITCH);
+        // last option "match frame rate" is only available for android 12+, remove it on old android versions
+        if (Build.VERSION.SDK_INT < 31) {
+            CharSequence[] entries = mActivateRefreshrateTVSwitch.getEntries();
+            CharSequence[] entryValues = mActivateRefreshrateTVSwitch.getEntryValues();
+            CharSequence[] newEntries = new CharSequence[entries.length - 1];
+            CharSequence[] newEntryValues = new CharSequence[entryValues.length - 1];
+            for (int i = 0; i < entries.length - 1; i++) {
+                newEntries[i] = entries[i];
+                newEntryValues[i] = entryValues[i];
+            }
+            mActivateRefreshrateTVSwitch.setEntries(newEntries);
+            mActivateRefreshrateTVSwitch.setEntryValues(newEntryValues);
+        }
+
         mAdultScrape = (CheckBoxPreference) findPreference(KEY_ADULT_SCRAPE);
         mTraktSyncProgressPreference = (CheckBoxPreference) findPreference(KEY_TRAKT_SYNC_PROGRESS);
         mAdvancedPreferences = (PreferenceCategory) findPreference(KEY_ADVANCED_VIDEO_CATEGORY);
