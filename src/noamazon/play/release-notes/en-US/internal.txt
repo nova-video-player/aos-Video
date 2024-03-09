@@ -1,3 +1,5 @@
+- Add Android 12 frame rate matching feature support
+- Add missing season actors to tv show episode cast
 - UPnP network shares: use jupnp Java library instead of EOL cling
 - Scrape shows and movies without air date reported by TMDB
 - Fix preferred audio language not applied
