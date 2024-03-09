@@ -115,6 +115,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     public static final boolean AUDIO_SPEED_ON_THE_FLY = true;
 
+    public static boolean FOUND_PREFERRED_SUB_TRACK = false;
     public static final int RESUME_NO = 0;
     public static final int RESUME_FROM_LAST_POS = 1;
     public static final int RESUME_FROM_BOOKMARK = 2;
@@ -169,7 +170,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private int mLastPosition = -1;
     private boolean mIsChangingSurface;
     private int mResume;
-    private boolean firstTimeCalled;
+    private boolean firstTimeCalled = true;
     private boolean mHideSubtitles = false;
     private int mNewSubtitleTrack;
     private boolean mAudioSubtitleNeedUpdate;
@@ -494,6 +495,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if(mIndexHelper!=null&&mVideoInfo==null)
             requestVideoDb();
         else if(mVideoInfo!=null){
+            log.debug("onStart: mVideoInfo != null, call mPlayerFrontend.onVideoDb");
             mPlayerFrontend.onVideoDb(mVideoInfo, null);
         }
         if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
@@ -1050,6 +1052,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if(mDestroyed) //will perhaps fix some weird crashes on playstore console
             return;
         if(mPlayerFrontend!=null) {
+            log.debug("onVideoDb: mPlayerFrontend.onVideoDb");
             mPlayerFrontend.onVideoDb(info, remoteInfo);
         }
     }
@@ -1268,6 +1271,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     supported = false;
             }
         }
+
         if (mVideoInfo.audioTrack == -1)
             mVideoInfo.audioTrack = newAudioTrack;
 
@@ -1298,7 +1302,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         log.debug("onSubtitleMetadataUpdated: nbTrack=" + nbTrack + " newSubtitleTrack=" + newSubtitleTrack + " mVideoInfo.subtitleTrack=" + mVideoInfo.subtitleTrack + " mHideSubtitles=" + mHideSubtitles + " mSubsFavoriteLanguage=" + mSubsFavoriteLanguage + " mVideoInfo.subtitleTrack=" + mVideoInfo.subtitleTrack);
         if (nbTrack != 0) {
             int noneTrack = nbTrack; // here it tracks mVideoInfo.subtitleTrack that are the tracks of the video (not the none from menu)
-            if (mVideoInfo.subtitleTrack == -1) { // means no track has been selected before
+            // do the scan for preferred lang at second call since onSubtitleMetadataUpdated is called twice and the first time it does not get all subtracks when there are a Subs/ dir with a lot of subs
+            if ((mVideoInfo.subtitleTrack == -1 || ! FOUND_PREFERRED_SUB_TRACK) && ! firstTimeCalled) { // means no track has been selected before or preferred sub track found
                 if (mHideSubtitles) {
                     log.debug("onSubtitleMetadataUpdated: hide subs -> selected none track");
                     mVideoInfo.subtitleTrack = noneTrack;
@@ -1311,6 +1316,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                         if (locale.getDisplayLanguage().equalsIgnoreCase(findLanguageInString(vMetadata.getSubtitleTrack(i).name))
                                 && ! stringContainsForced(vMetadata.getSubtitleTrack(i).name)) {
                             log.debug("onSubtitleMetadataUpdated: selected default track: " + vMetadata.getSubtitleTrack(i).name + " matching locale language " + locale.getDisplayLanguage());
+                            FOUND_PREFERRED_SUB_TRACK = true;
                             mVideoInfo.subtitleTrack = i;
                             break;
                         }
@@ -1325,7 +1331,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 if (newSubtitleTrack != mVideoInfo.subtitleTrack &&
                         !mPlayer.setSubtitleTrack(mVideoInfo.subtitleTrack))
                     mVideoInfo.subtitleTrack = noneTrack;
-                log.debug("SubtitleDelay = "+String.valueOf(mVideoInfo.subtitleDelay));
+                log.debug("onSubtitleMetadataUpdated: subtitleDelay = "+String.valueOf(mVideoInfo.subtitleDelay));
                 mPlayer.setSubtitleDelay(mVideoInfo.subtitleDelay);
                 if (mVideoInfo.subtitleRatio >= 0) {
                     mPlayer.setSubtitleRatio(mVideoInfo.subtitleRatio);
@@ -1334,8 +1340,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if (mVideoInfo.subtitleTrack == noneTrack) { // if none track selected, player gets -1 track
                 mPlayer.setSubtitleTrack(-1);
             }
-
-            firstTimeCalled=false;
+            firstTimeCalled = false;
         } else
             firstTimeCalled = true;
         
