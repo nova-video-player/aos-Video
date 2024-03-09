@@ -536,6 +536,9 @@
     <string name="preference_tv_3d_automatic_switch_summary">Utiliser cette option si votre télé 3D supporte cette fonctionnalité\"</string>
     <string name="preference_tv_refreshrate_switch">Ajuster automatiquement le taux de rafraîchissement</string>
     <string name="preference_tv_refreshrate_switch_summary">Supprime les saccades d\'affichage en adaptant la fréquence de rafraîchissement écran au fps vidéo (la prise en charge dépend de l\'appareil)</string>
+    <string name="preferences_tv_refreshrate_switch_disabled">Désactivé</string>
+    <string name="preferences_tv_refreshrate_switch_mode_selection">Sélection du mode d\'affichage correspondant aux fps de la vidéo</string>
+    <string name="preferences_tv_refreshrate_switch_match_frame_rate">Fonctionnalité d\'Android 12+ d\'adaptation à la fréquence d\'images de la vidéo</string>
     <string name="preference_remove_dolby_vision">Désactiver dolby vision</string>
     <string name="preference_remove_dolby_vision_summary">Utilisez des codecs vidéo standards plutôt que dolby vision</string>
     <string name="preference_cutout_short_edges">Vidéo plein écran même en présence d\'encoche</string>
