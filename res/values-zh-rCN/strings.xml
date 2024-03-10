@@ -531,6 +531,9 @@
     <string name="preference_tv_3d_automatic_switch_summary">仅在您的 3D 电视支持的情况下使用此功能</string>
     <string name="preference_tv_refreshrate_switch">启用自动刷新率切换</string>
     <string name="preference_tv_refreshrate_switch_summary">通过匹配最佳屏幕刷新率与视频帧率去除抖动效果(可能受设备支持限制)</string>
+    <string name="preferences_tv_refreshrate_switch_disabled">禁用</string>
+    <string name="preferences_tv_refreshrate_switch_mode_selection">显示模式选择匹配视频fps</string>
+    <string name="preferences_tv_refreshrate_switch_match_frame_rate">Android 12+ 帧率匹配功能</string>
     <string name="preference_remove_dolby_vision">禁用杜比视界</string>
     <string name="preference_remove_dolby_vision_summary">使用标准视频编解码器而不是杜比视界</string>
     <string name="preference_cutout_short_edges">异形屏视频全屏</string>
