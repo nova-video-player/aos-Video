@@ -536,6 +536,9 @@
     <string name="preference_tv_3d_automatic_switch_summary">Utilice esta función sólo si su TV es compatible con la función 3D</string>
     <string name="preference_tv_refreshrate_switch">Activar el cambio de tasa de refresco automático</string>
     <string name="preference_tv_refreshrate_switch_summary">Elimina el efecto juddler adaptando la tasa de refresco de pantalla a la tasa de fotogramas de video (el soporte de esta característica puede variar según el dispositivo)</string>
+    <string name="preferences_tv_refreshrate_switch_disabled">Desactivado</string>
+    <string name="preferences_tv_refreshrate_switch_mode_selection">Mostrar modo de selección que coincide con fps de vídeo</string>
+    <string name="preferences_tv_refreshrate_switch_match_frame_rate">Función de coincidencia de ratio de fotogramas para Android 12 +</string>
     <string name="preference_remove_dolby_vision">Desactivar Dolby Vision</string>
     <string name="preference_remove_dolby_vision_summary">Usa códecs de vídeo estándar sobre los de Dolby Visión</string>
     <string name="preference_cutout_short_edges">Pantalla completa con recortes de pantalla</string>
