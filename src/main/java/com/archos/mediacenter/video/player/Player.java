@@ -1049,11 +1049,11 @@ public class Player implements IPlayerControl,
                     float wantedFps = (float) ((double) video.fpsRate / (double) video.fpsScale);
                     log.debug("CONFIG wantedFps=" + wantedFps);
 
-                    if (refreshRateSwitchMode == 2 && Build.VERSION.SDK_INT >= 31) {
+                    if (refreshRateSwitchMode == 2 && Build.VERSION.SDK_INT >= 31 && mSurfaceHolder != null) {
                         log.debug("CONFIG setting frame rate to " + wantedFps + " fps through setFrameRate Android 12+ API");
-                        Surface mySurface = mSurfaceHolder.getSurface();
-                        // Now you can use mySurface for setFrameRate or other operations
-                        mySurface.setFrameRate(wantedFps, Surface.FRAME_RATE_COMPATIBILITY_DEFAULT, 0);
+                        Surface videoSurface = mSurfaceHolder.getSurface();
+                        // Surface.CHANGE_FRAME_RATE_ALWAYS is needed to get the refresh rate switch
+                        videoSurface.setFrameRate(wantedFps, Surface.FRAME_RATE_COMPATIBILITY_FIXED_SOURCE, Surface.CHANGE_FRAME_RATE_ALWAYS);
                     } else {
                         if (Build.VERSION.SDK_INT >= 23) { // select display mode of highest refresh rate matching 0 modulo fps
                             Display.Mode[] supportedModes = d.getSupportedModes();
