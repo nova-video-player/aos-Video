@@ -513,6 +513,9 @@
     <string name="preference_tv_3d_automatic_switch_summary">Použijte tuto funkci pouze pokud vaše TV podporuje 3D\"</string>
     <string name="preference_tv_refreshrate_switch">Aktivovat automatické přepínání obnovovací frekvence</string>
     <string name="preference_tv_refreshrate_switch_summary">Odstranění efektu \"judder\" přizpůsobením obnovovací frekvence vůči snímkové frekvenci videa (podpora pro jednotlivá zařízení se může lišit)</string>
+    <string name="preferences_tv_refreshrate_switch_disabled">Vypnuto</string>
+    <string name="preferences_tv_refreshrate_switch_mode_selection">Zobrazit režim výběru přizpůsobení fps</string>
+    <string name="preferences_tv_refreshrate_switch_match_frame_rate">Android 12+ funkce přizpůsobení snímkové frekvence</string>
     <string name="preference_remove_dolby_vision">Zakázat dolby vision</string>
     <string name="preference_remove_dolby_vision_summary">Použít standardní video kodeky místo dolby vision</string>
     <string name="preference_cutout_short_edges">Celá obrazovka s výřezy displeje</string>

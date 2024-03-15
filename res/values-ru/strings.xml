@@ -546,6 +546,9 @@
     <string name="preference_tv_3d_automatic_switch_summary">Используйте эту функцию только если ваш 3D TV поддерживает ее</string>
     <string name="preference_tv_refreshrate_switch">Включить автоматическое переключение частоты обновления</string>
     <string name="preference_tv_refreshrate_switch_summary">Устранение подергивания изображения путём синхронизации частоты кадров экрана и файла (зависит от поддержки устройством)</string>
+    <string name="preferences_tv_refreshrate_switch_disabled">Отключено</string>
+    <string name="preferences_tv_refreshrate_switch_mode_selection">Выбор режима переключения частоты кадров</string>
+    <string name="preferences_tv_refreshrate_switch_match_frame_rate">Функция переключения частоты кадров на Android 12+</string>
     <string name="preference_remove_dolby_vision">Отключить Dolby Vision</string>
     <string name="preference_remove_dolby_vision_summary">Использовать стандартные видеокодеки поверх кодеков Dolby Vision</string>
     <string name="preference_cutout_short_edges">Полноэкранное видео на дисплее с вырезами</string>

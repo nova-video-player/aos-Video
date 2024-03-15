@@ -531,6 +531,9 @@
     <string name="preference_tv_3d_automatic_switch_summary">只有在您的 3D 電視支援的情況下使用此功能</string>
     <string name="preference_tv_refreshrate_switch">開啟自動重新整理頻率開關</string>
     <string name="preference_tv_refreshrate_switch_summary">藉由調適最佳重新整理頻率及影片播放速率來去除抖動效應 (部分裝置可能不支援)</string>
+    <string name="preferences_tv_refreshrate_switch_disabled">已停用</string>
+    <string name="preferences_tv_refreshrate_switch_mode_selection">顯示模式選擇匹配影片的每秒播放格數 (fps)</string>
+    <string name="preferences_tv_refreshrate_switch_match_frame_rate">Android 12+ 畫面更新率匹配功能</string>
     <string name="preference_remove_dolby_vision">關閉杜比視域</string>
     <string name="preference_remove_dolby_vision_summary">使用標準視訊編碼而不是杜比視域編碼</string>
     <string name="preference_cutout_short_edges">強制全螢幕</string>

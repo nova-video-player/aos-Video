@@ -546,6 +546,9 @@
     <string name="preference_tv_3d_automatic_switch_summary">Túto funkciu používajte len vtedy, ak ju váš 3D televízor podporuje</string>
     <string name="preference_tv_refreshrate_switch">Povolenie automatického prepínania obnovovacej frekvencie</string>
     <string name="preference_tv_refreshrate_switch_summary">Odstránenie efektu trhania prispôsobením najlepšej obnovovacej frekvencie obrazovky snímkovej frekvencii videa (podpora zariadenia sa môže líšiť)</string>
+    <string name="preferences_tv_refreshrate_switch_disabled">Vypnutý</string>
+    <string name="preferences_tv_refreshrate_switch_mode_selection">Výber režimu zobrazenia zodpovedajúci videu fps</string>
+    <string name="preferences_tv_refreshrate_switch_match_frame_rate">Funkcia prispôsobenia snímkovej frekvencie systému Android 12+</string>
     <string name="preference_remove_dolby_vision">Vypnutie funkcie Dolby Vision</string>
     <string name="preference_remove_dolby_vision_summary">Používanie štandardných video kodekov namiesto Dolby Vision</string>
     <string name="preference_cutout_short_edges">Video na celú obrazovku s výrezmi displeja</string>
