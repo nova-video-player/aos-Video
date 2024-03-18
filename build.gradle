@@ -21,8 +21,16 @@ apply {
     plugin("com.android.application")
 }
 
+import io.sentry.android.gradle.extensions.InstrumentationFeature
+
 if (hasProperty('bugReport')) {
     apply plugin: 'io.sentry.android.gradle'
+    sentry {
+        tracingInstrumentation {
+            enabled = true
+            features = EnumSet.allOf(InstrumentationFeature) - InstrumentationFeature.OKHTTP
+        }
+    }
 }
 
 def keystorePropertiesFile = rootProject.file("keystore.properties");
