@@ -98,12 +98,12 @@
         android:name=".CustomApplication"
         android:allowTaskReparenting="true"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/nova"
         android:label="@string/nova"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
         android:localeConfig="@xml/locales_config"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/nova_round"
         android:usesCleartextTraffic="true"
         android:networkSecurityConfig="@xml/network_security_config">
         <meta-data
@@ -122,10 +122,10 @@
         <activity
             android:name=".EntryActivity"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/nova"
             android:label="@string/nova"
             android:launchMode="singleTask"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:roundIcon="@mipmap/nova_round"
             android:taskAffinity="archos.task.video"
             android:theme="@style/ArchosThemeBlue" />
 
@@ -133,10 +133,10 @@
             android:name=".browser.MainActivity"
             android:banner="@drawable/androidtv_banner"
             android:configChanges="keyboard|keyboardHidden"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/nova"
             android:label="@string/nova"
             android:launchMode="singleTask"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:roundIcon="@mipmap/nova_round"
             android:taskAffinity="archos.task.video"
             android:theme="@style/ArchosThemeBlueNoActionBar"
             android:windowSoftInputMode="adjustPan">
@@ -164,9 +164,9 @@
 
         <activity-alias
             android:name=".browser.MainActivityStereo"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/nova"
             android:label="@string/nova"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:roundIcon="@mipmap/nova_round"
             android:targetActivity=".browser.MainActivity">
 
             <!-- Points to searchable meta data. -->
@@ -181,8 +181,8 @@
         <activity
             android:name=".browser.QueryBrowserActivityVideo"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:icon="@mipmap/nova"
+            android:roundIcon="@mipmap/nova_round"
             android:theme="@style/ArchosThemeBlue">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -218,11 +218,11 @@
             android:enabled="true"
             android:exported="true"
             android:finishOnTaskLaunch="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/nova"
             android:label="@string/nova"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:roundIcon="@mipmap/nova_round"
             android:supportsPictureInPicture="true"
             android:taskAffinity="archos.task.video"
             android:theme="@style/ArchosThemeBlueOverlay">
@@ -1037,10 +1037,10 @@
             android:configChanges="orientation|screenLayout|screenSize"
             android:excludeFromRecents="true"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/nova"
             android:label="@string/scraper_notification_title"
             android:launchMode="singleTask"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:roundIcon="@mipmap/nova_round"
             android:theme="@style/Theme.DialogMinWidth">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -1050,10 +1050,10 @@
             android:name=".utils.SubtitlesWizardActivity"
             android:excludeFromRecents="true"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/nova"
             android:label="@string/get_subtitles_on_drive"
             android:launchMode="singleTask"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:roundIcon="@mipmap/nova_round"
             android:theme="@style/ArchosThemeBlueTransparent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -1062,20 +1062,20 @@
         <activity
             android:name=".utils.credentialsmanager.CredentialsManagerPreferenceActivity"
             android:excludeFromRecents="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/nova"
             android:label="@string/samba_settings_title"
             android:launchMode="singleTask"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:roundIcon="@mipmap/nova_round"
             android:theme="@style/ArchosThemeBlue" />
         <activity
             android:name=".utils.VideoPreferencesActivity"
             android:configChanges="orientation|screenLayout"
             android:excludeFromRecents="true"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/nova"
             android:label="@string/preferences"
             android:launchMode="singleTop"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:roundIcon="@mipmap/nova_round"
             android:theme="@style/ArchosThemeBlue">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -1086,10 +1086,10 @@
             android:configChanges="orientation|screenLayout"
             android:excludeFromRecents="true"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/nova"
             android:label="@string/preferences_video_licenses"
             android:launchMode="singleTop"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:roundIcon="@mipmap/nova_round"
             android:theme="@style/ArchosThemeBlue">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -1098,9 +1098,9 @@
         <activity
             android:name=".browser.VideoPicker"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/nova"
             android:label="@string/video_picker_title"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:roundIcon="@mipmap/nova_round"
             android:theme="@style/ArchosThemeBlue">
             <!-- Someone asks to get content of any of the video types we support. -->
             <intent-filter>
@@ -1483,7 +1483,7 @@
             android:name="com.archos.mediacenter.video.leanback.MainActivityLeanback"
             android:banner="@drawable/androidtv_banner"
             android:exported="true"
-            android:icon="@mipmap/video2"
+            android:icon="@mipmap/nova"
             android:label="@string/nova"
             android:taskAffinity="archos.task.video"
             android:theme="@style/MyLeanbackTheme">

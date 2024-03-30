@@ -393,7 +393,7 @@ public class ChannelManager {
                 Uri uri = mContext.getContentResolver().insert(TvContractCompat.Channels.CONTENT_URI, buildChannel(channel).toContentValues());
                 long id = ContentUris.parseId(uri);
 
-                ChannelLogoUtils.storeChannelLogo(mContext, id, BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.video2_full));
+                ChannelLogoUtils.storeChannelLogo(mContext, id, BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.nova));
 
                 return id;
             } catch (Exception e) {

@@ -27,12 +27,12 @@
         android:required="false" />
 
     <application
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/nova">
         <!-- ************** WIDGET ************** -->
 
         <activity
             android:name="com.archos.mediacenter.video.widget.VideoWidgetConfigure"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/nova"
             android:exported="false"
             android:label="@string/nova"
             android:theme="@style/Theme.DialogMinWidth" >

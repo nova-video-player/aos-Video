@@ -38,7 +38,7 @@
         android:id="@+id/app_icon"
         android:layout_width="28dip"
         android:layout_height="28dip"
-        app:srcCompat="@mipmap/video2" />
+        app:srcCompat="@mipmap/nova" />
 
     <GridView
         android:id="@+id/gridview"
