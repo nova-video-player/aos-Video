@@ -119,7 +119,7 @@ public class FileManagerService extends Service implements OperationEngineListen
                 nm.createNotificationChannel(nc);
         }
         nb = new NotificationCompat.Builder(this, notifChannelId)
-                .setSmallIcon(R.drawable.video2)
+                .setSmallIcon(R.drawable.nova_notification)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setTicker(null).setOnlyAlertOnce(true).setOngoing(true).setAutoCancel(true);
         startForeground(PASTE_NOTIFICATION_ID, nb.build());
