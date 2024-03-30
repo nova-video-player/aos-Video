@@ -524,7 +524,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 nm.createNotificationChannel(nc);
         }
         nb = new NotificationCompat.Builder(this, notifChannelId)
-                .setSmallIcon(R.drawable.nova_notification)
+                .setSmallIcon(R.drawable.video2)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setTicker(null).setOnlyAlertOnce(true).setOngoing(true).setAutoCancel(true);
 
