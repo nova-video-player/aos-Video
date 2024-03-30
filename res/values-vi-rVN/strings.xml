@@ -102,14 +102,14 @@
     </plurals>
     <string name="not_watched_movies_format">Chưa xem  -  %d</string>
     <string name="not_watched_animes_format">Chưa xem  -  %d</string>
-    <string name="no_movie_watched">Không có phim đã xem</string>
+    <string name="no_movie_watched">Chưa xem phim nào</string>
     <string name="all_movies_watched">Tất cả phim đã xem</string>
     <string name="movies_by_alpha">Phim theo bảng chữ cái</string>
     <string name="movies_by_genre">Phim theo thể loại</string>
     <string name="movies_by_rating">Phim theo xếp hạng</string>
     <string name="movie_collections">Bộ sưu tập</string>
     <string name="anime_collections">Bộ sưu tập hoạt hình Nhật Bản</string>
-    <string name="movies_by_year">Năm ra Phim</string>
+    <string name="movies_by_year">Phim theo năm</string>
     <string name="all_tv_shows">Chương trình TV</string>
     <string name="all_tvshows">Tất cả chương trình TV</string>
     <string name="all_animes">Tất cả phim hoạt hình</string>

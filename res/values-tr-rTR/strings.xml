@@ -95,19 +95,36 @@
     <string name="all_animes_format">Animasyon filmleri - %d</string>
     <string name="all_collections">Tüm koleksiyonlar</string>
     <string name="all_collections_format">Tüm koleksiyonlar - %d</string>
+    <string name="all_collection_watched">Tüm koleksiyon izlendi</string>
+    <string name="all_collection_unwatched">Koleksiyon izlenmedi</string>
     <string name="not_watched_movies_format">İzlenmedi  -  %d</string>
+    <string name="not_watched_animes_format">İzlenmedi - %d</string>
+    <string name="no_movie_watched">Film izlenmedi</string>
+    <string name="all_movies_watched">İzlenen tüm filmler</string>
     <string name="movies_by_alpha">Alfabetik sırala</string>
     <string name="movies_by_genre">Türe göre filmler</string>
     <string name="movies_by_rating">Derecelendirmeye göre filmler</string>
+    <string name="movie_collections">Koleksiyonlar</string>
+    <string name="anime_collections">Anime koleksiyonları</string>
     <string name="movies_by_year">Yıllara göre filmler</string>
     <string name="all_tv_shows">TV programları</string>
     <string name="all_tvshows">Tüm TV şovları</string>
+    <string name="all_animes">Tüm animasyon filmleri</string>
+    <string name="all_animes_row">Tüm animasyonlar</string>
+    <string name="all_animeshows">Tüm animasyon TV programları</string>
+    <string name="animes_by_alpha">Animasyon filmleri alfabetik</string>
+    <string name="animes_by_genre">Türlerine göre animasyon filmleri</string>
+    <string name="animes_by_rating">Derecelendirmeye göre animasyon filmleri</string>
+    <string name="animes_by_year">Yıla göre animasyon filmleri</string>
     <string name="all_tvshows_format">Tüm TV şovları  - %d</string>
     <string name="not_watched_tvshows_format">İzlenmedi - %d</string>
+    <string name="all_animeshows_format">Animasyon TV şovları - %d</string>
+    <string name="not_watched_animeshows_format">İzlenmedi - %d</string>
     <string name="all_seasons">Tüm sezonlar</string>
     <string name="tvshows_by_alpha">TV alfabetik gösterir</string>
     <string name="tvshows_by_genre">Türe göre TV şovları</string>
     <string name="tvshows_by_rating">Derecelendirmeye göre TV şovları</string>
+    <string name="animation_shows_by_alpha">Animasyon alfabetik olarak gösterilir</string>
     <string name="episodes_by_date">Tarihe göre bölüm sayısı</string>
     <string name="date_view_week">Hafta</string>
     <string name="date_view_month">Ay</string>
@@ -146,7 +163,9 @@
     <string name="scrap_get_title">Bilgi alma</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Yönetmen</string>
+    <string name="scrap_writer">Yazar</string>
     <string name="scrap_director_format">Yönetmen: %s</string>
+    <string name="scrap_writer_format">Yazar: %s</string>
     <string name="scrap_rating">Değerlendirme</string>
     <string name="scrap_rating_format">Değerlendirme: %s</string>
     <string name="scrap_year">Yıl</string>
@@ -239,7 +258,11 @@ izlenen bölümler %d</item>
     <string name="you_have_no_video">Video yok</string>
     <string name="you_have_no_video_yet">Video aranıyor&#8230;</string>
     <string name="you_have_no_movies">Film yok</string>
+    <string name="you_have_no_animes">Animasyon filmi yok</string>
+    <string name="you_have_no_movie_collections">Koleksiyon yok</string>
+    <string name="you_have_no_anime_collections">Anime koleksiyonu yok</string>
     <string name="you_have_no_tv_shows">TV şovu yok</string>
+    <string name="you_have_no_anime_shows">Animasyon TV programı yok</string>
     <string name="you_have_no_non_scraped_videos">Alıntı yapılmayan video yok</string>
     <plurals name="Nmovies">
         <item quantity="one">1 filim
@@ -275,6 +298,7 @@ izlenen bölümler %d</item>
     <string name="player_subtitle_track_toast">Altyazı parçası:</string>
     <string name="player_bookmark_set">Yerimi ayarlandı</string>
     <string name="player_pref_subtitle_delay_title">Gecikme</string>
+    <string name="player_pref_audio_speed_title">Oynatma hızı</string>
     <string name="floating_player_restore">Geri yükle</string>
     <string name="floating_player_play">Oynat</string>
     <string name="floating_player_pause">Duraklat</string>
@@ -286,6 +310,7 @@ izlenen bölümler %d</item>
     <string name="pref_play_mode_entry_folder">Klasör</string>
     <string name="pref_play_mode_entry_repeat_folder">Klasörü tekrarla</string>
     <string name="pref_play_mode_entry_repeat_single">Parçayı tekrarla</string>
+    <string name="pref_play_mode_entry_binge">Art arda izleme</string>
     <string name="pref_audio_parameters_title">Ses</string>
     <string name="pref_audio_filt_title">Ses Yükseltme</string>
     <string name="pref_audio_filt_night_mode">Gece Modu</string>
@@ -308,8 +333,10 @@ izlenen bölümler %d</item>
     <string name="menu_change_folder_details">Başlamak için klasörü seçin</string>
     <string name="unlock_instructions">Kilidi açmak için simgeye uzun basın</string>
     <string name="seek_to_percentage">%s%% için aranıyor</string>
+    <string name="set_audio_speed_to">Ses hızı %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
+    <string name="subs_HI">İşitme engelliler</string>
     <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brezilya</string>
@@ -471,6 +498,9 @@ desteklenmiyor.</string>
     <string name="preference_tv_3d_automatic_switch_summary">Bu özelliği yalnızca 3D TV\'niz destekliyorsa kullanın</string>
     <string name="preference_tv_refreshrate_switch">Otomatik yenileme hızı anahtarını etkinleştirin</string>
     <string name="preference_tv_refreshrate_switch_summary">En iyi ekran yenileme hızını video kare hızına uyarlayarak titreme efektini kaldırın (cihaz desteği değişiklik gösterebilir)</string>
+    <string name="preferences_tv_refreshrate_switch_disabled">Devre dışı bırakıldı</string>
+    <string name="preferences_tv_refreshrate_switch_mode_selection">Video fps ile eşleşen ekran modu seçimi</string>
+    <string name="preferences_tv_refreshrate_switch_match_frame_rate">Android 12+kare hızı eşleştirme özelliği</string>
     <string name="preference_cutout_short_edges">Ekran kesimli tam ekran video</string>
     <string name="preference_cutout_short_edges_summary">Kesikli yatay tam ekran videoya izin ver</string>
     <string name="category_languages">Altyazı</string>
@@ -482,6 +512,7 @@ desteklenmiyor.</string>
     <string name="summary_list_preference_primary">Altyazıları indirmek için dillerinizi seçin</string>
     <string name="favSubLang_title">Altyazı okuma dili</string>
     <string name="favSubLang_summary">Altyazı okumak için favori dilinizi seçin</string>
+    <string name="favAudioLang_title">Ses tercih edilen dil</string>
     <string name="ui_mode_title">Kullanıcı arayüzü modu</string>
     <string name="ui_mode_summary">TV ve Tablet/Telefon kullanıcı arayüzü arasında seçim yapın</string>
     <string name="preferences_video_about">Hakkında</string>
