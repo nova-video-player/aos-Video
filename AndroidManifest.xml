@@ -133,10 +133,9 @@
             android:name=".browser.MainActivity"
             android:banner="@drawable/androidtv_banner"
             android:configChanges="keyboard|keyboardHidden"
-            android:icon="@mipmap/nova"
+            android:icon="@drawable/nova_icon"
             android:label="@string/nova"
             android:launchMode="singleTask"
-            android:roundIcon="@mipmap/nova_round"
             android:taskAffinity="archos.task.video"
             android:theme="@style/ArchosThemeBlueNoActionBar"
             android:windowSoftInputMode="adjustPan">
