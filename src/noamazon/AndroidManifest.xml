@@ -27,7 +27,7 @@
         android:required="false" />
 
     <application
-        android:icon="@drawable/nova_icon">
+        android:icon="@mipmap/nova"
         <!-- ************** WIDGET ************** -->
 
         <activity

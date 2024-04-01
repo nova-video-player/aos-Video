@@ -98,7 +98,7 @@
         android:name=".CustomApplication"
         android:allowTaskReparenting="true"
         android:hardwareAccelerated="true"
-        android:icon="@drawable/nova_icon"
+        android:icon="@mipmap/nova"
         android:banner="@drawable/nova_banner"
         android:label="@string/nova"
         android:largeHeap="true"
