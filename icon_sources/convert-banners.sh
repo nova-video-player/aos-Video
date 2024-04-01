@@ -9,7 +9,7 @@ densities=("mdpi" "hdpi" "xhdpi" "xxhdpi" "xxxhdpi")
 # Create densities if they don't exist
 for dir in "${densities[@]}"
 do
-  mkdir -p "res/mipmap-${dir}"
+  mkdir -p "res/drawable-${dir}"
 done
 
 # Associate resolutions with directory names using associative array
@@ -24,5 +24,5 @@ for resolution in "${resolutions[@]}"
 do
   dir="${dir_map[$resolution]}"
   yresolution=$(echo "scale=0; 9 * $resolution / 16" | bc)
-  convert ${srcn}.png -resize ${resolution}x${yresolution} -quality 100 res/mipmap-${dir}/${srcn}.webp
+  convert ${srcn}.png -resize ${resolution}x${yresolution} -quality 100 res/drawable-${dir}/${srcn}.webp
 done

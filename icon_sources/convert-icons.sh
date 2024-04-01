@@ -10,6 +10,9 @@ srcp=nova_private
 resolutions=(80 120 160 240 320)
 densities=("mdpi" "hdpi" "xhdpi" "xxhdpi" "xxxhdpi")
 
+# foreground needs to be scaled otherwise icon is too big
+convert nova_foreground.png -resize 67% -gravity center -background none -extent 1024x1024 nova_foreground2.png
+
 # Create densities if they don't exist
 for dir in "${densities[@]}"
 do
@@ -27,9 +30,9 @@ done
 for resolution in "${resolutions[@]}"
 do
   dir="${dir_map[$resolution]}"
-  echo convert ${srcn}.png -resize ${resolution}x${resolution} -quality 100 res/mipmap-${dir}/${srcn}.webp
+  echo convert size ${resolution}x${resolution} for res/mipmap-${dir}
   convert ${srcn}.png -resize ${resolution}x${resolution} -quality 100 res/mipmap-${dir}/${srcn}.webp
-  convert ${srca}.png -resize ${resolution}x${resolution} -quality 100 res/mipmap-${dir}/${srca}.webp
+  convert ${srca}2.png -resize ${resolution}x${resolution} -quality 100 res/mipmap-${dir}/${srca}.webp
   convert ${srcr}.png -resize ${resolution}x${resolution} -quality 100 res/mipmap-${dir}/${srcr}.webp
   convert ${srcp}.png -resize ${resolution}x${resolution} -quality 100 res/mipmap-${dir}/${srcp}.webp
 done
