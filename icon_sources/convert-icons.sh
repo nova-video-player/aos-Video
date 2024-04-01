@@ -6,8 +6,8 @@ srcr=nova_round
 srcp=nova_private
 
 # Define arrays for resolutions and directory names
-#resolutions=(256 384 512 768 1024)
-resolutions=(80 120 160 240 320)
+resolutions=(256 384 512 768 1024)
+#resolutions=(80 120 160 240 320)
 densities=("mdpi" "hdpi" "xhdpi" "xxhdpi" "xxxhdpi")
 
 # foreground needs to be scaled otherwise icon is too big
