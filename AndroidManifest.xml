@@ -99,7 +99,7 @@
         android:allowTaskReparenting="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/nova"
-        android:banner="@drawable/androidtv_banner"
+        android:banner="@drawable/nova_banner"
         android:label="@string/nova"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
