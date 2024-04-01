@@ -27,7 +27,7 @@
         android:required="false" />
 
     <application
-        android:icon="@mipmap/nova"
+        android:icon="@mipmap/nova">
         <!-- ************** WIDGET ************** -->
 
         <activity
