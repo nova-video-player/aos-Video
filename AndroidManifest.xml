@@ -98,13 +98,13 @@
         android:name=".CustomApplication"
         android:allowTaskReparenting="true"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/nova"
+        android:icon="@mipmap/ic_launcher"
         android:banner="@drawable/nova_banner"
         android:label="@string/nova"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
         android:localeConfig="@xml/locales_config"
-        android:roundIcon="@mipmap/nova_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
         android:networkSecurityConfig="@xml/network_security_config">
         <meta-data
