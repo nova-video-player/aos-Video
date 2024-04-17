@@ -336,14 +336,18 @@ public class OpenSubtitlesApiHelper {
         // Note: only the first result page is queried because it is assumed that it should be enough with order_by criteria
         // input: languages is a comma separated list of languages (e.g. "en,fr")
         // output: an arrayList of OpenSubtitlesSearchResult for each subtitle found
+        log.error("searchSubtitle: baseUrl={}, languages={}, fileInfo={}", baseUrl, languages, fileInfo);
         HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + "subtitles").newBuilder();
         urlBuilder.addQueryParameter("languages", languages);
         urlBuilder.addQueryParameter("order_by", "from_trusted,ratings,download_count");
         if (fileInfo.getTmdbId() != null) {
-            urlBuilder.addQueryParameter("tmdb_id", fileInfo.getTmdbId());
+            if (fileInfo.isShow()) urlBuilder.addQueryParameter("parent_tmdb_id", fileInfo.getTmdbId());
+            else urlBuilder.addQueryParameter("tmdb_id", fileInfo.getTmdbId());
         } else {
-            if (fileInfo.getImdbId() != null)
-                urlBuilder.addQueryParameter("imdb_id", fileInfo.getImdbId());
+            if (fileInfo.getImdbId() != null) {
+                if (fileInfo.isShow()) urlBuilder.addQueryParameter("parent_imdb_id", fileInfo.getImdbId());
+                else urlBuilder.addQueryParameter("imdb_id", fileInfo.getImdbId());
+            }
             else {
                 if (fileInfo.getFileName() != null) urlBuilder.addQueryParameter("query", fileInfo.getFileName());
             }
