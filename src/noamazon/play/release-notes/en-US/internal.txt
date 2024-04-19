@@ -1,3 +1,4 @@
+- Fix posters not downloading on old Android version
 - Android TV icon update for Google Play compliance
 - Add Android 12 frame rate matching feature support
 - Add missing season actors to tv show episode cast
@@ -6,4 +7,3 @@
 - Fix cannot download subs when logged in on opensubtitles.com
 - Propose nova as external player when opening local files
 - Fix subtitles download for videos on UPnP shares
-- Stability enhancements
