@@ -13,7 +13,7 @@ buildscript {
 
 plugins {
     id "com.github.triplet.play" version "3.9.1"
-    id "io.sentry.android.gradle" version "4.4.0" apply false
+    id "io.sentry.android.gradle" version "4.4.1" apply false
     //id "app.brant.amazonappstorepublisher" version "0.1.0"
 }
 
