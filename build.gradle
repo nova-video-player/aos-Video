@@ -13,7 +13,7 @@ buildscript {
 
 plugins {
     id "com.github.triplet.play" version "3.9.1"
-    id "io.sentry.android.gradle" version "4.4.0" apply false
+    id "io.sentry.android.gradle" version "4.4.1" apply false
     //id "app.brant.amazonappstorepublisher" version "0.1.0"
 }
 
@@ -312,7 +312,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
     implementation 'androidx.media:media:1.7.0'
-    implementation 'androidx.core:core:1.12.0'
+    implementation 'androidx.core:core:1.13.0'
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
     implementation 'androidx.fragment:fragment:1.6.2'
