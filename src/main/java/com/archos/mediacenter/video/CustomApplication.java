@@ -55,6 +55,7 @@ import com.archos.mediacenter.video.browser.BootupRecommandationService;
 import com.archos.mediacenter.video.picasso.SmbRequestHandler;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
 import com.archos.mediacenter.video.utils.OpenSubtitlesApiHelper;
+import com.archos.mediacenter.video.utils.TrustingOkHttp3Downloader;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.medialib.LibAvos;
 import com.archos.mediaprovider.video.NetworkAutoRefresh;
@@ -273,12 +274,23 @@ public class CustomApplication extends Application {
         }.start();
 
         // Initialize picasso thumbnail extension
-        Picasso.setSingletonInstance(
-                new Picasso.Builder(mContext)
-                        .addRequestHandler(new ThumbnailRequestHandler(mContext))
-                        .addRequestHandler(new SmbRequestHandler(mContext))
-                        .build()
-        );
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+            // for Android versions below 7.1.1 we need to trust letsencrypt certificates
+            Picasso.setSingletonInstance(
+                    new Picasso.Builder(mContext)
+                            .addRequestHandler(new ThumbnailRequestHandler(mContext))
+                            .addRequestHandler(new SmbRequestHandler(mContext))
+                            .downloader(new TrustingOkHttp3Downloader(mContext))
+                            .build()
+            );
+        } else {
+            Picasso.setSingletonInstance(
+                    new Picasso.Builder(mContext)
+                            .addRequestHandler(new ThumbnailRequestHandler(mContext))
+                            .addRequestHandler(new SmbRequestHandler(mContext))
+                            .build()
+            );
+        }
 
         // Set the dimension of the posters to save
         ScraperImage.setGeneralPosterSize(
