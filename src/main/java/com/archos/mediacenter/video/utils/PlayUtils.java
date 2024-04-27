@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -168,9 +169,10 @@ public class PlayUtils implements IndexHelper.Listener {
         mExternalPlayerWithResultStarter = externalPlayerWithResultStarter;
         mResumePosition = resumePosition;
         mPlaylistId = playlistId;
-        if (allow3rdPartyPlayer(context)&&resume!=PlayerService.RESUME_NO&&resumePosition==-1) {
+        if (allow3rdPartyPlayer(context)) {
             // prepare subs only for external player to provide list to 3rd party player
             // subs are fetched in /storage/emulated/0/Android/data/org.courville.nova/cache/subtitles/ during preFetchHTTPSubtitlesAndPrepareUpnpSubs
+            log.debug("startPlayer: prepareSubs");
             prepareSubs();
             /*
             if(mIndexHelper==null)
@@ -185,6 +187,7 @@ public class PlayUtils implements IndexHelper.Listener {
     }
 
     public void requestVideoDb() {
+        log.debug("requestVideoDb: list subtitles");
         listOfSubtitles = SubtitleManager.getPreFetchedListOfSubs();
         if(mIndexHelper==null)
             mIndexHelper = new IndexHelper(mContext, null, 0);
@@ -271,14 +274,14 @@ public class PlayUtils implements IndexHelper.Listener {
             intent.putExtra(PlayerService.VIDEO, video);
             intent.setClass(context, PlayerActivity.class);
             intent.setDataAndType(dataUri, mimeType);
-        }
-        else {
+        } else {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             // do not check Uri below because it can be a MediaDB Uri starting with content:
             if (!FileUtils.isLocal(video.getFileUri())) {
                 if (!"upnp".equals(video.getFileUri().getScheme())) {
                     // Http proxy to allow 3rd party players to play remote files
                     try {
+                        log.debug("onResumeReady: 3rd party player, non local file, file uri:" + video.getFileUri());
                         StreamOverHttp stream = new StreamOverHttp(video.getFileUri(), mimeType);
                         dataUri = stream.getUri(video.getFileUri().getLastPathSegment());
                     } catch (IOException e) {
@@ -289,8 +292,7 @@ public class PlayUtils implements IndexHelper.Listener {
                 }
                 log.debug("onResumeReady: 3rd party player, non local file, streaming uri:" + dataUri);
                 intent.setDataAndType(dataUri, mimeType);
-            }
-            else {
+            } else {
                 // in case of a local file, need to rely on FileProvider since API24+ to avoid android.os.FileUriExposedException
                 File localFile = new File(video.getFileUri().getPath());
                 fileUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", localFile);
@@ -305,6 +307,12 @@ public class PlayUtils implements IndexHelper.Listener {
             int n = 0;
             List<Uri> MxSubPaths = new ArrayList<>();
             Uri subUri;
+            // dump listOfSubtitles to logcat
+            if (listOfSubtitles != null) {
+                log.debug("onResumeReady: listOfSubtitles " + Arrays.toString(listOfSubtitles.toArray()));
+            } else {
+                log.debug("onResumeReady: listOfSubtitles is null");
+            }
             if (listOfSubtitles != null) {
                 log.debug("onResumeReady: videoMetadata not null, number of sub files to inspect:" + listOfSubtitles.size());
                 // find first external subtitle file and pass it to vlc
