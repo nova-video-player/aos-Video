@@ -1,3 +1,4 @@
+- Fix subs not passed to external video player
 - Fix posters not downloading on old Android version
 - Android TV icon update for Google Play compliance
 - Add Android 12 frame rate matching feature support
@@ -5,5 +6,3 @@
 - Scrape shows and movies without air date reported by TMDB
 - Fix preferred audio language not applied
 - Fix cannot download subs when logged in on opensubtitles.com
-- Propose nova as external player when opening local files
-- Fix subtitles download for videos on UPnP shares
