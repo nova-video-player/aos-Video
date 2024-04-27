@@ -50,7 +50,7 @@
     <string name="info_tab_movie">Phim</string>
     <string name="info_tab_show">Chương trình</string>
     <string name="info_tab_episode">Tập</string>
-    <string name="info_tab_video">Video</string>
+    <string name="info_tab_video">Băng hình</string>
     <string name="info_tab_file">Thông tin tệp</string>
     <string name="info_tab_backdrop_chooser">Trình chọn phông nền</string>
     <string name="info_tab_poster_chooser">Trình chọn áp phích</string>
@@ -84,8 +84,8 @@
     <string name="root_storage">Bộ nhớ trong</string>
     <string name="cannot_list">Không thể liệt kê nội dung</string>
     <!-- VIDEO -->
-    <string name="videos">Video</string>
-    <string name="all_videos">Tất cả video</string>
+    <string name="videos">Băng hình</string>
+    <string name="all_videos">Tất cả băng hình</string>
     <string name="not_played_yet_videos">Chưa phát</string>
     <string name="video_folder">Thư mục</string>
     <string name="movies">Phim</string>
@@ -133,13 +133,13 @@
     <string name="date_view_month">Tháng</string>
     <string name="date_view_year">Năm</string>
     <string name="all_movies_and_tv_shows">Phim và Chương trình TV</string>
-    <string name="non_scraped_videos">Các video chưa được thu thập</string>
+    <string name="non_scraped_videos">Các băng hình chưa được thu thập</string>
     <string name="no_server">Không tìm thấy máy chủ phương tiện</string>
-    <string name="cannot_open_video">Không Mở được video</string>
+    <string name="cannot_open_video">Không thể mở băng hình này</string>
     <string name="confirm_delete">Bạn có thực sự muốn xóa nó?</string>
     <string name="deleting">Đang xóa…</string>
     <string name="cannot_delete_directory">Không thể xóa thư mục</string>
-    <string name="cannot_delete_file">Không thể xóa tập tin</string>
+    <string name="cannot_delete_file">Không thể xóa tệp</string>
     <string name="directory_deleted">Thư mục đã xóa</string>
     <string name="file_deleted">Tập tin đã xóa</string>
     <string name="resume">Tiếp tục</string>
@@ -152,7 +152,7 @@
     <string name="mark_as_watched">Đánh dấu đã xem</string>
     <string name="mark_as_not_watched">Đánh dấu chưa xem</string>
     <string name="upnp_not_allowed">Bạn không được phép truy cập vào máy chủ UPnP này. Vui lòng thay đổi cấu hình truy cập của bạn trước.</string>
-    <string name="scrap_no_info">Bạn không có mô tả phim hoặc chương trình TV cho video này.</string>
+    <string name="scrap_no_info">Bạn không có mô tả phim hoặc chương trình TV cho băng hình này.</string>
     <string name="scrap_remove">Loại bỏ thông tin</string>
     <string name="scrap_remove_short">Xóa</string>
     <!-- for small screens -->
@@ -172,7 +172,7 @@
     <string name="scrap_rating_format">Đánh giá: %s</string>
     <string name="scrap_year">Năm</string>
     <string name="scrap_year_format">Năm: %d</string>
-    <string name="scrap_studio">Studio</string>
+    <string name="scrap_studio">Xưởng phim</string>
     <string name="scrap_plot">Kịch bản</string>
     <string name="scrap_trailer">Trailer</string>
     <string name="scrap_cast">Dàn diễn viên</string>
@@ -217,16 +217,16 @@
     <string name="scrap_status_rejected">Đã loại bỏ thông tin</string>
     <string name="scrap_status_unknown">Không rõ</string>
     <string name="scraper_abort_request">Bạn có thực sự muốn hủy bỏ việc tìm kiếm?</string>
-    <string name="scraper_no_files">Không có tập tin nào để xử lý</string>
-    <string name="scraper_no_new_files">Không có tập tin mới nào để xử lý</string>
-    <string name="scraper_no_new_files_in_folder">Không có tập tin mới nào để xử lý trong thư mục này</string>
-    <string name="scraper_folder_no_files">Tuy nhiên vẫn có %d video mà trước đây không tìm thấy thông tin nào.</string>
-    <string name="scraper_folder_no_file">Tuy nhiên vẫn còn một video mà trước đây không tìm thấy thông tin nào.</string>
+    <string name="scraper_no_files">Không có tệp nào để xử lý</string>
+    <string name="scraper_no_new_files">Không có tệp mới nào để xử lý</string>
+    <string name="scraper_no_new_files_in_folder">Không có tệp mới nào để xử lý trong thư mục này</string>
+    <string name="scraper_folder_no_files">Tuy nhiên vẫn có %d băng hình mà trước đây không tìm thấy thông tin nào.</string>
+    <string name="scraper_folder_no_file">Tuy nhiên vẫn còn một băng hình mà trước đây không tìm thấy thông tin nào.</string>
     <string name="scraper_folder_try_again">Bạn có muốn thử lại không?</string>
     <string name="scraper_notification_title">Tìm kiếm thông tin trực tuyến</string>
     <string name="scraper_notification_progress">\"%1$d trong số %2$d tệp đã được xử lý</string>
     <string name="scraper_no_episode_found">Không tìm thấy tập nào</string>
-    <string name="scraper_suggest_message">Bạn có thể tìm kiếm áp phích và thông tin trực tuyến cho video của bạn bằng menu \'Tìm kiếm thông tin trực tuyến\'.</string>
+    <string name="scraper_suggest_message">Bạn có thể tìm kiếm áp phích và thông tin trực tuyến cho băng hình của bạn bằng menu \'Tìm kiếm thông tin trực tuyến\'.</string>
     <string name="scraper_no_movie_text">Hiện tại bạn không có áp phích và mô tả cho phim của bạn</string>
     <string name="scraper_no_movie_button_label">Tìm kiếm thông tin phim trực tuyến</string>
     <string name="scraper_no_tv_show_text">Bạn hiện không có áp phích và mô tả cho chương trình TV của bạn</string>
@@ -237,10 +237,10 @@
     <string name="rescan_storage">Quét lại bộ nhớ</string>
     <string name="rescanning">Đang quét lại bộ nhớ thiết bị</string>
     <string name="rescan_storage_summary">Quét lại các thiết bị lưu trữ nội bộ, thẻ SD và USB</string>
-    <string name="preference_display_all_files">Hiển thị tất cả tập tin trong trình duyệt</string>
-    <string name="preference_display_all_files_summary">Cũng hiện những tệp không phải video</string>
+    <string name="preference_display_all_files">Hiện mọi tệp trong trình duyệt</string>
+    <string name="preference_display_all_files_summary">Cũng hiện những tệp không phải băng hình</string>
     <string name="info_processing">Đang kiểm tra thuộc tính phương tiện…</string>
-    <string name="info_video">Video</string>
+    <string name="info_video">Băng hình</string>
     <string name="info_audio">Âm thanh</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_plugin_required">(yêu cầu plugin)</string>
@@ -250,17 +250,17 @@
     <string name="info_file">Thông tin tệp</string>
     <string name="use_remote_resume">Sử dụng vị trí tiếp tục mạng?</string>
     <!-- VIDEO COVER ROLL -->
-    <string name="you_have_no_recently_added_video">Không có video nào được thêm gần đây</string>
-    <string name="you_have_no_recently_played_video">Không có video nào được phát gần đây</string>
-    <string name="you_have_no_video">Không có video</string>
-    <string name="you_have_no_video_yet">Đang tìm kiếm video&#8230;</string>
+    <string name="you_have_no_recently_added_video">Không có băng hình nào được thêm gần đây</string>
+    <string name="you_have_no_recently_played_video">Không có băng hình nào được phát gần đây</string>
+    <string name="you_have_no_video">Không có băng hình</string>
+    <string name="you_have_no_video_yet">Đang tìm kiếm băng hình&#8230;</string>
     <string name="you_have_no_movies">Không có phim</string>
     <string name="you_have_no_animes">Không có phim hoạt hình</string>
     <string name="you_have_no_movie_collections">Không có bộ sưu tập</string>
     <string name="you_have_no_anime_collections">Không có bộ sưu tập hoạt hình Nhật Bản</string>
     <string name="you_have_no_tv_shows">Không có chương trình TV</string>
     <string name="you_have_no_anime_shows">Không có chương trình TV hoạt hình</string>
-    <string name="you_have_no_non_scraped_videos">Không có các video chưa được thu thập</string>
+    <string name="you_have_no_non_scraped_videos">Không có các băng hình chưa được thu thập</string>
     <plurals name="Nmovies">
         <item quantity="other"><xliff:g id="count">%d</xliff:g> phim</item>
     </plurals>
@@ -281,7 +281,7 @@
     <string name="switch_to_list">Danh sách</string>
     <string name="switch_to_grid">Lưới</string>
     <!-- VideoPlayer -->
-    <string name="player_loading_video">Đang tải video\u2026</string>
+    <string name="player_loading_video">Đang tải băng hình\u2026</string>
     <string name="player_audio_track_toast">Luồng âm thanh:</string>
     <string name="player_subtitle_track_toast">Bản phụ đề:</string>
     <string name="player_bookmark_set">Đã đặt dấu trang tại</string>
@@ -316,7 +316,7 @@
     <string name="menu_lock_player">Khóa trình phát</string>
     <string name="menu_bookmark">Đặt đánh dấu</string>
     <string name="menu_brightness_settings">Độ sáng</string>
-    <string name="menu_player_settings">Cài đặt</string>
+    <string name="menu_player_settings">Thiết đặt</string>
     <string name="menu_change_folder">Thay đổi thư mục</string>
     <string name="menu_change_folder_details">Chọn thư mục để bắt đầu</string>
     <string name="unlock_instructions">Nhấn giữ biểu tượng để mở khóa</string>
@@ -345,22 +345,22 @@
     <string name="s_chinese_bilingual">Song ngữ tiếng Trung</string>
     <string name="s_none">Không có</string>
     <!-- Player errors -->
-    <string name="player_err_cantplayvideo">Không thể phát video</string>
+    <string name="player_err_cantplayvideo">Không thể phát băng hình</string>
     <string name="player_err_cantplaysound">Không thể phát luồng âm thanh</string>
     <string name="audiocodec_not_supported">Định dạng âm thanh (<xliff:g id="codec">%s</xliff:g>) không được hổ trợ.</string>
-    <string name="videocodec_not_supported">Định dạng video (<xliff:g id="codec">%s</xliff:g>) không được hổ trợ.</string>
-    <string name="player_err_file">Tệp Video không tồn tại.</string>
-    <string name="player_err_sizetoobig">Kích thước video quá lớn</string>
+    <string name="videocodec_not_supported">Định dạng băng hình (<xliff:g id="codec">%s</xliff:g>) này không được hỗ trợ.</string>
+    <string name="player_err_file">Tệp băng hình không tồn tại.</string>
+    <string name="player_err_sizetoobig">Kích thước băng hình quá lớn</string>
     <string name="player_err_unknown">Lỗi không rõ.</string>
     <string name="player_err_critical">Lỗi trình phát phương tiện.</string>
     <string name="player_err_forcodec">dành cho bộ giải mã</string>
-    <string name="player_err_notinterleaved">Các luồng video và âm thanh không BỊ XEN KẼ.</string>
+    <string name="player_err_notinterleaved">Các luồng băng hình và âm thanh không BỊ XEN KẼ.</string>
     <string name="player_err_codec">Code</string>
     <string name="player_err_isnotsupported">không được hỗ trợ.</string>
     <string name="player_err_fileNoLicense">Không tìm thấy giấy phép cho tệp này.</string>
     <string name="player_err_fileerror">Tệp bị hỏng hoặc không đầy đủ.</string>
     <string name="player_err_connection_failed">Kết nối thất bại.</string>
-    <string name="player_err_video_decoder_error">Lỗi giải mã video:</string>
+    <string name="player_err_video_decoder_error">Lỗi giải mã băng hình:</string>
     <string name="player_err_qpel_and_gmc">\"Quarter Pixel\" và \"GMC\"</string>
     <string name="player_err_profile_and_level">\"Hồ sơ\" và \"Cấp độ\"</string>
     <string name="player_err_interlaced">Quét xen kẽ</string>
@@ -371,27 +371,27 @@
     <string name="player_plugin_ac3">Plug-in AC3</string>
     <string name="player_plugin_mpeg2_title">Plug-in MPEG-2</string>
     <string name="player_plugin_mpeg2">Plug-in MPEG-2 (DVD)</string>
-    <string name="player_plugin_video_msg">Tệp này chứa định dạng video <xliff:g id="video">%1$s</xliff:g>.</string>
+    <string name="player_plugin_video_msg">Tệp này chứa định dạng băng hình <xliff:g id="video">%1$s</xliff:g>.</string>
     <string name="player_plugin_audio_msg">Tệp này chứa định dạng âm thanh <xliff:g id="audio">%1$s</xliff:g>.</string>
-    <string name="player_plugin_video_audio_msg">Tệp này chứa một định dạng video <xliff:g id="video">%1$s</xliff:g> và một định dạng âm thanh <xliff:g id="audio">%2$s</xliff:g>.</string>
+    <string name="player_plugin_video_audio_msg">Tệp này chứa một định dạng băng hình <xliff:g id="video">%1$s</xliff:g> và một định dạng âm thanh <xliff:g id="audio">%2$s</xliff:g>.</string>
     <string name="player_plugin_purchase_msg">Bạn cần mua các <xliff:g id="plugin">%1$s</xliff:g></string>
     <string name="player_plugin_purchase">Đi đến cửa hàng</string>
     <string name="player_plugin_purchase_archos_msg">Bạn có thể mua thêm các plug-in codec trên www.archos.com.</string>
     <string name="player_plugin_purchase_google_play_msg">Bạn có thể mua thêm các plug-in codec trên Google Play.</string>
     <string name="player_plugin_purchase_google_play_button">Đi đến Google Play</string>
     <string name="plugin_update_required_title">Yêu cầu cập nhật codec</string>
-    <string name="plugin_update_required_message">Có vẻ như bạn đã cài đặt thêm codec cho Trình phát video Nova.\n\nPhiên bản mới này của Trình phát video Nova yêu cầu cập nhật các codec này.\n\nHãy vào Google Play để cập nhật và cài đặt lại codec.</string>
+    <string name="plugin_update_required_message">Có vẻ như bạn đã cài đặt thêm bộ giải mã cho Trình phát băng hình Nova.\n\nPhiên bản mới này của Trình phát băng hình Nova yêu cầu cập nhật các bộ giải mã này.\n\nHãy vào Google Play để cập nhật và cài đặt lại bộ giải mã.</string>
     <!-- Subtitles wizard -->
     <string name="get_subtitles_on_drive">Chọn phụ đề trên bộ nhớ</string>
     <string name="subtitles_wizard_no_files">Không tìm thấy tệp phụ đề</string>
     <string name="subtitles_wizard_current_files">Tệp phụ đề hiện tại</string>
     <string name="subtitles_wizard_available_files">Tệp phụ đề có sẵn</string>
-    <string name="subtitles_wizard_associate">Liên kết tệp này với video</string>
+    <string name="subtitles_wizard_associate">Liên kết tệp này với băng hình</string>
     <string name="subtitles_wizard_delete">Xóa tệp này</string>
     <string name="subtitles_wizard_empty_list">Không tìm thấy tệp</string>
-    <string name="subtitles_wizard_add_files">Bạn có thể sao chép thêm tệp phụ đề vào thư mục này để liên kết chúng với video này.</string>
-    <string name="subtitles_wizard_help">Chọn bất kỳ tệp phụ đề có sẵn nào để liên kết nó với video %s. Tệp sẽ được đổi tên để khớp với tên của video.</string>
-    <string name="subtitles_wizard_empty_list_help">Không tìm thấy tệp phụ đề. Bạn phải sao chép cái đầu tiên hoặc nhiều tệp phụ đề vào thư mục này để liên kết chúng với video %s.</string>
+    <string name="subtitles_wizard_add_files">Bạn có thể sao chép thêm tệp phụ đề vào thư mục này để liên kết chúng với băng hình này.</string>
+    <string name="subtitles_wizard_help">Chọn bất kỳ tệp phụ đề có sẵn nào để liên kết nó với băng hình %s. Tệp sẽ được đổi tên để khớp với tên của băng hình.</string>
+    <string name="subtitles_wizard_empty_list_help">Không tìm thấy tệp phụ đề. Bạn phải sao chép cái đầu tiên hoặc nhiều tệp phụ đề vào thư mục này để liên kết chúng với băng hình %s.</string>
     <string name="subtitles_wizard_cache">Bộ đệm</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Nhận phụ đề trực tuyến</string>
@@ -405,7 +405,7 @@
     <string name="dialog_subloader_success">Tìm được phụ đề cho:</string>
     <string name="dialog_subloader_fails">Không tìm được phụ đề cho:</string>
     <string name="sub_force_all_title">Buộc tải xuống phụ đề</string>
-    <string name="sub_force_all">Tất cả video của bạn đã có ít nhất một bản phụ đề. Bạn có muốn buộc tải xuống bản phụ đề mới không?</string>
+    <string name="sub_force_all">Tất cả băng hình của bạn đã có ít nhất một bản phụ đề. Bạn có muốn buộc tải xuống bản phụ đề mới không?</string>
     <string name="dialog_subloader_nonetwork_title">Không có internet</string>
     <string name="dialog_subloader_nonetwork_message">Cần có kết nối internet để tải xuống phụ đề</string>
     <string name="dialog_subloader_connecting">Đang kết nối đến www.opensubtitles.org…</string>
@@ -417,7 +417,7 @@
     <string name="toast_subloader_quota_exceeded">Đã vượt quá hạn ngạch tải xuống OpenSubtitles</string>
     <string name="opensubtitles_quota_reset_time_remaining">Đặt lại hạn ngạch sau %s</string>
     <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_settings_title">Cài đặt phụ đề</string>
+    <string name="subtitle_settings_title">Thiết đặt phụ đề</string>
     <string name="subtitle_sample_text">\"mẫu\"</string>
     <string name="subtitle_size_text">Kích thước:</string>
     <string name="subtitle_style_text">Kiểu:</string>
@@ -434,8 +434,8 @@
     not visible otherwise -->
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
     <string name="error_permission">Không đủ quyền</string>
-    <string name="error_permission_storage">Trình phát video Nova cần có quyền lưu trữ để đọc video cục bộ, vui lòng cấp quyền này.</string>
-    <string name="error_permission_all_file_access">Trình phát video Nova cần tất cả quyền quản lý bộ nhớ ngoài để quản lý đúng cách các tệp video/NFO cục bộ, vui lòng cấp quyền này.</string>
+    <string name="error_permission_storage">Trình phát băng hình Nova cần có quyền lưu trữ để đọc băng hình cục bộ, vui lòng cấp quyền này.</string>
+    <string name="error_permission_all_file_access">Trình phát băng hình Nova cần tất cả quyền quản lý bộ nhớ ngoài để quản lý đúng cách các tệp băng hình/NFO cục bộ, vui lòng cấp quyền này.</string>
     <string name="allow">Cho phép</string>
     <string name="exit">Thoát</string>
     <!-- torrent -->
@@ -444,7 +444,7 @@
     <string name="error_loading_torrent">Lỗi khi tải torrent</string>
     <string name="error_downloading_not_enough_space">Lỗi khi tải xuống torrent : không đủ dung lượng</string>
     <string name="loading_torrent">Đang tải torrent…</string>
-    <string name="error_no_video_file">Không có tập tin video</string>
+    <string name="error_no_video_file">Không có tệp băng hình</string>
     <string name="torrent_file_to_play">Chọn một tệp để phát</string>
     <string name="torrent_buy_premium_message">Phát trực tuyến torrent chỉ khả dụng trên phiên bản trả phí</string>
     <string name="torrent_buy_premium">Mua phiên bản cao cấp</string>
@@ -501,9 +501,9 @@
     <string name="upgrade_to_add_free_version_description">Mua giấy phép ứng dụng để xóa quảng cáo và bật tất cả các tính năng</string>
     <string name="preferences_about">Giới thiệu</string>
     <string name="preferences_category_complete">Phiên bản đầy đủ</string>
-    <string name="preferences_category_video">Video</string>
+    <string name="preferences_category_video">Băng hình</string>
     <string name="preferences_force_software_decoding">Buộc giải mã phần mềm</string>
-    <string name="preferences_force_software_decoding_summary">Bạn có thể thử tùy chọn này nếu một số video phát không chính xác</string>
+    <string name="preferences_force_software_decoding_summary">Bạn có thể thử tùy chọn này nếu một số băng hình phát không chính xác</string>
     <string name="preferences_force_audio_passthrough">Truyền tải âm thanh</string>
     <string name="preferences_force_audio_passthrough_disabled">Tắt (khuyến nghị)</string>
     <string name="preferences_force_audio_passthrough_enable">Chế độ 1 (không dùng nữa)</string>
@@ -520,24 +520,24 @@
     <string name="preferences_force_passthrough">Buộc truyền tải âm thanh</string>
     <string name="preferences_force_passthrough_summary">Nếu tính năng truyền tải được bật, hãy thực thi nó ngay cả khi codec âm thanh không được xác nhận quyền sở hữu được hỗ trợ bởi bộ thu AV thay vì kiểm tra khả năng của bộ thu AV</string>
     <string name="preferences_playback_speed">Kích hoạt tốc độ phát lại</string>
-    <string name="preferences_playback_speed_summary">Cho phép khả năng thay đổi tốc độ phát lại. ⚠ Thử nghiệm có thể khiến video bị giật</string>
+    <string name="preferences_playback_speed_summary">Cho phép khả năng thay đổi tốc độ phát lại. ⚠ Thử nghiệm có thể khiến băng hình bị giật</string>
     <string name="preferences_disable_downmix_title">Tắt kết hợp thành âm thanh nổi</string>
     <string name="preferences_disable_downmix_summary">Luôn giải mã tất cả các kênh và để Android kết hợp tùy thuộc vào khả năng đầu ra âm thanh (có thể dẫn đến mất kênh thoại)</string>
     <string name="preferences_enable_downmix_androidtv_title">Buộc kết hợp thành âm thanh nổi</string>
     <string name="preferences_enable_downmix_androidtv_summary">Luôn kết hợp nhiều kênh âm thanh thành âm thanh nổi (sẽ được chọn nếu các kênh thoại không nghe được)</string>
     <string name="preferences_allow_3rd_party_player">Cho phép sử dụng trình phát băng hình khác</string>
-    <string name="preferences_allow_3rd_party_player_summary">Các ứng dụng phát video tương thích khác sẽ được Android đề xuất khi khởi chạy tính năng phát video. Xin lưu ý rằng một số tính năng sẽ không hoạt động (tiếp tục, đánh dấu, v.v.)</string>
+    <string name="preferences_allow_3rd_party_player_summary">Các ứng dụng phát băng hình tương thích khác sẽ được Android đề xuất khi khởi chạy tính năng phát băng hình. Xin lưu ý rằng một số tính năng sẽ không hoạt động (tiếp tục, đánh dấu, v.v.)</string>
     <string name="preference_tv_3d_automatic_switch">Bật chuyển TV 3D tự động</string>
     <string name="preference_tv_3d_automatic_switch_summary">Chỉ sử dụng tính năng này nếu TV 3D của bạn hỗ trợ nó</string>
     <string name="preference_tv_refreshrate_switch">Kích hoạt chuyển đổi tốc độ làm mới tự động</string>
-    <string name="preference_tv_refreshrate_switch_summary">Loại bỏ hiệu ứng judder bằng cách điều chỉnh tốc độ làm mới màn hình tốt nhất sang tốc độ khung hình video (hỗ trợ thiết bị có thể khác nhau)</string>
+    <string name="preference_tv_refreshrate_switch_summary">Loại bỏ hiệu ứng judder bằng cách điều chỉnh tốc độ làm mới màn hình tốt nhất sang tốc độ khung hình băng hình (hỗ trợ thiết bị có thể khác nhau)</string>
     <string name="preferences_tv_refreshrate_switch_disabled">Đã tắt</string>
-    <string name="preferences_tv_refreshrate_switch_mode_selection">Lựa chọn chế độ hiển thị phù hợp với fps của video</string>
+    <string name="preferences_tv_refreshrate_switch_mode_selection">Lựa chọn chế độ hiển thị phù hợp với fps của băng hình</string>
     <string name="preferences_tv_refreshrate_switch_match_frame_rate">Tính năng khớp tốc độ khung hình của Android 12+</string>
     <string name="preference_remove_dolby_vision">Tắt dolby vision</string>
-    <string name="preference_remove_dolby_vision_summary">Sử dụng codec video tiêu chuẩn thay vì codec dolby vision</string>
-    <string name="preference_cutout_short_edges">Video toàn màn hình với phần cắt hiển thị</string>
-    <string name="preference_cutout_short_edges_summary">Cho phép hiển thị video toàn màn hình ngang có phần bị cắt</string>
+    <string name="preference_remove_dolby_vision_summary">Sử dụng bộ giải mã băng hình tiêu chuẩn thay vì bộ giải mã dolby vision</string>
+    <string name="preference_cutout_short_edges">Băng hình toàn màn hình với phần cắt hiển thị</string>
+    <string name="preference_cutout_short_edges_summary">Cho phép hiển thị băng hình toàn màn hình ngang có phần bị cắt</string>
     <string name="category_languages">Phụ đề</string>
     <string name="subtitles_hide_default">Ẩn phụ đề theo mặc định</string>
     <string name="subtitles_hide_default_summary">Chọn nếu bạn muốn ẩn phụ đề theo mặc định</string>
@@ -555,7 +555,7 @@
     <string name="preferences_video_os_text">Phụ đề được cung cấp bởi</string>
     <string name="preferences_video_tmdb_text">Thông tin phim/chương trình TV được cung cấp bởi</string>
     <string name="preferences_video_tvdb_text">Thông tin chương trình TV được cung cấp bởi</string>
-    <string name="preferences_video_trakt_text">Video scrobbler được cung cấp bởi</string>
+    <string name="preferences_video_trakt_text">Trình quét băng hình được cung cấp bởi</string>
     <string name="preferences_video_licenses">Giấy phép</string>
     <string name="preferences_network_mobile_vpn_summary">Chỉ sử dụng nó với cấu hình VPN và cẩn thận với việc sử dụng dữ liệu của bạn.</string>
     <string name="preferences_network_mobile_vpn_title">Bật chia sẻ mạng trên kết nối di động</string>
@@ -567,17 +567,17 @@
     <string name="trakt_change">Một sửa đổi trên Trakt API yêu cầu kết nối lại.</string>
     <string name="tv_scraper">Chương trình TV</string>
     <string name="movie_scraper">Phim</string>
-    <string name="enable_auto_scrap">Tự động nhận thông tin cho các video mới</string>
-    <string name="enable_adult_scrap_title">Đang thu thập thông tin video người lớn</string>
-    <string name="enable_adult_scrap_summary">Bật truy xuất thông tin video người lớn (bị tắt theo mặc định)</string>
+    <string name="enable_auto_scrap">Tự động nhận thông tin cho các băng hình mới</string>
+    <string name="enable_adult_scrap_title">Đang quét băng hình người lớn</string>
+    <string name="enable_adult_scrap_summary">Bật truy xuất thông tin băng hình người lớn (bị tắt theo mặc định)</string>
     <string name="locale">Ngôn ngữ hệ thống</string>
-    <string name="scraper_language_title">Ngôn ngữ mô tả cuốn băng</string>
-    <string name="scraper_language_summary">Đặt ngôn ngữ được sử dụng để tải xuống mô tả cuốn băng</string>
+    <string name="scraper_language_title">Ngôn ngữ mô tả băng hình</string>
+    <string name="scraper_language_summary">Đặt ngôn ngữ được sử dụng để tải xuống mô tả băng hình</string>
     <string name="yes">Đồng ý</string>
     <string name="no">Không</string>
     <string name="abort">Hủy bỏ</string>
     <!--  Title of the video picker activity. -->
-    <string name="video_picker_title">Chọn video</string>
+    <string name="video_picker_title">Chọn băng hình</string>
     <!-- Archos File Info -->
     <string name="video_info_custom_search_file_hint">"\"Tên phim\" hoặc \"Tên chương trình S01E01\""</string>
     <string name="video_info_custom_search_show_hint">Tên của chương trình TV</string>
@@ -585,7 +585,7 @@
     <string name="video_info_backdrop_select">Chọn ảnh khác</string>
     <string name="video_info_backdrop_remove">Loại bỏ</string>
     <string name="video_info_backdrop_set_as">Đặt ảnh làm</string>
-    <string name="video_info_share_message">"Tôi đang xem video \"%1$s\" trên Nova %2$s của mình"</string>
+    <string name="video_info_share_message">"Tôi đang xem băng hình \"%1$s\" trên Nova %2$s của mình"</string>
     <string name="notification_mode">Thông báo</string>
     <string name="notifications_all">Tất cả thông báo</string>
     <string name="notifications_alerts">Chỉ cảnh báo thông báo</string>
@@ -607,10 +607,10 @@
     <string name="help_overlay_network_indexing_text1">Nhấn mục thực đơn này để tích hợp nội dung của thư mục này và các thư mục con của nó vào Thư viện băng hình.</string>
     <string name="help_overlay_network_indexing_text1_lb">Sử dụng nút + để tích hợp nội dung của thư mục này và các thư mục con của nó vào Thư viện băng hình.</string>
     <string name="help_overlay_network_indexing_text2">Nó sẽ cho phép bạn nhận áp phích và mô tả cho các bộ phim và chương trình TV.</string>
-    <string name="help_overlay_scraper_text">Nhấn mục menu này để tìm kiếm áp phích và mô tả trực tuyến cho video của bạn. </string>
+    <string name="help_overlay_scraper_text">Nhấn mục menu này để tìm kiếm áp phích và mô tả trực tuyến cho băng hình của bạn. </string>
     <string name="help_overlay_network_shortcut_text1_lb">Sử dụng nút + để thêm thư mục này làm lối tắt mạng và có tùy chọn thêm nội dung của nó và các thư mục con của nó vào Thư viện băng hình.</string>
-    <string name="new_videos_count">Video mới: %d</string>
-    <string name="new_videos_scrape_message">Bạn có video mới chưa có thông tin và áp phích.</string>
+    <string name="new_videos_count">Băng hình mới: %d</string>
+    <string name="new_videos_scrape_message">Bạn có băng hình mới chưa có thông tin và áp phích.</string>
     <string name="network_bookmarks">Các điểm tiếp tục và vị trí đánh dấu trên mạng</string>
     <string name="network_thumbnails">Tạo hình thu nhỏ từ xa</string>
     <string name="network_thumbnails_summary">Tạo hình thu nhỏ từ các cuộn phim từ xa khi không có áp phích</string>
@@ -634,7 +634,7 @@
     <string name="connection_abnormally_long">Kết nối có vẻ lâu bất thường. Bạn có muốn đặt lại nó không?</string>
     <string name="connection_reset">Đặt lại</string>
     <!-- Info dialog, not indexed file -->
-    <string name="video_info_unindexed_message">Tệp này hiện không được lập chỉ mục trong thư viện video của bạn.\nTìm kiếm áp phích và thông tin chỉ có sẵn cho các tệp đã lập chỉ mục.\nBạn có muốn lập chỉ mục nó ngay bây giờ không?</string>
+    <string name="video_info_unindexed_message">Tệp này hiện không được lập chỉ mục trong thư viện băng hình của bạn.\nTìm kiếm áp phích và thông tin chỉ có sẵn cho các tệp đã lập chỉ mục.\nBạn có muốn lập chỉ mục nó ngay bây giờ không?</string>
     <string name="video_info_unindexed_message2">Tệp đang được xử lý. Quá trình này có thể mất một lúc.</string>
     <string name="video_browser_index_file">Thêm vào thư viện</string>
     <string name="video_browser_unindex_file">Loại bỏ khỏi thư viện</string>
@@ -686,12 +686,12 @@
     <string name="audio_interface_audiotrack">Buộc bản âm thanh</string>
     <string name="audio_interface_any">Logic mặc định</string>
     <string name="preferences_user_interface">Giao diện người dùng</string>
-    <string name="preferences_display_resume_box_summary">Hiển thị hoặc ẩn nút phát tiếp video mới nhất trên màn hình chính</string>
+    <string name="preferences_display_resume_box_summary">Hiển thị hoặc ẩn nút phát tiếp băng hình mới nhất trên màn hình chính</string>
     <string name="preferences_display_resume_box">Hiển thị hộp tiếp tục phát</string>
     <string name="preferences_leanback_user_interface">Giao diện người dùng TV</string>
-    <string name="preferences_separate_animation_from_movies_summary">Kiểm tra để tách video hoạt hình khỏi phim và chương trình tv bằng cách thêm hàng hoạt hình</string>
+    <string name="preferences_separate_animation_from_movies_summary">Kiểm tra để tách băng hình hoạt hình khỏi phim và chương trình tv bằng cách thêm hàng hoạt hình</string>
     <string name="preferences_separate_animation_from_movies">Tách hoạt hình khỏi phim và chương trình TV</string>
-    <string name="preferences_show_watching_up_next_row_summary">Chọn để hiển thị một hàng với các video bạn đang xem và các video tiếp theo</string>
+    <string name="preferences_show_watching_up_next_row_summary">Chọn để hiển thị một hàng với các băng hình bạn đang xem và các băng hình tiếp theo</string>
     <string name="preferences_show_watching_up_next_row">Hiển thị hàng đang xem/tiếp theo</string>
     <string name="preferences_show_last_added_row_summary">Chọn để hiển thị một hàng có phương tiện của bạn được thêm cuối cùng</string>
     <string name="preferences_show_last_added_row">Hiển thị hàng được thêm cuối cùng</string>
@@ -792,7 +792,7 @@
     <string name="private_mode_is_off">Chế độ riêng tư đang TẮT</string>
     <string name="private_mode">Chế độ riêng tư</string>
     <string name="private_mode_description">Khi ở chế độ riêng tư, các tính năng sau sẽ bị tắt:\n
-        - Tự động lập chỉ mục và tự động loại bỏ các video đã phát\n
+        - Tự động lập chỉ mục và tự động loại bỏ các băng hình đã phát\n
         - Đã phát gần đây\n
         - Điểm tiếp tục\n
         - Đồng bộ hóa Trakt</string>
@@ -816,7 +816,7 @@
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Giao diện cũ</string>
     <string name="leanback_hint_long_press_on_back">GỢI Ý: nhấn và giữ phím QUAY LẠI để đóng trình duyệt tệp</string>
-    <string name="leanback_archos_video_webview">Chế độ xem web video Nova</string>
+    <string name="leanback_archos_video_webview">Chế độ xem web băng hình Nova</string>
     <string name="file_access_error">Không quản lý để truy cập tệp</string>
     <string name="interface_size">Kích thước giao diện</string>
     <string name="interface_size_summary">Thay đổi điều này trong trường hợp giao diện người dùng quá nhỏ hoặc quá lớn</string>
@@ -846,8 +846,8 @@
     <string name="scheduled_rescan_time">Thời gian quét lại</string>
     <string name="rescan_when_opening_application">Quét lại khi mở ứng dụng</string>
     <string name="last_rescan_occured">Lần cuối quét lại diễn ra vào:</string>
-    <string name="error_permission_display_over_apps">Chế độ cửa sổ cần có quyền đặc biệt để hiển thị trước các ứng dụng khác. Vui lòng cấp cho Trình phát video Nova quyền này để chuyển sang chế độ cửa sổ.</string>
-    <string name="intro_overlay_text">Chạm để truyền video tới TV của bạn</string>
+    <string name="error_permission_display_over_apps">Chế độ cửa sổ cần có quyền đặc biệt để hiển thị trước các ứng dụng khác. Vui lòng cấp cho Trình phát băng hình Nova quyền này để chuyển sang chế độ cửa sổ.</string>
+    <string name="intro_overlay_text">Chạm để truyền băng hình tới TV của bạn</string>
     <string name="drawer_open">ngăn kéo mở</string>
     <string name="drawer_close">ngăn kéo đóng</string>
     <string name="view_more">Xem thêm</string>
@@ -856,12 +856,12 @@
     <string name="rescrap_movies_in_progress">Đang thu thập lại tất cả các phim</string>
     <string name="rescrap_collections_in_progress">Đang thu thập lại tất cả các bộ sưu tập</string>
     <string name="acquire_external_usb_permission">Nova Video cần sự cho phép đặc biệt để truy cập bộ nhớ ngoài. Vui lòng chọn bộ nhớ của bạn trên màn hình tiếp theo</string>
-    <string name="rescrap_not_found">Thu thập lại những video không có mô tả</string>
+    <string name="rescrap_not_found">Thu thập lại những băng hình không có mô tả</string>
     <string name="rescrap_all_title">Thu thập lại tất cả</string>
     <string name="rescrap_all_movies_title">Thu thập lại tất cả phim</string>
     <string name="rescrap_all_collections_title">Thu thập lại tất cả các bộ sưu tập</string>
-    <string name="nfo_export_manual_title">Xuất các video đã thu thập thông tin</string>
-    <string name="nfo_export_manual_summary">Xuất tệp .nfo của mọi video đã được thu thập</string>
+    <string name="nfo_export_manual_title">Xuất các băng hình đã thu thập thông tin</string>
+    <string name="nfo_export_manual_summary">Xuất tệp .nfo của mọi băng hình đã được thu thập</string>
     <string name="db_export_manual_title">Xuất cơ sở dữ liệu phương tiện</string>
     <string name="db_export_manual_summary">Xuất tệp media.db sang /thẻ sd cho mục đích gỡ lỗi</string>
     <string name="db_export_in_progress">Đang xuất cơ sở dữ liệu</string>
@@ -871,16 +871,16 @@
     <string name="switch_remote_empty_message">Chuyển sang chế độ hiển thị từ xa có thể cung cấp nhiều tùy chọn theo dõi hơn</string>
     <string name="cast_stream_mode">Chế độ phát trực tiếp</string>
     <string name="cast_remote_display_mode">Màn hình từ xa</string>
-    <string name="cast_remote_display_mode_description">mọi định dạng được hỗ trợ bởi Trình phát video Nova đều có thể được phát bằng màn hình từ xa. Tuy nhiên, chất lượng có thể bị suy giảm.</string>
+    <string name="cast_remote_display_mode_description">mọi định dạng được hỗ trợ bởi Trình phát băng hình Nova đều có thể được phát bằng màn hình từ xa. Tuy nhiên, chất lượng có thể bị suy giảm.</string>
     <string name="cast_stream_mode_description">Chất lượng tối ưu nhưng một số định dạng không thể được hỗ trợ</string>
     <string name="sleep_timer_title">Hẹn giờ ngủ</string>
-    <string name="sleep_timer_description">Dừng video sau: </string>
+    <string name="sleep_timer_description">Dừng băng hình sau: </string>
     <string name="cast_mode">Chế độ truyền</string>
     <string name="cast_info">Thông tin</string>
-    <string name="troubleshoot_streammode_msg">Trình phát video Nova hiện đang ở chế độ truyền phát trực tuyến.
-        \nĐiều này mang lại chất lượng video tốt nhưng có thể phát sinh vấn đề với luồng âm thanh và phụ đề.
+    <string name="troubleshoot_streammode_msg">Trình phát băng hình Nova hiện đang ở chế độ truyền phát trực tuyến.
+        \nĐiều này mang lại chất lượng băng hình tốt nhưng có thể phát sinh vấn đề với luồng âm thanh và phụ đề.
         Hãy thử chuyển sang chế độ truyền màn hình từ xa.</string>
-    <string name="troubleshoot_remotemode_msg">Trình phát video Nova hiện đang ở chế độ hiển thị từ xa.
+    <string name="troubleshoot_remotemode_msg">Trình phát băng hình Nova hiện đang ở chế độ hiển thị từ xa.
         \nTùy thuộc vào thiết bị và chất lượng mạng của bạn, bạn có thể gặp một số vấn đề về giảm chất lượng và hiệu suất. </string>
     <string name="picture_in_picture">Ảnh trong ảnh</string>
     <string name="cast">Truyền</string>
@@ -889,17 +889,17 @@
     <string name="cast_fallback_message">Lỗi: dự phòng để truyền màn hình</string>
     <string name="cast_introduction">Tính năng thử nghiệm mới: \nGoogle cast</string>
     <string name="cast_select_for_full_control">Chạm để mở rộng bộ điều khiển</string>
-    <string name="cast_audio_background">Âm thanh sẽ không hoạt động khi Trình phát video Nova ở chế độ nền</string>
+    <string name="cast_audio_background">Âm thanh sẽ không hoạt động khi Trình phát băng hình Nova ở chế độ nền</string>
     <string name="help_faq">Trợ giúp/Hỏi đáp</string>
     <string name="provider_folders">Đám mây</string>
     <string name="learn_more">Tìm hiểu thêm</string>
-    <string name="learn_more_about_codecs">Trình phát video Nova chỉ có thể phát video được thiết bị của bạn hỗ trợ. Do vấn đề giấy phép, một số định dạng không thể được bao gồm hợp pháp, một số định dạng khác có thể được mua trên Cửa hàng Google Play.</string>
+    <string name="learn_more_about_codecs">Trình phát băng hình Nova chỉ có thể phát băng hình được thiết bị của bạn hỗ trợ. Do vấn đề giấy phép, một số định dạng không thể được bao gồm hợp pháp, một số định dạng khác có thể được mua trên Cửa hàng Google Play.</string>
     <string name="rate_us">Nếu bạn thích ứng dụng này, hãy ủng hộ chúng tôi bằng cách đánh giá chúng tôi 5 sao</string>
     <string name="rate_us_title">☆ Hỗ trợ chúng tôi</string>
     <string name="create_new_list">Tạo danh sách mới</string>
     <string name="add_to_list">Thêm vào danh sách</string>
     <string name="no_resume_available">Hiện không có sẵn điểm tiếp tục</string>
-    <string name="no_list_detected">Hiện không phát hiện danh sách nào. Danh sách có thể được tạo bằng cách thêm các mục mới trực tiếp từ thông tin video hoặc có thể được đồng bộ hóa với tài khoản trakt của bạn.</string>
+    <string name="no_list_detected">Hiện không phát hiện danh sách nào. Danh sách có thể được tạo bằng cách thêm các mục mới trực tiếp từ thông tin băng hình hoặc có thể được đồng bộ hóa với tài khoản trakt của bạn.</string>
     <string name="premium_already_purchased">Premium đã được mua</string>
     <string name="remove_from_list">Loại khỏi danh sách</string>
     <string name="warning_swdec">Cảnh báo: giải mã phần cứng bị vô hiệu hóa!</string>
@@ -911,7 +911,7 @@
     <string name="enable_sponsor_title">Kích hoạt liên kết nhà tài trợ Nova</string>
     <string name="enable_sponsor_summary">Bật liên kết nhà tài trợ để quyên góp: mọi đóng góp đều có ích.</string>
     <string name="upgrade_info">Nâng cấp thông tin</string>
-    <string name="v5_v6_upgrade_info">CẢNH BÁO: bản cập nhật lớn này của Nova yêu cầu quét lại tất cả bộ sưu tập video để thu thập lại thông tin đa phương tiện.
+    <string name="v5_v6_upgrade_info">CẢNH BÁO: bản cập nhật lớn này của Nova yêu cầu quét lại tất cả bộ sưu tập băng hình để thu thập lại thông tin đa phương tiện.
         Khuyên bạn nên khởi động lại từ một cài đặt sạch để tránh các vấn đề. Vui lòng kiểm tra FAQ để biết chi tiết.</string>
     <string name="networks">Mạng:</string>
     <string name="premiered">Công chiếu:</string>

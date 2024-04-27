@@ -339,7 +339,9 @@
     <string name="set_audio_speed_to">מהירות אודיו %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
+    <string name="subs_HI">לקויי שמיעה</string>
     <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <string name="subs_SDH">כתוביות לחרשים ולקויי שמיעה</string>
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">ברזילאית</string>
     <string name="s_chinese">סינית</string>
@@ -455,6 +457,7 @@
     <string name="exit">יציאה</string>
     <!-- torrent -->
     <string name="error">אירעה שגיאה</string>
+    <string name="error_protocol_not_supported">שגיאה: פרוטוקול לא נתמך</string>
     <string name="error_loading_torrent">שגיאה בעת טעינת הטורנט</string>
     <string name="error_downloading_not_enough_space">שגיאה בזמן הורדת טורנט: אין מספיק מקום</string>
     <string name="loading_torrent">טוען טורנט…</string>
@@ -545,6 +548,9 @@
     <string name="preference_tv_3d_automatic_switch_summary">השתמש בתכונה זו רק אם האלויזיה שלך תומכת ב-3D</string>
     <string name="preference_tv_refreshrate_switch">אפשר שינוי אוטומטי של קצב הרענון</string>
     <string name="preference_tv_refreshrate_switch_summary">הסר את אפקט הרעידה על ידי התאמת קצב רענון המסך לקצב הפריימים של הוידאו (תלוי בתמיכת המכשיר)</string>
+    <string name="preferences_tv_refreshrate_switch_disabled">מושבת</string>
+    <string name="preferences_tv_refreshrate_switch_mode_selection">בחירת קצב ריענון וידאו במצב תצוגה</string>
+    <string name="preferences_tv_refreshrate_switch_match_frame_rate">תכונה של התאמת קצב ריענון באנדרואיד 12 ומעלה</string>
     <string name="preference_remove_dolby_vision">השבת Dolby vision</string>
     <string name="preference_remove_dolby_vision_summary">השתמש במקודדים סטנדרטיים במקום Dolby vision</string>
     <string name="preference_cutout_short_edges">וידאו על מסך מלא עם חורים במסך</string>
@@ -558,6 +564,8 @@
     <string name="summary_list_preference_primary">בחר את השפות להורדת כתוביות</string>
     <string name="favSubLang_title">שפת קריאת כתוביות</string>
     <string name="favSubLang_summary">בחר את השפה המועדפת לקריאת כתוביות</string>
+    <string name="favAudioLang_title">שפת שמע מועדפת</string>
+    <string name="favAudioLang_summary">בחר את שפת השמע המועדפת</string>
     <string name="ui_mode_title">מצב ממשק משתמש</string>
     <string name="ui_mode_summary">בחר בין ממשק טלוויזיה וטבלט/טלפון</string>
     <string name="preferences_video_about">אודות</string>
@@ -580,6 +588,8 @@
     <string name="enable_adult_scrap_title">מידע מדיה של סרטים למבוגרים</string>
     <string name="enable_adult_scrap_summary">אפשר שליפת מידע עבור סרטים למבוגרים (לא מאופשר כברירת מחדל)</string>
     <string name="locale">שפת מערכת</string>
+    <string name="scraper_language_title">שפת תיאור הוידאו</string>
+    <string name="scraper_language_summary">הגדר את שפת תיאור הוידאו להורדה</string>
     <string name="yes">כן</string>
     <string name="no">לא</string>
     <string name="abort">ביטול</string>
