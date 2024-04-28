@@ -1337,7 +1337,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     mPlayer.setSubtitleRatio(mVideoInfo.subtitleRatio);
                 }
             }
-            if (mVideoInfo.subtitleTrack == noneTrack) { // if none track selected, player gets -1 track
+            if (mHideSubtitles || mVideoInfo.subtitleTrack == noneTrack) { // if none track selected, player gets -1 track
                 mPlayer.setSubtitleTrack(-1);
             }
             firstTimeCalled = false;
