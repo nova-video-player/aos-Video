@@ -20,6 +20,8 @@ import android.content.Intent;
 import android.net.Uri;
 import androidx.core.content.FileProvider;
 import androidx.preference.PreferenceManager;
+
+import android.os.Parcelable;
 import android.widget.Toast;
 
 import com.archos.filecorelibrary.MetaFile2;
@@ -307,7 +309,6 @@ public class PlayUtils implements IndexHelper.Listener {
             int n = 0;
             List<Uri> MxSubPaths = new ArrayList<>();
             Uri subUri;
-            // dump listOfSubtitles to logcat
             if (listOfSubtitles != null) {
                 log.debug("onResumeReady: listOfSubtitles " + Arrays.toString(listOfSubtitles.toArray()));
             } else {
@@ -333,8 +334,10 @@ public class PlayUtils implements IndexHelper.Listener {
                     }
                     n++;
                 }
+                Parcelable[] MxSubPathsParcelableArray = MxSubPaths.toArray(new Parcelable[0]);
+                log.trace("onResumeReady: subs passed to 3rd party player " + Arrays.toString(MxSubPathsParcelableArray));
+                if (! MxSubPaths.isEmpty()) intent.putExtra("subs", MxSubPathsParcelableArray);
             }
-            if (MxSubPaths.size() != 0) intent.putExtra("subs", MxSubPaths.toArray(new Uri[] {}));
         }
         //this differs from the file uri for upnp
         intent.putExtra(PlayerActivity.KEY_STREAMING_URI, video.getStreamingUri());
