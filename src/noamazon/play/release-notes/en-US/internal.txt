@@ -1,3 +1,4 @@
+- Fix hide subtitles by default not working regression
 - Fix subs not passed to external video player
 - Fix posters not downloading on old Android version
 - Android TV icon update for Google Play compliance
