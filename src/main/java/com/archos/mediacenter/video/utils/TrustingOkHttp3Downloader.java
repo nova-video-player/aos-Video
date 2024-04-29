@@ -20,6 +20,9 @@ import android.content.Context;
 
 import com.squareup.picasso.Downloader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyManagementException;
@@ -29,6 +32,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.util.Enumeration;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
@@ -41,7 +45,6 @@ import okhttp3.Request;
 // okhttp3 downloader that trusts letsencrypt certificates added manually
 // because on android 7.1 and below platform certificates are not up to date
 public class TrustingOkHttp3Downloader implements Downloader {
-
     private final Context context;
 
     public TrustingOkHttp3Downloader(Context context) {
@@ -71,14 +74,31 @@ public class TrustingOkHttp3Downloader implements Downloader {
             Certificate certificate2 = certificateFactory.generateCertificate(certInputStream2);
             certInputStream2.close();
 
-            // Create a TrustManager that trusts the letsencrypt loaded certificates
-            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            keyStore.load(null);
-            keyStore.setCertificateEntry("cert1", certificate1);
-            keyStore.setCertificateEntry("cert2", certificate2);
+            // Load the system's default KeyStore (AndroidCAStore)
+            KeyStore systemKeyStore = KeyStore.getInstance("AndroidCAStore");
+            systemKeyStore.load(null);
 
+            // Create a custom KeyStore with the system's CA certificates and add the custom certificates
+            KeyStore customKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            customKeyStore.load(null);
+
+            // Copy all system certificates into the custom KeyStore
+            Enumeration<String> aliases = systemKeyStore.aliases();
+            while (aliases.hasMoreElements()) {
+                String alias = aliases.nextElement();
+                if (systemKeyStore.isCertificateEntry(alias)) {
+                    Certificate systemCert = systemKeyStore.getCertificate(alias);
+                    customKeyStore.setCertificateEntry(alias, systemCert);
+                }
+            }
+
+            // Add the custom certificates to the custom KeyStore
+            customKeyStore.setCertificateEntry("isrg_root_x1", certificate1);
+            customKeyStore.setCertificateEntry("isrg_root_x2", certificate2);
+
+            // Create a TrustManager that trusts the system and custom certificates
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            trustManagerFactory.init(keyStore);
+            trustManagerFactory.init(customKeyStore);
 
             // Build the OkHttpClient with the custom TrustManager
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
