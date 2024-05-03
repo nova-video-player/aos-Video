@@ -3673,7 +3673,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     log.debug("onSubtitleMetadataUpdated: mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack);
                     mSubtitleInfoController.setTrack(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles)); // +1 since none track is at position 0
                 }
-                if (mVideoInfo.subtitleTrack == -1) { // selects first track in this case to avoid none track
+                if (!mHideSubtitles && mVideoInfo.subtitleTrack == -1) { // selects first track in this case to avoid none track
+                //if (mVideoInfo.subtitleTrack == -1) { // selects first track in this case to avoid none track
                     log.debug("onSubtitleMetadataUpdated: mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack + " -> setting first track");
                     mSubtitleInfoController.setTrack(1);
                 }
@@ -3681,6 +3682,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     log.debug("onSubtitleMetadataUpdated: none track selected, disabling delay menu");
                     mSubtitleInfoController.enableSettings(SUBTITLE_MENU_DELAY, false, false);
                 }
+
+                if (mHideSubtitles) {
+                    mSubtitleInfoController.setTrack(0);
+                }
+
             }
 
             refreshSubtitleTVMenu();
