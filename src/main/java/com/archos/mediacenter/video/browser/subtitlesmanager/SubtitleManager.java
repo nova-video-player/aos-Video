@@ -306,7 +306,7 @@ public class SubtitleManager {
                 });
                 //force prefixing with video name before copy if this is not the case i.e. Subs/en.srt -> videoName.en.srt,
                 // /!\ it will cause subs duplicates because detection is based on fileName
-                engine.setAllTargetFilesShouldStartWithString(stripExtension(videoUri));
+                engine.setAllTargetFilesShouldStartWithString(stripExtension(videoUri) + ".");
                 engine.copy(subs, target, true);
             } else {
                 mHandler.post(new Runnable() {
