@@ -513,7 +513,7 @@ public class SubtitleManager {
     public static String getLanguage3(String basename) {
         // extract the 2 or 3 letters language code in a string located at after the start of the string or character "_" or "." or "]" till the end of the string or till a closing ".HI"
         // for some reason, some yts subtitles have a .HI at the end of the filename, and apparently this is not for Hindi but Hearing Impaired, note that they are preceded by SDH for Deaf and hard of Hearing
-        Pattern pattern = Pattern.compile("(?:[_\\-.\\]]|^)([a-zA-Z]{2,3})(" + SEP + "(HI|SDH)|$)");
+        Pattern pattern = Pattern.compile("(?:^|" + SEP + ")(" + COUNTRYCODE + ")(?:" + SEP + HI + "|$)");
         Matcher matcher = pattern.matcher(basename);
         if (matcher.find()) {
             return matcher.group(1);
@@ -522,15 +522,9 @@ public class SubtitleManager {
         }
     }
 
-    private static final String SEP = "(^|[\\p{Punct}\\s]++|$)";
-
-    public static boolean isHearingImpaired(String input) {
-        if (input == null) return false;
-        // HI and SDH case sensitive for hearing impaired
-        String regex = ".*" + SEP + "(HI|SDH)" + SEP + ".*";
-        log.debug("isHearingImpaired: " + input + " -> " + input.matches(regex));
-        return input.matches(regex);
-    }
+    private static final String SEP = "[\\p{Punct}\\s]++";
+    private static final String COUNTRYCODE = "[a-zA-Z]{2,3}";
+    private static final String HI = "(HI|SDH)";
 
     public static String getSubLanguageFromSubPath(Context context, String path) {
         String subFilenameWithoutExtension = stripExtensionFromName(getName(path));
@@ -549,7 +543,7 @@ public class SubtitleManager {
         String subLanguageName = null;
         if (lang != null) {
             // treat yts SDH and HI as hearing impaired e.g. SDH.eng.HI.srt
-            if (isHearingImpaired(subFilenameWithoutExtension))
+            if (isSubtitleHearingImpaired(subFilenameWithoutExtension))
                 subLanguageName = getLanguageNameForLetterCode(context, lang) + " (HI)";
             else subLanguageName = getLanguageNameForLetterCode(context, lang);
         } else subLanguageName = subFilenameWithoutExtension;
@@ -560,7 +554,7 @@ public class SubtitleManager {
     public static boolean isSubtitleHearingImpaired(String basename) {
         // extract the 2 or 3 letters language code in a string located at after the start of the string or character "_" or "." or "]" till the end of the string or till a closing ".HI"
         // for some reason, some yts subtitles have a .HI at the end of the filename, and apparently this is not for Hindi but Hearing Impaired, note that they are preceded by SDH for Deaf and hard of Hearing
-        Pattern pattern = Pattern.compile("(?:[_\\-.\\]]|^)([a-zA-Z]{2,3})\\.HI$");
+        Pattern pattern = Pattern.compile("(?:^|" + SEP + ")(" + COUNTRYCODE + ")" + SEP + HI + "$");
         Matcher matcher = pattern.matcher(basename);
         //log.debug("isSubtitleHearingImpaired: " + basename + " -> " + matcher.group(1));
         return matcher.find();
