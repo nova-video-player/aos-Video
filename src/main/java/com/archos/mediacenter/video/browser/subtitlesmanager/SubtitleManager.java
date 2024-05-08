@@ -14,8 +14,10 @@
 
 package com.archos.mediacenter.video.browser.subtitlesmanager;
 
+import static com.archos.filecorelibrary.FileUtils.getName;
 import static com.archos.filecorelibrary.FileUtils.stripExtensionFromName;
 import static com.archos.mediacenter.utils.ISO639codes.getLanguageNameForLetterCode;
+import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.getLanguageNameForLetterCode;
 import static com.archos.mediacenter.utils.ISO639codes.isletterCode;
 
 import android.content.Context;
@@ -135,9 +137,16 @@ public class SubtitleManager {
 
     private static List<String> prefetchedListOfSubs;
 
+    private static List<String> listOfLocalSubs;
+
     public static List<String> getPreFetchedListOfSubs() {
         log.debug("getPreFetchedListOfSubs: " + Arrays.toString(prefetchedListOfSubs.toArray()));
         return prefetchedListOfSubs;
+    }
+
+    public static List<String> getListOfLocalSubs() {
+        log.debug("getListOfLocalSubs: " + Arrays.toString(listOfLocalSubs.toArray()));
+        return listOfLocalSubs;
     }
 
     public void preFetchHTTPSubtitlesAndPrepareUpnpSubs(final Uri upnpNiceUri, final Uri fileUri){
@@ -235,6 +244,7 @@ public class SubtitleManager {
                     }
                 }
                 else if(!"upnp".equals(fileUri.getScheme())&&UriUtils.isImplementedByFileCore(fileUri)&&!FileUtils.isLocal(fileUri)){
+                    log.debug("preFetchHTTPSubtitlesAndPrepareUpnpSubs: fileUri is not local, trying to fetch subtitles from " + fileUri);
                     privatePrefetchSub(fileUri);
                 }
 
@@ -320,7 +330,7 @@ public class SubtitleManager {
     }
 
     private static String stripExtension(Uri video){
-        final String videoFileName = FileUtils.getName(video);
+        final String videoFileName = getName(video);
         final String videoExtension = MimeUtils.getExtension(videoFileName);
         String filenameWithoutExtension ;
         if (videoExtension!=null) { // may happen in UPnP
@@ -484,12 +494,14 @@ public class SubtitleManager {
         }
         // Remove duplicates due to the fact that the remote subtitles may have already been downloaded to the tmp folder
         List<SubtitleFile> subListUnique = new LinkedList<SubtitleFile>();
+        listOfLocalSubs = new LinkedList<String>();
         for (SubtitleFile f : subList) {
             // this test checks if the file is already in the list via fileSize and fleName (it captures Subs/en.srt then it is renamed in privatePrefetchSub to videoName.en.srt)
             // refer to equal() method for this
             if (!subListUnique.contains(f)) {
                 log.debug("listLocalAndRemotesSubtitles: adding only unique " + f.mFile.getUri().toString() + " (" + f.mName +")");
                 subListUnique.add(f);
+                if (FileUtils.isLocal(f.mFile.getUri())) listOfLocalSubs.add(f.mFile.getUri().getPath());
             } else {
                 log.debug("listLocalAndRemotesSubtitles: skipping duplicate " + f.mFile.getUri().toString() + " (" + f.mName +")");
             }
@@ -501,13 +513,48 @@ public class SubtitleManager {
     public static String getLanguage3(String basename) {
         // extract the 2 or 3 letters language code in a string located at after the start of the string or character "_" or "." or "]" till the end of the string or till a closing ".HI"
         // for some reason, some yts subtitles have a .HI at the end of the filename, and apparently this is not for Hindi but Hearing Impaired, note that they are preceded by SDH for Deaf and hard of Hearing
-        Pattern pattern = Pattern.compile("(?:[_\\-.\\]]|^)([a-zA-Z]{2,3})(\\.HI|$)");
+        Pattern pattern = Pattern.compile("(?:[_\\-.\\]]|^)([a-zA-Z]{2,3})(" + SEP + "(HI|SDH)|$)");
         Matcher matcher = pattern.matcher(basename);
         if (matcher.find()) {
             return matcher.group(1);
         } else {
             return null;
         }
+    }
+
+    private static final String SEP = "(^|[\\p{Punct}\\s]++|$)";
+
+    public static boolean isHearingImpaired(String input) {
+        if (input == null) return false;
+        // HI and SDH case sensitive for hearing impaired
+        String regex = ".*" + SEP + "(HI|SDH)" + SEP + ".*";
+        log.debug("isHearingImpaired: " + input + " -> " + input.matches(regex));
+        return input.matches(regex);
+    }
+
+    public static String getSubLanguageFromSubPath(Context context, String path) {
+        String subFilenameWithoutExtension = stripExtensionFromName(getName(path));
+        if (subFilenameWithoutExtension == null) return path;
+        // get 2 or 3 letter code for language
+        getLanguage3(subFilenameWithoutExtension);
+        String lang = switch (subFilenameWithoutExtension.toLowerCase()) {
+            case "simplified.chi" -> "s_chinese_simplified";
+            case "traditional.chi" -> "s_traditional_chinese";
+            case "brazilian.por" -> "s_brazilian";
+            case "latin american.spa" -> "s_spanish_la";
+            case "english" -> "eng";
+            default -> getLanguage3(subFilenameWithoutExtension);
+        };
+        // treat yts Simplified.chi.srt Traditional.chi.srt Latin American.spa.srt English.srt Brazilian.por.srt and reuse s_ special strings for this
+        String subLanguageName = null;
+        if (lang != null) {
+            // treat yts SDH and HI as hearing impaired e.g. SDH.eng.HI.srt
+            if (isHearingImpaired(subFilenameWithoutExtension))
+                subLanguageName = getLanguageNameForLetterCode(context, lang) + " (HI)";
+            else subLanguageName = getLanguageNameForLetterCode(context, lang);
+        } else subLanguageName = subFilenameWithoutExtension;
+        log.debug("getSubLanguageFromSubPath: " + path + " -> " + subLanguageName);
+        return subLanguageName;
     }
 
     public static boolean isSubtitleHearingImpaired(String basename) {

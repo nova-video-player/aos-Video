@@ -3,4 +3,5 @@
   <external-path name="external_files" path="." />
   <root-path name="storage_files" path="/storage/" />
   <root-path name="mount_files" path="/mnt/" />
+  <external-cache-path name="subtitles" path="subtitles/" />
 </paths>

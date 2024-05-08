@@ -108,9 +108,9 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
                 ", mPlayerUri " + mPlayerUri
         );
         // Some external video player api specs:
-        // vlc https://wiki.videolan.org/Android_Player_Intents/
+        // vlc https://wiki.videolan.org/Android_Player_Intents/ https://wiki.videolan.org/MediaControlAPI
         // justplayer https://github.com/moneytoo/Player/issues/203
-        // mxplayer https://mx.j2inter.com/api
+        // mxplayer https://mx.j2inter.com/api https://sites.google.com/site/mxvpen/api
         // mpv http://mpv-android.github.io/mpv-android/intent.html
         // vimu https://www.vimu.tv/player-api
         if (data != null) {

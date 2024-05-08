@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by vapillon on 15/04/15.
@@ -190,7 +191,14 @@ public class PlayUtils implements IndexHelper.Listener {
 
     public void requestVideoDb() {
         log.debug("requestVideoDb: list subtitles");
-        listOfSubtitles = SubtitleManager.getPreFetchedListOfSubs();
+        if (FileUtils.isLocal(mVideo.getUri())) {
+            // provide local list of subs
+            listOfSubtitles = SubtitleManager.getListOfLocalSubs();
+        } else {
+            // provide prefetched list of subs for remote shares
+            listOfSubtitles = SubtitleManager.getPreFetchedListOfSubs();
+        }
+        log.debug("requestVideoDb: listOfSubtitles " + Arrays.toString(listOfSubtitles.toArray()));
         if(mIndexHelper==null)
             mIndexHelper = new IndexHelper(mContext, null, 0);
         mIndexHelper.requestVideoDb(mVideo.getUri(), -1,null, this, false, true);
@@ -234,7 +242,6 @@ public class PlayUtils implements IndexHelper.Listener {
     public void onVideoDb(VideoDbInfo info, VideoDbInfo remoteInfo) {
         int resumePos = -1;
         if(info!=null||remoteInfo!=null) {
-
             if (mResume != PlayerService.RESUME_NO) {
                 if(remoteInfo!=null&&info==null)
                     resumePos = remoteInfo.resume;
@@ -306,8 +313,12 @@ public class PlayUtils implements IndexHelper.Listener {
             // for mxplayer/justplayer http://mx.j2inter.com/api subs android.net.Uri[], subs.name String[], subs.filename String[]
             Boolean subFound = false;
             String subPath;
+            File subFile;
+            String subLanguage;
             int n = 0;
             List<Uri> MxSubPaths = new ArrayList<>();
+            List<String> MxSubNameList = new ArrayList<>();
+            List<String> MxSubFileList = new ArrayList<>();
             Uri subUri;
             if (listOfSubtitles != null) {
                 log.debug("onResumeReady: listOfSubtitles " + Arrays.toString(listOfSubtitles.toArray()));
@@ -319,24 +330,26 @@ public class PlayUtils implements IndexHelper.Listener {
                 // find first external subtitle file and pass it to vlc
                 while (n < listOfSubtitles.size()) {
                     subPath = listOfSubtitles.get(n);
-                    subUri = Uri.parse(subPath); // these files are in local nova cache not accessible from 3rd party players
-                    try {
-                        StreamOverHttp stream = new StreamOverHttp(subUri, mimeType);
-                        dataUri = stream.getUri(subUri.getLastPathSegment());
-                        // vlc
-                        if (!subFound) intent.putExtra("subtitles_location", dataUri);
-                        subFound = true;
-                        // mxplayer/justplayer
-                        MxSubPaths.add(dataUri);
-                        log.debug("onResumeReady: adding external subtitle " + dataUri);
-                    } catch (IOException e) {
-                        log.error("onResumeReady: failed to start " + subUri + e);
-                    }
+                    subFile = new File(subPath);
+                    subUri = FileProvider.getUriForFile(context, "org.courville.nova.provider", subFile);
+                    subLanguage = SubtitleManager.getSubLanguageFromSubPath(context, subPath);
+                    MxSubPaths.add(subUri);
+                    MxSubNameList.add(subLanguage);
+                    MxSubFileList.add(subPath);
+                    log.debug("onResumeReady: subPath " + subPath + " -> subUri " + subUri + "-> subLanguage " + subLanguage);
                     n++;
                 }
                 Parcelable[] MxSubPathsParcelableArray = MxSubPaths.toArray(new Parcelable[0]);
                 log.trace("onResumeReady: subs passed to 3rd party player " + Arrays.toString(MxSubPathsParcelableArray));
-                if (! MxSubPaths.isEmpty()) intent.putExtra("subs", MxSubPathsParcelableArray);
+                if (! MxSubPaths.isEmpty()) {
+                    intent.putExtra("subs", MxSubPathsParcelableArray);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putExtra("subs.name", MxSubNameList.toArray(new String[0]));
+                    intent.putExtra("subs.file", MxSubFileList.toArray(new String[0]));
+                }
+            } else {
+                log.debug("onResumeReady: no sub files to inspect");
+
             }
         }
         //this differs from the file uri for upnp
