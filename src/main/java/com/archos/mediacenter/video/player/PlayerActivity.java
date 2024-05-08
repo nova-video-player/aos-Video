@@ -133,7 +133,7 @@ import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermi
 import static com.archos.filecorelibrary.FileUtils.stripExtensionFromName;
 import static com.archos.mediacenter.utils.ISO639codes.findLanguageInString;
 import static com.archos.mediacenter.utils.ISO639codes.isLanguageInString;
-import static com.archos.mediacenter.utils.ISO639codes.replaceLanguageCodeInString;
+import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.replaceLanguageCodeInString;
 import static com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager.getLanguage3;
 import static com.archos.mediacenter.video.utils.MiscUtils.isEmulator;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.DEFAULT_MAX_IFRAME_SIZE;
@@ -3564,7 +3564,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mAudioInfoController.clear();
             for (int i = 0; i < nbTrack; ++i) {
                 VideoMetadata.AudioTrack audio = vMetadata.getAudioTrack(i);
-                CharSequence name = replaceLanguageCodeInString(audio.name);
+                CharSequence name = replaceLanguageCodeInString(mContext, audio.name);
                 CharSequence summary = audio.format;
                 mAudioInfoController.addTrack(name, summary);
             }
@@ -3620,14 +3620,13 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         if (lang != null) {
                             // add hearing impaired indication if present
                             if (vMetadata.getSubtitleTrack(i).name.equals("hi") && !lang.equals("hi")) {
-                                mSubtitleInfoController.addTrack(replaceLanguageCodeInString(lang) + " (HI)");
+                                mSubtitleInfoController.addTrack(replaceLanguageCodeInString(mContext, lang) + " (HI)");
                             } else
-                                mSubtitleInfoController.addTrack(replaceLanguageCodeInString(lang));
-                        }
-                        else mSubtitleInfoController.addTrack(replaceLanguageCodeInString(vMetadata.getSubtitleTrack(i).name));
+                                mSubtitleInfoController.addTrack(replaceLanguageCodeInString(mContext, lang));
+                        } else mSubtitleInfoController.addTrack(replaceLanguageCodeInString(mContext, vMetadata.getSubtitleTrack(i).name));
                     } else {
-                        log.debug("onSubtitleMetadataUpdated: no path, path={}, isExternal={} -> name={}", vMetadata.getSubtitleTrack(i).path, vMetadata.getSubtitleTrack(i).isExternal, replaceLanguageCodeInString(vMetadata.getSubtitleTrack(i).name));
-                        mSubtitleInfoController.addTrack(replaceLanguageCodeInString(vMetadata.getSubtitleTrack(i).name));
+                        log.debug("onSubtitleMetadataUpdated: no path, path={}, isExternal={} -> name={}", vMetadata.getSubtitleTrack(i).path, vMetadata.getSubtitleTrack(i).isExternal, replaceLanguageCodeInString(mContext, vMetadata.getSubtitleTrack(i).name));
+                        mSubtitleInfoController.addTrack(replaceLanguageCodeInString(mContext, vMetadata.getSubtitleTrack(i).name));
                     }
                 }
 

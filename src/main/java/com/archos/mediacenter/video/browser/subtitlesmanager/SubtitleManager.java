@@ -99,7 +99,7 @@ public class SubtitleManager {
         public boolean equals(Object o) {
             // test checks if the file is already in the list via fileSize and fleName
             SubtitleFile other = (SubtitleFile)o;
-            log.debug("equals: " + mFile.getStreamingUri() + " vs " + other.mFile.getStreamingUri() + " (" + mFile.length() + " vs " + other.mFile.length() + ")");
+            log.trace("equals: " + mFile.getStreamingUri() + " vs " + other.mFile.getStreamingUri() + " (" + mFile.length() + " vs " + other.mFile.length() + ")");
             // do not compare entire fileName but only trailing part (i.e. "en.srt" instead of "videoName.en.srt") to capture copy of Subs/en.srt to videoName.en.srt by privatePrefetchSub
             //return ((mFile.getName().equals(other.mFile.getName())) && (mFile.length() == other.mFile.length()));
             return ((mFile.getName().endsWith(other.mFile.getName())) && (mFile.length() == other.mFile.length()));
@@ -470,22 +470,7 @@ public class SubtitleManager {
                 if (fileExtension != null) {
                     String subtitleName = null;
                     if (SubtitleExtensions.contains(fileExtension.toLowerCase(Locale.US))&&(!fileExtension.toLowerCase(Locale.US).equals("idx") || includeIdx)) {
-                        //log.debug("Found external subtitle file: " + file.getUri().toString());
-                        // Check if there is a language extension
-                        String language = "";
-                        final String subFilename = file.getName();
-                        final String subFilenameWithoutExtension = stripExtensionFromName(subFilename);
-                        final String languageExtension = getLanguage3(subFilenameWithoutExtension);
-                        // if this is not a 3 letter code use the full file name
-                        log.debug("listLocalAndRemotesSubtitles: subFilename={}, subFilenameWithoutExtension={}, languageExtension={}", subFilename, subFilenameWithoutExtension, languageExtension);
-                        if (languageExtension != null && isletterCode(languageExtension)) subtitleName = getLanguageNameForLetterCode(languageExtension);
-                        if (isSubtitleHearingImpaired(subFilenameWithoutExtension) && subtitleName != null)
-                            subtitleName += " (HI)";
-                        // In case we don't have the subtitle language we put the full file name
-                        if (subtitleName==null || subtitleName.isEmpty()) {
-                            subtitleName = subFilename;
-                        }
-                        subList.add(new SubtitleFile(file, subtitleName));
+                        subList.add(new SubtitleFile(file, getSubLanguageFromSubPath(mContext, file.getUri().getPath())));
                         log.trace("listLocalAndRemotesSubtitles: add external " + file.getUri().toString() + " (" + subtitleName +")");
                     }
                 }
@@ -526,19 +511,24 @@ public class SubtitleManager {
     private static final String COUNTRYCODE = "[a-zA-Z]{2,3}";
     private static final String HI = "(HI|SDH)";
 
-    public static String getSubLanguageFromSubPath(Context context, String path) {
-        String subFilenameWithoutExtension = stripExtensionFromName(getName(path));
-        if (subFilenameWithoutExtension == null) return path;
-        // get 2 or 3 letter code for language
-        getLanguage3(subFilenameWithoutExtension);
-        String lang = switch (subFilenameWithoutExtension.toLowerCase()) {
+    public static String convertYTSSubNamingExceptions(String name) {
+        return switch (name.toLowerCase()) {
             case "simplified.chi" -> "s_chinese_simplified";
             case "traditional.chi" -> "s_traditional_chinese";
             case "brazilian.por" -> "s_brazilian";
             case "latin american.spa" -> "s_spanish_la";
             case "english" -> "eng";
-            default -> getLanguage3(subFilenameWithoutExtension);
+            default -> name;
         };
+    }
+
+    public static String getSubLanguageFromSubPath(Context context, String path) {
+        String subFilenameWithoutExtension = stripExtensionFromName(getName(path));
+        if (subFilenameWithoutExtension == null) return path;
+        // get 2 or 3 letter code for language
+        String lang = convertYTSSubNamingExceptions(subFilenameWithoutExtension);
+        if (subFilenameWithoutExtension.equals(lang))
+            lang = getLanguage3(subFilenameWithoutExtension);
         // treat yts Simplified.chi.srt Traditional.chi.srt Latin American.spa.srt English.srt Brazilian.por.srt and reuse s_ special strings for this
         String subLanguageName = null;
         if (lang != null) {

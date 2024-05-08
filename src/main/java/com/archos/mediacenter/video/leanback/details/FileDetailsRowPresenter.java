@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.details;
 
+import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.replaceLanguageCodeInString;
+
 import android.content.Context;
 import android.content.res.Resources;
 import androidx.leanback.widget.RowHeaderPresenter;
@@ -24,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.archos.mediacenter.utils.ISO639codes;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
@@ -198,7 +199,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
             }
             int index = i + offset;
             sb.append(Integer.toString(index + 1)).append(".").append(separator)
-                    .append(ISO639codes.replaceLanguageCodeInString(videoMetadata.getSubtitleTrack(index).name) + separator);
+                    .append(replaceLanguageCodeInString(context, videoMetadata.getSubtitleTrack(index).name) + separator);
         }
         return sb.toString();
     }
