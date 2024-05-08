@@ -34,12 +34,12 @@ public class ISO639codes {
     static public String replaceLanguageCodeInString(Context context, String string) {
         // treat specific yts external subtitles naming for external subtitles
         String result = convertYTSSubNamingExceptions(string);
-        log.debug("replaceLanguageCodeInString: string={} result={}", string, result);
         if (string.equals(result))
             result = com.archos.mediacenter.utils.ISO639codes.replaceLanguageCodeInString(getSubLanguageFromSubPath(context, string));
         if (result.startsWith("s_"))
-            return VideoUtils.getLanguageString(context, result).toString();
-        else return result;
+            result =  VideoUtils.getLanguageString(context, result).toString();
+        log.debug("replaceLanguageCodeInString: exception string={} result={}", string, result);
+        return result;
     }
 
     static public String getLanguageNameForLetterCode(Context context, String code) {
