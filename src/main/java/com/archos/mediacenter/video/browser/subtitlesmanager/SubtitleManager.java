@@ -145,7 +145,8 @@ public class SubtitleManager {
     }
 
     public static List<String> getListOfLocalSubs() {
-        log.debug("getListOfLocalSubs: " + Arrays.toString(listOfLocalSubs.toArray()));
+        if (listOfLocalSubs != null) log.debug("getListOfLocalSubs: " + Arrays.toString(listOfLocalSubs.toArray()));
+        else log.debug("getListOfLocalSubs: null");
         return listOfLocalSubs;
     }
 

@@ -204,7 +204,8 @@ public class PlayUtils implements IndexHelper.Listener {
             // provide prefetched list of subs for remote shares
             listOfSubtitles = SubtitleManager.getPreFetchedListOfSubs();
         }
-        log.debug("requestVideoDb: listOfSubtitles " + Arrays.toString(listOfSubtitles.toArray()));
+        if (listOfSubtitles != null) log.debug("requestVideoDb: listOfSubtitles " + Arrays.toString(listOfSubtitles.toArray()));
+        else log.debug("requestVideoDb: listOfSubtitles is null");
         if(mIndexHelper==null)
             mIndexHelper = new IndexHelper(mContext, null, 0);
         mIndexHelper.requestVideoDb(mVideo.getUri(), -1,null, this, false, true);
