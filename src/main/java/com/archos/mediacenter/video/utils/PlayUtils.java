@@ -55,6 +55,9 @@ import java.util.regex.Pattern;
 public class PlayUtils implements IndexHelper.Listener {
     private static final Logger log = LoggerFactory.getLogger(PlayUtils.class);
 
+    // pass subs with http proxy to 3rd party players
+    private static final boolean EXTERNAL_PLAYER_HTTP_SUBS = true;
+
     private IndexHelper mIndexHelper;
     private VideoDbInfo mVideoDbInfo;
     private int mResume;
@@ -335,12 +338,29 @@ public class PlayUtils implements IndexHelper.Listener {
                 // find first external subtitle file and pass it to vlc
                 while (n < listOfSubtitles.size()) {
                     subPath = listOfSubtitles.get(n);
-                    subFile = new File(subPath);
-                    subUri = FileProvider.getUriForFile(context, "org.courville.nova.provider", subFile);
-                    subLanguage = SubtitleManager.getSubLanguageFromSubPath(context, subPath);
-                    MxSubPaths.add(subUri);
-                    MxSubNameList.add(subLanguage);
                     MxSubFileList.add(subPath);
+                    subLanguage = SubtitleManager.getSubLanguageFromSubPath(context, subPath);
+                    MxSubNameList.add(subLanguage);
+                    if (EXTERNAL_PLAYER_HTTP_SUBS) {
+                        subUri = Uri.parse(subPath); // these files are in local nova cache not accessible from 3rd party players
+                        try {
+                            StreamOverHttp stream = new StreamOverHttp(subUri, mimeType);
+                            dataUri = stream.getUri(subUri.getLastPathSegment());
+                            // vlc
+                            if (!subFound) intent.putExtra("subtitles_location", dataUri);
+                            subFound = true;
+                            // mxplayer/justplayer
+                            MxSubPaths.add(dataUri);
+                            log.debug("onResumeReady: adding external subtitle " + dataUri);
+                        } catch (IOException e) {
+                            log.error("onResumeReady: failed to start " + subUri + e);
+                        }
+                    } else {
+                        // TODO FIXME passing file to 3rd party player is not working
+                        subFile = new File(subPath);
+                        subUri = FileProvider.getUriForFile(context, "org.courville.nova.provider", subFile);
+                        MxSubPaths.add(subUri);
+                    }
                     log.debug("onResumeReady: subPath " + subPath + " -> subUri " + subUri + "-> subLanguage " + subLanguage);
                     n++;
                 }
