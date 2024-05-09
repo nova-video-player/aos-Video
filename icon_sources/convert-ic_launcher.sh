@@ -12,7 +12,7 @@ resolutions=(256 384 512 768 1024)
 densities=("mdpi" "hdpi" "xhdpi" "xxhdpi" "xxxhdpi")
 
 # foreground needs to be scaled otherwise icon is too big
-convert ${srca}.png -resize 45% -gravity center -background none -extent 1024x1024 ${srca}2.png
+#convert ${srca}.png -resize 45% -gravity center -background none -extent 1024x1024 ${srca}2.png
 #convert ${srca}.png -resize 67% -gravity center -background none -extent 1024x1024 ${srca}2.png
 #convert ${srcn}.png -resize 67% -gravity center -extent 1024x1024 ${srcn}2.png
 #cp ${srca}.png ${srca}2.png
@@ -36,5 +36,5 @@ do
   dir="${dir_map[$resolution]}"
   echo convert size ${resolution}x${resolution} for res/mipmap-${dir}
   convert ${srcn}.png -resize ${resolution}x${resolution} -quality 100 res/mipmap-${dir}/${srcn}.webp
-  convert ${srca}2.png -resize ${resolution}x${resolution} -quality 100 res/mipmap-${dir}/${srca}.webp
+  convert ${srca}.png -resize ${resolution}x${resolution} -quality 100 res/mipmap-${dir}/${srca}.webp
 done
