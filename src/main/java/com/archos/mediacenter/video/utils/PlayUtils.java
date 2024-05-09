@@ -185,16 +185,19 @@ public class PlayUtils implements IndexHelper.Listener {
         }else {
             if (resume == PlayerService.RESUME_NO)
                 resumePosition = 0;
+            log.debug("startPlayer: send onResumeReady");
             onResumeReady(context, mVideo, mimeType, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, playlistId);
         }
     }
 
     public void requestVideoDb() {
-        log.debug("requestVideoDb: list subtitles");
-        if (FileUtils.isLocal(mVideo.getUri())) {
+        log.debug("requestVideoDb: list subtitles for " + mVideo.getFileUri());
+        if (FileUtils.isLocal(mVideo.getFileUri())) {
             // provide local list of subs
+            log.debug("requestVideoDb: local list of subs");
             listOfSubtitles = SubtitleManager.getListOfLocalSubs();
         } else {
+            log.debug("requestVideoDb: remote prefetched list of subs");
             // provide prefetched list of subs for remote shares
             listOfSubtitles = SubtitleManager.getPreFetchedListOfSubs();
         }
@@ -233,6 +236,7 @@ public class PlayUtils implements IndexHelper.Listener {
                             requestVideoDb();
                         }
                     });
+            log.debug("prepareSubs: launch preFetchHTTPSubtitlesAndPrepareUpnpSubs " + mVideo.getFileUri() + " -> " + mVideo.getFileUri());
             // this copies subs locally to /storage/emulated/0/Android/data/org.courville.nova/cache/subtitles/
             subtitleManager.preFetchHTTPSubtitlesAndPrepareUpnpSubs(mVideo.getFileUri(), mVideo.getFileUri());
         }
@@ -256,6 +260,7 @@ public class PlayUtils implements IndexHelper.Listener {
                 }
             }
         }
+        log.debug("onVideoDb: send onResumeReady");
         onResumeReady(mContext, mVideo, mMimeType,
                 mResume, mLegacyPlayer, resumePos, mExternalPlayerWithResultStarter, mPlaylistId);
     }
