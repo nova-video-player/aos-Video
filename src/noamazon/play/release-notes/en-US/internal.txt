@@ -1,3 +1,4 @@
+- Use jupnp 3.0.2 instead of cling for UPnP
 - Many subtitles naming detection fixes
 - Fix hide subtitles by default not working regression
 - Fix subs not passed to external video player
