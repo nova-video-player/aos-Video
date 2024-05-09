@@ -1,9 +1,5 @@
+- Many subtitles naming detection fixes
 - Fix hide subtitles by default not working regression
 - Fix subs not passed to external video player
 - Fix posters not downloading on old Android version
-- Android TV icon update for Google Play compliance
-- Add Android 12 frame rate matching feature support
-- Add missing season actors to tv show episode cast
-- Scrape shows and movies without air date reported by TMDB
-- Fix preferred audio language not applied
-- Fix cannot download subs when logged in on opensubtitles.com
+- Nova icon update for Google Play compliance
