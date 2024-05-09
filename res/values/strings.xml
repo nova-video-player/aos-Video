@@ -316,6 +316,9 @@
     <string name="switch_to_grid">Grid</string>
 
     <!-- VideoPlayer -->
+
+    <string name="player_track">Track</string>
+
     <string name="player_loading_video">Loading video\u2026</string>
 
     <string name="player_audio_track_toast">Audio track:</string>

@@ -3563,9 +3563,15 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     + "  nbTrack: " + nbTrack);
 
             mAudioInfoController.clear();
+            String trackName = null;
             for (int i = 0; i < nbTrack; ++i) {
                 VideoMetadata.AudioTrack audio = vMetadata.getAudioTrack(i);
-                CharSequence name = replaceLanguageCodeInString(mContext, audio.name);
+                log.debug("onAudioMetadataUpdated: name={}, format={}", audio.name, audio.format);
+                trackName = replaceLanguageCodeInString(mContext, audio.name);
+                CharSequence name = trackName;
+                // when no name use track number instead of R.string.unknown_track_name th
+                if (trackName.isEmpty())
+                    name = getText(R.string.player_track) + " " + (i + 1);
                 CharSequence summary = audio.format;
                 mAudioInfoController.addTrack(name, summary);
             }
