@@ -389,7 +389,7 @@ public class PlayUtils implements IndexHelper.Listener {
                 StreamOverHttp streamOverHttp = new StreamOverHttp(file,mimeType);
                 uri = streamOverHttp.getUri(file.getName());
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("openAnyFile: failed to start " + file.getUri() + e);
             }
             intent.setDataAndType(uri, mimeType);
         }
