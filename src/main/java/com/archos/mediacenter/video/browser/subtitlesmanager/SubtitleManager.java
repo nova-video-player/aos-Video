@@ -544,7 +544,9 @@ public class SubtitleManager {
             if (isSubtitleHearingImpaired(subFilenameWithoutExtension))
                 subLanguageName = getLanguageNameForLetterCode(context, lang) + " (HI)";
             else subLanguageName = getLanguageNameForLetterCode(context, lang);
-        } else subLanguageName = "SRT"; // subLanguageName = subFilenameWithoutExtension;
+        } else { // subLanguageName is likely subFilenameWithoutExtension but cannot compare here because video filename not available
+            subLanguageName = subFilenameWithoutExtension;
+        }
         log.debug("getSubLanguageFromSubPath: " + path + " -> " + subLanguageName);
         return subLanguageName;
     }
