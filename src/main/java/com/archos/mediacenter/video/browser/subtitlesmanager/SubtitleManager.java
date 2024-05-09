@@ -16,9 +16,7 @@ package com.archos.mediacenter.video.browser.subtitlesmanager;
 
 import static com.archos.filecorelibrary.FileUtils.getName;
 import static com.archos.filecorelibrary.FileUtils.stripExtensionFromName;
-import static com.archos.mediacenter.utils.ISO639codes.getLanguageNameForLetterCode;
 import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.getLanguageNameForLetterCode;
-import static com.archos.mediacenter.utils.ISO639codes.isletterCode;
 
 import android.content.Context;
 import android.content.Intent;
@@ -57,8 +55,10 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CountDownLatch;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by alexandre on 12/05/15.
@@ -270,10 +270,12 @@ public class SubtitleManager {
     private void privatePrefetchSub(final Uri videoUri) {
         log.debug("privatePrefetchSub");
         try {
-            MediaUtils.removeLastSubs(mContext);List<MetaFile2> subs = getSubtitleList(videoUri);
-            if (!subs.isEmpty()){
+            MediaUtils.removeLastSubs(mContext);
+            List<MetaFile2> subs = getSubtitleList(videoUri);
 
+            if (!subs.isEmpty()){
                 Uri target = Uri.fromFile(MediaUtils.getSubsDir(mContext));
+                final CountDownLatch latch = new CountDownLatch(subs.size()); // Initialize the CountDownLatch with a count of 1
                 engine = new CopyCutEngine(mContext);
                 engine.setListener(new OperationEngineListener() {
                     @Override
@@ -290,24 +292,33 @@ public class SubtitleManager {
                                 mContext.sendBroadcast(intent);
                             }catch (Exception e){}//catching all exceptions for now for quick release
                         }
+                        latch.countDown(); // Decrement the count of the latch when the operation is successful
                     }
                     @Override
                     public void onFilesListUpdate(List<MetaFile2> copyingMetaFiles,List<MetaFile2> rootFiles) {  }
                     @Override
                     public void onEnd() {
                         mListener.onSuccess(videoUri);
+                        latch.countDown(); // Decrement the count of the latch when the operation ends
                     }
                     @Override
                     public void onFatalError(Exception e) {
                         mListener.onError(videoUri, e);
+                        latch.countDown(); // Decrement the count of the latch when there is an error
                     }
                     @Override
-                    public void onCanceled() {}
+                    public void onCanceled() {
+                        latch.countDown(); // Decrement the count of the latch when the operation is canceled
+                    }
                 });
                 //force prefixing with video name before copy if this is not the case i.e. Subs/en.srt -> videoName.en.srt,
                 // /!\ it will cause subs duplicates because detection is based on fileName
+                log.debug("privatePrefetchSub: setAllTargetFilesShouldStartWithString " + stripExtension(videoUri) + ".");
                 engine.setAllTargetFilesShouldStartWithString(stripExtension(videoUri) + ".");
+                //engine.setAllTargetFilesShouldStartWithString(stripExtension(videoUri));
                 engine.copy(subs, target, true);
+
+                latch.await(); // Wait for the latch to reach zero
             } else {
                 mHandler.post(new Runnable() {
                     @Override
