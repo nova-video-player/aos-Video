@@ -286,6 +286,7 @@
     <string name="switch_to_list">Liste</string>
     <string name="switch_to_grid">Grille</string>
     <!-- VideoPlayer -->
+    <string name="player_track">Piste</string>
     <string name="player_loading_video">Ouverture de la vidéo\u2026</string>
     <string name="player_audio_track_toast">Piste audio:</string>
     <string name="player_subtitle_track_toast">Piste de sous-titres:</string>
