@@ -3629,17 +3629,18 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                             mSubtitleInfoController.addTrack(getText(R.string.unknown_track_name));
                         }
                     } else { // name is not null
-                        if (vMetadata.getSubtitleTrack(i).name.equals("SRT") || vMetadata.getSubtitleTrack(i).name.equals("hi")) {
-                            // name is not meaningful, use path
+                        if ( ! vMetadata.getSubtitleTrack(i).isExternal && (vMetadata.getSubtitleTrack(i).name.equals("SRT") || vMetadata.getSubtitleTrack(i).name.equals("hi"))) {
+                            // name is not meaningful
                             if (lang != null) {
-                                log.debug("onSubtitleMetadataUpdated: set track name to lang=" + lang);
+                                log.debug("onSubtitleMetadataUpdated: int sub set track name to lang=" + lang);
                                 mSubtitleInfoController.addTrack(lang);
                             } else {
-                                log.debug("onSubtitleMetadataUpdated: lang is null, set track name to name=" + vMetadata.getSubtitleTrack(i).name);
+                                log.debug("onSubtitleMetadataUpdated: int sub lang is null, set track name to name=" + vMetadata.getSubtitleTrack(i).name);
                                 mSubtitleInfoController.addTrack(replaceLanguageCodeInString(mContext, vMetadata.getSubtitleTrack(i).name));
                             }
                         } else { // name can be meaningful add it only if not external
-                            if (lang != null) {
+                            // if ext sub and name is SRT it means that the sub filename is the same as the language reported thus we can use SRT without ambiguity
+                            if (! vMetadata.getSubtitleTrack(i).name.equalsIgnoreCase("srt") && lang != null) {
                                 if (vMetadata.getSubtitleTrack(i).isExternal) {
                                     log.debug("onSubtitleMetadataUpdated: ext sub set track name to lang=" + lang);
                                     mSubtitleInfoController.addTrack(lang);

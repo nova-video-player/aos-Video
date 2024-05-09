@@ -469,8 +469,12 @@ public class SubtitleManager {
                 final String fileExtension = file.getExtension();
                 if (fileExtension != null) {
                     String subtitleName = null;
+                    String subtitleFileName = null;
                     if (SubtitleExtensions.contains(fileExtension.toLowerCase(Locale.US))&&(!fileExtension.toLowerCase(Locale.US).equals("idx") || includeIdx)) {
-                        subList.add(new SubtitleFile(file, getSubLanguageFromSubPath(mContext, file.getUri().getPath())));
+                        subtitleFileName = stripExtensionFromName(getName(file.getName()));
+                        subtitleName = getSubLanguageFromSubPath(mContext, file.getUri().getPath());
+                        if (subtitleFileName.equals(subtitleName)) subtitleName = "SRT";
+                        subList.add(new SubtitleFile(file, subtitleName));
                         log.trace("listLocalAndRemotesSubtitles: add external " + file.getUri().toString() + " (" + subtitleName +")");
                     }
                 }
