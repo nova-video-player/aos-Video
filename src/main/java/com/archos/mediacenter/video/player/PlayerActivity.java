@@ -135,6 +135,7 @@ import static com.archos.mediacenter.utils.ISO639codes.findLanguageInString;
 import static com.archos.mediacenter.utils.ISO639codes.isLanguageInString;
 import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.replaceLanguageCodeInString;
 import static com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager.getLanguage3;
+import static com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager.getSubLanguageFromSubPath;
 import static com.archos.mediacenter.video.utils.MiscUtils.isEmulator;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.DEFAULT_MAX_IFRAME_SIZE;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.DEFAULT_STREAM_BUFFER_SIZE;
@@ -3611,22 +3612,40 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 for (int i = 0; i < nbTrack; ++i) {
                     // name comes from IMediaPlayer (avos) and if not internal it says SRT thus if name="SRT" infer the name from path
                     // infer language from path if path is provided
-                    // FIXME: vMetadata.getSubtitleTrack(i).name sometimes is "hi" but bad parsing from filename because not Hindi but hearing impaired. Cannot locate where it has been set :-( to fix at source
-                    // hint: probably it is part of privatePrefetchSub that triggers a scraping that puts info in MediaDb
-                    if (vMetadata.getSubtitleTrack(i).name != null && (vMetadata.getSubtitleTrack(i).name.equals("SRT") || vMetadata.getSubtitleTrack(i).name.equals("hi") || vMetadata.getSubtitleTrack(i).name.isEmpty()) && vMetadata.getSubtitleTrack(i).path != null) {
-                        String subFilenameWithoutExtension = stripExtensionFromName(getName(vMetadata.getSubtitleTrack(i).path));
-                        lang = getLanguage3(subFilenameWithoutExtension);
-                        log.debug("onSubtitleMetadataUpdated: name={}, path={}, isExternal={} -> subFilenameWithoutExtension={} -> lang={}", vMetadata.getSubtitleTrack(i).name, vMetadata.getSubtitleTrack(i).path, vMetadata.getSubtitleTrack(i).isExternal, subFilenameWithoutExtension, lang);
+                    lang = getSubLanguageFromSubPath(mContext, getName(vMetadata.getSubtitleTrack(i).path));
+                    log.debug("onSubtitleMetadataUpdated: name={}, path={}, isExternal={}, langFromPath={}", vMetadata.getSubtitleTrack(i).name, vMetadata.getSubtitleTrack(i).path, vMetadata.getSubtitleTrack(i).isExternal, lang);
+                    if (vMetadata.getSubtitleTrack(i).name == null || vMetadata.getSubtitleTrack(i).name.isEmpty()) {
                         if (lang != null) {
-                            // add hearing impaired indication if present
-                            if (vMetadata.getSubtitleTrack(i).name.equals("hi") && !lang.equals("hi")) {
-                                mSubtitleInfoController.addTrack(replaceLanguageCodeInString(mContext, lang) + " (HI)");
-                            } else
-                                mSubtitleInfoController.addTrack(replaceLanguageCodeInString(mContext, lang));
-                        } else mSubtitleInfoController.addTrack(replaceLanguageCodeInString(mContext, vMetadata.getSubtitleTrack(i).name));
-                    } else {
-                        log.debug("onSubtitleMetadataUpdated: no path, path={}, isExternal={} -> name={}", vMetadata.getSubtitleTrack(i).path, vMetadata.getSubtitleTrack(i).isExternal, replaceLanguageCodeInString(mContext, vMetadata.getSubtitleTrack(i).name));
-                        mSubtitleInfoController.addTrack(replaceLanguageCodeInString(mContext, vMetadata.getSubtitleTrack(i).name));
+                            log.debug("onSubtitleMetadataUpdated: name is null set track name to lang=" + lang);
+                            mSubtitleInfoController.addTrack(lang);
+                        } else {
+                            log.debug("onSubtitleMetadataUpdated: name and lang are null, set track name to unknown");
+                            mSubtitleInfoController.addTrack(getText(R.string.unknown_track_name));
+                        }
+                    } else { // name is not null
+                        if (vMetadata.getSubtitleTrack(i).name.equals("SRT") || vMetadata.getSubtitleTrack(i).name.equals("hi")) {
+                            // name is not meaningful, use path
+                            if (lang != null) {
+                                log.debug("onSubtitleMetadataUpdated: set track name to lang=" + lang);
+                                mSubtitleInfoController.addTrack(lang);
+                            } else {
+                                log.debug("onSubtitleMetadataUpdated: lang is null, set track name to name=" + vMetadata.getSubtitleTrack(i).name);
+                                mSubtitleInfoController.addTrack(replaceLanguageCodeInString(mContext, vMetadata.getSubtitleTrack(i).name));
+                            }
+                        } else { // name can be meaningful add it only if not external
+                            if (lang != null) {
+                                if (vMetadata.getSubtitleTrack(i).isExternal) {
+                                    log.debug("onSubtitleMetadataUpdated: ext sub set track name to lang=" + lang);
+                                    mSubtitleInfoController.addTrack(lang);
+                                } else {
+                                    log.debug("onSubtitleMetadataUpdated: int sub set track name to name+lang=" + vMetadata.getSubtitleTrack(i).name + " " + lang);
+                                    mSubtitleInfoController.addTrack(replaceLanguageCodeInString(mContext, vMetadata.getSubtitleTrack(i).name) + " " + lang);
+                                }
+                            } else {
+                                log.debug("onSubtitleMetadataUpdated: lang is null, set track name to name=" + vMetadata.getSubtitleTrack(i).name);
+                                mSubtitleInfoController.addTrack(replaceLanguageCodeInString(mContext, vMetadata.getSubtitleTrack(i).name));
+                            }
+                        }
                     }
                 }
 

@@ -507,23 +507,31 @@ public class SubtitleManager {
         }
     }
 
-    private static final String SEP = "[\\p{Punct}\\s]++";
+    // exclude parenthesis and brackets not to match mx (HI) in Rebel.Moon.-.Part.Two.The.Scargiver.2024.1080p.WEBRip.x265.10bit.AAC5.1-[YTS.MX].SDH.eng.HI.srt
+    private static final String SEP = "[\\p{Punct}&&[^\\[\\]()\\s]]++";
     private static final String COUNTRYCODE = "[a-zA-Z]{2,3}";
     private static final String HI = "(HI|SDH)";
 
     public static String convertYTSSubNamingExceptions(String name) {
-        return switch (name.toLowerCase()) {
-            case "simplified.chi" -> "s_chinese_simplified";
-            case "traditional.chi" -> "s_traditional_chinese";
-            case "brazilian.por" -> "s_brazilian";
-            case "latin american.spa" -> "s_spanish_la";
-            case "english" -> "eng";
-            default -> name;
-        };
+        String lowercaseName = name.toLowerCase();
+        if (lowercaseName.endsWith("simplified.chi")) {
+            return "s_chinese_simplified";
+        } else if (lowercaseName.endsWith("traditional.chi")) {
+            return "s_traditional_chinese";
+        } else if (lowercaseName.endsWith("brazilian.por")) {
+            return "s_brazilian";
+        } else if (lowercaseName.endsWith("latin american.spa")) {
+            return "s_spanish_la";
+        } else if (lowercaseName.endsWith("english")) {
+            return "eng";
+        } else {
+            return name;
+        }
     }
 
     public static String getSubLanguageFromSubPath(Context context, String path) {
         String subFilenameWithoutExtension = stripExtensionFromName(getName(path));
+        log.debug("getSubLanguageFromSubPath: " + path + " -> " + subFilenameWithoutExtension);
         if (subFilenameWithoutExtension == null) return path;
         // get 2 or 3 letter code for language
         String lang = convertYTSSubNamingExceptions(subFilenameWithoutExtension);
