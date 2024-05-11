@@ -48,7 +48,6 @@ import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.leanback.UnavailablePosterBroadcastReceiver;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
-import com.archos.mediacenter.video.player.Player;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediaprovider.video.VideoProvider;
 import com.squareup.picasso.Picasso;
