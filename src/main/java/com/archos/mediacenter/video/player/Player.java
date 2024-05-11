@@ -274,6 +274,7 @@ public class Player implements IPlayerControl,
                 mMediaPlayer.setAvDelay(mAvDelay);
             if (mAvSpeed != 1.0f)
                 mMediaPlayer.setAvSpeed(mAvSpeed);
+            log.trace("onPrepared: audioTrack=" + mAudioTrack);
             if (mAudioTrack != -1)
                 mMediaPlayer.setAudioTrack(mAudioTrack);
             reset();
@@ -292,6 +293,7 @@ public class Player implements IPlayerControl,
             mSubtitleDelay = subtitleDelay;
         }
         public void setAudioTrack(int audioTrack) {
+            log.debug("setAudioTrack: " + audioTrack);
             mAudioTrack = audioTrack;
         }
         public void setSubtitleRatio(int n, int d) {
@@ -513,10 +515,12 @@ public class Player implements IPlayerControl,
                 else
                     mMediaPlayer.setDataSource(mContext, mUri);
                 if (mSurfaceHolder != null) {
+                    log.debug("openVideo: setDisplay based on SurfaceHolder");
                     mMediaPlayer.setDisplay(mSurfaceHolder);
                     hasBeenSet=true;
                 }
                 else if (mVideoTexture != null) {
+                    log.debug("openVideo: setSurface based on SurfaceTexture");
                     Surface surface = new Surface(mVideoTexture);
                     mMediaPlayer.setSurface(surface);
                     surface.release();
@@ -927,6 +931,7 @@ public class Player implements IPlayerControl,
     };
 
     public boolean setAudioTrack(int stream) {
+        log.debug("setAudioTrack: select stream " + stream);
         if (isInPlaybackState()) {
             return mMediaPlayer.setAudioTrack(stream);
         } else {
