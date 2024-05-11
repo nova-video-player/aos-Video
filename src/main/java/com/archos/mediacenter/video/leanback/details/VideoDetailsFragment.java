@@ -1122,7 +1122,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     @Override
     public void startActivityWithResultListener(Intent intent) {
-        startActivityForResult(intent, PLAY_ACTIVITY_REQUEST_CODE);
+        if (isAdded()) {
+            startActivityForResult(intent, PLAY_ACTIVITY_REQUEST_CODE);
+        } else {
+            log.error("startActivityWithResultListener: fragment not added");
+        }
     }
 
     //putting in thread to avoid async tasks to be locked
