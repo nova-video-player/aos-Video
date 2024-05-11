@@ -484,7 +484,7 @@ public class SubtitleManager {
                     String subtitleFileName = null;
                     if (SubtitleExtensions.contains(fileExtension.toLowerCase(Locale.US))&&(!fileExtension.toLowerCase(Locale.US).equals("idx") || includeIdx)) {
                         subtitleFileName = stripExtensionFromName(getName(file.getName()));
-                        subtitleName = getSubLanguageFromSubPath(mContext, file.getUri().getPath());
+                        subtitleName = getSubLanguageFromSubPathAndVideoPath(mContext, file.getUri().getPath(), video.getPath());
                         if (subtitleFileName.equals(subtitleName)) subtitleName = "SRT";
                         subList.add(new SubtitleFile(file, subtitleName));
                         log.trace("listLocalAndRemotesSubtitles: add external " + file.getUri().toString() + " (" + subtitleName +")");
@@ -545,25 +545,38 @@ public class SubtitleManager {
         }
     }
 
-    public static String getSubLanguageFromSubPath(Context context, String path) {
-        String subFilenameWithoutExtension = stripExtensionFromName(getName(path));
-        log.debug("getSubLanguageFromSubPath: " + path + " -> " + subFilenameWithoutExtension);
-        if (subFilenameWithoutExtension == null) return path;
-        // get 2 or 3 letter code for language
-        String lang = convertYTSSubNamingExceptions(subFilenameWithoutExtension);
-        if (subFilenameWithoutExtension.equals(lang))
-            lang = getLanguage3(subFilenameWithoutExtension);
+    public static String getSubLanguageFromSubPathAndVideoPath(Context context, String subPath, String videoPath) {
+        String subFilenameWithoutExtension = stripExtensionFromName(getName(subPath));
+        String videoFilenameWithoutExtension = stripExtensionFromName(getName(videoPath));
+        if (subFilenameWithoutExtension.equals(videoFilenameWithoutExtension)) {
+            log.debug("getSubLanguageFromSubPathAndVideoPath: video and sub have same name " + subFilenameWithoutExtension + " -> SRT");
+            return "SRT";
+        }
+        // subtract video name from sub name if they start the same (they should) but there could be Subs/en.srt too
+        String lastPart = null;
+        if (subFilenameWithoutExtension.startsWith(videoFilenameWithoutExtension + ".")) {
+            lastPart = subFilenameWithoutExtension.substring(videoFilenameWithoutExtension.length() + 1);
+        } else lastPart = subFilenameWithoutExtension;
+        log.debug("getSubLanguageFromSubPathAndVideoPath: ({} - {})={}", subPath, videoPath, lastPart);
         // treat yts Simplified.chi.srt Traditional.chi.srt Latin American.spa.srt English.srt Brazilian.por.srt and reuse s_ special strings for this
+        String lang = convertYTSSubNamingExceptions(lastPart);
         String subLanguageName = null;
+        if (lastPart.equals(lang))
+            // get 2 or 3 letter code for language
+            lang = getLanguage3(lastPart);
         if (lang != null) {
-            // treat yts SDH and HI as hearing impaired e.g. SDH.eng.HI.srt
+            subLanguageName = getLanguageNameForLetterCode(context, lang);
+            if (lang.equals(subLanguageName)) lang = null; // match was not a valid 2 or 3 letter code
+        }
+        if (lang != null) {
+            // note that subLanguageName is already set to proper value
+            // treat yts SDH and HI as hearing impaired e.g. SDH.eng.HI.srt: add it to the language name
             if (isSubtitleHearingImpaired(subFilenameWithoutExtension))
-                subLanguageName = getLanguageNameForLetterCode(context, lang) + " (HI)";
-            else subLanguageName = getLanguageNameForLetterCode(context, lang);
+                subLanguageName = subLanguageName + " (HI)";
         } else { // subLanguageName is likely subFilenameWithoutExtension but cannot compare here because video filename not available
             subLanguageName = subFilenameWithoutExtension;
         }
-        log.debug("getSubLanguageFromSubPath: " + path + " -> " + subLanguageName);
+        log.debug("getSubLanguageFromSubPathAndVideoPath: " + subPath + " -> " + subLanguageName);
         return subLanguageName;
     }
 

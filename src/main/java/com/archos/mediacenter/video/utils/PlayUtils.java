@@ -320,7 +320,7 @@ public class PlayUtils implements IndexHelper.Listener {
             // add support for 3rd party player subs both for local and remote
             // for vlc https://wiki.videolan.org/Android_Player_Intents/ subtitles_location path
             // for mxplayer/justplayer http://mx.j2inter.com/api subs android.net.Uri[], subs.name String[], subs.filename String[]
-            Boolean subFound = false;
+            boolean subFound = false;
             String subPath;
             File subFile;
             String subLanguage;
@@ -340,7 +340,7 @@ public class PlayUtils implements IndexHelper.Listener {
                 while (n < listOfSubtitles.size()) {
                     subPath = listOfSubtitles.get(n);
                     MxSubFileList.add(subPath);
-                    subLanguage = SubtitleManager.getSubLanguageFromSubPath(context, subPath);
+                    subLanguage = SubtitleManager.getSubLanguageFromSubPathAndVideoPath(context, subPath, video.getFriendlyPath());
                     MxSubNameList.add(subLanguage);
                     if (EXTERNAL_PLAYER_HTTP_SUBS) {
                         subUri = Uri.parse(subPath); // these files are in local nova cache not accessible from 3rd party players

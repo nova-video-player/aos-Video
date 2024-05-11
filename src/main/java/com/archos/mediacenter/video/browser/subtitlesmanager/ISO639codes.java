@@ -14,9 +14,6 @@
 
 package com.archos.mediacenter.video.browser.subtitlesmanager;
 
-import static com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager.convertYTSSubNamingExceptions;
-import static com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager.getSubLanguageFromSubPath;
-
 import android.content.Context;
 
 import com.archos.mediacenter.video.utils.VideoUtils;
@@ -32,10 +29,7 @@ public class ISO639codes {
     private static final Logger log = LoggerFactory.getLogger(ISO639codes.class);
 
     static public String replaceLanguageCodeInString(Context context, String string) {
-        // treat specific yts external subtitles naming for external subtitles
-        String result = convertYTSSubNamingExceptions(string);
-        if (string.equals(result))
-            result = com.archos.mediacenter.utils.ISO639codes.replaceLanguageCodeInString(getSubLanguageFromSubPath(context, string));
+        String result = com.archos.mediacenter.utils.ISO639codes.replaceLanguageCodeInString(string);
         if (result.startsWith("s_"))
             result =  VideoUtils.getLanguageString(context, result).toString();
         log.debug("replaceLanguageCodeInString: exception string={} result={}", string, result);
