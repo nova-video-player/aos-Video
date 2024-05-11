@@ -53,6 +53,42 @@ public class WatchingUpNextLoader extends VideoLoader {
             "))"
         );
          */
+        /* optimized query using having:
+        WITH v AS
+(
+  SELECT video_online_id, scraper_name, m_coll_id, m_year, s_id, e_season, e_episode
+  FROM video
+  WHERE (m_coll_id IS NOT NULL OR s_id IS NOT NULL)
+        AND Archos_lastTimePlayed = 0
+        AND archos_hiddenbyuser = 0
+  GROUP BY video_online_id
+),
+l AS
+(
+  SELECT m_coll_id, s_id, MAX(e_season) AS e_season, MAX(e_episode) AS e_episode, MAX(archos_lasttimeplayed) AS archos_lasttimeplayed, MAX(m_year) AS m_year
+  FROM video
+  WHERE Archos_lastTimePlayed > 1
+        AND (m_coll_id IS NOT NULL OR s_id IS NOT NULL)
+        AND archos_hiddenbyuser = 0
+  GROUP BY m_coll_id, s_id
+  HAVING MAX(e_episode) = (SELECT MAX(e_episode) FROM v WHERE v.s_id = l.s_id AND v.e_season = l.e_season)
+     OR MAX(m_year) = (SELECT MIN(m_year) FROM v WHERE v.m_coll_id = l.m_coll_id AND v.m_year > l.m_year)
+  LIMIT 100
+)
+SELECT v.video_online_id, v.scraper_name, v.e_season, v.e_episode, l.archos_lasttimeplayed
+FROM v
+INNER JOIN l ON
+  (v.s_id = l.s_id AND
+    (v.e_season = l.e_season + 1 AND v.e_episode = (SELECT MIN(e_episode) FROM v WHERE s_id = v.s_id AND e_season = l.e_season + 1))
+    OR (v.e_season = l.e_season AND v.e_episode = (SELECT MIN(e_episode) FROM v WHERE s_id = l.s_id AND e_season = l.e_season AND e_episode > l.e_episode)))
+UNION
+SELECT v.video_online_id, v.scraper_name, v.e_season, v.e_episode, l.archos_lasttimeplayed
+FROM v
+INNER JOIN l ON v.m_coll_id = l.m_coll_id
+           AND v.m_year = (SELECT MIN(m_year) FROM v WHERE m_coll_id = l.m_coll_id AND m_year > l.m_year)
+ORDER BY l.archos_lasttimeplayed DESC;
+
+         */
 
         builder.append(
                 "(video_online_id IN\n" +
