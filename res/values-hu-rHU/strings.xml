@@ -286,6 +286,7 @@
     <string name="switch_to_list">Lista</string>
     <string name="switch_to_grid">Rács</string>
     <!-- VideoPlayer -->
+    <string name="player_track">Sáv</string>
     <string name="player_loading_video">Videó betöltése\u2026</string>
     <string name="player_audio_track_toast">Hangsáv:</string>
     <string name="player_subtitle_track_toast">Feliratsáv:</string>

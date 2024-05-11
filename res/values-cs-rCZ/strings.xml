@@ -270,6 +270,7 @@
     <string name="switch_to_list">Seznam</string>
     <string name="switch_to_grid">Mřížka</string>
     <!-- VideoPlayer -->
+    <string name="player_track">Stopa</string>
     <string name="player_loading_video">Načítání videa\u2026</string>
     <string name="player_audio_track_toast">Zvuková stopa:</string>
     <string name="player_subtitle_track_toast">Stopa titulků:</string>

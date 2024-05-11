@@ -296,6 +296,7 @@
     <string name="switch_to_list">Список</string>
     <string name="switch_to_grid">Сетка</string>
     <!-- VideoPlayer -->
+    <string name="player_track">Трек</string>
     <string name="player_loading_video">Загрузка видео \u2026</string>
     <string name="player_audio_track_toast">Аудио дорожка:</string>
     <string name="player_subtitle_track_toast">Дорожка субтитров:</string>
