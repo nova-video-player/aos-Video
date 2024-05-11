@@ -1,3 +1,4 @@
+- Ugly fix to apply change of internal subtitle track (FIXME)
 - Use jupnp 3.0.2 instead of cling for UPnP
 - Many subtitles naming detection fixes
 - Fix hide subtitles by default not working regression
