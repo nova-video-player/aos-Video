@@ -20,9 +20,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 
 import androidx.core.content.ContextCompat;
-import androidx.leanback.widget.BaseCardView;
 import androidx.leanback.widget.ImageCardView;
-import androidx.leanback.widget.Presenter;
 
 import android.widget.ImageView;
 
@@ -32,16 +30,19 @@ import com.archos.mediascraper.ScraperTrailer;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by vapillon on 10/04/15.
  */
 public class TrailerPresenter extends PosterImageCardPresenter {
 
+    private static final Logger log = LoggerFactory.getLogger(TrailerPresenter.class);
+
     public TrailerPresenter(Context context) {
         super(context);
     }
-
-
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Object item) {
@@ -54,6 +55,7 @@ public class TrailerPresenter extends PosterImageCardPresenter {
         card.setMainImageScaleType(ImageView.ScaleType.CENTER);
         card.setTitleText(box.mName);
 
+        log.debug("onBindViewHolder: get image " + getImageUrl(box));
         Picasso.get()
                 .load(getImageUrl(box))
                 .resize(getWidth(mContext), getHeight(mContext)) // better resize to card size, since backdrop files are pretty large
@@ -73,6 +75,7 @@ public class TrailerPresenter extends PosterImageCardPresenter {
 
     private Uri getImageUrl(ScraperTrailer box) {
         String base = "https://img.youtube.com/vi/%s/0.jpg";
+        log.debug("getImageUrl: " + String.format(base, box.mVideoKey));
         return Uri.parse(String.format(base, box.mVideoKey));
     }
 
