@@ -1,5 +1,5 @@
+- Revert from jupnp to cling because of errors seen on sentry
 - Ugly fix to apply change of internal subtitle track (FIXME)
-- Use jupnp 3.0.2 instead of cling for UPnP
 - Many subtitles naming detection fixes
 - Fix hide subtitles by default not working regression
 - Fix subs not passed to external video player
