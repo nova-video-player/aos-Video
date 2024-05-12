@@ -51,6 +51,10 @@
 -dontwarn org.eclipse.jetty.jmx.ObjectMBean
 -dontwarn com.sun.**
 -dontwarn org.seamless.**
+-dontwarn com.bubblesoft.**
+-dontnote com.bubblesoft.**
+-dontwarn org.fourthline.**
+-dontnote org.fourthline.**
 -dontwarn org.eclipse.jetty.**
 -dontnote org.eclipse.jetty.**
 
@@ -112,7 +116,3 @@
 -dontwarn org.bouncycastle.crypto.DefaultBufferedBlockCipher
 -dontwarn org.bouncycastle.crypto.modes.CBCModeCipher
 -dontwarn org.bouncycastle.crypto.modes.CTRModeCipher
-
-# jupnp
--dontwarn org.osgi.framework.**
--dontwarn org.osgi.service.**

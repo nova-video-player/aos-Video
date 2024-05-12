@@ -28,7 +28,7 @@ import com.archos.mediacenter.video.browser.filebrowsing.network.WorkgroupShortc
 import com.archos.mediaprovider.NetworkScanner;
 import com.archos.environment.NetworkState;
 
-import org.jupnp.model.meta.Device;
+import org.fourthline.cling.model.meta.Device;
 
 import java.util.ArrayList;
 import java.util.List;
