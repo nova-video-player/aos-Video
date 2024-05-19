@@ -296,6 +296,7 @@
     <string name="switch_to_list">Zoznam</string>
     <string name="switch_to_grid">Mriežka</string>
     <!-- VideoPlayer -->
+    <string name="player_track">Skladba</string>
     <string name="player_loading_video">Načítanie videa\u2026</string>
     <string name="player_audio_track_toast">Zvuková stopa:</string>
     <string name="player_subtitle_track_toast">Stopa s titulkami:</string>

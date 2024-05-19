@@ -296,6 +296,7 @@
     <string name="switch_to_list">רשימה</string>
     <string name="switch_to_grid">רשת</string>
     <!-- VideoPlayer -->
+    <string name="player_track">רצועה</string>
     <string name="player_loading_video">טוען וידאו\u2026</string>
     <string name="player_audio_track_toast">רצועת שמע:</string>
     <string name="player_subtitle_track_toast">רצועת כתוביות:</string>

@@ -286,6 +286,7 @@
     <string name="switch_to_list">Liste</string>
     <string name="switch_to_grid">Raster</string>
     <!-- VideoPlayer -->
+    <string name="player_track">Track</string>
     <string name="player_loading_video">Video wird geladen\u2026</string>
     <string name="player_audio_track_toast">Tonspur:</string>
     <string name="player_subtitle_track_toast">Untertitel:</string>
