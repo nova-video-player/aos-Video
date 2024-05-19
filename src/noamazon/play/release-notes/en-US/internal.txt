@@ -1,3 +1,4 @@
+- Fix default subtitle selection logic
 - Revert from jupnp to cling because of errors seen on sentry
 - Ugly fix to apply change of internal subtitle track (FIXME)
 - Many subtitles naming detection fixes
