@@ -53,9 +53,9 @@
 
     <!-- Used for scanning and trakt -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" android:maxSdkVersion="32"/>
 
     <!--<uses-permission android:name="android.permission.WRITE_SETTINGS" />-->
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29"/>
@@ -1113,7 +1113,7 @@
         <service android:name="com.archos.mediacenter.video.player.PlayerService"
             android:exported="true"/>
 
-        <service android:name="com.archos.mediascraper.AutoScrapeService" />
+        <service android:name="com.archos.mediascraper.AutoScrapeService" android:foregroundServiceType="mediaPlayback"/>
         <service android:name="com.archos.mediascraper.AllCollectionScrapeService" />
         <service android:name="com.archos.mediacenter.video.browser.FileManagerService" />
 
@@ -1241,7 +1241,7 @@
             android:process=":scanner" />
 
         <!-- Service doing the import -->
-        <service android:name="com.archos.mediaprovider.video.VideoStoreImportService" />
+        <service android:name="com.archos.mediaprovider.video.VideoStoreImportService" android:foregroundServiceType="mediaPlayback"/>
 
         <!-- Service doing SMB scanning -->
         <service android:name="com.archos.mediaprovider.video.NetworkScannerServiceVideo" />
