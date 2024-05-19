@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.utils;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -386,11 +387,15 @@ public class PlayUtils implements IndexHelper.Listener {
 
         ExternalPlayerResultListener.ExternalPositionExtra.setAllPositionExtras(intent,resumePosition );
         try {
-            if(externalPlayerWithResultStarter==null||!allow3rdPartyPlayer(context))
-                context.startActivity(intent);
-            else {
+            if(externalPlayerWithResultStarter==null||!allow3rdPartyPlayer(context)) {
+                if (!((Activity) context).isFinishing()) {
+                    context.startActivity(intent);
+                }
+            } else {
                 ExternalPlayerResultListener.getInstance().init(context, video.getUri(), dataUri, mVideoDbInfo);
-                externalPlayerWithResultStarter.startActivityWithResultListener(intent);
+                if (!((Activity) context).isFinishing()) {
+                    externalPlayerWithResultStarter.startActivityWithResultListener(intent);
+                }
             }
         } catch (ActivityNotFoundException e) {
             Toast.makeText(context, R.string.no_application_to_open_file, Toast.LENGTH_SHORT).show();
