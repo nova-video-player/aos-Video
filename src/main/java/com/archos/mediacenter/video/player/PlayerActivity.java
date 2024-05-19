@@ -3422,6 +3422,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     };
 
     private boolean setPlayerAudioTrack(int audioTrack) {
+        log.debug("setPlayerAudioTrack: " + audioTrack);
         if (mPlayer.getType() == IMediaPlayer.TYPE_ANDROID) {
             /*
              * On android, AudioTrack can only be changed on Prepared State
@@ -3620,19 +3621,19 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         lang = getSubLanguageFromSubPathAndVideoPath(mContext, vMetadata.getSubtitleTrack(i).path, vMetadata.getFile().getPath());
                         log.debug("onSubtitleMetadataUpdated: extsub name={}, path={}, videoPath={}, isExternal={}, langFromPath={}", vMetadata.getSubtitleTrack(i).name, vMetadata.getSubtitleTrack(i).path, vMetadata.getFile().getPath(), vMetadata.getSubtitleTrack(i).isExternal, lang);
                         if (lang != null) {
-                            log.debug("onSubtitleMetadataUpdated: extsub name is null set track name to lang=" + lang);
+                            log.debug("onSubtitleMetadataUpdated: extsub name might not be null add track name with lang=" + lang);
                             mSubtitleInfoController.addTrack(lang);
                         } else { // this should never happen
-                            log.warn("onSubtitleMetadataUpdated: extsub name and lang are null, set track name to unknown");
+                            log.warn("onSubtitleMetadataUpdated: extsub name and lang are null, add track name to unknown");
                             mSubtitleInfoController.addTrack(getText(R.string.unknown_track_name));
                         }
                     } else {
                         // internal subtitle get name from name
                         if (vMetadata.getSubtitleTrack(i).name == null || vMetadata.getSubtitleTrack(i).name.isEmpty()) {
-                            log.debug("onSubtitleMetadataUpdated: intsub name are null/empty, set track name to unknown");
+                            log.debug("onSubtitleMetadataUpdated: intsub name are null/empty, add track name with unknown");
                             mSubtitleInfoController.addTrack(getText(R.string.unknown_track_name));
                         } else { // name is not null use it
-                            log.debug("onSubtitleMetadataUpdated: intsub set track name to name=" + vMetadata.getSubtitleTrack(i).name);
+                            log.debug("onSubtitleMetadataUpdated: intsub add track name with name=" + vMetadata.getSubtitleTrack(i).name);
                             mSubtitleInfoController.addTrack(replaceLanguageCodeInString(mContext, vMetadata.getSubtitleTrack(i).name));
                         }
                     }
@@ -3663,12 +3664,17 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 // If no language set for subs, set the user favorite. Or system language if none.
                 if (!mHideSubtitles && mVideoInfo.subtitleTrack == -1) {
                     Locale locale = new Locale(mSubsFavoriteLanguage);
+                    String trackName = "";
+                    log.debug("onSubtitleMetadataUpdated: mSubsFavoriteLanguage=" + mSubsFavoriteLanguage + ", locale.getDisplayLanguage()=" + locale.getDisplayLanguage() + ", nbTrack=" + nbTrack);
                     for (int i = 0; i < nbTrack; ++i) { // loop through subtitleTracks to select default one not considering none
+                        log.debug("onSubtitleMetadataUpdated: trying to set sub for track " + (i + 1) + ", getTrackName=" + mSubtitleInfoController.getTrackNameAt(i + 1).toString() + ", locale=" + locale.getDisplayLanguage());
                         // select default locale and avoid forced subs
-                        if (locale.getDisplayLanguage().equalsIgnoreCase(findLanguageInString(mSubtitleInfoController.getTrackNameAt(i + 1).toString()))
-                                && ! stringContainsForced(mSubtitleInfoController.getTrackNameAt(i + 1).toString())) {
-                            log.debug("onSubtitleMetadataUpdated: selected default track: " + mSubtitleInfoController.getTrackNameAt(i + 1).toString() + " matching locale language " + locale.getDisplayLanguage());
+                        trackName = mSubtitleInfoController.getTrackNameAt(i + 1).toString();
+                        if (trackName.toLowerCase().contains(locale.getDisplayLanguage().toLowerCase())
+                                && ! stringContainsForced(trackName)) {
+                            log.debug("onSubtitleMetadataUpdated: selected default track: " + trackName + " matching locale language " + locale.getDisplayLanguage());
                             mVideoInfo.subtitleTrack = i;
+                            log.debug("onSubtitleMetadataUpdated: updated mVideoInfo.subtitleTrack=" + mVideoInfo.subtitleTrack);
                             break;
                         }
                     }
@@ -3677,7 +3683,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 log.debug("onSubtitleMetadataUpdated: mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack + " nbTrack: " + nbTrack);
                 if (mVideoInfo.subtitleTrack >= 0 && mVideoInfo.subtitleTrack <= nbTrack) {
                     //mVideoInfo.subtitleTrack has been changed by playerservice
-                    log.debug("onSubtitleMetadataUpdated: mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack);
+                    log.debug("onSubtitleMetadataUpdated: set mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack);
                     mSubtitleInfoController.setTrack(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles)); // +1 since none track is at position 0
                 }
                 if (!mHideSubtitles && mVideoInfo.subtitleTrack == -1) { // selects first track in this case to avoid none track
