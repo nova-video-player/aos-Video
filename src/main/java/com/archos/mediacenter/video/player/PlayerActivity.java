@@ -3689,6 +3689,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (!mHideSubtitles && mVideoInfo.subtitleTrack == -1) { // selects first track in this case to avoid none track
                 //if (mVideoInfo.subtitleTrack == -1) { // selects first track in this case to avoid none track
                     log.debug("onSubtitleMetadataUpdated: mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack + " -> setting first track");
+                    mVideoInfo.subtitleTrack = 0;
                     mSubtitleInfoController.setTrack(1);
                 }
                 if (mSubtitleInfoController.getTrack() == nonePosition) {
