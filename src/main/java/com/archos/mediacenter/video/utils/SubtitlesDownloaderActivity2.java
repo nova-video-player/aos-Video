@@ -188,13 +188,16 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
     }
 
     private ArrayList<String> getSubLangValue() {
-        // always add default system language in the list of languages
-        Set<String> langDefault = new HashSet<String>();
-        langDefault.add(Locale.getDefault().getLanguage()); // add system default language
-        Set<String> languages = sharedPreferences.getStringSet("languages_list", langDefault);
-        final ArrayList<String> languageDefault = new ArrayList<String>(languages);
-        log.debug("getSubLangValue: langDefault=" + languageDefault.toString());
-        return languageDefault;
+        Set<String> existingLanguages = new HashSet<>(sharedPreferences.getStringSet("languages_list", new HashSet<>()));
+        if (existingLanguages.isEmpty()) {
+            // if no language is set, add default locale at least
+            String defaultLanguage = Locale.getDefault().getLanguage();
+            existingLanguages.add(defaultLanguage);
+            sharedPreferences.edit().putStringSet("languages_list", existingLanguages).apply();
+        }
+        ArrayList<String> languageList = new ArrayList<>(existingLanguages);
+        log.debug("getSubLangValue: langDefault=" + languageList);
+        return languageList;
     }
 
     private class OpenSubtitlesTask extends AsyncTask<ArrayList<String>, Integer, Void>{
@@ -279,7 +282,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             if (fileInfo != null) log.debug("getSubtitle: tmdbId=" + fileInfo.getTmdbId() + ", imdbId=" + fileInfo.getImdbId() + ", videoHash=" + fileInfo.getFileHash() + ", fileName=" + fileInfo.getFileName() + ", languages=" + languagesString);
             else log.debug("getSubtitle: fileInfo is null for " + fileUrl);
             try {
-                searchResults = OpenSubtitlesApiHelper.searchSubtitle(fileInfo, languagesString );
+                searchResults = OpenSubtitlesApiHelper.searchSubtitle(fileInfo, languagesString);
             } catch (Throwable e) { //for various service outages
                 log.error("getSubtitles: caught Throwable ", e);
                 displayToast(getString(R.string.toast_subloader_service_unreachable));
