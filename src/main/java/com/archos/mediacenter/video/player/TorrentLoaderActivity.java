@@ -94,7 +94,9 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
         public void handleMessage(Message msg) {                    
             if(msg.what == LOADING_FINISHED){
                 if(mFiles!=null&& !mFiles.isEmpty()&&!isDialogDisplayed)   {
-                    mProgress.dismiss();
+                    if (mProgress != null && mProgress.isShowing()) {
+                        mProgress.dismiss();
+                    }
                     if(mFiles.size()>1){
                         isDialogDisplayed = true;
                         new AlertDialog.Builder(TorrentLoaderActivity.this).setTitle(R.string.torrent_file_to_play)
@@ -133,7 +135,9 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
                 }
             }
             else if(msg.what == ERROR_DIALOG){
-                mProgress.dismiss();
+                if (mProgress != null && mProgress.isShowing()) {
+                    mProgress.dismiss();
+                }
                 if(!isClosingService)
                     showErrorDialog(getString(R.string.error_loading_torrent));
             }
