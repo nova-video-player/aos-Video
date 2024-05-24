@@ -275,7 +275,7 @@ public class VideoMetadata implements Serializable {
     }
 
     public SubtitleTrack getSubtitleTrack(int idx) {
-        return mSubtitleTrackList != null && idx < mSubtitleTrackList.length ? mSubtitleTrackList[idx] : null;
+        return mSubtitleTrackList != null && idx < mSubtitleTrackList.length && idx >= 0 ? mSubtitleTrackList[idx] : null;
     }
     public int getAudioTrackNb() {
         return mAudioTrackList != null ? mAudioTrackList.length : 0;
