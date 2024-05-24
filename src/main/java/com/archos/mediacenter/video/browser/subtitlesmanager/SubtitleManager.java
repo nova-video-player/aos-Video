@@ -461,7 +461,8 @@ public class SubtitleManager {
                 try {
                     List<MetaFile2> files = RawListerFactoryWithUpnp.getRawListerForUrl(localSubsDirUri).getFileList();
                     for (MetaFile2 file : files) {
-                        if (file.getName().startsWith(filenameWithoutExtension) || addAllSubs) {
+                        // ensures that we have a file with the same name as the video
+                        if (file.getName().startsWith(filenameWithoutExtension + ".") || addAllSubs) {
                             allFiles.add(file);
                             log.trace("listLocalAndRemotesSubtitles: cache add " + file.getName());
                         }
