@@ -78,6 +78,7 @@ import com.archos.mediascraper.xml.BaseScraper2;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -684,6 +685,14 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         CharSequence[] listEntriesValues = OpensubtitlesLanguageListEntryValues.toArray(new CharSequence[0]);
         mSubtitlesDownloadLanguagePreferences.setEntries(listEntries);
         mSubtitlesDownloadLanguagePreferences.setEntryValues(listEntriesValues);
+        mSubtitlesDownloadLanguagePreferences.setDefaultValue(new HashSet<>(List.of(Locale.getDefault().getLanguage())));
+        Set<String> currentValues = mSubtitlesDownloadLanguagePreferences.getValues();
+        if (currentValues.isEmpty()) { // enforce at least locale on subtitles download
+            Set<String> newValues = new HashSet<>(currentValues);
+            newValues.add(Locale.getDefault().getLanguage());
+            mSubtitlesDownloadLanguagePreferences.setValues(newValues);
+            log.debug("onCreatePreferences: getValues " + mSubtitlesDownloadLanguagePreferences.getValues());
+        }
         mSubtitlesFavLangPreferences.setEntries(listEntries);
         mSubtitlesFavLangPreferences.setEntryValues(listEntriesValues);
         if (OpensubtitlesSystemLanguageIndex>=0) mSubtitlesFavLangPreferences.setValueIndex(OpensubtitlesSystemLanguageIndex);
