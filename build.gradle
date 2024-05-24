@@ -5,7 +5,7 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.4.0'
+        classpath 'com.android.tools.build:gradle:8.4.1'
         //classpath 'app.brant:amazonappstorepublisher:0.1.0'
         //classpath 'com.github.BrantApps.gradle-amazon-app-store-publisher:amazonappstorepublisher:master-SNAPSHOT'
     }
@@ -301,6 +301,14 @@ android {
                     println("generated: " + outputFileName + " (" + versionName + ", " + versionCode + ")");
                 }
             }
+        }
+    }
+
+    dependenciesInfo {
+        if (project.hasProperty("universal")) {
+            // universal if for fdroid now with specific version(Name|Code) and oneapk for amazon
+            includeInApk = false
+            includeInBundle = false
         }
     }
 
