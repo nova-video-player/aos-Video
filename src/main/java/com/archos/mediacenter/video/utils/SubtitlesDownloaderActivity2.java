@@ -26,10 +26,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -417,7 +419,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         private void askSubChoice(final String videoFilePath, final ArrayList<OpenSubtitlesSearchResult> searchResults, final boolean displayLang, final boolean hasSuccess) {
             View view = LayoutInflater.from(SubtitlesDownloaderActivity2.this).inflate(R.layout.subtitle_chooser_title_layout, null);
             ((TextView) view.findViewById(R.id.video_name)).setText(HtmlCompat.fromHtml(getString(R.string.select_sub_file, getFriendlyFilename(videoFilePath)), HtmlCompat.FROM_HTML_MODE_LEGACY));
-            new AlertDialog.Builder(SubtitlesDownloaderActivity2.this)
+            final AlertDialog dialog = new AlertDialog.Builder(SubtitlesDownloaderActivity2.this)
                     .setCustomTitle(view)
                     .setAdapter(new BaseAdapter() {
                         @Override
@@ -459,7 +461,16 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                     }.start())
                     .setCancelable(true)
                     .setOnCancelListener(dialog -> finish())
-                    .show().getListView().setDividerHeight(10);
+                    .create();
+
+            if (!isFinishing() && !isDestroyed()) {
+                dialog.show();
+                ListView listView = dialog.getListView();
+                if (listView != null) {
+                    // Set the divider height
+                    listView.setDividerHeight(10);
+                }
+            }
         }
 
         public void downloadSubtitles(String subUrl, String fileUrl, String name, String language){
