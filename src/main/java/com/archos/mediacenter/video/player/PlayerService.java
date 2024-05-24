@@ -1363,10 +1363,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                         }
                         if (trackName.equalsIgnoreCase("srt")) srtTrack = i;
                     }
-                    if (mVideoInfo.subtitleTrack == -1) {
-                        log.debug("onSubtitleMetadataUpdated: NOT DOING FIX FIX no default track found, allocate mVideoInfo.subtitleTrack to newSubtitleTrack=" + newSubtitleTrack);
-                    //    mVideoInfo.subtitleTrack = newSubtitleTrack;
-                    }
                     if (!mHideSubtitles && mVideoInfo.subtitleTrack == -1) { // selects newSubtitleTrack (could be noneTrack) if language not found
                         int newTrack = 0;
                         String revertTrackName = "";
