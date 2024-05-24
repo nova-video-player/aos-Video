@@ -935,12 +935,13 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         PlayerBrightnessManager.getInstance().restoreBrightness(this);
         if(!mWasInPictureInPicture){
             mPermissionChecker.checkAndRequestPermission(this);
-            // TODO MARC API 23 required!
-            if(mHasAskedFloatingPermission&&Settings.canDrawOverlays(this)){ //permission has been granted
-                startService(new Intent(this, FloatingPlayerService.class));
+            if (!isFinishing() && !isDestroyed()) {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mHasAskedFloatingPermission&&Settings.canDrawOverlays(this)){ //permission has been granted
+                    startService(new Intent(this, FloatingPlayerService.class));
+                }
+                mHasAskedFloatingPermission = false;
+                TorrentObserverService.resumed(PlayerActivity.this);
             }
-            mHasAskedFloatingPermission = false;
-            TorrentObserverService.resumed(PlayerActivity.this);
             addNetworkListener();
             if (mPaused) {
                 mPaused = false;
