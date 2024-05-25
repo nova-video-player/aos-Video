@@ -218,6 +218,8 @@ public class CustomApplication extends Application {
 
     @Override
     public void onCreate() {
+        super.onCreate();
+
         /*
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                 .detectDiskReads()
@@ -246,7 +248,6 @@ public class CustomApplication extends Application {
                     .build());
         }
 
-        super.onCreate();
         // init application context to make it available to all static methods
         mContext = getApplicationContext();
         // must be done after context is available
