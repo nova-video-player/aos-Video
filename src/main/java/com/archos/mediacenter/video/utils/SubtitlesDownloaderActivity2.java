@@ -419,7 +419,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         private void askSubChoice(final String videoFilePath, final ArrayList<OpenSubtitlesSearchResult> searchResults, final boolean displayLang, final boolean hasSuccess) {
             View view = LayoutInflater.from(SubtitlesDownloaderActivity2.this).inflate(R.layout.subtitle_chooser_title_layout, null);
             ((TextView) view.findViewById(R.id.video_name)).setText(HtmlCompat.fromHtml(getString(R.string.select_sub_file, getFriendlyFilename(videoFilePath)), HtmlCompat.FROM_HTML_MODE_LEGACY));
-            final AlertDialog dialog = new AlertDialog.Builder(SubtitlesDownloaderActivity2.this)
+            final AlertDialog subChoiceDialog = new AlertDialog.Builder(SubtitlesDownloaderActivity2.this)
                     .setCustomTitle(view)
                     .setAdapter(new BaseAdapter() {
                         @Override
@@ -464,8 +464,8 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                     .create();
 
             if (!isFinishing() && !isDestroyed()) {
-                dialog.show();
-                ListView listView = dialog.getListView();
+                subChoiceDialog.show();
+                ListView listView = subChoiceDialog.getListView();
                 if (listView != null) {
                     // Set the divider height
                     listView.setDividerHeight(10);
