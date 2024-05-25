@@ -971,6 +971,7 @@ public class Player implements IPlayerControl,
                     int currentAudio = -1;
                     if (data.has(IMediaPlayer.METADATA_KEY_CURRENT_AUDIO_TRACK))
                         currentAudio = data.getInt(IMediaPlayer.METADATA_KEY_CURRENT_AUDIO_TRACK);
+                    log.debug("handleMetadata: currentAudioTrack -1 -> " + currentAudio + ", calling onAudioMetadataUpdated");
                     mPlayerListener.onAudioMetadataUpdated(mVideoMetadata, currentAudio);
                 }
                 if (data.has(IMediaPlayer.METADATA_KEY_NB_SUBTITLE_TRACK)) {
@@ -1301,6 +1302,7 @@ public class Player implements IPlayerControl,
     }
 
     public void onSubtitle(IMediaPlayer mp, Subtitle subtitle) {
+        log.debug("onSubtitle: " + subtitle);
         if (mPlayerListener != null) {
             mPlayerListener.onSubtitle(subtitle);
         }
