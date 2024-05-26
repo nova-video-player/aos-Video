@@ -1302,7 +1302,7 @@ public class Player implements IPlayerControl,
     }
 
     public void onSubtitle(IMediaPlayer mp, Subtitle subtitle) {
-        log.debug("onSubtitle: " + subtitle);
+        log.debug("onSubtitle");
         if (mPlayerListener != null) {
             mPlayerListener.onSubtitle(subtitle);
         }
