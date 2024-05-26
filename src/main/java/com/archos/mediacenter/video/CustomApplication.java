@@ -61,6 +61,7 @@ import com.archos.medialib.LibAvos;
 import com.archos.mediaprovider.video.NetworkAutoRefresh;
 import com.archos.mediaprovider.video.VideoStoreImportReceiver;
 import com.archos.mediascraper.ScraperImage;
+import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.squareup.picasso.Picasso;
 
 import httpimage.FileSystemPersistence;
@@ -237,6 +238,7 @@ public class CustomApplication extends Application {
                 //.penaltyDeath()
                 .build());
         */
+        AndroidThreeTen.init(this);
 
         if (BuildConfig.DEBUG) {
             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
