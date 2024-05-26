@@ -23,6 +23,7 @@
 -keepattributes SourceFile,LineNumberTable
 -keepattributes Exceptions,InnerClasses
 
+-keep public class org.courville.nova.CustomApplication { *; }
 -keep class com.archos.mediacenter.LibAvosReceiver
 -keep class com.archos.mediacenter.video.utils.CodecDiscovery {*;}
 
@@ -116,3 +117,7 @@
 -dontwarn org.bouncycastle.crypto.DefaultBufferedBlockCipher
 -dontwarn org.bouncycastle.crypto.modes.CBCModeCipher
 -dontwarn org.bouncycastle.crypto.modes.CTRModeCipher
+
+-keep class com.hierynomus.smbj.** { *; }
+-keep class org.slf4j.** { *; }
+-keep class org.eclipse.jetty.** { *; }
