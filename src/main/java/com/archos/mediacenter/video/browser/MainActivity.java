@@ -473,9 +473,16 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             else{
                 mDrawerLayout.openDrawer(GravityCompat.START);
             }
-        }
-        else
+        } else {
+            // Get the fragment that is currently at the top of the back stack
+            String fragmentTag = getSupportFragmentManager().getBackStackEntryAt(backStackCount - 1).getName();
+            Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(fragmentTag);
+            // Check if the fragment is added before trying to remove it
+            if (currentFragment != null && currentFragment.isAdded()) {
+                getSupportFragmentManager().beginTransaction().remove(currentFragment).commit();
+            }
             getSupportFragmentManager().popBackStackImmediate();
+        }
         updateHomeIcon(getSupportFragmentManager().getBackStackEntryCount() > 1);
     }
 
