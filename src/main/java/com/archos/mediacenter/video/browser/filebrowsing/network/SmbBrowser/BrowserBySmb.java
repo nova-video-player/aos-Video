@@ -112,6 +112,10 @@ public class BrowserBySmb extends BrowserByNetwork {
     private void displayConnectionDescription() {
         final String description = getString(R.string.network_connected_as, mUser);
         final int userStart = description.indexOf(mUser);
+        if (userStart == -1) {
+            Log.e("BrowserBySmb", "displayConnectionDescription: user string not found in description");
+            return;
+        }
         final int userEnd = userStart + mUser.length();
         final SpannableStringBuilder sb = new SpannableStringBuilder(description);
         sb.setSpan(new TypefaceSpan("sans-serif-light"), 0, description.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
