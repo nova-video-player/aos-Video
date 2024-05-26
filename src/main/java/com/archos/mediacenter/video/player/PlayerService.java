@@ -1354,7 +1354,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                         // vMetadata.getSubtitleTrack(i).name is either "XYZ" or "title (XYZ)"
                         log.debug("onSubtitleMetadataUpdated: subtitle track " + i + " name=" + trackName + " displayLanguage=" + locale.getDisplayLanguage() + " findLanguageInString=" + findLanguageInString(trackName));
                         // select default locale and avoid forced subs
-                        if (trackName.toLowerCase().contains(locale.getDisplayLanguage().toLowerCase())
+                        if (findLanguageInString(trackName).toLowerCase().contains(locale.getDisplayLanguage().toLowerCase())
                                 && ! stringContainsForced(trackName)) {
                             log.debug("onSubtitleMetadataUpdated: selected default track: " + trackName + " matching locale language " + locale.getDisplayLanguage());
                             FOUND_PREFERRED_SUB_TRACK = true;
