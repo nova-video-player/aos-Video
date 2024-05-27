@@ -196,7 +196,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private String mAudioTrackFavoriteLanguage;
     private boolean mDestroyed;
     private Runnable mAutoSaveTask;
-    
+
     public enum PlayerState {
         INIT,
         PREPARING,
@@ -241,7 +241,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
-           mTorrent = null;
+            mTorrent = null;
         }
     };
 
@@ -426,7 +426,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         super.onStartCommand(intent, flags, startId);
         return START_NOT_STICKY;
     }
-    
+
     public void onStart(Intent intent) {
         if (intent == null || intent.getData() == null)
             return;
@@ -842,7 +842,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mTraktError = false;
             mTraktLiveScrobblingEnabled = Trakt.isLiveScrobblingEnabled(mPreferences);
             if (mTraktLiveScrobblingEnabled) {
-                 int progress = getPlayerProgress();
+                int progress = getPlayerProgress();
                 mVideoInfo.traktResume = -progress;
                 mVideoInfo.duration = Player.sPlayer.getDuration();
                 log.debug("startTrakt: trakt watching progress=" + progress);
@@ -1256,7 +1256,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     @Override
     public void onAudioMetadataUpdated(VideoMetadata vMetadata, int newAudioTrack) {
-         /*
+        /*
          * if current audio track is invalid or not supported, choose the first supported one
          */
 
@@ -1351,17 +1351,35 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     String lang = null;
                     for (int i = 0; i < nbTrack; ++i) { // select default track
                         trackName = vMetadata.getSubtitleTrack(i).name;
-                        // vMetadata.getSubtitleTrack(i).name is either "XYZ" or "title (XYZ)"
-                        log.debug("onSubtitleMetadataUpdated: subtitle track " + i + " name=" + trackName + " displayLanguage=" + locale.getDisplayLanguage() + " findLanguageInString=" + findLanguageInString(trackName));
                         // select default locale and avoid forced subs
-                        if (findLanguageInString(trackName).toLowerCase().contains(locale.getDisplayLanguage().toLowerCase())
-                                && ! stringContainsForced(trackName)) {
-                            log.debug("onSubtitleMetadataUpdated: selected default track: " + trackName + " matching locale language " + locale.getDisplayLanguage());
-                            FOUND_PREFERRED_SUB_TRACK = true;
-                            mVideoInfo.subtitleTrack = i;
-                            break;
+                        if (vMetadata.getSubtitleTrack(i).isExternal) {
+                            // this returns lang = "SRT" if subFileName is video.srt and videoFileName is video.mkv
+                            lang = getSubLanguageFromSubPathAndVideoPath(getApplicationContext(), vMetadata.getSubtitleTrack(i).path, vMetadata.getFile().getPath());
+                            log.debug("onSubtitleMetadataUpdated: subtrack " + i + ", ext sub found lang=" + lang + " (" + vMetadata.getSubtitleTrack(i).path + ")");
+                        } else {
+                            // vMetadata.getSubtitleTrack(i).name is either "XYZ" or "title (XYZ)"
+                            lang = findLanguageInString(trackName);
+                            log.debug("onSubtitleMetadataUpdated: subtrack " + i + ", int sub found lang=" + lang + " (" + trackName + ")");
                         }
-                        if (trackName.equalsIgnoreCase("srt")) srtTrack = i;
+                        if (lang == null || lang.isEmpty()) {
+                            log.debug("onSubtitleMetadataUpdated: no language found in track/file name -> set it to unknown");
+                            lang = getText(R.string.unknown_track_name).toString();
+                        } else {
+                            if (stringContainsForced(trackName)) {
+                                log.debug("onSubtitleMetadataUpdated: skip track: " + trackName + " with identified lang: " + lang + " because it contains forced sub");
+                            } else {
+                                if (lang.toLowerCase().contains(locale.getDisplayLanguage().toLowerCase())) {
+                                    log.debug("onSubtitleMetadataUpdated: selected default track: " + trackName + " identified lang: " + lang + " matching locale language " + locale.getDisplayLanguage());
+                                    FOUND_PREFERRED_SUB_TRACK = true;
+                                    mVideoInfo.subtitleTrack = i;
+                                    break;
+                                }
+                            }
+                        }
+                        if (vMetadata.getSubtitleTrack(i).isExternal && lang.equalsIgnoreCase("srt")) {
+                            log.debug("onSubtitleMetadataUpdated: found srt track " + i + " -> setting srtTrack=" + i);
+                            srtTrack = i;
+                        }
                     }
                     if (!mHideSubtitles && mVideoInfo.subtitleTrack == -1) { // selects newSubtitleTrack (could be noneTrack) if language not found
                         int newTrack = 0;
