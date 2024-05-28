@@ -32,7 +32,7 @@ import com.archos.medialib.IMediaPlayer;
 import com.archos.medialib.LibAvos;
 import com.archos.mediaprovider.video.VideoStore;
 
-import org.fourthline.cling.model.meta.Device;
+import org.jupnp.model.meta.Device;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
