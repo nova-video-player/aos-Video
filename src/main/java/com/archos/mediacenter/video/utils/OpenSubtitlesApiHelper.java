@@ -254,41 +254,41 @@ public class OpenSubtitlesApiHelper {
         if (status != 200) log.warn("parseResult: status={}, message={}", status, LAST_QUERY_MESSAGE);
         else log.trace("parseResult: status={}, message={}", status, LAST_QUERY_MESSAGE);
         switch (status) {
-            case 200 -> {
+            case 200: {
                 LAST_QUERY_RESULT = RESULT_CODE_OK;
                 return LAST_QUERY_RESULT;
             }
-            case 400 -> {
+            case 400: {
                 LAST_QUERY_RESULT = RESULT_NOT_ENOUGH_PARAMETERS;
                 log.warn("parseResult: not enough parameters");
                 return LAST_QUERY_RESULT;
             }
-            case 401 -> {
+            case 401: {
                 LAST_QUERY_RESULT = RESULT_CODE_BAD_CREDENTIALS;
                 log.warn("parseResult: bad credentials");
                 return LAST_QUERY_RESULT;
             }
-            case 403 -> {
+            case 403: {
                 LAST_QUERY_RESULT = RESULT_CODE_BAD_API_KEY;
                 log.warn("parseResult: bad API key");
                 return LAST_QUERY_RESULT;
             }
-            case 406 -> {
+            case 406: {
                 LAST_QUERY_RESULT = RESULT_CODE_UNACCEPTABLE;
                 log.warn("parseResult: not acceptable");
                 return LAST_QUERY_RESULT;
             }
-            case 410 -> {
+            case 410: {
                 LAST_QUERY_RESULT = RESULT_CODE_LINK_GONE;
                 log.warn("parseResult: invalid or expired link");
                 return LAST_QUERY_RESULT;
             }
-            case 429 -> {
+            case 429: {
                 LAST_QUERY_RESULT = RESULT_CODE_TOO_MANY_REQUESTS;
                 log.warn("parseResult: throttle limit reached, try later");
                 return LAST_QUERY_RESULT;
             }
-            default -> {
+            default: {
                 if (status >= 500 && status <= 599) {
                     log.warn("parseResult: server issue");
                     LAST_QUERY_RESULT = RESULT_CODE_SERVER_ISSUE;
@@ -379,7 +379,7 @@ public class OpenSubtitlesApiHelper {
                 else
                     log.debug("searchSubtitle: status={}, message={}", LAST_QUERY_RESULT, LAST_QUERY_MESSAGE);
                 switch (LAST_QUERY_RESULT) {
-                    case RESULT_CODE_OK -> {
+                    case RESULT_CODE_OK: {
                         JSONArray dataArray = jsonResponse.getJSONArray("data");
                         int numSubtitles = dataArray.length();
                         ArrayList<OpenSubtitlesSearchResult> subtitleRefs = new ArrayList<>();
@@ -421,7 +421,7 @@ public class OpenSubtitlesApiHelper {
                         }
                         return subtitleRefs;
                     }
-                    case RESULT_CODE_TOKEN_EXPIRED -> {
+                    case RESULT_CODE_TOKEN_EXPIRED: {
                         // Handle invalid token error
                         if (!authTokenValid) { // one retry in case of invalid token
                             log.warn("searchSubtitle: invalid token, retrying");
@@ -431,7 +431,7 @@ public class OpenSubtitlesApiHelper {
                             return null;
                         }
                     }
-                    default -> { // we are in error
+                    default: { // we are in error
                         return null;
                     }
                 }
@@ -488,13 +488,13 @@ public class OpenSubtitlesApiHelper {
                 else
                     log.debug("searchSubtitle: status={}, message={}", LAST_QUERY_RESULT, LAST_QUERY_MESSAGE);
                 switch (LAST_QUERY_RESULT) {
-                    case RESULT_CODE_OK -> {
+                    case RESULT_CODE_OK: {
                         log.debug("getDownloadSubtitleLink: remaining downloads={}, number of downloads={}", remainingDownloads, numberDownloads);
                         String subtitleLink = jsonResponse.optString("link", null);
                         log.debug("getDownloadSubtitleLink: found link {}", subtitleLink);
                         return subtitleLink;
                     }
-                    case RESULT_CODE_TOKEN_EXPIRED -> {
+                    case RESULT_CODE_TOKEN_EXPIRED: {
                         // Handle invalid token error
                         if (!authTokenValid) { // one retry in case of invalid token
                             log.warn("getDownloadSubtitleLink: invalid token, retrying");
@@ -504,7 +504,8 @@ public class OpenSubtitlesApiHelper {
                             return null;
                         }
                     }
-                    case RESULT_CODE_BAD_CREDENTIALS, RESULT_CODE_QUOTA_EXCEEDED -> {
+                    case RESULT_CODE_BAD_CREDENTIALS:
+                    case RESULT_CODE_QUOTA_EXCEEDED: {
                         return null;
                     }
                 }

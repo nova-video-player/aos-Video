@@ -54,7 +54,7 @@ public class FTPServerCredentialsDialog extends ServerCredentialsDialog {
             port = Integer.parseInt(mPortEt.getText().toString());
         } catch(NumberFormatException e){ }
 
-        var uriB = new Uri.Builder();
+        Uri.Builder uriB = new Uri.Builder();
 
         String scheme = "";
         scheme = getTypeUri(type);

@@ -35,6 +35,7 @@ import java.security.cert.CertificateFactory;
 import java.util.Enumeration;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
@@ -107,7 +108,9 @@ public class TrustingOkHttp3Downloader implements Downloader {
             sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
 
             // Check if the first TrustManager is an X509TrustManager
-            if (trustManagerFactory.getTrustManagers()[0] instanceof X509TrustManager x509TrustManager) {
+            TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
+            if (trustManagers.length > 0 && trustManagers[0] instanceof X509TrustManager) {
+                X509TrustManager x509TrustManager = (X509TrustManager) trustManagers[0];
                 builder.sslSocketFactory(sslContext.getSocketFactory(), x509TrustManager);
             } else {
                 // Handle the case where the TrustManager is not X509TrustManager (unlikely)
