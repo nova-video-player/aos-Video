@@ -29,6 +29,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -49,6 +50,7 @@ import android.widget.Toast;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.ui.NovaProgressDialog;
+import com.archos.mediacenter.video.utils.MiscUtils;
 import com.archos.mediacenter.video.utils.NovaWebView;
 
 /**
@@ -220,7 +222,7 @@ public class OAuthDialog extends Dialog {
         {
 			log.debug("onReceivedError API23+");
 			super.onReceivedError(view, request, error);
-            if(mListener!=null)
+			if(mListener!=null)
                 mListener.onFinished(mdata);
 			OAuthDialog.this.dismiss();
 			log.warn("onReceivedError: error code is " + error.getErrorCode() + ", description " + error.getDescription());
@@ -236,7 +238,8 @@ public class OAuthDialog extends Dialog {
         {
 			log.debug("onPageStarted for url " + url);
 			super.onPageStarted(view, url, favicon);
-			if (!((Activity) getContext()).isFinishing() && !((Activity) getContext()).isDestroyed())
+			Activity activity = MiscUtils.getActivityFromContext(getContext());
+			if (activity != null && ! activity.isFinishing() && ! activity.isDestroyed())
 				mProgress.show();
         }
 

@@ -14,7 +14,9 @@
 
 package com.archos.mediacenter.video.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.app.UiModeManager;
@@ -105,5 +107,16 @@ public class MiscUtils {
 
     public static float px2Dp(float px) {
         return px / Resources.getSystem().getDisplayMetrics().density;
+    }
+
+    // retrieve activity from context
+    public static Activity getActivityFromContext(Context context) {
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity) context;
+            }
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+        return null;
     }
 }
