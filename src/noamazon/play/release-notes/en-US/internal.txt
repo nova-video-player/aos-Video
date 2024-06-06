@@ -1,3 +1,5 @@
+- Better scrape for year matching in tvshows
+- Add IPv6 address support in network shares
 - Fix default subtitle selection logic
 - Revert from jupnp to cling because of errors seen on sentry
 - Ugly fix to apply change of internal subtitle track (FIXME)
