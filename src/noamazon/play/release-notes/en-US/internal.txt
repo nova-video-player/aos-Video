@@ -1,10 +1,6 @@
+- Fix favorite lang/sub not applied in binge watching mode
 - Better scrape for year matching in tvshows
 - Add IPv6 address support in network shares
-- Fix default subtitle selection logic
-- Revert from jupnp to cling because of errors seen on sentry
-- Ugly fix to apply change of internal subtitle track (FIXME)
 - Many subtitles naming detection fixes
-- Fix hide subtitles by default not working regression
-- Fix subs not passed to external video player
 - Fix posters not downloading on old Android version
 - Nova icon update for Google Play compliance
