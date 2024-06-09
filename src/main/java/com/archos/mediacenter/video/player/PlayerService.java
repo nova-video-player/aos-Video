@@ -430,7 +430,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void onStart(Intent intent) {
         if (intent == null || intent.getData() == null)
             return;
-
+        firstTimeAudioCalled = true;
+        firstTimeSubCalled = true;
         log.debug("onStart() ");
         mCallOnDataUriOKWhenVideoInfoIsSet = true;
         mIntent = intent;
@@ -1285,13 +1286,17 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     firstSupportedTrack = i;
                     supported = true;
                 }
-                log.debug("onAudioMetadataUpdated: trying to find {} in {}", locale.getDisplayLanguage(), trackName);
                 if ((mVideoInfo.audioTrack < 0 || mVideoInfo.audioTrack >= nbTrack || !vMetadata.getAudioTrack(mVideoInfo.audioTrack).supported) && firstTimeAudioCalled) { // track has not been selected yet and it is the first time video is played
+                    log.debug("onAudioMetadataUpdated: trying to find {} in {}", locale.getDisplayLanguage(), trackName);
                     if (isLanguageInString(locale.getDisplayLanguage(), trackName)) {
                         log.debug("onAudioMetadataUpdated: selected default track: #{} -> {} matching favorite audioTrack language {}", i, trackName, locale.getDisplayLanguage());
                         mVideoInfo.audioTrack = i;
                         break;
+                    } else {
+                        log.debug("onAudioMetadataUpdated: skip track: #{} -> {} not matching favorite audioTrack language {}", i, trackName, locale.getDisplayLanguage());
                     }
+                } else {
+                    log.debug("onAudioMetadataUpdated: not trying to find {} in {} because mVideoInfo.audioTrack={} out of range or not supported or firstTimeAudioCalled={}", locale.getDisplayLanguage(), trackName, mVideoInfo.audioTrack, firstTimeAudioCalled);
                 }
             }
         }
