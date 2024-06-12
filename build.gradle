@@ -5,7 +5,7 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.4.1'
+        classpath 'com.android.tools.build:gradle:8.4.2'
         //classpath 'app.brant:amazonappstorepublisher:0.1.0'
         //classpath 'com.github.BrantApps.gradle-amazon-app-store-publisher:amazonappstorepublisher:master-SNAPSHOT'
     }
@@ -13,7 +13,7 @@ buildscript {
 
 plugins {
     id "com.github.triplet.play" version "3.9.1"
-    id "io.sentry.android.gradle" version "4.6.0" apply false
+    id "io.sentry.android.gradle" version "4.7.1" apply false
     //id "app.brant.amazonappstorepublisher" version "0.1.0"
 }
 
@@ -342,7 +342,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
     implementation 'com.github.tony19:logback-android:3.0.0'
     implementation 'io.sentry:sentry-android:7.8.0'
-    implementation 'io.sentry:sentry:7.9.0'
+    implementation 'io.sentry:sentry:7.10.0'
 }
 
 // to avoid duplicate classes
