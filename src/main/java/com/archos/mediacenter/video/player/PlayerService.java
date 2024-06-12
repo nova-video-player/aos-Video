@@ -625,15 +625,18 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                         @Override
                         public void onAbort() {
                             mIsPreparingSubs = false;
+                            log.debug("prepareSubs: onAbort");
                         }
 
                         @Override
                         public void onError(Uri uri, Exception e) {
                             mIsPreparingSubs = false;
+                            log.debug("prepareSubs: onError");
                         }
 
                         @Override
                         public void onSuccess(Uri uri) {
+                            log.debug("prepareSubs: onSuccess");
                             mIsPreparingSubs = false;
                             if(mUri.equals(uri))
                                 mPlayer.checkSubtitles();
@@ -645,6 +648,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                         }
                     });
             subtitleManager.preFetchHTTPSubtitlesAndPrepareUpnpSubs(mUri, mStreamingUri);
+        } else {
+            log.debug("prepareSubs: already preparing subs");
         }
     }
 
@@ -1330,6 +1335,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     @Override
     public void onSubtitleMetadataUpdated(VideoMetadata vMetadata, int newSubtitleTrack) {
+        if (mIsPreparingSubs) {
+            log.debug("onSubtitleMetadataUpdated: subs under preparation: too early exit");
+            return;
+        }
         if (mVideoInfo == null) {
             mNewSubtitleTrack = newSubtitleTrack;
             mAudioSubtitleNeedUpdate = true;
