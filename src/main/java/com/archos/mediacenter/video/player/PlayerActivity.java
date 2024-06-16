@@ -1723,7 +1723,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
             Uri uri = VideoUtils.getFileUriFromMediaLibPath(mUri.toString());
 
-            if (uri.getScheme().equals("file") || uri.getScheme().equals("smb")) {
+            if (uri.getScheme().equals("file") || uri.getScheme().equals("smb") || uri.getScheme().equals("smbj") || uri.getScheme().equals("sshj")) {
                 mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.get_subtitles_on_drive).toString(), false, false).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
