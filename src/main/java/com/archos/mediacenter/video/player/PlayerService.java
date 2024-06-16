@@ -1336,10 +1336,12 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     @Override
     public void onSubtitleMetadataUpdated(VideoMetadata vMetadata, int newSubtitleTrack) {
-        if (mIsPreparingSubs) { // do not rush it if subs are not fetch yet
-            log.debug("onSubtitleMetadataUpdated: subs under preparation: too early exit");
-            return;
-        }
+        // note: if mIsPreparingSubs = true, onSubtitleMetadataUpdated can be called even if in not final state
+        // subs could be still being copied in cache directory
+        // however in a replay context cache is not  updated since all the subs have already been copied
+        // in this case prepareSubs() will call mediaPlayer.checkSubtitles() but avos will not notify handleMetadata()
+        // and onSubtitleMetadataUpdated will not been called a second time resulting in only internal subs being displayed
+
         if (mVideoInfo == null) {
             mNewSubtitleTrack = newSubtitleTrack;
             mAudioSubtitleNeedUpdate = true;
@@ -1350,12 +1352,12 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
         int nbTrack = vMetadata.getSubtitleTrackNb(); // this contains the number of subtitlesTracks not including the none track
         Integer srtTrack = null; // track for video.srt with no language provided
-        log.debug("onSubtitleMetadataUpdated: nbTrack=" + nbTrack + " newSubtitleTrack=" + newSubtitleTrack + " mVideoInfo.subtitleTrack=" + mVideoInfo.subtitleTrack + " mHideSubtitles=" + mHideSubtitles + " mSubsFavoriteLanguage=" + mSubsFavoriteLanguage + " mVideoInfo.subtitleTrack=" + mVideoInfo.subtitleTrack + " FOUND_PREFERRED_SUB_TRACK=" + FOUND_PREFERRED_SUB_TRACK + " firstTimeSubCalled=" + firstTimeSubCalled);
+        log.debug("onSubtitleMetadataUpdated: nbTrack=" + nbTrack + " newSubtitleTrack=" + newSubtitleTrack + " mVideoInfo.subtitleTrack=" + mVideoInfo.subtitleTrack + " mHideSubtitles=" + mHideSubtitles + " mSubsFavoriteLanguage=" + mSubsFavoriteLanguage + " mVideoInfo.subtitleTrack=" + mVideoInfo.subtitleTrack + " FOUND_PREFERRED_SUB_TRACK=" + FOUND_PREFERRED_SUB_TRACK + " firstTimeSubCalled=" + firstTimeSubCalled + " mIsPreparingSubs=" + mIsPreparingSubs);
         // selection logic
         if (nbTrack != 0) {
             int noneTrack = nbTrack; // here it tracks mVideoInfo.subtitleTrack that are the tracks of the video (not the none from menu)
             // do the scan for preferred lang at second call since onSubtitleMetadataUpdated is called twice and the first time it does not get all subtracks when there are a Subs/ dir with a lot of subs
-            if ((mVideoInfo.subtitleTrack == -1 || ! FOUND_PREFERRED_SUB_TRACK) && firstTimeSubCalled) { // means no track has been selected before or preferred sub track found
+            if ((mVideoInfo.subtitleTrack == -1 || ! FOUND_PREFERRED_SUB_TRACK) && (firstTimeSubCalled || ! mIsPreparingSubs)) { // means no track has been selected before or preferred sub track found
                 if (mHideSubtitles) {
                     log.debug("onSubtitleMetadataUpdated: hide subs -> selected none track");
                     mVideoInfo.subtitleTrack = noneTrack;
