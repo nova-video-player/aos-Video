@@ -19,7 +19,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.StrictMode;
 import android.text.format.Formatter;
-import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -33,14 +32,16 @@ import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SubtitlesWizardCommon {
 
-    private final static String TAG = "SubtitlesWizardCommon";
-    private final static boolean DBG = false;
+    private static final Logger log = LoggerFactory.getLogger(SubtitlesWizardCommon.class);
 
     // Subtitles files will be renamed as : video_name + SUBTITLES_FILES_SUFFIX + file_counter + extension
     // (for instance "." => myvideo.srt, myvideo.1.srt, myvideo.2.srt, ...)
@@ -103,7 +104,7 @@ public class SubtitlesWizardCommon {
         if (videoUri != null) {
             mVideoUri = videoUri;
             mVideoPath = videoUri.toString();
-            if (DBG) Log.d(TAG, "onCreate : video to process = " + mVideoPath);
+            log.debug("onCreate : video to process = " + mVideoPath);
 
             if (mVideoPath != null) {
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -112,22 +113,22 @@ public class SubtitlesWizardCommon {
 
                 // Retrieve the list of subtitles files already associated with the video
                 mCurrentFilesCount = buildCurrentSubtitlesFilesList(mVideoPath);
-                if (DBG) Log.d(TAG, "onCreate : mCurrentFilesCount = " + mCurrentFilesCount);
+                log.debug("onCreate : mCurrentFilesCount = " + mCurrentFilesCount);
 
                 // Get the list of subtitles files available in the current folder
                 mAvailableFilesCount = buildAvailableSubtitlesFilesList(mVideoPath);
-                if (DBG) Log.d(TAG, "onCreate : mAvailableFilesCount = " + mAvailableFilesCount);
+                log.debug("onCreate : mAvailableFilesCount = " + mAvailableFilesCount);
             }
         }
         else {
             // Bad intent
-            Log.e(TAG, "onCreate error : no folder provided");
+            log.error("onCreate error : no folder provided");
             mVideoUri = null;
         }
     }
 
     public int buildCurrentSubtitlesFilesList(String videoPath) {
-        if (DBG) Log.d(TAG, "buildCurrentSubtitlesFilesList : get current subtitles files");
+        log.debug("buildCurrentSubtitlesFilesList : get current subtitles files");
 
         mCurrentFiles = new ArrayList<String>();
 
@@ -145,14 +146,14 @@ public class SubtitlesWizardCommon {
                 mCurrentFiles.add(path);
             }
         } catch (Exception ex) {
-            Log.e(TAG, "buildCurrentSubtitlesFilesList error : failed to get data from SubtitleManager");
+            log.error("buildCurrentSubtitlesFilesList error : failed to get data from SubtitleManager");
         }
         
         return mCurrentFiles.size();
     }
 
     public int buildAvailableSubtitlesFilesList(String videoPath) {
-        if (DBG) Log.d(TAG, "buildAvailableSubtitlesFilesList : get available subtitles files");
+        log.debug("buildAvailableSubtitlesFilesList : get available subtitles files");
 
         mAvailableFiles = new ArrayList<String>();
 
@@ -172,7 +173,7 @@ public class SubtitlesWizardCommon {
                     mAvailableFiles.add(path);
             }
         } catch (Exception ex) {
-            Log.e(TAG, "buildAvailableSubtitlesFilesList error : failed to get data from SubtitleManager");
+            log.error("buildAvailableSubtitlesFilesList error : failed to get data from SubtitleManager");
         }
         
         return mAvailableFiles.size();
@@ -261,10 +262,10 @@ public class SubtitlesWizardCommon {
         // Rename the file
         try {
             fileRenamed = oldFile.rename(newName);
-            if (DBG) Log.d(TAG, "onItemClick : selected file renamed as " + newFilePath);
+            log.debug("onItemClick : selected file renamed as " + newFilePath);
         }
         catch (Exception e) {
-            Log.d(TAG, "renameFile : can not rename file as " + newFilePath);
+            log.debug("renameFile : can not rename file as " + newFilePath);
         }
 
         String cacheDirPath = Uri.fromFile(MediaUtils.getSubsDir(getActivity())).toString();
@@ -278,10 +279,10 @@ public class SubtitlesWizardCommon {
             if (cacheOldFile.exists()) {
                 try {
                     cacheOldFile.renameTo(cacheNewFile);
-                    if (DBG) Log.d(TAG, "onItemClick : selected file renamed as " + cacheNewFilePath);
+                    log.debug("onItemClick : selected file renamed as " + cacheNewFilePath);
                 }
                 catch (Exception e) {
-                    Log.d(TAG, "renameFile : can not rename file as " + cacheNewFilePath);
+                    log.error("renameFile : can not rename file as " + cacheNewFilePath);
                 }
             }
         }
@@ -295,7 +296,7 @@ public class SubtitlesWizardCommon {
             intent2.setPackage(ArchosUtils.getGlobalContext().getPackageName());
             sendBroadcast(intent2);
 
-            if (DBG) Log.d(TAG, "rescanning Video: " + mVideoUri.toString());
+            log.debug("rescanning Video: " + mVideoUri.toString());
             Intent intent3 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, mVideoUri);
             intent3.setPackage(ArchosUtils.getGlobalContext().getPackageName());
             sendBroadcast(intent3);
@@ -318,10 +319,10 @@ public class SubtitlesWizardCommon {
         FileEditor file = FileEditorFactory.getFileEditorForUrl(uri, getActivity());
         try {
             file.delete();
-            if (DBG) Log.d(TAG, "deleteFile : file " + path + " deleted");
+            log.debug("deleteFile : file " + path + " deleted");
         }
         catch (Exception e) {
-            Log.d(TAG, "deleteFile : can not delete file " + path);
+            log.debug("deleteFile : can not delete file " + path);
         }
 
         fileDeleted = !file.exists();
@@ -334,10 +335,10 @@ public class SubtitlesWizardCommon {
             if (cacheFile.exists()) {
                 try {
                     cacheFile.delete();
-                    if (DBG) Log.d(TAG, "deleteFile : file " + cacheFilePath + " deleted");
+                    log.debug("deleteFile : file " + cacheFilePath + " deleted");
                 }
                 catch (Exception e) {
-                    Log.d(TAG, "deleteFile : can not delete file " + cacheFilePath);
+                    log.error("deleteFile : can not delete file " + cacheFilePath);
                 }
             }
         }
@@ -348,7 +349,7 @@ public class SubtitlesWizardCommon {
             intent1.setPackage(ArchosUtils.getGlobalContext().getPackageName());
             sendBroadcast(intent1);
 
-            if (DBG) Log.d(TAG, "rescanning Video: " + mVideoUri.toString());
+            log.debug("rescanning Video: " + mVideoUri.toString());
             Intent intent2 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, mVideoUri);
             intent2.setPackage(ArchosUtils.getGlobalContext().getPackageName());
             sendBroadcast(intent2);
@@ -397,7 +398,7 @@ public class SubtitlesWizardCommon {
             file = MetaFile2Factory.getMetaFileForUrl(uri);
         }
         catch (Exception e) {
-            Log.e(TAG, "getFileSize error : can not get file");
+            log.error("getFileSize error : can not get file");
         }
         if (file != null) {
             size = Formatter.formatFileSize(getActivity(), file.length());
