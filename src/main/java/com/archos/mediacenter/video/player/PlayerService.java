@@ -233,7 +233,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         @Override
         public void onServiceConnected(ComponentName arg0, IBinder binder) {
             mTorrent  =  ((TorrentObserverService.TorrentServiceBinder) binder).getService();
-            mTorrent. setParameters(mTorrentURL, mTorrentFilePosition);
+            mTorrent.setParameters(mTorrentURL, mTorrentFilePosition);
             mTorrent.setObserver(mTorrentThreadObserver);
             mTorrent.start();
             // start();
@@ -636,10 +636,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
                         @Override
                         public void onSuccess(Uri uri) {
-                            log.debug("prepareSubs: onSuccess");
+                            log.debug("prepareSubs: onSuccess request player to check subs if " + mUri + " = " + uri);
                             mIsPreparingSubs = false;
-                            if(mUri.equals(uri))
-                                mPlayer.checkSubtitles();
+                            if(mUri.equals(uri)) {
+                                mPlayer.checkSubtitles(); // will trigger subs reload
+                            }
                         }
 
                         @Override
@@ -654,6 +655,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     private void onStreamingUriOK() {
+        log.debug("onStreamingUriOK");
         if(mTorrentFilePosition==-1)
             prepareSubs();
         if(mPlayerFrontend!=null)
@@ -953,6 +955,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     private void requestVideoDb() {
+        log.debug("requestVideoDb");
         mDatabaseInfoHasBeenRetrieved= true;
         mIndexHelper.requestVideoDb(mUri, mVideoId,
                 null,
@@ -1019,7 +1022,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         log.debug("setVideoInfo: videoInfo.id=" + (videoInfo != null ? videoInfo.id : "null") + ", videoInfo.uri=" + (videoInfo != null ? videoInfo.uri : "null"));
         mVideoInfo = videoInfo;
         if (mVideoInfo != null) {
-            log.debug("onStreamingUriOK: setLastVideoPlayed");
+            log.debug("setVideoInfo: setLastVideoPlayed");
             CustomApplication.setLastVideoPlayedId(mVideoInfo.id);
             CustomApplication.setLastVideoPlayedUri(mVideoInfo.uri);
         }
@@ -1094,8 +1097,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 PlayerService.sPlayerService.mPlayerState = PlayerService.PlayerState.PLAYING;
             }
             if(mAudioSubtitleNeedUpdate){ // when we have info about subs or audio track BEFORE mVideoInfo is set
-                log.debug("postPreparedAndVideoDb: subtitletrack onSubtitleMetadataUpdated " + mNewSubtitleTrack);
-                onSubtitleMetadataUpdated(mPlayer.getVideoMetadata(), mNewSubtitleTrack);
                 log.debug("postPreparedAndVideoDb: audiotrack onAudioMetadataUpdated " + mNewAudioTrack);
                 onAudioMetadataUpdated(mPlayer.getVideoMetadata(), mNewAudioTrack);
                 mAudioSubtitleNeedUpdate = false;
@@ -1335,7 +1336,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     @Override
     public void onSubtitleMetadataUpdated(VideoMetadata vMetadata, int newSubtitleTrack) {
-        if (mIsPreparingSubs) {
+        if (mIsPreparingSubs) { // do not rush it if subs are not fetch yet
             log.debug("onSubtitleMetadataUpdated: subs under preparation: too early exit");
             return;
         }
@@ -1425,8 +1426,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             // mVideoInfo.subtitleTrack is the track number without the none track 0<=mVideoInfo.subtitleTrack<nbTrack
             if (mVideoInfo.subtitleTrack >= 0 && mVideoInfo.subtitleTrack < nbTrack) {
                 log.debug("onSubtitleMetadataUpdated: newSubtitleTrack={}, mVideoInfo.subtitleTrack={}", newSubtitleTrack, mVideoInfo.subtitleTrack);
-                if (newSubtitleTrack != mVideoInfo.subtitleTrack &&
-                        !mPlayer.setSubtitleTrack(mVideoInfo.subtitleTrack)) {
+
+                if (!mPlayer.setSubtitleTrack(mVideoInfo.subtitleTrack)) {
                     log.debug("onSubtitleMetadataUpdated: setSubtitleTrack failed, setting none track");
                     mVideoInfo.subtitleTrack = noneTrack;
                 } else {

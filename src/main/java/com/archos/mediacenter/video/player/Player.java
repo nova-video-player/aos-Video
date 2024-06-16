@@ -844,7 +844,7 @@ public class Player implements IPlayerControl,
 
     public void checkSubtitles() {
         if (isInPlaybackState())
-            mMediaPlayer.checkSubtitles();
+            mMediaPlayer.checkSubtitles(); // note that player checks also cache directory with avos
     }
 
     public boolean setSubtitleTrack(int stream) {
@@ -978,7 +978,7 @@ public class Player implements IPlayerControl,
                     int currentSubtitle = -1;
                     if (data.has(IMediaPlayer.METADATA_KEY_CURRENT_SUBTITLE_TRACK))
                         currentSubtitle = data.getInt(IMediaPlayer.METADATA_KEY_CURRENT_SUBTITLE_TRACK);
-                    log.debug("handleMetadata: currentSubtitleTrack -1 -> " + currentSubtitle);
+                    log.debug("handleMetadata: currentSubtitleTrack -1 -> " + currentSubtitle + ", calling onSubtitleMetadataUpdated");
                     mPlayerListener.onSubtitleMetadataUpdated(mVideoMetadata, currentSubtitle);
                 }
             }
@@ -987,13 +987,13 @@ public class Player implements IPlayerControl,
 
     /* IMediaPlayer.Listener */
     public void onPrepared(IMediaPlayer mp) {
-        log.debug("onPrepared");
         mCurrentState = STATE_PREPARED;
         if (mSurfaceController != null)
             mSurfaceController.setMediaPlayer(mMediaPlayer);
 
         // Get the capabilities of the player for this stream
         mCanPause = mCanSeekForward = mCanSeekBack = true;
+        log.debug("onPrepared: mCanPause=" + mCanPause + ", mCanSeekForward=" + mCanSeekForward + ", mCanSeekBack=" + mCanSeekBack + " -> handleMetadata");
         handleMetadata(mMediaPlayer);
 
         mResumeCtx.onPrepared();
@@ -1248,8 +1248,11 @@ public class Player implements IPlayerControl,
     public void onAllSeekComplete(IMediaPlayer mp) {
         mIsBusy = false;
         if (mUpdateMetadata) {
+            log.debug("onAllSeekComplete: mUpdateMetadata = true -> handleMetadata");
             handleMetadata(mp);
             mUpdateMetadata = false;
+        } else {
+            log.debug("onAllSeekComplete: mUpdateMetadata = false");
         }
         if (mPlayerListener != null) {
             mPlayerListener.onAllSeekComplete();
@@ -1261,12 +1264,14 @@ public class Player implements IPlayerControl,
     }
 
     public boolean onInfo(IMediaPlayer mp, int what, int extra) {
-        log.debug("MediaPlayer.onInfo: "+what+" "+extra);
+        log.debug("onInfo: "+what+" "+extra);
         switch(what) {
         case IMediaPlayer.MEDIA_INFO_METADATA_UPDATE:
             if (mIsBusy) {
+                log.debug("onInfo: mIsBusy set mUpdateMetadata = true");
                 mUpdateMetadata = true;
             } else {
+                log.debug("onInfo: handleMetadata");
                 handleMetadata(mp);
             }
             return true;
@@ -1276,11 +1281,12 @@ public class Player implements IPlayerControl,
     }
 
     public boolean onError(IMediaPlayer mp, int errorCode, int errorQualCode, String msg) {
-        log.warn("Error: " + errorCode + "," + errorQualCode);
+        log.warn("onError: Error: " + errorCode + "," + errorQualCode);
         mCurrentState = STATE_ERROR;
         mTargetState = STATE_ERROR;
 
         if (mp != null) {
+            log.debug("onError: handleMetadata");
             handleMetadata(mp);
         }
         //save "exist" state, may be useful later
