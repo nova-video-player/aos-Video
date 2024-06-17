@@ -288,19 +288,21 @@ public class SubtitlesWizardCommon {
         }
 
         if (fileRenamed) {
-            // Update the medialib
-            Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, oldUri);
-            intent1.setPackage(ArchosUtils.getGlobalContext().getPackageName());
-            sendBroadcast(intent1);
-            Intent intent2 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, newUri);
-            intent2.setPackage(ArchosUtils.getGlobalContext().getPackageName());
-            sendBroadcast(intent2);
+            // send scan file for local storage only
+            if (FileUtils.isLocal(oldUri)) {
+                Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, oldUri);
+                intent1.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+                sendBroadcast(intent1);
+                Intent intent2 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, newUri);
+                intent2.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+                sendBroadcast(intent2);
 
-            log.debug("rescanning Video: " + mVideoUri.toString());
-            Intent intent3 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, mVideoUri);
-            intent3.setPackage(ArchosUtils.getGlobalContext().getPackageName());
-            sendBroadcast(intent3);
-
+                log.debug("rescanning Video: " + mVideoUri.toString());
+                Intent intent3 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, mVideoUri);
+                intent3.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+                sendBroadcast(intent3);
+            }
+            // TODO MARC check subs if player ongoing?
             // Update the local data : add the file to current subtitles list
             // and remove it from the available subtitles list
             mCurrentFiles.add(newFilePath);
@@ -345,14 +347,16 @@ public class SubtitlesWizardCommon {
 
         if (fileDeleted) {
             // Update the medialib
-            Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri);
-            intent1.setPackage(ArchosUtils.getGlobalContext().getPackageName());
-            sendBroadcast(intent1);
+            if (FileUtils.isLocal(uri)) {
+                Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri);
+                intent1.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+                sendBroadcast(intent1);
 
-            log.debug("rescanning Video: " + mVideoUri.toString());
-            Intent intent2 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, mVideoUri);
-            intent2.setPackage(ArchosUtils.getGlobalContext().getPackageName());
-            sendBroadcast(intent2);
+                log.debug("rescanning Video: " + mVideoUri.toString());
+                Intent intent2 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, mVideoUri);
+                intent2.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+                sendBroadcast(intent2);
+            }
             // Update the local data : remove the file from the list it belongs
             if (current) {
                 mCurrentFiles.remove(index);
@@ -398,7 +402,7 @@ public class SubtitlesWizardCommon {
             file = MetaFile2Factory.getMetaFileForUrl(uri);
         }
         catch (Exception e) {
-            log.error("getFileSize error : can not get file");
+            log.error("getFileSize error : can not get file size for " + path + " : " + e.getMessage());
         }
         if (file != null) {
             size = Formatter.formatFileSize(getActivity(), file.length());
