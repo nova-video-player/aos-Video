@@ -423,6 +423,9 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                 if (cursor != null) cursor.close();
             }
             if (cursor != null) cursor.close();
+            if (shortcutDbAdapter != null && shortcutDbAdapter.isDbOpen()) {
+                shortcutDbAdapter.close();
+            }
         }
     }
 
