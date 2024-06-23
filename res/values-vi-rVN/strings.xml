@@ -408,7 +408,7 @@
     <string name="sub_force_all">Tất cả băng hình của bạn đã có ít nhất một bản phụ đề. Bạn có muốn buộc tải xuống bản phụ đề mới không?</string>
     <string name="dialog_subloader_nonetwork_title">Không có internet</string>
     <string name="dialog_subloader_nonetwork_message">Cần có kết nối internet để tải xuống phụ đề</string>
-    <string name="dialog_subloader_connecting">Đang kết nối đến www.opensubtitles.org…</string>
+    <string name="dialog_subloader_connecting">Đang kết nối đến www.opensubtitles.com…</string>
     <string name="opensubtitles_quota_download_remaining">Hạn ngạch tải xuống OpenSubtitles: %d/%d còn lại</string>
     <string name="dialog_subloader_credentials">Thông tin đăng nhập OpenSubtitles</string>
     <string name="dialog_subloader_credentials_empty">Bạn phải chỉ định tên người dùng và mật khẩu hợp lệ!</string>

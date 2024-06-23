@@ -408,7 +408,7 @@ desteklenmiyor.</string>
     <string name="sub_force_all">Tüm videolarınızda zaten en az bir altyazı parçası var. Yeni altyazı parçalarının indirilmesini zorlamak ister misiniz?</string>
     <string name="dialog_subloader_nonetwork_title">İnternet bağlantısı yok</string>
     <string name="dialog_subloader_nonetwork_message">Altyazıları indirmek için internet bağlantısı gereklidir</string>
-    <string name="dialog_subloader_connecting">Www.opensubtitles.org sitesine bağlanıyor…</string>
+    <string name="dialog_subloader_connecting">Www.opensubtitles.com sitesine bağlanıyor…</string>
     <string name="dialog_subloader_credentials">Altyazı kimlik bilgilerini açar</string>
     <string name="dialog_subloader_credentials_empty">Geçerli bir kullanıcı adı ve şifre belirlemelisiniz!</string>
     <string name="toast_subloader_credentials_empty">Altyazıları indirebilmek için ayarlarda açılan altyazı kimlik bilgilerinizi sağlayın</string>

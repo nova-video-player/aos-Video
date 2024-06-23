@@ -408,7 +408,7 @@
     <string name="sub_force_all">您所有的影片已經至少有一個字幕軌，您確定要強制下載新的字幕軌嗎？</string>
     <string name="dialog_subloader_nonetwork_title">沒有網際網路連線</string>
     <string name="dialog_subloader_nonetwork_message">必須有網路連線才能下載字幕</string>
-    <string name="dialog_subloader_connecting">正在連結至 www.opensubtitles.org…</string>
+    <string name="dialog_subloader_connecting">正在連結至 www.opensubtitles.com…</string>
     <string name="opensubtitles_quota_download_remaining">OpenSubtitles 下載剩餘額度: %d/%d</string>
     <string name="dialog_subloader_credentials">Opensubtitles 憑證</string>
     <string name="dialog_subloader_credentials_empty">您必須提供一組有效的使用者名稱及密碼！</string>

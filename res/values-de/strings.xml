@@ -412,12 +412,12 @@
     <string name="sub_force_all">Alle Ihre Videos haben bereits Untertitel. Wollen Sie trotzdem neue Untertitel herunterladen?</string>
     <string name="dialog_subloader_nonetwork_title">Keine Internetverbindung</string>
     <string name="dialog_subloader_nonetwork_message">Eine Internetverbindung ist für das Herunterladen von Untertiteln notwendig</string>
-    <string name="dialog_subloader_connecting">Verbinde mit www.opensubtitles.org…</string>
+    <string name="dialog_subloader_connecting">Verbinde mit www.opensubtitles.com…</string>
     <string name="opensubtitles_quota_download_remaining">OpenSubtitles Download-Quote: %d/%d verbleibend</string>
-    <string name="dialog_subloader_credentials">Opensubtitles.org Anmeldedaten</string>
+    <string name="dialog_subloader_credentials">Opensubtitles.com Anmeldedaten</string>
     <string name="dialog_subloader_credentials_empty">Sie müssen einen gültigen Benutzernamen und Passwort angeben!</string>
-    <string name="toast_subloader_credentials_empty">Geben Sie Ihre Zugangsdaten für opensubtitles.org in den Einstellungen an, um Untertitel herunterladen zu können</string>
-    <string name="toast_subloader_login_failed">Falsche Anmeldedaten für opensubtitles.org oder Dienst nicht verfügbar</string>
+    <string name="toast_subloader_credentials_empty">Geben Sie Ihre Zugangsdaten für opensubtitles.com in den Einstellungen an, um Untertitel herunterladen zu können</string>
+    <string name="toast_subloader_login_failed">Falsche Anmeldedaten für opensubtitles.com oder Dienst nicht verfügbar</string>
     <string name="toast_subloader_quota_exceeded">OpenUntertitel Download-Quota überschritten</string>
     <string name="opensubtitles_quota_reset_time_remaining">Quota Rücksetzung in %s</string>
     <!-- Subtitle Settings Dialog -->
@@ -541,8 +541,8 @@
     <string name="category_languages">Untertitel</string>
     <string name="subtitles_hide_default">Untertitel standardmäßig ausblenden</string>
     <string name="subtitles_hide_default_summary">Überprüfen Sie, ob Sie Untertitel standardmäßig ausblenden möchten</string>
-    <string name="subtitles_credentials_title">Anmeldeinformationen für opensubtitles.org</string>
-    <string name="subtitles_credentials_summary">Geben Sie Ihre Zugangsdaten für opensubtitles.org in den Einstellungen an, um Untertitel herunterladen zu können</string>
+    <string name="subtitles_credentials_title">Anmeldeinformationen für opensubtitles.com</string>
+    <string name="subtitles_credentials_summary">Geben Sie Ihre Zugangsdaten für opensubtitles.com in den Einstellungen an, um Untertitel herunterladen zu können</string>
     <string name="preferences_languages">Untertitel Sprachen</string>
     <string name="summary_list_preference_primary">Wählen Sie die Sprachen aus in denen Untertitel gesucht werden sollen</string>
     <string name="favSubLang_title">Bevorzugte Sprache</string>

@@ -426,7 +426,7 @@
     <string name="sub_force_all">כל קבצי הוידאו מכילים לפחות רצועת כתוביות אחת. האם ברצונך לאלץ הורדת רצועת כתוביות חדשה?</string>
     <string name="dialog_subloader_nonetwork_title">אין חיבור אינטרנט</string>
     <string name="dialog_subloader_nonetwork_message">חיבור אינטרנט נדרש ע\"מ להוריד כתוביות</string>
-    <string name="dialog_subloader_connecting">מתחבר אל www.opensubtitles.org…</string>
+    <string name="dialog_subloader_connecting">מתחבר אל www.opensubtitles.com…</string>
     <string name="opensubtitles_quota_download_remaining">מכסת הורדה של OpenSubtitles: נותר %d/%d</string>
     <string name="dialog_subloader_credentials">פרטי משתמש Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">עליך לציין שם משתמש וסיסמה תקפים!</string>

@@ -378,7 +378,7 @@ Copertina (rotolo di copertina)</string>
     <string name="sub_force_all">Tutti i tuoi video hanno già almeno una traccia per i sottotitoli. Vuoi forzare il download di nuovi sottotitoli?</string>
     <string name="dialog_subloader_nonetwork_title">Nessuna connessione a internet</string>
     <string name="dialog_subloader_nonetwork_message">È necessaria una connessione a internet per scaricare i sottotitoli</string>
-    <string name="dialog_subloader_connecting">Connessione a www.opensubtitles.org...</string>
+    <string name="dialog_subloader_connecting">Connessione a www.opensubtitles.com…</string>
     <string name="dialog_subloader_credentials">Credenziali dei sottotitoli</string>
     <string name="dialog_subloader_credentials_empty">Devi specificare un nome utente e una password validi!</string>
     <string name="toast_subloader_credentials_empty">Fornisci le tue credenziali opensubtitles nelle impostazioni per poter scaricare i sottotitoli</string>

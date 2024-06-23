@@ -395,7 +395,7 @@
     <string name="sub_force_all">Všechna vaše videa mají alespoň jednu stopu s titulky. Chcete přesto zahájit vynucené stažení nových titulkových stop?</string>
     <string name="dialog_subloader_nonetwork_title">Připojení k internetu není k dispozici</string>
     <string name="dialog_subloader_nonetwork_message">Ke stažení titulků je vyžadováno připojení k internetu</string>
-    <string name="dialog_subloader_connecting">Připojování na www.opensubtitles.org…</string>
+    <string name="dialog_subloader_connecting">Připojování na www.opensubtitles.com…</string>
     <string name="opensubtitles_quota_download_remaining">Kvóta stahování na OpenSubtitle: %d/%d zbývá</string>
     <string name="dialog_subloader_credentials">Přihlašovací údaje k OpenSubtitles</string>
     <string name="dialog_subloader_credentials_empty">Musíte zadat platné uživatelské jméno a heslo!</string>

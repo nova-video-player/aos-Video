@@ -414,7 +414,7 @@
     <string name="sub_force_all">Az összes videójához már van legalább egy feliratsáv. Mindenképp letölti az új feliratsávokat?</string>
     <string name="dialog_subloader_nonetwork_title">Nincs internetkapcsolat</string>
     <string name="dialog_subloader_nonetwork_message">Internetkapcsolat szükséges a feliratok letöltéséhez</string>
-    <string name="dialog_subloader_connecting">Csatlakozás a www.opensubtitles.org-hoz…</string>
+    <string name="dialog_subloader_connecting">Csatlakozás a www.opensubtitles.com…</string>
     <string name="opensubtitles_quota_download_remaining">OpenSubtitle letöltési kvóta: %d%d maradt</string>
     <string name="dialog_subloader_credentials">Opensubtitles belépési adatok</string>
     <string name="dialog_subloader_credentials_empty">Érvényes felhasználónév és jelszó megadása szükséges!</string>

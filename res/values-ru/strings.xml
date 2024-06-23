@@ -424,7 +424,7 @@
     <string name="sub_force_all">Все ваши видео уже имеют хотя бы один набор субтитров. Вы все равно желаете загрузить новые?</string>
     <string name="dialog_subloader_nonetwork_title">Нет подключения к Интернету</string>
     <string name="dialog_subloader_nonetwork_message">Для загрузки субтитров требуется подключение к Интернету</string>
-    <string name="dialog_subloader_connecting">Подключение к www.opensubtitles.org…</string>
+    <string name="dialog_subloader_connecting">Подключение к www.opensubtitles.com…</string>
     <string name="opensubtitles_quota_download_remaining">Ограничение на скачивание OpenSubtitles: %d/%d осталось</string>
     <string name="dialog_subloader_credentials">Учётные данные Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">Вы должны указать правильное имя пользователя и пароль!</string>

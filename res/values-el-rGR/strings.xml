@@ -386,7 +386,7 @@
     <string name="sub_force_all">Όλα τα βίντεο σας έχουν ήδη τουλάχιστον ένα υπότιτλο. Θέλετε να κάνετε λήψη νέων υποτίτλων;</string>
     <string name="dialog_subloader_nonetwork_title">Δεν υπάρχει σύνδεση στο διαδίκτυο</string>
     <string name="dialog_subloader_nonetwork_message">Απαιτείται σύνδεση στο διαδίκτυο για τη λήψη υποτίτλων</string>
-    <string name="dialog_subloader_connecting">Σύνδεση στο www.opensubtitles.org…</string>
+    <string name="dialog_subloader_connecting">Σύνδεση στο www.opensubtitles.com…</string>
     <string name="opensubtitles_quota_download_remaining">Όριο λήψης OpenSubtitles: %d/%d απομένει</string>
     <string name="dialog_subloader_credentials">Πιστοποιητικά Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">Πρέπει να εισαγάγετε έγκυρο όνομα χρήστη και κωδικό πρόσβασης!</string>

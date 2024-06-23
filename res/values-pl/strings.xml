@@ -375,7 +375,7 @@
     <string name="sub_force_all">Wszystkie filmy mają już co najmniej jedną ścieżkę napisów. Czy chcesz wymusić pobranie nowych napisów?</string>
     <string name="dialog_subloader_nonetwork_title">Brak połączenia z Internetem</string>
     <string name="dialog_subloader_nonetwork_message">Do pobrania napisów wymagane jest połączenie z internetem</string>
-    <string name="dialog_subloader_connecting">Łączenie z www.opensubtitles.org…</string>
+    <string name="dialog_subloader_connecting">Łączenie z www.opensubtitles.com…</string>
     <string name="dialog_subloader_credentials">Dane logowania do Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">Podaj poprawne nazwę uzytkownika i hasło!</string>
     <string name="toast_subloader_credentials_empty">Podaj w ustawieniach dane logowania do OpenSubtitles, aby pobierać napisy</string>
