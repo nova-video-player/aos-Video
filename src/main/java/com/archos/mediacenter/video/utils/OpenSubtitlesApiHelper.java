@@ -188,14 +188,19 @@ public class OpenSubtitlesApiHelper {
                     setBaseUrl(jsonResponse.optString("https://"+"base_url", API_BASE_URL));
                     // Check if "user" object is present in the response
                     if (jsonResponse.has("user")) {
-                        JSONObject userObject = jsonResponse.getJSONObject("user");
-                        allowedDownloads = userObject.optInt("allowed_downloads", allowedDownloads);
-                        allowedTranslations = userObject.optInt("allowed_translations", allowedTranslations);
-                        level = userObject.optString("level", "Sub leecher");
-                        vip = userObject.optBoolean("vip", false);
-                        userId = userObject.optInt("user_id", 0);
-                        extInstalled = userObject.optBoolean("ext_installed", false);
-                        log.debug("auth: allowed_downloads={}, level={}, vip={}", allowedDownloads, level, vip);
+                        JSONArray userArray = jsonResponse.getJSONArray("user");
+                        if (userArray.length() > 0) {
+                            JSONObject userObject = userArray.getJSONObject(0);
+                            allowedDownloads = userObject.optInt("allowed_downloads", allowedDownloads);
+                            allowedTranslations = userObject.optInt("allowed_translations", allowedTranslations);
+                            level = userObject.optString("level", "Sub leecher");
+                            vip = userObject.optBoolean("vip", false);
+                            userId = userObject.optInt("user_id", 0);
+                            extInstalled = userObject.optBoolean("ext_installed", false);
+                            log.debug("auth: allowed_downloads={}, level={}, vip={}", allowedDownloads, level, vip);
+                        } else {
+                            log.warn("auth: no user object in response");
+                        }
                     }
                     if (authToken != null) {
                         log.debug("auth: authentication successful token={}", authToken);
@@ -336,7 +341,7 @@ public class OpenSubtitlesApiHelper {
         // Note: only the first result page is queried because it is assumed that it should be enough with order_by criteria
         // input: languages is a comma separated list of languages (e.g. "en,fr")
         // output: an arrayList of OpenSubtitlesSearchResult for each subtitle found
-        log.error("searchSubtitle: baseUrl={}, languages={}, fileInfo={}", baseUrl, languages, fileInfo);
+        log.debug("searchSubtitle: baseUrl={}, languages={}, fileInfo={}", baseUrl, languages, ((fileInfo != null) ? fileInfo.getFileName() : "null"));
         HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + "subtitles").newBuilder();
         urlBuilder.addQueryParameter("languages", languages);
         urlBuilder.addQueryParameter("order_by", "from_trusted,ratings,download_count");
@@ -395,20 +400,30 @@ public class OpenSubtitlesApiHelper {
                                 subtitleResult.setMoviehashMatch(subtitleAttribute.optBoolean("moviehash_match", false));
                                 if (subtitleAttribute.has("features")) {
                                     log.debug("searchSubtitle: it has features");
-                                    JSONObject subtitleFeatures = subtitleAttribute.getJSONObject("features");
-                                    subtitleResult.setRelease(subtitleFeatures.optString("release", ""));
-                                    subtitleResult.setMovieName(subtitleFeatures.optString("movie_name", ""));
-                                    subtitleResult.setSeasonNumber(subtitleFeatures.optInt("season_number", 0));
-                                    subtitleResult.setEpisodeNumber(subtitleFeatures.optInt("episode_number", 0));
-                                    subtitleResult.setFeatureType(subtitleFeatures.optString("feature_type", ""));
-                                    subtitleResult.setParentTitle(subtitleFeatures.optString("parent_title", ""));
+                                    JSONArray subtitleFeaturesArray = subtitleAttribute.getJSONArray("features");
+                                    if (subtitleFeaturesArray.length() > 0) { // Check if the JSONArray is not empty
+                                        JSONObject subtitleFeatures = subtitleFeaturesArray.getJSONObject(0);
+                                        subtitleResult.setRelease(subtitleFeatures.optString("release", ""));
+                                        subtitleResult.setMovieName(subtitleFeatures.optString("movie_name", ""));
+                                        subtitleResult.setSeasonNumber(subtitleFeatures.optInt("season_number", 0));
+                                        subtitleResult.setEpisodeNumber(subtitleFeatures.optInt("episode_number", 0));
+                                        subtitleResult.setFeatureType(subtitleFeatures.optString("feature_type", ""));
+                                        subtitleResult.setParentTitle(subtitleFeatures.optString("parent_title", ""));
+                                    } else {
+                                        log.debug("searchSubtitle: no features found");
+                                    }
                                 }
                                 if (subtitleAttribute.has("files")) {
                                     log.debug("searchSubtitle: it has files");
-                                    JSONObject subtitleFiles = subtitleAttribute.getJSONArray("files").getJSONObject(0);
-                                    subtitleResult.setFileId(subtitleFiles.optString("file_id", ""));
-                                    subtitleResult.setFileName(subtitleFiles.optString("file_name", ""));
-                                    log.debug("searchSubtitle: file_id={}, file_name={}", subtitleResult.getFileId(), subtitleResult.getFileName());
+                                    JSONArray subtitleFilesArray = subtitleAttribute.getJSONArray("files");
+                                    if (subtitleFilesArray.length() > 0) { // Check if the JSONArray is not empty
+                                        JSONObject subtitleFiles = subtitleFilesArray.getJSONObject(0);
+                                        subtitleResult.setFileId(subtitleFiles.optString("file_id", ""));
+                                        subtitleResult.setFileName(subtitleFiles.optString("file_name", ""));
+                                        log.debug("searchSubtitle: file_id={}, file_name={}", subtitleResult.getFileId(), subtitleResult.getFileName());
+                                    } else {
+                                        log.debug("searchSubtitle: no files found");
+                                    }
                                 }
                             }
                             subtitleRefs.add(subtitleResult);
