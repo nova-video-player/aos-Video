@@ -395,18 +395,13 @@ public class OpenSubtitlesApiHelper {
                                 subtitleResult.setMoviehashMatch(subtitleAttribute.optBoolean("moviehash_match", false));
                                 if (subtitleAttribute.has("features")) {
                                     log.debug("searchSubtitle: it has features");
-                                    JSONArray subtitleFeaturesArray = subtitleAttribute.getJSONArray("features");
-                                    if (subtitleFeaturesArray.length() > 0) { // Check if the JSONArray is not empty
-                                        JSONObject subtitleFeatures = subtitleFeaturesArray.getJSONObject(0);
-                                        subtitleResult.setRelease(subtitleFeatures.optString("release", ""));
-                                        subtitleResult.setMovieName(subtitleFeatures.optString("movie_name", ""));
-                                        subtitleResult.setSeasonNumber(subtitleFeatures.optInt("season_number", 0));
-                                        subtitleResult.setEpisodeNumber(subtitleFeatures.optInt("episode_number", 0));
-                                        subtitleResult.setFeatureType(subtitleFeatures.optString("feature_type", ""));
-                                        subtitleResult.setParentTitle(subtitleFeatures.optString("parent_title", ""));
-                                    } else {
-                                        log.debug("searchSubtitle: no features found");
-                                    }
+                                    JSONObject subtitleFeatures = subtitleAttribute.getJSONObject("feature");
+                                    subtitleResult.setRelease(subtitleFeatures.optString("release", ""));
+                                    subtitleResult.setMovieName(subtitleFeatures.optString("movie_name", ""));
+                                    subtitleResult.setSeasonNumber(subtitleFeatures.optInt("season_number", 0));
+                                    subtitleResult.setEpisodeNumber(subtitleFeatures.optInt("episode_number", 0));
+                                    subtitleResult.setFeatureType(subtitleFeatures.optString("feature_type", ""));
+                                    subtitleResult.setParentTitle(subtitleFeatures.optString("parent_title", ""));
                                 }
                                 if (subtitleAttribute.has("files")) {
                                     log.debug("searchSubtitle: it has files");
