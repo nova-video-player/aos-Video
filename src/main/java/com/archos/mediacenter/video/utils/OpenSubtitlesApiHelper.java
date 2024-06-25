@@ -188,19 +188,14 @@ public class OpenSubtitlesApiHelper {
                     setBaseUrl(jsonResponse.optString("https://"+"base_url", API_BASE_URL));
                     // Check if "user" object is present in the response
                     if (jsonResponse.has("user")) {
-                        JSONArray userArray = jsonResponse.getJSONArray("user");
-                        if (userArray.length() > 0) {
-                            JSONObject userObject = userArray.getJSONObject(0);
-                            allowedDownloads = userObject.optInt("allowed_downloads", allowedDownloads);
-                            allowedTranslations = userObject.optInt("allowed_translations", allowedTranslations);
-                            level = userObject.optString("level", "Sub leecher");
-                            vip = userObject.optBoolean("vip", false);
-                            userId = userObject.optInt("user_id", 0);
-                            extInstalled = userObject.optBoolean("ext_installed", false);
-                            log.debug("auth: allowed_downloads={}, level={}, vip={}", allowedDownloads, level, vip);
-                        } else {
-                            log.warn("auth: no user object in response");
-                        }
+                        JSONObject userObject = userArray.getJSONObject(0);
+                        allowedDownloads = userObject.optInt("allowed_downloads", allowedDownloads);
+                        allowedTranslations = userObject.optInt("allowed_translations", allowedTranslations);
+                        level = userObject.optString("level", "Sub leecher");
+                        vip = userObject.optBoolean("vip", false);
+                        userId = userObject.optInt("user_id", 0);
+                        extInstalled = userObject.optBoolean("ext_installed", false);
+                        log.debug("auth: allowed_downloads={}, level={}, vip={}", allowedDownloads, level, vip);
                     }
                     if (authToken != null) {
                         log.debug("auth: authentication successful token={}", authToken);
