@@ -188,7 +188,7 @@ public class OpenSubtitlesApiHelper {
                     setBaseUrl(jsonResponse.optString("https://"+"base_url", API_BASE_URL));
                     // Check if "user" object is present in the response
                     if (jsonResponse.has("user")) {
-                        JSONObject userObject = userArray.getJSONObject(0);
+                        JSONObject userObject = jsonResponse.getJSONObject(0);
                         allowedDownloads = userObject.optInt("allowed_downloads", allowedDownloads);
                         allowedTranslations = userObject.optInt("allowed_translations", allowedTranslations);
                         level = userObject.optString("level", "Sub leecher");
