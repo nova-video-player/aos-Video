@@ -188,7 +188,7 @@ public class OpenSubtitlesApiHelper {
                     setBaseUrl(jsonResponse.optString("https://"+"base_url", API_BASE_URL));
                     // Check if "user" object is present in the response
                     if (jsonResponse.has("user")) {
-                        JSONObject userObject = jsonResponse.getJSONObject(0);
+                        JSONObject userObject = jsonResponse.getJSONObject("user");
                         allowedDownloads = userObject.optInt("allowed_downloads", allowedDownloads);
                         allowedTranslations = userObject.optInt("allowed_translations", allowedTranslations);
                         level = userObject.optString("level", "Sub leecher");
@@ -416,7 +416,7 @@ public class OpenSubtitlesApiHelper {
                                     }
                                 }
                             }
-                            subtitleRefs.add(subtitleResult);
+                            if (subtitleResult.getFileId() != null) subtitleRefs.add(subtitleResult);
                             log.debug("searchSubtitle: found " + subtitleResult);
                             // only return one best match if hash match and single language
                             if (subtitleResult.getMoviehashMatch() && languages.split(",").length == 1) {
