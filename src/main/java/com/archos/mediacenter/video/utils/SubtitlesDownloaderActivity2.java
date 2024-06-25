@@ -194,7 +194,29 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         if (existingLanguages.isEmpty()) {
             // if no language is set, add default locale at least
             String defaultLanguage = Locale.getDefault().getLanguage();
+            // if defaultLanguage is not equal ignoring case zh-cn or zh-tw replace by zh-cn since zh-cn and zh-tw are the only two known by opensubtitles
+            if (defaultLanguage.toLowerCase().startsWith("zh") && !defaultLanguage.equalsIgnoreCase("zh-cn") && !defaultLanguage.equalsIgnoreCase("zh-tw")) {
+                log.warn("getSubLangValue: curing defaultLanguage=" + defaultLanguage + " to zh-cn");
+                defaultLanguage = "zh-cn";  // Simplified Chinese
+            }
             existingLanguages.add(defaultLanguage);
+            sharedPreferences.edit().putStringSet("languages_list", existingLanguages).apply();
+        }
+        // replace all strings from existingLanguages starting with zh and not equal to zh-cn or zh-tw by zh-cn since zh-cn and zh-tw are the only two known by opensubtitles
+        Set<String> toRemove = new HashSet<>();
+        Set<String> toAdd = new HashSet<>();
+        boolean modifiedList = false;
+        for (String lang : existingLanguages) {
+            if (lang.toLowerCase().startsWith("zh") && !lang.equalsIgnoreCase("zh-cn") && !lang.equalsIgnoreCase("zh-tw")) {
+                toRemove.add(lang);
+                toAdd.add("zh-cn");
+                modifiedList = true;
+            }
+        }
+        if (modifiedList) {
+            log.warn("getSubLangValue: curing subsFavLang modifiedList: toRemove=" + toRemove + ", toAdd=" + toAdd);
+            existingLanguages.removeAll(toRemove);
+            existingLanguages.addAll(toAdd);
             sharedPreferences.edit().putStringSet("languages_list", existingLanguages).apply();
         }
         ArrayList<String> languageList = new ArrayList<>(existingLanguages);
