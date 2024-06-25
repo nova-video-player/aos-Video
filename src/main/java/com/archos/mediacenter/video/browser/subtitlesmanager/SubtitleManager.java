@@ -554,12 +554,14 @@ public class SubtitleManager {
 
     public static String convertYTSSubNamingExceptions(String name) {
         String lowercaseName = name.toLowerCase();
-        if (lowercaseName.endsWith("simplified.chi")) {
+        if (lowercaseName.endsWith("simplified.chi") || lowercaseName.endsWith("zh-cn")) {
             return "s_chinese_simplified";
-        } else if (lowercaseName.endsWith("traditional.chi")) {
+        } else if (lowercaseName.endsWith("traditional.chi") || lowercaseName.endsWith("zh-tw")) {
             return "s_traditional_chinese";
-        } else if (lowercaseName.endsWith("brazilian.por")) {
+        } else if (lowercaseName.endsWith("brazilian.por") || lowercaseName.endsWith("pt-br")) {
             return "s_brazilian";
+        } else if (lowercaseName.endsWith("pt-pt")) {
+            return "pt";
         } else if (lowercaseName.endsWith("latin american.spa")) {
             return "s_spanish_la";
         } else if (lowercaseName.endsWith("english")) {

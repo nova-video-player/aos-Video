@@ -199,6 +199,10 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 log.warn("getSubLangValue: curing defaultLanguage=" + defaultLanguage + " to zh-cn");
                 defaultLanguage = "zh-cn";  // Simplified Chinese
             }
+            if (defaultLanguage.toLowerCase().startsWith("pt") && !defaultLanguage.equalsIgnoreCase("pt-br") && !defaultLanguage.equalsIgnoreCase("pt-pt")) {
+                log.warn("getSubLangValue: curing defaultLanguage=" + defaultLanguage + " to pt-pt");
+                defaultLanguage = "pt-pt";  // Portuguese
+            }
             existingLanguages.add(defaultLanguage);
             sharedPreferences.edit().putStringSet("languages_list", existingLanguages).apply();
         }
@@ -210,6 +214,11 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             if (lang.toLowerCase().startsWith("zh") && !lang.equalsIgnoreCase("zh-cn") && !lang.equalsIgnoreCase("zh-tw")) {
                 toRemove.add(lang);
                 toAdd.add("zh-cn");
+                modifiedList = true;
+            }
+            if (lang.toLowerCase().startsWith("pt") && !lang.equalsIgnoreCase("pt-pt") && !lang.equalsIgnoreCase("pt-br")) {
+                toRemove.add(lang);
+                toAdd.add("pt-pt");
                 modifiedList = true;
             }
         }
