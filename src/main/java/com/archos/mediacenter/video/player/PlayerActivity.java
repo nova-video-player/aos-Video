@@ -3251,7 +3251,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     int subtitleTrackToPosition(int subtitleTrack, int nbTracks) { // nbTracks does not count none track
         // position is between 0<=position<=nbTrack with 0 is none track
-        return (subtitleTrack + 1) % (nbTracks + 1);
+        if (nbTracks >= 0) return (subtitleTrack + 1) % (nbTracks + 1);
+        else return 0;
     }
 
     int nextSubtitleTrack(int subtitleTrack, int nbTracks) { // nbTracks does not count none track
