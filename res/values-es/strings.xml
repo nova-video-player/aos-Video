@@ -286,6 +286,7 @@
     <string name="switch_to_list">Lista</string>
     <string name="switch_to_grid">Cuadrícula</string>
     <!-- VideoPlayer -->
+    <string name="player_track">Pista</string>
     <string name="player_loading_video">Cargando vídeo\u2026</string>
     <string name="player_audio_track_toast">Pista de audio:</string>
     <string name="player_subtitle_track_toast">Pista de subtítulos:</string>
@@ -528,7 +529,7 @@
     <string name="preferences_playback_speed_summary">Habilita la posibilidad de cambiar la velocidad de reproducción. ⚠ Experimental, puede estropear el vídeo</string>
     <string name="preferences_disable_downmix_title">Desactivar reducción a estéreo</string>
     <string name="preferences_disable_downmix_summary">Decodifica siempre todos los canales y permite que Android realice una reducción a estéreo dependiendo de las capacidades de salida de audio (puede provocar la pérdida de canales de voz)</string>
-    <string name="preferences_enable_downmix_androidtv_title">Forzar downmix de audio estéreo</string>
+    <string name="preferences_enable_downmix_androidtv_title">Forzar reducción a estéreo</string>
     <string name="preferences_enable_downmix_androidtv_summary">Siempre mezcla pistas de audio de múltiples canales a estéreo (a seleccionar si los canales de voz no son audibles)</string>
     <string name="preferences_allow_3rd_party_player">Permitir usar otro reproductor de vídeo</string>
     <string name="preferences_allow_3rd_party_player_summary">Otras aplicaciones de reproducción de vídeo compatibles serán propuestas por Android cuando se lance una reproducción de vídeo. Tenga en cuenta que algunas características no funcionarán (reanudar, marcadores, etc.)</string>

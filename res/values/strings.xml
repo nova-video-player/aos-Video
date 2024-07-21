@@ -608,6 +608,9 @@
     <string name="favSubLang_summary">Choose your favorite language for reading subtitles</string>
     <string name="favAudioLang_title">Audio preferred language</string>
     <string name="favAudioLang_summary">Choose your favorite audio track language</string>
+    <string name="ui_language_title">Choose user interface language</string>
+    <string name="UiLang_title">User interface language</string>
+    <string name="UiLang_summary">Set nova user interface language, pick system to use system default</string>
     <string name="ui_mode_title">User interface mode</string>
     <string name="ui_mode_summary">Choose between TV and Tablet/Phone UI</string>
     <string name="preferences_video_about">About</string>
