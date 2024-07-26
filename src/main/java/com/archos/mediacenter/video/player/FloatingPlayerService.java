@@ -162,7 +162,11 @@ public class FloatingPlayerService extends Service implements AppState.OnForeGro
                 }
             }
         }        ;
-        registerReceiver(mReceiver, filter);
+        if (Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(mReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(mReceiver, filter);
+        }
 
     }
     @Override

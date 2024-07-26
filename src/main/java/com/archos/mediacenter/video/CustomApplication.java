@@ -387,7 +387,11 @@ public class CustomApplication extends Application {
                 final IntentFilter intentFilter = new IntentFilter();
                 intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
                 intentFilter.addDataScheme("file");
-                registerReceiver(videoStoreImportReceiver, intentFilter);
+                if (Build.VERSION.SDK_INT >= 33) {
+                    registerReceiver(videoStoreImportReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
+                } else {
+                    registerReceiver(videoStoreImportReceiver, intentFilter);
+                }
                 isVideStoreImportReceiverRegistered = true;
                 ArchosUtils.addBreadcrumb(SentryLevel.INFO, "CustomApplication.handleForeGround", "app now in ForeGround register videoStoreImportReceiver");
             } else {

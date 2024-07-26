@@ -19,6 +19,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -102,7 +103,11 @@ abstract public class BrowserActivity extends AppCompatActivity {
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Cover.LAUNCH_CONTENT_BROWSER_INTENT);
-        registerReceiver(mCoverLaunchListener, filter);
+        if (Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(mCoverLaunchListener, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(mCoverLaunchListener, filter);
+        }
 
         updateGlobalResume();
 

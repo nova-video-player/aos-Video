@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.preference.PreferenceManager;
 import androidx.fragment.app.Fragment;
@@ -264,7 +265,11 @@ abstract public class BrowserCategory extends ListFragment {
         intentFilter.addAction(ExtStorageReceiver.ACTION_MEDIA_CHANGED);
         intentFilter.addDataScheme(ExtStorageReceiver.ARCHOS_FILE_SCHEME);//new android nougat send UriExposureException when scheme = file
         intentFilter.addDataScheme("file");
-        getActivity().registerReceiver(mExternalStorageReceiver, intentFilter);
+        if (Build.VERSION.SDK_INT >= 33) {
+            getActivity().registerReceiver(mExternalStorageReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            getActivity().registerReceiver(mExternalStorageReceiver, intentFilter);
+        }
         addNetworkListener();
         // Remove non constant category items.
         for (int index = mCategoryList.size() - 1; index >= mLibrarySize; index--)

@@ -25,6 +25,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
@@ -326,7 +327,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         intentFilter.addAction(ExtStorageReceiver.ACTION_MEDIA_CHANGED);
         intentFilter.addDataScheme("file");
         intentFilter.addDataScheme(ExtStorageReceiver.ARCHOS_FILE_SCHEME);//new android nougat send UriExposureException when scheme = file
-        mActivity.registerReceiver(mExternalStorageReceiver, intentFilter);
+        if (Build.VERSION.SDK_INT >= 33) {
+            mActivity.registerReceiver(mExternalStorageReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            mActivity.registerReceiver(mExternalStorageReceiver, intentFilter);
+        }
         mUpdateFilter = new IntentFilter(ArchosMediaIntent.ACTION_VIDEO_SCANNER_SCAN_FINISHED);
         // VideoStoreImportService sends null scheme thus do not filter for specific scheme
         //for (String scheme : UriUtils.sIndexableSchemes) mUpdateFilter.addDataScheme(scheme);
