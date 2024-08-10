@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.ServiceInfo;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -40,6 +41,7 @@ import android.os.Handler;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ServiceCompat;
 import androidx.preference.PreferenceManager;
 import androidx.core.app.NotificationCompat;
 
@@ -407,7 +409,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
 
         log.debug("onCreate: register headsetPluggedReceiver");
-        registerReceiver(headsetPluggedReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
+        if (Build.VERSION.SDK_INT >= 33) registerReceiver(headsetPluggedReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG), Context.RECEIVER_NOT_EXPORTED);
+        else registerReceiver(headsetPluggedReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
         setPlayer();
         Intent intent = new Intent(PLAYER_SERVICE_STARTED);
         intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
@@ -569,8 +572,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         nb.setDeleteIntent(PendingIntent.getBroadcast(this, 0, new Intent(EXIT_INTENT),
                 ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT)));
         //notif.bigContentView = new RemoteViews(getPackageName(), R.layout.notification_controls);
-        startForeground(PLAYER_NOTIFICATION_ID, nb.build());
-
+        ServiceCompat.startForeground(this, PLAYER_NOTIFICATION_ID, nb.build(),
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ? ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK : 0
+        );
     }
 
 

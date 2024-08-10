@@ -23,12 +23,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ServiceInfo;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 
+import androidx.core.app.ServiceCompat;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 import androidx.core.app.NotificationCompat;
@@ -113,7 +115,7 @@ public class FileManagerService extends Service implements OperationEngineListen
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel nc = new NotificationChannel(notifChannelId, notifChannelName,
-                    nm.IMPORTANCE_LOW);
+                    NotificationManager.IMPORTANCE_LOW);
             nc.setDescription(notifChannelDescr);
             if (nm != null)
                 nm.createNotificationChannel(nc);
@@ -122,8 +124,9 @@ public class FileManagerService extends Service implements OperationEngineListen
                 .setSmallIcon(R.drawable.nova_notification)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setTicker(null).setOnlyAlertOnce(true).setOngoing(true).setAutoCancel(true);
-        startForeground(PASTE_NOTIFICATION_ID, nb.build());
-
+        ServiceCompat.startForeground(this, PASTE_NOTIFICATION_ID, nb.build(),
+            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ? ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC : 0
+        );
         mLastStatus = ActionStatusEnum.NONE;
         localBinder = new FileManagerServiceBinder();
         mOpenAtTheEnd = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(OPEN_AT_THE_END_KEY, true);
@@ -146,13 +149,16 @@ public class FileManagerService extends Service implements OperationEngineListen
         IntentFilter filter = new IntentFilter();
         filter.addAction("CANCEL");
         filter.addAction("OPEN");
-        registerReceiver(receiver, filter);
+        if (Build.VERSION.SDK_INT >= 33) registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        else registerReceiver(receiver, filter);
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         if (DBG) Log.d(TAG, "onStartCommand");
-        startForeground(PASTE_NOTIFICATION_ID, nb.build());
+        ServiceCompat.startForeground(this, PASTE_NOTIFICATION_ID, nb.build(),
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ? ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC : 0
+        );
         return START_NOT_STICKY;
     }
 

@@ -187,7 +187,7 @@ public class PlayUtils implements IndexHelper.Listener {
                 mIndexHelper = new IndexHelper(context, null, 0);
             mIndexHelper.requestVideoDb(video.getUri(), -1,null, this, false, true);
              */
-        }else {
+        } else {
             if (resume == PlayerService.RESUME_NO)
                 resumePosition = 0;
             log.debug("startPlayer: send onResumeReady");
