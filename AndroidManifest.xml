@@ -1279,7 +1279,7 @@
             android:name=".player.TorrentLoaderActivity"
             android:exported="true"
             android:theme="@style/Theme.Transparent">
-            <intent-filter android:autoVerify="true">
+            <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
