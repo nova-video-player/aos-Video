@@ -107,11 +107,10 @@ import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.EpisodeTags;
 import com.archos.mediascraper.MovieTags;
 import com.archos.mediascraper.NfoWriter;
+import com.archos.mediascraper.Scraper;
 import com.archos.mediascraper.ScraperTrailer;
 import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.VideoTags;
-import com.archos.mediascraper.xml.MovieScraper3;
-import com.archos.mediascraper.xml.ShowScraper4;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -1123,10 +1122,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             // Format TMDB URL with movie ID and preferred language
             final String language, tmdbUrl;
             if (mIsVideoMovie) {
-                language = MovieScraper3.getLanguage(getActivity());
+                language = Scraper.getLanguage(getActivity());
                 tmdbUrl = String.format(getResources().getString(R.string.tmdb_movie_title_url), Long.toString(mTMDBId), language);
             } else {
-                language = ShowScraper4.getLanguage(getActivity());
+                language = Scraper.getLanguage(getActivity());
                 tmdbUrl = String.format(getResources().getString(R.string.tmdb_tvshow_title_url), Long.toString(mOnlineId), language);
             }
             log.debug("onClick: mTMDBId=" + mTMDBId + ", tmdbUrl=" + tmdbUrl);
@@ -1137,7 +1136,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         }else if(view == mTVDBIcon){
             final String language;
             // Format TVDB URL with movie ID and preferred language
-            language = ShowScraper4.getLanguage(getActivity());
+            language = Scraper.getLanguage(getActivity());
             final String tvdbUrl = String.format(getResources().getString(R.string.tvdb_title_url), Long.toString(mTVDBId), language);
             // Breaks AndroidTV acceptance
             Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(tvdbUrl));
