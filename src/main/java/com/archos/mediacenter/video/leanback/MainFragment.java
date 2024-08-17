@@ -335,7 +335,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         mUpdateFilter = new IntentFilter(ArchosMediaIntent.ACTION_VIDEO_SCANNER_SCAN_FINISHED);
         // VideoStoreImportService sends null scheme thus do not filter for specific scheme
         //for (String scheme : UriUtils.sIndexableSchemes) mUpdateFilter.addDataScheme(scheme);
-        mActivity.registerReceiver(mUpdateReceiver, mUpdateFilter);
+        if (Build.VERSION.SDK_INT >= 33) {
+            mActivity.registerReceiver(mUpdateReceiver, mUpdateFilter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            mActivity.registerReceiver(mUpdateReceiver, mUpdateFilter);
+        }
 
         // check if resuming we have a change of parameters and update everything accordingly
         restartWatchingUpNextLoader = false;
