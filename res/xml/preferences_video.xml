@@ -10,6 +10,16 @@
             android:selectable="false"
             android:key="preferences_version"
             app:iconSpaceReserved="false"/>
+
+        <ListPreference
+            android:dialogTitle="@string/ui_language_title"
+            android:entries="@array/entries_list_preference"
+            android:entryValues="@array/entryvalues_list_preference"
+            android:key="ui_lang"
+            android:persistent="true"
+            android:summary="@string/UiLang_summary"
+            android:title="@string/UiLang_title"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="preferences_category_video"

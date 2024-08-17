@@ -13,6 +13,9 @@
 // limitations under the License.
 package com.archos.mediacenter.video.utils;
 
+import static android.content.Intent.getIntent;
+import static androidx.core.app.ActivityCompat.recreate;
+
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -22,6 +25,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
@@ -30,12 +34,15 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
@@ -102,6 +109,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     // curl --request GET --url 'https://api.themoviedb.org/3/configuration/languages?api_key=APIKEY' | jq '.[] | .iso_639_1' | sed 's/"\([^"]*\)"/\1/g' | grep -v mo | grep -v xx | sort -u | paste -sd "|" -
     public final static String TMDB_LANGUAGES = "aa|ab|ae|af|ak|am|an|ar|as|av|ay|az|ba|be|bg|bi|bm|bn|bo|br|bs|ca|ce|ch|cn|co|cr|cs|cu|cv|cy|da|de|dv|dz|ee|el|en|eo|es|et|eu|fa|ff|fi|fj|fo|fr|fy|ga|gd|gl|gn|gu|gv|ha|he|hi|ho|hr|ht|hu|hy|hz|ia|id|ie|ig|ii|ik|io|is|it|iu|ja|jv|ka|kg|ki|kj|kk|kl|km|kn|ko|kr|ks|ku|kv|kw|ky|la|lb|lg|li|ln|lo|lt|lu|lv|mg|mh|mi|mk|ml|mn|mr|ms|mt|my|na|nb|nd|ne|ng|nl|nn|no|nr|nv|ny|oc|oj|om|or|os|pa|pi|pl|ps|pt|qu|rm|rn|ro|ru|rw|sa|sc|sd|se|sg|sh|si|sk|sl|sm|sn|so|sq|sr|ss|st|su|sv|sw|ta|te|tg|th|ti|tk|tl|tn|to|tr|ts|tt|tw|ty|ug|uk|ur|uz|ve|vi|vo|wa|wo|xh|yi|yo|za|zh|zu";
 
+    // crowdin nova translation languages
+    // cd Video/res; (ls -d values-* | grep -Ev '(-w|-sw).*dp' | grep -Ev '(notouch|land)' | sed -E 's/values-//; s/-r/-/' | sort && echo "en") | sort | gpaste -sd "|"
+    public final static String UI_LANGUAGES = "ar|cs-CZ|de|el-GR|en|es|fa-IR|fr|hu-HU|it|iw|kaa|kmr-TR|ko|lt-LT|nl|or-IN|pl|pt-BR|pt-PT|ru|sk-SK|sv-SE|ta-IN|tr-TR|uk-UA|vi-VN|zh-CN|zh-TW";
+
     // should we provide adaptive refresh rate for all (not only on TV)
     private static final boolean REFRESHRATE_FORALL = true;
 
@@ -152,6 +163,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_TRAKT_SYNC_PROGRESS = "trakt_sync_resume";
     public static final String KEY_LICENCES = "preferences_video_licences";
 
+    public static final String KEY_UI_LANG = "ui_lang";
+    public static final String KEY_UI_LANG_SYSTEM = "syst";
     public static final String KEY_DEC_CHOICE = "dec_choice";
     public static final String KEY_AUDIO_INTERFACE_CHOICE = "audio_interface_choice";
     public static final String KEY_SUBTITLES_HIDE = "subtitles_hide_default";
@@ -221,6 +234,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private PreferenceCategory mAdvancedPreferences = null;
     private PreferenceCategory mScraperCategory = null;
     private ListPreference mSubtitlesFavLangPreferences = null;
+    private ListPreference mUiLang = null;
     private MultiSelectListPreference mSubtitlesDownloadLanguagePreferences = null;
     private ListPreference mTMDbScraperLanguagePreferences = null;
     private ListPreference mAudioTrackFavoriteLanguage = null;
@@ -269,7 +283,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     List<String> TMDbLanguageListEntries = new ArrayList<>();
     List<String> TMDbLanguageListEntryValues = new ArrayList<>();
     int TMDbSystemLanguageIndex = -1;
-
+    // TODO MARC
+    int UiSystemLanguageIndex =  -1;
+    List<String> UiLanguageListEntries = new ArrayList<>();
+    List<String> UiLanguageListEntryValues = new ArrayList<>();
 
     public VideoPreferencesCommon(PreferenceFragmentCompat preferencesFragment) {
         mPreferencesFragment = preferencesFragment;
@@ -715,6 +732,39 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         systemAudioLanguageIndex = findLanguageIndex(OpensubtitlesLanguageListEntryValues, getPreferenceManager().getSharedPreferences().getString(KEY_AUDIO_TRACK_FAV_LANG, Locale.getDefault().getLanguage()));
         if (systemAudioLanguageIndex>=0) mAudioTrackFavoriteLanguage.setValueIndex(systemAudioLanguageIndex);
 
+        // TODO MARC
+        mUiLang = (ListPreference) findPreference(KEY_UI_LANG);
+        buildUILanguageList(UI_LANGUAGES, UiLanguageListEntries, UiLanguageListEntryValues);
+        // Set entries and entry values for the ListPreference
+        mUiLang.setEntries(UiLanguageListEntries.toArray(new CharSequence[0]));
+        mUiLang.setEntryValues(UiLanguageListEntryValues.toArray(new CharSequence[0]));
+
+        // set default value of the ListPreference to the System first entry
+        UiSystemLanguageIndex = findLanguageIndex(UiLanguageListEntryValues, getPreferenceManager().getSharedPreferences().getString(KEY_UI_LANG, KEY_UI_LANG_SYSTEM));
+        if (UiSystemLanguageIndex>=0) mUiLang.setValueIndex(UiSystemLanguageIndex);
+
+        // Update summary to reflect the current setting
+        String selectedLocale = getPreferenceManager().getSharedPreferences().getString(KEY_UI_LANG, KEY_UI_LANG_SYSTEM);
+        mUiLang.setSummary(getLocaleDisplayName(selectedLocale));
+        mUiLang.setOnPreferenceChangeListener((preference, newValue) -> {
+            String newLocale = (String) newValue;
+            // modify mUiLang summary to concatenate getLocaleDisplayName(newLocale)
+            //mUiLang.setSummary(getLocaleDisplayName(newLocale));
+            log.debug("onCreatePreferences: mUiLang newLocale " + newLocale);
+            //setLocale(newLocale);
+            // TODO MARC TODO MARC!!!
+            //((CustomApplication) getActivity().getApplication()).setLocale(newLocale);
+            setLocale2(newLocale);
+            // commit all the settings changes before restarting the activity
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+            editor.putString(KEY_UI_LANG, newLocale);
+            editor.commit();
+            restartActivity(); // not enough to clear all the cached fragments
+            //restartApplication(); // TODO MARC not enough when returning to settings
+            //getActivity().recreate();
+            return true;
+        });
+
         ListPreference lp = (ListPreference) findPreference("codepage");
         int cp = MediaFactory.getCodepage();
         int cpStringID = getResources().getIdentifier("codepage_extra_" + cp, "string", getActivity().getPackageName());
@@ -941,6 +991,88 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         // Add the sorted languages to the listEntries and listEntryValues
         languageEntries.addAll(sortedLanguages.keySet());
         languageEntryValues.addAll(sortedLanguages.values());
+    }
+
+    // TODO MARC
+    private void buildUILanguageList(String languages, List<String> languageEntries, List<String> languageEntryValues) {
+        String[] languageCodeArray = languages.split("\\|");
+
+        // Add "System" entry first
+        languageEntries.add(getResources().getString(R.string.system));
+        languageEntryValues.add("");
+
+        // Use a TreeMap to keep the languages sorted as they are added
+        TreeMap<String, String> sortedLanguages = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+        for (String s : languageCodeArray) {
+            Locale locale = getLocaleFromCode(s);
+            String currentLocaleLanguage = locale.getDisplayName(locale);
+            sortedLanguages.put(currentLocaleLanguage, s);
+        }
+
+        // Add the sorted languages to the listEntries and listEntryValues
+        languageEntries.addAll(sortedLanguages.keySet());
+        languageEntryValues.addAll(sortedLanguages.values());
+    }
+
+    public static Locale getLocaleFromCode(String code) {
+        //log.trace("getLocaleFromCode: code " + code);
+        String[] parts = code.split("[-_]");
+        if (parts.length == 1) {
+            //log.trace("getLocaleFromCode: parts[0] " + parts[0]);
+            return new Locale(parts[0]);
+        } else if (parts.length == 2) {
+            //log.trace("getLocaleFromCode: parts[0] " + parts[0] + " parts[1] " + parts[1]);
+            return new Locale(parts[0], parts[1]);
+        } else {
+            //log.trace("getLocaleFromCode: returning default locale");
+            return Locale.getDefault();
+        }
+    }
+
+    private String getLocaleDisplayName(String localeCode) {
+        if (localeCode.equalsIgnoreCase(KEY_UI_LANG_SYSTEM)) {
+            return getResources().getString(R.string.system);
+        }
+        Locale locale = getLocaleFromCode(localeCode);
+        return locale.getDisplayName(locale);
+    }
+
+    private void restartActivity() {
+        //Intent intent = getActivity().getIntent();
+        //getActivity().finish();
+        //startActivity(intent);
+        getActivity().recreate(); // other way
+    }
+
+    private void restartApplication() {
+        Intent intent = new Intent(getActivity(), getActivity().getClass());
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        getActivity().startActivity(intent);
+        getActivity().finishAffinity(); // Use finishAffinity to finish this and all activities below it in the stack.
+        System.exit(0); // Optionally use this to ensure the app process is fully restarted.
+    }
+
+    private static boolean DBG = true;
+
+    // TODO MARC remove
+
+    public void setLocale2(String localeCode) {
+        // Warning no log.debug at this stage
+        Locale locale;
+        if (localeCode == null || localeCode.isEmpty() || localeCode.equalsIgnoreCase(VideoPreferencesCommon.KEY_UI_LANG_SYSTEM)) {
+            //log.debug("setLocale: use system default language");
+            if (DBG) Log.d("CustomApplication", "setLocale: use system default language");
+            locale = Locale.getDefault(); // Use system default language
+        } else {
+            //log.debug("setLocale: use language " + lang);
+            if (DBG) Log.d("CustomApplication", "setLocale: use localeCode " + localeCode);
+            locale = VideoPreferencesCommon.getLocaleFromCode(localeCode);
+        }
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);  // Use setLocale() instead of deprecated locale field
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
     }
 
     private void rescanPath(String s) {

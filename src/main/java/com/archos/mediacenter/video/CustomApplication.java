@@ -28,12 +28,15 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
@@ -80,6 +83,7 @@ import java.security.Security;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -250,11 +254,12 @@ public class CustomApplication extends Application {
                     .build());
         }
 
+        loadLocale();
+
         // init application context to make it available to all static methods
         mContext = getApplicationContext();
         // must be done after context is available
         log = LoggerFactory.getLogger(CustomApplication.class);
-
         setupBouncyCastle();
 
         // must be done before sambaDiscovery otherwise no context for jcifs
@@ -666,5 +671,34 @@ public class CustomApplication extends Application {
         // of that it's possible to have another BC implementation loaded in VM.
         Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
         Security.insertProviderAt(new BouncyCastleProvider(), 1);
+    }
+
+    static boolean DBG = true;
+
+    public void loadLocale() {
+        // Warning no log.debug at this stage
+        if (getApplicationContext() == null) return;
+        String language = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(VideoPreferencesCommon.KEY_UI_LANG, VideoPreferencesCommon.KEY_UI_LANG_SYSTEM);
+        //log.debug("loadLocale: load locale from preferences: " + language);
+        if (DBG) Log.d("CustomApplication", "loadLocale: load locale from preferences: " + language);
+        setLocale(language);
+    }
+
+    public void setLocale(String localeCode) {
+        // Warning no log.debug at this stage
+        Locale locale;
+        if (localeCode == null || localeCode.isEmpty() || localeCode.equalsIgnoreCase(VideoPreferencesCommon.KEY_UI_LANG_SYSTEM)) {
+            //log.debug("setLocale: use system default language");
+            if (DBG) Log.d("CustomApplication", "setLocale: use system default language");
+            locale = Locale.getDefault(); // Use system default language
+        } else {
+            //log.debug("setLocale: use language " + lang);
+            if (DBG) Log.d("CustomApplication", "setLocale: use localeCode " + localeCode);
+            locale = VideoPreferencesCommon.getLocaleFromCode(localeCode);
+        }
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);  // Use setLocale() instead of deprecated locale field
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
     }
 }

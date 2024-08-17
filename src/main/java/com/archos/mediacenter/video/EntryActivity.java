@@ -15,13 +15,18 @@
 package com.archos.mediacenter.video;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.leanback.MainActivityLeanback;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
+
+import java.util.Locale;
 
 /**
  * Hub activity to launch either the leanback activity or the regular tablet/phone activity
@@ -31,15 +36,18 @@ import com.archos.mediacenter.video.leanback.MainActivityLeanback;
 public class EntryActivity extends AppCompatActivity {
 
     private static final String TAG = "EntryActivity";
-    private static boolean DBG = false;
+    private static boolean DBG = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        ((CustomApplication) getApplication()).loadLocale();
+
         super.onCreate(savedInstanceState);
+
         if (DBG) Log.d(TAG, "onCreate");
 
         Class activityToLaunch = null;
-
         if (UiChoiceDialog.applicationIsInLeanbackMode(this)) {
             activityToLaunch = MainActivityLeanback.class;
         } else {
@@ -62,4 +70,11 @@ public class EntryActivity extends AppCompatActivity {
 
         finish();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((CustomApplication) getApplication()).loadLocale();
+    }
+
 }
