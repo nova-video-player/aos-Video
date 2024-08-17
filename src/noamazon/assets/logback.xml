@@ -107,6 +107,8 @@
     <!-- Subtitles -->
     <logger name="com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2" level="INFO"/>
     <logger name="com.archos.mediacenter.video.utils.OpenSubtitlesApiHelper" level="INFO"/>
+    <logger name="com.archos.mediacenter.video.utils.ISO639codes" level="INFO"/>
+    <logger name="com.archos.mediacenter.video.utils.VideoPreferencesCommon" level="INFO"/>
 
     <!-- Debug auto-scan refresh -->
     <logger name="com.archos.mediaprovider.video.NetworkAutoRefresh" level="INFO"/>
