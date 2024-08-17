@@ -283,7 +283,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     List<String> TMDbLanguageListEntries = new ArrayList<>();
     List<String> TMDbLanguageListEntryValues = new ArrayList<>();
     int TMDbSystemLanguageIndex = -1;
-    // TODO MARC
     int UiSystemLanguageIndex =  -1;
     List<String> UiLanguageListEntries = new ArrayList<>();
     List<String> UiLanguageListEntryValues = new ArrayList<>();
@@ -733,7 +732,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         systemAudioLanguageIndex = findLanguageIndex(OpensubtitlesLanguageListEntryValues, getPreferenceManager().getSharedPreferences().getString(KEY_AUDIO_TRACK_FAV_LANG, Locale.getDefault().getLanguage()));
         if (systemAudioLanguageIndex>=0) mAudioTrackFavoriteLanguage.setValueIndex(systemAudioLanguageIndex);
 
-        // TODO MARC
         mUiLang = (ListPreference) findPreference(KEY_UI_LANG);
         buildUILanguageList(UI_LANGUAGES, UiLanguageListEntries, UiLanguageListEntryValues);
         // Set entries and entry values for the ListPreference
@@ -754,9 +752,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             // modify mUiLang summary to concatenate getLocaleDisplayName(newLocale)
             mUiLang.setSummary(getLocaleDisplayName(newLocale));
             log.debug("onCreatePreferences: mUiLang newLocale " + newLocale);
-            //setLocale(newLocale);
-            // TODO MARC TODO MARC!!!
-            //((CustomApplication) getActivity().getApplication()).setLocale(newLocale);
             CustomApplication.setLocale(newLocale, getResources());
             // commit all the settings changes before restarting the activity
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
@@ -764,7 +759,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             editor.commit();
             // TODO MARC BUG: does not change the title string.preferences of preferences_video.xml but all the rest is ok
             restartActivity(); // not enough to clear all the cached fragments
-            //restartApplication(); // TODO MARC not enough when returning to settings
+            //restartApplication(); // not enough when returning to settings
             //getActivity().recreate();
             return true;
         });
@@ -997,7 +992,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         languageEntryValues.addAll(sortedLanguages.values());
     }
 
-    // TODO MARC
     private void buildUILanguageList(String languages, List<String> languageEntries, List<String> languageEntryValues) {
         String[] languageCodeArray = languages.split("\\|");
 
@@ -1042,6 +1036,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         return locale.getDisplayName(locale);
     }
 
+    // TODO MARC remove unused
+    
     private void restartActivity() {
         //Intent intent = getActivity().getIntent();
         //getActivity().finish();

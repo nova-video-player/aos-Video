@@ -42,8 +42,6 @@ public class EntryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         ((CustomApplication) getApplication()).loadLocale();
-        //CustomApplication.loadLocale(getResources());
-
         super.onCreate(savedInstanceState);
 
         if (DBG) Log.d(TAG, "onCreate");
@@ -76,7 +74,6 @@ public class EntryActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         ((CustomApplication) getApplication()).loadLocale();
-        //CustomApplication.loadLocale(getResources());
     }
 
 }

@@ -205,8 +205,6 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
      */
     @Override
     public void onCreate(Bundle bundle) {
-        // TODO MARC
-        //((CustomApplication) getApplication()).loadLocale();
         CustomApplication.loadLocale(getResources());
         super.onCreate(bundle);
         log.debug("onCreate");

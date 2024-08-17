@@ -66,8 +66,6 @@ public class MainActivityLeanback extends LeanbackActivity {
     public void onResumeFragments(){
         log.debug("onResumeFragments");
         super.onResumeFragments();
-
-        //((CustomApplication) getApplication()).loadLocale();
         CustomApplication.loadLocale(getResources());
 
         new DensityTweak(this)
@@ -77,10 +75,7 @@ public class MainActivityLeanback extends LeanbackActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         ((CustomApplication) getApplication()).loadLocale();
-        //CustomApplication.loadLocale(getResources());
-
         super.onCreate(savedInstanceState);
 
         UnavailablePosterBroadcastReceiver.registerReceiver(this);

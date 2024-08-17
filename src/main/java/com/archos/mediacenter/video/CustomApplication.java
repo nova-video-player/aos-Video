@@ -725,7 +725,6 @@ public class CustomApplication extends Application {
         if (localeCode == null || localeCode.isEmpty() || localeCode.equalsIgnoreCase(VideoPreferencesCommon.KEY_UI_LANG_SYSTEM)) {
             //log.debug("setLocale: use system default language");
             locale = defaultLocale; // Use system default language
-            // TODO MARC BUG provides the nova defaultLocale i.e. the previous one...
             if (DBG) Log.d("CustomApplication", "setLocale: use system default language = " + locale);
         } else {
             //log.debug("setLocale: use language " + lang);
