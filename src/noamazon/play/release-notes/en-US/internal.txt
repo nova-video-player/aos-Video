@@ -1,6 +1,3 @@
-- Fix favorite lang/sub not applied in binge watching mode
-- Better scrape for year matching in tvshows
-- Add IPv6 address support in network shares
-- Many subtitles naming detection fixes
-- Fix posters not downloading on old Android version
-- Nova icon update for Google Play compliance
+- fix PIP not working anymore
+- revert to ffmpeg 4.4.5 to avoid playback regressions
+- add Brazilian language for TMDB video descriptions
