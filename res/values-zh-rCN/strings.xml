@@ -332,6 +332,7 @@
     <string name="s_chinese">中文</string>
     <string name="s_chinese_simplified">简体中文</string>
     <string name="s_traditional_chinese">繁体中文</string>
+    <string name="s_chinese_bilingual">中英双语</string>
     <string name="s_spanish_la">西班牙语 (LA)</string>
     <string name="s_extremaduran">埃斯特雷马杜拉语</string>
     <string name="s_montenegrin">黑山语</string>
@@ -342,7 +343,6 @@
     <string name="s_santali">桑塔利语</string>
     <string name="s_syriac">叙利亚语</string>
     <string name="s_toki_pona">道本语</string>
-    <string name="s_chinese_bilingual">中英双语</string>
     <string name="s_none">无</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">无法播放视频</string>

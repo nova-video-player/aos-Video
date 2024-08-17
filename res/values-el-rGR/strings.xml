@@ -313,6 +313,7 @@
     <string name="s_chinese">Κινέζικα</string>
     <string name="s_chinese_simplified">Απλοποιημένα Κινέζικα</string>
     <string name="s_traditional_chinese">Παραδοσιακά Kινέζικα</string>
+    <string name="s_chinese_bilingual">Κινέζικα δίγλωσσα</string>
     <string name="s_spanish_la">Ισπανικά (ΛΑ)</string>
     <string name="s_montenegrin">Μαυροβουνιακά</string>
     <string name="s_manipuri">Μανιπούρι</string>
@@ -320,7 +321,6 @@
     <string name="s_spanish_eu">Ισπανικά (ΕΕ)</string>
     <string name="s_santali">Σαντάλι</string>
     <string name="s_syriac">Συριακά</string>
-    <string name="s_chinese_bilingual">Κινέζικα δίγλωσσα</string>
     <string name="s_none">Κανένα</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Αδυναμία αναπαραγωγής βίντεο</string>

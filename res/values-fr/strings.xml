@@ -338,6 +338,10 @@
     <string name="s_chinese">Chinois</string>
     <string name="s_chinese_simplified">chinois simplifié</string>
     <string name="s_traditional_chinese">chinois traditionnel</string>
+    <string name="s_chinese_bilingual">chinois bilingue</string>
+    <string name="s_chinese_mainland">chinois (Chine continentale)</string>
+    <string name="s_chinese_hk">chinois (Hong Kong)</string>
+    <string name="s_chinese_tw">chinois (Taïwan)</string>
     <string name="s_spanish_la">espagnol (LA)</string>
     <string name="s_extremaduran">estremègne</string>
     <string name="s_montenegrin">monténégrin</string>
@@ -348,7 +352,6 @@
     <string name="s_santali">santali</string>
     <string name="s_syriac">syriaque</string>
     <string name="s_toki_pona">toki pona</string>
-    <string name="s_chinese_bilingual">chinois bilingue</string>
     <string name="s_none">Aucun</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Impossible de lire la vidéo</string>
@@ -555,6 +558,9 @@
     <string name="favSubLang_summary">Choisissez la langue de sous-titres par défaut lors de la lecture de vos vidéos</string>
     <string name="favAudioLang_title">Langue audio préférée</string>
     <string name="favAudioLang_summary">Choisissez la langue de votre piste audio préférée</string>
+    <string name="ui_language_title">Changer la langue de l\'interface</string>
+    <string name="UiLang_title">Langue de l\'interface utilisateur</string>
+    <string name="UiLang_summary">Définir la langue de l\'interface utilisateur de nova, choisir système pour utiliser la valeur par défaut du système</string>
     <string name="ui_mode_title">Type d\'interface utilisateur</string>
     <string name="ui_mode_summary">Choisir entre les modes TV et tablette/smartphone</string>
     <string name="preferences_video_about">A propos</string>

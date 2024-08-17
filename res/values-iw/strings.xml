@@ -348,6 +348,7 @@
     <string name="s_chinese">סינית</string>
     <string name="s_chinese_simplified">סינית פשוטה</string>
     <string name="s_traditional_chinese">סינית מסורתית</string>
+    <string name="s_chinese_bilingual">סינית דו לשונית</string>
     <string name="s_spanish_la">ספרדית (LA)</string>
     <string name="s_extremaduran">אקסטרמדורית</string>
     <string name="s_montenegrin">מונטנגרית</string>
@@ -358,7 +359,6 @@
     <string name="s_santali">סנטלית</string>
     <string name="s_syriac">סורית</string>
     <string name="s_toki_pona">טוקי פונה</string>
-    <string name="s_chinese_bilingual">סינית דו לשונית</string>
     <string name="s_none">ללא</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">לא ניתן להפעיל וידאו</string>

@@ -332,6 +332,7 @@
     <string name="s_chinese">Tiếng Trung</string>
     <string name="s_chinese_simplified">Tiếng Trung giản thể</string>
     <string name="s_traditional_chinese">Chữ Hán phồn thể</string>
+    <string name="s_chinese_bilingual">Song ngữ tiếng Trung</string>
     <string name="s_spanish_la">Tiếng Tây Ban Nha (LA)</string>
     <string name="s_extremaduran">Extremaduran</string>
     <string name="s_montenegrin">Montenegrin</string>
@@ -342,7 +343,6 @@
     <string name="s_santali">Tiếng Santali</string>
     <string name="s_syriac">Tiếng Syriac</string>
     <string name="s_toki_pona">Toki Pona</string>
-    <string name="s_chinese_bilingual">Song ngữ tiếng Trung</string>
     <string name="s_none">Không có</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Không thể phát băng hình</string>

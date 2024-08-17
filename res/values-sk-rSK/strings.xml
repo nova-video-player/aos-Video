@@ -348,6 +348,7 @@
     <string name="s_chinese">Čínština</string>
     <string name="s_chinese_simplified">Zjednodušená čínština</string>
     <string name="s_traditional_chinese">Tradičná čínština</string>
+    <string name="s_chinese_bilingual">Dvojjazyčná čínština</string>
     <string name="s_spanish_la">Španielčina (LA)</string>
     <string name="s_extremaduran">Extremaduran</string>
     <string name="s_montenegrin">Čiernohorčina</string>
@@ -358,7 +359,6 @@
     <string name="s_santali">Santali</string>
     <string name="s_syriac">Sýrčina</string>
     <string name="s_toki_pona">Toki Pona</string>
-    <string name="s_chinese_bilingual">Dvojjazyčná čínština</string>
     <string name="s_none">Žiadny</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Nie je možné prehrať video</string>

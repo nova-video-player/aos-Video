@@ -348,6 +348,7 @@
     <string name="s_chinese">Китайский</string>
     <string name="s_chinese_simplified">Упрощенный китайский</string>
     <string name="s_traditional_chinese">Китайский традиционный</string>
+    <string name="s_chinese_bilingual">Китайский двуязычный</string>
     <string name="s_spanish_la">Испанский (LA)</string>
     <string name="s_extremaduran">Эстремадурский</string>
     <string name="s_montenegrin">Черногорский</string>
@@ -358,7 +359,6 @@
     <string name="s_santali">Сантали</string>
     <string name="s_syriac">Сирийский</string>
     <string name="s_toki_pona">Токи Пона</string>
-    <string name="s_chinese_bilingual">Китайский двуязычный</string>
     <string name="s_none">Нет</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Воспроизведение видео невозможно</string>

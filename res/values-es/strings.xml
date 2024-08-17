@@ -338,6 +338,7 @@
     <string name="s_chinese">Chino</string>
     <string name="s_chinese_simplified">Chino simplificado</string>
     <string name="s_traditional_chinese">Chino tradicional</string>
+    <string name="s_chinese_bilingual">Chino bilingual</string>
     <string name="s_spanish_la">Español (LA)</string>
     <string name="s_extremaduran">Extremeño</string>
     <string name="s_montenegrin">Montenegrino</string>
@@ -348,7 +349,6 @@
     <string name="s_santali">Santalí</string>
     <string name="s_syriac">Asirio</string>
     <string name="s_toki_pona">Toki Pona</string>
-    <string name="s_chinese_bilingual">Chino bilingual</string>
     <string name="s_none">Ninguno</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">No se puede reproducir el vídeo</string>
