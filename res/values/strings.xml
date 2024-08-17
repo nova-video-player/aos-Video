@@ -378,6 +378,10 @@
     <string name="s_chinese">Chinese</string>
     <string name="s_chinese_simplified">Simplified Chinese</string>
     <string name="s_traditional_chinese">Traditional Chinese</string>
+    <string name="s_chinese_bilingual">Chinese bilingual</string>
+    <string name="s_chinese_mainland">Chinese (Mainland China)</string>
+    <string name="s_chinese_hk">Chinese (Hong Kong)</string>
+    <string name="s_chinese_tw">Chinese (Taiwan)</string>
     <string name="s_spanish_la">Spanish (LA)</string>
     <string name="s_extremaduran">Extremaduran</string>
     <string name="s_montenegrin">Montenegrin</string>
@@ -388,7 +392,6 @@
     <string name="s_santali">Santali</string>
     <string name="s_syriac">Syriac</string>
     <string name="s_toki_pona">Toki Pona</string>
-    <string name="s_chinese_bilingual">Chinese bilingual</string>
     <string name="s_none">None</string>
 
     <!-- Player errors -->
