@@ -57,6 +57,7 @@ import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.browser.BootupRecommandationService;
 import com.archos.mediacenter.video.picasso.SmbRequestHandler;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
+import com.archos.mediacenter.video.utils.LocaleConfigParser;
 import com.archos.mediacenter.video.utils.OpenSubtitlesApiHelper;
 import com.archos.mediacenter.video.utils.TrustingOkHttp3Downloader;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
@@ -196,6 +197,8 @@ public class CustomApplication extends Application {
     private boolean mAutoScraperActive;
     private HttpImageManager mHttpImageManager;
 
+    private static Locale defaultLocale;
+
     public CustomApplication() {
         super();
         mAutoScraperActive = false;
@@ -219,6 +222,22 @@ public class CustomApplication extends Application {
     public static void resetLastVideoPlayed() {
         setLastVideoPlayedUri(null);
         setLastVideoPlayedId(-42);
+    }
+
+    private void getDefaultLocale() {
+        getDefaultLocale(this);
+    }
+
+    private static void getDefaultLocale(Context context) {
+        // Get the locales from the locales_config.xml
+        List<Locale> locales = LocaleConfigParser.getLocales(context);
+        // Assuming the first locale in the list is the one configured for the application
+        if (!locales.isEmpty()) {
+            defaultLocale = locales.get(0);
+        } else {
+            defaultLocale = Locale.getDefault();
+        }
+        log.debug("onCreate: defaultLocale=" + defaultLocale);
     }
 
     @Override
@@ -254,13 +273,14 @@ public class CustomApplication extends Application {
                     .build());
         }
 
-        loadLocale();
-
         // init application context to make it available to all static methods
         mContext = getApplicationContext();
         // must be done after context is available
         log = LoggerFactory.getLogger(CustomApplication.class);
         setupBouncyCastle();
+
+        getDefaultLocale();
+        loadLocale();
 
         // must be done before sambaDiscovery otherwise no context for jcifs
         new Thread(() -> {
@@ -677,20 +697,36 @@ public class CustomApplication extends Application {
 
     public void loadLocale() {
         // Warning no log.debug at this stage
+        getDefaultLocale();
         if (getApplicationContext() == null) return;
-        String language = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(VideoPreferencesCommon.KEY_UI_LANG, VideoPreferencesCommon.KEY_UI_LANG_SYSTEM);
         //log.debug("loadLocale: load locale from preferences: " + language);
-        if (DBG) Log.d("CustomApplication", "loadLocale: load locale from preferences: " + language);
-        setLocale(language);
+        setLocale(getUiLocale(getApplicationContext()));
+    }
+
+    public static void loadLocale(Resources resources) {
+        // Warning no log.debug at this stage
+        //log.debug("loadLocale: load locale from preferences: " + language);
+        getDefaultLocale(CustomApplication.getAppContext());
+        setLocale(getUiLocale(CustomApplication.getAppContext()), resources);
+    }
+
+    public static String getUiLocale(Context context) {
+        if (context == null) return VideoPreferencesCommon.KEY_UI_LANG_SYSTEM;
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(VideoPreferencesCommon.KEY_UI_LANG, VideoPreferencesCommon.KEY_UI_LANG_SYSTEM);
     }
 
     public void setLocale(String localeCode) {
+        setLocale(localeCode, getResources());
+    }
+
+    public static void setLocale(String localeCode, Resources resources) {
         // Warning no log.debug at this stage
         Locale locale;
         if (localeCode == null || localeCode.isEmpty() || localeCode.equalsIgnoreCase(VideoPreferencesCommon.KEY_UI_LANG_SYSTEM)) {
             //log.debug("setLocale: use system default language");
-            if (DBG) Log.d("CustomApplication", "setLocale: use system default language");
-            locale = Locale.getDefault(); // Use system default language
+            locale = defaultLocale; // Use system default language
+            // TODO MARC BUG provides the nova defaultLocale i.e. the previous one...
+            if (DBG) Log.d("CustomApplication", "setLocale: use system default language = " + locale);
         } else {
             //log.debug("setLocale: use language " + lang);
             if (DBG) Log.d("CustomApplication", "setLocale: use localeCode " + localeCode);
@@ -699,6 +735,6 @@ public class CustomApplication extends Application {
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.setLocale(locale);  // Use setLocale() instead of deprecated locale field
-        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+        resources.updateConfiguration(config, resources.getDisplayMetrics());
     }
 }

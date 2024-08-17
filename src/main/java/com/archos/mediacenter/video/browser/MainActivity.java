@@ -211,6 +211,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ((CustomApplication) getApplication()).loadLocale();
+        //CustomApplication.loadLocale(getResources());
         requestWindowFeature(Window.FEATURE_OPTIONS_PANEL);
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         super.onCreate(savedInstanceState);
@@ -442,6 +443,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     public void onResume() {
         super.onResume();
         ((CustomApplication) getApplication()).loadLocale();
+        //CustomApplication.loadLocale(getResources());
 
         mPermissionChecker.checkAndRequestPermission(this);
 

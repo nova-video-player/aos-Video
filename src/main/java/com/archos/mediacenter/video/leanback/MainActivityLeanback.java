@@ -67,7 +67,8 @@ public class MainActivityLeanback extends LeanbackActivity {
         log.debug("onResumeFragments");
         super.onResumeFragments();
 
-        ((CustomApplication) getApplication()).loadLocale();
+        //((CustomApplication) getApplication()).loadLocale();
+        CustomApplication.loadLocale(getResources());
 
         new DensityTweak(this)
                 .applyUserDensity();
@@ -78,6 +79,7 @@ public class MainActivityLeanback extends LeanbackActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         ((CustomApplication) getApplication()).loadLocale();
+        //CustomApplication.loadLocale(getResources());
 
         super.onCreate(savedInstanceState);
 

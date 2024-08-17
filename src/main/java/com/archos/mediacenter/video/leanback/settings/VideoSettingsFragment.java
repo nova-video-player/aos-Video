@@ -8,6 +8,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.leanback.preference.LeanbackPreferenceFragmentCompat;
 import androidx.leanback.preference.LeanbackSettingsFragmentCompat;
 
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 
 public class VideoSettingsFragment extends LeanbackSettingsFragmentCompat {

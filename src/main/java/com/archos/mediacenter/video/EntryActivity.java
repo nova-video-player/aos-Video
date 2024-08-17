@@ -42,6 +42,7 @@ public class EntryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         ((CustomApplication) getApplication()).loadLocale();
+        //CustomApplication.loadLocale(getResources());
 
         super.onCreate(savedInstanceState);
 
@@ -75,6 +76,7 @@ public class EntryActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         ((CustomApplication) getApplication()).loadLocale();
+        //CustomApplication.loadLocale(getResources());
     }
 
 }

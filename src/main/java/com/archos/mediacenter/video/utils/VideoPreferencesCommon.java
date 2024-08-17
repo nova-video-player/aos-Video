@@ -428,6 +428,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     }
 
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        CustomApplication.loadLocale(getResources());
         mSharedPreferences = getPreferenceManager().getSharedPreferences();
         // Load the preferences from an XML resource
         resetPassthroughPref(mSharedPreferences);
@@ -742,23 +743,26 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         // set default value of the ListPreference to the System first entry
         UiSystemLanguageIndex = findLanguageIndex(UiLanguageListEntryValues, getPreferenceManager().getSharedPreferences().getString(KEY_UI_LANG, KEY_UI_LANG_SYSTEM));
         if (UiSystemLanguageIndex>=0) mUiLang.setValueIndex(UiSystemLanguageIndex);
+        log.debug("onCreatePreferences: mUiLang UiSystemLanguageIndex " + UiSystemLanguageIndex);
 
         // Update summary to reflect the current setting
         String selectedLocale = getPreferenceManager().getSharedPreferences().getString(KEY_UI_LANG, KEY_UI_LANG_SYSTEM);
+        log.debug("onCreatePreferences: mUiLang selectedLocale " + selectedLocale);
         mUiLang.setSummary(getLocaleDisplayName(selectedLocale));
         mUiLang.setOnPreferenceChangeListener((preference, newValue) -> {
             String newLocale = (String) newValue;
             // modify mUiLang summary to concatenate getLocaleDisplayName(newLocale)
-            //mUiLang.setSummary(getLocaleDisplayName(newLocale));
+            mUiLang.setSummary(getLocaleDisplayName(newLocale));
             log.debug("onCreatePreferences: mUiLang newLocale " + newLocale);
             //setLocale(newLocale);
             // TODO MARC TODO MARC!!!
             //((CustomApplication) getActivity().getApplication()).setLocale(newLocale);
-            setLocale2(newLocale);
+            CustomApplication.setLocale(newLocale, getResources());
             // commit all the settings changes before restarting the activity
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
             editor.putString(KEY_UI_LANG, newLocale);
             editor.commit();
+            // TODO MARC BUG: does not change the title string.preferences of preferences_video.xml but all the rest is ok
             restartActivity(); // not enough to clear all the cached fragments
             //restartApplication(); // TODO MARC not enough when returning to settings
             //getActivity().recreate();
@@ -999,7 +1003,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         // Add "System" entry first
         languageEntries.add(getResources().getString(R.string.system));
-        languageEntryValues.add("");
+        languageEntryValues.add(KEY_UI_LANG_SYSTEM);
 
         // Use a TreeMap to keep the languages sorted as they are added
         TreeMap<String, String> sortedLanguages = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -1054,26 +1058,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     }
 
     private static boolean DBG = true;
-
-    // TODO MARC remove
-
-    public void setLocale2(String localeCode) {
-        // Warning no log.debug at this stage
-        Locale locale;
-        if (localeCode == null || localeCode.isEmpty() || localeCode.equalsIgnoreCase(VideoPreferencesCommon.KEY_UI_LANG_SYSTEM)) {
-            //log.debug("setLocale: use system default language");
-            if (DBG) Log.d("CustomApplication", "setLocale: use system default language");
-            locale = Locale.getDefault(); // Use system default language
-        } else {
-            //log.debug("setLocale: use language " + lang);
-            if (DBG) Log.d("CustomApplication", "setLocale: use localeCode " + localeCode);
-            locale = VideoPreferencesCommon.getLocaleFromCode(localeCode);
-        }
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.setLocale(locale);  // Use setLocale() instead of deprecated locale field
-        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
-    }
 
     private void rescanPath(String s) {
         isMediaScannerScanning(getActivity().getContentResolver());
