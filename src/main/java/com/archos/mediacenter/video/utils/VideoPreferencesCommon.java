@@ -13,9 +13,6 @@
 // limitations under the License.
 package com.archos.mediacenter.video.utils;
 
-import static android.content.Intent.getIntent;
-import static androidx.core.app.ActivityCompat.recreate;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -25,7 +22,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
@@ -34,15 +30,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
@@ -81,11 +74,9 @@ import com.archos.medialib.MediaFactory;
 import com.archos.mediaprovider.video.VideoProvider;
 import com.archos.mediascraper.AllCollectionScrapeService;
 import com.archos.mediascraper.AutoScrapeService;
-import com.archos.mediascraper.xml.BaseScraper2;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -1037,7 +1028,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     }
 
     // TODO MARC remove unused
-    
+
     private void restartActivity() {
         //Intent intent = getActivity().getIntent();
         //getActivity().finish();
