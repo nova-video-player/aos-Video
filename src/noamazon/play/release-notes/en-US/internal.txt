@@ -1,5 +1,2 @@
-- fix PIP not working anymore
-- revert to ffmpeg 4.4.5 to avoid playback regressions
-- add Brazilian language for TMDB video descriptions
-- fix traditional Chinese getting English video descriptions
-- rationalize Chinese language strings
+- add locale setting in nova for devices with restricted language support
+- target SDK 34 to comply with Google API rules
