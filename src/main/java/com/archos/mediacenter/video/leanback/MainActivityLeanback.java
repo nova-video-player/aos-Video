@@ -18,11 +18,14 @@ import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermi
 
 import android.content.Intent;
 
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.preference.PreferenceManager;
 import androidx.annotation.NonNull;
+
+import android.util.Log;
 import android.view.KeyEvent;
 
 import com.archos.mediacenter.video.CustomApplication;
@@ -43,6 +46,8 @@ import com.archos.environment.ArchosUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Locale;
+
 public class MainActivityLeanback extends LeanbackActivity {
 
     private static final Logger log = LoggerFactory.getLogger(MainActivityLeanback.class);
@@ -61,6 +66,8 @@ public class MainActivityLeanback extends LeanbackActivity {
     public void onResumeFragments(){
         log.debug("onResumeFragments");
         super.onResumeFragments();
+        CustomApplication.loadLocale(getResources());
+
         new DensityTweak(this)
                 .applyUserDensity();
         mPermissionChecker.checkAndRequestPermission(this);
@@ -68,7 +75,9 @@ public class MainActivityLeanback extends LeanbackActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ((CustomApplication) getApplication()).loadLocale();
         super.onCreate(savedInstanceState);
+
         UnavailablePosterBroadcastReceiver.registerReceiver(this);
         mPermissionChecker = new PermissionChecker(hasManageExternalStoragePermission(getApplicationContext()));
         new DensityTweak(this)

@@ -77,6 +77,7 @@ import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.utils.ThumbnailRequest;
 import com.archos.mediacenter.utils.ThumbnailRequester;
 import com.archos.mediacenter.utils.trakt.Trakt;
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.autoscraper.AutoScraperActivity;
 import com.archos.mediacenter.video.browser.dialogs.DeleteDialog;
@@ -204,6 +205,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
      */
     @Override
     public void onCreate(Bundle bundle) {
+        CustomApplication.loadLocale(getResources());
         super.onCreate(bundle);
         log.debug("onCreate");
         // pass the right deleteLauncher linked to activity
@@ -236,6 +238,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     @Override
     public void onResume() {
         log.debug("onResume");
+        CustomApplication.loadLocale(getResources());
         FileUtilsQ.setDeleteLauncher(deleteLauncher);
         mThumbnailEngine.setListener(this, mHandler);
         // Check if we need some thumbnails

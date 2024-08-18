@@ -52,6 +52,7 @@ import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.ExtStorageManager;
 import com.archos.filecorelibrary.ExtStorageReceiver;
 import com.archos.mediacenter.video.BuildConfig;
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.DensityTweak;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.MainActivity;
@@ -151,6 +152,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     // Need these row indexes to update the full ListRow object
     final static int ROW_INDEX_UNSET = -1;
 
+    private String currentLocale;
+
     private ArrayObjectAdapter mRowsAdapter;
     private ArrayObjectAdapter mMoviesRowsAdapter;
     private ArrayObjectAdapter mAnimeRowAdapter;
@@ -216,6 +219,12 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     private boolean firstTimeLoad = true;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        currentLocale = CustomApplication.getUiLocale(getContext());
+    }
+
     private Activity updateActivity(String callingMethod) {
         mActivity = getActivity();
         if (mActivity == null) log.warn("updateActivity: " + callingMethod + " -> activity is null!");
@@ -225,6 +234,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         log.debug("onViewCreated");
+        CustomApplication.loadLocale(getResources());
         super.onViewCreated(view, savedInstanceState);
         mActivity = getActivity();
 
@@ -311,10 +321,20 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         mActivity = null;
     }
 
+    private boolean hasLocaleChanged() {
+        String newLocale = CustomApplication.getUiLocale(getContext());
+        return !currentLocale.equals(newLocale);
+    }
+
     @Override
     public void onResume() {
         log.debug("onResume");
         super.onResume();
+        CustomApplication.loadLocale(getResources());
+        if (hasLocaleChanged()) {
+            // Recreate the fragment or activity to apply the new locale
+            if (getActivity() != null) getActivity().recreate();
+        }
         // be sure activity is not null and static variable does not refer to a destroyed one
         mActivity = getActivity();
         if (mActivity == null) log.warn("onResume: mActivity is null!");

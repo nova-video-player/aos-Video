@@ -35,6 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.archos.mediacenter.utils.ActionItem;
 import com.archos.mediacenter.utils.QuickAction;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.BrowserCategory;
 import com.archos.mediacenter.video.browser.ShortcutDb;
