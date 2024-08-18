@@ -442,7 +442,11 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         super.onResume();
         mPermissionChecker.checkAndRequestPermission(this);
 
-        registerReceiver(mTraktRelogBroadcastReceiver,new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN));
+        if (Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(mTraktRelogBroadcastReceiver,new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN), Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(mTraktRelogBroadcastReceiver,new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN));
+        }
         getContentResolver().registerContentObserver(VideoStore.Video.Media.EXTERNAL_CONTENT_URI,
                 false, mGlobalResumeContentObserver);
         LoaderManager.getInstance(this).restartLoader(0, null, mNewVideosActionProvider);

@@ -810,7 +810,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         intentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
         intentFilter.addAction(PlayerService.PLAYER_SERVICE_STARTED);
         intentFilter.addAction(ACTION_HDMI_PLUGGED);
-        registerReceiver(mReceiver, intentFilter);
+        if (Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(mReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(mReceiver, intentFilter);
+        }
         isTVMode = TVUtils.isTV(mContext);
         mLockRotation = mPreferences.getBoolean(KEY_LOCK_ROTATION, false);
         mNetworkBookmarksEnabled = mPreferences.getBoolean(KEY_NETWORK_BOOKMARKS, true);
