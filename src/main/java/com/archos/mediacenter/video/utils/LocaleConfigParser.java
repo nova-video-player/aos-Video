@@ -16,7 +16,8 @@ package com.archos.mediacenter.video.utils;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
-import android.util.Xml;
+import android.util.Log;
+
 import com.archos.mediacenter.video.R;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -37,16 +38,21 @@ public class LocaleConfigParser {
                 if (eventType == XmlPullParser.START_TAG && parser.getName().equals("locale")) {
                     String language = parser.getAttributeValue(null, "language");
                     String country = parser.getAttributeValue(null, "country");
-                    if (country != null) {
-                        locales.add(new Locale(language, country));
+                    if (language != null) {
+                        if (country != null) {
+                            locales.add(new Locale(language, country));
+                        } else {
+                            locales.add(new Locale(language));
+                        }
                     } else {
-                        locales.add(new Locale(language));
+                        Log.e("LocaleConfigParser", "Language attribute is missing in locales config");
                     }
                 }
                 eventType = parser.next();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            String TAG = "LocaleConfigParser";
+            Log.e(TAG, "Error parsing locales config", e);
         } finally {
             parser.close();
         }
