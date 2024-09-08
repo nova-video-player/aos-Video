@@ -85,19 +85,19 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
     }
 
     @Override
-    public void onActivityCreated(Bundle bundle) {
-        super.onActivityCreated(bundle);
-        if (bundle!=null) {
-            int navigationMode = bundle.getInt(KEY_ACTIONBAR_NAVIGATION_MODE, ActionBar.NAVIGATION_MODE_STANDARD);
+    public void onViewCreated(View v, Bundle save){
+        super.onViewCreated(v, save);
+        if (save!=null) {
+            int navigationMode = save.getInt(KEY_ACTIONBAR_NAVIGATION_MODE, ActionBar.NAVIGATION_MODE_STANDARD);
             if (navigationMode==ActionBar.NAVIGATION_MODE_LIST) {
                 setupMovieActionBarNavigation(false); // false because the corresponding fragment is already re-created by the framework after rotation
             } else {
                 setNavigationMode(navigationMode);
             }
         }
-    }
-    public void onViewCreated(View v, Bundle save){
-        super.onViewCreated(v, save);
+        // Ensure ActionBar is initialized before calling setFragment
+        if (save == null) //restore only when starting from scratch
+            v.post(() -> setFragment(null));
     }
 
 
@@ -167,7 +167,8 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("video/*");
-            startActivityForResult(intent.createChooser(intent, "Choose file"), FILE_CHOOSER_ACTIVITY_REQUEST_CODE);
+            intent.putExtra("requestCode", FILE_CHOOSER_ACTIVITY_REQUEST_CODE);
+            getFileChooserLauncher().launch(Intent.createChooser(intent, "Choose file"));
             //restore browser
             mSelectedItemId = mOldSelectedItemId;
             return ;
