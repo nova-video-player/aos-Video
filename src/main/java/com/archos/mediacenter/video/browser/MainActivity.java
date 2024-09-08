@@ -61,7 +61,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
@@ -229,8 +231,20 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             log.error("onCreate: searchManager is null");
         }
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
+
+        // Add the OnBackPressedCallback
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                handleBackPress();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         if (mDrawerLayout != null){
             mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
@@ -477,8 +491,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         super.onPause();
     }
 
-    @Override
-    public void onBackPressed() {
+    public void handleBackPress() {
         int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
         if(backStackCount<=1) {
             if(mDrawerLayout==null||mDrawerLayout.isDrawerOpen(GravityCompat.START))
@@ -501,14 +514,14 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-            case KeyEvent.KEYCODE_MEDIA_NEXT:
-            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+        return switch (keyCode) {
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE, KeyEvent.KEYCODE_MEDIA_NEXT,
+                 KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {
                 launchGlobalResume();
-                return true;
-        }
-        return super.onKeyUp(keyCode, event);
+                yield true;
+            }
+            default -> super.onKeyUp(keyCode, event);
+        };
     }
 
     @Override
@@ -694,8 +707,11 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
              mDrawerToggle.setDrawerIndicatorEnabled(!show);
             return;
         }
-        getSupportActionBar().setDisplayHomeAsUpEnabled(show);
-        getSupportActionBar().setHomeButtonEnabled(show);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(show);
+            actionBar.setHomeButtonEnabled(show);
+        }
     }
 
     public void closeDrawer() {
@@ -710,8 +726,10 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     //delegating to activity because getNavigationMode on support action bar doesn't work anymore
     public void setNavigationMode(int navigationMode) {
-        getSupportActionBar().setNavigationMode(navigationMode);
-        mNavigationMode = navigationMode;
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setNavigationMode(navigationMode);
+            mNavigationMode = navigationMode;
+        }
     }
 
     public int getNavigationMode(){
