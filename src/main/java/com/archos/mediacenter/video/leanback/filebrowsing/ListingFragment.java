@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.filebrowsing;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
@@ -139,6 +140,8 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
 
     private BackgroundManager bgMngr = null;
 
+    private OnBackPressedCallback onBackPressedCallback;
+
     /**
      * flag used to make the difference between first-creation and back-from-backstack
      */
@@ -173,6 +176,16 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         initGridOrList();
 
         mRefreshOnNextResume = true;
+
+        onBackPressedCallback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (isAdded()) {
+                    getActivity().finish();
+                }
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
     }
 
     @Override
@@ -741,7 +754,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
     public void onFileDelete(Uri file) {
 
         if(file.toString().endsWith("/")&&!mUri.toString().endsWith("/")&&file.toString().equals(mUri.toString()+"/")|| mUri.equals(file)) { //if current listed uri
-            if (isAdded()) getActivity().onBackPressed();
+            if (isAdded()) onBackPressedCallback.handleOnBackPressed();
         }
         else{ //if parent uri
             Uri parent = FileUtils.getParentUrl(file);
