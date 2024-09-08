@@ -34,6 +34,7 @@ import android.media.AudioDeviceCallback;
 import android.media.AudioDeviceInfo;
 import android.media.AudioFormat;
 import android.media.AudioManager;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -693,7 +694,11 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         try {
             //this code gets current version-code (after upgrade it will show new versionCode)
             PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            novaVersionCode = info.versionCode;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                novaVersionCode = (int) info.getLongVersionCode();
+            } else {
+                novaVersionCode = info.versionCode;
+            }
             novaVersionName = info.versionName;
             try {
                 novaVersionArray = splitVersion(novaVersionName);
