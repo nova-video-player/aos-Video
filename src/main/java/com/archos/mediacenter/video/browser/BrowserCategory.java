@@ -22,6 +22,11 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.preference.PreferenceManager;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -54,6 +59,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 abstract public class BrowserCategory extends ListFragment {
+
+    private ActivityResultLauncher<Intent> fileChooserLauncher;
 
     private static final String SELECTED_ID = "selectedId";
     private static final String SELECTED_TOP = "selectedTop";
@@ -91,6 +98,29 @@ abstract public class BrowserCategory extends ListFragment {
     private PropertyChangeListener propertyChangeListener = null;
     private boolean mNetworkStateListenerAdded = false;
     private boolean mEnableSponsor = false;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Register the launcher
+        fileChooserLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
+                        Intent data = result.getData();
+                        if (data.getIntExtra("requestCode", -1) == FILE_CHOOSER_ACTIVITY_REQUEST_CODE) {
+                            // Handle the result here
+                            VideoInfoActivity.startInstance(getActivity(), null, data.getData(), new Long(-1));
+                        }
+                    }
+                }
+        );
+    }
+
+    public ActivityResultLauncher<Intent> getFileChooserLauncher() {
+        return fileChooserLauncher;
+    }
 
     /**
      * This object is used to store basic info for the category list item.
@@ -166,16 +196,9 @@ abstract public class BrowserCategory extends ListFragment {
         return categoryView;
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode, data);
-        if(requestCode == FILE_CHOOSER_ACTIVITY_REQUEST_CODE&&data!=null){
-            //PlayUtils.startVideo(getActivity(), data.getData(), data.getData(), null, null, PlayerActivity.RESUME_FROM_LAST_POS, true,-1, null);
-            VideoInfoActivity.startInstance(getActivity(), null, data.getData(),new Long(-1));
-        }
-    }
-
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String lastPath = null;
@@ -293,7 +316,14 @@ abstract public class BrowserCategory extends ListFragment {
             f.setArguments(b);
         }
         loadFragmentAfterStackReset(f);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(struc.title);
+        //((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(struc.title);
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null) {
+            ActionBar ab = activity.getSupportActionBar();
+            if (ab != null) {
+                ab.setTitle(struc.title);
+            }
+        }
     }
 
     /**
