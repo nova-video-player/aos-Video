@@ -1,3 +1,4 @@
+- MANAGE_EXTERNAL_STORAGE permission perhaps granted by Google to see local storage NFO file
 - stability enhancements
 - fix PIP not working anymore
 - revert to ffmpeg 4.4.5 to avoid playback regressions
