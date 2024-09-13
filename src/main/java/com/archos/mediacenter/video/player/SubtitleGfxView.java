@@ -201,7 +201,7 @@ public class SubtitleGfxView extends View {
                 }
             }
 
-            c.drawBitmap(draw, mDrawX, 0, mPaint);
+            c.drawBitmap(mScaledBitmap, mDrawX, 0, mPaint);
             if (c != canvas) {
                 c.restore();
                 mExternalSurface.unlockCanvasAndPost(c);
