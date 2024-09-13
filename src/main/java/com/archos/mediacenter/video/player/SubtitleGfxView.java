@@ -42,6 +42,9 @@ public class SubtitleGfxView extends View {
     private Context mContext;
     private int mScreenDpi;
 
+    private int[] location = new int[2]; // Preallocate the array
+    private Bitmap mScaledBitmap; // Preallocate the Bitmap
+
     private Surface mExternalSurface = null;
     // Subtitle size is multiplied with a ratio, Range to be set here
     private static final double RATIO_MODIFIER_MIN = 0.5;
@@ -119,12 +122,12 @@ public class SubtitleGfxView extends View {
         double ratio;
         if (mOriginalWidth > mOriginalHeight) {
             // Original size = landscape => compare the longest sizes
-            int longestDisplaySize = (mDisplayWidth > mDisplayHeight) ? mDisplayWidth : mDisplayHeight;
+            int longestDisplaySize = Math.max(mDisplayWidth, mDisplayHeight);
             ratio = longestDisplaySize / (float) mOriginalWidth;
         }
         else {
             // Original size = portrait => compare the shortest sizes
-            int shortestDisplaySize = (mDisplayWidth > mDisplayHeight) ? mDisplayHeight : mDisplayWidth;
+            int shortestDisplaySize = Math.min(mDisplayWidth, mDisplayHeight);
             ratio = shortestDisplaySize / (float) mOriginalWidth;
         }
 
@@ -138,6 +141,9 @@ public class SubtitleGfxView extends View {
         mDrawWidth = (int) (mBitmap.getWidth() * ratio);
         mDrawHeight = (int) (mBitmap.getHeight() * ratio);
         mDrawX = (mDisplayWidth - mDrawWidth) / 2;
+
+        // Initialize the preallocated Bitmap
+        mScaledBitmap = Bitmap.createScaledBitmap(mBitmap, mDrawWidth, mDrawHeight, true);
 
         setVisibility(View.VISIBLE);
         requestLayout();
@@ -177,28 +183,25 @@ public class SubtitleGfxView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (mBitmap != null) {
+        if (mBitmap != null && !mBitmap.isRecycled()) {
             Canvas c = canvas;
+            Rect r = new Rect();
             if (mExternalSurface != null) {
                 try {
-                    Rect r = new Rect();
-                    r = canvas.getClipBounds();
-                    int [] location = new int[2];
+                    canvas.getClipBounds(r);
                     getLocationOnScreen(location);
-                    r.offsetTo(location[0],location[1]);
+                    r.offsetTo(location[0], location[1]);
                     c = mExternalSurface.lockCanvas(null);
                     c.save();
                     c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                     c.clipRect(r);
-                    c.translate(location[0],location[1]);
+                    c.translate(location[0], location[1]);
                 } catch (Exception e) {
                     Log.d(TAG, "Can not lock canvas!!!!");
                 }
             }
 
-            Bitmap draw = Bitmap.createScaledBitmap(mBitmap, mDrawWidth, mDrawHeight, true);
             c.drawBitmap(draw, mDrawX, 0, mPaint);
-            draw.recycle();
             if (c != canvas) {
                 c.restore();
                 mExternalSurface.unlockCanvasAndPost(c);
