@@ -1,3 +1,4 @@
 - upgrade to ffmpeg 7.0.2
 - add locale setting in nova for devices with restricted language support
 - target SDK 34 to comply with Google API rules
+- fix network shortcuts host check to accept FQDN with TLD larger than 6 characters
