@@ -590,6 +590,8 @@
     <string name="preferences_allow_3rd_party_player_summary">Other compatible video player applications will be proposed by Android when launching a video playback. Be aware that some features will not work (resume, bookmarks, etc.)</string>
     <string name="preference_tv_3d_automatic_switch">Enable automatic 3D TV switch</string>
     <string name="preference_tv_3d_automatic_switch_summary">Use this feature only if your 3D TV supports it</string>
+    <string name="enable_android_frame_timing">Enable Android frame timing</string>
+    <string name="enable_android_frame_timing_summary">Delegate to Android the frame blit timing (recommended)</string>
     <string name="preference_tv_refreshrate_switch">Enable automatic refresh rate switch</string>
     <string name="preference_tv_refreshrate_switch_summary">Remove judder effect by adapting best screen refresh rate to video frame rate (device support may vary)</string>
     <string name="preferences_tv_refreshrate_switch_disabled">Disabled</string>

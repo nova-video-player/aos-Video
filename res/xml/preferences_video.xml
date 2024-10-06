@@ -166,6 +166,13 @@
             android:inputType="numberDecimal"
             android:digits="0123456789"
             app:iconSpaceReserved="false"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="enable_android_frame_timing"
+            android:persistent="true"
+            android:summary="@string/enable_android_frame_timing_summary"
+            android:title="@string/enable_android_frame_timing"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/preferences_user_interface" android:key="category_user_interface"
         app:iconSpaceReserved="false" >
