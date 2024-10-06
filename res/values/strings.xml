@@ -591,7 +591,7 @@
     <string name="preference_tv_3d_automatic_switch">Enable automatic 3D TV switch</string>
     <string name="preference_tv_3d_automatic_switch_summary">Use this feature only if your 3D TV supports it</string>
     <string name="enable_android_frame_timing">Enable Android frame timing</string>
-    <string name="enable_android_frame_timing_summary">Delegate to Android the frame blit timing (recommended)</string>
+    <string name="enable_android_frame_timing_summary">Delegate to Android the frame blit timing for smoother playback (recommended)</string>
     <string name="preference_tv_refreshrate_switch">Enable automatic refresh rate switch</string>
     <string name="preference_tv_refreshrate_switch_summary">Remove judder effect by adapting best screen refresh rate to video frame rate (device support may vary)</string>
     <string name="preferences_tv_refreshrate_switch_disabled">Disabled</string>
