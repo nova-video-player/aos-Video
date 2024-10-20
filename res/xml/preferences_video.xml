@@ -167,7 +167,7 @@
             android:digits="0123456789"
             app:iconSpaceReserved="false"/>
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="enable_android_frame_timing"
             android:persistent="true"
             android:summary="@string/enable_android_frame_timing_summary"

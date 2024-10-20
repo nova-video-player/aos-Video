@@ -859,7 +859,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             }
             LibAvos.setStreamMaxIframeSize(finalSize);
             LibAvos.enableAudioSpeed(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false));
-            LibAvos.setAndroidFrameTiming(mPreferences.getBoolean(KEY_ENABLE_ANDROID_FRAME_TIMING,true));
+            LibAvos.setAndroidFrameTiming(mPreferences.getBoolean(KEY_ENABLE_ANDROID_FRAME_TIMING,false));
             LibAvos.setAudioSpeed(audioSpeed); // set audio speed playback (does nothing if audio speed not enabled)
             LibAvos.parserSyncMode(Integer.parseInt(mPreferences.getString(KEY_PARSER_SYNC_MODE,"0"))); // set lavc parser sync mode (0: PTS, 1 samples)
             if (ArchosFeatures.isAndroidTV(this)) {
