@@ -1,4 +1,5 @@
-- smoother playback: use Android timely frame posting
+- add pgs subtitles support
+- disable by default smoother playback: use Android timely frame posting
 - upgrade to ffmpeg 7.0.2
 - add locale setting in nova for devices with restricted language support
 - target SDK 34 to comply with Google API rules
