@@ -31,7 +31,6 @@ import android.graphics.BlendModeColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -338,6 +337,10 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
 
         mInBackground = true;
 
+        if (isResultTaskActive()) {
+            mResultTaskFuture.cancel(true);
+        }
+
         super.onStop();
     }
 
@@ -347,10 +350,6 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
 
         if (mFilesProcessed > 0)
             TraktService.onNewVideo(this);
-
-        if (isResultTaskActive()) {
-            mResultTaskFuture.cancel(true);
-        }
 
         mScraper = null;
 
@@ -1144,6 +1143,10 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
     //*****************************************************************************
 
     private void startScraperResultTask() {
+        if (isResultTaskActive()) {
+            mResultTaskFuture.cancel(true);
+            log.warn("startScraperResultTask : mResultTaskFuture cancelled before launching new one");
+        }
         mResultTaskFuture = executorService.submit(new ScraperResultRunnable(this));
     }
 

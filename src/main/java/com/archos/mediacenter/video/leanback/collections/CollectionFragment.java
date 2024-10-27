@@ -34,8 +34,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -59,15 +57,12 @@ import androidx.leanback.widget.RowPresenter;
 import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import android.transition.Slide;
-import android.util.Log;
-import android.util.Pair;
+import android.transition.Transition;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.leanback.transition.TransitionHelper;
-import androidx.leanback.transition.TransitionListener;
 import androidx.loader.content.CursorLoader;
 
 import com.archos.filecorelibrary.FileUtilsQ;
@@ -97,6 +92,10 @@ import com.archos.mediacenter.video.utils.DbUtils;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.squareup.picasso.Picasso;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,9 +130,10 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     private ArrayObjectAdapter mRowsAdapter;
     private MovieCollectionAdapter mMovieCollectionAdapter;
 
-    private AsyncTask mBackdropTask;
-    private AsyncTask mDetailRowBuilderTask;
-    private AsyncTask mRefreshCollectionBitmapTask;
+    private BackdropTask mBackdropTask;
+    private ExecutorService executorService;
+    private Future<?> mDetailRowBuilderFuture;
+    private Future<?> mRefreshCollectionBitmapFuture;
 
     private ArchosDetailsOverviewRowPresenter mOverviewRowPresenter;
     private CollectionDetailsDescriptionPresenter mDescriptionPresenter;
@@ -175,18 +175,19 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         super.onCreate(savedInstanceState);
         // pass the right deleteLauncher linked to activity
         FileUtilsQ.setDeleteLauncher(deleteLauncher);
-        Object transition = TransitionHelper.getEnterTransition(getActivity().getWindow());
-        if(transition!=null) {
-            TransitionHelper.addTransitionListener(transition, new TransitionListener() {
+        Transition transition = getActivity().getWindow().getEnterTransition();
+        if (transition != null) {
+            transition.addListener(new Transition.TransitionListener() {
                 @Override
-                public void onTransitionStart(Object transition) {
-                    mOverlay.hide();
-                }
-
+                public void onTransitionStart(Transition transition) {mOverlay.hide();}
                 @Override
-                public void onTransitionEnd(Object transition) {
-                    mOverlay.show();
-                }
+                public void onTransitionEnd(Transition transition) {mOverlay.show();}
+                @Override
+                public void onTransitionCancel(Transition transition) {}
+                @Override
+                public void onTransitionPause(Transition transition) {}
+                @Override
+                public void onTransitionResume(Transition transition) {}
             });
         }
 
@@ -222,8 +223,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     if (!mCollection.isWatched()) {
                         DbUtils.markAsRead(getActivity(), mCollection);
                         refreshCollection();
-                        if (mRefreshCollectionBitmapTask != null) mRefreshCollectionBitmapTask.cancel(true);
-                        mRefreshCollectionBitmapTask = new RefreshCollectionBitmapTask().execute(mCollection);
+                        executeRefreshCollectionBitmapTask(mCollection);
                         refreshActivity();
                     }
                 }
@@ -232,8 +232,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     if (mCollection.isWatched()) {
                         DbUtils.markAsNotRead(getActivity(), mCollection);
                         refreshCollection();
-                        if (mRefreshCollectionBitmapTask != null) mRefreshCollectionBitmapTask.cancel(true);
-                        mRefreshCollectionBitmapTask = new RefreshCollectionBitmapTask().execute(mCollection);
+                        executeRefreshCollectionBitmapTask(mCollection);
                         refreshActivity();
                     }
                 }
@@ -269,7 +268,8 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         // WORKAROUND: at least one instance of BackdropTask must be created soon in the process (onCreate ?)
         // else it does not work later.
         // --> This instance of BackdropTask() will not be used but it must be created here!
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+        // TODO MARC onResume and fix!
+        //mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
 
         setOnItemViewClickedListener(new OnItemViewClickedListener() {
             @Override
@@ -405,17 +405,22 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     public void onDestroyView() {
         log.debug("onDestroyView");
         mOverlay.destroy();
+        if (executorService != null && !executorService.isShutdown()) executorService.shutdown();
         super.onDestroyView();
     }
 
     @Override
     public void onStop() {
         log.debug("onStop");
-        mBackdropTask.cancel(true);
-        if (mDetailRowBuilderTask!=null) {
-            mDetailRowBuilderTask.cancel(true);
-        }
+        if (mBackdropTask != null && !mBackdropTask.isDone()) mBackdropTask.cancel();
+        Arrays.asList(mRefreshCollectionBitmapFuture, mDetailRowBuilderFuture).forEach(this::cancelFuture);
         super.onStop();
+    }
+
+    private void cancelFuture(Future<?> future) {
+        if (future != null && !future.isDone()) {
+            future.cancel(true);
+        }
     }
 
     @Override
@@ -424,19 +429,23 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         super.onResume();
         mOverlay.resume();
 
+        // TODO MARC adjust
+        executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
         // Load the details view
-        if (mDetailRowBuilderTask != null) {
-            mDetailRowBuilderTask.cancel(true);
+        if (mDetailRowBuilderFuture != null && !mDetailRowBuilderFuture.isDone()) {
+            mDetailRowBuilderFuture.cancel(true);
         }
-        mDetailRowBuilderTask = new DetailRowBuilderTask().execute(mCollection);
+        executeDetailRowBuilderTask(mCollection);
 
         // Launch backdrop task in BaseTags-as-arguments mode
-        if (mBackdropTask!=null) {
-            mBackdropTask.cancel(true);
+        if (mBackdropTask!=null && !mBackdropTask.isDone()) {
+            log.warn("onResume: mBackdropTask cancelled");
+            mBackdropTask.cancel();
         }
         // what we need here is the backdrop i.e. the image generated
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mCollection);
-
+        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+        mBackdropTask.execute(mCollection);
         // Start loading the list of seasons
         LoaderManager.getInstance(CollectionFragment.this).restartLoader(COLLECTION_LOADER_ID, null, CollectionFragment.this);
     }
@@ -499,54 +508,46 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
     }
 
-    private class DetailRowBuilderTask extends AsyncTask<Collection, Void, Pair<Collection, Bitmap>> {
-
-        @Override
-        protected Pair<Collection, Bitmap> doInBackground(Collection... collections) {
-            log.debug("DetailRowBuilderTask.doInBackground collectionS length " + collections.length);
-            Collection collection = collections[0];
-            log.debug("DetailRowBuilderTask.doInBackground collection " + collection.getName());
+    private void executeDetailRowBuilderTask(Collection collection) {
+        if (mDetailRowBuilderFuture != null) {
+            mDetailRowBuilderFuture.cancel(true);
+            log.warn("executeDetailRowBuilderTask: mDetailRowBuilderFuture cancelled");
+        }
+        mDetailRowBuilderFuture = executorService.submit(() -> {
+            log.debug("executeDetailRowBuilderTask: mDetailRowBuilderFuture collection " + collection.getName());
             Bitmap bitmap = generateCollectionBitmap(collection.getPosterUri(), collection.isWatched());
-            return new Pair<>(collection, bitmap);
-        }
 
-        @Override
-        protected void onPostExecute(Pair<Collection, Bitmap> result) {
-            Collection collection = result.first;
-            Bitmap bitmap = result.second;
+            // Post results back to the UI thread
+            new Handler(Looper.getMainLooper()).post(() -> {
+                if (mDetailsOverviewRow == null) {
+                    mDetailsOverviewRow = new DetailsOverviewRow(collection);
+                    mDetailsOverviewRow.setActionsAdapter(new CollectionActionAdapter(getActivity(), collection, mShouldDisplayConfirmDelete));
+                } else {
+                    mDetailsOverviewRow.setItem(collection);
+                }
 
-            // Buttons
-            if (mDetailsOverviewRow == null) {
-                mDetailsOverviewRow = new DetailsOverviewRow(collection);
-                mDetailsOverviewRow.setActionsAdapter(new CollectionActionAdapter(getActivity(), collection, mShouldDisplayConfirmDelete));
-            }
-            else {
-                mDetailsOverviewRow.setItem(collection);
-            }
+                if (bitmap != null) {
+                    mOverviewRowPresenter.updateBackgroundColor(mColor);
+                    mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
+                    mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
+                    mDetailsOverviewRow.setImageScaleUpAllowed(true);
+                } else {
+                    mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
+                    mDetailsOverviewRow.setImageScaleUpAllowed(false);
+                }
 
-            if (bitmap!=null) {
-                mOverviewRowPresenter.updateBackgroundColor(mColor);
-                mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
-                mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
-                mDetailsOverviewRow.setImageScaleUpAllowed(true);
-            }
-            else {
-                mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
-                mDetailsOverviewRow.setImageScaleUpAllowed(false);
-            }
-
-            log.debug("mHasDetailRow = " + mHasDetailRow);
-            if (!mHasDetailRow) {
-                log.debug("mHasDetailRow is false adding detailOverviewRow");
-                BackgroundManager.getInstance(getActivity()).setDrawable(new ColorDrawable(VideoInfoCommonClass.getDarkerColor(mColor)));
-                mRowsAdapter.add(INDEX_DETAILS, mDetailsOverviewRow);
-                setAdapter(mRowsAdapter);
-                mHasDetailRow = true;
-            } else {
-                mRowsAdapter.replace(INDEX_DETAILS, mDetailsOverviewRow);
-                setAdapter(mRowsAdapter);
-            }
-        }
+                if (!mHasDetailRow) {
+                    BackgroundManager.getInstance(getActivity()).setDrawable(new ColorDrawable(VideoInfoCommonClass.getDarkerColor(mColor)));
+                    mRowsAdapter.add(INDEX_DETAILS, mDetailsOverviewRow);
+                    setAdapter(mRowsAdapter);
+                    mHasDetailRow = true;
+                } else {
+                    mRowsAdapter.replace(INDEX_DETAILS, mDetailsOverviewRow);
+                    setAdapter(mRowsAdapter);
+                }
+            });
+        });
+        log.debug("executeDetailRowBuilderTask: done mDetailRowBuilderFuture collection " + collection.getName());
     }
 
     public void onKeyDown(int keyCode) {
@@ -692,26 +693,31 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         return bitmap;
     }
 
-    private class RefreshCollectionBitmapTask extends AsyncTask<Collection, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(Collection... collections) {
-            Collection collection = collections[0];
-            log.debug("RefreshCollectionBitmapTask.doInBackground collection " + collection.getName());
+    private void executeRefreshCollectionBitmapTask(Collection collection) {
+        // TODO MARC
+        if (mRefreshCollectionBitmapFuture != null && !mRefreshCollectionBitmapFuture.isDone()) {
+            mRefreshCollectionBitmapFuture.cancel(true);
+            log.warn("executeRefreshCollectionBitmapTask: mRefreshCollectionBitmapFuture cancelled");
+        }
+        mRefreshCollectionBitmapFuture = executorService.submit(() -> {
+            log.debug("executeRefreshCollectionBitmapTask: mRefreshCollectionBitmapFuture collection " + collection.getName());
             Bitmap bitmap = generateCollectionBitmap(collection.getPosterUri(), collection.isWatched());
-            return bitmap;
-        }
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap!=null) {
-                mOverviewRowPresenter.updateBackgroundColor(mColor);
-                mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
-                mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
-                mDetailsOverviewRow.setImageScaleUpAllowed(true);
-                if (mHasDetailRow) {
-                    mRowsAdapter.replace(INDEX_DETAILS, mDetailsOverviewRow);
-                    setAdapter(mRowsAdapter);
+
+            // Post results back to the UI thread
+            new Handler(Looper.getMainLooper()).post(() -> {
+                if (bitmap != null) {
+                    mOverviewRowPresenter.updateBackgroundColor(mColor);
+                    mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
+                    mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
+                    mDetailsOverviewRow.setImageScaleUpAllowed(true);
+                    if (mHasDetailRow) {
+                        mRowsAdapter.replace(INDEX_DETAILS, mDetailsOverviewRow);
+                        setAdapter(mRowsAdapter);
+                    }
                 }
-            }
-        }
+            });
+        });
+        log.debug("executeRefreshCollectionBitmapTask: done mRefreshCollectionBitmapFuture collection " + collection.getName());
     }
+
 }

@@ -21,9 +21,11 @@ import androidx.preference.PreferenceManager;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.SpinnerAdapter;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserAllMovies;
@@ -43,7 +45,7 @@ import com.archos.mediacenter.video.browser.filebrowsing.network.UpnpBrowser.Upn
 
 import java.util.ArrayList;
 
-public class BrowserCategoryVideo extends BrowserCategory implements androidx.appcompat.app.ActionBar.OnNavigationListener {
+public class BrowserCategoryVideo extends BrowserCategory {
     static final String TAG = "BrowserCategoryVideo";
 
     static final String KEY_ACTIONBAR_NAVIGATION_MODE = "KEY_ACTIONBAR_NAVIGATION_MODE";
@@ -95,6 +97,18 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
                 setNavigationMode(navigationMode);
             }
         }
+
+        Toolbar toolbar = v.findViewById(R.id.main_toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+        // Set up navigation for the Toolbar
+        //toolbar.setNavigationIcon(R.drawable.ic_navigation_icon); // Set your navigation icon
+        toolbar.setNavigationOnClickListener(view -> {
+            // Handle navigation click
+            getActivity().onBackPressed();
+        });
+
+
         // Ensure ActionBar is initialized before calling setFragment
         if (save == null) //restore only when starting from scratch
             v.post(() -> setFragment(null));
@@ -203,7 +217,15 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
         for (int i=0; i<MOVIE_CATEGORIES_NAMES_ID.length; i++) {
             movieCategoriesNames[i] = getResources().getString(MOVIE_CATEGORIES_NAMES_ID[i]);
         }
-        ab.setListNavigationCallbacks( new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item, movieCategoriesNames), this);
+        // TODO MARC
+        SpinnerAdapter adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, movieCategoriesNames);
+        ActionBar.OnNavigationListener listener = new ActionBar.OnNavigationListener() {
+            @Override
+            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+                return BrowserCategoryVideo.this.onNavigationItemSelected(itemPosition, itemId);
+            }
+        };
+        ab.setListNavigationCallbacks(adapter, listener);
 
         // Set default value
         int defaultListPosition = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(KEY_ACTIONBAR_NAVIGATION_POSITION, KEY_ACTIONBAR_NAVIGATION_POSITION_DEFAULT);

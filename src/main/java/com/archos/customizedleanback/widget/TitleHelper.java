@@ -16,10 +16,10 @@
 
 package com.archos.customizedleanback.widget;
 
-import androidx.leanback.transition.LeanbackTransitionHelper;
-import androidx.leanback.transition.TransitionHelper;
 import androidx.leanback.widget.BrowseFrameLayout;
-import androidx.core.view.ViewCompat;
+import androidx.transition.TransitionManager;
+import androidx.transition.Transition;
+import androidx.transition.Fade;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -30,12 +30,15 @@ import android.view.ViewGroup;
  */
 public class TitleHelper {
 
-    private ViewGroup mSceneRoot;
-    private MyTitleView mTitleView;
-    private Object mTitleUpTransition;
-    private Object mTitleDownTransition;
-    private Object mSceneWithTitle;
-    private Object mSceneWithoutTitle;
+    private final ViewGroup mSceneRoot;
+    private final MyTitleView mTitleView;
+    private Transition mTitleUpTransition;
+    private Transition mTitleDownTransition;
+
+    private void createTransitions() {
+        mTitleUpTransition = new Fade(); // Customize as needed
+        mTitleDownTransition = new Fade(); // Customize as needed
+    }
 
     // When moving focus off the TitleView, this focus search listener assumes that the view that
     // should take focus comes before the TitleView in a focus search starting at the scene root.
@@ -46,10 +49,8 @@ public class TitleHelper {
                     if (focused != mTitleView && direction == View.FOCUS_UP) {
                         return mTitleView;
                     }
-                    final boolean isRtl = ViewCompat.getLayoutDirection(focused) ==
-                            View.LAYOUT_DIRECTION_RTL;
-                    //final int forward = isRtl ? View.FOCUS_LEFT : View.FOCUS_RIGHT;
-                    if (mTitleView.hasFocus() && direction == View.FOCUS_DOWN /*|| direction == forward*/) {
+                    final boolean isRtl = focused.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+                    if (mTitleView.hasFocus() && direction == View.FOCUS_DOWN) {
                         return mSceneRoot;
                     }
                     return null;
@@ -62,44 +63,21 @@ public class TitleHelper {
         }
         mSceneRoot = sceneRoot;
         mTitleView = titleView;
-        createTransitions();
+        createTransitions(); // Call to initialize transitions
     }
 
-    private void createTransitions() {
-        mTitleUpTransition = LeanbackTransitionHelper.loadTitleOutTransition(
-                mSceneRoot.getContext());
-        mTitleDownTransition = LeanbackTransitionHelper.loadTitleInTransition(
-                mSceneRoot.getContext());
-        mSceneWithTitle = TransitionHelper.createScene(mSceneRoot, new Runnable() {
-            @Override
-            public void run() {
-                mTitleView.setVisibility(View.VISIBLE);
-            }
-        });
-        mSceneWithoutTitle = TransitionHelper.createScene(mSceneRoot, new Runnable() {
-            @Override
-            public void run() {
-                mTitleView.setVisibility(View.INVISIBLE);
-            }
-        });
-    }
 
     /**
-     * Shows the title.
+     * Shows the title with a transition.
      */
     public void showTitle(boolean show) {
-        if (show) {
-            TransitionHelper.runTransition(mSceneWithTitle, mTitleDownTransition);
-        } else {
-            TransitionHelper.runTransition(mSceneWithoutTitle, mTitleUpTransition);
-        }
-    }
+        TransitionManager.beginDelayedTransition(mSceneRoot, show ? mTitleDownTransition : mTitleUpTransition);
 
-    /**
-     * Returns the scene root ViewGroup.
-     */
-    public ViewGroup getSceneRoot() {
-        return mSceneRoot;
+        if (show) {
+            mTitleView.setVisibility(View.VISIBLE);
+        } else {
+            mTitleView.setVisibility(View.INVISIBLE);
+        }
     }
 
     /**

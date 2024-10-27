@@ -712,6 +712,20 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             actionBar.setDisplayHomeAsUpEnabled(show);
             actionBar.setHomeButtonEnabled(show);
         }
+        // TODO MARC
+        /*
+        if (mDrawerLayout != null) {
+            // If using a Toolbar, set the navigation icon based on the 'show' parameter
+            if (show) {
+                mDrawerToggle.setDrawerIndicatorEnabled(false); // Hide the drawer indicator
+                mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_back); // Set your back icon
+                mDrawerToggle.setToolbarNavigationClickListener(view -> onBackPressed()); // Handle back press
+            } else {
+                mDrawerToggle.setDrawerIndicatorEnabled(true); // Show the drawer indicator
+            }
+            mDrawerToggle.syncState(); // Sync the state of the drawer toggle
+        }
+         */
     }
 
     public void closeDrawer() {

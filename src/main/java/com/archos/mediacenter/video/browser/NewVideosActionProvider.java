@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -232,6 +233,9 @@ public class NewVideosActionProvider extends ActionProvider implements
     }
 
     private class HelpOverlayHandler extends Handler {
+        public HelpOverlayHandler() {
+            super(Looper.getMainLooper());
+        }
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == MSG_START_HELP_OVERLAY && mItemView != null) {

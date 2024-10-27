@@ -26,7 +26,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -51,16 +50,18 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import android.transition.Slide;
-import android.util.Log;
-import android.util.Pair;
+import android.transition.Transition;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
-import androidx.leanback.transition.TransitionHelper;
-import androidx.leanback.transition.TransitionListener;
 import androidx.loader.content.CursorLoader;
+
+import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
@@ -90,12 +91,14 @@ import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.ShowTags;
 import com.squareup.picasso.Picasso;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 
 public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final boolean DBG = false;
-    private static final String TAG = "TvshowFragment";
+    private static final Logger log = LoggerFactory.getLogger(TvshowFragment.class);
 
     public static final String EXTRA_TVSHOW = "TVSHOW";
     public static final String EXTRA_TV_SHOW_ID = "tv_show_id";
@@ -118,10 +121,11 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     private ArrayObjectAdapter mRowsAdapter;
     private SparseArray<CursorObjectAdapter> mSeasonAdapters;
 
-    private AsyncTask mBackdropTask;
-    private AsyncTask mFullScraperTagsTask;
-    private AsyncTask mDetailRowBuilderTask;
-    private AsyncTask mRefreshTvshowBitmapTask;
+    private BackdropTask mBackdropTask;
+    private ExecutorService executorService;
+    private Future<?> mFullScraperTagsFuture;
+    private Future<?> mDetailRowBuilderFuture;
+    private Future<?> mRefreshTvshowBitmapFuture;
 
     private ArchosDetailsOverviewRowPresenter mOverviewRowPresenter;
     private TvshowDetailsDescriptionPresenter mDescriptionPresenter;
@@ -135,7 +139,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     private boolean mHasDetailRow;
 
     private void setmTvshow(long id) {
-        if (DBG) Log.d(TAG, "setTvshow: for id=" + id);
+        log.debug("setTvshow: for id=" + id);
         if (id != -1) {
             // TvshowLoader is a CursorLoader
             TvshowLoader tvshowLoader = new TvshowLoader(getActivity(), id);
@@ -145,30 +149,37 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 TvshowCursorMapper tvshowCursorMapper = new TvshowCursorMapper();
                 tvshowCursorMapper.bindColumns(cursor);
                 mTvshow = (Tvshow) tvshowCursorMapper.bind(cursor);
-                if (DBG) Log.d(TAG, "setTvshow: poster is " + mTvshow.getPosterUri());
+                log.debug("setTvshow: poster is " + mTvshow.getPosterUri());
                 cursor.close();
             }
         } else {
-            Log.w(TAG, "setTvshow not done!");
+            log.warn("setTvshow not done!");
         }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (DBG) Log.d(TAG, "onCreate");
+        log.debug("onCreate");
         super.onCreate(savedInstanceState);
-
-        Object transition = TransitionHelper.getEnterTransition(getActivity().getWindow());
-        if(transition!=null) {
-            TransitionHelper.addTransitionListener(transition, new TransitionListener() {
+        Transition transition = getActivity().getWindow().getEnterTransition();
+        if (transition != null) {
+            transition.addListener(new Transition.TransitionListener() {
                 @Override
-                public void onTransitionStart(Object transition) {
+                public void onTransitionStart(Transition transition) {
                     mOverlay.hide();
                 }
-
                 @Override
-                public void onTransitionEnd(Object transition) {
+                public void onTransitionEnd(Transition transition) {
                     mOverlay.show();
+                }
+                @Override
+                public void onTransitionCancel(Transition transition) {
+                }
+                @Override
+                public void onTransitionPause(Transition transition) {
+                }
+                @Override
+                public void onTransitionResume(Transition transition) {
                 }
             });
         }
@@ -180,7 +191,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
         if (mTvshow == null) {
             long tvShowId = intent.getLongExtra(EXTRA_TV_SHOW_ID, -1);
-            if (DBG) Log.d(TAG, "onCreate: tvShowId=" + tvShowId);
+            log.debug("onCreate: tvShowId=" + tvShowId);
             setmTvshow(tvShowId);
         }
 
@@ -257,7 +268,8 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         // WORKAROUND: at least one instance of BackdropTask must be created soon in the process (onCreate ?)
         // else it does not work later.
         // --> This instance of BackdropTask() will not be used but it must be created here!
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+        // TODO MARC remove
+        //mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
 
         setOnItemViewClickedListener(new OnItemViewClickedListener() {
             @Override
@@ -341,52 +353,60 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        if (DBG) Log.d(TAG, "onViewCreated");
+        log.debug("onViewCreated");
         super.onViewCreated(view, savedInstanceState);
         mOverlay = new Overlay(this);
     }
 
     @Override
     public void onDestroyView() {
-        if (DBG) Log.d(TAG, "onDestroyView");
+        log.debug("onDestroyView");
         mOverlay.destroy();
+        if (executorService != null && !executorService.isShutdown()) executorService.shutdown();
         super.onDestroyView();
     }
 
+    // TODO MARC bug: no backdrop on tvshowfragment when listing all episodes
+
     @Override
     public void onStop() {
-        if (DBG) Log.d(TAG, "onStop");
-        mBackdropTask.cancel(true);
-        if (mFullScraperTagsTask!=null) {
-            mFullScraperTagsTask.cancel(true);
-        }
-        if (mDetailRowBuilderTask!=null) {
-            mDetailRowBuilderTask.cancel(true);
-        }
+        log.debug("onStop");
+        if (mBackdropTask != null) mBackdropTask.cancel();
+        Arrays.asList(mDetailRowBuilderFuture, mDetailRowBuilderFuture, mRefreshTvshowBitmapFuture).forEach(this::cancelFuture);
         super.onStop();
+    }
+
+    private void cancelFuture(Future<?> future) {
+        if (future != null && !future.isDone()) {
+            future.cancel(true);
+        }
     }
 
     @Override
     public void onResume() {
-        if (DBG) Log.d(TAG, "onResume");
+        log.debug("onResume");
         super.onResume();
+        // TODO MARC adjust
+        executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         mOverlay.resume();
         // Start loading the detailed info about the show if needed
-        if (mTvshow.getShowTags()==null) {
-            if (DBG) Log.d(TAG, "onResume: mTvshow.getShowTags()==null -> FullScraperTagsTask");
-            mFullScraperTagsTask = new FullScraperTagsTask().execute(mTvshow);
+        if (mTvshow.getShowTags() == null) {
+            log.debug("onResume: mTvshow.getShowTags()==null -> FullScraperTagsTask");
+            executeFullScraperTagsTask(mTvshow);
         }
-        if (mBackdropTask!=null) {
-            if (DBG) Log.d(TAG, "onResume: mBackdropTask!=null -> cancel");
-            mBackdropTask.cancel(true);
-        }
-        if (DBG) Log.d(TAG, "onResume: new backdropTask");
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mTvshow.getShowTags());
+        //if (mBackdropTask != null) {
+        //    log.debug("onResume: mBackdropTask!=null -> cancel");
+        //    mBackdropTask.cancel();
+        //}
+        log.debug("onResume: new backdropTask");
+        //if (mBackdropTask == null) mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+        // TODO MARC
+        //if (mTvshow.getShowTags() != null) mBackdropTask.execute(mTvshow.getShowTags());
     }
 
     @Override
     public void onPause() {
-        if (DBG) Log.d(TAG, "onPause");
+        log.debug("onPause");
         super.onPause();
         mOverlay.pause();
     }
@@ -410,8 +430,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 Tvshow tvshow = (Tvshow) tvshowCursorMapper.bind(cursor);
                 tvshow.setShowTags(mTvshow.getShowTags());
                 mTvshow = tvshow;
-                if (mRefreshTvshowBitmapTask != null) mRefreshTvshowBitmapTask.cancel(true);
-                mRefreshTvshowBitmapTask = new RefreshTvshowBitmapTask().execute(mTvshow);
+                executeRefreshTvshowBitmapTask(mTvshow);
                 refreshActivity();
                 cursor.close();
             }
@@ -420,7 +439,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 mDetailsOverviewRow.setItem(mTvshow);
         }
         if ((requestCode == REQUEST_CODE_MORE_DETAILS || requestCode == REQUEST_CODE_VIDEO) && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "onActivityResult: got RESULT_OK from TvshowMoreDetailsFragment/VideoDetailsFragment");
+            log.debug("onActivityResult: got RESULT_OK from TvshowMoreDetailsFragment/VideoDetailsFragment");
 
             // Only Poster and/or backdrop has been changed.
             // But the ShowTags must be recomputed as well.
@@ -433,19 +452,19 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
             mSeasonAdapters = null;
 
-            if (mFullScraperTagsTask!=null) {
-                mFullScraperTagsTask.cancel(true);
+            if (mFullScraperTagsFuture != null && !mFullScraperTagsFuture.isDone()) {
+                mFullScraperTagsFuture.cancel(true);
             }
-            mFullScraperTagsTask = new FullScraperTagsTask().execute(mTvshow);
+            executeFullScraperTagsTask(mTvshow);
         }
         else if (requestCode == REQUEST_CODE_CHANGE_TVSHOW && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "onActivityResult: got RESULT_OK from ManualShowScrappingActivity");
+            log.debug("onActivityResult: got RESULT_OK from ManualShowScrappingActivity");
             // Whole show has been changed, need to reload everything
             // First update the TvShow instance we have here with the data returned by ManualShowScrappingActivity
             String newName = data.getStringExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_NAME);
             Long newId = data.getLongExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_ID, -1);
 
-            if (DBG) Log.d(TAG, "onActivityResult: newName=" + newName + ", newId=" + newId);
+            log.debug("onActivityResult: newName=" + newName + ", newId=" + newId);
             // doing this assumes same number of seasons/episodes and results in null getPosterUri...
             //mTvshow = new Tvshow(newId, newName, null, mTvshow.getSeasonCount(), mTvshow.getEpisodeCount(), mTvshow.getEpisodeWatchedCount());
             setmTvshow(newId);
@@ -476,44 +495,89 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     }
 
     /** Fill the ShowTags in the given TvShow instance */
-    private class FullScraperTagsTask extends AsyncTask<Tvshow, Void, Tvshow> {
-
-        @Override
-        protected Tvshow doInBackground(Tvshow... tvshows) {
-            mTvshow.setShowTags( (ShowTags)tvshows[0].getFullScraperTags(getActivity()));
-            if (DBG) Log.d(TAG, "FullScraperTagsTask:doInBackground:" + (mTvshow != null ? mTvshow.getName() + " " + mTvshow.getPosterUri(): "null"));
-            return mTvshow;
+    private void executeFullScraperTagsTask(Tvshow tvshow) {
+        if (mFullScraperTagsFuture != null && !mFullScraperTagsFuture.isDone()) {
+            mFullScraperTagsFuture.cancel(true);
+            log.warn("executeFullScraperTagsTask: mFullScraperTagsFuture cancelled");
         }
+        mFullScraperTagsFuture = executorService.submit(() -> {
+            tvshow.setShowTags((ShowTags) tvshow.getFullScraperTags(getActivity()));
+            log.debug("executeFullScraperTagsTask: mFullScraperTagsFuture " + (tvshow != null ? tvshow.getName() + " " + tvshow.getPosterUri() : "null"));
 
-        protected void onPostExecute(Tvshow tvshow) {
-            if (DBG) Log.d(TAG, "FullScraperTagsTask:onPostExecute:" + (tvshow != null ? tvshow.getName() + " " + tvshow.getPosterUri(): "null") + ", rebuild and restart loader");
+            // Post results back to the UI thread
+            new Handler(Looper.getMainLooper()).post(() -> {
+                log.debug("executeFullScraperTagsTask: mFullScraperTagsFuture " + (tvshow != null ? tvshow.getName() + " " + tvshow.getPosterUri() : "null") + ", rebuild and restart loader");
 
-            if (tvshow.getShowTags()==null) {
-                Log.e(TAG, "FullScraperTagsTask failed to get ShowTags for "+mTvshow);
-                return;
-            }
-            // Load the details view
-            if (mDetailRowBuilderTask != null) {
-                mDetailRowBuilderTask.cancel(true);
-            }
-            mDetailRowBuilderTask = new DetailRowBuilderTask().execute(tvshow);
+                if (tvshow.getShowTags() == null) {
+                    log.error("executeFullScraperTagsTask mFullScraperTagsFuture failed to get ShowTags for " + tvshow);
+                    return;
+                }
+                // Load the details view
+                if (mDetailRowBuilderFuture != null && !mDetailRowBuilderFuture.isDone()) {
+                    mDetailRowBuilderFuture.cancel(true);
+                }
+                executeDetailRowBuilderTask(tvshow);
 
-            // Launch backdrop task in BaseTags-as-arguments mode
-            if (mBackdropTask!=null) {
-                mBackdropTask.cancel(true);
-            }
-            mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(tvshow.getShowTags());
+                // Launch backdrop task in BaseTags-as-arguments mode
+                if (mBackdropTask != null) {
+                    log.warn("executeFullScraperTagsTask: mBackdropTask cancelled");
+                    mBackdropTask.cancel();
+                }
+                if (mBackdropTask == null) mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
 
-            // Start loading the list of seasons
-            LoaderManager.getInstance(TvshowFragment.this).restartLoader(SEASONS_LOADER_ID, null, TvshowFragment.this);
+                mBackdropTask.execute(tvshow.getShowTags());
+
+                // Start loading the list of seasons
+                LoaderManager.getInstance(TvshowFragment.this).restartLoader(SEASONS_LOADER_ID, null, TvshowFragment.this);
+            });
+            log.debug("executeFullScraperTagsTask: mFullScraperTagsFuture done");
+        });
+    }
+
+    private void executeDetailRowBuilderTask(Tvshow tvshow) {
+        if (mDetailRowBuilderFuture != null && !mDetailRowBuilderFuture.isDone()) {
+            mDetailRowBuilderFuture.cancel(true);
+            log.warn("executeDetailRowBuilderTask: mDetailRowBuilderFuture cancelled");
         }
+        mDetailRowBuilderFuture = executorService.submit(() -> {
+            log.debug("executeDetailRowBuilderTask: mDetailRowBuilderFuture tvshow " + tvshow.getName());
+            Bitmap bitmap = generateTvshowBitmap(tvshow.getPosterUri(), tvshow.isWatched());
+
+            // Post results back to the UI thread
+            new Handler(Looper.getMainLooper()).post(() -> {
+                if (mDetailsOverviewRow == null) {
+                    mDetailsOverviewRow = new DetailsOverviewRow(tvshow);
+                    mDetailsOverviewRow.setActionsAdapter(new TvshowActionAdapter(getActivity(), tvshow));
+                } else {
+                    mDetailsOverviewRow.setItem(tvshow);
+                }
+
+                if (bitmap != null) {
+                    mOverviewRowPresenter.updateBackgroundColor(mColor);
+                    mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
+                    mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
+                    mDetailsOverviewRow.setImageScaleUpAllowed(true);
+                } else {
+                    mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
+                    mDetailsOverviewRow.setImageScaleUpAllowed(false);
+                }
+
+                if (!mHasDetailRow) {
+                    BackgroundManager.getInstance(getActivity()).setDrawable(new ColorDrawable(VideoInfoCommonClass.getDarkerColor(mColor)));
+                    mRowsAdapter.add(INDEX_DETAILS, mDetailsOverviewRow);
+                    setAdapter(mRowsAdapter);
+                    mHasDetailRow = true;
+                }
+            });
+            log.debug("executeDetailRowBuilderTask: mDetailRowBuilderFuture done");
+        });
     }
 
     //--------------------------------------------
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-        if (DBG) Log.d(TAG, "onCreateLoader id=" + id);
+        log.debug("onCreateLoader id=" + id);
         if (id == SEASONS_LOADER_ID) {
             return new SeasonsLoader(getActivity(), mTvshow.getTvshowId());
         } else {
@@ -524,7 +588,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        if (DBG) Log.d(TAG, "onLoadFinished");
+        log.debug("onLoadFinished");
         if (getActivity() == null) return;
         if (cursorLoader.getId()==SEASONS_LOADER_ID) {
             final int seasonNumberColumn = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON);
@@ -596,56 +660,6 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-    }
-
-    //--------------------------------------------
-
-    private class DetailRowBuilderTask extends AsyncTask<Tvshow, Void, Pair<Tvshow, Bitmap>> {
-
-        @Override
-        protected Pair<Tvshow, Bitmap> doInBackground(Tvshow... shows) {
-            Tvshow tvshow = shows[0];
-            if (DBG) Log.d(TAG, "DetailRowBuilderTask: tvshow posterUri " + tvshow.getPosterUri());
-            Bitmap bitmap = generateTvshowBitmap(tvshow.getPosterUri(), tvshow.isWatched());
-            return new Pair<>(tvshow, bitmap);
-        }
-
-        @Override
-        protected void onPostExecute(Pair<Tvshow, Bitmap> result) {
-            Tvshow tvshow = result.first;
-            Bitmap bitmap = result.second;
-
-            if (DBG) Log.d(TAG, "DetailRowBuilderTask:onPostExecute: tvshow " + tvshow.getName());
-
-            // Buttons
-            if (mDetailsOverviewRow == null) {
-                mDetailsOverviewRow = new DetailsOverviewRow(tvshow);
-                mDetailsOverviewRow.setActionsAdapter(new TvshowActionAdapter(getActivity(), tvshow));
-            }
-            else {
-                mDetailsOverviewRow.setItem(tvshow);
-            }
-
-            if (bitmap!=null) {
-                mOverviewRowPresenter.updateBackgroundColor(mColor);
-                mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
-                mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
-                mDetailsOverviewRow.setImageScaleUpAllowed(true);
-            }
-            else {
-                mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
-                mDetailsOverviewRow.setImageScaleUpAllowed(false);
-            }
-
-            if (!mHasDetailRow) {
-                BackgroundManager.getInstance(getActivity()).setDrawable(new ColorDrawable(VideoInfoCommonClass.getDarkerColor(mColor)));
-                mRowsAdapter.add(INDEX_DETAILS, mDetailsOverviewRow);
-            
-                setAdapter(mRowsAdapter);
-
-                mHasDetailRow = true;
-            }
-        }
     }
 
     public void onKeyDown(int keyCode) {
@@ -732,17 +746,17 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
 
     private void refreshActivity() {
         if (mTvshow != null) {
-            if (DBG) Log.d(TAG, "refreshActivity: collection is not empty " + mTvshow.getName());
+            log.debug("refreshActivity: collection is not empty " + mTvshow.getName());
             ((TvshowActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mTvshow);
             mDetailsOverviewRow.setItem(mTvshow);
         } else {
-            if (DBG) Log.d(TAG, "refreshActivity: collection is null exit!");
+            log.debug("refreshActivity: collection is null exit!");
             getActivity().finish();
         }
     }
 
     private Bitmap generateTvshowBitmap(Uri posterUri, boolean isWatched) {
-        if (DBG) Log.d(TAG, "generateTvshowBitmap: posterUri=" + posterUri);
+        log.debug("generateTvshowBitmap: posterUri=" + posterUri);
         Bitmap bitmap = null;
         try {
             if (posterUri != null) {
@@ -752,12 +766,12 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                         .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
                         .centerCrop()
                         .get();
-                if (DBG) Log.d(TAG, "------ "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
+                log.debug("------ "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
             }
         } catch (IOException e) {
-            Log.d(TAG, "generateTvshowBitmap Picasso load exception", e);
+            log.error("generateTvshowBitmap Picasso load exception", e);
         } catch (NullPointerException e) { // getDefaultPoster() may return null (seen once at least)
-            Log.d(TAG, "generateTvshowBitmap doInBackground exception", e);
+            log.error("generateTvshowBitmap doInBackground exception", e);
         } finally {
             if (bitmap!=null) {
                 Palette palette = Palette.from(bitmap).generate();
@@ -775,27 +789,30 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         return bitmap;
     }
 
-    private class RefreshTvshowBitmapTask extends AsyncTask<Tvshow, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(Tvshow... tvshows) {
-            Tvshow tvshow = tvshows[0];
-            if (DBG) Log.d(TAG, "RefreshTvshowBitmapTask.doInBackground tvshow " + tvshow.getName());
+    private void executeRefreshTvshowBitmapTask(Tvshow tvshow) {
+        if (mRefreshTvshowBitmapFuture != null && !mRefreshTvshowBitmapFuture.isDone()) {
+            mRefreshTvshowBitmapFuture.cancel(true);
+            log.warn("executeRefreshTvshowBitmapTask: mRefreshTvshowBitmapFuture cancelled");
+        }
+        mRefreshTvshowBitmapFuture = executorService.submit(() -> {
+            log.debug("executeRefreshTvshowBitmapTask: mRefreshTvshowBitmapFuture tvshow " + tvshow.getName());
             Bitmap bitmap = generateTvshowBitmap(tvshow.getPosterUri(), tvshow.isWatched());
-            return bitmap;
-        }
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap!=null) {
-                mOverviewRowPresenter.updateBackgroundColor(mColor);
-                mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
-                mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
-                mDetailsOverviewRow.setImageScaleUpAllowed(true);
-                if (mHasDetailRow) {
-                    mRowsAdapter.replace(INDEX_DETAILS, mDetailsOverviewRow);
-                    setAdapter(mRowsAdapter);
+
+            // Post results back to the UI thread
+            new Handler(Looper.getMainLooper()).post(() -> {
+                if (bitmap != null) {
+                    mOverviewRowPresenter.updateBackgroundColor(mColor);
+                    mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
+                    mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
+                    mDetailsOverviewRow.setImageScaleUpAllowed(true);
+                    if (mHasDetailRow) {
+                        mRowsAdapter.replace(INDEX_DETAILS, mDetailsOverviewRow);
+                        setAdapter(mRowsAdapter);
+                    }
                 }
-            }
-        }
+            });
+            log.debug("executeRefreshTvshowBitmapTask: mRefreshTvshowBitmapFuture done");
+        });
     }
 
     public static int getDominantColor() {

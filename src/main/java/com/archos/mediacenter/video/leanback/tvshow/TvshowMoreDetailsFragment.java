@@ -17,7 +17,6 @@ package com.archos.mediacenter.video.leanback.tvshow;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.leanback.app.DetailsFragmentWithLessTopOffset;
@@ -36,9 +35,15 @@ import androidx.leanback.widget.Row;
 import androidx.leanback.widget.RowPresenter;
 import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
-import android.util.Log;
+
+import android.os.Looper;
 import android.view.View;
 import android.widget.Toast;
+
+import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
@@ -59,6 +64,9 @@ import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.TagsFactory;
 import com.squareup.picasso.Picasso;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -66,8 +74,7 @@ import java.util.List;
 
 public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset {
 
-    private static final String TAG = "TvshowMoreDetails";
-
+    private static final Logger log = LoggerFactory.getLogger(TvshowMoreDetailsFragment.class);
     public static final String EXTRA_TVSHOW_ID = "TVSHOW_ID";
     public static final String EXTRA_TVSHOW_WATCHED = "TVSHOW_WATCHED";
     public static final String SHARED_ELEMENT_NAME = "hero";
@@ -87,11 +94,12 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     private ListRow mWebLinksRow;
     private ArrayObjectAdapter mRowsAdapter;
 
-    private AsyncTask mBackdropTask;
-    private AsyncTask mFullScraperTagsTask;
-    private AsyncTask mBuildRowsTask;
-    private AsyncTask mShowPosterSaverTask;
-    private AsyncTask mBackdropSaverTask;
+    private BackdropTask mBackdropTask;
+    private ExecutorService executorService;
+    private Future<?> mShowPosterSaverFuture;
+    private Future<?> mBackdropSaverFuture;
+    private Future<?> mFullScraperTagsFuture;
+    private Future<?> mBuildRowsFuture;
 
     private Overlay mOverlay;
     private ArchosDetailsOverviewRowPresenter mOverviewRowPresenter;
@@ -105,6 +113,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        log.debug("onCreate");
         setTopOffsetRatio(0.6f);
 
         final Intent intent = getActivity().getIntent();
@@ -126,14 +135,12 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
             public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
                 if (item instanceof ScraperImage) {
                     if (row == mPostersRow) {
-                        mShowPosterSaverTask = new ShowPosterSaverTask().execute((ScraperImage) item);
+                        savePosterAsync((ScraperImage) item);
+                    } else if (row == mBackdropsRow) {
+                        saveBackdropAsync((ScraperImage) item);
                     }
-                    else if (row == mBackdropsRow) {
-                        mBackdropSaverTask = new BackdropSaverTask().execute((ScraperImage) item);
-                    }
-                }
-                else if (item instanceof WebPageLink) {
-                    WebPageLink link = (WebPageLink)item;
+                } else if (item instanceof WebPageLink) {
+                    WebPageLink link = (WebPageLink) item;
                     WebUtils.openWebLink(getActivity(), link.getUrl());
                 }
             }
@@ -142,6 +149,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
         // WORKAROUND: at least one instance of BackdropTask must be created soon in the process (onCreate ?)
         // else it does not work later.
         // --> This instance of BackdropTask() will not be used but it must be created here!
+        // TODO MARC remove
         mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
     }
 
@@ -204,6 +212,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     @Override
     public void onDestroyView() {
         mOverlay.destroy();
+        if (executorService != null && !executorService.isShutdown()) executorService.shutdown();
         super.onDestroyView();
     }
 
@@ -214,29 +223,38 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
 
     @Override
     public void onStop() {
+        if (mBackdropTask != null && !mBackdropTask.isDone()) mBackdropTask.cancel();
         // Cancel all the async tasks
-        for (AsyncTask task : new AsyncTask[] { mBackdropTask, mFullScraperTagsTask, mBuildRowsTask, mShowPosterSaverTask, mBackdropSaverTask}) {
-            if (task!=null) {
-                task.cancel(true);
-            }
-        }
+        Arrays.asList(mFullScraperTagsFuture, mBuildRowsFuture, mShowPosterSaverFuture, mBackdropSaverFuture).forEach(this::cancelFuture);
         super.onStop();
+    }
+
+    private void cancelFuture(Future<?> future) {
+        if (future != null && !future.isDone()) {
+            future.cancel(true);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        log.debug("onResume");
+        // TODO MARC adjust
+        executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         mOverlay.resume();
 
         // Start loading the detailed info about the show if needed
-        if (mShowTags==null) {
-            mFullScraperTagsTask = new FullScraperTagsTask().execute(mShowId);
+        if (mShowTags == null) {
+            executeFullScraperTagsTask(mShowId);
         }
 
-        if (mBackdropTask!=null) {
-            mBackdropTask.cancel(true);
+        if (mBackdropTask!=null && mBackdropTask.isDone()) {
+            log.warn("onResume: mBackdropTask cancelled");
+            mBackdropTask.cancel();
         }
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mShowTags);
+        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+        // TODO MARC
+        if (mShowTags != null) mBackdropTask.execute(mShowTags);
     }
 
     @Override
@@ -248,44 +266,47 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     //--------------------------------------------
 
     /** Get the ShowTags */
-    private class FullScraperTagsTask extends AsyncTask<Long, Void, ShowTags> {
 
-        @Override
-        protected ShowTags doInBackground(Long... ids) {
-            final long showId = ids[0];
-            return TagsFactory.buildShowTags(getActivity(), showId);
+    private void executeFullScraperTagsTask(long showId) {
+        if (mFullScraperTagsFuture != null && !mFullScraperTagsFuture.isDone()) {
+            mFullScraperTagsFuture.cancel(true);
         }
+        mFullScraperTagsFuture = executorService.submit(() -> {
+            ShowTags showTags = TagsFactory.buildShowTags(getActivity(), showId);
 
-        protected void onPostExecute(ShowTags showTags) {
-            mShowTags = showTags;
+            // Post results back to the UI thread
+            new Handler(Looper.getMainLooper()).post(() -> {
+                mShowTags = showTags;
 
-            // Launch backdrop task in BaseTags-as-arguments mode
-            if (mBackdropTask!=null) {
-                mBackdropTask.cancel(true);
-            }
-            mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(showTags);
+                // Launch backdrop task in BaseTags-as-arguments mode
+                if (mBackdropTask != null && mBackdropTask.isDone()) {
+                    log.warn("executeFullScraperTagsTask: mBackdropTask cancelled");
+                    mBackdropTask.cancel();
+                }
+                mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+                if (showTags != null) mBackdropTask.execute(showTags);
 
-            // Build and load the rows
-            if (mBuildRowsTask != null) {
-                mBuildRowsTask.cancel(true);
-            }
-            mBuildRowsTask = new BuildRowsTask().execute(mShowTags);
-        }
+                // Build and load the rows
+                if (mBuildRowsFuture != null && !mBuildRowsFuture.isDone()) {
+                    mBuildRowsFuture.cancel(true);
+                }
+                executeBuildRowsTask(mShowTags);
+            });
+        });
     }
 
-    private class BuildRowsTask extends AsyncTask<ShowTags, Void, Void> {
-
-        @Override
-        protected Void doInBackground(ShowTags... showTagsArray) {
-            ShowTags tags = showTagsArray[0];
-
+    private void executeBuildRowsTask(ShowTags showTags) {
+        if (mBuildRowsFuture != null && !mBuildRowsFuture.isDone()) {
+            mBuildRowsFuture.cancel(true);
+        }
+        mBuildRowsFuture = executorService.submit(() -> {
             // Details ---------------
-            mDetailsRow = new DetailsOverviewRow(tags);
+            mDetailsRow = new DetailsOverviewRow(showTags);
             Bitmap bitmap = null;
             try {
-                if (tags.getDefaultPoster() != null) {
+                if (showTags.getDefaultPoster() != null) {
                     // Poster
-                    File file = tags.getDefaultPoster().getLargeFileF();
+                    File file = showTags.getDefaultPoster().getLargeFileF();
                     if (file != null) {
                         bitmap = Picasso.get()
                                 .load(file)
@@ -296,9 +317,9 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                     }
                 }
             } catch (IOException e) {
-                Log.d(TAG, "TvshowMoreDetailsFragment Picasso load exception", e);
+                log.error("executeBuildRowsTask: Picasso load exception", e);
             } catch (NullPointerException e) { // getDefaultPoster() may return null (seen once at least)
-                Log.d(TAG, "TvshowMoreDetailsFragment doInBackground exception", e);
+                log.error("executeBuildRowsTask: exception", e);
             } finally {
                 if (bitmap != null) {
                     Palette palette = Palette.from(bitmap).generate();
@@ -311,52 +332,49 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                     dominantColor = mColor;
                     mDetailsRow.setImageBitmap(getActivity(), bitmap);
                     mDetailsRow.setImageScaleUpAllowed(true);
-                }
-                else {
+                } else {
                     mDetailsRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
                     mDetailsRow.setImageScaleUpAllowed(false);
                 }
             }
 
             // Plot and cast
-            if (tags.getPlot()!=null) {
-                mPlotAndGenresRow = new PlotAndGenresRow(getString(R.string.scrap_plot), tags.getPlot(), tags.getGenresFormatted());
+            if (showTags.getPlot() != null) {
+                mPlotAndGenresRow = new PlotAndGenresRow(getString(R.string.scrap_plot), showTags.getPlot(), showTags.getGenresFormatted());
             } else {
                 mPlotAndGenresRow = null;
             }
 
-            if (tags.getSpannableActorsFormatted()!=null) {
-                mCastRow = new CastRow(getString(R.string.scrap_cast), tags.getSpannableActorsFormatted(), "");
-            }
-            else {
+            if (showTags.getSpannableActorsFormatted() != null) {
+                mCastRow = new CastRow(getString(R.string.scrap_cast), showTags.getSpannableActorsFormatted(), "");
+            } else {
                 mCastRow = null;
             }
 
-            if (isCancelled()) {
-                return null;
+            if (mBuildRowsFuture.isCancelled()) {
+                return;
             }
 
             // Posters
-            List<ScraperImage> posters = tags.getAllPostersInDb(getActivity());
+            List<ScraperImage> posters = showTags.getAllPostersInDb(getActivity());
             if (!posters.isEmpty()) {
                 ArrayObjectAdapter postersRowAdapter = new ArrayObjectAdapter(new ScraperImagePosterPresenter());
                 postersRowAdapter.addAll(0, posters);
-                mPostersRow = new ListRow( new HeaderItem(getString(R.string.leanback_posters_header)), postersRowAdapter);
+                mPostersRow = new ListRow(new HeaderItem(getString(R.string.leanback_posters_header)), postersRowAdapter);
             } else {
                 mPostersRow = null;
             }
 
-
-            if (isCancelled()) {
-                return null;
+            if (mBuildRowsFuture.isCancelled()) {
+                return;
             }
 
             // Backdrops
-            List<ScraperImage> backdrops = tags.getAllBackdropsInDb(getActivity());
+            List<ScraperImage> backdrops = showTags.getAllBackdropsInDb(getActivity());
             if (!backdrops.isEmpty()) {
                 ArrayObjectAdapter backdropsRowAdapter = new ArrayObjectAdapter(new ScraperImageBackdropPresenter());
                 backdropsRowAdapter.addAll(0, backdrops);
-                mBackdropsRow = new ListRow( new HeaderItem(getString(R.string.leanback_backdrops_header)), backdropsRowAdapter);
+                mBackdropsRow = new ListRow(new HeaderItem(getString(R.string.leanback_backdrops_header)), backdropsRowAdapter);
             } else {
                 mBackdropsRow = null;
             }
@@ -374,43 +392,40 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
             }*/
             mWebLinksRow = null; // No web links for now to be sure to get "leanback certification"
 
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void avoid) {
-            ClassPresenterSelector ps = new ClassPresenterSelector();
-            ps.addClassPresenter(DetailsOverviewRow.class, mOverviewRowPresenter);
-            ps.addClassPresenter(PlotAndGenresRow.class, new PlotAndGenresRowPresenter(14,mColor)); // 14 lines max to fit on screen
-            ps.addClassPresenter(CastRow.class, new CastRowPresenter(17,mColor)); // 17 lines max to fit on screen
-            ps.addClassPresenter(ListRow.class, new ListRowPresenter());
-            mOverviewRowPresenter.updateBackgroundColor(mColor);
-            mRowsAdapter = new ArrayObjectAdapter(ps);
-            mRowsAdapter.clear();
-            // Add all the non-null rows
-            for (Row row : new Row[] {mDetailsRow, mPlotAndGenresRow, mCastRow, mPostersRow, mBackdropsRow, mWebLinksRow}) {
-                if (row!=null) {
-                    mRowsAdapter.add(row);
+            // Post results back to the UI thread
+            new Handler(Looper.getMainLooper()).post(() -> {
+                ClassPresenterSelector ps = new ClassPresenterSelector();
+                ps.addClassPresenter(DetailsOverviewRow.class, mOverviewRowPresenter);
+                ps.addClassPresenter(PlotAndGenresRow.class, new PlotAndGenresRowPresenter(14, mColor)); // 14 lines max to fit on screen
+                ps.addClassPresenter(CastRow.class, new CastRowPresenter(17, mColor)); // 17 lines max to fit on screen
+                ps.addClassPresenter(ListRow.class, new ListRowPresenter());
+                mOverviewRowPresenter.updateBackgroundColor(mColor);
+                mRowsAdapter = new ArrayObjectAdapter(ps);
+                mRowsAdapter.clear();
+                // Add all the non-null rows
+                for (Row row : new Row[]{mDetailsRow, mPlotAndGenresRow, mCastRow, mPostersRow, mBackdropsRow, mWebLinksRow}) {
+                    if (row != null) {
+                        mRowsAdapter.add(row);
+                    }
                 }
-            }
-            setAdapter(mRowsAdapter);
-        }
+                setAdapter(mRowsAdapter);
+            });
+        });
     }
 
-
     /** Saves a Poster as default poster for a show and update the current poster */
-    private class ShowPosterSaverTask extends AsyncTask<ScraperImage, Void, Bitmap> {
-
-        @Override
-        protected Bitmap doInBackground(ScraperImage... params) {
-            ScraperImage poster = params[0];
-
+    // TODO MARC here
+    private void savePosterAsync(ScraperImage poster) {
+        if (mShowPosterSaverFuture != null && !mShowPosterSaverFuture.isDone()) {
+            mShowPosterSaverFuture.cancel(true);
+        }
+        mShowPosterSaverFuture = executorService.submit(() -> {
+            Bitmap bitmap = null;
             // Save in DB and download
             if (poster.setAsDefault(getActivity(), -1)) { // -1 means for the whole show (not for a given season)
                 poster.download(getActivity());
             }
             // Update the bitmap
-            Bitmap bitmap=null;
             try {
                 bitmap = Picasso.get()
                         .load(poster.getLargeFileF())
@@ -418,79 +433,86 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                         .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
                         .centerCrop()
                         .get();
-
             } catch (IOException e) {
-                Log.d(TAG, "ShowPosterSaverTask Picasso load exception", e);
+                log.error("savePosterAsync: Picasso load exception", e);
             }
 
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            if (result != null) {
-                mDetailsRow.setImageBitmap(getActivity(), result);
-                mDetailsRow.setImageScaleUpAllowed(true);
-
-                Palette palette = Palette.from(result).generate();
-                int color;
-                
-                if (palette.getDarkVibrantSwatch() != null)
-                    color = palette.getDarkVibrantSwatch().getRgb();
-                else if (palette.getDarkMutedSwatch() != null)
-                    color = palette.getDarkMutedSwatch().getRgb();
-                else
-                    color = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
-
-                if (color != mColor) {
-                    mColor = color;
-
-                    mOverviewRowPresenter.updateBackgroundColor(color);
-
-                    for (Presenter pres : mRowsAdapter.getPresenterSelector().getPresenters()){
-                        if (pres instanceof BackgroundColorPresenter)
-                            ((BackgroundColorPresenter) pres).setBackgroundColor(color);
-                    }
-                }
-
-                Toast.makeText(getActivity(), R.string.leanback_poster_changed, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
-            }
-
-            // The activity result is set to OK if the poster or backdrop is changed
-            getActivity().setResult(Activity.RESULT_OK);
-        }
+            // Post results back to the UI thread
+            final Bitmap finalBitmap = bitmap;
+            new Handler(Looper.getMainLooper()).post(() -> handlePosterResult(finalBitmap));
+        });
     }
 
-    /** Saves a Backdrop as default for a video and update the current backdrop */
-    private class BackdropSaverTask extends AsyncTask<ScraperImage, Void, ShowTags> {
+    private void handlePosterResult(Bitmap result) {
+        if (result != null) {
+            mDetailsRow.setImageBitmap(getActivity(), result);
+            mDetailsRow.setImageScaleUpAllowed(true);
 
-        @Override
-        protected ShowTags doInBackground(ScraperImage... params) {
-            ScraperImage backdrop = params[0];
+            Palette palette = Palette.from(result).generate();
+            int color;
+
+            if (palette.getDarkVibrantSwatch() != null)
+                color = palette.getDarkVibrantSwatch().getRgb();
+            else if (palette.getDarkMutedSwatch() != null)
+                color = palette.getDarkMutedSwatch().getRgb();
+            else
+                color = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
+
+            if (color != mColor) {
+                mColor = color;
+
+                mOverviewRowPresenter.updateBackgroundColor(color);
+
+                for (Presenter pres : mRowsAdapter.getPresenterSelector().getPresenters()) {
+                    if (pres instanceof BackgroundColorPresenter)
+                        ((BackgroundColorPresenter) pres).setBackgroundColor(color);
+                }
+            }
+
+            Toast.makeText(getActivity(), R.string.leanback_poster_changed, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+        }
+
+        // The activity result is set to OK if the poster or backdrop is changed
+        getActivity().setResult(Activity.RESULT_OK);
+    }
+
+
+    /** Saves a Backdrop as default for a video and update the current backdrop */
+    private void saveBackdropAsync(ScraperImage backdrop) {
+        log.debug("saveBackdropAsync: backdrop=" + backdrop);
+        if (mBackdropSaverFuture != null && !mBackdropSaverFuture.isDone()) {
+            mBackdropSaverFuture.cancel(true);
+        }
+        mBackdropSaverFuture = executorService.submit(() -> {
             // Save in DB and download
             if (backdrop.setAsDefault(getActivity())) {
                 backdrop.download(getActivity());
             }
-            // Simplier to rebuild the full ShowTags here in order for the BackdropTask to get the new backdrop in it
-            return TagsFactory.buildShowTags(getActivity(), mShowId);
+            // Simpler to rebuild the full ShowTags here in order for the BackdropTask to get the new backdrop in it
+            ShowTags showTags = TagsFactory.buildShowTags(getActivity(), mShowId);
+
+            // Post results back to the UI thread
+            new Handler(Looper.getMainLooper()).post(() -> handleBackdropResult(showTags));
+        });
+    }
+
+    private void handleBackdropResult(ShowTags result) {
+        mShowTags = result;
+        log.debug("handleBackdropResult: mShowTags updated");
+
+        // Update backdrop
+        if (mBackdropTask != null && mBackdropTask.isDone()) {
+            log.warn("handleBackdropResult: mBackdropTask cancelled");
+            mBackdropTask.cancel();
         }
+        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+        mBackdropTask.execute(mShowTags);
+        Toast.makeText(getActivity(), R.string.leanback_backdrop_changed, Toast.LENGTH_SHORT).show();
 
-        @Override
-        protected void onPostExecute(ShowTags result) {
-            mShowTags = result;
-
-            // Update backdrop
-            if (mBackdropTask!=null) {
-                mBackdropTask.cancel(true);
-            }
-            mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mShowTags);
-            Toast.makeText(getActivity(), R.string.leanback_backdrop_changed, Toast.LENGTH_SHORT).show();
-
-            // The activity result is set to OK if the poster or backdrop is changed
-            getActivity().setResult(Activity.RESULT_OK);
-       }
+        // The activity result is set to OK if the poster or backdrop is changed
+        getActivity().setResult(Activity.RESULT_OK);
     }
 
     public static int getDominantColor() {
